@@ -1,12 +1,12 @@
 {
   "summary": {
-    "total": 12,
-    "correct": 10,
+    "total": 20,
+    "correct": 18,
     "abstained": 2,
     "wrong": 0,
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9,
+    "grounded_coverage": 0.5,
     "grounded_correct": 9
   },
   "results": [
@@ -91,7 +91,71 @@
       "trust": "authoritative"
     },
     {
+      "id": "fabry_enzyme",
+      "tactic": "recall",
+      "gold": "alpha_galactosidase_a",
+      "answer": "alpha_galactosidase_a",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "fabry_substrate",
+      "tactic": "recall",
+      "gold": "globotriaosylceramide",
+      "answer": "globotriaosylceramide",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
       "id": "niemann_pick_enzyme",
+      "tactic": "recall",
+      "gold": "acid_sphingomyelinase",
+      "answer": "acid_sphingomyelinase",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "krabbe_enzyme",
+      "tactic": "recall",
+      "gold": "galactocerebrosidase",
+      "answer": "galactocerebrosidase",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "hurler_enzyme",
+      "tactic": "recall",
+      "gold": "alpha_l_iduronidase",
+      "answer": "alpha_l_iduronidase",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "msud_enzyme",
+      "tactic": "recall",
+      "gold": "branched_chain_ketoacid_dehydrogenase",
+      "answer": "branched_chain_ketoacid_dehydrogenase",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "galactosemia_enzyme",
+      "tactic": "recall",
+      "gold": "galactose_1_phosphate_uridyltransferase",
+      "answer": "galactose_1_phosphate_uridyltransferase",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "msud_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_recessive",
+      "answer": "autosomal_recessive",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "wilson_disease_enzyme",
       "tactic": "recall",
       "gold": "ABSTAIN",
       "answer": null,
@@ -99,7 +163,7 @@
       "trust": null
     },
     {
-      "id": "fabry_enzyme",
+      "id": "menkes_enzyme",
       "tactic": "recall",
       "gold": "ABSTAIN",
       "answer": null,

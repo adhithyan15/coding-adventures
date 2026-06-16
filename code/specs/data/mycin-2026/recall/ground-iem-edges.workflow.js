@@ -65,6 +65,49 @@ const EDGES = [
     claim: 'Glycogen accumulates in liver and kidney in von Gierke disease.' },
   { id: 'inherited_as__von_gierke', rel: 'inherited_as', subj: 'von_gierke', obj: 'autosomal_recessive',
     claim: 'Von Gierke disease is inherited in an autosomal recessive manner.' },
+
+  // REL-6 expansion — a second high-yield disease set (must match iem_edge_ground.py GROUPS).
+  { id: 'deficient_in__fabry', rel: 'deficient_in', subj: 'fabry', obj: 'alpha_galactosidase_a',
+    claim: 'Fabry disease results from deficiency of the enzyme alpha-galactosidase A.' },
+  { id: 'accumulates__fabry', rel: 'accumulates', subj: 'fabry', obj: 'globotriaosylceramide',
+    claim: 'Globotriaosylceramide (Gb3 / ceramide trihexoside) accumulates in Fabry disease.' },
+  { id: 'inherited_as__fabry', rel: 'inherited_as', subj: 'fabry', obj: 'x_linked_recessive',
+    claim: 'Fabry disease is inherited in an X-linked recessive manner.' },
+
+  { id: 'deficient_in__niemann_pick', rel: 'deficient_in', subj: 'niemann_pick', obj: 'acid_sphingomyelinase',
+    claim: 'Niemann-Pick disease types A and B result from deficiency of acid sphingomyelinase (ASM / SMPD1).' },
+  { id: 'accumulates__niemann_pick', rel: 'accumulates', subj: 'niemann_pick', obj: 'sphingomyelin',
+    claim: 'Sphingomyelin accumulates in Niemann-Pick disease (types A/B).' },
+  { id: 'inherited_as__niemann_pick', rel: 'inherited_as', subj: 'niemann_pick', obj: 'autosomal_recessive',
+    claim: 'Niemann-Pick disease is inherited in an autosomal recessive manner.' },
+
+  { id: 'deficient_in__krabbe', rel: 'deficient_in', subj: 'krabbe', obj: 'galactocerebrosidase',
+    claim: 'Krabbe disease results from deficiency of galactocerebrosidase (galactosylceramidase / GALC).' },
+  { id: 'accumulates__krabbe', rel: 'accumulates', subj: 'krabbe', obj: 'psychosine',
+    claim: 'Psychosine (galactosylsphingosine) accumulates in Krabbe disease.' },
+  { id: 'inherited_as__krabbe', rel: 'inherited_as', subj: 'krabbe', obj: 'autosomal_recessive',
+    claim: 'Krabbe disease is inherited in an autosomal recessive manner.' },
+
+  { id: 'deficient_in__hurler', rel: 'deficient_in', subj: 'hurler', obj: 'alpha_l_iduronidase',
+    claim: 'Hurler syndrome (mucopolysaccharidosis type I) results from deficiency of alpha-L-iduronidase (IDUA).' },
+  { id: 'accumulates__hurler', rel: 'accumulates', subj: 'hurler', obj: 'glycosaminoglycans',
+    claim: 'Glycosaminoglycans (dermatan and heparan sulfate) accumulate in Hurler syndrome.' },
+  { id: 'inherited_as__hurler', rel: 'inherited_as', subj: 'hurler', obj: 'autosomal_recessive',
+    claim: 'Hurler syndrome is inherited in an autosomal recessive manner.' },
+
+  { id: 'deficient_in__msud', rel: 'deficient_in', subj: 'msud', obj: 'branched_chain_ketoacid_dehydrogenase',
+    claim: 'Maple syrup urine disease results from deficiency of branched-chain alpha-ketoacid dehydrogenase (BCKDH).' },
+  { id: 'accumulates__msud', rel: 'accumulates', subj: 'msud', obj: 'branched_chain_amino_acids',
+    claim: 'Branched-chain amino acids (leucine, isoleucine, valine) accumulate in maple syrup urine disease.' },
+  { id: 'inherited_as__msud', rel: 'inherited_as', subj: 'msud', obj: 'autosomal_recessive',
+    claim: 'Maple syrup urine disease is inherited in an autosomal recessive manner.' },
+
+  { id: 'deficient_in__galactosemia', rel: 'deficient_in', subj: 'galactosemia', obj: 'galactose_1_phosphate_uridyltransferase',
+    claim: 'Classic galactosemia results from deficiency of galactose-1-phosphate uridyltransferase (GALT).' },
+  { id: 'accumulates__galactosemia', rel: 'accumulates', subj: 'galactosemia', obj: 'galactose_1_phosphate',
+    claim: 'Galactose-1-phosphate accumulates in classic galactosemia.' },
+  { id: 'inherited_as__galactosemia', rel: 'inherited_as', subj: 'galactosemia', obj: 'autosomal_recessive',
+    claim: 'Classic galactosemia is inherited in an autosomal recessive manner.' },
 ]
 
 const GROUND_SCHEMA = {

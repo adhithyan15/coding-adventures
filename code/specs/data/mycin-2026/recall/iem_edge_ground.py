@@ -104,6 +104,58 @@ GROUPS: list[tuple[str, list[tuple[str, str, str, str]]]] = [
         ("inherited_as", "von_gierke", "autosomal_recessive",
          "Von Gierke disease is inherited in an autosomal recessive manner."),
     ]),
+
+    # ---- REL-6 expansion: a second high-yield disease set (lysosomal storage +
+    # classic IEM). New edges enter as authored-debt (consensus + FLAG) until the
+    # spider grounds them; the board's grounded-coverage dips, then climbs again.
+    ("Fabry disease", [
+        ("deficient_in", "fabry", "alpha_galactosidase_a",
+         "Fabry disease results from deficiency of the enzyme alpha-galactosidase A."),
+        ("accumulates", "fabry", "globotriaosylceramide",
+         "Globotriaosylceramide (Gb3) accumulates in Fabry disease."),
+        ("inherited_as", "fabry", "x_linked_recessive",
+         "Fabry disease is inherited in an X-linked recessive manner."),
+    ]),
+    ("Niemann-Pick disease (type A/B)", [
+        ("deficient_in", "niemann_pick", "acid_sphingomyelinase",
+         "Niemann-Pick disease types A and B result from deficiency of acid sphingomyelinase."),
+        ("accumulates", "niemann_pick", "sphingomyelin",
+         "Sphingomyelin accumulates in Niemann-Pick disease."),
+        ("inherited_as", "niemann_pick", "autosomal_recessive",
+         "Niemann-Pick disease is inherited in an autosomal recessive manner."),
+    ]),
+    ("Krabbe disease", [
+        ("deficient_in", "krabbe", "galactocerebrosidase",
+         "Krabbe disease results from deficiency of galactocerebrosidase (galactosylceramidase)."),
+        ("accumulates", "krabbe", "psychosine",
+         "Psychosine (galactosylsphingosine) accumulates in Krabbe disease."),
+        ("inherited_as", "krabbe", "autosomal_recessive",
+         "Krabbe disease is inherited in an autosomal recessive manner."),
+    ]),
+    ("Hurler syndrome (MPS I)", [
+        ("deficient_in", "hurler", "alpha_l_iduronidase",
+         "Hurler syndrome (mucopolysaccharidosis type I) results from deficiency of alpha-L-iduronidase."),
+        ("accumulates", "hurler", "glycosaminoglycans",
+         "Glycosaminoglycans (dermatan and heparan sulfate) accumulate in Hurler syndrome."),
+        ("inherited_as", "hurler", "autosomal_recessive",
+         "Hurler syndrome is inherited in an autosomal recessive manner."),
+    ]),
+    ("Maple syrup urine disease (MSUD)", [
+        ("deficient_in", "msud", "branched_chain_ketoacid_dehydrogenase",
+         "Maple syrup urine disease results from deficiency of branched-chain alpha-ketoacid dehydrogenase."),
+        ("accumulates", "msud", "branched_chain_amino_acids",
+         "Branched-chain amino acids (leucine, isoleucine, valine) accumulate in maple syrup urine disease."),
+        ("inherited_as", "msud", "autosomal_recessive",
+         "Maple syrup urine disease is inherited in an autosomal recessive manner."),
+    ]),
+    ("Classic galactosemia", [
+        ("deficient_in", "galactosemia", "galactose_1_phosphate_uridyltransferase",
+         "Classic galactosemia results from deficiency of galactose-1-phosphate uridyltransferase (GALT)."),
+        ("accumulates", "galactosemia", "galactose_1_phosphate",
+         "Galactose-1-phosphate accumulates in classic galactosemia."),
+        ("inherited_as", "galactosemia", "autosomal_recessive",
+         "Classic galactosemia is inherited in an autosomal recessive manner."),
+    ]),
 ]
 
 HEADER = """\
