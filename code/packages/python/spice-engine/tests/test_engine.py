@@ -6810,15 +6810,13 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tran_window_execution.plan.use_initial_conditions is True
     assert isinstance(tran_window_execution.result, TransientResult)
     assert [point.time for point in tran_window_execution.result.points] == pytest.approx(
-        [2.0e-3, 3.0e-3, 4.0e-3, 5.0e-3, 6.0e-3],
+        [2.0e-3, 4.0e-3, 6.0e-3],
     )
     assert tran_window_execution.table == (
         "Index\tTime\tV(mid)\n"
         "0\t2.000000e-03\t5.000000e-01\n"
-        "1\t3.000000e-03\t5.000000e-01\n"
-        "2\t4.000000e-03\t5.000000e-01\n"
-        "3\t5.000000e-03\t5.000000e-01\n"
-        "4\t6.000000e-03\t5.000000e-01\n"
+        "1\t4.000000e-03\t5.000000e-01\n"
+        "2\t6.000000e-03\t5.000000e-01\n"
     )
 
     with pytest.raises(ValueError, match="multiple analysis cards"):

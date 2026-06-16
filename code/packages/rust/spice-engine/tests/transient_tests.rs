@@ -1915,7 +1915,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert!(tran_window_execution.plan.use_initial_conditions);
     match &tran_window_execution.result {
         DeckAnalysisExecutionResult::Tran(points) => {
-            let expected_times = [2.0e-3, 3.0e-3, 4.0e-3, 5.0e-3, 6.0e-3];
+            let expected_times = [2.0e-3, 4.0e-3, 6.0e-3];
             assert_eq!(points.len(), expected_times.len());
             for (point, expected_time) in points.iter().zip(expected_times) {
                 assert!((point.time - expected_time).abs() < 1.0e-12);
@@ -1925,7 +1925,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     }
     assert_eq!(
         tran_window_execution.table,
-        "Index\tTime\tV(mid)\n0\t2.000000e-03\t5.000000e-01\n1\t3.000000e-03\t5.000000e-01\n2\t4.000000e-03\t5.000000e-01\n3\t5.000000e-03\t5.000000e-01\n4\t6.000000e-03\t5.000000e-01\n"
+        "Index\tTime\tV(mid)\n0\t2.000000e-03\t5.000000e-01\n1\t4.000000e-03\t5.000000e-01\n2\t6.000000e-03\t5.000000e-01\n"
     );
 
     let error = run_deck_analysis(&circuit, netlist, None).unwrap_err();

@@ -91,8 +91,9 @@ and reports ambiguity before solver dispatch.
 `runDeckAnalysis` executes one selected `.op`, `.dc`, `.ac LIN`, `.ac DEC`,
 `.ac OCT`, or `.tran` plan against an existing `Circuit` and returns the plan,
 solver result, and deck-selected output table. Selected `.tran` plans route
-`START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
-initial-condition intent through that stable transient table surface.
+`START` output filtering, use `.tran TSTEP` as the output print grid, apply
+`MAXSTEP` as an internal fixed-step cap, and carry `UIC` initial-condition
+intent through that stable transient table surface.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save` and scoped
 or global `.probe` cards before `.end`, normalize and deduplicate output
 probes in deck order, and feed `formatDeckOpTable`,
@@ -162,4 +163,5 @@ malformed deck-level analysis controls.
 deck execution helpers.
 `runDeckAnalysis` routes that selected plan into the matching solver and stable
 deck-selected table output, including `.ac LIN`, `.ac DEC`, `.ac OCT`
-frequency grids, and `.tran` `START` / `MAXSTEP` / `UIC` controls.
+frequency grids, and `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC`
+controls.
