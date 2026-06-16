@@ -1,17 +1,27 @@
 {
-  "_comment": "MYCIN-2026 REL-5 board-style item bank. Each item is a fact-recall question posed as a relational binding query over a grounded knowledge graph, with a gold answer (or ABSTAIN for a deliberately-uncovered disease). The harness scores correct / abstained / wrong: 'wrong' (a fabricated answer) is the only real failure; abstaining on an uncovered item is the honest, defensible outcome. Tactic is 'recall' for now; 'differential' items slot in via the same schema once the harness drives the native CLI for ranked hypotheses.",
+  "_comment": "MYCIN-2026 board-style item bank. Each item is a fact-recall question posed as a relational binding query over a grounded knowledge graph, with a gold answer (or ABSTAIN for a deliberately-uncovered disease). The harness scores correct / abstained / wrong: 'wrong' (a fabricated answer) is the only real failure; abstaining on an uncovered item is the honest, defensible outcome. Tactic is 'recall' for now; 'differential' items slot in via the same schema once the harness drives the native CLI for ranked hypotheses.",
   "items": [
-    {"id": "tay_sachs_enzyme",    "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "tay_sachs",       "var": "Enzyme",      "gold": "hexosaminidase_a"},
-    {"id": "gaucher_enzyme",      "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "gaucher",         "var": "Enzyme",      "gold": "glucocerebrosidase"},
-    {"id": "pku_enzyme",          "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "phenylketonuria", "var": "Enzyme",      "gold": "phenylalanine_hydroxylase"},
-    {"id": "pompe_enzyme",        "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "pompe",           "var": "Enzyme",      "gold": "acid_alpha_glucosidase"},
-    {"id": "lesch_nyhan_enzyme",  "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "lesch_nyhan",     "var": "Enzyme",      "gold": "hgprt"},
-    {"id": "von_gierke_enzyme",   "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "von_gierke",      "var": "Enzyme",      "gold": "glucose_6_phosphatase"},
-    {"id": "tay_sachs_substrate", "domain": "iem", "tactic": "recall", "relation": "accumulates",  "subject": "tay_sachs",       "var": "Substrate",   "gold": "gm2_ganglioside"},
-    {"id": "gaucher_substrate",   "domain": "iem", "tactic": "recall", "relation": "accumulates",  "subject": "gaucher",         "var": "Substrate",   "gold": "glucocerebroside"},
-    {"id": "lesch_nyhan_inherit", "domain": "iem", "tactic": "recall", "relation": "inherited_as", "subject": "lesch_nyhan",     "var": "Pattern",     "gold": "x_linked_recessive"},
-    {"id": "von_gierke_inherit",  "domain": "iem", "tactic": "recall", "relation": "inherited_as", "subject": "von_gierke",      "var": "Pattern",     "gold": "autosomal_recessive"},
-    {"id": "niemann_pick_enzyme", "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "niemann_pick",    "var": "Enzyme",      "gold": "ABSTAIN"},
-    {"id": "fabry_enzyme",        "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "fabry",           "var": "Enzyme",      "gold": "ABSTAIN"}
+    {"id": "tay_sachs_enzyme",    "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "tay_sachs",       "var": "Enzyme",    "gold": "hexosaminidase_a"},
+    {"id": "gaucher_enzyme",      "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "gaucher",         "var": "Enzyme",    "gold": "glucocerebrosidase"},
+    {"id": "pku_enzyme",          "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "phenylketonuria", "var": "Enzyme",    "gold": "phenylalanine_hydroxylase"},
+    {"id": "pompe_enzyme",        "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "pompe",           "var": "Enzyme",    "gold": "acid_alpha_glucosidase"},
+    {"id": "lesch_nyhan_enzyme",  "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "lesch_nyhan",     "var": "Enzyme",    "gold": "hgprt"},
+    {"id": "von_gierke_enzyme",   "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "von_gierke",      "var": "Enzyme",    "gold": "glucose_6_phosphatase"},
+    {"id": "tay_sachs_substrate", "domain": "iem", "tactic": "recall", "relation": "accumulates",  "subject": "tay_sachs",       "var": "Substrate", "gold": "gm2_ganglioside"},
+    {"id": "gaucher_substrate",   "domain": "iem", "tactic": "recall", "relation": "accumulates",  "subject": "gaucher",         "var": "Substrate", "gold": "glucocerebroside"},
+    {"id": "lesch_nyhan_inherit", "domain": "iem", "tactic": "recall", "relation": "inherited_as", "subject": "lesch_nyhan",     "var": "Pattern",   "gold": "x_linked_recessive"},
+    {"id": "von_gierke_inherit",  "domain": "iem", "tactic": "recall", "relation": "inherited_as", "subject": "von_gierke",      "var": "Pattern",   "gold": "autosomal_recessive"},
+
+    {"id": "fabry_enzyme",        "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "fabry",           "var": "Enzyme",    "gold": "alpha_galactosidase_a"},
+    {"id": "fabry_substrate",     "domain": "iem", "tactic": "recall", "relation": "accumulates",  "subject": "fabry",           "var": "Substrate", "gold": "globotriaosylceramide"},
+    {"id": "niemann_pick_enzyme", "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "niemann_pick",    "var": "Enzyme",    "gold": "acid_sphingomyelinase"},
+    {"id": "krabbe_enzyme",       "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "krabbe",          "var": "Enzyme",    "gold": "galactocerebrosidase"},
+    {"id": "hurler_enzyme",       "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "hurler",          "var": "Enzyme",    "gold": "alpha_l_iduronidase"},
+    {"id": "msud_enzyme",         "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "msud",            "var": "Enzyme",    "gold": "branched_chain_ketoacid_dehydrogenase"},
+    {"id": "galactosemia_enzyme", "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "galactosemia",    "var": "Enzyme",    "gold": "galactose_1_phosphate_uridyltransferase"},
+    {"id": "msud_inherit",        "domain": "iem", "tactic": "recall", "relation": "inherited_as", "subject": "msud",            "var": "Pattern",   "gold": "autosomal_recessive"},
+
+    {"id": "wilson_disease_enzyme", "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "wilson_disease", "var": "Enzyme", "gold": "ABSTAIN"},
+    {"id": "menkes_enzyme",         "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "menkes",         "var": "Enzyme", "gold": "ABSTAIN"}
   ]
 }

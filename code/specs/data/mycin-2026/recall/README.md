@@ -14,7 +14,7 @@ one engine, not two).
 
 | file | what it is |
 |---|---|
-| `iem-edges.adj` | the inborn-errors-of-metabolism knowledge-graph — 6 diseases × {deficient enzyme, accumulated substrate, inheritance}. **GENERATED** by `iem_edge_ground.py` (do not hand-edit). Each ungrounded edge is `trust consensus` + `% [FLAG: …]` (authored-debt, visible); a spider-grounded edge lifts to `trust authoritative` with its byte-quote + URL. |
+| `iem-edges.adj` | the inborn-errors-of-metabolism knowledge-graph — 12 diseases × {deficient enzyme, accumulated substrate, inheritance} (36 edges). **GENERATED** by `iem_edge_ground.py` (do not hand-edit). Each ungrounded edge is `trust consensus` + `% [FLAG: …]` (authored-debt, visible); a spider-grounded edge lifts to `trust authoritative` with its byte-quote + URL. |
 | `iem_edge_ground.py` | the REL-4 **write gate** — consumes `iem-edge-grounding.json` (the spider's output) and regenerates `iem-edges.adj` + `iem-edge-manifest.json`. `--check` verifies the committed file is up to date. Reuses the shared `organism_id_ground` gate helpers. |
 | `ground-iem-edges.workflow.js` | the REL-4 **spider** (opt-in, costs tokens + network): one agent per edge grounds it against a primary source (OMIM / biochemistry reference) with a verbatim byte-quote; an independent agent re-fetches + tries to refute. Produces `iem-edge-grounding.json`. |
 | `test_iem_edge_ground.py` | gate tests — ungrounded→consensus+FLAG, grounded→authoritative+quote+locator, refuted stays flagged, untrusted-quote escaping, committed-file `--check`. |

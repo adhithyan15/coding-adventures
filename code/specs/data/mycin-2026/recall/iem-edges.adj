@@ -108,4 +108,70 @@ rulebook iem_facts {
         source "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell must have a variant to cause the disorder."
         locator "https://medlineplus.gov/genetics/condition/glycogen-storage-disease-type-i/"
         trust authoritative
+
+    % --- Fabry disease ---------------------------------------------------
+    relate deficient_in(fabry, alpha_galactosidase_a)
+        source "Fabry disease results from deficiency of the enzyme alpha-galactosidase A."
+        trust consensus   % [FLAG: pending]
+    relate accumulates(fabry, globotriaosylceramide)
+        source "Globotriaosylceramide (Gb3) accumulates in Fabry disease."
+        trust consensus   % [FLAG: pending]
+    relate inherited_as(fabry, x_linked_recessive)
+        source "Fabry disease is inherited in an X-linked recessive manner."
+        trust consensus   % [FLAG: pending]
+
+    % --- Niemann-Pick disease (type A/B) ---------------------------------
+    relate deficient_in(niemann_pick, acid_sphingomyelinase)
+        source "Niemann-Pick disease types A and B result from deficiency of acid sphingomyelinase."
+        trust consensus   % [FLAG: pending]
+    relate accumulates(niemann_pick, sphingomyelin)
+        source "Sphingomyelin accumulates in Niemann-Pick disease."
+        trust consensus   % [FLAG: pending]
+    relate inherited_as(niemann_pick, autosomal_recessive)
+        source "Niemann-Pick disease is inherited in an autosomal recessive manner."
+        trust consensus   % [FLAG: pending]
+
+    % --- Krabbe disease --------------------------------------------------
+    relate deficient_in(krabbe, galactocerebrosidase)
+        source "Krabbe disease results from deficiency of galactocerebrosidase (galactosylceramidase)."
+        trust consensus   % [FLAG: pending]
+    relate accumulates(krabbe, psychosine)
+        source "Psychosine (galactosylsphingosine) accumulates in Krabbe disease."
+        trust consensus   % [FLAG: pending]
+    relate inherited_as(krabbe, autosomal_recessive)
+        source "Krabbe disease is inherited in an autosomal recessive manner."
+        trust consensus   % [FLAG: pending]
+
+    % --- Hurler syndrome (MPS I) -----------------------------------------
+    relate deficient_in(hurler, alpha_l_iduronidase)
+        source "Hurler syndrome (mucopolysaccharidosis type I) results from deficiency of alpha-L-iduronidase."
+        trust consensus   % [FLAG: pending]
+    relate accumulates(hurler, glycosaminoglycans)
+        source "Glycosaminoglycans (dermatan and heparan sulfate) accumulate in Hurler syndrome."
+        trust consensus   % [FLAG: pending]
+    relate inherited_as(hurler, autosomal_recessive)
+        source "Hurler syndrome is inherited in an autosomal recessive manner."
+        trust consensus   % [FLAG: pending]
+
+    % --- Maple syrup urine disease (MSUD) --------------------------------
+    relate deficient_in(msud, branched_chain_ketoacid_dehydrogenase)
+        source "Maple syrup urine disease results from deficiency of branched-chain alpha-ketoacid dehydrogenase."
+        trust consensus   % [FLAG: pending]
+    relate accumulates(msud, branched_chain_amino_acids)
+        source "Branched-chain amino acids (leucine, isoleucine, valine) accumulate in maple syrup urine disease."
+        trust consensus   % [FLAG: pending]
+    relate inherited_as(msud, autosomal_recessive)
+        source "Maple syrup urine disease is inherited in an autosomal recessive manner."
+        trust consensus   % [FLAG: pending]
+
+    % --- Classic galactosemia --------------------------------------------
+    relate deficient_in(galactosemia, galactose_1_phosphate_uridyltransferase)
+        source "Classic galactosemia results from deficiency of galactose-1-phosphate uridyltransferase (GALT)."
+        trust consensus   % [FLAG: pending]
+    relate accumulates(galactosemia, galactose_1_phosphate)
+        source "Galactose-1-phosphate accumulates in classic galactosemia."
+        trust consensus   % [FLAG: pending]
+    relate inherited_as(galactosemia, autosomal_recessive)
+        source "Classic galactosemia is inherited in an autosomal recessive manner."
+        trust consensus   % [FLAG: pending]
 }

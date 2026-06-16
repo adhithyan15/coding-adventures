@@ -180,7 +180,187 @@
       "trust": "authoritative",
       "source": "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell must have a variant to cause the disorder.",
       "url": "https://medlineplus.gov/genetics/condition/glycogen-storage-disease-type-i/"
+    },
+    "deficient_in__fabry": {
+      "relation": "deficient_in",
+      "subject": "fabry",
+      "object": "alpha_galactosidase_a",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Fabry disease results from deficiency of the enzyme alpha-galactosidase A.",
+      "url": null
+    },
+    "accumulates__fabry": {
+      "relation": "accumulates",
+      "subject": "fabry",
+      "object": "globotriaosylceramide",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Globotriaosylceramide (Gb3) accumulates in Fabry disease.",
+      "url": null
+    },
+    "inherited_as__fabry": {
+      "relation": "inherited_as",
+      "subject": "fabry",
+      "object": "x_linked_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Fabry disease is inherited in an X-linked recessive manner.",
+      "url": null
+    },
+    "deficient_in__niemann_pick": {
+      "relation": "deficient_in",
+      "subject": "niemann_pick",
+      "object": "acid_sphingomyelinase",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Niemann-Pick disease types A and B result from deficiency of acid sphingomyelinase.",
+      "url": null
+    },
+    "accumulates__niemann_pick": {
+      "relation": "accumulates",
+      "subject": "niemann_pick",
+      "object": "sphingomyelin",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Sphingomyelin accumulates in Niemann-Pick disease.",
+      "url": null
+    },
+    "inherited_as__niemann_pick": {
+      "relation": "inherited_as",
+      "subject": "niemann_pick",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Niemann-Pick disease is inherited in an autosomal recessive manner.",
+      "url": null
+    },
+    "deficient_in__krabbe": {
+      "relation": "deficient_in",
+      "subject": "krabbe",
+      "object": "galactocerebrosidase",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Krabbe disease results from deficiency of galactocerebrosidase (galactosylceramidase).",
+      "url": null
+    },
+    "accumulates__krabbe": {
+      "relation": "accumulates",
+      "subject": "krabbe",
+      "object": "psychosine",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Psychosine (galactosylsphingosine) accumulates in Krabbe disease.",
+      "url": null
+    },
+    "inherited_as__krabbe": {
+      "relation": "inherited_as",
+      "subject": "krabbe",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Krabbe disease is inherited in an autosomal recessive manner.",
+      "url": null
+    },
+    "deficient_in__hurler": {
+      "relation": "deficient_in",
+      "subject": "hurler",
+      "object": "alpha_l_iduronidase",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hurler syndrome (mucopolysaccharidosis type I) results from deficiency of alpha-L-iduronidase.",
+      "url": null
+    },
+    "accumulates__hurler": {
+      "relation": "accumulates",
+      "subject": "hurler",
+      "object": "glycosaminoglycans",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Glycosaminoglycans (dermatan and heparan sulfate) accumulate in Hurler syndrome.",
+      "url": null
+    },
+    "inherited_as__hurler": {
+      "relation": "inherited_as",
+      "subject": "hurler",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hurler syndrome is inherited in an autosomal recessive manner.",
+      "url": null
+    },
+    "deficient_in__msud": {
+      "relation": "deficient_in",
+      "subject": "msud",
+      "object": "branched_chain_ketoacid_dehydrogenase",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Maple syrup urine disease results from deficiency of branched-chain alpha-ketoacid dehydrogenase.",
+      "url": null
+    },
+    "accumulates__msud": {
+      "relation": "accumulates",
+      "subject": "msud",
+      "object": "branched_chain_amino_acids",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Branched-chain amino acids (leucine, isoleucine, valine) accumulate in maple syrup urine disease.",
+      "url": null
+    },
+    "inherited_as__msud": {
+      "relation": "inherited_as",
+      "subject": "msud",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Maple syrup urine disease is inherited in an autosomal recessive manner.",
+      "url": null
+    },
+    "deficient_in__galactosemia": {
+      "relation": "deficient_in",
+      "subject": "galactosemia",
+      "object": "galactose_1_phosphate_uridyltransferase",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Classic galactosemia results from deficiency of galactose-1-phosphate uridyltransferase (GALT).",
+      "url": null
+    },
+    "accumulates__galactosemia": {
+      "relation": "accumulates",
+      "subject": "galactosemia",
+      "object": "galactose_1_phosphate",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Galactose-1-phosphate accumulates in classic galactosemia.",
+      "url": null
+    },
+    "inherited_as__galactosemia": {
+      "relation": "inherited_as",
+      "subject": "galactosemia",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Classic galactosemia is inherited in an autosomal recessive manner.",
+      "url": null
     }
   },
-  "hash": "10aa3579bf49f1ad"
+  "hash": "8882153dfd4643ec"
 }

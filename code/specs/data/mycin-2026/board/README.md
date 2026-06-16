@@ -19,19 +19,20 @@ harness **gates on never-fabricate** — a single `wrong` is a non-zero exit.
 
 The scorecard also reports **grounded-coverage**: of the correct answers, how many
 cite an `authoritative` (spider-grounded) edge vs a `consensus` (authored-debt)
-edge. That is the number every grounding PR moves. Today the IEM edges are
-authored-debt, so:
+edge. That is the number every grounding/expansion PR moves:
 
 ```
-correct 10 · abstained 2 · wrong 0  (of 12)
-defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 0%
+correct 18 · abstained 2 · wrong 0  (of 20)
+defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 50%
 ✓ never fabricated — every answer is correct-with-proof or an honest abstention.
 ```
 
-After the REL-4 spider runs (`recall/ground-iem-edges.workflow.js` → `iem_edge_ground.py`),
-the edges flip `consensus → authoritative` and **grounded-coverage climbs from 0% toward
-100%** with no change to this harness — the scoreboard turns grounding progress into a
-single watchable metric.
+The number tracks **both levers**, honestly. The REL-4b spider grounded 9 of the
+original answers (`consensus → authoritative`). REL-6 then expanded the bank from 6 to
+**12 diseases** — the 6 new disease sets enter as authored-debt, so grounded-coverage
+**dipped 90% → 50%**. Re-running `recall/ground-iem-edges.workflow.js` →
+`iem_edge_ground.py` on the new edges climbs it back. **Expansion adds debt; grounding
+retires it; the scoreboard shows both** — with no change to this harness.
 
 ## Files
 
