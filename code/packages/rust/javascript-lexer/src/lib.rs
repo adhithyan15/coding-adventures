@@ -292,6 +292,102 @@ mod tests {
         }
     }
 
+    // ----- gap-044b: template literals with non-identifier expressions -----
+    //
+    // Before the fix, any substitution expression that triggered an F10
+    // flat-mode transition (e.g. `on NAME -> set-mode div`) caused the lexer
+    // to lose the template context.  A subsequent `}` was then consumed as
+    // RBRACE instead of TEMPLATE_TAIL, producing a LexerError.
+    //
+    // We verify six representative shapes; each must tokenize successfully
+    // and the closing `}...`` token must be classified as TEMPLATE_TAIL.
+
+    fn find_template_tail(tokens: &[lexer::token::Token]) -> Option<&lexer::token::Token> {
+        tokens.iter().find(|t| t.type_name.as_deref() == Some("TEMPLATE_TAIL"))
+    }
+
+    #[test]
+    fn gap044b_template_member_expr_no_lexer_error() {
+        // `${obj.name}` — DOT triggers set-mode default, then NAME sets div
+        let tokens = tokenize_javascript_typed(
+            "var s = `prefix ${obj.name} suffix`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize `${obj.name}` without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after `${{obj.name}}`");
+    }
+
+    #[test]
+    fn gap044b_template_binary_expr_no_lexer_error() {
+        // `${a + b}` — PLUS triggers set-mode default, then b sets div
+        let tokens = tokenize_javascript_typed(
+            "var s = `sum ${a + b} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize `${{a + b}}` without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after `${{a + b}}`");
+    }
+
+    #[test]
+    fn gap044b_template_call_expr_no_lexer_error() {
+        // `${f()}` — LPAREN triggers set-mode default, RPAREN triggers set-mode div
+        let tokens = tokenize_javascript_typed(
+            "var s = `call ${f()} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize `${{f()}}` without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after `${{f()}}`");
+    }
+
+    #[test]
+    fn gap044b_template_object_expr_no_lexer_error() {
+        // `${{a:1}}` — nested braces inside the substitution
+        let tokens = tokenize_javascript_typed(
+            "var s = `obj ${{a:1}} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize template with nested object literal without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after nested object literal in template");
+    }
+
+    #[test]
+    fn gap044b_template_ternary_expr_no_lexer_error() {
+        // `${x ? y : z}` — COLON triggers set-mode default, z NAME sets div
+        let tokens = tokenize_javascript_typed(
+            "var s = `tern ${x ? y : z} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize ternary template without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after ternary expression in template");
+    }
+
+    #[test]
+    fn gap044b_template_multiple_substitutions_no_lexer_error() {
+        // Two substitutions: each `}${` is TEMPLATE_MIDDLE, closing `}` is TEMPLATE_TAIL
+        let tokens = tokenize_javascript_typed(
+            "var s = `${a.x} mid ${b.y} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize multiple substitutions without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token in multi-substitution template");
+        let middles: Vec<_> = tokens.iter()
+            .filter(|t| t.type_name.as_deref() == Some("TEMPLATE_MIDDLE"))
+            .collect();
+        assert_eq!(middles.len(), 1,
+            "expected exactly one TEMPLATE_MIDDLE between two substitutions");
+    }
+
+    #[test]
+    fn gap044b_simple_template_still_works() {
+        // Sanity check: simple `${x}` (only NAME, no operators) must still work.
+        let tokens = tokenize_javascript_typed(
+            "var s = `hello ${x}!`;",
+            EsVersion::Es2025,
+        ).expect("simple template must tokenize");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected TEMPLATE_TAIL for simple template substitution");
+    }
+
     #[test]
     fn tokenize_with_cv_disabled_log_still_returns_tokens() {
         // Per CLOC03, when the log is disabled, create() still returns IDs

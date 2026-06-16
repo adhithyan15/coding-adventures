@@ -554,6 +554,27 @@ pub struct GrammarLexer<'a> {
     /// callbacks via [`LexerContext::bracket_depth()`].
     bracket_depths: BracketDepths,
 
+    /// Brace depths at which template literal substitutions (`${...}`) were opened.
+    ///
+    /// Each `${` in a template literal opens a JS expression context that ends at
+    /// the matching `}`. We record the brace depth *at the time TEMPLATE_HEAD or
+    /// TEMPLATE_MIDDLE was matched* so we can recognise when a subsequent `}` at
+    /// that same depth should be tokenised as TEMPLATE_TAIL / TEMPLATE_MIDDLE
+    /// rather than a plain RBRACE.
+    ///
+    /// This is necessary because F10 flat-mode transitions such as
+    /// `on NAME -> set-mode div` fire inside the `${...}` expression and silently
+    /// overwrite the active mode to "div" or "default", losing the information
+    /// that we are still inside a template substitution.  Without this stack, a
+    /// template like `` `${obj.name}` `` causes a LexerError because the closing
+    /// `}` is consumed as RBRACE (in "div" mode) instead of TEMPLATE_TAIL.
+    ///
+    /// Invariant: the stack is empty outside any template literal.  It is pushed
+    /// after TEMPLATE_HEAD or TEMPLATE_MIDDLE, and popped after TEMPLATE_TAIL.
+    /// TEMPLATE_MIDDLE pops then pushes at the same depth (net no-op on depth).
+    /// Nested templates push additional entries, one per open substitution level.
+    template_entry_depths: Vec<usize>,
+
     /// Context-sensitive keywords -- words that are keywords in some
     /// syntactic positions but identifiers in others.
     ///
@@ -716,6 +737,7 @@ impl<'a> GrammarLexer<'a> {
             case_insensitive,
             last_emitted_token: None,
             bracket_depths: BracketDepths::default(),
+            template_entry_depths: Vec::new(),
             context_keyword_set,
             layout_keyword_set,
             transitions: grammar.transitions.clone(),
@@ -1131,7 +1153,33 @@ impl<'a> GrammarLexer<'a> {
             // The active group is the top of the group stack. When no
             // groups are defined, this is always "default" (the top-level
             // definitions), preserving backward compatibility.
-            let active_group = self.group_stack.last().cloned().unwrap_or_else(|| "default".to_string());
+            //
+            // Template-substitution override (gap-044b): F10 flat-mode
+            // transitions like `on NAME -> set-mode div` can fire inside a
+            // template `${...}` expression and overwrite the active mode to
+            // "div" or "default", losing the template context.  When we are
+            // inside at least one open template substitution AND the current
+            // brace depth equals the depth recorded when that substitution
+            // was opened, the `}` at this position MUST be TEMPLATE_TAIL or
+            // TEMPLATE_MIDDLE rather than RBRACE.  We restore the template
+            // group so those patterns take priority.
+            let active_group = {
+                let base = self.group_stack.last().cloned()
+                    .unwrap_or_else(|| "default".to_string());
+                if let Some(&entry_depth) = self.template_entry_depths.last() {
+                    if self.bracket_depths.brace == entry_depth {
+                        match base.as_str() {
+                            "div"     => "template_div".to_string(),
+                            "default" => "template".to_string(),
+                            _         => base,
+                        }
+                    } else {
+                        base
+                    }
+                } else {
+                    base
+                }
+            };
             if let Some((name, alias, matched)) = self.try_match_token_in_group(&active_group) {
                 let start_line = self.line;
                 let start_col = self.column;
@@ -1239,6 +1287,16 @@ impl<'a> GrammarLexer<'a> {
                     };
                     if !ctx.suppressed {
                         self.bracket_depths.update(&token.value);
+                        // Template-substitution depth tracking (gap-044b).
+                        match name.as_str() {
+                            "TEMPLATE_HEAD" | "TEMPLATE_MIDDLE" => {
+                                self.template_entry_depths.push(self.bracket_depths.brace);
+                            }
+                            "TEMPLATE_TAIL" => {
+                                self.template_entry_depths.pop();
+                            }
+                            _ => {}
+                        }
                         self.last_emitted_token = Some(token.clone());
                         tokens.push(token);
                     }
@@ -1275,6 +1333,18 @@ impl<'a> GrammarLexer<'a> {
                     }
                 } else {
                     self.bracket_depths.update(&token.value);
+                    // Template-substitution depth tracking (gap-044b): push the
+                    // current brace depth after TEMPLATE_HEAD/MIDDLE so the next
+                    // `}` at that depth is intercepted as TEMPLATE_TAIL/MIDDLE.
+                    match name.as_str() {
+                        "TEMPLATE_HEAD" | "TEMPLATE_MIDDLE" => {
+                            self.template_entry_depths.push(self.bracket_depths.brace);
+                        }
+                        "TEMPLATE_TAIL" => {
+                            self.template_entry_depths.pop();
+                        }
+                        _ => {}
+                    }
                     // F10: consult the declarative table before the token is
                     // moved into `tokens`, so the new mode governs the NEXT match.
                     self.apply_transitions(&token);
@@ -1299,9 +1369,10 @@ impl<'a> GrammarLexer<'a> {
             type_name: None, flags: None,
         });
 
-        // Reset group stack and skip_enabled for reuse.
+        // Reset group stack, template depth stack, and skip_enabled for reuse.
         // F10: reset to the configured start mode, not the bare "default".
         self.group_stack = vec![self.start_mode.clone()];
+        self.template_entry_depths.clear();
         self.skip_enabled = true;
 
         Ok(tokens)
