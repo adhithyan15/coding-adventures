@@ -1,0 +1,156 @@
+{
+  "kind": "coag-edge",
+  "clauses": {
+    "factor_deficiency__hemophilia_a": {
+      "relation": "factor_deficiency",
+      "subject": "hemophilia_a",
+      "object": "factor_viii",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hemophilia A is caused by a deficiency of coagulation factor VIII.",
+      "url": null
+    },
+    "coag_inheritance__hemophilia_a": {
+      "relation": "coag_inheritance",
+      "subject": "hemophilia_a",
+      "object": "x_linked_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hemophilia A is inherited in an X-linked recessive pattern.",
+      "url": null
+    },
+    "prolonged_test__hemophilia_a": {
+      "relation": "prolonged_test",
+      "subject": "hemophilia_a",
+      "object": "aptt",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Factor VIII deficiency prolongs the activated partial thromboplastin time (aPTT) with a normal prothrombin time.",
+      "url": null
+    },
+    "factor_deficiency__hemophilia_b": {
+      "relation": "factor_deficiency",
+      "subject": "hemophilia_b",
+      "object": "factor_ix",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hemophilia B (Christmas disease) is caused by a deficiency of coagulation factor IX.",
+      "url": null
+    },
+    "coag_inheritance__hemophilia_b": {
+      "relation": "coag_inheritance",
+      "subject": "hemophilia_b",
+      "object": "x_linked_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hemophilia B is inherited in an X-linked recessive pattern.",
+      "url": null
+    },
+    "prolonged_test__hemophilia_b": {
+      "relation": "prolonged_test",
+      "subject": "hemophilia_b",
+      "object": "aptt",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Factor IX deficiency prolongs the activated partial thromboplastin time (aPTT) with a normal prothrombin time.",
+      "url": null
+    },
+    "factor_deficiency__von_willebrand_disease": {
+      "relation": "factor_deficiency",
+      "subject": "von_willebrand_disease",
+      "object": "von_willebrand_factor",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Von Willebrand disease results from a quantitative or qualitative deficiency of von Willebrand factor.",
+      "url": null
+    },
+    "coag_inheritance__von_willebrand_disease": {
+      "relation": "coag_inheritance",
+      "subject": "von_willebrand_disease",
+      "object": "autosomal_dominant",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Von Willebrand disease (the common type 1) is inherited in an autosomal dominant pattern.",
+      "url": null
+    },
+    "prolonged_test__von_willebrand_disease": {
+      "relation": "prolonged_test",
+      "subject": "von_willebrand_disease",
+      "object": "bleeding_time",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Von Willebrand disease classically prolongs the bleeding time because von Willebrand factor mediates platelet adhesion.",
+      "url": null
+    },
+    "factor_deficiency__factor_vii_deficiency": {
+      "relation": "factor_deficiency",
+      "subject": "factor_vii_deficiency",
+      "object": "factor_vii",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Factor VII deficiency is a deficiency of coagulation factor VII of the extrinsic pathway.",
+      "url": null
+    },
+    "coag_inheritance__factor_vii_deficiency": {
+      "relation": "coag_inheritance",
+      "subject": "factor_vii_deficiency",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Factor VII deficiency is inherited in an autosomal recessive pattern.",
+      "url": null
+    },
+    "prolonged_test__factor_vii_deficiency": {
+      "relation": "prolonged_test",
+      "subject": "factor_vii_deficiency",
+      "object": "pt",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Factor VII deficiency prolongs the prothrombin time (PT) in isolation, with a normal activated partial thromboplastin time.",
+      "url": null
+    },
+    "factor_deficiency__hemophilia_c": {
+      "relation": "factor_deficiency",
+      "subject": "hemophilia_c",
+      "object": "factor_xi",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hemophilia C is caused by a deficiency of coagulation factor XI.",
+      "url": null
+    },
+    "coag_inheritance__hemophilia_c": {
+      "relation": "coag_inheritance",
+      "subject": "hemophilia_c",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hemophilia C (factor XI deficiency) is inherited in an autosomal recessive pattern.",
+      "url": null
+    },
+    "prolonged_test__hemophilia_c": {
+      "relation": "prolonged_test",
+      "subject": "hemophilia_c",
+      "object": "aptt",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Factor XI deficiency prolongs the activated partial thromboplastin time (aPTT).",
+      "url": null
+    }
+  },
+  "hash": "4b8676e9d0f130c0"
+}

@@ -21,11 +21,34 @@ one engine, not two).
 | `recall.py` | executable prototype: ground-edge store + single-hop binding-query resolver + proof DAG + **honest abstention** (UNKNOWN when no grounded edge supports an answer). |
 | `test_recall.py` | proves the forward + reverse vignettes resolve with citations, reverse lookup is free, and the store abstains on an ungrounded disease. |
 
+## Additional recall domains
+
+The IEM graph is the template; each later domain is a **drop-in** following the exact
+same shape — a `<domain>-edges.adj` (gate-generated), a `<domain>_edge_ground.py` gate
+that REUSES `iem_edge_ground._edge_block`, a `ground-<domain>-edges.workflow.js` spider,
+and a `test_<domain>_edge_ground.py`. Adding a domain to the board is then a one-line
+`EDGE_FILES` append in `../board/board_eval.py` plus its items in `../board/items.json`.
+
+| domain | file | relations |
+|---|---|---|
+| vitamins | `vitamin-edges.adj` | `deficiency_causes`, `classic_finding` |
+| anemia | `anemia-edges.adj` | `has_mcv`, `classic_finding` |
+| endocrine | `endocrine-edges.adj` | `secreted_by`, `deficiency_syndrome` |
+| **coagulation** (REL-13) | `coag-edges.adj` | `factor_deficiency`, `coag_inheritance`, `prolonged_test` |
+
+The coagulation graph covers 5 board-classic bleeding disorders (hemophilia A/B/C, von
+Willebrand disease, factor VII deficiency), querying each three ways — the deficient
+clotting factor, the inheritance pattern, and the screening test it prolongs (intrinsic
+factors VIII/IX/XI → aPTT; extrinsic VII → PT; vWD → bleeding time). It enters as
+`trust consensus` authored-debt; `ground-coag-edges.workflow.js` retires it to
+`authoritative` with byte-quotes, exactly like the other domains.
+
 ## Run
 
 ```sh
 python3 recall.py        # the two worked vignettes from the spec
 python3 test_recall.py   # 7 tests, all deterministic
+python3 test_coag_edge_ground.py   # the coagulation gate + engine-resolution tests
 ```
 
 ## Status & what's next
