@@ -107,12 +107,12 @@ impl CpuMipsR2000 {
     ///
     /// # Panics
     ///
-    /// Panics (debug_assert) if the program doesn't fit within 64 KB.
+    /// Panics if the program doesn't fit within 64 KB.
     pub fn load(&mut self, program: &[u8], origin: u32) {
         self.reset();
         let start = origin as usize;
         let available = MEM_SIZE.saturating_sub(start);
-        debug_assert!(
+        assert!(
             program.len() <= available,
             "load: program length {} exceeds available memory {} at origin {:#06x}",
             program.len(),
@@ -156,11 +156,13 @@ impl CpuMipsR2000 {
 
     fn fetch_word(&mut self) -> u32 {
         let addr = (self.rf.read_pc() & MEM_MASK) as usize;
-        // Big-endian word assembly from 4 bytes — memory decoding, allowed.
-        let iw = ((self.mem[addr] as u32) << 24)
-            | ((self.mem[addr + 1] as u32) << 16)
-            | ((self.mem[addr + 2] as u32) << 8)
-            | (self.mem[addr + 3] as u32);
+        // Big-endian word assembly — each byte access is individually masked
+        // so that a PC near the top of memory wraps safely rather than panicking.
+        let b0 = self.mem[addr];
+        let b1 = self.mem[(addr + 1) & (MEM_SIZE - 1)];
+        let b2 = self.mem[(addr + 2) & (MEM_SIZE - 1)];
+        let b3 = self.mem[(addr + 3) & (MEM_SIZE - 1)];
+        let iw = ((b0 as u32) << 24) | ((b1 as u32) << 16) | ((b2 as u32) << 8) | (b3 as u32);
         // Gate-level PC increment via ripple-carry adder
         self.rf.increment_pc(4);
         iw

@@ -263,11 +263,10 @@ pub fn multu32(a: u32, b: u32) -> (u32, u32) {
     for bit_idx in 0..32usize {
         if b_bits[bit_idx] == 1 {
             // Shift a left by bit_idx positions using 64-bit bit manipulation.
+            // bit_idx is in 0..32 so [bit_idx..] is always in-bounds.
             let a_64 = int_to_bits64(a as u64);
             let mut shifted = [0u8; 64];
-            if bit_idx < 64 {
-                shifted[bit_idx..].copy_from_slice(&a_64[..64 - bit_idx]);
-            }
+            shifted[bit_idx..].copy_from_slice(&a_64[..64 - bit_idx]);
             let partial = bits_to_u64(shifted);
             let (new_product, _) = add_64bit(product, partial, 0);
             product = new_product;
@@ -372,10 +371,9 @@ pub fn divu32(a: u32, b: u32) -> (u32, u32) {
         // larger than any 32-bit remainder — skip this bit position.
         let b_64 = int_to_bits64(b as u64);
         let bidx = bit_idx as usize;
+        // bidx is in 0..32 so [bidx..] is always in-bounds on the 64-element array.
         let mut shifted_64 = [0u8; 64];
-        if bidx < 64 {
-            shifted_64[bidx..].copy_from_slice(&b_64[..64 - bidx]);
-        }
+        shifted_64[bidx..].copy_from_slice(&b_64[..64 - bidx]);
         let shifted_b_val = bits_to_u64(shifted_64);
 
         if shifted_b_val > 0xFFFF_FFFF {
