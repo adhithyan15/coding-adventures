@@ -3406,6 +3406,8 @@ pub struct DeckAnalysisExecution {
     pub output_probes: Vec<String>,
     pub measurements: Vec<ProbeMeasurement>,
     pub measurement_table: String,
+    pub fourier: Vec<FourierResult>,
+    pub fourier_table: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9436,6 +9438,24 @@ fn select_deck_measurement_cards_for_analysis(
         .collect())
 }
 
+fn select_deck_fourier_cards_for_analysis(
+    netlist: &str,
+    analysis: &str,
+) -> Result<Vec<DeckFourierCard>, SpiceError> {
+    let summary = resolve_deck_fourier(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "run_deck_analysis",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    Ok(if analysis == "tran" {
+        summary.fourier
+    } else {
+        Vec::new()
+    })
+}
+
 pub fn run_deck_analysis(
     circuit: &Circuit,
     netlist: &str,
@@ -9449,6 +9469,9 @@ pub fn run_deck_analysis(
             select_deck_measurement_cards_for_analysis(netlist, "op")?;
             let measurements = Vec::new();
             let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "op")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Op(result),
@@ -9456,6 +9479,8 @@ pub fn run_deck_analysis(
                 output_probes: select_deck_output_probes(netlist, "op")?,
                 measurements,
                 measurement_table,
+                fourier,
+                fourier_table,
             })
         }
         "dc" => {
@@ -9470,6 +9495,9 @@ pub fn run_deck_analysis(
             let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "dc")?;
             let measurements = measure_dc_sweep_cards(&result, &measurement_cards)?;
             let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "dc")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::DcSweep(result),
@@ -9477,6 +9505,8 @@ pub fn run_deck_analysis(
                 output_probes: select_deck_output_probes(netlist, "dc")?,
                 measurements,
                 measurement_table,
+                fourier,
+                fourier_table,
             })
         }
         "ac" => {
@@ -9492,6 +9522,9 @@ pub fn run_deck_analysis(
             let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "ac")?;
             let measurements = measure_ac_sweep_cards(&result, &measurement_cards)?;
             let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "ac")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Ac(result),
@@ -9499,6 +9532,8 @@ pub fn run_deck_analysis(
                 output_probes: select_deck_output_probes(netlist, "ac")?,
                 measurements,
                 measurement_table,
+                fourier,
+                fourier_table,
             })
         }
         "tran" => {
@@ -9517,6 +9552,9 @@ pub fn run_deck_analysis(
             let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "tran")?;
             let measurements = measure_transient_cards(&result, &measurement_cards)?;
             let measurement_table = format_measurement_table(&measurements);
+            let fourier_cards = select_deck_fourier_cards_for_analysis(netlist, "tran")?;
+            let fourier = fourier_transient_cards(&result, &fourier_cards)?;
+            let fourier_table = format_deck_fourier_table(&fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Tran(result),
@@ -9524,6 +9562,8 @@ pub fn run_deck_analysis(
                 output_probes: select_deck_output_probes(netlist, "tran")?,
                 measurements,
                 measurement_table,
+                fourier,
+                fourier_table,
             })
         }
         _ => Err(SpiceError::InvalidElement {
@@ -10190,6 +10230,14 @@ pub fn format_fourier_table(result: &FourierResult) -> String {
     }
     rows.push(String::new());
     rows.join("\n")
+}
+
+pub fn format_deck_fourier_table(results: &[FourierResult]) -> String {
+    results
+        .iter()
+        .map(format_fourier_table)
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 pub fn format_corner_fourier_table(result: &CornerFourierResult) -> String {

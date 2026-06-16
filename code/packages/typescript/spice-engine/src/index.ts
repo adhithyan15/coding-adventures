@@ -661,6 +661,8 @@ export interface DeckAnalysisExecution {
   readonly outputProbes: readonly string[];
   readonly measurements: readonly ProbeMeasurement[];
   readonly measurementTable: string;
+  readonly fourier: readonly FourierResult[];
+  readonly fourierTable: string;
 }
 
 export interface ReleaseReadinessIssue {
@@ -7271,6 +7273,21 @@ function selectDeckMeasurementCardsForAnalysis(
   );
 }
 
+function selectDeckFourierCardsForAnalysis(
+  netlist: string,
+  analysis: DeckAnalysisPlan["analysis"],
+): DeckFourierCard[] {
+  const summary = resolveDeckFourier(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      "runDeckAnalysis",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  return analysis === "tran" ? [...summary.fourier] : [];
+}
+
 export function runDeckAnalysis(
   circuit: Circuit,
   netlist: string,
@@ -7280,7 +7297,9 @@ export function runDeckAnalysis(
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
     selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const measurements: ProbeMeasurement[] = [];
+    const fourier: FourierResult[] = [];
     return {
       plan,
       result,
@@ -7288,6 +7307,8 @@ export function runDeckAnalysis(
       outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
       measurements,
       measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
     };
   }
   if (plan.analysis === "dc") {
@@ -7300,6 +7321,8 @@ export function runDeckAnalysis(
       result,
       selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
     );
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const fourier: FourierResult[] = [];
     return {
       plan,
       result,
@@ -7307,6 +7330,8 @@ export function runDeckAnalysis(
       outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
       measurements,
       measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
     };
   }
   if (plan.analysis === "ac") {
@@ -7330,6 +7355,8 @@ export function runDeckAnalysis(
       result,
       selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
     );
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const fourier: FourierResult[] = [];
     return {
       plan,
       result,
@@ -7337,6 +7364,8 @@ export function runDeckAnalysis(
       outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
       measurements,
       measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
     };
   }
   if (plan.analysis === "tran") {
@@ -7353,6 +7382,10 @@ export function runDeckAnalysis(
       result,
       selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
     );
+    const fourier = fourierTransientCards(
+      result,
+      selectDeckFourierCardsForAnalysis(netlist, plan.analysis),
+    );
     return {
       plan,
       result,
@@ -7360,6 +7393,8 @@ export function runDeckAnalysis(
       outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
       measurements,
       measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
     };
   }
   throw invalidElement("runDeckAnalysis", `unsupported analysis ${JSON.stringify(plan.analysis)}`);
@@ -7995,6 +8030,10 @@ export function formatFourierTable(result: FourierResult): string {
   });
   rows.push("");
   return rows.join("\n");
+}
+
+export function formatDeckFourierTable(results: readonly FourierResult[]): string {
+  return results.map((result) => formatFourierTable(result)).join("\n");
 }
 
 export function formatCornerFourierTable(result: CornerFourierResult): string {

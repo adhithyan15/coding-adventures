@@ -105,18 +105,20 @@ implicit `.op`, and reports ambiguity before solver dispatch.
 returns the plan, solver result, deck-selected output table, and normalized
 output probes that produced the table, plus selected `.measure` results and a
 stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
-`.tran` plans route `START` output filtering, use `.tran TSTEP` as the output
-print grid, apply `MAXSTEP` as an internal fixed-step cap, and carry `UIC`
-initial-condition intent through that stable transient table surface.
+`.tran` plans also return selected `.four` harmonic results and a stable
+Fourier table. They route `START` output filtering, use `.tran TSTEP` as the
+output print grid, apply `MAXSTEP` as an internal fixed-step cap, and carry
+`UIC` initial-condition intent through that stable transient table surface.
 `resolve_deck_outputs()` and `select_deck_output_probes()` extract `.save` and
 scoped or global `.probe` cards before `.end`, normalize and deduplicate output
 probes in deck order, and feed `format_deck_op_table()`,
 `format_deck_dc_sweep_table()`, `format_deck_ac_table()`, and
 `format_deck_transient_table()` for stable deck-selected text output.
-`resolve_deck_fourier()`, `fourier_transient_cards()`, and
-`fourier_transient_deck()` extract parsed `.four` / `.FOUR` cards before
-`.end` and route transient samples into the existing SPICE-style Fourier result
-shape with optional `HARMONICS=` and `FROM=` controls.
+`resolve_deck_fourier()`, `fourier_transient_cards()`,
+`fourier_transient_deck()`, and `format_deck_fourier_table()` extract parsed
+`.four` / `.FOUR` cards before `.end` and route transient samples into the
+existing SPICE-style Fourier result shape with optional `HARMONICS=` and
+`FROM=` controls.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
 size, selected real solver path, tolerance, convergence aid, and final Newton

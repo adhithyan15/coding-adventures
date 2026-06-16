@@ -159,13 +159,15 @@ card by analysis alias, defaults decks without analysis cards to an implicit
 solver result, deck-selected output table, and normalized output probes that
 produced the table, plus selected `.measure` results and a stable measurement
 table for `.dc`, `.ac`, and `.tran` executions. Selected `.tran` plans route
-`START` output filtering, use `.tran TSTEP` as the output print grid, apply
-`MAXSTEP` as an internal fixed-step cap, and carry `UIC` initial-condition
-intent through that stable transient table surface.
-`resolve_deck_fourier`, `fourier_transient_cards`, and
-`fourier_transient_deck` extract parsed `.four` / `.FOUR` cards before `.end`
-and route transient samples into the existing SPICE-style Fourier result shape
-with optional `HARMONICS=` and `FROM=` controls.
+`START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
+an internal fixed-step cap, and `UIC` initial-condition intent through that
+stable transient table surface. They also return selected `.four` harmonic
+results and a stable Fourier table.
+`resolve_deck_fourier`, `fourier_transient_cards`,
+`fourier_transient_deck`, and `format_deck_fourier_table` extract parsed
+`.four` / `.FOUR` cards before `.end` and route transient samples into the
+existing SPICE-style Fourier result shape with optional `HARMONICS=` and
+`FROM=` controls.
 `resolve_deck_parameters` evaluates scalar whitespace-tokenized `.param`
 assignments, collects scalar `.func` definitions before `.end`, preserves
 parameter order, rewrites braced and quoted active-line expressions, and emits

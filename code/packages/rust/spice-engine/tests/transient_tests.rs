@@ -2003,6 +2003,37 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 }
 
 #[test]
+fn run_deck_analysis_exposes_selected_fourier_artifacts() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+    let netlist = "
+.save V(mid)
+.op
+.tran 0.5m 1m
+.four 2k V(mid) harmonics=1
+.end
+";
+
+    let op_execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
+    assert!(op_execution.fourier.is_empty());
+    assert_eq!(op_execution.fourier_table, "");
+
+    let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
+    assert_eq!(tran_execution.fourier.len(), 1);
+    let result = &tran_execution.fourier[0];
+    assert!((result.fundamental_frequency_hz - 2_000.0).abs() < 1.0e-12);
+    assert_eq!(result.probes[0].probe, "V(mid)");
+    assert_eq!(result.probes[0].harmonics.len(), 1);
+    assert_eq!(tran_execution.fourier_table, format_fourier_table(result));
+}
+
+#[test]
 fn corner_transient_text_output_table_is_stable() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(

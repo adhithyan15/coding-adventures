@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck Fourier artifact routing** —
+  `run_deck_analysis()` now returns selected transient `.four` harmonic
+  results and a stable Fourier table alongside the selected plan, solver
+  result, output probes, and measurement artifacts, matching Rust and
+  TypeScript.
+
 - **Deck measurement artifact routing** —
   `run_deck_analysis()` now returns selected `.measure` / `.meas` results and
   a stable measurement table for selected `.dc`, `.ac`, and `.tran` executions,
