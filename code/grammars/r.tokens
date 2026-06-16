@@ -1,0 +1,145 @@
+# R Language Token Grammar
+# ============================================================================
+#
+# Tokenizes the R language — "an implementation of the S language" (Ihaka &
+# Gentleman, 1993). R's lexical structure is ~98% that of historical S, so this
+# grammar is deliberately a close sibling of `s.tokens`. The differences below
+# are exactly the places R departs from S. See code/specs/R00-r-language.md.
+#
+# Like S, R is CASE-SENSITIVE (`TRUE` ≠ `true`, `T` ≠ `t`), so we leave
+# case_sensitive at its default (true).
+#
+# THE KEY DIFFERENCE FROM S — `_` IS A NAME CHARACTER, NOT ASSIGNMENT
+# ----------------------------------------------------------------------------
+# In historical S the underscore is the assignment operator. R retired that in
+# R 1.9 (2004): in R, `_` is an ordinary identifier character, so `data_frame`
+# is a single name. There is therefore NO `UNDERSCORE` token here, and the
+# `NAME` pattern INCLUDES `_`. Assignment in R is `<-`, `<<-`, `->`, `->>`, and
+# `=` (which also binds named call arguments — the parser disambiguates).
+
+case_sensitive: true
+
+# ============================================================================
+# SECTION 1: Multi-character operators (MUST precede their single-char prefixes)
+#
+# Longest-match-first ordering: each longer operator is listed before the
+# shorter operator it begins with, so `<<-` never lexes as `<-`+`-`, and the
+# right super-assignment `->>` (an R addition over S) wins over `->`.
+# ============================================================================
+
+SUPER_ASSIGN       = "<<-"
+ASSIGN             = "<-"
+LE                 = "<="
+GE                 = ">="
+EQEQ               = "=="
+NE                 = "!="
+RIGHT_SUPER_ASSIGN = "->>"
+RIGHT_ASSIGN       = "->"
+
+# Special infix operators: the whole `%…%` block is one token. Matches `%%`
+# (modulo), `%/%` (integer division), `%in%`, `%o%`, and user-defined `%name%`.
+PERCENT_OP         = /%[^%]*%/
+
+# ============================================================================
+# SECTION 2: Numeric literals
+#
+# Double-precision forms, identical to S: `42`, `3.14`, `.5`, `1e3`, `1.5e-3`.
+# (R's `L` integer / `i` complex / `0x` hex suffixes are a later item.)
+# ============================================================================
+
+NUMBER = /[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?/
+
+# ============================================================================
+# SECTION 3: String literals (double- and single-quoted; aliased to STRING)
+# ============================================================================
+
+DQ_STRING = /"[^"]*"/ -> STRING
+SQ_STRING = /'[^']*'/ -> STRING
+
+# ============================================================================
+# SECTION 4: Identifiers (underscore ALLOWED — see header) and keywords
+#
+# An R name starts with a letter or a dot and continues with letters, digits,
+# dots, and underscores: `x`, `data.frame`, `data_frame`, `.GlobalEnv`, `...`.
+# NAME tokens whose exact value is in the keywords: list are promoted to
+# KEYWORD (value preserved verbatim, case-sensitively). The `NA_*` typed-NA
+# constants are names in R precisely because `_` is a name character.
+# ============================================================================
+
+NAME = /[A-Za-z.][A-Za-z0-9._]*/
+
+keywords:
+  if
+  else
+  for
+  while
+  repeat
+  function
+  break
+  next
+  in
+  TRUE
+  FALSE
+  T
+  F
+  NULL
+  NA
+  NA_integer_
+  NA_real_
+  NA_character_
+  Inf
+  NaN
+
+# ============================================================================
+# SECTION 5: Single-character operators and punctuation
+#
+#   <  >  =   comparison / assignment / named-arg binding
+#   + - * /   arithmetic       ^   exponentiation (right-associative)
+#   :         sequence (1:5)
+#   ( ) { } [ ]   grouping, blocks, indexing    , ;   separators    $   extract
+# (No UNDERSCORE token — `_` is part of NAME in R.)
+# ============================================================================
+
+LT        = "<"
+GT        = ">"
+EQ        = "="
+PLUS      = "+"
+MINUS     = "-"
+STAR      = "*"
+SLASH     = "/"
+CARET     = "^"
+COLON     = ":"
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+COMMA     = ","
+SEMICOLON = ";"
+DOLLAR    = "$"
+
+# ============================================================================
+# SECTION 6: Newlines (significant — statement terminators)
+#
+# As in S, a newline ends a statement except inside open ( ) or [ ]; the
+# r-lexer crate's post-tokenize hook drops bracket-interior newlines (newlines
+# inside { } stay significant). Identical rule to S.
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+# ============================================================================
+# SECTION 7: Skip patterns — horizontal whitespace and `#` line comments
+# ============================================================================
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /#[^\n]*/
+
+# ============================================================================
+# SECTION 8: Error recovery
+# ============================================================================
+
+errors:
+  UNKNOWN = /./

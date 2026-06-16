@@ -242,6 +242,7 @@ members = [
     "perceptron",
     "pipeline",
     "progress-bar",
+    "r-lexer",
     "r-vector",
     "riscv-simulator",
     "rom-bios",
