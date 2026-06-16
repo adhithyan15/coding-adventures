@@ -233,8 +233,18 @@ returning_item    = "*" | expr ;
 # ── CREATE TABLE / DROP TABLE ─────────────────────────────────────────────────
 
 create_table_stmt = "CREATE" "TABLE" [ "IF" "NOT" "EXISTS" ] NAME
-                    "(" col_def { "," col_def } ")"
+                    "(" col_def { "," col_def } { "," table_constraint } ")"
                     [ table_options ] ;
+# Table-level constraints appear after the column definitions.  Each
+# starts with a keyword, which lets the PEG parser distinguish them from
+# col_def (which starts with NAME).  Mini-sqlite enforces PRIMARY KEY and
+# UNIQUE by promoting the flag onto the matching column definition(s);
+# CHECK and FOREIGN KEY are parsed and accepted but not enforced.
+table_constraint  = ( "PRIMARY" "KEY" "(" NAME { "," NAME } ")" )
+                  | ( "UNIQUE"  "(" NAME { "," NAME } ")" )
+                  | ( "CHECK"   "(" expr ")" )
+                  | ( "FOREIGN" "KEY" "(" NAME { "," NAME } ")"
+                      "REFERENCES" NAME [ "(" NAME { "," NAME } ")" ] ) ;
 # Trailing table options (SQLite 3.8.2+ / 3.37+ extensions):
 #   WITHOUT ROWID — store rows in the primary-key B-tree instead of a
 #                   rowid table.  Mini-sqlite accepts and ignores.
