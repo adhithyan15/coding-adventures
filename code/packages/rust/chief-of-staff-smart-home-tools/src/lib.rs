@@ -171,6 +171,14 @@ use std::cell::RefCell;
 use std::collections::BTreeSet;
 use std::rc::Rc;
 
+macro_rules! heap_object {
+    ($(($name:expr, $value:expr $(,)?)),* $(,)?) => {{
+        let mut fields = Vec::new();
+        $(fields.push(($name, $value));)*
+        object_from_fields(fields)
+    }};
+}
+
 pub const SMART_HOME_LIST_BRIDGES_TOOL_ID: &str = "smart_home.list_bridges";
 pub const SMART_HOME_DISCOVER_TOOL_ID: &str = "smart_home.discover";
 pub const SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID: &str = "smart_home.list_discovery_workers";
@@ -466,6 +474,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_PURGES_TOOL_ID: &str =
     "smart_home.list_integration_activation_waiver_purges";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_PURGE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_waiver_purge_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_ERASURES_TOOL_ID: &str =
+    "smart_home.list_integration_activation_waiver_erasures";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_ERASURE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_waiver_erasure_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -1175,6 +1187,18 @@ impl SmartHomeToolBridge {
                     let query = integration_activation_waiver_purge_query(&arguments)?;
                     Ok(
                         get_integration_activation_waiver_purge_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_ERASURES_TOOL_ID => {
+                    let query = integration_activation_waiver_erasure_query(&arguments)?;
+                    Ok(list_integration_activation_waiver_erasures_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_ERASURE_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_waiver_erasure_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_waiver_erasure_summary_output_handler_output(
                             query,
                         ),
                     )
@@ -3768,6 +3792,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation waiver purge summary",
             "Return compact D23A activation waiver purge-readiness counts by purge status, purge lane, source linkage, blocker, tombstone readiness, and purged posture.",
             integration_activation_waiver_purge_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_ERASURES_TOOL_ID,
+            "List smart-home integration activation waiver erasures",
+            "List Chief-facing D23A activation waiver erasure evidence rows derived from waiver purges with erasure status, erasure lane, source-lineage posture, and receipt action.",
+            integration_activation_waiver_erasure_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_waiver_erasures", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_waiver_erasures",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_ERASURE_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation waiver erasure summary",
+            "Return compact D23A activation waiver erasure evidence counts by erasure status, erasure lane, source linkage, blocker, purge readiness, and receipt posture.",
+            integration_activation_waiver_erasure_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -12475,6 +12533,319 @@ struct IntegrationActivationWaiverPurgeQuery {
     purge_limit: Option<usize>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum IntegrationActivationWaiverErasureStatus {
+    Blocked,
+    EvidenceRequired,
+    ReadyForErasure,
+    Erased,
+}
+
+impl IntegrationActivationWaiverErasureStatus {
+    fn from_purge_record(record: &IntegrationActivationWaiverPurgeRecord) -> Self {
+        if record.is_blocked() || record.purge_status.is_blocked() {
+            Self::Blocked
+        } else if !record.has_source_lineage()
+            || !record.purge_ready()
+            || !record.source.source.source.evidence_ready
+        {
+            Self::EvidenceRequired
+        } else if matches!(
+            record.purge_status,
+            IntegrationActivationWaiverPurgeStatus::ReadyForPurge
+        ) {
+            Self::ReadyForErasure
+        } else {
+            Self::Erased
+        }
+    }
+
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocked => "blocked",
+            Self::EvidenceRequired => "evidence_required",
+            Self::ReadyForErasure => "ready_for_erasure",
+            Self::Erased => "erased",
+        }
+    }
+
+    fn is_blocked(self) -> bool {
+        matches!(self, Self::Blocked)
+    }
+
+    fn requires_attention(self) -> bool {
+        matches!(self, Self::Blocked | Self::EvidenceRequired)
+    }
+
+    fn erasure_ready(self) -> bool {
+        matches!(self, Self::ReadyForErasure | Self::Erased)
+    }
+
+    fn erased(self) -> bool {
+        matches!(self, Self::Erased)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationWaiverErasureRecord {
+    sequence: usize,
+    erasure_id: String,
+    source_purge_id: String,
+    erasure_status: IntegrationActivationWaiverErasureStatus,
+    erasure_lane: IntegrationActivationResponseOwnerLane,
+    erasure_reason: String,
+    erasure_action: String,
+    source: Box<IntegrationActivationWaiverPurgeRecord>,
+}
+
+impl IntegrationActivationWaiverErasureRecord {
+    fn from_purge_record(sequence: usize, record: &IntegrationActivationWaiverPurgeRecord) -> Self {
+        let erasure_status = IntegrationActivationWaiverErasureStatus::from_purge_record(record);
+        Self {
+            sequence,
+            erasure_id: format!("activation-waiver-erasure-{sequence}"),
+            source_purge_id: record.purge_id.clone(),
+            erasure_status,
+            erasure_lane: activation_waiver_erasure_lane(record, erasure_status),
+            erasure_reason: activation_waiver_erasure_reason(record, erasure_status).to_string(),
+            erasure_action: activation_waiver_erasure_action(erasure_status).to_string(),
+            source: Box::new(record.clone()),
+        }
+    }
+
+    fn has_source_lineage(&self) -> bool {
+        !self.source_purge_id.is_empty() && self.source.has_source_lineage()
+    }
+
+    fn is_blocked(&self) -> bool {
+        self.erasure_status.is_blocked()
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.source.requires_attention() || self.erasure_status.requires_attention()
+    }
+
+    fn erasure_ready(&self) -> bool {
+        self.erasure_status.erasure_ready()
+    }
+
+    fn erased(&self) -> bool {
+        self.erasure_status.erased()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationWaiverErasureSummary {
+    total_records: usize,
+    unique_integrations: usize,
+    records_requiring_attention: usize,
+    blocked_records: usize,
+    evidence_required_records: usize,
+    ready_for_erasure_records: usize,
+    erased_records: usize,
+    erasure_ready_records: usize,
+    purged_records: usize,
+    purge_ready_records: usize,
+    tombstoned_records: usize,
+    evidence_ready_records: usize,
+    source_linked_records: usize,
+    reviewer_required_records: usize,
+    exception_required_records: usize,
+    signoff_required_records: usize,
+    platform_erasure_records: usize,
+    integration_erasure_records: usize,
+    security_erasure_records: usize,
+    reviewer_erasure_records: usize,
+    verification_erasure_records: usize,
+    audit_erasure_records: usize,
+    first_attention_priority: Option<u8>,
+    first_blocked_priority: Option<u8>,
+    first_ready_priority: Option<u8>,
+    next_erasure_status: Option<IntegrationActivationWaiverErasureStatus>,
+    next_erasure_lane: Option<IntegrationActivationResponseOwnerLane>,
+    next_erasure_action: Option<String>,
+    highest_policy_tier: PrivilegeTier,
+    overall_status: IntegrationActivationHealthStatus,
+}
+
+impl IntegrationActivationWaiverErasureSummary {
+    fn from_records<'a>(
+        records: impl IntoIterator<Item = &'a IntegrationActivationWaiverErasureRecord>,
+    ) -> Self {
+        let mut summary = Self {
+            total_records: 0,
+            unique_integrations: 0,
+            records_requiring_attention: 0,
+            blocked_records: 0,
+            evidence_required_records: 0,
+            ready_for_erasure_records: 0,
+            erased_records: 0,
+            erasure_ready_records: 0,
+            purged_records: 0,
+            purge_ready_records: 0,
+            tombstoned_records: 0,
+            evidence_ready_records: 0,
+            source_linked_records: 0,
+            reviewer_required_records: 0,
+            exception_required_records: 0,
+            signoff_required_records: 0,
+            platform_erasure_records: 0,
+            integration_erasure_records: 0,
+            security_erasure_records: 0,
+            reviewer_erasure_records: 0,
+            verification_erasure_records: 0,
+            audit_erasure_records: 0,
+            first_attention_priority: None,
+            first_blocked_priority: None,
+            first_ready_priority: None,
+            next_erasure_status: None,
+            next_erasure_lane: None,
+            next_erasure_action: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for record in records {
+            summary.total_records += 1;
+            if summary.next_erasure_status.is_none() {
+                summary.next_erasure_status = Some(record.erasure_status);
+                summary.next_erasure_lane = Some(record.erasure_lane);
+                summary.next_erasure_action = Some(record.erasure_action.clone());
+            }
+            for integration_id in &record.source.source.source.source.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            if record.requires_attention() {
+                summary.records_requiring_attention += 1;
+                summary.first_attention_priority = min_optional_priority(
+                    summary.first_attention_priority,
+                    record.source.source.source.source.priority,
+                );
+            }
+            if record.is_blocked() {
+                summary.blocked_records += 1;
+                summary.first_blocked_priority = min_optional_priority(
+                    summary.first_blocked_priority,
+                    record.source.source.source.source.priority,
+                );
+            }
+            if record.erasure_ready() {
+                summary.erasure_ready_records += 1;
+                summary.first_ready_priority = min_optional_priority(
+                    summary.first_ready_priority,
+                    record.source.source.source.source.priority,
+                );
+            }
+            if record.source.purged() {
+                summary.purged_records += 1;
+            }
+            if record.source.purge_ready() {
+                summary.purge_ready_records += 1;
+            }
+            if record.source.source.tombstoned() {
+                summary.tombstoned_records += 1;
+            }
+            if record.source.source.source.source.evidence_ready {
+                summary.evidence_ready_records += 1;
+            }
+            if record.has_source_lineage() {
+                summary.source_linked_records += 1;
+            }
+            if record.source.source.source.source.reviewer_required {
+                summary.reviewer_required_records += 1;
+            }
+            if record.source.source.source.source.exception_required {
+                summary.exception_required_records += 1;
+            }
+            if record.source.source.source.source.signoff_required {
+                summary.signoff_required_records += 1;
+            }
+            match record.erasure_status {
+                IntegrationActivationWaiverErasureStatus::Blocked => {}
+                IntegrationActivationWaiverErasureStatus::EvidenceRequired => {
+                    summary.evidence_required_records += 1
+                }
+                IntegrationActivationWaiverErasureStatus::ReadyForErasure => {
+                    summary.ready_for_erasure_records += 1
+                }
+                IntegrationActivationWaiverErasureStatus::Erased => summary.erased_records += 1,
+            }
+            match record.erasure_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_erasure_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_erasure_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_erasure_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_erasure_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_erasure_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Audit => summary.audit_erasure_records += 1,
+            }
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(record.source.source.source.source.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.total_records == 0 {
+            IntegrationActivationHealthStatus::Empty
+        } else if summary.blocked_records > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.evidence_required_records > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else {
+            IntegrationActivationHealthStatus::Ready
+        };
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_records > 0
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.records_requiring_attention > 0 || self.evidence_required_records > 0
+    }
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationWaiverErasureQuery {
+    waiver_purge: Box<IntegrationActivationWaiverPurgeQuery>,
+    erasure_status: Option<IntegrationActivationWaiverErasureStatus>,
+    erasure_lane: Option<IntegrationActivationResponseOwnerLane>,
+    purge_lane: Option<IntegrationActivationResponseOwnerLane>,
+    tombstone_lane: Option<IntegrationActivationResponseOwnerLane>,
+    disposal_lane: Option<IntegrationActivationResponseOwnerLane>,
+    expiration_lane: Option<IntegrationActivationResponseOwnerLane>,
+    retention_lane: Option<IntegrationActivationResponseOwnerLane>,
+    archive_lane: Option<IntegrationActivationResponseOwnerLane>,
+    closure_lane: Option<IntegrationActivationResponseOwnerLane>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    approval_lane: Option<IntegrationActivationResponseOwnerLane>,
+    evidence_kind: Option<String>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    erasure_ready: Option<bool>,
+    erased: Option<bool>,
+    purge_ready: Option<bool>,
+    purged: Option<bool>,
+    tombstoned: Option<bool>,
+    disposed: Option<bool>,
+    expired: Option<bool>,
+    evidence_ready: Option<bool>,
+    reviewer_required: Option<bool>,
+    signoff_required: Option<bool>,
+    erasure_limit: Option<usize>,
+}
+
 fn activation_exception_reason(focus: IntegrationActivationGuardrailKind) -> &'static str {
     match focus {
         IntegrationActivationGuardrailKind::Incident => "incident evidence closure required",
@@ -13007,6 +13378,63 @@ fn activation_waiver_purge_action(status: IntegrationActivationWaiverPurgeStatus
         IntegrationActivationWaiverPurgeStatus::EvidenceRequired => "attach_waiver_purge_evidence",
         IntegrationActivationWaiverPurgeStatus::ReadyForPurge => "authorize_waiver_purge",
         IntegrationActivationWaiverPurgeStatus::Purged => "monitor_waiver_purge",
+    }
+}
+
+fn activation_waiver_erasure_lane(
+    record: &IntegrationActivationWaiverPurgeRecord,
+    status: IntegrationActivationWaiverErasureStatus,
+) -> IntegrationActivationResponseOwnerLane {
+    match status {
+        IntegrationActivationWaiverErasureStatus::Blocked => record.purge_lane,
+        IntegrationActivationWaiverErasureStatus::EvidenceRequired => record.purge_lane,
+        IntegrationActivationWaiverErasureStatus::ReadyForErasure => {
+            IntegrationActivationResponseOwnerLane::Audit
+        }
+        IntegrationActivationWaiverErasureStatus::Erased => {
+            IntegrationActivationResponseOwnerLane::Audit
+        }
+    }
+}
+
+fn activation_waiver_erasure_reason(
+    record: &IntegrationActivationWaiverPurgeRecord,
+    status: IntegrationActivationWaiverErasureStatus,
+) -> &'static str {
+    match status {
+        IntegrationActivationWaiverErasureStatus::Blocked => {
+            "blocking waiver purge must clear before erasure evidence"
+        }
+        IntegrationActivationWaiverErasureStatus::EvidenceRequired => {
+            if !record.has_source_lineage() {
+                "waiver erasure is missing purge source lineage"
+            } else if !record.source.source.source.evidence_ready {
+                "waiver erasure evidence is not ready"
+            } else {
+                "waiver purge must be ready before erasure evidence"
+            }
+        }
+        IntegrationActivationWaiverErasureStatus::ReadyForErasure => {
+            "waiver purge record is ready for erasure receipt"
+        }
+        IntegrationActivationWaiverErasureStatus::Erased => {
+            "waiver purge has an erasure receipt for audit posture"
+        }
+    }
+}
+
+fn activation_waiver_erasure_action(
+    status: IntegrationActivationWaiverErasureStatus,
+) -> &'static str {
+    match status {
+        IntegrationActivationWaiverErasureStatus::Blocked => "clear_waiver_purge_blocker",
+        IntegrationActivationWaiverErasureStatus::EvidenceRequired => {
+            "attach_waiver_erasure_evidence"
+        }
+        IntegrationActivationWaiverErasureStatus::ReadyForErasure => {
+            "record_waiver_erasure_receipt"
+        }
+        IntegrationActivationWaiverErasureStatus::Erased => "monitor_waiver_erasure_receipt",
     }
 }
 
@@ -15012,6 +15440,107 @@ fn integration_activation_waiver_purge_query(
         signoff_required: optional_bool(arguments, "signoff_required")?,
         purge_limit: optional_u64(arguments, "waiver_purge_limit")?
             .or(optional_u64(arguments, "purge_limit")?)
+            .or(optional_u64(arguments, "record_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_waiver_erasure_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationWaiverErasureQuery, ToolCallError> {
+    let erasure_status = optional_string(arguments, "waiver_erasure_status")?
+        .or(optional_string(arguments, "erasure_status")?)
+        .map(|label| parse_activation_waiver_erasure_status(&label))
+        .transpose()?;
+    let erasure_lane = optional_string(arguments, "waiver_erasure_lane")?
+        .or(optional_string(arguments, "erasure_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let purge_lane = optional_string(arguments, "waiver_erasure_purge_lane")?
+        .or(optional_string(arguments, "waiver_purge_lane")?)
+        .or(optional_string(arguments, "purge_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let tombstone_lane = optional_string(arguments, "waiver_erasure_tombstone_lane")?
+        .or(optional_string(arguments, "waiver_tombstone_lane")?)
+        .or(optional_string(arguments, "tombstone_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let disposal_lane = optional_string(arguments, "waiver_erasure_disposal_lane")?
+        .or(optional_string(arguments, "waiver_disposal_lane")?)
+        .or(optional_string(arguments, "disposal_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let expiration_lane = optional_string(arguments, "waiver_erasure_expiration_lane")?
+        .or(optional_string(arguments, "waiver_expiration_lane")?)
+        .or(optional_string(arguments, "expiration_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let retention_lane = optional_string(arguments, "waiver_erasure_retention_lane")?
+        .or(optional_string(arguments, "waiver_retention_lane")?)
+        .or(optional_string(arguments, "retention_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let archive_lane = optional_string(arguments, "waiver_erasure_archive_lane")?
+        .or(optional_string(arguments, "waiver_archive_lane")?)
+        .or(optional_string(arguments, "archive_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let closure_lane = optional_string(arguments, "waiver_erasure_closure_lane")?
+        .or(optional_string(arguments, "waiver_closure_lane")?)
+        .or(optional_string(arguments, "closure_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "waiver_erasure_owner_lane")?
+        .or(optional_string(arguments, "waiver_purge_owner_lane")?)
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let approval_lane = optional_string(arguments, "waiver_erasure_approval_lane")?
+        .or(optional_string(arguments, "waiver_purge_approval_lane")?)
+        .or(optional_string(arguments, "approval_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationWaiverErasureQuery {
+        waiver_purge: Box::new(integration_activation_waiver_purge_query(arguments)?),
+        erasure_status,
+        erasure_lane,
+        purge_lane,
+        tombstone_lane,
+        disposal_lane,
+        expiration_lane,
+        retention_lane,
+        archive_lane,
+        closure_lane,
+        owner_lane,
+        approval_lane,
+        evidence_kind: optional_string(arguments, "waiver_erasure_evidence_kind")?
+            .or(optional_string(arguments, "waiver_purge_evidence_kind")?)
+            .or(optional_string(arguments, "evidence_kind")?),
+        requires_attention: optional_bool(arguments, "waiver_erasure_requires_attention")?
+            .or(optional_bool(arguments, "waiver_purge_requires_attention")?)
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "waiver_erasure_blocked")?
+            .or(optional_bool(arguments, "waiver_purge_blocked")?)
+            .or(optional_bool(arguments, "blocked")?),
+        erasure_ready: optional_bool(arguments, "waiver_erasure_ready")?
+            .or(optional_bool(arguments, "erasure_ready")?),
+        erased: optional_bool(arguments, "waiver_erased")?.or(optional_bool(arguments, "erased")?),
+        purge_ready: optional_bool(arguments, "waiver_purge_ready")?
+            .or(optional_bool(arguments, "purge_ready")?),
+        purged: optional_bool(arguments, "waiver_purged")?.or(optional_bool(arguments, "purged")?),
+        tombstoned: optional_bool(arguments, "waiver_tombstoned")?
+            .or(optional_bool(arguments, "tombstoned")?),
+        disposed: optional_bool(arguments, "waiver_disposed")?
+            .or(optional_bool(arguments, "disposed")?),
+        expired: optional_bool(arguments, "waiver_expired")?
+            .or(optional_bool(arguments, "expired")?),
+        evidence_ready: optional_bool(arguments, "evidence_ready")?,
+        reviewer_required: optional_bool(arguments, "reviewer_required")?,
+        signoff_required: optional_bool(arguments, "signoff_required")?,
+        erasure_limit: optional_u64(arguments, "waiver_erasure_limit")?
+            .or(optional_u64(arguments, "erasure_limit")?)
             .or(optional_u64(arguments, "record_limit")?)
             .map(|value| value as usize),
     })
@@ -17447,6 +17976,105 @@ fn integration_activation_waiver_purges_for_query(
         records.retain(|record| record.source.source.source.signoff_required == signoff_required);
     }
     if let Some(limit) = query.purge_limit {
+        records.truncate(limit);
+    }
+
+    (records, catalog_count)
+}
+
+fn integration_activation_waiver_erasures_for_query(
+    query: &IntegrationActivationWaiverErasureQuery,
+) -> (Vec<IntegrationActivationWaiverErasureRecord>, usize) {
+    let (purge_records, catalog_count) =
+        integration_activation_waiver_purges_for_query(&query.waiver_purge);
+    let mut records: Vec<_> = purge_records
+        .iter()
+        .enumerate()
+        .map(|(index, record)| {
+            IntegrationActivationWaiverErasureRecord::from_purge_record(index + 1, record)
+        })
+        .collect();
+
+    if let Some(status) = query.erasure_status {
+        records.retain(|record| record.erasure_status == status);
+    }
+    if let Some(erasure_lane) = query.erasure_lane {
+        records.retain(|record| record.erasure_lane == erasure_lane);
+    }
+    if let Some(purge_lane) = query.purge_lane {
+        records.retain(|record| record.source.purge_lane == purge_lane);
+    }
+    if let Some(tombstone_lane) = query.tombstone_lane {
+        records.retain(|record| record.source.source.tombstone_lane == tombstone_lane);
+    }
+    if let Some(disposal_lane) = query.disposal_lane {
+        records.retain(|record| record.source.source.source.disposal_lane == disposal_lane);
+    }
+    if let Some(expiration_lane) = query.expiration_lane {
+        records
+            .retain(|record| record.source.source.source.source.expiration_lane == expiration_lane);
+    }
+    if let Some(retention_lane) = query.retention_lane {
+        records
+            .retain(|record| record.source.source.source.source.retention_lane == retention_lane);
+    }
+    if let Some(archive_lane) = query.archive_lane {
+        records.retain(|record| record.source.source.source.source.archive_lane == archive_lane);
+    }
+    if let Some(closure_lane) = query.closure_lane {
+        records.retain(|record| record.source.source.source.source.closure_lane == closure_lane);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        records.retain(|record| record.source.source.source.source.owner_lane == owner_lane);
+    }
+    if let Some(approval_lane) = query.approval_lane {
+        records.retain(|record| record.source.source.source.source.approval_lane == approval_lane);
+    }
+    if let Some(evidence_kind) = &query.evidence_kind {
+        records.retain(|record| record.source.source.source.source.evidence_kind == *evidence_kind);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        records.retain(|record| record.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        records.retain(|record| record.is_blocked() == blocked);
+    }
+    if let Some(erasure_ready) = query.erasure_ready {
+        records.retain(|record| record.erasure_ready() == erasure_ready);
+    }
+    if let Some(erased) = query.erased {
+        records.retain(|record| record.erased() == erased);
+    }
+    if let Some(purge_ready) = query.purge_ready {
+        records.retain(|record| record.source.purge_ready() == purge_ready);
+    }
+    if let Some(purged) = query.purged {
+        records.retain(|record| record.source.purged() == purged);
+    }
+    if let Some(tombstoned) = query.tombstoned {
+        records.retain(|record| record.source.source.tombstoned() == tombstoned);
+    }
+    if let Some(disposed) = query.disposed {
+        records.retain(|record| record.source.source.source.disposed() == disposed);
+    }
+    if let Some(expired) = query.expired {
+        records.retain(|record| record.source.source.source.source.expired == expired);
+    }
+    if let Some(evidence_ready) = query.evidence_ready {
+        records
+            .retain(|record| record.source.source.source.source.evidence_ready == evidence_ready);
+    }
+    if let Some(reviewer_required) = query.reviewer_required {
+        records.retain(|record| {
+            record.source.source.source.source.reviewer_required == reviewer_required
+        });
+    }
+    if let Some(signoff_required) = query.signoff_required {
+        records.retain(|record| {
+            record.source.source.source.source.signoff_required == signoff_required
+        });
+    }
+    if let Some(limit) = query.erasure_limit {
         records.truncate(limit);
     }
 
@@ -22218,6 +22846,84 @@ fn get_integration_activation_waiver_purge_summary_output_handler_output(
             (
                 "purge_ready_records",
                 integer(summary.purge_ready_records as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn list_integration_activation_waiver_erasures_output_handler_output(
+    query: IntegrationActivationWaiverErasureQuery,
+) -> ToolHandlerOutput {
+    let (records, catalog_count) = integration_activation_waiver_erasures_for_query(&query);
+    let summary = IntegrationActivationWaiverErasureSummary::from_records(records.iter());
+    let count = records.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_waiver_erasures",
+            JsonValue::Array(
+                records
+                    .iter()
+                    .map(activation_waiver_erasure_record_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_waiver_erasure_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_waiver_erasures"),
+            ),
+            ("records", integer(count as i64)),
+            (
+                "records_requiring_attention",
+                integer(summary.records_requiring_attention as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            (
+                "erasure_ready_records",
+                integer(summary.erasure_ready_records as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn get_integration_activation_waiver_erasure_summary_output_handler_output(
+    query: IntegrationActivationWaiverErasureQuery,
+) -> ToolHandlerOutput {
+    let (records, _) = integration_activation_waiver_erasures_for_query(&query);
+    let summary = IntegrationActivationWaiverErasureSummary::from_records(records.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_waiver_erasure_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_waiver_erasure_summary"),
+            ),
+            ("total_records", integer(summary.total_records as i64)),
+            (
+                "records_requiring_attention",
+                integer(summary.records_requiring_attention as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            (
+                "erasure_ready_records",
+                integer(summary.erasure_ready_records as i64),
             ),
             ("overall_status", string(summary.overall_status.as_str())),
         ]),
@@ -37912,6 +38618,316 @@ fn integration_activation_waiver_purge_summary_json(
     ])
 }
 
+fn activation_waiver_erasure_record_json(
+    record: &IntegrationActivationWaiverErasureRecord,
+) -> JsonValue {
+    let purge = &record.source;
+    let tombstone = &purge.source;
+    let disposal = &tombstone.source;
+    let source = &disposal.source;
+    heap_object![
+        ("sequence", integer(record.sequence as i64)),
+        ("erasure_id", string(&record.erasure_id)),
+        ("source_purge_id", string(&record.source_purge_id)),
+        ("source_tombstone_id", string(&purge.source_tombstone_id)),
+        ("source_disposal_id", string(&tombstone.source_disposal_id)),
+        (
+            "source_expiration_id",
+            string(&disposal.source_expiration_id),
+        ),
+        ("source_retention_id", string(&source.source_retention_id)),
+        ("source_archive_id", string(&source.source_archive_id)),
+        ("source_closure_id", string(&source.source_closure_id)),
+        (
+            "source_remediation_id",
+            string(&source.source_remediation_id),
+        ),
+        (
+            "source_disposition_id",
+            string(&source.source_disposition_id),
+        ),
+        ("source_review_id", string(&source.source_review_id)),
+        ("source_waiver_id", string(&source.source_waiver_id)),
+        ("source_exception_id", string(&source.source_exception_id)),
+        ("source_ledger_id", string(&source.source_ledger_id)),
+        (
+            "source_attestation_id",
+            string(&source.source_attestation_id),
+        ),
+        ("source_compliance_id", string(&source.source_compliance_id)),
+        ("source_governance_id", string(&source.source_governance_id)),
+        ("source_assurance_id", string(&source.source_assurance_id)),
+        ("source_guardrail_id", string(&source.source_guardrail_id)),
+        ("erasure_status", string(record.erasure_status.as_str())),
+        ("purge_status", string(purge.purge_status.as_str())),
+        (
+            "tombstone_status",
+            string(tombstone.tombstone_status.as_str()),
+        ),
+        ("disposal_status", string(disposal.disposal_status.as_str())),
+        (
+            "expiration_status",
+            string(source.expiration_status.as_str()),
+        ),
+        ("retention_status", string(source.retention_status.as_str())),
+        ("archive_status", string(source.archive_status.as_str())),
+        ("closure_status", string(source.closure_status.as_str())),
+        (
+            "remediation_status",
+            string(source.remediation_status.as_str()),
+        ),
+        (
+            "disposition_status",
+            string(source.disposition_status.as_str()),
+        ),
+        ("review_status", string(source.review_status.as_str())),
+        ("waiver_status", string(source.waiver_status.as_str())),
+        ("exception_status", string(source.exception_status.as_str())),
+        ("erasure_lane", string(record.erasure_lane.as_str())),
+        ("purge_lane", string(purge.purge_lane.as_str())),
+        ("tombstone_lane", string(tombstone.tombstone_lane.as_str())),
+        ("disposal_lane", string(disposal.disposal_lane.as_str())),
+        ("expiration_lane", string(source.expiration_lane.as_str())),
+        ("retention_lane", string(source.retention_lane.as_str())),
+        ("archive_lane", string(source.archive_lane.as_str())),
+        ("closure_lane", string(source.closure_lane.as_str())),
+        ("owner_lane", string(source.owner_lane.as_str())),
+        ("approval_lane", string(source.approval_lane.as_str())),
+        ("erasure_reason", string(&record.erasure_reason)),
+        ("erasure_action", string(&record.erasure_action)),
+        ("purge_reason", string(&purge.purge_reason)),
+        ("purge_action", string(&purge.purge_action)),
+        ("tombstone_reason", string(&tombstone.tombstone_reason)),
+        ("tombstone_action", string(&tombstone.tombstone_action)),
+        ("disposal_reason", string(&disposal.disposal_reason)),
+        ("disposal_action", string(&disposal.disposal_action)),
+        ("expiration_reason", string(&source.expiration_reason)),
+        ("expiration_action", string(&source.expiration_action)),
+        ("retention_reason", string(&source.retention_reason)),
+        ("retention_action", string(&source.retention_action)),
+        ("archive_reason", string(&source.archive_reason)),
+        ("archive_action", string(&source.archive_action)),
+        ("closure_reason", string(&source.closure_reason)),
+        ("closure_action", string(&source.closure_action)),
+        ("remediation_kind", string(&source.remediation_kind)),
+        ("remediation_action", string(&source.remediation_action)),
+        ("disposition_reason", string(&source.disposition_reason)),
+        ("disposition_action", string(&source.disposition_action)),
+        ("waiver_scope", string(&source.waiver_scope)),
+        ("evidence_kind", string(&source.evidence_kind)),
+        ("focus", string(source.focus.as_str())),
+        ("recommended_view", string(source.recommended_view.as_str())),
+        ("title", string(&source.title)),
+        ("summary", string(&source.summary)),
+        ("priority", integer(source.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                source
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(source.integration_ids.len() as i64),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(source.required_tier)),
+        ),
+        (
+            "policy_surface",
+            source
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "reviewer_required",
+            JsonValue::Bool(source.reviewer_required),
+        ),
+        (
+            "exception_required",
+            JsonValue::Bool(source.exception_required),
+        ),
+        ("signoff_required", JsonValue::Bool(source.signoff_required)),
+        ("evidence_ready", JsonValue::Bool(source.evidence_ready)),
+        ("waiver_ready", JsonValue::Bool(source.waiver_ready)),
+        ("review_ready", JsonValue::Bool(source.review_ready)),
+        (
+            "disposition_ready",
+            JsonValue::Bool(source.disposition_ready),
+        ),
+        ("closure_ready", JsonValue::Bool(source.closure_ready)),
+        ("archive_ready", JsonValue::Bool(source.archive_ready)),
+        ("retention_ready", JsonValue::Bool(source.retention_ready)),
+        ("expiration_ready", JsonValue::Bool(source.expiration_ready)),
+        ("disposal_ready", JsonValue::Bool(disposal.disposal_ready())),
+        (
+            "tombstone_ready",
+            JsonValue::Bool(tombstone.tombstone_ready()),
+        ),
+        ("purge_ready", JsonValue::Bool(purge.purge_ready())),
+        ("erasure_ready", JsonValue::Bool(record.erasure_ready())),
+        ("erased", JsonValue::Bool(record.erased())),
+        ("purged", JsonValue::Bool(purge.purged())),
+        ("tombstoned", JsonValue::Bool(tombstone.tombstoned())),
+        ("disposed", JsonValue::Bool(disposal.disposed())),
+        ("retained", JsonValue::Bool(source.retained)),
+        ("expired", JsonValue::Bool(source.expired)),
+        ("archived", JsonValue::Bool(source.archived)),
+        ("blocked", JsonValue::Bool(record.is_blocked())),
+        (
+            "requires_attention",
+            JsonValue::Bool(record.requires_attention()),
+        ),
+        (
+            "has_source_lineage",
+            JsonValue::Bool(record.has_source_lineage()),
+        ),
+    ]
+}
+
+fn integration_activation_waiver_erasure_summary_json(
+    summary: &IntegrationActivationWaiverErasureSummary,
+) -> JsonValue {
+    heap_object![
+        ("total_records", integer(summary.total_records as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "records_requiring_attention",
+            integer(summary.records_requiring_attention as i64),
+        ),
+        ("blocked_records", integer(summary.blocked_records as i64)),
+        (
+            "evidence_required_records",
+            integer(summary.evidence_required_records as i64),
+        ),
+        (
+            "ready_for_erasure_records",
+            integer(summary.ready_for_erasure_records as i64),
+        ),
+        ("erased_records", integer(summary.erased_records as i64)),
+        (
+            "erasure_ready_records",
+            integer(summary.erasure_ready_records as i64),
+        ),
+        ("purged_records", integer(summary.purged_records as i64)),
+        (
+            "purge_ready_records",
+            integer(summary.purge_ready_records as i64),
+        ),
+        (
+            "tombstoned_records",
+            integer(summary.tombstoned_records as i64),
+        ),
+        (
+            "evidence_ready_records",
+            integer(summary.evidence_ready_records as i64),
+        ),
+        (
+            "source_linked_records",
+            integer(summary.source_linked_records as i64),
+        ),
+        (
+            "reviewer_required_records",
+            integer(summary.reviewer_required_records as i64),
+        ),
+        (
+            "exception_required_records",
+            integer(summary.exception_required_records as i64),
+        ),
+        (
+            "signoff_required_records",
+            integer(summary.signoff_required_records as i64),
+        ),
+        (
+            "platform_erasure_records",
+            integer(summary.platform_erasure_records as i64),
+        ),
+        (
+            "integration_erasure_records",
+            integer(summary.integration_erasure_records as i64),
+        ),
+        (
+            "security_erasure_records",
+            integer(summary.security_erasure_records as i64),
+        ),
+        (
+            "reviewer_erasure_records",
+            integer(summary.reviewer_erasure_records as i64),
+        ),
+        (
+            "verification_erasure_records",
+            integer(summary.verification_erasure_records as i64),
+        ),
+        (
+            "audit_erasure_records",
+            integer(summary.audit_erasure_records as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_priority",
+            summary
+                .first_ready_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_erasure_status",
+            summary
+                .next_erasure_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_erasure_lane",
+            summary
+                .next_erasure_lane
+                .map(|lane| string(lane.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_erasure_action",
+            summary
+                .next_erasure_action
+                .as_ref()
+                .map(|action| string(action))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.total_records == 0)),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ]
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -41526,6 +42542,27 @@ fn parse_activation_waiver_purge_status(
     }
 }
 
+fn parse_activation_waiver_erasure_status(
+    label: &str,
+) -> Result<IntegrationActivationWaiverErasureStatus, ToolCallError> {
+    match label {
+        "blocked" | "blocker" | "hold" | "held" => {
+            Ok(IntegrationActivationWaiverErasureStatus::Blocked)
+        }
+        "evidence_required" | "needs_evidence" | "evidence" | "source_required"
+        | "source_linkage" => Ok(IntegrationActivationWaiverErasureStatus::EvidenceRequired),
+        "ready_for_erasure" | "ready" | "erasure_ready" | "ready_to_erase" => {
+            Ok(IntegrationActivationWaiverErasureStatus::ReadyForErasure)
+        }
+        "erased" | "erase" | "purged" | "deleted" | "complete" | "completed" => {
+            Ok(IntegrationActivationWaiverErasureStatus::Erased)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation waiver erasure status `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -42099,6 +43136,15 @@ fn validation_error(message: impl Into<String>) -> ToolCallError {
 }
 
 fn object<const N: usize>(fields: [(&str, JsonValue); N]) -> JsonValue {
+    JsonValue::Object(
+        fields
+            .into_iter()
+            .map(|(name, value)| (name.to_string(), value))
+            .collect(),
+    )
+}
+
+fn object_from_fields(fields: Vec<(&str, JsonValue)>) -> JsonValue {
     JsonValue::Object(
         fields
             .into_iter()
@@ -44541,6 +45587,97 @@ fn integration_activation_waiver_purge_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_waiver_erasure_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_waiver_purge_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        let mut push_if_absent = |property: SchemaProperty| {
+            if !properties
+                .iter()
+                .any(|existing| existing.name == property.name)
+            {
+                properties.push(property);
+            }
+        };
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_status",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new("erasure_status", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new("erasure_lane", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_purge_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_tombstone_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_disposal_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_expiration_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_retention_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_archive_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_closure_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_owner_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_approval_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_evidence_kind",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_ready",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new("erasure_ready", JsonSchema::Boolean));
+        push_if_absent(SchemaProperty::new("waiver_erased", JsonSchema::Boolean));
+        push_if_absent(SchemaProperty::new("erased", JsonSchema::Boolean));
+        push_if_absent(SchemaProperty::new(
+            "waiver_erasure_limit",
+            JsonSchema::Integer,
+        ));
+        push_if_absent(SchemaProperty::new("erasure_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("record_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -44685,7 +45822,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 175);
+        assert_eq!(definitions.len(), 177);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -45188,9 +46325,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_PURGE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_ERASURES_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_ERASURE_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            167
+            169
         );
         assert_eq!(
             export
@@ -45830,11 +46973,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(175))
+            Some(&integer(177))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(167))
+            Some(&integer(169))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -56571,6 +57714,192 @@ mod tests {
         traces.push((
             activation_waiver_purge_summary_request,
             activation_waiver_purge_summary_trace,
+        ));
+
+        traces
+    }
+
+    #[test]
+    fn activation_waiver_erasure_tools_project_purge_lineage_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let traces = exercise_activation_waiver_erasure_tools(&tool_runtime);
+        let mut journal = ToolExecutionJournal::new();
+        for (request, trace) in traces {
+            journal.record_trace(request, trace);
+        }
+
+        let summary = journal.summary();
+        assert_eq!(summary.invocation_count, 2);
+        assert_eq!(summary.completed_count, 2);
+        assert_eq!(journal.audit_records().len(), 2);
+    }
+
+    fn exercise_activation_waiver_erasure_tools(
+        tool_runtime: &InMemoryToolRuntime,
+    ) -> Vec<(ToolInvocationRequest, ToolExecutionTrace)> {
+        let mut traces = Vec::with_capacity(2);
+
+        let list_activation_waiver_erasures_request = request(
+            "call-list-integration-activation-waiver-erasures",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_ERASURES_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("waiver_erasure_blocked", JsonValue::Bool(true)),
+                ("waiver_erasure_requires_attention", JsonValue::Bool(true)),
+                ("waiver_erasure_limit", integer(3)),
+            ]),
+            5_403,
+        );
+        let list_activation_waiver_erasures_trace =
+            tool_runtime.invoke_with_events(&list_activation_waiver_erasures_request);
+        assert!(list_activation_waiver_erasures_trace.result.ok);
+        assert_eq!(
+            list_activation_waiver_erasures_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_waiver_erasures_output = list_activation_waiver_erasures_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_waiver_erasure_count =
+            integer_value(field(list_activation_waiver_erasures_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_waiver_erasure_count));
+        let activation_waiver_erasure_summary =
+            field(list_activation_waiver_erasures_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_waiver_erasure_summary, "total_records"),
+            Some(&integer(activation_waiver_erasure_count))
+        );
+        assert!(
+            integer_value(field(activation_waiver_erasure_summary, "blocked_records").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_waiver_erasure_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_waiver_erasure_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_waiver_erasure = array_item(
+            field(
+                list_activation_waiver_erasures_output,
+                "activation_waiver_erasures",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_waiver_erasure, "erasure_id").is_some());
+        assert!(field(activation_waiver_erasure, "source_purge_id").is_some());
+        assert!(field(activation_waiver_erasure, "source_tombstone_id").is_some());
+        assert!(field(activation_waiver_erasure, "source_disposal_id").is_some());
+        assert!(field(activation_waiver_erasure, "source_expiration_id").is_some());
+        assert!(field(activation_waiver_erasure, "source_retention_id").is_some());
+        assert!(field(activation_waiver_erasure, "source_archive_id").is_some());
+        assert!(field(activation_waiver_erasure, "source_waiver_id").is_some());
+        assert!(field(activation_waiver_erasure, "source_exception_id").is_some());
+        assert!(field(activation_waiver_erasure, "erasure_lane").is_some());
+        assert!(field(activation_waiver_erasure, "erasure_action").is_some());
+        assert_eq!(
+            field(activation_waiver_erasure, "blocked"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_waiver_erasure, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_waiver_erasure, "has_source_lineage"),
+            Some(&JsonValue::Bool(true))
+        );
+        traces.push((
+            list_activation_waiver_erasures_request,
+            list_activation_waiver_erasures_trace,
+        ));
+
+        let activation_waiver_erasure_summary_request = request(
+            "call-integration-activation-waiver-erasure-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_ERASURE_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("waiver_erasure_blocked", JsonValue::Bool(true)),
+            ]),
+            5_404,
+        );
+        let activation_waiver_erasure_summary_trace =
+            tool_runtime.invoke_with_events(&activation_waiver_erasure_summary_request);
+        assert!(activation_waiver_erasure_summary_trace.result.ok);
+        assert_eq!(
+            activation_waiver_erasure_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_waiver_erasure_summary_output = activation_waiver_erasure_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_waiver_erasure_rollup =
+            field(activation_waiver_erasure_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_waiver_erasure_rollup, "blocked_records").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_waiver_erasure_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        traces.push((
+            activation_waiver_erasure_summary_request,
+            activation_waiver_erasure_summary_trace,
         ));
 
         traces
