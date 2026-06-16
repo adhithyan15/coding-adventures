@@ -11,6 +11,8 @@ use crate::error::{SError, SResult};
 use crate::eval::{nth_element, Interpreter};
 use crate::value::{bounded_sequence, class_of, combine, index, Arg, SValue, MAX_SEQ_LEN};
 use r_vector::{is_na_real, na_real, Double};
+use statistics_core::distributions::{dnorm, pnorm, qnorm, rnorm};
+use statistics_core::distributions_more::{dexp, dunif, pexp, punif, qexp, qunif, rexp, runif};
 use statistics_core::{descriptive, Number, StatsError};
 use std::collections::HashSet;
 
@@ -94,6 +96,22 @@ pub fn install(env: &Env) {
     define(env, "grep", builtin("grep", b_grep));
     define(env, "gsub", builtin("gsub", b_gsub));
     define(env, "sub", builtin("sub", b_sub));
+
+    // Distribution family (R-8): density (d*), distribution/CDF (p*),
+    // quantile (q*), and random sampling (r*), wired to statistics-core.
+    define(env, "set.seed", builtin("set.seed", b_set_seed));
+    define(env, "dnorm", builtin("dnorm", b_dnorm));
+    define(env, "pnorm", builtin("pnorm", b_pnorm));
+    define(env, "qnorm", builtin("qnorm", b_qnorm));
+    define(env, "rnorm", builtin("rnorm", b_rnorm));
+    define(env, "dunif", builtin("dunif", b_dunif));
+    define(env, "punif", builtin("punif", b_punif));
+    define(env, "qunif", builtin("qunif", b_qunif));
+    define(env, "runif", builtin("runif", b_runif));
+    define(env, "dexp", builtin("dexp", b_dexp));
+    define(env, "pexp", builtin("pexp", b_pexp));
+    define(env, "qexp", builtin("qexp", b_qexp));
+    define(env, "rexp", builtin("rexp", b_rexp));
 
     // String manipulation (vectorized over a character vector).
     define(env, "nchar", builtin("nchar", b_nchar));
@@ -1283,6 +1301,179 @@ fn apply_reducer(name: &str, f: Reducer, data: &Double, na_rm: bool) -> SResult<
         Ok(num) => Ok(SValue::scalar(num.to_f64_lossy())),
         Err(err) => Err(SError::Domain(format!("{name}: {}", describe(err)))),
     }
+}
+
+// ===========================================================================
+// Distribution family (R-8) — d/p/q/r over statistics-core
+// ===========================================================================
+//
+// R names probability functions with a one-letter prefix on the distribution:
+//
+//   prefix   meaning                  example         maps to
+//   ------   ----------------------   -------------   ----------------------
+//   d*       density / mass           dnorm(x)        statistics_core::…::dnorm
+//   p*       cumulative probability   pnorm(q)        …::pnorm  (CDF, P[X ≤ q])
+//   q*       quantile (inverse CDF)   qnorm(p)        …::qnorm  (the x with that p)
+//   r*       random sample of size n  rnorm(n)        …::rnorm  (draws from the RNG)
+//
+// `d*`/`p*`/`q*` are pure and **vectorized over their first argument** (the
+// quantile/probability vector); the distribution parameters (`mean`, `sd`,
+// `min`, `max`, `rate`) are read as scalars, by name or position, with R's
+// defaults. `r*` draws from the session generator on the `Interpreter`, so a
+// run of `set.seed(s); rnorm(3)` is reproducible. NA in the input propagates to
+// NA in the output, exactly as in R.
+//
+// Scope: the closed-form continuous families (normal, uniform, exponential).
+// Their density/CDF/quantile are O(1) and sampling is O(n), so there are no
+// input-driven unbounded loops — the only resource knob is `n`, which
+// [`sample_count`] caps at `MAX_SEQ_LEN`. Discrete families (binomial, Poisson),
+// whose CDF/sampling loop over a user-supplied count, are a separate follow-up.
+
+/// `set.seed(n)` — reseed the session RNG so subsequent `r*` draws are
+/// reproducible. Returns invisibly (`NULL`), like R.
+fn b_set_seed(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let seed = first_positional(args)?
+        .as_double()?
+        .get_value(0)
+        .filter(|v| v.is_finite())
+        .ok_or_else(|| SError::BadArgs("set.seed: seed must be a finite number".into()))?;
+    // R coerces the seed to a 32-bit integer; mirror that so `set.seed(1)`
+    // behaves the same here as there.
+    interp.reseed(seed.trunc() as i64 as u32 as u64);
+    Ok(SValue::Null)
+}
+
+/// Read distribution parameter `name` (or positional index `pos`) as a scalar,
+/// falling back to `default` when absent. Position 0 is the quantile/probability
+/// vector, so parameters start at position 1.
+fn dist_param(args: &[Arg], pos: usize, name: &str, default: f64) -> SResult<f64> {
+    let v = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some(name))
+        .map(|a| &a.value)
+        .or_else(|| nth_positional(args, pos));
+    match v {
+        Some(sv) => Ok(sv.as_double()?.get_value(0).unwrap_or(default)),
+        None => Ok(default),
+    }
+}
+
+/// Interpret the first positional argument as a sample count for an `r*`
+/// function. Following R, a vector of length > 1 means "draw `length(n)`
+/// samples". The result is capped at [`MAX_SEQ_LEN`] and rejects non-finite or
+/// negative counts, so `rnorm(1e18)` is a clean error rather than an
+/// out-of-memory abort.
+fn sample_count(args: &[Arg]) -> SResult<usize> {
+    let nv = first_positional(args)?.as_double()?;
+    let n = if nv.len() > 1 {
+        nv.len()
+    } else {
+        let v = nv
+            .get_value(0)
+            .ok_or_else(|| SError::BadArgs("invalid arguments (n is missing)".into()))?;
+        if !v.is_finite() || v < 0.0 {
+            return Err(SError::BadArgs(
+                "invalid arguments (n must be a non-negative count)".into(),
+            ));
+        }
+        v.trunc() as usize // saturates for huge v; the cap below rejects it
+    };
+    if n > MAX_SEQ_LEN {
+        return Err(SError::BadArgs(format!(
+            "cannot allocate a sample of length {n} (limit {MAX_SEQ_LEN})"
+        )));
+    }
+    Ok(n)
+}
+
+// --- normal --------------------------------------------------------------
+
+fn b_dnorm(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (mean, sd) = (
+        dist_param(args, 1, "mean", 0.0)?,
+        dist_param(args, 2, "sd", 1.0)?,
+    );
+    unary_math(args, move |x| dnorm(x, mean, sd))
+}
+fn b_pnorm(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (mean, sd) = (
+        dist_param(args, 1, "mean", 0.0)?,
+        dist_param(args, 2, "sd", 1.0)?,
+    );
+    unary_math(args, move |x| pnorm(x, mean, sd))
+}
+fn b_qnorm(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (mean, sd) = (
+        dist_param(args, 1, "mean", 0.0)?,
+        dist_param(args, 2, "sd", 1.0)?,
+    );
+    unary_math(args, move |p| qnorm(p, mean, sd))
+}
+fn b_rnorm(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let n = sample_count(args)?;
+    let (mean, sd) = (
+        dist_param(args, 1, "mean", 0.0)?,
+        dist_param(args, 2, "sd", 1.0)?,
+    );
+    Ok(SValue::doubles(
+        interp.sample_with(|rng| rnorm(n, mean, sd, rng)),
+    ))
+}
+
+// --- uniform -------------------------------------------------------------
+
+fn b_dunif(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (min, max) = (
+        dist_param(args, 1, "min", 0.0)?,
+        dist_param(args, 2, "max", 1.0)?,
+    );
+    unary_math(args, move |x| dunif(x, min, max))
+}
+fn b_punif(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (min, max) = (
+        dist_param(args, 1, "min", 0.0)?,
+        dist_param(args, 2, "max", 1.0)?,
+    );
+    unary_math(args, move |x| punif(x, min, max))
+}
+fn b_qunif(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (min, max) = (
+        dist_param(args, 1, "min", 0.0)?,
+        dist_param(args, 2, "max", 1.0)?,
+    );
+    unary_math(args, move |p| qunif(p, min, max))
+}
+fn b_runif(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let n = sample_count(args)?;
+    let (min, max) = (
+        dist_param(args, 1, "min", 0.0)?,
+        dist_param(args, 2, "max", 1.0)?,
+    );
+    Ok(SValue::doubles(
+        interp.sample_with(|rng| runif(n, min, max, rng)),
+    ))
+}
+
+// --- exponential ---------------------------------------------------------
+
+fn b_dexp(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let rate = dist_param(args, 1, "rate", 1.0)?;
+    unary_math(args, move |x| dexp(x, rate))
+}
+fn b_pexp(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let rate = dist_param(args, 1, "rate", 1.0)?;
+    unary_math(args, move |x| pexp(x, rate))
+}
+fn b_qexp(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let rate = dist_param(args, 1, "rate", 1.0)?;
+    unary_math(args, move |p| qexp(p, rate))
+}
+fn b_rexp(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let n = sample_count(args)?;
+    let rate = dist_param(args, 1, "rate", 1.0)?;
+    Ok(SValue::doubles(
+        interp.sample_with(|rng| rexp(n, rate, rng)),
+    ))
 }
 
 // ===========================================================================

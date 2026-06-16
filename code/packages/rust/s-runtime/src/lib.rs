@@ -757,4 +757,92 @@ mod tests {
             vec!["[1] 10".to_string()]
         );
     }
+
+    // --- Distribution family (R-8) --------------------------------------
+
+    /// Assert the first element of a `Double` result is approximately `expected`.
+    fn approx(src: &str, expected: f64) {
+        let got = nums(src)[0];
+        assert!(
+            (got - expected).abs() < 1e-6,
+            "{src:?}: got {got}, expected {expected}"
+        );
+    }
+
+    #[test]
+    fn normal_density_cdf_quantile() {
+        approx("dnorm(0)\n", 1.0 / (2.0 * std::f64::consts::PI).sqrt()); // ≈ 0.3989423
+        approx("pnorm(0)\n", 0.5);
+        approx("qnorm(0.5)\n", 0.0);
+        approx("pnorm(1.96)\n", 0.9750021); // the classic 97.5% point
+                                            // q is the inverse of p: qnorm(pnorm(x)) == x.
+        approx("qnorm(pnorm(1.2345))\n", 1.2345);
+    }
+
+    #[test]
+    fn normal_parameters_by_name_and_position() {
+        // Standardising: pnorm(x, mean, sd) == pnorm((x-mean)/sd).
+        approx("pnorm(110, mean = 100, sd = 10)\n", 0.8413447);
+        approx("pnorm(110, 100, 10)\n", 0.8413447); // positional form agrees
+        approx(
+            "dnorm(0, sd = 2)\n",
+            1.0 / (2.0 * (2.0 * std::f64::consts::PI).sqrt()),
+        );
+    }
+
+    #[test]
+    fn normal_is_vectorized_over_x_with_na() {
+        // d* maps over the whole quantile vector; NA propagates.
+        assert_eq!(show("pnorm(c(0, NA))\n"), "[1] 0.5  NA");
+    }
+
+    #[test]
+    fn uniform_family() {
+        approx("dunif(0.5)\n", 1.0);
+        approx("dunif(2)\n", 0.0); // outside [0,1] has zero density
+        approx("punif(0.25)\n", 0.25);
+        approx("qunif(0.75)\n", 0.75);
+        approx("punif(5, min = 0, max = 10)\n", 0.5);
+    }
+
+    #[test]
+    fn exponential_family() {
+        approx("dexp(0)\n", 1.0); // rate 1: density at 0 is the rate
+        approx("pexp(0.6931471805599453)\n", 0.5); // CDF at ln 2 is 1/2
+        approx("qexp(0.5)\n", std::f64::consts::LN_2);
+        approx("pexp(1, rate = 2)\n", 1.0 - (-2.0_f64).exp());
+    }
+
+    #[test]
+    fn sampling_respects_n_and_is_reseedable() {
+        // rnorm(n) returns n draws…
+        assert_eq!(nums("set.seed(1)\nrnorm(5)\n").len(), 5);
+        // …and set.seed makes the stream reproducible.
+        let a = nums("set.seed(42)\nrnorm(4)\n");
+        let b = nums("set.seed(42)\nrnorm(4)\n");
+        assert_eq!(a, b);
+        // A different seed gives a different stream.
+        let c = nums("set.seed(99)\nrnorm(4)\n");
+        assert_ne!(a, c);
+    }
+
+    #[test]
+    fn runif_draws_lie_in_range() {
+        let xs = nums("set.seed(7)\nrunif(100, min = -1, max = 1)\n");
+        assert_eq!(xs.len(), 100);
+        assert!(xs.iter().all(|&x| (-1.0..1.0).contains(&x)));
+    }
+
+    #[test]
+    fn sample_count_is_capped_not_oom() {
+        // A pathological n is a clean error, not an allocation abort.
+        assert!(eval_s("rnorm(1e18)\n").is_err());
+        assert!(eval_s("runif(-3)\n").is_err());
+    }
+
+    #[test]
+    fn set_seed_returns_invisibly() {
+        let outcome = Interpreter::new().eval_str("set.seed(1)\n").unwrap();
+        assert!(!outcome.visible);
+    }
 }

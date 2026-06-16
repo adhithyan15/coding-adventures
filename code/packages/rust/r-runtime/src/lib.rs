@@ -240,4 +240,17 @@ mod tests {
         // says so clearly rather than producing a wrong value.
         assert!(matches!(eval_r("1i\n"), Err(RError::TypeError(_))));
     }
+
+    #[test]
+    fn distribution_family_works_through_r() {
+        // R-8: d/p/q/r reach R unchanged via the shared evaluator, including the
+        // dotted name `set.seed` and the `mean =` named parameter.
+        assert_eq!(show("pnorm(0)\n"), "[1] 0.5");
+        assert_eq!(show("qunif(0.5)\n"), "[1] 0.5");
+        // set.seed makes rnorm reproducible across two fresh R sessions.
+        let a = nums("set.seed(123)\nrnorm(3, mean = 10)\n");
+        let b = nums("set.seed(123)\nrnorm(3, mean = 10)\n");
+        assert_eq!(a, b);
+        assert_eq!(a.len(), 3);
+    }
 }

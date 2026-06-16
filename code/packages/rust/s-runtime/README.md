@@ -31,6 +31,9 @@ s-lexer → s-parser → GrammarASTNode → s-runtime (this crate) → s-repl
 - **v2** adds `%op%` infix operators, a broad builtin library, **S3 method
   dispatch** (a generic `print`), **factors**, and **data frames** (`$`,
   `[[ ]]`, 2-D indexing).
+- The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
+  density/CDF/quantile/sampling for the normal, uniform, and exponential
+  distributions, plus `set.seed` for a reproducible per-session RNG.
 
 ## Quick start
 
