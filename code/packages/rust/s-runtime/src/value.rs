@@ -81,6 +81,23 @@ pub enum SValue {
         inner: Box<SValue>,
         class: Vec<String>,
     },
+
+    /// A generic list — an ordered, heterogeneous, optionally-named sequence of
+    /// values (R's `list`). `names[i]` is `None` for an unnamed element. Access
+    /// is `x[[i]]` / `x[["name"]]` / `x$name` (one element) and `x[i]`
+    /// (a sub-list). Implicit class `"list"`.
+    List {
+        names: Vec<Option<String>>,
+        items: Vec<SValue>,
+    },
+}
+
+impl SValue {
+    /// Build a list from `(optional name, value)` pairs.
+    pub fn list(pairs: Vec<(Option<String>, SValue)>) -> SValue {
+        let (names, items) = pairs.into_iter().unzip();
+        SValue::List { names, items }
+    }
 }
 
 /// The S3 class vector of a value: the explicit class if one was set, otherwise
@@ -90,6 +107,7 @@ pub fn class_of(value: &SValue) -> Vec<String> {
         SValue::Classed { class, .. } => class.clone(),
         SValue::Factor { .. } => vec!["factor".to_string()],
         SValue::DataFrame { .. } => vec!["data.frame".to_string()],
+        SValue::List { .. } => vec!["list".to_string()],
         SValue::Double(_) => vec!["numeric".to_string()],
         SValue::Logical(_) => vec!["logical".to_string()],
         SValue::Character(_) => vec!["character".to_string()],
@@ -118,6 +136,7 @@ impl std::fmt::Debug for SValue {
                 write!(f, "DataFrame({} cols: {:?})", columns.len(), names)
             }
             SValue::Classed { inner, class } => write!(f, "Classed({class:?}, {inner:?})"),
+            SValue::List { items, .. } => write!(f, "List({} items)", items.len()),
         }
     }
 }
@@ -154,6 +173,7 @@ impl SValue {
             SValue::Factor { .. } => "factor",
             SValue::DataFrame { .. } => "data.frame",
             SValue::Classed { inner, .. } => inner.type_name(),
+            SValue::List { .. } => "list",
         }
     }
 
@@ -169,6 +189,7 @@ impl SValue {
             SValue::Factor { codes, .. } => codes.len(),
             SValue::DataFrame { columns, .. } => columns.len(),
             SValue::Classed { inner, .. } => inner.length(),
+            SValue::List { items, .. } => items.len(),
         }
     }
 
@@ -559,6 +580,27 @@ pub fn index(base: &SValue, idx: &SValue) -> SResult<SValue> {
             levels: levels.clone(),
         },
         SValue::Classed { inner, .. } => index(inner, idx)?,
+        // Single-bracket on a list returns a *sub-list* (NA index → a NULL slot).
+        SValue::List { names, items } => {
+            let mut out_names = Vec::new();
+            let mut out_items = Vec::new();
+            for p in &picks {
+                match p {
+                    Some(i) => {
+                        out_names.push(names[*i].clone());
+                        out_items.push(items[*i].clone());
+                    }
+                    None => {
+                        out_names.push(None);
+                        out_items.push(SValue::Null);
+                    }
+                }
+            }
+            SValue::List {
+                names: out_names,
+                items: out_items,
+            }
+        }
         other => {
             return Err(SError::Index(format!(
                 "object of type '{}' is not subsettable",
@@ -654,6 +696,7 @@ pub fn format_value(value: &SValue) -> Vec<String> {
         }
         SValue::DataFrame { names, columns } => return format_data_frame(names, columns),
         SValue::Classed { inner, .. } => return format_value(inner),
+        SValue::List { names, items } => return format_list(names, items),
     };
 
     format_vector(&elems)
@@ -689,6 +732,26 @@ pub fn element_string(value: &SValue, i: usize) -> String {
         SValue::Classed { inner, .. } => element_string(inner, i),
         _ => "NA".into(),
     }
+}
+
+/// Render a list the way R does: each element under a `$name` (named) or `[[i]]`
+/// (unnamed) header, the element's own formatting indented below, blank line
+/// between. An empty list prints `list()`.
+fn format_list(names: &[Option<String>], items: &[SValue]) -> Vec<String> {
+    if items.is_empty() {
+        return vec!["list()".to_string()];
+    }
+    let mut lines = Vec::new();
+    for (i, item) in items.iter().enumerate() {
+        let header = match names.get(i).and_then(|n| n.clone()) {
+            Some(name) if !name.is_empty() => format!("${name}"),
+            _ => format!("[[{}]]", i + 1),
+        };
+        lines.push(header);
+        lines.extend(format_value(item));
+        lines.push(String::new()); // blank separator
+    }
+    lines
 }
 
 /// Render a data frame as a simple left-aligned table with a leading row-number

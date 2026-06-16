@@ -62,15 +62,20 @@ unchanged.
   before `NUMBER`; the shared `eval_primary` maps `L`/`0x` to double (this subset
   has no distinct integer type) and reports `1i` as unsupported (no complex type
   yet) rather than producing a wrong value.
-- **R-5 — string built-ins** *(this PR)*. `nchar`, `toupper`, `tolower`,
+- **R-5 — string built-ins** ✅ *merged*. `nchar`, `toupper`, `tolower`,
   `substr` (1-based inclusive, char-boundary safe), and a minimal `sprintf`
   (`%d`/`%i`/`%s`/`%f`/`%e`/`%g`/`%%`, with width/`.precision`/`-`/`0`,
-  vectorized). Added to the shared `s-runtime` built-ins (S benefits too).
-  `paste`/`paste0`/`rev`/`sort`/`order`/`unique`/`which`/`any`/`all` already
-  exist from S v2. *Deferred:* `strsplit` (needs a list type — R-6), and regex
-  (`gsub`/`grepl`).
-- **R-6+** — a list type (unlocking `strsplit`/`lapply`), regex helpers, then the
-  `d/p/q/r` distribution family wired to `statistics-core`.
+  vectorized; width/precision capped against a crafted-format DoS). Added to the
+  shared `s-runtime` built-ins (S benefits too).
+- **R-6 — a generic list type** *(this PR)*. `SValue::List` (ordered,
+  optionally-named, heterogeneous; class `"list"`) added to the shared value
+  model, with `[[i]]`/`[["name"]]`/`$name` extraction, `[i]` sub-list slicing,
+  and R-style `$name`/`[[i]]` block printing. Built-ins `list(...)`,
+  `lapply(x, f)` (returns a list), and `strsplit(x, split)` (fixed-string split
+  → a list of character vectors). `nth_element` now iterates list elements, so
+  `sapply`/`lapply` work over lists. *Deferred:* `table`, regex (`gsub`/`grepl`).
+- **R-7+** — regex helpers, then the `d/p/q/r` distribution family wired to
+  `statistics-core`.
 
 ## §4 Reuse strategy
 

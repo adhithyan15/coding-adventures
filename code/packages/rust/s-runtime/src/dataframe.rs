@@ -19,6 +19,12 @@ pub fn column_by_name(value: &SValue, name: &str) -> SResult<SValue> {
             .position(|n| n == name)
             .map(|i| columns[i].clone())
             .ok_or_else(|| SError::Index(format!("undefined column '{name}'"))),
+        // `lst$name` — element by name, NULL if absent (matching R).
+        SValue::List { names, items } => Ok(names
+            .iter()
+            .position(|n| n.as_deref() == Some(name))
+            .map(|i| items[i].clone())
+            .unwrap_or(SValue::Null)),
         SValue::Classed { inner, .. } => column_by_name(inner, name),
         other => Err(SError::TypeError(format!(
             "$ operator is invalid for {}",
@@ -42,6 +48,27 @@ pub fn extract(value: &SValue, key: &SValue) -> SResult<SValue> {
             _ => {
                 let pos = scalar_index(key)?;
                 columns
+                    .get(pos)
+                    .cloned()
+                    .ok_or_else(|| SError::Index("subscript out of bounds".into()))
+            }
+        },
+        // `lst[[i]]` (one element) / `lst[["name"]]` (by name; NULL if missing).
+        SValue::List { names, items } => match key {
+            SValue::Character(v) => {
+                let name = v
+                    .first()
+                    .and_then(|o| o.clone())
+                    .ok_or_else(|| SError::Index("invalid list name".into()))?;
+                Ok(names
+                    .iter()
+                    .position(|n| n.as_deref() == Some(name.as_str()))
+                    .map(|i| items[i].clone())
+                    .unwrap_or(SValue::Null))
+            }
+            _ => {
+                let pos = scalar_index(key)?;
+                items
                     .get(pos)
                     .cloned()
                     .ok_or_else(|| SError::Index("subscript out of bounds".into()))

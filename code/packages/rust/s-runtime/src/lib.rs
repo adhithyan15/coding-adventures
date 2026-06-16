@@ -616,6 +616,50 @@ mod tests {
         ));
     }
 
+    // --- Lists ----------------------------------------------------------
+
+    #[test]
+    fn list_construction_and_access() {
+        assert_eq!(nums("list(a = 1, b = 2)$a\n"), vec![1.0]);
+        assert_eq!(nums("list(a = 1, b = 2)$b\n"), vec![2.0]);
+        assert_eq!(show("list(\"x\", \"y\")[[2]]\n"), "[1] \"y\"");
+        assert_eq!(nums("list(a = c(1, 2, 3))[[\"a\"]]\n"), vec![1.0, 2.0, 3.0]);
+        // A missing name is NULL (not an error), like R.
+        assert_eq!(show("list(a = 1)$zzz\n"), "NULL");
+        assert_eq!(nums("length(list(1, 2, 3))\n"), vec![3.0]);
+    }
+
+    #[test]
+    fn single_bracket_on_list_returns_a_sublist() {
+        assert_eq!(show("class(list(1, 2, 3)[1])\n"), "[1] \"list\"");
+    }
+
+    #[test]
+    fn lapply_returns_a_list() {
+        assert_eq!(nums("lapply(1:3, function(n) n * n)[[3]]\n"), vec![9.0]);
+        assert_eq!(show("class(lapply(1:2, function(n) n))\n"), "[1] \"list\"");
+    }
+
+    #[test]
+    fn strsplit_returns_a_list_of_character_vectors() {
+        assert_eq!(
+            show("strsplit(\"a,b,c\", \",\")[[1]]\n"),
+            "[1] \"a\" \"b\" \"c\""
+        );
+        // Empty split → individual characters.
+        assert_eq!(
+            show("strsplit(\"abc\", \"\")[[1]]\n"),
+            "[1] \"a\" \"b\" \"c\""
+        );
+    }
+
+    #[test]
+    fn list_prints_with_named_and_indexed_headers() {
+        let outcome = Interpreter::new().eval_str("list(a = 1, 2)\n").unwrap();
+        assert!(outcome.printed.contains("$a"), "{:?}", outcome.printed);
+        assert!(outcome.printed.contains("[[2]]"), "{:?}", outcome.printed);
+    }
+
     #[test]
     fn print_returns_its_argument_invisibly() {
         let outcome = Interpreter::new().eval_str("print(42)\n").unwrap();

@@ -84,6 +84,11 @@ pub fn install(env: &Env) {
     define(env, "paste", builtin("paste", b_paste));
     define(env, "paste0", builtin("paste0", b_paste0));
 
+    // Lists (R-6).
+    define(env, "list", builtin("list", b_list));
+    define(env, "lapply", builtin("lapply", b_lapply));
+    define(env, "strsplit", builtin("strsplit", b_strsplit));
+
     // String manipulation (vectorized over a character vector).
     define(env, "nchar", builtin("nchar", b_nchar));
     define(env, "toupper", builtin("toupper", b_toupper));
@@ -631,6 +636,90 @@ fn paste_impl(args: &[Arg], default_sep: &str) -> SResult<SValue> {
         })
         .collect();
     Ok(SValue::Character(out))
+}
+
+// ===========================================================================
+// Lists
+// ===========================================================================
+
+/// `list(...)` — build a generic list from positional and named arguments,
+/// preserving order and element names.
+fn b_list(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let pairs = args
+        .iter()
+        .map(|a| (a.name.clone(), a.value.clone()))
+        .collect();
+    Ok(SValue::list(pairs))
+}
+
+/// `lapply(x, f)` — apply `f` to each element of `x`, returning a list of the
+/// results (with `x`'s names, if any, carried over).
+fn b_lapply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&Arg> = args.iter().filter(|a| a.name.is_none()).collect();
+    let x = positional
+        .first()
+        .ok_or_else(|| SError::BadArgs("lapply: missing X".into()))?
+        .value
+        .clone();
+    let f = positional
+        .get(1)
+        .ok_or_else(|| SError::BadArgs("lapply: missing FUN".into()))?
+        .value
+        .clone();
+    if !f.is_callable() {
+        return Err(SError::NotCallable(f.type_name().to_string()));
+    }
+    let names = list_names(&x);
+    let mut items = Vec::with_capacity(x.length());
+    for i in 0..x.length() {
+        let elem = nth_element(&x, i);
+        items.push(interp.call_value(
+            f.clone(),
+            &[Arg {
+                name: None,
+                value: elem,
+            }],
+        )?);
+    }
+    Ok(SValue::List { names, items })
+}
+
+/// The element names of `x` if it is a list, else all-unnamed.
+fn list_names(x: &SValue) -> Vec<Option<String>> {
+    match x {
+        SValue::List { names, .. } => names.clone(),
+        other => vec![None; other.length()],
+    }
+}
+
+/// `strsplit(x, split)` — split each element of `x` by the fixed substring
+/// `split`, returning a *list* of character vectors (one per element of `x`).
+/// An empty `split` splits into individual characters (as in R).
+fn b_strsplit(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.as_character();
+    let split = nth_positional(args, 1)
+        .map(|v| v.as_character())
+        .and_then(|c| c.into_iter().next().flatten())
+        .unwrap_or_default();
+
+    let items: Vec<SValue> = x
+        .into_iter()
+        .map(|o| match o {
+            None => SValue::Character(vec![None]),
+            Some(s) => {
+                let parts: Vec<Option<String>> = if split.is_empty() {
+                    s.chars().map(|c| Some(c.to_string())).collect()
+                } else {
+                    s.split(split.as_str())
+                        .map(|p| Some(p.to_string()))
+                        .collect()
+                };
+                SValue::Character(parts)
+            }
+        })
+        .collect();
+    let names = vec![None; items.len()];
+    Ok(SValue::List { names, items })
 }
 
 // ===========================================================================
