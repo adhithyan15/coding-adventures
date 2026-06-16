@@ -488,7 +488,24 @@ _UNSUPPORTED_DECK_CONTROL_DIRECTIVES = frozenset({".include", ".lib", ".control"
 _UNSUPPORTED_RESOLVED_DIRECTIVES = frozenset({".control"})
 _UNSUPPORTED_PARAMETER_DIRECTIVES = frozenset()
 _SUPPORTED_CONTROL_BLOCK_COMMANDS = frozenset(
-    {"op", ".op", "dc", ".dc", "ac", ".ac", "tran", ".tran", "print", ".print", "plot", ".plot"}
+    {
+        "op",
+        ".op",
+        "dc",
+        ".dc",
+        "ac",
+        ".ac",
+        "tran",
+        ".tran",
+        "save",
+        ".save",
+        "probe",
+        ".probe",
+        "print",
+        ".print",
+        "plot",
+        ".plot",
+    }
 )
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,

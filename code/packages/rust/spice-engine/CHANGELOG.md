@@ -2,10 +2,14 @@
 
 ## Unreleased
 
+- Add selected `.control` block `save` and `probe` command routing to
+  `analyze_deck_controls` and `resolve_deck_sources`; the commands are
+  normalized into `.save` and `.probe` deck cards, matching Python and
+  TypeScript.
 - Add selected `.control` block command routing to `analyze_deck_controls` and
   `resolve_deck_sources`; analysis/output commands (`op`, `dc`, `ac`, `tran`,
-  `print`, and `plot`) are normalized into dotted deck cards, matching Python
-  and TypeScript.
+  `save`, `probe`, `print`, and `plot`) are normalized into dotted deck cards,
+  matching Python and TypeScript.
 - Add control-block exclusion diagnostics to `analyze_deck_controls` and
   `resolve_deck_sources`; unsupported `.control` / `.endc` block markers and
   unrecognized body commands are no longer forwarded as active deck lines and

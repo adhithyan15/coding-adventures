@@ -129,6 +129,8 @@ fn analyze_deck_controls_reports_unsupported_directives() {
 .LIB vendor.lib TT
 .control
 op
+save V(in)
+probe V(out)
 print op V(in)
 run
 .endc
@@ -143,6 +145,8 @@ run
             ".include models.inc".to_string(),
             ".LIB vendor.lib TT".to_string(),
             ".op".to_string(),
+            ".save V(in)".to_string(),
+            ".probe V(out)".to_string(),
             ".print op V(in)".to_string(),
         ]
     );
@@ -163,7 +167,7 @@ run
             (".include", 2, "error"),
             (".lib", 3, "error"),
             (".control", 4, "error"),
-            (".control", 7, "error")
+            (".control", 9, "error")
         ]
     );
     assert_eq!(
@@ -260,6 +264,8 @@ fn resolve_deck_sources_reports_missing_sources_and_cycles() {
 .lib vendor.lib SS
 .control
 op
+save V(a)
+probe V(b)
 print op V(a)
 run
 .endc
@@ -271,7 +277,14 @@ run
     assert!(summary.terminated);
     assert_eq!(
         summary.active_lines,
-        vec!["R2 b 0 2", "R1 a b 1", ".op", ".print op V(a)"]
+        vec![
+            "R2 b 0 2",
+            "R1 a b 1",
+            ".op",
+            ".save V(a)",
+            ".probe V(b)",
+            ".print op V(a)"
+        ]
     );
     assert_eq!(
         summary
@@ -294,7 +307,7 @@ run
             .skip(3)
             .map(|diagnostic| (diagnostic.directive.as_str(), diagnostic.line_number))
             .collect::<Vec<_>>(),
-        vec![(".control", 5), (".control", 8)]
+        vec![(".control", 5), (".control", 10)]
     );
     assert_eq!(
         summary

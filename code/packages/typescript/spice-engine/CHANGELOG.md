@@ -2,10 +2,13 @@
 
 ## Unreleased
 
+- Add selected `.control` block `save` and `probe` command routing to
+  `analyzeDeckControls` and `resolveDeckSources`; the commands are normalized
+  into `.save` and `.probe` deck cards, matching Python and Rust.
 - Add selected `.control` block command routing to `analyzeDeckControls` and
   `resolveDeckSources`; analysis/output commands (`op`, `dc`, `ac`, `tran`,
-  `print`, and `plot`) are normalized into dotted deck cards, matching Python
-  and Rust.
+  `save`, `probe`, `print`, and `plot`) are normalized into dotted deck cards,
+  matching Python and Rust.
 - Add control-block exclusion diagnostics to `analyzeDeckControls` and
   `resolveDeckSources`; unsupported `.control` / `.endc` block markers and
   unrecognized body commands are no longer forwarded as active deck lines and
