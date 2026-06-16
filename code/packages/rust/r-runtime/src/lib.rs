@@ -179,4 +179,24 @@ mod tests {
     fn errors_surface() {
         assert!(matches!(eval_r("nope\n"), Err(RError::Undefined(_))));
     }
+
+    // --- R-4: typed numeric literals evaluate ---------------------------
+
+    #[test]
+    fn integer_and_hex_literals_are_doubles() {
+        // This subset has no distinct integer type; L/hex become doubles.
+        assert_eq!(nums("10L\n"), vec![10.0]);
+        assert_eq!(nums("0xFF\n"), vec![255.0]);
+        assert_eq!(nums("0x1FL\n"), vec![31.0]);
+        assert_eq!(nums("1e3L\n"), vec![1000.0]);
+        // They participate in ordinary arithmetic.
+        assert_eq!(nums("0x10 + 1L\n"), vec![17.0]);
+    }
+
+    #[test]
+    fn complex_literal_is_reported_unsupported() {
+        // `1i` lexes and parses, but complex is not in this subset — the runtime
+        // says so clearly rather than producing a wrong value.
+        assert!(matches!(eval_r("1i\n"), Err(RError::TypeError(_))));
+    }
 }

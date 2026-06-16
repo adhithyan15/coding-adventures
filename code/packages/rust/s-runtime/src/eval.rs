@@ -605,6 +605,29 @@ impl Interpreter {
                             SError::Parse(format!("invalid number literal '{value}'"))
                         })?)
                     }
+                    // R's typed numeric literals (R-4). This subset has no
+                    // distinct integer type, so the integer/hex forms become
+                    // doubles. `L` (integer) and `0x` (hex) suffixes are dropped.
+                    "INT_LIT" => {
+                        let digits = value.trim_end_matches('L');
+                        SValue::scalar(digits.parse::<f64>().map_err(|_| {
+                            SError::Parse(format!("invalid integer literal '{value}'"))
+                        })?)
+                    }
+                    "HEX_LIT" => {
+                        // Strip the `0x`/`0X` prefix and an optional `L` suffix.
+                        let body = value[2..].trim_end_matches('L');
+                        let n = u64::from_str_radix(body, 16)
+                            .map_err(|_| SError::Parse(format!("invalid hex literal '{value}'")))?;
+                        SValue::scalar(n as f64)
+                    }
+                    // Complex literals (`1i`) lex and parse, but this subset has
+                    // no complex type yet — report it clearly rather than lying.
+                    "COMPLEX_LIT" => {
+                        return Err(SError::TypeError(format!(
+                            "complex numbers are not yet supported (literal '{value}')"
+                        )))
+                    }
                     "STRING" => SValue::Character(vec![Some(strip_quotes(value))]),
                     "KEYWORD" => match value {
                         "TRUE" | "T" => SValue::Logical(vec![Some(true)]),

@@ -212,4 +212,26 @@ mod tests {
     fn unknown_char_is_an_error() {
         assert!(try_tokenize_r("x <- @\n").is_err());
     }
+
+    // --- R-4: typed numeric literals ------------------------------------
+
+    #[test]
+    fn integer_hex_and_complex_literals() {
+        pair(&lex_nl("10L\n"), 0, "INT_LIT", "10L");
+        pair(&lex_nl("0xFF\n"), 0, "HEX_LIT", "0xFF");
+        pair(&lex_nl("0x1FL\n"), 0, "HEX_LIT", "0x1FL"); // hex with integer L
+        pair(&lex_nl("2.5i\n"), 0, "COMPLEX_LIT", "2.5i");
+        pair(&lex_nl("1e3L\n"), 0, "INT_LIT", "1e3L");
+    }
+
+    #[test]
+    fn plain_numbers_and_names_unaffected() {
+        // No suffix → plain NUMBER; suffix-looking names stay NAMEs.
+        pair(&lex_nl("10\n"), 0, "NUMBER", "10");
+        pair(&lex_nl("1e3\n"), 0, "NUMBER", "1e3");
+        pair(&lex_nl("Length\n"), 0, "NAME", "Length"); // not INT_LIT
+        pair(&lex_nl("i\n"), 0, "NAME", "i"); // bare i is a name
+                                              // `0x1FL` is one token, not split.
+        assert_eq!(lex_nl("0x1FL\n").len(), 1);
+    }
 }
