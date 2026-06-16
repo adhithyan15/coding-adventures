@@ -151,6 +151,7 @@ members = [
     "html-parser",
     "html-renderer",
     "intel4004-gatelevel",
+    "mos6502-gatelevel",
     "intel4004-simulator",
     "intel8080-gatelevel",
     "interrupt-handler",
