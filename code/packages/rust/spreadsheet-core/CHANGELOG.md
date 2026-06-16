@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.5.0
+
+**Cell display formats.** Cells can now carry an Excel-style format code, and a
+new accessor returns the formatted display string — wiring `number-format-core`
+into the engine's display path.
+
+- Per-sheet `formats` store (independent of cell content, so a cell can be
+  formatted while empty and the format survives content edits).
+- `Workbook::set_format(sheet, addr, code)` / `clear_format` / `get_format`.
+- `Workbook::get_display(sheet, addr) -> String`: the computed value run through
+  its format code (or `General`) — numbers formatted per the code (grouping,
+  decimals, percent, dates via the date/time codes), text/booleans/errors render
+  naturally, empty → `""`. The one call a renderer needs per visible cell.
+- Structural edits relocate the format store alongside cells: a format rides
+  with the cell it decorates on insert/delete, is dropped when its cell is
+  deleted, and the off-grid-overflow guard now also covers format-only entries.
+- New `number-format-core` dependency (a Layer-1 core, like the math cores the
+  formula engine already dispatches to). 5 new tests.
+
 ## 0.4.0
 
 **Insert/delete rows & columns** (`workbook.rs`) — wires the structural-edit
