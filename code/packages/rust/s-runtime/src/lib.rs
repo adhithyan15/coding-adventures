@@ -845,4 +845,68 @@ mod tests {
         let outcome = Interpreter::new().eval_str("set.seed(1)\n").unwrap();
         assert!(!outcome.visible);
     }
+
+    // --- Discrete distribution family (R-8b) ----------------------------
+
+    #[test]
+    fn binomial_density_cdf_quantile() {
+        // dbinom(2, 4, 0.5) = C(4,2)·0.5^4 = 6/16 = 0.375.
+        approx("dbinom(2, 4, 0.5)\n", 0.375);
+        // pbinom(2, 4, 0.5) = (1+4+6)/16 = 11/16 = 0.6875.
+        approx("pbinom(2, 4, 0.5)\n", 0.6875);
+        // qbinom(0.5, 4, 0.5): smallest k with cdf ≥ 0.5 → 2.
+        approx("qbinom(0.5, 4, 0.5)\n", 2.0);
+        // Parameters by name agree with positional.
+        approx("dbinom(2, size = 4, prob = 0.5)\n", 0.375);
+    }
+
+    #[test]
+    fn poisson_density_cdf_quantile() {
+        // dpois(0, 2) = e^-2 ≈ 0.1353353.
+        approx("dpois(0, 2)\n", (-2.0_f64).exp());
+        approx("ppois(0, 2)\n", (-2.0_f64).exp());
+        // The Poisson median for lambda = 4 is 4.
+        approx("qpois(0.5, 4)\n", 4.0);
+        approx("dpois(0, lambda = 2)\n", (-2.0_f64).exp());
+    }
+
+    #[test]
+    fn discrete_is_vectorized_with_na() {
+        // d* maps over the whole vector and propagates NA.
+        let b = nums("dbinom(c(0, 4), 4, 0.5)\n");
+        assert!((b[0] - 0.0625).abs() < 1e-9 && (b[1] - 0.0625).abs() < 1e-9);
+        let p = nums("dpois(c(0, NA), 1)\n");
+        assert!((p[0] - (-1.0_f64).exp()).abs() < 1e-9);
+        assert!(p[1].is_nan()); // NA propagates
+    }
+
+    #[test]
+    fn discrete_sampling_is_reseedable_and_in_range() {
+        // rbinom draws lie in 0..=size; rpois draws are non-negative.
+        let b = nums("set.seed(1)\nrbinom(50, 10, 0.3)\n");
+        assert_eq!(b.len(), 50);
+        assert!(b
+            .iter()
+            .all(|&k| (0.0..=10.0).contains(&k) && k.fract() == 0.0));
+        // Reproducible across fresh sessions.
+        assert_eq!(
+            nums("set.seed(7)\nrpois(20, 3)\n"),
+            nums("set.seed(7)\nrpois(20, 3)\n")
+        );
+        assert!(nums("set.seed(7)\nrpois(20, 3)\n")
+            .iter()
+            .all(|&k| k >= 0.0));
+    }
+
+    #[test]
+    fn discrete_dos_guards() {
+        // size / x / sampling counts that would drive an unbounded inner loop
+        // are clean errors, not hangs.
+        assert!(eval_s("rbinom(1000000, 1000000, 0.5)\n").is_err()); // n·size huge
+        assert!(eval_s("pbinom(0, 1e18, 0.5)\n").is_err()); // size beyond support
+        assert!(eval_s("ppois(1e18, 2)\n").is_err()); // x beyond support
+                                                      // Required parameters can't be omitted.
+        assert!(eval_s("dbinom(1)\n").is_err());
+        assert!(eval_s("dpois(1)\n").is_err());
+    }
 }

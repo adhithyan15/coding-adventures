@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-06-16
+
+### Added
+
+- **Discrete distribution family (R-8b)** — the `d`/`p`/`q`/`r` functions for the
+  discrete distributions, wired to `statistics-core`:
+  - **Binomial**: `dbinom`, `pbinom`, `qbinom`, `rbinom` (parameters `size`,
+    `prob`).
+  - **Poisson**: `dpois`, `ppois`, `qpois`, `rpois` (parameter `lambda`).
+
+  Same vectorized `d`/`p`/`q` (NA-propagating), named/positional parameters, and
+  reproducible per-session RNG as the continuous families (R-8).
+
+### Security
+
+- The discrete CDFs and inverse-CDF samplers loop over an integer count
+  (`pbinom` is O(`size`), `ppois` is O(`x`), `rbinom` is O(n·`size`)). Two guards
+  bound every loop: a per-element cap (`MAX_DISCRETE_SUPPORT` ≈ 1M on `size` and
+  the `ppois` quantile) and a total-iteration budget (`MAX_DISCRETE_WORK` ≈ 134M
+  over `len·driver` / `n·per-sample`). A crafted `rbinom(1e6, 1e6, …)` or
+  `ppois(1e18, …)` is a clean error, not an unbounded loop.
+
 ## [0.3.0] - 2026-06-16
 
 ### Added

@@ -12,7 +12,10 @@ use crate::eval::{nth_element, Interpreter};
 use crate::value::{bounded_sequence, class_of, combine, index, Arg, SValue, MAX_SEQ_LEN};
 use r_vector::{is_na_real, na_real, Double};
 use statistics_core::distributions::{dnorm, pnorm, qnorm, rnorm};
-use statistics_core::distributions_more::{dexp, dunif, pexp, punif, qexp, qunif, rexp, runif};
+use statistics_core::distributions_more::{
+    dbinom, dexp, dpois, dunif, pbinom, pexp, ppois, punif, qbinom, qexp, qpois, qunif, rbinom,
+    rexp, rpois, runif,
+};
 use statistics_core::{descriptive, Number, StatsError};
 use std::collections::HashSet;
 
@@ -112,6 +115,16 @@ pub fn install(env: &Env) {
     define(env, "pexp", builtin("pexp", b_pexp));
     define(env, "qexp", builtin("qexp", b_qexp));
     define(env, "rexp", builtin("rexp", b_rexp));
+
+    // Discrete distribution family (R-8b): binomial and Poisson.
+    define(env, "dbinom", builtin("dbinom", b_dbinom));
+    define(env, "pbinom", builtin("pbinom", b_pbinom));
+    define(env, "qbinom", builtin("qbinom", b_qbinom));
+    define(env, "rbinom", builtin("rbinom", b_rbinom));
+    define(env, "dpois", builtin("dpois", b_dpois));
+    define(env, "ppois", builtin("ppois", b_ppois));
+    define(env, "qpois", builtin("qpois", b_qpois));
+    define(env, "rpois", builtin("rpois", b_rpois));
 
     // String manipulation (vectorized over a character vector).
     define(env, "nchar", builtin("nchar", b_nchar));
@@ -1473,6 +1486,180 @@ fn b_rexp(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let rate = dist_param(args, 1, "rate", 1.0)?;
     Ok(SValue::doubles(
         interp.sample_with(|rng| rexp(n, rate, rng)),
+    ))
+}
+
+// ===========================================================================
+// Discrete distribution family (R-8b) — binomial and Poisson
+// ===========================================================================
+//
+// Unlike the continuous families (R-8), the discrete CDFs and samplers loop
+// over an integer *count*: `pbinom`/`qbinom` sum/scan O(size) terms,
+// `ppois` sums O(x) terms (Poisson has unbounded support), and the samplers
+// draw via inverse-CDF, so `rbinom` is O(n·size). Left unbounded, a crafted
+// `pbinom(0, size = 1e18)` or `rbinom(1e6, size = 1e9)` would hang the process.
+//
+// Two guards bound every loop:
+//   * MAX_DISCRETE_SUPPORT caps the per-element driver — `size` (binomial) and
+//     the `x` quantile fed to `ppois` — so no single term-sum runs away.
+//   * MAX_DISCRETE_WORK caps the *total* iterations of a call: `len · driver`
+//     for the vectorized `d`/`p`/`q` functions and `n · per_sample` for the
+//     samplers. Anything larger is a clean error, never an unbounded loop.
+// statistics-core's own `qpois`/Poisson sampler already cap their internal
+// scan at ~10_000, which we reuse as the Poisson per-element/per-sample driver.
+
+/// Largest per-element loop driver (`size`, or the `ppois` quantile) we accept.
+const MAX_DISCRETE_SUPPORT: u64 = 1 << 20; // ~1.05M
+/// Largest total inner-loop iteration count a single discrete call may incur.
+const MAX_DISCRETE_WORK: u128 = 1 << 27; // ~134M (sub-second)
+/// statistics-core caps the Poisson quantile/sampler scan at this many terms.
+const POISSON_SCAN_CAP: u128 = 10_000;
+
+/// Reject a discrete call whose estimated total iteration count exceeds the
+/// budget, before it runs.
+fn check_discrete_work(count: u128, driver: u128, what: &str) -> SResult<()> {
+    if count.saturating_mul(driver) > MAX_DISCRETE_WORK {
+        return Err(SError::BadArgs(format!(
+            "{what}: requested work exceeds the safety limit \
+             (count {count} × {driver} > {MAX_DISCRETE_WORK})"
+        )));
+    }
+    Ok(())
+}
+
+/// Read a **required** distribution parameter (by name or position) as a finite
+/// scalar — `dbinom`/`dpois` have no defaults for `size`/`prob`/`lambda`.
+fn required_param(args: &[Arg], pos: usize, name: &str) -> SResult<f64> {
+    let v = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some(name))
+        .map(|a| &a.value)
+        .or_else(|| nth_positional(args, pos))
+        .ok_or_else(|| {
+            SError::BadArgs(format!("argument \"{name}\" is missing, with no default"))
+        })?;
+    v.as_double()?
+        .get_value(0)
+        .filter(|x| x.is_finite())
+        .ok_or_else(|| SError::BadArgs(format!("invalid \"{name}\" (must be a finite number)")))
+}
+
+/// Read and validate the binomial parameters `(size, prob)`. `size` is a
+/// non-negative count capped at [`MAX_DISCRETE_SUPPORT`]; `prob` is in `[0, 1]`.
+fn binom_params(args: &[Arg]) -> SResult<(u64, f64)> {
+    let size_f = required_param(args, 1, "size")?;
+    if size_f < 0.0 || size_f > MAX_DISCRETE_SUPPORT as f64 {
+        return Err(SError::BadArgs(format!(
+            "size must be in 0..={MAX_DISCRETE_SUPPORT} (got {size_f})"
+        )));
+    }
+    let prob = required_param(args, 2, "prob")?;
+    if !(0.0..=1.0).contains(&prob) {
+        return Err(SError::BadArgs(format!(
+            "prob must be in [0, 1] (got {prob})"
+        )));
+    }
+    Ok((size_f.trunc() as u64, prob))
+}
+
+/// Read and validate the Poisson `lambda` (a non-negative rate).
+fn pois_lambda(args: &[Arg]) -> SResult<f64> {
+    let lambda = required_param(args, 1, "lambda")?;
+    if lambda < 0.0 {
+        return Err(SError::BadArgs(format!(
+            "lambda must be ≥ 0 (got {lambda})"
+        )));
+    }
+    Ok(lambda)
+}
+
+/// Map an integer-valued density/CDF/quantile over the first positional vector,
+/// truncating each element toward zero and propagating `NA`.
+fn map_discrete(args: &[Arg], f: impl Fn(f64) -> f64) -> SResult<SValue> {
+    let x = first_positional(args)?.as_double()?;
+    Ok(SValue::doubles(
+        x.iter()
+            .map(|v| if is_na_real(v) { na_real() } else { f(v) })
+            .collect(),
+    ))
+}
+
+// --- binomial ------------------------------------------------------------
+
+fn b_dbinom(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (size, prob) = binom_params(args)?; // pmf is O(1) per element
+    map_discrete(args, move |x| dbinom(x.trunc() as i64, size, prob))
+}
+fn b_pbinom(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (size, prob) = binom_params(args)?;
+    let x = first_positional(args)?.as_double()?;
+    check_discrete_work(x.len() as u128, size as u128, "pbinom")?;
+    map_discrete(args, move |q| pbinom(q.trunc() as i64, size, prob))
+}
+fn b_qbinom(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (size, prob) = binom_params(args)?;
+    let p = first_positional(args)?.as_double()?;
+    check_discrete_work(p.len() as u128, size as u128, "qbinom")?;
+    map_discrete(args, move |p| qbinom(p, size, prob) as f64)
+}
+fn b_rbinom(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let n = sample_count(args)?;
+    let (size, prob) = binom_params(args)?;
+    check_discrete_work(n as u128, size as u128, "rbinom")?; // each draw is O(size)
+    Ok(SValue::doubles(
+        interp
+            .sample_with(|rng| rbinom(n, size, prob, rng))
+            .iter()
+            .map(|&k| k as f64)
+            .collect(),
+    ))
+}
+
+// --- Poisson -------------------------------------------------------------
+
+fn b_dpois(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let lambda = pois_lambda(args)?; // pmf is O(1) per element
+    map_discrete(args, move |x| dpois(x.trunc() as i64, lambda))
+}
+fn b_ppois(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let lambda = pois_lambda(args)?;
+    let x = first_positional(args)?.as_double()?;
+    // ppois sums O(x) terms (unbounded support) — bound the largest x and the
+    // total work before evaluating.
+    let max_x = x
+        .iter()
+        .filter(|v| v.is_finite() && *v >= 0.0)
+        .map(|v| v.trunc() as i128)
+        .max()
+        .unwrap_or(0);
+    if max_x > MAX_DISCRETE_SUPPORT as i128 {
+        return Err(SError::BadArgs(format!(
+            "ppois: x = {max_x} exceeds the safety limit of {MAX_DISCRETE_SUPPORT}"
+        )));
+    }
+    check_discrete_work(x.len() as u128, max_x.max(1) as u128, "ppois")?;
+    map_discrete(args, move |q| ppois(q.trunc() as i64, lambda))
+}
+fn b_qpois(_i: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let lambda = pois_lambda(args)?;
+    let p = first_positional(args)?.as_double()?;
+    // statistics-core caps the quantile scan at ~10_000 terms per element.
+    check_discrete_work(p.len() as u128, POISSON_SCAN_CAP, "qpois")?;
+    map_discrete(args, move |p| qpois(p, lambda) as f64)
+}
+fn b_rpois(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let n = sample_count(args)?;
+    let lambda = pois_lambda(args)?;
+    // Knuth sampling is ~O(lambda) for small lambda; the large-lambda path uses
+    // the ~10_000-capped quantile. Bound the per-sample cost accordingly.
+    let per_sample = if lambda < 30.0 { 64 } else { POISSON_SCAN_CAP };
+    check_discrete_work(n as u128, per_sample, "rpois")?;
+    Ok(SValue::doubles(
+        interp
+            .sample_with(|rng| rpois(n, lambda, rng))
+            .iter()
+            .map(|&k| k as f64)
+            .collect(),
     ))
 }
 

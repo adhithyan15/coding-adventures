@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-06-16
+
+### Added (via the shared `s-runtime`)
+
+- **R-8b — discrete distribution families**: `dbinom`/`pbinom`/`qbinom`/`rbinom`
+  and `dpois`/`ppois`/`qpois`/`rpois`, with DoS-bounded count loops. R picks
+  these up unchanged from the shared evaluator. See `s-runtime` 0.4.0.
+
 ## [0.2.0] - 2026-06-16
 
 ### Added (via the shared `s-runtime`)

@@ -93,6 +93,16 @@ unchanged.
   `MAX_SEQ_LEN` so `rnorm(1e18)` errors instead of aborting. *Deferred (R-8b):*
   the discrete families (`dbinom`/`dpois`/…), whose CDF/sampling loop over a
   user-supplied count and need their own bounds.
+- **R-8b — the discrete distribution families** *(this PR)*. **Binomial**
+  (`dbinom`/`pbinom`/`qbinom`/`rbinom`, parameters `size`, `prob`) and **Poisson**
+  (`dpois`/`ppois`/`qpois`/`rpois`, parameter `lambda`), same `d`/`p`/`q`/`r`
+  shape and reproducible RNG as R-8. The discrete CDFs and inverse-CDF samplers
+  loop over an integer count (`pbinom` sums O(`size`) terms, `ppois` sums O(`x`)
+  terms, `rbinom` is O(n·`size`)), so two guards bound every loop: a per-element
+  cap (`size` and the `ppois` quantile ≤ `MAX_DISCRETE_SUPPORT` ≈ 1M) and a
+  total-iteration budget (`MAX_DISCRETE_WORK` ≈ 134M) over `len·driver` /
+  `n·per-sample`. `rbinom(1e6, 1e6, …)` and `ppois(1e18, …)` are clean errors,
+  never hangs.
 
 ## §4 Reuse strategy
 
