@@ -73,5 +73,7 @@ All notable changes to this package will be documented in this file.
   final route ingest checks.
 - Thread attach route load summaries that turn route-ingest readiness into
   final route load checks.
+- Thread attach route restore summaries that turn route-load readiness into
+  final route restore checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.

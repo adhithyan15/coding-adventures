@@ -70,6 +70,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
   route ingest checks
 - attach route load summaries that turn route-ingest readiness into final route
   load checks
+- attach route restore summaries that turn route-load readiness into final
+  route restore checks
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection
