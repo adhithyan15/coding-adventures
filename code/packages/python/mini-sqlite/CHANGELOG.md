@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.23.0] - 2026-06-16
+
+### Fixed
+
+- **`INTERSECT ALL` and `EXCEPT ALL` now raise `OperationalError: near "ALL": syntax error`** —
+  SQLite does not support bag semantics for `INTERSECT` or `EXCEPT`; only
+  `UNION ALL` is valid.  Previously mini-sqlite silently accepted these two
+  forms and returned results (treating them like plain `INTERSECT`/`EXCEPT`),
+  diverging from real SQLite behaviour.
+
+  Root cause: the SQL grammar accepts `[ "ALL" ]` for all three set operators
+  so the PEG parser can produce a meaningful token stream; the adapter
+  (`_set_op_clause`) is now the enforcement point.  When it detects
+  `INTERSECT ALL` or `EXCEPT ALL`, it raises `OperationalError` with the same
+  message byte-for-byte as the real engine.
+
+  | SQL form            | Before       | After                              |
+  |---------------------|--------------|------------------------------------|
+  | `UNION ALL`         | OK (correct) | OK (unchanged)                     |
+  | `INTERSECT ALL`     | returns rows | `OperationalError: near "ALL": …`  |
+  | `EXCEPT ALL`        | returns rows | `OperationalError: near "ALL": …`  |
+
+- **16 new oracle tests** in ``test_tier3_intersect_except_all_rejected.py``
+  verify that both operators raise the correct error type and message, that
+  plain `INTERSECT`/`EXCEPT` (without `ALL`) continue to work, and that
+  `UNION ALL` is unaffected.
+
 ## [2.22.0] - 2026-06-16
 
 ### Fixed

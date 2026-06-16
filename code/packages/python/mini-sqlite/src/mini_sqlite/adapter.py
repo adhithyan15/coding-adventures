@@ -429,6 +429,13 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode, str]:
     The body may be a ``select_stmt`` (the usual case) or a
     ``values_stmt`` (``UNION ALL VALUES (1)``).  The caller dispatches
     on ``body_rule`` to call the right translator.
+
+    SQLite compatibility note: only ``UNION ALL`` is valid.  SQLite parses
+    ``INTERSECT ALL`` and ``EXCEPT ALL`` as syntax errors because neither the
+    SQL-92 nor the SQLite dialect defines bag semantics for those two operators.
+    We enforce the same restriction here so callers get the same
+    ``OperationalError: near "ALL": syntax error`` they would from the real
+    SQLite engine.
     """
     op: str | None = None
     all_flag = False
@@ -446,6 +453,11 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode, str]:
             body_rule = c.rule_name
     if op is None or body_node is None or body_rule is None:
         raise ProgrammingError("malformed set_op_clause")
+    # SQLite only supports UNION ALL.  INTERSECT ALL and EXCEPT ALL are not
+    # part of the SQLite dialect (the grammar accepts them so the parser can
+    # report a clean error rather than a confusing token-mismatch).
+    if op in ("INTERSECT", "EXCEPT") and all_flag:
+        raise OperationalError('near "ALL": syntax error')
     return op, all_flag, body_node, body_rule
 
 
