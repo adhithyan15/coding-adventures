@@ -518,7 +518,7 @@ _SUPPORTED_CONTROL_BLOCK_COMMANDS = frozenset(
 _NOOP_CONTROL_BLOCK_COMMANDS = frozenset(
     {"run", ".run", "reset", ".reset", "quit", ".quit"}
 )
-_NOOP_CONTROL_BLOCK_SET_OPTIONS = frozenset({"noaskquit"})
+_NOOP_CONTROL_BLOCK_SET_OPTIONS = frozenset({"noaskquit", "filetype=ascii"})
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,

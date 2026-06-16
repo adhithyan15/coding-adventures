@@ -126,6 +126,7 @@ four 2k V(in)
 reset
 set noaskquit
 set filetype=ascii
+set filetype=binary
 run
 quit
 .endc
@@ -153,7 +154,7 @@ quit
       [".include", 2, "error"],
       [".lib", 3, "error"],
       [".control", 4, "error"],
-      [".control", 15, "error"],
+      [".control", 16, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
@@ -239,6 +240,7 @@ fourier 1k V(a)
 four 2k V(b)
 .reset
 .set noaskquit
+.set filetype=ascii
 run
 .quit
 .endc

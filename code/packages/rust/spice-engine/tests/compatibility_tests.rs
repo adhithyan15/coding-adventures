@@ -139,6 +139,7 @@ four 2k V(in)
 reset
 set noaskquit
 set filetype=ascii
+set filetype=binary
 run
 quit
 .endc
@@ -179,7 +180,7 @@ quit
             (".include", 2, "error"),
             (".lib", 3, "error"),
             (".control", 4, "error"),
-            (".control", 15, "error")
+            (".control", 16, "error")
         ]
     );
     assert_eq!(
@@ -324,6 +325,7 @@ fourier 1k V(a)
 four 2k V(b)
 .reset
 .set noaskquit
+.set filetype=ascii
 run
 .quit
 .endc
