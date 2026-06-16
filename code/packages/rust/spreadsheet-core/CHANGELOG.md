@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.3.0
+
+**Structural-edit reference arithmetic** (`edit.rs`) — the pure substrate of the
+insert/delete rows & columns feature. Mutates no workbook state; a later layer
+wires these transforms into `Workbook` (relocate cells, rewrite each formula's
+AST, rebuild the dependency graph, recalc).
+
+- `StructuralEdit`: `InsertRows` / `DeleteRows` / `InsertCols` / `DeleteCols`,
+  each `{ at, count }` (1-based).
+- `CellAddress::adjust(edit) -> Option<CellAddress>`: where an address moves, or
+  `None` if it sat on a deleted line (→ `#REF!`). Structural edits shift **both**
+  relative and absolute references (`$A$1` → `$A$2` when a row is inserted
+  above) — absolute flags are preserved, not exempted; that's distinct from
+  `CellAddress::shift`'s copy/paste semantics.
+- `CellRange::adjust(edit) -> Option<CellRange>`: grow on interior insert, move
+  on insert-before, shrink/clamp on partial delete, `None` when the whole range
+  is deleted. Absolute corner flags preserved.
+- `FormulaAst::adjust(edit) -> FormulaAst`: pure recursive rewrite of every
+  `Ref`/`Range`; deleted references collapse to the `#REF!` error literal, which
+  then propagates through evaluation like any error.
+- 18 unit tests covering before/at/in-band/after for rows and columns, absolute
+  shifting, range grow/move/shrink/destroy, nested-AST recursion, and the
+  zero-count identity edit.
+
 ## 0.2.0
 
 **Viewport primitive for the virtualized infinite sheet** (`viewport.rs`,
