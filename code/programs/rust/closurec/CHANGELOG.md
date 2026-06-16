@@ -2,6 +2,65 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.141.0] - 2026-06-16
+
+### Added (CLOC12.158 — SIMPLE pipeline gains `remove-unused-vars`)
+
+The `--compilation_level SIMPLE` pass pipeline is now
+`constant-fold → fold-control-flow → dce → inline → remove-unused-vars`. The
+final pass deletes top-level `var`/`let`/`const` bindings that nothing
+references, when their initializer is side-effect-free:
+
+| Source | SIMPLE output |
+|--------|---------------|
+| `var dead = 1 + 2; …` | *(removed — folds to `3`, then dropped)* |
+| `var live = 10; log(live);` | `var live=10;log(live);` *(referenced)* |
+| `var impure = run();` | `var impure=run();` *(kept — call may have a side effect)* |
+
+The `var dead = 1 + 2` case shows `constant-fold` and `remove-unused-vars`
+composing: the initializer must fold to a literal before the binding reads as a
+pure, removable declaration.
+
+- `inline` is now also registered. `remove-unused-vars` declares
+  `depends_on = ["dce", "inline"]`, so the scheduler will not run it unless
+  `inline` is in the pipeline. `inline` is an identity pass today; it holds the
+  canonical slot until real function inlining lands.
+- `SIMPLE_PASS_NAMES` is now
+  `["constant-fold", "fold-control-flow", "dce", "inline", "remove-unused-vars"]`;
+  the `passes` field in the `simple_v2` correlation-vector trace lists all five.
+
+This relies on `closure-pass-remove-unused-vars` 0.4.0, which made the pass
+actually remove bindings (it was previously a no-op on bridged programs).
+
+### Verified
+- New `tests/diff/simple-remove-unused-vars/` end-to-end fixture +
+  `tests/diff_simple_remove_unused_vars.rs`:
+  `var dead = 1 + 2; var live = 10; var impure = run(); log(live);` ⇒
+  `var live=10;var impure=run();log(live);`.
+- New unit tests `simple_remove_unused_drops_dead_top_level_var`,
+  `simple_remove_unused_composes_with_constant_fold`,
+  `simple_remove_unused_keeps_impure_initializer` (purity gate), and
+  `simple_remove_unused_whitespace_only_keeps_var`.
+- Existing `simple_v2` CV test updated to expect all five pass names.
+
+### Fixture / test churn (default level is SIMPLE)
+
+Adding `remove-unused-vars` to the default pipeline means an unreferenced
+top-level `var` is now deleted by default. Several existing tests used a bare
+`var x = 1;` as inert filler and broke when it vanished. Fixed two ways:
+- **Feature-orthogonal tests pinned to `WHITESPACE_ONLY`** (they test charset,
+  `--emit_use_strict`, IIFE/output-wrapper isolation, glob expansion,
+  output-file plumbing, source maps, externs, concatenation/newline handling —
+  none of which depend on the optimization level): the `charset-us-ascii`,
+  `charset-utf8`, `emit-use-strict`, `isolation-iife`, `js-glob`,
+  `js-output-file`, and `output-wrapper` diff fixtures, plus the corresponding
+  `run.rs` unit tests. This isolates them from future optimizer changes too.
+- **SIMPLE-level tests given referenced vars** so the binding survives and the
+  behavior under test stays observable: `simple_level_constant_folds_arithmetic`,
+  `simple_level_strips_whitespace_not_identity`,
+  `simple_level_bridge_status_n_a_without_cv`, and the `simple-constant-fold`
+  fixture now pass their values to a `report(...)`/`use(...)` call.
+
 ## [0.140.0] - 2026-06-16
 
 ### Added (CLOC12.157 — SIMPLE pipeline gains `dce`)
