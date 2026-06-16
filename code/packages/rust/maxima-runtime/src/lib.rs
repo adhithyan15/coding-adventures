@@ -244,12 +244,17 @@ fn check_statement_token_counts(src: &str) -> Result<(), String> {
 
     let mut count: usize = 0;
     for token in &tokens {
-        // `;` and `$` are the statement terminators; the next statement starts
-        // its own budget. (Matched on the lexeme, which is robust regardless of
-        // how the token is classified.)
-        if token.value == ";" || token.value == "$" {
-            count = 0;
-            continue;
+        // Reset on a statement terminator. Match on the token *type* (`SEMI` /
+        // `DOLLAR`), never on its lexeme: a STRING literal like `";"` or `"$"`
+        // has its quotes stripped, so its `value` is `;`/`$` while its type is
+        // `STRING` — keying on `value` would let such a literal masquerade as a
+        // terminator and reset the counter mid-expression, bypassing the cap.
+        match token.effective_type_name() {
+            "SEMI" | "DOLLAR" => {
+                count = 0;
+                continue;
+            }
+            _ => {}
         }
         count += 1;
         if count > MAX_STATEMENT_TOKENS {
@@ -460,6 +465,29 @@ mod tests {
         assert!(
             err.contains("too complex"),
             "quote-in-comment bypass not closed: {err:?}"
+        );
+    }
+
+    #[test]
+    fn a_string_literal_terminator_does_not_reset_the_cap() {
+        // A STRING literal `";"` / `"$"` has its quotes stripped, so its lexeme
+        // is `;`/`$` — but its token TYPE is STRING, not a terminator. Splicing
+        // such literals into one deep expression must NOT reset the per-statement
+        // counter (which would bypass the cap). Build a deep `1+1+…` chain with a
+        // `";"+` spliced in every 50 terms and confirm it is still rejected.
+        let mut src = String::new();
+        for i in 0..6_000 {
+            src.push_str("1+");
+            if i % 50 == 0 {
+                src.push_str("\";\"+"); // a string literal whose content is ';'
+            }
+        }
+        src.push_str("1;");
+        assert!(src.len() <= MAX_INPUT_LEN);
+        let err = eval(&src).unwrap_err(); // must NOT abort
+        assert!(
+            err.contains("too complex"),
+            "string-literal terminator must not reset the cap: {err:?}"
         );
     }
 
