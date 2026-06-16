@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck control rawfile output option routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `set wr_vecnames` and `set wr_singlescale` rawfile output
+  toggles as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript.
+
 - **Deck control ASCII filetype option routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
   `.control` block `set filetype=ascii` output-format options as no-op control

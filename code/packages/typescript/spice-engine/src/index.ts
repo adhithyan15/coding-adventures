@@ -2855,7 +2855,12 @@ const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
   ".plot",
 ]);
 const NOOP_CONTROL_BLOCK_COMMANDS = new Set(["run", ".run", "reset", ".reset", "quit", ".quit"]);
-const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set(["noaskquit", "filetype=ascii"]);
+const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set([
+  "noaskquit",
+  "filetype=ascii",
+  "wr_vecnames",
+  "wr_singlescale",
+]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;

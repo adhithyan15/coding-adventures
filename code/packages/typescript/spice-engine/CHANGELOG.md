@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Accept selected `.control` block `set wr_vecnames` and `set wr_singlescale`
+  rawfile output toggles as no-op control commands in `analyzeDeckControls`
+  and `resolveDeckSources`, matching Python and Rust.
 - Accept selected `.control` block `set filetype=ascii` output-format options
   as no-op control commands in `analyzeDeckControls` and `resolveDeckSources`,
   matching Python and Rust.
