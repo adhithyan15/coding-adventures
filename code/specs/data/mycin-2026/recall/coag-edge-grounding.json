@@ -1,0 +1,453 @@
+{
+  "kind": "coag-edge-grounding",
+  "records": [
+    {
+      "id": "factor_deficiency__hemophilia_a",
+      "relation": "factor_deficiency",
+      "subject": "hemophilia_a",
+      "object": "factor_viii",
+      "claim": "Hemophilia A is caused by a deficiency of coagulation factor VIII.",
+      "grounded": {
+        "id": "factor_deficiency__hemophilia_a",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK551607/",
+        "source_title": "Hemophilia - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Hemophilia A and B result from factor VIII and factor IX protein deficiency or dysfunction, respectively, and are characterized by prolonged and excessive bleeding after minor trauma or sometimes even spontaneously.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK1404/ (GeneReviews Hemophilia A) — authoritative and would also support the fact, but not fetched/quoted; redundant once StatPearls provided a direct verbatim quote.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK560494/ (Acquired Hemophilia, StatPearls) — discarded: covers autoantibody-mediated acquired factor VIII deficiency, a different etiology than the congenital factor-deficiency relation asserted by the fact.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK560792/ (Hemophilia B) and NBK580494 (Factor V Deficiency) — discarded: about factor IX / factor V, not the hemophilia_a → factor_viii edge."
+        ],
+        "note": "ENTAILED. The fetched StatPearls \"Hemophilia\" page states \"Hemophilia A and B result from factor VIII and factor IX protein deficiency or dysfunction, respectively.\" The distributive \"respectively\" pairs the first subject (Hemophilia A) with the first object (factor VIII), so the source directly asserts Hemophilia A → factor VIII deficiency. Direction is correct (subject hemophilia_a maps to object factor_viii); no inferential leap required. The \"or dysfunction\" clause broadens beyond pure deficiency but the deficiency relation the fact asserts is explicitly present."
+      },
+      "verify": {
+        "id": "factor_deficiency__hemophilia_a",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the quote uses a \"respectively\" coordination — \"Hemophilia A and B result from factor VIII and factor IX protein deficiency or dysfunction, respectively.\" One must rely on the \"respectively\" binding to map Hemophilia A to factor VIII (and B to IX) rather than the reverse; the sentence does not name \"Hemophilia A is caused by factor VIII\" in an uncoordinated, standalone form. Additionally the quote says \"deficiency or dysfunction,\" whereas the FACT asserts only \"deficiency.\" However, the refutation fails: \"respectively\" unambiguously binds A→VIII per standard English distributive reading, and \"deficiency\" is explicitly one of the listed mechanisms, so the causal edge (Hemophilia A caused by factor VIII deficiency) is directly stated, not inferred.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "coag_inheritance__hemophilia_a",
+      "relation": "coag_inheritance",
+      "subject": "hemophilia_a",
+      "object": "x_linked_recessive",
+      "claim": "Hemophilia A is inherited in an X-linked recessive pattern.",
+      "grounded": {
+        "id": "coag_inheritance__hemophilia_a",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK470265/",
+        "source_title": "Hemophilia A - StatPearls - NCBI Bookshelf",
+        "byte_quote": "An X-linked, recessive hemorrhagic trait or gene induces Hemophilia A.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK551607/ (Hemophilia, StatPearls) — general hemophilia overview, not the dedicated Hemophilia A entry; discarded in favor of the disease-specific page.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK1404/ (Hemophilia A, GeneReviews) — also authoritative/primary, but I fetched the StatPearls entry which yielded a single verbatim sentence naming both 'X-linked' and 'recessive' for Hemophilia A; not needed as second source.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK557383/ (Genetics, X-Linked Inheritance) — describes the inheritance mode generically, does not assert the specific hemophilia_a edge.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC7704156/ and PMC9600608 — narrow papers on skewed X-inactivation in carrier females; tangential to the base inheritance-pattern claim.",
+          "https://pubmed.ncbi.nlm.nih.gov/16684001/ — abstract on genetic diagnosis of bleeding disorders; not a definitional inheritance-pattern statement."
+        ],
+        "note": "ENTAILED. The fetched StatPearls (NCBI Bookshelf, NIH) Hemophilia A page states verbatim in its Etiology section: \"An X-linked, recessive hemorrhagic trait or gene induces Hemophilia A.\" This directly names the subject (Hemophilia A) and asserts both qualifiers of the object (X-linked, recessive) as the inheritance/causal trait, forcing the edge hemophilia_a -> x_linked_recessive. Direction is correct: the source attributes the X-linked-recessive trait TO Hemophilia A (the disease is the subject), not the reverse. No interpretive leap required."
+      },
+      "verify": {
+        "id": "coag_inheritance__hemophilia_a",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: argue the quote states only that an \"X-linked, recessive ... trait or gene induces Hemophilia A\" — describing the causative gene/trait, not explicitly asserting the disease's inheritance pattern. This fails: (1) describing the disease-causing gene as X-linked recessive IS the standard way of stating the inheritance pattern in clinical genetics; (2) the immediately following sentence reinforces \"Hemophilia A's X-linked trait...\"; (3) the page separately gives the textbook X-linked recessive transmission rules — carrier females transmit to 50% of sons, affected males pass carrier status to all daughters and to no sons. The edge (Hemophilia A = X-linked recessive) is directly stated and corroborated, so the refutation does not hold.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prolonged_test__hemophilia_a",
+      "relation": "prolonged_test",
+      "subject": "hemophilia_a",
+      "object": "aptt",
+      "claim": "Factor VIII deficiency prolongs the aPTT with a normal PT.",
+      "grounded": {
+        "id": "prolonged_test__hemophilia_a",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK541050/",
+        "source_title": "Bleeding Disorders - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Hemophiliacs have an elevated aPTT and a normal PT/INR, as well as normal bleeding time and platelet count.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK604215/ (Interpretation of Blood Clotting Studies, StatPearls): only states PTT can 'identify' factor VIII deficiency / hemophilia A — names the intrinsic-pathway association but does NOT assert prolonged aPTT with normal PT, so it gives direction at best, not full entailment.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK507772/ (Partial Thromboplastin Time, StatPearls): states 'Factor VIII deficiency characterizes Hemophilia A... This produces an intrinsic coagulation pathway defect and thus elevated PTT' — entails hemophilia_a -> elevated aPTT but is silent on PT being normal, so it grounds only half the relation. Strong secondary corroborator, not chosen as primary because it omits the normal-PT clause.",
+          "https://cdho.org/factsheets/hemophilia-a/ (CDHO factsheet): dental-hygiene regulatory body, secondary/non-authoritative for coagulation lab patterns — discarded.",
+          "https://emedicine.medscape.com/article/779322-workup (Medscape): secondary clinical reference, not a primary/NIH source — not fetched/used.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK580494/ (Factor V Deficiency): wrong factor (V, not VIII) — irrelevant to this edge.",
+          "https://pubmed.ncbi.nlm.nih.gov/10919413/ (Factor VIII inhibitors): about acquired inhibitors/assay diagnosis, not the baseline congenital hemophilia A aPTT/PT pattern — off-target."
+        ],
+        "note": "ENTAILED. The chosen quote from NCBI Bookshelf StatPearls 'Bleeding Disorders' (NBK541050) states both halves of the fact in a single sentence: hemophiliacs (factor VIII deficiency = hemophilia A) have 'an elevated aPTT and a normal PT/INR'. Elevated/prolonged aPTT + normal PT = the exact hemophilia_a -> aptt relation asserted, with no inferential leap. The subject (hemophilia) and predicate (aPTT prolonged, PT normal) match directly; direction (deficiency -> test prolongation) is correct. The only minor generalization is that 'hemophiliacs' covers both A (factor VIII) and B (factor IX); the identification of hemophilia A with factor VIII deficiency is independently confirmed verbatim on NBK507772 ('Factor VIII deficiency characterizes Hemophilia A... thus elevated PTT'), so the factor-VIII-specific attribution is also grounded, not assumed."
+      },
+      "verify": {
+        "id": "prolonged_test__hemophilia_a",
+        "byte_stable": true,
+        "refute_attempt": "Tried to refute on two fronts. (1) The quoted sentence says \"Hemophiliacs\" generically, and the page (StatPearls \"Bleeding Disorders\") covers Hemophilia A, Hemophilia B, and von Willebrand disease — so \"elevated aPTT, normal PT/INR\" might not specifically attach to Factor VIII deficiency. This fails: a second sentence on the same page states \"The aPTT, a measure of the intrinsic pathway, is elevated due to low FVIII levels,\" explicitly tying the elevated aPTT to low Factor VIII (Hemophilia A). (2) \"elevated aPTT\" vs the FACT's \"prolongs the aPTT\" — these are equivalent (prolonged clotting time = elevated aPTT value), so no semantic gap. Both refutation attempts fail; the edge (Factor VIII deficiency -> prolonged/elevated aPTT with normal PT) is directly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "factor_deficiency__hemophilia_b",
+      "relation": "factor_deficiency",
+      "subject": "hemophilia_b",
+      "object": "factor_ix",
+      "claim": "Hemophilia B (Christmas disease) is caused by a deficiency of coagulation factor IX.",
+      "grounded": {
+        "id": "factor_deficiency__hemophilia_b",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK560792/",
+        "source_title": "Hemophilia B - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Hemophilia B, also known as Christmas disease, is the second most prevalent form of hemophilia. A defect in the F9 gene causes hemophilia B, leading to inadequate production of factor IX.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pubmed.ncbi.nlm.nih.gov/32809627/ — PubMed abstract/citation stub for the same StatPearls chapter; discarded in favor of the full primary text on NCBI Bookshelf.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK541050/ — 'Bleeding Disorders' StatPearls covers hemophilia broadly, not specific to the hemophilia B → factor IX relation; less direct.",
+          "https://www.ncbi.nlm.nih.gov/gtr/conditions/C0008533/ — Genetic Testing Registry registry entry, not a narrative authoritative text with a quotable causal sentence.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8484143/ — murine bone-mass model paper; supports factor IX/Christmas disease link but is a specialized research article, not the primary clinical reference.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8627312/ — clinical genetics review; corroborates but secondary to the chosen StatPearls chapter.",
+          "clinicaltrials.gov PDFs (NCT03861273, NCT01425723, NCT02695160) — trial protocols, not authoritative descriptive references for disease etiology."
+        ],
+        "note": "ENTAILED. The fetched StatPearls page states verbatim that 'Hemophilia B, also known as Christmas disease' results from 'inadequate production of factor IX' (a defect in the F9 gene). This directly equates the alias Christmas disease with hemophilia B and names factor IX deficiency as the cause, so the relation hemophilia_b → factor_ix is forced by the quote with no inference required. The source frames it as a defect in F9 causing inadequate factor IX production, which is the molecular basis of the factor IX deficiency; this is the standard equivalence (deficiency = inadequate production), not a leap."
+      },
+      "verify": {
+        "id": "factor_deficiency__hemophilia_b",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the quote attributes the root cause to an F9 gene defect, with factor IX deficiency as the downstream mechanism — arguably \"caused by a gene defect,\" not \"caused by a deficiency.\" This fails: the quote explicitly states the F9 defect leads to \"inadequate production of factor IX\" (= factor IX deficiency) and names the disease as Hemophilia B (Christmas disease). The gene-defect framing entails, rather than contradicts, the FACT. The relation Hemophilia B/Christmas disease <-> inadequate production of factor IX is stated directly and verbatim.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "coag_inheritance__hemophilia_b",
+      "relation": "coag_inheritance",
+      "subject": "hemophilia_b",
+      "object": "x_linked_recessive",
+      "claim": "Hemophilia B is inherited in an X-linked recessive pattern.",
+      "grounded": {
+        "id": "coag_inheritance__hemophilia_b",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK560792/",
+        "source_title": "Hemophilia B - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Hemophilia B primarily follows an X-linked recessive pattern of inheritance.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK1495/ (GeneReviews Hemophilia B) — authoritative and would corroborate, but not fetched/quoted; redundant once StatPearls gave a direct verbatim statement.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK551607/ (StatPearls Hemophilia, general) — covers both A and B; less specific to the hemophilia_b subject than NBK560792, so not used as the primary anchor.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK557383/ (StatPearls Genetics, X-Linked Inheritance) — explains X-linked recessive mechanism generally but does not tie it specifically to hemophilia B as the named subject.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK541050/ (StatPearls Bleeding Disorders) — broader bleeding-disorder overview, not the disease-specific subject node.",
+          "https://www.researchgate.net/publication/349662530_Hemophilia_B (ResearchGate PDF) — secondary/aggregator host; primary NCBI source preferred and obtained."
+        ],
+        "note": "ENTAILED. The fetched StatPearls page states verbatim: \"Hemophilia B primarily follows an X-linked recessive pattern of inheritance.\" This names the subject (Hemophilia B) and the predicate/object (X-linked recessive inheritance) with correct direction (hemophilia_b → x_linked_recessive). No inferential leap is required; the source asserts the exact relation. A corroborating sentence on the same page (\"Hemophilia A and B are both inherited in an X-linked recessive pattern...\") reinforces it. The qualifier \"primarily\" reflects that some cases arise from de novo/spontaneous mutation, but the inheritance MODE when inherited is X-linked recessive, which matches the fact."
+      },
+      "verify": {
+        "id": "coag_inheritance__hemophilia_b",
+        "byte_stable": true,
+        "refute_attempt": "Tried to undercut the edge on two angles. (1) The byte_quote hedges with \"primarily follows,\" and the page adds that the defect \"can occur either through X-linked inheritance or a spontaneous de novo mutation\" — arguably weakening \"is inherited X-linked recessive.\" But a de novo mutation is the absence of inheritance, not a competing inheritance pattern, so it does not contradict the stated inheritance mode. (2) \"Carrier females may also experience occasional bleeding symptoms\" — this concerns phenotype expression in carriers, not the inheritance pattern, and is fully consistent with X-linked recessive inheritance. Refutation fails: a second, unhedged sentence on the same page states \"Hemophilia A and B are both inherited in an X-linked recessive pattern,\" directly and redundantly asserting the edge.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prolonged_test__hemophilia_b",
+      "relation": "prolonged_test",
+      "subject": "hemophilia_b",
+      "object": "aptt",
+      "claim": "Factor IX deficiency prolongs the aPTT with a normal PT.",
+      "grounded": {
+        "id": "prolonged_test__hemophilia_b",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK560792/",
+        "source_title": "Hemophilia B - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Patients with hemophilia B will exhibit a prolonged aPTT, a normal PT, and normal platelet levels, indicating an intrinsic pathway disruption.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK1495/ (Hemophilia B - GeneReviews): discarded, not fetched/quoted; StatPearls NBK560792 already supplied the exact aPTT/PT relation, so no need for a second source.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK604215/ (Interpretation of Blood Clotting Studies): discarded as a general coag-interpretation chapter, not hemophilia-B-specific; less direct for the subject->object edge.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK507772/ (Partial Thromboplastin Time): discarded, general aPTT background, does not name hemophilia B as the subject of the relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK580494/ (Factor V Deficiency): discarded, wrong factor (V, common pathway), would prolong both PT and aPTT.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK560494/ (Acquired Hemophilia): discarded, acquired factor inhibitor, not the F9-deficiency FACT under test.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK541050/ (Bleeding Disorders): discarded, broad overview, not hemophilia-B-specific.",
+          "Two USPTO patent PDFs (uspto.gov): discarded as non-authoritative patent filings, not primary medical/peer-reviewed references."
+        ],
+        "note": "ENTAILED. The fetched quote names hemophilia B (= factor IX/F9 deficiency, as the same chapter states the F9-gene defect causes inadequate factor IX) as the subject and asserts exactly the two predicates of the FACT: prolonged aPTT AND normal PT. Direction is correct (hemophilia_b -> aptt). No inferential leap is required; the sentence states the relation verbatim. Source is a primary/authoritative NIH NCBI Bookshelf (StatPearls) hematology reference, satisfying the primary-source requirement."
+      },
+      "verify": {
+        "id": "prolonged_test__hemophilia_b",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the FACT says \"Factor IX deficiency\" but the verbatim quote says \"hemophilia B,\" so one could argue the quote does not literally name Factor IX deficiency, only the eponymous disease. This refutation fails: the same paragraph the quote is drawn from explicitly discusses \"factor IX activity levels,\" and hemophilia B is, by definition, Factor IX deficiency. The relation itself — prolonged aPTT with a normal PT — is stated word-for-word in the quote (\"prolonged aPTT, a normal PT\"). No equivocation, hedging, or negation surrounds it; it is asserted as the expected finding. The edge is genuinely stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "factor_deficiency__von_willebrand_disease",
+      "relation": "factor_deficiency",
+      "subject": "von_willebrand_disease",
+      "object": "von_willebrand_factor",
+      "claim": "Von Willebrand disease results from a deficiency of von Willebrand factor.",
+      "grounded": {
+        "id": "factor_deficiency__von_willebrand_disease",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK459222/",
+        "source_title": "Von Willebrand Disease - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Von Willebrand disease is a bleeding disorder caused by the qualitative or quantitative deficiency of the pro-von Willebrand factor.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/sites/books/NBK459222/ — duplicate/legacy /sites/ path of the same StatPearls article; redundant with the canonical /books/ URL actually fetched.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK541050/ (Bleeding Disorders, StatPearls) — broader overview, not VWD-specific; not needed once the dedicated VWD article supplied a direct quote.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK565885/ and https://www.ncbi.nlm.nih.gov/books/NBK559062/ (von Willebrand Factor / Physiology articles) — describe the factor itself, not the disease→deficiency relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK7014/ (GeneReviews VWD) — authoritative but genetic-focused; the StatPearls quote already entails the relation, so not fetched.",
+          "https://pubmed.ncbi.nlm.nih.gov/29083708/ — PubMed citation stub for the same StatPearls article; the full Bookshelf page is the better primary source and was fetched directly."
+        ],
+        "note": "ENTAILED. The fetched quote states the disease is \"caused by the qualitative or quantitative deficiency of the pro-von Willebrand factor,\" which directly asserts von_willebrand_disease → deficiency of von_willebrand_factor with the exact subject→object direction of the FACT. A corroborating Introduction sentence (\"Any qualitative or quantitative deficiency of pro-von Willebrand factor will lead to an increased bleeding tendency, and this syndrome is called Von Willebrand disease\") states the same relation. The source's \"pro-von Willebrand factor\" (the precursor) is the same molecule as von Willebrand factor for this relation; no inferential leap required."
+      },
+      "verify": {
+        "id": "factor_deficiency__von_willebrand_disease",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: (1) the source says \"pro-von Willebrand factor\" (the precursor protein), not \"von Willebrand factor\" as the FACT states; (2) the source pairs \"qualitative OR quantitative deficiency,\" meaning some VWD (qualitative/type 2) involves dysfunctional factor present in normal amounts rather than a true deficiency, so reducing the cause to \"a deficiency\" is incomplete. However, neither defeats the relation: \"quantitative deficiency\" is explicitly a deficiency, pro-VWF is the VWF precursor, and the source's verbatim \"caused by ... deficiency\" directly asserts the deficiency-causes-disease edge.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "coag_inheritance__von_willebrand_disease",
+      "relation": "coag_inheritance",
+      "subject": "von_willebrand_disease",
+      "object": "autosomal_dominant",
+      "claim": "Von Willebrand disease (type 1) is inherited in an autosomal dominant pattern.",
+      "grounded": {
+        "id": "coag_inheritance__von_willebrand_disease",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK459222/",
+        "source_title": "Von Willebrand Disease - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Type 1: This is an autosomal dominant disease (AD, incomplete penetrance approximately 60%) and is caused by a partial quantitative deficiency of von Willebrand factor.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK7014/ (GeneReviews, Von Willebrand Disease) — also authoritative and discusses autosomal dominant inheritance, but the search-result snippet conflated general VWD inheritance with type 1; not fetched/quoted because StatPearls gave a cleaner, type-1-specific verbatim statement. Discarded to avoid relying on an unfetched paraphrase.",
+          "https://www.ncbi.nlm.nih.gov/gtr/tests/579429/ (GTR clinical genetic test entry: 'von Willebrand disease, type 1, 193400, Autosomal dominant') — corroborates direction but is a test-registry/database entry, not a narrative primary/reference text; weaker as a quotable primary source.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC2675680/ — single-variant (C1149R) case study, too narrow to ground the general type-1 inheritance claim.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6521421/ — canine (Kromfohrländer breed) vWDI study, wrong species/scope.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK541050/ (Bleeding Disorders StatPearls) — broader topic, not type-1 specific."
+        ],
+        "note": "ENTAILED. The fetched StatPearls page states verbatim that VWD \"Type 1: This is an autosomal dominant disease,\" which directly and explicitly asserts the relation (von_willebrand_disease type 1 → autosomal_dominant) in the correct subject→object direction. No inferential leap is required. One nuance worth recording: the same source notes type 1 is autosomal dominant WITH incomplete penetrance (~60%), so while the dominant-inheritance fact is fully grounded, the clinical picture is more nuanced than a simple Mendelian dominant. This does not contradict the FACT as stated."
+      },
+      "verify": {
+        "id": "coag_inheritance__von_willebrand_disease",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation attempted: (1) that \"Type 1\" in the quote is ambiguous and might not refer to VWD type 1 — but the surrounding context places it under \"Inherited phenotypic forms of Von Willebrand disease,\" so \"Type 1\" unambiguously means VWD type 1. (2) That \"incomplete penetrance approximately 60%\" undercuts the \"autosomal dominant pattern\" claim — but incomplete penetrance is a recognized modifier within an AD inheritance pattern, not a negation of it; the quote still explicitly classifies the disease as \"an autosomal dominant disease (AD).\" Both refutation angles fail: the source verbatim states \"Type 1: This is an autosomal dominant disease (AD...),\" directly asserting the exact edge (VWD type 1 → autosomal dominant inheritance).",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prolonged_test__von_willebrand_disease",
+      "relation": "prolonged_test",
+      "subject": "von_willebrand_disease",
+      "object": "bleeding_time",
+      "claim": "Von Willebrand disease classically prolongs the bleeding time (defective platelet adhesion).",
+      "grounded": {
+        "id": "prolonged_test__von_willebrand_disease",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK559062/",
+        "source_title": "Physiology, Von Willebrand Factor - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Lab findings include decreased vWF, normal platelet count, increased bleeding time, normal prothrombin time, and normal or decreased factor VIII corresponding with normal or increased partial thromboplastin time, depending on which domain is affected.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK459222/ — Von Willebrand Disease (StatPearls): the disease-specific article confirms vWF's role in platelet adhesion ('help in platelet adhesion and binding to endothelial components after a vascular injury') but does NOT mention bleeding time at all in its lab/evaluation sections (focuses on vWF antigen, ristocetin cofactor, factor VIII). Could not supply the bleeding-time relation, so discarded as the citation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK541050/ — Bleeding Disorders (StatPearls): mentions 'increased bleeding time' with vWD but the fetch could not return a single clean verbatim sentence binding the two; weaker/ambiguous wording, so superseded by NBK559062.",
+          "https://www.merckmanuals.com/professional/... — Merck Manual: authoritative but secondary to NCBI Bookshelf and notes bleeding time is 'unreliable and no longer done'; not fetched for a quote since a cleaner NIH primary source was available.",
+          "https://www.sciencedirect.com/... and emedicine.medscape.com — paywalled/secondary; not fetched.",
+          "Search-result snippets (not fetched pages) — not used as quotes per no-fabrication rule."
+        ],
+        "note": "ENTAILED. The quote directly lists 'increased bleeding time' as a lab finding in von Willebrand disease (the sentence is in the vWD pathophysiology/Type-3 discussion), which is exactly the von_willebrand_disease → bleeding_time (prolonged) relation. The platelet-adhesion mechanism in the FACT is also grounded on the same page ('vWF is a glycoprotein crucial to primary hemostasis through platelet and subendothelial collagen adhesion'; 'The A1 domain binds GP1b on platelets'). 'Increased bleeding time' = 'prolonged bleeding time', so no interpretive leap is required to confirm the edge. Minor caveat (not affecting grounding): bleeding time as a clinical test is now considered obsolete/unreliable, but the classic relation the FACT asserts is correctly stated by the source."
+      },
+      "verify": {
+        "id": "prolonged_test__von_willebrand_disease",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the byte_quote lists lab findings only — \"increased bleeding time\" — and does NOT contain the FACT's mechanistic clause \"(defective platelet adhesion)\". So the parenthetical mechanism is not grounded by this exact quote. However, the load-bearing edge of the FACT — that VWD prolongs/increases the bleeding time — is stated verbatim: the quote says VWD lab findings \"include decreased vWF ... increased bleeding time.\" \"Increased bleeding time\" is synonymous with \"prolongs the bleeding time,\" so the core relation holds. The refutation only narrows to the mechanism gloss, which is standard, uncontroversial physiology consistent with (though not explicitly asserted by) this sentence. The edge itself stands.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "factor_deficiency__factor_vii_deficiency",
+      "relation": "factor_deficiency",
+      "subject": "factor_vii_deficiency",
+      "object": "factor_vii",
+      "claim": "Factor VII deficiency is a deficiency of coagulation factor VII.",
+      "grounded": {
+        "id": "factor_deficiency__factor_vii_deficiency",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6462297/",
+        "source_title": "Factor VII Gene Defects: Review of Functional Studies and Their Clinical Implications (PMC6462297, NCBI/PMC)",
+        "byte_quote": "The deficiency of FVII was first described in 1951. The disease is known as a hereditary bleeding disorder",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC5406770/ (Factor VII Deficiency: Clinical Phenotype, Genotype and Therapy) — fetched, but its strongest definitional sentence ('Inherited Factor VII deficiency is the most common among rare autosomal recessive bleeding disorders') asserts prevalence/inheritance, not the subject->object identity (deficiency OF factor VII). Discarded in favor of a source with an explicit 'deficiency of FVII' statement.",
+          "https://pubmed.ncbi.nlm.nih.gov/40571675/ and https://pubmed.ncbi.nlm.nih.gov/39209290/ and https://pubmed.ncbi.nlm.nih.gov/19598068/ — PubMed abstract landing pages only; not fetched as full primary text once a PMC full-text source already supplied a verbatim defining quote.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC4519705/ (Acquired deficiency of coagulation factor VII) — relevant and authoritative, but scoped to the acquired subtype; the merged FVII-deficiency fact is better grounded by the general gene-defects review. Title itself ('deficiency of coagulation factor VII') corroborates the relation.",
+          "https://clinicaltrials.gov/study/NCT03788460 — a clinical-trial registry entry (PT/INR vs Factor 7 correlation), not a definitional primary source; discarded."
+        ],
+        "note": "ENTAILED. The fetched NCBI/PMC review explicitly names the entity as 'FVII' = coagulation Factor VII (the article's subject is the F7 gene / coagulation factor VII) and states 'The deficiency of FVII ... is known as a hereditary bleeding disorder.' This directly asserts that Factor VII deficiency is a deficiency of coagulation factor VII, matching the relation factor_vii_deficiency -> factor_vii in the correct direction (the disorder is OF the factor). The abstract corroborates ('Factor VII (FVII) deficiency is a rare bleeding disorder'). No inferential leap is required; the equivalence FVII = coagulation factor VII is standard and stated in-source."
+      },
+      "verify": {
+        "id": "factor_deficiency__factor_vii_deficiency",
+        "byte_stable": true,
+        "refute_attempt": "The byte_quote appears verbatim on the page (confirmed on two independent fetches): \"The deficiency of FVII was first described in 1951. The disease is known as a hereditary bleeding disorder.\" However, the strongest refutation is that this specific quoted span does NOT by itself state the definitional edge. It only asserts (a) when FVII deficiency was first described and (b) that it is a hereditary bleeding disorder. The equation \"FVII = coagulation factor VII\" and the definitional framing \"Factor VII deficiency is a deficiency of coagulation factor VII\" rely on OTHER sentences on the page (\"Factor VII (FVII) plays a pivotal role in... blood coagulation,\" \"Congenital deficiencies of these factors cause inheritable hemorrhagic diseases\"), not the cited quote. So the quote substantiates that FVII deficiency is a (hereditary bleeding) disorder of FVII, and the FVII=factor VII expansion is established elsewhere on the same page, but the chosen byte_quote carries the relation only partially in isolation.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "coag_inheritance__factor_vii_deficiency",
+      "relation": "coag_inheritance",
+      "subject": "factor_vii_deficiency",
+      "object": "autosomal_recessive",
+      "claim": "Factor VII deficiency is inherited in an autosomal recessive pattern.",
+      "grounded": {
+        "id": "coag_inheritance__factor_vii_deficiency",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5406770/",
+        "source_title": "Factor VII Deficiency: Clinical Phenotype, Genotype and Therapy (PMC5406770)",
+        "byte_quote": "Inherited Factor VII deficiency is the most common among rare autosomal recessive bleeding disorders.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://en.wikipedia.org/wiki/Factor_VII_deficiency — secondary/tertiary source (encyclopedia), not a primary/authoritative medical reference; not fetched for the quote.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC12085932/ — a single case-report titled 'A Family With Factor VII Deficiency: A Possible Autosomal Dominant Transmission'; describes an atypical/possible-dominant pedigree, so it does NOT support the standard autosomal-recessive relation and would muddy grounding.",
+          "https://omim.org/entry/227500 — OMIM entry (authoritative) but not fetched; #227500 is classed Autosomal recessive, would corroborate, but the PMC peer-reviewed article already provides a clean entailing quote.",
+          "https://www.ncbi.nlm.nih.gov/gtr/conditions/C0015503/ — NIH GTR condition page; authoritative registry but not fetched; redundant given the grounded PMC quote.",
+          "StatPearls — no dedicated 'Factor VII Deficiency' StatPearls chapter exists in NCBI Bookshelf; related chapters (Factor V Deficiency, Hemophilia A/B) are about different factors and were not used."
+        ],
+        "note": "ENTAILED. The fetched peer-reviewed NCBI/PMC article (PMC5406770) states verbatim: \"Inherited Factor VII deficiency is the most common among rare autosomal recessive bleeding disorders.\" This explicitly classifies Factor VII deficiency as an autosomal recessive disorder, directly forcing the relation (factor_vii_deficiency → autosomal_recessive) in the correct subject→object direction. No leap required. Caveat for the record (not a grounding gap): the same literature notes variable penetrance and a discarded case report (PMC12085932) describes a possible autosomal-dominant pedigree, but the standard/canonical inheritance pattern stated by the authoritative source is autosomal recessive."
+      },
+      "verify": {
+        "id": "coag_inheritance__factor_vii_deficiency",
+        "byte_stable": true,
+        "refute_attempt": "The strongest refutation is that the quote categorizes Factor VII deficiency within the class of \"rare autosomal recessive bleeding disorders\" rather than asserting \"Factor VII deficiency is autosomal recessive\" as a standalone clause — a class-membership phrasing rather than a direct predication. This refutation fails: placing the disorder inside the autosomal-recessive category directly attributes that inheritance pattern to it, and it is corroborated on the same page by discussion of homozygous and heterozygous subjects (recessive-consistent phenotype). No statement of dominant, X-linked, or any alternative inheritance appears anywhere on the page.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prolonged_test__factor_vii_deficiency",
+      "relation": "prolonged_test",
+      "subject": "factor_vii_deficiency",
+      "object": "pt",
+      "claim": "Factor VII deficiency prolongs the prothrombin time (PT) in isolation, with a normal aPTT.",
+      "grounded": {
+        "id": "prolonged_test__factor_vii_deficiency",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK265/",
+        "source_title": "Coagulation Tests — Clinical Methods: The History, Physical, and Laboratory Examinations (NCBI Bookshelf, NIH)",
+        "byte_quote": "Inherited deficiency of factor VII is a rare bleeding disorder characterized by a prolonged PT and a normal aPTT.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK604215/ (Interpretation of Blood Clotting Studies, StatPearls) — also supports 'isolated prolonged PT with normal PTT = factor VII deficiency,' but discarded as redundant; the fetched NBK265 sentence already entails the exact relation verbatim.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC3002068/ (Factor VII Deficiency: A Rare Case Report) — a single case report (secondary anecdotal evidence), weaker than a reference text for establishing the general relation; discarded.",
+          "https://journals.sagepub.com/doi/full/10.1177/1076029616670257 (Sevenet et al. review) — peer-reviewed but a paywalled/secondary review; not fetched since the primary NIH reference already grounds the fact.",
+          "https://www.thebloodproject.com/... (The Blood Project) — explicitly excluded by instruction (secondary blog-style site).",
+          "https://clinicaltrials.gov/study/NCT03788460 — a trial registration, not a statement of the diagnostic relation; discarded."
+        ],
+        "note": "ENTAILED. The verbatim sentence from NBK265 states factor VII deficiency is \"characterized by a prolonged PT and a normal aPTT,\" which directly and fully asserts both halves of the fact: factor_vii_deficiency → PT prolongation in isolation, with a normal aPTT. No inferential leap is required; the directionality (deficiency causes the prolongation) is explicit in the source. The fetched page is the NIH NCBI Bookshelf reproduction of the Clinical Methods reference text, an authoritative primary/reference source (not a blog or question bank)."
+      },
+      "verify": {
+        "id": "prolonged_test__factor_vii_deficiency",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: argue the byte_quote is purely descriptive and does not assert the *isolated* edge the FACT claims (i.e., that the FACT's qualifier \"in isolation\" overreaches the source). This fails. The quote states factor VII deficiency is \"characterized by a prolonged PT and a normal aPTT\" — which by construction is the isolated relation: PT abnormal, aPTT normal. The surrounding source text reinforces the mechanism: the PT \"measures the time necessary to generate fibrin after activation of factor VII\" and \"a relatively small drop in factor VII levels may prolong the PT,\" while aPTT measures the intrinsic pathway (which excludes factor VII). A second independent fetch returned the same verbatim sentence and paragraph context, guarding against a summarizer hallucination. The FACT's \"in isolation / normal aPTT\" is a faithful, non-embellishing restatement. No refutation succeeds.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "factor_deficiency__hemophilia_c",
+      "relation": "factor_deficiency",
+      "subject": "hemophilia_c",
+      "object": "factor_xi",
+      "claim": "Hemophilia C is caused by a deficiency of coagulation factor XI.",
+      "grounded": {
+        "id": "factor_deficiency__hemophilia_c",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK551607/",
+        "source_title": "Hemophilia - StatPearls - NCBI Bookshelf",
+        "byte_quote": "There is hemophilia C as well, which occurs due to deficiency of clotting factor XI but is rare.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://my.clevelandclinic.org/health/diseases/23337-hemophilia-c — Cleveland Clinic consumer health page; secondary/patient-education, not a primary/peer-reviewed source. Corroborates the relation but not used as the grounding source.",
+          "https://en.wikipedia.org/wiki/Haemophilia_C — Wikipedia; tertiary encyclopedia, not authoritative/primary. Discarded.",
+          "https://www.bleeding.org/bleeding-disorders-a-z/types/other-factor-deficiencies/factor-xi — NBDF advocacy/patient-education page; not peer-reviewed primary source.",
+          "https://emedicine.medscape.com/article/209984-overview — Medscape reference (login-walled, secondary); not used though it agrees.",
+          "https://pubmed.ncbi.nlm.nih.gov/34535287/ — PubMed abstract stub for a separate Factor XI Deficiency StatPearls entry; did not fetch full text since NBK551607 already provided a direct verbatim quote.",
+          "https://image-ppubs.uspto.gov/.../8163749 — USPTO patent on serine protease inhibitors; irrelevant to the disease→factor relation."
+        ],
+        "note": "ENTAILED. The StatPearls (NCBI Bookshelf, peer-reviewed authoritative hematology reference) sentence \"There is hemophilia C as well, which occurs due to deficiency of clotting factor XI\" states the exact relation: hemophilia C → caused by deficiency of factor XI. Direction is correct (disease is the subject, factor XI the deficient agent). No inferential leap required — the quote directly forces the fact. The factor is named \"clotting factor XI\" (= coagulation factor XI); equivalence of \"clotting factor\" and \"coagulation factor\" is standard hematology terminology, not a leap."
+      },
+      "verify": {
+        "id": "factor_deficiency__hemophilia_c",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to break the edge on three axes. (1) Verbatim presence: two independent WebFetches of NBK551607 both returned the quote character-for-character — \"There is hemophilia C as well, which occurs due to deficiency of clotting factor XI but is rare.\" — so byte_stable holds. (2) Terminology mismatch: FACT says \"coagulation factor XI\" while source says \"clotting factor XI\" — but clotting factor and coagulation factor are exact synonyms and the factor number (XI) is identical, so no semantic gap. (3) Causal-relation challenge: the source uses \"occurs due to deficiency of clotting factor XI,\" which is direct causal/etiological language equivalent to \"is caused by a deficiency of\"; the only hedge (\"but is rare\") modifies prevalence, not the causal link, and there is no \"may/associated with\" softening of the etiology. The refutation fails on all three — the edge (hemophilia C caused by factor XI deficiency) is stated explicitly and unambiguously.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "coag_inheritance__hemophilia_c",
+      "relation": "coag_inheritance",
+      "subject": "hemophilia_c",
+      "object": "autosomal_recessive",
+      "claim": "Hemophilia C (factor XI deficiency) is inherited in an autosomal recessive pattern.",
+      "grounded": {
+        "id": "coag_inheritance__hemophilia_c",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3190010/",
+        "source_title": "A Novel Missense Mutation Asp506Gly in Exon 13 of the F11 Gene in an Asymptomatic Korean Woman with Mild Factor XI Deficiency (Korean Journal of Laboratory Medicine, 2011;31(4):290-293, NCBI PMC PMC3190010)",
+        "byte_quote": "Hereditary FXI deficiency (also known as hemophilia C) was first described as a hemophilia-like syndrome by Rosenthal et al. ... It is inherited as an autosomal recessive trait that may arise because of a wide range of mutations, including missense, nonsense, splice-site, insertion, and deletion mutations, within the F11 gene.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK551607/ (Hemophilia, StatPearls) — DISCARDED: although a primary StatPearls source, on fetch it mentions hemophilia C only as a rare FXI deficiency and gives no explicit verbatim statement of its inheritance pattern; cannot supply a supporting quote for hemophilia_c -> autosomal_recessive.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC7063557/ (Congenital factor XI deficiency, novel F11 missense variant, case report) — DISCARDED: on fetch it described homozygote/heterozygote severity but contained no verbatim 'autosomal recessive' inheritance statement.",
+          "WebSearch result snippets (the search-engine summaries asserting 'hemophilia C is autosomal recessive' and 'X-linked vs autosomal recessive' contrast) — DISCARDED as not a fetched primary page; treated only as leads, not as the grounding quote."
+        ],
+        "note": "ENTAILED. The fetched peer-reviewed PMC article states two adjacent facts verbatim: (1) \"Hereditary FXI deficiency (also known as hemophilia C)\" — explicitly equating factor XI deficiency with hemophilia C, the subject of the edge; and (2) \"It is inherited as an autosomal recessive trait...\" — the object. The pronoun \"It\" refers to the same hereditary FXI deficiency / hemophilia C entity in the surrounding text, so the quote forces the relation hemophilia_c -> autosomal_recessive with no inferential leap. Direction is correct: the disease (hemophilia C) is the inherited entity and autosomal recessive is its inheritance mode. Source is authoritative (NCBI PMC, peer-reviewed journal), not a blog or question bank. Minor note: the two clauses are quoted from nearby sentences in the same introductory passage joined with an ellipsis; both are verbatim and refer to the same entity."
+      },
+      "verify": {
+        "id": "coag_inheritance__hemophilia_c",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: argue the quote doesn't state the EDGE because \"It is inherited as an autosomal recessive trait\" might have an ambiguous antecedent or be hedged. This fails: the immediately preceding sentence defines the subject as \"Hereditary FXI deficiency (also known as hemophilia C),\" and the pronoun \"It\" has no other candidate antecedent, so the autosomal-recessive inheritance is bound directly to hemophilia C / factor XI deficiency. The statement is declarative and unhedged, citing reference [4]. Note: the byte_quote elides the citation/year (\"[6] in 1953.\") with \"...\", but both flanking substrings appear verbatim on the page. Relation is genuinely stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prolonged_test__hemophilia_c",
+      "relation": "prolonged_test",
+      "subject": "hemophilia_c",
+      "object": "aptt",
+      "claim": "Factor XI deficiency prolongs the aPTT.",
+      "grounded": {
+        "id": "prolonged_test__hemophilia_c",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7153668/",
+        "source_title": "Hemophilia C: A Case Report With Updates on Diagnosis and Management of a Rare Bleeding Disorder (PMC / Cureus, NCBI PubMed Central)",
+        "byte_quote": "Factor XI deficiency may prolong the aPTT, though a normal aPTT does not exclude mild deficiency and can result in false negative results. Typically, the aPTT becomes prolonged when the factor XI level is significantly reduced to the range of < 15%.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK551607/ (StatPearls 'Hemophilia') — DISCARDED: mentions hemophilia C / factor XI only as 'occurs due to deficiency of clotting factor XI but is rare' and states 'In both hemophilia A and B, PTT will be prolonged'; it does NOT provide a verbatim statement tying factor XI deficiency specifically to aPTT prolongation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK604215/ (StatPearls 'Interpretation of Blood Clotting Studies') — DISCARDED: states aPTT/PTT 'assesses factors such as VIII, IX, XI, and XII' and 'Prolonged PTT may signify deficiencies in these clotting factors', but this is a general factor-panel statement, not an explicit factor-XI-deficiency-prolongs-aPTT claim.",
+          "USPTO patent PDFs and StatPearls Factor V / Acquired Hemophilia pages from the search — DISCARDED as off-target (not about factor XI → aPTT) or non-authoritative for this relation."
+        ],
+        "note": "ENTAILED. The fetched peer-reviewed PMC case report states verbatim \"Factor XI deficiency may prolong the aPTT,\" and the article's title/subject establishes Factor XI deficiency = Hemophilia C. This directly asserts the edge (hemophilia_c → aptt) in the correct subject→object direction, no inferential leap. One nuance the source itself surfaces: the prolongation is dose-dependent (typically when factor XI < 15%) and a normal aPTT does not exclude mild deficiency — so the relation is 'may prolong,' not an absolute, but the FACT 'Factor XI deficiency prolongs the aPTT' is supported."
+      },
+      "verify": {
+        "id": "prolonged_test__hemophilia_c",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the quote hedges — \"may prolong the aPTT\" (not always), and explicitly states \"a normal aPTT does not exclude mild deficiency and can result in false negative results,\" and only prolongs \"when the factor XI level is significantly reduced to the range of < 15%.\" So the edge is conditional/probabilistic, not deterministic, and could be challenged as not asserting that FXI deficiency reliably prolongs aPTT. Rebuttal: the directional relation (Factor XI deficiency -> prolonged aPTT) is nonetheless directly stated; Factor XI is an intrinsic-pathway factor and the source affirms its deficiency prolongs aPTT (especially <15% levels). The hedging qualifies the sensitivity/strength of the edge but does not negate its existence or direction. The FACT as written is supported.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    }
+  ]
+}
