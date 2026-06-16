@@ -147,6 +147,8 @@ packages a typed surface for:
   reconciliation readiness into final archive settlement checks
 - Hue package release archive finalization summaries that turn archive
   settlement readiness into final archive finalization checks
+- Hue package release archive confirmation summaries that turn archive
+  finalization readiness into final archive confirmation checks
 
 ## Dependencies
 

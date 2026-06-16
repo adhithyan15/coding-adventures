@@ -107,6 +107,8 @@ All notable changes to this package will be documented in this file.
   reconciliation readiness into final archive settlement checks.
 - Hue package release archive finalization summaries that turn archive
   settlement readiness into final archive finalization checks.
+- Hue package release archive confirmation summaries that turn archive
+  finalization readiness into final archive confirmation checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
