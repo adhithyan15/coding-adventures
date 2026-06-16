@@ -107,6 +107,48 @@ def score_differential(decision: dict | None, gold: str) -> tuple[str, str | Non
     return "abstained", None
 
 
+# The MANAGEMENT tactic — "best next step / empiric regimen" — runs the real
+# chart-as-constraints engine: a patient context (likely organisms + allergies /
+# comorbidity / pregnancy / renal) compiles into a constraint program that the
+# adj-constraint-solver SOLVES into a min-cost regimen, OR proves INFEASIBLE with a
+# named conflict. Constraints solved OR made unsatisfiable — both are defensible.
+_TREATMENT = HERE.parent / "treatment" / "antibiotics"
+
+
+def run_management(chart: list[list[str]]) -> dict | None:
+    """Compile the chart-fact IR → COP, solve it via the native engine, and return the
+    result dict (regimen / outcome / conflict). None if the CLI binary is unavailable."""
+    if not cli_available():
+        return None
+    if str(_TREATMENT) not in sys.path:
+        sys.path.insert(0, str(_TREATMENT))
+    import chart_to_cop as ctc  # noqa: E402  (reuse the merged chart→constraints engine)
+
+    facts = [ctc.ChartFact(*(f + [""])[:3]) for f in chart]  # [kind, value, span?]
+    return ctc.derive(_CLI, facts)
+
+
+def score_management(result: dict | None, gold) -> tuple[str, str | None]:
+    """Score a management decision against the gold regimen (a sorted drug list) or the
+    literal "INFEASIBLE" (a chart whose constraints conflict — no safe regimen exists).
+
+    A regimen that matches gold is correct. INFEASIBLE when gold is "INFEASIBLE" is
+    correct (the engine rightly refused to fabricate a regimen). INFEASIBLE when a
+    regimen was expected is an honest abstention (declined, not wrong). A regimen when
+    the chart should have been INFEASIBLE is wrong (fabricated a regimen). A missing
+    result (CLI unavailable) abstains.
+    """
+    if result is None:
+        return "abstained", None
+    regimen = result.get("regimen")
+    answer = "+".join(regimen) if regimen else "INFEASIBLE"
+    if gold == "INFEASIBLE":
+        return ("correct" if regimen is None else "wrong"), answer
+    if regimen is None:
+        return "abstained", "INFEASIBLE"  # expected a regimen; engine declined — defensible
+    return ("correct" if sorted(regimen) == sorted(gold) else "wrong"), answer
+
+
 @dataclass
 class Result:
     item_id: str
@@ -171,6 +213,15 @@ def score(items: list[dict], store: "recall.RelationStore") -> Scorecard:
             decision = run_differential(HERE / it["program"])
             outcome, answer = score_differential(decision, it["gold"])
             card.results.append(Result(it["id"], "differential", it["gold"], answer, outcome, None))
+            continue
+        if tactic == "management":
+            # Run the chart-as-constraints engine: regimen OR INFEASIBLE(conflict).
+            # trust=None — the proof is the constraint trace, not a single cited edge.
+            gold = it["gold"]
+            result = run_management(it["chart"])
+            outcome, answer = score_management(result, gold)
+            gold_str = gold if isinstance(gold, str) else "+".join(gold)
+            card.results.append(Result(it["id"], "management", gold_str, answer, outcome, None))
             continue
         if tactic != "recall":
             # Unknown tactic: record as abstained-from-scoring rather than silently

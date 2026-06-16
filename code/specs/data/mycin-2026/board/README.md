@@ -22,11 +22,19 @@ cite an `authoritative` (spider-grounded) edge vs a `consensus` (authored-debt)
 edge. That is the number every grounding/expansion PR moves:
 
 ```
-correct 43 · abstained 6 · wrong 0  (of 49)
-by tactic — differential: 1✓/1·/0✗  ·  recall: 42✓/5·/0✗
+correct 48 · abstained 6 · wrong 0  (of 54)
+by tactic — differential: 1✓/1·/0✗  ·  management: 5✓/0·/0✗  ·  recall: 42✓/5·/0✗
 defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 98%
 ✓ never fabricated — every answer is correct-with-proof or an honest abstention.
 ```
+
+The board now scores **all three board question-types** over one engine + one
+defensibility metric: **recall** (binding queries over the grounded graph),
+**differential** (the LR engine ranks hypotheses; commit or abstain), and
+**management** (the chart-as-constraints engine compiles a patient context into a
+constraint program and SOLVES a regimen — or proves it INFEASIBLE with a named
+conflict). Constraints solved OR made unsatisfiable; both are defensible, neither
+fabricates.
 
 The bank spans **four recall domains** — 12 inborn-errors-of-metabolism diseases
 (`recall/iem-edges.adj`), 8 vitamin deficiencies (`recall/vitamin-edges.adj`), 8 anemia

@@ -1,13 +1,18 @@
 {
   "summary": {
-    "total": 49,
-    "correct": 43,
+    "total": 54,
+    "correct": 48,
     "abstained": 6,
     "wrong": 0,
     "by_tactic": {
       "differential": {
         "correct": 1,
         "abstained": 1,
+        "wrong": 0
+      },
+      "management": {
+        "correct": 5,
+        "abstained": 0,
         "wrong": 0
       },
       "recall": {
@@ -412,6 +417,46 @@
       "gold": "ABSTAIN",
       "answer": null,
       "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "mgmt_adult_community",
+      "tactic": "management",
+      "gold": "ceftriaxone+vancomycin",
+      "answer": "ceftriaxone+vancomycin",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_older_adult",
+      "tactic": "management",
+      "gold": "ampicillin+ceftriaxone+vancomycin",
+      "answer": "ampicillin+ceftriaxone+vancomycin",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_neurosurgical",
+      "tactic": "management",
+      "gold": "cefepime+vancomycin",
+      "answer": "cefepime+vancomycin",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_pregnant_adult",
+      "tactic": "management",
+      "gold": "ceftriaxone+vancomycin",
+      "answer": "ceftriaxone+vancomycin",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_betalactam_allergic",
+      "tactic": "management",
+      "gold": "INFEASIBLE",
+      "answer": "INFEASIBLE",
+      "outcome": "correct",
       "trust": null
     }
   ]
