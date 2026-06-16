@@ -399,6 +399,40 @@ mod tests {
         assert_eq!(nums("head(1:10, 3)\n"), vec![1.0, 2.0, 3.0]);
     }
 
+    #[test]
+    fn double_bracket_on_vector_extracts_one_element() {
+        assert_eq!(nums("c(10, 20, 30)[[2]]\n"), vec![20.0]);
+    }
+
+    #[test]
+    fn data_frame_multi_column_subset_stays_a_frame() {
+        let setup = "d <- data.frame(x = 1:2, y = c(10, 20), z = c(100, 200))\n";
+        assert_eq!(
+            nums(&format!("{setup}ncol(d[1:2, c(\"x\", \"z\")])\n")),
+            vec![2.0]
+        );
+    }
+
+    #[test]
+    fn data_frame_access_errors() {
+        assert!(eval_s("(1:3)$x\n").is_err(), "$ on a non-data-frame");
+        assert!(
+            eval_s("data.frame(x = 1)[[\"nope\"]]\n").is_err(),
+            "unknown column"
+        );
+        assert!(
+            eval_s("data.frame(x = 1)[[5]]\n").is_err(),
+            "column out of bounds"
+        );
+        assert!(eval_s("(1:3)[1, 2]\n").is_err(), "2-D index on a vector");
+        assert!(
+            eval_s("data.frame(a = 1:2, b = 1:3)\n").is_err(),
+            "differing column lengths"
+        );
+        // Selecting a column by position works.
+        assert!(eval_s("data.frame(a = 1, b = 2)[[2]]\n").is_ok());
+    }
+
     // --- Comparison -----------------------------------------------------
 
     #[test]

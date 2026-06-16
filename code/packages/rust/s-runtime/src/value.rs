@@ -1049,4 +1049,75 @@ mod tests {
         assert!(bounded_sequence(1.0, f64::INFINITY).is_err());
         assert!(bounded_sequence(1.0, 1e18).is_err());
     }
+
+    // --- v2: membership, logical coercion, class, new formatting --------
+
+    #[test]
+    fn membership_returns_logical() {
+        let r = membership(
+            &SValue::doubles(vec![1.0, 5.0]),
+            &SValue::doubles(vec![1.0, 2.0, 3.0]),
+        );
+        assert!(matches!(&r, SValue::Logical(v) if *v == vec![Some(true), Some(false)]));
+    }
+
+    #[test]
+    fn as_logical_coercion() {
+        assert_eq!(SValue::scalar(0.0).as_logical().unwrap(), vec![Some(false)]);
+        assert_eq!(SValue::scalar(2.0).as_logical().unwrap(), vec![Some(true)]);
+        assert!(SValue::Character(vec![Some("x".into())])
+            .as_logical()
+            .is_err());
+    }
+
+    #[test]
+    fn class_of_implicit_and_explicit() {
+        assert_eq!(class_of(&SValue::scalar(1.0)), vec!["numeric"]);
+        assert_eq!(class_of(&SValue::Character(vec![])), vec!["character"]);
+        assert_eq!(class_of(&SValue::Null), vec!["NULL"]);
+        let f = SValue::Factor {
+            codes: vec![],
+            levels: vec![],
+        };
+        assert_eq!(class_of(&f), vec!["factor"]);
+        let c = SValue::Classed {
+            inner: Box::new(SValue::scalar(1.0)),
+            class: vec!["myc".into()],
+        };
+        assert_eq!(class_of(&c), vec!["myc"]);
+    }
+
+    #[test]
+    fn format_factor_and_classed_and_data_frame() {
+        let f = SValue::Factor {
+            codes: vec![Some(2), Some(1)],
+            levels: vec!["a".into(), "b".into()],
+        };
+        assert_eq!(format_value(&f), vec!["[1] b a", "Levels: a b"]);
+
+        // Classed delegates to its inner value's formatting.
+        let c = SValue::Classed {
+            inner: Box::new(SValue::scalar(5.0)),
+            class: vec!["myc".into()],
+        };
+        assert_eq!(format_value(&c), vec!["[1] 5"]);
+
+        let df = SValue::DataFrame {
+            names: vec!["x".into()],
+            columns: vec![SValue::doubles(vec![1.0, 2.0])],
+        };
+        assert!(format_value(&df).len() >= 3); // header + two rows
+    }
+
+    #[test]
+    fn factor_labels_and_element_string() {
+        let codes = vec![Some(2u32), None, Some(1u32)];
+        let levels = vec!["a".to_string(), "b".to_string()];
+        assert_eq!(
+            SValue::factor_labels(&codes, &levels),
+            vec![Some("b".to_string()), None, Some("a".to_string())]
+        );
+        let d = SValue::doubles(vec![1.0, 2.5]);
+        assert_eq!(element_string(&d, 1), "2.5");
+    }
 }
