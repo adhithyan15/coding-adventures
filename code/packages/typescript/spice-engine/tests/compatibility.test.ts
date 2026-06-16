@@ -123,6 +123,7 @@ measure tran vmax MAX V(out)
 meas dc imax MAX I(V1)
 fourier 1k V(out)
 four 2k V(in)
+reset
 set noaskquit
 set filetype=ascii
 run
@@ -152,7 +153,7 @@ quit
       [".include", 2, "error"],
       [".lib", 3, "error"],
       [".control", 4, "error"],
-      [".control", 14, "error"],
+      [".control", 15, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
@@ -236,6 +237,7 @@ measure tran vmax MAX V(a)
 meas dc imax MAX I(V1)
 fourier 1k V(a)
 four 2k V(b)
+.reset
 .set noaskquit
 run
 .quit
