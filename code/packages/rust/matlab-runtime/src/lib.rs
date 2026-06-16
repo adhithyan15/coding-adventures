@@ -37,13 +37,42 @@ pub use value::MatValue;
 
 use coding_adventures_matlab_parser::try_parse_matlab;
 
+/// Maximum bracket nesting depth accepted by [`Interpreter::feed`]. The
+/// recursive-descent parser uses one stack frame per nesting level, so this
+/// bound rejects pathologically nested input (`((((…))))`) *before* parsing,
+/// turning a would-be stack overflow into a clean error. Real code nests a
+/// handful of levels deep; 200 is generous.
+const MAX_NESTING: usize = 200;
+
 impl Interpreter {
     /// Parse and evaluate a chunk of MATLAB source, returning the concatenated
     /// prompt echo of every unsuppressed result. Variables persist across calls.
     pub fn feed(&mut self, source: &str) -> Result<String, String> {
+        check_nesting(source)?;
         let tree = try_parse_matlab(source)?;
         self.run(&tree)
     }
+}
+
+/// Reject source whose `(`/`[`/`{` nesting exceeds [`MAX_NESTING`], so the parser
+/// is never handed input deep enough to exhaust the stack. A linear pre-scan.
+fn check_nesting(source: &str) -> Result<(), String> {
+    let mut depth: usize = 0;
+    for ch in source.chars() {
+        match ch {
+            '(' | '[' | '{' => {
+                depth += 1;
+                if depth > MAX_NESTING {
+                    return Err(format!(
+                        "matlab-runtime: input nests deeper than the limit of {MAX_NESTING}"
+                    ));
+                }
+            }
+            ')' | ']' | '}' => depth = depth.saturating_sub(1),
+            _ => {}
+        }
+    }
+    Ok(())
 }
 
 /// Evaluate MATLAB source in a fresh session and return its display output.
@@ -187,6 +216,14 @@ mod tests {
         assert!(m.feed("A(9)\n").is_err()); // out of bounds
         assert!(eval("zeros(1e18)\n").is_err()); // capped, not OOM
         assert!(eval("undefined_thing\n").is_err());
+    }
+
+    #[test]
+    fn deeply_nested_input_errors_instead_of_crashing() {
+        // Pathologically nested parentheses must be a clean error, not a stack
+        // overflow that aborts the process.
+        let src = format!("{}1{}\n", "(".repeat(2000), ")".repeat(2000));
+        assert!(eval(&src).is_err());
     }
 
     /// Helper: evaluate in an existing session and read the scalar echo.

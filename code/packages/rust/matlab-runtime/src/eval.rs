@@ -14,12 +14,30 @@ use array_runtime::{execute, ops, Array, Kernel};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::cell::Cell;
 use std::collections::HashMap;
+use std::rc::Rc;
 
-/// A persistent MATLAB session: a variable workspace plus the value of `end`
-/// currently in scope (set while evaluating an index expression).
+/// Maximum expression/block nesting depth. Crafted input like `((((…))))` or
+/// `if…if…end…end` recurses one frame per level; this bound turns a stack
+/// overflow (which would abort the whole process) into a clean error.
+const MAX_DEPTH: usize = 512;
+
+/// A persistent MATLAB session: a variable workspace, the value of `end`
+/// currently in scope (set while evaluating an index expression), and the
+/// current evaluation depth.
 pub struct Interpreter {
     vars: HashMap<String, MatValue>,
     end_value: Cell<Option<f64>>,
+    depth: Rc<Cell<usize>>,
+}
+
+/// RAII guard that decrements the depth counter on every exit path (including
+/// `?` early returns).
+struct DepthGuard(Rc<Cell<usize>>);
+
+impl Drop for DepthGuard {
+    fn drop(&mut self) {
+        self.0.set(self.0.get().saturating_sub(1));
+    }
 }
 
 /// One index argument: a value, or a bare colon meaning "the whole dimension".
@@ -39,7 +57,19 @@ impl Interpreter {
         Interpreter {
             vars: HashMap::new(),
             end_value: Cell::new(None),
+            depth: Rc::new(Cell::new(0)),
         }
+    }
+
+    /// Enter one level of recursion, erroring if the nesting limit is exceeded.
+    /// The returned guard decrements the counter when it drops.
+    fn enter(&self) -> Result<DepthGuard, String> {
+        self.depth.set(self.depth.get() + 1);
+        let guard = DepthGuard(Rc::clone(&self.depth));
+        if self.depth.get() > MAX_DEPTH {
+            return Err("matlab-runtime: expression or block nesting too deep".to_string());
+        }
+        Ok(guard)
     }
 
     /// Evaluate a whole program (the `program` node), returning the prompt echo
@@ -133,6 +163,7 @@ impl Interpreter {
 
     /// Evaluate any expression node, dispatching by rule name.
     fn eval_node(&self, node: &GrammarASTNode) -> Result<MatValue, String> {
+        let _guard = self.enter()?;
         match node.rule_name.as_str() {
             "expr" | "assignment" | "statement" => self.eval_node(only_node(node)?),
             "logical_or" | "logical_and" | "bit_or" | "bit_and" | "comparison" | "additive"
@@ -511,6 +542,7 @@ impl Interpreter {
 
     /// Run a `block_body` (a run of statement lines) for its side effects.
     fn eval_block(&mut self, body: &GrammarASTNode) -> Result<(), String> {
+        let _guard = self.enter()?;
         for line in node_children(body) {
             if line.rule_name == "statement_line" {
                 self.eval_statement_line(line)?;
