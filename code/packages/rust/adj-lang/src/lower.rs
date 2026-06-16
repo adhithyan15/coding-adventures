@@ -25,7 +25,7 @@ use logic_core::{
 use logic_engine::{
     compute, BodyLiteral, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContributionClause, Fact,
     JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause, PriorClause,
-    Provenance, Rule, TrustTier, UncertaintyMarker,
+    Priority, Provenance, Rule, TrustTier, UncertaintyMarker,
 };
 
 use std::collections::HashMap;
@@ -102,6 +102,12 @@ pub enum LowerError {
     /// rather than panicking in `from_lr`.
     InvalidLikelihoodRatio {
         value: f64,
+    },
+    /// A `rule { … priority: <tier> }` whose tier is not one of the named
+    /// [`Priority`] levels (`default` | `specific` | `authoritative` | `mandatory`).
+    /// Caught at lowering so a typo produces a clean diagnostic, not a silent default.
+    UnknownPriorityTier {
+        tier: String,
     },
     /// A `let <name> = <expr>` whose formula could not be evaluated (an
     /// unknown slot, division by zero, an empty aggregation, …). Carries
@@ -258,10 +264,16 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 let prov = annotations_to_provenance(annotations)?;
                 kb.add_fact(Fact::certain(lower_term(edge)).with_provenance(prov));
             }
+            Statement::Functional { functor, arity } => {
+                // ADJ73 PR-C: declare the predicate functional on its last argument, so
+                // conflicting derivations are resolved by precedence (enumerate_governing).
+                kb.declare_functional(functor, *arity);
+            }
             Statement::Rule {
                 head,
                 body,
                 annotations,
+                priority,
             } => {
                 // A derivation rule → `logic_engine::Rule { head, body }`. Head and body
                 // share ONE variable scope so a `$Var` in the head unifies with the same
@@ -282,7 +294,21 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     })
                     .collect();
                 let prov = annotations_to_provenance(annotations)?;
-                kb.add_rule(Rule::certain(head_term, body_lits).with_provenance(prov));
+                // ADJ73 PR-C: map the optional named tier → Priority (absent ⇒ Default).
+                let tier = match priority.as_deref() {
+                    None | Some("default") => Priority::Default,
+                    Some("specific") => Priority::Specific,
+                    Some("authoritative") => Priority::Authoritative,
+                    Some("mandatory") => Priority::Mandatory,
+                    Some(other) => {
+                        return Err(LowerError::UnknownPriorityTier { tier: other.into() })
+                    }
+                };
+                kb.add_rule(
+                    Rule::certain(head_term, body_lits)
+                        .with_provenance(prov)
+                        .with_priority(tier),
+                );
             }
             Statement::Query { conclusion } => {
                 // Lower with a per-query variable scope so repeated `$Var`s in one
@@ -1628,5 +1654,89 @@ mod tests {
     fn a_pure_rulebook_has_an_empty_constraint_system() {
         let lowered = compile("prior 0.10 for acs\n? acs").unwrap();
         assert!(lowered.constraints.is_empty());
+    }
+
+    // ---- ADJ73 PR-C: precedence surface syntax (functional + priority tiers) ----
+
+    /// `functional` + `priority:` lower into the engine so a higher-tier rule GOVERNS a
+    /// conflicting lower-tier one (the whole point — surface syntax over the merged engine).
+    #[test]
+    fn functional_and_priority_tiers_resolve_a_conflict() {
+        use logic_engine::{enumerate_governing, GovernStatus};
+        let src = "\
+functional timing(decision)
+relate stable_routine_pending(yes)
+rule { head: timing(await_culture) when: stable_routine_pending(yes) priority: specific }
+rule { head: timing(treat_now) when: stable_routine_pending(yes) priority: default }
+? timing($D)";
+        let lowered = compile(src).unwrap();
+        let res = enumerate_governing(&lowered.queries[0], &lowered.kb);
+        let governing: Vec<&CoreTerm> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(
+            governing.len(),
+            1,
+            "exactly one answer should govern: {res:?}"
+        );
+        // the `specific` tier governs; the `default` is defeated but retained.
+        assert!(matches!(
+            governing[0],
+            CoreTerm::Compound { functor, args }
+                if functor == "timing" && args == &[CoreTerm::Atom("await_culture".into())]
+        ));
+        assert!(!res.has_conflict());
+        let defeated = res
+            .answers
+            .iter()
+            .find(|a| {
+                matches!(&a.term, CoreTerm::Compound { args, .. }
+                if args == &[CoreTerm::Atom("treat_now".into())])
+            })
+            .unwrap();
+        assert!(matches!(defeated.status, GovernStatus::Defeated { .. }));
+    }
+
+    /// Two equal tiers on a functional predicate → an unresolved CONFLICT (no governor).
+    #[test]
+    fn equal_tiers_on_a_functional_predicate_conflict() {
+        use logic_engine::enumerate_governing;
+        let prog = "\
+functional pick(x)
+relate gate(t)
+rule { head: pick(a) when: gate(t) priority: authoritative }
+rule { head: pick(b) when: gate(t) priority: authoritative }
+? pick($X)";
+        let lowered = compile(prog).unwrap();
+        let res = enumerate_governing(&lowered.queries[0], &lowered.kb);
+        assert!(
+            res.has_conflict(),
+            "equal tiers must conflict, not silently pick: {res:?}"
+        );
+        assert_eq!(res.governing().count(), 0);
+    }
+
+    /// A non-functional predicate is unaffected — every derivation governs (back-compat).
+    #[test]
+    fn priority_without_functional_leaves_every_answer_governing() {
+        use logic_engine::enumerate_governing;
+        let prog = "\
+relate gate(t)
+rule { head: note(a) when: gate(t) priority: specific }
+rule { head: note(b) when: gate(t) priority: default }
+? note($X)";
+        let lowered = compile(prog).unwrap();
+        let res = enumerate_governing(&lowered.queries[0], &lowered.kb);
+        assert_eq!(res.governing().count(), 2, "non-functional → both govern");
+        assert!(!res.has_conflict());
+    }
+
+    /// An unknown priority tier is a clean lowering error, not a silent default.
+    #[test]
+    fn unknown_priority_tier_is_rejected() {
+        let err =
+            compile("relate g(t)\nrule { head: h(a) when: g(t) priority: urgent }").unwrap_err();
+        assert!(
+            format!("{err:?}").contains("UnknownPriorityTier"),
+            "expected UnknownPriorityTier, got {err:?}"
+        );
     }
 }

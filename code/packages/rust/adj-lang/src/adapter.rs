@@ -110,6 +110,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "observe_decl" => adapt_observe(child),
         "relate_decl" => adapt_relate(child),
         "rule_decl" => adapt_rule(child),
+        "functional_decl" => adapt_functional(child),
         "query_decl" => adapt_query(child),
         "let_decl" => adapt_let(child),
         "symbol_decl" => adapt_symbol(child),
@@ -324,11 +325,43 @@ fn adapt_rule(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         });
     }
     let annotations = collect_annotations(node)?;
+    // ADJ73 PR-C: optional trailing `priority: <tier>`. The tier is the first Name token after
+    // the `priority` literal token (the COLON between them is a separate token).
+    let mut priority = None;
+    let mut seen_priority_kw = false;
+    for child in &node.children {
+        if let ASTNodeOrToken::Token(t) = child {
+            if t.type_ == TokenType::Name && t.value == "priority" {
+                seen_priority_kw = true;
+            } else if seen_priority_kw && t.type_ == TokenType::Name {
+                priority = Some(t.value.clone());
+                break;
+            }
+        }
+    }
     Ok(Statement::Rule {
         head,
         body,
         annotations,
+        priority,
     })
+}
+
+fn adapt_functional(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // functional_decl = "functional" term — declare a predicate functional on its last
+    // argument. Only the functor + arity of the term matter (arg names are placeholders).
+    let term = expect_term_child(node, "functional_decl")?;
+    let (functor, arity) = match &term {
+        Term::Compound { functor, args } => (functor.clone(), args.len()),
+        Term::Atom(name) => (name.clone(), 0),
+        _ => {
+            return Err(AdapterError::MissingChild {
+                rule: "functional_decl".into(),
+                position: "predicate term (compound or atom)",
+            })
+        }
+    };
+    Ok(Statement::Functional { functor, arity })
 }
 
 fn adapt_query(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
