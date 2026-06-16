@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.140.0] - 2026-06-16
+
+### Added (CLOC12.157 — SIMPLE pipeline gains `dce`)
+
+The `--compilation_level SIMPLE` pass pipeline is now
+`constant-fold → fold-control-flow → dce` (was `constant-fold → fold-control-flow`).
+The dead-code-elimination pass does two things, both scoped to block bodies:
+
+1. **Dead-after-terminator** — drops every statement after a `return` in a
+   block (`function f(){g();return 1;dead()}` ⇒ `function f(){g();return 1}`).
+2. **Empty-statement removal** — sweeps `;` no-ops out of a block. This is what
+   cleans up the empty statement `fold-control-flow` leaves behind when it folds
+   away an `if (false) {…}` with no `else`.
+
+dce runs **last**: both it and `fold-control-flow` declare
+`depends_on = ["constant-fold"]` (so constant-fold runs first), but neither
+depends on the other, so registration order is the tie-breaker — and we register
+dce after fold-control-flow so it can sweep that pass's `;` debris.
+
+- `SIMPLE_PASS_NAMES` is now `["constant-fold", "fold-control-flow", "dce"]`;
+  the `passes` field in the `simple_v2` correlation-vector trace lists all three.
+- `run_simple_pipeline` registers `DcePass` after `FoldControlFlowPass`.
+
+### Verified
+- New `tests/diff/simple-dce/` end-to-end fixture +
+  `tests/diff_simple_dce.rs`: a function body exercising all three passes ⇒
+  `function f(){keep();return 1};` (the dead `if (4 > 5) {…}` folds and is swept,
+  the post-`return` `alsoDead()` is dropped).
+- New unit tests `simple_dce_drops_dead_after_return`,
+  `simple_dce_sweeps_folded_if_empty_statement` (all three passes composing), and
+  `simple_dce_whitespace_only_keeps_dead_code`.
+- Existing `simple_v2` CV test updated to expect all three pass names in `passes`.
+
 ## [0.139.0] - 2026-06-16
 
 ### Added (CLOC12.156 — SIMPLE pipeline gains `fold-control-flow`)
