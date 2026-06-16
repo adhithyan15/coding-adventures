@@ -225,6 +225,16 @@ mod tests {
     }
 
     #[test]
+    fn regex_builtins_through_r_syntax() {
+        assert_eq!(
+            show("grepl(\"^a\", c(\"apple\", \"banana\"))\n"),
+            "[1]  TRUE FALSE"
+        );
+        assert_eq!(show("gsub(\"a\", \"X\", \"banana\")\n"), "[1] \"bXnXnX\"");
+        assert_eq!(show("sub(\"a\", \"X\", \"banana\")\n"), "[1] \"bXnana\"");
+    }
+
+    #[test]
     fn complex_literal_is_reported_unsupported() {
         // `1i` lexes and parses, but complex is not in this subset — the runtime
         // says so clearly rather than producing a wrong value.

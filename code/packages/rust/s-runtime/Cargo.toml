@@ -11,3 +11,4 @@ lexer = { path = "../lexer" }
 r-vector = { path = "../r-vector" }
 numeric-tower = { path = "../numeric-tower" }
 statistics-core = { path = "../statistics-core" }
+regex = "1"
