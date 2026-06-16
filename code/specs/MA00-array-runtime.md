@@ -28,23 +28,29 @@ always-available fallback. So `A * B` runs on the GPU exactly when the matrices
 are large enough to beat transfer overhead, and on the CPU otherwise, with no
 language-level GPU code and no "use GPU" keyword.
 
-### What this PR (MA-1) delivers vs. defers
+### Delivery status (MA-1 → MA-2)
 
-- **Delivered now:** the `Array` value model + a correct CPU **reference**
+- **MA-1 (merged):** the `Array` value model + a correct CPU **reference**
   implementation of the core ops (so results are exact today), **and** the
   `matrix-ir` lowering + `matrix-runtime` cost-planner integration — i.e. each
   op can be lowered to a `matrix-ir` graph and *planned*, and the planner's
   backend choice is observable and tested (a large `matmul` with a GPU profile
   registered plans onto the GPU; a small one stays on the CPU).
-- **Deferred (next MA item):** routing actual *execution* of the planned
-  `ComputeGraph` through the registered executors. `matrix-runtime`'s public API
-  currently *plans* (cost-based placement) but does not yet orchestrate
-  execution end-to-end, and the GPU executor crates are not yet registered. Once
-  that execution path lands, `array-runtime` switches its compute from the CPU
-  reference path to the planned executors with **no API change** — the lowering
-  and dispatch decision are already wired here. Until then the reference path
-  guarantees correct results and the planner integration guarantees the dispatch
-  decision is right.
+- **MA-2 (this PR) — execution closed:** `array-runtime` now **plans and runs**
+  the lowered graph through `matrix-cpu`'s `CpuExecutor`, returning real numeric
+  results from the same pipeline a GPU would use (see §5.1 and the `exec`
+  module). `matrix-runtime`'s public API exposes `plan()` but no end-to-end
+  `run()`; the executor-driving loop (allocate buffers → upload → `Dispatch` →
+  download) is the well-trodden one the Rust/Python and Node bindings already
+  use, so `array-runtime` orchestrates it directly. `execute()` covers
+  **elementwise** (`add`/`sub`/`mul`/`div` on equal shapes) and **`matmul`**;
+  every executed result is cross-checked against the reference path in tests so
+  the two cannot silently diverge.
+- **Still deferred:** executing `transpose` and the reductions (trivial /
+  axis-aware lowering), scalar-broadcast execution, and registering real GPU
+  executor crates (CUDA/Metal). The reference path in `ops` remains the exact
+  `f64` answer until a `matrix-ir` `f64` dtype lands; `execute()` matches it to
+  `f32` precision.
 
 This staging keeps every PR correct and mergeable while building the GPU path
 incrementally.
@@ -101,11 +107,37 @@ can be registered to exercise the cost model. (`matrix-ir` uses `f32`/`Shape`
 with `u32` dims; `array-runtime` works in `f64` and converts at the lowering
 boundary.)
 
+## §5.1 Execution (MA-2 — the loop closed)
+
+`exec::execute(kernel, &a, &b) -> Array` runs the lowered graph for real. It
+plans the graph (§5), then drives the placed `ComputeGraph` through
+`matrix-cpu`'s `CpuExecutor` via the executor protocol:
+
+```text
+build_graph ──▶ Runtime::plan ──▶ ComputeGraph
+                                       │  allocate one CpuExecutor buffer per
+                                       │  planner buffer-id, rewrite residencies
+                                       ▼
+        AllocBuffer · UploadBuffer(constants, inputs) · Dispatch · DownloadBuffer
+                                       │
+                                       ▼
+                              f32 output bytes ──▶ Array
+```
+
+Two boundary conversions: **precision** (`f64` ↔ `f32` little-endian bytes, since
+`matrix-ir` has no `f64` dtype yet) and **memory order** (`array-runtime` is
+column-major, `matrix-cpu`'s kernels are row-major — elementwise is positional
+so passes through untouched; `matmul` transposes each operand into row-major in,
+and the result back into column-major out). A `MAX_TOTAL_BUFFER_BYTES` cap (4
+GiB) rejects crafted giant-shape graphs before any allocation. The same path
+runs on a GPU executor the moment one is registered — execution and the §5
+dispatch decision are the same pipeline.
+
 ## §6 Crate layout & dependencies
 
 ```
 array-runtime/
-  src/{lib.rs, value.rs, ops.rs, accel.rs}
+  src/{lib.rs, value.rs, ops.rs, accel.rs, exec.rs}
 ```
 
 ```toml
@@ -119,10 +151,11 @@ matrix-cpu = { path = "../matrix-cpu" }
 
 ## §7 Roadmap fit
 
-- **MA-1** *(this PR)*: value model + CPU reference ops + matrix-ir lowering /
+- **MA-1** *(merged)*: value model + CPU reference ops + matrix-ir lowering /
   cost-planner integration (this spec).
-- **MA-2**: execution through the registered executors (CPU first), replacing the
-  reference compute with the planned `ComputeGraph` run — same API.
+- **MA-2** *(this PR)*: execution through the CPU executor — `execute()` plans
+  and runs the lowered graph end-to-end for elementwise + `matmul`, cross-checked
+  against the reference path (§5.1). Same crate, additive API.
 - **MA-3+**: the MATLAB frontend (`matlab-lexer`/`matlab-parser`/`matlab-runtime`
   + the `matlab`/`octave` binaries) on top of `array-runtime`; then APL, etc.,
   per [`HML00`](HML00-historical-math-languages-roadmap.md).
