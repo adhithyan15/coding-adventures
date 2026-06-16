@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.22.0] - 2026-06-16
+
+### Fixed
+
+- **`SELECT * FROM (SELECT 1, 2)` now returns `(1, 2)` instead of `(2,)`** —
+  when a derived-table subquery contains unnamed literal columns (e.g.
+  ``SELECT 1, 2``), the column names are now ``"1"`` and ``"2"`` (matching
+  SQLite's surface representation) instead of ``"?"`` for every column.
+
+  Root cause: ``_column_display_name()`` in sql-codegen returned ``None``
+  for ``Literal`` nodes, so every constant projection fell back to the
+  placeholder ``"?"``.  Two identical ``"?"`` keys in the same result set
+  caused ``dict(zip(cols, row))`` inside the VM's ``_do_run_subquery`` to
+  drop all columns but the last.  (sql-codegen v1.43.0)
+
+  The fix applies to all literal types:
+
+  | SQL expression | Column name before | Column name after |
+  |----------------|--------------------|-------------------|
+  | ``SELECT 1``   | ``"?"``            | ``"1"``           |
+  | ``SELECT 1, 2``| ``"?", "?"``       | ``"1", "2"``      |
+  | ``SELECT NULL``| ``"?"``            | ``"NULL"``        |
+  | ``SELECT 'hi'``| ``"?"``            | ``"'hi'"``        |
+
+- **21 new oracle tests** in ``test_tier3_subquery_literal_colnames.py``
+  cover column-name accuracy and row-value correctness for all literal
+  types, with byte-for-byte comparison against stdlib ``sqlite3``.
+- **10 new unit tests** in the sql-codegen test suite cover
+  ``_column_display_name`` directly, pushing sql-codegen coverage to
+  **80.48 %** (from the borderline pre-existing 79.61 %).
+
 ## [2.21.0] - 2026-06-16
 
 ### Fixed

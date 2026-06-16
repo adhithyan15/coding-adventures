@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.43.0] - 2026-06-16
+
+### Fixed
+
+- **Literal expressions now get SQLite-compatible column display names** —
+  `_column_display_name()` previously returned `None` for `Literal` nodes,
+  causing `_projection_name()` to fall back to `"?"` for every unnamed
+  constant expression.  When a single ``SELECT`` had two or more literal
+  columns (e.g. ``SELECT 1, 2``), both columns received the key ``"?"``,
+  and the VM's ``_do_run_subquery()`` converted rows to dicts via
+  ``dict(zip(cols, row))``, silently losing all but the last value.
+
+  Fix: ``_column_display_name`` now handles ``Literal`` by returning the
+  surface representation SQLite uses:
+
+  | Literal type | Display name example  |
+  |--------------|-----------------------|
+  | `int`        | `"1"`, `"42"`         |
+  | `float`      | `"1.5"`, `"3.14"`     |
+  | `str`        | `"'hello'"`           |
+  | `bytes`      | `"X'DEADBEEF'"`       |
+  | `None`       | `"NULL"`              |
+
+  This makes ``SELECT 1, 2`` produce column names ``("1", "2")`` instead
+  of ``("?", "?")``, fixing ``SELECT * FROM (SELECT 1, 2)`` which
+  previously returned ``(2,)`` instead of the correct ``(1, 2)``.
+
+- **RowIdRef now covered in ``_column_display_name``** — added unit tests
+  that exercise both the ``RowIdRef → "rowid"`` branch and the new
+  ``Literal`` branch, bringing overall package coverage to **80.48 %**.
+
 ## [1.42.0] - 2026-06-16
 
 ### Fixed
