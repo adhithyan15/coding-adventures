@@ -207,6 +207,8 @@ members = [
     "matlab-parser",
     "matlab-runtime",
     "matlab-repl",
+    "octave-runtime",
+    "octave-repl",
     "logic-gates",
     "logic-core",
     "lookup-core",
