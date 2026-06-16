@@ -6903,12 +6903,18 @@ fn control_block_command_as_deck_line(line: &str) -> Option<String> {
 }
 
 fn is_noop_control_block_command(line: &str) -> bool {
-    matches!(
-        line.split_whitespace()
-            .next()
-            .map(|command| command.to_ascii_lowercase()),
-        Some(command) if command == "run" || command == ".run" || command == "quit" || command == ".quit"
-    )
+    let mut parts = line.split_whitespace();
+    let Some(command) = parts.next().map(|command| command.to_ascii_lowercase()) else {
+        return false;
+    };
+    if matches!(command.as_str(), "run" | ".run" | "quit" | ".quit") {
+        return true;
+    }
+    if !matches!(command.as_str(), "set" | ".set") {
+        return false;
+    }
+    matches!(parts.next().map(|option| option.to_ascii_lowercase()), Some(option) if option == "noaskquit")
+        && parts.next().is_none()
 }
 
 fn is_unsupported_deck_control_directive(directive: &str) -> bool {

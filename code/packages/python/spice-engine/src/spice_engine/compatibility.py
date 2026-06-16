@@ -516,6 +516,7 @@ _SUPPORTED_CONTROL_BLOCK_COMMANDS = frozenset(
     }
 )
 _NOOP_CONTROL_BLOCK_COMMANDS = frozenset({"run", ".run", "quit", ".quit"})
+_NOOP_CONTROL_BLOCK_SET_OPTIONS = frozenset({"noaskquit"})
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,
@@ -3342,5 +3343,12 @@ def _control_block_command_as_deck_line(line: str) -> str | None:
 
 
 def _is_noop_control_block_command(line: str) -> bool:
-    command = line.split(maxsplit=1)[0].lower()
-    return command in _NOOP_CONTROL_BLOCK_COMMANDS
+    parts = line.split()
+    command = parts[0].lower()
+    if command in _NOOP_CONTROL_BLOCK_COMMANDS:
+        return True
+    return (
+        command in {"set", ".set"}
+        and len(parts) == 2
+        and parts[1].lower() in _NOOP_CONTROL_BLOCK_SET_OPTIONS
+    )

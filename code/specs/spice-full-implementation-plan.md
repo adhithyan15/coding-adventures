@@ -36,10 +36,10 @@ downstream tools to compare.
      stable non-executed diagnostics, and selected `.control` block
      analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
      `measure`, `meas`, `four`, `fourier`, `print`, and `plot`) now normalize
-     into dotted deck cards while `run` and `quit` are accepted as no-op
-     execution / interpreter-exit markers; parsed `.measure dc` / `.meas dc`
-     cards now route DC sweep probe samples into the shared scalar measurement
-     table surface;
+     into dotted deck cards while `run`, `quit`, and UI-only `set noaskquit`
+     options are accepted as no-op control markers; parsed `.measure dc` /
+     `.meas dc` cards now route DC sweep probe samples into the shared scalar
+     measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
      optional frequency windows into the same measurement table surface; parsed
      transient `.measure ... FIND ... AT=` cards now route single-time probe
@@ -555,6 +555,14 @@ downstream tools to compare.
       analysis and output commands have normalized into deck cards.
     - Other unrecognized non-comment commands inside `.control` blocks remain
       diagnostic-only so unsupported control flow is still explicit.
+
+50. Selected `.control` noaskquit option routing.
+    - Status: completed in this selected control noaskquit-option routing slice.
+    - Python, Rust, and TypeScript now accept exact selected `.control` block
+      `set noaskquit` UI options as no-op control commands.
+    - Other `set` variables and unrecognized non-comment commands inside
+      `.control` blocks remain diagnostic-only so unsupported script state and
+      control flow are still explicit.
 
 ## Backlog
 

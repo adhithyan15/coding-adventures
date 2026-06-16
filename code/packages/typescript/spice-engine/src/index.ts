@@ -2855,6 +2855,7 @@ const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
   ".plot",
 ]);
 const NOOP_CONTROL_BLOCK_COMMANDS = new Set(["run", ".run", "quit", ".quit"]);
+const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set(["noaskquit"]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -5712,8 +5713,19 @@ function controlBlockCommandAsDeckLine(line: string): string | undefined {
 }
 
 function isNoopControlBlockCommand(line: string): boolean {
-  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
-  return command !== undefined && NOOP_CONTROL_BLOCK_COMMANDS.has(command);
+  const parts = line.split(/\s+/);
+  const command = parts[0]?.toLowerCase();
+  if (command === undefined) {
+    return false;
+  }
+  if (NOOP_CONTROL_BLOCK_COMMANDS.has(command)) {
+    return true;
+  }
+  return (
+    (command === "set" || command === ".set") &&
+    parts.length === 2 &&
+    NOOP_CONTROL_BLOCK_SET_OPTIONS.has(parts[1]?.toLowerCase() ?? "")
+  );
 }
 
 export function subcircuitDefinition(
