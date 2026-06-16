@@ -105,9 +105,12 @@ grid to `InfiniteGrid` — a virtualized, effectively-infinite (u32 × u32, spar
 sheet rendered on the same engine. The body is a `ListView.builder`, which
 natively virtualizes: it calls its `itemBuilder` only for rows near the viewport
 and recycles them as they scroll off, so a 1000-row sheet costs the handful of
-rows you can see. Each built row makes **one** engine `get_window` over its
-`1×totalCols` strip (`InfiniteSheetModel.rowCells`) — per-frame engine work is
-proportional to *visible* rows, never the sheet's height.
+rows you can see. Each built row makes **one** engine `get_display_window` over
+its `1×totalCols` strip (`InfiniteSheetModel.rowCells`) — display strings, each
+already rendered through its Excel-style format code (the seed formats the
+cross-foot totals as `#,##0.00` and the far-flung `Z1000` total as a percent),
+so the Flutter host paints them directly. Per-frame engine work is proportional
+to *visible* rows, never the sheet's height.
 
 Two-axis scroll with frozen chrome, kept in sync by one-way controller links
 (the chrome is non-interactive and slaved to the body): the column-letter header
