@@ -303,4 +303,53 @@ mod tests {
             vec![11.0, 12.0, 13.0]
         );
     }
+
+    // --- R-10: higher-order functionals (with R-9 lambdas) --------------
+
+    #[test]
+    fn reduce_folds_left() {
+        assert_eq!(nums("Reduce(\\(a, b) a + b, 1:4)\n"), vec![10.0]);
+        assert_eq!(nums("Reduce(\\(a, b) a + b, 1:4, 100)\n"), vec![110.0]);
+        // Non-commutative fold confirms left-associativity: ((10-1)-2)-3 = 4.
+        assert_eq!(nums("Reduce(\\(a, b) a - b, c(1, 2, 3), 10)\n"), vec![4.0]);
+    }
+
+    #[test]
+    fn filter_keeps_matching_elements() {
+        assert_eq!(
+            nums("Filter(\\(x) x %% 2 == 0, 1:6)\n"),
+            vec![2.0, 4.0, 6.0]
+        );
+    }
+
+    #[test]
+    fn mapply_zips_and_simplifies() {
+        assert_eq!(
+            nums("mapply(\\(x, y) x * y, 1:3, 4:6)\n"),
+            vec![4.0, 10.0, 18.0]
+        );
+    }
+
+    #[test]
+    fn map_zips_into_a_list() {
+        // Map returns a list; [[i]] extracts the i-th result.
+        assert_eq!(nums("Map(\\(x, y) x + y, 1:3, 4:6)[[2]]\n"), vec![7.0]);
+    }
+
+    #[test]
+    fn vapply_checks_the_result_shape() {
+        assert_eq!(nums("vapply(1:3, \\(x) x ^ 2, 0)\n"), vec![1.0, 4.0, 9.0]);
+        // A result that doesn't match the template length is an error.
+        assert!(eval_r("vapply(1:3, \\(x) c(x, x), 0)\n").is_err());
+    }
+
+    #[test]
+    fn functionals_compose_with_the_pipe() {
+        // 1:5 |> Filter(even) |> Reduce(+)  →  2 + 4 = 6. The function goes by
+        // name so the piped vector lands in the data slot.
+        assert_eq!(
+            nums("1:5 |> Filter(f = \\(x) x %% 2 == 0) |> Reduce(f = \\(a, b) a + b)\n"),
+            vec![6.0]
+        );
+    }
 }

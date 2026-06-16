@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-06-16
+
+### Added (via the shared `s-runtime`)
+
+- **R-10 — higher-order functionals**: `Map`/`mapply`/`Reduce`/`Filter`/`vapply`,
+  composing with the R-9 lambdas and pipe. See `s-runtime` 0.6.0.
+
 ## [0.4.0] - 2026-06-16
 
 ### Added (R-9)

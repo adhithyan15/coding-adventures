@@ -94,6 +94,13 @@ pub fn install(env: &Env) {
     define(env, "lapply", builtin("lapply", b_lapply));
     define(env, "strsplit", builtin("strsplit", b_strsplit));
 
+    // Higher-order functionals (R-10) — pair with the R-9 `\(x)` lambdas.
+    define(env, "Map", builtin("Map", b_map));
+    define(env, "Reduce", builtin("Reduce", b_reduce));
+    define(env, "Filter", builtin("Filter", b_filter));
+    define(env, "mapply", builtin("mapply", b_mapply));
+    define(env, "vapply", builtin("vapply", b_vapply));
+
     // Regular expressions (R-7).
     define(env, "grepl", builtin("grepl", b_grepl));
     define(env, "grep", builtin("grep", b_grep));
@@ -1185,6 +1192,223 @@ fn b_sapply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
                 value: elem,
             }],
         )?;
+        results.push(Arg {
+            name: None,
+            value: r,
+        });
+    }
+    Ok(combine(&results))
+}
+
+// ===========================================================================
+// Higher-order functionals (R-10)
+// ===========================================================================
+//
+// The classic functional-programming toolkit, pairing with the R-9 `\(x)`
+// lambdas. Like `sapply`/`lapply` they take a callable and invoke it through
+// `interp.call_value`. `Map`/`mapply` zip several sequences element-wise (Map
+// returns a list, mapply simplifies to a vector); `Reduce` folds; `Filter`
+// keeps elements; `vapply` is `sapply` with a result-shape template.
+
+/// Split a functional's arguments into `(function, data…)`. The function is the
+/// one passed by name (`f =` / `FUN =`) or, failing that, the first *callable*
+/// positional argument; the remaining positionals are the data, in order. This
+/// matches R's argument matching closely enough that both `Map(f, x, y)` and the
+/// piped `x |> Map(f = …)` work (`|>` makes the data the first positional, so the
+/// function must be named).
+fn split_fun(args: &[Arg], name: &str) -> SResult<(SValue, Vec<SValue>)> {
+    let positional: Vec<SValue> = args
+        .iter()
+        .filter(|a| a.name.is_none())
+        .map(|a| a.value.clone())
+        .collect();
+    let named_f = args
+        .iter()
+        .find(|a| matches!(a.name.as_deref(), Some("f") | Some("FUN")))
+        .map(|a| a.value.clone());
+
+    let (f, data) = match named_f {
+        Some(f) => (f, positional),
+        None => {
+            let idx = positional
+                .iter()
+                .position(|v| v.is_callable())
+                .ok_or_else(|| SError::BadArgs(format!("{name}: missing function argument")))?;
+            let mut data = positional;
+            let f = data.remove(idx);
+            (f, data)
+        }
+    };
+    if !f.is_callable() {
+        return Err(SError::NotCallable(f.type_name().to_string()));
+    }
+    Ok((f, data))
+}
+
+/// `Map(f, ...)` — apply `f` element-wise across one or more sequences,
+/// recycling shorter ones to the longest. Returns a list (one entry per
+/// element); use `mapply` for a simplified vector.
+fn b_map(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (items, _) = zip_apply(interp, args, "Map")?;
+    Ok(SValue::List {
+        names: vec![None; items.len()],
+        items,
+    })
+}
+
+/// `mapply(f, ...)` — like `Map`, but simplifies the results to a vector.
+fn b_mapply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (items, _) = zip_apply(interp, args, "mapply")?;
+    let results: Vec<Arg> = items
+        .into_iter()
+        .map(|value| Arg { name: None, value })
+        .collect();
+    Ok(combine(&results))
+}
+
+/// Shared engine for `Map`/`mapply`: call `f(seq1[i], seq2[i], …)` for each
+/// position `i`, recycling each sequence to the longest length.
+fn zip_apply(interp: &Interpreter, args: &[Arg], name: &str) -> SResult<(Vec<SValue>, usize)> {
+    let (f, seqs) = split_fun(args, name)?;
+    if seqs.is_empty() {
+        return Err(SError::BadArgs(format!("{name}: nothing to iterate over")));
+    }
+    // The result length is the longest input; an empty input yields nothing.
+    let lengths: Vec<usize> = seqs.iter().map(|s| s.length()).collect();
+    let len = if lengths.contains(&0) {
+        0
+    } else {
+        lengths.iter().copied().max().unwrap_or(0)
+    };
+    let mut items = Vec::with_capacity(len);
+    for i in 0..len {
+        let call_args: Vec<Arg> = seqs
+            .iter()
+            .zip(&lengths)
+            .map(|(s, &l)| Arg {
+                name: None,
+                value: nth_element(s, i % l), // recycle
+            })
+            .collect();
+        items.push(interp.call_value(f.clone(), &call_args)?);
+    }
+    Ok((items, len))
+}
+
+/// `Reduce(f, x[, init])` — left fold. Without `init`, `f` is first applied to
+/// the first two elements; an empty `x` with no `init` is `NULL`.
+fn b_reduce(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (f, data) = split_fun(args, "Reduce")?;
+    let x = data
+        .first()
+        .cloned()
+        .ok_or_else(|| SError::BadArgs("Reduce: missing x".into()))?;
+    // The initial value comes from `init =` or the next positional after x.
+    let init = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("init"))
+        .map(|a| a.value.clone())
+        .or_else(|| data.get(1).cloned());
+
+    let n = x.length();
+    let (mut acc, start) = match init {
+        Some(v) => (v, 0),
+        None if n == 0 => return Ok(SValue::Null),
+        None => (nth_element(&x, 0), 1),
+    };
+    for i in start..n {
+        acc = interp.call_value(
+            f.clone(),
+            &[
+                Arg {
+                    name: None,
+                    value: acc,
+                },
+                Arg {
+                    name: None,
+                    value: nth_element(&x, i),
+                },
+            ],
+        )?;
+    }
+    Ok(acc)
+}
+
+/// `Filter(f, x)` — keep the elements of `x` for which `f(element)` is true.
+/// Returns the same kind of structure (a list stays a list, a vector stays a
+/// vector).
+fn b_filter(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (f, data) = split_fun(args, "Filter")?;
+    let x = data
+        .into_iter()
+        .next()
+        .ok_or_else(|| SError::BadArgs("Filter: missing x".into()))?;
+    let mut keep = Vec::new();
+    for i in 0..x.length() {
+        let verdict = interp.call_value(
+            f.clone(),
+            &[Arg {
+                name: None,
+                value: nth_element(&x, i),
+            }],
+        )?;
+        if verdict.truthy()? {
+            keep.push(i);
+        }
+    }
+    match &x {
+        SValue::List { names, items } => Ok(SValue::List {
+            names: keep.iter().map(|&i| names[i].clone()).collect(),
+            items: keep.iter().map(|&i| items[i].clone()).collect(),
+        }),
+        _ => {
+            let kept: Vec<Arg> = keep
+                .iter()
+                .map(|&i| Arg {
+                    name: None,
+                    value: nth_element(&x, i),
+                })
+                .collect();
+            Ok(combine(&kept))
+        }
+    }
+}
+
+/// `vapply(x, f, template)` — like `sapply`, but every result must match the
+/// length of `template` (its `FUN.VALUE`); a mismatch is an error. This makes
+/// the result shape predictable, unlike `sapply`.
+fn b_vapply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // `vapply(X, FUN, FUN.VALUE)`: the function is the callable argument, the
+    // data and template are the other positionals (X first, template next).
+    let (f, data) = split_fun(args, "vapply")?;
+    let x = data
+        .first()
+        .cloned()
+        .ok_or_else(|| SError::BadArgs("vapply: missing X".into()))?;
+    let tlen = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("FUN.VALUE"))
+        .map(|a| a.value.clone())
+        .or_else(|| data.get(1).cloned())
+        .ok_or_else(|| SError::BadArgs("vapply: missing FUN.VALUE template".into()))?
+        .length();
+
+    let mut results: Vec<Arg> = Vec::with_capacity(x.length());
+    for i in 0..x.length() {
+        let r = interp.call_value(
+            f.clone(),
+            &[Arg {
+                name: None,
+                value: nth_element(&x, i),
+            }],
+        )?;
+        if r.length() != tlen {
+            return Err(SError::BadArgs(format!(
+                "vapply: values must be length {tlen}, but element {} is length {}",
+                i + 1,
+                r.length()
+            )));
+        }
         results.push(Arg {
             name: None,
             value: r,
