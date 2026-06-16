@@ -131,6 +131,8 @@ packages a typed surface for:
   readiness into final archive export checks
 - Hue package release archive import summaries that turn archive export
   readiness into final archive import checks
+- Hue package release archive ingest summaries that turn archive import
+  readiness into final archive ingest checks
 
 ## Dependencies
 
