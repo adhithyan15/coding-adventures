@@ -1,0 +1,126 @@
+{
+  "kind": "anemia-edge",
+  "clauses": {
+    "has_mcv__iron_deficiency_anemia": {
+      "relation": "has_mcv",
+      "subject": "iron_deficiency_anemia",
+      "object": "microcytic",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Iron-deficiency anemia is a microcytic anemia (low mean corpuscular volume).",
+      "url": null
+    },
+    "classic_finding__iron_deficiency_anemia": {
+      "relation": "classic_finding",
+      "subject": "iron_deficiency_anemia",
+      "object": "koilonychia",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Iron-deficiency anemia can cause koilonychia (spoon-shaped nails).",
+      "url": null
+    },
+    "has_mcv__thalassemia": {
+      "relation": "has_mcv",
+      "subject": "thalassemia",
+      "object": "microcytic",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Thalassemia is a microcytic anemia.",
+      "url": null
+    },
+    "classic_finding__thalassemia": {
+      "relation": "classic_finding",
+      "subject": "thalassemia",
+      "object": "target_cells",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Thalassemia classically shows target cells on the peripheral blood smear.",
+      "url": null
+    },
+    "has_mcv__sideroblastic_anemia": {
+      "relation": "has_mcv",
+      "subject": "sideroblastic_anemia",
+      "object": "microcytic",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Sideroblastic anemia is typically a microcytic anemia.",
+      "url": null
+    },
+    "classic_finding__sideroblastic_anemia": {
+      "relation": "classic_finding",
+      "subject": "sideroblastic_anemia",
+      "object": "ringed_sideroblasts",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Sideroblastic anemia is defined by ringed sideroblasts in the bone marrow.",
+      "url": null
+    },
+    "has_mcv__b12_deficiency_anemia": {
+      "relation": "has_mcv",
+      "subject": "b12_deficiency_anemia",
+      "object": "macrocytic",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin B12 deficiency causes a macrocytic (megaloblastic) anemia.",
+      "url": null
+    },
+    "classic_finding__b12_deficiency_anemia": {
+      "relation": "classic_finding",
+      "subject": "b12_deficiency_anemia",
+      "object": "hypersegmented_neutrophils",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Megaloblastic anemia (B12 or folate deficiency) shows hypersegmented neutrophils.",
+      "url": null
+    },
+    "has_mcv__hereditary_spherocytosis": {
+      "relation": "has_mcv",
+      "subject": "hereditary_spherocytosis",
+      "object": "normocytic",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hereditary spherocytosis is a normocytic hemolytic anemia.",
+      "url": null
+    },
+    "classic_finding__hereditary_spherocytosis": {
+      "relation": "classic_finding",
+      "subject": "hereditary_spherocytosis",
+      "object": "spherocytes",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Hereditary spherocytosis shows spherocytes on the peripheral smear.",
+      "url": null
+    },
+    "has_mcv__g6pd_deficiency": {
+      "relation": "has_mcv",
+      "subject": "g6pd_deficiency",
+      "object": "normocytic",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "G6PD deficiency causes an episodic normocytic hemolytic anemia.",
+      "url": null
+    },
+    "classic_finding__g6pd_deficiency": {
+      "relation": "classic_finding",
+      "subject": "g6pd_deficiency",
+      "object": "bite_cells",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "G6PD deficiency shows bite cells and Heinz bodies on the peripheral smear.",
+      "url": null
+    }
+  },
+  "hash": "0ccc5355c757d8f6"
+}

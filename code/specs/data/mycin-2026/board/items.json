@@ -34,6 +34,16 @@
     {"id": "thiamine_finding", "domain": "vitamin", "tactic": "recall", "relation": "classic_finding",   "subject": "thiamine",   "var": "Finding", "gold": "wernicke_encephalopathy"},
     {"id": "biotin_disease",   "domain": "vitamin", "tactic": "recall", "relation": "deficiency_causes", "subject": "biotin",     "var": "Disease", "gold": "ABSTAIN"},
 
+    {"id": "ida_mcv",             "domain": "anemia", "tactic": "recall", "relation": "has_mcv",         "subject": "iron_deficiency_anemia",    "var": "Class",   "gold": "microcytic"},
+    {"id": "thal_mcv",            "domain": "anemia", "tactic": "recall", "relation": "has_mcv",         "subject": "thalassemia",               "var": "Class",   "gold": "microcytic"},
+    {"id": "b12_anemia_mcv",      "domain": "anemia", "tactic": "recall", "relation": "has_mcv",         "subject": "b12_deficiency_anemia",     "var": "Class",   "gold": "macrocytic"},
+    {"id": "hs_mcv",              "domain": "anemia", "tactic": "recall", "relation": "has_mcv",         "subject": "hereditary_spherocytosis",  "var": "Class",   "gold": "normocytic"},
+    {"id": "b12_anemia_finding",  "domain": "anemia", "tactic": "recall", "relation": "classic_finding", "subject": "b12_deficiency_anemia",     "var": "Finding", "gold": "hypersegmented_neutrophils"},
+    {"id": "hs_finding",          "domain": "anemia", "tactic": "recall", "relation": "classic_finding", "subject": "hereditary_spherocytosis",  "var": "Finding", "gold": "spherocytes"},
+    {"id": "g6pd_finding",        "domain": "anemia", "tactic": "recall", "relation": "classic_finding", "subject": "g6pd_deficiency",           "var": "Finding", "gold": "bite_cells"},
+    {"id": "sideroblastic_finding","domain": "anemia", "tactic": "recall", "relation": "classic_finding", "subject": "sideroblastic_anemia",     "var": "Finding", "gold": "ringed_sideroblasts"},
+    {"id": "aplastic_mcv",        "domain": "anemia", "tactic": "recall", "relation": "has_mcv",         "subject": "aplastic_anemia",           "var": "Class",   "gold": "ABSTAIN"},
+
     {"id": "meningitis_bacterial_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_bacterial.adj", "gold": "bacterial_meningitis"},
     {"id": "meningitis_equivocal_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_equivocal.adj", "gold": "ABSTAIN"}
   ]
