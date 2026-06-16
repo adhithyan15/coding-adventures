@@ -135,6 +135,41 @@ def test_objective_breakdown_surfaced_with_chart_weights():
     assert ob["total"] == 1 * ob["cost"] + 3 * ob["side_effects"], ob
 
 
+def test_decide_timing_decision_table():
+    # CC-5 (§4): the wait-vs-treat-now decision is a function of (disease acuity, culture
+    # status, clinical stability). Pure — no engine needed.
+    # Time-critical disease (meningitis) → empiric now, high delay_risk, with the threshold.
+    t = cc.decide_timing("meningitis", "pending", "stable")
+    assert t["decision"] == "treat_now_empiric" and t["delay_risk"] == "high"
+    assert t["threshold"]["treat_within_min"] == 60 and t["threshold"]["trust"]
+    # A critical patient forces empiric-now even for a routine-acuity disease.
+    assert cc.decide_timing("cellulitis", "pending", "critical")["decision"] == "treat_now_empiric"
+    # Stable + non-time-critical + culture pending → awaiting the culture is defensible.
+    aw = cc.decide_timing("cellulitis", "pending", "stable")
+    assert aw["decision"] == "await_culture" and aw["delay_risk"] == "low"
+    # Culture already back → targeted, the wait question is moot.
+    assert cc.decide_timing("meningitis", "resulted", "stable")["decision"] == "targeted_culture_directed"
+    # No timing info on a routine disease → conservative treat-now (don't gamble).
+    assert cc.decide_timing("cellulitis", "", "")["decision"] == "treat_now_empiric"
+
+
+def test_timing_facts_compile_and_surface_in_derive():
+    # culture_status / clinical_status compile into timing inputs with provenance.
+    cop = cc.compile_cop([cc.ChartFact("culture_status", "pending", "cultures sent"),
+                          cc.ChartFact("clinical_status", "critical", "obtunded, hypotensive")])
+    assert cop.culture_status == "pending" and cop.clinical_status == "critical"
+    assert sum(c["type"] == "timing_input" for c in cop.constraints) == 2
+    # Unrecognized values are discarded, never silently set.
+    bad = cc.compile_cop([cc.ChartFact("culture_status", "maybe")])
+    assert not bad.culture_status and any("culture_status" in d["fact"] for d in bad.discards)
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # derive() surfaces the timing decision; meningitis is time-critical → empiric now.
+    r = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("culture_status", "pending")])
+    assert r["timing"]["decision"] == "treat_now_empiric" and r["timing"]["delay_risk"] == "high"
+
+
 def test_unmapped_fact_is_discarded_not_ignored():
     # No silent drops: a fact with no rule lands in discards WITH a reason.
     cop = cc.compile_cop([cc.ChartFact("age_band", "adult"),
@@ -173,6 +208,8 @@ def main() -> int:
     test_dose_risk_facts_become_dose_constraints()
     test_objective_priority_sets_the_cost_side_effect_weights()
     test_objective_breakdown_surfaced_with_chart_weights()
+    test_decide_timing_decision_table()
+    test_timing_facts_compile_and_surface_in_derive()
     test_dose_infeasibility_folds_into_the_cover()
     test_pregnancy_contraindicates_drugs()
     test_pregnancy_engine_behaviour()

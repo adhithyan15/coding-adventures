@@ -71,6 +71,8 @@ class Cop:
     weight: float = 70.0                                      # kg; for the mg dose window
     contraindicated: set[str] = field(default_factory=set)   # CC-3 drugs excluded by a contraindication
     weights: tuple[int, int] = reg.DEFAULT_WEIGHTS            # CC-4 objective blend (w_cost, w_tox)
+    culture_status: str = ""                                 # CC-5 pending | resulted (timing decision)
+    clinical_status: str = ""                                # CC-5 critical | unstable | stable
     constraints: list[dict] = field(default_factory=list)   # provenance per constraint
     discards: list[dict] = field(default_factory=list)       # facts not mapped + reason
 
@@ -92,6 +94,23 @@ _PREGNANCY_CONTRAINDICATED = {"moxifloxacin", "tmp_smx"}
 # set-cover minimizes. "cost" is the historical default (toxicity ignored); raising w_tox
 # lets a pricier-but-safer regimen win for a patient where side-effect burden matters.
 _OBJECTIVE_WEIGHTS = {"cost": (1, 0), "balanced": (1, 1), "low_toxicity": (1, 3)}
+
+# CC-5: the wait-vs-treat-now decision (§4). Empiric-now vs await-culture is a real
+# tradeoff: treating now buys broad coverage (more cost + side-effect burden) but
+# `delay_risk = 0`; awaiting the culture is cheaper/narrower but incurs delay_risk. The
+# disease's TIME-CRITICALITY decides which dominates. For bacterial meningitis the door-to-
+# antibiotic window is ~60 min — delay raises mortality — so empiric-now dominates regardless
+# of cost/toxicity. This threshold is AUTHORED-DEBT (the IDSA recommendation), flagged for
+# CC-5b spider grounding; `routine` acuity (a non-time-critical infection) leaves room to
+# await a culture when the patient is stable. The decision is reusable: it's a function of
+# (disease acuity, culture status, clinical stability), not meningitis-specific.
+_TIME_CRITICALITY = {
+    "meningitis": {"acuity": "time_critical", "treat_within_min": 60,
+                   "source": "Suspected bacterial meningitis is a medical emergency; "
+                             "empiric antibiotics should be started without delay (target "
+                             "≤1 hour), as delay increases mortality and morbidity (IDSA).",
+                   "trust": "consensus"},  # [FLAG: authored — ground in CC-5b]
+}
 
 
 def compile_cop(facts: list[ChartFact]) -> Cop:
@@ -176,6 +195,26 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
             else:
                 cop.discards.append({"fact": f"pregnancy={f.value}",
                                      "reason": "pregnancy value not 'present' → no contraindication applied"})
+        elif f.kind == "culture_status":
+            # CC-5: whether the culture is back drives the wait-vs-treat-now decision.
+            if f.value in ("pending", "resulted"):
+                cop.culture_status = f.value
+                cop.constraints.append({"type": "timing_input", "from": f"culture_status={f.value}",
+                                        "rule": "culture status drives the wait-vs-treat-now decision",
+                                        "span": f.span})
+            else:
+                cop.discards.append({"fact": f"culture_status={f.value}",
+                                     "reason": "unrecognized culture status (want pending/resulted)"})
+        elif f.kind == "clinical_status":
+            # CC-5: acuity — a critical/unstable patient forces empiric-now regardless.
+            if f.value in ("critical", "unstable", "stable"):
+                cop.clinical_status = f.value
+                cop.constraints.append({"type": "timing_input", "from": f"clinical_status={f.value}",
+                                        "rule": "clinical acuity drives the wait-vs-treat-now decision",
+                                        "span": f.span})
+            else:
+                cop.discards.append({"fact": f"clinical_status={f.value}",
+                                     "reason": "unrecognized clinical status (want critical/unstable/stable)"})
         elif f.kind == "objective_priority":
             # CC-4: the chart's treatment priority selects the cost/side-effect objective
             # blend. "cost" (default) = cheapest acceptable regimen; "low_toxicity" weights
@@ -207,6 +246,41 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
     return cop
 
 
+def decide_timing(disease: str, culture_status: str, clinical_status: str) -> dict:
+    """CC-5 (§4): model the empiric-now vs await-culture decision as a costed binary, with
+    the grounded time-criticality threshold as the deciding factor. Returns the decision +
+    its delay_risk + the rationale/threshold provenance — a reusable function of (disease
+    acuity, culture status, clinical stability), not meningitis-specific.
+
+      culture resulted        → targeted (culture-directed): the wait question is moot.
+      time-critical disease   → treat_now_empiric (delay_risk high): the grounded threshold
+        OR critical/unstable     says delay raises mortality; empiric coverage now dominates
+                                 any cost/side-effect saving from waiting.
+      stable + routine acuity → await_culture (delay_risk low): narrow, cheaper, fewer side
+        + culture pending        effects — defensible only when delay is safe.
+      otherwise               → treat_now_empiric (delay_risk moderate): the conservative
+                                 default (don't gamble on a benign course)."""
+    tc = _TIME_CRITICALITY.get(disease, {"acuity": "routine"})
+    acuity = tc.get("acuity", "routine")
+    if culture_status == "resulted":
+        return {"decision": "targeted_culture_directed", "delay_risk": "none",
+                "rationale": "culture resulted → narrow to the isolate's susceptibilities",
+                "disease_acuity": acuity}
+    base = {"disease_acuity": acuity, "culture_status": culture_status or "unknown",
+            "threshold": {k: tc[k] for k in ("treat_within_min", "source", "trust") if k in tc}}
+    if acuity == "time_critical" or clinical_status in ("critical", "unstable"):
+        return {**base, "decision": "treat_now_empiric", "delay_risk": "high",
+                "rationale": ("time-critical (or unstable): start empiric antibiotics now; "
+                              "awaiting culture would save cost/side-effects but the delay "
+                              "raises mortality above the grounded threshold")}
+    if clinical_status == "stable" and acuity == "routine" and culture_status == "pending":
+        return {**base, "decision": "await_culture", "delay_risk": "low",
+                "rationale": ("stable + non-time-critical + culture pending: await the result "
+                              "and give narrow targeted therapy — cheaper, fewer side effects")}
+    return {**base, "decision": "treat_now_empiric", "delay_risk": "moderate",
+            "rationale": "insufficient evidence the delay is safe → treat empirically (conservative)"}
+
+
 def dose_infeasible(cli: Path, drugs: list[str], risks: set[str], weight: float) -> dict:
     """CC-2: the drugs with NO safe-and-effective dose for this patient — efficacy floor
     exceeds the toxicity ceiling once `risks` shrink it (the engine's dose_window check
@@ -219,12 +293,13 @@ def dose_infeasible(cli: Path, drugs: list[str], risks: set[str], weight: float)
     return out
 
 
-def derive(cli: Path, facts: list[ChartFact]) -> dict:
+def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> dict:
     """Compile the chart → COP, solve it, and return the regimen with provenance.
     Dose feasibility (CC-2) is folded into the cover: a drug with no safe-and-effective
     dose under the chart's renal/interaction risks is excluded, so the optimizer
     re-derives around it or abstains. On INFEASIBLE the engine's conflict core is
-    surfaced (honest abstention)."""
+    surfaced (honest abstention). CC-5: the wait-vs-treat-now decision is computed from
+    the chart's culture/clinical status against the disease's grounded time-criticality."""
     cop = compile_cop(facts)
     # CC-2: drop drugs that can't be safely + effectively dosed for this patient.
     undosable = dose_infeasible(cli, reg.candidates(cop.exclusions), cop.risks, cop.weight)
@@ -237,10 +312,12 @@ def derive(cli: Path, facts: list[ChartFact]) -> dict:
     excluded_drugs = set(undosable) | cop.contraindicated
     # CC-4: solve under the chart's cost/side-effect objective blend (default tier-only).
     res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, excluded_drugs, cop.weights)
+    # CC-5: the empiric-now vs await-culture decision, from the chart's timing inputs.
+    timing = decide_timing(disease, cop.culture_status, cop.clinical_status)
     return {
         "regimen": res["regimen"], "outcome": res["outcome"],
         "cost": res.get("cost"), "conflict": res.get("iis"),
-        "objective": res.get("objective"),
+        "objective": res.get("objective"), "timing": timing,
         "organisms": cop.organisms, "exclusions": sorted(cop.exclusions),
         "defeated": sorted(map(list, cop.defeated)),
         "risks": sorted(cop.risks), "dose_infeasible": sorted(undosable),
