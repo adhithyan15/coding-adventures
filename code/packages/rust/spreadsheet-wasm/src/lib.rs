@@ -195,6 +195,35 @@ pub extern "C" fn get_values() -> *mut u8 {
     pack(SESSION.with(|s| s.borrow().get_values()))
 }
 
+// ── Structural edits: insert / delete rows & columns ─────────────────
+// 1-based `at`, `count` lines. The engine relocates cells and rewrites formula
+// references; the formula echo stays in step. No return — the JS host re-reads
+// via get_window / get_raw afterwards.
+
+/// `insert_rows(at, count)`. See [`SpreadsheetSession::insert_rows`].
+#[no_mangle]
+pub extern "C" fn insert_rows(at: u32, count: u32) {
+    SESSION.with(|s| s.borrow_mut().insert_rows(at, count));
+}
+
+/// `delete_rows(at, count)`. See [`SpreadsheetSession::delete_rows`].
+#[no_mangle]
+pub extern "C" fn delete_rows(at: u32, count: u32) {
+    SESSION.with(|s| s.borrow_mut().delete_rows(at, count));
+}
+
+/// `insert_cols(at, count)`. See [`SpreadsheetSession::insert_cols`].
+#[no_mangle]
+pub extern "C" fn insert_cols(at: u32, count: u32) {
+    SESSION.with(|s| s.borrow_mut().insert_cols(at, count));
+}
+
+/// `delete_cols(at, count)`. See [`SpreadsheetSession::delete_cols`].
+#[no_mangle]
+pub extern "C" fn delete_cols(at: u32, count: u32) {
+    SESSION.with(|s| s.borrow_mut().delete_cols(at, count));
+}
+
 // ── Viewport primitive (virtualized infinite sheet) ──────────────────
 // These take integer coordinates directly (no pointer marshalling), so a
 // scrolling JS host can fetch just the visible window of an unbounded sheet.
@@ -307,6 +336,24 @@ mod tests {
         // Recalc on dependency change.
         set("B1", "115");
         assert_eq!(value("B6"), r#"{"kind":"number","value":146.0}"#);
+    }
+
+    #[test]
+    fn abi_insert_and_delete_rows() {
+        reset();
+        set("A1", "10");
+        set("A2", "20");
+        set("A3", "=SUM(A1:A2)");
+
+        insert_rows(1, 1); // a blank row at the top — everything slides down
+        assert_eq!(value("A2"), r#"{"kind":"number","value":10.0}"#); // was A1
+        assert_eq!(value("A4"), r#"{"kind":"number","value":30.0}"#); // SUM moved
+        assert_eq!(raw("A4"), "=SUM(A2:A3)"); // range rewritten
+
+        delete_rows(1, 1); // remove the blank top row again
+        assert_eq!(value("A1"), r#"{"kind":"number","value":10.0}"#);
+        assert_eq!(value("A3"), r#"{"kind":"number","value":30.0}"#);
+        assert_eq!(raw("A3"), "=SUM(A1:A2)");
     }
 
     #[test]

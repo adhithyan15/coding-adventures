@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+**Insert/delete rows & columns over the WASM ABI.** New `void`-returning exports
+`insert_rows` / `delete_rows` / `insert_cols` / `delete_cols(at, count)` (1-based,
+plain integer args — no pointer marshalling), each delegating to the thread-local
+`SpreadsheetSession`. The JS host re-reads via `get_window` / `get_raw`
+afterwards. 1 new ABI round-trip test (insert then delete restores the sheet).
+
 ## 0.2.0
 
 Viewport entry points for the virtualized infinite sheet, mirroring
