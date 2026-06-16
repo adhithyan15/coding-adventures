@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add control-block exclusion diagnostics to `analyzeDeckControls` and
+  `resolveDeckSources`; unsupported `.control` / `.endc` blocks are no longer
+  forwarded as active deck lines, and non-comment commands inside the block
+  emit stable diagnostics, matching Python and Rust.
 - Add parsed `.plot <analysis> ...` output routing to `resolveDeckOutputs`,
   `selectDeckOutputProbes`, and deck table formatters, matching Python and
   Rust.

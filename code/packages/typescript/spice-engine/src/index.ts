@@ -2837,6 +2837,7 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
   const activeLines: string[] = [];
   const diagnostics: DeckControlDiagnostic[] = [];
   let endLineNumber: number | undefined;
+  let inControlBlock = false;
 
   const lines = netlist.split(/\r?\n/);
   for (let index = 0; index < lines.length; index++) {
@@ -2846,6 +2847,20 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
       continue;
     }
     const directive = deckDirective(stripped);
+    if (inControlBlock) {
+      if (directive === ".endc") {
+        inControlBlock = false;
+        continue;
+      }
+      diagnostics.push({
+        code: "SPICE_DECK_CONTROL_COMMAND",
+        directive: ".control",
+        lineNumber,
+        message: `${JSON.stringify(stripped)} inside .control is not executed by the deck execution foothold yet`,
+        severity: "error",
+      });
+      continue;
+    }
     if (directive === ".end") {
       endLineNumber = lineNumber;
       break;
@@ -2858,6 +2873,10 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
         message: `${directive} is not supported by the deck execution foothold yet`,
         severity: "error",
       });
+      if (directive === ".control") {
+        inControlBlock = true;
+        continue;
+      }
     }
     activeLines.push(stripped);
   }
@@ -3373,6 +3392,7 @@ function resolveDeckLines(
 ): ResolvedDeckLines {
   const activeLines: string[] = [];
   let endLineNumber: number | undefined;
+  let inControlBlock = false;
 
   const lines = netlist.split(/\r?\n/);
   for (let index = 0; index < lines.length; index++) {
@@ -3382,6 +3402,21 @@ function resolveDeckLines(
       continue;
     }
     const directive = deckDirective(stripped);
+    if (inControlBlock) {
+      if (directive === ".endc") {
+        inControlBlock = false;
+        continue;
+      }
+      state.diagnostics.push({
+        code: "SPICE_DECK_CONTROL_COMMAND",
+        directive: ".control",
+        source,
+        lineNumber,
+        message: `${JSON.stringify(stripped)} inside .control is not executed by the deck source resolver yet`,
+        severity: "error",
+      });
+      continue;
+    }
     if (directive === ".end") {
       endLineNumber = lineNumber;
       break;
@@ -3407,6 +3442,10 @@ function resolveDeckLines(
         message: `${directive} is not supported by the deck source resolver yet`,
         severity: "error",
       });
+      if (directive === ".control") {
+        inControlBlock = true;
+        continue;
+      }
     }
     activeLines.push(stripped);
   }

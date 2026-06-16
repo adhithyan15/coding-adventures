@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck control-block exclusion diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now exclude
+  unsupported `.control` / `.endc` blocks from active deck lines while
+  reporting stable command diagnostics for non-comment lines inside the block,
+  matching Rust and TypeScript.
+
 - **Parsed plot output routing** —
   `resolve_deck_outputs()`, `select_deck_output_probes()`, and
   `format_deck_*_table()` now route scoped `.plot <analysis> ...` output

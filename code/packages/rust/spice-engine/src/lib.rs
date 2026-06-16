@@ -3550,6 +3550,7 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
     let mut active_lines = Vec::new();
     let mut diagnostics = Vec::new();
     let mut end_line_number = None;
+    let mut in_control_block = false;
 
     for (index, raw_line) in netlist.lines().enumerate() {
         let line_number = index + 1;
@@ -3558,6 +3559,22 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
             continue;
         }
         let directive = deck_directive(stripped);
+        if in_control_block {
+            if directive.as_deref() == Some(".endc") {
+                in_control_block = false;
+                continue;
+            }
+            diagnostics.push(DeckControlDiagnostic {
+                code: "SPICE_DECK_CONTROL_COMMAND".to_string(),
+                directive: ".control".to_string(),
+                line_number,
+                message: format!(
+                    "{stripped:?} inside .control is not executed by the deck execution foothold yet"
+                ),
+                severity: "error".to_string(),
+            });
+            continue;
+        }
         if directive.as_deref() == Some(".end") {
             end_line_number = Some(line_number);
             break;
@@ -3573,6 +3590,10 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
                     ),
                     severity: "error".to_string(),
                 });
+                if directive == ".control" {
+                    in_control_block = true;
+                    continue;
+                }
             }
         }
         active_lines.push(stripped.to_string());
@@ -4323,6 +4344,7 @@ fn resolve_deck_lines(
 ) -> (Vec<String>, bool, Option<usize>) {
     let mut active_lines = Vec::new();
     let mut end_line_number = None;
+    let mut in_control_block = false;
 
     for (index, raw_line) in netlist.lines().enumerate() {
         let line_number = index + 1;
@@ -4331,6 +4353,24 @@ fn resolve_deck_lines(
             continue;
         }
         let directive = deck_directive(stripped);
+        if in_control_block {
+            if directive.as_deref() == Some(".endc") {
+                in_control_block = false;
+                continue;
+            }
+            state.diagnostics.push(DeckResolutionDiagnostic {
+                code: "SPICE_DECK_CONTROL_COMMAND".to_string(),
+                directive: ".control".to_string(),
+                source: source.to_string(),
+                line_number,
+                message: format!(
+                    "{stripped:?} inside .control is not executed by the deck source resolver yet"
+                ),
+                severity: "error".to_string(),
+                target: None,
+            });
+            continue;
+        }
         if directive.as_deref() == Some(".end") {
             end_line_number = Some(line_number);
             break;
@@ -4367,6 +4407,8 @@ fn resolve_deck_lines(
                 severity: "error".to_string(),
                 target: None,
             });
+            in_control_block = true;
+            continue;
         }
         active_lines.push(stripped.to_string());
     }
