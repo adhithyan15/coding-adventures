@@ -42,13 +42,14 @@ unchanged.
 
 ## §3 Rollout (one item = one PR)
 
-- **R-1 — R00 spec + `r-lexer`** *(this PR)*. `code/grammars/r.tokens` (the S
+- **R-1 — R00 spec + `r-lexer`** ✅ *merged*. `code/grammars/r.tokens` (the S
   token grammar with `_` moved into `NAME`, no `UNDERSCORE`, plus `->>` and the
   `NA_*` constants) and the `r-lexer` crate (a sibling of `s-lexer`, reusing the
   identical bracket-interior newline hook).
-- **R-2 — `r-parser`**. `code/grammars/r.grammar`, mirroring `s.grammar`'s rule
-  names (so the S evaluator can consume the tree unchanged) and adding `=` as a
-  top-level assignment operator.
+- **R-2 — `r-parser`** *(this PR)*. `code/grammars/r.grammar`, mirroring
+  `s.grammar`'s rule names exactly (so the shared `s-runtime` evaluator can
+  consume the tree unchanged) and adding `=` and `->>` as assignment operators
+  plus the typed-`NA` atoms. The `r-parser` crate is a sibling of `s-parser`.
 - **R-3 — `r-runtime` + `r-repl` + the `R` binary**. A vertical slice to a
   working R REPL. The S runtime is refactored to expose evaluation of an
   externally-parsed tree; `r-runtime` parses with `r-parser` and evaluates with
