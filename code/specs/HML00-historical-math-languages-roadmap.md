@@ -178,7 +178,11 @@ sequence of one-PR items run through the autonomous loop (§8).
 ### Item breakdown for the first three waves (illustrative)
 
 - **Maxima:** M-1 spec + grammar diff from Macsyma; M-2 lexer/parser; M-3 runtime
-  alias over `macsyma-runtime`; M-4 GPL-era builtins.
+  alias over `macsyma-runtime`; M-4 GPL-era builtins. *(Delivered: see
+  [MA03](MA03-maxima-language.md). The grammar diff is empty for the supported
+  subset — Maxima parses identically to Macsyma — so M-1/M-2 collapsed and Maxima
+  shipped as just the runtime alias + REPL, the symbolic-CAS analogue of
+  Octave-over-MATLAB. No `maxima.tokens`/`maxima.grammar`.)*
 - **MATLAB/Octave:** ML-1 spec + `array-runtime` (Wave 0); ML-2 `matlab.tokens/grammar`
   + lexer; ML-3 parser; ML-4 `matlab-runtime` (matrix literals, `\`/`'`/`end`,
   ranges, broadcasting → `matrix-ir`); ML-5 `matlab-repl` + binary; ML-6 Octave
