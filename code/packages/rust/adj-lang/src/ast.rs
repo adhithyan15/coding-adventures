@@ -149,7 +149,18 @@ pub enum Statement {
         head: Term,
         body: Vec<RuleLiteral>,
         annotations: Vec<Annotation>,
+        /// ADJ73 defeasible precedence (PR-C): the optional `priority: <tier>` annotation
+        /// (`default` | `specific` | `authoritative` | `mandatory`). `None` lowers to
+        /// `Priority::Default`. Among *conflicting* derivations of a functional predicate, a
+        /// higher tier defeats a lower one (`logic_engine::govern::enumerate_governing`).
+        priority: Option<String>,
     },
+    /// `functional <pred>(<arg>, …)` — declare a predicate FUNCTIONAL on its last argument
+    /// (ADJ73 PR-C): at most one value may hold per key (the preceding args). The argument
+    /// names are placeholders for readability; only the functor + arity are used. Lowers to
+    /// `KnowledgeBase::declare_functional(functor, arity)`. Two derivations sharing the key but
+    /// differing on the last arg then *conflict*, and precedence picks the governing one.
+    Functional { functor: String, arity: usize },
     /// `? <conclusion>` — query the engine. With a ground hypothesis term this
     /// returns the posterior; with a relational goal containing a `$variable`
     /// (`? deficient_in(tay_sachs, $E)`) it returns the binding(s) — fact recall

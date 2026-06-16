@@ -26,6 +26,7 @@ statement   = prior_decl
             | observe_decl
             | relate_decl
             | rule_decl
+            | functional_decl
             | query_decl
             | let_decl
             | symbol_decl
@@ -100,9 +101,20 @@ relate_decl      = "relate" term { annotation } ;
 # every grounded clause carries. A body literal prefixed with `not` is
 # negation-as-failure.
 # ----------------------------------------------------------------
-rule_decl        = "rule" LBRACE "head" COLON term "when" COLON body_literal { COMMA body_literal } { annotation } RBRACE ;
+rule_decl        = "rule" LBRACE "head" COLON term "when" COLON body_literal { COMMA body_literal } { annotation } [ "priority" COLON IDENT ] RBRACE ;
 
 body_literal     = [ "not" ] term ;
+
+# ----------------------------------------------------------------
+# `functional <pred>(<arg>, …)` — ADJ73 defeasible precedence (PR-C): declare a
+# predicate FUNCTIONAL on its last argument (at most one value per key = the
+# preceding args). The arg names are placeholders for readability; only the
+# functor + arity are used (→ `KnowledgeBase::declare_functional`). Two
+# derivations sharing the key but differing on the last arg then CONFLICT, and a
+# rule's `priority:` tier picks the governing one. `functional`/`priority` are
+# IDENT-matched literals — no lexer keywords.
+# ----------------------------------------------------------------
+functional_decl  = "functional" term ;
 
 query_decl       = QUESTION term ;
 

@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.15.0] - 2026-06-16 — precedence surface syntax (ADJ73 PR-C)
+
+### Added
+
+- **`rule { … priority: <tier> }`** — optional named precedence tier on a derivation rule
+  (`default` | `specific` | `authoritative` | `mandatory`). Lowers to
+  `logic_engine::Rule::with_priority(Priority::…)`; absent ⇒ `Default`. An unknown tier is a
+  clean `LowerError::UnknownPriorityTier`, not a silent default.
+- **`functional <pred>(<arg>, …)`** — top-level declaration that a predicate is functional on
+  its last argument (arg names are placeholders; only functor + arity matter). Lowers to
+  `KnowledgeBase::declare_functional(functor, arity)`. Two derivations sharing the key but
+  differing on the last arg then *conflict*, and the `priority:` tier picks the governing one
+  (`logic_engine::govern::enumerate_governing`).
+- Grammar: `functional_decl` added to `statement`; `rule_decl` gains a trailing
+  `[ "priority" COLON IDENT ]`. `functional`/`priority` are IDENT-matched literals (no new lexer
+  tokens). `_parser_grammar.rs` / `_lexer_grammar.rs` regenerated.
+- AST: `Statement::Functional { functor, arity }`; `Statement::Rule` gains `priority: Option<String>`.
+
+### Notes
+
+This is the **surface** for the merged ADJ73 engine core (logic-engine 0.18 `Priority` /
+`declare_functional` / `enumerate_governing`). Tests compile the new syntax and verify the full
+path parse → lower → `enumerate_governing` (higher tier governs; equal tiers conflict;
+non-functional predicates unaffected — back-compat). `adj-lang-cli` *governing* rendering is the
+next slice (PR-3); the CLI's existing `decide`/recall paths are unchanged.
+
 ## [0.14.0] - 2026-06-16 — `rule { head: … when: … }` derivation rules (Datalog clauses)
 
 ### Added
