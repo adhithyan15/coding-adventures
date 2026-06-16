@@ -95,6 +95,47 @@ reactor (I/O thread)                         worker pool (worker_count threads)
    write to closed connections (the mailbox tracks connection_id → liveness;
    confirm a write to a closed connection is dropped safely).
 
+## RESOLVED (scoping pass): ordering is NOT free — reorder buffer required
+
+A source read of the in-process pool (`generic-job-runtime::RustThreadPool`)
+settles the ordering open question: its declared capabilities are
+**`supports_affinity: false`** and **`supports_ordered_responses: false`**. It is
+a **single shared-queue** pool — `try_submit` does `queue.jobs.push_back(job)` and
+any idle worker pulls the next job; the `connection_id` affinity key is carried in
+metadata but the in-process executor does not pin a key's jobs to one worker, so a
+single connection's pipelined requests can run on different workers and **complete
+out of order**.
+
+**Consequence:** the *pipelined* path (WEB01b-1b) must add a per-connection
+**reorder buffer** (per-connection monotonic sequence; hold completed responses
+until all earlier ones on that connection are written). The **WEB01b-1a** slice
+sidesteps this entirely by allowing **one in-flight request per connection** (see
+below), so it needs no reorder buffer.
+
+## WEB01b-1a — implementation notes (the approved bounded slice)
+
+Scope (user-approved): mailbox-backed serve giving **cross-connection**
+parallelism with **one in-flight request per connection** (no intra-connection
+pipelining), opt-in, all three platforms. No reorder buffer (deferred to 1b).
+
+Mailbox contract (template: `embeddable-tcp-server` tests around the
+`new_inprocess_mailbox` usage — `handle_tcp_bytes_mailbox_with_submitter` +
+`map_tcp_output_frame` + a typed `worker_fn`):
+
+- `new_inprocess_mailbox(options, init, handler, on_close, map_response, worker_fn)`.
+- `init: Fn(TcpConnectionInfo) -> State` — per-connection state (the HTTP buffer).
+- `handler: Fn(info, &mut State, &[u8], &RustThreadPoolJobSubmitter<Req,Resp>) -> TcpHandlerResult`
+  — frame a complete `HttpRequest` from the buffer, then `submitter.submit(connection_id, req)`.
+- `map_response: Fn(Resp) -> TcpMailboxFrame { writes, close }` — `serialize_response` + close flag.
+- `worker_fn: Fn(JobRequest<Req>) -> JobResult<Resp>` — runs the handler (`app.handle`).
+
+**Open question to resolve FIRST in 1a (before coding the read-gating):** after a
+worker's response is written back via `map_response`, does the framework re-invoke
+the connection `handler` (so the next buffered request can be framed+submitted), or
+must the connection be re-armed another way? This determines how "one in-flight per
+connection" un-gates. Read the mailbox write-back path / connection bookkeeping in
+`embeddable-tcp-server` to confirm before implementing 1a's gating.
+
 ## Verification (anti-smoke-test)
 
 - **Ordering (deterministic, CI gate):** pipeline N requests on ONE connection
