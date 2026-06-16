@@ -205,6 +205,8 @@ members = [
     "macsyma-wasm",
     "matlab-lexer",
     "matlab-parser",
+    "matlab-runtime",
+    "matlab-repl",
     "logic-gates",
     "logic-core",
     "lookup-core",
