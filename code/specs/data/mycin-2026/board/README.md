@@ -22,19 +22,19 @@ cite an `authoritative` (spider-grounded) edge vs a `consensus` (authored-debt)
 edge. That is the number every grounding/expansion PR moves:
 
 ```
-correct 27 · abstained 4 · wrong 0  (of 31)
-by tactic — differential: 1✓/1·/0✗  ·  recall: 26✓/3·/0✗
-defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 100%
+correct 35 · abstained 5 · wrong 0  (of 40)
+by tactic — differential: 1✓/1·/0✗  ·  recall: 34✓/4·/0✗
+defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 76%
 ✓ never fabricated — every answer is correct-with-proof or an honest abstention.
 ```
 
-The bank spans **two recall domains** — 12 inborn-errors-of-metabolism diseases
-(`recall/iem-edges.adj`) and 8 vitamin deficiencies (`recall/vitamin-edges.adj`) — merged
-into one store. grounded-coverage tracked the whole arc: REL-4b/REL-8 grounded the IEM
-answers (→100%), REL-10 added the vitamin domain as authored-debt (→69%), and REL-10b
-spider-grounded the vitamins (→**100%, both domains**). **A new domain = drop in its
-`*-edges.adj` file + its board items; the harness merges and scores it unchanged**, and
-its grounding climbs the same live number.
+The bank spans **three recall domains** — 12 inborn-errors-of-metabolism diseases
+(`recall/iem-edges.adj`), 8 vitamin deficiencies (`recall/vitamin-edges.adj`), and 8 anemia
+classifications (`recall/anemia-edges.adj`, REL-11) — merged into one store. grounded-coverage
+tracks the whole arc: the IEM + vitamin domains are fully spider-grounded (REL-8/REL-10b),
+and REL-11 added the anemia domain as authored-debt, dipping it 100% → 76%. Grounding the
+anemia edges climbs it back. **A new domain = drop in its `*-edges.adj` file + its board
+items + the filename in `EDGE_FILES`; the harness merges and scores it unchanged.**
 
 ## Files
 

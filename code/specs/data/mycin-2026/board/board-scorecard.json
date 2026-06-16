@@ -1,8 +1,8 @@
 {
   "summary": {
-    "total": 31,
-    "correct": 27,
-    "abstained": 4,
+    "total": 40,
+    "correct": 35,
+    "abstained": 5,
     "wrong": 0,
     "by_tactic": {
       "differential": {
@@ -11,14 +11,14 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 26,
-        "abstained": 3,
+        "correct": 34,
+        "abstained": 4,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 1.0,
+    "grounded_coverage": 0.7647,
     "grounded_correct": 26
   },
   "results": [
@@ -248,6 +248,78 @@
     },
     {
       "id": "biotin_disease",
+      "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "ida_mcv",
+      "tactic": "recall",
+      "gold": "microcytic",
+      "answer": "microcytic",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "thal_mcv",
+      "tactic": "recall",
+      "gold": "microcytic",
+      "answer": "microcytic",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "b12_anemia_mcv",
+      "tactic": "recall",
+      "gold": "macrocytic",
+      "answer": "macrocytic",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "hs_mcv",
+      "tactic": "recall",
+      "gold": "normocytic",
+      "answer": "normocytic",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "b12_anemia_finding",
+      "tactic": "recall",
+      "gold": "hypersegmented_neutrophils",
+      "answer": "hypersegmented_neutrophils",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "hs_finding",
+      "tactic": "recall",
+      "gold": "spherocytes",
+      "answer": "spherocytes",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "g6pd_finding",
+      "tactic": "recall",
+      "gold": "bite_cells",
+      "answer": "bite_cells",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "sideroblastic_finding",
+      "tactic": "recall",
+      "gold": "ringed_sideroblasts",
+      "answer": "ringed_sideroblasts",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "aplastic_mcv",
       "tactic": "recall",
       "gold": "ABSTAIN",
       "answer": null,

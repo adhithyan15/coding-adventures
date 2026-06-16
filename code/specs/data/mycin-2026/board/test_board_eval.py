@@ -38,16 +38,14 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["tay_sachs_enzyme"].answer == "hexosaminidase_a"
     # A correct recall answer carries the citing edge's trust tier (its proof).
     assert by_id["tay_sachs_enzyme"].trust is not None
-    # The bank spans two domains: 18 IEM disease items + 8 vitamin-deficiency items
-    # (REL-10) = 26 covered recall items.
+    # The bank spans THREE recall domains: 18 IEM + 8 vitamin (REL-10) + 8 anemia
+    # (REL-11) = 34 covered recall items, all over one merged store.
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 26
-    # A REL-6 disease answers correctly too (its edge is in the graph).
-    assert by_id["fabry_enzyme"].outcome == "correct"
-    assert by_id["fabry_enzyme"].answer == "alpha_galactosidase_a"
-    # The REL-10 vitamin domain resolves over the same merged store.
-    assert by_id["thiamine_disease"].outcome == "correct"
-    assert by_id["thiamine_disease"].answer == "beriberi"
+    assert len(recall_correct) == 34
+    assert by_id["fabry_enzyme"].outcome == "correct"          # IEM
+    assert by_id["thiamine_disease"].answer == "beriberi"      # vitamin
+    assert by_id["ida_mcv"].answer == "microcytic"             # anemia (REL-11)
+    assert by_id["b12_anemia_finding"].answer == "hypersegmented_neutrophils"
 
 
 def test_uncovered_items_abstain_not_fabricate() -> None:
@@ -69,16 +67,16 @@ def test_defensibility_is_full() -> None:
 def test_grounded_coverage_is_the_live_grounding_number() -> None:
     card, _ = _card()
     s = card.summary()
-    # Across the whole arc: REL-8 grounded the 18 IEM answers (→100%), REL-10 added the
-    # vitamin domain as debt (→69%), and REL-10b spider-grounded the vitamins — so all
-    # 26 recall answers across BOTH domains now cite an authoritative edge: 100%.
-    assert s["grounded_coverage"] == 1.0
+    # The IEM + vitamin domains are fully grounded (26 authoritative answers). REL-11
+    # then added the anemia domain as authored-debt, so grounded-coverage dipped
+    # 100% → 76% (26 grounded / 34 recall correct). Grounding the anemia edges climbs
+    # it back — the same expansion-then-grounding dynamic, now across three domains.
+    assert s["grounded_coverage"] == round(26 / 34, 4)   # 0.7647
     assert s["grounded_correct"] == 26
     by_id = {r.item_id: r for r in card.results}
-    # Both domains are now spider-grounded.
-    assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
-    assert by_id["thiamine_disease"].trust == "authoritative"      # vitamin (REL-10b)
-    assert by_id["b12_disease"].trust == "authoritative"
+    assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM, grounded
+    assert by_id["thiamine_disease"].trust == "authoritative"      # vitamin, grounded
+    assert by_id["ida_mcv"].trust == "consensus"                   # anemia, not yet grounded
 
 
 def test_gate_exit_code_zero_when_no_fabrication() -> None:
