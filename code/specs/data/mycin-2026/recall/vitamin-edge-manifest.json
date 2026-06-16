@@ -5,147 +5,147 @@
       "relation": "deficiency_causes",
       "subject": "thiamine",
       "object": "beriberi",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Thiamine (vitamin B1) deficiency causes beriberi.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Thiamine deficiency affects the cardiovascular, nervous, and immune systems and commonly manifests as wet beriberi, dry beriberi, or Wernicke-Korsakoff syndrome.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK537204/"
     },
     "classic_finding__thiamine": {
       "relation": "classic_finding",
       "subject": "thiamine",
       "object": "wernicke_encephalopathy",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Thiamine deficiency causes Wernicke encephalopathy (confusion, ophthalmoplegia, ataxia).",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Wernicke encephalopathy is an acute, time-sensitive neurologic disorder caused by thiamine deficiency that requires prompt recognition and treatment to prevent irreversible neurologic damage.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK470344/"
     },
     "deficiency_causes__niacin": {
       "relation": "deficiency_causes",
       "subject": "niacin",
       "object": "pellagra",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Niacin (vitamin B3) deficiency causes pellagra.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Niacin (vitamin B3) deficiency results in a condition known as pellagra.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK557728/"
     },
     "classic_finding__niacin": {
       "relation": "classic_finding",
       "subject": "niacin",
       "object": "dermatitis_diarrhea_dementia",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Pellagra (niacin deficiency) classically presents with the triad of dermatitis, diarrhea, and dementia.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Niacin deficiency results in pellagra, which includes the triad or \"three Ds,\" dermatitis, dementia, and diarrhea, and can result in death.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK557728/"
     },
     "deficiency_causes__cobalamin": {
       "relation": "deficiency_causes",
       "subject": "cobalamin",
       "object": "megaloblastic_anemia",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Cobalamin (vitamin B12) deficiency causes megaloblastic anemia.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "As a result, homocysteine levels accumulate, and pyrimidine bases cannot be formed, slowing down DNA synthesis and can cause megaloblastic anemia.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK441923/"
     },
     "classic_finding__cobalamin": {
       "relation": "classic_finding",
       "subject": "cobalamin",
       "object": "subacute_combined_degeneration",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Vitamin B12 deficiency causes subacute combined degeneration of the spinal cord.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Subacute combined degeneration (SCD) of the spinal cord is a disease affecting the lateral and posterior columns of the spinal cord, primarily due to demyelination. It most commonly presents in patients deficient in vitamin B12, producing hematological and neurological manifestations. This condition is most commonly caused by vitamin B12 deficiency.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK560728/"
     },
     "deficiency_causes__folate": {
       "relation": "deficiency_causes",
       "subject": "folate",
       "object": "megaloblastic_anemia",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Folate (vitamin B9) deficiency causes megaloblastic anemia (without neurologic deficits).",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Reduced folate levels result in a decreased availability of THF, which impairs purine and pyrimidine synthesis and nucleoprotein metabolism. This disruption results in ineffective erythropoiesis, megaloblastic anemia, and impaired cellular proliferation.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK535377/"
     },
     "classic_finding__folate": {
       "relation": "classic_finding",
       "subject": "folate",
       "object": "neural_tube_defects",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Periconceptional folate deficiency is associated with fetal neural tube defects.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Folate deficiency has a well-established teratogenic effect, leading to an increasing risk of neural tube defects.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3415073/"
     },
     "deficiency_causes__vitamin_c": {
       "relation": "deficiency_causes",
       "subject": "vitamin_c",
       "object": "scurvy",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Vitamin C (ascorbic acid) deficiency causes scurvy.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Scurvy is a clinical syndrome resulting from vitamin C deficiency.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK493187/"
     },
     "classic_finding__vitamin_c": {
       "relation": "classic_finding",
       "subject": "vitamin_c",
       "object": "impaired_collagen_synthesis",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Vitamin C is a cofactor for collagen hydroxylation; its deficiency impairs collagen synthesis.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Proline residues on procollagen require vitamin C for hydroxylation, making it necessary for the triple-helix formation of mature collagen.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK499877/"
     },
     "deficiency_causes__vitamin_d": {
       "relation": "deficiency_causes",
       "subject": "vitamin_d",
       "object": "rickets",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Vitamin D deficiency causes rickets in children.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Deficiency of this beneficial substance can lead to nutritional rickets in children and osteomalacia in adults.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK532266/"
     },
     "classic_finding__vitamin_d": {
       "relation": "classic_finding",
       "subject": "vitamin_d",
       "object": "osteomalacia",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Vitamin D deficiency causes osteomalacia in adults.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Deficiency of this beneficial substance can lead to nutritional rickets in children and osteomalacia in adults.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK532266/"
     },
     "deficiency_causes__vitamin_a": {
       "relation": "deficiency_causes",
       "subject": "vitamin_a",
       "object": "night_blindness",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Vitamin A deficiency causes night blindness (nyctalopia).",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Night blindness or defective vision in dim light is the earliest clinical manifestation of Vitamin A deficiency.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK431094/"
     },
     "classic_finding__vitamin_a": {
       "relation": "classic_finding",
       "subject": "vitamin_a",
       "object": "xerophthalmia",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Vitamin A deficiency causes xerophthalmia and corneal damage.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Xerophthalmia refers to the constellation of ocular signs and symptoms associated with Vitamin A deficiency. ... First, it may be caused by reduced dietary intake of Vitamin A, which is more often seen in developing countries.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK431094/"
     },
     "deficiency_causes__vitamin_k": {
       "relation": "deficiency_causes",
       "subject": "vitamin_k",
       "object": "coagulopathy",
-      "status": "pending",
+      "status": "direction_only",
       "verdict": "FLAG",
       "trust": "consensus",
       "source": "Vitamin K deficiency causes a bleeding diathesis (coagulopathy).",
@@ -155,12 +155,12 @@
       "relation": "classic_finding",
       "subject": "vitamin_k",
       "object": "prolonged_prothrombin_time",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Vitamin K deficiency prolongs the prothrombin time (PT/INR).",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Across age groups, vitamin K deficiency is characterized by impaired γ-carboxylation of clotting factors, leading to prolonged prothrombin time with normal platelet counts and fibrinogen levels.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK536983/"
     }
   },
-  "hash": "3669d51c58fd4456"
+  "hash": "d3367d0d986110cc"
 }

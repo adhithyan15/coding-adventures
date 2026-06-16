@@ -26,65 +26,80 @@ rulebook vitamin_facts {
 
     % --- Thiamine (B1) ---------------------------------------------------
     relate deficiency_causes(thiamine, beriberi)
-        source "Thiamine (vitamin B1) deficiency causes beriberi."
-        trust consensus   % [FLAG: pending]
+        source "Thiamine deficiency affects the cardiovascular, nervous, and immune systems and commonly manifests as wet beriberi, dry beriberi, or Wernicke-Korsakoff syndrome."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537204/"
+        trust authoritative
     relate classic_finding(thiamine, wernicke_encephalopathy)
-        source "Thiamine deficiency causes Wernicke encephalopathy (confusion, ophthalmoplegia, ataxia)."
-        trust consensus   % [FLAG: pending]
+        source "Wernicke encephalopathy is an acute, time-sensitive neurologic disorder caused by thiamine deficiency that requires prompt recognition and treatment to prevent irreversible neurologic damage."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470344/"
+        trust authoritative
 
     % --- Niacin (B3) -----------------------------------------------------
     relate deficiency_causes(niacin, pellagra)
-        source "Niacin (vitamin B3) deficiency causes pellagra."
-        trust consensus   % [FLAG: pending]
+        source "Niacin (vitamin B3) deficiency results in a condition known as pellagra."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557728/"
+        trust authoritative
     relate classic_finding(niacin, dermatitis_diarrhea_dementia)
-        source "Pellagra (niacin deficiency) classically presents with the triad of dermatitis, diarrhea, and dementia."
-        trust consensus   % [FLAG: pending]
+        source "Niacin deficiency results in pellagra, which includes the triad or \"three Ds,\" dermatitis, dementia, and diarrhea, and can result in death."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557728/"
+        trust authoritative
 
     % --- Cobalamin (B12) -------------------------------------------------
     relate deficiency_causes(cobalamin, megaloblastic_anemia)
-        source "Cobalamin (vitamin B12) deficiency causes megaloblastic anemia."
-        trust consensus   % [FLAG: pending]
+        source "As a result, homocysteine levels accumulate, and pyrimidine bases cannot be formed, slowing down DNA synthesis and can cause megaloblastic anemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441923/"
+        trust authoritative
     relate classic_finding(cobalamin, subacute_combined_degeneration)
-        source "Vitamin B12 deficiency causes subacute combined degeneration of the spinal cord."
-        trust consensus   % [FLAG: pending]
+        source "Subacute combined degeneration (SCD) of the spinal cord is a disease affecting the lateral and posterior columns of the spinal cord, primarily due to demyelination. It most commonly presents in patients deficient in vitamin B12, producing hematological and neurological manifestations. This condition is most commonly caused by vitamin B12 deficiency."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560728/"
+        trust authoritative
 
     % --- Folate (B9) -----------------------------------------------------
     relate deficiency_causes(folate, megaloblastic_anemia)
-        source "Folate (vitamin B9) deficiency causes megaloblastic anemia (without neurologic deficits)."
-        trust consensus   % [FLAG: pending]
+        source "Reduced folate levels result in a decreased availability of THF, which impairs purine and pyrimidine synthesis and nucleoprotein metabolism. This disruption results in ineffective erythropoiesis, megaloblastic anemia, and impaired cellular proliferation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535377/"
+        trust authoritative
     relate classic_finding(folate, neural_tube_defects)
-        source "Periconceptional folate deficiency is associated with fetal neural tube defects."
-        trust consensus   % [FLAG: pending]
+        source "Folate deficiency has a well-established teratogenic effect, leading to an increasing risk of neural tube defects."
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC3415073/"
+        trust authoritative
 
     % --- Vitamin C (ascorbate) -------------------------------------------
     relate deficiency_causes(vitamin_c, scurvy)
-        source "Vitamin C (ascorbic acid) deficiency causes scurvy."
-        trust consensus   % [FLAG: pending]
+        source "Scurvy is a clinical syndrome resulting from vitamin C deficiency."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493187/"
+        trust authoritative
     relate classic_finding(vitamin_c, impaired_collagen_synthesis)
-        source "Vitamin C is a cofactor for collagen hydroxylation; its deficiency impairs collagen synthesis."
-        trust consensus   % [FLAG: pending]
+        source "Proline residues on procollagen require vitamin C for hydroxylation, making it necessary for the triple-helix formation of mature collagen."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499877/"
+        trust authoritative
 
     % --- Vitamin D -------------------------------------------------------
     relate deficiency_causes(vitamin_d, rickets)
-        source "Vitamin D deficiency causes rickets in children."
-        trust consensus   % [FLAG: pending]
+        source "Deficiency of this beneficial substance can lead to nutritional rickets in children and osteomalacia in adults."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532266/"
+        trust authoritative
     relate classic_finding(vitamin_d, osteomalacia)
-        source "Vitamin D deficiency causes osteomalacia in adults."
-        trust consensus   % [FLAG: pending]
+        source "Deficiency of this beneficial substance can lead to nutritional rickets in children and osteomalacia in adults."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532266/"
+        trust authoritative
 
     % --- Vitamin A -------------------------------------------------------
     relate deficiency_causes(vitamin_a, night_blindness)
-        source "Vitamin A deficiency causes night blindness (nyctalopia)."
-        trust consensus   % [FLAG: pending]
+        source "Night blindness or defective vision in dim light is the earliest clinical manifestation of Vitamin A deficiency."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK431094/"
+        trust authoritative
     relate classic_finding(vitamin_a, xerophthalmia)
-        source "Vitamin A deficiency causes xerophthalmia and corneal damage."
-        trust consensus   % [FLAG: pending]
+        source "Xerophthalmia refers to the constellation of ocular signs and symptoms associated with Vitamin A deficiency. ... First, it may be caused by reduced dietary intake of Vitamin A, which is more often seen in developing countries."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK431094/"
+        trust authoritative
 
     % --- Vitamin K -------------------------------------------------------
     relate deficiency_causes(vitamin_k, coagulopathy)
         source "Vitamin K deficiency causes a bleeding diathesis (coagulopathy)."
-        trust consensus   % [FLAG: pending]
+        trust consensus   % [FLAG: direction_only]
     relate classic_finding(vitamin_k, prolonged_prothrombin_time)
-        source "Vitamin K deficiency prolongs the prothrombin time (PT/INR)."
-        trust consensus   % [FLAG: pending]
+        source "Across age groups, vitamin K deficiency is characterized by impaired γ-carboxylation of clotting factors, leading to prolonged prothrombin time with normal platelet counts and fibrinogen levels."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK536983/"
+        trust authoritative
 }
