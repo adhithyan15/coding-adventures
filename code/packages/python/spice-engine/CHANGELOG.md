@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck control quit marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `quit` interpreter-exit markers as no-op control commands
+  instead of reporting unsupported-command diagnostics, matching Rust and
+  TypeScript.
+
 - **Deck control run marker routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
   `.control` block `run` execution markers as no-op control commands instead

@@ -124,6 +124,7 @@ meas dc imax MAX I(V1)
 fourier 1k V(out)
 four 2k V(in)
 run
+quit
 .endc
 .end
 `);
@@ -232,6 +233,7 @@ meas dc imax MAX I(V1)
 fourier 1k V(a)
 four 2k V(b)
 run
+.quit
 .endc
 .end
 `, {
