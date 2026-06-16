@@ -53,11 +53,17 @@ def _sym(prefix: str, *parts: str) -> str:
     return name
 
 
+def _safe_reason(reason: str) -> str:
+    """Sanitize an exclusion reason before it goes into a `%` line-comment in the emitted
+    program — keep only an alnum/space/_-: subset (no newline can escape the comment),
+    bounded length. Never interpolate a reason string into the program unvalidated."""
+    return re.sub(r"[^A-Za-z0-9 _:-]", "", reason)[:80]
+
+
 def emit_program(organisms: list[str], exclusions: set[str],
                  defeated: set[tuple[str, str]] = frozenset(),
-                 dose_excluded: set[str] = frozenset(),
                  weights: tuple[int, int] = reg.DEFAULT_WEIGHTS,
-                 step_blocked: set[str] = frozenset()) -> tuple[str, dict, bool]:
+                 forced_zero: dict[str, str] | None = None) -> tuple[str, dict, bool]:
     """Emit the adj-lang integer program for this cover. Returns (program text,
     {x_var → drug}, feasible?) — feasible is False if some organism has no coverer
     (the program is then trivially infeasible and the engine will say so).
@@ -69,21 +75,20 @@ def emit_program(organisms: list[str], exclusions: set[str],
     A combination is defeated for an organism if any of its members is resistant to
     that organism (the synergy rationale is undercut).
 
-    `dose_excluded` (CC-2) is the set of drugs that have NO safe-and-effective dose for
-    this patient — their efficacy floor exceeds their toxicity ceiling once the chart's
-    renal/interaction risks shrink it (dose_window UNSAT). Such a drug is dropped from the
-    candidate set before the cover is built, so the optimizer re-derives around it (or
-    abstains if it was load-bearing) — dose feasibility folded INTO the cover, not a
-    post-hoc warning.
-
-    `step_blocked` (CC-6) is the set of drugs a payer step-therapy rule blocks because
-    their prerequisite hasn't been tried. Unlike dose_excluded (which removes a drug from
-    the cover entirely on clinical grounds), a step-blocked drug stays a first-class
-    variable but is pinned to 0 by an EXPLICIT precedence constraint `x_Y <= 0` — the
-    `x_Y ≤ tried_X` precedence with the known-untried `tried_X = 0` folded in. The
-    reimbursement constraint is thus enforced BY THE ENGINE and visible in the program
-    (auditable / appealable), not pre-filtered away in Python."""
-    cands = [d for d in reg.candidates(exclusions) if d not in dose_excluded]
+    `forced_zero` maps a drug → the REASON it is unavailable for this patient, and every
+    such drug is pinned out by an EXPLICIT engine constraint `x_d <= 0   % excluded (reason)`
+    — NOT silently dropped from the candidate set in Python. This unifies every exclusion
+    family as auditable constraints visible in the emitted program:
+      - dose-infeasible (CC-2): no safe-and-effective dose under the chart's renal/interaction
+        risks (the efficacy floor exceeds the toxicity ceiling);
+      - contraindicated (CC-3): e.g. a drug contraindicated in pregnancy;
+      - step-therapy (CC-6): a payer won't reimburse the drug until a prerequisite is tried
+        (the `x_Y ≤ tried_X` precedence with the known-untried `tried_X = 0` folded in).
+    A forced-zero drug keeps its selector variable (so the reason is on the record and any
+    covering combination it belongs to is correctly disabled via `y <= x_d`); the constraint,
+    not its absence, removes it — so the engine, not Python, owns the exclusion + infeasibility."""
+    forced_zero = forced_zero or {}
+    cands = list(reg.candidates(exclusions))
     lines: list[str] = []
     xvar = {d: _sym("x", d) for d in cands}
     var_to_drug = {v: d for d, v in xvar.items()}
@@ -124,13 +129,13 @@ def emit_program(organisms: list[str], exclusions: set[str],
             feasible = False  # no drug or combination covers this organism
             lines.append(f"constrain 0 >= 1   % UNCOVERABLE: {org}")
 
-    # CC-6 step-therapy precedence: `x_Y ≤ tried_Y`. The prerequisite is known-untried at
-    # compile time (tried_Y = 0), so the precedence folds to `x_Y <= 0` — an explicit,
-    # engine-enforced constraint that pins the payer-blocked drug out of the reimbursement
-    # solve. (Clinical solve passes step_blocked=∅, so it is unconstrained there.)
+    # Exclusions as EXPLICIT constraints: every forced-zero drug is pinned out by
+    # `constrain x_d <= 0`, with its reason in the comment — so dose-infeasibility (CC-2),
+    # contraindication (CC-3), and step-therapy (CC-6) are all auditable in the program and
+    # the resulting infeasibility is the engine's verdict, not a Python pre-filter.
     for d in cands:
-        if d in step_blocked:
-            lines.append(f"constrain {xvar[d]} <= 0   % step-therapy: reimbursement requires prerequisite tried")
+        if d in forced_zero:
+            lines.append(f"constrain {xvar[d]} <= 0   % excluded ({_safe_reason(forced_zero[d])})")
 
     # CC-4 objective: minimize Σ (w_cost·tier + w_tox·side_effects)·x_d. The coefficient
     # is a non-negative integer (validated below), so this stays in the engine's INTEGER
@@ -154,16 +159,14 @@ def emit_program(organisms: list[str], exclusions: set[str],
 
 def solve(cli: Path, organisms: list[str], exclusions: set[str],
           defeated: set[tuple[str, str]] = frozenset(),
-          dose_excluded: set[str] = frozenset(),
           weights: tuple[int, int] = reg.DEFAULT_WEIGHTS,
-          step_blocked: set[str] = frozenset()) -> dict:
+          forced_zero: dict[str, str] | None = None) -> dict:
     """Run the emitted program through the engine; return the engine's regimen.
     `defeated` carries culture-sensitivity results (resistant drug→organism edges);
-    `dose_excluded` carries drugs with no safe-and-effective dose for this patient (CC-2);
     `weights`=(w_cost, w_tox) is the CC-4 cost+side-effect objective blend (default (1,0));
-    `step_blocked` (CC-6) pins payer-blocked drugs to 0 via an explicit precedence constraint."""
-    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated, dose_excluded,
-                                            weights, step_blocked)
+    `forced_zero` maps drug→reason for every drug pinned out by an explicit `x_d <= 0`
+    constraint (dose-infeasible / contraindicated / step-therapy)."""
+    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated, weights, forced_zero)
     fd, name = tempfile.mkstemp(suffix=".adj", prefix="_tmp_native_", dir=HERE)
     p = Path(name)
     try:
