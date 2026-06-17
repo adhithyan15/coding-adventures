@@ -108,6 +108,12 @@ class _InfiniteGridState extends State<InfiniteGrid> {
     });
   }
 
+  // Drag-fill: replicate the selected cell into the 10 rows below it. The engine
+  // shifts each copy's relative refs, pins absolute ($) refs, carries the format.
+  void _fillDown() {
+    setState(() => _model.fillDown(10));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -149,6 +155,20 @@ class _InfiniteGridState extends State<InfiniteGrid> {
                   border: InputBorder.none,
                 ),
               ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          // Drag-fill: replicate the selected cell into the 10 rows below it.
+          Tooltip(
+            message: 'Replicate the selected cell into the 10 rows below it',
+            child: OutlinedButton(
+              onPressed: _fillDown,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: _ink,
+                side: const BorderSide(color: _border),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              ),
+              child: const Text('Fill ↓ 10', style: TextStyle(fontFamily: _mono, fontSize: 12)),
             ),
           ),
         ],

@@ -67,6 +67,12 @@ typedef _ChangedSinceD = Pointer<Uint8> Function(Pointer<Void>, int);
 typedef _SetFormatC = Void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
 typedef _SetFormatD = void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
 
+// sc_fill(session, src, dst_start, dst_end) → void (drag-fill; three A1 strings).
+typedef _FillC = Void Function(
+    Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Pointer<Uint8>);
+typedef _FillD = void Function(
+    Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Pointer<Uint8>);
+
 /// A single spreadsheet session, owning the opaque C handle.
 class SpreadsheetSession {
   final DynamicLibrary _lib;
@@ -77,9 +83,9 @@ class SpreadsheetSession {
   late final _GetD _getValue;
   late final _GetD _getRaw;
   late final _StringFreeD _stringFree;
-  late final _WindowD _getWindow;
   late final _WindowD _getDisplayWindow;
   late final _SetFormatD _setFormatFn;
+  late final _FillD _fillFn;
   late final _NoArgD _usedRangeFn;
   late final _ColLettersD _columnLettersFn;
   late final _CurrentRevD _currentRevisionFn;
@@ -97,9 +103,9 @@ class SpreadsheetSession {
     _getValue = _lib.lookupFunction<_GetC, _GetD>('sc_get_value');
     _getRaw = _lib.lookupFunction<_GetC, _GetD>('sc_get_raw');
     _stringFree = _lib.lookupFunction<_StringFreeC, _StringFreeD>('sc_string_free');
-    _getWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_window');
     _getDisplayWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_display_window');
     _setFormatFn = _lib.lookupFunction<_SetFormatC, _SetFormatD>('sc_set_format');
+    _fillFn = _lib.lookupFunction<_FillC, _FillD>('sc_fill');
     _usedRangeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_used_range');
     _columnLettersFn = _lib.lookupFunction<_ColLettersC, _ColLettersD>('sc_column_letters');
     _currentRevisionFn = _lib.lookupFunction<_CurrentRevC, _CurrentRevD>('sc_current_revision');
@@ -245,6 +251,23 @@ class SpreadsheetSession {
     } finally {
       _freeCString(a1Ptr);
       _freeCString(codePtr);
+    }
+  }
+
+  /// Drag-fill: replicate the `src` cell across the inclusive A1 rectangle
+  /// `dstStart`..`dstEnd`. Relative references shift per target (`=A1` filled
+  /// down → `=A2`), absolute (`$`) refs pin, the source's format carries along,
+  /// an empty source clears each target. A malformed address is a no-op.
+  void fill(String src, String dstStart, String dstEnd) {
+    final srcPtr = _toCString(src);
+    final startPtr = _toCString(dstStart);
+    final endPtr = _toCString(dstEnd);
+    try {
+      _fillFn(_handle, srcPtr, startPtr, endPtr);
+    } finally {
+      _freeCString(srcPtr);
+      _freeCString(startPtr);
+      _freeCString(endPtr);
     }
   }
 
@@ -468,5 +491,16 @@ class InfiniteSheetModel {
     _session.setCell(infAddress, raw);
     computeExtent();
     formula = _session.getRaw(infAddress);
+  }
+
+  /// Drag-fill: replicate the selected cell into the [rows] rows below it. The
+  /// engine shifts each copy's relative references, pins absolute (`$`) refs,
+  /// and carries the format. Regrows the extent if the fill reached new ground.
+  void fillDown(int rows) {
+    final col = columnLetters(selCol);
+    final first = '$col${selRow + 1}';
+    final last = '$col${selRow + rows}';
+    _session.fill(infAddress, first, last);
+    computeExtent();
   }
 }
