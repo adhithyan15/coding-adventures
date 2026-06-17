@@ -84,13 +84,9 @@
 
 #![warn(rust_2018_idioms)]
 
-use coding_adventures_json_serializer::{
-    serialize, serialize_pretty, SerializerConfig,
-};
+use coding_adventures_json_serializer::{serialize, serialize_pretty, SerializerConfig};
 use coding_adventures_json_value::{JsonNumber, JsonValue};
-use matrix_ir::{
-    Constant, DType, Graph, Op, Shape, Tensor, TensorId, WIRE_FORMAT_VERSION,
-};
+use matrix_ir::{Constant, DType, Graph, Op, Shape, Tensor, TensorId, WIRE_FORMAT_VERSION};
 
 // ════════════════════════════════════════════════════════════════════
 //                              ERRORS
@@ -160,7 +156,11 @@ impl core::fmt::Display for Error {
                 write!(f, "bad integer at {}: {}", path, reason)
             }
             Error::InputTensorMissing { id } => {
-                write!(f, "input references tensor id {} which is not in the tensors array", id)
+                write!(
+                    f,
+                    "input references tensor id {} which is not in the tensors array",
+                    id
+                )
             }
         }
     }
@@ -194,8 +194,7 @@ pub fn encode_pretty(g: &Graph) -> String {
         sort_keys: false,
         trailing_newline: false,
     };
-    serialize_pretty(&v, &config)
-        .expect("matrix-ir-json encoder never produces non-finite floats")
+    serialize_pretty(&v, &config).expect("matrix-ir-json encoder never produces non-finite floats")
 }
 
 /// Decode a [`Graph`] from a JSON string.  Performs structural
@@ -209,7 +208,10 @@ pub fn decode(s: &str) -> Result<Graph, Error> {
     let obj = expect_object(&value, "/")?;
 
     // matrix_ir_version
-    let version = expect_u64(get_field(obj, "matrix_ir_version", "/")?, "/matrix_ir_version")?;
+    let version = expect_u64(
+        get_field(obj, "matrix_ir_version", "/")?,
+        "/matrix_ir_version",
+    )?;
     if version != WIRE_FORMAT_VERSION as u64 {
         return Err(Error::UnsupportedVersion { saw: version });
     }
@@ -261,8 +263,14 @@ fn graph_to_json_value(g: &Graph) -> JsonValue {
     JsonValue::Object(vec![
         ("matrix_ir_version".to_owned(), u32_v(WIRE_FORMAT_VERSION)),
         ("tensors".to_owned(), tensors_to_json(&g.tensors)),
-        ("inputs".to_owned(), tensor_id_array_to_json(g.inputs.iter().map(|t| t.id))),
-        ("outputs".to_owned(), tensor_id_array_to_json(g.outputs.iter().copied())),
+        (
+            "inputs".to_owned(),
+            tensor_id_array_to_json(g.inputs.iter().map(|t| t.id)),
+        ),
+        (
+            "outputs".to_owned(),
+            tensor_id_array_to_json(g.outputs.iter().copied()),
+        ),
         ("ops".to_owned(), ops_to_json(&g.ops)),
         ("constants".to_owned(), constants_to_json(&g.constants)),
     ])
@@ -276,6 +284,7 @@ fn dtype_to_json(dt: DType) -> JsonValue {
     JsonValue::String(
         match dt {
             DType::F32 => "f32",
+            DType::F64 => "f64",
             DType::U8 => "u8",
             DType::I32 => "i32",
         }
@@ -340,23 +349,119 @@ fn op_to_json(op: &Op) -> JsonValue {
     // Each variant follows the same shape as the binary encoder.
     let (kind, mut fields): (&'static str, Vec<(String, JsonValue)>) = match op {
         // unary
-        Op::Neg { input, output } => ("Neg", vec![("input".into(), u32_v(input.0)), ("output".into(), u32_v(output.0))]),
-        Op::Abs { input, output } => ("Abs", vec![("input".into(), u32_v(input.0)), ("output".into(), u32_v(output.0))]),
-        Op::Sqrt { input, output } => ("Sqrt", vec![("input".into(), u32_v(input.0)), ("output".into(), u32_v(output.0))]),
-        Op::Exp { input, output } => ("Exp", vec![("input".into(), u32_v(input.0)), ("output".into(), u32_v(output.0))]),
-        Op::Log { input, output } => ("Log", vec![("input".into(), u32_v(input.0)), ("output".into(), u32_v(output.0))]),
-        Op::Tanh { input, output } => ("Tanh", vec![("input".into(), u32_v(input.0)), ("output".into(), u32_v(output.0))]),
-        Op::Recip { input, output } => ("Recip", vec![("input".into(), u32_v(input.0)), ("output".into(), u32_v(output.0))]),
+        Op::Neg { input, output } => (
+            "Neg",
+            vec![
+                ("input".into(), u32_v(input.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Abs { input, output } => (
+            "Abs",
+            vec![
+                ("input".into(), u32_v(input.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Sqrt { input, output } => (
+            "Sqrt",
+            vec![
+                ("input".into(), u32_v(input.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Exp { input, output } => (
+            "Exp",
+            vec![
+                ("input".into(), u32_v(input.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Log { input, output } => (
+            "Log",
+            vec![
+                ("input".into(), u32_v(input.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Tanh { input, output } => (
+            "Tanh",
+            vec![
+                ("input".into(), u32_v(input.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Recip { input, output } => (
+            "Recip",
+            vec![
+                ("input".into(), u32_v(input.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
         // binary
-        Op::Add { lhs, rhs, output } => ("Add", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
-        Op::Sub { lhs, rhs, output } => ("Sub", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
-        Op::Mul { lhs, rhs, output } => ("Mul", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
-        Op::Div { lhs, rhs, output } => ("Div", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
-        Op::Max { lhs, rhs, output } => ("Max", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
-        Op::Min { lhs, rhs, output } => ("Min", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
-        Op::Pow { lhs, rhs, output } => ("Pow", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
+        Op::Add { lhs, rhs, output } => (
+            "Add",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Sub { lhs, rhs, output } => (
+            "Sub",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Mul { lhs, rhs, output } => (
+            "Mul",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Div { lhs, rhs, output } => (
+            "Div",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Max { lhs, rhs, output } => (
+            "Max",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Min { lhs, rhs, output } => (
+            "Min",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Pow { lhs, rhs, output } => (
+            "Pow",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
         // reductions
-        Op::ReduceSum { input, axes, keep_dims, output } => (
+        Op::ReduceSum {
+            input,
+            axes,
+            keep_dims,
+            output,
+        } => (
             "ReduceSum",
             vec![
                 ("input".into(), u32_v(input.0)),
@@ -365,7 +470,12 @@ fn op_to_json(op: &Op) -> JsonValue {
                 ("output".into(), u32_v(output.0)),
             ],
         ),
-        Op::ReduceMax { input, axes, keep_dims, output } => (
+        Op::ReduceMax {
+            input,
+            axes,
+            keep_dims,
+            output,
+        } => (
             "ReduceMax",
             vec![
                 ("input".into(), u32_v(input.0)),
@@ -374,7 +484,12 @@ fn op_to_json(op: &Op) -> JsonValue {
                 ("output".into(), u32_v(output.0)),
             ],
         ),
-        Op::ReduceMean { input, axes, keep_dims, output } => (
+        Op::ReduceMean {
+            input,
+            axes,
+            keep_dims,
+            output,
+        } => (
             "ReduceMean",
             vec![
                 ("input".into(), u32_v(input.0)),
@@ -384,7 +499,11 @@ fn op_to_json(op: &Op) -> JsonValue {
             ],
         ),
         // shape
-        Op::Reshape { input, new_shape, output } => (
+        Op::Reshape {
+            input,
+            new_shape,
+            output,
+        } => (
             "Reshape",
             vec![
                 ("input".into(), u32_v(input.0)),
@@ -392,7 +511,11 @@ fn op_to_json(op: &Op) -> JsonValue {
                 ("output".into(), u32_v(output.0)),
             ],
         ),
-        Op::Transpose { input, perm, output } => (
+        Op::Transpose {
+            input,
+            perm,
+            output,
+        } => (
             "Transpose",
             vec![
                 ("input".into(), u32_v(input.0)),
@@ -400,7 +523,11 @@ fn op_to_json(op: &Op) -> JsonValue {
                 ("output".into(), u32_v(output.0)),
             ],
         ),
-        Op::Broadcast { input, target_shape, output } => (
+        Op::Broadcast {
+            input,
+            target_shape,
+            output,
+        } => (
             "Broadcast",
             vec![
                 ("input".into(), u32_v(input.0)),
@@ -408,7 +535,14 @@ fn op_to_json(op: &Op) -> JsonValue {
                 ("output".into(), u32_v(output.0)),
             ],
         ),
-        Op::Slice { input, axis, start, end, step, output } => (
+        Op::Slice {
+            input,
+            axis,
+            start,
+            end,
+            step,
+            output,
+        } => (
             "Slice",
             vec![
                 ("input".into(), u32_v(input.0)),
@@ -419,10 +553,17 @@ fn op_to_json(op: &Op) -> JsonValue {
                 ("output".into(), u32_v(output.0)),
             ],
         ),
-        Op::Concat { inputs, axis, output } => (
+        Op::Concat {
+            inputs,
+            axis,
+            output,
+        } => (
             "Concat",
             vec![
-                ("inputs".into(), tensor_id_array_to_json(inputs.iter().copied())),
+                (
+                    "inputs".into(),
+                    tensor_id_array_to_json(inputs.iter().copied()),
+                ),
                 ("axis".into(), u32_v(*axis)),
                 ("output".into(), u32_v(output.0)),
             ],
@@ -430,14 +571,44 @@ fn op_to_json(op: &Op) -> JsonValue {
         // linear algebra
         Op::MatMul { a, b, output } => (
             "MatMul",
-            vec![("a".into(), u32_v(a.0)), ("b".into(), u32_v(b.0)), ("output".into(), u32_v(output.0))],
+            vec![
+                ("a".into(), u32_v(a.0)),
+                ("b".into(), u32_v(b.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
         ),
         // comparison
-        Op::Equal { lhs, rhs, output } => ("Equal", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
-        Op::Less { lhs, rhs, output } => ("Less", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
-        Op::Greater { lhs, rhs, output } => ("Greater", vec![("lhs".into(), u32_v(lhs.0)), ("rhs".into(), u32_v(rhs.0)), ("output".into(), u32_v(output.0))]),
+        Op::Equal { lhs, rhs, output } => (
+            "Equal",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Less { lhs, rhs, output } => (
+            "Less",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
+        Op::Greater { lhs, rhs, output } => (
+            "Greater",
+            vec![
+                ("lhs".into(), u32_v(lhs.0)),
+                ("rhs".into(), u32_v(rhs.0)),
+                ("output".into(), u32_v(output.0)),
+            ],
+        ),
         // selection
-        Op::Where { predicate, true_value, false_value, output } => (
+        Op::Where {
+            predicate,
+            true_value,
+            false_value,
+            output,
+        } => (
             "Where",
             vec![
                 ("predicate".into(), u32_v(predicate.0)),
@@ -447,7 +618,11 @@ fn op_to_json(op: &Op) -> JsonValue {
             ],
         ),
         // conversion
-        Op::Cast { input, dtype, output } => (
+        Op::Cast {
+            input,
+            dtype,
+            output,
+        } => (
             "Cast",
             vec![
                 ("input".into(), u32_v(input.0)),
@@ -458,7 +633,10 @@ fn op_to_json(op: &Op) -> JsonValue {
         // constants
         Op::Const { constant, output } => (
             "Const",
-            vec![("constant".into(), u32_v(*constant)), ("output".into(), u32_v(output.0))],
+            vec![
+                ("constant".into(), u32_v(*constant)),
+                ("output".into(), u32_v(output.0)),
+            ],
         ),
     };
     // Prepend kind so the object always starts with "kind".  This is
@@ -562,10 +740,7 @@ fn get_field<'a>(
         })
 }
 
-fn get_field_opt<'a>(
-    obj: &'a [(String, JsonValue)],
-    key: &str,
-) -> Option<&'a JsonValue> {
+fn get_field_opt<'a>(obj: &'a [(String, JsonValue)], key: &str) -> Option<&'a JsonValue> {
     obj.iter().find(|(k, _)| k == key).map(|(_, v)| v)
 }
 
@@ -584,6 +759,7 @@ fn decode_dtype(v: &JsonValue, path: &str) -> Result<DType, Error> {
     let s = expect_string(v, path)?;
     match s {
         "f32" => Ok(DType::F32),
+        "f64" => Ok(DType::F64),
         "u8" => Ok(DType::U8),
         "i32" => Ok(DType::I32),
         other => Err(Error::UnknownDType {
@@ -709,8 +885,7 @@ fn decode_op_array(v: &JsonValue, path: &str) -> Result<Vec<Op>, Error> {
 
 fn decode_op(v: &JsonValue, path: &str) -> Result<Op, Error> {
     let obj = expect_object(v, path)?;
-    let kind = expect_string(get_field(obj, "kind", path)?, &format!("{}/kind", path))?
-        .to_owned();
+    let kind = expect_string(get_field(obj, "kind", path)?, &format!("{}/kind", path))?.to_owned();
 
     // Helper for reading a tensor-id field by name into a TensorId.
     let tid = |name: &str| -> Result<TensorId, Error> {
@@ -745,20 +920,69 @@ fn decode_op(v: &JsonValue, path: &str) -> Result<Op, Error> {
     };
 
     let op = match kind.as_str() {
-        "Neg" => Op::Neg { input: tid("input")?, output: tid("output")? },
-        "Abs" => Op::Abs { input: tid("input")?, output: tid("output")? },
-        "Sqrt" => Op::Sqrt { input: tid("input")?, output: tid("output")? },
-        "Exp" => Op::Exp { input: tid("input")?, output: tid("output")? },
-        "Log" => Op::Log { input: tid("input")?, output: tid("output")? },
-        "Tanh" => Op::Tanh { input: tid("input")?, output: tid("output")? },
-        "Recip" => Op::Recip { input: tid("input")?, output: tid("output")? },
-        "Add" => Op::Add { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
-        "Sub" => Op::Sub { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
-        "Mul" => Op::Mul { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
-        "Div" => Op::Div { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
-        "Max" => Op::Max { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
-        "Min" => Op::Min { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
-        "Pow" => Op::Pow { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
+        "Neg" => Op::Neg {
+            input: tid("input")?,
+            output: tid("output")?,
+        },
+        "Abs" => Op::Abs {
+            input: tid("input")?,
+            output: tid("output")?,
+        },
+        "Sqrt" => Op::Sqrt {
+            input: tid("input")?,
+            output: tid("output")?,
+        },
+        "Exp" => Op::Exp {
+            input: tid("input")?,
+            output: tid("output")?,
+        },
+        "Log" => Op::Log {
+            input: tid("input")?,
+            output: tid("output")?,
+        },
+        "Tanh" => Op::Tanh {
+            input: tid("input")?,
+            output: tid("output")?,
+        },
+        "Recip" => Op::Recip {
+            input: tid("input")?,
+            output: tid("output")?,
+        },
+        "Add" => Op::Add {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
+        "Sub" => Op::Sub {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
+        "Mul" => Op::Mul {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
+        "Div" => Op::Div {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
+        "Max" => Op::Max {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
+        "Min" => Op::Min {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
+        "Pow" => Op::Pow {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
         "ReduceSum" => Op::ReduceSum {
             input: tid("input")?,
             axes: u32arrayf("axes")?,
@@ -809,10 +1033,26 @@ fn decode_op(v: &JsonValue, path: &str) -> Result<Op, Error> {
                 output: tid("output")?,
             }
         }
-        "MatMul" => Op::MatMul { a: tid("a")?, b: tid("b")?, output: tid("output")? },
-        "Equal" => Op::Equal { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
-        "Less" => Op::Less { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
-        "Greater" => Op::Greater { lhs: tid("lhs")?, rhs: tid("rhs")?, output: tid("output")? },
+        "MatMul" => Op::MatMul {
+            a: tid("a")?,
+            b: tid("b")?,
+            output: tid("output")?,
+        },
+        "Equal" => Op::Equal {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
+        "Less" => Op::Less {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
+        "Greater" => Op::Greater {
+            lhs: tid("lhs")?,
+            rhs: tid("rhs")?,
+            output: tid("output")?,
+        },
         "Where" => Op::Where {
             predicate: tid("predicate")?,
             true_value: tid("true_value")?,
@@ -912,7 +1152,8 @@ mod tests {
 
     #[test]
     fn decode_rejects_unknown_dtype() {
-        let json = r#"{"matrix_ir_version":1,"tensors":[{"id":0,"dtype":"f64","shape":[1]}],"inputs":[],"outputs":[],"ops":[],"constants":[]}"#;
+        // `f16` is not a supported dtype (f64 is, as of MX12).
+        let json = r#"{"matrix_ir_version":1,"tensors":[{"id":0,"dtype":"f16","shape":[1]}],"inputs":[],"outputs":[],"ops":[],"constants":[]}"#;
         let err = decode(json).unwrap_err();
         assert!(matches!(err, Error::UnknownDType { .. }), "got {:?}", err);
     }
@@ -921,14 +1162,34 @@ mod tests {
     fn decode_rejects_odd_hex_length() {
         let json = r#"{"matrix_ir_version":1,"tensors":[{"id":0,"dtype":"u8","shape":[1]}],"inputs":[],"outputs":[],"ops":[],"constants":[{"tensor_id":0,"dtype":"u8","shape":[1],"bytes_hex":"abc"}]}"#;
         let err = decode(json).unwrap_err();
-        assert!(matches!(err, Error::BadHex { reason: "odd character count", .. }), "got {:?}", err);
+        assert!(
+            matches!(
+                err,
+                Error::BadHex {
+                    reason: "odd character count",
+                    ..
+                }
+            ),
+            "got {:?}",
+            err
+        );
     }
 
     #[test]
     fn decode_rejects_invalid_hex_char() {
         let json = r#"{"matrix_ir_version":1,"tensors":[{"id":0,"dtype":"u8","shape":[1]}],"inputs":[],"outputs":[],"ops":[],"constants":[{"tensor_id":0,"dtype":"u8","shape":[1],"bytes_hex":"zz"}]}"#;
         let err = decode(json).unwrap_err();
-        assert!(matches!(err, Error::BadHex { reason: "non-hex character", .. }), "got {:?}", err);
+        assert!(
+            matches!(
+                err,
+                Error::BadHex {
+                    reason: "non-hex character",
+                    ..
+                }
+            ),
+            "got {:?}",
+            err
+        );
     }
 
     #[test]

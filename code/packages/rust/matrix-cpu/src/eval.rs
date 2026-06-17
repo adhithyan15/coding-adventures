@@ -35,6 +35,27 @@ pub fn write_f32_vec(out: &mut [u8], values: &[f32]) {
     }
 }
 
+/// Helper: read N f64 values from bytes (8 bytes each, little-endian).
+pub fn read_f64_vec(bytes: &[u8], n: usize) -> Vec<f64> {
+    debug_assert_eq!(bytes.len(), n * 8, "f64 buffer wrong size");
+    let mut out = Vec::with_capacity(n);
+    for i in 0..n {
+        let off = i * 8;
+        let arr: [u8; 8] = bytes[off..off + 8].try_into().unwrap();
+        out.push(f64::from_le_bytes(arr));
+    }
+    out
+}
+
+/// Helper: write N f64 values into bytes.
+pub fn write_f64_vec(out: &mut [u8], values: &[f64]) {
+    debug_assert_eq!(out.len(), values.len() * 8);
+    for (i, &v) in values.iter().enumerate() {
+        let off = i * 8;
+        out[off..off + 8].copy_from_slice(&v.to_le_bytes());
+    }
+}
+
 /// Helper: read N i32 values from bytes.
 pub fn read_i32_vec(bytes: &[u8], n: usize) -> Vec<i32> {
     debug_assert_eq!(bytes.len(), n * 4, "i32 buffer wrong size");
@@ -72,6 +93,13 @@ pub fn unary_f32(input: &[u8], output: &mut [u8], n: usize, f: impl Fn(f32) -> f
     write_f32_vec(output, &ys);
 }
 
+/// Apply a per-element f64 function to the input bytes.
+pub fn unary_f64(input: &[u8], output: &mut [u8], n: usize, f: impl Fn(f64) -> f64) {
+    let xs = read_f64_vec(input, n);
+    let ys: Vec<f64> = xs.iter().map(|&x| f(x)).collect();
+    write_f64_vec(output, &ys);
+}
+
 /// Apply a per-element i32 function.
 pub fn unary_i32(input: &[u8], output: &mut [u8], n: usize, f: impl Fn(i32) -> i32) {
     let xs = read_i32_vec(input, n);
@@ -88,14 +116,39 @@ pub fn unary_u8(input: &[u8], output: &mut [u8], f: impl Fn(u8) -> u8) {
 
 // ──────────────────────────── Elementwise binary ────────────────────────────
 
-pub fn binary_f32(lhs: &[u8], rhs: &[u8], output: &mut [u8], n: usize, f: impl Fn(f32, f32) -> f32) {
+pub fn binary_f32(
+    lhs: &[u8],
+    rhs: &[u8],
+    output: &mut [u8],
+    n: usize,
+    f: impl Fn(f32, f32) -> f32,
+) {
     let xs = read_f32_vec(lhs, n);
     let ys = read_f32_vec(rhs, n);
     let zs: Vec<f32> = xs.iter().zip(ys.iter()).map(|(&a, &b)| f(a, b)).collect();
     write_f32_vec(output, &zs);
 }
 
-pub fn binary_i32(lhs: &[u8], rhs: &[u8], output: &mut [u8], n: usize, f: impl Fn(i32, i32) -> i32) {
+pub fn binary_f64(
+    lhs: &[u8],
+    rhs: &[u8],
+    output: &mut [u8],
+    n: usize,
+    f: impl Fn(f64, f64) -> f64,
+) {
+    let xs = read_f64_vec(lhs, n);
+    let ys = read_f64_vec(rhs, n);
+    let zs: Vec<f64> = xs.iter().zip(ys.iter()).map(|(&a, &b)| f(a, b)).collect();
+    write_f64_vec(output, &zs);
+}
+
+pub fn binary_i32(
+    lhs: &[u8],
+    rhs: &[u8],
+    output: &mut [u8],
+    n: usize,
+    f: impl Fn(i32, i32) -> i32,
+) {
     let xs = read_i32_vec(lhs, n);
     let ys = read_i32_vec(rhs, n);
     let zs: Vec<i32> = xs.iter().zip(ys.iter()).map(|(&a, &b)| f(a, b)).collect();
@@ -125,6 +178,23 @@ pub fn matmul_f32(a: &[u8], b: &[u8], c: &mut [u8], m: usize, k: usize, n: usize
         }
     }
     write_f32_vec(c, &cv);
+}
+
+/// f64 matmul: `c[m,n] = a[m,k] × b[k,n]` (row-major), accumulating in f64.
+pub fn matmul_f64(a: &[u8], b: &[u8], c: &mut [u8], m: usize, k: usize, n: usize) {
+    let av = read_f64_vec(a, m * k);
+    let bv = read_f64_vec(b, k * n);
+    let mut cv = vec![0.0f64; m * n];
+    for i in 0..m {
+        for j in 0..n {
+            let mut acc = 0.0f64;
+            for kk in 0..k {
+                acc += av[i * k + kk] * bv[kk * n + j];
+            }
+            cv[i * n + j] = acc;
+        }
+    }
+    write_f64_vec(c, &cv);
 }
 
 pub fn matmul_i32(a: &[u8], b: &[u8], c: &mut [u8], m: usize, k: usize, n: usize) {
@@ -191,11 +261,7 @@ pub fn unravel(mut flat: usize, dims: &[u32]) -> Vec<usize> {
 
 /// Compose multidim coordinates into a flat row-major index.
 pub fn ravel(coords: &[usize], strides: &[usize]) -> usize {
-    coords
-        .iter()
-        .zip(strides.iter())
-        .map(|(c, s)| c * s)
-        .sum()
+    coords.iter().zip(strides.iter()).map(|(c, s)| c * s).sum()
 }
 
 /// Reduce f32 along the given axes using `fold` (initialized at `init`).
@@ -266,6 +332,75 @@ pub fn reduce_f32(
 
     let mut out = vec![0u8; n_out * 4];
     write_f32_vec(&mut out, &acc);
+    (out, out_dims)
+}
+
+/// Reduce f64 along the given axes using `fold` (initialized at `init`).
+/// Returns the reduced bytes and the output shape. Mirrors [`reduce_f32`].
+pub fn reduce_f64(
+    input: &[u8],
+    in_dims: &[u32],
+    axes: &[u32],
+    keep_dims: bool,
+    init: f64,
+    fold: impl Fn(f64, f64) -> f64,
+) -> (Vec<u8>, Vec<u32>) {
+    let rank = in_dims.len();
+    let n_in = numel(in_dims);
+    let xs = read_f64_vec(input, n_in);
+
+    let reduce_all = axes.is_empty();
+    let mut out_dims: Vec<u32> = Vec::new();
+    if reduce_all {
+        if keep_dims {
+            out_dims = vec![1; rank];
+        }
+    } else {
+        for (i, &d) in in_dims.iter().enumerate() {
+            let i = i as u32;
+            if axes.contains(&i) {
+                if keep_dims {
+                    out_dims.push(1);
+                }
+            } else {
+                out_dims.push(d);
+            }
+        }
+    }
+    let n_out = numel(&out_dims).max(1);
+    let mut acc = vec![init; n_out];
+
+    let in_strides = row_major_strides(in_dims);
+    let out_strides = row_major_strides(&out_dims);
+
+    for flat in 0..n_in {
+        let in_coords = unravel_with_strides(flat, &in_strides, rank);
+        let out_coords: Vec<usize> = if reduce_all {
+            if keep_dims {
+                vec![0; rank]
+            } else {
+                Vec::new()
+            }
+        } else {
+            let mut oc = Vec::new();
+            for (i, &c) in in_coords.iter().enumerate() {
+                let i = i as u32;
+                if axes.contains(&i) {
+                    if keep_dims {
+                        oc.push(0);
+                    }
+                } else {
+                    oc.push(c);
+                }
+            }
+            oc
+        };
+        let out_flat = ravel(&out_coords, &out_strides);
+        acc[out_flat] = fold(acc[out_flat], xs[flat]);
+    }
+
+    let mut out = vec![0u8; n_out * 8];
+    write_f64_vec(&mut out, &acc);
     (out, out_dims)
 }
 
@@ -536,8 +671,7 @@ pub fn concat_bytes(
         input_offsets.push(cum);
         cum += dims[axis as usize];
     }
-    let input_strides: Vec<Vec<usize>> =
-        inputs.iter().map(|(_, d)| row_major_strides(d)).collect();
+    let input_strides: Vec<Vec<usize>> = inputs.iter().map(|(_, d)| row_major_strides(d)).collect();
 
     for flat_out in 0..n_out {
         let out_coords = unravel_with_strides(flat_out, &out_strides, rank);
@@ -608,6 +742,44 @@ pub fn cast(input: &[u8], src: DType, dst: DType, n: usize) -> Vec<u8> {
         (DType::U8, DType::I32) => {
             let xs: Vec<i32> = input.iter().map(|&x| x as i32).collect();
             write_i32_vec(&mut out, &xs);
+        }
+        // f64 conversions (MX12).
+        (DType::F64, DType::F64) => out.copy_from_slice(input),
+        (DType::F64, DType::F32) => {
+            let xs = read_f64_vec(input, n);
+            let ys: Vec<f32> = xs.iter().map(|&x| x as f32).collect();
+            write_f32_vec(&mut out, &ys);
+        }
+        (DType::F32, DType::F64) => {
+            let xs = read_f32_vec(input, n);
+            let ys: Vec<f64> = xs.iter().map(|&x| x as f64).collect();
+            write_f64_vec(&mut out, &ys);
+        }
+        (DType::F64, DType::I32) => {
+            let xs = read_f64_vec(input, n);
+            let ys: Vec<i32> = xs.iter().map(|&x| x as i32).collect();
+            write_i32_vec(&mut out, &ys);
+        }
+        (DType::I32, DType::F64) => {
+            let xs = read_i32_vec(input, n);
+            let ys: Vec<f64> = xs.iter().map(|&x| x as f64).collect();
+            write_f64_vec(&mut out, &ys);
+        }
+        (DType::F64, DType::U8) => {
+            let xs = read_f64_vec(input, n);
+            for (i, &x) in xs.iter().enumerate() {
+                out[i] = if x < 0.0 {
+                    0u8
+                } else if x > 255.0 {
+                    255u8
+                } else {
+                    x as u8
+                };
+            }
+        }
+        (DType::U8, DType::F64) => {
+            let xs: Vec<f64> = input.iter().map(|&x| x as f64).collect();
+            write_f64_vec(&mut out, &xs);
         }
     }
     out

@@ -24,18 +24,22 @@ pub struct OpId(pub u32);
 
 /// The element type of a tensor.
 ///
-/// V1 supports three dtypes:
+/// Supported dtypes:
 /// - [`DType::F32`] — IEEE 754 single-precision float, 4 bytes
+/// - [`DType::F64`] — IEEE 754 double-precision float, 8 bytes (MX12, for
+///   `f64`-native languages — R, MATLAB doubles — to lower at full precision)
 /// - [`DType::U8`]  — unsigned 8-bit integer, also used for booleans
 ///   (0 or 1) since shader languages typically don't have bool tensors
 /// - [`DType::I32`] — signed 32-bit integer, 4 bytes
 ///
-/// `f16`, `bf16`, `i64`, `complex64` are deferred to V2.  The wire
-/// format reserves tags `0x03` and `0x04` for `F16` and `I64`.
+/// `f16`, `bf16`, `i64`, `complex64` are deferred.  The wire format reserves
+/// tags `0x03` and `0x04` for `F16` and `I64`; `F64` takes `0x05`.
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
 pub enum DType {
     /// IEEE 754 binary32.
     F32,
+    /// IEEE 754 binary64.
+    F64,
     /// Unsigned 8-bit.
     U8,
     /// Signed 32-bit.
@@ -48,14 +52,22 @@ impl DType {
     /// | DType | size |
     /// |-------|------|
     /// | F32   | 4    |
+    /// | F64   | 8    |
     /// | U8    | 1    |
     /// | I32   | 4    |
     pub const fn size_bytes(self) -> usize {
         match self {
             DType::F32 => 4,
+            DType::F64 => 8,
             DType::U8 => 1,
             DType::I32 => 4,
         }
+    }
+
+    /// Whether this dtype is a floating-point type (the ops `Sqrt`, `Exp`,
+    /// `Log`, `Tanh`, `Recip`, `Div`, `Pow` require one).
+    pub const fn is_float(self) -> bool {
+        matches!(self, DType::F32 | DType::F64)
     }
 
     /// The wire-format tag for this dtype.  See spec MX03 §"Encoding
@@ -65,6 +77,7 @@ impl DType {
             DType::F32 => 0x00,
             DType::U8 => 0x01,
             DType::I32 => 0x02,
+            DType::F64 => 0x05,
         }
     }
 
@@ -76,6 +89,7 @@ impl DType {
             0x01 => Some(DType::U8),
             0x02 => Some(DType::I32),
             // 0x03 reserved for F16, 0x04 reserved for I64
+            0x05 => Some(DType::F64),
             _ => None,
         }
     }
@@ -85,6 +99,7 @@ impl fmt::Display for DType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             DType::F32 => f.write_str("f32"),
+            DType::F64 => f.write_str("f64"),
             DType::U8 => f.write_str("u8"),
             DType::I32 => f.write_str("i32"),
         }
@@ -141,8 +156,7 @@ impl Shape {
     /// The total byte size of a tensor with this shape and dtype.
     /// Returns `None` on overflow.
     pub fn byte_size(&self, dtype: DType) -> Option<u64> {
-        self.numel()?
-            .checked_mul(dtype.size_bytes() as u64)
+        self.numel()?.checked_mul(dtype.size_bytes() as u64)
     }
 }
 

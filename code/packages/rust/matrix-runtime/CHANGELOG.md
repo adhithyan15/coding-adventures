@@ -3,6 +3,13 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [unreleased] — MX12 f64 dtype
+
+### Changed — cost model accepts `DType::F64` (MX12)
+
+`compute_cost` handles `F64` (using the `f32` GFLOPS rate as a placeholder; MXF-2
+adds a dedicated `gflops_f64`), so graphs with `f64` tensors plan without panic.
+
 ## [0.10.0] — 2026-05-13
 
 ### Changed — cost model knows `Op::Concat`
