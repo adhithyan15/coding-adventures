@@ -1,0 +1,17 @@
+[package]
+name = "coding-adventures-wolfram-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `wolfram` (alias `math`) binary for the Wolfram Language"
+license = "MIT"
+
+[dependencies]
+coding-adventures-wolfram-runtime = { path = "../wolfram-runtime" }
+
+[[bin]]
+name = "wolfram"
+path = "src/main.rs"
+
+[[bin]]
+name = "math"
+path = "src/math.rs"

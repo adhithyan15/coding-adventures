@@ -1,0 +1,27 @@
+[package]
+name = "coding-adventures-wolfram-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Wolfram Language runtime — lowers M-expressions to symbolic-ir and evaluates via symbolic-vm"
+license = "MIT"
+
+[dependencies]
+# The W-3 frontend: parses Wolfram source into a generic GrammarASTNode that
+# this crate lowers to symbolic-ir.
+coding-adventures-wolfram-parser = { path = "../wolfram-parser" }
+# The W-2 lexer. We tokenize once up front (the lexer is iterative, so unlike
+# the parser it cannot stack-overflow) to measure per-statement token counts
+# from the *real* token stream — comments/whitespace already skipped, strings
+# already coalesced — rather than re-deriving the lexical model in the facade
+# (which a security review found to be bypassable). Same pattern maxima-runtime
+# uses.
+coding-adventures-wolfram-lexer = { path = "../wolfram-lexer" }
+# The shared symbolic substrate: the term IR everything lowers to, the VM that
+# rewrites it, and the pattern matcher that backs `/.`.
+symbolic-ir = { path = "../symbolic-ir" }
+symbolic-vm = { path = "../symbolic-vm" }
+cas-pattern-matching = { path = "../cas-pattern-matching" }
+# The generic parser AST types (GrammarASTNode / ASTNodeOrToken) and the lexer
+# Token type the lowering walks.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
