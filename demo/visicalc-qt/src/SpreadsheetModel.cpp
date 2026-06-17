@@ -303,3 +303,20 @@ void SpreadsheetModel::commitInf(const QString &raw) {
     emit infSelectionChanged();
     emit revisionChanged();
 }
+
+// Drag-fill: the engine replicates the `src` cell across the inclusive A1
+// rectangle (relative refs shift per target, absolute ($) refs pin, the format
+// carries). sc_fill returns void; we then recompute the parity grid, regrow the
+// extent if the fill reached new ground, and bump `revision` so the visible rows
+// re-fetch. A malformed address is a no-op inside the engine.
+void SpreadsheetModel::fill(const QString &src, const QString &dstStart, const QString &dstEnd) {
+    const QByteArray s = src.toUtf8();
+    const QByteArray ds = dstStart.toUtf8();
+    const QByteArray de = dstEnd.toUtf8();
+    sc_fill(session_, s.constData(), ds.constData(), de.constData());
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}

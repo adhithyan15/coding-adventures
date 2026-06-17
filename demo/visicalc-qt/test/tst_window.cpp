@@ -22,6 +22,7 @@ private slots:
     void farWindowReachesZ1000AndGapsAreSparse();
     void extentColumnLettersAndChangedSince();
     void infiniteViewSelectEditAndRowCells();
+    void fillReplicatesShiftingReferences();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -135,6 +136,25 @@ void TstWindow::infiniteViewSelectEditAndRowCells() {
     QCOMPARE(m.rowCells(2).at(4).toString(), QStringLiteral("151.00")); // E2 = 108+14+7+22, formatted
     QCOMPARE(m.rowCells(5).at(0).toString(), QStringLiteral("139.00")); // A5 = 15+108+12+4, formatted
     QCOMPARE(m.rowCells(5).at(4).toString(), QStringLiteral("269.00")); // E5 grand total, formatted
+}
+
+// Drag-fill (the "Fill down" control drives model.fill): replicate a formula
+// down a column, each copy's relative reference tracking its row.
+void TstWindow::fillReplicatesShiftingReferences() {
+    SpreadsheetModel m;
+    // Seed a fresh column away from the default budget: H1=2, H2=3, H3=4;
+    // I1 = H1*10. Fill I1 down into I2:I3 — each tracks its row.
+    m.setCell("H1", "2");
+    m.setCell("H2", "3");
+    m.setCell("H3", "4");
+    m.setCell("I1", "=H1*10"); // 20
+    m.fill("I1", "I2", "I3");
+    // I2 = H2*10 = 30, I3 = H3*10 = 40 (each filled formula's relative ref tracked
+    // its row). Read through a window over col 9 (= I); the values prove the shift.
+    QCOMPARE(m.window(2, 9, 2, 9).at(0).toList().at(0).toString(), QStringLiteral("30"));
+    QCOMPARE(m.window(3, 9, 3, 9).at(0).toList().at(0).toString(), QStringLiteral("40"));
+    // The source cell is untouched by its own fill.
+    QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QStringLiteral("20"));
 }
 
 QTEST_MAIN(TstWindow)
