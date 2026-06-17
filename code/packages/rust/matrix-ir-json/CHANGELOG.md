@@ -3,6 +3,12 @@
 All notable changes to `matrix-ir-json` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [unreleased] — MX12 f64 dtype
+
+### Added — `f64` dtype mnemonic (MX12)
+
+The JSON encoder/decoder maps `DType::F64` ↔ `"f64"`.
+
 ## [0.1.0] — 2026-05-18
 
 ### Added — initial release: JSON wire format for `matrix-ir`

@@ -136,6 +136,40 @@ pub enum Statement {
         edge: Term,
         annotations: Vec<Annotation>,
     },
+    /// `rule { head: <term> when: <lit>, <lit> … }` — a DERIVATION RULE (a Horn
+    /// clause / Datalog rule). Where `Relate` asserts a GROUND edge, a `Rule` lets
+    /// the engine DERIVE `head` whenever every body literal holds under the current
+    /// substitution (variables bind across head and body). A literal prefixed with
+    /// `not` is negation-as-failure. Lowers to a `logic_engine::Rule { head, body }`,
+    /// so `? head($X)` enumerates every derivable answer via the same SLD machinery
+    /// `relate` facts resolve through. This is the primitive that lets a `rulebook`
+    /// express conditional domain knowledge (contraindications, step-therapy, …) —
+    /// authored once, grounded into the CAS, derived by the engine from per-case facts.
+    Rule {
+        head: Term,
+        body: Vec<RuleLiteral>,
+        annotations: Vec<Annotation>,
+        /// ADJ73 defeasible precedence (PR-C): the optional `priority: <tier>` annotation
+        /// (`default` | `specific` | `authoritative` | `mandatory`). `None` lowers to
+        /// `Priority::Default`. Among *conflicting* derivations of a functional predicate, a
+        /// higher tier defeats a lower one (`logic_engine::govern::enumerate_governing`).
+        priority: Option<String>,
+        /// ADJ73 PR-B: the optional `context: <name>` annotation — the CONTEXT this rule is
+        /// grounded in (jurisdiction / guideline edition / specialty). `None` = context-free.
+        /// Lowers to `logic_engine::Rule::with_context`; a rule in a context that outranks
+        /// another's (per [`Statement::ContextOrder`]) defeats it before the tier is consulted.
+        context: Option<String>,
+    },
+    /// `functional <pred>(<arg>, …)` — declare a predicate FUNCTIONAL on its last argument
+    /// (ADJ73 PR-C): at most one value may hold per key (the preceding args). The argument
+    /// names are placeholders for readability; only the functor + arity are used. Lowers to
+    /// `KnowledgeBase::declare_functional(functor, arity)`. Two derivations sharing the key but
+    /// differing on the last arg then *conflict*, and precedence picks the governing one.
+    Functional { functor: String, arity: usize },
+    /// `context_order { higher > lower, … }` — ADJ73 PR-B: grounded CONTEXT precedence edges.
+    /// Each `(higher, lower)` lowers to `KnowledgeBase::add_context_outranks`, so a rule in
+    /// `higher` defeats a conflicting one in `lower` (lex superior).
+    ContextOrder { edges: Vec<(String, String)> },
     /// `? <conclusion>` — query the engine. With a ground hypothesis term this
     /// returns the posterior; with a relational goal containing a `$variable`
     /// (`? deficient_in(tay_sachs, $E)`) it returns the binding(s) — fact recall
@@ -204,6 +238,15 @@ pub enum Statement {
     /// `Import` at lowering time was compiled without the resolver — a
     /// [`crate::LowerError::UnresolvedImport`].
     Import(String),
+}
+
+/// One literal in a [`Statement::Rule`] body: a subgoal `term`, optionally
+/// negated. `negated` true is negation-as-failure (`not <term>`) — the term must
+/// NOT be derivable under the current substitution.
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuleLiteral {
+    pub negated: bool,
+    pub term: Term,
 }
 
 /// A single dictionary entry (MYCIN-2026).

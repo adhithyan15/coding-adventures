@@ -2,6 +2,54 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.45.0] - 2026-06-16
+
+### Added
+
+- **Named WINDOW clause grammar** — ``sql.grammar`` changes:
+
+  - ``WINDOW`` added to ``sql.tokens`` keyword list so the lexer
+    classifies it as a keyword token rather than a plain name.
+  - ``window_func_call`` modified to accept either an inline spec or a
+    name reference after ``OVER``::
+
+        window_func_call = NAME "(" ( STAR | [ value_list ] ) ")" "OVER"
+                           ( "(" window_spec ")" | window_name_ref ) ;
+        window_name_ref  = NAME ;
+
+  - New ``window_clause`` rule::
+
+        window_clause = "WINDOW" NAME "AS" "(" window_spec ")"
+                        { "," NAME "AS" "(" window_spec ")" } ;
+
+  - ``select_stmt`` extended with ``[ window_clause ]`` between
+    ``having_clause`` and ``order_clause``.
+
+  ``_grammar.py`` regenerated from the updated grammar source via
+  ``grammar-tools compile-grammar``.
+
+## [0.44.0] - 2026-06-15
+
+### Added
+
+- **Row-value comparison grammar** — the ``comparison`` rule in
+  ``code/grammars/sql.grammar`` gained three new PEG alternatives that
+  fire before the scalar ``collated`` form:
+
+      comparison = row_value cmp_op row_value
+                 | row_value "NOT" "IN" "(" row_value_list ")"
+                 | row_value "IN" "(" row_value_list ")"
+                 | collated [ ... ] ;
+
+  A new ``row_value_list`` rule is also defined to support the IN variant::
+
+      row_value_list = row_value { "," row_value } ;
+
+  ``_grammar.py`` was regenerated from the updated grammar source via
+  ``grammar-tools compile-grammar``.  The ordering ensures the PEG parser
+  tries the row-value form first when it sees ``(`` so that scalar
+  regressions are unaffected.
+
 ## [0.43.0] - 2026-05-23
 
 ### Changed

@@ -2,6 +2,75 @@
 
 ## Unreleased
 
+- Accept selected `.control` block `set wr_vecnames` and `set wr_singlescale`
+  rawfile output toggles as no-op control commands in `analyzeDeckControls`
+  and `resolveDeckSources`, matching Python and Rust.
+- Accept selected `.control` block `set filetype=ascii` output-format options
+  as no-op control commands in `analyzeDeckControls` and `resolveDeckSources`,
+  matching Python and Rust.
+- Accept selected `.control` block `reset` session-reset markers as no-op
+  control commands in `analyzeDeckControls` and `resolveDeckSources`, matching
+  Python and Rust.
+- Accept selected `.control` block `set noaskquit` UI options as no-op control
+  commands in `analyzeDeckControls` and `resolveDeckSources`, matching Python
+  and Rust.
+- Accept selected `.control` block `quit` interpreter-exit markers as no-op
+  control commands in `analyzeDeckControls` and `resolveDeckSources`, matching
+  Python and Rust.
+- Accept selected `.control` block `run` execution markers as no-op control
+  commands in `analyzeDeckControls` and `resolveDeckSources`, matching Python
+  and Rust.
+- Add selected `.control` block `four` and `fourier` command routing to
+  `analyzeDeckControls` and `resolveDeckSources`; the commands are normalized
+  into `.four` deck cards, matching Python and Rust.
+- Add selected `.control` block `measure` and `meas` command routing to
+  `analyzeDeckControls` and `resolveDeckSources`; the commands are normalized
+  into `.measure` and `.meas` deck cards, matching Python and Rust.
+- Add selected `.control` block `save` and `probe` command routing to
+  `analyzeDeckControls` and `resolveDeckSources`; the commands are normalized
+  into `.save` and `.probe` deck cards, matching Python and Rust.
+- Add selected `.control` block command routing to `analyzeDeckControls` and
+  `resolveDeckSources`; analysis/output commands (`op`, `dc`, `ac`, `tran`,
+  `save`, `probe`, `print`, and `plot`) are normalized into dotted deck cards,
+  matching Python and Rust.
+- Add control-block exclusion diagnostics to `analyzeDeckControls` and
+  `resolveDeckSources`; unsupported `.control` / `.endc` block markers and
+  unrecognized body commands are no longer forwarded as active deck lines and
+  emit stable diagnostics, matching Python and Rust.
+- Add parsed `.plot <analysis> ...` output routing to `resolveDeckOutputs`,
+  `selectDeckOutputProbes`, and deck table formatters, matching Python and
+  Rust.
+- Add parsed `.print <analysis> ...` output routing to `resolveDeckOutputs`,
+  `selectDeckOutputProbes`, and deck table formatters, matching Python and
+  Rust.
+- Add selected-run artifact summaries to `runDeckAnalysis`; executions now
+  return stable result-row, output-probe, measurement, and Fourier counts plus
+  a run-artifact table, matching Python and Rust.
+- Add selected Fourier artifacts to `runDeckAnalysis`; selected `.tran`
+  executions now return parsed `.four` harmonic results and a stable Fourier
+  table alongside the selected plan, solver result, output probes, and
+  measurement artifacts, matching Python and Rust.
+- Add selected measurement artifacts to `runDeckAnalysis`; selected `.dc`,
+  `.ac`, and `.tran` executions now return parsed `.measure` / `.meas` results
+  and a stable measurement table alongside the selected plan, solver result,
+  output probes, and output table, matching Python and Rust.
+- Add selected-output probe artifacts to `runDeckAnalysis`; callers now receive
+  the normalized deck-selected output probes alongside each selected plan,
+  solver result, and stable table, matching Python and Rust.
+- Add `.tran` print-step output routing to `runDeckAnalysis`; deck transient
+  plans now keep `.tran TSTEP` as the stable output print grid while `MAXSTEP`
+  caps internal solver stepping, matching Python and Rust.
+- Add `.tran START/MAXSTEP/UIC` selected-plan execution routing to
+  `runDeckAnalysis`; deck transient plans now apply `START` output filtering,
+  `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent through stable
+  deck-selected transient tables, matching Python and Rust.
+- Add `.ac LIN` and `.ac OCT` selected-plan execution routing to
+  `runDeckAnalysis`; deck AC plans now execute SPICE-style linear,
+  points-per-decade, and points-per-octave grids, matching Python and Rust.
+- Add `runDeckAnalysis` so callers can select one deck `.op`, `.dc`,
+  `.ac DEC`, or `.tran` plan, execute the matching solver, and receive the
+  selected plan, solver result, and deck-selected output table, matching
+  Python and Rust.
 - Add `selectDeckAnalysisPlan` so callers can choose one explicit or implicit
   deck analysis plan with stable ambiguity and invalid-card errors, matching
   Python and Rust.

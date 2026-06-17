@@ -1,0 +1,2 @@
+function distance(a,b){return a * a + b * b};distance(3,4);
+

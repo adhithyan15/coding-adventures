@@ -297,6 +297,97 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — u8 WRAP (LANG-FULL E2 / N6). `200u8 + 100u8` overflows the byte and must
+    // wrap mod-256 to `44`. The exit code is itself `& 0xFF`, so a bare `return 200+100`
+    // could NOT distinguish a wrapped 44 from an unwrapped 300 (both exit 44) — instead we
+    // compare the in-register value: with wrap `x == 44` is true (→1), without wrap
+    // `300 == 44` is false (→0). Returning 1 on every backend proves the add wrapped
+    // BEFORE the comparison. This exercises the whole E2 stack: the Nib frontend emits a
+    // `u8` type_hint on the add (bidirectional typing), and each backend masks the result
+    // — vm-core/jit-core/wasm/jvm/cil by value-mask, LLVM by `and i64`, native-AOT by the
+    // aarch64/x86_64 `and #mask`.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = 200 + 100; if x == 44 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — u8 wrap is width-correct, not "any mask": `6 * 7 = 42` must stay 42 (it fits a
+    // byte), proving the mask is mod-256 not a blanket truncation. `6` and `7` are typed
+    // `u8` from the `-> u8` return context (bidirectional typing), so the product is masked
+    // at 0xFF and 42 < 256 is unchanged. (Guards the regression where magnitude-based
+    // literal typing made `6*7` a `u4` and wrapped it to `42 & 0xF = 10`.)
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { return 6 * 7; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `+%` WRAPPING add (LANG-FULL N7). `200u8 +% 100` discards the carry →
+    // `44`. The comparison (`x == 44`) distinguishes a wrapped 44 from an unwrapped
+    // 300 (whose exit-code low byte would also be 44). `+%` lowers to the same
+    // narrow-typed `add` as `+`, which the E2 backend mask wraps.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = 200 +% 100; if x == 44 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `+?` SATURATING add (LANG-FULL N7). `200u8 +? 100` clamps at the u8 max
+    // → `255` (NOT 44, the wrapping result). `+?` lowers to a *wide* add + a clamp
+    // branch (`min(sum, 255)`), exercising add/const/cmp_gt/jmp_if_false/mov/label
+    // together on every code-gen backend.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = 200 +? 100; if x == 255 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `+?` saturating at the u4 max: `15u4 +? 1` clamps to `15` (the nibble
+    // max), not the wrapping `0`.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u4 { let a: u4 = 15 +? 1; if a == 15 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `+?` that does NOT overflow returns the plain sum (`3 +? 4 = 7`),
+    // proving the clamp branch only fires on overflow.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = 3 +? 4; if x == 7 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — bitwise NOT (`~`), u8 (LANG-FULL N3). `~0` flips all bits; masked to the
+    // u8 width (the E2 value-mask) it is `255` (`-1 & 0xFF`), NOT the i64 all-ones.
+    // `compile_unary` lowers `~` to the shared IIR `not` op with a `u8` type_hint;
+    // `iir-to-llvm` 0.12.0 grew the `not` op (the last backend that lacked it), so this
+    // now runs on every backend. The `if x == 255` guard distinguishes the masked
+    // complement from an unmasked `not 0` (`-1`, which would NOT equal 255 → exit 0).
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = ~0; if x == 255 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — bitwise NOT (`~`), u4 (LANG-FULL N3). `~15` on a nibble: 15 = 0b1111, so
+    // its complement masked to 4 bits is `0`. Proves the `not` mask is width-correct
+    // (a u8 or i64 mask would leave 0xF0/-16, not 0), distinct from the u8 case above.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u4 { let x: u4 = ~15; if x == 0 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,
@@ -338,7 +429,7 @@ const PROGRAMS: &[Prog] = &[
         src: "fn side() -> u8 { out(1, 5); return 1; } \
                fn main() { if 1 == 2 && side() == 1 { out(1, 1); } else { out(1, 9); } }",
         expect: Expect::Stdout("9"),
-        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Oct — `||` SHORT-CIRCUIT, PROVEN observably. `1 == 1` is true, so `side()` (in the
     // right operand) must be skipped → output `7`. Eager would print `5` then `7`.
@@ -348,7 +439,32 @@ const PROGRAMS: &[Prog] = &[
         src: "fn side() -> u8 { out(1, 5); return 1; } \
                fn main() { if 1 == 1 || side() == 1 { out(1, 7); } else { out(1, 9); } }",
         expect: Expect::Stdout("7"),
-        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Oct — bitwise NOT (`~`) masks to the u8 width (LANG-FULL O2). Oct's only integer
+    // type is `u8` (the 8008 byte), so `~0` flips 8 bits → `255` (`-1 & 0xFF`), NOT the
+    // i64 all-ones. `oct-iir-compiler` 0.7.0 emits the `not` op with a `u8` type_hint;
+    // every backend masks it (the E2 value-mask), the same path Nib N3-`~` proved. The
+    // `out` prints the value, so stdout is the direct observable proof. (An unmasked
+    // `~0` would print `-1`, not `255`.)
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { out(1, ~0); }",
+        expect: Expect::Stdout("255"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Oct — u8 arithmetic WRAPS modulo 256 (LANG-FULL O2). The grammar specifies Oct
+    // addition wraps mod-2⁸; `200 + 100 = 300` wraps to `44`. Until O2 the result rode an
+    // unmasked i64 slot and printed `300`. Now the `add` carries the `u8` hint and every
+    // backend masks it. Distinct from the existing `100 + 100 = 200` Oct program, which
+    // does NOT overflow — this one proves the wrap actually fires.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { out(1, 200 + 100); }",
+        expect: Expect::Stdout("44"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
@@ -449,6 +565,38 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Brainfuck — STDIN (LANG-FULL B1-stdin). The matrix proved every backend can *write*
+    // output (`.`); these two prove every backend can *read* input (`,`). `,+.` reads one
+    // byte from real stdin, `+` increments it, and `.` prints the result — so the output
+    // depends on BOTH the input and a computation on it (not a constant, not a bare echo):
+    // input "A" (65) → output "B" (66). The harness feeds "A" to the process stdin on the
+    // four subprocess backends (libc `getchar` / `System.in` / `Console.Read`) and to the
+    // in-process `getchar` buffer on WASM/VM/JIT — see `program_stdin` + `output_with_stdin`.
+    //
+    // It reads EXACTLY as many bytes as supplied and never reads past EOF, so it terminates
+    // identically on every backend *regardless* of the EOF convention — which still differs
+    // (JVM's BFRuntime and the VM/JIT return 0; libc `getchar`, `Console.Read` and the wasm
+    // host return -1 → the cell wraps to 255). The classic cat `,[.,]` would loop forever on
+    // the -1 backends, so normalising EOF across backends is a separate item; these programs
+    // sidestep it by construction.
+    Prog {
+        lang: Language::Brainfuck,
+        ext: "bf",
+        src: ",+.",
+        expect: Expect::Stdout("B"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Brainfuck — multi-byte STDIN echo (LANG-FULL B1-stdin). `,.,.` reads a byte and prints
+    // it, twice; with input "Hi" it echoes "Hi". Proves *repeated* reads advance through the
+    // input stream on every backend (the second `,` must see 'i', not 'H' again). Like `,+.`
+    // it reads exactly the supplied bytes — no EOF-gated loop — so it terminates everywhere.
+    Prog {
+        lang: Language::Brainfuck,
+        ext: "bf",
+        src: ",.,.",
+        expect: Expect::Stdout("Hi"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
     // and the harness compares stdout (LM-L BASIC). On WASM the same `PRINT` lowers to
@@ -484,7 +632,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET S = 0\n20 FOR I = 1 TO 5\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n",
         expect: Expect::Stdout("15"),
-        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — `IF … THEN <line>` + `GOTO`-style jump (LANG-FULL BA0). `A > 5`
     // lowers to `cmp_gt` (one of the comparisons LLVM compared at the wrong width until
@@ -497,7 +645,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A = 7\n20 IF A > 5 THEN 100\n30 PRINT 0\n40 END\n100 PRINT A\n110 END\n",
         expect: Expect::Stdout("7"),
-        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 
@@ -554,6 +702,42 @@ fn compile_native(src_path: &std::path::Path, exe: &std::path::Path, lang: Langu
     }
 }
 
+/// The stdin bytes a Brainfuck `,` program reads. The matrix is otherwise stdin-free —
+/// every program above supplies none, so `getchar` sees EOF (the prior behaviour) — so
+/// only the explicit stdin programs name their input here, keyed on `(lang, src)`.
+/// Keeping the input in a small side table rather than a new `Prog` field avoids
+/// editing every one of the ~30 existing `Prog` literals (and the churn/merge conflicts
+/// that would cause in a fast-moving array); the Brainfuck sources are unique, so the
+/// match is unambiguous.
+fn program_stdin(p: &Prog) -> &'static [u8] {
+    match (p.lang, p.src) {
+        (Language::Brainfuck, ",+.") => b"A",   // read 'A' (65), `+` → 66, print 'B'
+        (Language::Brainfuck, ",.,.") => b"Hi", // read a byte and echo it, twice → "Hi"
+        _ => b"",
+    }
+}
+
+/// Run `cmd` feeding `input` to its stdin, returning the finished output. The four
+/// subprocess backends (native / LLVM / JVM / CLR) read a Brainfuck `,` from their
+/// real process stdin — libc `getchar` (native/LLVM), `System.in` (JVM's BFRuntime),
+/// `Console.Read` (CLR) — so this writes the program's input and closes the pipe (→
+/// EOF). `input` is empty for every non-stdin program, so `write_all(b"")` is a no-op
+/// and behaviour is unchanged. A write error is deliberately ignored: a program that
+/// exits before reading closes the read end, and a resulting broken pipe must not fail
+/// an otherwise-correct run. The captured stdout/stderr are piped so they don't leak to
+/// the test's own console.
+fn output_with_stdin(mut cmd: Command, input: &[u8]) -> Option<std::process::Output> {
+    use std::io::Write as _;
+    cmd.stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped());
+    let mut child = cmd.spawn().ok()?;
+    if let Some(mut si) = child.stdin.take() {
+        let _ = si.write_all(input); // `si` dropped at block end → stdin closes → EOF
+    }
+    child.wait_with_output().ok()
+}
+
 /// Native-AOT runner: write the source, compile to a host executable, run it, and
 /// return `(exit_code, trimmed_stdout)`. `None` when native AOT is unavailable here.
 ///
@@ -573,7 +757,9 @@ fn run_native(p: &Prog) -> Option<(Option<i32>, String)> {
     std::fs::write(&src_path, p.src).ok()?;
     let exe = dir.path().join("prog");
     compile_native(&src_path, &exe, p.lang)?;
-    let out = Command::new(&exe).output().ok()?;
+    // Feed the program's stdin (a Brainfuck `,` reads it via libc `getchar`); empty for
+    // every other program, so the prior no-stdin behaviour is unchanged.
+    let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     Some((out.status.code(), stdout))
 }
@@ -635,7 +821,9 @@ fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
     if !built.status.success() {
         return None;
     }
-    let out = Command::new(&exe).output().ok()?;
+    // Same stdin wiring as `run_native`: a Brainfuck `,` reads libc `getchar` from the
+    // process stdin; empty for every other program.
+    let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     Some((out.status.code(), stdout))
 }
@@ -723,11 +911,15 @@ impl wasm_execution::HostFunction for PutcharFunc {
 }
 
 /// Brainfuck's `,` lowers to `call $getchar`, imported as `env.getchar : () -> i32`
-/// (the wasm sibling of libc `@getchar`). This matrix has no stdin, so the host returns
-/// `-1` (EOF) — the conventional Brainfuck "leave 255 on EOF" after the cell store
-/// truncates it. Resolving it keeps the host complete for any BF program that reads
-/// input; the proven cell (`++++++++[>++++++++<-]>+.`) emits no `,`, so it is unused there.
-struct GetcharFunc;
+/// (the wasm sibling of libc `@getchar`). Each call pops the next byte from the program's
+/// stdin buffer (seeded by `run_wasm` from `program_stdin`); when the buffer is drained it
+/// returns `-1` (EOF) — the conventional Brainfuck "leave 255 on EOF" after the cell store
+/// truncates it, matching the libc `getchar` column. A program with no stdin (every cell
+/// but the B1-stdin ones) gets an empty buffer, so the first read is EOF, exactly the
+/// previous behaviour.
+struct GetcharFunc {
+    input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
+}
 
 impl wasm_execution::HostFunction for GetcharFunc {
     fn func_type(&self) -> &wasm_types::FuncType {
@@ -744,7 +936,13 @@ impl wasm_execution::HostFunction for GetcharFunc {
         _args: &[wasm_execution::WasmValue],
         _memory: Option<&mut wasm_execution::LinearMemory>,
     ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
-        Ok(vec![wasm_execution::WasmValue::I32(-1)])
+        let byte = self
+            .input
+            .lock()
+            .expect("lang-matrix wasm stdin buffer poisoned")
+            .pop_front();
+        let code = byte.map(i32::from).unwrap_or(-1); // EOF → -1
+        Ok(vec![wasm_execution::WasmValue::I32(code)])
     }
 }
 
@@ -757,6 +955,7 @@ impl wasm_execution::HostFunction for GetcharFunc {
 struct PrintHost {
     captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
     bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+    input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
 }
 
 impl wasm_execution::HostInterface for PrintHost {
@@ -772,7 +971,9 @@ impl wasm_execution::HostInterface for PrintHost {
             ("env", "putchar") => Some(Box::new(PutcharFunc {
                 bytes: std::sync::Arc::clone(&self.bytes),
             })),
-            ("env", "getchar") => Some(Box::new(GetcharFunc)),
+            ("env", "getchar") => Some(Box::new(GetcharFunc {
+                input: std::sync::Arc::clone(&self.input),
+            })),
             _ => None,
         }
     }
@@ -809,9 +1010,14 @@ fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
     let wasm = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
     let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    // The program's stdin, drained by `env.getchar` (Brainfuck `,`); empty otherwise.
+    let input = std::sync::Arc::new(std::sync::Mutex::new(
+        program_stdin(p).iter().copied().collect::<std::collections::VecDeque<u8>>(),
+    ));
     let host = PrintHost {
         captured: std::sync::Arc::clone(&captured),
         bytes: std::sync::Arc::clone(&byte_buf),
+        input: std::sync::Arc::clone(&input),
     };
     let rt = wasm_runtime::WasmRuntime::with_host(Box::new(host));
     let result = rt.load_and_run(&wasm, "main", &[]).ok()?;
@@ -1040,7 +1246,11 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
             return None;
         }
     }
-    let out = Command::new("java").arg("-cp").arg(dir.path()).arg("Main").output().ok()?;
+    // A Brainfuck `,` reads `env.BFRuntime.getchar()` → `System.in`, so pipe the
+    // program's stdin to the `java` process; empty for every other program.
+    let mut java = Command::new("java");
+    java.arg("-cp").arg(dir.path()).arg("Main");
+    let out = output_with_stdin(java, program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     if prints {
         // The program wrote its result to stdout via `env.BasicRuntime.println`.
@@ -1103,7 +1313,11 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
         r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#,
     )
     .ok()?;
-    let out = Command::new("dotnet").arg(&dll).output().ok()?;
+    // A Brainfuck `,` reads `Console.Read()` from the process stdin, so pipe the
+    // program's stdin to the `dotnet` process; empty for every other program.
+    let mut dn = Command::new("dotnet");
+    dn.arg(&dll);
+    let out = output_with_stdin(dn, program_stdin(p))?;
     if !out.status.success() {
         return None;
     }
@@ -1166,9 +1380,15 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
         bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
         Ok(Value::Null)
     });
+    // The program's stdin, drained one byte per `getchar` (Brainfuck `,`); empty for
+    // every other program, so the first read is EOF → 0 (the prior behaviour).
+    let stdin_buf: Arc<Mutex<std::collections::VecDeque<u8>>> =
+        Arc::new(Mutex::new(program_stdin(p).iter().copied().collect()));
+    let input = Arc::clone(&stdin_buf);
     vm.builtins_mut().register("getchar", move |_args: &[Value]| {
-        // No stdin in the matrix; EOF → 0 (BF convention).
-        Ok(Value::Int(0))
+        // Pop the next stdin byte; EOF → 0 (BF convention) once the buffer is drained.
+        let byte = input.lock().expect("lang-matrix VM stdin buffer poisoned").pop_front();
+        Ok(Value::Int(byte.map(i64::from).unwrap_or(0)))
     });
 
     let result = vm.execute(&mut module, &entry, &[]).ok()?;
@@ -1235,7 +1455,16 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
         Ok(Value::Null)
     });
-    vm.builtins_mut().register("getchar", move |_args: &[Value]| Ok(Value::Int(0)));
+    // The program's stdin, shared by BOTH tiers' `getchar` (a function runs on one tier,
+    // but sharing one buffer keeps the byte stream consistent whichever tier it lands
+    // on); empty for every non-stdin program, so the first read is EOF → 0.
+    let stdin_buf: Arc<Mutex<std::collections::VecDeque<u8>>> =
+        Arc::new(Mutex::new(program_stdin(p).iter().copied().collect()));
+    let input = Arc::clone(&stdin_buf);
+    vm.builtins_mut().register("getchar", move |_args: &[Value]| {
+        let byte = input.lock().expect("lang-matrix JIT stdin buffer poisoned").pop_front();
+        Ok(Value::Int(byte.map(i64::from).unwrap_or(0)))
+    });
 
     // --- compiled path: the same builtins on the JIT backend (closures return Value) ---
     let backend = GenericCirJit::new();
@@ -1251,7 +1480,11 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
         Value::Null
     });
-    backend.register_builtin("getchar", move |_args: &[Value]| Value::Int(0));
+    let input = Arc::clone(&stdin_buf);
+    backend.register_builtin("getchar", move |_args: &[Value]| {
+        let byte = input.lock().expect("lang-matrix JIT stdin buffer poisoned").pop_front();
+        Value::Int(byte.map(i64::from).unwrap_or(0))
+    });
 
     // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the
     // borrow, so `execute_with_jit` can re-borrow `vm` for the interpreter tier.

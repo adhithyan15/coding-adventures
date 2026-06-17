@@ -2,6 +2,78 @@
 
 ## Unreleased
 
+- Accept selected `.control` block `set wr_vecnames` and `set wr_singlescale`
+  rawfile output toggles as no-op control commands in `analyze_deck_controls`
+  and `resolve_deck_sources`, matching Python and TypeScript.
+- Accept selected `.control` block `set filetype=ascii` output-format options
+  as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript.
+- Accept selected `.control` block `reset` session-reset markers as no-op
+  control commands in `analyze_deck_controls` and `resolve_deck_sources`,
+  matching Python and TypeScript.
+- Accept selected `.control` block `set noaskquit` UI options as no-op control
+  commands in `analyze_deck_controls` and `resolve_deck_sources`, matching
+  Python and TypeScript.
+- Accept selected `.control` block `quit` interpreter-exit markers as no-op
+  control commands in `analyze_deck_controls` and `resolve_deck_sources`,
+  matching Python and TypeScript.
+- Accept selected `.control` block `run` execution markers as no-op control
+  commands in `analyze_deck_controls` and `resolve_deck_sources`, matching
+  Python and TypeScript.
+- Add selected `.control` block `four` and `fourier` command routing to
+  `analyze_deck_controls` and `resolve_deck_sources`; the commands are
+  normalized into `.four` deck cards, matching Python and TypeScript.
+- Add selected `.control` block `measure` and `meas` command routing to
+  `analyze_deck_controls` and `resolve_deck_sources`; the commands are
+  normalized into `.measure` and `.meas` deck cards, matching Python and
+  TypeScript.
+- Add selected `.control` block `save` and `probe` command routing to
+  `analyze_deck_controls` and `resolve_deck_sources`; the commands are
+  normalized into `.save` and `.probe` deck cards, matching Python and
+  TypeScript.
+- Add selected `.control` block command routing to `analyze_deck_controls` and
+  `resolve_deck_sources`; analysis/output commands (`op`, `dc`, `ac`, `tran`,
+  `save`, `probe`, `print`, and `plot`) are normalized into dotted deck cards,
+  matching Python and TypeScript.
+- Add control-block exclusion diagnostics to `analyze_deck_controls` and
+  `resolve_deck_sources`; unsupported `.control` / `.endc` block markers and
+  unrecognized body commands are no longer forwarded as active deck lines and
+  emit stable diagnostics, matching Python and TypeScript.
+- Add parsed `.plot <analysis> ...` output routing to `resolve_deck_outputs`,
+  `select_deck_output_probes`, and deck table formatters, matching Python and
+  TypeScript.
+- Add parsed `.print <analysis> ...` output routing to `resolve_deck_outputs`,
+  `select_deck_output_probes`, and deck table formatters, matching Python and
+  TypeScript.
+- Add selected-run artifact summaries to `run_deck_analysis`; executions now
+  return stable result-row, output-probe, measurement, and Fourier counts plus
+  a run-artifact table, matching Python and TypeScript.
+- Add selected Fourier artifacts to `run_deck_analysis`; selected `.tran`
+  executions now return parsed `.four` harmonic results and a stable Fourier
+  table alongside the selected plan, solver result, output probes, and
+  measurement artifacts, matching Python and TypeScript.
+- Add selected measurement artifacts to `run_deck_analysis`; selected `.dc`,
+  `.ac`, and `.tran` executions now return parsed `.measure` / `.meas` results
+  and a stable measurement table alongside the selected plan, solver result,
+  output probes, and output table, matching Python and TypeScript.
+- Add selected-output probe artifacts to `run_deck_analysis`; callers now
+  receive the normalized deck-selected output probes alongside each selected
+  plan, solver result, and stable table, matching Python and TypeScript.
+- Add `.tran` print-step output routing to `run_deck_analysis`; deck transient
+  plans now keep `.tran TSTEP` as the stable output print grid while `MAXSTEP`
+  caps internal solver stepping, matching Python and TypeScript.
+- Add `.tran START/MAXSTEP/UIC` selected-plan execution routing to
+  `run_deck_analysis`; deck transient plans now apply `START` output filtering,
+  `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent through stable
+  deck-selected transient tables, matching Python and TypeScript.
+- Add `.ac LIN` and `.ac OCT` selected-plan execution routing to
+  `run_deck_analysis`; deck AC plans now execute SPICE-style linear,
+  points-per-decade, and points-per-octave grids, matching Python and
+  TypeScript.
+- Add `run_deck_analysis` so callers can select one deck `.op`, `.dc`,
+  `.ac DEC`, or `.tran` plan, execute the matching solver, and receive the
+  selected plan, solver result, and deck-selected output table, matching Python
+  and TypeScript.
 - Add `select_deck_analysis_plan` so callers can choose one explicit or
   implicit deck analysis plan with stable ambiguity and invalid-card errors,
   matching Python and TypeScript.

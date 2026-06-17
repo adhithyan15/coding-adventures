@@ -46,26 +46,36 @@ const SEED = {
 };
 for (const k in SEED) wb.setCell(k, SEED[k]);
 
+// Same format codes as infinite.html: the cross-foot totals read with thousands
+// grouping + 2 decimals, and Z1000 as a percent. Values are unchanged — this
+// only affects how getDisplayWindow renders them.
+const FORMATS = {
+  E1: "#,##0.00", E2: "#,##0.00", E3: "#,##0.00", E4: "#,##0.00", E5: "#,##0.00",
+  A5: "#,##0.00", B5: "#,##0.00", C5: "#,##0.00", D5: "#,##0.00",
+  Z1000: "0.0%",
+};
+for (const k in FORMATS) wb.setFormat(k, FORMATS[k]);
+
 const ROW_H = 22, COL_W = 80, OVER = 3;
 const u = wb.usedRange();
 const TOTAL_ROWS = Math.max(u.maxRow + 200, 1000);
 const TOTAL_COLS = Math.max(u.maxCol + 30, 60);
 
-// infinite.html's render() window computation, headless.
+// infinite.html's render() window computation, headless. Like the page, it now
+// reads getDisplayWindow — each cell is its display STRING (value rendered
+// through its format code; empty cells ""), so the renderer paints text
+// directly and never re-derives number formatting.
 function windowAt(st, sl, vh = 400, vw = 900) {
   const firstRow = Math.max(1, Math.floor(st / ROW_H) + 1 - OVER);
   const lastRow = Math.min(TOTAL_ROWS, Math.ceil((st + vh) / ROW_H) + OVER);
   const firstCol = Math.max(1, Math.floor(sl / COL_W) + 1 - OVER);
   const lastCol = Math.min(TOTAL_COLS, Math.ceil((sl + vw) / COL_W) + OVER);
-  const win = wb.getWindow(firstRow, firstCol, lastRow, lastCol);
+  const win = wb.getDisplayWindow(firstRow, firstCol, lastRow, lastCol);
   const cells = (lastRow - firstRow + 1) * (lastCol - firstCol + 1);
   return { firstRow, lastRow, firstCol, lastCol, win, cells };
 }
-const disp = (v) =>
-  v.kind === "number" ? String(v.value)
-  : v.kind === "text" ? v.value
-  : v.kind === "error" ? v.code : "";
-const valAt = (w, r, c) => w.win.values[r - w.firstRow][c - w.firstCol];
+// A cell's display string at an absolute 1-based (r, c) within window w.
+const valAt = (w, r, c) => w.win.cells[r - w.firstRow][c - w.firstCol];
 
 let fail = 0;
 const ok = (cond, msg) => { console.log((cond ? "ok  " : "FAIL") + "  " + msg); if (!cond) fail++; };
@@ -74,31 +84,46 @@ ok(TOTAL_ROWS >= 1000 && TOTAL_COLS >= 60, `virtual grid ${TOTAL_ROWS}x${TOTAL_C
 
 const top = windowAt(0, 0);
 ok(top.cells < 1000, `top renders only ${top.cells} cells (bounded, not ${TOTAL_ROWS * TOTAL_COLS})`);
-ok(disp(valAt(top, 1, 1)) === "15", "A1 = 15 in view");
-ok(disp(valAt(top, 1, 5)) === "38", "E1 = 38 (engine SUM) in view");
-ok(disp(valAt(top, 5, 5)) === "169", "E5 = 169 (grand total) in view");
+ok(valAt(top, 1, 1) === "15", "A1 = 15 in view (unformatted)");
+// E1/E5 carry "#,##0.00" → the engine renders the formatted display string.
+ok(valAt(top, 1, 5) === "38.00", "E1 = 38.00 (engine SUM, thousands+2dp format) in view");
+ok(valAt(top, 5, 5) === "169.00", "E5 = 169.00 (grand total, formatted) in view");
 
 const far = windowAt((1000 - 1) * ROW_H - 100, (26 - 1) * COL_W - 100); // row 1000, col Z
 ok(far.firstRow > 900 && far.lastRow >= 1000, `scrolled to rows ${far.firstRow}..${far.lastRow}`);
 ok(far.cells < 1000, `far view renders only ${far.cells} cells (same bound as the top)`);
-ok(disp(valAt(far, 1000, 26)) === "39", "Z1000 = 39 (=SUM(A1:A4), 1000 rows down)");
+// Z1000 = SUM(A1:A4) = 39, format "0.0%" → 39 × 100 = "3900.0%": the format
+// applies identically 1000 rows off-origin.
+ok(valAt(far, 1000, 26) === "3900.0%", "Z1000 = 3900.0% (=SUM(A1:A4) as percent, 1000 rows down)");
 
 const gap = windowAt(110 * ROW_H, 0);
 let allEmpty = true;
 for (let r = gap.firstRow; r <= gap.lastRow; r++)
   for (let c = gap.firstCol; c <= gap.lastCol; c++)
-    if (valAt(gap, r, c).kind !== "empty") allEmpty = false;
+    if (valAt(gap, r, c) !== "") allEmpty = false;
 ok(allEmpty, "gap region (rows ~100-120) is entirely empty (sparse)");
 
 ok(wb.columnLetters(27) === "AA" && wb.columnLetters(53) === "BA" && wb.columnLetters(54) === "BB",
   "column letters AA / BA / BB");
-ok(disp(wb.getWindow(50, 54, 50, 54).values[0][0]) === "78", "BB50 = 78 (=Z1000*2)");
+ok(wb.getDisplayWindow(50, 54, 50, 54).cells[0][0] === "78", "BB50 = 78 (=Z1000*2, unformatted)");
 
 const rev = wb.currentRevision();
 wb.setCell("A1", "115");
 const d = wb.changedSince(rev);
 ok(!d.stale && d.changed.includes("A1") && d.changed.includes("E1") && d.changed.includes("Z1000"),
   `edit A1 dirtied ${d.changed.length} cells incl. far Z1000: ${d.changed.join(",")}`);
+
+// Drag-fill (the "Fill ↓ 10" button): G1 = F1*2, fill into G2:G3 — each copy's
+// relative reference tracks its row (the same engine.fill the button calls).
+wb.setCell("F1", "10");
+wb.setCell("F2", "20");
+wb.setCell("F3", "30");
+wb.setCell("G1", "=F1*2"); // 20
+wb.fill("G1", "G2", "G3");
+const fillWin = wb.getDisplayWindow(2, 7, 3, 7); // G2:G3 (col 7 = G)
+ok(fillWin.cells[0][0] === "40" && fillWin.cells[1][0] === "60",
+  `fill G1 down → G2=${fillWin.cells[0][0]} (F2*2), G3=${fillWin.cells[1][0]} (F3*2)`);
+ok(wb.getRaw("G3") === "=(F3*2)", `filled G3 source tracked the row: ${wb.getRaw("G3")}`);
 
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);

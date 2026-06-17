@@ -19,21 +19,21 @@ use spice_engine::{
     pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, sample_transient_probe_as_digital_events,
+    pss_with_tolerance, run_deck_analysis, sample_transient_probe_as_digital_events,
     sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
     transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
     transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
     transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
     Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
-    CurrentSource, DigitalBridgeSchedule, DigitalEvent, DigitalEventStream, DigitalLogicLevels,
-    DigitalState, DigitalThresholds, DistortionHarmonic, DistortionPoint, DistortionResult,
-    Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet,
-    JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
-    PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
-    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
-    TransmissionLine, VoltageSource, Waveform,
+    CurrentSource, DeckAnalysisExecutionResult, DigitalBridgeSchedule, DigitalEvent,
+    DigitalEventStream, DigitalLogicLevels, DigitalState, DigitalThresholds, DistortionHarmonic,
+    DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult,
+    FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind,
+    PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult,
+    PssNewtonSolveResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
+    PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod,
+    TransientPoint, TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1837,6 +1837,8 @@ fn transient_deck_output_cards_select_table_probes() {
         "
 .save V(out) I(V1)
 .probe tran V(clk) V(out)
+.print tran V(ignored)
+.plot tran I(V1)
 .probe ac V(ignored)
 .end
 ",
@@ -1845,7 +1847,229 @@ fn transient_deck_output_cards_select_table_probes() {
 
     assert_eq!(
         table,
-        "Index\tTime\tV(out)\tI(V1)\tV(clk)\n0\t0.000000e+00\t0.000000e+00\t-1.000000e-03\t0.000000e+00\n1\t1.000000e-03\t1.000000e+00\t-2.000000e-03\t5.000000e+00\n"
+        "Index\tTime\tV(out)\tI(V1)\tV(clk)\tV(ignored)\n0\t0.000000e+00\t0.000000e+00\t-1.000000e-03\t0.000000e+00\t1.000000e+00\n1\t1.000000e-03\t1.000000e+00\t-2.000000e-03\t5.000000e+00\t2.000000e+00\n"
+    );
+}
+
+#[test]
+fn run_deck_analysis_routes_selected_plan_and_output_table() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+    let netlist = "
+.save V(mid)
+.probe dc I(V1)
+.op
+.dc V1 0 1 1
+.ac dec 1 1k 1k
+.tran 1m 1m
+.measure dc mid_avg avg V(mid)
+.measure ac mid_peak max V(mid)
+.measure tran mid_final final V(mid)
+.end
+";
+
+    let op_execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
+    assert_eq!(op_execution.plan.analysis, "op");
+    assert_eq!(op_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert!(op_execution.measurements.is_empty());
+    assert_eq!(
+        op_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    );
+    assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
+    assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(
+        op_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\nop\t.op\t{}\t1\t1\t0\t0\n",
+            op_execution.plan.line_number
+        )
+    );
+
+    let dc_execution = run_deck_analysis(&circuit, netlist, Some("dc")).unwrap();
+    assert_eq!(dc_execution.plan.source_name.as_deref(), Some("V1"));
+    assert_eq!(
+        dc_execution.output_probes,
+        vec!["V(mid)".to_string(), "I(V1)".to_string()]
+    );
+    assert_eq!(dc_execution.measurements[0].name, "mid_avg");
+    assert_eq!(
+        dc_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n"
+    );
+    match dc_execution.result {
+        DeckAnalysisExecutionResult::DcSweep(points) => assert_eq!(points.len(), 2),
+        other => panic!("expected DC sweep result, got {other:?}"),
+    }
+    assert_eq!(
+        dc_execution.table,
+        "Index\tSource\tValue\tV(mid)\tI(V1)\n0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    );
+    assert_eq!(dc_execution.run_artifacts[0].analysis, "dc");
+    assert_eq!(
+        dc_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\ndc\t.dc\t{}\t2\t2\t1\t0\n",
+            dc_execution.plan.line_number
+        )
+    );
+
+    let ac_execution = run_deck_analysis(&circuit, netlist, Some("ac")).unwrap();
+    assert_eq!(ac_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert_eq!(ac_execution.measurements[0].name, "mid_peak");
+    assert_eq!(
+        ac_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_peak\tac\tV(mid)\tmax\t\t\t5.000000e-01\n"
+    );
+    match ac_execution.result {
+        DeckAnalysisExecutionResult::Ac(points) => assert_eq!(points.len(), 1),
+        other => panic!("expected AC result, got {other:?}"),
+    }
+    assert_eq!(
+        ac_execution.table,
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    );
+    assert_eq!(
+        ac_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\nac\t.ac\t{}\t1\t1\t1\t0\n",
+            ac_execution.plan.line_number
+        )
+    );
+
+    let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
+    assert_eq!(tran_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert_eq!(tran_execution.measurements[0].name, "mid_final");
+    assert_eq!(
+        tran_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_final\ttran\tV(mid)\tlast\t\t\t5.000000e-01\n"
+    );
+    match tran_execution.result {
+        DeckAnalysisExecutionResult::Tran(points) => assert_eq!(points.len(), 1),
+        other => panic!("expected transient result, got {other:?}"),
+    }
+    assert_eq!(
+        tran_execution.table,
+        "Index\tTime\tV(mid)\n0\t1.000000e-03\t5.000000e-01\n"
+    );
+    assert_eq!(
+        tran_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\ntran\t.tran\t{}\t1\t1\t1\t0\n",
+            tran_execution.plan.line_number
+        )
+    );
+
+    let tran_window_execution = run_deck_analysis(
+        &circuit,
+        ".save V(mid)\n.tran 2m 6m 2m 1m uic\n.end\n",
+        None,
+    )
+    .unwrap();
+    assert!((tran_window_execution.plan.start_time.unwrap() - 2.0e-3).abs() < 1.0e-12);
+    assert!((tran_window_execution.plan.max_step.unwrap() - 1.0e-3).abs() < 1.0e-12);
+    assert!(tran_window_execution.plan.use_initial_conditions);
+    assert_eq!(
+        tran_window_execution.output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    match &tran_window_execution.result {
+        DeckAnalysisExecutionResult::Tran(points) => {
+            let expected_times = [2.0e-3, 4.0e-3, 6.0e-3];
+            assert_eq!(points.len(), expected_times.len());
+            for (point, expected_time) in points.iter().zip(expected_times) {
+                assert!((point.time - expected_time).abs() < 1.0e-12);
+            }
+        }
+        other => panic!("expected transient result, got {other:?}"),
+    }
+    assert_eq!(
+        tran_window_execution.table,
+        "Index\tTime\tV(mid)\n0\t2.000000e-03\t5.000000e-01\n1\t4.000000e-03\t5.000000e-01\n2\t6.000000e-03\t5.000000e-01\n"
+    );
+
+    let error = run_deck_analysis(&circuit, netlist, None).unwrap_err();
+    assert!(error.to_string().contains("multiple analysis cards"));
+
+    let lin_execution =
+        run_deck_analysis(&circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n", None).unwrap();
+    assert_eq!(lin_execution.output_probes, vec!["V(mid)".to_string()]);
+    match &lin_execution.result {
+        DeckAnalysisExecutionResult::Ac(points) => assert_eq!(
+            points
+                .iter()
+                .map(|point| point.frequency_hz)
+                .collect::<Vec<_>>(),
+            vec![1.0, 2.0, 3.0]
+        ),
+        other => panic!("expected AC result, got {other:?}"),
+    }
+    assert_eq!(
+        lin_execution.table,
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n2\t3.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    );
+
+    let oct_execution =
+        run_deck_analysis(&circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n", None).unwrap();
+    assert_eq!(oct_execution.output_probes, vec!["V(mid)".to_string()]);
+    match &oct_execution.result {
+        DeckAnalysisExecutionResult::Ac(points) => assert_eq!(
+            points
+                .iter()
+                .map(|point| point.frequency_hz)
+                .collect::<Vec<_>>(),
+            vec![1.0, 2.0, 4.0]
+        ),
+        other => panic!("expected AC result, got {other:?}"),
+    }
+    assert_eq!(
+        oct_execution.table,
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n2\t4.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    );
+}
+
+#[test]
+fn run_deck_analysis_exposes_selected_fourier_artifacts() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+    let netlist = "
+.save V(mid)
+.op
+.tran 0.5m 1m
+.four 2k V(mid) harmonics=1
+.end
+";
+
+    let op_execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
+    assert!(op_execution.fourier.is_empty());
+    assert_eq!(op_execution.fourier_table, "");
+
+    let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
+    assert_eq!(tran_execution.fourier.len(), 1);
+    let result = &tran_execution.fourier[0];
+    assert!((result.fundamental_frequency_hz - 2_000.0).abs() < 1.0e-12);
+    assert_eq!(result.probes[0].probe, "V(mid)");
+    assert_eq!(result.probes[0].harmonics.len(), 1);
+    assert_eq!(tran_execution.fourier_table, format_fourier_table(result));
+    assert_eq!(tran_execution.run_artifacts[0].fourier_count, 1);
+    assert_eq!(
+        tran_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\ntran\t.tran\t{}\t2\t1\t0\t1\n",
+            tran_execution.plan.line_number
+        )
     );
 }
 

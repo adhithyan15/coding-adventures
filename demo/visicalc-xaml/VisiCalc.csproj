@@ -59,6 +59,11 @@
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <!-- The virtualized infinite-sheet view (Windows-only; its engine-backed
+         model is proven cross-platform by test/Program.cs). -->
+    <Page Include="InfiniteSheet.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!-- The cross-platform engine smoke under test/ is a SEPARATE console project

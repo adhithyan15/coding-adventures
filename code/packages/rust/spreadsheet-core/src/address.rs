@@ -51,6 +51,20 @@ impl CellAddress {
         }
     }
 
+    /// This address with its `$` absolute markers stripped (position only).
+    ///
+    /// A cell is *stored* and *tracked* by position alone — `A1`, `$A1`, `A$1`,
+    /// and `$A$1` in formulas must all resolve to the one cell at row 1, col 1.
+    /// The absolute markers only steer how a reference *shifts* on copy/fill (see
+    /// [`shift`](Self::shift)); they are not part of a cell's identity. So every
+    /// place that uses a reference's address as a key into the cell store or the
+    /// dependency graph normalises it through this first — otherwise a `$A$1`
+    /// lookup (flags set) would miss the relatively-keyed `A1` cell and read as
+    /// empty.
+    pub fn without_absolute(&self) -> CellAddress {
+        CellAddress::new(self.row, self.col)
+    }
+
     /// Shift by `(d_row, d_col)`, respecting absolute flags.
     /// Returns `Err(Ref)` if the shift would push the address to row
     /// or column 0 or below (i.e. would invalidate the reference).

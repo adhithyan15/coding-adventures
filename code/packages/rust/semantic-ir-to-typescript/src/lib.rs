@@ -927,4 +927,58 @@ mod tests {
         assert!(a.source.contains("(-(5))"), "neg: got:\n{}", a.source);
         assert!(!a.source.contains("__Sir.callBuiltin(\"neg\""), "got:\n{}", a.source);
     }
+
+    #[test]
+    fn lambda_builtin_lowers_to_inner_closure_ts() {
+        // Ruby `lambda { … }` / `->{…}` reach the backend as
+        // `BuiltinCall("lambda", [MakeClosure])`.  The lambda *is* its closure,
+        // so it must emit the inner `MakeClosure` (→ `new __Sir.Closure`)
+        // directly, never route through the eager dispatch table.
+        let mc = Expr::MakeClosure { fn_name: "main".into(), captures: vec![], span: s() };
+        let lam = bc("lambda", vec![mc]);
+        let a = compile(&module_with_main_body(vec![], lam, &[Feature::Closures]))
+            .expect("compile");
+        assert!(a.source.contains("new __Sir.Closure("), "got:\n{}", a.source);
+        assert!(!a.source.contains("__Sir.callBuiltin(\"lambda\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn range_builtin_lowers_to_runtime_and_imports_ts() {
+        // Ruby `a..b` / `a...b` reach the backend as
+        // `BuiltinCall("range", [start, stop, exclusive])`.  It must lower to the
+        // `__SirRange.range(...)` constructor, gate in the range-runtime import,
+        // and never route through the eager dispatch table.
+        let rng = bc(
+            "range",
+            vec![
+                Expr::IntLit { value: 1, span: s() },
+                Expr::IntLit { value: 5, span: s() },
+                Expr::BoolLit { value: false, span: s() },
+            ],
+        );
+        let a = compile(&module_with_main_body(vec![], rng, &[])).expect("compile");
+        assert!(a.source.contains("__SirRange.range(1, 5, false)"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("from \"@coding-adventures/sir-runtime-range\""),
+            "missing range import; got:\n{}",
+            a.source
+        );
+        assert!(!a.source.contains("__Sir.callBuiltin(\"range\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn no_range_import_when_unused_ts() {
+        // A module that never builds a range must not gain the range dependency.
+        let a = compile(&module_with_main_body(
+            vec![],
+            Expr::IntLit { value: 7, span: s() },
+            &[],
+        ))
+        .expect("compile");
+        assert!(
+            !a.source.contains("@coding-adventures/sir-runtime-range"),
+            "unexpected range import; got:\n{}",
+            a.source
+        );
+    }
 }

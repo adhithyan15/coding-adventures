@@ -477,6 +477,22 @@ def _column_display_name(expr: Expr) -> str | None:
         # display name.  This makes ``ORDER BY rowid`` find the column
         # emitted by ``SELECT rowid, ...`` via its alias.
         return "rowid"
+    if isinstance(expr, Literal):
+        # SQLite names unnamed literal columns by their surface representation:
+        #   SELECT 1      → column "1"
+        #   SELECT 'hi'   → column "'hi'"
+        #   SELECT NULL   → column "NULL"
+        # Without this, every Literal falls back to "?" and duplicate-column
+        # dicts in _do_run_subquery lose all but the last value — causing
+        # SELECT * FROM (SELECT 1, 2) to return (2,) instead of (1, 2).
+        v = expr.value
+        if v is None:
+            return "NULL"
+        if isinstance(v, str):
+            return f"'{v}'"
+        if isinstance(v, bytes):
+            return "X'" + v.hex().upper() + "'"
+        return str(v)  # int, float, bool
     return None
 
 
@@ -637,6 +653,48 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
                 i for i, ins in enumerate(post) if isinstance(ins, SortResult)
             )
             post.insert(sort_idx + 1, StripTrailingColumns(count=len(hidden_pairs)))
+
+    elif ir_sort_keys is not None and isinstance(cur, PlanWindowAgg):
+        # PlanWindowAgg analogue of the hidden-column injection above.
+        #
+        # When ORDER BY references columns absent from output_cols — e.g.
+        #
+        #   SELECT grp, SUM(val) OVER (PARTITION BY grp)
+        #   FROM   t
+        #   ORDER BY grp, val
+        #
+        # the plan is Sort(PlanWindowAgg(output_cols=('grp','window_1'))).
+        # After ComputeWindowFunctions projects to output_cols, 'val' is
+        # gone, so SortResult raises ValueError looking for it in columns.
+        #
+        # Fix: extend output_cols to include the missing sort key columns as
+        # trailing hidden entries.  ComputeWindowFunctions will pass them
+        # through (the inner plan already includes them for the window
+        # computation).  StripTrailingColumns removes them after the sort.
+        output_names_win: set[str] = set(cur.output_cols)
+        seen_win: set[str] = set()
+        hidden_win: list[str] = []
+        for ir_sk in ir_sort_keys:
+            # Positional keys use column_idx — they always reference an
+            # output column by index, so no injection needed.
+            if ir_sk.column_idx is not None:
+                continue
+            col = ir_sk.column
+            if col == "?" or col in output_names_win or col in seen_win:
+                continue
+            hidden_win.append(col)
+            seen_win.add(col)
+
+        if hidden_win:
+            cur = PlanWindowAgg(
+                input=cur.input,
+                specs=cur.specs,
+                output_cols=cur.output_cols + tuple(hidden_win),
+            )
+            win_sort_idx = next(
+                i for i, ins in enumerate(post) if isinstance(ins, SortResult)
+            )
+            post.insert(win_sort_idx + 1, StripTrailingColumns(count=len(hidden_win)))
 
     core = _compile_core(cur, ctx)
 

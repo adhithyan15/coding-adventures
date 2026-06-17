@@ -28,10 +28,20 @@ downstream tools to compare.
      diagnostic and solver footholds; transient scalar `.measure`-style output
      helpers now cover shared peak-to-peak and final-value measurement output,
      and parsed transient `.measure` / `.meas` cards can now feed those
-     measurement helpers from deck text; parsed `.save` and `.probe` cards now
-     drive stable Rust table output for operating-point, DC sweep, AC sweep, and
-     transient results; parsed `.measure dc` / `.meas dc` cards now route DC
-     sweep probe samples into the shared scalar measurement table surface;
+     measurement helpers from deck text; parsed `.save`, `.probe`,
+     `.print <analysis> ...`, and `.plot <analysis> ...` cards now drive
+     stable table output for operating-point, DC sweep, AC sweep, and transient
+     results; unsupported `.control` / `.endc` blocks are now excluded from
+     active deck and source-resolved solver input while body commands emit
+     stable non-executed diagnostics, and selected `.control` block
+     analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
+     `measure`, `meas`, `four`, `fourier`, `print`, and `plot`) now normalize
+     into dotted deck cards while `run`, `reset`, `quit`, and UI-only
+     `set noaskquit` options plus ASCII rawfile-format `set filetype=ascii`
+     options and rawfile vector-name/single-scale toggles (`set wr_vecnames`,
+     `set wr_singlescale`) are accepted as no-op control markers; parsed
+     `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
+     the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
      optional frequency windows into the same measurement table surface; parsed
      transient `.measure ... FIND ... AT=` cards now route single-time probe
@@ -47,7 +57,20 @@ downstream tools to compare.
      analyses over transient outputs with optional `HARMONICS=` and `FROM=`
      controls; parsed `.op`, `.dc`, `.ac`, and `.tran` cards now resolve into
      shared cross-language analysis-plan metadata before execution, and callers
-     can select one explicit or implicit plan with stable ambiguity errors.
+     can select one explicit or implicit plan with stable ambiguity errors and
+     route `.op`, `.dc`, `.ac LIN`, `.ac DEC`, `.ac OCT`, or `.tran` into the
+     matching solver plus deck-selected table output, including `.tran`
+     `START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
+     initial-condition intent; selected `.tran` execution now keeps `.tran
+     TSTEP` as the deck output print grid while `MAXSTEP` caps internal solver
+     stepping; deck executions now expose normalized selected output probes as
+     an inspectable artifact alongside the stable table; selected `.measure`
+     outputs now travel with deck execution results as structured measurements
+     plus stable measurement tables; selected transient `.four` outputs now
+     travel with deck execution results as structured Fourier artifacts plus
+     stable Fourier tables; selected deck executions now include structured
+     run-artifact summaries plus stable row/count tables for result rows,
+     output probes, measurements, and Fourier artifacts.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -179,10 +202,11 @@ downstream tools to compare.
       active deck lines before `.end`.
     - The helpers emit stable unsupported-feature diagnostics for `.include`,
       `.lib`, and `.control` directives that appear before `.end`, while
-      ignoring lines after the deck boundary.
+      ignoring lines after the deck boundary. Unsupported `.control` blocks
+      are also excluded from active lines, with per-command diagnostics for
+      non-comment lines inside the block.
     - Package README, changelog, and tests document and lock this shared
-      parser/planner foothold before include/library resolution and control
-      block execution are implemented.
+      parser/planner foothold before control block execution is implemented.
 
 15. Include/library source resolution.
     - Status: completed in this include/library resolution slice.
@@ -193,7 +217,8 @@ downstream tools to compare.
       named `.lib` / `.endl` library sections.
     - Stable diagnostics cover missing include files, missing library files,
       absent or unterminated sections, include/library cycles, and
-      still-unsupported `.control` directives.
+      still-unsupported `.control` directives whose body commands are excluded
+      from active source-resolved solver input.
 
 16. Parameter/expression resolution foothold.
     - Status: completed in this parameter/expression resolution slice.
@@ -387,14 +412,201 @@ downstream tools to compare.
     - This gives deck execution helpers a deterministic single-plan bridge
       while leaving full selected-plan-to-solver dispatch in backlog.
 
+33. Selected deck analysis execution routing.
+    - Status: completed in this selected-plan execution routing slice.
+    - Python, Rust, and TypeScript now expose matching helpers that select one
+      deck analysis plan, execute `.op`, `.dc`, `.ac DEC`, or `.tran` against an
+      existing `Circuit`, and return the selected plan, solver result, and
+      deck-selected output table.
+    - The bridge preserves stable ambiguity and invalid-card diagnostics and
+      explicitly reports unsupported `.ac LIN` / `.ac OCT` execution modes for
+      future solver-grid expansion.
+
+34. Deck AC LIN/OCT execution routing.
+    - Status: completed in this deck AC grid routing slice.
+    - Python, Rust, and TypeScript now route selected `.ac LIN`, `.ac DEC`, and
+      `.ac OCT` plans through matching solver executions and deck-selected AC
+      table output.
+    - The execution bridge uses SPICE-style linear total-point grids,
+      points-per-decade grids, and points-per-octave grids while preserving
+      selected-plan ambiguity and invalid-card diagnostics.
+
+35. Deck transient START/MAXSTEP/UIC routing.
+    - Status: completed in this transient deck-control routing slice.
+    - Python, Rust, and TypeScript now route selected `.tran` `START` output
+      filtering, `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent
+      through matching solver executions and deck-selected transient tables.
+    - This closes the first deck-owned transient execution-control foothold
+      while leaving richer run artifacts and output-plan integration in
+      backlog.
+
+36. Deck transient print-step output routing.
+    - Status: completed in this transient print-step routing slice.
+    - Python, Rust, and TypeScript now keep `.tran TSTEP` as the stable deck
+      output print grid while using `MAXSTEP` only as an internal fixed-step
+      cap.
+    - This separates deck-visible transient output rows from internal solver
+      stepping and preserves stable selected-plan transient tables.
+
+37. Deck selected-output artifact metadata.
+    - Status: completed in this output-probe artifact slice.
+    - Python, Rust, and TypeScript `run_deck_analysis` / `runDeckAnalysis`
+      results now include the normalized deck-selected output probes alongside
+      the selected plan, solver result, and stable table.
+    - This gives callers a structured deck-owned output artifact without
+      reparsing table text.
+
+38. Deck selected measurement artifact routing.
+    - Status: completed in this deck measurement artifact slice.
+    - Python, Rust, and TypeScript `run_deck_analysis` / `runDeckAnalysis`
+      results now include selected `.measure` / `.meas` outputs and a stable
+      measurement table for `.dc`, `.ac`, and `.tran` executions.
+    - Measurement cards are selected by the executed analysis, so mixed-analysis
+      decks can expose the chosen analysis artifact without reparsing output
+      tables.
+
+39. Deck selected Fourier artifact routing.
+    - Status: completed in this deck Fourier artifact slice.
+    - Python, Rust, and TypeScript `run_deck_analysis` / `runDeckAnalysis`
+      results now include selected transient `.four` outputs and a stable
+      Fourier table for `.tran` executions.
+    - Fourier cards are exposed only for the selected transient analysis, so
+      mixed-analysis decks can inspect harmonic artifacts without reparsing
+      output tables.
+
+40. Deck selected-run artifact summary.
+    - Status: completed in this deck run-artifact summary slice.
+    - Python, Rust, and TypeScript `run_deck_analysis` / `runDeckAnalysis`
+      results now include selected-run artifact summaries and stable count
+      tables for result rows, normalized output probes, measurement artifacts,
+      and Fourier artifacts.
+    - The summary is list-shaped so future nested sweeps can append more
+      deck-owned run artifacts without changing the public field shape.
+
+41. Parsed `.print` output routing.
+    - Status: completed in this parsed print output-routing slice.
+    - Python, Rust, and TypeScript now treat scoped
+      `.print <analysis> V(node) I(source)` cards as deck output selections
+      alongside `.save` and `.probe`.
+    - Selected probes are normalized and deduplicated in deck order, while
+      diagnostics distinguish missing `.print` probes, unsupported `.print`
+      analyses, and malformed output probes.
+
+42. Parsed `.plot` output routing.
+    - Status: completed in this parsed plot output-routing slice.
+    - Python, Rust, and TypeScript now treat scoped
+      `.plot <analysis> V(node) I(source)` cards as deck output selections
+      alongside `.save`, `.probe`, and `.print`.
+    - Selected probes are normalized and deduplicated in deck order, while
+      diagnostics distinguish missing `.plot` probes, unsupported `.plot`
+      analyses, and malformed output probes.
+
+43. Deck `.control` block exclusion.
+    - Status: completed in this control-block exclusion slice.
+    - Python, Rust, and TypeScript now exclude unsupported `.control` / `.endc`
+      blocks from active deck-control lines and source-resolved solver input.
+    - The existing unsupported `.control` directive diagnostic is preserved,
+      while unrecognized non-comment commands inside the block emit stable
+      `SPICE_DECK_CONTROL_COMMAND` diagnostics.
+
+44. Selected `.control` command routing.
+    - Status: completed in this selected control-command routing slice.
+    - Python, Rust, and TypeScript now normalize selected `.control` block
+      analysis/output commands (`op`, `dc`, `ac`, `tran`, `print`, and `plot`)
+      into the same dotted deck cards consumed by the existing analysis and
+      output resolvers.
+    - Unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
+
+45. Selected `.control` save/probe routing.
+    - Status: completed in this selected control save/probe routing slice.
+    - Python, Rust, and TypeScript now normalize selected `.control` block
+      output-selection commands (`save` and `probe`) into the same `.save` and
+      `.probe` deck cards consumed by existing output resolvers.
+    - Unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
+
+46. Selected `.control` measurement routing.
+    - Status: completed in this selected control measurement-routing slice.
+    - Python, Rust, and TypeScript now normalize selected `.control` block
+      measurement commands (`measure` and `meas`) into the same `.measure` and
+      `.meas` deck cards consumed by existing measurement resolvers.
+    - Unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
+
+47. Selected `.control` Fourier routing.
+    - Status: completed in this selected control Fourier-routing slice.
+    - Python, Rust, and TypeScript now normalize selected `.control` block
+      harmonic output commands (`four` and `fourier`) into the same `.four`
+      deck cards consumed by existing Fourier resolvers.
+    - Unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
+
+48. Selected `.control` run marker routing.
+    - Status: completed in this selected control run-marker routing slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block `run`
+      execution markers as no-op control commands after selected analysis and
+      output commands have normalized into deck cards.
+    - Other unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
+
+49. Selected `.control` quit marker routing.
+    - Status: completed in this selected control quit-marker routing slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block `quit`
+      interpreter-exit markers as no-op control commands after selected
+      analysis and output commands have normalized into deck cards.
+    - Other unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
+
+50. Selected `.control` noaskquit option routing.
+    - Status: completed in this selected control noaskquit-option routing slice.
+    - Python, Rust, and TypeScript now accept exact selected `.control` block
+      `set noaskquit` UI options as no-op control commands.
+    - Other `set` variables and unrecognized non-comment commands inside
+      `.control` blocks remain diagnostic-only so unsupported script state and
+      control flow are still explicit.
+
+51. Selected `.control` reset marker routing.
+    - Status: completed in this selected control reset-marker routing slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block `reset`
+      session-reset markers as no-op control commands after selected analysis
+      and output commands have normalized into deck cards.
+    - Other unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported stateful script execution is still
+      explicit.
+
+52. Selected `.control` ASCII filetype option routing.
+    - Status: completed in this selected control filetype-ascii option routing
+      slice.
+    - Python, Rust, and TypeScript now accept exact selected `.control` block
+      `set filetype=ascii` output-format options as no-op control commands.
+    - Other `set` variables, binary rawfile options, file-writing commands, and
+      unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported file I/O and script state are explicit.
+
+53. Selected `.control` rawfile output option routing.
+    - Status: completed in this selected control rawfile-output option routing
+      slice.
+    - Python, Rust, and TypeScript now accept exact selected `.control` block
+      `set wr_vecnames` and `set wr_singlescale` rawfile output toggles as
+      no-op control commands.
+    - Other `set` variables, rawfile file-writing commands, and unrecognized
+      non-comment commands inside `.control` blocks remain diagnostic-only so
+      unsupported file I/O and script state are explicit.
+
 ## Backlog
 
 1. Deck execution layer.
-   - Wire selected analysis-plan metadata into runnable solver executions.
+   - Expand selected-plan execution beyond fixed-step transient basics,
+     including richer deck-owned run artifacts beyond selected output probes,
+     selected measurement artifacts, selected Fourier artifacts, and selected
+     run summaries, plus output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
-     routing toward full SPICE compatibility.
-   - Define a deliberate `.control` subset; explicit unsupported-feature
-     diagnostics are now present for the current non-executed state.
+     routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
+     selection toward full SPICE compatibility.
+   - Expand the deliberate `.control` subset beyond simple analysis/output
+     command routing, including control flow, variables, and script execution
+     policy.
 
 2. Production solver core.
    - Finish sparse real and complex matrix paths.

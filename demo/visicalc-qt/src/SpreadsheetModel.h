@@ -88,11 +88,48 @@ public:
     // A1 addresses changed since `since` (empty if none / stale).
     Q_INVOKABLE QStringList changedSince(quint64 since) const;
 
+    // ── Infinite-sheet view state (InfiniteSheet.qml) ──
+    // The virtual grid size, the selection, the formula-bar text, and a revision
+    // counter the QML rebinds on to refresh the visible rows after an edit. All
+    // 1-based (row/col ≥ 1, col 1 = "A"). Separate from the 5×5 parity selection.
+    Q_PROPERTY(int totalRows READ totalRows NOTIFY extentChanged)
+    Q_PROPERTY(int totalCols READ totalCols NOTIFY extentChanged)
+    Q_PROPERTY(int infRow READ infRow NOTIFY infSelectionChanged)
+    Q_PROPERTY(int infCol READ infCol NOTIFY infSelectionChanged)
+    Q_PROPERTY(QString infAddress READ infAddress NOTIFY infSelectionChanged)
+    Q_PROPERTY(QString infFormula READ infFormula NOTIFY infSelectionChanged)
+    Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
+
+    int totalRows() const { return totalRows_; }
+    int totalCols() const { return totalCols_; }
+    int infRow() const { return infRow_; }
+    int infCol() const { return infCol_; }
+    QString infAddress() const;
+    QString infFormula() const { return infFormula_; }
+    int revision() const { return revision_; }
+
+    // One row's display strings (a QVariantList of QString, columns 1..totalCols)
+    // — what a windowed ListView delegate renders. One engine read per row.
+    Q_INVOKABLE QVariantList rowCells(int row) const;
+    // Select the infinite-view cell (clamped); pulls its source into infFormula.
+    Q_INVOKABLE void selectInf(int row, int col);
+    // Commit the formula bar into the selected infinite-view cell: write through,
+    // recompute, resize the extent, bump `revision` so the rows re-fetch.
+    Q_INVOKABLE void commitInf(const QString &raw);
+    // Drag-fill: replicate the `src` cell across the inclusive A1 rectangle
+    // `dstStart`..`dstEnd` (relative refs shift, absolute pin, format carried);
+    // resizes the extent and bumps `revision` so the visible rows re-fetch.
+    Q_INVOKABLE void fill(const QString &src, const QString &dstStart, const QString &dstEnd);
+
 signals:
     // viewportRows changed (after a recompute) — QML rebinds the grid.
     void changed();
     // The selection moved — QML rebinds cellAddress / selectedRaw / highlight.
     void selectionChanged();
+    // Infinite-view signals.
+    void extentChanged();
+    void infSelectionChanged();
+    void revisionChanged();
 
 private:
     // A1 address for grid display row `r` (0-based) and column `c` (1..5).
@@ -104,10 +141,23 @@ private:
     // Rebuild viewportRows_ from the engine's computed values and emit changed().
     void recompute();
 
+    // Re-derive totalRows_/totalCols_ from the engine's used_range + a margin.
+    void computeExtent();
+    // The raw source of an A1 cell (the formula bar's text).
+    QString rawAt(const QString &a1) const;
+
     ScSession *session_;
     QVariantList viewportRows_;
     int selectedRow_ = 0; // 0..4
     int selectedCol_ = 1; // 1..5 (0 = gutter)
+
+    // Infinite-view state.
+    int totalRows_ = 1000;
+    int totalCols_ = 60;
+    int infRow_ = 1;     // 1-based
+    int infCol_ = 1;     // 1-based (1 = "A")
+    QString infFormula_;
+    int revision_ = 0;
 };
 
 #endif // VISICALC_QT_SPREADSHEET_MODEL_H

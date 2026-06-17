@@ -1,0 +1,559 @@
+{
+  "summary": {
+    "total": 66,
+    "correct": 59,
+    "abstained": 7,
+    "wrong": 0,
+    "by_tactic": {
+      "differential": {
+        "correct": 1,
+        "abstained": 1,
+        "wrong": 0
+      },
+      "management": {
+        "correct": 5,
+        "abstained": 0,
+        "wrong": 0
+      },
+      "recall": {
+        "correct": 53,
+        "abstained": 6,
+        "wrong": 0
+      }
+    },
+    "defensibility": 1.0,
+    "accuracy_on_attempted": 1.0,
+    "grounded_coverage": 0.9623,
+    "grounded_correct": 51
+  },
+  "results": [
+    {
+      "id": "tay_sachs_enzyme",
+      "tactic": "recall",
+      "gold": "hexosaminidase_a",
+      "answer": "hexosaminidase_a",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "gaucher_enzyme",
+      "tactic": "recall",
+      "gold": "glucocerebrosidase",
+      "answer": "glucocerebrosidase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pku_enzyme",
+      "tactic": "recall",
+      "gold": "phenylalanine_hydroxylase",
+      "answer": "phenylalanine_hydroxylase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pompe_enzyme",
+      "tactic": "recall",
+      "gold": "acid_alpha_glucosidase",
+      "answer": "acid_alpha_glucosidase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "lesch_nyhan_enzyme",
+      "tactic": "recall",
+      "gold": "hgprt",
+      "answer": "hgprt",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "von_gierke_enzyme",
+      "tactic": "recall",
+      "gold": "glucose_6_phosphatase",
+      "answer": "glucose_6_phosphatase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "tay_sachs_substrate",
+      "tactic": "recall",
+      "gold": "gm2_ganglioside",
+      "answer": "gm2_ganglioside",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "gaucher_substrate",
+      "tactic": "recall",
+      "gold": "glucocerebroside",
+      "answer": "glucocerebroside",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "lesch_nyhan_inherit",
+      "tactic": "recall",
+      "gold": "x_linked_recessive",
+      "answer": "x_linked_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "von_gierke_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_recessive",
+      "answer": "autosomal_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "fabry_enzyme",
+      "tactic": "recall",
+      "gold": "alpha_galactosidase_a",
+      "answer": "alpha_galactosidase_a",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "fabry_substrate",
+      "tactic": "recall",
+      "gold": "globotriaosylceramide",
+      "answer": "globotriaosylceramide",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "niemann_pick_enzyme",
+      "tactic": "recall",
+      "gold": "acid_sphingomyelinase",
+      "answer": "acid_sphingomyelinase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "krabbe_enzyme",
+      "tactic": "recall",
+      "gold": "galactocerebrosidase",
+      "answer": "galactocerebrosidase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hurler_enzyme",
+      "tactic": "recall",
+      "gold": "alpha_l_iduronidase",
+      "answer": "alpha_l_iduronidase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "msud_enzyme",
+      "tactic": "recall",
+      "gold": "branched_chain_ketoacid_dehydrogenase",
+      "answer": "branched_chain_ketoacid_dehydrogenase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "galactosemia_enzyme",
+      "tactic": "recall",
+      "gold": "galactose_1_phosphate_uridyltransferase",
+      "answer": "galactose_1_phosphate_uridyltransferase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "msud_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_recessive",
+      "answer": "autosomal_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "wilson_disease_enzyme",
+      "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "menkes_enzyme",
+      "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "thiamine_disease",
+      "tactic": "recall",
+      "gold": "beriberi",
+      "answer": "beriberi",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "niacin_disease",
+      "tactic": "recall",
+      "gold": "pellagra",
+      "answer": "pellagra",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "b12_disease",
+      "tactic": "recall",
+      "gold": "megaloblastic_anemia",
+      "answer": "megaloblastic_anemia",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "vitc_disease",
+      "tactic": "recall",
+      "gold": "scurvy",
+      "answer": "scurvy",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "vitd_disease",
+      "tactic": "recall",
+      "gold": "rickets",
+      "answer": "rickets",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "vita_disease",
+      "tactic": "recall",
+      "gold": "night_blindness",
+      "answer": "night_blindness",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "b12_finding",
+      "tactic": "recall",
+      "gold": "subacute_combined_degeneration",
+      "answer": "subacute_combined_degeneration",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "thiamine_finding",
+      "tactic": "recall",
+      "gold": "wernicke_encephalopathy",
+      "answer": "wernicke_encephalopathy",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "biotin_disease",
+      "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "ida_mcv",
+      "tactic": "recall",
+      "gold": "microcytic",
+      "answer": "microcytic",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "thal_mcv",
+      "tactic": "recall",
+      "gold": "microcytic",
+      "answer": "microcytic",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "b12_anemia_mcv",
+      "tactic": "recall",
+      "gold": "macrocytic",
+      "answer": "macrocytic",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hs_mcv",
+      "tactic": "recall",
+      "gold": "normocytic",
+      "answer": "normocytic",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "b12_anemia_finding",
+      "tactic": "recall",
+      "gold": "hypersegmented_neutrophils",
+      "answer": "hypersegmented_neutrophils",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hs_finding",
+      "tactic": "recall",
+      "gold": "spherocytes",
+      "answer": "spherocytes",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "g6pd_finding",
+      "tactic": "recall",
+      "gold": "bite_cells",
+      "answer": "bite_cells",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "sideroblastic_finding",
+      "tactic": "recall",
+      "gold": "ringed_sideroblasts",
+      "answer": "ringed_sideroblasts",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "aplastic_mcv",
+      "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "insulin_gland",
+      "tactic": "recall",
+      "gold": "pancreatic_beta_cells",
+      "answer": "pancreatic_beta_cells",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cortisol_gland",
+      "tactic": "recall",
+      "gold": "adrenal_cortex",
+      "answer": "adrenal_cortex",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "thyroxine_gland",
+      "tactic": "recall",
+      "gold": "thyroid_gland",
+      "answer": "thyroid_gland",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "adh_gland",
+      "tactic": "recall",
+      "gold": "posterior_pituitary",
+      "answer": "posterior_pituitary",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "insulin_def",
+      "tactic": "recall",
+      "gold": "diabetes_mellitus",
+      "answer": "diabetes_mellitus",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cortisol_def",
+      "tactic": "recall",
+      "gold": "addison_disease",
+      "answer": "addison_disease",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "thyroxine_def",
+      "tactic": "recall",
+      "gold": "hypothyroidism",
+      "answer": "hypothyroidism",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "adh_def",
+      "tactic": "recall",
+      "gold": "central_diabetes_insipidus",
+      "answer": "central_diabetes_insipidus",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "glucagon_gland",
+      "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "hemophilia_a_factor",
+      "tactic": "recall",
+      "gold": "factor_viii",
+      "answer": "factor_viii",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hemophilia_b_factor",
+      "tactic": "recall",
+      "gold": "factor_ix",
+      "answer": "factor_ix",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "vwd_factor",
+      "tactic": "recall",
+      "gold": "von_willebrand_factor",
+      "answer": "von_willebrand_factor",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hemophilia_c_factor",
+      "tactic": "recall",
+      "gold": "factor_xi",
+      "answer": "factor_xi",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "factor7_def_factor",
+      "tactic": "recall",
+      "gold": "factor_vii",
+      "answer": "factor_vii",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "hemophilia_a_inherit",
+      "tactic": "recall",
+      "gold": "x_linked_recessive",
+      "answer": "x_linked_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "vwd_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_dominant",
+      "answer": "autosomal_dominant",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "factor7_def_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_recessive",
+      "answer": "autosomal_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hemophilia_a_test",
+      "tactic": "recall",
+      "gold": "aptt",
+      "answer": "aptt",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "factor7_def_test",
+      "tactic": "recall",
+      "gold": "pt",
+      "answer": "pt",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "vwd_test",
+      "tactic": "recall",
+      "gold": "bleeding_time",
+      "answer": "bleeding_time",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "bernard_soulier_factor",
+      "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "meningitis_bacterial_dx",
+      "tactic": "differential",
+      "gold": "bacterial_meningitis",
+      "answer": "bacterial_meningitis",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "meningitis_equivocal_dx",
+      "tactic": "differential",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "mgmt_adult_community",
+      "tactic": "management",
+      "gold": "ceftriaxone+vancomycin",
+      "answer": "ceftriaxone+vancomycin",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_older_adult",
+      "tactic": "management",
+      "gold": "ampicillin+ceftriaxone+vancomycin",
+      "answer": "ampicillin+ceftriaxone+vancomycin",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_neurosurgical",
+      "tactic": "management",
+      "gold": "cefepime+vancomycin",
+      "answer": "cefepime+vancomycin",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_pregnant_adult",
+      "tactic": "management",
+      "gold": "ceftriaxone+vancomycin",
+      "answer": "ceftriaxone+vancomycin",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_betalactam_allergic",
+      "tactic": "management",
+      "gold": "INFEASIBLE",
+      "answer": "INFEASIBLE",
+      "outcome": "correct",
+      "trust": null
+    }
+  ]
+}

@@ -69,6 +69,28 @@ check("D2 error propagation", wb.getValue("D2"), { kind: "error", code: "#DIV/0!
 wb.setCell("E1", 'a"b');
 check("E1 text", wb.getValue("E1"), { kind: "text", value: 'a"b' });
 
+// Viewport: the format-aware windowed read paints display strings. Format A1
+// (=3) with a 2-decimal code and read the A1:C1 window back as strings.
+wb.setFormat("A1", "#,##0.00");
+check("getDisplayWindow formatted strings", wb.getDisplayWindow(1, 1, 1, 3), {
+  row0: 1,
+  col0: 1,
+  rows: 1,
+  cols: 3,
+  cells: [["3.00", "115", "13"]], // A1 formatted; B1=115, C1=13 (General)
+});
+check("getDisplayWindow bad request", wb.getDisplayWindow(0, 0, 5, 5), {
+  error: "#REF!",
+});
+
+// Drag-fill: G1 = F1*2, fill down into G2 — the relative ref tracks the row.
+wb.setCell("F1", "10");
+wb.setCell("F2", "20");
+wb.setCell("G1", "=F1*2"); // 20
+wb.fill("G1", "G2", "G2");
+check("fill G2 = F2*2", wb.getValue("G2"), { kind: "number", value: 40 });
+check("fill G2 raw shifted", wb.getRaw("G2"), "=(F2*2)");
+
 // Fresh workbook is empty.
 const wb2 = engine.createSpreadsheet();
 check("reset clears values", wb2.getValues(), {});

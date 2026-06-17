@@ -1,0 +1,8 @@
+[package]
+name = "coding-adventures-octave-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "GNU Octave frontend — a source-compatibility shim over matlab-runtime"
+
+[dependencies]
+coding-adventures-matlab-runtime = { path = "../matlab-runtime" }

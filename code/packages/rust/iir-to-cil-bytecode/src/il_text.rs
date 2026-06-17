@@ -802,6 +802,22 @@ fn emit_method(
             //
             // (CoreCLR's `div`/`rem` raise on divide-by-zero, matching the other
             // backends' trap-on-zero behaviour — no guard needed here.)
+            // Unary bitwise NOT (`~`, LANG-FULL N3) → the CIL `not` opcode (one's
+            // complement), then the E2 narrow mask so a `u4`/`u8`/`u16` result is the
+            // width's complement, not the full register's: `~0u8 = 255` (`-1 & 0xFF`),
+            // `~15u4 = 0`. This is the unary IIR `not` op (one source operand) — distinct
+            // from the lispy `call_builtin "not"` (boolean negate) handled above.
+            "not" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "not must have a dest".into(),
+                })?;
+                let a = var_src(f, instr, 0, "not")?;
+                load_var(il, &regs, a)?;
+                let _ = writeln!(il, "    not");
+                emit_narrow_width_mask(il, &instr.type_hint);
+                store_var(il, &regs, dest)?;
+            }
             // Bitwise `and`/`or`/`xor` map to the identically-named CIL opcodes
             // (LANG-FULL N3). `shl`/`shr` are the CIL shift ops; included here so
             // the textual path matches the bytecode path's binary-op coverage.
@@ -970,6 +986,30 @@ mod tests {
         }
     }
 
+    #[test]
+    fn unary_not_emits_cil_not_then_masks() {
+        // LANG-FULL N3: the textual `.il` path must lower the unary `not` op (Nib `~`)
+        // to the CIL `not` opcode (the bytecode path already did), followed by the E2
+        // narrow mask for a `u8` width — so `~0u8 = 255` on real CoreCLR, not the
+        // register's all-ones. (The lispy `call_builtin "not"` is a different path.)
+        let instrs = vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("not", Some("c".into()), vec![Operand::Var("a".into())], "u8"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "u8"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "u8", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        let lines: Vec<&str> = il.lines().map(|l| l.trim()).collect();
+        let not_at = lines.iter().position(|l| *l == "not").expect("emits a bare `not`");
+        // The mask is `ldc.i4 0xFF` (or `ldc.i4 255`) then `and` immediately after.
+        assert!(
+            lines[not_at + 1..].iter().take(2).any(|l| *l == "and"),
+            "u8 not must be followed by the `and` mask; got:\n{il}"
+        );
+    }
+
     /// Build `c = <op>(a, b); ret c` with a chosen result-`type_hint` width,
     /// so the E2 narrow-width mask fires on the binary op (the operand `const`s
     /// stay `i32`; only the op's `type_hint` selects the width).
@@ -989,6 +1029,37 @@ mod tests {
         m.functions.push(IIRFunction::new("main", vec![], hint, instrs));
         m.entry_point = Some("main".into());
         m
+    }
+
+    /// LANG-FULL E2 integration regression: a narrow `u8` op whose **operands
+    /// are `i64`** — the shape a real frontend emits (Nib materialises every
+    /// const/let as i64 and carries the narrow width only on the op). Unlike the
+    /// wasm/jvm backends (which had to grow an i64 register model so a narrow op
+    /// wouldn't trap over i64 operands), the CIL backend is **uniformly int32**
+    /// (`cil_local_type` maps every scalar — incl. `i64` — to `int32`, and
+    /// `const` emits `ldc.i4`). So the i64 consts collapse to int32, the add is
+    /// int32, and the `ldc.i4 0xFF; and` mask is int32-consistent — no rework
+    /// needed. This test locks that in: the IL has NO `int64`/`ldc.i8`, and the
+    /// u8 add still wraps via the mask. (`200u8 + 100u8` → `44` on real dotnet.)
+    #[test]
+    fn e2_u8_op_over_i64_operands_stays_int32() {
+        let f = IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i64"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i64"),
+            IIRInstr::new("add", Some("x".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "u8"),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),
+        ]);
+        let mut m = IIRModule::new("Main", "nib");
+        m.functions.push(f);
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(!il.contains("int64") && !il.contains("ldc.i8"),
+            "CIL is uniformly int32 — no int64 from an i64-hinted operand; got:\n{il}");
+        let lines: Vec<&str> = il.lines().map(|l| l.trim()).collect();
+        let add_at = lines.iter().position(|l| *l == "add").expect("emits add");
+        assert_eq!(lines[add_at + 1], "ldc.i4 0xFF", "u8 add still masks over i64-collapsed operands");
+        assert_eq!(lines[add_at + 2], "and");
     }
 
     #[test]

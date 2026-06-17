@@ -268,7 +268,7 @@ class DeckFourierSummary:
 
 @dataclass(frozen=True, slots=True)
 class DeckOutputSelection:
-    """A parsed ``.save`` or ``.probe`` output selection card."""
+    """A parsed ``.save``, ``.probe``, ``.print``, or ``.plot`` output card."""
 
     directive: str
     analysis: str | None
@@ -290,7 +290,7 @@ class DeckOutputDiagnostic:
 
 @dataclass(frozen=True, slots=True)
 class DeckOutputSummary:
-    """Resolved active deck lines plus parsed ``.save`` / ``.probe`` cards."""
+    """Resolved active deck lines plus parsed deck output selection cards."""
 
     active_lines: tuple[str, ...]
     terminated: bool
@@ -487,6 +487,40 @@ _REQUIRED_ANALYSES = frozenset({"op", "dc", "ac", "tran"})
 _UNSUPPORTED_DECK_CONTROL_DIRECTIVES = frozenset({".include", ".lib", ".control"})
 _UNSUPPORTED_RESOLVED_DIRECTIVES = frozenset({".control"})
 _UNSUPPORTED_PARAMETER_DIRECTIVES = frozenset()
+_SUPPORTED_CONTROL_BLOCK_COMMANDS = frozenset(
+    {
+        "op",
+        ".op",
+        "dc",
+        ".dc",
+        "ac",
+        ".ac",
+        "tran",
+        ".tran",
+        "save",
+        ".save",
+        "probe",
+        ".probe",
+        "measure",
+        ".measure",
+        "meas",
+        ".meas",
+        "four",
+        ".four",
+        "fourier",
+        ".fourier",
+        "print",
+        ".print",
+        "plot",
+        ".plot",
+    }
+)
+_NOOP_CONTROL_BLOCK_COMMANDS = frozenset(
+    {"run", ".run", "reset", ".reset", "quit", ".quit"}
+)
+_NOOP_CONTROL_BLOCK_SET_OPTIONS = frozenset(
+    {"noaskquit", "filetype=ascii", "wr_vecnames", "wr_singlescale"}
+)
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,
@@ -507,12 +541,36 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
     active_lines: list[str] = []
     diagnostics: list[DeckControlDiagnostic] = []
     end_line_number: int | None = None
+    in_control_block = False
 
     for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
         stripped = raw_line.strip()
         if not stripped or stripped.startswith(("*", ";")):
             continue
         directive = _deck_directive(stripped)
+        if in_control_block:
+            if directive == ".endc":
+                in_control_block = False
+                continue
+            control_line = _control_block_command_as_deck_line(stripped)
+            if control_line is not None:
+                active_lines.append(control_line)
+                continue
+            if _is_noop_control_block_command(stripped):
+                continue
+            diagnostics.append(
+                DeckControlDiagnostic(
+                    code="SPICE_DECK_CONTROL_COMMAND",
+                    directive=".control",
+                    line_number=line_number,
+                    message=(
+                        f"{stripped!r} inside .control is not executed by "
+                        "the deck execution foothold yet"
+                    ),
+                    severity="error",
+                )
+            )
+            continue
         if directive == ".end":
             end_line_number = line_number
             break
@@ -529,6 +587,9 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
                     severity="error",
                 )
             )
+            if directive == ".control":
+                in_control_block = True
+                continue
         active_lines.append(stripped)
 
     return DeckControlSummary(
@@ -723,7 +784,7 @@ def resolve_deck_fourier(netlist: str) -> DeckFourierSummary:
 
 
 def resolve_deck_outputs(netlist: str) -> DeckOutputSummary:
-    """Extract supported ``.save`` and ``.probe`` cards before ``.end``."""
+    """Extract supported ``.save``, ``.probe``, ``.print``, and ``.plot`` cards."""
 
     state = _DeckOutputState()
     active_lines: list[str] = []
@@ -737,7 +798,7 @@ def resolve_deck_outputs(netlist: str) -> DeckOutputSummary:
         if directive == ".end":
             end_line_number = line_number
             break
-        if directive in {".save", ".probe"}:
+        if directive in {".save", ".probe", ".print", ".plot"}:
             _resolve_output_line(stripped, line_number, directive, state)
             continue
         active_lines.append(stripped)
@@ -2173,18 +2234,45 @@ def _resolve_output_line(
 ) -> None:
     tokens = _directive_tokens(line)
     if len(tokens) < 2:
+        message = (
+            f"{directive} requires an analysis token and at least one probe token"
+            if directive in {".print", ".plot"}
+            else f"{directive} requires at least one probe token"
+        )
         _add_output_diagnostic(
             state,
             code="SPICE_DECK_OUTPUT_ARGUMENT",
             directive=directive,
             line_number=line_number,
-            message=f"{directive} requires at least one probe token",
+            message=message,
         )
         return
 
     analysis: str | None = None
     probe_tokens = tokens[1:]
-    if directive == ".probe" and _normalize_deck_output_analysis(tokens[1]) is not None:
+    if directive in {".print", ".plot"}:
+        if len(tokens) < 3:
+            _add_output_diagnostic(
+                state,
+                code="SPICE_DECK_OUTPUT_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=f"{directive} requires an analysis token and at least one probe token",
+            )
+            return
+        analysis = _normalize_deck_output_analysis(tokens[1])
+        if analysis is None:
+            _add_output_diagnostic(
+                state,
+                code="SPICE_DECK_OUTPUT_ANALYSIS",
+                directive=directive,
+                line_number=line_number,
+                message=f"{directive} analysis must be op, dc, ac, or tran, got {tokens[1]!r}",
+                token=tokens[1],
+            )
+            return
+        probe_tokens = tokens[2:]
+    elif directive == ".probe" and _normalize_deck_output_analysis(tokens[1]) is not None:
         analysis = _normalize_deck_output_analysis(tokens[1])
         probe_tokens = tokens[2:]
     if not probe_tokens:
@@ -2937,12 +3025,37 @@ def _resolve_deck_lines(
 ) -> tuple[list[str], bool, int | None]:
     active_lines: list[str] = []
     end_line_number: int | None = None
+    in_control_block = False
 
     for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
         stripped = raw_line.strip()
         if not stripped or stripped.startswith(("*", ";")):
             continue
         directive = _deck_directive(stripped)
+        if in_control_block:
+            if directive == ".endc":
+                in_control_block = False
+                continue
+            control_line = _control_block_command_as_deck_line(stripped)
+            if control_line is not None:
+                active_lines.append(control_line)
+                continue
+            if _is_noop_control_block_command(stripped):
+                continue
+            state.diagnostics.append(
+                DeckResolutionDiagnostic(
+                    code="SPICE_DECK_CONTROL_COMMAND",
+                    directive=".control",
+                    source=source,
+                    line_number=line_number,
+                    message=(
+                        f"{stripped!r} inside .control is not executed by "
+                        "the deck source resolver yet"
+                    ),
+                    severity="error",
+                )
+            )
+            continue
         if directive == ".end":
             end_line_number = line_number
             break
@@ -2984,6 +3097,9 @@ def _resolve_deck_lines(
                     severity="error",
                 )
             )
+            if directive == ".control":
+                in_control_block = True
+                continue
         active_lines.append(stripped)
 
     return active_lines, end_line_number is not None, end_line_number
@@ -3212,3 +3328,31 @@ def _deck_directive(line: str) -> str | None:
     if not line.startswith("."):
         return None
     return line.split(None, 1)[0].lower()
+
+
+def _control_block_command_as_deck_line(line: str) -> str | None:
+    parts = line.split(maxsplit=1)
+    if not parts:
+        return None
+    command = parts[0].lower()
+    if command not in _SUPPORTED_CONTROL_BLOCK_COMMANDS:
+        return None
+    if command in {"four", ".four", "fourier", ".fourier"}:
+        directive = ".four"
+    else:
+        directive = command if command.startswith(".") else f".{command}"
+    if len(parts) == 1:
+        return directive
+    return f"{directive} {parts[1]}"
+
+
+def _is_noop_control_block_command(line: str) -> bool:
+    parts = line.split()
+    command = parts[0].lower()
+    if command in _NOOP_CONTROL_BLOCK_COMMANDS:
+        return True
+    return (
+        command in {"set", ".set"}
+        and len(parts) == 2
+        and parts[1].lower() in _NOOP_CONTROL_BLOCK_SET_OPTIONS
+    )

@@ -303,7 +303,11 @@ where
 pub fn collect_refs(ast: &FormulaAst, current_sheet: SheetId, out: &mut Vec<(SheetId, CellAddress)>) {
     match ast {
         FormulaAst::Literal(_) => {}
-        FormulaAst::Ref(a) => out.push((current_sheet, *a)),
+        // Normalise away `$` markers: the dependency graph (like the cell store)
+        // is keyed by position, so a `$A$1` precedent points at the same node as
+        // `A1` — otherwise the edge would never match and `set_value` wouldn't
+        // recompute a dependent that referenced it absolutely.
+        FormulaAst::Ref(a) => out.push((current_sheet, a.without_absolute())),
         FormulaAst::Range(r) => {
             // Skip expansion of an oversized range: registering one
             // dependency per cell for `=SUM(A1:XFD1048576)` would
@@ -312,7 +316,7 @@ pub fn collect_refs(ast: &FormulaAst, current_sheet: SheetId, out: &mut Vec<(She
             // so it has no meaningful precedents to track.
             if !r.is_oversized() {
                 for addr in r.iter() {
-                    out.push((current_sheet, addr));
+                    out.push((current_sheet, addr.without_absolute()));
                 }
             }
         }

@@ -151,9 +151,9 @@ impl std::error::Error for CompilerError {}
 /// | Level             | Transform                                         |
 /// |-------------------|---------------------------------------------------|
 /// | `WhitespaceOnly`  | strip comments + collapse whitespace              |
-/// | `Simple`          | bridge-parse → whitespace_only (CLOC12.137 v1;    |
-/// |                   | typed passes land in follow-up PRs)               |
-/// | `Advanced`        | identity (future: typed passes)                   |
+/// | `Simple`          | bridge → typed optimization pipeline → emit       |
+/// | `Advanced`        | same typed pipeline as `Simple` (≥ SIMPLE;        |
+/// |                   | advanced-only passes land here as implemented)    |
 /// | `Bundle`          | identity                                          |
 /// | `TranspileOnly`   | identity                                          |
 ///
@@ -190,20 +190,152 @@ pub fn transform_source(
 /// | Stage              | `source`           | `tag`            | `meta`                                   |
 /// |--------------------|--------------------|------------------|------------------------------------------|
 /// | WhitespaceOnly     | `compilation_level`| `whitespace_only`| `{input_byte_len, output_byte_len}`      |
-/// | Simple             | `compilation_level`| `simple_v1`      | `{level, bridge_status, input_byte_len, output_byte_len}` |
-/// | Advanced / other   | `compilation_level`| `identity`       | `{level: "ADVANCED" \| "BUNDLE" \| ...}` |
+/// | Simple             | `compilation_level`| `simple_v2`      | `{level, bridge_status, passes, input_byte_len, output_byte_len}` |
+/// | Advanced           | `compilation_level`| `advanced_v1`    | same shape as `simple_v2` (shares the pipeline)  |
+/// | Bundle / Transpile | `compilation_level`| `identity`       | `{level: "BUNDLE" \| "TRANSPILE_ONLY"}` |
 /// | Defines            | `defines`          | `applied`        | `{input_byte_len, output_byte_len, defines_count}` |
 ///
-/// **`bridge_status`** (Simple only): `"ok"` if the bridge parsed
-/// successfully, `"unsupported_syntax:<rule>@<loc>"` if the source
-/// contains Phase 2+ constructs (the output still degrades to
-/// whitespace_only), or `"n/a"` if the bridge was not called.
+/// **`bridge_status`** (Simple only): `"ok"` if the full
+/// parse→bridge→passes→emit chain succeeded, otherwise the degrade
+/// reason — `"parse_error:<e>"`, `"unsupported_syntax:<rule>@<loc>"`
+/// (Phase 2+ constructs), `"pass_error:<e>"`, or `"emit_error:<e>"` —
+/// in all of which cases the output falls back to whitespace_only.
+/// `"n/a"` when the level is not Simple.
 ///
 /// The `defines.applied` contribution lands for every input even
 /// when `--define` is empty (`defines_count: 0`), because the
 /// stage *ran* — it just didn't do any substitutions. That keeps
 /// the trace symmetric across files and visualization tools
 /// don't have to special-case zero-defines runs.
+/// The ordered list of optimization passes the SIMPLE level runs.
+///
+/// Each PR appends one more SIMPLE-appropriate pass here (and to the
+/// pipeline below) so the growth is auditable one pass at a time. The
+/// names are the passes' own canonical `Pass::name()` values; they also
+/// become the `passes` field in the correlation-vector trace.
+///
+/// The list is in execution order. Ordering is enforced two ways: every
+/// pass that needs a predecessor declares it via `Pass::depends_on`, and
+/// where two passes are mutually independent the pipeline falls back to
+/// *registration order* as the tie-breaker.
+///
+/// - constant-fold turns `2 > 3` into the literal `false`;
+/// - fold-control-flow then prunes `if (false) {A}` to an empty `;`;
+/// - dce then sweeps that empty statement (and any code after a `return`)
+///   away;
+/// - inline is in the chain because `remove-unused-vars` declares
+///   `depends_on = ["dce", "inline"]` — the scheduler will not run
+///   remove-unused-vars unless `inline` is registered. (inline is
+///   currently an identity pass; it earns its slot once function
+///   inlining lands, and registering it now pins the canonical order.)
+/// - remove-unused-vars deletes top-level `var/let/const` bindings that
+///   nothing references, when their initializer is side-effect-free;
+/// - treeshake runs last and deletes top-level `function`/`class`
+///   declarations that nothing references. It is the function-shaped
+///   complement to remove-unused-vars (which deliberately skips
+///   functions). Running it after remove-unused-vars means a function
+///   that only a now-removed var referenced is itself swept this pass.
+///   Removing an unused function declaration is unconditionally safe —
+///   declaring a function has no side effect, so no purity gate is
+///   needed (unlike a `var` initializer).
+const SIMPLE_PASS_NAMES: &[&str] = &[
+    "constant-fold",
+    "fold-control-flow",
+    "dce",
+    "inline",
+    "remove-unused-vars",
+    "treeshake",
+    "rename",
+];
+
+/// Run the SIMPLE optimization pipeline over a bridged `Program` and
+/// emit the result as JavaScript text.
+///
+/// This is the "happy path" half of the SIMPLE level. The caller has
+/// already turned source text into a typed [`Program`] via the
+/// grammar parser and the bridge; this function runs the pass
+/// pipeline ([`SIMPLE_PASS_NAMES`]) over it and serialises the
+/// optimized tree back to JS with [`closure_emitter::emit`].
+///
+/// Returns `Some(code)` on success and `None` if a pass or the
+/// emitter fails — in which case the caller degrades to
+/// `whitespace_only`. Either way it records the outcome in
+/// `*status` (`"ok"`, `"pass_error:<e>"`, or `"emit_error:<e>"`) so
+/// the correlation-vector trace can distinguish a true optimized emit
+/// from a degrade.
+///
+/// The pass pipeline and emitter both want a type [`Sidecar`] and a
+/// [`CVLog`]. SIMPLE v2 has no type-inference stage yet, so we pass an
+/// empty sidecar; the pass-internal CV log is created disabled because
+/// the per-byte SIMPLE trace is emitted by the caller's stage block,
+/// not by the individual passes.
+fn run_simple_pipeline(
+    program: coding_adventures_javascript_ast::Program,
+    status: &mut Option<String>,
+) -> Option<String> {
+    use coding_adventures_closure_emitter::{emit, EmitOptions};
+    use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
+    use coding_adventures_closure_pass_dce::DcePass;
+    use coding_adventures_closure_pass_fold_control_flow::FoldControlFlowPass;
+    use coding_adventures_closure_pass_inline::InlinePass;
+    use coding_adventures_closure_pass_pipeline::PassPipeline;
+    use coding_adventures_closure_pass_remove_unused_vars::RemoveUnusedVarsPass;
+    use coding_adventures_closure_pass_rename::RenamePass;
+    use coding_adventures_closure_pass_treeshake::TreeshakePass;
+    use coding_adventures_correlation_vector::CVLog;
+    use coding_adventures_type_sidecar::Sidecar;
+
+    let sidecar = Sidecar::new();
+    // The passes and emitter take a CV log, but SIMPLE's per-stage CV
+    // record is produced by the caller, not by the passes. A disabled
+    // log accepts contributions and drops them — zero overhead.
+    let mut pass_cv = CVLog::new(false);
+
+    // The pipeline topo-sorts on each pass's `depends_on`, with
+    // registration order as the tie-breaker between independent passes.
+    // `remove-unused-vars` declares `depends_on = ["dce", "inline"]`, so
+    // `inline` MUST be registered or the scheduler refuses to run
+    // remove-unused-vars. `inline` is an identity pass today; it holds
+    // the canonical slot until real function inlining lands.
+    let mut pipeline = PassPipeline::new();
+    pipeline.add(Box::new(ConstantFoldPass::new()));
+    pipeline.add(Box::new(FoldControlFlowPass::new()));
+    pipeline.add(Box::new(DcePass::new()));
+    pipeline.add(Box::new(InlinePass::new()));
+    pipeline.add(Box::new(RemoveUnusedVarsPass::new()));
+    pipeline.add(Box::new(TreeshakePass::new()));
+    // rename runs last: it shortens leaf-function parameter names after
+    // every structural pass has finished removing/rewriting code. It has
+    // no dependencies (correct standalone), so registration order places
+    // it at the end.
+    pipeline.add(Box::new(RenamePass::new()));
+
+    let optimized = match pipeline.run(program, &sidecar, &mut pass_cv) {
+        Ok(out) => out.program,
+        Err(e) => {
+            *status = Some(format!("pass_error:{e}"));
+            return None;
+        }
+    };
+
+    // Emit minified JS (pretty=false). No source map at this layer —
+    // SIMPLE source maps land with the dedicated source-map work.
+    let opts = EmitOptions {
+        source_map: false,
+        ..Default::default()
+    };
+    match emit(&optimized, &sidecar, &mut pass_cv, &opts) {
+        Ok(out) => {
+            *status = Some("ok".to_string());
+            Some(out.code)
+        }
+        Err(e) => {
+            *status = Some(format!("emit_error:{e}"));
+            None
+        }
+    }
+}
+
 pub fn transform_source_with_cv(
     source: &str,
     config: &CompilerConfig,
@@ -225,9 +357,10 @@ pub fn transform_source_with_cv(
     // implement Copy, but we can reborrow at each call site.
     let mut cv_pair = cv;
 
-    // bridge_status is set only for CompilationLevel::Simple and
-    // threaded into the CV contribution below. Other levels leave
-    // it None, where the CV block substitutes "n/a".
+    // bridge_status is set for the typed-pipeline levels (Simple and
+    // Advanced, which share that pipeline) and threaded into the CV
+    // contribution below. Other levels leave it None, where the CV block
+    // substitutes "n/a".
     let mut simple_bridge_status: Option<String> = None;
 
     // Step 1 — compilation-level transform.
@@ -246,60 +379,82 @@ pub fn transform_source_with_cv(
             whitespace_only::whitespace_only_minify(source, es_version, wo_cv)
                 .map_err(CompilerError::Minify)?
         }
-        // CLOC12.137: SIMPLE routes through the typed-AST bridge (v1).
+        // CLOC12.155: SIMPLE runs the typed-AST optimization pipeline (v2).
         //
-        // The bridge validates source structure and yields a typed
-        // `javascript_ast::Program`. In v1, the output is produced by
-        // whitespace_only — typed optimization passes (variable
-        // renaming, dead code elimination, etc.) land in follow-up PRs.
+        // The pipeline is:
         //
-        // Degrade policy:
-        // - BridgeError::UnsupportedSyntax  → record status and still
-        //   emit whitespace_only output (Phase 2+ constructs are common
-        //   in real codebases; we must not error on them).
-        // - BridgeError::InternalError      → propagate as
-        //   CompilerError::Bridge (indicates a bridge invariant violation,
-        //   NOT something the caller should silently degrade past).
-        CompilationLevel::Simple => {
-            // Two-phase bridge call: grammar-parse first, then
-            // bridge-convert. We split the phases so we can match
-            // directly on BridgeError variants rather than on the
-            // stringified error returned by parse_javascript_program().
-            simple_bridge_status = Some(
-                match parse_javascript_typed(source, es_version) {
-                    Err(parse_err) => {
-                        // Malformed JS — grammar parser rejected it.
-                        // Degrade gracefully; whitespace_only will
-                        // surface the real lex error if needed.
-                        format!("parse_error:{parse_err}")
+        //     source ──parse──▶ grammar AST ──bridge──▶ typed Program
+        //            ──passes──▶ optimized Program ──emit──▶ JS text
+        //
+        // In v2 the pass pipeline holds a single pass — `constant-fold`
+        // (e.g. `1 + 2` ⇒ `3`). Follow-up PRs append the remaining
+        // SIMPLE-appropriate passes (fold-control-flow, dce,
+        // remove-unused-vars, local inline/rename), one pass per PR.
+        //
+        // Degrade policy — the typed path is best-effort. If ANY stage
+        // fails (the grammar parser rejects the source, the bridge hits
+        // a Phase-2+ construct, a pass errors, or the emitter cannot
+        // serialise a node), we fall back to `whitespace_only` so the
+        // compiler never errors on valid-but-not-yet-supported input.
+        // The one exception is `BridgeError::InternalError`, which
+        // signals a broken bridge invariant rather than an unsupported
+        // construct — that propagates as `CompilerError::Bridge`.
+        //
+        // `simple_bridge_status` records which branch we took so the
+        // correlation-vector trace can show whether the run was a true
+        // optimized emit (`"ok"`) or a degrade (`"parse_error:…"`,
+        // `"unsupported_syntax:…"`, `"pass_error:…"`, `"emit_error:…"`).
+        // ADVANCED currently runs the *same* typed optimization pipeline
+        // as SIMPLE. It is specified to be at least as aggressive as
+        // SIMPLE, so reusing the SIMPLE pipeline is a correct lower bound
+        // (and removes the former literal no-op, where ADVANCED returned
+        // the source verbatim). Advanced-only passes — aggressive
+        // property/global renaming, cross-module tree-shaking — layer on
+        // here as they are implemented.
+        CompilationLevel::Simple | CompilationLevel::Advanced => {
+            // Attempt the typed optimization path. `Some(code)` means
+            // the full parse→bridge→passes→emit chain succeeded;
+            // `None` means we should degrade to whitespace_only.
+            let optimized: Option<String> = match parse_javascript_typed(source, es_version) {
+                Err(parse_err) => {
+                    // Malformed JS — grammar parser rejected it.
+                    // Degrade; whitespace_only surfaces the real error.
+                    simple_bridge_status = Some(format!("parse_error:{parse_err}"));
+                    None
+                }
+                Ok(node) => match bridge::grammar_to_program(&node, es_version) {
+                    Ok(program) => run_simple_pipeline(program, &mut simple_bridge_status),
+                    Err(BridgeError::UnsupportedSyntax { rule, location }) => {
+                        simple_bridge_status =
+                            Some(format!("unsupported_syntax:{rule}@{location}"));
+                        None
                     }
-                    Ok(node) => match bridge::grammar_to_program(&node, es_version) {
-                        Ok(_program) => "ok".to_string(),
-                        Err(BridgeError::UnsupportedSyntax { rule, location }) => {
-                            format!("unsupported_syntax:{rule}@{location}")
-                        }
-                        Err(BridgeError::InternalError { msg, rule }) => {
-                            return Err(CompilerError::Bridge(format!("{rule}: {msg}")));
-                        }
-                    },
+                    Err(BridgeError::InternalError { msg, rule }) => {
+                        return Err(CompilerError::Bridge(format!("{rule}: {msg}")));
+                    }
                 },
-            );
-            // v1: emit via whitespace_only; future passes will use
-            // `_program` to produce fully-optimised SIMPLE output.
-            let wo_cv = cv_pair.as_mut().map(|(log, id, ids)| {
-                (
-                    *log as &mut coding_adventures_correlation_vector::CVLog,
-                    *id,
-                    *ids,
-                )
-            });
-            whitespace_only::whitespace_only_minify(source, es_version, wo_cv)
-                .map_err(CompilerError::Minify)?
+            };
+
+            match optimized {
+                Some(code) => code,
+                None => {
+                    // Degrade path: emit via whitespace_only.
+                    let wo_cv = cv_pair.as_mut().map(|(log, id, ids)| {
+                        (
+                            *log as &mut coding_adventures_correlation_vector::CVLog,
+                            *id,
+                            *ids,
+                        )
+                    });
+                    whitespace_only::whitespace_only_minify(source, es_version, wo_cv)
+                        .map_err(CompilerError::Minify)?
+                }
+            }
         }
-        // Advanced / Bundle / TranspileOnly: identity until typed passes land.
-        CompilationLevel::Advanced
-        | CompilationLevel::Bundle
-        | CompilationLevel::TranspileOnly => source.to_string(),
+        // Bundle / TranspileOnly: identity for now (module bundling and
+        // language down-levelling are orthogonal to the optimization
+        // pipeline and land separately).
+        CompilationLevel::Bundle | CompilationLevel::TranspileOnly => source.to_string(),
     };
 
     if let Some((log, cv_id, _token_ids)) = cv_pair.as_mut() {
@@ -319,37 +474,51 @@ pub fn transform_source_with_cv(
                         ),
                     ],
                 ),
-                CompilationLevel::Simple => (
-                    "simple_v1",
-                    vec![
-                        ("level", serde_json::Value::String("SIMPLE".into())),
-                        (
-                            "bridge_status",
-                            serde_json::Value::String(
-                                simple_bridge_status
-                                    .as_deref()
-                                    .unwrap_or("n/a")
-                                    .into(),
+                // SIMPLE and ADVANCED share the typed optimization
+                // pipeline, so they share this contribution shape. The
+                // tag and `level` distinguish them; ADVANCED runs the same
+                // passes today (it is ≥ SIMPLE) and gains advanced-only
+                // passes here as they land.
+                CompilationLevel::Simple | CompilationLevel::Advanced => {
+                    let (tag, level) = match config.compilation.level {
+                        CompilationLevel::Advanced => ("advanced_v1", "ADVANCED"),
+                        _ => ("simple_v2", "SIMPLE"),
+                    };
+                    (
+                        tag,
+                        vec![
+                            ("level", serde_json::Value::String(level.into())),
+                            (
+                                "bridge_status",
+                                serde_json::Value::String(
+                                    simple_bridge_status.as_deref().unwrap_or("n/a").into(),
+                                ),
                             ),
-                        ),
-                        (
-                            "input_byte_len",
-                            serde_json::Value::Number(
-                                (source.len() as u64).into(),
+                            // The optimization passes that ran (in order).
+                            // A degrade (`bridge_status != "ok"`) still
+                            // lists them — they were the *intended*
+                            // pipeline even when the run fell back to
+                            // whitespace_only.
+                            (
+                                "passes",
+                                serde_json::Value::Array(
+                                    SIMPLE_PASS_NAMES
+                                        .iter()
+                                        .map(|p| serde_json::Value::String((*p).into()))
+                                        .collect(),
+                                ),
                             ),
-                        ),
-                        (
-                            "output_byte_len",
-                            serde_json::Value::Number(
-                                (after_level.len() as u64).into(),
+                            (
+                                "input_byte_len",
+                                serde_json::Value::Number((source.len() as u64).into()),
                             ),
-                        ),
-                    ],
-                ),
-                CompilationLevel::Advanced => (
-                    "identity",
-                    vec![("level", serde_json::Value::String("ADVANCED".into()))],
-                ),
+                            (
+                                "output_byte_len",
+                                serde_json::Value::Number((after_level.len() as u64).into()),
+                            ),
+                        ],
+                    )
+                }
                 CompilationLevel::Bundle => (
                     "identity",
                     vec![("level", serde_json::Value::String("BUNDLE".into()))],
@@ -2072,6 +2241,13 @@ mod tests {
                 ],
                 ..Default::default()
             },
+            // Pinned to WHITESPACE_ONLY: this test is about input
+            // concatenation order, not optimization (at SIMPLE the
+            // unreferenced `var a`/`var b` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
             ..Default::default()
         };
         let out = run_compiler(&cfg).expect("ok");
@@ -2117,6 +2293,13 @@ mod tests {
         let cfg = CompilerConfig {
             io: IoConfig {
                 js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: this test is about newline
+            // handling, not optimization. At the default level (SIMPLE)
+            // remove-unused-vars would delete the unreferenced `var x`.
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -2221,12 +2404,18 @@ mod tests {
                 js_output_file: Some(out_path.clone()),
                 ..Default::default()
             },
+            // Pinned to WHITESPACE_ONLY: this test is about parent-dir
+            // auto-creation, not optimization (at SIMPLE the unreferenced
+            // `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
             ..Default::default()
         };
         let out = run_compiler(&cfg).expect("ok");
         assert_eq!(out.wrote_files, vec![out_path.clone()]);
         let written = fs::read_to_string(&out_path).expect("read out");
-        // SIMPLE v1 produces whitespace_only output (no extra spaces).
         assert_eq!(written, "var x=1;\n");
         let _ = fs::remove_dir_all(&base);
     }
@@ -2245,6 +2434,13 @@ mod tests {
             io: IoConfig {
                 js_patterns: vec![in_path.to_string_lossy().to_string()],
                 js_output_file: None,
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: this test is about the stdout
+            // fallback plumbing, not optimization (at SIMPLE the
+            // unreferenced `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -2270,6 +2466,13 @@ mod tests {
             },
             language: crate::config::LanguageConfig {
                 emit_use_strict: true,
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: this test is about the
+            // use-strict directive, not optimization (at SIMPLE the
+            // unreferenced `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -2323,6 +2526,12 @@ mod tests {
                 isolation_mode: crate::config::IsolationMode::Iife,
                 ..Default::default()
             },
+            // Pinned to WHITESPACE_ONLY: tests directive placement
+            // inside the IIFE, not optimization.
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
             ..Default::default()
         };
         let out = run_compiler(&cfg).expect("ok");
@@ -2355,6 +2564,12 @@ mod tests {
             },
             formatting: crate::config::FormattingConfig {
                 output_wrapper: "PRE %output% POST".to_string(),
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: tests directive placement
+            // inside the output wrapper, not optimization.
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -2788,6 +3003,13 @@ mod tests {
                 externs: vec![ext_path.to_string_lossy().to_string()],
                 ..Default::default()
             },
+            // Pinned to WHITESPACE_ONLY: this test is about externs
+            // resolution, not optimization (at SIMPLE the unreferenced
+            // `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
             ..Default::default()
         };
         let out = run_compiler(&cfg).expect("ok");
@@ -2870,6 +3092,13 @@ mod tests {
             },
             source_map: crate::config::SourceMapConfig {
                 path_template: map_path.to_string_lossy().to_string(),
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: this test is about source-map
+            // emission, not optimization (at SIMPLE the unreferenced
+            // `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -3259,8 +3488,8 @@ mod tests {
         };
         let _ = run_compiler(&cfg).expect("ok");
         let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
-        // CLOC12.137: SIMPLE now records "simple_v1" (not "identity").
-        assert!(body.contains("\"tag\":\"simple_v1\""), "got: {body}");
+        // CLOC12.155: SIMPLE now records "simple_v2" (constant-fold pipeline).
+        assert!(body.contains("\"tag\":\"simple_v2\""), "got: {body}");
         assert!(body.contains("\"level\":\"SIMPLE\""), "got: {body}");
         assert!(body.contains("\"bridge_status\":\"ok\""), "got: {body}");
         let _ = fs::remove_dir_all(&dir);
@@ -5332,10 +5561,9 @@ mod tests {
 
     #[test]
     fn simple_level_strips_whitespace_not_identity() {
-        // v1: SIMPLE output must be whitespace-stripped (not the raw
-        // source). This confirms that transform_source now calls the
-        // bridge and whitespace_only for SIMPLE rather than returning
-        // the source verbatim.
+        // SIMPLE output must be whitespace-stripped (not the raw
+        // source). With no foldable expression the typed pipeline
+        // emits the same compact form whitespace_only would.
         let cfg = CompilerConfig {
             compilation: crate::config::CompilationConfig {
                 level: crate::config::CompilationLevel::Simple,
@@ -5343,12 +5571,372 @@ mod tests {
             },
             ..Default::default()
         };
-        let source = "var  x   =   1 ;";
+        // `x` is referenced so remove-unused-vars keeps it; the point
+        // here is the whitespace normalisation, not removal.
+        let source = "var  x   =   1 ; use(x);";
         let out = transform_source(source, &cfg).expect("ok");
-        // whitespace_only collapses extra spaces and removes the
-        // space before `=` that the raw string contains.
+        // The typed emitter produces the compact `var x=1;use(x);`.
         assert_ne!(out, source, "SIMPLE must not return the raw source");
-        assert_eq!(out, "var x=1;");
+        assert_eq!(out, "var x=1;use(x);");
+    }
+
+    #[test]
+    fn simple_level_constant_folds_arithmetic() {
+        // CLOC12.155: the SIMPLE pipeline runs constant-fold, so a
+        // literal arithmetic expression is evaluated at compile time.
+        // This is the load-bearing difference from whitespace_only —
+        // `1 + 2` becomes `3`, not `1+2`. If the bridge/pipeline/emit
+        // chain ever silently degraded, this would regress to `1+2`.
+        //
+        // `x` is referenced (`use(x)`) so remove-unused-vars — now last
+        // in the SIMPLE pipeline — keeps the declaration; otherwise the
+        // whole `var x` would be removed and the fold wouldn't be visible.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var x = 1 + 2; use(x);", &cfg).expect("ok");
+        assert_eq!(out, "var x=3;use(x);", "constant-fold must evaluate 1 + 2");
+    }
+
+    #[test]
+    fn simple_level_whitespace_only_leaves_arithmetic_unfolded() {
+        // Companion to the test above — the SAME input under
+        // WHITESPACE_ONLY keeps `1+2` literally, proving the fold is
+        // the SIMPLE pipeline's doing and not the lexer/emitter.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var x = 1 + 2;", &cfg).expect("ok");
+        assert_eq!(out, "var x=1+2;", "whitespace_only must NOT fold");
+    }
+
+    #[test]
+    fn simple_fold_control_flow_prunes_dead_branch() {
+        // CLOC12.156: the SIMPLE pipeline now runs fold-control-flow
+        // after constant-fold, so an `if` with a statically-false
+        // condition keeps only its `else` branch. The `2 > 3` form is
+        // the load-bearing case: constant-fold turns `2 > 3` into
+        // `false`, and only then can fold-control-flow decide the
+        // branch — so this exercises the two passes composing.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("if (2 > 3) { a(); } else { b(); }", &cfg).expect("ok");
+        assert_eq!(out, "{b()}", "fold-control-flow must keep only the else branch");
+    }
+
+    #[test]
+    fn simple_fold_control_flow_whitespace_only_keeps_if() {
+        // Companion — the SAME input under WHITESPACE_ONLY keeps the
+        // whole `if`/`else`, proving the pruning is the SIMPLE
+        // pipeline's doing and not the lexer/emitter.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("if (2 > 3) { a(); } else { b(); }", &cfg).expect("ok");
+        assert_eq!(
+            out, "if(2>3)a();else b();",
+            "whitespace_only must NOT prune the branch"
+        );
+    }
+
+    #[test]
+    fn simple_dce_drops_dead_after_return() {
+        // CLOC12.157: the SIMPLE pipeline now runs dce after
+        // fold-control-flow. Code after a `return` in a block is
+        // unreachable, so dce removes it.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        // `f` is called so treeshake (now last in the SIMPLE pipeline)
+        // keeps the declaration; otherwise the unused function would be
+        // removed wholesale and the dce-inside-the-body effect wouldn't
+        // be observable.
+        let out = transform_source("function f() { g(); return 1; dead(); } f();", &cfg)
+            .expect("ok");
+        assert_eq!(
+            out, "function f(){g();return 1};f();",
+            "dce must drop the statement after the return"
+        );
+    }
+
+    #[test]
+    fn simple_dce_sweeps_folded_if_empty_statement() {
+        // All three passes compose: constant-fold turns `4 > 5` into
+        // `false`, fold-control-flow turns `if (false) {…}` into an
+        // empty `;`, and dce sweeps that empty statement out of the
+        // block — leaving just the `return`.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        // `f` is called so treeshake keeps the declaration (see the
+        // companion dead-after-return test).
+        let out =
+            transform_source("function f() { if (4 > 5) { x(); } return 2; } f();", &cfg)
+                .expect("ok");
+        assert_eq!(
+            out, "function f(){return 2};f();",
+            "dce must sweep the empty statement left by fold-control-flow"
+        );
+    }
+
+    #[test]
+    fn simple_dce_whitespace_only_keeps_dead_code() {
+        // Companion — the SAME input under WHITESPACE_ONLY keeps the
+        // dead statement, proving the elimination is the SIMPLE
+        // pipeline's doing.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function f() { g(); return 1; dead(); }", &cfg)
+            .expect("ok");
+        assert_eq!(
+            out, "function f(){g();return 1;dead()};",
+            "whitespace_only must NOT drop dead code"
+        );
+    }
+
+    #[test]
+    fn simple_remove_unused_drops_dead_top_level_var() {
+        // CLOC12.158: the SIMPLE pipeline now ends with
+        // remove-unused-vars. An unreferenced top-level `var` with a
+        // pure (literal) initializer is deleted entirely.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var unused = 1; used();", &cfg).expect("ok");
+        assert_eq!(out, "used();", "the unused var must be removed");
+    }
+
+    #[test]
+    fn simple_remove_unused_composes_with_constant_fold() {
+        // `var x = 1 + 2; sideEffect();` — constant-fold turns the
+        // initializer into the literal `3`, and only then does
+        // remove-unused-vars see a pure init it can drop. Proves the
+        // two passes compose end to end.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var x = 1 + 2; sideEffect();", &cfg).expect("ok");
+        assert_eq!(out, "sideEffect();", "folded-then-dead var must be removed");
+    }
+
+    #[test]
+    fn simple_remove_unused_keeps_impure_initializer() {
+        // `var impure = run();` — unreferenced, but the call initializer
+        // may have a side effect, so the purity gate keeps it.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var impure = run();", &cfg).expect("ok");
+        assert_eq!(
+            out, "var impure=run();",
+            "a dead var with a side-effecting initializer must be kept"
+        );
+    }
+
+    #[test]
+    fn simple_remove_unused_whitespace_only_keeps_var() {
+        // Companion — the SAME unused var under WHITESPACE_ONLY survives,
+        // proving the removal is the SIMPLE pipeline's doing.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var unused = 1; used();", &cfg).expect("ok");
+        assert_eq!(out, "var unused=1;used();", "whitespace_only must NOT remove");
+    }
+
+    #[test]
+    fn simple_treeshake_drops_unused_function() {
+        // CLOC12.159: the SIMPLE pipeline now ends with treeshake, which
+        // deletes a top-level function declaration nothing references.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out =
+            transform_source("function dead() { return 1; } used();", &cfg).expect("ok");
+        assert_eq!(out, "used();", "the unused function must be removed");
+    }
+
+    #[test]
+    fn simple_treeshake_keeps_called_function() {
+        // A function that IS referenced (called) survives.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function f() { return 2; } log(f());", &cfg)
+            .expect("ok");
+        assert_eq!(
+            out, "function f(){return 2};log(f());",
+            "a called function must be kept"
+        );
+    }
+
+    #[test]
+    fn simple_treeshake_whitespace_only_keeps_function() {
+        // Companion — the SAME unused function under WHITESPACE_ONLY
+        // survives, proving the removal is the SIMPLE pipeline's doing.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out =
+            transform_source("function dead() { return 1; } used();", &cfg).expect("ok");
+        assert_eq!(
+            out, "function dead(){return 1};used();",
+            "whitespace_only must NOT remove the function"
+        );
+    }
+
+    #[test]
+    fn simple_rename_shortens_leaf_function_params() {
+        // CLOC12.160: the SIMPLE pipeline now ends with rename, which
+        // shortens a leaf function's parameter names. The function is
+        // called so treeshake keeps it; the top-level name `f` is kept,
+        // its parameter `longName` becomes `a`.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function f(longName) { return longName + 1; } f(5);", &cfg)
+            .expect("ok");
+        assert_eq!(out, "function f(a){return a + 1};f(5);");
+    }
+
+    #[test]
+    fn simple_rename_keeps_property_names() {
+        // Rename must not touch property names: `obj.longName` keeps its
+        // `.longName`; only the parameter `obj` is shortened.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out =
+            transform_source("function f(obj) { return obj.longName; } f(x);", &cfg).expect("ok");
+        assert_eq!(out, "function f(a){return a.longName};f(x);");
+    }
+
+    #[test]
+    fn simple_rename_whitespace_only_keeps_param_names() {
+        // Companion — the SAME input under WHITESPACE_ONLY keeps the full
+        // parameter name, proving the renaming is the SIMPLE pipeline's.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function f(longName) { return longName + 1; } f(5);", &cfg)
+            .expect("ok");
+        assert_eq!(out, "function f(longName){return longName+1};f(5);");
+    }
+
+    #[test]
+    fn advanced_optimizes_like_simple() {
+        // CLOC12.161: ADVANCED was a literal no-op (returned the source
+        // verbatim). It now runs the typed pipeline; this input is folded
+        // and renamed instead of passed through.
+        let src = "function f(longName) { return longName + 1; } f(5);";
+        let advanced = transform_source(
+            src,
+            &CompilerConfig {
+                compilation: crate::config::CompilationConfig {
+                    level: crate::config::CompilationLevel::Advanced,
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+        )
+        .expect("ok");
+        assert_eq!(advanced, "function f(a){return a + 1};f(5);");
+        assert_ne!(advanced, src, "ADVANCED must no longer be an identity no-op");
+    }
+
+    #[test]
+    fn advanced_matches_simple_output() {
+        // ADVANCED reuses the SIMPLE pipeline today, so the two levels
+        // produce identical output. (When advanced-only passes land, this
+        // test documents the point at which they diverge.)
+        let src = "var dead = 1 + 2; function g(value) { return value * 2; } use(g(4));";
+        let mk = |level| {
+            transform_source(
+                src,
+                &CompilerConfig {
+                    compilation: crate::config::CompilationConfig {
+                        level,
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .expect("ok")
+        };
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Advanced),
+            mk(crate::config::CompilationLevel::Simple),
+        );
     }
 
     #[test]
@@ -5380,12 +5968,19 @@ mod tests {
         let _ = run_compiler(&cfg).expect("ok");
         let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
         assert!(
-            body.contains("\"tag\":\"simple_v1\""),
-            "expected simple_v1 tag in CV sidecar: {body}"
+            body.contains("\"tag\":\"simple_v2\""),
+            "expected simple_v2 tag in CV sidecar: {body}"
         );
         assert!(
             body.contains("\"bridge_status\":\"ok\""),
             "expected bridge_status=ok in CV sidecar: {body}"
+        );
+        // The pass pipeline must be recorded in the trace, in order.
+        assert!(
+            body.contains(
+                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"remove-unused-vars\",\"treeshake\",\"rename\"]"
+            ),
+            "expected passes list in CV sidecar: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }
@@ -5429,9 +6024,11 @@ mod tests {
             "expected output file written"
         );
         let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // Even on a degrade the stage is still tagged simple_v2 — the
+        // tag names the level's pipeline version, not the outcome.
         assert!(
-            body.contains("\"tag\":\"simple_v1\""),
-            "expected simple_v1 tag: {body}"
+            body.contains("\"tag\":\"simple_v2\""),
+            "expected simple_v2 tag: {body}"
         );
         assert!(
             body.contains("\"bridge_status\":\"unsupported_syntax:"),
@@ -5451,7 +6048,8 @@ mod tests {
             },
             ..Default::default()
         };
-        let out = transform_source("var x = 1;", &cfg).expect("ok");
-        assert_eq!(out, "var x=1;");
+        // `x` is referenced so remove-unused-vars keeps it.
+        let out = transform_source("var x = 1; use(x);", &cfg).expect("ok");
+        assert_eq!(out, "var x=1;use(x);");
     }
 }

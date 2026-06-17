@@ -9,10 +9,11 @@
 //! 3. Per-op verification on each supported dtype.
 //! 4. Edge cases: empty graphs, missing buffers, large tensors.
 
-use compute_ir::{BufferId, ComputeGraph, ExecutorId, OpTiming as PlanOpTiming, PlacedConstant, PlacedOp, PlacedTensor, Residency, CPU_EXECUTOR};
-use executor_protocol::{
-    block_on, ExecutorRequest, ExecutorResponse, LocalTransport, Transport,
+use compute_ir::{
+    BufferId, ComputeGraph, ExecutorId, OpTiming as PlanOpTiming, PlacedConstant, PlacedOp,
+    PlacedTensor, Residency, CPU_EXECUTOR,
 };
+use executor_protocol::{block_on, ExecutorRequest, ExecutorResponse, LocalTransport, Transport};
 use matrix_cpu::{local_transport, CpuExecutor};
 use matrix_ir::{DType, Op, Shape, TensorId};
 
@@ -47,6 +48,117 @@ fn from_f32_bytes(bytes: &[u8]) -> Vec<f32> {
         out.push(f32::from_le_bytes(arr));
     }
     out
+}
+
+fn f64_bytes(values: &[f64]) -> Vec<u8> {
+    let mut out = Vec::with_capacity(values.len() * 8);
+    for &v in values {
+        out.extend_from_slice(&v.to_le_bytes());
+    }
+    out
+}
+
+fn from_f64_bytes(bytes: &[u8]) -> Vec<f64> {
+    let mut out = Vec::with_capacity(bytes.len() / 8);
+    for chunk in bytes.chunks(8) {
+        let arr: [u8; 8] = chunk.try_into().unwrap();
+        out.push(f64::from_le_bytes(arr));
+    }
+    out
+}
+
+/// Run a single binary op over two `f64` length-`n` inputs and return the
+/// `f64` result. (MX12.)
+fn run_binary_f64(op_fn: fn(TensorId, TensorId, TensorId) -> Op, a: &[f64], b: &[f64]) -> Vec<f64> {
+    let exec = CpuExecutor::new();
+    let n = a.len();
+    let nbytes = (n * 8) as u64;
+    let alloc = |bytes: u64| match exec.handle(ExecutorRequest::AllocBuffer { bytes }) {
+        ExecutorResponse::BufferAllocated { buffer } => buffer,
+        _ => panic!("alloc"),
+    };
+    let (ba, bb, bo) = (alloc(nbytes), alloc(nbytes), alloc(nbytes));
+    exec.handle(ExecutorRequest::UploadBuffer {
+        buffer: ba,
+        offset: 0,
+        data: f64_bytes(a),
+    });
+    exec.handle(ExecutorRequest::UploadBuffer {
+        buffer: bb,
+        offset: 0,
+        data: f64_bytes(b),
+    });
+    let shape = Shape::from(&[n as u32]);
+    let graph = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![
+            placed(0, DType::F64, shape.clone(), cpu_buf(ba.0)),
+            placed(1, DType::F64, shape.clone(), cpu_buf(bb.0)),
+        ],
+        outputs: vec![placed(2, DType::F64, shape.clone(), cpu_buf(bo.0))],
+        constants: vec![],
+        ops: vec![PlacedOp::Compute {
+            op: op_fn(TensorId(0), TensorId(1), TensorId(2)),
+            executor: CPU_EXECUTOR,
+            timing: PlanOpTiming { estimated_ns: 0 },
+        }],
+        tensors: vec![
+            placed(0, DType::F64, shape.clone(), cpu_buf(ba.0)),
+            placed(1, DType::F64, shape.clone(), cpu_buf(bb.0)),
+            placed(2, DType::F64, shape, cpu_buf(bo.0)),
+        ],
+    };
+    assert!(matches!(
+        exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph }),
+        ExecutorResponse::DispatchDone { .. }
+    ));
+    match exec.handle(ExecutorRequest::DownloadBuffer {
+        buffer: bo,
+        offset: 0,
+        len: nbytes,
+    }) {
+        ExecutorResponse::BufferData { data, .. } => from_f64_bytes(&data),
+        other => panic!("got {:?}", other),
+    }
+}
+
+/// The whole point of MX12: f64 ops keep precision an f32 op would lose.
+#[test]
+fn f64_add_keeps_precision_f32_would_round_away() {
+    // 1 + 2^-40 is exactly representable in f64 but rounds to 1.0 in f32.
+    let tiny = 2f64.powi(-40);
+    let got = run_binary_f64(
+        |lhs, rhs, output| Op::Add { lhs, rhs, output },
+        &[1.0],
+        &[tiny],
+    );
+    assert_eq!(got, vec![1.0 + tiny]);
+    assert_ne!(got[0], 1.0, "must NOT have rounded to 1.0 like f32 would");
+    // Sanity: the same values through f32 *do* round away the tiny part.
+    assert_eq!((1.0f32 + tiny as f32), 1.0f32);
+}
+
+#[test]
+fn f64_mul_is_double_precision() {
+    let got = run_binary_f64(
+        |lhs, rhs, output| Op::Mul { lhs, rhs, output },
+        &[0.1, 1e300],
+        &[3.0, 1e-300],
+    );
+    assert_eq!(got, vec![0.1f64 * 3.0, 1e300f64 * 1e-300]); // exact f64 arithmetic
+}
+
+#[test]
+fn f64_div_passes_the_float_only_validator() {
+    // Div is a float-only op: this exercises the validator's float gate, proving
+    // it accepts F64 (not just F32) — the op dispatches and computes in f64.
+    let got = run_binary_f64(
+        |lhs, rhs, output| Op::Div { lhs, rhs, output },
+        &[1.0, 7.0],
+        &[3.0, 2.0],
+    );
+    assert_eq!(got, vec![1.0f64 / 3.0, 7.0f64 / 2.0]); // 0.3333333333333333, 3.5
+    assert_ne!(got[0] as f32 as f64, got[0]); // genuinely f64, not f32-rounded
 }
 
 // ─────────────────── 1. Direct request/response ───────────────────
@@ -215,7 +327,12 @@ fn dispatch_matmul_f32() {
             placed(0, DType::F32, Shape::from(&[2, 2]), cpu_buf(buf_a.0)),
             placed(1, DType::F32, Shape::from(&[2, 2]), cpu_buf(buf_b.0)),
         ],
-        outputs: vec![placed(2, DType::F32, Shape::from(&[2, 2]), cpu_buf(buf_c.0))],
+        outputs: vec![placed(
+            2,
+            DType::F32,
+            Shape::from(&[2, 2]),
+            cpu_buf(buf_c.0),
+        )],
         constants: vec![],
         ops: vec![PlacedOp::Compute {
             op: Op::MatMul {
@@ -232,7 +349,10 @@ fn dispatch_matmul_f32() {
             placed(2, DType::F32, Shape::from(&[2, 2]), cpu_buf(buf_c.0)),
         ],
     };
-    exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g });
+    exec.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: g,
+    });
     let down = exec.handle(ExecutorRequest::DownloadBuffer {
         buffer: buf_c,
         offset: 0,
@@ -291,7 +411,10 @@ fn dispatch_with_constant() {
             placed(2, DType::F32, Shape::from(&[3]), cpu_buf(buf_out.0)),
         ],
     };
-    exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g });
+    exec.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: g,
+    });
     let down = exec.handle(ExecutorRequest::DownloadBuffer {
         buffer: buf_out,
         offset: 0,
@@ -323,7 +446,12 @@ fn dispatch_reduce_sum() {
     });
     let g = ComputeGraph {
         format_version: compute_ir::WIRE_FORMAT_VERSION,
-        inputs: vec![placed(0, DType::F32, Shape::from(&[2, 2]), cpu_buf(buf_x.0))],
+        inputs: vec![placed(
+            0,
+            DType::F32,
+            Shape::from(&[2, 2]),
+            cpu_buf(buf_x.0),
+        )],
         outputs: vec![placed(1, DType::F32, Shape::from(&[2]), cpu_buf(buf_out.0))],
         constants: vec![],
         ops: vec![PlacedOp::Compute {
@@ -341,7 +469,10 @@ fn dispatch_reduce_sum() {
             placed(1, DType::F32, Shape::from(&[2]), cpu_buf(buf_out.0)),
         ],
     };
-    exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g });
+    exec.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: g,
+    });
     let down = exec.handle(ExecutorRequest::DownloadBuffer {
         buffer: buf_out,
         offset: 0,
@@ -414,7 +545,10 @@ fn dispatch_where_chooses_per_predicate() {
             placed(3, DType::F32, Shape::from(&[4]), cpu_buf(buf_out.0)),
         ],
     };
-    exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g });
+    exec.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: g,
+    });
     let down = exec.handle(ExecutorRequest::DownloadBuffer {
         buffer: buf_out,
         offset: 0,
@@ -475,7 +609,10 @@ fn dispatch_comparison_yields_u8() {
             placed(2, DType::U8, Shape::from(&[3]), cpu_buf(buf_out.0)),
         ],
     };
-    exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g });
+    exec.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: g,
+    });
     let down = exec.handle(ExecutorRequest::DownloadBuffer {
         buffer: buf_out,
         offset: 0,
@@ -508,11 +645,7 @@ fn unary_test(input_bytes: Vec<u8>, output_bytes_len: u64, dtype: DType, op: Op)
         offset: 0,
         data: input_bytes.clone(),
     });
-    let n = match dtype {
-        DType::F32 => input_bytes.len() / 4,
-        DType::I32 => input_bytes.len() / 4,
-        DType::U8 => input_bytes.len(),
-    } as u32;
+    let n = (input_bytes.len() / dtype.size_bytes()) as u32;
     let shape = Shape::from(&[n]);
     let g = ComputeGraph {
         format_version: compute_ir::WIRE_FORMAT_VERSION,
@@ -529,7 +662,10 @@ fn unary_test(input_bytes: Vec<u8>, output_bytes_len: u64, dtype: DType, op: Op)
             placed(1, dtype, shape, cpu_buf(out_buf.0)),
         ],
     };
-    exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g });
+    exec.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: g,
+    });
     match exec.handle(ExecutorRequest::DownloadBuffer {
         buffer: out_buf,
         offset: 0,
@@ -598,7 +734,10 @@ fn dispatch_rejects_oversized_tensor() {
         ops: vec![],
         tensors: vec![placed(0, DType::F32, oversized, cpu_buf(buf.0))],
     };
-    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+    match exec.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: g,
+    }) {
         ExecutorResponse::Error { message, .. } => {
             assert!(
                 message.contains("exceeds") || message.contains("overflows"),
@@ -627,7 +766,10 @@ fn dispatch_rejects_buffer_smaller_than_shape() {
         ops: vec![],
         tensors: vec![placed(0, DType::F32, Shape::from(&[10]), cpu_buf(buf.0))],
     };
-    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+    match exec.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: g,
+    }) {
         ExecutorResponse::Error { message, .. } => {
             assert!(
                 message.contains("declares") || message.contains("buffer"),
@@ -655,7 +797,10 @@ fn dispatch_rejects_constant_byte_length_mismatch() {
         ops: vec![],
         tensors: vec![placed(0, DType::F32, Shape::from(&[3]), cpu_buf(99))],
     };
-    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+    match exec.handle(ExecutorRequest::Dispatch {
+        job_id: 1,
+        graph: g,
+    }) {
         ExecutorResponse::Error { message, .. } => {
             assert!(
                 message.contains("constant") || message.contains("bytes"),
@@ -866,9 +1011,8 @@ fn dispatch_specialised_kernel_error_becomes_runtime_error() {
     // with the kernel's message embedded.  Same shape as generic
     // Dispatch failures.
     let exec = arc_executor();
-    let kernel: Box<SpecialisedKernelFn> = Box::new(|_, _, _| {
-        Err("intentional kernel failure".to_string())
-    });
+    let kernel: Box<SpecialisedKernelFn> =
+        Box::new(|_, _, _| Err("intentional kernel failure".to_string()));
     exec.install_specialised(0x1234, kernel);
     let t = transport_for(exec);
 
@@ -880,7 +1024,11 @@ fn dispatch_specialised_kernel_error_becomes_runtime_error() {
     }))
     .unwrap();
     match resp {
-        ExecutorResponse::Error { code, message, job_id } => {
+        ExecutorResponse::Error {
+            code,
+            message,
+            job_id,
+        } => {
             assert_eq!(code, executor_protocol::ErrorCode::RUNTIME_ERROR);
             assert_eq!(job_id, Some(99));
             assert!(message.contains("intentional kernel failure"));
@@ -959,10 +1107,10 @@ fn dispatch_specialised_kernel_can_call_real_eval() {
         let b_bytes = bufs.read(inputs[1], 0, 12)?;
         let mut out_bytes = vec![0u8; 12];
         for i in 0..3 {
-            let a = f32::from_le_bytes(a_bytes[i*4..i*4+4].try_into().unwrap());
-            let b = f32::from_le_bytes(b_bytes[i*4..i*4+4].try_into().unwrap());
+            let a = f32::from_le_bytes(a_bytes[i * 4..i * 4 + 4].try_into().unwrap());
+            let b = f32::from_le_bytes(b_bytes[i * 4..i * 4 + 4].try_into().unwrap());
             let c = a + b;
-            out_bytes[i*4..i*4+4].copy_from_slice(&c.to_le_bytes());
+            out_bytes[i * 4..i * 4 + 4].copy_from_slice(&c.to_le_bytes());
         }
         bufs.write(outputs[0], 0, &out_bytes)?;
         Ok(vec![executor_protocol::OpTiming { op_index: 0, ns: 0 }])
@@ -1044,10 +1192,18 @@ fn dispatch_specialised_kernel_panic_becomes_runtime_error_not_unwind() {
     .unwrap();
 
     match resp {
-        ExecutorResponse::Error { code, job_id, message } => {
+        ExecutorResponse::Error {
+            code,
+            job_id,
+            message,
+        } => {
             assert_eq!(code, executor_protocol::ErrorCode::RUNTIME_ERROR);
             assert_eq!(job_id, Some(13));
-            assert!(message.contains("panicked"), "message should mention panic: {}", message);
+            assert!(
+                message.contains("panicked"),
+                "message should mention panic: {}",
+                message
+            );
         }
         other => panic!("expected Error, got {:?}", other),
     }

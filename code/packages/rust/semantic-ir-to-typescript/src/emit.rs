@@ -68,6 +68,14 @@ fn uses_shell(m: &Module) -> bool {
     module_uses_builtin(m, "backtick")
 }
 
+/// True if the module calls the `range` builtin (a Ruby `a..b` / `a...b`
+/// literal lowers to `BuiltinCall("range", [start, stop, exclusive])`).  Range
+/// carries no SIR `Feature`, so we detect it by builtin name; a positive result
+/// gates the `@coding-adventures/sir-runtime-range` import.
+fn uses_range(m: &Module) -> bool {
+    module_uses_builtin(m, "range")
+}
+
 /// Walk every function body for a `BuiltinCall` named `name` — gates
 /// per-concern imports for builtins that carry no `Feature` flag.  Exhaustive
 /// over `Stmt`/`Expr` so a new node can't silently hide a use.
@@ -214,6 +222,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only backtick-using modules import the shell runtime.
     if uses_shell(m) {
         out.push_str(crate::runtime::RUNTIME_SHELL);
+    }
+    // Only range-using modules import the range runtime.
+    if uses_range(m) {
+        out.push_str(crate::runtime::RUNTIME_RANGE);
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
@@ -964,6 +976,16 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push(')');
         return;
     }
+    // `range` (a Ruby `a..b` / `a...b` literal) → construct a first-class SIR
+    // `Range` via the range runtime.  Args are `[start, stop, exclusive]`
+    // (start/stop may be `NilLit` for the begin/endless forms).  Gated by
+    // `uses_range`.
+    if name == "range" {
+        out.push_str("__SirRange.range(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
     // Ruby `&&`/`and` and `||`/`or` lower to `BuiltinCall("and"/"or", [lhs,
     // rhs])`.  They must **short-circuit** and use SIR truthiness, so they
     // emit the same truthy-guarded arrow IIFE as `Expr::LogicalAnd`/`LogicalOr`
@@ -996,6 +1018,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str("(-(");
         emit_expr(out, &args[0], indent);
         out.push_str("))");
+        return;
+    }
+    // `lambda` / `->{…}` lower to `BuiltinCall("lambda", [MakeClosure])`.  The
+    // lambda *is* its closure value, so we emit the inner `MakeClosure`
+    // directly (which renders `new __Sir.Closure(...)`) rather than routing
+    // through the eager `callBuiltin` dispatch — there is no separate
+    // "lambda" runtime helper, the closure already is the result.
+    if name == "lambda" && args.len() == 1 {
+        emit_expr(out, &args[0], indent);
         return;
     }
     let helper = match name {

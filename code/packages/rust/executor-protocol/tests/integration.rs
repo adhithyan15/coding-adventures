@@ -25,6 +25,7 @@ fn stub_profile() -> BackendProfile {
         supported_ops: 0xFFFF_FFFF,
         supported_dtypes: 0x07,
         gflops_f32: 100,
+        gflops_f64: 88,
         gflops_u8: 50,
         gflops_i32: 75,
         host_to_device_bw: 12,

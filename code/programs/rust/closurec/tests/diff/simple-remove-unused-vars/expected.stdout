@@ -1,0 +1,2 @@
+var live=10;var impure=run();log(live);
+

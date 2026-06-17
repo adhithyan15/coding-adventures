@@ -117,6 +117,30 @@ surface now means scripts and CI configs that invoke the Java
 tool today can target `closurec` with no flag changes when the
 body fills in.**
 
+## Compilation levels
+
+`--compilation_level` (`-O`) selects how hard the compiler works:
+
+| Level | What it does |
+|-------|--------------|
+| `WHITESPACE_ONLY` | Strips comments and inter-token whitespace only. Token-level; never parses to a typed AST. |
+| `SIMPLE` | Runs the typed-AST optimization pipeline — parse → bridge → passes → emit. Today the pipeline is `constant-fold → fold-control-flow → dce → inline → remove-unused-vars → treeshake → rename` (e.g. `1 + 2` ⇒ `3`; `if (2 > 3) {a} else {b}` ⇒ `{b}`; code after a `return` is dropped; unused top-level `var`s with pure initializers and unused top-level `function`s are deleted; leaf-function parameters are shortened to `a`, `b`, …); more passes land one PR at a time. Falls back to `WHITESPACE_ONLY` if the source uses a not-yet-supported construct, so it never errors on valid input. |
+| `ADVANCED` | Runs the same typed optimization pipeline as `SIMPLE` (it is specified to be at least as aggressive). Advanced-only passes — aggressive property/global renaming, cross-module tree-shaking — layer on as they are implemented. |
+| `BUNDLE` / `TRANSPILE_ONLY` | Identity passthrough for now — module bundling and language down-levelling are orthogonal to the optimization pipeline and land separately. |
+
+The SIMPLE pipeline:
+
+```text
+source ──parse──▶ grammar AST ──bridge──▶ typed Program
+       ──passes──▶ optimized Program ──emit──▶ JS text
+```
+
+```sh
+# SIMPLE evaluates constant expressions at compile time:
+closurec --compilation_level SIMPLE --js in.js
+#   var x = 1 + 2;   ⇒   var x=3;
+```
+
 ## Architecture
 
 ```text

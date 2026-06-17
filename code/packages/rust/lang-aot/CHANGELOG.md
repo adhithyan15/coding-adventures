@@ -1,5 +1,123 @@
 # Changelog — `lang-aot`
 
+## 0.92.0 — 2026-06-16 — Oct bitwise `~` + u8 wrap run cross-backend (LANG-FULL O2)
+
+`tests/lang_matrix.rs` gains two executed Oct programs proving u8 width semantics run on
+**all 7 backends** (native/LLVM/WASM/JVM/CLR/VM/JIT):
+
+- `out(1, ~0)` → `255`. Oct's only integer type is `u8`, so `~0` flips 8 bits → `255`
+  (`-1 & 0xFF`), not the i64 all-ones. (An unmasked `~0` would print `-1`.)
+- `out(1, 200 + 100)` → `44`. The grammar specifies Oct addition wraps mod-256; `300` wraps
+  to `44`. Distinct from the existing `100 + 100 = 200` Oct program, which does not overflow
+  — this one proves the wrap fires.
+
+Driven by `oct-iir-compiler` 0.7.0 (emits the `u8` hint on arithmetic/bitwise/`~`; Oct has a
+single integer width, so every integer op is u8) and `iir-to-jvm-class-file` 0.14.0 (Oct's
+`out` programs keep the JVM long model, so the narrow mask had to become `i2l; land` over the
+long result — the int `iand` was unverifiable and returned empty on java). Completes Oct O2.
+
+## 0.91.0 — 2026-06-16 — Nib bitwise `~` runs cross-backend (LANG-FULL N3)
+
+`tests/lang_matrix.rs` gains two executed `~` programs proving unary bitwise NOT runs
+on **all 7 backends** (native/LLVM/WASM/JVM/CLR/VM/JIT):
+
+- `~0u8` — `let x: u8 = ~0; if x == 255 { return 1; }` → exit `1`. `~0` flips all bits;
+  masked to u8 it is `255`. The `== 255` guard distinguishes the masked complement from
+  an unmasked `not 0` (`-1`, which would give exit `0`).
+- `~15u4` — `let x: u4 = ~15; if x == 0 { return 1; }` → exit `1`. On a nibble `~15 = 0`;
+  proves the mask is *width-correct* (a u8/i64 mask would leave `0xF0`/`-16`, not `0`).
+
+Driven by `nib-iir-compiler` 0.16.0 (lowers `~` → IIR `not` with the narrow width — it had
+been silently dropped) and `iir-to-cil-bytecode` 0.21.0 (adds the unary `not` arm to its
+textual `.il` emitter — the last backend that couldn't assemble `~` on CoreCLR). Completes
+Nib N3 (`& | ^ ~`).
+
+## 0.90.0 — 2026-06-16 — Brainfuck reads real stdin cross-backend (LANG-FULL B1-stdin)
+
+The matrix proved every backend can *write* output (`.`); two new programs prove every
+backend can *read* input (`,`):
+
+- `,+.` — read one byte from real stdin, `+` (increment), print: input `"A"` (65) →
+  output `"B"` (66). The output depends on **both** the input and a computation on it —
+  not a constant, not a bare echo.
+- `,.,.` — read a byte and print it, twice: input `"Hi"` → output `"Hi"`. Proves
+  *repeated* reads advance through the input stream (the second `,` sees `'i'`, not `'H'`).
+
+Both run on **all 7 backends** (native/LLVM/WASM/JVM/CLR/VM/JIT — verified locally with
+every toolchain present). Wiring (test-harness only — every backend already *compiled*
+`,`→`getchar`; it had simply never been fed input):
+
+- **native / LLVM / JVM / CLR** read from their real process stdin (libc `getchar`,
+  `System.in`, `Console.Read`). New `output_with_stdin` helper spawns the child with a
+  piped stdin, writes the program's input, and closes the pipe (→ EOF).
+- **WASM / VM / JIT** are in-process: their `getchar` host now drains a per-program byte
+  buffer seeded from `program_stdin` (empty for every non-stdin program, so the first
+  read is EOF — unchanged behaviour).
+
+Both programs read **exactly** the bytes supplied and never read past EOF, so they
+terminate identically on every backend **regardless** of the divergent `getchar`-EOF
+convention (JVM/VM/JIT return `0`; libc/`Console.Read`/wasm return `-1` → the u8 cell
+wraps to 255). The classic cat `,[.,]` would loop forever on the `-1` backends, so
+normalising EOF across backends is tracked as a separate item. No backend/frontend crate
+changed.
+
+## 0.89.0 — 2026-06-16 — Nib `+%` wrapping / `+?` saturating add cross-backend (LANG-FULL N7)
+
+Four new matrix programs prove Nib's N7 operators run on all 7 backends: `200u8 +% 100`
+→ wraps to `44`, `200u8 +? 100` → saturates to `255`, `15u4 +? 1` → clamps to `15`,
+and `3 +? 4` → `7` (no clamp). Comparison-based so they distinguish saturate/wrap from
+the unclamped sum. (nib-iir-compiler 0.15.0.)
+
+## 0.88.0 — 2026-06-16 — Oct `&&`/`||` short-circuit run on the JVM (LANG-FULL, BA-JVM-1 follow-through)
+
+The two Oct short-circuit matrix programs (`&&` → `9`, `||` → `7`) now include the
+**JVM** backend: `iir-to-jvm-class-file` 0.13.3 makes a `mov` bridge int↔long when
+the dest slot width differs (Oct keeps the i64 value model, so a bool comparison
+result mov'd into a long accumulator needs `i2l`). With this, **every matrix
+program runs on all 7 backends**.
+
+## 0.87.0 — 2026-06-16 — BASIC `IF`/`FOR` run on the JVM (LANG-FULL BA-JVM-1)
+
+The two Dartmouth BASIC control-flow matrix programs (the `FOR` sum → `15` and
+the `IF` branch → `7`) now include the **JVM** backend: `iir-to-jvm-class-file`
+0.13.2 fixes the comparison-dest slot typing that made a branch-after-a-loop over
+BASIC's i64 value model fail JVM verification (`uninitialized register pair`).
+Both run on real `java` now; the matrix proves it cross-backend.
+
+## 0.86.0 — 2026-06-15 — Nib u8 wrap runs cross-backend (LANG-FULL E2 / N6)
+
+`tests/lang_matrix.rs` gains two new **Nib integer-wrap** programs, both run
+across native / LLVM / WASM / JVM / CLR / VM / JIT:
+
+**Wrap proof** (LANG-FULL N6 — u8 wrap semantics):
+```nib
+fn main() -> u8 { let x: u8 = 200 + 100; if x == 44 { return 1; } return 0; }
+```
+→ exit **1**. `200 + 100 = 300` wraps mod-256 to **44** in every backend;
+comparing the in-register value (not just the exit-code low byte) proves the
+wrap happened *before* the comparison.  Exercises the full E2 stack:
+`nib-type-checker` 0.3.0 annotates the `add_expr` node as `u8` (bidirectional
+context flows from the `let x: u8` declaration); `nib-iir-compiler` 0.14.0
+emits `add` with `type_hint = "u8"`; each backend masks — vm-core and jit-core
+by `result & 0xFF`, iir-to-wasm by `i32.and 255`, iir-to-jvm/cil by `and`,
+iir-to-llvm by `and i64 ..., 255`, native-AOT by `and X0, X0, #0xFF` /
+`and rax, 0xFF`.
+
+**Magnitude regression guard** (confirms bidirectional typing):
+```nib
+fn main() -> u8 { return 6 * 7; }
+```
+→ exit **42**. Without `nib-type-checker` 0.3.0, `6` and `7` would infer as
+`u4` (magnitude ≤ 15), the backend would mask `42 & 0xF = 10`, and the test
+would fail.  Passing proves literals in a `u8` return context adopt `u8`, and
+`6 * 7 = 42` is within the u8 range so no wrap occurs.
+
+### Crates updated
+
+- `nib-type-checker` 0.3.0 — bidirectional typing
+- `nib-iir-compiler` 0.14.0 — narrow type_hints + unary `~` lowering
+- `aot-core` 0.2.2 — `u4` added to CIR type pipeline
+
 ## 0.85.0 — 2026-06-14 — Twig top-level value `define` runs cross-backend (LANG-FULL TW2)
 
 `tests/lang_matrix.rs` gains an executed **top-level value `define`** program:

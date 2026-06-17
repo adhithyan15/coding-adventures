@@ -7,13 +7,14 @@
 
 use std::collections::{HashMap, HashSet, VecDeque};
 
-use crate::address::{CellAddress, SheetId};
+use crate::address::{CellAddress, CellRange, SheetId, MAX_RANGE_CELLS};
 use crate::cell::{Cell, CellContent, CellValue};
 use crate::dag::DependencyGraph;
+use crate::edit::StructuralEdit;
 use crate::errors::SpreadsheetError;
 use crate::parser::{parse, ParseError};
 use crate::recalc::{collect_refs, evaluate};
-use crate::viewport::{ChangeSet, UsedRange, Window, CHANGELOG_RETAIN, MAX_WINDOW_CELLS};
+use crate::viewport::{ChangeSet, DisplayWindow, UsedRange, Window, CHANGELOG_RETAIN, MAX_WINDOW_CELLS};
 
 /// Top-level container — one or more sheets plus the dependency
 /// graph that spans them.
@@ -43,6 +44,13 @@ pub struct Workbook {
 struct Sheet {
     name: String,
     cells: HashMap<CellAddress, Cell>,
+    /// Per-cell display format codes (Excel-style, e.g. `"#,##0.00"`,
+    /// `"yyyy-mm-dd"`). Stored separately from cell content because a cell can
+    /// be formatted while empty, and the format outlives content edits — exactly
+    /// as in a real spreadsheet. Applied to the computed value by [`get_display`].
+    ///
+    /// [`get_display`]: Workbook::get_display
+    formats: HashMap<CellAddress, String>,
 }
 
 impl Workbook {
@@ -66,6 +74,7 @@ impl Workbook {
         self.sheets.push(Sheet {
             name: name.clone(),
             cells: HashMap::new(),
+            formats: HashMap::new(),
         });
         self.sheet_by_name.insert(name, id);
         id
@@ -120,26 +129,7 @@ impl Workbook {
         row1: u32,
         col1: u32,
     ) -> Result<Window, SpreadsheetError> {
-        // Coordinates are 1-based (A1 = row 1, col 1), so a 0 is out of contract
-        // — and rejecting it also rules out the `row0 = 0` case that would let
-        // the span computation below span the full u32 range.
-        if row0 == 0 || col0 == 0 || row1 < row0 || col1 < col0 {
-            return Err(SpreadsheetError::Ref);
-        }
-        // Compute the span in u64. The operands MUST be widened to u64 *before*
-        // the `+ 1`: doing `(row1 - row0 + 1)` in u32 first overflows when
-        // `row1 - row0 == u32::MAX` (e.g. row0=1, row1=u32::MAX), wrapping to a
-        // bogus small count that would slip past the MAX_WINDOW_CELLS cap and
-        // send the loop over the entire u32 range — an OOM DoS. Widening first
-        // keeps the true count, so checked_mul + the cap reject it.
-        let rows = (row1 as u64 - row0 as u64) + 1;
-        let cols = (col1 as u64 - col0 as u64) + 1;
-        // `rows * cols` can still overflow u64 for a full-sheet request, so use
-        // checked_mul: an overflow is by definition past the cap.
-        match rows.checked_mul(cols) {
-            Some(n) if n <= MAX_WINDOW_CELLS => {}
-            _ => return Err(SpreadsheetError::Ref),
-        }
+        let (rows, cols) = window_dims(row0, col0, row1, col1)?;
         let s = self.sheets.get(sheet.0 as usize).ok_or(SpreadsheetError::Ref)?;
         let mut values = Vec::with_capacity((rows * cols) as usize);
         for r in row0..=row1 {
@@ -158,6 +148,41 @@ impl Workbook {
             rows: rows as u32,
             cols: cols as u32,
             values,
+        })
+    }
+
+    /// Like [`get_window`](Self::get_window), but each cell is the **display
+    /// string** it should paint — its value rendered through its format code
+    /// (see [`get_display`](Self::get_display)) — rather than a typed value. This
+    /// is the one read a virtualized grid needs per frame: a dense rectangle of
+    /// ready-to-draw, format-applied strings. Same 1-based coords and
+    /// [`MAX_WINDOW_CELLS`](crate::viewport::MAX_WINDOW_CELLS) cap as `get_window`.
+    pub fn get_display_window(
+        &self,
+        sheet: SheetId,
+        row0: u32,
+        col0: u32,
+        row1: u32,
+        col1: u32,
+    ) -> Result<DisplayWindow, SpreadsheetError> {
+        let (rows, cols) = window_dims(row0, col0, row1, col1)?;
+        // Validate the sheet exists up front (get_display would silently yield
+        // "" for an unknown sheet, but the windowed read promises a Ref error).
+        if self.sheets.get(sheet.0 as usize).is_none() {
+            return Err(SpreadsheetError::Ref);
+        }
+        let mut cells = Vec::with_capacity((rows * cols) as usize);
+        for r in row0..=row1 {
+            for c in col0..=col1 {
+                cells.push(self.get_display(sheet, CellAddress::new(r, c)));
+            }
+        }
+        Ok(DisplayWindow {
+            row0,
+            col0,
+            rows: rows as u32,
+            cols: cols as u32,
+            cells,
         })
     }
 
@@ -288,6 +313,56 @@ impl Workbook {
         self.get_value(sheet, addr).unwrap_or(CellValue::Empty)
     }
 
+    // ----------------------------------------------------------------
+    // Cell formats (display)
+    // ----------------------------------------------------------------
+    //
+    // A format is an Excel-style code (`"#,##0.00"`, `"0%"`, `"yyyy-mm-dd"`,
+    // `"h:mm AM/PM"`) that decides how a cell's *computed value* reads — never
+    // what it is. The number/date formatting itself lives in `number-format-core`
+    // (a Layer-1 core, like the math cores the formula engine dispatches to); the
+    // engine just stores the per-cell code and applies it on display.
+
+    /// Set a cell's display format code. An empty code clears the format (the
+    /// cell falls back to `General`). Logs a change so a viewport sees the
+    /// re-display, but does not touch the value or trigger recalc.
+    pub fn set_format(&mut self, sheet: SheetId, addr: CellAddress, code: &str) {
+        let Some(s) = self.sheets.get_mut(sheet.0 as usize) else {
+            return;
+        };
+        self.revision = self.revision.wrapping_add(1);
+        if code.is_empty() {
+            s.formats.remove(&addr);
+        } else {
+            s.formats.insert(addr, code.to_string());
+        }
+        self.log_change(sheet, addr);
+    }
+
+    /// Clear a cell's display format (it falls back to `General`).
+    pub fn clear_format(&mut self, sheet: SheetId, addr: CellAddress) {
+        self.set_format(sheet, addr, "");
+    }
+
+    /// A cell's display format code, or `None` if it uses the default (`General`).
+    pub fn get_format(&self, sheet: SheetId, addr: CellAddress) -> Option<&str> {
+        self.sheets
+            .get(sheet.0 as usize)?
+            .formats
+            .get(&addr)
+            .map(String::as_str)
+    }
+
+    /// The cell's computed value as the **display string** it should show —
+    /// its value run through its format code (or `General`). Numbers are
+    /// formatted per the code (grouping, decimals, percent, dates…); text,
+    /// booleans, and errors render naturally; an empty cell is `""`. This is the
+    /// one call a renderer needs per visible cell.
+    pub fn get_display(&self, sheet: SheetId, addr: CellAddress) -> String {
+        let value = self.get_value(sheet, addr).unwrap_or(CellValue::Empty);
+        display_value(&value, self.get_format(sheet, addr))
+    }
+
     /// Recalculate every formula cell. Bumps the epoch on success.
     pub fn recalc_all(&mut self) {
         // A full sweep is one revision-transaction too, so the cells it rewrites
@@ -312,6 +387,256 @@ impl Workbook {
             self.set_cached(sheet, addr, CellValue::Error(SpreadsheetError::Ref));
         }
         self.epoch = self.epoch.wrapping_add(1);
+    }
+
+    // ----------------------------------------------------------------
+    // Structural edits — insert / delete rows & columns
+    // ----------------------------------------------------------------
+    //
+    // These relabel the grid: cells at or past the edit point slide over, and
+    // every formula's references are rewritten (via [`FormulaAst::adjust`]) so it
+    // keeps naming the same logical cells — a reference to a deleted line becomes
+    // `#REF!`. The pure address/AST arithmetic lives in `edit.rs`; this layer
+    // applies it to the live cell store, rebuilds the dependency graph (every
+    // address moved, so the old edges are stale), and recalculates.
+    //
+    // v1 scope: single-sheet (the engine's formula references are sheet-local),
+    // and the rebuild + recalc is a full sweep — correct and simple. Cross-sheet
+    // reference adjustment and an incremental recalc are future optimisations.
+
+    /// Insert `count` blank rows before 1-based row `at`; rows at/after `at`
+    /// slide down. Formulas are rewritten and the sheet recalculated.
+    pub fn insert_rows(&mut self, sheet: SheetId, at: u32, count: u32) {
+        self.apply_structural_edit(sheet, StructuralEdit::InsertRows { at, count });
+    }
+
+    /// Delete `count` rows starting at 1-based row `at`; rows after slide up.
+    /// Cells on deleted rows are removed; references to them become `#REF!`.
+    pub fn delete_rows(&mut self, sheet: SheetId, at: u32, count: u32) {
+        self.apply_structural_edit(sheet, StructuralEdit::DeleteRows { at, count });
+    }
+
+    /// Insert `count` blank columns before 1-based column `at`; columns at/after
+    /// slide right. Formulas are rewritten and the sheet recalculated.
+    pub fn insert_cols(&mut self, sheet: SheetId, at: u32, count: u32) {
+        self.apply_structural_edit(sheet, StructuralEdit::InsertCols { at, count });
+    }
+
+    /// Delete `count` columns starting at 1-based column `at`; columns after
+    /// slide left. Cells on deleted columns are removed; references → `#REF!`.
+    pub fn delete_cols(&mut self, sheet: SheetId, at: u32, count: u32) {
+        self.apply_structural_edit(sheet, StructuralEdit::DeleteCols { at, count });
+    }
+
+    /// Apply a [`StructuralEdit`] to one sheet: relocate every cell, rewrite each
+    /// formula's references and echo text, drop cells on deleted lines, rebuild
+    /// the dependency graph, and recalculate. A no-op if `sheet` is unknown.
+    fn apply_structural_edit(&mut self, sheet: SheetId, edit: StructuralEdit) {
+        let Some(s) = self.sheets.get_mut(sheet.0 as usize) else {
+            return;
+        };
+
+        // 0. Refuse an insert that would push a non-empty cell off the u32 grid
+        //    edge. There the per-coordinate shift saturates at `u32::MAX`, so two
+        //    distinct cells would collapse onto the same relocated address and the
+        //    second would silently overwrite the first in the map below — data
+        //    loss. Excel likewise refuses to shift non-empty cells off the sheet.
+        //    (Deletes only drop a band and shift survivors inward — never a
+        //    collision — so they need no such guard.)
+        // Check both the cell store and the format store: a format can sit on an
+        // empty (content-less) cell, so a format-only entry could collide too.
+        let would_overflow_grid = match edit {
+            StructuralEdit::InsertRows { at, count } => s
+                .cells
+                .keys()
+                .chain(s.formats.keys())
+                .any(|a| a.row >= at && a.row.checked_add(count).is_none()),
+            StructuralEdit::InsertCols { at, count } => s
+                .cells
+                .keys()
+                .chain(s.formats.keys())
+                .any(|a| a.col >= at && a.col.checked_add(count).is_none()),
+            StructuralEdit::DeleteRows { .. } | StructuralEdit::DeleteCols { .. } => false,
+        };
+        if would_overflow_grid {
+            return; // reject the whole edit rather than lose cells
+        }
+
+        // 1. Relocate cells + rewrite formula references. A cell's *position*
+        //    and its formula's *references* both follow the same edit. Build a
+        //    fresh map: a cell on a deleted line has no new address → dropped.
+        let old = std::mem::take(&mut s.cells);
+        let mut moved: HashMap<CellAddress, Cell> = HashMap::with_capacity(old.len());
+        for (addr, mut cell) in old {
+            if let CellContent::Formula { ast, text, cached } = &mut cell.content {
+                *ast = ast.adjust(edit);
+                *text = ast.to_formula_string(); // keep the echo text honest
+                *cached = None; // recomputed below
+            }
+            if let Some(new_addr) = addr.adjust(edit) {
+                moved.insert(new_addr, cell);
+            }
+        }
+        self.sheets[sheet.0 as usize].cells = moved;
+
+        // 1b. Relocate the format store the same way (formats ride with the cell
+        //     they decorate; a format on a deleted line is dropped).
+        let old_formats = std::mem::take(&mut self.sheets[sheet.0 as usize].formats);
+        let mut moved_formats: HashMap<CellAddress, String> =
+            HashMap::with_capacity(old_formats.len());
+        for (addr, code) in old_formats {
+            if let Some(new_addr) = addr.adjust(edit) {
+                moved_formats.insert(new_addr, code);
+            }
+        }
+        self.sheets[sheet.0 as usize].formats = moved_formats;
+
+        // 2. Every address moved, so the old dependency edges are stale. Rebuild
+        //    the graph from the rewritten ASTs, then recalc the whole workbook.
+        //    `recalc_all` bumps the revision (one transaction for the edit).
+        self.rebuild_dependency_graph();
+        self.recalc_all();
+
+        // 3. `recalc_all` logged the formula cells it recomputed; also log the
+        //    surviving literal cells so a viewport `changed_since` snapshot taken
+        //    before the edit sees the relocation. (Deleted cells can't be logged
+        //    — a host re-fetches its window, where they read back as empty.)
+        let addrs: Vec<CellAddress> = self.sheets[sheet.0 as usize]
+            .cells
+            .keys()
+            .copied()
+            .collect();
+        for a in addrs {
+            self.log_change(sheet, a);
+        }
+    }
+
+    // ----------------------------------------------------------------
+    // Fill / replicate (drag-fill)
+    // ----------------------------------------------------------------
+
+    /// Replicate the cell at `src` across every cell of `dst` — the engine side
+    /// of drag-fill / copy-paste.
+    ///
+    /// Each target gets a **copy** of the source, with its formula's references
+    /// shifted by the target's offset from `src` (so `=A1` filled down the column
+    /// becomes `=A2`, `=A3`, …), via [`FormulaAst::shift`] — relative refs track,
+    /// absolute (`$`) refs stay pinned, and a ref shifted off the grid edge
+    /// becomes `#REF!`. A literal source is copied unchanged; an **empty** source
+    /// clears each target (filling "nothing" erases). The source's display
+    /// **format** rides along to every target, the way a spreadsheet's fill does.
+    /// `src` itself is overwritten with an identical copy when it falls inside
+    /// `dst` (a zero offset — a no-op in effect).
+    ///
+    /// One recalc transaction (`recalc_all` bumps the revision once). Unknown
+    /// `sheet` is a no-op. A `dst` larger than [`MAX_RANGE_CELLS`] is rejected
+    /// wholesale (the same DoS guard formula ranges use) — a hostile or buggy
+    /// caller can't ask the engine to materialise billions of cells.
+    pub fn fill(&mut self, sheet: SheetId, src: CellAddress, dst: CellRange) {
+        if self.sheets.get(sheet.0 as usize).is_none() {
+            return;
+        }
+        // DoS guard: cap the number of cells a single fill can write. Computed in
+        // u64 (cell_count already is), so it can't overflow on a full-grid range.
+        if dst.cell_count() > MAX_RANGE_CELLS {
+            return;
+        }
+
+        // Snapshot the source content + format up front: the loop overwrites
+        // cells (possibly `src` itself), so we must not read it mid-fill.
+        let s = &self.sheets[sheet.0 as usize];
+        let src_content = s.cells.get(&src).map(|c| c.content.clone());
+        let src_format = s.formats.get(&src).cloned();
+
+        // Write every target's content + format directly (one transaction; the
+        // single recalc_all below evaluates them all and bumps the revision once).
+        for row in dst.start.row..=dst.end.row {
+            for col in dst.start.col..=dst.end.col {
+                let target = CellAddress::new(row, col);
+                // Offsets in i64 then clamped into shift's i32 contract: row/col
+                // are u32 (up to ~4.3e9), so `row as i32 - src.row as i32` would
+                // overflow — a panic in debug/test builds, a silent wrap in
+                // release — for a fill anchored at a high coordinate (which clears
+                // the cell_count guard). i64 makes the subtraction exact for all
+                // u32 operands; the clamp keeps it in range, and any resulting
+                // off-grid reference still collapses to #REF! inside `shift`.
+                let d_row =
+                    (row as i64 - src.row as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+                let d_col =
+                    (col as i64 - src.col as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+
+                let new_content = match &src_content {
+                    // Source never set / explicitly empty → clear the target.
+                    None | Some(CellContent::Empty) => CellContent::Empty,
+                    Some(CellContent::Value(v)) => CellContent::Value(v.clone()),
+                    Some(CellContent::Formula { ast, .. }) => {
+                        let shifted = ast.shift(d_row, d_col);
+                        CellContent::Formula {
+                            text: shifted.to_formula_string(),
+                            ast: shifted,
+                            cached: None, // recomputed by recalc_all
+                        }
+                    }
+                };
+
+                let s = &mut self.sheets[sheet.0 as usize];
+                match new_content {
+                    CellContent::Empty => {
+                        s.cells.remove(&target);
+                    }
+                    content => {
+                        s.cells.insert(target, Cell { content });
+                    }
+                }
+                // The format rides with the cell: copy it, or clear the target's
+                // format when the source had none.
+                match &src_format {
+                    Some(code) => {
+                        s.formats.insert(target, code.clone());
+                    }
+                    None => {
+                        s.formats.remove(&target);
+                    }
+                }
+            }
+        }
+
+        // Targets' references changed en masse; rebuild edges, then recalc the
+        // whole workbook (one revision bump). Log every target so a viewport
+        // `changed_since` snapshot taken before the fill sees them.
+        self.rebuild_dependency_graph();
+        self.recalc_all();
+        for row in dst.start.row..=dst.end.row {
+            for col in dst.start.col..=dst.end.col {
+                self.log_change(sheet, CellAddress::new(row, col));
+            }
+        }
+    }
+
+    /// Rebuild the entire cross-sheet dependency graph from the current formula
+    /// ASTs. Used after a structural edit relocates addresses en masse, which
+    /// invalidates every existing edge.
+    fn rebuild_dependency_graph(&mut self) {
+        // Collect first (can't borrow `self.sheets` and mutate `self.graph` at
+        // once), then repopulate a fresh graph.
+        // A graph node is a (sheet, address) pair; an entry is a node plus its
+        // dependency nodes.
+        type Node = (SheetId, CellAddress);
+        let mut deps: Vec<(Node, Vec<Node>)> = Vec::new();
+        for (i, s) in self.sheets.iter().enumerate() {
+            let sheet = SheetId(i as u32);
+            for (addr, cell) in &s.cells {
+                if let CellContent::Formula { ast, .. } = &cell.content {
+                    let mut refs = Vec::new();
+                    collect_refs(ast, sheet, &mut refs);
+                    deps.push(((sheet, *addr), refs));
+                }
+            }
+        }
+        self.graph = DependencyGraph::new();
+        for (node, refs) in deps {
+            self.graph.set_dependencies(node, refs);
+        }
     }
 
     // ----------------------------------------------------------------
@@ -355,9 +680,11 @@ impl Workbook {
         let result = {
             let sheets = &self.sheets;
             let lookup = |sid: SheetId, a: CellAddress| {
+                // Normalise away `$` markers: a `$A$1` reference must resolve to
+                // the same cell as `A1` (cells are keyed by position only).
                 sheets
                     .get(sid.0 as usize)
-                    .and_then(|s| s.cells.get(&a))
+                    .and_then(|s| s.cells.get(&a.without_absolute()))
                     .map(|c| c.current_value())
                     .unwrap_or(CellValue::Empty)
             };
@@ -401,6 +728,45 @@ impl Workbook {
 impl Default for Workbook {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+/// Validate a 1-based inclusive window request and return its `(rows, cols)`
+/// dimensions in `u64`. Shared by [`Workbook::get_window`] and
+/// [`Workbook::get_display_window`] so the bounds + overflow + cap checks can't
+/// drift apart.
+///
+/// Rejects (`#REF!`) a 0 coordinate (out of the 1-based contract — and a `row0`/
+/// `col0` of 0 would let the span computation cover the full u32 range), an
+/// inverted rectangle, and a window over [`MAX_WINDOW_CELLS`]. The span operands
+/// are widened to `u64` **before** the `+ 1` — `(row1 - row0 + 1)` in `u32` would
+/// overflow when `row1 - row0 == u32::MAX`, wrapping to a bogus small count that
+/// slips past the cap and sends the caller's loop over the entire u32 range (an
+/// OOM DoS). `checked_mul` then rejects any product that still overflows `u64`.
+fn window_dims(row0: u32, col0: u32, row1: u32, col1: u32) -> Result<(u64, u64), SpreadsheetError> {
+    if row0 == 0 || col0 == 0 || row1 < row0 || col1 < col0 {
+        return Err(SpreadsheetError::Ref);
+    }
+    let rows = (row1 as u64 - row0 as u64) + 1;
+    let cols = (col1 as u64 - col0 as u64) + 1;
+    match rows.checked_mul(cols) {
+        Some(n) if n <= MAX_WINDOW_CELLS => Ok((rows, cols)),
+        _ => Err(SpreadsheetError::Ref),
+    }
+}
+
+/// Render a computed value as the display string a cell should show, under an
+/// optional format code. Numbers go through `number-format-core` (the code, or
+/// `General` when there's none); text / booleans / errors render naturally; an
+/// empty cell is the empty string. Number formats apply only to numbers — a
+/// format on a text or boolean cell is ignored, as in a spreadsheet.
+fn display_value(value: &CellValue, format: Option<&str>) -> String {
+    match value {
+        CellValue::Number(n) => number_format_core::format_number(*n, format.unwrap_or("General")),
+        CellValue::Empty => String::new(),
+        CellValue::Boolean(b) => if *b { "TRUE" } else { "FALSE" }.to_string(),
+        CellValue::Text(s) => s.clone(),
+        CellValue::Error(e) => e.display().to_string(),
     }
 }
 
@@ -473,6 +839,176 @@ mod tests {
         // Change the input.
         wb.set_value(s, cell(1, 1), CellValue::Number(7.0));
         assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(70.0)));
+    }
+
+    // ── Structural edits: insert / delete rows & columns ────────────
+
+    #[test]
+    fn insert_rows_relocates_cells_and_rewrites_formulas() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(10.0)); // A1
+        wb.set_value(s, cell(2, 1), CellValue::Number(20.0)); // A2
+        wb.set_formula(s, cell(3, 1), "=SUM(A1:A2)").unwrap(); // A3 = 30
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(30.0)));
+
+        // Insert one row at the top: everything slides down a row.
+        wb.insert_rows(s, 1, 1);
+        assert_eq!(wb.get_value(s, cell(1, 1)), None); // A1 now blank
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(10.0))); // was A1
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(20.0))); // was A2
+        // The SUM moved to A4 and its range was rewritten A1:A2 → A2:A3; still 30.
+        assert_eq!(wb.get_value(s, cell(4, 1)), Some(CellValue::Number(30.0)));
+        // And editing a now-relocated input still ripples through.
+        wb.set_value(s, cell(2, 1), CellValue::Number(110.0));
+        assert_eq!(wb.get_value(s, cell(4, 1)), Some(CellValue::Number(130.0)));
+    }
+
+    #[test]
+    fn delete_rows_shifts_survivors_and_rewrites_refs() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(10.0)); // A1
+        wb.set_value(s, cell(2, 1), CellValue::Number(20.0)); // A2
+        wb.set_formula(s, cell(3, 1), "=A2*2").unwrap(); // A3 = 40
+
+        wb.delete_rows(s, 1, 1); // delete row 1
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(20.0))); // was A2
+        // The formula moved A3 → A2 and its ref A2 → A1; 20*2 = 40.
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(40.0)));
+    }
+
+    #[test]
+    fn deleting_a_referenced_line_yields_ref_error() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(10.0)); // A1
+        wb.set_formula(s, cell(1, 2), "=A1+1").unwrap(); // B1 = 11
+
+        wb.delete_cols(s, 1, 1); // delete column A — A1 is gone
+        // B1 → A1, and its reference A1 (now deleted) → #REF!.
+        assert_eq!(
+            wb.get_value(s, cell(1, 1)),
+            Some(CellValue::Error(SpreadsheetError::Ref))
+        );
+    }
+
+    #[test]
+    fn insert_cols_shifts_columns_right() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(5.0)); // A1
+        wb.set_formula(s, cell(1, 2), "=A1*3").unwrap(); // B1 = 15
+
+        wb.insert_cols(s, 1, 2); // two blank columns at the left
+        assert_eq!(wb.get_value(s, cell(1, 1)), None); // A1 blank
+        assert_eq!(wb.get_value(s, cell(1, 3)), Some(CellValue::Number(5.0))); // was A1
+        // B1 → D1, ref A1 → C1; still 15.
+        assert_eq!(wb.get_value(s, cell(1, 4)), Some(CellValue::Number(15.0)));
+    }
+
+    #[test]
+    fn structural_edit_advances_revision() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        let before = wb.current_revision();
+        wb.insert_rows(s, 1, 1);
+        assert!(wb.current_revision() > before);
+    }
+
+    // ── Cell formats / display ──────────────────────────────────────
+
+    #[test]
+    fn get_display_applies_format_or_defaults_to_general() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1234.5));
+        // No format → General (shortest representation).
+        assert_eq!(wb.get_display(s, cell(1, 1)), "1234.5");
+        // With a format code.
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+        assert_eq!(wb.get_display(s, cell(1, 1)), "1,234.50");
+        assert_eq!(wb.get_format(s, cell(1, 1)), Some("#,##0.00"));
+        // A percent format on a fraction.
+        wb.set_value(s, cell(2, 1), CellValue::Number(0.5));
+        wb.set_format(s, cell(2, 1), "0%");
+        assert_eq!(wb.get_display(s, cell(2, 1)), "50%");
+    }
+
+    #[test]
+    fn clear_format_reverts_to_general() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(0.5));
+        wb.set_format(s, cell(1, 1), "0%");
+        assert_eq!(wb.get_display(s, cell(1, 1)), "50%");
+        wb.clear_format(s, cell(1, 1));
+        assert_eq!(wb.get_format(s, cell(1, 1)), None);
+        assert_eq!(wb.get_display(s, cell(1, 1)), "0.5"); // General
+    }
+
+    #[test]
+    fn format_ignored_on_non_numbers() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Text("hi".into()));
+        wb.set_format(s, cell(1, 1), "#,##0.00"); // numeric format on text
+        assert_eq!(wb.get_display(s, cell(1, 1)), "hi"); // text renders naturally
+        wb.set_formula(s, cell(1, 2), "=1/0").unwrap();
+        wb.set_format(s, cell(1, 2), "0.00");
+        assert_eq!(wb.get_display(s, cell(1, 2)), "#DIV/0!"); // error shows through
+    }
+
+    #[test]
+    fn formatted_cells_compute_display_through_a_formula() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1500.0));
+        wb.set_value(s, cell(2, 1), CellValue::Number(2500.0));
+        wb.set_formula(s, cell(3, 1), "=A1+A2").unwrap(); // 4000
+        wb.set_format(s, cell(3, 1), "#,##0");
+        assert_eq!(wb.get_display(s, cell(3, 1)), "4,000");
+    }
+
+    #[test]
+    fn format_relocates_with_its_cell_on_insert_and_drops_on_delete() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1234.5));
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+
+        wb.insert_rows(s, 1, 1); // A1 → A2; the format must ride along
+        assert_eq!(wb.get_format(s, cell(2, 1)), Some("#,##0.00"));
+        assert_eq!(wb.get_display(s, cell(2, 1)), "1,234.50");
+        assert_eq!(wb.get_format(s, cell(1, 1)), None); // nothing at A1 now
+
+        wb.delete_rows(s, 2, 1); // delete the row holding the formatted cell
+        assert_eq!(wb.get_format(s, cell(1, 1)), None); // format dropped with the cell
+    }
+
+    #[test]
+    fn insert_that_would_overflow_the_grid_is_rejected_not_lossy() {
+        // An insert whose shift saturates u32 would collapse distinct cells onto
+        // u32::MAX in the relocation map, silently dropping one. The guard must
+        // reject the whole edit so no cell is lost.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(10.0)); // A1
+        wb.set_value(s, cell(2, 1), CellValue::Number(20.0)); // A2
+        wb.insert_rows(s, 1, u32::MAX); // both rows would saturate to u32::MAX
+        // No-op: both cells survive, unmoved.
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(10.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(20.0)));
+    }
+
+    #[test]
+    fn structural_edit_on_unknown_sheet_is_a_noop() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        wb.insert_rows(SheetId(99), 1, 1); // no such sheet
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
     }
 
     #[test]
@@ -635,6 +1171,34 @@ mod tests {
     }
 
     #[test]
+    fn get_display_window_renders_formatted_strings() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1234.5));
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+        wb.set_value(s, cell(1, 2), CellValue::Number(0.5));
+        wb.set_format(s, cell(1, 2), "0%");
+        wb.set_value(s, cell(2, 1), CellValue::Text("hi".into())); // unformatted
+        // A1=formatted, B1=percent, A2=text, B2=empty — row-major.
+        let dw = wb.get_display_window(s, 1, 1, 2, 2).unwrap();
+        assert_eq!((dw.rows, dw.cols), (2, 2));
+        assert_eq!(
+            dw.cells,
+            vec![
+                "1,234.50".to_string(),
+                "50%".to_string(),
+                "hi".to_string(),
+                String::new(),
+            ]
+        );
+        // Same guards as get_window.
+        assert!(wb.get_display_window(s, 0, 1, 1, 1).is_err()); // 0 coord
+        assert!(wb.get_display_window(s, 2, 1, 1, 1).is_err()); // inverted
+        assert!(wb.get_display_window(s, 1, 1, 400, 400).is_err()); // oversized
+        assert!(wb.get_display_window(SheetId(9), 1, 1, 1, 1).is_err()); // bad sheet
+    }
+
+    #[test]
     fn get_window_rejects_inverted_and_oversized() {
         let mut wb = Workbook::new();
         let s = wb.add_sheet("S");
@@ -752,5 +1316,146 @@ mod tests {
             wb.changed_since(s, recent),
             ChangeSet::Delta { .. }
         ));
+    }
+
+    // ── Absolute-reference resolution (regression) ───────────────────
+
+    #[test]
+    fn absolute_references_resolve_to_the_same_cell_as_relative() {
+        // A cell is keyed by position only, so $A$1 / $A1 / A$1 / A1 in a formula
+        // must all read the value at A1. (Regression: the evaluator once keyed the
+        // cell lookup by the reference's full address incl. its `$` flags, so an
+        // absolute reference missed the relatively-stored cell and read 0.)
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(7.0)); // A1
+        wb.set_formula(s, cell(1, 2), "=$A$1+$A1+A$1+A1").unwrap(); // B1 = 7*4
+        assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(28.0)));
+        // And the absolute precedent is tracked: editing A1 recomputes B1.
+        wb.set_value(s, cell(1, 1), CellValue::Number(10.0));
+        assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(40.0)));
+        // An absolute range corner resolves too: SUM($A$1:$A$2).
+        wb.set_value(s, cell(2, 1), CellValue::Number(5.0)); // A2
+        wb.set_formula(s, cell(1, 3), "=SUM($A$1:$A$2)").unwrap(); // C1 = 15
+        assert_eq!(wb.get_value(s, cell(1, 3)), Some(CellValue::Number(15.0)));
+    }
+
+    // ── Fill / replicate ─────────────────────────────────────────────
+
+    #[test]
+    fn fill_shifts_relative_formula_references_down_a_column() {
+        // Classic cross-foot: B1=A1*2, then fill B1 down B2:B4 over a column of
+        // inputs. Each filled formula tracks its row: B2 = A2*2, etc.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        for (r, v) in [(1, 10.0), (2, 20.0), (3, 30.0), (4, 40.0)] {
+            wb.set_value(s, cell(r, 1), CellValue::Number(v)); // A1..A4
+        }
+        wb.set_formula(s, cell(1, 2), "=A1*2").unwrap(); // B1 = 20
+        wb.fill(s, cell(1, 2), CellRange::new(cell(2, 2), cell(4, 2))); // fill B2:B4
+
+        assert_eq!(wb.get_value(s, cell(2, 2)), Some(CellValue::Number(40.0))); // A2*2
+        assert_eq!(wb.get_value(s, cell(3, 2)), Some(CellValue::Number(60.0))); // A3*2
+        assert_eq!(wb.get_value(s, cell(4, 2)), Some(CellValue::Number(80.0))); // A4*2
+    }
+
+    #[test]
+    fn fill_pins_absolute_references() {
+        // B1 = A1 * $A$1 ; filled down, the relative A1 tracks but $A$1 stays.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(3.0)); // A1
+        wb.set_value(s, cell(2, 1), CellValue::Number(5.0)); // A2
+        wb.set_formula(s, cell(1, 2), "=A1*$A$1").unwrap(); // B1 = 9
+        wb.fill(s, cell(1, 2), CellRange::new(cell(2, 2), cell(2, 2))); // fill B2
+
+        // B2 = A2 * $A$1 = 5 * 3 = 15 (the absolute corner stayed at A1).
+        assert_eq!(wb.get_value(s, cell(2, 2)), Some(CellValue::Number(15.0)));
+    }
+
+    #[test]
+    fn fill_copies_literals_and_formats() {
+        // A literal source replicates unchanged, and its display format rides along.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1234.5));
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+        wb.fill(s, cell(1, 1), CellRange::new(cell(1, 2), cell(1, 3))); // fill right B1:C1
+
+        assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(1234.5)));
+        assert_eq!(wb.get_format(s, cell(1, 3)), Some("#,##0.00"));
+        assert_eq!(wb.get_display(s, cell(1, 2)), "1,234.50"); // format applied
+    }
+
+    #[test]
+    fn fill_off_grid_reference_becomes_ref_error() {
+        // B2 = A1 (one row up-left of B2). Fill it up into B1, where the relative
+        // ref would point at row 0 → #REF!.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(7.0)); // A1
+        wb.set_formula(s, cell(2, 2), "=A1").unwrap(); // B2 = 7
+        wb.fill(s, cell(2, 2), CellRange::new(cell(1, 2), cell(1, 2))); // fill up into B1
+
+        assert_eq!(
+            wb.get_value(s, cell(1, 2)),
+            Some(CellValue::Error(SpreadsheetError::Ref))
+        );
+    }
+
+    #[test]
+    fn fill_from_empty_source_clears_targets() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(2, 1), CellValue::Number(9.0)); // A2 set
+        // A1 was never set (empty). Filling it over A2 clears A2.
+        wb.fill(s, cell(1, 1), CellRange::new(cell(2, 1), cell(2, 1)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), None);
+    }
+
+    #[test]
+    fn fill_oversized_range_is_rejected_wholesale() {
+        // A fill spanning more than MAX_RANGE_CELLS is a no-op (DoS guard), so a
+        // pre-existing cell in that range is left untouched rather than overwritten.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(5, 5), CellValue::Number(42.0));
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        // 1 .. 2^20 rows in one column is exactly the cap; add a row to exceed it.
+        let huge = CellRange::new(cell(1, 1), cell((1 << 20) + 1, 1));
+        assert!(huge.cell_count() > MAX_RANGE_CELLS);
+        wb.fill(s, cell(1, 1), huge);
+        assert_eq!(wb.get_value(s, cell(5, 5)), Some(CellValue::Number(42.0))); // untouched
+    }
+
+    #[test]
+    fn fill_at_high_coordinate_does_not_overflow() {
+        // A single-cell fill anchored near u32::MAX passes the cell_count guard
+        // (count = 1) but its offset arithmetic must not overflow i32 (would
+        // panic in debug/test, wrap in release). Filling a literal far down the
+        // sheet just copies it; a formula's huge negative shift collapses to #REF!.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        let hi = 2_147_483_648; // > i32::MAX
+        wb.set_value(s, cell(hi, 1), CellValue::Number(5.0));
+        // Fill that literal one row further down — no panic, value copied.
+        wb.fill(s, cell(hi, 1), CellRange::new(cell(hi + 1, 1), cell(hi + 1, 1)));
+        assert_eq!(wb.get_value(s, cell(hi + 1, 1)), Some(CellValue::Number(5.0)));
+        // A formula at the high anchor filled back to row 1 shifts by a huge
+        // negative delta → its reference goes off-grid → #REF! (no overflow).
+        wb.set_formula(s, cell(hi, 2), "=A1").unwrap();
+        wb.fill(s, cell(hi, 2), CellRange::new(cell(1, 2), cell(1, 2)));
+        assert_eq!(
+            wb.get_value(s, cell(1, 2)),
+            Some(CellValue::Error(SpreadsheetError::Ref))
+        );
+    }
+
+    #[test]
+    fn fill_unknown_sheet_is_noop() {
+        let mut wb = Workbook::new();
+        wb.fill(SheetId(9), cell(1, 1), CellRange::new(cell(1, 1), cell(2, 2)));
+        // No panic, nothing created.
+        assert_eq!(wb.sheet_count(), 0);
     }
 }

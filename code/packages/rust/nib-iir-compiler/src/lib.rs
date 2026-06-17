@@ -620,10 +620,20 @@ impl Compiler {
         out: &mut Vec<IIRInstr>,
     ) -> Result<String, CompileError> {
         // Single-child wrapper rules pass through to the inner expression.
+        //
+        // `child_nodes` filters out tokens, so a `unary_expr` that applies an operator
+        // (`~x` → children `[TILDE, operand]`) has exactly ONE child *node* and would be
+        // mistaken for a transparent wrapper — silently dropping the `~`. Guard against
+        // that: a `unary_expr` carrying a leading operator token must reach
+        // `compile_unary`, not be unwrapped. (Other expr levels with operators have ≥2
+        // child nodes, so they never hit this passthrough.)
         let kids = child_nodes(node);
+        let unary_with_op = node.rule_name == "unary_expr"
+            && node.children.iter().any(|c| matches!(c, ASTNodeOrToken::Token(_)));
         if kids.len() == 1
             && node.rule_name != "primary"
             && !is_terminal_expr(node)
+            && !unary_with_op
         {
             return self.compile_expr(kids[0], types, env, out);
         }
@@ -933,6 +943,45 @@ impl Compiler {
             };
 
             let rhs = self.compile_expr(rhs_node, types, env, out)?;
+
+            // LANG-FULL N7 — saturating add (`+?`): `dest = min(acc + b, MAX)`,
+            // where MAX is the type's maximum (u4 → 15, u8 → 255). Unlike `+%`/
+            // `+` (which WRAP via the E2 mask), `+?` CLAMPS: `15u4 +? 1 = 15`,
+            // `200u8 +? 100 = 255`. It needs the *wide* sum (an i64 add, NOT
+            // masked) to see the true total, then a branch to clamp it at MAX.
+            // (It is not a single CIR op, so it is lowered here, before
+            // `cir_op_for`.)
+            if op_tok.effective_type_name() == "SAT_ADD" || op_tok.value == "+?" {
+                let max: i64 = match lookup_node_type(node, types) {
+                    Some(NibType::U4) => 0xF,
+                    Some(NibType::U8) => 0xFF,
+                    // Saturating needs a width; default to the u8 max when the
+                    // context is unconstrained.
+                    _ => 0xFF,
+                };
+                let sum = self.fresh_var();
+                self.emit_to(out, IIRInstr::new("add", Some(sum.clone()),
+                    vec![Operand::Var(acc), Operand::Var(rhs)], "i64")); // wide, unmasked
+                let maxc = self.fresh_var();
+                self.emit_to(out, IIRInstr::new("const", Some(maxc.clone()),
+                    vec![Operand::Int(max)], "i64"));
+                let over = self.fresh_var();
+                self.emit_to(out, IIRInstr::new("cmp_gt", Some(over.clone()),
+                    vec![Operand::Var(sum.clone()), Operand::Var(maxc.clone())], "i64"));
+                let dest = self.fresh_var();
+                self.emit_to(out, IIRInstr::new("mov", Some(dest.clone()),
+                    vec![Operand::Var(sum)], "i64")); // dest = sum
+                let skip = self.fresh_label();
+                self.emit_to(out, IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var(over), Operand::Var(skip.clone())], "void")); // !over → skip
+                self.emit_to(out, IIRInstr::new("mov", Some(dest.clone()),
+                    vec![Operand::Var(maxc)], "i64")); // dest = MAX (saturate)
+                self.emit_to(out, IIRInstr::new("label", None,
+                    vec![Operand::Var(skip)], "void"));
+                acc = dest;
+                continue;
+            }
+
             // Map operator token to a typed CIR mnemonic the IIR-to-*
             // backends (wasm/jvm/clr/beam) recognise.  Mirrors the
             // pattern oct-iir-compiler uses — emit `add` / `cmp_eq` etc.
@@ -943,18 +992,30 @@ impl Compiler {
                 .ok_or_else(|| CompileError::Unsupported(format!("op {:?}", op_tok.value)))?;
 
             let dest = self.fresh_var();
-            // At the IIR level Nib's narrow types (u4/u8/bool) all flow
-            // through 64-bit slots — match the pattern in oct-iir-compiler
-            // which uses `"i64"` uniformly.  The function's declared
-            // Nib return type ("u8" / "bool" / "void") stays the source
-            // of truth on the IIRFunction; instruction type_hints are
-            // a separate IIR-level concept and concrete-typing them as
-            // `i64` lets every IIR-to-* validator accept the module.
+            // LANG-FULL E2 — register width & wrap. An **arithmetic / bitwise**
+            // op carries the narrow width (`u8`/`u4`) of its result so every
+            // backend masks the value mod-2ⁿ (e.g. `200u8 + 100u8 = 44`). A
+            // **comparison** (`cmp_*`) yields a 0/1 bool that is never masked,
+            // and its operands ride i64 slots — so it stays `i64` (the operand
+            // width; emitting `bool`/`u8` here would mis-type the LLVM `icmp`).
+            // Falls back to `i64` when the result width is unknown (an
+            // unconstrained expression) — preserving the legacy "collapse to
+            // i64, no wrap" behaviour. Consts/lets/ret/calls remain `i64` (see
+            // `nib_ty_str`); the narrow hint lives only on the arithmetic op.
+            let hint = if cir_op.starts_with("cmp_") {
+                "i64"
+            } else {
+                match lookup_node_type(node, types) {
+                    Some(NibType::U8) => "u8",
+                    Some(NibType::U4) => "u4",
+                    _ => "i64",
+                }
+            };
             self.emit_to(out, IIRInstr::new(
                 cir_op,
                 Some(dest.clone()),
                 vec![Operand::Var(acc), Operand::Var(rhs)],
-                "i64",
+                hint,
             ));
             acc = dest;
         }
@@ -970,12 +1031,50 @@ impl Compiler {
         out: &mut Vec<IIRInstr>,
     ) -> Result<String, CompileError> {
         // unary_expr = (BANG|TILDE) unary_expr | primary | …
-        // For V1 we just pass the inner expression through (drop the
-        // operator); proper logical-NOT / bitwise-NOT lowering is deferred.
-        if let Some(inner) = child_nodes(node).into_iter().find(|c| is_expr_rule(&c.rule_name)) {
-            return self.compile_expr(inner, types, env, out);
+        //
+        // The first child is the operator token when one is present (`~x` → the
+        // children are `[TILDE, unary_expr]`); a bare operand has no leading token
+        // (just `[primary]`). `child_nodes` filters tokens out, so it always returns
+        // the operand sub-node.
+        let inner = child_nodes(node)
+            .into_iter()
+            .find(|c| is_expr_rule(&c.rule_name))
+            .ok_or_else(|| CompileError::Unsupported("empty unary_expr".into()))?;
+        let val = self.compile_expr(inner, types, env, out)?;
+
+        // The leading operator token, if any (`~`/TILDE or `!`/BANG).
+        let op = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t),
+            ASTNodeOrToken::Node(_) => None,
+        });
+
+        match op.map(|t| (t.value.as_str(), t.effective_type_name())) {
+            // LANG-FULL N3 — bitwise NOT (`~`) → IIR `not` (flip every bit). The
+            // result carries the narrow width (`u8`/`u4`) of the unary node so every
+            // backend masks it mod-2ⁿ (the E2 value-mask): `~0u8 = 255` (`-1 & 0xFF`),
+            // `~15u4 = 0`. Without the mask a `not` would yield the i64 all-ones
+            // (`-1`), not the type's bitwise complement. `iir-to-llvm` 0.12.0 grew the
+            // `not` op (synthesised as `xor x, -1` + mask) — the last backend that
+            // lacked it — so this now runs on every backend. Falls back to `i64`
+            // (legacy "collapse, no mask") only when the width is unconstrained.
+            Some(("~", _)) | Some((_, "TILDE")) => {
+                let hint = match lookup_node_type(node, types) {
+                    Some(NibType::U8) => "u8",
+                    Some(NibType::U4) => "u4",
+                    _ => "i64",
+                };
+                let dest = self.fresh_var();
+                self.emit_to(
+                    out,
+                    IIRInstr::new("not", Some(dest.clone()), vec![Operand::Var(val)], hint),
+                );
+                Ok(dest)
+            }
+            // Logical NOT (`!`) needs boolean lowering (compare-to-zero) — a separate
+            // item; for now the inner value passes through unchanged (the prior V1
+            // behaviour). A bare operand (no operator) also passes through.
+            _ => Ok(val),
         }
-        Err(CompileError::Unsupported("empty unary_expr".into()))
     }
 
     // ---- Helpers --------------------------------------------------------
@@ -1234,14 +1333,21 @@ fn cir_op_for(text: &str, type_name: &str) -> Option<&'static str> {
     match (text, type_name) {
         // Arithmetic
         ("+", _) | (_, "PLUS")        => Some("add"),
+        // LANG-FULL N7 — wrapping add (`+%`). Lowers to the same `add` as `+`,
+        // and carries the narrow `type_hint` so the E2 backend mask wraps it:
+        // `15u4 +% 1` → `16 & 0xF = 0`, `200u8 +% 100` → `44`. (Under E2 a plain
+        // `+` on a narrow type already wraps; `+%` makes that intent explicit.)
+        // `+?` (SAT_ADD, saturating) is NOT a single op — it lowers to a wide
+        // add + clamp in `compile_binary_chain` and never reaches here.
+        ("+%", _) | (_, "WRAP_ADD")   => Some("add"),
         ("-", _) | (_, "MINUS")       => Some("sub"),
         ("*", _) | (_, "STAR")        => Some("mul"),
         ("/", _) | (_, "SLASH")       => Some("div"),
         // Bitwise (LANG-FULL N3). The grammar's `bitwise_expr` level already
         // produces these; they lower to the shared IIR `and`/`or`/`xor` ops, which
-        // every backend implements directly. (Unary `~` (TILDE) is deferred: a
-        // correct width-mask needs the integer-wrap enabler E2 — `~x` on a u8 must
-        // flip 8 bits, not the full 64-bit register.)
+        // every backend implements directly. (Unary `~` (TILDE) lowers to the IIR
+        // `not` op in `compile_unary`, narrow-masked per the E2 width so `~0u8 = 255`
+        // — see there; it never reaches this binary-operator map.)
         ("&", _) | (_, "AMP")         => Some("and"),
         ("|", _) | (_, "PIPE")        => Some("or"),
         ("^", _) | (_, "CARET")       => Some("xor"),
@@ -1341,6 +1447,41 @@ mod tests {
             assert!(!body.iter().any(|i| i.op == "call_builtin"),
                 "regression: bitwise op leaked a call_builtin in {src:?}; got body: {body:?}");
         }
+    }
+
+    #[test]
+    fn compiles_bitwise_not_with_narrow_hint() {
+        // LANG-FULL N3: unary `~` lowers to the shared IIR `not` op, carrying the
+        // narrow result width so every backend masks it mod-2ⁿ (`~0u8 = 255`). The
+        // hint MUST be the type's width, not `i64` — an unmasked `not 0` is the i64
+        // all-ones (`-1`), not the u8/u4 complement.
+        for (src, hint) in [
+            ("fn main() -> u8 { return ~0; }", "u8"),
+            ("fn main() -> u4 { return ~15; }", "u4"),
+        ] {
+            let m = compile_source(src, "test").expect("ok");
+            let body = &m.functions[0].instructions;
+            let not = body
+                .iter()
+                .find(|i| i.op == "not")
+                .unwrap_or_else(|| panic!("expected a `not` op for {src:?}; got body: {body:?}"));
+            assert_eq!(
+                not.type_hint, hint,
+                "`~` must carry the narrow width {hint:?} for {src:?}; got {:?}",
+                not.type_hint
+            );
+            assert!(!body.iter().any(|i| i.op == "call_builtin"),
+                "regression: `~` leaked a call_builtin in {src:?}; got body: {body:?}");
+        }
+    }
+
+    #[test]
+    fn double_bitwise_not_is_identity() {
+        // `~~x` nests two unary_exprs → `not(not(x))`. Two `not` ops must be emitted
+        // (the operator is no longer silently dropped).
+        let m = compile_source("fn main() -> u8 { return ~~5; }", "test").expect("ok");
+        let nots = m.functions[0].instructions.iter().filter(|i| i.op == "not").count();
+        assert_eq!(nots, 2, "expected two `not` ops for `~~5`; got {nots}");
     }
 
     #[test]

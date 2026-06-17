@@ -186,6 +186,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Grammar-lexer test helper**: `_tok_type` normalizer is required — non-keyword tokens keep `TokenType` enum values, only promoted keywords use strings. Direct `t.type == "EOF"` comparison fails because `TokenType.EOF != "EOF"`.
 - **Bracket-aware regex delimiter scanning** in `.tokens` parsers — `/` inside `[...]` is not the closing delim. Don't escape it as `[^\/]`; the parser handles it correctly.
 - **New language frontends MUST wrap `GrammarLexer` / `GrammarParser`, not hand-write their own.** Every Twig/Lisp/whatever frontend in the repo (Python, Rust, etc.) is a thin shim that loads `code/grammars/<lang>.tokens` and `<lang>.grammar`. The wrapper pattern is the canonical approach — see `code/packages/rust/brainfuck/` for the reference. The standalone `lisp-lexer` / `lisp-parser` Rust crates are NOT a model — they predate the grammar-tools refactor. Hand-writing forks the grammar into a second implementation that drifts silently.
+- **In the S language `_` is the assignment operator, so it cannot appear in any identifier** (the `NAME` pattern in `s.tokens` excludes it). Builtin names borrowed from R that contain an underscore — `seq_len`, `seq_along`, `is_null` — are therefore unwriteable in S: `seq_len(4)` lexes as `seq _ len(4)` (assign `len(4)` to `seq`) and the call silently does the wrong thing rather than erroring. Use dot-style names (`is.na`, `as.character` — dots ARE valid in S names) or drop the underscore form. Hit while adding the S v2 builtin library; the failure surfaced as a runtime "expected double" panic in a test, not a parse error.
 - **Rust GrammarParser NAME-match collision fix** (parser/grammar_parser.rs `match_token_reference`): when the grammar expects literal `NAME`, reject tokens whose `type_name` is set (e.g. a `QUOTE` token whose `type_: Name` is just the enum-fallback). The original logic only excluded type_name'd tokens for non-NAME custom types, so a Twig `'foo` would lex `'` as `(type_=Name, type_name="QUOTE")` and then incorrectly match the `NAME` slot in `atom = ... | NAME`. Symmetric tightening: a custom Name-based type reference (e.g. `AT_KEYWORD`) requires `type_name == expected_type` — bare-Name tokens no longer cross-pollute custom types.
 - **Custom token types (DIMENSION, HASH_COLOR, TOKEN_REF, …) do NOT get new `TokenType` enum variants.** The GrammarLexer maps custom-named regex tokens to `type_ = TokenType::Name` with `type_name = Some("DIMENSION")` etc. To detect them in a Rust compiler, use `t.type_name.as_deref() == Some("TOKEN_REF")`, NOT `t.type_ == TokenType::TokenRef` (which doesn't exist). Tests must check `t.type_ == TokenType::Name && t.type_name.as_deref() == Some("DIMENSION")`.
 - **`GrammarParser::new` takes `Vec<Token>` and `ParserGrammar` by value.** Do NOT borrow: `GrammarParser::new(&tokens, &grammar)` fails. Use `GrammarParser::new(tokens, grammar)`. If you need the token list after parsing, clone before passing.
@@ -724,3 +725,135 @@ Durable lessons:
   linker path at build time. Sibling dynamic-load ports (C#) sidestep this with a
   custom `CONDUIT_CAPI_PATH` resolver; GHC FFI has no such hook, so the OS loader
   env vars are mandatory.
+
+## LANG-FULL N6 (Nib u8 wrap) — the exit-code matrix can't prove a u8 wrap
+
+**Date:** 2026-06-15
+
+Attempted N6 (make `200u8 + 100u8 = 44` run cross-backend). Three findings that
+block a HONEST proof — recorded so the next attempt doesn't ship a false positive:
+
+1. **`Expect::Exit` is `& 0xFF` — it CANNOT distinguish a u8 wrap from no wrap.**
+   `lang_matrix.rs` reads the process exit code, which the OS/C-runtime truncates
+   to 8 bits (documented at the top of the file: "process exit code (`& 0xFF`)").
+   `200 + 100 = 300`; `300 & 0xFF = 44` **whether or not the backend masks**. So a
+   Nib `fn main() -> u8 { return 200 + 100; }` "passes" `Expect::Exit(44)` even when
+   the arithmetic is plain i64 with no E2 mask. For u8 the exit-code truncation IS
+   the u8 mask, so the test proves nothing. u16/u32 are worse — their masked values
+   (4464, …) exceed 255 and can't ride an exit code at all. **A real N6 proof needs
+   the value at full width**: either a stdout print (`Expect::Stdout`, but Nib has
+   no `print`/`out` — Oct does, via O-OUT) or a return-value-at-width harness like
+   `iir-to-wasm/tests/width_wrap.rs` (which calls `load_and_run` and reads the raw
+   i64 result, NOT an exit code). Decide the proof mechanism BEFORE writing N6.
+
+2. **The Nib `type_hint` lookup was a silent no-op.** `arith_result_hint` /
+   `lookup_node_type` consult `types: HashMap<usize, NibType>` keyed by AST-node
+   pointer address. Tagging the `add` op with the inferred `u8` produced `i64`
+   anyway (unit-tested: the emitted `add` carried `"i64"`, not `"u8"`). Either the
+   checker doesn't type the `add_expr` node, or the pointer keys don't match the
+   nodes the compiler walks (the checker types one AST, `compile_typed` may walk a
+   moved/rebuilt one). Verify the lookup actually returns `Some(U8)` (a direct unit
+   test on the emitted hint) BEFORE relying on it — the i64 collapse hid this for
+   every prior Nib item because everything was i64 regardless.
+
+3. **JVM + CLR E2 mask legs were only structurally tested and don't fire for the
+   real shape.** Their executed proof was explicitly deferred to "the integration
+   PR." With the universal shape (i64 slots + narrow hint on the op — see
+   `iir-to-llvm`'s `e2_*` tests), a u8 add over `long` operands returns the unmasked
+   value on JVM (`iir_type_to_jvm("u8") = Int` → `IADD`, but operands ride `long`
+   slots; the `iand` mask path doesn't match). Native/LLVM/WASM/VM/JIT mask
+   correctly; JVM/CLR need a fix for the i64-operand case. These are two real
+   remaining E2 backend legs, not done.
+
+Net: N6 is a multi-part item (proof-mechanism design + Nib type-lookup fix + JVM/CLR
+backend fixes), NOT a one-line frontend wiring. The native-AOT E2 leg (PR #5887,
+merged) IS real — its `aarch64-backend` proof installs and *calls* the generated
+code and reads the raw u64 (44), so it is not exit-code-confounded.
+
+## Identity must be a SUBSET of fields when a rich struct is a map/graph key (spreadsheet-core fill PR)
+
+`CellAddress` carries `{row, col, absolute_row, absolute_col}` and derives
+`Eq`/`Hash` over **all four** fields. But a cell's *identity* is its position
+(`row, col`) only — the `$` markers just steer copy/fill shifting. The engine
+stored cells (and dependency-graph nodes) keyed by the bare `CellAddress`, yet
+the evaluator looked them up with the address taken **straight from the formula's
+`Ref`**, flags and all. So `=$A$1` built a lookup key `{1,1,true,true}` that never
+matched the relatively-stored `{1,1,false,false}` cell → it read as empty (**0**),
+and editing `A1` never recomputed a dependent that referenced it absolutely.
+
+Nobody had ever written a test that *evaluated* an absolute reference, so the bug
+sat latent until the fill feature (whose whole point is "`$A$1` stays pinned")
+surfaced it. Fix: a `without_absolute()` normaliser applied at the two key
+boundaries (the evaluator's `lookup` closure and `collect_refs`).
+
+Lesson: when a struct with "decorative" fields is used as a `HashMap` key or graph
+node, either (a) don't derive `Hash`/`Eq` over the decorative fields, or (b)
+normalise to the identity subset at **every** key boundary — and add a test that
+exercises the decorated form through the real lookup path, not just the AST. A
+derive that silently widens identity is a landmine.
+
+## stream-reactor `defer_read` REPLAYS the chunk — it is not "pause output" (WEB01b-1a, PR #6047)
+
+`MailboxHttpServer` (the new mailbox/deferred-response HTTP server) framed a
+request, submitted it to the worker pool, and returned
+`TcpHandlerResult::defer_read()` intending "pause this connection's reads until
+the response is written." The test passed locally on macOS but failed on the
+Linux CI runner: the client received a spurious `400 Bad Request` written
+*before* the real `200 OK` on the same connection.
+
+Root cause: in `code/packages/rust/stream-reactor`, `defer_read` does **not**
+mean "pause output." It means **"I did NOT consume these bytes — buffer this
+chunk and *replay* it (re-invoke the handler with the same bytes) when reads
+resume."** The mailbox response-router calls `resume_all_reads()` for *every*
+connection's response, so a deferred chunk gets replayed (`progress_reads_with_state`
+→ `apply_read_chunk`, stream-reactor/src/lib.rs:651-668,720-724). Because the
+handler had already *consumed* the bytes (drained its buffer + submitted the
+job), the replay re-fed the chunk. On macOS the whole request arrived in one TCP
+segment, so the replay merely double-submitted (the leading `200` still satisfied
+the assertion). On Linux under load the request was TCP-segmented, so the
+replayed **trailing fragment** (`ection: close\r\n\r\n`) parsed as a malformed
+head → `pop_request` returned `Err` → a `400` was queued before the real `200`.
+
+Fixes:
+1. After a successful consume+submit, return `TcpHandlerResult::default()`
+   (keep reading) — **never** `defer_read()`. Only return `defer_read` when you
+   genuinely did NOT consume the bytes and want them replayed (e.g. the
+   QueueFull backpressure case in embeddable-tcp-server). There is currently no
+   "pause-without-replay" primitive; a per-connection in-flight gate needs a
+   reorder buffer (deferred to WEB01b-1b).
+2. Drain **every** complete request a read delivered by looping `pop_request`
+   until `Ok(None)` — one TCP read can carry multiple coalesced/pipelined
+   requests; popping once strands the extras in the buffer and hangs a client
+   that sent them together and then waited. (Caught by the security review.)
+
+Lesson: a handler-result flag named for an *intent* ("defer") may be implemented
+as a *mechanism* ("replay") — read the reactor's drain path before reusing it,
+and never trust a same-host test to expose a TCP-segmentation-dependent bug
+(loopback coalescing hides it; the Linux runner under parallel load splits the
+read and surfaces it).
+
+## `mv file.bak file` restores OLD mtime → cargo skips the rebuild (false "race")
+
+While building WEB01b-1b I did a "does this test actually prove anything" check:
+`sed -i.bak 's/ordered_responses: true/false/' lib.rs` (build+run → correctly
+FAILED), then `mv lib.rs.bak lib.rs` to restore. The restored file had
+`ordered_responses: true` again — but every subsequent `cargo test` kept FAILING
+as if it were still `false`. Adding ANY `eprintln!` "fixed" it, which screamed
+"timing race." It was not a race.
+
+`mv` preserves the SOURCE file's mtime. The `.bak` was created at the moment of
+the `sed` (before the false-build), so restoring it stamped `lib.rs` with an
+mtime OLDER than the compiled artifact from the false build. Cargo's
+mtime-based staleness check then judged `lib.rs` "older than the build" and
+skipped recompiling — so the tests ran against the stale `ordered_responses:
+false` binary. Adding an `eprintln` edited the file (fresh mtime) and forced a
+real rebuild, which is why it "passed."
+
+Lessons:
+- To revert a quick experiment, restore from git (`git checkout -- file`) or
+  `touch file` after a `cp`/`mv` — never trust `mv file.bak file` to trigger a
+  rebuild; it can move the mtime backwards.
+- A Heisenbug that disappears the instant you add a print, where the print is
+  AFTER the observed effect, is almost never a real race — suspect a stale build
+  artifact (or caching) first. Confirm by `touch`-ing the source and re-running
+  clean BEFORE hunting for a concurrency bug.

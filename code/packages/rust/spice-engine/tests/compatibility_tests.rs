@@ -128,7 +128,22 @@ fn analyze_deck_controls_reports_unsupported_directives() {
 .include models.inc
 .LIB vendor.lib TT
 .control
+op
+save V(in)
+probe V(out)
+print op V(in)
+measure tran vmax MAX V(out)
+meas dc imax MAX I(V1)
+fourier 1k V(out)
+four 2k V(in)
+reset
+set noaskquit
+set filetype=ascii
+set wr_vecnames
+set wr_singlescale
+set filetype=binary
 run
+quit
 .endc
 .end
 ",
@@ -136,11 +151,18 @@ run
 
     assert!(summary.terminated);
     assert_eq!(
-        &summary.active_lines[..3],
+        summary.active_lines,
         &[
             ".include models.inc".to_string(),
             ".LIB vendor.lib TT".to_string(),
-            ".control".to_string()
+            ".op".to_string(),
+            ".save V(in)".to_string(),
+            ".probe V(out)".to_string(),
+            ".print op V(in)".to_string(),
+            ".measure tran vmax MAX V(out)".to_string(),
+            ".meas dc imax MAX I(V1)".to_string(),
+            ".four 1k V(out)".to_string(),
+            ".four 2k V(in)".to_string(),
         ]
     );
     let diagnostics = summary
@@ -159,13 +181,62 @@ run
         vec![
             (".include", 2, "error"),
             (".lib", 3, "error"),
-            (".control", 4, "error")
+            (".control", 4, "error"),
+            (".control", 18, "error")
         ]
     );
-    assert!(summary
-        .diagnostics
-        .iter()
-        .all(|diagnostic| diagnostic.code == "SPICE_DECK_UNSUPPORTED_DIRECTIVE"));
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_CONTROL_COMMAND"
+        ]
+    );
+    let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
+    let measurement_summary = resolve_deck_measurements(&measurement_deck);
+    assert_eq!(
+        measurement_summary
+            .measurements
+            .iter()
+            .map(|card| (
+                card.directive.as_str(),
+                card.analysis.as_str(),
+                card.name.as_str(),
+                card.mode.as_str(),
+                card.probe.as_str()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            (".measure", "tran", "vmax", "max", "V(out)"),
+            (".meas", "dc", "imax", "max", "I(V1)")
+        ]
+    );
+    let fourier_deck = format!("{}\n.end", summary.active_lines.join("\n"));
+    let fourier_summary = resolve_deck_fourier(&fourier_deck);
+    assert_eq!(
+        fourier_summary
+            .fourier
+            .iter()
+            .map(|card| (
+                card.directive.as_str(),
+                card.fundamental_frequency_hz,
+                card.probes
+                    .iter()
+                    .map(|probe| probe.as_str())
+                    .collect::<Vec<_>>()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            (".four", 1000.0, vec!["V(out)"]),
+            (".four", 2000.0, vec!["V(in)"])
+        ]
+    );
 }
 
 #[test]
@@ -246,14 +317,42 @@ fn resolve_deck_sources_reports_missing_sources_and_cycles() {
 .include a.inc
 .lib vendor.lib SS
 .control
+op
+save V(a)
+probe V(b)
+print op V(a)
+measure tran vmax MAX V(a)
+meas dc imax MAX I(V1)
+fourier 1k V(a)
+four 2k V(b)
+.reset
+.set noaskquit
+.set filetype=ascii
+.set wr_vecnames
+.set wr_singlescale
+run
+.quit
+.endc
 .end
 ",
         &sources,
     );
 
+    assert!(summary.terminated);
     assert_eq!(
         summary.active_lines,
-        vec!["R2 b 0 2", "R1 a b 1", ".control"]
+        vec![
+            "R2 b 0 2",
+            "R1 a b 1",
+            ".op",
+            ".save V(a)",
+            ".probe V(b)",
+            ".print op V(a)",
+            ".measure tran vmax MAX V(a)",
+            ".meas dc imax MAX I(V1)",
+            ".four 1k V(a)",
+            ".four 2k V(b)"
+        ]
     );
     assert_eq!(
         summary
@@ -266,6 +365,54 @@ fn resolve_deck_sources_reports_missing_sources_and_cycles() {
             "SPICE_DECK_INCLUDE_CYCLE",
             "SPICE_DECK_LIB_SECTION_NOT_FOUND",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
+        ]
+    );
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .skip(3)
+            .map(|diagnostic| (diagnostic.directive.as_str(), diagnostic.line_number))
+            .collect::<Vec<_>>(),
+        vec![(".control", 5)]
+    );
+    let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
+    let measurement_summary = resolve_deck_measurements(&measurement_deck);
+    assert_eq!(
+        measurement_summary
+            .measurements
+            .iter()
+            .map(|card| (
+                card.directive.as_str(),
+                card.analysis.as_str(),
+                card.name.as_str(),
+                card.mode.as_str(),
+                card.probe.as_str()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            (".measure", "tran", "vmax", "max", "V(a)"),
+            (".meas", "dc", "imax", "max", "I(V1)")
+        ]
+    );
+    let fourier_deck = format!("{}\n.end", summary.active_lines.join("\n"));
+    let fourier_summary = resolve_deck_fourier(&fourier_deck);
+    assert_eq!(
+        fourier_summary
+            .fourier
+            .iter()
+            .map(|card| (
+                card.directive.as_str(),
+                card.fundamental_frequency_hz,
+                card.probes
+                    .iter()
+                    .map(|probe| probe.as_str())
+                    .collect::<Vec<_>>()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            (".four", 1000.0, vec!["V(a)"]),
+            (".four", 2000.0, vec!["V(b)"])
         ]
     );
     assert_eq!(
@@ -766,13 +913,15 @@ fn resolve_deck_fourier_reports_unsupported_subset() {
 }
 
 #[test]
-fn resolve_deck_outputs_extracts_save_and_probe_cards() {
+fn resolve_deck_outputs_extracts_save_probe_print_and_plot_cards() {
     let summary = resolve_deck_outputs(
         "
 V1 in 0 DC 1
 .save V(out) i(V1)
 .probe tran V(clk)
 .probe AC V(out)
+.print dc V(load) I(V2)
+.plot ac I(V3)
 .end
 .save V(ignored)
 ",
@@ -780,7 +929,7 @@ V1 in 0 DC 1
 
     assert_eq!(summary.active_lines, vec!["V1 in 0 DC 1"]);
     assert!(summary.terminated);
-    assert_eq!(summary.end_line_number, Some(6));
+    assert_eq!(summary.end_line_number, Some(8));
     assert!(summary.diagnostics.is_empty());
     assert_eq!(
         summary
@@ -800,6 +949,12 @@ V1 in 0 DC 1
             ),
             (".probe", Some("tran"), &["V(clk)".to_string()][..]),
             (".probe", Some("ac"), &["V(out)".to_string()][..]),
+            (
+                ".print",
+                Some("dc"),
+                &["V(load)".to_string(), "I(V2)".to_string()][..]
+            ),
+            (".plot", Some("ac"), &["I(V3)".to_string()][..]),
         ]
     );
 
@@ -808,13 +963,15 @@ V1 in 0 DC 1
             "
 .save V(out) I(V1)
 .probe tran V(out) V(clk)
+.print tran I(V2)
+.plot tran V(extra)
 .probe ac V(freq)
 .end
 ",
             "transient",
         )
         .unwrap(),
-        vec!["V(out)", "I(V1)", "V(clk)"]
+        vec!["V(out)", "I(V1)", "V(clk)", "I(V2)", "V(extra)"]
     );
 }
 
@@ -988,8 +1145,14 @@ fn resolve_deck_outputs_reports_invalid_cards() {
         "
 .save
 .probe tran
+.print tran
+.print foo V(out)
+.plot tran
+.plot foo V(out)
 .save P(out)
 .probe dc V(out) bad-token
+.print dc bad-token
+.plot dc bad-token
 .end
 ",
     );
@@ -1003,8 +1166,14 @@ fn resolve_deck_outputs_reports_invalid_cards() {
     assert_eq!(
         codes,
         vec![
+            "SPICE_DECK_OUTPUT_ANALYSIS",
+            "SPICE_DECK_OUTPUT_ANALYSIS",
             "SPICE_DECK_OUTPUT_ARGUMENT",
             "SPICE_DECK_OUTPUT_ARGUMENT",
+            "SPICE_DECK_OUTPUT_ARGUMENT",
+            "SPICE_DECK_OUTPUT_ARGUMENT",
+            "SPICE_DECK_OUTPUT_PROBE",
+            "SPICE_DECK_OUTPUT_PROBE",
             "SPICE_DECK_OUTPUT_PROBE",
             "SPICE_DECK_OUTPUT_PROBE",
         ]

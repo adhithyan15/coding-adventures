@@ -67,6 +67,7 @@ then implement SIR faithfully and uniformly.
 | `cons` `car` `cdr` (Pairs) | — | `sir-runtime-pairs` |
 | `regex` literal | native `re` / `RegExp` engine | `sir-runtime-regex` (flavour/flags) |
 | `backtick` shell-out | native subprocess | `sir-runtime-shell` |
+| `range` literal (`a..b` `a...b` `a..` `..b`) | — (Python `range` is half-open/integer-only; JS has none) | `sir-runtime-range` |
 | `+ - * / = < > <= >= != %` | native operators where SIR semantics match | `sir-runtime-core` for SIR-specific (variadic, truncating `/`) |
 
 ### The truthiness rule (corrects SIR20)
@@ -136,6 +137,22 @@ plus match/scan helpers.
 `backtick(command) -> str` — run a command and capture stdout (Python
 `subprocess`, TS `child_process.execSync`), preserving the SIR contract for exit
 status / output.
+
+### `sir-runtime-range`
+The SIR first-class `Range` value (a Ruby `a..b` / `a...b` literal lowers to
+`BuiltinCall("range", [start, stop, exclusive])`). No faithful native form
+exists — Python's `range` is half-open and integer-only and can't express the
+inclusive or begin/endless forms, and JavaScript has no range type at all.
+- `range(start, stop, exclusive) -> Range` — the constructor the backends emit
+  (`_sir_range(...)` / `__SirRange.range(...)`). Either bound may be nil/`null`
+  for the beginless (`..b`) / endless (`a..`) forms; `exclusive` selects `...`.
+- `Range` is **iterable** (integers upward from `start`; an endless range yields
+  forever — consume lazily; a beginless range raises on iteration, matching
+  Ruby's `(..5).each`), supports **membership** (`includes` / Ruby `include?`),
+  materialises with `to_list` / `toList` (Ruby `to_a`; raises on an unbounded
+  range), and renders in Ruby notation (`1..5`, `1...5`, `1..`, `..5`).
+- Zero dependencies (numeric ranges need no richer display). v0 covers integer
+  ranges; non-integer stride / float ranges are out of scope.
 
 ## How backends consume them
 

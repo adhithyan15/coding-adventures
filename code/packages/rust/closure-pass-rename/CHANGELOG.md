@@ -2,6 +2,86 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-16
+
+### Added — local variables, not just parameters
+
+`RenamePass` now renames not only leaf-function **parameters** but also their
+function-body **`var`/`let`/`const` locals**:
+
+```js
+function f(input) { var doubled = input * 2; return doubled; }
+//  ⇒  function f(a){var b=a * 2;return b}
+```
+
+A name is renamed only when it is **declared exactly once** in a leaf function
+**and** its declaration's scope spans the whole function body — because the
+renamer rewrites *every* in-body use of the name, so it is only sound when every
+use provably resolves to that one binding:
+
+- a **parameter** or a **`var`** is function-scoped (a `var` hoists, even from a
+  nested block) → all in-body uses resolve to it → eligible;
+- a **`let`/`const`** is block-scoped → eligible only when declared at the
+  function-body **top level** (its block is then the whole body). A `let`/`const`
+  nested inside an inner `{}`/`if`/loop/`switch`/`for`-init is **skipped**:
+  the same identifier used *outside* that inner block resolves to an outer/global
+  binding, and renaming "every use" would corrupt it. (This block-scope rule was
+  added after a security review caught the count-alone rule as unsound.)
+- a name declared **more than once** (a parameter also `var`'d, two block-scoped
+  `let x`) is skipped — its uses could belong to distinct bindings.
+
+- The collector that gated parameter renaming (`collect_decl_names`, a set) is
+  now `collect_decl_occurrences` (an ordered `Vec` of `(name, eligible)` with
+  duplicates) so the pass can count occurrences, track per-declaration scope
+  eligibility, and assign fresh names in deterministic source order.
+- Declaration sites are now rewrite targets: a `var`/`let`/`const` declarator id
+  (including a `for (var i …)` init) is renamed alongside its uses.
+
+- **8 new behavior tests**: local `var`, top-level `let`+`const`, parameter+local
+  together, a `for`-loop var, the WHITESPACE_ONLY contrast, the load-bearing
+  `skips_name_declared_twice` (two distinct `total` bindings not conflated), the
+  soundness regression `skips_nested_block_scoped_let_used_outside_its_block`,
+  and `renames_nested_var_because_function_scoped` (a `var` in a block IS
+  eligible, unlike a `let`).
+
+## [0.3.0] - 2026-06-16
+
+### Added — real renaming (leaf-function parameters)
+
+`RenamePass::run` is no longer identity. It now renames the **parameters of
+leaf functions** (function declarations whose body declares no nested function)
+to short names (`a`, `b`, …), rewriting the declaration and every use site:
+
+```js
+function f(longName) { return longName + 1; }   ⇒   function f(a){return a + 1}
+```
+
+It is a self-contained scope-aware α-rename over the Phase-1 AST. It
+conservatively never renames:
+
+- module/global top-level names (potentially externally visible);
+- free globals (`console`, `window`, …);
+- property names — the `.x` of a non-computed member access, a non-computed
+  object-literal key;
+- a parameter also declared `var`/`let`/`const` in the body (re-declared or
+  block-shadowed) — skipped rather than mis-renamed;
+- single-character parameters (already minimal).
+
+Fresh names avoid every identifier that appears anywhere in the function, so a
+rename can neither collide with another local nor capture a free global. Within
+this subset the transform is provably sound; anything outside it is left
+untouched (`changed` stays `false`).
+
+This is the v1 slice. Broader renaming — non-leaf scopes, locals, module-private
+top-level names — is future work on the same walker, and will consume
+`closure-scope-analyzer` for cross-scope resolution (v1 does not yet use it).
+
+- **11 new behavior tests** driving the real `source → bridge → rename → emit`
+  roundtrip (added `javascript-parser` + `closure-emitter` dev-deps): renaming,
+  property-name preservation, global avoidance, redeclared/non-leaf/single-char
+  skips, computed-member rewriting, nested-block uses.
+- De-staled the module/struct/test docs (they claimed "v1 is identity").
+
 ## [0.2.0] - 2026-06-01
 
 ### Added (CLOC13.A — consume `closure-scope-analyzer`)

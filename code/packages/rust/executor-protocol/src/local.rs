@@ -121,6 +121,7 @@ mod tests {
             supported_ops: 0,
             supported_dtypes: 0,
             gflops_f32: 0,
+            gflops_f64: 0,
             gflops_u8: 0,
             gflops_i32: 0,
             host_to_device_bw: 0,

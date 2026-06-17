@@ -115,16 +115,38 @@ V1 in 0 DC 1
 .include models.inc
 .LIB vendor.lib TT
 .control
+op
+save V(in)
+probe V(out)
+print op V(in)
+measure tran vmax MAX V(out)
+meas dc imax MAX I(V1)
+fourier 1k V(out)
+four 2k V(in)
+reset
+set noaskquit
+set filetype=ascii
+set wr_vecnames
+set wr_singlescale
+set filetype=binary
 run
+quit
 .endc
 .end
 `);
 
     expect(summary.terminated).toBe(true);
-    expect(summary.activeLines.slice(0, 3)).toStrictEqual([
+    expect(summary.activeLines).toStrictEqual([
       ".include models.inc",
       ".LIB vendor.lib TT",
-      ".control",
+      ".op",
+      ".save V(in)",
+      ".probe V(out)",
+      ".print op V(in)",
+      ".measure tran vmax MAX V(out)",
+      ".meas dc imax MAX I(V1)",
+      ".four 1k V(out)",
+      ".four 2k V(in)",
     ]);
     expect(summary.diagnostics.map(({ directive, lineNumber, severity }) => [
       directive,
@@ -134,10 +156,34 @@ run
       [".include", 2, "error"],
       [".lib", 3, "error"],
       [".control", 4, "error"],
+      [".control", 18, "error"],
     ]);
-    expect(summary.diagnostics.every((diagnostic) =>
-      diagnostic.code === "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
-    )).toBe(true);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+      "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+      "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+      "SPICE_DECK_CONTROL_COMMAND",
+    ]);
+    const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
+    expect(measurementSummary.measurements.map((card) => [
+      card.directive,
+      card.analysis,
+      card.name,
+      card.mode,
+      card.probe,
+    ])).toStrictEqual([
+      [".measure", "tran", "vmax", "max", "V(out)"],
+      [".meas", "dc", "imax", "max", "I(V1)"],
+    ]);
+    const fourierSummary = resolveDeckFourier(`${summary.activeLines.join("\n")}\n.end`);
+    expect(fourierSummary.fourier.map((card) => [
+      card.directive,
+      card.fundamentalFrequencyHz,
+      card.probes,
+    ])).toStrictEqual([
+      [".four", 1000, ["V(out)"]],
+      [".four", 2000, ["V(in)"]],
+    ]);
   });
 
   it("expands include files and selected library sections", () => {
@@ -186,6 +232,22 @@ Ctyp out 0 1u
 .include a.inc
 .lib vendor.lib SS
 .control
+op
+save V(a)
+probe V(b)
+print op V(a)
+measure tran vmax MAX V(a)
+meas dc imax MAX I(V1)
+fourier 1k V(a)
+four 2k V(b)
+.reset
+.set noaskquit
+.set filetype=ascii
+.set wr_vecnames
+.set wr_singlescale
+run
+.quit
+.endc
 .end
 `, {
       "a.inc": ".include b.inc\nR1 a b 1\n",
@@ -193,12 +255,50 @@ Ctyp out 0 1u
       "vendor.lib": ".lib TT\nRtyp out 0 20\n.endl TT\n",
     });
 
-    expect(summary.activeLines).toStrictEqual(["R2 b 0 2", "R1 a b 1", ".control"]);
+    expect(summary.terminated).toBe(true);
+    expect(summary.activeLines).toStrictEqual([
+      "R2 b 0 2",
+      "R1 a b 1",
+      ".op",
+      ".save V(a)",
+      ".probe V(b)",
+      ".print op V(a)",
+      ".measure tran vmax MAX V(a)",
+      ".meas dc imax MAX I(V1)",
+      ".four 1k V(a)",
+      ".four 2k V(b)",
+    ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_INCLUDE_NOT_FOUND",
       "SPICE_DECK_INCLUDE_CYCLE",
       "SPICE_DECK_LIB_SECTION_NOT_FOUND",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+    ]);
+    expect(summary.diagnostics.slice(3).map(({ directive, lineNumber }) => [
+      directive,
+      lineNumber,
+    ])).toStrictEqual([
+      [".control", 5],
+    ]);
+    const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
+    expect(measurementSummary.measurements.map((card) => [
+      card.directive,
+      card.analysis,
+      card.name,
+      card.mode,
+      card.probe,
+    ])).toStrictEqual([
+      [".measure", "tran", "vmax", "max", "V(a)"],
+      [".meas", "dc", "imax", "max", "I(V1)"],
+    ]);
+    const fourierSummary = resolveDeckFourier(`${summary.activeLines.join("\n")}\n.end`);
+    expect(fourierSummary.fourier.map((card) => [
+      card.directive,
+      card.fundamentalFrequencyHz,
+      card.probes,
+    ])).toStrictEqual([
+      [".four", 1000, ["V(a)"]],
+      [".four", 2000, ["V(b)"]],
     ]);
     expect(summary.diagnostics.slice(0, 3).map(({ source, lineNumber, target }) => [
       source,
@@ -554,19 +654,21 @@ V1 in 0 SIN(0 1 1k)
     ]);
   });
 
-  it("extracts .save and .probe output cards", () => {
+  it("extracts .save, .probe, .print, and .plot output cards", () => {
     const summary = resolveDeckOutputs(`
 V1 in 0 DC 1
 .save V(out) i(V1)
 .probe tran V(clk)
 .probe AC V(out)
+.print dc V(load) I(V2)
+.plot ac I(V3)
 .end
 .save V(ignored)
 `);
 
     expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 1"]);
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(6);
+    expect(summary.endLineNumber).toBe(8);
     expect(summary.diagnostics).toStrictEqual([]);
     expect(
       summary.selections.map((selection) => [
@@ -578,6 +680,8 @@ V1 in 0 DC 1
       [".save", undefined, ["V(out)", "I(V1)"]],
       [".probe", "tran", ["V(clk)"]],
       [".probe", "ac", ["V(out)"]],
+      [".print", "dc", ["V(load)", "I(V2)"]],
+      [".plot", "ac", ["I(V3)"]],
     ]);
 
     expect(
@@ -585,26 +689,40 @@ V1 in 0 DC 1
         `
 .save V(out) I(V1)
 .probe tran V(out) V(clk)
+.print tran I(V2)
+.plot tran V(extra)
 .probe ac V(freq)
 .end
 `,
         "transient",
       ),
-    ).toStrictEqual(["V(out)", "I(V1)", "V(clk)"]);
+    ).toStrictEqual(["V(out)", "I(V1)", "V(clk)", "I(V2)", "V(extra)"]);
   });
 
-  it("reports invalid .save and .probe output cards", () => {
+  it("reports invalid .save, .probe, .print, and .plot output cards", () => {
     const summary = resolveDeckOutputs(`
 .save
 .probe tran
+.print tran
+.print foo V(out)
+.plot tran
+.plot foo V(out)
 .save P(out)
 .probe dc V(out) bad-token
+.print dc bad-token
+.plot dc bad-token
 .end
 `);
 
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code).sort()).toStrictEqual([
+      "SPICE_DECK_OUTPUT_ANALYSIS",
+      "SPICE_DECK_OUTPUT_ANALYSIS",
       "SPICE_DECK_OUTPUT_ARGUMENT",
       "SPICE_DECK_OUTPUT_ARGUMENT",
+      "SPICE_DECK_OUTPUT_ARGUMENT",
+      "SPICE_DECK_OUTPUT_ARGUMENT",
+      "SPICE_DECK_OUTPUT_PROBE",
+      "SPICE_DECK_OUTPUT_PROBE",
       "SPICE_DECK_OUTPUT_PROBE",
       "SPICE_DECK_OUTPUT_PROBE",
     ]);

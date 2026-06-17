@@ -11,8 +11,8 @@
 use std::net::{SocketAddr, ToSocketAddrs};
 use std::sync::Arc;
 
-use embeddable_http_server::{HttpServerOptions, HttpServer};
-use tcp_runtime::PlatformError;
+use embeddable_http_server::{HttpServer, HttpServerOptions, MailboxHttpServer, ShardedHttpServer};
+use tcp_runtime::{PlatformError, ShardedStopHandle};
 
 use crate::app::WebApp;
 
@@ -125,6 +125,218 @@ impl WebServer<transport_platform::windows::WindowsTransportPlatform> {
             options,
             app,
         )
+    }
+}
+
+/// A **parallel** `WebApp` server (WEB01a-2): the sharded counterpart of
+/// [`WebServer`].
+///
+/// [`WebServer`] drives every connection on one reactor thread, so a slow or
+/// CPU-bound handler stalls every other connection. `ShardedWebServer` runs the
+/// dispatch (`app.handle`) across `worker_count` reactor shards (a
+/// [`ShardedHttpServer`]), so requests on different connections are handled
+/// **concurrently**. The same `Arc<WebApp>` is shared across all shards — it is
+/// immutable after construction, so no locking is needed; `WebApp::handle` is
+/// `&self` and `Send + Sync`.
+///
+/// This is **opt-in**: the existing [`WebServer`] (single reactor) is unchanged
+/// and remains the default. Callers choose parallelism explicitly by binding a
+/// `ShardedWebServer` with `worker_count > 1`. Handler semantics are identical
+/// (hooks, routing, `halt`, etc. all run inside `app.handle` on the owning
+/// shard); only the degree of concurrency changes. HTTP/1.1 response ordering on
+/// a single connection is preserved because each connection stays on one shard.
+pub struct ShardedWebServer<P> {
+    inner: ShardedHttpServer<P>,
+    app: Arc<WebApp>,
+}
+
+impl<P> ShardedWebServer<P> {
+    /// The local socket address the server is bound to.
+    pub fn local_addr(&self) -> SocketAddr {
+        self.inner.local_addr()
+    }
+
+    /// The number of reactor shards (the handler-parallelism degree).
+    pub fn worker_count(&self) -> usize {
+        self.inner.worker_count()
+    }
+
+    /// A handle that can stop every shard from another thread.
+    pub fn stop_handle(&self) -> ShardedStopHandle {
+        self.inner.stop_handle()
+    }
+}
+
+impl<P> ShardedWebServer<P>
+where
+    P: transport_platform::TransportPlatform + Send + 'static,
+{
+    /// Run all shard reactors until stopped. Blocks the calling thread; after it
+    /// returns, the `on_server_stop` hooks fire (once, like [`WebServer::serve`]).
+    pub fn serve(&mut self) -> Result<(), PlatformError> {
+        let result = self.inner.serve();
+        self.app.fire_server_stop();
+        result
+    }
+}
+
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+impl ShardedWebServer<transport_platform::bsd::KqueueTransportPlatform> {
+    /// Bind a kqueue-backed sharded server (macOS / BSD) with `worker_count`
+    /// reactor shards. The `app`'s `on_server_start` hooks fire before returning.
+    pub fn bind_kqueue_sharded<A: ToSocketAddrs>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        app: Arc<WebApp>,
+    ) -> Result<Self, PlatformError> {
+        let app_clone = Arc::clone(&app);
+        let inner = ShardedHttpServer::bind_kqueue_sharded(
+            addr,
+            options,
+            worker_count,
+            move |request| app_clone.handle(request),
+        )?;
+        let local_addr = inner.local_addr();
+        app.fire_server_start(local_addr);
+        Ok(Self { inner, app })
+    }
+}
+
+#[cfg(target_os = "linux")]
+impl ShardedWebServer<transport_platform::linux::EpollTransportPlatform> {
+    /// Bind an epoll-backed sharded server (Linux) with `worker_count` reactor
+    /// shards. The `app`'s `on_server_start` hooks fire before returning.
+    pub fn bind_epoll_sharded<A: ToSocketAddrs>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        app: Arc<WebApp>,
+    ) -> Result<Self, PlatformError> {
+        let app_clone = Arc::clone(&app);
+        let inner = ShardedHttpServer::bind_epoll_sharded(
+            addr,
+            options,
+            worker_count,
+            move |request| app_clone.handle(request),
+        )?;
+        let local_addr = inner.local_addr();
+        app.fire_server_start(local_addr);
+        Ok(Self { inner, app })
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl ShardedWebServer<transport_platform::windows::WindowsTransportPlatform> {
+    /// Bind a Windows IOCP-backed sharded server with `worker_count` reactor
+    /// shards. The `app`'s `on_server_start` hooks fire before returning.
+    pub fn bind_windows_sharded<A: ToSocketAddrs>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        app: Arc<WebApp>,
+    ) -> Result<Self, PlatformError> {
+        let app_clone = Arc::clone(&app);
+        let inner = ShardedHttpServer::bind_windows_sharded(
+            addr,
+            options,
+            worker_count,
+            move |request| app_clone.handle(request),
+        )?;
+        let local_addr = inner.local_addr();
+        app.fire_server_start(local_addr);
+        Ok(Self { inner, app })
+    }
+}
+
+/// A **per-request-parallel** `WebApp` server (WEB01b-2): the mailbox counterpart
+/// of [`WebServer`].
+///
+/// Where [`ShardedWebServer`] parallelises *by connection* (N reactors, each
+/// running `app.handle` inline), `MailboxWebServer` parallelises *by request*: a
+/// single reactor frames each request and submits it to a `worker_count`-thread
+/// pool (a [`MailboxHttpServer`]); a worker runs `app.handle` off the reactor
+/// thread and the pool's response router writes the reply back. This decouples
+/// handler concurrency from the I/O thread, so even requests arriving on the
+/// *same* connection (sequential keep-alive) do not serialise behind one another
+/// in the dispatcher. The `Arc<WebApp>` is shared across all pool threads
+/// unchanged (`WebApp::handle` is `&self` and `Send + Sync`).
+///
+/// This is **opt-in**, like [`ShardedWebServer`]: the default [`WebServer`] is
+/// untouched. The platform (kqueue / epoll / IOCP) is selected internally by the
+/// underlying `EmbeddableTcpServer`, so — unlike the per-platform sharded binds —
+/// there is a single cross-platform [`bind`](MailboxWebServer::bind) and the
+/// error type is `std::io::Result` (the mailbox stack is `io::Error`-based).
+///
+/// **Scope (WEB01b-2 / -1a):** correct and in order for one-request-and-close and
+/// *sequential* keep-alive; gating and reordering a *pipelined* connection is
+/// WEB01b-1b. See `code/specs/WEB01b-mailbox-parallelism.md`.
+#[derive(Clone)]
+pub struct MailboxWebServer {
+    inner: MailboxHttpServer,
+    app: Arc<WebApp>,
+    /// Fires the `on_server_stop` hooks **exactly once**, even though this type is
+    /// `Clone` and `serve` takes `&self`: two clones could each call `serve` and
+    /// both return, so we gate the stop hooks behind a shared `Once` to keep them
+    /// from double-firing (matching `WebServer`/`ShardedWebServer`, whose
+    /// `&mut self` serve cannot be called twice).
+    stop_hooks_fired: Arc<std::sync::Once>,
+}
+
+impl MailboxWebServer {
+    /// Bind `host:port` with a `worker_count`-thread handler pool.
+    ///
+    /// The `app`'s `on_server_start` hooks fire before this method returns.
+    pub fn bind(
+        host: &str,
+        port: u16,
+        options: HttpServerOptions,
+        worker_count: usize,
+        app: Arc<WebApp>,
+    ) -> std::io::Result<Self> {
+        let app_clone = Arc::clone(&app);
+        let inner = MailboxHttpServer::bind(host, port, options, worker_count, move |request| {
+            app_clone.handle(request)
+        })?;
+        let local_addr = inner.local_addr();
+        app.fire_server_start(local_addr);
+        Ok(Self {
+            inner,
+            app,
+            stop_hooks_fired: Arc::new(std::sync::Once::new()),
+        })
+    }
+
+    /// The local socket address the server is bound to.
+    pub fn local_addr(&self) -> SocketAddr {
+        self.inner.local_addr()
+    }
+
+    /// Whether the server is currently serving.
+    pub fn is_running(&self) -> bool {
+        self.inner.is_running()
+    }
+
+    /// Signal the server to stop (from this or another thread; the type is
+    /// `Clone`, so a clone can serve on a worker thread while another stops it).
+    pub fn stop(&self) {
+        self.inner.stop();
+    }
+
+    /// Run the event loop until stopped. Blocks the calling thread; after it
+    /// returns, the `on_server_stop` hooks fire (exactly once across all clones —
+    /// see `stop_hooks_fired`).
+    pub fn serve(&self) -> std::io::Result<()> {
+        let result = self.inner.serve();
+        let app = &self.app;
+        self.stop_hooks_fired.call_once(|| app.fire_server_stop());
+        result
     }
 }
 

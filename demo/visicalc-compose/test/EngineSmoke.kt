@@ -91,6 +91,55 @@ fun main() {
     check("window Z1000 after edit", s.window(1000, 26, 1000, 26)[0][0], "139")
     s.close()
 
+    // ── Infinite-view binding layer (InfiniteSheetModel) ─────────────
+    // The model InfiniteSheet.kt drives: one engine read per visible row via
+    // rowCells, tap-to-select via selectInf (loading the cell's source into the
+    // formula bar), and write-through via commitInf (recompute + regrow extent).
+    val inf = InfiniteSheetModel()
+    // The constructor seeds the budget PLUS far-flung cells (Z1000, BA50/BB50)
+    // and computes the extent: at least 1000×60, grown to reach the far cells.
+    check("inf totalRows >= 1000", (inf.totalRows >= 1000).toString(), "true")
+    check("inf totalCols >= 60", (inf.totalCols >= 60).toString(), "true")
+
+    // rowCells returns one row's display strings (columns 1..totalCols).
+    val row1 = inf.rowCells(1)
+    check("inf rowCells width", (row1.size == inf.totalCols).toString(), "true")
+    check("inf rowCells A1", row1[0], "15") // unformatted
+    check("inf rowCells E1", row1[4], "38.00")  // SUM(A1:D1), "#,##0.00" formatted
+    check("inf rowCells J1 empty", row1[9], "") // sparse
+    check("inf gap row blank", inf.rowCells(200).all { it.isEmpty() }.toString(), "true")
+
+    // selectInf loads the cell SOURCE (A5 is a formula) and clamps to the grid.
+    inf.selectInf(5, 1)
+    check("inf select A5 addr", inf.infAddress(), "A5")
+    check("inf select A5 formula", inf.formula, "=SUM(A1:A4)")
+    inf.selectInf(-3, 0) // clamps to (1,1)
+    check("inf clamp row", inf.selRow.toString(), "1")
+    check("inf clamp col", inf.selCol.toString(), "1")
+
+    // commitInf writes through and recomputes every dependent.
+    inf.selectInf(2, 1)          // A2
+    inf.commitInf("108")         // 8 -> 108
+    check("inf commit A2", inf.rowCells(2)[0], "108") // unformatted
+    check("inf commit E2", inf.rowCells(2)[4], "151.00") // 108+14+7+22, formatted
+    check("inf commit A5", inf.rowCells(5)[0], "139.00") // 15+108+12+4, formatted
+    check("inf commit E5", inf.rowCells(5)[4], "269.00") // grand total, formatted
+
+    // fillDown replicates the selected cell, shifting relative refs per target.
+    // Seed a fresh column via select+commit: H1=2, H2=3, H3=4 (col 8 = H);
+    // I1 = H1*10 (col 9 = I). Select I1 and fill down 10 — each filled formula
+    // tracks its row (I2 = H2*10 = 30, I3 = H3*10 = 40), and I1 stays untouched.
+    inf.selectInf(1, 8); inf.commitInf("2")        // H1
+    inf.selectInf(2, 8); inf.commitInf("3")        // H2
+    inf.selectInf(3, 8); inf.commitInf("4")        // H3
+    inf.selectInf(1, 9); inf.commitInf("=H1*10")   // I1 = 20
+    inf.selectInf(1, 9)
+    inf.fillDown(10)
+    check("inf fillDown I2", inf.rowCells(2)[8], "30") // I2 = H2*10
+    check("inf fillDown I3", inf.rowCells(3)[8], "40") // I3 = H3*10
+    check("inf fillDown I1 source", inf.rowCells(1)[8], "20") // I1 untouched
+    inf.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }

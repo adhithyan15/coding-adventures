@@ -129,11 +129,30 @@ the JVM (LANG-MATRIX LM-J): the tape is a host-provided static `byte[]`, `baload
 index it (masking the sign-extended load back to an unsigned cell), and `.`/`,` call the
 `env.BFRuntime` host class — the JVM sibling of the LLVM libc / wasm `env.putchar` I/O.
 
-**Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2): a `u4`/`u8`/`u16`
-arithmetic/bitwise/`neg`/`not`/`shl` result is masked with `iconst/sipush/ldc <mask>;
-iand` after the `int` op, so `200u8+100u8=44` and `~0u8=255`. JVM `int` ops already wrap
-mod-2³², so `u32`/`i32` need no mask. A positive mask + `iand` is used (not `i2b`/`i2s`,
-which sign-extend) to keep the unsigned widths unsigned.
+**Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2): narrow **unsigned**
+integers (`u4`/`u8`/`u16`/`u32`) use the JVM **`int` model** — `int` locals, `I` descriptors,
+the int opcodes (`iadd`/`iand`/…), and the result masked with `iconst/sipush/ldc <mask>;
+iand` — so `200u8+100u8=44` and `~0u8=255`. JVM `int` ops already wrap mod-2³², so `u32`/`i32`
+need no mask. A positive mask + `iand` is used (not `i2b`/`i2s`, which sign-extend) to keep
+the unsigned widths unsigned.
+
+A scalar program reaches this backend through `lang_aot::concretize_scalar_any_for_jvm`,
+which narrows the module's `i64`→`i32` *before* lowering (the in-repo `jvm-simulator` is
+32-bit and a scalar entry must `ireturn`). So a narrow op already meets `i32` operands — the
+int op + int mask are operand-consistent. *(v0.13.0 briefly used a `long` register model,
+like wasm; that was reverted in v0.13.1 because it conflicts with `concretize` — it left the
+narrow op `long` while the consts/return were `int`, producing unverifiable bytecode. wasm
+keeps genuine `i64` operands with no concretize-to-i32, so its i64 model stands; the JVM is
+the odd one out because of the 32-bit-simulator concretization.)*
+
+**Narrow mask on the `long` model** (LANG-FULL O2, v0.14.0): a *printing* program (Oct's
+`out`, BASIC's `PRINT`) is **not** concretized — it keeps the `i64`/`long` model so its value
+can reach `print_i64`. Oct's only integer type is `u8`, so a printing Oct program emits a
+narrow-hinted op (`200u8 + 100u8`, `~0u8`) over **`long`** operands. There the int op + int
+mask would be unverifiable, so `narrow_op_over_long` keeps the op on the long model
+(`ladd`/`lxor`/…) and the mask becomes `i2l; land` (the masks are positive, so widening
+zero-extends). It keys off the actual operand types, so concretized int-model programs are
+untouched. This is what makes Oct `200u8+100u8=44` / `~0u8=255` run on real `java`.
 
 ## Closures (LANG36)
 
@@ -200,6 +219,14 @@ for non-closure paths (unlike the BEAM backend).
 | `f64`                                 | `D` (double)   | 2          |
 | `void`                                | `V` (void)     | 0          |
 
+A **comparison op** (`cmp_eq`/…/`cmp_ge`) is special-cased to an `int` dest slot
+regardless of its `type_hint`: the hint is the *operand* width, but a comparison
+always produces a 0/1 `int` (stored with `istore`). Without this, a comparison
+over `i64` operands got a `Long` slot, so a later `jmp_if_false` read it with the
+long guard (`lload; lconst_0; lcmp`) while it was `istore`d as int → the verifier
+rejected an "uninitialized register pair" (LANG-FULL BA-JVM-1, the BASIC `IF`/
+`FOR` programs over their i64 value model).
+
 ## Register allocation
 
 Variables are allocated to JVM local variable slots via a deterministic
@@ -211,6 +238,12 @@ two-pass scan:
 
 The same variable name always maps to the same slot within one function.
 This is a simple linear scan — no liveness analysis, no spilling.
+
+A `mov` whose source and destination slots differ in width **bridges** them with
+`i2l`/`l2i`: e.g. a bool/int comparison result moved into a `long` accumulator
+(Oct's `&&`/`||` short-circuit over its i64 value model) widens with `i2l` before
+`lstore`, so the long slot's second half is initialised — otherwise a later
+`lload` of it fails JVM verification ("uninitialized register pair").
 
 ## Label/jump backpatching
 

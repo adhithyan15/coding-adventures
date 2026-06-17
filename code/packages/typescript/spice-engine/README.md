@@ -20,8 +20,9 @@ to thresholded transient probe outputs with stable schedule tables and VCD
 correlation output,
 stable text tables for selected node voltages, branch currents, AC phasors,
 Fourier harmonics, transfer-function results, pole-zero entries, and
-distortion harmonics, parsed `.save` / `.probe` deck-selected output tables,
-and backward-Euler reactive-element companion models.
+distortion harmonics, parsed `.save` / `.probe` / `.print` / `.plot`
+deck-selected output tables, and backward-Euler reactive-element companion
+models.
 
 ```ts
 import {
@@ -88,15 +89,28 @@ malformed arguments, unsupported AC sweep modes, invalid sweep intervals, and
 unresolved scalar expressions. `selectDeckAnalysisPlan` picks one explicit card
 by analysis alias, defaults decks without analysis cards to an implicit `.op`,
 and reports ambiguity before solver dispatch.
-`resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save` and scoped
-or global `.probe` cards before `.end`, normalize and deduplicate output
-probes in deck order, and feed `formatDeckOpTable`,
+`runDeckAnalysis` executes one selected `.op`, `.dc`, `.ac LIN`, `.ac DEC`,
+`.ac OCT`, or `.tran` plan against an existing `Circuit` and returns the plan,
+solver result, deck-selected output table, and normalized output probes that
+produced the table, plus selected `.measure` results and a stable measurement
+table for `.dc`, `.ac`, and `.tran` executions. Selected `.tran` plans route
+`START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
+an internal fixed-step cap, and `UIC` initial-condition intent through that
+stable transient table surface. They also return selected `.four` harmonic
+results and a stable Fourier table. Executions also include selected-run
+artifact summaries plus `formatDeckRunArtifactTable` output for stable
+result-row, output-probe, measurement, and Fourier counts.
+`resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save`, scoped or
+global `.probe`, scoped `.print <analysis> ...`, and scoped
+`.plot <analysis> ...` cards before `.end`, normalize and deduplicate output
+probes in deck order, and feed
+`formatDeckOpTable`,
 `formatDeckDcSweepTable`, `formatDeckAcTable`, and
 `formatDeckTransientTable` for stable deck-selected text output.
-`resolveDeckFourier`, `fourierTransientCards`, and `fourierTransientDeck`
-extract parsed `.four` / `.FOUR` cards before `.end` and route transient
-samples into the existing SPICE-style Fourier result shape with optional
-`HARMONICS=` and `FROM=` controls.
+`resolveDeckFourier`, `fourierTransientCards`, `fourierTransientDeck`, and
+`formatDeckFourierTable` extract parsed `.four` / `.FOUR` cards before `.end`
+and route transient samples into the existing SPICE-style Fourier result shape
+with optional `HARMONICS=` and `FROM=` controls.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`
@@ -118,13 +132,21 @@ notes. `releaseReadinessGates` validates the corpus metadata, while
 stable tab-separated summaries for package checks.
 `analyzeDeckControls` provides the shared deck-control boundary foothold: it
 returns active lines before `.end` and stable diagnostics for unsupported
-`.include`, `.lib`, and `.control` directives before future include/library
-resolution and control-block execution are in scope.
+`.include`, `.lib`, and `.control` directives. Inside `.control` blocks,
+selected analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
+`measure`, `meas`, `four`, `fourier`, `print`, and `plot`) are normalized into
+dotted deck cards, while `run`, `reset`, `quit`, and the UI-only
+`set noaskquit` option plus the ASCII rawfile-format `set filetype=ascii`
+option and vector-name/single-scale rawfile output toggles (`set wr_vecnames`,
+`set wr_singlescale`) are accepted as no-op control markers. Other
+unrecognized non-comment commands emit diagnostics until a broader executed
+control subset is in scope.
 `resolveDeckSources` is the first include/library resolution layer: callers
 provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable
 diagnostics for missing files, missing sections, unterminated sections, cycles,
-and still-unsupported `.control` blocks.
+and still-unsupported `.control` block commands that are not part of the
+selected analysis/output subset.
 `resolveDeckParameters` evaluates scalar whitespace-tokenized `.param`
 assignments, collects scalar `.func` definitions before `.end`, preserves
 parameter order, rewrites braced and quoted active-line expressions, and emits
@@ -147,11 +169,17 @@ cards before `.end`, keeps non-measure active lines, evaluates optional
 `FIND ... AT=` sample points and `WHEN probe=target` crossings with optional
 `RISE`, `FALL`, or `CROSS` counters, and reports stable diagnostics for
 unsupported analyses, modes, options, expressions, and invalid windows.
-`resolveDeckOutputs` extracts `.save` and `.probe` cards before `.end`,
-preserves non-output active lines, and reports stable diagnostics for missing
-probe lists or malformed `V(node)` / `I(source)` probes.
+`resolveDeckOutputs` extracts `.save`, `.probe`, `.print`, and `.plot` cards
+before `.end`, preserves non-output active lines, and reports stable
+diagnostics for missing probe lists, unsupported scoped output analyses, or
+malformed `V(node)` / `I(source)` probes.
 `resolveDeckAnalyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
 `.end`, preserves non-analysis active lines, and reports stable diagnostics for
 malformed deck-level analysis controls.
 `selectDeckAnalysisPlan` returns one selected or implicit plan for downstream
 deck execution helpers.
+`runDeckAnalysis` routes that selected plan into the matching solver and stable
+deck-selected table output with normalized output-probe artifacts, selected
+measurement artifacts, selected transient Fourier artifacts, selected-run
+artifact summaries, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and
+`.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.

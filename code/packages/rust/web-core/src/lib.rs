@@ -55,6 +55,6 @@ pub use hooks::{HookRegistry, LogLevel};
 pub use request::WebRequest;
 pub use response::WebResponse;
 pub use router::{Handler, Route, Router, RouteLookupResult, RouteMatch};
-pub use server::WebServer;
+pub use server::{MailboxWebServer, ShardedWebServer, WebServer};
 
 pub const VERSION: &str = "0.1.0";

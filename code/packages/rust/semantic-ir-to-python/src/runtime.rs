@@ -72,6 +72,14 @@ pub const RUNTIME_SHELL: &str = r##"# ── SIR shell runtime (imported from co
 from coding_adventures_sir_runtime_shell import backtick as _sir_shell_backtick
 "##;
 
+/// The range-runtime import header, appended **only** when a module calls the
+/// `range` builtin (a Ruby `a..b` / `a...b` literal).  Provides the first-class
+/// `Range` value type (Python's `range` is half-open and integer-only and can't
+/// model the inclusive or begin/endless forms); see `code/specs/sir-runtime.md`.
+pub const RUNTIME_RANGE: &str = r##"# ── SIR range runtime (imported from coding-adventures-sir-runtime-range) ──
+from coding_adventures_sir_runtime_range import range as _sir_range
+"##;
+
 pub const RUNTIME: &str = r##"# ── SIR runtime (imported from coding-adventures-sir-runtime-core) ──
 from coding_adventures_sir_runtime_core import (
     truthy as _sir_truthy,

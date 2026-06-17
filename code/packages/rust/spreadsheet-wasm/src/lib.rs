@@ -195,6 +195,102 @@ pub extern "C" fn get_values() -> *mut u8 {
     pack(SESSION.with(|s| s.borrow().get_values()))
 }
 
+// ── Cell display formats ─────────────────────────────────────────────
+// An Excel-style format code per cell decides how its value reads.
+
+/// `set_format(a1, code)` — set a cell's display format (empty `code` clears).
+/// See [`SpreadsheetSession::set_format`].
+///
+/// # Safety
+/// The `(ptr, len)` pairs must describe readable byte ranges (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn set_format(
+    a1_ptr: *const u8,
+    a1_len: usize,
+    code_ptr: *const u8,
+    code_len: usize,
+) {
+    let a1 = read_input(a1_ptr, a1_len);
+    let code = read_input(code_ptr, code_len);
+    SESSION.with(|s| s.borrow_mut().set_format(&a1, &code));
+}
+
+/// `get_format(a1)` → the cell's format code, or `""`. See
+/// [`SpreadsheetSession::get_format`].
+///
+/// # Safety
+/// `(ptr, len)` must describe a readable byte range.
+#[no_mangle]
+pub unsafe extern "C" fn get_format(a1_ptr: *const u8, a1_len: usize) -> *mut u8 {
+    let a1 = read_input(a1_ptr, a1_len);
+    pack(SESSION.with(|s| s.borrow().get_format(&a1)))
+}
+
+/// `get_display(a1)` → the cell's value rendered through its format (the display
+/// string). See [`SpreadsheetSession::get_display`].
+///
+/// # Safety
+/// `(ptr, len)` must describe a readable byte range.
+#[no_mangle]
+pub unsafe extern "C" fn get_display(a1_ptr: *const u8, a1_len: usize) -> *mut u8 {
+    let a1 = read_input(a1_ptr, a1_len);
+    pack(SESSION.with(|s| s.borrow().get_display(&a1)))
+}
+
+// ── Structural edits: insert / delete rows & columns ─────────────────
+// 1-based `at`, `count` lines. The engine relocates cells and rewrites formula
+// references; the formula echo stays in step. No return — the JS host re-reads
+// via get_window / get_raw afterwards.
+
+/// `insert_rows(at, count)`. See [`SpreadsheetSession::insert_rows`].
+#[no_mangle]
+pub extern "C" fn insert_rows(at: u32, count: u32) {
+    SESSION.with(|s| s.borrow_mut().insert_rows(at, count));
+}
+
+/// `delete_rows(at, count)`. See [`SpreadsheetSession::delete_rows`].
+#[no_mangle]
+pub extern "C" fn delete_rows(at: u32, count: u32) {
+    SESSION.with(|s| s.borrow_mut().delete_rows(at, count));
+}
+
+/// `insert_cols(at, count)`. See [`SpreadsheetSession::insert_cols`].
+#[no_mangle]
+pub extern "C" fn insert_cols(at: u32, count: u32) {
+    SESSION.with(|s| s.borrow_mut().insert_cols(at, count));
+}
+
+/// `delete_cols(at, count)`. See [`SpreadsheetSession::delete_cols`].
+#[no_mangle]
+pub extern "C" fn delete_cols(at: u32, count: u32) {
+    SESSION.with(|s| s.borrow_mut().delete_cols(at, count));
+}
+
+/// `fill(src, dst_start, dst_end)` — drag-fill: replicate the `src` cell across
+/// the inclusive A1 rectangle `dst_start`..`dst_end`, shifting each copy's
+/// relative references (absolute `$` refs pin), carrying the source's format,
+/// clearing from an empty source. Malformed addresses are a no-op. The JS host
+/// re-reads via `get_window` / `get_display_window` / `get_raw` afterwards. See
+/// [`SpreadsheetSession::fill`].
+///
+/// # Safety
+/// The three `(ptr, len)` pairs must describe readable byte ranges (see
+/// [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn fill(
+    src_ptr: *const u8,
+    src_len: usize,
+    dst_start_ptr: *const u8,
+    dst_start_len: usize,
+    dst_end_ptr: *const u8,
+    dst_end_len: usize,
+) {
+    let src = read_input(src_ptr, src_len);
+    let dst_start = read_input(dst_start_ptr, dst_start_len);
+    let dst_end = read_input(dst_end_ptr, dst_end_len);
+    SESSION.with(|s| s.borrow_mut().fill(&src, &dst_start, &dst_end));
+}
+
 // ── Viewport primitive (virtualized infinite sheet) ──────────────────
 // These take integer coordinates directly (no pointer marshalling), so a
 // scrolling JS host can fetch just the visible window of an unbounded sheet.
@@ -204,6 +300,14 @@ pub extern "C" fn get_values() -> *mut u8 {
 #[no_mangle]
 pub extern "C" fn get_window(row0: u32, col0: u32, row1: u32, col1: u32) -> *mut u8 {
     pack(SESSION.with(|s| s.borrow().get_window(row0, col0, row1, col1)))
+}
+
+/// `get_display_window(row0, col0, row1, col1)` → display-window JSON (each cell
+/// rendered through its format code; 1-based, inclusive). See
+/// [`SpreadsheetSession::get_display_window`].
+#[no_mangle]
+pub extern "C" fn get_display_window(row0: u32, col0: u32, row1: u32, col1: u32) -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().get_display_window(row0, col0, row1, col1)))
 }
 
 /// `used_range()` → data-extent JSON, or the literal `null`. See
@@ -293,6 +397,43 @@ mod tests {
         take(out)
     }
 
+    fn set_fmt(a1: &str, code: &str) {
+        let (ap, al) = put(a1);
+        let (cp, cl) = put(code);
+        unsafe { set_format(ap, al, cp, cl) };
+        unsafe {
+            dealloc(ap, al);
+            dealloc(cp, cl);
+        }
+    }
+
+    fn display(a1: &str) -> String {
+        let (ap, al) = put(a1);
+        let out = unsafe { get_display(ap, al) };
+        unsafe { dealloc(ap, al) };
+        take(out)
+    }
+
+    fn format(a1: &str) -> String {
+        let (ap, al) = put(a1);
+        let out = unsafe { get_format(ap, al) };
+        unsafe { dealloc(ap, al) };
+        take(out)
+    }
+
+    #[test]
+    fn abi_cell_format_round_trip() {
+        reset();
+        set("A1", "1234.5");
+        assert_eq!(display("A1"), "1234.5"); // General before any format
+        set_fmt("A1", "#,##0.00");
+        assert_eq!(format("A1"), "#,##0.00");
+        assert_eq!(display("A1"), "1,234.50");
+        set_fmt("A1", ""); // clear → back to General
+        assert_eq!(format("A1"), "");
+        assert_eq!(display("A1"), "1234.5");
+    }
+
     #[test]
     fn abi_round_trips_a_formula() {
         reset();
@@ -307,6 +448,44 @@ mod tests {
         // Recalc on dependency change.
         set("B1", "115");
         assert_eq!(value("B6"), r#"{"kind":"number","value":146.0}"#);
+    }
+
+    #[test]
+    fn abi_insert_and_delete_rows() {
+        reset();
+        set("A1", "10");
+        set("A2", "20");
+        set("A3", "=SUM(A1:A2)");
+
+        insert_rows(1, 1); // a blank row at the top — everything slides down
+        assert_eq!(value("A2"), r#"{"kind":"number","value":10.0}"#); // was A1
+        assert_eq!(value("A4"), r#"{"kind":"number","value":30.0}"#); // SUM moved
+        assert_eq!(raw("A4"), "=SUM(A2:A3)"); // range rewritten
+
+        delete_rows(1, 1); // remove the blank top row again
+        assert_eq!(value("A1"), r#"{"kind":"number","value":10.0}"#);
+        assert_eq!(value("A3"), r#"{"kind":"number","value":30.0}"#);
+        assert_eq!(raw("A3"), "=SUM(A1:A2)");
+    }
+
+    #[test]
+    fn abi_fill_replicates_and_shifts() {
+        reset();
+        set("A1", "10");
+        set("A2", "20");
+        set("B1", "=A1*2"); // 20
+        let (sp, sl) = put("B1");
+        let (asp, asl) = put("B2");
+        let (aep, ael) = put("B2");
+        // SAFETY: all three pairs come from `put`/`alloc`.
+        unsafe { fill(sp, sl, asp, asl, aep, ael) };
+        unsafe {
+            dealloc(sp, sl);
+            dealloc(asp, asl);
+            dealloc(aep, ael);
+        }
+        assert_eq!(value("B2"), r#"{"kind":"number","value":40.0}"#); // A2*2
+        assert_eq!(raw("B2"), "=(A2*2)"); // echoed shifted source
     }
 
     #[test]
@@ -351,6 +530,12 @@ mod tests {
         let w = take(get_window(1, 1, 1, 3));
         assert!(w.contains(r#""rows":1"#) && w.contains(r#""cols":3"#), "{w}");
         assert!(w.contains(r#"{"kind":"number","value":18.0}"#), "{w}");
+
+        // Display window: a formatted cell paints its rendered string.
+        set_fmt("A1", "#,##0.00");
+        let dw = take(get_display_window(1, 1, 1, 3));
+        assert!(dw.contains(r#""cells""#) && dw.contains("15.00"), "{dw}");
+        assert_eq!(take(get_display_window(0, 0, 5, 5)), r##"{"error":"#REF!"}"##);
 
         // used_range covers A1..C1.
         let u = take(used_range());

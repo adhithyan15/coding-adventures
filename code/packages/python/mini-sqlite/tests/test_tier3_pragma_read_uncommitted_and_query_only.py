@@ -1,12 +1,14 @@
 """Tests for ``PRAGMA read_uncommitted`` and ``PRAGMA query_only``.
 
 Both PRAGMAs are recognised as accept-and-store boolean settings
-that round-trip per connection (default ``0``).  Mini-sqlite does
-not honour the underlying semantics — ``read_uncommitted`` selects
-SQLite's shared-cache isolation level (mini-sqlite has no shared
-cache) and ``query_only`` should reject writes when ON (enforcement
-is a future increment).  Callers that read the PRAGMA back to
-confirm settings — common in ORMs and migration tools — see the
+that round-trip per connection (default ``0``).  ``read_uncommitted``
+selects SQLite's shared-cache isolation level — mini-sqlite has no
+shared cache so the value is purely round-tripped with no semantic
+effect.  ``query_only`` is **enforced** as of mini-sqlite 2.16.0:
+when ON, mini-sqlite raises ``OperationalError: attempt to write
+a readonly database`` for any DML or DDL statement, matching
+SQLite's behaviour.  Callers that read the PRAGMA back to confirm
+settings — common in ORMs and migration tools — see the
 SQLite-compatible values.
 
 Previously mini-sqlite returned ``[]`` for both reads (vs sqlite3's
@@ -128,21 +130,149 @@ class TestConnectionIsolation:
         assert a.execute("PRAGMA query_only").fetchall() == [(1,)]
 
 
-class TestQueryOnlyEnforcementNotIncluded:
-    """Document the scope limit: ``query_only`` does NOT yet block writes.
+class TestQueryOnlyEnforcement:
+    """``query_only = 1`` now rejects writes (mini-sqlite 2.16.0).
 
     SQLite raises ``OperationalError: attempt to write a readonly
     database`` when ``query_only = 1`` and a write is attempted.
-    Mini-sqlite currently allows the write through — enforcement is
-    deferred to a future increment.  Pin the current behaviour so a
-    future fix that wires the gate is detected (the test will need
-    updating then, with a matching CHANGELOG note).
+    The previous ``TestQueryOnlyEnforcementNotIncluded`` class pinned
+    the divergence; this class pins the matching SQLite-compatible
+    enforcement.  Coverage spans DML (INSERT/UPDATE/DELETE) and DDL
+    (CREATE TABLE / CREATE INDEX / DROP TABLE / ALTER / CREATE VIEW),
+    plus the negative-space checks (SELECT works, lifting the gate
+    works, isolation across connections).
     """
 
-    def test_query_only_does_not_block_writes_yet(self) -> None:
+    _ERR = "attempt to write a readonly database"
+
+    # ------------------------------------------------------------------
+    # DML: INSERT / UPDATE / DELETE all hit the gate
+    # ------------------------------------------------------------------
+
+    def _setup_with_row(self) -> mini_sqlite.Connection:
+        m = mini_sqlite.connect(":memory:")
+        m.execute("CREATE TABLE t (a INT)")
+        m.execute("INSERT INTO t VALUES (1)")
+        m.execute("PRAGMA query_only = 1")
+        return m
+
+    def test_insert_rejected(self) -> None:
+        m = self._setup_with_row()
+        try:
+            m.execute("INSERT INTO t VALUES (2)")
+        except mini_sqlite.OperationalError as e:
+            assert self._ERR in str(e)
+        else:
+            raise AssertionError("expected OperationalError")
+
+    def test_update_rejected(self) -> None:
+        m = self._setup_with_row()
+        try:
+            m.execute("UPDATE t SET a = 99")
+        except mini_sqlite.OperationalError as e:
+            assert self._ERR in str(e)
+        else:
+            raise AssertionError("expected OperationalError")
+
+    def test_delete_rejected(self) -> None:
+        m = self._setup_with_row()
+        try:
+            m.execute("DELETE FROM t")
+        except mini_sqlite.OperationalError as e:
+            assert self._ERR in str(e)
+        else:
+            raise AssertionError("expected OperationalError")
+
+    # ------------------------------------------------------------------
+    # DDL: CREATE TABLE / CREATE INDEX / DROP TABLE / ALTER / CREATE VIEW
+    # ------------------------------------------------------------------
+
+    def test_create_table_rejected(self) -> None:
+        m = mini_sqlite.connect(":memory:")
+        m.execute("PRAGMA query_only = 1")
+        try:
+            m.execute("CREATE TABLE t (a INT)")
+        except mini_sqlite.OperationalError as e:
+            assert self._ERR in str(e)
+        else:
+            raise AssertionError("expected OperationalError")
+
+    def test_create_index_rejected(self) -> None:
         m = mini_sqlite.connect(":memory:")
         m.execute("CREATE TABLE t (a INT)")
         m.execute("PRAGMA query_only = 1")
-        # Currently no error — mini-sqlite does not enforce read-only mode.
-        m.execute("INSERT INTO t VALUES (1)")
+        try:
+            m.execute("CREATE INDEX idx ON t(a)")
+        except mini_sqlite.OperationalError as e:
+            assert self._ERR in str(e)
+        else:
+            raise AssertionError("expected OperationalError")
+
+    def test_drop_table_rejected(self) -> None:
+        m = mini_sqlite.connect(":memory:")
+        m.execute("CREATE TABLE t (a INT)")
+        m.execute("PRAGMA query_only = 1")
+        try:
+            m.execute("DROP TABLE t")
+        except mini_sqlite.OperationalError as e:
+            assert self._ERR in str(e)
+        else:
+            raise AssertionError("expected OperationalError")
+
+    def test_alter_table_rejected(self) -> None:
+        m = mini_sqlite.connect(":memory:")
+        m.execute("CREATE TABLE t (a INT)")
+        m.execute("PRAGMA query_only = 1")
+        try:
+            m.execute("ALTER TABLE t RENAME TO t2")
+        except mini_sqlite.OperationalError as e:
+            assert self._ERR in str(e)
+        else:
+            raise AssertionError("expected OperationalError")
+
+    def test_create_view_rejected(self) -> None:
+        m = mini_sqlite.connect(":memory:")
+        m.execute("CREATE TABLE t (a INT)")
+        m.execute("PRAGMA query_only = 1")
+        try:
+            m.execute("CREATE VIEW v AS SELECT * FROM t")
+        except mini_sqlite.OperationalError as e:
+            assert self._ERR in str(e)
+        else:
+            raise AssertionError("expected OperationalError")
+
+    # ------------------------------------------------------------------
+    # Negative space: SELECT permitted; PRAGMA lift permitted; isolation
+    # ------------------------------------------------------------------
+
+    def test_select_still_permitted(self) -> None:
+        m = self._setup_with_row()
+        # SELECT is a pure read; the gate must let it through.
         assert m.execute("SELECT * FROM t").fetchall() == [(1,)]
+
+    def test_pragma_can_lift_gate(self) -> None:
+        m = self._setup_with_row()
+        # ``PRAGMA query_only = 0`` always succeeds, even when the
+        # gate is currently engaged — otherwise the connection would
+        # be wedged read-only with no escape.
+        m.execute("PRAGMA query_only = 0")
+        m.execute("INSERT INTO t VALUES (2)")
+        assert sorted(m.execute("SELECT a FROM t").fetchall()) == [(1,), (2,)]
+
+    def test_gate_is_per_connection(self) -> None:
+        # Connection A's query_only must not leak into connection B.
+        a = mini_sqlite.connect(":memory:")
+        b = mini_sqlite.connect(":memory:")
+        for c in (a, b):
+            c.execute("CREATE TABLE t (a INT)")
+        a.execute("PRAGMA query_only = 1")
+        # B's write proceeds normally.
+        b.execute("INSERT INTO t VALUES (7)")
+        assert b.execute("SELECT a FROM t").fetchall() == [(7,)]
+        # A's write is still gated.
+        try:
+            a.execute("INSERT INTO t VALUES (8)")
+        except mini_sqlite.OperationalError as e:
+            assert self._ERR in str(e)
+        else:
+            raise AssertionError("expected OperationalError on A")

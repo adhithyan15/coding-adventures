@@ -16,6 +16,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io' show Directory, File, Platform;
+import 'dart:math' show max;
 
 // ---------------------------------------------------------------------------
 // C ABI function signatures (see spreadsheet-capi/include/spreadsheet.h).
@@ -62,6 +63,16 @@ typedef _CurrentRevD = int Function(Pointer<Void>);
 typedef _ChangedSinceC = Pointer<Uint8> Function(Pointer<Void>, Uint64);
 typedef _ChangedSinceD = Pointer<Uint8> Function(Pointer<Void>, int);
 
+// sc_set_format(session, a1, code) → void. An empty code clears the format.
+typedef _SetFormatC = Void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
+typedef _SetFormatD = void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
+
+// sc_fill(session, src, dst_start, dst_end) → void (drag-fill; three A1 strings).
+typedef _FillC = Void Function(
+    Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Pointer<Uint8>);
+typedef _FillD = void Function(
+    Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Pointer<Uint8>);
+
 /// A single spreadsheet session, owning the opaque C handle.
 class SpreadsheetSession {
   final DynamicLibrary _lib;
@@ -72,7 +83,9 @@ class SpreadsheetSession {
   late final _GetD _getValue;
   late final _GetD _getRaw;
   late final _StringFreeD _stringFree;
-  late final _WindowD _getWindow;
+  late final _WindowD _getDisplayWindow;
+  late final _SetFormatD _setFormatFn;
+  late final _FillD _fillFn;
   late final _NoArgD _usedRangeFn;
   late final _ColLettersD _columnLettersFn;
   late final _CurrentRevD _currentRevisionFn;
@@ -90,7 +103,9 @@ class SpreadsheetSession {
     _getValue = _lib.lookupFunction<_GetC, _GetD>('sc_get_value');
     _getRaw = _lib.lookupFunction<_GetC, _GetD>('sc_get_raw');
     _stringFree = _lib.lookupFunction<_StringFreeC, _StringFreeD>('sc_string_free');
-    _getWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_window');
+    _getDisplayWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_display_window');
+    _setFormatFn = _lib.lookupFunction<_SetFormatC, _SetFormatD>('sc_set_format');
+    _fillFn = _lib.lookupFunction<_FillC, _FillD>('sc_fill');
     _usedRangeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_used_range');
     _columnLettersFn = _lib.lookupFunction<_ColLettersC, _ColLettersD>('sc_column_letters');
     _currentRevisionFn = _lib.lookupFunction<_CurrentRevC, _CurrentRevD>('sc_current_revision');
@@ -225,16 +240,51 @@ class SpreadsheetSession {
   // C ABI's sc_get_window etc.), 1-based inclusive coords, so a windowed Flutter
   // grid can render only the visible rectangle of an unbounded sheet.
 
+  /// Set a cell's display format code (an Excel-style code like `"#,##0.00"` or
+  /// `"0%"`); an empty code clears it. Drives the engine's display path that
+  /// [window] reads through `sc_get_display_window`.
+  void setFormat(String a1, String code) {
+    final a1Ptr = _toCString(a1);
+    final codePtr = _toCString(code);
+    try {
+      _setFormatFn(_handle, a1Ptr, codePtr);
+    } finally {
+      _freeCString(a1Ptr);
+      _freeCString(codePtr);
+    }
+  }
+
+  /// Drag-fill: replicate the `src` cell across the inclusive A1 rectangle
+  /// `dstStart`..`dstEnd`. Relative references shift per target (`=A1` filled
+  /// down → `=A2`), absolute (`$`) refs pin, the source's format carries along,
+  /// an empty source clears each target. A malformed address is a no-op.
+  void fill(String src, String dstStart, String dstEnd) {
+    final srcPtr = _toCString(src);
+    final startPtr = _toCString(dstStart);
+    final endPtr = _toCString(dstEnd);
+    try {
+      _fillFn(_handle, srcPtr, startPtr, endPtr);
+    } finally {
+      _freeCString(srcPtr);
+      _freeCString(startPtr);
+      _freeCString(endPtr);
+    }
+  }
+
   /// Dense display strings for the inclusive 1-based rectangle, row-major
   /// (empty cells become ''). Empty list on a bad/oversized request.
+  ///
+  /// Reads `sc_get_display_window`: each cell arrives already rendered through
+  /// its format code as a display string, so the host paints it directly and
+  /// never re-derives number formatting. The format-aware sibling of
+  /// `sc_get_window`; the JSON is `{...,"cells":[["1,234.50",...],...]}`.
   List<List<String>> window(int row0, int col0, int row1, int col1) {
-    final json = _takeString(_getWindow(_handle, row0, col0, row1, col1));
+    final json = _takeString(_getDisplayWindow(_handle, row0, col0, row1, col1));
     final Object? obj = jsonDecode(json);
-    if (obj is! Map || obj['values'] is! List) return const [];
-    return (obj['values'] as List)
-        .map<List<String>>((row) => (row as List)
-            .map<String>((c) => (c is Map) ? _displayValue(c) : '')
-            .toList())
+    if (obj is! Map || obj['cells'] is! List) return const [];
+    return (obj['cells'] as List)
+        .map<List<String>>((row) =>
+            (row as List).map<String>((c) => (c as String?) ?? '').toList())
         .toList();
   }
 
@@ -334,5 +384,123 @@ class SpreadsheetModel {
     if (c < 1) return;
     _session.setCell(address(r, c), raw);
     recompute();
+  }
+}
+
+/// Engine-backed model for the VIRTUALIZED infinite sheet — the Dart sibling of
+/// the SwiftUI `WindowedSheetModel`, the Qt `SpreadsheetModel` infinite-view
+/// state, and the web demo's infinite.html. It seeds a deliberately far-flung,
+/// sparse dataset and exposes one-row windowed reads plus the data extent, so a
+/// `ListView.builder`-virtualized grid can render only the visible rectangle of
+/// an effectively-unbounded (u32 × u32) sheet.
+///
+/// Plain Dart (no ChangeNotifier): the host `StatefulWidget` mutates it inside
+/// `setState`, exactly as `main.dart` drives [SpreadsheetModel]. All coordinates
+/// here are 1-based (row/col ≥ 1, col 1 = "A"), matching the engine.
+class InfiniteSheetModel {
+  final SpreadsheetSession _session;
+
+  /// The virtual grid size, derived from the data extent plus a margin so you
+  /// can scroll past the data into blank space.
+  int totalRows = 1000;
+  int totalCols = 60;
+
+  /// The selected cell (1-based) and the formula-bar text (its raw source).
+  int selRow = 1;
+  int selCol = 1;
+  String formula = '';
+
+  InfiniteSheetModel({SpreadsheetSession? session})
+      : _session = session ?? SpreadsheetSession() {
+    _seed();
+    computeExtent();
+    selectInf(1, 1); // prime the selection + formula bar at A1
+  }
+
+  void dispose() => _session.dispose();
+
+  /// The classic cross-footing budget PLUS far-flung cells (a formula at
+  /// `Z1000`, a couple near `BA50`/`BB50`) to prove the sheet is sparse and
+  /// unbounded — identical seed to the SwiftUI/Qt infinite views.
+  void _seed() {
+    const cells = <List<String>>[
+      ['A1', '15'], ['B1', '3'], ['C1', '12'], ['D1', '8'], ['E1', '=SUM(A1:D1)'],
+      ['A2', '8'], ['B2', '14'], ['C2', '7'], ['D2', '22'], ['E2', '=SUM(A2:D2)'],
+      ['A3', '12'], ['B3', '9'], ['C3', '18'], ['D3', '6'], ['E3', '=SUM(A3:D3)'],
+      ['A4', '4'], ['B4', '11'], ['C4', '3'], ['D4', '17'], ['E4', '=SUM(A4:D4)'],
+      ['A5', '=SUM(A1:A4)'], ['B5', '=SUM(B1:B4)'], ['C5', '=SUM(C1:C4)'],
+      ['D5', '=SUM(D1:D4)'], ['E5', '=SUM(E1:E4)'],
+      ['Z1000', '=SUM(A1:A4)'], // 1000 rows down: 39
+      ['BA50', 'far cell'], ['BB50', '=Z1000*2'], // col 53/54, row 50: 78
+    ];
+    for (final cell in cells) {
+      _session.setCell(cell[0], cell[1]);
+    }
+
+    // Attach Excel-style format codes so the engine's display path is visible in
+    // the windowed view (which renders via sc_get_display_window): the cross-foot
+    // totals read with thousands grouping + two decimals, and the far-flung Z1000
+    // total as a percent. Values are unchanged — only how the display strings
+    // render. Identical to the web/Qt demos' seeded formats.
+    const formats = <List<String>>[
+      ['E1', '#,##0.00'], ['E2', '#,##0.00'], ['E3', '#,##0.00'],
+      ['E4', '#,##0.00'], ['E5', '#,##0.00'],
+      ['A5', '#,##0.00'], ['B5', '#,##0.00'], ['C5', '#,##0.00'], ['D5', '#,##0.00'],
+      ['Z1000', '0.0%'], // 39 → "3900.0%": proves the format applies far off-origin
+    ];
+    for (final f in formats) {
+      _session.setFormat(f[0], f[1]);
+    }
+  }
+
+  /// Re-derive the virtual grid size from the engine's data extent plus a
+  /// comfortable margin. Mirrors `WindowedSheetModel.resize()`.
+  void computeExtent() {
+    final u = _session.usedRange();
+    totalRows = max((u?['maxRow'] ?? 1) + 200, 1000);
+    totalCols = max((u?['maxCol'] ?? 1) + 30, 60);
+  }
+
+  /// Column letters for a 1-based index (`1` → `"A"`, `27` → `"AA"`).
+  String columnLetters(int index) => _session.columnLetters(index);
+
+  /// The A1 address of the selected cell (e.g. `"Z1000"`).
+  String get infAddress => '${_session.columnLetters(selCol)}$selRow';
+
+  /// One row's display strings (columns 1..totalCols) — what a virtualized
+  /// `ListView` delegate renders. A single engine `get_window` over a 1×N strip;
+  /// returns an empty list if the request was rejected/oversized.
+  List<String> rowCells(int row) {
+    if (row < 1) return const [];
+    final w = _session.window(row, 1, row, totalCols);
+    return w.isEmpty ? const [] : w[0];
+  }
+
+  /// Move the selection (clamped to the virtual grid; row/col ≥ 1) and pull the
+  /// selected cell's raw source into the formula bar.
+  void selectInf(int row, int col) {
+    selRow = row.clamp(1, totalRows);
+    selCol = col.clamp(1, totalCols);
+    formula = _session.getRaw(infAddress);
+  }
+
+  /// Commit the formula bar into the selected cell: write through to the engine
+  /// (which recomputes every dependent), grow the extent if the edit reached new
+  /// ground, and re-read the canonicalised source back into the bar.
+  void commitInf(String raw) {
+    _session.setCell(infAddress, raw);
+    computeExtent();
+    formula = _session.getRaw(infAddress);
+  }
+
+  /// Drag-fill: replicate the selected cell into the [rows] rows below it. The
+  /// engine shifts each copy's relative references, pins absolute (`$`) refs,
+  /// and carries the format. Regrows the extent if the fill reached new ground.
+  void fillDown(int rows) {
+    final col = columnLetters(selCol);
+    final first = '$col${selRow + 1}';
+    final last = '$col${selRow + rows}';
+    _session.fill(infAddress, first, last);
+    computeExtent();
   }
 }

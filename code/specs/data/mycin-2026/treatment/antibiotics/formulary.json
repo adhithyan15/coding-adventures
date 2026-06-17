@@ -11,6 +11,11 @@
     {"drugs": ["vancomycin", "cefepime"], "covers": "s_pneumoniae_resistant",
      "source": "IDSA Tunkel 2004: vancomycin + a broad cephalosporin (cefepime) covers resistant pneumococcus in the nosocomial setting."}
   ],
+  "side_effects": {
+    "_doc": "CC-4 side-effect / toxicity burden weight per drug (relative integer, 0=benign … 3=high-monitoring/toxicity). Feeds the COST+SIDE-EFFECT objective minimize(w_cost·tier + w_tox·side_effects): a cheap-but-toxic drug can lose to a pricier-but-safer one when w_tox>0. AUTHORED-DEBT — illustrative clinical estimates pending CC-4b spider grounding (FDA label adverse-event / monitoring burden); not validated tox data. Default objective weights are (w_cost=1, w_tox=0), which reproduces the tier-only set-cover exactly, so this layer is inert until a chart/policy raises w_tox.",
+    "vancomycin": 3, "ceftriaxone": 1, "ampicillin": 1, "cefepime": 2,
+    "meropenem": 2, "moxifloxacin": 3, "aztreonam": 1, "tmp_smx": 3
+  },
   "drugs": {
     "vancomycin":   {"covers": ["s_pneumoniae_resistant", "mrsa"], "csf_penetrant": true, "betalactam": false, "contraindications": [], "tier": 1,
                      "dose": {"floor_mg_per_kg": 15, "ceiling_base_mg_per_kg": 20, "ceiling_penalty_mg_per_kg": {"renal_severe": 6, "nephrotoxin_interaction": 6, "renal_moderate": 2}},

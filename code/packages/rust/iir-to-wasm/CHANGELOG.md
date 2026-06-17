@@ -3,6 +3,44 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.15.0] — 2026-06-15 (LANG-FULL E2 integration — compute-wide + mask)
+
+### Changed — narrow unsigned types ride the i64 register model
+
+The v0.14.0 E2 masking typed a narrow op at its natural WASM width (`u8` → `i32`)
+and masked with `i32.and`. That is only valid when the **operands** are also
+`i32`. A real frontend's value model isn't: Nib (and the other LANG languages)
+materialise every `const`/`let`/`ret` as `i64` for module uniformity and carry
+the narrow width *only on the arithmetic op*. So a Nib `u8` add emitted
+`i32.add` over two `i64` locals → **`type mismatch: expected i32, got I64`** at
+run time. (The v0.14.0 unit tests never caught it because they built
+self-consistent narrow-width modules — every operand `u8` too.)
+
+The fix makes narrow **unsigned** integers (`u4`/`u8`/`u16`/`u32`) use the **i64
+register model**, exactly like the vm-core/jit-core/LLVM/native backends:
+
+- `hint_to_value_type`: `u4`/`u8`/`u16`/`u32` → **I64** (were I32). Signed narrow
+  (`i8`/`i16`/`i32`) and `bool` keep I32 (no frontend emits narrow signed
+  register arithmetic; booleans are i32 0/1).
+- New `uses_i64_register(hint)` gates op selection — narrow unsigned now pick
+  `i64.*` opcodes (add/sub/mul/div/mod/and/or/xor/shl/shr, `const`, `neg`, `not`,
+  and the relational ops) over their i64-slot operands.
+- `emit_wasm_width_mask`: emits `i64.const <mask>; i64.and` (was `i32.*`), and now
+  covers `u32` (`0xFFFFFFFF`) too — within i64 a 32-bit op no longer self-wraps.
+- Relational ops use signed `i64.*` compares; a masked narrow value is in
+  `[0, 2ⁿ)` (positive in i64), so the signed result is the correct unsigned one.
+
+So `200u8 + 100u8` wraps to `44` **with i64 operands** — the shape a frontend
+actually emits. Verified end-to-end on the real `wasm-runtime` by a new test
+(`u8_op_over_i64_operands_wraps_on_real_wasm`) that builds `200i64 + 100i64 : u8`
+and compares `== 44` in-register (→ 1). The full `lang-aot` matrix (Brainfuck,
+BASIC, Twig, i64-Nib) and all wasm consumers stay green — the change is a no-op
+for every i64/u64 program. Two unit tests updated to the i64 model
+(`unsigned_8_16_32_map_to_i32`, `emit_i32_div_u_opcode`).
+
+This is the first of the 3 stack-backend reworks (wasm, then jvm, cil) the E2
+Nib integration needs; the other 4 backends already compute wide and mask.
+
 ## [0.14.0] — 2026-06-14 (LANG-FULL E2 — register width & wrap, backend 3 of 6)
 
 ### Added — narrow-width arithmetic wraps mod-2ⁿ on real wasm

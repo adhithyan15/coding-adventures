@@ -130,6 +130,7 @@ mod tests {
             supported_ops: ops,
             supported_dtypes: dtypes,
             gflops_f32: 100,
+            gflops_f64: 100,
             gflops_u8: 100,
             gflops_i32: 100,
             host_to_device_bw: 10,

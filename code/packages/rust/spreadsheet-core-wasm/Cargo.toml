@@ -1,6 +1,6 @@
 [package]
 name = "spreadsheet-core-wasm"
-version = "0.2.0"
+version = "0.6.0"
 edition = "2021"
 description = "Browser/WASM-facing string-in / JSON-out facade over spreadsheet-core"
 license = "MIT"

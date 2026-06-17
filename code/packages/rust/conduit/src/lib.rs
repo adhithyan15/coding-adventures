@@ -23,7 +23,7 @@ use std::str::Utf8Error;
 use std::sync::Arc;
 
 use embeddable_http_server::{HttpRequest, HttpResponse, HttpServerOptions};
-use tcp_runtime::{PlatformError, StopHandle};
+use tcp_runtime::{PlatformError, ShardedStopHandle, StopHandle};
 use web_core::{LogLevel, WebApp, WebRequest, WebResponse};
 
 /// Request type exposed to Rust Conduit handlers.
@@ -370,6 +370,175 @@ impl Server {
     }
 }
 
+#[cfg(target_os = "linux")]
+type NativeShardedServer = web_core::ShardedWebServer<transport_platform::linux::EpollTransportPlatform>;
+
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+type NativeShardedServer = web_core::ShardedWebServer<transport_platform::bsd::KqueueTransportPlatform>;
+
+#[cfg(target_os = "windows")]
+type NativeShardedServer = web_core::ShardedWebServer<transport_platform::windows::WindowsTransportPlatform>;
+
+/// A **parallel** Conduit server (WEB01a-3): the opt-in counterpart of [`Server`].
+///
+/// [`Server`] runs every connection on a single reactor thread. `ShardedServer`
+/// dispatches across `worker_count` reactor shards (a `web_core::ShardedWebServer`),
+/// so requests on different connections are handled **concurrently** — a slow or
+/// CPU-bound handler no longer stalls the whole server. The application is shared
+/// (`Arc`) across shards unchanged; routes, hooks, `halt`, etc. behave exactly as
+/// with [`Server`], and HTTP/1.1 per-connection response ordering is preserved
+/// (each connection stays on one shard).
+///
+/// Parallelism is **opt-in**: keep using [`Server`] for the default single-reactor
+/// behaviour; reach for `ShardedServer` with `worker_count > 1` to scale across
+/// cores. See `code/specs/WEB01-async-web-core.md`.
+pub struct ShardedServer {
+    inner: NativeShardedServer,
+}
+
+impl ShardedServer {
+    /// Bind to `host:port` with `worker_count` reactor shards and default options.
+    pub fn bind(
+        host: &str,
+        port: u16,
+        worker_count: usize,
+        app: Application,
+    ) -> Result<Self, PlatformError> {
+        Self::bind_with_options(host, port, worker_count, HttpServerOptions::default(), app)
+    }
+
+    /// Bind to `host:port` with `worker_count` reactor shards and explicit options.
+    pub fn bind_with_options(
+        host: &str,
+        port: u16,
+        worker_count: usize,
+        options: HttpServerOptions,
+        app: Application,
+    ) -> Result<Self, PlatformError> {
+        let addr = format!("{host}:{port}");
+        let app = Arc::new(app.into_web_app());
+
+        #[cfg(target_os = "linux")]
+        let inner =
+            web_core::ShardedWebServer::bind_epoll_sharded(addr, options, worker_count, app)?;
+
+        #[cfg(any(
+            target_os = "macos",
+            target_os = "freebsd",
+            target_os = "openbsd",
+            target_os = "netbsd",
+            target_os = "dragonfly"
+        ))]
+        let inner =
+            web_core::ShardedWebServer::bind_kqueue_sharded(addr, options, worker_count, app)?;
+
+        #[cfg(target_os = "windows")]
+        let inner =
+            web_core::ShardedWebServer::bind_windows_sharded(addr, options, worker_count, app)?;
+
+        Ok(Self { inner })
+    }
+
+    /// The local socket address the server bound to.
+    pub fn local_addr(&self) -> SocketAddr {
+        self.inner.local_addr()
+    }
+
+    /// The number of reactor shards (the handler-parallelism degree).
+    pub fn worker_count(&self) -> usize {
+        self.inner.worker_count()
+    }
+
+    /// Handle that can stop every shard from another thread.
+    pub fn stop_handle(&self) -> ShardedStopHandle {
+        self.inner.stop_handle()
+    }
+
+    /// Serve requests until stopped.
+    pub fn serve(&mut self) -> Result<(), PlatformError> {
+        self.inner.serve()
+    }
+}
+
+/// A **per-request-parallel** Conduit server (WEB01b-2): the mailbox counterpart
+/// of [`ShardedServer`].
+///
+/// [`ShardedServer`] parallelises *by connection* (N reactor shards). `MailboxServer`
+/// parallelises *by request*: a single reactor frames each request and submits it
+/// to a `worker_count`-thread pool (a `web_core::MailboxWebServer`); a worker runs
+/// the Conduit dispatch off the reactor thread. Routes, hooks, `halt`, etc. behave
+/// exactly as with [`Server`]; the application is shared (`Arc`) across pool
+/// threads unchanged.
+///
+/// Like [`ShardedServer`], this is **opt-in**. The platform (kqueue / epoll / IOCP)
+/// is chosen internally, so binding is a single cross-platform call and the error
+/// type is `std::io::Result` (the mailbox stack is `io::Error`-based) — unlike the
+/// per-platform [`Server`] / [`ShardedServer`] binds. Correct and in order for
+/// one-request-and-close and *sequential* keep-alive; pipelined-connection gating
+/// and reordering is WEB01b-1b. See `code/specs/WEB01b-mailbox-parallelism.md`.
+pub struct MailboxServer {
+    inner: web_core::MailboxWebServer,
+}
+
+impl MailboxServer {
+    /// Bind to `host:port` with a `worker_count`-thread handler pool and default options.
+    pub fn bind(
+        host: &str,
+        port: u16,
+        worker_count: usize,
+        app: Application,
+    ) -> std::io::Result<Self> {
+        Self::bind_with_options(host, port, worker_count, HttpServerOptions::default(), app)
+    }
+
+    /// Bind to `host:port` with a `worker_count`-thread handler pool and explicit options.
+    pub fn bind_with_options(
+        host: &str,
+        port: u16,
+        worker_count: usize,
+        options: HttpServerOptions,
+        app: Application,
+    ) -> std::io::Result<Self> {
+        let app = Arc::new(app.into_web_app());
+        let inner = web_core::MailboxWebServer::bind(host, port, options, worker_count, app)?;
+        Ok(Self { inner })
+    }
+
+    /// The local socket address the server bound to.
+    pub fn local_addr(&self) -> SocketAddr {
+        self.inner.local_addr()
+    }
+
+    /// Whether the server is currently serving.
+    pub fn is_running(&self) -> bool {
+        self.inner.is_running()
+    }
+
+    /// Signal the server to stop (from this or another thread).
+    pub fn stop(&self) {
+        self.inner.stop();
+    }
+
+    /// Serve requests until stopped. Blocks the calling thread.
+    pub fn serve(&self) -> std::io::Result<()> {
+        self.inner.serve()
+    }
+}
+
+impl Clone for MailboxServer {
+    fn clone(&self) -> Self {
+        Self {
+            inner: self.inner.clone(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::io::{BufRead, BufReader, Read, Write};
@@ -573,5 +742,137 @@ mod tests {
     #[test]
     fn json_string_escaping_handles_control_characters() {
         assert_eq!(escape_json_string("a\"b\\c\n"), "a\\\"b\\\\c\\n");
+    }
+
+    /// WEB01a-3: a `ShardedServer` dispatches Conduit handlers concurrently across
+    /// its shards. Proven deterministically (not by wall-clock, which flakes under
+    /// CI load): the handler bumps an in-flight gauge, holds briefly, and records
+    /// the max simultaneous handlers. A single-reactor server could never exceed 1;
+    /// observing >= 2 proves real cross-shard parallelism. Every concurrent request
+    /// also gets a correct 200, so parallelism preserves the request/response
+    /// contract through the full facade (`Application` → `WebApp` → shards).
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn sharded_server_dispatches_handlers_concurrently() {
+        let worker_count = 4;
+        let client_count = 8;
+
+        let in_flight = Arc::new(AtomicUsize::new(0));
+        let max_in_flight = Arc::new(AtomicUsize::new(0));
+        let h_in_flight = Arc::clone(&in_flight);
+        let h_max = Arc::clone(&max_in_flight);
+
+        let mut app = Application::new();
+        app.get("/work", move |_| {
+            let now = h_in_flight.fetch_add(1, Ordering::SeqCst) + 1;
+            h_max.fetch_max(now, Ordering::SeqCst);
+            // A sleeping handler does not hold a core, so overlap is observable
+            // regardless of the CI runner's core count.
+            thread::sleep(Duration::from_millis(60));
+            h_in_flight.fetch_sub(1, Ordering::SeqCst);
+            text("ok")
+        });
+
+        let mut server =
+            ShardedServer::bind("127.0.0.1", 0, worker_count, app).expect("bind sharded");
+        assert_eq!(server.worker_count(), worker_count, "all requested shards spawned");
+        let port = server.local_addr().port();
+        let stop = server.stop_handle();
+        thread::spawn(move || {
+            let _ = server.serve();
+        });
+        thread::sleep(Duration::from_millis(20));
+
+        let barrier = Arc::new(std::sync::Barrier::new(client_count));
+        let clients: Vec<_> = (0..client_count)
+            .map(|_| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    barrier.wait();
+                    request(port, "GET", "/work", "")
+                })
+            })
+            .collect();
+
+        for client in clients {
+            let (status, body) = client.join().expect("client thread");
+            assert_eq!(status, 200);
+            assert_eq!(body, "ok");
+        }
+
+        let observed_max = max_in_flight.load(Ordering::SeqCst);
+        assert!(
+            observed_max >= 2,
+            "expected concurrent handler dispatch across shards; max in-flight was \
+             {observed_max} (a single reactor would never exceed 1)",
+        );
+
+        stop.stop();
+    }
+
+    /// WEB01b-2: a `MailboxServer` dispatches Conduit handlers concurrently on a
+    /// SINGLE reactor by submitting them to its worker pool (parallel *by request*,
+    /// vs `ShardedServer`'s parallel *by connection*). Proven deterministically:
+    /// the handler bumps an in-flight gauge, holds briefly, and records the max
+    /// simultaneous handlers. A single reactor dispatching inline could never
+    /// exceed 1; observing >= 2 proves the pool runs Conduit dispatch in parallel
+    /// through the full facade (`Application` → `WebApp` → `MailboxWebServer` →
+    /// pool). Every concurrent request also gets a correct 200.
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn mailbox_server_dispatches_handlers_concurrently() {
+        let worker_count = 4;
+        let client_count = 8;
+
+        let in_flight = Arc::new(AtomicUsize::new(0));
+        let max_in_flight = Arc::new(AtomicUsize::new(0));
+        let h_in_flight = Arc::clone(&in_flight);
+        let h_max = Arc::clone(&max_in_flight);
+
+        let mut app = Application::new();
+        app.get("/work", move |_| {
+            let now = h_in_flight.fetch_add(1, Ordering::SeqCst) + 1;
+            h_max.fetch_max(now, Ordering::SeqCst);
+            // A sleeping handler does not hold a core, so overlap is observable
+            // regardless of the CI runner's core count.
+            thread::sleep(Duration::from_millis(60));
+            h_in_flight.fetch_sub(1, Ordering::SeqCst);
+            text("ok")
+        });
+
+        let server = MailboxServer::bind("127.0.0.1", 0, worker_count, app).expect("bind mailbox");
+        let port = server.local_addr().port();
+        // The server is `Clone`; serve a clone on a worker thread and stop via the
+        // original (serve takes `&self` — the mailbox stack owns its threads).
+        let serve = server.clone();
+        thread::spawn(move || {
+            let _ = serve.serve();
+        });
+        thread::sleep(Duration::from_millis(20));
+
+        let barrier = Arc::new(std::sync::Barrier::new(client_count));
+        let clients: Vec<_> = (0..client_count)
+            .map(|_| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    barrier.wait();
+                    request(port, "GET", "/work", "")
+                })
+            })
+            .collect();
+
+        for client in clients {
+            let (status, body) = client.join().expect("client thread");
+            assert_eq!(status, 200);
+            assert_eq!(body, "ok");
+        }
+
+        let observed_max = max_in_flight.load(Ordering::SeqCst);
+        server.stop();
+        assert!(
+            observed_max >= 2,
+            "expected concurrent handler dispatch via the pool on a single reactor; max \
+             in-flight was {observed_max} (inline dispatch never exceeds 1)",
+        );
     }
 }

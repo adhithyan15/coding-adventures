@@ -4538,6 +4538,5578 @@ pub fn hue_package_release_archive_validation_summary(
     HuePackageReleaseArchiveValidationSummary::from_pairing_plan(plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveCertificationSummary {
+    pub archive_validation_summary: HuePackageReleaseArchiveValidationSummary,
+    pub required_archive_certification_check_count: usize,
+    pub passed_archive_certification_check_count: usize,
+    pub blocked_archive_certification_check_count: usize,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_certification_ready: bool,
+}
+
+impl HuePackageReleaseArchiveCertificationSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_validation_summary(hue_package_release_archive_validation_summary(plan))
+    }
+
+    pub fn from_archive_validation_summary(
+        archive_validation_summary: HuePackageReleaseArchiveValidationSummary,
+    ) -> Self {
+        let release_archive_validation_ready =
+            archive_validation_summary.is_release_archive_validation_ready();
+        let release_archive_verification_ready =
+            !archive_validation_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_validation_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_validation_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_validation_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_validation_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_validation_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_validation_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_validation_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_validation_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_validation_summary.needs_release_archive();
+        let release_closure_ready = !archive_validation_summary.needs_release_closure();
+        let release_signoff_ready = !archive_validation_summary.needs_release_signoff();
+        let release_audit_ready = !archive_validation_summary.needs_release_audit();
+        let operator_ready = !archive_validation_summary.needs_operator_readiness();
+        let coordination_ready = !archive_validation_summary.needs_coordination();
+        let publish_gate_ready = !archive_validation_summary.needs_publish_gate();
+        let checks = [
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_certification_check_count =
+            checks.iter().filter(|ready| **ready).count();
+        let required_archive_certification_check_count = checks.len();
+        let blocked_archive_certification_check_count =
+            required_archive_certification_check_count - passed_archive_certification_check_count;
+        let release_archive_certification_ready = blocked_archive_certification_check_count == 0;
+
+        Self {
+            archive_validation_summary,
+            required_archive_certification_check_count,
+            passed_archive_certification_check_count,
+            blocked_archive_certification_check_count,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_certification_ready,
+        }
+    }
+
+    pub fn is_release_archive_certification_ready(self) -> bool {
+        self.release_archive_certification_ready
+    }
+
+    pub fn has_blocked_archive_certification_checks(self) -> bool {
+        self.blocked_archive_certification_check_count > 0
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_certification_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveCertificationSummary {
+    HuePackageReleaseArchiveCertificationSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveApprovalSummary {
+    pub archive_certification_summary: HuePackageReleaseArchiveCertificationSummary,
+    pub required_archive_approval_check_count: usize,
+    pub passed_archive_approval_check_count: usize,
+    pub blocked_archive_approval_check_count: usize,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_approval_ready: bool,
+}
+
+impl HuePackageReleaseArchiveApprovalSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_certification_summary(hue_package_release_archive_certification_summary(
+            plan,
+        ))
+    }
+
+    pub fn from_archive_certification_summary(
+        archive_certification_summary: HuePackageReleaseArchiveCertificationSummary,
+    ) -> Self {
+        let release_archive_certification_ready =
+            archive_certification_summary.is_release_archive_certification_ready();
+        let release_archive_validation_ready =
+            !archive_certification_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_certification_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_certification_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_certification_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_certification_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_certification_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_certification_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_certification_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_certification_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_certification_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_certification_summary.needs_release_archive();
+        let release_closure_ready = !archive_certification_summary.needs_release_closure();
+        let release_signoff_ready = !archive_certification_summary.needs_release_signoff();
+        let release_audit_ready = !archive_certification_summary.needs_release_audit();
+        let operator_ready = !archive_certification_summary.needs_operator_readiness();
+        let coordination_ready = !archive_certification_summary.needs_coordination();
+        let publish_gate_ready = !archive_certification_summary.needs_publish_gate();
+        let checks = [
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_approval_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_approval_check_count = checks.len();
+        let blocked_archive_approval_check_count =
+            required_archive_approval_check_count - passed_archive_approval_check_count;
+        let release_archive_approval_ready = blocked_archive_approval_check_count == 0;
+
+        Self {
+            archive_certification_summary,
+            required_archive_approval_check_count,
+            passed_archive_approval_check_count,
+            blocked_archive_approval_check_count,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_approval_ready,
+        }
+    }
+
+    pub fn is_release_archive_approval_ready(self) -> bool {
+        self.release_archive_approval_ready
+    }
+
+    pub fn has_blocked_archive_approval_checks(self) -> bool {
+        self.blocked_archive_approval_check_count > 0
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_approval_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveApprovalSummary {
+    HuePackageReleaseArchiveApprovalSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveActivationSummary {
+    pub archive_approval_summary: HuePackageReleaseArchiveApprovalSummary,
+    pub required_archive_activation_check_count: usize,
+    pub passed_archive_activation_check_count: usize,
+    pub blocked_archive_activation_check_count: usize,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_activation_ready: bool,
+}
+
+impl HuePackageReleaseArchiveActivationSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_approval_summary(hue_package_release_archive_approval_summary(plan))
+    }
+
+    pub fn from_archive_approval_summary(
+        archive_approval_summary: HuePackageReleaseArchiveApprovalSummary,
+    ) -> Self {
+        let release_archive_approval_ready =
+            archive_approval_summary.is_release_archive_approval_ready();
+        let release_archive_certification_ready =
+            !archive_approval_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_approval_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_approval_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_approval_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_approval_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_approval_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_approval_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_approval_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_approval_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_approval_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_approval_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_approval_summary.needs_release_archive();
+        let release_closure_ready = !archive_approval_summary.needs_release_closure();
+        let release_signoff_ready = !archive_approval_summary.needs_release_signoff();
+        let release_audit_ready = !archive_approval_summary.needs_release_audit();
+        let operator_ready = !archive_approval_summary.needs_operator_readiness();
+        let coordination_ready = !archive_approval_summary.needs_coordination();
+        let publish_gate_ready = !archive_approval_summary.needs_publish_gate();
+        let checks = [
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_activation_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_activation_check_count = checks.len();
+        let blocked_archive_activation_check_count =
+            required_archive_activation_check_count - passed_archive_activation_check_count;
+        let release_archive_activation_ready = blocked_archive_activation_check_count == 0;
+
+        Self {
+            archive_approval_summary,
+            required_archive_activation_check_count,
+            passed_archive_activation_check_count,
+            blocked_archive_activation_check_count,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_activation_ready,
+        }
+    }
+
+    pub fn is_release_archive_activation_ready(self) -> bool {
+        self.release_archive_activation_ready
+    }
+
+    pub fn has_blocked_archive_activation_checks(self) -> bool {
+        self.blocked_archive_activation_check_count > 0
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_activation_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveActivationSummary {
+    HuePackageReleaseArchiveActivationSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveRolloutSummary {
+    pub archive_activation_summary: HuePackageReleaseArchiveActivationSummary,
+    pub required_archive_rollout_check_count: usize,
+    pub passed_archive_rollout_check_count: usize,
+    pub blocked_archive_rollout_check_count: usize,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_rollout_ready: bool,
+}
+
+impl HuePackageReleaseArchiveRolloutSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_activation_summary(hue_package_release_archive_activation_summary(plan))
+    }
+
+    pub fn from_archive_activation_summary(
+        archive_activation_summary: HuePackageReleaseArchiveActivationSummary,
+    ) -> Self {
+        let release_archive_activation_ready =
+            archive_activation_summary.is_release_archive_activation_ready();
+        let release_archive_approval_ready =
+            !archive_activation_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_activation_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_activation_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_activation_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_activation_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_activation_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_activation_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_activation_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_activation_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_activation_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_activation_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_activation_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_activation_summary.needs_release_archive();
+        let release_closure_ready = !archive_activation_summary.needs_release_closure();
+        let release_signoff_ready = !archive_activation_summary.needs_release_signoff();
+        let release_audit_ready = !archive_activation_summary.needs_release_audit();
+        let operator_ready = !archive_activation_summary.needs_operator_readiness();
+        let coordination_ready = !archive_activation_summary.needs_coordination();
+        let publish_gate_ready = !archive_activation_summary.needs_publish_gate();
+        let checks = [
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_rollout_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_rollout_check_count = checks.len();
+        let blocked_archive_rollout_check_count =
+            required_archive_rollout_check_count - passed_archive_rollout_check_count;
+        let release_archive_rollout_ready = blocked_archive_rollout_check_count == 0;
+
+        Self {
+            archive_activation_summary,
+            required_archive_rollout_check_count,
+            passed_archive_rollout_check_count,
+            blocked_archive_rollout_check_count,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_rollout_ready,
+        }
+    }
+
+    pub fn is_release_archive_rollout_ready(self) -> bool {
+        self.release_archive_rollout_ready
+    }
+
+    pub fn has_blocked_archive_rollout_checks(self) -> bool {
+        self.blocked_archive_rollout_check_count > 0
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_rollout_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveRolloutSummary {
+    HuePackageReleaseArchiveRolloutSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveAdoptionSummary {
+    pub archive_rollout_summary: HuePackageReleaseArchiveRolloutSummary,
+    pub required_archive_adoption_check_count: usize,
+    pub passed_archive_adoption_check_count: usize,
+    pub blocked_archive_adoption_check_count: usize,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_adoption_ready: bool,
+}
+
+impl HuePackageReleaseArchiveAdoptionSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_rollout_summary(hue_package_release_archive_rollout_summary(plan))
+    }
+
+    pub fn from_archive_rollout_summary(
+        archive_rollout_summary: HuePackageReleaseArchiveRolloutSummary,
+    ) -> Self {
+        let release_archive_rollout_ready =
+            archive_rollout_summary.is_release_archive_rollout_ready();
+        let release_archive_activation_ready =
+            !archive_rollout_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_rollout_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_rollout_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_rollout_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_rollout_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_rollout_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_rollout_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_rollout_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_rollout_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_rollout_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_rollout_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_rollout_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_rollout_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_rollout_summary.needs_release_archive();
+        let release_closure_ready = !archive_rollout_summary.needs_release_closure();
+        let release_signoff_ready = !archive_rollout_summary.needs_release_signoff();
+        let release_audit_ready = !archive_rollout_summary.needs_release_audit();
+        let operator_ready = !archive_rollout_summary.needs_operator_readiness();
+        let coordination_ready = !archive_rollout_summary.needs_coordination();
+        let publish_gate_ready = !archive_rollout_summary.needs_publish_gate();
+        let checks = [
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_adoption_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_adoption_check_count = checks.len();
+        let blocked_archive_adoption_check_count =
+            required_archive_adoption_check_count - passed_archive_adoption_check_count;
+        let release_archive_adoption_ready = blocked_archive_adoption_check_count == 0;
+
+        Self {
+            archive_rollout_summary,
+            required_archive_adoption_check_count,
+            passed_archive_adoption_check_count,
+            blocked_archive_adoption_check_count,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_adoption_ready,
+        }
+    }
+
+    pub fn is_release_archive_adoption_ready(self) -> bool {
+        self.release_archive_adoption_ready
+    }
+
+    pub fn has_blocked_archive_adoption_checks(self) -> bool {
+        self.blocked_archive_adoption_check_count > 0
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_adoption_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveAdoptionSummary {
+    HuePackageReleaseArchiveAdoptionSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveAcceptanceSummary {
+    pub archive_adoption_summary: HuePackageReleaseArchiveAdoptionSummary,
+    pub required_archive_acceptance_check_count: usize,
+    pub passed_archive_acceptance_check_count: usize,
+    pub blocked_archive_acceptance_check_count: usize,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+}
+
+impl HuePackageReleaseArchiveAcceptanceSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_adoption_summary(hue_package_release_archive_adoption_summary(plan))
+    }
+
+    pub fn from_archive_adoption_summary(
+        archive_adoption_summary: HuePackageReleaseArchiveAdoptionSummary,
+    ) -> Self {
+        let release_archive_adoption_ready =
+            archive_adoption_summary.is_release_archive_adoption_ready();
+        let release_archive_rollout_ready =
+            !archive_adoption_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_adoption_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_adoption_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_adoption_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_adoption_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_adoption_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_adoption_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_adoption_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_adoption_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_adoption_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_adoption_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_adoption_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_adoption_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_adoption_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_adoption_summary.needs_release_archive();
+        let release_closure_ready = !archive_adoption_summary.needs_release_closure();
+        let release_signoff_ready = !archive_adoption_summary.needs_release_signoff();
+        let release_audit_ready = !archive_adoption_summary.needs_release_audit();
+        let operator_ready = !archive_adoption_summary.needs_operator_readiness();
+        let coordination_ready = !archive_adoption_summary.needs_coordination();
+        let publish_gate_ready = !archive_adoption_summary.needs_publish_gate();
+        let checks = [
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_acceptance_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_acceptance_check_count = checks.len();
+        let blocked_archive_acceptance_check_count =
+            required_archive_acceptance_check_count - passed_archive_acceptance_check_count;
+        let release_archive_acceptance_ready = blocked_archive_acceptance_check_count == 0;
+
+        Self {
+            archive_adoption_summary,
+            required_archive_acceptance_check_count,
+            passed_archive_acceptance_check_count,
+            blocked_archive_acceptance_check_count,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_acceptance_ready,
+        }
+    }
+
+    pub fn is_release_archive_acceptance_ready(self) -> bool {
+        self.release_archive_acceptance_ready
+    }
+
+    pub fn has_blocked_archive_acceptance_checks(self) -> bool {
+        self.blocked_archive_acceptance_check_count > 0
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_acceptance_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveAcceptanceSummary {
+    HuePackageReleaseArchiveAcceptanceSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveDistributionSummary {
+    pub archive_acceptance_summary: HuePackageReleaseArchiveAcceptanceSummary,
+    pub required_archive_distribution_check_count: usize,
+    pub passed_archive_distribution_check_count: usize,
+    pub blocked_archive_distribution_check_count: usize,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_distribution_ready: bool,
+}
+
+impl HuePackageReleaseArchiveDistributionSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_acceptance_summary(hue_package_release_archive_acceptance_summary(plan))
+    }
+
+    pub fn from_archive_acceptance_summary(
+        archive_acceptance_summary: HuePackageReleaseArchiveAcceptanceSummary,
+    ) -> Self {
+        let release_archive_acceptance_ready =
+            archive_acceptance_summary.is_release_archive_acceptance_ready();
+        let release_archive_adoption_ready =
+            !archive_acceptance_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready =
+            !archive_acceptance_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_acceptance_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_acceptance_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_acceptance_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_acceptance_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_acceptance_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_acceptance_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_acceptance_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_acceptance_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_acceptance_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_acceptance_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_acceptance_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_acceptance_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_acceptance_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_acceptance_summary.needs_release_archive();
+        let release_closure_ready = !archive_acceptance_summary.needs_release_closure();
+        let release_signoff_ready = !archive_acceptance_summary.needs_release_signoff();
+        let release_audit_ready = !archive_acceptance_summary.needs_release_audit();
+        let operator_ready = !archive_acceptance_summary.needs_operator_readiness();
+        let coordination_ready = !archive_acceptance_summary.needs_coordination();
+        let publish_gate_ready = !archive_acceptance_summary.needs_publish_gate();
+        let checks = [
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_distribution_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_distribution_check_count = checks.len();
+        let blocked_archive_distribution_check_count =
+            required_archive_distribution_check_count - passed_archive_distribution_check_count;
+        let release_archive_distribution_ready = blocked_archive_distribution_check_count == 0;
+
+        Self {
+            archive_acceptance_summary,
+            required_archive_distribution_check_count,
+            passed_archive_distribution_check_count,
+            blocked_archive_distribution_check_count,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_distribution_ready,
+        }
+    }
+
+    pub fn is_release_archive_distribution_ready(self) -> bool {
+        self.release_archive_distribution_ready
+    }
+
+    pub fn has_blocked_archive_distribution_checks(self) -> bool {
+        self.blocked_archive_distribution_check_count > 0
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_distribution_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveDistributionSummary {
+    HuePackageReleaseArchiveDistributionSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveExportSummary {
+    pub archive_distribution_summary: HuePackageReleaseArchiveDistributionSummary,
+    pub required_archive_export_check_count: usize,
+    pub passed_archive_export_check_count: usize,
+    pub blocked_archive_export_check_count: usize,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_export_ready: bool,
+}
+
+impl HuePackageReleaseArchiveExportSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_distribution_summary(hue_package_release_archive_distribution_summary(
+            plan,
+        ))
+    }
+
+    pub fn from_archive_distribution_summary(
+        archive_distribution_summary: HuePackageReleaseArchiveDistributionSummary,
+    ) -> Self {
+        let release_archive_distribution_ready =
+            archive_distribution_summary.is_release_archive_distribution_ready();
+        let release_archive_acceptance_ready =
+            !archive_distribution_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_distribution_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready =
+            !archive_distribution_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_distribution_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_distribution_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_distribution_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_distribution_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_distribution_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_distribution_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_distribution_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_distribution_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_distribution_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_distribution_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_distribution_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_distribution_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_distribution_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_distribution_summary.needs_release_archive();
+        let release_closure_ready = !archive_distribution_summary.needs_release_closure();
+        let release_signoff_ready = !archive_distribution_summary.needs_release_signoff();
+        let release_audit_ready = !archive_distribution_summary.needs_release_audit();
+        let operator_ready = !archive_distribution_summary.needs_operator_readiness();
+        let coordination_ready = !archive_distribution_summary.needs_coordination();
+        let publish_gate_ready = !archive_distribution_summary.needs_publish_gate();
+        let checks = [
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_export_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_export_check_count = checks.len();
+        let blocked_archive_export_check_count =
+            required_archive_export_check_count - passed_archive_export_check_count;
+        let release_archive_export_ready = blocked_archive_export_check_count == 0;
+
+        Self {
+            archive_distribution_summary,
+            required_archive_export_check_count,
+            passed_archive_export_check_count,
+            blocked_archive_export_check_count,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_export_ready,
+        }
+    }
+
+    pub fn is_release_archive_export_ready(self) -> bool {
+        self.release_archive_export_ready
+    }
+
+    pub fn has_blocked_archive_export_checks(self) -> bool {
+        self.blocked_archive_export_check_count > 0
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_export_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveExportSummary {
+    HuePackageReleaseArchiveExportSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveImportSummary {
+    pub archive_export_summary: HuePackageReleaseArchiveExportSummary,
+    pub required_archive_import_check_count: usize,
+    pub passed_archive_import_check_count: usize,
+    pub blocked_archive_import_check_count: usize,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_import_ready: bool,
+}
+
+impl HuePackageReleaseArchiveImportSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_export_summary(hue_package_release_archive_export_summary(plan))
+    }
+
+    pub fn from_archive_export_summary(
+        archive_export_summary: HuePackageReleaseArchiveExportSummary,
+    ) -> Self {
+        let release_archive_export_ready = archive_export_summary.is_release_archive_export_ready();
+        let release_archive_distribution_ready =
+            !archive_export_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_export_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_export_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready = !archive_export_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_export_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_export_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_export_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_export_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_export_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_export_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_export_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_export_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_export_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_export_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready = !archive_export_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready = !archive_export_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready = !archive_export_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_export_summary.needs_release_archive();
+        let release_closure_ready = !archive_export_summary.needs_release_closure();
+        let release_signoff_ready = !archive_export_summary.needs_release_signoff();
+        let release_audit_ready = !archive_export_summary.needs_release_audit();
+        let operator_ready = !archive_export_summary.needs_operator_readiness();
+        let coordination_ready = !archive_export_summary.needs_coordination();
+        let publish_gate_ready = !archive_export_summary.needs_publish_gate();
+        let checks = [
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_import_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_import_check_count = checks.len();
+        let blocked_archive_import_check_count =
+            required_archive_import_check_count - passed_archive_import_check_count;
+        let release_archive_import_ready = blocked_archive_import_check_count == 0;
+
+        Self {
+            archive_export_summary,
+            required_archive_import_check_count,
+            passed_archive_import_check_count,
+            blocked_archive_import_check_count,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_import_ready,
+        }
+    }
+
+    pub fn is_release_archive_import_ready(self) -> bool {
+        self.release_archive_import_ready
+    }
+
+    pub fn has_blocked_archive_import_checks(self) -> bool {
+        self.blocked_archive_import_check_count > 0
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_import_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveImportSummary {
+    HuePackageReleaseArchiveImportSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveIngestSummary {
+    pub archive_import_summary: HuePackageReleaseArchiveImportSummary,
+    pub required_archive_ingest_check_count: usize,
+    pub passed_archive_ingest_check_count: usize,
+    pub blocked_archive_ingest_check_count: usize,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_ingest_ready: bool,
+}
+
+impl HuePackageReleaseArchiveIngestSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_import_summary(hue_package_release_archive_import_summary(plan))
+    }
+
+    pub fn from_archive_import_summary(
+        archive_import_summary: HuePackageReleaseArchiveImportSummary,
+    ) -> Self {
+        let release_archive_import_ready = archive_import_summary.is_release_archive_import_ready();
+        let release_archive_export_ready = !archive_import_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_import_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_import_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_import_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready = !archive_import_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_import_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_import_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_import_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_import_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_import_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_import_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_import_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_import_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_import_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_import_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready = !archive_import_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready = !archive_import_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready = !archive_import_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_import_summary.needs_release_archive();
+        let release_closure_ready = !archive_import_summary.needs_release_closure();
+        let release_signoff_ready = !archive_import_summary.needs_release_signoff();
+        let release_audit_ready = !archive_import_summary.needs_release_audit();
+        let operator_ready = !archive_import_summary.needs_operator_readiness();
+        let coordination_ready = !archive_import_summary.needs_coordination();
+        let publish_gate_ready = !archive_import_summary.needs_publish_gate();
+        let checks = [
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_ingest_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_ingest_check_count = checks.len();
+        let blocked_archive_ingest_check_count =
+            required_archive_ingest_check_count - passed_archive_ingest_check_count;
+        let release_archive_ingest_ready = blocked_archive_ingest_check_count == 0;
+
+        Self {
+            archive_import_summary,
+            required_archive_ingest_check_count,
+            passed_archive_ingest_check_count,
+            blocked_archive_ingest_check_count,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_ingest_ready,
+        }
+    }
+
+    pub fn is_release_archive_ingest_ready(self) -> bool {
+        self.release_archive_ingest_ready
+    }
+
+    pub fn has_blocked_archive_ingest_checks(self) -> bool {
+        self.blocked_archive_ingest_check_count > 0
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_ingest_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveIngestSummary {
+    HuePackageReleaseArchiveIngestSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveLoadSummary {
+    pub archive_ingest_summary: HuePackageReleaseArchiveIngestSummary,
+    pub required_archive_load_check_count: usize,
+    pub passed_archive_load_check_count: usize,
+    pub blocked_archive_load_check_count: usize,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_load_ready: bool,
+}
+
+impl HuePackageReleaseArchiveLoadSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_ingest_summary(hue_package_release_archive_ingest_summary(plan))
+    }
+
+    pub fn from_archive_ingest_summary(
+        archive_ingest_summary: HuePackageReleaseArchiveIngestSummary,
+    ) -> Self {
+        let release_archive_ingest_ready = archive_ingest_summary.is_release_archive_ingest_ready();
+        let release_archive_import_ready = !archive_ingest_summary.needs_release_archive_import();
+        let release_archive_export_ready = !archive_ingest_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_ingest_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_ingest_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_ingest_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready = !archive_ingest_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_ingest_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_ingest_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_ingest_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_ingest_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_ingest_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_ingest_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_ingest_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_ingest_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_ingest_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_ingest_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready = !archive_ingest_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready = !archive_ingest_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready = !archive_ingest_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_ingest_summary.needs_release_archive();
+        let release_closure_ready = !archive_ingest_summary.needs_release_closure();
+        let release_signoff_ready = !archive_ingest_summary.needs_release_signoff();
+        let release_audit_ready = !archive_ingest_summary.needs_release_audit();
+        let operator_ready = !archive_ingest_summary.needs_operator_readiness();
+        let coordination_ready = !archive_ingest_summary.needs_coordination();
+        let publish_gate_ready = !archive_ingest_summary.needs_publish_gate();
+        let checks = [
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_load_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_load_check_count = checks.len();
+        let blocked_archive_load_check_count =
+            required_archive_load_check_count - passed_archive_load_check_count;
+        let release_archive_load_ready = blocked_archive_load_check_count == 0;
+
+        Self {
+            archive_ingest_summary,
+            required_archive_load_check_count,
+            passed_archive_load_check_count,
+            blocked_archive_load_check_count,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_load_ready,
+        }
+    }
+
+    pub fn is_release_archive_load_ready(self) -> bool {
+        self.release_archive_load_ready
+    }
+
+    pub fn has_blocked_archive_load_checks(self) -> bool {
+        self.blocked_archive_load_check_count > 0
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_load_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveLoadSummary {
+    HuePackageReleaseArchiveLoadSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveRestoreSummary {
+    pub archive_load_summary: HuePackageReleaseArchiveLoadSummary,
+    pub required_archive_restore_check_count: usize,
+    pub passed_archive_restore_check_count: usize,
+    pub blocked_archive_restore_check_count: usize,
+    pub release_archive_load_ready: bool,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_restore_ready: bool,
+}
+
+impl HuePackageReleaseArchiveRestoreSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_load_summary(hue_package_release_archive_load_summary(plan))
+    }
+
+    pub fn from_archive_load_summary(
+        archive_load_summary: HuePackageReleaseArchiveLoadSummary,
+    ) -> Self {
+        let release_archive_load_ready = archive_load_summary.is_release_archive_load_ready();
+        let release_archive_ingest_ready = !archive_load_summary.needs_release_archive_ingest();
+        let release_archive_import_ready = !archive_load_summary.needs_release_archive_import();
+        let release_archive_export_ready = !archive_load_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_load_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_load_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready = !archive_load_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready = !archive_load_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_load_summary.needs_release_archive_activation();
+        let release_archive_approval_ready = !archive_load_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_load_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_load_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_load_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_load_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_load_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_load_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready = !archive_load_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready = !archive_load_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready = !archive_load_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready = !archive_load_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready = !archive_load_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_load_summary.needs_release_archive();
+        let release_closure_ready = !archive_load_summary.needs_release_closure();
+        let release_signoff_ready = !archive_load_summary.needs_release_signoff();
+        let release_audit_ready = !archive_load_summary.needs_release_audit();
+        let operator_ready = !archive_load_summary.needs_operator_readiness();
+        let coordination_ready = !archive_load_summary.needs_coordination();
+        let publish_gate_ready = !archive_load_summary.needs_publish_gate();
+        let checks = [
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_restore_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_restore_check_count = checks.len();
+        let blocked_archive_restore_check_count =
+            required_archive_restore_check_count - passed_archive_restore_check_count;
+        let release_archive_restore_ready = blocked_archive_restore_check_count == 0;
+
+        Self {
+            archive_load_summary,
+            required_archive_restore_check_count,
+            passed_archive_restore_check_count,
+            blocked_archive_restore_check_count,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_restore_ready,
+        }
+    }
+
+    pub fn is_release_archive_restore_ready(self) -> bool {
+        self.release_archive_restore_ready
+    }
+
+    pub fn has_blocked_archive_restore_checks(self) -> bool {
+        self.blocked_archive_restore_check_count > 0
+    }
+
+    pub fn needs_release_archive_load(self) -> bool {
+        !self.release_archive_load_ready
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_restore_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveRestoreSummary {
+    HuePackageReleaseArchiveRestoreSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveRecoverySummary {
+    pub archive_restore_summary: HuePackageReleaseArchiveRestoreSummary,
+    pub required_archive_recovery_check_count: usize,
+    pub passed_archive_recovery_check_count: usize,
+    pub blocked_archive_recovery_check_count: usize,
+    pub release_archive_restore_ready: bool,
+    pub release_archive_load_ready: bool,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_recovery_ready: bool,
+}
+
+impl HuePackageReleaseArchiveRecoverySummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_restore_summary(hue_package_release_archive_restore_summary(plan))
+    }
+
+    pub fn from_archive_restore_summary(
+        archive_restore_summary: HuePackageReleaseArchiveRestoreSummary,
+    ) -> Self {
+        let release_archive_restore_ready =
+            archive_restore_summary.is_release_archive_restore_ready();
+        let release_archive_load_ready = !archive_restore_summary.needs_release_archive_load();
+        let release_archive_ingest_ready = !archive_restore_summary.needs_release_archive_ingest();
+        let release_archive_import_ready = !archive_restore_summary.needs_release_archive_import();
+        let release_archive_export_ready = !archive_restore_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_restore_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_restore_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_restore_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready =
+            !archive_restore_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_restore_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_restore_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_restore_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_restore_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_restore_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_restore_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_restore_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_restore_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_restore_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_restore_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_restore_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_restore_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_restore_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_restore_summary.needs_release_archive();
+        let release_closure_ready = !archive_restore_summary.needs_release_closure();
+        let release_signoff_ready = !archive_restore_summary.needs_release_signoff();
+        let release_audit_ready = !archive_restore_summary.needs_release_audit();
+        let operator_ready = !archive_restore_summary.needs_operator_readiness();
+        let coordination_ready = !archive_restore_summary.needs_coordination();
+        let publish_gate_ready = !archive_restore_summary.needs_publish_gate();
+        let checks = [
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_recovery_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_recovery_check_count = checks.len();
+        let blocked_archive_recovery_check_count =
+            required_archive_recovery_check_count - passed_archive_recovery_check_count;
+        let release_archive_recovery_ready = blocked_archive_recovery_check_count == 0;
+
+        Self {
+            archive_restore_summary,
+            required_archive_recovery_check_count,
+            passed_archive_recovery_check_count,
+            blocked_archive_recovery_check_count,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_recovery_ready,
+        }
+    }
+
+    pub fn is_release_archive_recovery_ready(self) -> bool {
+        self.release_archive_recovery_ready
+    }
+
+    pub fn has_blocked_archive_recovery_checks(self) -> bool {
+        self.blocked_archive_recovery_check_count > 0
+    }
+
+    pub fn needs_release_archive_restore(self) -> bool {
+        !self.release_archive_restore_ready
+    }
+
+    pub fn needs_release_archive_load(self) -> bool {
+        !self.release_archive_load_ready
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_recovery_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveRecoverySummary {
+    HuePackageReleaseArchiveRecoverySummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveReplaySummary {
+    pub archive_recovery_summary: HuePackageReleaseArchiveRecoverySummary,
+    pub required_archive_replay_check_count: usize,
+    pub passed_archive_replay_check_count: usize,
+    pub blocked_archive_replay_check_count: usize,
+    pub release_archive_recovery_ready: bool,
+    pub release_archive_restore_ready: bool,
+    pub release_archive_load_ready: bool,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_replay_ready: bool,
+}
+
+impl HuePackageReleaseArchiveReplaySummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_recovery_summary(hue_package_release_archive_recovery_summary(plan))
+    }
+
+    pub fn from_archive_recovery_summary(
+        archive_recovery_summary: HuePackageReleaseArchiveRecoverySummary,
+    ) -> Self {
+        let release_archive_recovery_ready =
+            archive_recovery_summary.is_release_archive_recovery_ready();
+        let release_archive_restore_ready =
+            !archive_recovery_summary.needs_release_archive_restore();
+        let release_archive_load_ready = !archive_recovery_summary.needs_release_archive_load();
+        let release_archive_ingest_ready = !archive_recovery_summary.needs_release_archive_ingest();
+        let release_archive_import_ready = !archive_recovery_summary.needs_release_archive_import();
+        let release_archive_export_ready = !archive_recovery_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_recovery_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_recovery_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_recovery_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready =
+            !archive_recovery_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_recovery_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_recovery_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_recovery_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_recovery_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_recovery_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_recovery_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_recovery_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_recovery_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_recovery_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_recovery_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_recovery_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_recovery_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_recovery_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_recovery_summary.needs_release_archive();
+        let release_closure_ready = !archive_recovery_summary.needs_release_closure();
+        let release_signoff_ready = !archive_recovery_summary.needs_release_signoff();
+        let release_audit_ready = !archive_recovery_summary.needs_release_audit();
+        let operator_ready = !archive_recovery_summary.needs_operator_readiness();
+        let coordination_ready = !archive_recovery_summary.needs_coordination();
+        let publish_gate_ready = !archive_recovery_summary.needs_publish_gate();
+        let checks = [
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_replay_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_replay_check_count = checks.len();
+        let blocked_archive_replay_check_count =
+            required_archive_replay_check_count - passed_archive_replay_check_count;
+        let release_archive_replay_ready = blocked_archive_replay_check_count == 0;
+
+        Self {
+            archive_recovery_summary,
+            required_archive_replay_check_count,
+            passed_archive_replay_check_count,
+            blocked_archive_replay_check_count,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_replay_ready,
+        }
+    }
+
+    pub fn is_release_archive_replay_ready(self) -> bool {
+        self.release_archive_replay_ready
+    }
+
+    pub fn has_blocked_archive_replay_checks(self) -> bool {
+        self.blocked_archive_replay_check_count > 0
+    }
+
+    pub fn needs_release_archive_recovery(self) -> bool {
+        !self.release_archive_recovery_ready
+    }
+
+    pub fn needs_release_archive_restore(self) -> bool {
+        !self.release_archive_restore_ready
+    }
+
+    pub fn needs_release_archive_load(self) -> bool {
+        !self.release_archive_load_ready
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_replay_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveReplaySummary {
+    HuePackageReleaseArchiveReplaySummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveReconciliationSummary {
+    pub archive_replay_summary: HuePackageReleaseArchiveReplaySummary,
+    pub required_archive_reconciliation_check_count: usize,
+    pub passed_archive_reconciliation_check_count: usize,
+    pub blocked_archive_reconciliation_check_count: usize,
+    pub release_archive_replay_ready: bool,
+    pub release_archive_recovery_ready: bool,
+    pub release_archive_restore_ready: bool,
+    pub release_archive_load_ready: bool,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_reconciliation_ready: bool,
+}
+
+impl HuePackageReleaseArchiveReconciliationSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_replay_summary(hue_package_release_archive_replay_summary(plan))
+    }
+
+    pub fn from_archive_replay_summary(
+        archive_replay_summary: HuePackageReleaseArchiveReplaySummary,
+    ) -> Self {
+        let release_archive_replay_ready = archive_replay_summary.is_release_archive_replay_ready();
+        let release_archive_recovery_ready =
+            !archive_replay_summary.needs_release_archive_recovery();
+        let release_archive_restore_ready = !archive_replay_summary.needs_release_archive_restore();
+        let release_archive_load_ready = !archive_replay_summary.needs_release_archive_load();
+        let release_archive_ingest_ready = !archive_replay_summary.needs_release_archive_ingest();
+        let release_archive_import_ready = !archive_replay_summary.needs_release_archive_import();
+        let release_archive_export_ready = !archive_replay_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_replay_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_replay_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_replay_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready = !archive_replay_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_replay_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_replay_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_replay_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_replay_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_replay_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_replay_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_replay_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_replay_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_replay_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_replay_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready = !archive_replay_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready = !archive_replay_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready = !archive_replay_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_replay_summary.needs_release_archive();
+        let release_closure_ready = !archive_replay_summary.needs_release_closure();
+        let release_signoff_ready = !archive_replay_summary.needs_release_signoff();
+        let release_audit_ready = !archive_replay_summary.needs_release_audit();
+        let operator_ready = !archive_replay_summary.needs_operator_readiness();
+        let coordination_ready = !archive_replay_summary.needs_coordination();
+        let publish_gate_ready = !archive_replay_summary.needs_publish_gate();
+        let checks = [
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_reconciliation_check_count =
+            checks.iter().filter(|ready| **ready).count();
+        let required_archive_reconciliation_check_count = checks.len();
+        let blocked_archive_reconciliation_check_count =
+            required_archive_reconciliation_check_count - passed_archive_reconciliation_check_count;
+        let release_archive_reconciliation_ready = blocked_archive_reconciliation_check_count == 0;
+
+        Self {
+            archive_replay_summary,
+            required_archive_reconciliation_check_count,
+            passed_archive_reconciliation_check_count,
+            blocked_archive_reconciliation_check_count,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_reconciliation_ready,
+        }
+    }
+
+    pub fn is_release_archive_reconciliation_ready(self) -> bool {
+        self.release_archive_reconciliation_ready
+    }
+
+    pub fn has_blocked_archive_reconciliation_checks(self) -> bool {
+        self.blocked_archive_reconciliation_check_count > 0
+    }
+
+    pub fn needs_release_archive_replay(self) -> bool {
+        !self.release_archive_replay_ready
+    }
+
+    pub fn needs_release_archive_recovery(self) -> bool {
+        !self.release_archive_recovery_ready
+    }
+
+    pub fn needs_release_archive_restore(self) -> bool {
+        !self.release_archive_restore_ready
+    }
+
+    pub fn needs_release_archive_load(self) -> bool {
+        !self.release_archive_load_ready
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_reconciliation_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveReconciliationSummary {
+    HuePackageReleaseArchiveReconciliationSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveSettlementSummary {
+    pub archive_reconciliation_summary: HuePackageReleaseArchiveReconciliationSummary,
+    pub required_archive_settlement_check_count: usize,
+    pub passed_archive_settlement_check_count: usize,
+    pub blocked_archive_settlement_check_count: usize,
+    pub release_archive_reconciliation_ready: bool,
+    pub release_archive_replay_ready: bool,
+    pub release_archive_recovery_ready: bool,
+    pub release_archive_restore_ready: bool,
+    pub release_archive_load_ready: bool,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_settlement_ready: bool,
+}
+
+impl HuePackageReleaseArchiveSettlementSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_reconciliation_summary(
+            hue_package_release_archive_reconciliation_summary(plan),
+        )
+    }
+
+    pub fn from_archive_reconciliation_summary(
+        archive_reconciliation_summary: HuePackageReleaseArchiveReconciliationSummary,
+    ) -> Self {
+        let release_archive_reconciliation_ready =
+            archive_reconciliation_summary.is_release_archive_reconciliation_ready();
+        let release_archive_replay_ready =
+            !archive_reconciliation_summary.needs_release_archive_replay();
+        let release_archive_recovery_ready =
+            !archive_reconciliation_summary.needs_release_archive_recovery();
+        let release_archive_restore_ready =
+            !archive_reconciliation_summary.needs_release_archive_restore();
+        let release_archive_load_ready =
+            !archive_reconciliation_summary.needs_release_archive_load();
+        let release_archive_ingest_ready =
+            !archive_reconciliation_summary.needs_release_archive_ingest();
+        let release_archive_import_ready =
+            !archive_reconciliation_summary.needs_release_archive_import();
+        let release_archive_export_ready =
+            !archive_reconciliation_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_reconciliation_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_reconciliation_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_reconciliation_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready =
+            !archive_reconciliation_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_reconciliation_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_reconciliation_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_reconciliation_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_reconciliation_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_reconciliation_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_reconciliation_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_reconciliation_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_reconciliation_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_reconciliation_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_reconciliation_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_reconciliation_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_reconciliation_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_reconciliation_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_reconciliation_summary.needs_release_archive();
+        let release_closure_ready = !archive_reconciliation_summary.needs_release_closure();
+        let release_signoff_ready = !archive_reconciliation_summary.needs_release_signoff();
+        let release_audit_ready = !archive_reconciliation_summary.needs_release_audit();
+        let operator_ready = !archive_reconciliation_summary.needs_operator_readiness();
+        let coordination_ready = !archive_reconciliation_summary.needs_coordination();
+        let publish_gate_ready = !archive_reconciliation_summary.needs_publish_gate();
+        let checks = [
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_settlement_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_settlement_check_count = checks.len();
+        let blocked_archive_settlement_check_count =
+            required_archive_settlement_check_count - passed_archive_settlement_check_count;
+        let release_archive_settlement_ready = blocked_archive_settlement_check_count == 0;
+
+        Self {
+            archive_reconciliation_summary,
+            required_archive_settlement_check_count,
+            passed_archive_settlement_check_count,
+            blocked_archive_settlement_check_count,
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_settlement_ready,
+        }
+    }
+
+    pub fn is_release_archive_settlement_ready(self) -> bool {
+        self.release_archive_settlement_ready
+    }
+
+    pub fn has_blocked_archive_settlement_checks(self) -> bool {
+        self.blocked_archive_settlement_check_count > 0
+    }
+
+    pub fn needs_release_archive_reconciliation(self) -> bool {
+        !self.release_archive_reconciliation_ready
+    }
+
+    pub fn needs_release_archive_replay(self) -> bool {
+        !self.release_archive_replay_ready
+    }
+
+    pub fn needs_release_archive_recovery(self) -> bool {
+        !self.release_archive_recovery_ready
+    }
+
+    pub fn needs_release_archive_restore(self) -> bool {
+        !self.release_archive_restore_ready
+    }
+
+    pub fn needs_release_archive_load(self) -> bool {
+        !self.release_archive_load_ready
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_settlement_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveSettlementSummary {
+    HuePackageReleaseArchiveSettlementSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveFinalizationSummary {
+    pub archive_settlement_summary: HuePackageReleaseArchiveSettlementSummary,
+    pub required_archive_finalization_check_count: usize,
+    pub passed_archive_finalization_check_count: usize,
+    pub blocked_archive_finalization_check_count: usize,
+    pub release_archive_settlement_ready: bool,
+    pub release_archive_reconciliation_ready: bool,
+    pub release_archive_replay_ready: bool,
+    pub release_archive_recovery_ready: bool,
+    pub release_archive_restore_ready: bool,
+    pub release_archive_load_ready: bool,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_finalization_ready: bool,
+}
+
+impl HuePackageReleaseArchiveFinalizationSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_settlement_summary(hue_package_release_archive_settlement_summary(plan))
+    }
+
+    pub fn from_archive_settlement_summary(
+        archive_settlement_summary: HuePackageReleaseArchiveSettlementSummary,
+    ) -> Self {
+        let release_archive_settlement_ready =
+            archive_settlement_summary.is_release_archive_settlement_ready();
+        let release_archive_reconciliation_ready =
+            !archive_settlement_summary.needs_release_archive_reconciliation();
+        let release_archive_replay_ready =
+            !archive_settlement_summary.needs_release_archive_replay();
+        let release_archive_recovery_ready =
+            !archive_settlement_summary.needs_release_archive_recovery();
+        let release_archive_restore_ready =
+            !archive_settlement_summary.needs_release_archive_restore();
+        let release_archive_load_ready = !archive_settlement_summary.needs_release_archive_load();
+        let release_archive_ingest_ready =
+            !archive_settlement_summary.needs_release_archive_ingest();
+        let release_archive_import_ready =
+            !archive_settlement_summary.needs_release_archive_import();
+        let release_archive_export_ready =
+            !archive_settlement_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_settlement_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_settlement_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_settlement_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready =
+            !archive_settlement_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_settlement_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_settlement_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_settlement_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_settlement_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_settlement_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_settlement_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_settlement_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_settlement_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_settlement_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_settlement_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_settlement_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_settlement_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_settlement_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_settlement_summary.needs_release_archive();
+        let release_closure_ready = !archive_settlement_summary.needs_release_closure();
+        let release_signoff_ready = !archive_settlement_summary.needs_release_signoff();
+        let release_audit_ready = !archive_settlement_summary.needs_release_audit();
+        let operator_ready = !archive_settlement_summary.needs_operator_readiness();
+        let coordination_ready = !archive_settlement_summary.needs_coordination();
+        let publish_gate_ready = !archive_settlement_summary.needs_publish_gate();
+        let checks = [
+            release_archive_settlement_ready,
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_finalization_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_finalization_check_count = checks.len();
+        let blocked_archive_finalization_check_count =
+            required_archive_finalization_check_count - passed_archive_finalization_check_count;
+        let release_archive_finalization_ready = blocked_archive_finalization_check_count == 0;
+
+        Self {
+            archive_settlement_summary,
+            required_archive_finalization_check_count,
+            passed_archive_finalization_check_count,
+            blocked_archive_finalization_check_count,
+            release_archive_settlement_ready,
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_finalization_ready,
+        }
+    }
+
+    pub fn is_release_archive_finalization_ready(self) -> bool {
+        self.release_archive_finalization_ready
+    }
+
+    pub fn has_blocked_archive_finalization_checks(self) -> bool {
+        self.blocked_archive_finalization_check_count > 0
+    }
+
+    pub fn needs_release_archive_settlement(self) -> bool {
+        !self.release_archive_settlement_ready
+    }
+
+    pub fn needs_release_archive_reconciliation(self) -> bool {
+        !self.release_archive_reconciliation_ready
+    }
+
+    pub fn needs_release_archive_replay(self) -> bool {
+        !self.release_archive_replay_ready
+    }
+
+    pub fn needs_release_archive_recovery(self) -> bool {
+        !self.release_archive_recovery_ready
+    }
+
+    pub fn needs_release_archive_restore(self) -> bool {
+        !self.release_archive_restore_ready
+    }
+
+    pub fn needs_release_archive_load(self) -> bool {
+        !self.release_archive_load_ready
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_finalization_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveFinalizationSummary {
+    HuePackageReleaseArchiveFinalizationSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveConfirmationSummary {
+    pub archive_finalization_summary: HuePackageReleaseArchiveFinalizationSummary,
+    pub required_archive_confirmation_check_count: usize,
+    pub passed_archive_confirmation_check_count: usize,
+    pub blocked_archive_confirmation_check_count: usize,
+    pub release_archive_finalization_ready: bool,
+    pub release_archive_settlement_ready: bool,
+    pub release_archive_reconciliation_ready: bool,
+    pub release_archive_replay_ready: bool,
+    pub release_archive_recovery_ready: bool,
+    pub release_archive_restore_ready: bool,
+    pub release_archive_load_ready: bool,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_confirmation_ready: bool,
+}
+
+impl HuePackageReleaseArchiveConfirmationSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_finalization_summary(hue_package_release_archive_finalization_summary(
+            plan,
+        ))
+    }
+
+    pub fn from_archive_finalization_summary(
+        archive_finalization_summary: HuePackageReleaseArchiveFinalizationSummary,
+    ) -> Self {
+        let release_archive_finalization_ready =
+            archive_finalization_summary.is_release_archive_finalization_ready();
+        let release_archive_settlement_ready =
+            !archive_finalization_summary.needs_release_archive_settlement();
+        let release_archive_reconciliation_ready =
+            !archive_finalization_summary.needs_release_archive_reconciliation();
+        let release_archive_replay_ready =
+            !archive_finalization_summary.needs_release_archive_replay();
+        let release_archive_recovery_ready =
+            !archive_finalization_summary.needs_release_archive_recovery();
+        let release_archive_restore_ready =
+            !archive_finalization_summary.needs_release_archive_restore();
+        let release_archive_load_ready = !archive_finalization_summary.needs_release_archive_load();
+        let release_archive_ingest_ready =
+            !archive_finalization_summary.needs_release_archive_ingest();
+        let release_archive_import_ready =
+            !archive_finalization_summary.needs_release_archive_import();
+        let release_archive_export_ready =
+            !archive_finalization_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_finalization_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_finalization_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_finalization_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready =
+            !archive_finalization_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_finalization_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_finalization_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_finalization_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_finalization_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_finalization_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_finalization_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_finalization_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_finalization_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_finalization_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_finalization_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_finalization_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_finalization_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_finalization_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_finalization_summary.needs_release_archive();
+        let release_closure_ready = !archive_finalization_summary.needs_release_closure();
+        let release_signoff_ready = !archive_finalization_summary.needs_release_signoff();
+        let release_audit_ready = !archive_finalization_summary.needs_release_audit();
+        let operator_ready = !archive_finalization_summary.needs_operator_readiness();
+        let coordination_ready = !archive_finalization_summary.needs_coordination();
+        let publish_gate_ready = !archive_finalization_summary.needs_publish_gate();
+        let checks = [
+            release_archive_finalization_ready,
+            release_archive_settlement_ready,
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_confirmation_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_confirmation_check_count = checks.len();
+        let blocked_archive_confirmation_check_count =
+            required_archive_confirmation_check_count - passed_archive_confirmation_check_count;
+        let release_archive_confirmation_ready = blocked_archive_confirmation_check_count == 0;
+
+        Self {
+            archive_finalization_summary,
+            required_archive_confirmation_check_count,
+            passed_archive_confirmation_check_count,
+            blocked_archive_confirmation_check_count,
+            release_archive_finalization_ready,
+            release_archive_settlement_ready,
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_confirmation_ready,
+        }
+    }
+
+    pub fn is_release_archive_confirmation_ready(self) -> bool {
+        self.release_archive_confirmation_ready
+    }
+
+    pub fn has_blocked_archive_confirmation_checks(self) -> bool {
+        self.blocked_archive_confirmation_check_count > 0
+    }
+
+    pub fn needs_release_archive_finalization(self) -> bool {
+        !self.release_archive_finalization_ready
+    }
+
+    pub fn needs_release_archive_settlement(self) -> bool {
+        !self.release_archive_settlement_ready
+    }
+
+    pub fn needs_release_archive_reconciliation(self) -> bool {
+        !self.release_archive_reconciliation_ready
+    }
+
+    pub fn needs_release_archive_replay(self) -> bool {
+        !self.release_archive_replay_ready
+    }
+
+    pub fn needs_release_archive_recovery(self) -> bool {
+        !self.release_archive_recovery_ready
+    }
+
+    pub fn needs_release_archive_restore(self) -> bool {
+        !self.release_archive_restore_ready
+    }
+
+    pub fn needs_release_archive_load(self) -> bool {
+        !self.release_archive_load_ready
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_confirmation_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveConfirmationSummary {
+    HuePackageReleaseArchiveConfirmationSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveAttestationSummary {
+    pub archive_confirmation_summary: HuePackageReleaseArchiveConfirmationSummary,
+    pub required_archive_attestation_check_count: usize,
+    pub passed_archive_attestation_check_count: usize,
+    pub blocked_archive_attestation_check_count: usize,
+    pub release_archive_confirmation_ready: bool,
+    pub release_archive_finalization_ready: bool,
+    pub release_archive_settlement_ready: bool,
+    pub release_archive_reconciliation_ready: bool,
+    pub release_archive_replay_ready: bool,
+    pub release_archive_recovery_ready: bool,
+    pub release_archive_restore_ready: bool,
+    pub release_archive_load_ready: bool,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_attestation_ready: bool,
+}
+
+impl HuePackageReleaseArchiveAttestationSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_confirmation_summary(hue_package_release_archive_confirmation_summary(
+            plan,
+        ))
+    }
+
+    pub fn from_archive_confirmation_summary(
+        archive_confirmation_summary: HuePackageReleaseArchiveConfirmationSummary,
+    ) -> Self {
+        let release_archive_confirmation_ready =
+            archive_confirmation_summary.is_release_archive_confirmation_ready();
+        let release_archive_finalization_ready =
+            !archive_confirmation_summary.needs_release_archive_finalization();
+        let release_archive_settlement_ready =
+            !archive_confirmation_summary.needs_release_archive_settlement();
+        let release_archive_reconciliation_ready =
+            !archive_confirmation_summary.needs_release_archive_reconciliation();
+        let release_archive_replay_ready =
+            !archive_confirmation_summary.needs_release_archive_replay();
+        let release_archive_recovery_ready =
+            !archive_confirmation_summary.needs_release_archive_recovery();
+        let release_archive_restore_ready =
+            !archive_confirmation_summary.needs_release_archive_restore();
+        let release_archive_load_ready = !archive_confirmation_summary.needs_release_archive_load();
+        let release_archive_ingest_ready =
+            !archive_confirmation_summary.needs_release_archive_ingest();
+        let release_archive_import_ready =
+            !archive_confirmation_summary.needs_release_archive_import();
+        let release_archive_export_ready =
+            !archive_confirmation_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_confirmation_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_confirmation_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_confirmation_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready =
+            !archive_confirmation_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_confirmation_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_confirmation_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_confirmation_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_confirmation_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_confirmation_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_confirmation_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_confirmation_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_confirmation_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_confirmation_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_confirmation_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_confirmation_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_confirmation_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_confirmation_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_confirmation_summary.needs_release_archive();
+        let release_closure_ready = !archive_confirmation_summary.needs_release_closure();
+        let release_signoff_ready = !archive_confirmation_summary.needs_release_signoff();
+        let release_audit_ready = !archive_confirmation_summary.needs_release_audit();
+        let operator_ready = !archive_confirmation_summary.needs_operator_readiness();
+        let coordination_ready = !archive_confirmation_summary.needs_coordination();
+        let publish_gate_ready = !archive_confirmation_summary.needs_publish_gate();
+        let checks = [
+            release_archive_confirmation_ready,
+            release_archive_finalization_ready,
+            release_archive_settlement_ready,
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_attestation_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_attestation_check_count = checks.len();
+        let blocked_archive_attestation_check_count =
+            required_archive_attestation_check_count - passed_archive_attestation_check_count;
+        let release_archive_attestation_ready = blocked_archive_attestation_check_count == 0;
+
+        Self {
+            archive_confirmation_summary,
+            required_archive_attestation_check_count,
+            passed_archive_attestation_check_count,
+            blocked_archive_attestation_check_count,
+            release_archive_confirmation_ready,
+            release_archive_finalization_ready,
+            release_archive_settlement_ready,
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_attestation_ready,
+        }
+    }
+
+    pub fn is_release_archive_attestation_ready(self) -> bool {
+        self.release_archive_attestation_ready
+    }
+
+    pub fn has_blocked_archive_attestation_checks(self) -> bool {
+        self.blocked_archive_attestation_check_count > 0
+    }
+
+    pub fn needs_release_archive_confirmation(self) -> bool {
+        !self.release_archive_confirmation_ready
+    }
+
+    pub fn needs_release_archive_finalization(self) -> bool {
+        !self.release_archive_finalization_ready
+    }
+
+    pub fn needs_release_archive_settlement(self) -> bool {
+        !self.release_archive_settlement_ready
+    }
+
+    pub fn needs_release_archive_reconciliation(self) -> bool {
+        !self.release_archive_reconciliation_ready
+    }
+
+    pub fn needs_release_archive_replay(self) -> bool {
+        !self.release_archive_replay_ready
+    }
+
+    pub fn needs_release_archive_recovery(self) -> bool {
+        !self.release_archive_recovery_ready
+    }
+
+    pub fn needs_release_archive_restore(self) -> bool {
+        !self.release_archive_restore_ready
+    }
+
+    pub fn needs_release_archive_load(self) -> bool {
+        !self.release_archive_load_ready
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_attestation_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveAttestationSummary {
+    HuePackageReleaseArchiveAttestationSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveEvidenceSummary {
+    pub archive_attestation_summary: HuePackageReleaseArchiveAttestationSummary,
+    pub required_archive_evidence_check_count: usize,
+    pub passed_archive_evidence_check_count: usize,
+    pub blocked_archive_evidence_check_count: usize,
+    pub release_archive_attestation_ready: bool,
+    pub release_archive_confirmation_ready: bool,
+    pub release_archive_finalization_ready: bool,
+    pub release_archive_settlement_ready: bool,
+    pub release_archive_reconciliation_ready: bool,
+    pub release_archive_replay_ready: bool,
+    pub release_archive_recovery_ready: bool,
+    pub release_archive_restore_ready: bool,
+    pub release_archive_load_ready: bool,
+    pub release_archive_ingest_ready: bool,
+    pub release_archive_import_ready: bool,
+    pub release_archive_export_ready: bool,
+    pub release_archive_distribution_ready: bool,
+    pub release_archive_acceptance_ready: bool,
+    pub release_archive_adoption_ready: bool,
+    pub release_archive_rollout_ready: bool,
+    pub release_archive_activation_ready: bool,
+    pub release_archive_approval_ready: bool,
+    pub release_archive_certification_ready: bool,
+    pub release_archive_validation_ready: bool,
+    pub release_archive_verification_ready: bool,
+    pub release_archive_publication_ready: bool,
+    pub release_archive_completion_ready: bool,
+    pub release_archive_supervisor_ready: bool,
+    pub release_archive_operator_ready: bool,
+    pub release_archive_dispatch_ready: bool,
+    pub release_archive_handoff_ready: bool,
+    pub release_archive_closure_ready: bool,
+    pub release_archive_signoff_ready: bool,
+    pub release_archive_ready: bool,
+    pub release_closure_ready: bool,
+    pub release_signoff_ready: bool,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub coordination_ready: bool,
+    pub publish_gate_ready: bool,
+    pub release_archive_evidence_ready: bool,
+}
+
+impl HuePackageReleaseArchiveEvidenceSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_archive_attestation_summary(hue_package_release_archive_attestation_summary(
+            plan,
+        ))
+    }
+
+    pub fn from_archive_attestation_summary(
+        archive_attestation_summary: HuePackageReleaseArchiveAttestationSummary,
+    ) -> Self {
+        let release_archive_attestation_ready =
+            archive_attestation_summary.is_release_archive_attestation_ready();
+        let release_archive_confirmation_ready =
+            !archive_attestation_summary.needs_release_archive_confirmation();
+        let release_archive_finalization_ready =
+            !archive_attestation_summary.needs_release_archive_finalization();
+        let release_archive_settlement_ready =
+            !archive_attestation_summary.needs_release_archive_settlement();
+        let release_archive_reconciliation_ready =
+            !archive_attestation_summary.needs_release_archive_reconciliation();
+        let release_archive_replay_ready =
+            !archive_attestation_summary.needs_release_archive_replay();
+        let release_archive_recovery_ready =
+            !archive_attestation_summary.needs_release_archive_recovery();
+        let release_archive_restore_ready =
+            !archive_attestation_summary.needs_release_archive_restore();
+        let release_archive_load_ready = !archive_attestation_summary.needs_release_archive_load();
+        let release_archive_ingest_ready =
+            !archive_attestation_summary.needs_release_archive_ingest();
+        let release_archive_import_ready =
+            !archive_attestation_summary.needs_release_archive_import();
+        let release_archive_export_ready =
+            !archive_attestation_summary.needs_release_archive_export();
+        let release_archive_distribution_ready =
+            !archive_attestation_summary.needs_release_archive_distribution();
+        let release_archive_acceptance_ready =
+            !archive_attestation_summary.needs_release_archive_acceptance();
+        let release_archive_adoption_ready =
+            !archive_attestation_summary.needs_release_archive_adoption();
+        let release_archive_rollout_ready =
+            !archive_attestation_summary.needs_release_archive_rollout();
+        let release_archive_activation_ready =
+            !archive_attestation_summary.needs_release_archive_activation();
+        let release_archive_approval_ready =
+            !archive_attestation_summary.needs_release_archive_approval();
+        let release_archive_certification_ready =
+            !archive_attestation_summary.needs_release_archive_certification();
+        let release_archive_validation_ready =
+            !archive_attestation_summary.needs_release_archive_validation();
+        let release_archive_verification_ready =
+            !archive_attestation_summary.needs_release_archive_verification();
+        let release_archive_publication_ready =
+            !archive_attestation_summary.needs_release_archive_publication();
+        let release_archive_completion_ready =
+            !archive_attestation_summary.needs_release_archive_completion();
+        let release_archive_supervisor_ready =
+            !archive_attestation_summary.needs_release_archive_supervisor();
+        let release_archive_operator_ready =
+            !archive_attestation_summary.needs_release_archive_operator();
+        let release_archive_dispatch_ready =
+            !archive_attestation_summary.needs_release_archive_dispatch();
+        let release_archive_handoff_ready =
+            !archive_attestation_summary.needs_release_archive_handoff();
+        let release_archive_closure_ready =
+            !archive_attestation_summary.needs_release_archive_closure();
+        let release_archive_signoff_ready =
+            !archive_attestation_summary.needs_release_archive_signoff();
+        let release_archive_ready = !archive_attestation_summary.needs_release_archive();
+        let release_closure_ready = !archive_attestation_summary.needs_release_closure();
+        let release_signoff_ready = !archive_attestation_summary.needs_release_signoff();
+        let release_audit_ready = !archive_attestation_summary.needs_release_audit();
+        let operator_ready = !archive_attestation_summary.needs_operator_readiness();
+        let coordination_ready = !archive_attestation_summary.needs_coordination();
+        let publish_gate_ready = !archive_attestation_summary.needs_publish_gate();
+        let checks = [
+            release_archive_attestation_ready,
+            release_archive_confirmation_ready,
+            release_archive_finalization_ready,
+            release_archive_settlement_ready,
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+        ];
+        let passed_archive_evidence_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_evidence_check_count = checks.len();
+        let blocked_archive_evidence_check_count =
+            required_archive_evidence_check_count - passed_archive_evidence_check_count;
+        let release_archive_evidence_ready = blocked_archive_evidence_check_count == 0;
+
+        Self {
+            archive_attestation_summary,
+            required_archive_evidence_check_count,
+            passed_archive_evidence_check_count,
+            blocked_archive_evidence_check_count,
+            release_archive_attestation_ready,
+            release_archive_confirmation_ready,
+            release_archive_finalization_ready,
+            release_archive_settlement_ready,
+            release_archive_reconciliation_ready,
+            release_archive_replay_ready,
+            release_archive_recovery_ready,
+            release_archive_restore_ready,
+            release_archive_load_ready,
+            release_archive_ingest_ready,
+            release_archive_import_ready,
+            release_archive_export_ready,
+            release_archive_distribution_ready,
+            release_archive_acceptance_ready,
+            release_archive_adoption_ready,
+            release_archive_rollout_ready,
+            release_archive_activation_ready,
+            release_archive_approval_ready,
+            release_archive_certification_ready,
+            release_archive_validation_ready,
+            release_archive_verification_ready,
+            release_archive_publication_ready,
+            release_archive_completion_ready,
+            release_archive_supervisor_ready,
+            release_archive_operator_ready,
+            release_archive_dispatch_ready,
+            release_archive_handoff_ready,
+            release_archive_closure_ready,
+            release_archive_signoff_ready,
+            release_archive_ready,
+            release_closure_ready,
+            release_signoff_ready,
+            release_audit_ready,
+            operator_ready,
+            coordination_ready,
+            publish_gate_ready,
+            release_archive_evidence_ready,
+        }
+    }
+
+    pub fn is_release_archive_evidence_ready(self) -> bool {
+        self.release_archive_evidence_ready
+    }
+
+    pub fn has_blocked_archive_evidence_checks(self) -> bool {
+        self.blocked_archive_evidence_check_count > 0
+    }
+
+    pub fn needs_release_archive_attestation(self) -> bool {
+        !self.release_archive_attestation_ready
+    }
+
+    pub fn needs_release_archive_confirmation(self) -> bool {
+        !self.release_archive_confirmation_ready
+    }
+
+    pub fn needs_release_archive_finalization(self) -> bool {
+        !self.release_archive_finalization_ready
+    }
+
+    pub fn needs_release_archive_settlement(self) -> bool {
+        !self.release_archive_settlement_ready
+    }
+
+    pub fn needs_release_archive_reconciliation(self) -> bool {
+        !self.release_archive_reconciliation_ready
+    }
+
+    pub fn needs_release_archive_replay(self) -> bool {
+        !self.release_archive_replay_ready
+    }
+
+    pub fn needs_release_archive_recovery(self) -> bool {
+        !self.release_archive_recovery_ready
+    }
+
+    pub fn needs_release_archive_restore(self) -> bool {
+        !self.release_archive_restore_ready
+    }
+
+    pub fn needs_release_archive_load(self) -> bool {
+        !self.release_archive_load_ready
+    }
+
+    pub fn needs_release_archive_ingest(self) -> bool {
+        !self.release_archive_ingest_ready
+    }
+
+    pub fn needs_release_archive_import(self) -> bool {
+        !self.release_archive_import_ready
+    }
+
+    pub fn needs_release_archive_export(self) -> bool {
+        !self.release_archive_export_ready
+    }
+
+    pub fn needs_release_archive_distribution(self) -> bool {
+        !self.release_archive_distribution_ready
+    }
+
+    pub fn needs_release_archive_acceptance(self) -> bool {
+        !self.release_archive_acceptance_ready
+    }
+
+    pub fn needs_release_archive_adoption(self) -> bool {
+        !self.release_archive_adoption_ready
+    }
+
+    pub fn needs_release_archive_rollout(self) -> bool {
+        !self.release_archive_rollout_ready
+    }
+
+    pub fn needs_release_archive_activation(self) -> bool {
+        !self.release_archive_activation_ready
+    }
+
+    pub fn needs_release_archive_approval(self) -> bool {
+        !self.release_archive_approval_ready
+    }
+
+    pub fn needs_release_archive_certification(self) -> bool {
+        !self.release_archive_certification_ready
+    }
+
+    pub fn needs_release_archive_validation(self) -> bool {
+        !self.release_archive_validation_ready
+    }
+
+    pub fn needs_release_archive_verification(self) -> bool {
+        !self.release_archive_verification_ready
+    }
+
+    pub fn needs_release_archive_publication(self) -> bool {
+        !self.release_archive_publication_ready
+    }
+
+    pub fn needs_release_archive_completion(self) -> bool {
+        !self.release_archive_completion_ready
+    }
+
+    pub fn needs_release_archive_supervisor(self) -> bool {
+        !self.release_archive_supervisor_ready
+    }
+
+    pub fn needs_release_archive_operator(self) -> bool {
+        !self.release_archive_operator_ready
+    }
+
+    pub fn needs_release_archive_dispatch(self) -> bool {
+        !self.release_archive_dispatch_ready
+    }
+
+    pub fn needs_release_archive_handoff(self) -> bool {
+        !self.release_archive_handoff_ready
+    }
+
+    pub fn needs_release_archive_closure(self) -> bool {
+        !self.release_archive_closure_ready
+    }
+
+    pub fn needs_release_archive_signoff(self) -> bool {
+        !self.release_archive_signoff_ready
+    }
+
+    pub fn needs_release_archive(self) -> bool {
+        !self.release_archive_ready
+    }
+
+    pub fn needs_release_closure(self) -> bool {
+        !self.release_closure_ready
+    }
+
+    pub fn needs_release_signoff(self) -> bool {
+        !self.release_signoff_ready
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_archive_evidence_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveEvidenceSummary {
+    HuePackageReleaseArchiveEvidenceSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -9987,6 +15559,3226 @@ mod tests {
         assert!(!summary.release_archive_validation_ready);
         assert!(!summary.is_release_archive_validation_ready());
         assert!(summary.has_blocked_archive_validation_checks());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_certification_summary_reports_ready_archive_certification() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_certification_summary(&plan);
+
+        assert_eq!(
+            summary.archive_validation_summary,
+            hue_package_release_archive_validation_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_certification_check_count, 17);
+        assert_eq!(summary.passed_archive_certification_check_count, 17);
+        assert_eq!(summary.blocked_archive_certification_check_count, 0);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.is_release_archive_certification_ready());
+        assert!(!summary.has_blocked_archive_certification_checks());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_certification_summary_routes_blocked_archive_certification() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveCertificationSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_certification_check_count, 17);
+        assert_eq!(summary.passed_archive_certification_check_count, 0);
+        assert_eq!(summary.blocked_archive_certification_check_count, 17);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.is_release_archive_certification_ready());
+        assert!(summary.has_blocked_archive_certification_checks());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_approval_summary_reports_ready_archive_approval() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_approval_summary(&plan);
+
+        assert_eq!(
+            summary.archive_certification_summary,
+            hue_package_release_archive_certification_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_approval_check_count, 18);
+        assert_eq!(summary.passed_archive_approval_check_count, 18);
+        assert_eq!(summary.blocked_archive_approval_check_count, 0);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.is_release_archive_approval_ready());
+        assert!(!summary.has_blocked_archive_approval_checks());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_approval_summary_routes_blocked_archive_approval() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveApprovalSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_approval_check_count, 18);
+        assert_eq!(summary.passed_archive_approval_check_count, 0);
+        assert_eq!(summary.blocked_archive_approval_check_count, 18);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.is_release_archive_approval_ready());
+        assert!(summary.has_blocked_archive_approval_checks());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_activation_summary_reports_ready_archive_activation() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_activation_summary(&plan);
+
+        assert_eq!(
+            summary.archive_approval_summary,
+            hue_package_release_archive_approval_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_activation_check_count, 19);
+        assert_eq!(summary.passed_archive_activation_check_count, 19);
+        assert_eq!(summary.blocked_archive_activation_check_count, 0);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.is_release_archive_activation_ready());
+        assert!(!summary.has_blocked_archive_activation_checks());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_activation_summary_routes_blocked_archive_activation() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveActivationSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_activation_check_count, 19);
+        assert_eq!(summary.passed_archive_activation_check_count, 0);
+        assert_eq!(summary.blocked_archive_activation_check_count, 19);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.is_release_archive_activation_ready());
+        assert!(summary.has_blocked_archive_activation_checks());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_rollout_summary_reports_ready_archive_rollout() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_rollout_summary(&plan);
+
+        assert_eq!(
+            summary.archive_activation_summary,
+            hue_package_release_archive_activation_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_rollout_check_count, 20);
+        assert_eq!(summary.passed_archive_rollout_check_count, 20);
+        assert_eq!(summary.blocked_archive_rollout_check_count, 0);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.is_release_archive_rollout_ready());
+        assert!(!summary.has_blocked_archive_rollout_checks());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_rollout_summary_routes_blocked_archive_rollout() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveRolloutSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_rollout_check_count, 20);
+        assert_eq!(summary.passed_archive_rollout_check_count, 0);
+        assert_eq!(summary.blocked_archive_rollout_check_count, 20);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.is_release_archive_rollout_ready());
+        assert!(summary.has_blocked_archive_rollout_checks());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_adoption_summary_reports_ready_archive_adoption() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_adoption_summary(&plan);
+
+        assert_eq!(
+            summary.archive_rollout_summary,
+            hue_package_release_archive_rollout_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_adoption_check_count, 21);
+        assert_eq!(summary.passed_archive_adoption_check_count, 21);
+        assert_eq!(summary.blocked_archive_adoption_check_count, 0);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.is_release_archive_adoption_ready());
+        assert!(!summary.has_blocked_archive_adoption_checks());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_adoption_summary_routes_blocked_archive_adoption() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveAdoptionSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_adoption_check_count, 21);
+        assert_eq!(summary.passed_archive_adoption_check_count, 0);
+        assert_eq!(summary.blocked_archive_adoption_check_count, 21);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.is_release_archive_adoption_ready());
+        assert!(summary.has_blocked_archive_adoption_checks());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_acceptance_summary_reports_ready_archive_acceptance() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_acceptance_summary(&plan);
+
+        assert_eq!(
+            summary.archive_adoption_summary,
+            hue_package_release_archive_adoption_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_acceptance_check_count, 22);
+        assert_eq!(summary.passed_archive_acceptance_check_count, 22);
+        assert_eq!(summary.blocked_archive_acceptance_check_count, 0);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.is_release_archive_acceptance_ready());
+        assert!(!summary.has_blocked_archive_acceptance_checks());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_acceptance_summary_routes_blocked_archive_acceptance() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveAcceptanceSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_acceptance_check_count, 22);
+        assert_eq!(summary.passed_archive_acceptance_check_count, 0);
+        assert_eq!(summary.blocked_archive_acceptance_check_count, 22);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.is_release_archive_acceptance_ready());
+        assert!(summary.has_blocked_archive_acceptance_checks());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_distribution_summary_reports_ready_archive_distribution() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_distribution_summary(&plan);
+
+        assert_eq!(
+            summary.archive_acceptance_summary,
+            hue_package_release_archive_acceptance_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_distribution_check_count, 23);
+        assert_eq!(summary.passed_archive_distribution_check_count, 23);
+        assert_eq!(summary.blocked_archive_distribution_check_count, 0);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.is_release_archive_distribution_ready());
+        assert!(!summary.has_blocked_archive_distribution_checks());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_distribution_summary_routes_blocked_archive_distribution() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveDistributionSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_distribution_check_count, 23);
+        assert_eq!(summary.passed_archive_distribution_check_count, 0);
+        assert_eq!(summary.blocked_archive_distribution_check_count, 23);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.is_release_archive_distribution_ready());
+        assert!(summary.has_blocked_archive_distribution_checks());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_export_summary_reports_ready_archive_export() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_export_summary(&plan);
+
+        assert_eq!(
+            summary.archive_distribution_summary,
+            hue_package_release_archive_distribution_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_export_check_count, 24);
+        assert_eq!(summary.passed_archive_export_check_count, 24);
+        assert_eq!(summary.blocked_archive_export_check_count, 0);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.is_release_archive_export_ready());
+        assert!(!summary.has_blocked_archive_export_checks());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_export_summary_routes_blocked_archive_export() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveExportSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_export_check_count, 24);
+        assert_eq!(summary.passed_archive_export_check_count, 0);
+        assert_eq!(summary.blocked_archive_export_check_count, 24);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.is_release_archive_export_ready());
+        assert!(summary.has_blocked_archive_export_checks());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_import_summary_reports_ready_archive_import() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_import_summary(&plan);
+
+        assert_eq!(
+            summary.archive_export_summary,
+            hue_package_release_archive_export_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_import_check_count, 25);
+        assert_eq!(summary.passed_archive_import_check_count, 25);
+        assert_eq!(summary.blocked_archive_import_check_count, 0);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.is_release_archive_import_ready());
+        assert!(!summary.has_blocked_archive_import_checks());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_import_summary_routes_blocked_archive_import() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveImportSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_import_check_count, 25);
+        assert_eq!(summary.passed_archive_import_check_count, 0);
+        assert_eq!(summary.blocked_archive_import_check_count, 25);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.is_release_archive_import_ready());
+        assert!(summary.has_blocked_archive_import_checks());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_ingest_summary_reports_ready_archive_ingest() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_ingest_summary(&plan);
+
+        assert_eq!(
+            summary.archive_import_summary,
+            hue_package_release_archive_import_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_ingest_check_count, 26);
+        assert_eq!(summary.passed_archive_ingest_check_count, 26);
+        assert_eq!(summary.blocked_archive_ingest_check_count, 0);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.is_release_archive_ingest_ready());
+        assert!(!summary.has_blocked_archive_ingest_checks());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_ingest_summary_routes_blocked_archive_ingest() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveIngestSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_ingest_check_count, 26);
+        assert_eq!(summary.passed_archive_ingest_check_count, 0);
+        assert_eq!(summary.blocked_archive_ingest_check_count, 26);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.is_release_archive_ingest_ready());
+        assert!(summary.has_blocked_archive_ingest_checks());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_load_summary_reports_ready_archive_load() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_load_summary(&plan);
+
+        assert_eq!(
+            summary.archive_ingest_summary,
+            hue_package_release_archive_ingest_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_load_check_count, 27);
+        assert_eq!(summary.passed_archive_load_check_count, 27);
+        assert_eq!(summary.blocked_archive_load_check_count, 0);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.is_release_archive_load_ready());
+        assert!(!summary.has_blocked_archive_load_checks());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_load_summary_routes_blocked_archive_load() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveLoadSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_load_check_count, 27);
+        assert_eq!(summary.passed_archive_load_check_count, 0);
+        assert_eq!(summary.blocked_archive_load_check_count, 27);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.is_release_archive_load_ready());
+        assert!(summary.has_blocked_archive_load_checks());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_restore_summary_reports_ready_archive_restore() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_restore_summary(&plan);
+
+        assert_eq!(
+            summary.archive_load_summary,
+            hue_package_release_archive_load_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_restore_check_count, 28);
+        assert_eq!(summary.passed_archive_restore_check_count, 28);
+        assert_eq!(summary.blocked_archive_restore_check_count, 0);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_restore_ready);
+        assert!(summary.is_release_archive_restore_ready());
+        assert!(!summary.has_blocked_archive_restore_checks());
+        assert!(!summary.needs_release_archive_load());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_restore_summary_routes_blocked_archive_restore() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveRestoreSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_restore_check_count, 28);
+        assert_eq!(summary.passed_archive_restore_check_count, 0);
+        assert_eq!(summary.blocked_archive_restore_check_count, 28);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_restore_ready);
+        assert!(!summary.is_release_archive_restore_ready());
+        assert!(summary.has_blocked_archive_restore_checks());
+        assert!(summary.needs_release_archive_load());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_recovery_summary_reports_ready_archive_recovery() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_recovery_summary(&plan);
+
+        assert_eq!(
+            summary.archive_restore_summary,
+            hue_package_release_archive_restore_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_recovery_check_count, 29);
+        assert_eq!(summary.passed_archive_recovery_check_count, 29);
+        assert_eq!(summary.blocked_archive_recovery_check_count, 0);
+        assert!(summary.release_archive_restore_ready);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_recovery_ready);
+        assert!(summary.is_release_archive_recovery_ready());
+        assert!(!summary.has_blocked_archive_recovery_checks());
+        assert!(!summary.needs_release_archive_restore());
+        assert!(!summary.needs_release_archive_load());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_recovery_summary_routes_blocked_archive_recovery() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveRecoverySummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_recovery_check_count, 29);
+        assert_eq!(summary.passed_archive_recovery_check_count, 0);
+        assert_eq!(summary.blocked_archive_recovery_check_count, 29);
+        assert!(!summary.release_archive_restore_ready);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_recovery_ready);
+        assert!(!summary.is_release_archive_recovery_ready());
+        assert!(summary.has_blocked_archive_recovery_checks());
+        assert!(summary.needs_release_archive_restore());
+        assert!(summary.needs_release_archive_load());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_replay_summary_reports_ready_archive_replay() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_replay_summary(&plan);
+
+        assert_eq!(
+            summary.archive_recovery_summary,
+            hue_package_release_archive_recovery_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_replay_check_count, 30);
+        assert_eq!(summary.passed_archive_replay_check_count, 30);
+        assert_eq!(summary.blocked_archive_replay_check_count, 0);
+        assert!(summary.release_archive_recovery_ready);
+        assert!(summary.release_archive_restore_ready);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_replay_ready);
+        assert!(summary.is_release_archive_replay_ready());
+        assert!(!summary.has_blocked_archive_replay_checks());
+        assert!(!summary.needs_release_archive_recovery());
+        assert!(!summary.needs_release_archive_restore());
+        assert!(!summary.needs_release_archive_load());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_replay_summary_routes_blocked_archive_replay() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveReplaySummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_replay_check_count, 30);
+        assert_eq!(summary.passed_archive_replay_check_count, 0);
+        assert_eq!(summary.blocked_archive_replay_check_count, 30);
+        assert!(!summary.release_archive_recovery_ready);
+        assert!(!summary.release_archive_restore_ready);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_replay_ready);
+        assert!(!summary.is_release_archive_replay_ready());
+        assert!(summary.has_blocked_archive_replay_checks());
+        assert!(summary.needs_release_archive_recovery());
+        assert!(summary.needs_release_archive_restore());
+        assert!(summary.needs_release_archive_load());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_reconciliation_summary_reports_ready_archive_reconciliation() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_reconciliation_summary(&plan);
+
+        assert_eq!(
+            summary.archive_replay_summary,
+            hue_package_release_archive_replay_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_reconciliation_check_count, 31);
+        assert_eq!(summary.passed_archive_reconciliation_check_count, 31);
+        assert_eq!(summary.blocked_archive_reconciliation_check_count, 0);
+        assert!(summary.release_archive_replay_ready);
+        assert!(summary.release_archive_recovery_ready);
+        assert!(summary.release_archive_restore_ready);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_reconciliation_ready);
+        assert!(summary.is_release_archive_reconciliation_ready());
+        assert!(!summary.has_blocked_archive_reconciliation_checks());
+        assert!(!summary.needs_release_archive_replay());
+        assert!(!summary.needs_release_archive_recovery());
+        assert!(!summary.needs_release_archive_restore());
+        assert!(!summary.needs_release_archive_load());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_reconciliation_summary_routes_blocked_archive_reconciliation() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveReconciliationSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_reconciliation_check_count, 31);
+        assert_eq!(summary.passed_archive_reconciliation_check_count, 0);
+        assert_eq!(summary.blocked_archive_reconciliation_check_count, 31);
+        assert!(!summary.release_archive_replay_ready);
+        assert!(!summary.release_archive_recovery_ready);
+        assert!(!summary.release_archive_restore_ready);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_reconciliation_ready);
+        assert!(!summary.is_release_archive_reconciliation_ready());
+        assert!(summary.has_blocked_archive_reconciliation_checks());
+        assert!(summary.needs_release_archive_replay());
+        assert!(summary.needs_release_archive_recovery());
+        assert!(summary.needs_release_archive_restore());
+        assert!(summary.needs_release_archive_load());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_settlement_summary_reports_ready_archive_settlement() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_settlement_summary(&plan);
+
+        assert_eq!(
+            summary.archive_reconciliation_summary,
+            hue_package_release_archive_reconciliation_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_settlement_check_count, 32);
+        assert_eq!(summary.passed_archive_settlement_check_count, 32);
+        assert_eq!(summary.blocked_archive_settlement_check_count, 0);
+        assert!(summary.release_archive_reconciliation_ready);
+        assert!(summary.release_archive_replay_ready);
+        assert!(summary.release_archive_recovery_ready);
+        assert!(summary.release_archive_restore_ready);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_settlement_ready);
+        assert!(summary.is_release_archive_settlement_ready());
+        assert!(!summary.has_blocked_archive_settlement_checks());
+        assert!(!summary.needs_release_archive_reconciliation());
+        assert!(!summary.needs_release_archive_replay());
+        assert!(!summary.needs_release_archive_recovery());
+        assert!(!summary.needs_release_archive_restore());
+        assert!(!summary.needs_release_archive_load());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_settlement_summary_routes_blocked_archive_settlement() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveSettlementSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_settlement_check_count, 32);
+        assert_eq!(summary.passed_archive_settlement_check_count, 0);
+        assert_eq!(summary.blocked_archive_settlement_check_count, 32);
+        assert!(!summary.release_archive_reconciliation_ready);
+        assert!(!summary.release_archive_replay_ready);
+        assert!(!summary.release_archive_recovery_ready);
+        assert!(!summary.release_archive_restore_ready);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_settlement_ready);
+        assert!(!summary.is_release_archive_settlement_ready());
+        assert!(summary.has_blocked_archive_settlement_checks());
+        assert!(summary.needs_release_archive_reconciliation());
+        assert!(summary.needs_release_archive_replay());
+        assert!(summary.needs_release_archive_recovery());
+        assert!(summary.needs_release_archive_restore());
+        assert!(summary.needs_release_archive_load());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_finalization_summary_reports_ready_archive_finalization() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_finalization_summary(&plan);
+
+        assert_eq!(
+            summary.archive_settlement_summary,
+            hue_package_release_archive_settlement_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_finalization_check_count, 33);
+        assert_eq!(summary.passed_archive_finalization_check_count, 33);
+        assert_eq!(summary.blocked_archive_finalization_check_count, 0);
+        assert!(summary.release_archive_settlement_ready);
+        assert!(summary.release_archive_reconciliation_ready);
+        assert!(summary.release_archive_replay_ready);
+        assert!(summary.release_archive_recovery_ready);
+        assert!(summary.release_archive_restore_ready);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_finalization_ready);
+        assert!(summary.is_release_archive_finalization_ready());
+        assert!(!summary.has_blocked_archive_finalization_checks());
+        assert!(!summary.needs_release_archive_settlement());
+        assert!(!summary.needs_release_archive_reconciliation());
+        assert!(!summary.needs_release_archive_replay());
+        assert!(!summary.needs_release_archive_recovery());
+        assert!(!summary.needs_release_archive_restore());
+        assert!(!summary.needs_release_archive_load());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_finalization_summary_routes_blocked_archive_finalization() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveFinalizationSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_finalization_check_count, 33);
+        assert_eq!(summary.passed_archive_finalization_check_count, 0);
+        assert_eq!(summary.blocked_archive_finalization_check_count, 33);
+        assert!(!summary.release_archive_settlement_ready);
+        assert!(!summary.release_archive_reconciliation_ready);
+        assert!(!summary.release_archive_replay_ready);
+        assert!(!summary.release_archive_recovery_ready);
+        assert!(!summary.release_archive_restore_ready);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_finalization_ready);
+        assert!(!summary.is_release_archive_finalization_ready());
+        assert!(summary.has_blocked_archive_finalization_checks());
+        assert!(summary.needs_release_archive_settlement());
+        assert!(summary.needs_release_archive_reconciliation());
+        assert!(summary.needs_release_archive_replay());
+        assert!(summary.needs_release_archive_recovery());
+        assert!(summary.needs_release_archive_restore());
+        assert!(summary.needs_release_archive_load());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_confirmation_summary_reports_ready_archive_confirmation() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_confirmation_summary(&plan);
+
+        assert_eq!(
+            summary.archive_finalization_summary,
+            hue_package_release_archive_finalization_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_confirmation_check_count, 34);
+        assert_eq!(summary.passed_archive_confirmation_check_count, 34);
+        assert_eq!(summary.blocked_archive_confirmation_check_count, 0);
+        assert!(summary.release_archive_finalization_ready);
+        assert!(summary.release_archive_settlement_ready);
+        assert!(summary.release_archive_reconciliation_ready);
+        assert!(summary.release_archive_replay_ready);
+        assert!(summary.release_archive_recovery_ready);
+        assert!(summary.release_archive_restore_ready);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_confirmation_ready);
+        assert!(summary.is_release_archive_confirmation_ready());
+        assert!(!summary.has_blocked_archive_confirmation_checks());
+        assert!(!summary.needs_release_archive_finalization());
+        assert!(!summary.needs_release_archive_settlement());
+        assert!(!summary.needs_release_archive_reconciliation());
+        assert!(!summary.needs_release_archive_replay());
+        assert!(!summary.needs_release_archive_recovery());
+        assert!(!summary.needs_release_archive_restore());
+        assert!(!summary.needs_release_archive_load());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_confirmation_summary_routes_blocked_archive_confirmation() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveConfirmationSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_confirmation_check_count, 34);
+        assert_eq!(summary.passed_archive_confirmation_check_count, 0);
+        assert_eq!(summary.blocked_archive_confirmation_check_count, 34);
+        assert!(!summary.release_archive_finalization_ready);
+        assert!(!summary.release_archive_settlement_ready);
+        assert!(!summary.release_archive_reconciliation_ready);
+        assert!(!summary.release_archive_replay_ready);
+        assert!(!summary.release_archive_recovery_ready);
+        assert!(!summary.release_archive_restore_ready);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_confirmation_ready);
+        assert!(!summary.is_release_archive_confirmation_ready());
+        assert!(summary.has_blocked_archive_confirmation_checks());
+        assert!(summary.needs_release_archive_finalization());
+        assert!(summary.needs_release_archive_settlement());
+        assert!(summary.needs_release_archive_reconciliation());
+        assert!(summary.needs_release_archive_replay());
+        assert!(summary.needs_release_archive_recovery());
+        assert!(summary.needs_release_archive_restore());
+        assert!(summary.needs_release_archive_load());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_attestation_summary_reports_ready_archive_attestation() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_attestation_summary(&plan);
+
+        assert_eq!(
+            summary.archive_confirmation_summary,
+            hue_package_release_archive_confirmation_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_attestation_check_count, 35);
+        assert_eq!(summary.passed_archive_attestation_check_count, 35);
+        assert_eq!(summary.blocked_archive_attestation_check_count, 0);
+        assert!(summary.release_archive_confirmation_ready);
+        assert!(summary.release_archive_finalization_ready);
+        assert!(summary.release_archive_settlement_ready);
+        assert!(summary.release_archive_reconciliation_ready);
+        assert!(summary.release_archive_replay_ready);
+        assert!(summary.release_archive_recovery_ready);
+        assert!(summary.release_archive_restore_ready);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_attestation_ready);
+        assert!(summary.is_release_archive_attestation_ready());
+        assert!(!summary.has_blocked_archive_attestation_checks());
+        assert!(!summary.needs_release_archive_confirmation());
+        assert!(!summary.needs_release_archive_finalization());
+        assert!(!summary.needs_release_archive_settlement());
+        assert!(!summary.needs_release_archive_reconciliation());
+        assert!(!summary.needs_release_archive_replay());
+        assert!(!summary.needs_release_archive_recovery());
+        assert!(!summary.needs_release_archive_restore());
+        assert!(!summary.needs_release_archive_load());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_attestation_summary_routes_blocked_archive_attestation() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveAttestationSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_attestation_check_count, 35);
+        assert_eq!(summary.passed_archive_attestation_check_count, 0);
+        assert_eq!(summary.blocked_archive_attestation_check_count, 35);
+        assert!(!summary.release_archive_confirmation_ready);
+        assert!(!summary.release_archive_finalization_ready);
+        assert!(!summary.release_archive_settlement_ready);
+        assert!(!summary.release_archive_reconciliation_ready);
+        assert!(!summary.release_archive_replay_ready);
+        assert!(!summary.release_archive_recovery_ready);
+        assert!(!summary.release_archive_restore_ready);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_attestation_ready);
+        assert!(!summary.is_release_archive_attestation_ready());
+        assert!(summary.has_blocked_archive_attestation_checks());
+        assert!(summary.needs_release_archive_confirmation());
+        assert!(summary.needs_release_archive_finalization());
+        assert!(summary.needs_release_archive_settlement());
+        assert!(summary.needs_release_archive_reconciliation());
+        assert!(summary.needs_release_archive_replay());
+        assert!(summary.needs_release_archive_recovery());
+        assert!(summary.needs_release_archive_restore());
+        assert!(summary.needs_release_archive_load());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
+        assert!(summary.needs_release_archive_verification());
+        assert!(summary.needs_release_archive_publication());
+        assert!(summary.needs_release_archive_completion());
+        assert!(summary.needs_release_archive_supervisor());
+        assert!(summary.needs_release_archive_operator());
+        assert!(summary.needs_release_archive_dispatch());
+        assert!(summary.needs_release_archive_handoff());
+        assert!(summary.needs_release_archive_closure());
+        assert!(summary.needs_release_archive_signoff());
+        assert!(summary.needs_release_archive());
+        assert!(summary.needs_release_closure());
+        assert!(summary.needs_release_signoff());
+        assert!(summary.needs_release_audit());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_evidence_summary_reports_ready_archive_evidence() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_evidence_summary(&plan);
+
+        assert_eq!(
+            summary.archive_attestation_summary,
+            hue_package_release_archive_attestation_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_evidence_check_count, 36);
+        assert_eq!(summary.passed_archive_evidence_check_count, 36);
+        assert_eq!(summary.blocked_archive_evidence_check_count, 0);
+        assert!(summary.release_archive_attestation_ready);
+        assert!(summary.release_archive_confirmation_ready);
+        assert!(summary.release_archive_finalization_ready);
+        assert!(summary.release_archive_settlement_ready);
+        assert!(summary.release_archive_reconciliation_ready);
+        assert!(summary.release_archive_replay_ready);
+        assert!(summary.release_archive_recovery_ready);
+        assert!(summary.release_archive_restore_ready);
+        assert!(summary.release_archive_load_ready);
+        assert!(summary.release_archive_ingest_ready);
+        assert!(summary.release_archive_import_ready);
+        assert!(summary.release_archive_export_ready);
+        assert!(summary.release_archive_distribution_ready);
+        assert!(summary.release_archive_acceptance_ready);
+        assert!(summary.release_archive_adoption_ready);
+        assert!(summary.release_archive_rollout_ready);
+        assert!(summary.release_archive_activation_ready);
+        assert!(summary.release_archive_approval_ready);
+        assert!(summary.release_archive_certification_ready);
+        assert!(summary.release_archive_validation_ready);
+        assert!(summary.release_archive_verification_ready);
+        assert!(summary.release_archive_publication_ready);
+        assert!(summary.release_archive_completion_ready);
+        assert!(summary.release_archive_supervisor_ready);
+        assert!(summary.release_archive_operator_ready);
+        assert!(summary.release_archive_dispatch_ready);
+        assert!(summary.release_archive_handoff_ready);
+        assert!(summary.release_archive_closure_ready);
+        assert!(summary.release_archive_signoff_ready);
+        assert!(summary.release_archive_ready);
+        assert!(summary.release_closure_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_archive_evidence_ready);
+        assert!(summary.is_release_archive_evidence_ready());
+        assert!(!summary.has_blocked_archive_evidence_checks());
+        assert!(!summary.needs_release_archive_attestation());
+        assert!(!summary.needs_release_archive_confirmation());
+        assert!(!summary.needs_release_archive_finalization());
+        assert!(!summary.needs_release_archive_settlement());
+        assert!(!summary.needs_release_archive_reconciliation());
+        assert!(!summary.needs_release_archive_replay());
+        assert!(!summary.needs_release_archive_recovery());
+        assert!(!summary.needs_release_archive_restore());
+        assert!(!summary.needs_release_archive_load());
+        assert!(!summary.needs_release_archive_ingest());
+        assert!(!summary.needs_release_archive_import());
+        assert!(!summary.needs_release_archive_export());
+        assert!(!summary.needs_release_archive_distribution());
+        assert!(!summary.needs_release_archive_acceptance());
+        assert!(!summary.needs_release_archive_adoption());
+        assert!(!summary.needs_release_archive_rollout());
+        assert!(!summary.needs_release_archive_activation());
+        assert!(!summary.needs_release_archive_approval());
+        assert!(!summary.needs_release_archive_certification());
+        assert!(!summary.needs_release_archive_validation());
+        assert!(!summary.needs_release_archive_verification());
+        assert!(!summary.needs_release_archive_publication());
+        assert!(!summary.needs_release_archive_completion());
+        assert!(!summary.needs_release_archive_supervisor());
+        assert!(!summary.needs_release_archive_operator());
+        assert!(!summary.needs_release_archive_dispatch());
+        assert!(!summary.needs_release_archive_handoff());
+        assert!(!summary.needs_release_archive_closure());
+        assert!(!summary.needs_release_archive_signoff());
+        assert!(!summary.needs_release_archive());
+        assert!(!summary.needs_release_closure());
+        assert!(!summary.needs_release_signoff());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_archive_evidence_summary_routes_blocked_archive_evidence() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveEvidenceSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_evidence_check_count, 36);
+        assert_eq!(summary.passed_archive_evidence_check_count, 0);
+        assert_eq!(summary.blocked_archive_evidence_check_count, 36);
+        assert!(!summary.release_archive_attestation_ready);
+        assert!(!summary.release_archive_confirmation_ready);
+        assert!(!summary.release_archive_finalization_ready);
+        assert!(!summary.release_archive_settlement_ready);
+        assert!(!summary.release_archive_reconciliation_ready);
+        assert!(!summary.release_archive_replay_ready);
+        assert!(!summary.release_archive_recovery_ready);
+        assert!(!summary.release_archive_restore_ready);
+        assert!(!summary.release_archive_load_ready);
+        assert!(!summary.release_archive_ingest_ready);
+        assert!(!summary.release_archive_import_ready);
+        assert!(!summary.release_archive_export_ready);
+        assert!(!summary.release_archive_distribution_ready);
+        assert!(!summary.release_archive_acceptance_ready);
+        assert!(!summary.release_archive_adoption_ready);
+        assert!(!summary.release_archive_rollout_ready);
+        assert!(!summary.release_archive_activation_ready);
+        assert!(!summary.release_archive_approval_ready);
+        assert!(!summary.release_archive_certification_ready);
+        assert!(!summary.release_archive_validation_ready);
+        assert!(!summary.release_archive_verification_ready);
+        assert!(!summary.release_archive_publication_ready);
+        assert!(!summary.release_archive_completion_ready);
+        assert!(!summary.release_archive_supervisor_ready);
+        assert!(!summary.release_archive_operator_ready);
+        assert!(!summary.release_archive_dispatch_ready);
+        assert!(!summary.release_archive_handoff_ready);
+        assert!(!summary.release_archive_closure_ready);
+        assert!(!summary.release_archive_signoff_ready);
+        assert!(!summary.release_archive_ready);
+        assert!(!summary.release_closure_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_archive_evidence_ready);
+        assert!(!summary.is_release_archive_evidence_ready());
+        assert!(summary.has_blocked_archive_evidence_checks());
+        assert!(summary.needs_release_archive_attestation());
+        assert!(summary.needs_release_archive_confirmation());
+        assert!(summary.needs_release_archive_finalization());
+        assert!(summary.needs_release_archive_settlement());
+        assert!(summary.needs_release_archive_reconciliation());
+        assert!(summary.needs_release_archive_replay());
+        assert!(summary.needs_release_archive_recovery());
+        assert!(summary.needs_release_archive_restore());
+        assert!(summary.needs_release_archive_load());
+        assert!(summary.needs_release_archive_ingest());
+        assert!(summary.needs_release_archive_import());
+        assert!(summary.needs_release_archive_export());
+        assert!(summary.needs_release_archive_distribution());
+        assert!(summary.needs_release_archive_acceptance());
+        assert!(summary.needs_release_archive_adoption());
+        assert!(summary.needs_release_archive_rollout());
+        assert!(summary.needs_release_archive_activation());
+        assert!(summary.needs_release_archive_approval());
+        assert!(summary.needs_release_archive_certification());
+        assert!(summary.needs_release_archive_validation());
         assert!(summary.needs_release_archive_verification());
         assert!(summary.needs_release_archive_publication());
         assert!(summary.needs_release_archive_completion());

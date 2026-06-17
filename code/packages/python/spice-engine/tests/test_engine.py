@@ -156,6 +156,7 @@ from spice_engine import (
     TemperatureDcResult,
     TfResult,
     TransientPoint,
+    TransientResult,
     TransmissionLine,
     VoltageSource,
     XInstance,
@@ -262,6 +263,7 @@ from spice_engine import (
     pss_residual,
     pss_residual_jacobian,
     resolve_deck_initial_conditions,
+    run_deck_analysis,
     s_parameters,
     s_parameters_corners,
     sample_transient_probe_as_digital_events,
@@ -6693,11 +6695,13 @@ def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
     )
 
 
-def test_deck_output_tables_route_save_probe_cards() -> None:
+def test_deck_output_tables_route_save_probe_print_plot_cards() -> None:
     netlist = """
 .save V(out)
 .probe dc I(V1)
 .probe tran V(clk)
+.print tran V(ignored)
+.plot tran I(V1)
 .probe ac I(V1)
 .end
 """
@@ -6715,8 +6719,16 @@ def test_deck_output_tables_route_save_probe_cards() -> None:
         source_name="V1",
     )
     transient_points = [
-        TransientPoint(0.0, {"clk": 0.0, "out": 0.0}, {"I(V1)": 0.0}),
-        TransientPoint(1.0e-3, {"clk": 1.0, "out": 0.5}, {"I(V1)": -5.0e-4}),
+        TransientPoint(
+            0.0,
+            {"clk": 0.0, "out": 0.0, "ignored": 1.0},
+            {"I(V1)": 0.0},
+        ),
+        TransientPoint(
+            1.0e-3,
+            {"clk": 1.0, "out": 0.5, "ignored": 2.0},
+            {"I(V1)": -5.0e-4},
+        ),
     ]
     ac_result = AcResult(
         points=[
@@ -6738,9 +6750,9 @@ def test_deck_output_tables_route_save_probe_cards() -> None:
         "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
     )
     assert format_deck_transient_table(transient_points, netlist) == (
-        "Index\tTime\tV(out)\tV(clk)\n"
-        "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
-        "1\t1.000000e-03\t5.000000e-01\t1.000000e+00\n"
+        "Index\tTime\tV(out)\tV(clk)\tV(ignored)\tI(V1)\n"
+        "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t1.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t5.000000e-01\t1.000000e+00\t2.000000e+00\t-5.000000e-04\n"
     )
     assert format_deck_ac_table(ac_result, netlist) == (
         "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
@@ -6751,6 +6763,173 @@ def test_deck_output_tables_route_save_probe_cards() -> None:
         transient_points,
         ".probe ac V(freq)\n.end\n",
     ) == format_transient_table(transient_points)
+
+
+def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "vin", "0", 1.0))
+    circuit.add(Resistor("R1", "vin", "mid", 1000.0))
+    circuit.add(Resistor("R2", "mid", "0", 1000.0))
+
+    netlist = """
+.save V(mid)
+.probe dc I(V1)
+.op
+.dc V1 0 1 1
+.ac dec 1 1k 1k
+.tran 1m 1m
+.measure dc mid_avg avg V(mid)
+.measure ac mid_peak max V(mid)
+.measure tran mid_final final V(mid)
+.end
+"""
+
+    op_execution = run_deck_analysis(circuit, netlist, "op")
+    assert op_execution.plan.analysis == "op"
+    assert op_execution.output_probes == ["V(mid)"]
+    assert op_execution.measurements == []
+    assert op_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
+    assert op_execution.run_artifacts[0].result_rows == 1
+    assert op_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
+        f"op\t.op\t{op_execution.plan.line_number}\t1\t1\t0\t0\n"
+    )
+
+    dc_execution = run_deck_analysis(circuit, netlist, "dc")
+    assert dc_execution.plan.source_name == "V1"
+    assert dc_execution.output_probes == ["V(mid)", "I(V1)"]
+    assert [measurement.name for measurement in dc_execution.measurements] == ["mid_avg"]
+    assert dc_execution.measurement_table == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "mid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n"
+    )
+    assert isinstance(dc_execution.result, DcSweepResult)
+    assert len(dc_execution.result.points) == 2
+    assert dc_execution.table == (
+        "Index\tSource\tValue\tV(mid)\tI(V1)\n"
+        "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+    assert dc_execution.run_artifacts[0].analysis == "dc"
+    assert dc_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
+        f"dc\t.dc\t{dc_execution.plan.line_number}\t2\t2\t1\t0\n"
+    )
+
+    ac_execution = run_deck_analysis(circuit, netlist, "ac")
+    assert ac_execution.output_probes == ["V(mid)"]
+    assert [measurement.name for measurement in ac_execution.measurements] == ["mid_peak"]
+    assert ac_execution.measurement_table == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "mid_peak\tac\tV(mid)\tmax\t\t\t5.000000e-01\n"
+    )
+    assert isinstance(ac_execution.result, AcResult)
+    assert len(ac_execution.result.points) == 1
+    assert ac_execution.table == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+    assert ac_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
+        f"ac\t.ac\t{ac_execution.plan.line_number}\t1\t1\t1\t0\n"
+    )
+
+    tran_execution = run_deck_analysis(circuit, netlist, "tran")
+    assert tran_execution.output_probes == ["V(mid)"]
+    assert [measurement.name for measurement in tran_execution.measurements] == [
+        "mid_final"
+    ]
+    assert tran_execution.measurement_table == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "mid_final\ttran\tV(mid)\tlast\t\t\t5.000000e-01\n"
+    )
+    assert isinstance(tran_execution.result, TransientResult)
+    assert tran_execution.table == (
+        "Index\tTime\tV(mid)\n"
+        "0\t0.000000e+00\t5.000000e-01\n"
+        "1\t1.000000e-03\t5.000000e-01\n"
+    )
+    assert tran_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
+        f"tran\t.tran\t{tran_execution.plan.line_number}\t2\t1\t1\t0\n"
+    )
+
+    tran_window_execution = run_deck_analysis(
+        circuit,
+        ".save V(mid)\n.tran 2m 6m 2m 1m uic\n.end\n",
+    )
+    assert tran_window_execution.plan.start_time == pytest.approx(2.0e-3)
+    assert tran_window_execution.plan.max_step == pytest.approx(1.0e-3)
+    assert tran_window_execution.plan.use_initial_conditions is True
+    assert tran_window_execution.output_probes == ["V(mid)"]
+    assert isinstance(tran_window_execution.result, TransientResult)
+    assert [point.time for point in tran_window_execution.result.points] == pytest.approx(
+        [2.0e-3, 4.0e-3, 6.0e-3],
+    )
+    assert tran_window_execution.table == (
+        "Index\tTime\tV(mid)\n"
+        "0\t2.000000e-03\t5.000000e-01\n"
+        "1\t4.000000e-03\t5.000000e-01\n"
+        "2\t6.000000e-03\t5.000000e-01\n"
+    )
+
+    with pytest.raises(ValueError, match="multiple analysis cards"):
+        run_deck_analysis(circuit, netlist)
+
+    lin_execution = run_deck_analysis(circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n")
+    assert lin_execution.output_probes == ["V(mid)"]
+    assert isinstance(lin_execution.result, AcResult)
+    assert [point.freq for point in lin_execution.result.points] == [1.0, 2.0, 3.0]
+    assert lin_execution.table == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "2\t3.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+
+    oct_execution = run_deck_analysis(circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n")
+    assert oct_execution.output_probes == ["V(mid)"]
+    assert isinstance(oct_execution.result, AcResult)
+    assert [point.freq for point in oct_execution.result.points] == [1.0, 2.0, 4.0]
+    assert oct_execution.table == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "2\t4.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+
+
+def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "vin", "0", 1.0))
+    circuit.add(Resistor("R1", "vin", "mid", 1000.0))
+    circuit.add(Resistor("R2", "mid", "0", 1000.0))
+
+    netlist = """
+.save V(mid)
+.op
+.tran 0.5m 1m
+.four 2k V(mid) harmonics=1
+.end
+"""
+
+    op_execution = run_deck_analysis(circuit, netlist, "op")
+    assert op_execution.fourier == []
+    assert op_execution.fourier_table == ""
+
+    tran_execution = run_deck_analysis(circuit, netlist, "tran")
+    assert len(tran_execution.fourier) == 1
+    result = tran_execution.fourier[0]
+    assert result.fundamental_frequency == pytest.approx(2000.0)
+    assert result.probes[0].probe == "V(mid)"
+    assert len(result.probes[0].harmonics) == 1
+    assert tran_execution.fourier_table == format_fourier_table(result)
+    assert tran_execution.run_artifacts[0].fourier_count == 1
+    assert tran_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
+        f"tran\t.tran\t{tran_execution.plan.line_number}\t3\t1\t0\t1\n"
+    )
 
 
 def test_transient_probe_measurements_are_stable() -> None:

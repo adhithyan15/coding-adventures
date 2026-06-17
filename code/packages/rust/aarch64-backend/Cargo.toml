@@ -1,6 +1,6 @@
 [package]
 name = "aarch64-backend"
-version = "0.9.0"
+version = "0.10.0"
 edition = "2021"
 description = "ARM64 (AArch64) backend for jit-core / aot-core — lowers CIR to native machine code via aarch64-encoder."
 
@@ -8,3 +8,10 @@ description = "ARM64 (AArch64) backend for jit-core / aot-core — lowers CIR to
 aarch64-encoder = { path = "../aarch64-encoder" }
 jit-core        = { path = "../jit-core" }
 vm-core         = { path = "../vm-core" }
+
+[dev-dependencies]
+# Executed proof for the E2 narrow-width masking: install the generated ARM64
+# bytes into an executable page and call them.  macOS / Apple-Silicon only — the
+# width_wrap execution tests are `#[cfg]`-gated to that host; the structural
+# tests (mask emitted) run everywhere.
+jit-loader-macos = { path = "../jit-loader-macos" }

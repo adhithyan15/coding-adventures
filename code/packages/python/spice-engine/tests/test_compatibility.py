@@ -111,24 +111,68 @@ def test_analyze_deck_controls_reports_unsupported_directives() -> None:
 .include models.inc
 .LIB vendor.lib TT
 .control
+op
+save V(in)
+probe V(out)
+print op V(in)
+measure tran vmax MAX V(out)
+meas dc imax MAX I(V1)
+fourier 1k V(out)
+four 2k V(in)
+reset
+set noaskquit
+set filetype=ascii
+set wr_vecnames
+set wr_singlescale
+set filetype=binary
 run
+quit
 .endc
 .end
 """
     )
 
     assert summary.terminated is True
-    assert summary.active_lines[:3] == (
+    assert summary.active_lines == (
         ".include models.inc",
         ".LIB vendor.lib TT",
-        ".control",
+        ".op",
+        ".save V(in)",
+        ".probe V(out)",
+        ".print op V(in)",
+        ".measure tran vmax MAX V(out)",
+        ".meas dc imax MAX I(V1)",
+        ".four 1k V(out)",
+        ".four 2k V(in)",
     )
     assert [(diag.directive, diag.line_number, diag.severity) for diag in summary.diagnostics] == [
         (".include", 2, "error"),
         (".lib", 3, "error"),
         (".control", 4, "error"),
+        (".control", 18, "error"),
     ]
-    assert all(diag.code == "SPICE_DECK_UNSUPPORTED_DIRECTIVE" for diag in summary.diagnostics)
+    assert [diag.code for diag in summary.diagnostics] == [
+        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_CONTROL_COMMAND",
+    ]
+    measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
+    assert [
+        (card.directive, card.analysis, card.name, card.mode, card.probe)
+        for card in measurement_summary.measurements
+    ] == [
+        (".measure", "tran", "vmax", "max", "V(out)"),
+        (".meas", "dc", "imax", "max", "I(V1)"),
+    ]
+    fourier_summary = resolve_deck_fourier("\n".join(summary.active_lines) + "\n.end")
+    assert [
+        (card.directive, card.fundamental_frequency, card.probes)
+        for card in fourier_summary.fourier
+    ] == [
+        (".four", 1000.0, ("V(out)",)),
+        (".four", 2000.0, ("V(in)",)),
+    ]
 
 
 def test_resolve_deck_sources_expands_include_and_library_section() -> None:
@@ -181,6 +225,22 @@ def test_resolve_deck_sources_reports_missing_sources_and_cycles() -> None:
 .include a.inc
 .lib vendor.lib SS
 .control
+op
+save V(a)
+probe V(b)
+print op V(a)
+measure tran vmax MAX V(a)
+meas dc imax MAX I(V1)
+fourier 1k V(a)
+four 2k V(b)
+.reset
+.set noaskquit
+.set filetype=ascii
+.set wr_vecnames
+.set wr_singlescale
+run
+.quit
+.endc
 .end
 """,
         {
@@ -190,12 +250,43 @@ def test_resolve_deck_sources_reports_missing_sources_and_cycles() -> None:
         },
     )
 
-    assert summary.active_lines == ("R2 b 0 2", "R1 a b 1", ".control")
+    assert summary.terminated is True
+    assert summary.active_lines == (
+        "R2 b 0 2",
+        "R1 a b 1",
+        ".op",
+        ".save V(a)",
+        ".probe V(b)",
+        ".print op V(a)",
+        ".measure tran vmax MAX V(a)",
+        ".meas dc imax MAX I(V1)",
+        ".four 1k V(a)",
+        ".four 2k V(b)",
+    )
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_INCLUDE_NOT_FOUND",
         "SPICE_DECK_INCLUDE_CYCLE",
         "SPICE_DECK_LIB_SECTION_NOT_FOUND",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+    ]
+    assert [(diag.directive, diag.line_number) for diag in summary.diagnostics[3:]] == [
+        (".control", 5),
+    ]
+    measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
+    assert [
+        (card.directive, card.analysis, card.name, card.mode, card.probe)
+        for card in measurement_summary.measurements
+    ] == [
+        (".measure", "tran", "vmax", "max", "V(a)"),
+        (".meas", "dc", "imax", "max", "I(V1)"),
+    ]
+    fourier_summary = resolve_deck_fourier("\n".join(summary.active_lines) + "\n.end")
+    assert [
+        (card.directive, card.fundamental_frequency, card.probes)
+        for card in fourier_summary.fourier
+    ] == [
+        (".four", 1000.0, ("V(a)",)),
+        (".four", 2000.0, ("V(b)",)),
     ]
     assert [(diag.source, diag.line_number, diag.target) for diag in summary.diagnostics[:3]] == [
         ("<deck>", 2, "missing.inc"),
@@ -533,13 +624,15 @@ def test_resolve_deck_fourier_reports_unsupported_subset() -> None:
     }
 
 
-def test_resolve_deck_outputs_extracts_save_and_probe_cards() -> None:
+def test_resolve_deck_outputs_extracts_save_probe_print_and_plot_cards() -> None:
     summary = resolve_deck_outputs(
         """
 V1 in 0 DC 1
 .save V(out) i(V1)
 .probe tran V(clk)
 .probe AC V(out)
+.print dc V(load) I(V2)
+.plot ac I(V3)
 .end
 .save V(ignored)
 """
@@ -547,7 +640,7 @@ V1 in 0 DC 1
 
     assert summary.active_lines == ("V1 in 0 DC 1",)
     assert summary.terminated is True
-    assert summary.end_line_number == 6
+    assert summary.end_line_number == 8
     assert summary.diagnostics == ()
     assert [
         (selection.directive, selection.analysis, selection.probes)
@@ -556,17 +649,21 @@ V1 in 0 DC 1
         (".save", None, ("V(out)", "I(V1)")),
         (".probe", "tran", ("V(clk)",)),
         (".probe", "ac", ("V(out)",)),
+        (".print", "dc", ("V(load)", "I(V2)")),
+        (".plot", "ac", ("I(V3)",)),
     ]
 
     assert select_deck_output_probes(
         """
 .save V(out) I(V1)
 .probe tran V(out) V(clk)
+.print tran I(V2)
+.plot tran V(extra)
 .probe ac V(freq)
 .end
 """,
         "transient",
-    ) == ["V(out)", "I(V1)", "V(clk)"]
+    ) == ["V(out)", "I(V1)", "V(clk)", "I(V2)", "V(extra)"]
 
 
 def test_resolve_deck_analyses_extracts_supported_cards() -> None:
@@ -707,15 +804,27 @@ def test_resolve_deck_outputs_reports_invalid_cards() -> None:
         """
 .save
 .probe tran
+.print tran
+.print foo V(out)
+.plot tran
+.plot foo V(out)
 .save P(out)
 .probe dc V(out) bad-token
+.print dc bad-token
+.plot dc bad-token
 .end
 """
     )
 
     assert sorted(diagnostic.code for diagnostic in summary.diagnostics) == [
+        "SPICE_DECK_OUTPUT_ANALYSIS",
+        "SPICE_DECK_OUTPUT_ANALYSIS",
         "SPICE_DECK_OUTPUT_ARGUMENT",
         "SPICE_DECK_OUTPUT_ARGUMENT",
+        "SPICE_DECK_OUTPUT_ARGUMENT",
+        "SPICE_DECK_OUTPUT_ARGUMENT",
+        "SPICE_DECK_OUTPUT_PROBE",
+        "SPICE_DECK_OUTPUT_PROBE",
         "SPICE_DECK_OUTPUT_PROBE",
         "SPICE_DECK_OUTPUT_PROBE",
     ]

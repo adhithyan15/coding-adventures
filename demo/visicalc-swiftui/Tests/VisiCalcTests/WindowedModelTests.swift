@@ -21,16 +21,20 @@ final class WindowedModelTests: XCTestCase {
         // A small visible window over A1:E5 — the values are engine-computed.
         let w = m.window(rows: 1...5, cols: 1...5)
         XCTAssertEqual(w.count, 5)
-        XCTAssertEqual(w[0][0], "15")   // A1
-        XCTAssertEqual(w[0][4], "38")   // E1 = SUM(A1:D1)
-        XCTAssertEqual(w[4][4], "169")  // E5 grand total
+        XCTAssertEqual(w[0][0], "15")       // A1 (unformatted)
+        // E1/E5 carry the "#,##0.00" seed format → the engine renders the
+        // formatted display string (window() now reads sc_get_display_window).
+        XCTAssertEqual(w[0][4], "38.00")    // E1 = SUM(A1:D1)
+        XCTAssertEqual(w[4][4], "169.00")   // E5 grand total
     }
 
     func testFarWindowReachesZ1000AndGapsAreSparse() {
         let m = WindowedSheetModel()
         // A window 1000 rows down, around column Z (26): the far formula shows.
         let far = m.window(rows: 998...1002, cols: 24...28)
-        XCTAssertEqual(far[2][2], "39") // Z1000 = SUM(A1:A4), at row 1000 / col 26
+        // Z1000 = SUM(A1:A4) = 39 at row 1000 / col 26, with the "0.0%" seed
+        // format → 39 × 100 = "3900.0%": the format applies 1000 rows off-origin.
+        XCTAssertEqual(far[2][2], "3900.0%")
         // The gap between the two data islands is empty (the sheet is sparse).
         let gap = m.window(rows: 100...110, cols: 1...10)
         for row in gap { for cell in row { XCTAssertEqual(cell, "") } }
@@ -50,7 +54,8 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertFalse(stale)
         XCTAssertTrue(changed.contains("A1"))
         XCTAssertTrue(changed.contains("Z1000"), "far dependent recomputed: \(changed)")
-        // And the recomputed value is visible through a fresh window read.
-        XCTAssertEqual(m.window(rows: 1000...1000, cols: 26...26)[0][0], "139") // 115+8+12+4
+        // And the recomputed value is visible through a fresh window read:
+        // 115+8+12+4 = 139, formatted as a percent ("0.0%") → "13900.0%".
+        XCTAssertEqual(m.window(rows: 1000...1000, cols: 26...26)[0][0], "13900.0%")
     }
 }

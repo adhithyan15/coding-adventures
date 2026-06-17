@@ -157,6 +157,103 @@ pub unsafe extern "C" fn sc_get_values(s: *mut ScSession) -> *mut c_char {
     into_cstr((*s).inner.get_values())
 }
 
+// ── Cell display formats ─────────────────────────────────────────────
+// An Excel-style format code per cell decides how its value reads.
+
+/// `set_format(a1, code)` — set a cell's display format (empty `code` clears it).
+/// See [`SpreadsheetSession::set_format`].
+///
+/// # Safety
+/// `s` must be a valid session; `a1`/`code` must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn sc_set_format(s: *mut ScSession, a1: *const c_char, code: *const c_char) {
+    if s.is_null() {
+        return;
+    }
+    let a1 = read_cstr(a1);
+    let code = read_cstr(code);
+    (*s).inner.set_format(&a1, &code);
+}
+
+/// `get_format(a1)` → the cell's format code, or `""`. See
+/// [`SpreadsheetSession::get_format`].
+///
+/// # Safety
+/// `s` must be a valid session; `a1` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_get_format(s: *mut ScSession, a1: *const c_char) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.get_format(&read_cstr(a1)))
+}
+
+/// `get_display(a1)` → the cell's value rendered through its format (the display
+/// string). See [`SpreadsheetSession::get_display`].
+///
+/// # Safety
+/// `s` must be a valid session; `a1` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_get_display(s: *mut ScSession, a1: *const c_char) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.get_display(&read_cstr(a1)))
+}
+
+// ── Structural edits: insert / delete rows & columns ─────────────────
+// 1-based `at`, `count` lines. The engine relocates cells and rewrites every
+// formula's references; the facade keeps its raw echo map in step. No return —
+// the host re-reads via get_window / get_raw after the edit.
+
+/// `insert_rows(at, count)`. See [`SpreadsheetSession::insert_rows`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_insert_rows(s: *mut ScSession, at: u32, count: u32) {
+    if s.is_null() {
+        return;
+    }
+    (*s).inner.insert_rows(at, count);
+}
+
+/// `delete_rows(at, count)`. See [`SpreadsheetSession::delete_rows`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_delete_rows(s: *mut ScSession, at: u32, count: u32) {
+    if s.is_null() {
+        return;
+    }
+    (*s).inner.delete_rows(at, count);
+}
+
+/// `insert_cols(at, count)`. See [`SpreadsheetSession::insert_cols`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_insert_cols(s: *mut ScSession, at: u32, count: u32) {
+    if s.is_null() {
+        return;
+    }
+    (*s).inner.insert_cols(at, count);
+}
+
+/// `delete_cols(at, count)`. See [`SpreadsheetSession::delete_cols`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_delete_cols(s: *mut ScSession, at: u32, count: u32) {
+    if s.is_null() {
+        return;
+    }
+    (*s).inner.delete_cols(at, count);
+}
+
 // ── Viewport primitive (virtualized infinite sheet) ──────────────────
 // Integer coordinates (1-based, inclusive) so a native scrolling host can fetch
 // just the visible window of an unbounded sheet.
@@ -178,6 +275,50 @@ pub unsafe extern "C" fn sc_get_window(
         return ptr::null_mut();
     }
     into_cstr((*s).inner.get_window(row0, col0, row1, col1))
+}
+
+/// `fill(src, dst_start, dst_end)` — replicate the `src` cell across the
+/// inclusive rectangle `dst_start`..`dst_end` (drag-fill): relative references
+/// shift per target, absolute (`$`) refs pin, the source's format carries along,
+/// an empty source clears each target. Malformed addresses are a no-op. See
+/// [`SpreadsheetSession::fill`].
+///
+/// # Safety
+/// `s` must be a valid session; the A1 args must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn sc_fill(
+    s: *mut ScSession,
+    src: *const c_char,
+    dst_start: *const c_char,
+    dst_end: *const c_char,
+) {
+    if s.is_null() {
+        return;
+    }
+    let src = read_cstr(src);
+    let dst_start = read_cstr(dst_start);
+    let dst_end = read_cstr(dst_end);
+    (*s).inner.fill(&src, &dst_start, &dst_end);
+}
+
+/// `get_display_window(row0, col0, row1, col1)` → display-window JSON (each cell
+/// is its value rendered through its format code). See
+/// [`SpreadsheetSession::get_display_window`]. Returns null only on a null `s`.
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_get_display_window(
+    s: *mut ScSession,
+    row0: u32,
+    col0: u32,
+    row1: u32,
+    col1: u32,
+) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.get_display_window(row0, col0, row1, col1))
 }
 
 /// `used_range()` → data-extent JSON, or the literal `null`. See
@@ -293,6 +434,24 @@ mod tests {
     }
 
     #[test]
+    fn c_abi_fill_replicates_and_shifts() {
+        unsafe {
+            let s = sc_session_new();
+            set(s, "A1", "10");
+            set(s, "A2", "20");
+            set(s, "B1", "=A1*2"); // 20
+            let src = CString::new("B1").unwrap();
+            let ds = CString::new("B2").unwrap();
+            let de = CString::new("B2").unwrap();
+            sc_fill(s, src.as_ptr(), ds.as_ptr(), de.as_ptr());
+            assert_eq!(value(s, "B2"), r#"{"kind":"number","value":40.0}"#); // A2*2
+            // Null session is a safe no-op (no return value to check).
+            sc_fill(ptr::null_mut(), src.as_ptr(), ds.as_ptr(), de.as_ptr());
+            sc_session_free(s);
+        }
+    }
+
+    #[test]
     fn null_handle_returns_null_not_crash() {
         unsafe {
             let ca = CString::new("A1").unwrap();
@@ -321,6 +480,18 @@ mod tests {
             let w = take(sc_get_window(s, 1, 1, 1, 3));
             assert!(w.contains(r#""rows":1"#) && w.contains(r#""cols":3"#), "{w}");
             assert!(w.contains(r#"{"kind":"number","value":18.0}"#), "{w}");
+
+            // Display window: a formatted cell paints its rendered string.
+            let cf = CString::new("A1").unwrap();
+            let cc = CString::new("#,##0.00").unwrap();
+            sc_set_format(s, cf.as_ptr(), cc.as_ptr());
+            let dw = take(sc_get_display_window(s, 1, 1, 1, 3));
+            assert!(dw.contains(r#""cells""#) && dw.contains("15.00"), "{dw}");
+            assert_eq!(
+                take(sc_get_display_window(s, 0, 0, 5, 5)),
+                r##"{"error":"#REF!"}"##
+            );
+            assert!(sc_get_display_window(ptr::null_mut(), 1, 1, 1, 1).is_null());
 
             assert!(take(sc_used_range(s)).contains(r#""maxCol":3"#));
             assert_eq!(take(sc_column_letters(s, 27)), "AA");

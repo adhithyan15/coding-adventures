@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-r-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "R runtime — evaluates R programs by reusing the shared S tree-walker"
+
+[dependencies]
+coding-adventures-r-parser = { path = "../r-parser" }
+coding-adventures-s-runtime = { path = "../s-runtime" }

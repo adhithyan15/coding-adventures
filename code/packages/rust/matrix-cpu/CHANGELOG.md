@@ -2,6 +2,15 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [unreleased] — MX12 f64 dtype
+
+### Added — f64 kernels (MX12)
+
+`read/write_f64_vec`, `unary_f64`, `binary_f64`, `matmul_f64`, `reduce_f64`, the
+`f64 ↔ {f32,i32,u8}` cast cases, and a `DType::F64` arm in every per-dtype
+dispatch `match`, so an `f64` graph executes exactly on the CPU executor. Tests
+prove the result keeps precision an `f32` op would round away (`1 + 2^-40`).
+
 ## [0.9.0] — 2026-05-13
 
 ### Added — `Op::Concat` execution

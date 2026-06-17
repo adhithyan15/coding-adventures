@@ -39,7 +39,7 @@ use matrix_runtime::{Runtime, BackendProfile};
 let cpu = BackendProfile {
     kind: "cpu".to_string(),
     supported_ops: 0xFFFF_FFFF, supported_dtypes: 0x07,
-    gflops_f32: 40, gflops_u8: 40, gflops_i32: 40,
+    gflops_f32: 40, gflops_f64: 40, gflops_u8: 40, gflops_i32: 40,
     host_to_device_bw: 100, device_to_host_bw: 100, device_internal_bw: 100,
     launch_overhead_ns: 0, transport_latency_ns: 0,
     on_device_mib: 8 * 1024, max_tensor_rank: 16, max_dim: u32::MAX,
@@ -49,6 +49,7 @@ let mut rt = Runtime::new(cpu);
 let gpu = BackendProfile {
     kind: "gpu".to_string(),
     gflops_f32: 5_000, /* …125× faster… */
+    gflops_f64: 0, /* …no GPU f64 kernel → cost model keeps f64 on the CPU… */
     host_to_device_bw: 10, /* …slow PCIe… */
     ..rt.executors()[0].profile.clone()
 };

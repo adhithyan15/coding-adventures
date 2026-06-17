@@ -21,6 +21,8 @@ private slots:
     void windowIsEngineComputedAndDense();
     void farWindowReachesZ1000AndGapsAreSparse();
     void extentColumnLettersAndChangedSince();
+    void infiniteViewSelectEditAndRowCells();
+    void fillReplicatesShiftingReferences();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -36,9 +38,11 @@ void TstWindow::windowIsEngineComputedAndDense() {
     // engine-computed and dense.
     const QVariantList w = m.window(1, 1, 5, 5);
     QCOMPARE(w.size(), 5);
-    QCOMPARE(at(w, 1, 1, 1, 1), QStringLiteral("15"));  // A1
-    QCOMPARE(at(w, 1, 1, 1, 5), QStringLiteral("38"));  // E1 = SUM(A1:D1)
-    QCOMPARE(at(w, 1, 1, 5, 5), QStringLiteral("169")); // E5 grand total
+    QCOMPARE(at(w, 1, 1, 1, 1), QStringLiteral("15"));      // A1 (unformatted)
+    // E1/E5 carry the "#,##0.00" seed format → the engine renders the formatted
+    // display string (window() now reads sc_get_display_window).
+    QCOMPARE(at(w, 1, 1, 1, 5), QStringLiteral("38.00"));   // E1 = SUM(A1:D1)
+    QCOMPARE(at(w, 1, 1, 5, 5), QStringLiteral("169.00"));  // E5 grand total
 }
 
 void TstWindow::farWindowReachesZ1000AndGapsAreSparse() {
@@ -46,8 +50,9 @@ void TstWindow::farWindowReachesZ1000AndGapsAreSparse() {
     // Plant a far-flung formula 1000 rows down (Z = col 26).
     m.setCell("Z1000", "=SUM(A1:A4)"); // 15+8+12+4 = 39
     // A window around it returns the computed value — reachable without
-    // materialising the millions of cells in between.
-    QCOMPARE(at(m.window(998, 24, 1002, 28), 998, 24, 1000, 26), QStringLiteral("39"));
+    // materialising the millions of cells in between. Z1000 carries the "0.0%"
+    // seed format, so 39 renders as "3900.0%": the format applies 1000 rows down.
+    QCOMPARE(at(m.window(998, 24, 1002, 28), 998, 24, 1000, 26), QStringLiteral("3900.0%"));
     // The gap between the two data islands is empty (the sheet is sparse).
     const QVariantList gap = m.window(100, 1, 110, 10);
     for (const QVariant &rowVar : gap) {
@@ -61,10 +66,11 @@ void TstWindow::extentColumnLettersAndChangedSince() {
     SpreadsheetModel m;
     m.setCell("Z1000", "=SUM(A1:A4)");
 
-    // used_range extends to the far cell.
+    // used_range extends to the far cells. The default seed plants Z1000 (row
+    // 1000) and BB50 (col 54 = "BB"), so the extent spans both far islands.
     const QVariantMap u = m.usedRange();
     QCOMPARE(u.value("maxRow").toInt(), 1000);
-    QCOMPARE(u.value("maxCol").toInt(), 26);
+    QCOMPARE(u.value("maxCol").toInt(), 54);
 
     // Column letters past Z.
     QCOMPARE(m.columnLetters(27), QStringLiteral("AA"));
@@ -77,8 +83,78 @@ void TstWindow::extentColumnLettersAndChangedSince() {
     QVERIFY2(changed.contains("A1"), "A1 changed");
     QVERIFY2(changed.contains("Z1000"),
              qPrintable("far dependent recomputed: " + changed.join(",")));
-    // And the recomputed value shows through a fresh window read: 115+8+12+4.
-    QCOMPARE(at(m.window(1000, 26, 1000, 26), 1000, 26, 1000, 26), QStringLiteral("139"));
+    // And the recomputed value shows through a fresh window read: 115+8+12+4 =
+    // 139, formatted as a percent ("0.0%") → "13900.0%".
+    QCOMPARE(at(m.window(1000, 26, 1000, 26), 1000, 26, 1000, 26), QStringLiteral("13900.0%"));
+}
+
+// The infinite-view binding layer (InfiniteSheet.qml drives these): one engine
+// read per visible row via rowCells, tap-to-select via selectInf (which pulls
+// the cell's source into the formula bar), and write-through via commitInf
+// (which recomputes dependents, regrows the extent, and bumps `revision`).
+void TstWindow::infiniteViewSelectEditAndRowCells() {
+    SpreadsheetModel m;
+
+    // The constructor seeds the cross-foot budget PLUS far-flung cells
+    // (Z1000, BA50/BB50) and computes the extent: at least 1000×60, and grown
+    // to reach the far cells. Z1000 → totalRows ≥ 1000 + margin.
+    QVERIFY2(m.totalRows() >= 1000, "extent grows to reach the far seeded cells");
+    QVERIFY2(m.totalCols() >= 60, "extent has the default column margin");
+
+    // rowCells returns one row's display strings (columns 1..totalCols). Row 1
+    // is the budget's first row: A1..E1 = 15,3,12,8,38, then blanks.
+    const QVariantList row1 = m.rowCells(1);
+    QCOMPARE(row1.size(), m.totalCols());
+    QCOMPARE(row1.at(0).toString(), QStringLiteral("15"));    // A1 (unformatted)
+    QCOMPARE(row1.at(4).toString(), QStringLiteral("38.00")); // E1 = SUM(A1:D1), formatted
+    QCOMPARE(row1.at(9).toString(), QString());               // J1 empty (sparse)
+    // A row in the gap between the data islands is entirely blank.
+    const QVariantList gapRow = m.rowCells(200);
+    for (const QVariant &cell : gapRow) QCOMPARE(cell.toString(), QString());
+
+    // selectInf moves the selection (1-based) and pulls the cell's SOURCE into
+    // the formula bar — A5 is a formula, so we see the formula, not its value.
+    m.selectInf(5, 1);
+    QCOMPARE(m.infRow(), 5);
+    QCOMPARE(m.infCol(), 1);
+    QCOMPARE(m.infAddress(), QStringLiteral("A5"));
+    QCOMPARE(m.infFormula(), QStringLiteral("=SUM(A1:A4)"));
+
+    // selectInf clamps to the virtual grid (never below 1, never past the extent).
+    m.selectInf(-3, 0);
+    QCOMPARE(m.infRow(), 1);
+    QCOMPARE(m.infCol(), 1);
+
+    // commitInf writes the formula bar through to the selected cell. Edit A2
+    // 8 → 108 and every dependent recomputes: E2 (row total) and A5/E5 (col /
+    // grand totals) all move, visible through a fresh rowCells read.
+    const int revBefore = m.revision();
+    m.selectInf(2, 1);                 // A2
+    m.commitInf(QStringLiteral("108"));
+    QVERIFY2(m.revision() > revBefore, "commit bumps the revision so rows re-fetch");
+    QCOMPARE(m.rowCells(2).at(0).toString(), QStringLiteral("108"));    // A2 (unformatted)
+    QCOMPARE(m.rowCells(2).at(4).toString(), QStringLiteral("151.00")); // E2 = 108+14+7+22, formatted
+    QCOMPARE(m.rowCells(5).at(0).toString(), QStringLiteral("139.00")); // A5 = 15+108+12+4, formatted
+    QCOMPARE(m.rowCells(5).at(4).toString(), QStringLiteral("269.00")); // E5 grand total, formatted
+}
+
+// Drag-fill (the "Fill down" control drives model.fill): replicate a formula
+// down a column, each copy's relative reference tracking its row.
+void TstWindow::fillReplicatesShiftingReferences() {
+    SpreadsheetModel m;
+    // Seed a fresh column away from the default budget: H1=2, H2=3, H3=4;
+    // I1 = H1*10. Fill I1 down into I2:I3 — each tracks its row.
+    m.setCell("H1", "2");
+    m.setCell("H2", "3");
+    m.setCell("H3", "4");
+    m.setCell("I1", "=H1*10"); // 20
+    m.fill("I1", "I2", "I3");
+    // I2 = H2*10 = 30, I3 = H3*10 = 40 (each filled formula's relative ref tracked
+    // its row). Read through a window over col 9 (= I); the values prove the shift.
+    QCOMPARE(m.window(2, 9, 2, 9).at(0).toList().at(0).toString(), QStringLiteral("30"));
+    QCOMPARE(m.window(3, 9, 3, 9).at(0).toList().at(0).toString(), QStringLiteral("40"));
+    // The source cell is untouched by its own fill.
+    QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QStringLiteral("20"));
 }
 
 QTEST_MAIN(TstWindow)

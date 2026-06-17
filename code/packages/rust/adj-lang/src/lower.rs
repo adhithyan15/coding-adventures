@@ -23,9 +23,9 @@ use logic_core::{
     atom as core_atom, compound, float as core_float, var as core_var, LogicVar, Term as CoreTerm,
 };
 use logic_engine::{
-    compute, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContributionClause, Fact,
+    compute, BodyLiteral, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContributionClause, Fact,
     JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause, PriorClause,
-    Provenance, TrustTier, UncertaintyMarker,
+    Priority, Provenance, Rule, TrustTier, UncertaintyMarker,
 };
 
 use std::collections::HashMap;
@@ -102,6 +102,12 @@ pub enum LowerError {
     /// rather than panicking in `from_lr`.
     InvalidLikelihoodRatio {
         value: f64,
+    },
+    /// A `rule { … priority: <tier> }` whose tier is not one of the named
+    /// [`Priority`] levels (`default` | `specific` | `authoritative` | `mandatory`).
+    /// Caught at lowering so a typo produces a clean diagnostic, not a silent default.
+    UnknownPriorityTier {
+        tier: String,
     },
     /// A `let <name> = <expr>` whose formula could not be evaluated (an
     /// unknown slot, division by zero, an empty aggregation, …). Carries
@@ -257,6 +263,63 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // relation; its arguments are the entities.
                 let prov = annotations_to_provenance(annotations)?;
                 kb.add_fact(Fact::certain(lower_term(edge)).with_provenance(prov));
+            }
+            Statement::Functional { functor, arity } => {
+                // ADJ73 PR-C: declare the predicate functional on its last argument, so
+                // conflicting derivations are resolved by precedence (enumerate_governing).
+                kb.declare_functional(functor, *arity);
+            }
+            Statement::ContextOrder { edges } => {
+                // ADJ73 PR-B: each `a > b` edge asserts that context `a` outranks context `b`
+                // (lex superior) — consulted before the priority tier in resolution.
+                for (higher, lower) in edges {
+                    kb.add_context_outranks(higher.clone(), lower.clone());
+                }
+            }
+            Statement::Rule {
+                head,
+                body,
+                annotations,
+                priority,
+                context,
+            } => {
+                // A derivation rule → `logic_engine::Rule { head, body }`. Head and body
+                // share ONE variable scope so a `$Var` in the head unifies with the same
+                // `$Var` in a body literal (clause-scope, like a binding query). `not <lit>`
+                // lowers to negation-as-failure. The citation (if grounded) rides on the
+                // rule as provenance — a CAS rule stays byte-traceable.
+                let mut vars = HashMap::new();
+                let head_term = lower_term_scoped(head, &mut vars);
+                let body_lits: Vec<BodyLiteral> = body
+                    .iter()
+                    .map(|lit| {
+                        let t = lower_term_scoped(&lit.term, &mut vars);
+                        if lit.negated {
+                            BodyLiteral::Neg(t)
+                        } else {
+                            BodyLiteral::Pos(t)
+                        }
+                    })
+                    .collect();
+                let prov = annotations_to_provenance(annotations)?;
+                // ADJ73 PR-C: map the optional named tier → Priority (absent ⇒ Default).
+                let tier = match priority.as_deref() {
+                    None | Some("default") => Priority::Default,
+                    Some("specific") => Priority::Specific,
+                    Some("authoritative") => Priority::Authoritative,
+                    Some("mandatory") => Priority::Mandatory,
+                    Some(other) => {
+                        return Err(LowerError::UnknownPriorityTier { tier: other.into() })
+                    }
+                };
+                // ADJ73 PR-B: the optional `context: <name>` grounds the rule in a context.
+                let mut rule = Rule::certain(head_term, body_lits)
+                    .with_provenance(prov)
+                    .with_priority(tier);
+                if let Some(ctx) = context {
+                    rule = rule.with_context(ctx.clone());
+                }
+                kb.add_rule(rule);
             }
             Statement::Query { conclusion } => {
                 // Lower with a per-query variable scope so repeated `$Var`s in one
@@ -825,6 +888,82 @@ mod tests {
             dag.proofs.is_empty(),
             "must abstain, not fabricate an enzyme"
         );
+    }
+
+    #[test]
+    fn rule_derives_a_head_from_body_facts() {
+        // The keystone: a `rule { head: … when: … }` lets the ENGINE DERIVE the head
+        // when its body holds — so domain rulebooks (contraindications, step-therapy)
+        // live in ADJ and the engine derives consequences from per-case facts, no host
+        // code. Here: every pregnancy-excluded drug is derived contraindicated.
+        let src = r#"
+            relate pregnant(present)
+            relate pregnancy_excludes(moxifloxacin)
+            relate pregnancy_excludes(tmp_smx)
+            rule { head: contraindicated($D) when: pregnant(present), pregnancy_excludes($D) }
+            ? contraindicated($X)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(
+            dag.proofs.len(),
+            2,
+            "both pregnancy-excluded drugs are derived"
+        );
+        assert!(dag
+            .proofs
+            .iter()
+            .any(|p| p.bindings.walk_var(&v) == core_atom("moxifloxacin")));
+        assert!(dag
+            .proofs
+            .iter()
+            .any(|p| p.bindings.walk_var(&v) == core_atom("tmp_smx")));
+    }
+
+    #[test]
+    fn rule_negation_as_failure_excludes_when_the_negated_goal_holds() {
+        // `not <lit>` is negation-as-failure: `safe(D)` holds only for a β-lactam that
+        // is NOT (derivably) contraindicated. ampicillin is contraindicated → not-safe;
+        // ceftriaxone is the only safe drug.
+        let src = r#"
+            relate betalactam(ceftriaxone)
+            relate betalactam(ampicillin)
+            relate contraindicated(ampicillin)
+            rule { head: safe($D) when: betalactam($D), not contraindicated($D) }
+            ? safe($X)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(
+            dag.proofs.len(),
+            1,
+            "only the non-contraindicated β-lactam is safe"
+        );
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            core_atom("ceftriaxone")
+        );
+    }
+
+    #[test]
+    fn rule_carries_its_grounding_provenance() {
+        // A grounded rule keeps its citation (byte-quote + trust), so a CAS rulebook is
+        // byte-traceable — the same provenance contract `relate` edges carry.
+        let src = r#"
+            rule { head: contraindicated($D) when: pregnant(present), excludes($D)
+                   source "Pregnancy contraindicates fluoroquinolones (FDA label)."
+                   trust authoritative }
+            relate pregnant(present)
+            relate excludes(moxifloxacin)
+            ? contraindicated($X)
+        "#;
+        let lowered = compile(src).unwrap();
+        let dag = enumerate_all(&lowered.queries[0], &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1);
     }
 
     #[test]
@@ -1526,5 +1665,127 @@ mod tests {
     fn a_pure_rulebook_has_an_empty_constraint_system() {
         let lowered = compile("prior 0.10 for acs\n? acs").unwrap();
         assert!(lowered.constraints.is_empty());
+    }
+
+    // ---- ADJ73 PR-C: precedence surface syntax (functional + priority tiers) ----
+
+    /// `functional` + `priority:` lower into the engine so a higher-tier rule GOVERNS a
+    /// conflicting lower-tier one (the whole point — surface syntax over the merged engine).
+    #[test]
+    fn functional_and_priority_tiers_resolve_a_conflict() {
+        use logic_engine::{enumerate_governing, GovernStatus};
+        let src = "\
+functional timing(decision)
+relate stable_routine_pending(yes)
+rule { head: timing(await_culture) when: stable_routine_pending(yes) priority: specific }
+rule { head: timing(treat_now) when: stable_routine_pending(yes) priority: default }
+? timing($D)";
+        let lowered = compile(src).unwrap();
+        let res = enumerate_governing(&lowered.queries[0], &lowered.kb);
+        let governing: Vec<&CoreTerm> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(
+            governing.len(),
+            1,
+            "exactly one answer should govern: {res:?}"
+        );
+        // the `specific` tier governs; the `default` is defeated but retained.
+        assert!(matches!(
+            governing[0],
+            CoreTerm::Compound { functor, args }
+                if functor == "timing" && args == &[CoreTerm::Atom("await_culture".into())]
+        ));
+        assert!(!res.has_conflict());
+        let defeated = res
+            .answers
+            .iter()
+            .find(|a| {
+                matches!(&a.term, CoreTerm::Compound { args, .. }
+                if args == &[CoreTerm::Atom("treat_now".into())])
+            })
+            .unwrap();
+        assert!(matches!(defeated.status, GovernStatus::Defeated { .. }));
+    }
+
+    /// Two equal tiers on a functional predicate → an unresolved CONFLICT (no governor).
+    #[test]
+    fn equal_tiers_on_a_functional_predicate_conflict() {
+        use logic_engine::enumerate_governing;
+        let prog = "\
+functional pick(x)
+relate gate(t)
+rule { head: pick(a) when: gate(t) priority: authoritative }
+rule { head: pick(b) when: gate(t) priority: authoritative }
+? pick($X)";
+        let lowered = compile(prog).unwrap();
+        let res = enumerate_governing(&lowered.queries[0], &lowered.kb);
+        assert!(
+            res.has_conflict(),
+            "equal tiers must conflict, not silently pick: {res:?}"
+        );
+        assert_eq!(res.governing().count(), 0);
+    }
+
+    /// A non-functional predicate is unaffected — every derivation governs (back-compat).
+    #[test]
+    fn priority_without_functional_leaves_every_answer_governing() {
+        use logic_engine::enumerate_governing;
+        let prog = "\
+relate gate(t)
+rule { head: note(a) when: gate(t) priority: specific }
+rule { head: note(b) when: gate(t) priority: default }
+? note($X)";
+        let lowered = compile(prog).unwrap();
+        let res = enumerate_governing(&lowered.queries[0], &lowered.kb);
+        assert_eq!(res.governing().count(), 2, "non-functional → both govern");
+        assert!(!res.has_conflict());
+    }
+
+    /// An unknown priority tier is a clean lowering error, not a silent default.
+    #[test]
+    fn unknown_priority_tier_is_rejected() {
+        let err =
+            compile("relate g(t)\nrule { head: h(a) when: g(t) priority: urgent }").unwrap_err();
+        assert!(
+            format!("{err:?}").contains("UnknownPriorityTier"),
+            "expected UnknownPriorityTier, got {err:?}"
+        );
+    }
+
+    // ---- ADJ73 PR-B: context precedence surface (`context:` + `context_order`) ----
+
+    /// `context_order { higher > lower }` + `context:` on rules → the higher-context rule
+    /// governs the lower-context one, and context precedence BEATS the priority tier (lex
+    /// superior): the broad reading governs despite carrying the lower `default` tier.
+    #[test]
+    fn context_order_and_context_resolve_lex_superior() {
+        use logic_engine::enumerate_governing;
+        let prog = "\
+functional means(term, reading)
+context_order { ninth_circuit > district_court }
+relate gate(t)
+rule { head: means(waters, broad) when: gate(t) priority: default context: ninth_circuit }
+rule { head: means(waters, narrow) when: gate(t) priority: authoritative context: district_court }
+? means(waters, $R)";
+        let lowered = compile(prog).unwrap();
+        let res = enumerate_governing(&lowered.queries[0], &lowered.kb);
+        let gov: Vec<&CoreTerm> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(gov.len(), 1, "exactly one governs: {res:?}");
+        assert!(matches!(gov[0], CoreTerm::Compound { args, .. }
+            if args == &[CoreTerm::Atom("waters".into()), CoreTerm::Atom("broad".into())]));
+        assert!(!res.has_conflict());
+    }
+
+    /// A multi-edge `context_order` lowers every edge (transitive: federal > circuit > state).
+    #[test]
+    fn context_order_lowers_multiple_edges_transitively() {
+        let prog = "\
+context_order { federal > circuit, circuit > state }
+relate x(t)
+rule { head: r(a) when: x(t) }";
+        let lowered = compile(prog).unwrap();
+        // federal transitively outranks state via circuit.
+        assert!(lowered.kb.context_outranks("federal", "state"));
+        assert!(lowered.kb.context_outranks("federal", "circuit"));
+        assert!(!lowered.kb.context_outranks("state", "federal"));
     }
 }

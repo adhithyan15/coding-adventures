@@ -4,6 +4,120 @@
 
 ### Added
 
+- **Deck control rawfile output option routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `set wr_vecnames` and `set wr_singlescale` rawfile output
+  toggles as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript.
+
+- **Deck control ASCII filetype option routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `set filetype=ascii` output-format options as no-op control
+  commands instead of reporting unsupported-command diagnostics, matching Rust
+  and TypeScript.
+
+- **Deck control reset marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `reset` session-reset markers as no-op control commands
+  instead of reporting unsupported-command diagnostics, matching Rust and
+  TypeScript.
+
+- **Deck control noaskquit option routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `set noaskquit` UI options as no-op control commands instead
+  of reporting unsupported-command diagnostics, matching Rust and TypeScript.
+
+- **Deck control quit marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `quit` interpreter-exit markers as no-op control commands
+  instead of reporting unsupported-command diagnostics, matching Rust and
+  TypeScript.
+
+- **Deck control run marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `run` execution markers as no-op control commands instead
+  of reporting unsupported-command diagnostics, matching Rust and TypeScript.
+
+- **Deck control Fourier routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block `four` and `fourier` harmonic output commands into
+  `.four` deck cards, matching Rust and TypeScript.
+
+- **Deck control measurement routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block `measure` and `meas` measurement commands into
+  `.measure` and `.meas` deck cards, matching Rust and TypeScript.
+
+- **Deck control save/probe routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block `save` and `probe` output commands into `.save` and
+  `.probe` deck cards, matching Rust and TypeScript.
+
+- **Deck control-command routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block analysis/output commands (`op`, `dc`, `ac`,
+  `tran`, `save`, `probe`, `print`, and `plot`) into dotted deck cards,
+  matching Rust and TypeScript.
+
+- **Deck control-block exclusion diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now exclude
+  unsupported `.control` / `.endc` block markers and unrecognized body
+  commands from active deck lines while reporting stable command diagnostics,
+  matching Rust and TypeScript.
+
+- **Parsed plot output routing** —
+  `resolve_deck_outputs()`, `select_deck_output_probes()`, and
+  `format_deck_*_table()` now route scoped `.plot <analysis> ...` output
+  cards alongside `.save`, `.probe`, and `.print`, matching Rust and
+  TypeScript.
+
+- **Parsed print output routing** —
+  `resolve_deck_outputs()`, `select_deck_output_probes()`, and
+  `format_deck_*_table()` now route scoped `.print <analysis> ...` output
+  cards alongside `.save` and `.probe`, matching Rust and TypeScript.
+
+- **Deck run artifact metadata** —
+  `run_deck_analysis()` now returns selected-run artifact summaries and a
+  stable run-artifact table with result-row, output-probe, measurement, and
+  Fourier counts, matching Rust and TypeScript.
+
+- **Deck Fourier artifact routing** —
+  `run_deck_analysis()` now returns selected transient `.four` harmonic
+  results and a stable Fourier table alongside the selected plan, solver
+  result, output probes, and measurement artifacts, matching Rust and
+  TypeScript.
+
+- **Deck measurement artifact routing** —
+  `run_deck_analysis()` now returns selected `.measure` / `.meas` results and
+  a stable measurement table for selected `.dc`, `.ac`, and `.tran` executions,
+  matching Rust and TypeScript.
+
+- **Deck selected-output artifact metadata** —
+  `run_deck_analysis()` now returns the normalized deck-selected output probes
+  alongside each selected plan, solver result, and stable table, matching Rust
+  and TypeScript.
+
+- **Deck transient print-step output routing** —
+  `run_deck_analysis()` now keeps `.tran TSTEP` as the stable deck output
+  print grid while `MAXSTEP` caps internal solver stepping, matching Rust and
+  TypeScript.
+
+- **Deck transient START/MAXSTEP/UIC routing** —
+  `run_deck_analysis()` now routes selected `.tran` `START` output filtering,
+  `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent through stable
+  deck-selected transient tables, matching Rust and TypeScript.
+
+- **Deck AC LIN/OCT execution routing** —
+  `run_deck_analysis()` now executes selected `.ac LIN`, `.ac DEC`, and
+  `.ac OCT` plans with SPICE-style linear, points-per-decade, and
+  points-per-octave frequency grids, matching Rust and TypeScript.
+
+- **Deck analysis execution routing** —
+  `run_deck_analysis()` now selects one deck `.op`, `.dc`, `.ac DEC`, or
+  `.tran` plan, dispatches it into the matching solver, and returns the
+  selected plan, solver result, and deck-selected output table, matching Rust
+  and TypeScript.
+
 - **Deck analysis-plan selector** —
   `select_deck_analysis_plan()` now resolves one explicit or implicit deck
   analysis plan with stable ambiguity and invalid-card errors, matching Rust

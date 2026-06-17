@@ -630,8 +630,18 @@ impl Compiler {
                     "unknown operator token `{other}`"))),
             };
             let dest = self.fresh_tmp();
+            // LANG-FULL O2 — u8 width & wrap. Oct's only integer type is `u8` (the
+            // 8008's byte; see the grammar — `bool` is the only other type), and the
+            // language spec says arithmetic "wraps modulo 256". So an arithmetic /
+            // bitwise op carries the `u8` type_hint and every backend masks its result
+            // mod-2⁸ (the E2 value-mask): `200 + 100 = 44`, not 300. A **comparison**
+            // (`cmp_*`) yields a 0/1 `bool` that must NOT be masked (and its operands
+            // ride i64 slots), so it stays `i64` — emitting `u8` would mis-type the
+            // LLVM `icmp`. (There is no width to *track* here the way Nib does: Oct has
+            // exactly one integer width, so every integer op is u8 by construction.)
+            let hint = if cir_op.starts_with("cmp_") { "i64" } else { "u8" };
             self.emit(out, cir_op, Some(&dest),
-                vec![Operand::Var(acc), Operand::Var(rhs)], "i64");
+                vec![Operand::Var(acc), Operand::Var(rhs)], hint);
             acc = dest;
         }
         Ok(acc)
@@ -702,15 +712,19 @@ impl Compiler {
                     "unary missing operand".into()))?;
                 let v = self.compile_child(operand, out)?;
                 let dest = self.fresh_tmp();
-                let cir_op = if kind == "BANG" { "not" } else { "not" };
-                // Both `!bool` (logical NOT, operand is 0/1) and `~u8`
-                // (bitwise NOT) lower to IIR `not` — for 0/1 values the
-                // result is 1/0 which is the right boolean inversion.
-                // Real bitwise-not for arbitrary u8 should mask to 8
-                // bits; deferred to V2 (the backend `not_i64` flips all
-                // 64 bits and consumers downstream don't yet care).
-                self.emit(out, cir_op, Some(&dest),
-                    vec![Operand::Var(v)], "i64");
+                // LANG-FULL O2 — both `~` (TILDE) and `!` (BANG) lower to the IIR `not`
+                // op (bitwise complement), but with DIFFERENT widths:
+                //
+                //  - `~u8` (bitwise NOT) carries the `u8` hint, so every backend masks
+                //    the complement to 8 bits: `~0u8 = 255` (`-1 & 0xFF`), not the i64
+                //    all-ones. This is the O2 fix — previously `~` flipped all 64 bits.
+                //  - `!bool` (logical NOT, operand is 0/1) stays `i64`: `not 0 = -1`,
+                //    `not 1 = -2` — *not* a clean boolean flip, but this is the prior
+                //    behaviour and proper logical negation (compare-to-zero) is a
+                //    separate item; only `~` is in scope for O2.
+                let hint = if kind == "TILDE" { "u8" } else { "i64" };
+                self.emit(out, "not", Some(&dest),
+                    vec![Operand::Var(v)], hint);
                 return Ok(dest);
             }
         }
@@ -932,6 +946,38 @@ mod tests {
         assert!(o.contains(&"const".to_string()));
         assert!(o.contains(&"add".to_string()));
         assert!(o.contains(&"mov".to_string()));
+    }
+
+    /// The `(op, type_hint)` pairs of a function's body — for asserting the O2 widths.
+    fn op_hints(m: &IIRModule, fn_name: &str) -> Vec<(String, String)> {
+        m.functions.iter().find(|f| f.name == fn_name).unwrap()
+            .instructions.iter().map(|i| (i.op.clone(), i.type_hint.clone())).collect()
+    }
+
+    #[test]
+    fn o2_arithmetic_carries_u8_hint_so_it_wraps() {
+        // LANG-FULL O2: Oct's only integer type is u8, and arithmetic wraps mod-256, so
+        // an `add`/`sub`/bitwise op must carry the `u8` type_hint (the backends then mask
+        // the result). A `cmp_*` stays `i64` (its 0/1 bool result must not be masked).
+        let m = compile_source(
+            "fn main() { let x: u8 = 200 + 100; if x == 44 { let y: u8 = 1; } }",
+            "test",
+        ).expect("ok");
+        let oh = op_hints(&m, "main");
+        assert!(oh.iter().any(|(op, h)| op == "add" && h == "u8"),
+            "Oct `add` must carry the u8 hint so it wraps; got: {oh:?}");
+        assert!(oh.iter().any(|(op, h)| op == "cmp_eq" && h == "i64"),
+            "Oct `cmp_eq` must stay i64 (its bool result is unmasked); got: {oh:?}");
+    }
+
+    #[test]
+    fn o2_bitwise_not_carries_u8_hint() {
+        // LANG-FULL O2: `~` lowers to the IIR `not` op with the `u8` hint so the
+        // complement masks to 8 bits (`~0u8 = 255`), not the i64 all-ones (`-1`).
+        let m = compile_source("fn main() { let x: u8 = ~0; }", "test").expect("ok");
+        let oh = op_hints(&m, "main");
+        assert!(oh.iter().any(|(op, h)| op == "not" && h == "u8"),
+            "Oct `~` must lower to a u8-hinted `not`; got: {oh:?}");
     }
 
     #[test]

@@ -52,8 +52,11 @@ use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use serde_json::{json, Value};
+use spreadsheet_core::parser::parse;
+use spreadsheet_core::address::MAX_RANGE_CELLS;
 use spreadsheet_core::{
-    column_index_to_letters, CellAddress, CellValue, ChangeSet, SheetId, SpreadsheetError, Workbook,
+    column_index_to_letters, CellAddress, CellRange, CellValue, ChangeSet, SheetId,
+    SpreadsheetError, StructuralEdit, Workbook,
 };
 
 /// A single-sheet spreadsheet session with a JSON boundary.
@@ -130,6 +133,126 @@ impl SpreadsheetSession {
         Ok(())
     }
 
+    // ── Structural edits: insert / delete rows & columns ────────────
+    //
+    // These call through to the engine (which relocates cells and rewrites every
+    // formula's references) AND keep this facade's `raw` echo map in step: each
+    // raw entry's address is relocated the same way, and a formula's *source* is
+    // rewritten via the shared `parse → adjust → to_formula_string` so the
+    // formula bar echoes the post-edit references. Coordinates are 1-based.
+
+    /// Insert `count` blank rows before row `at`; rows at/after slide down.
+    pub fn insert_rows(&mut self, at: u32, count: u32) {
+        self.structural_edit(StructuralEdit::InsertRows { at, count });
+    }
+
+    /// Delete `count` rows starting at row `at`; rows after slide up. Cells on
+    /// deleted rows are removed; references to them become `#REF!`.
+    pub fn delete_rows(&mut self, at: u32, count: u32) {
+        self.structural_edit(StructuralEdit::DeleteRows { at, count });
+    }
+
+    /// Insert `count` blank columns before column `at`; columns at/after slide right.
+    pub fn insert_cols(&mut self, at: u32, count: u32) {
+        self.structural_edit(StructuralEdit::InsertCols { at, count });
+    }
+
+    /// Delete `count` columns starting at column `at`; columns after slide left.
+    pub fn delete_cols(&mut self, at: u32, count: u32) {
+        self.structural_edit(StructuralEdit::DeleteCols { at, count });
+    }
+
+    fn structural_edit(&mut self, edit: StructuralEdit) {
+        // Mirror the engine's guard: an insert that would push a non-empty cell
+        // off the u32 grid edge is rejected wholesale (the saturating shift would
+        // otherwise collide raw entries onto the same address). Both sides apply
+        // the same condition, so the facade and engine stay consistent.
+        let would_overflow = match edit {
+            StructuralEdit::InsertRows { at, count } => self
+                .raw
+                .keys()
+                .any(|a| a.row >= at && a.row.checked_add(count).is_none()),
+            StructuralEdit::InsertCols { at, count } => self
+                .raw
+                .keys()
+                .any(|a| a.col >= at && a.col.checked_add(count).is_none()),
+            StructuralEdit::DeleteRows { .. } | StructuralEdit::DeleteCols { .. } => false,
+        };
+        if would_overflow {
+            return;
+        }
+
+        match edit {
+            StructuralEdit::InsertRows { at, count } => self.wb.insert_rows(self.sheet, at, count),
+            StructuralEdit::DeleteRows { at, count } => self.wb.delete_rows(self.sheet, at, count),
+            StructuralEdit::InsertCols { at, count } => self.wb.insert_cols(self.sheet, at, count),
+            StructuralEdit::DeleteCols { at, count } => self.wb.delete_cols(self.sheet, at, count),
+        }
+
+        // Relocate the raw echo map to match: move each entry's address, drop
+        // entries on deleted lines, and rewrite formula sources.
+        let old = std::mem::take(&mut self.raw);
+        for (addr, raw) in old {
+            if let Some(new_addr) = addr.adjust(edit) {
+                self.raw.insert(new_addr, rewrite_raw_for_edit(&raw, edit));
+            }
+        }
+    }
+
+    /// Replicate the cell at `src_a1` across the inclusive rectangle
+    /// `dst_start_a1`..`dst_end_a1` — drag-fill. Each target gets a copy with its
+    /// formula's relative references shifted by its offset from the source
+    /// (`=A1` filled down → `=A2`), absolute (`$`) references pinned, and the
+    /// source's format carried along; an off-grid reference becomes `#REF!`. A
+    /// literal source is copied unchanged; an empty source clears each target.
+    /// Malformed addresses are a no-op (the engine and the echo map stay in
+    /// step). Mirrors [`SpreadsheetSession::insert_rows`] in keeping the `raw`
+    /// echo map honest — each target's stored source is the source's source with
+    /// its references shifted (so the formula bar shows the filled formula).
+    pub fn fill(&mut self, src_a1: &str, dst_start_a1: &str, dst_end_a1: &str) {
+        let (Ok(src), Ok(ds), Ok(de)) = (
+            CellAddress::parse(src_a1),
+            CellAddress::parse(dst_start_a1),
+            CellAddress::parse(dst_end_a1),
+        ) else {
+            return;
+        };
+        let dst = CellRange::new(ds, de);
+        // Mirror the engine's DoS guard so the raw-map loop below also stays
+        // bounded — without it a hostile `dst` could make the facade iterate
+        // billions of cells even though the engine itself rejected the fill.
+        if dst.cell_count() > MAX_RANGE_CELLS {
+            return;
+        }
+
+        // The engine replicates cell content + formats (shifting formula refs).
+        self.wb.fill(self.sheet, src, dst);
+
+        // Keep the `raw` echo map in step: each target's source is the source
+        // cell's raw text with its references shifted by the target's offset
+        // (formulas rewritten via parse→shift→serialize; literals copied; an
+        // empty source clears the target). Offsets in i64 then clamped, matching
+        // the engine — a high-coordinate anchor can't overflow the i32 delta.
+        let src_raw = self.raw.get(&src).cloned();
+        for row in dst.start.row..=dst.end.row {
+            for col in dst.start.col..=dst.end.col {
+                let target = CellAddress::new(row, col);
+                let d_row =
+                    (row as i64 - src.row as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+                let d_col =
+                    (col as i64 - src.col as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+                match &src_raw {
+                    Some(raw) => {
+                        self.raw.insert(target, rewrite_raw_for_fill(raw, d_row, d_col));
+                    }
+                    None => {
+                        self.raw.remove(&target);
+                    }
+                }
+            }
+        }
+    }
+
     /// Get a cell's *computed* value as a JSON object (see [`value_to_json`] for
     /// the shape). A malformed address yields an `#REF!`-style error object
     /// rather than failing.
@@ -151,6 +274,41 @@ impl SpreadsheetSession {
             .ok()
             .and_then(|addr| self.raw.get(&addr).cloned())
             .unwrap_or_default()
+    }
+
+    // ── Cell display formats ────────────────────────────────────────
+    //
+    // A format is an Excel-style code (`"#,##0.00"`, `"0%"`, `"yyyy-mm-dd"`) that
+    // decides how a cell's computed value reads. The engine stores the code and
+    // applies it (via number-format-core); these thin wrappers expose that to a
+    // JS / native host.
+
+    /// Set a cell's display format code. An empty code clears it (the cell falls
+    /// back to `General`). A malformed address is a no-op.
+    pub fn set_format(&mut self, a1: &str, code: &str) {
+        if let Ok(addr) = CellAddress::parse(a1) {
+            self.wb.set_format(self.sheet, addr, code);
+        }
+    }
+
+    /// A cell's display format code, or `""` if it uses the default (`General`).
+    pub fn get_format(&self, a1: &str) -> String {
+        CellAddress::parse(a1)
+            .ok()
+            .and_then(|addr| self.wb.get_format(self.sheet, addr))
+            .map(str::to_string)
+            .unwrap_or_default()
+    }
+
+    /// A cell's computed value rendered through its format — the **display
+    /// string** to show (e.g. `1234.5` with `"#,##0.00"` → `"1,234.50"`). What a
+    /// cell paints, as opposed to [`get_value`](Self::get_value) (typed JSON) or
+    /// [`get_raw`](Self::get_raw) (the source). Empty string for a bad address.
+    pub fn get_display(&self, a1: &str) -> String {
+        match CellAddress::parse(a1) {
+            Ok(addr) => self.wb.get_display(self.sheet, addr),
+            Err(_) => String::new(),
+        }
     }
 
     /// Get every set cell's computed value as a JSON object keyed by A1
@@ -192,6 +350,36 @@ impl SpreadsheetSession {
                     "row0": w.row0, "col0": w.col0,
                     "rows": w.rows, "cols": w.cols,
                     "values": rows,
+                })
+                .to_string()
+            }
+            Err(e) => json!({ "error": e.display() }).to_string(),
+        }
+    }
+
+    /// Display **strings** for the inclusive 1-based rectangle, as JSON:
+    /// `{"row0":1,"col0":1,"rows":R,"cols":C,"cells":[["1,234.50",…],…]}` where
+    /// `cells` is a row-major `R×C` array of the per-cell display strings (each
+    /// value already rendered through its format code; empty cells are `""`).
+    /// This is the format-aware sibling of [`get_window`](Self::get_window) — the
+    /// one read a virtualized grid needs per frame, since the host paints the
+    /// strings directly without re-deriving number formatting. On a bad request
+    /// (inverted/oversized/0-coord) returns `{"error":"#REF!"}`.
+    pub fn get_display_window(&self, row0: u32, col0: u32, row1: u32, col1: u32) -> String {
+        match self.wb.get_display_window(self.sheet, row0, col0, row1, col1) {
+            Ok(w) => {
+                let mut rows = Vec::with_capacity(w.rows as usize);
+                for r in 0..w.rows {
+                    let mut row = Vec::with_capacity(w.cols as usize);
+                    for c in 0..w.cols {
+                        row.push(Value::String(w.cells[(r * w.cols + c) as usize].clone()));
+                    }
+                    rows.push(Value::Array(row));
+                }
+                json!({
+                    "row0": w.row0, "col0": w.col0,
+                    "rows": w.rows, "cols": w.cols,
+                    "cells": rows,
                 })
                 .to_string()
             }
@@ -267,6 +455,41 @@ fn coerce_literal(s: &str) -> CellValue {
     CellValue::Text(s.to_string())
 }
 
+/// Rewrite a raw cell source for a [`StructuralEdit`], so the formula bar echoes
+/// the post-edit references. A literal is unchanged (it has no references); a
+/// formula is re-parsed, its references adjusted via the shared `edit` arithmetic,
+/// and re-serialized. An unparseable formula is kept verbatim — there's nothing
+/// to rewrite, and the source must survive for the user to fix.
+fn rewrite_raw_for_edit(raw: &str, edit: StructuralEdit) -> String {
+    let trimmed = raw.trim();
+    if trimmed.starts_with('=') {
+        match parse(trimmed) {
+            Ok(ast) => format!("={}", ast.adjust(edit).to_formula_string()),
+            Err(_) => raw.to_string(),
+        }
+    } else {
+        raw.to_string()
+    }
+}
+
+/// Rewrite a raw cell source for a fill of `(d_row, d_col)`, so the formula bar
+/// echoes the *shifted* references the engine stored — the copy/paste sibling of
+/// [`rewrite_raw_for_edit`]. A literal is copied verbatim (no references); a
+/// formula is re-parsed, its references shifted via the shared `shift` arithmetic
+/// (relative tracks, absolute pinned, off-grid → `#REF!`), and re-serialized. An
+/// unparseable formula is kept as-is — there's nothing to rewrite.
+fn rewrite_raw_for_fill(raw: &str, d_row: i32, d_col: i32) -> String {
+    let trimmed = raw.trim();
+    if trimmed.starts_with('=') {
+        match parse(trimmed) {
+            Ok(ast) => format!("={}", ast.shift(d_row, d_col).to_formula_string()),
+            Err(_) => raw.to_string(),
+        }
+    } else {
+        raw.to_string()
+    }
+}
+
 /// Encode a [`CellValue`] as the JSON the JS host expects. The shape matches
 /// the TypeScript engine's `CellValue` discriminated union exactly, so the
 /// demo glue is identical whichever engine backs it:
@@ -330,6 +553,109 @@ mod tests {
         // Change a precedent → the total recomputes.
         s.set_cell("B1", "115");
         assert_eq!(s.get_value("B6"), r#"{"kind":"number","value":146.0}"#);
+    }
+
+    // ── Structural edits: insert / delete rows & columns ────────────
+
+    #[test]
+    fn insert_rows_shifts_values_raw_and_formula_refs() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "10");
+        s.set_cell("A2", "20");
+        s.set_cell("A3", "=SUM(A1:A2)");
+        assert_eq!(s.get_value("A3"), r#"{"kind":"number","value":30.0}"#);
+
+        s.insert_rows(1, 1); // a blank row at the top; everything slides down
+
+        assert_eq!(s.get_value("A1"), r#"{"kind":"empty"}"#); // now blank
+        assert_eq!(s.get_value("A2"), r#"{"kind":"number","value":10.0}"#); // was A1
+        assert_eq!(s.get_value("A4"), r#"{"kind":"number","value":30.0}"#); // SUM moved
+        // Echo: the SUM moved to A4 and its range rewrote A1:A2 → A2:A3.
+        assert_eq!(s.get_raw("A4"), "=SUM(A2:A3)");
+        assert_eq!(s.get_raw("A1"), ""); // nothing there now
+    }
+
+    #[test]
+    fn delete_cols_makes_dangling_reference_ref_error() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "10");
+        s.set_cell("B1", "=A1+1");
+        s.delete_cols(1, 1); // delete column A
+
+        // B1 → A1, and its reference A1 (now deleted) → #REF!.
+        assert_eq!(s.get_value("A1"), r##"{"code":"#REF!","kind":"error"}"##);
+        // The echoed source shows the dangling reference (binary ops are fully
+        // parenthesised by the serializer).
+        assert_eq!(s.get_raw("A1"), "=(#REF!+1)");
+    }
+
+    #[test]
+    fn delete_rows_shifts_survivors_up() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "10");
+        s.set_cell("A2", "20");
+        s.set_cell("A3", "=A2*2");
+        s.delete_rows(1, 1); // delete row 1
+
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":20.0}"#); // was A2
+        assert_eq!(s.get_value("A2"), r#"{"kind":"number","value":40.0}"#); // =A1*2
+        assert_eq!(s.get_raw("A2"), "=(A1*2)");
+    }
+
+    #[test]
+    fn set_get_and_apply_display_format() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "1234.5");
+        // No format → General display.
+        assert_eq!(s.get_display("A1"), "1234.5");
+        assert_eq!(s.get_format("A1"), "");
+        // Set a format → get_display applies it; get_format echoes the code.
+        s.set_format("A1", "#,##0.00");
+        assert_eq!(s.get_format("A1"), "#,##0.00");
+        assert_eq!(s.get_display("A1"), "1,234.50");
+        // get_value (typed) is unaffected by the format.
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":1234.5}"#);
+        // Clearing the format reverts to General.
+        s.set_format("A1", "");
+        assert_eq!(s.get_format("A1"), "");
+        assert_eq!(s.get_display("A1"), "1234.5");
+    }
+
+    #[test]
+    fn fill_replicates_formula_shifting_refs_and_echoes_source() {
+        let mut s = SpreadsheetSession::new();
+        for (a, v) in [("A1", "10"), ("A2", "20"), ("A3", "30")] {
+            s.set_cell(a, v);
+        }
+        s.set_cell("B1", "=A1*2"); // 20
+        // Fill B1 down into B2:B3 — each tracks its row.
+        s.fill("B1", "B2", "B3");
+        assert_eq!(s.get_value("B2"), r#"{"kind":"number","value":40.0}"#); // A2*2
+        assert_eq!(s.get_value("B3"), r#"{"kind":"number","value":60.0}"#); // A3*2
+        // The formula bar echoes the shifted source (binary ops parenthesised).
+        assert_eq!(s.get_raw("B3"), "=(A3*2)");
+    }
+
+    #[test]
+    fn fill_carries_literal_and_clears_from_empty() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "7");
+        s.fill("A1", "B1", "C1"); // copy literal right
+        assert_eq!(s.get_value("C1"), r#"{"kind":"number","value":7.0}"#);
+        assert_eq!(s.get_raw("B1"), "7");
+        // Filling from an empty source clears the targets (raw echo too).
+        s.set_cell("D1", "99");
+        s.fill("Z9", "D1", "D1"); // Z9 is empty
+        assert_eq!(s.get_raw("D1"), "");
+        assert_eq!(s.get_value("D1"), r#"{"kind":"empty"}"#);
+    }
+
+    #[test]
+    fn fill_bad_address_is_noop() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "1");
+        s.fill("not-an-addr", "B1", "B2"); // no panic, nothing filled
+        assert_eq!(s.get_value("B1"), r#"{"kind":"empty"}"#);
     }
 
     #[test]
@@ -439,6 +765,35 @@ mod tests {
         // 0-coord / oversized → an error object, never a panic.
         assert_eq!(s.get_window(0, 0, 10, 10), r##"{"error":"#REF!"}"##);
         assert_eq!(s.get_window(1, 1, 1000, 1000), r##"{"error":"#REF!"}"##);
+    }
+
+    #[test]
+    fn get_display_window_returns_formatted_strings_row_major() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "1234.5");
+        s.set_format("A1", "#,##0.00"); // → "1,234.50"
+        s.set_cell("B1", "0.25");
+        s.set_format("B1", "0%"); // → "25%"
+        s.set_cell("C1", "hi"); // text, General
+        // Window A1:C1 — one row, three columns, display strings, dense.
+        let out = s.get_display_window(1, 1, 1, 3);
+        assert_eq!(
+            out,
+            r#"{"cells":[["1,234.50","25%","hi"]],"col0":1,"cols":3,"row0":1,"rows":1}"#
+        );
+        // A blank region comes back as "" cells (included, not omitted): row 2,
+        // columns A:B → one row, two empty strings.
+        let out2 = s.get_display_window(2, 1, 2, 2);
+        assert_eq!(
+            out2,
+            r#"{"cells":[["",""]],"col0":1,"cols":2,"row0":2,"rows":1}"#
+        );
+        // 0-coord / oversized → an error object, never a panic.
+        assert_eq!(s.get_display_window(0, 0, 10, 10), r##"{"error":"#REF!"}"##);
+        assert_eq!(
+            s.get_display_window(1, 1, 1000, 1000),
+            r##"{"error":"#REF!"}"##
+        );
     }
 
     #[test]

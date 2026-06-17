@@ -35,28 +35,28 @@
 pub mod compute;
 pub mod conversion;
 pub mod datetime;
-pub mod dimension;
 pub mod differential;
+pub mod dimension;
 pub mod enumerate;
+pub mod govern;
 pub mod lr_aggregate;
 pub mod proof_dag;
 pub mod provenance;
 pub mod wmc;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
 pub use compute::{compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived};
-pub use conversion::{
-    add_or_sub, convert_value, ConvError, Conversion, ConversionTable,
-};
+pub use conversion::{add_or_sub, convert_value, ConvError, Conversion, ConversionTable};
 pub use datetime::{
     after, before, date_add, date_ordinal, days_between, read_date, read_duration_days,
 };
-pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
 pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
+pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
 pub use enumerate::enumerate_all;
+pub use govern::{enumerate_governing, GovernStatus, GovernedAnswer, GovernedResult};
 pub use lr_aggregate::{
     counterfactual, lr_aggregate, sigmoid, source_disagreements,
     source_disagreements_with_threshold, CmpOp, ContributionClause, JointContributionClause,
@@ -228,6 +228,56 @@ pub struct Rule {
     pub head: Term,
     pub body: Vec<BodyLiteral>,
     pub probability: Probability,
+    /// Where this rule came from — a byte-quoted citation when the rule was
+    /// grounded from source text (a payer policy, an FDA label, a guideline) and
+    /// gated into the CAS. Defaults to [`Provenance::unattributed`] for rules with
+    /// no citation. Mirrors [`Fact::provenance`], so a derived consequence can (in
+    /// future) cite the rule that produced it alongside the facts it fired on.
+    pub provenance: Provenance,
+    /// ADJ73 defeasible precedence: the rule's priority TIER among *conflicting*
+    /// derivations. A higher tier defeats a lower one when two rules derive heads that
+    /// cannot both hold (a predicate declared functional via
+    /// [`KnowledgeBase::declare_functional`]). Defaults to [`Priority::Default`]; a plain
+    /// rulebook with no priorities and no functional predicates behaves exactly as before
+    /// (every conclusion governs). Only [`crate::govern::enumerate_governing`] reads this
+    /// field — `enumerate_all` ignores it, so monotonic queries are unchanged.
+    ///
+    /// Named TIERS, not raw integers (ADJ73 decision 1): the explicit tier is the simplest
+    /// grounded precedence principle ("a higher tier wins"), used for local default-vs-
+    /// exception ladders. Richer, byte-provenanced precedence (lex-superior / recency /
+    /// appeal-status over a grounded `context-precedence` rulebook) is ADJ73 PR-B.
+    pub priority: Priority,
+    /// ADJ73 PR-B (grounded context precedence): the CONTEXT this rule is grounded in — a
+    /// jurisdiction (`ninth_circuit`), guideline edition (`idsa_2024`), specialty
+    /// (`specialist`), etc. `None` for a context-free rule (today's behavior). When two
+    /// conflicting rules carry contexts ordered by [`KnowledgeBase::add_context_outranks`]
+    /// (e.g. `ninth_circuit` outranks `district_court`), the rule in the GREATER context
+    /// defeats the other — the McCarthy lex-superior relation — *before* the priority tier is
+    /// consulted (the tier breaks ties the context order leaves open). Only
+    /// [`crate::govern::enumerate_governing`] reads it.
+    pub context: Option<String>,
+}
+
+/// ADJ73 defeasible-precedence TIER (decision 1: named enum, not raw integers). Totally
+/// ordered lowest→highest by declaration order, so `derive(Ord)` gives `Default < Specific
+/// < Authoritative < Mandatory`. A ground **fact** sits above every tier (asserted truth);
+/// that "above all" standing is represented by [`crate::govern::Standing`], not here.
+///
+/// - `Default` — the implicit fallback rule (what a rule has when no tier is written).
+/// - `Specific` — a more specific rule than the general default.
+/// - `Authoritative` — a rule from a governing/authoritative source.
+/// - `Mandatory` — a hard override (the highest rule tier).
+///
+/// These are domain-neutral: a clinical "specialist guideline over general" and a legal
+/// "controlling authority over persuasive" both map onto the same ladder. The names are
+/// open to revision (ADJ73 §2.2).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default)]
+pub enum Priority {
+    #[default]
+    Default,
+    Specific,
+    Authoritative,
+    Mandatory,
 }
 
 impl Rule {
@@ -237,6 +287,9 @@ impl Rule {
             head,
             body,
             probability: Probability::Certain,
+            provenance: Provenance::unattributed(),
+            priority: Priority::Default,
+            context: None,
         }
     }
 
@@ -249,7 +302,32 @@ impl Rule {
             head,
             body,
             probability: Probability::Value(p),
+            provenance: Provenance::unattributed(),
+            priority: Priority::Default,
+            context: None,
         }
+    }
+
+    /// Attach a citation (mirrors [`Fact::with_provenance`]) — used when a rule is
+    /// grounded from source text and gated into the CAS.
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = provenance;
+        self
+    }
+
+    /// ADJ73: set the rule's defeasible-precedence priority (higher defeats lower
+    /// among conflicting derivations). Builder-style, mirrors [`Self::with_provenance`].
+    pub fn with_priority(mut self, priority: Priority) -> Self {
+        self.priority = priority;
+        self
+    }
+
+    /// ADJ73 PR-B: ground the rule in a CONTEXT (a jurisdiction / guideline edition /
+    /// specialty). Combined with [`KnowledgeBase::add_context_outranks`], the rule in the
+    /// greater context defeats a conflicting one in a lesser context (lex superior).
+    pub fn with_context(mut self, context: impl Into<String>) -> Self {
+        self.context = Some(context.into());
+        self
     }
 }
 
@@ -322,6 +400,20 @@ pub struct KnowledgeBase {
     /// [`UncertaintyReport`] in the result so the audit reader sees
     /// what's missing.
     uncertainty_markers: Vec<UncertaintyMarker>,
+    /// ADJ73 defeasible precedence: the set of predicates (by functor/arity) that are
+    /// FUNCTIONAL on their last argument — at most one value may hold per key (the
+    /// preceding args). Two derivations that agree on the key but differ on the last
+    /// argument *conflict*, and [`crate::govern::enumerate_governing`] keeps only the
+    /// highest-priority one. A predicate not listed here is monotonic (every derivation
+    /// governs) — this is what makes precedence opt-in and `enumerate_all` unchanged.
+    functional_predicates: HashSet<ClauseIndex>,
+    /// ADJ73 PR-B: the grounded CONTEXT precedence order — directed edges `(higher, lower)`
+    /// meaning "a rule in `higher` outranks a conflicting rule in `lower`" (federal > state,
+    /// ninth_circuit > district_court, idsa_2024 > idsa_2004, specialist > general). Each edge
+    /// is a grounded fact (its byte-quote — the Supremacy Clause, etc. — rides on the
+    /// surface/data layer). [`crate::govern::enumerate_governing`] consults this BEFORE the
+    /// priority tier (lex superior); the transitive reach is computed cycle-safely.
+    context_order: Vec<(String, String)>,
     next_fact_id: u64,
     next_rule_id: u64,
     next_prior_id: u64,
@@ -391,6 +483,100 @@ impl KnowledgeBase {
     /// Look up a Rule by its `RuleId`. O(N) over all rules.
     pub fn find_rule_by_id(&self, id: RuleId) -> Option<&Rule> {
         self.rules.values().flatten().find(|r| r.id == id)
+    }
+
+    /// ADJ73: declare a predicate FUNCTIONAL on its last argument — at most one value
+    /// may hold per key (the preceding arguments). E.g. `declare_functional("timing", 1)`
+    /// makes every `timing(_)` derivation conflict (key is empty), so precedence picks one.
+    /// Idempotent. A predicate that is never declared functional stays monotonic.
+    pub fn declare_functional(&mut self, functor: &str, arity: usize) {
+        self.functional_predicates.insert(ClauseIndex {
+            functor: functor.to_string(),
+            arity,
+        });
+    }
+
+    /// ADJ73: is this term's predicate functional on its last argument? (Used by
+    /// [`crate::govern::enumerate_governing`] to decide which answers can conflict.)
+    pub(crate) fn is_functional(&self, term: &Term) -> bool {
+        ClauseIndex::from_term(term)
+            .map(|idx| self.functional_predicates.contains(&idx))
+            .unwrap_or(false)
+    }
+
+    /// ADJ73 PR-B: assert that context `higher` OUTRANKS context `lower` (a grounded
+    /// precedence edge — federal > state, ninth_circuit > district_court). Idempotent; the
+    /// transitive closure is computed on query. Adding a back-edge that creates a cycle is
+    /// *allowed* here (the loader may reject it), but [`Self::context_outranks`] is cycle-safe
+    /// and a mutual outrank degrades to an unresolved conflict rather than a wrong pick.
+    pub fn add_context_outranks(&mut self, higher: impl Into<String>, lower: impl Into<String>) {
+        let edge = (higher.into(), lower.into());
+        if !self.context_order.contains(&edge) {
+            self.context_order.push(edge);
+        }
+    }
+
+    /// ADJ73 PR-B: does context `a` outrank context `b` (directly or transitively)? Cycle-safe
+    /// DFS over the `(higher, lower)` edges. `a == b` is `false` (a context does not outrank
+    /// itself). Returns `false` when there is no directed path `a → … → b`.
+    pub fn context_outranks(&self, a: &str, b: &str) -> bool {
+        if a == b {
+            return false;
+        }
+        let mut stack = vec![a];
+        let mut seen: HashSet<&str> = HashSet::new();
+        while let Some(node) = stack.pop() {
+            if !seen.insert(node) {
+                continue; // already visited — cycle-safe
+            }
+            for (hi, lo) in &self.context_order {
+                if hi == node {
+                    if lo == b {
+                        return true;
+                    }
+                    stack.push(lo);
+                }
+            }
+        }
+        false
+    }
+
+    /// ADJ73 PR-B: `true` iff the declared `context_order` contains a cycle (e.g. `a > b`,
+    /// `b > a`). The surface loader should reject such a rulebook; the resolver itself stays
+    /// safe regardless. Detected as "some node can reach itself".
+    pub fn context_order_has_cycle(&self) -> bool {
+        let nodes: HashSet<&str> = self
+            .context_order
+            .iter()
+            .flat_map(|(h, l)| [h.as_str(), l.as_str()])
+            .collect();
+        nodes.iter().any(|n| self.reaches_self(n))
+    }
+
+    /// Helper: can `start` reach itself via a directed path of length ≥ 1? (`context_outranks`
+    /// short-circuits `a == b` to false, so cycle detection needs this explicit walk.)
+    fn reaches_self(&self, start: &str) -> bool {
+        let mut stack: Vec<&str> = self
+            .context_order
+            .iter()
+            .filter(|(h, _)| h == start)
+            .map(|(_, l)| l.as_str())
+            .collect();
+        let mut seen: HashSet<&str> = HashSet::new();
+        while let Some(node) = stack.pop() {
+            if node == start {
+                return true;
+            }
+            if !seen.insert(node) {
+                continue;
+            }
+            for (hi, lo) in &self.context_order {
+                if hi == node {
+                    stack.push(lo);
+                }
+            }
+        }
+        false
     }
 
     /// Walk every Fact and every Rule once; return `true` iff every

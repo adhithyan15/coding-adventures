@@ -183,6 +183,7 @@ fn encode_profile(p: &BackendProfile, w: &mut Writer<'_>) {
     w.u32(p.supported_ops);
     w.u8(p.supported_dtypes);
     w.u32(p.gflops_f32);
+    w.u32(p.gflops_f64);
     w.u32(p.gflops_u8);
     w.u32(p.gflops_i32);
     w.u32(p.host_to_device_bw);
@@ -201,6 +202,7 @@ fn decode_profile(r: &mut Reader<'_>) -> Result<BackendProfile, WireError> {
         supported_ops: r.u32()?,
         supported_dtypes: r.u8()?,
         gflops_f32: r.u32()?,
+        gflops_f64: r.u32()?,
         gflops_u8: r.u32()?,
         gflops_i32: r.u32()?,
         host_to_device_bw: r.u32()?,
