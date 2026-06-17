@@ -62,26 +62,38 @@ host↔device-transfer cost model. CPU is the always-available fallback. So a la
 small one stays on the CPU — with **no language-level GPU code and no "use GPU"
 keyword**.
 
-```rust
-use coding_adventures_array_runtime::{Kernel, BinOp, plan_backend};
+`plan_backend` takes the element `DType`, because the dtype affects *placement*,
+not just the math: a backend with no `f64` kernel (the GPU profile advertises
+`gflops_f64 = 0`) costs an `f64` op as ∞, so `f64` work stays on the CPU even when
+the same `f32` op would be shipped to the accelerator.
 
-// A big matmul is worth shipping to an accelerator…
-assert_eq!(plan_backend(Kernel::MatMul, &[256, 256], &[256, 256], true).unwrap(), "gpu");
-// …a tiny elementwise op is not.
-assert_eq!(plan_backend(Kernel::Elementwise(BinOp::Add), &[2, 2], &[2, 2], true).unwrap(), "cpu");
+```rust
+use coding_adventures_array_runtime::{Kernel, BinOp, DType, plan_backend};
+
+// A big f32 matmul is worth shipping to an accelerator…
+assert_eq!(plan_backend(Kernel::MatMul, DType::F32, &[256, 256], &[256, 256], true).unwrap(), "gpu");
+// …a tiny elementwise op is not…
+assert_eq!(plan_backend(Kernel::Elementwise(BinOp::Add), DType::F32, &[2, 2], &[2, 2], true).unwrap(), "cpu");
+// …and the same big matmul in f64 stays on the CPU (the GPU has no f64 kernel).
+assert_eq!(plan_backend(Kernel::MatMul, DType::F64, &[256, 256], &[256, 256], true).unwrap(), "cpu");
 ```
 
-### 4. End-to-end execution (`exec.rs`, MA-2)
+### 4. End-to-end execution (`exec.rs`, MA-2 + MXF-3)
 
 `execute()` doesn't just *plan* the graph — it **runs** it through
 [`matrix-cpu`](../matrix-cpu)'s executor, returning real numeric results from the
-same pipeline a GPU would use. It bridges two boundaries: precision (`f64` ↔
-`f32`, since `matrix-ir` has no `f64` dtype yet) and memory order (column-major ↔
-the executor's row-major — elementwise passes through, `matmul` transposes at the
-edges).
+same pipeline a GPU would use. It bridges two boundaries: **precision** and
+**memory order** (column-major ↔ the executor's row-major — elementwise passes
+through, `matmul` transposes at the edges).
+
+As of **MX12 / MXF-3**, `matrix-ir` has a `DType::F64`, so `execute()` lowers
+`f64` arrays to an **`F64`** graph and crosses the boundary as **8-byte** doubles
+— **no `f64 → f32 → f64` round-trip**. The result is therefore **bit-exact** with
+the `ops` reference path, even on values `f32` cannot represent (e.g. `1 + 2^-40`,
+which the old `f32` path collapsed to `1.0`).
 
 ```rust
-use coding_adventures_array_runtime::{Array, Kernel, BinOp, execute};
+use coding_adventures_array_runtime::{Array, Kernel, execute, execute_sum, ops};
 
 let a = Array::from_rows(vec![vec![1.0, 2.0], vec![3.0, 4.0]]).unwrap();
 let b = Array::from_rows(vec![vec![5.0, 6.0], vec![7.0, 8.0]]).unwrap();
@@ -89,6 +101,18 @@ let b = Array::from_rows(vec![vec![5.0, 6.0], vec![7.0, 8.0]]).unwrap();
 // Planned and executed on the CPU executor — [[19,22],[43,50]].
 let c = execute(Kernel::MatMul, &a, &b).unwrap();
 assert_eq!(c.get(0, 0), Some(19.0));
+
+// Full f64 precision: a value f32 can't hold survives the executor round-trip,
+// so the executed result matches the reference path bit-for-bit.
+let x = 1.0 + 2f64.powi(-40); // distinct from 1.0 in f64, == 1.0 as f32
+let p = Array::from_vec(vec![x]);
+let one = Array::from_vec(vec![1.0]);
+let executed = execute(Kernel::Elementwise(coding_adventures_array_runtime::BinOp::Sub), &p, &one).unwrap();
+assert_eq!(executed.data()[0].to_bits(), ops::sub(&p, &one).unwrap().data()[0].to_bits());
+
+// `execute_sum` runs an f64 whole-array reduction on the same path.
+let total = execute_sum(&Array::from_vec(vec![1.0, 2.0, 3.0])).unwrap();
+assert_eq!(total.data()[0], 6.0);
 ```
 
 ## Status
@@ -96,11 +120,17 @@ assert_eq!(c.get(0, 0), Some(19.0));
 - **MA-1 (merged):** the value model, the CPU reference ops (exact `f64` results),
   and the full `matrix-ir` lowering + cost-planner integration — the backend
   choice is observable and tested.
-- **MA-2 (this release):** `execute()` plans **and runs** the lowered graph on the
-  CPU executor for elementwise + `matmul`, cross-checked against the reference
-  path. The same path runs on a GPU executor the moment one is registered.
-- **Next:** executing `transpose`/reductions, scalar-broadcast execution, and
-  registering real CUDA/Metal executor crates.
+- **MA-2 (merged):** `execute()` plans **and runs** the lowered graph on the CPU
+  executor for elementwise + `matmul`, cross-checked against the reference path.
+  The same path runs on a GPU executor the moment one is registered.
+- **MXF-3 (this release):** the `f64` path. `execute()` lowers `f64` arrays to an
+  `F64` graph and uses an 8-byte codec — no `f32` round-trip — so the executed
+  result is **bit-exact** with the reference path. `execute_sum()` adds an `f64`
+  whole-array reduction on the same path. `plan_backend`/`build_graph` now take an
+  explicit `DType` (breaking signature change for `plan_backend`).
+- **Next (MXF-4):** R's `s-runtime` adopts this `f64` path for `%*%` and the
+  matrix ops, replacing its hand-written loops; then executing scalar-broadcast /
+  `transpose`, and registering real CUDA/Metal executor crates.
 
 ## Where it sits in the stack
 

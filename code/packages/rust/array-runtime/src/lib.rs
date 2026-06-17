@@ -20,11 +20,16 @@
 //!    transfer cost model. The placement is observable via
 //!    [`accel::plan_backend`], so the dispatch decision is tested.
 //!
-//! 3. **[`exec`]** — end-to-end execution (MA-2). [`execute`] plans the lowered
-//!    graph and **runs it** through `matrix-cpu`'s executor, returning real
-//!    results from the same pipeline a GPU would use. The reference path in
-//!    [`ops`] remains the exact-`f64` answer (`matrix-ir` has no `f64` dtype
-//!    yet); executed results match it to `f32` precision.
+//! 3. **[`exec`]** — end-to-end execution (MA-2, MXF-3). [`execute`] plans the
+//!    lowered graph and **runs it** through `matrix-cpu`'s executor, returning
+//!    real results from the same pipeline a GPU would use. As of MX12 / MXF-3,
+//!    `matrix-ir` has a `DType::F64`, so `execute` lowers `f64` arrays to an
+//!    **`F64`** graph and crosses the boundary as **8-byte** doubles — no `f32`
+//!    round-trip. Its result is therefore **bit-exact** with the [`ops`]
+//!    reference path, even on values `f32` cannot represent. ([`execute_sum`]
+//!    adds an `f64` whole-array reduction on the same path; the legacy `f32`
+//!    lowering is still reachable for `f32` callers and agrees only to `f32`
+//!    precision, by construction.)
 //!
 //! ```
 //! use coding_adventures_array_runtime::{Array, ops, execute, Kernel, BinOp};
@@ -45,6 +50,7 @@ pub mod ops;
 pub mod value;
 
 pub use accel::{plan_backend, Kernel};
-pub use exec::execute;
+pub use exec::{execute, execute_sum};
+pub use matrix_ir::DType;
 pub use ops::BinOp;
 pub use value::Array;
