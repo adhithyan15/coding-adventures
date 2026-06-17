@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.144.0] - 2026-06-16
+
+### Changed (CLOC12.161 — ADVANCED now optimizes instead of being a no-op)
+
+`--compilation_level ADVANCED` was a **literal no-op**: it returned the source
+verbatim (`source.to_string()`), so ADVANCED users got no optimization at all.
+ADVANCED now runs the **same typed optimization pipeline as SIMPLE**
+(`constant-fold → fold-control-flow → dce → inline → remove-unused-vars →
+treeshake → rename`). ADVANCED is specified to be *at least* as aggressive as
+SIMPLE, so reusing the SIMPLE pipeline is a correct lower bound. Advanced-only
+passes (aggressive property/global renaming, cross-module tree-shaking) will
+layer on here as they are implemented.
+
+```js
+var dead = 1 + 2; function compute(longName) { return longName + 1; } report(compute(7));
+//  --compilation_level ADVANCED  ⇒  function compute(a){return a + 1};report(compute(7));
+```
+
+- The `Advanced` arm now shares the `Simple` match arm (the same
+  parse→bridge→pipeline→emit path, degrade-safe to whitespace_only).
+- `Bundle` / `TranspileOnly` remain identity (module bundling and language
+  down-levelling are orthogonal and land separately).
+- The `compilation_level` correlation-vector contribution for ADVANCED is now
+  `advanced_v1` (same shape as `simple_v2` — level, bridge_status, passes,
+  byte lengths) instead of the former `identity` tag.
+
+### Verified
+- New `tests/diff/advanced-optimizes/` fixture + `tests/diff_advanced_optimizes.rs`.
+- New unit tests `advanced_optimizes_like_simple` (ADVANCED is no longer
+  identity) and `advanced_matches_simple_output` (ADVANCED ≡ SIMPLE today).
+
 ## [0.143.0] - 2026-06-16
 
 ### Added (CLOC12.160 — SIMPLE pipeline gains `rename`)
