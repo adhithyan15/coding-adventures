@@ -125,7 +125,8 @@ kb.add_fact(
 // a federal rule now governs a conflicting state rule even at a lower tier; the edge is auditable.
 ```
 
-`context_edges()` unions the explicit and grounded edges, so cycle detection spans both sources.
+`context_adjacency()` unions the explicit and grounded edges into one directed graph, so the
+cycle check (a single Kahn pass) and `context_outranks` (a cycle-safe DFS) span both sources.
 The grounded `context-precedence` *rulebook* (a `.adj` library of such edges, each byte-quoting
 its charter) + a worked legal example through the CLI `governing` section land in PR-B-3
 (`code/specs/ADJ73-defeasible-rule-precedence.md` §2.3, §7).

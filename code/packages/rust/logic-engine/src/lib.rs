@@ -413,7 +413,7 @@ pub struct KnowledgeBase {
     /// specialist > general), declared via [`Self::add_context_outranks`] (the bare
     /// `context_order { a > b }` surface form). These edges carry NO provenance. The GROUNDED
     /// half — edges that DO carry a byte-quote (the Supremacy Clause, etc.) — lives as ordinary
-    /// `outranks_context(higher, lower)` facts in the fact store; [`Self::context_edges`] unions
+    /// `outranks_context(higher, lower)` facts in the fact store; [`Self::context_adjacency`] unions
     /// the two so both feed [`crate::govern::enumerate_governing`], which consults the order
     /// BEFORE the priority tier (lex superior). Transitive reach is computed cycle-safely.
     context_order: Vec<(String, String)>,
@@ -532,44 +532,49 @@ impl KnowledgeBase {
     ///     cited clause, riding on the edge itself rather than asserted bare in host code.
     ///
     /// Both args of the grounding fact must be atoms; a fact with a variable or nested compound arg
-    /// is not a ground edge and is ignored here (it stays a normal queryable fact). Borrows from
-    /// `&self`, so the returned `&str`s live as long as the borrow.
-    fn context_edges(&self) -> Vec<(&str, &str)> {
-        let mut edges: Vec<(&str, &str)> = self
-            .context_order
-            .iter()
-            .map(|(h, l)| (h.as_str(), l.as_str()))
-            .collect();
+    /// is not a ground edge and is ignored here (it stays a normal queryable fact). Returns the
+    /// edges as a directed ADJACENCY MAP `higher → [lowers]` so a graph walk does a single O(1)
+    /// neighbour lookup per node instead of re-scanning the whole edge list (the context order is
+    /// meant to scale to large rule corpora — e.g. a jurisdiction graph over the US Code — so the
+    /// walks below stay O(V+E), not O(V·E)). Borrows from `&self`, so the `&str`s live as long as
+    /// the borrow.
+    fn context_adjacency(&self) -> HashMap<&str, Vec<&str>> {
+        let mut adj: HashMap<&str, Vec<&str>> = HashMap::new();
+        // 1. Explicit edges (the bare `context_order { a > b }` surface form).
+        for (hi, lo) in &self.context_order {
+            adj.entry(hi.as_str()).or_default().push(lo.as_str());
+        }
+        // 2. Grounded edges — any ground `outranks_context(higher, lower)` fact (both args atoms).
         for fact in self.facts.values().flatten() {
             if let Term::Compound { functor, args } = &fact.term {
                 if functor == "outranks_context" && args.len() == 2 {
                     if let (Term::Atom(hi), Term::Atom(lo)) = (&args[0], &args[1]) {
-                        edges.push((hi.as_str(), lo.as_str()));
+                        adj.entry(hi.as_str()).or_default().push(lo.as_str());
                     }
                 }
             }
         }
-        edges
+        adj
     }
 
     /// ADJ73 PR-B: does context `a` outrank context `b` (directly or transitively)? Cycle-safe
-    /// DFS over the effective [`Self::context_edges`] (explicit + grounded-fact). `a == b` is
-    /// `false` (a context does not outrank itself). Returns `false` when there is no directed path
-    /// `a → … → b`.
+    /// DFS over the effective context adjacency (explicit + grounded-fact edges, see
+    /// [`Self::context_adjacency`]). `a == b` is `false` (a context does not outrank itself).
+    /// Returns `false` when there is no directed path `a → … → b`.
     pub fn context_outranks(&self, a: &str, b: &str) -> bool {
         if a == b {
             return false;
         }
-        let edges = self.context_edges();
+        let adj = self.context_adjacency();
         let mut stack = vec![a];
         let mut seen: HashSet<&str> = HashSet::new();
         while let Some(node) = stack.pop() {
             if !seen.insert(node) {
                 continue; // already visited — cycle-safe
             }
-            for (hi, lo) in &edges {
-                if *hi == node {
-                    if *lo == b {
+            if let Some(neighbours) = adj.get(node) {
+                for &lo in neighbours {
+                    if lo == b {
                         return true;
                     }
                     stack.push(lo);
@@ -580,40 +585,42 @@ impl KnowledgeBase {
     }
 
     /// ADJ73 PR-B: `true` iff the effective context order (explicit + grounded-fact edges, see
-    /// [`Self::context_edges`]) contains a cycle (e.g. `a > b`, `b > a`). The surface/loader should
-    /// reject such a rulebook; the resolver itself stays safe regardless. Detected as "some node can
-    /// reach itself". Catches a cycle formed *across* the two edge sources too (e.g. an explicit
-    /// `a > b` plus a grounded `outranks_context(b, a)` fact).
+    /// [`Self::context_adjacency`]) contains a cycle (e.g. `a > b`, `b > a`, or a self-loop). The
+    /// surface/loader should reject such a rulebook; the resolver itself stays safe regardless.
+    /// Catches a cycle formed *across* the two edge sources too (an explicit `a > b` plus a
+    /// grounded `outranks_context(b, a)` fact). Single Kahn topological-sort pass: a directed
+    /// acyclic graph fully drains to zero in-degree, so any node left unremoved lies on a cycle.
     pub fn context_order_has_cycle(&self) -> bool {
-        let edges = self.context_edges();
-        let nodes: HashSet<&str> = edges.iter().flat_map(|(h, l)| [*h, *l]).collect();
-        nodes.iter().any(|n| self.reaches_self(n, &edges))
-    }
-
-    /// Helper: can `start` reach itself via a directed path of length ≥ 1 over `edges`?
-    /// (`context_outranks` short-circuits `a == b` to false, so cycle detection needs this explicit
-    /// walk.) Takes the precomputed edge set so the caller builds the union once.
-    fn reaches_self(&self, start: &str, edges: &[(&str, &str)]) -> bool {
-        let mut stack: Vec<&str> = edges
+        let adj = self.context_adjacency();
+        // In-degree of every node that appears as a head or a tail.
+        let mut in_degree: HashMap<&str, usize> = HashMap::new();
+        for (&hi, lowers) in &adj {
+            in_degree.entry(hi).or_insert(0);
+            for &lo in lowers {
+                *in_degree.entry(lo).or_insert(0) += 1;
+            }
+        }
+        // Kahn: repeatedly retire a zero-in-degree node, decrementing its successors.
+        let mut ready: Vec<&str> = in_degree
             .iter()
-            .filter(|(h, _)| *h == start)
-            .map(|(_, l)| *l)
+            .filter(|&(_, &d)| d == 0)
+            .map(|(&n, _)| n)
             .collect();
-        let mut seen: HashSet<&str> = HashSet::new();
-        while let Some(node) = stack.pop() {
-            if node == start {
-                return true;
-            }
-            if !seen.insert(node) {
-                continue;
-            }
-            for (hi, lo) in edges {
-                if *hi == node {
-                    stack.push(lo);
+        let mut retired = 0usize;
+        while let Some(node) = ready.pop() {
+            retired += 1;
+            if let Some(neighbours) = adj.get(node) {
+                for &lo in neighbours {
+                    let d = in_degree.get_mut(lo).expect("successor was counted above");
+                    *d -= 1;
+                    if *d == 0 {
+                        ready.push(lo);
+                    }
                 }
             }
         }
-        false
+        // Anything not retired sits on (or downstream of) a cycle.
+        retired != in_degree.len()
     }
 
     /// Walk every Fact and every Rule once; return `true` iff every

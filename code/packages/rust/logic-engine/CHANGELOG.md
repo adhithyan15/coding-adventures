@@ -14,10 +14,12 @@ All notable changes to this project will be documented in this file.
   *reason* federal outranks state (the Supremacy Clause) rides on the edge itself rather than
   being asserted bare in host code. A `relate outranks_context(federal, state) source "…" trust
   authoritative` clause in adj-lang already lowers to such a fact — no surface change needed.
-- **`KnowledgeBase::context_edges()`** (private) — the EFFECTIVE edge set: the union of explicit
-  `add_context_outranks` edges and grounded-fact edges. `context_outranks`, `context_order_has_cycle`,
-  and the internal `reaches_self` walk this union, so a cycle formed *across* the two sources
-  (explicit `a > b` + grounded `outranks_context(b, a)`) is still detected.
+- **`KnowledgeBase::context_adjacency()`** (private) — the EFFECTIVE order as a directed
+  adjacency map `higher → [lowers]`, unioning explicit `add_context_outranks` edges and
+  grounded-fact edges. `context_outranks` is a cycle-safe DFS over it (O(V+E)); `context_order_has_cycle`
+  is a single Kahn topological-sort pass (O(V+E)) — both detect a cycle formed *across* the two
+  sources (explicit `a > b` + grounded `outranks_context(b, a)`). The per-node adjacency lookup
+  replaces the prior full-edge-list rescan so the order scales to large rule corpora.
 
 ### Unchanged (back-compat)
 
