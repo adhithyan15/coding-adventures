@@ -441,6 +441,31 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Oct — bitwise NOT (`~`) masks to the u8 width (LANG-FULL O2). Oct's only integer
+    // type is `u8` (the 8008 byte), so `~0` flips 8 bits → `255` (`-1 & 0xFF`), NOT the
+    // i64 all-ones. `oct-iir-compiler` 0.7.0 emits the `not` op with a `u8` type_hint;
+    // every backend masks it (the E2 value-mask), the same path Nib N3-`~` proved. The
+    // `out` prints the value, so stdout is the direct observable proof. (An unmasked
+    // `~0` would print `-1`, not `255`.)
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { out(1, ~0); }",
+        expect: Expect::Stdout("255"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Oct — u8 arithmetic WRAPS modulo 256 (LANG-FULL O2). The grammar specifies Oct
+    // addition wraps mod-2⁸; `200 + 100 = 300` wraps to `44`. Until O2 the result rode an
+    // unmasked i64 slot and printed `300`. Now the `add` carries the `u8` hint and every
+    // backend masks it. Distinct from the existing `100 + 100 = 200` Oct program, which
+    // does NOT overflow — this one proves the wrap actually fires.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { out(1, 200 + 100); }",
+        expect: Expect::Stdout("44"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
         lang: Language::Algol60,

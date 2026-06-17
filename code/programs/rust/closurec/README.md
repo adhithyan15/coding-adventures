@@ -125,7 +125,8 @@ body fills in.**
 |-------|--------------|
 | `WHITESPACE_ONLY` | Strips comments and inter-token whitespace only. Token-level; never parses to a typed AST. |
 | `SIMPLE` | Runs the typed-AST optimization pipeline — parse → bridge → passes → emit. Today the pipeline is `constant-fold → fold-control-flow → dce → inline → remove-unused-vars → treeshake → rename` (e.g. `1 + 2` ⇒ `3`; `if (2 > 3) {a} else {b}` ⇒ `{b}`; code after a `return` is dropped; unused top-level `var`s with pure initializers and unused top-level `function`s are deleted; leaf-function parameters are shortened to `a`, `b`, …); more passes land one PR at a time. Falls back to `WHITESPACE_ONLY` if the source uses a not-yet-supported construct, so it never errors on valid input. |
-| `ADVANCED` / `BUNDLE` / `TRANSPILE_ONLY` | Identity passthrough for now — the typed passes specific to these levels (tree-shaking, property renaming, etc.) land in follow-up work. |
+| `ADVANCED` | Runs the same typed optimization pipeline as `SIMPLE` (it is specified to be at least as aggressive). Advanced-only passes — aggressive property/global renaming, cross-module tree-shaking — layer on as they are implemented. |
+| `BUNDLE` / `TRANSPILE_ONLY` | Identity passthrough for now — module bundling and language down-levelling are orthogonal to the optimization pipeline and land separately. |
 
 The SIMPLE pipeline:
 

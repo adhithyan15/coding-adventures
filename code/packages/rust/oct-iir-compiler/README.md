@@ -43,6 +43,13 @@ native executable
 | Local variables                   |                                           |
 | `out(port, value)` → stdout       |                                           |
 
+**u8 width & wrap** (LANG-FULL O2): Oct's only integer type is `u8` (the 8008 byte),
+and arithmetic wraps modulo 256, so arithmetic/bitwise ops and unary `~` carry the
+`u8` type_hint — every backend masks the result. `out(1, 200 + 100)` prints `44`
+(not 300) and `out(1, ~0)` prints `255` (not -1). Comparisons stay `i64` (their 0/1
+`bool` result is never masked). Because Oct has a single integer width, every integer
+op is u8 by construction — there is no per-expression type to track.
+
 `out(port, value)` (LANG-FULL O-OUT) lowers to `call_builtin "print_i64"` — all 24
 8008 output ports collapse to stdout — giving Oct its first observable output (its
 `main` is void, so the exit code is always 0).  The remaining intrinsics (`in`,

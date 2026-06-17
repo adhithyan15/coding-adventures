@@ -102,7 +102,11 @@ bodyFlick.contentX`) and the row-number gutter (its own non-interactive
 body.contentY`). Tapping a cell calls `model.selectInf(row, col)` (pulling its
 source into the formula bar); pressing Enter calls `model.commitInf(text)`,
 which writes through to the engine, recomputes every dependent, regrows the
-extent, and bumps `model.revision` so the visible rows re-fetch.
+extent, and bumps `model.revision` so the visible rows re-fetch. The **"Fill ↓
+10"** button next to the formula bar calls `model.fill(src, dstStart, dstEnd)`
+(over the C ABI's `sc_fill`) to replicate the selected cell into the 10 rows
+below it — the engine shifts each copy's relative references (`=A1`→`=A2`, …),
+pins absolute (`$`) refs, and carries the format.
 
 The model seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) on top of the
 budget so there's something to scroll to; the extent (`totalRows`/`totalCols`)

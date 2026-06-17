@@ -93,6 +93,19 @@ Item {
                     onAccepted: if (doc) doc.commitInf(text)
                 }
             }
+            // Drag-fill: replicate the selected cell into the 10 rows below it.
+            // The engine shifts each copy's relative refs, pins absolute ($) refs,
+            // and carries the format — one doc.fill call.
+            Button {
+                text: "Fill ↓ 10"
+                ToolTip.visible: hovered
+                ToolTip.text: "Replicate the selected cell into the 10 rows below it"
+                onClicked: if (doc) {
+                    var first = doc.columnLetters(doc.infCol) + (doc.infRow + 1);
+                    var last = doc.columnLetters(doc.infCol) + (doc.infRow + 10);
+                    doc.fill(doc.infAddress, first, last);
+                }
+            }
         }
 
         // ── Column-letter header (frozen vertically, scrolls horizontally) ──

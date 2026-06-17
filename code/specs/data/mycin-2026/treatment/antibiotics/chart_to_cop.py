@@ -46,6 +46,7 @@ import decide as decide_mod  # noqa: E402  (find_cli)
 import derive_regimen as reg  # noqa: E402  (grounded formulary: SCENARIOS, DRUGS, candidates)
 import native_setcover as nsc  # noqa: E402  (the COP emitter/solver)
 import step_therapy as st  # noqa: E402  (ADJ-native: derive_blocked via the engine, NAF)
+import timing as timing_mod  # noqa: E402  (ADJ-native: derive_timing via the precedence engine)
 
 
 # --------------------------------------------------------------------------
@@ -295,39 +296,49 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
     return cop
 
 
-def decide_timing(disease: str, culture_status: str, clinical_status: str) -> dict:
-    """CC-5 (§4): model the empiric-now vs await-culture decision as a costed binary, with
-    the grounded time-criticality threshold as the deciding factor. Returns the decision +
-    its delay_risk + the rationale/threshold provenance — a reusable function of (disease
-    acuity, culture status, clinical stability), not meningitis-specific.
+# A decision → its human-readable rationale. The DECISION is engine-derived (timing.adj
+# precedence ladder); this is presentation only, keyed by what governed. treat_now's rationale
+# depends on the governing tier (authoritative time-critical/unstable vs the conservative
+# default), so it is keyed by (decision, delay_risk).
+_TIMING_RATIONALE = {
+    ("targeted_culture_directed", "none"): "culture resulted → narrow to the isolate's susceptibilities",
+    ("treat_now_empiric", "high"): ("time-critical (or unstable): start empiric antibiotics now; "
+                                    "awaiting culture would save cost/side-effects but the delay "
+                                    "raises mortality above the grounded threshold"),
+    ("await_culture", "low"): ("stable + non-time-critical + culture pending: await the result "
+                               "and give narrow targeted therapy — cheaper, fewer side effects"),
+    ("treat_now_empiric", "moderate"): "insufficient evidence the delay is safe → treat empirically (conservative)",
+}
 
-      culture resulted        → targeted (culture-directed): the wait question is moot.
-      time-critical disease   → treat_now_empiric (delay_risk high): the grounded threshold
-        OR critical/unstable     says delay raises mortality; empiric coverage now dominates
-                                 any cost/side-effect saving from waiting.
-      stable + routine acuity → await_culture (delay_risk low): narrow, cheaper, fewer side
-        + culture pending        effects — defensible only when delay is safe.
-      otherwise               → treat_now_empiric (delay_risk moderate): the conservative
-                                 default (don't gamble on a benign course)."""
+
+def decide_timing(cli: Path, disease: str, culture_status: str, clinical_status: str) -> dict:
+    """CC-5 (§4) — ADJ-NATIVE: the empiric-now vs await-culture DECISION is now derived by the
+    engine from the `timing.adj` precedence ladder (`timing.derive_timing`), not a Python
+    if/elif. This wrapper supplies the disease's acuity (from the flagged `_TIME_CRITICALITY`
+    input table) and dresses the engine verdict with the threshold provenance + a
+    human-readable rationale (presentation). The reasoning lives in the language.
+
+      culture resulted        → targeted (mandatory tier; the wait question is moot)
+      time-critical / unstable→ treat_now_empiric (authoritative tier; delay_risk high)
+      stable+routine+pending  → await_culture (specific tier; delay_risk low)
+      otherwise               → treat_now_empiric (default tier; delay_risk moderate)"""
     tc = _TIME_CRITICALITY.get(disease, {"acuity": "routine"})
     acuity = tc.get("acuity", "routine")
-    if culture_status == "resulted":
-        return {"decision": "targeted_culture_directed", "delay_risk": "none",
-                "rationale": "culture resulted → narrow to the isolate's susceptibilities",
-                "disease_acuity": acuity}
-    base = {"disease_acuity": acuity, "culture_status": culture_status or "unknown",
-            "threshold": {k: tc[k] for k in ("treat_within_min", "source", "trust") if k in tc}}
-    if acuity == "time_critical" or clinical_status in ("critical", "unstable"):
-        return {**base, "decision": "treat_now_empiric", "delay_risk": "high",
-                "rationale": ("time-critical (or unstable): start empiric antibiotics now; "
-                              "awaiting culture would save cost/side-effects but the delay "
-                              "raises mortality above the grounded threshold")}
-    if clinical_status == "stable" and acuity == "routine" and culture_status == "pending":
-        return {**base, "decision": "await_culture", "delay_risk": "low",
-                "rationale": ("stable + non-time-critical + culture pending: await the result "
-                              "and give narrow targeted therapy — cheaper, fewer side effects")}
-    return {**base, "decision": "treat_now_empiric", "delay_risk": "moderate",
-            "rationale": "insufficient evidence the delay is safe → treat empirically (conservative)"}
+    res = timing_mod.derive_timing(cli, culture_status, clinical_status, acuity)
+    decision, delay_risk = res["decision"], res["delay_risk"]
+    out = {
+        "decision": decision,
+        "delay_risk": delay_risk,
+        "standing": res.get("standing"),
+        "disease_acuity": acuity,
+        "culture_status": culture_status or "unknown",
+        "rationale": _TIMING_RATIONALE.get((decision, delay_risk), ""),
+    }
+    # Carry the grounded (flagged) door-to-antibiotic threshold when one is recorded.
+    threshold = {k: tc[k] for k in ("treat_within_min", "source", "trust") if k in tc}
+    if threshold:
+        out["threshold"] = threshold
+    return out
 
 
 def dose_infeasible(cli: Path, drugs: list[str], risks: set[str], weight: float) -> dict:
@@ -378,8 +389,9 @@ def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> di
     # `regimen` is the CLINICALLY optimal one — what the physician should give, ignoring
     # the payer. (CC-4 objective blend applies.)
     res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, cop.weights, forced_zero=forced_zero)
-    # CC-5: the empiric-now vs await-culture decision, from the chart's timing inputs.
-    timing = decide_timing(disease, cop.culture_status, cop.clinical_status)
+    # CC-5: the empiric-now vs await-culture decision — DERIVED BY THE ENGINE from the timing
+    # precedence ladder (timing.adj), keyed by the chart's culture/clinical status + acuity.
+    timing = decide_timing(cli, disease, cop.culture_status, cop.clinical_status)
     # CC-6: when the chart carries payer step-therapy rules, ALSO solve the reimbursement-
     # feasible regimen (the clinically-best drugs whose step-therapy prerequisite is unmet
     # are excluded) and surface BOTH so the tradeoff — and any medical-necessity appeal — is

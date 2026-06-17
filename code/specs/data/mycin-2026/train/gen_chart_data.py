@@ -66,6 +66,8 @@ CHART_PROFILES: dict[str, list[tuple[str, list[str]]]] = {
     "allergy": [
         ("penicillin", ["anaphylaxis to penicillin", "a severe penicillin allergy"]),
         ("cephalosporin", ["a documented cephalosporin allergy", "hives with cephalosporins"]),
+        ("betalactam", ["a severe reaction to all beta-lactams",
+                        "an unspecified beta-lactam allergy"]),
     ],
     "renal_status": [
         ("renal_severe", ["an eGFR of 12", "on hemodialysis", "a creatinine of 5.2"]),
@@ -84,6 +86,35 @@ CHART_PROFILES: dict[str, list[tuple[str, list[str]]]] = {
     "culture_resistance": [
         ("ceftriaxone:n_meningitidis", ["CSF isolate resistant to ceftriaxone",
                                         "the meningococcus is ceftriaxone-resistant on sensitivities"]),
+    ],
+    # --- CC-5 timing inputs (wait-vs-treat-now): culture + clinical status. ---
+    "culture_status": [
+        ("pending", ["cultures are still pending", "blood cultures sent, results not yet back",
+                     "awaiting culture and sensitivities"]),
+        ("resulted", ["the culture has resulted", "final culture and sensitivities are back"]),
+    ],
+    "clinical_status": [
+        ("critical", ["in septic shock on vasopressors", "critically ill and intubated in the ICU"]),
+        ("unstable", ["hypotensive and tachycardic", "clinically unstable with deteriorating vitals"]),
+        ("stable", ["hemodynamically stable", "vital signs are stable and the patient looks well"]),
+    ],
+    # --- CC-4 objective priority (cost vs side-effect blend). ---
+    "objective_priority": [
+        ("low_toxicity", ["prioritize minimizing side effects given the patient's frailty",
+                          "favor the least toxic regimen"]),
+        ("balanced", ["balance cost against side-effect burden"]),
+        ("cost", ["choose the most cost-effective regimen"]),
+    ],
+    # --- CC-6 insurance step-therapy: a payer prerequisite + drugs already tried. ---
+    # value is "restricted:prerequisite" (the COP partitions on the colon); the span is the
+    # natural phrasing of the policy.
+    "step_therapy": [
+        ("cefepime:meropenem", ["the payer requires a meropenem trial before approving cefepime",
+                                "step therapy: cefepime is restricted until meropenem has been tried"]),
+    ],
+    "prior_failed": [
+        ("ampicillin", ["already failed a course of ampicillin", "ampicillin was tried and failed"]),
+        ("meropenem", ["a prior meropenem failure"]),
     ],
 }
 

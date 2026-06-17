@@ -145,6 +145,15 @@ narrow op `long` while the consts/return were `int`, producing unverifiable byte
 keeps genuine `i64` operands with no concretize-to-i32, so its i64 model stands; the JVM is
 the odd one out because of the 32-bit-simulator concretization.)*
 
+**Narrow mask on the `long` model** (LANG-FULL O2, v0.14.0): a *printing* program (Oct's
+`out`, BASIC's `PRINT`) is **not** concretized — it keeps the `i64`/`long` model so its value
+can reach `print_i64`. Oct's only integer type is `u8`, so a printing Oct program emits a
+narrow-hinted op (`200u8 + 100u8`, `~0u8`) over **`long`** operands. There the int op + int
+mask would be unverifiable, so `narrow_op_over_long` keeps the op on the long model
+(`ladd`/`lxor`/…) and the mask becomes `i2l; land` (the masks are positive, so widening
+zero-extends). It keys off the actual operand types, so concretized int-model programs are
+untouched. This is what makes Oct `200u8+100u8=44` / `~0u8=255` run on real `java`.
+
 ## Closures (LANG36)
 
 The JVM backend supports **first-class closures** via a `long[]`-based

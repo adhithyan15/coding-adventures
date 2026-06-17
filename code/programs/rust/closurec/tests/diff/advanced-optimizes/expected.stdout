@@ -1,0 +1,2 @@
+function compute(a){return a + 1};report(compute(7));
+
