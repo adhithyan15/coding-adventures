@@ -187,16 +187,14 @@ impl WolframSession {
         // is ever built (see the module "Robustness" note and the const docs).
         check_statement_token_counts(src)?;
 
-        // Which lines are display vs `;`-suppressed. We need this *before*
-        // lowering, because the lowering discards the terminator. The parser's
-        // statement_line carries the SEMI/NEWLINE token; rather than re-derive it
-        // we scan the source lines (the lexer drops newlines inside brackets, but
-        // a trailing `;` on a statement is outside brackets by construction).
-        // Simpler and robust: run on the worker thread alongside eval.
-
-        // Guard 3 + Guard (panics): evaluate on a worker thread with a large
-        // bounded stack and catch any unwinding panic. Only the small result
-        // (Vec<Output>) or an error message crosses back.
+        // Guard 3 + Guard (panics): the recursive parser, the lowering, the
+        // ReplaceAll pre-pass, the VM evaluation, and the printer all run on a
+        // worker thread with a large bounded stack — so the bounded-but-still-deep
+        // trees (capped by Guard 2) are built, walked, and dropped clear of the
+        // caller's own (possibly small) stack — and any unwinding panic from the
+        // reused symbolic stack is caught. Only the small result (Vec<Output>) or
+        // an error message crosses back. (Guards 1 and 2 above already ran on the
+        // caller thread; the iterative lexer they use cannot itself overflow.)
         let vm = &mut self.vm;
         let start_index = self.output_index;
         let src_owned = src.to_string();
@@ -233,7 +231,9 @@ impl WolframSession {
 /// Evaluate every statement in `src`, returning the displayed outputs and the new
 /// `Out` counter. Runs on the worker thread.
 fn eval_source(vm: &mut VM, src: &str, start_index: usize) -> Result<(Vec<Output>, usize), String> {
-    let ast = try_parse_wolfram(src).map_err(|e| format_parse_error(src, &e))?;
+    // The parser's error string already carries a user-readable `line:col:
+    // message` position, so we forward it as-is.
+    let ast = try_parse_wolfram(src)?;
     // Pair each lowered statement with whether its source line displays.
     let displays = statement_display_flags(src);
     let statements = lower_program(&ast).map_err(|e| e.to_string())?;
@@ -429,13 +429,6 @@ fn check_statement_token_counts(src: &str) -> Result<(), String> {
         }
     }
     Ok(())
-}
-
-/// Format a parser error string with a source-line caret, like the Maxima facade.
-/// The parser already produces a `line:col: message` string; we keep it as-is —
-/// it is already user-readable and carries the position.
-fn format_parse_error(_src: &str, error: &str) -> String {
-    error.to_string()
 }
 
 /// Evaluate `src` once on a fresh [`WolframSession`] and return its echo.
@@ -646,13 +639,27 @@ mod tests {
     }
 
     #[test]
-    fn session_recovers_after_a_caught_panic() {
-        // Drive a panic from inside the engine if one is reachable; regardless,
-        // the session must remain usable. We use a normal error path here and
-        // assert subsequent calls still work, exercising the recovery wiring.
+    fn session_recovers_after_a_parse_error() {
         let mut s = WolframSession::new();
         let _ = s.feed("1 +\n"); // parse error, not a panic
         assert_eq!(s.feed("3 + 4\n").unwrap(), "Out[1]= 7\n");
+    }
+
+    #[test]
+    fn a_malformed_set_lhs_is_caught_not_aborted() {
+        // `5 = 3` lowers to `Assign(5, 3)`. The reused VM's assign_handler
+        // *panics* when the Set LHS is not a symbol — a malformed-AST surface the
+        // security review flagged. The worker-thread `catch_unwind` must convert
+        // that panic into a clean `Err`, and the session must remain usable after
+        // (the env is rebuilt). This proves a crafted statement cannot abort the
+        // process or wedge the session.
+        let mut s = WolframSession::new();
+        assert!(
+            s.feed("5 = 3\n").is_err(),
+            "a non-symbol Set LHS must return Err, never abort"
+        );
+        // The session survives and works on the next call.
+        assert_eq!(s.feed("2 + 2\n").unwrap(), "Out[1]= 4\n");
     }
 
     #[test]
