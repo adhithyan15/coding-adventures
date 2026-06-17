@@ -125,6 +125,22 @@ final class WindowedSheetModel: ObservableObject {
         revision += 1
     }
 
+    /// Drag-fill: replicate the selected cell into the `rows` rows below it. The
+    /// engine shifts each copy's relative references (`=A1`→`=A2`, …), pins
+    /// absolute (`$`) refs, carries the format, and recomputes every dependent;
+    /// then resize the extent and bump `revision` so the visible rows re-fetch.
+    /// The SwiftUI sibling of the Flutter/Compose/XAML `fillDown` and the Qt
+    /// "Fill ↓ 10" button. (Int is 64-bit here, so `selectedRow + rows` over the
+    /// u32-bounded extent cannot overflow.)
+    func fillDown(_ rows: Int) {
+        let src = address(selectedRow, selectedCol)
+        let first = address(selectedRow + 1, selectedCol)
+        let last = address(selectedRow + rows, selectedCol)
+        session.fill(src, first, last)
+        resize()
+        revision += 1
+    }
+
     /// Write `raw` into an explicit A1 cell and return the cells it dirtied.
     /// (Kept for the headless `WindowedModelTests`.)
     @discardableResult
@@ -184,6 +200,10 @@ struct InfiniteGridView: View {
                 .background(Color(hex: 0x121212))
                 .cornerRadius(3)
                 .onSubmit { model.commitFormula() }
+            // Drag-fill: replicate the selected cell into the 10 rows below it.
+            Button("Fill ↓ 10") { model.fillDown(10) }
+                .font(.system(size: 11, design: .monospaced))
+                .help("Replicate the selected cell into the 10 rows below it")
         }
         .padding(.bottom, 8)
     }
