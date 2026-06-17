@@ -148,6 +148,19 @@ fn f64_mul_is_double_precision() {
     assert_eq!(got, vec![0.1f64 * 3.0, 1e300f64 * 1e-300]); // exact f64 arithmetic
 }
 
+#[test]
+fn f64_div_passes_the_float_only_validator() {
+    // Div is a float-only op: this exercises the validator's float gate, proving
+    // it accepts F64 (not just F32) — the op dispatches and computes in f64.
+    let got = run_binary_f64(
+        |lhs, rhs, output| Op::Div { lhs, rhs, output },
+        &[1.0, 7.0],
+        &[3.0, 2.0],
+    );
+    assert_eq!(got, vec![1.0f64 / 3.0, 7.0f64 / 2.0]); // 0.3333333333333333, 3.5
+    assert_ne!(got[0] as f32 as f64, got[0]); // genuinely f64, not f32-rounded
+}
+
 // ─────────────────── 1. Direct request/response ───────────────────
 
 #[test]
