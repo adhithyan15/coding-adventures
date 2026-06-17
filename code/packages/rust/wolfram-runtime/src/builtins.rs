@@ -133,12 +133,14 @@ fn part_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     let Some(elems) = list_elements(&expr.args[0]) else {
         return unevaluated(expr);
     };
-    let len = elems.len() as i64;
-    // 1-based: index 1..=len from the front, -1..=-len from the back.
-    let idx0 = if i > 0 {
-        i - 1
+    let len = elems.len() as i128;
+    // 1-based: index 1..=len from the front, -1..=-len from the back. Compute in
+    // i128 so a crafted extreme index (e.g. `i64::MIN`) cannot overflow the
+    // subtraction/addition — it just falls outside `[0, len)` and is rejected.
+    let idx0: i128 = if i > 0 {
+        (i as i128) - 1
     } else {
-        len + i // i is negative
+        len + (i as i128) // i is negative
     };
     if idx0 < 0 || idx0 >= len {
         return unevaluated(expr);
@@ -400,6 +402,21 @@ mod tests {
         assert_eq!(
             run("Part", vec![xs.clone(), int(9)]),
             apply(sym("Part"), vec![xs, int(9)])
+        );
+    }
+
+    #[test]
+    fn part_with_extreme_index_does_not_overflow() {
+        // A crafted i64::MIN index must not overflow the `len + i` arithmetic —
+        // it simply falls out of range and stays unevaluated (no panic / wrap).
+        let xs = list(vec![sym("a"), sym("b")]);
+        assert_eq!(
+            run("Part", vec![xs.clone(), int(i64::MIN)]),
+            apply(sym("Part"), vec![xs.clone(), int(i64::MIN)])
+        );
+        assert_eq!(
+            run("Part", vec![xs.clone(), int(i64::MAX)]),
+            apply(sym("Part"), vec![xs, int(i64::MAX)])
         );
     }
 
