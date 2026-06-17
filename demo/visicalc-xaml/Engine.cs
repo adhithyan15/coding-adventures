@@ -61,6 +61,12 @@ internal static class ScNative
     internal static extern void sc_set_format(IntPtr s,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string a1,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string code);
+    // sc_fill(session, src, dst_start, dst_end) → void (drag-fill; three A1 strings).
+    [DllImport("spreadsheet_capi")]
+    internal static extern void sc_fill(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string src,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string dstStart,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string dstEnd);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_used_range(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_column_letters(IntPtr s, uint index);
     [DllImport("spreadsheet_capi")] internal static extern ulong sc_current_revision(IntPtr s);
@@ -118,6 +124,14 @@ public sealed class SpreadsheetSession : IDisposable
     /// "0%"); an empty code clears it. Drives the engine's display path that
     /// <see cref="Window"/> reads through sc_get_display_window.
     public void SetFormat(string a1, string code) => ScNative.sc_set_format(_handle, a1, code);
+
+    /// Drag-fill: replicate the `src` cell across the inclusive A1 rectangle
+    /// `dstStart`..`dstEnd`. Relative references shift per target (`=A1` filled
+    /// one row down becomes `=A2`), absolute (`$`) refs pin, off-grid refs become
+    /// `#REF!`; the source's display format rides along. The engine recomputes
+    /// every dependent. Reaches sc_fill — the same path every other backend drives.
+    public void Fill(string src, string dstStart, string dstEnd) =>
+        ScNative.sc_fill(_handle, src, dstStart, dstEnd);
 
     /// The display string for a cell — what a spreadsheet should show. Parses
     /// the engine's JSON (the fixed shape every backend's engine emits).
@@ -429,6 +443,27 @@ public sealed class InfiniteSheetModel : IDisposable
         _session.SetCell(InfAddress, raw);
         ComputeExtent();
         Formula = _session.GetRaw(InfAddress);
+    }
+
+    /// Drag-fill: replicate the selected cell into the `rows` rows below it. The
+    /// engine shifts each copy's relative references (`=A1`→`=A2`, …), pins
+    /// absolute (`$`) refs, carries the format, and recomputes every dependent.
+    /// Regrows the extent if the fill reached new ground. The .NET sibling of the
+    /// Flutter/Compose `FillDown` and the Qt "Fill ↓ 10" button.
+    public void FillDown(int rows)
+    {
+        string col = _session.ColumnLetters((uint)SelCol);
+        // Widen the row arithmetic to `long` and saturate back into a valid row
+        // before building the A1 strings. SelRow is clamped to [1, TotalRows] but
+        // TotalRows can be up to int.MaxValue, so `SelRow + rows` would otherwise
+        // overflow to a negative row (the same u32-overflow-defeats-cap hazard the
+        // Saturate helper guards) and emit a malformed address. Saturate clamps to
+        // [1, int.MaxValue]; the engine treats any off-grid target as #REF! and
+        // ComputeExtent() below regrows the virtual grid to cover the fill.
+        int first = Saturate((long)SelRow + 1, floor: 1);
+        int last = Saturate((long)SelRow + rows, floor: 1);
+        _session.Fill(InfAddress, $"{col}{first}", $"{col}{last}");
+        ComputeExtent();
     }
 
     public void Dispose() => _session.Dispose();
