@@ -48,6 +48,8 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     private val scGetDisplayWindow = handle("sc_get_display_window", FunctionDescriptor.of(ptr, ptr, i32, i32, i32, i32))
     // sc_set_format(session, a1, code) -> void (empty code clears the format).
     private val scSetFormat = handle("sc_set_format", FunctionDescriptor.ofVoid(ptr, ptr, ptr))
+    // sc_fill(session, src, dst_start, dst_end) -> void (drag-fill; three A1 strings).
+    private val scFill = handle("sc_fill", FunctionDescriptor.ofVoid(ptr, ptr, ptr, ptr))
     private val scUsedRange = handle("sc_used_range", FunctionDescriptor.of(ptr, ptr))
     private val scColumnLetters = handle("sc_column_letters", FunctionDescriptor.of(ptr, ptr, i32))
     private val scCurrentRevision = handle("sc_current_revision", FunctionDescriptor.of(i64, ptr))
@@ -112,6 +114,21 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     /// [window] reads through sc_get_display_window.
     fun setFormat(a1: String, code: String): Unit = Arena.ofConfined().use { a ->
         scSetFormat.invoke(session, a.allocateUtf8String(a1), a.allocateUtf8String(code))
+    }
+
+    /// Drag-fill: replicate the `src` cell across the inclusive A1 rectangle
+    /// `dstStart`..`dstEnd`. Relative references shift per target (`=A1` filled
+    /// one row down becomes `=A2`), absolute (`$`) refs pin, off-grid refs become
+    /// `#REF!`; the source's display format rides along. The engine recomputes
+    /// every dependent. Reaches sc_fill — the same path the web/SwiftUI/Qt/Flutter
+    /// demos drive.
+    fun fill(src: String, dstStart: String, dstEnd: String): Unit = Arena.ofConfined().use { a ->
+        scFill.invoke(
+            session,
+            a.allocateUtf8String(src),
+            a.allocateUtf8String(dstStart),
+            a.allocateUtf8String(dstEnd),
+        )
     }
 
     /// Dense display strings for the inclusive 1-based rectangle, row-major
@@ -354,6 +371,19 @@ class InfiniteSheetModel(
         session.setCell(infAddress(), raw)
         computeExtent()
         formula = session.getRaw(infAddress())
+    }
+
+    /// Drag-fill: replicate the selected cell into the [rows] rows below it. The
+    /// engine shifts each copy's relative references (`=A1`→`=A2`, …), pins
+    /// absolute (`$`) refs, carries the format, and recomputes every dependent.
+    /// Regrows the extent if the fill reached new ground. The Kotlin sibling of
+    /// the Flutter `InfiniteSheetModel.fillDown` and the Qt "Fill ↓ 10" button.
+    fun fillDown(rows: Int) {
+        val col = session.columnLetters(selCol)
+        val first = "$col${selRow + 1}"
+        val last = "$col${selRow + rows}"
+        session.fill(infAddress(), first, last)
+        computeExtent()
     }
 
     override fun close() = session.close()
