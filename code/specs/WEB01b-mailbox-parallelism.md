@@ -163,10 +163,19 @@ connection" un-gates. Read the mailbox write-back path / connection bookkeeping 
    `std::io::Result` (the mailbox stack is `io::Error`-based), `Clone`; mirrors the
    `ShardedWebServer`/`ShardedServer` surface. web-core 0.2.0→0.3.0, conduit
    0.2.0→0.3.0.
-4. **WEB01b-1b — per-connection reorder buffer** for the *pipelined* path: gate a
-   connection to one in-flight request and reassemble the unordered pool's
-   responses into HTTP/1.1 wire order (the pool is `supports_ordered_responses =
-   false`). Still open.
+4. **WEB01b-1b — per-connection reorder buffer** for the *pipelined* path:
+   reassemble the unordered pool's responses into HTTP/1.1 wire order (the pool is
+   `supports_ordered_responses = false`). ✅ done. Implemented as an opt-in
+   `ordered_responses` flag on `EmbeddableTcpServerOptions` (default off → existing
+   consumers byte-identical; `MailboxHttpServer` is the only opt-in): the submitter
+   records each connection's job-ids in submission order and the router buffers a
+   finished response until every earlier one on that connection has been written.
+   No separate in-flight *gate* was needed — the reorder buffer is already bounded
+   by the pool's queue depth (a connection that pipelines past it is shed with a
+   503). Deterministic tests at both layers:
+   `inprocess_mailbox_orders_responses_by_submission_when_enabled`
+   (embeddable-tcp-server) and `mailbox_http_server_preserves_pipelined_response_order`
+   (embeddable-http-server) — both fail without the buffer.
 5. **WEB01b-3 — comparative benchmark** (`#[ignore]`): single-reactor vs sharded
    (WEB01a) vs mailbox (WEB01b) on a CPU-bound load; document when to pick which.
    ✅ done — `web_serving_modes_cpu_bound_comparison` in
