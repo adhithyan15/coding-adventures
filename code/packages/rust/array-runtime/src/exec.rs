@@ -114,7 +114,12 @@ pub fn execute_sum(a: &Array) -> Result<Array, String> {
         .map_err(|e| format!("execute_sum: graph build failed: {e:?}"))?;
 
     let out = run_graph_on_cpu(&graph, &[f64_bytes(a.data())])?;
-    let data = f64_from_bytes(&out[0])?;
+    // Index the output defensively: the graph declares exactly one output, but
+    // never panic if the executor hands back an unexpected shape.
+    let first = out
+        .first()
+        .ok_or_else(|| "execute_sum: executor returned no output buffer".to_string())?;
+    let data = f64_from_bytes(first)?;
     if data.len() != 1 {
         return Err(format!(
             "execute_sum: reduce-all should yield one scalar, got {} values",
