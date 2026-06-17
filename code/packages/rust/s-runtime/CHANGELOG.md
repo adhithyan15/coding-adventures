@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-06-16
+
+### Added
+
+- **Index sub-assignment (R-14)** — the left side of an assignment may now be a
+  subscript expression, not just a bare name. `eval_indexed_assignment` descends
+  to the postfix `[ … ]`, requires a bare-name base, looks up its current value,
+  resolves the subscripts, writes the (recycled) RHS into the selected cells, and
+  rebinds the modified value to the base name. Supported: 1-D `v[i] <- val`,
+  `v[-i] <- val`, `v[logical] <- val` (full `resolve_picks` styles), and 2-D
+  `m[i, j] <- v`, `m[i, ] <- v`, `m[, j] <- v`, `m[rows, cols] <- v`. New free
+  functions `assign_index` / `assign_index2d` (with `assign_positions` /
+  `write_recycled` helpers) in `value.rs`.
+
+### Safety
+
+- Sub-assignment is **copy-on-modify**: the base value is cloned, mutated, and
+  re-`define`d, so a prior copy (`b <- a; a[1] <- 9`) is never aliased and the
+  rebind cannot corrupt any other binding. An out-of-range or `NA` index in an
+  assignment is a hard error (no silent auto-grow); an empty replacement
+  (`v[i] <- c()`) is an error; assigning into an undefined base is an error.
+  Write counts are bounded by the (`MAX_SEQ_LEN`-capped) selection length.
+
 ## [0.9.0] - 2026-06-16
 
 ### Added
