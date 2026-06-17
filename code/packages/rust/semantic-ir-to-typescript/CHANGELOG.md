@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.1.14 — `splat` lowers to native spread; `double_splat` deferred (Q9c)
+
+Third item of the Q9 structural-builtin tranche.  Ruby `*x` / `**x` reach the
+backend as `BuiltinCall("splat", [x])` / `BuiltinCall("double_splat", [x])`.
+`emit_args` now expands them via a new `emit_arg` helper:
+
+- `splat` → `...x`  (e.g. `f(*a)` → `f(...a)`, `[1, *mid, 3]` → `[1, ...mid, 3]`)
+  — fully native JS spread.
+- `double_splat` in call position → **deferred (v0 cut-line)**.  JavaScript has
+  no keyword-argument call form and an SIR map is a `Map`, which does not spread
+  into an object literal or a call, so there is no faithful native form.  `**h`
+  falls through to the eager dispatch (`__Sir.callBuiltin("double_splat", …)`),
+  which raises a clear unknown-builtin error rather than emitting silently wrong
+  code.  (Python, which has `**`, lowers it natively — see its 0.1.15.)
+
+Tests: `splat_in_seq_literal_emits_native_spread_ts` (`[1, ...mid, 3]`),
+`splat_call_arg_emits_native_spread_ts` (`(...a)`), and
+`double_splat_call_arg_is_deferred_to_dispatch_ts` (asserts the documented
+dispatch fallthrough, and that it is *not* mis-emitted as a JS spread).
+
 ## 0.1.13 — `range` builtin lowers to the range runtime (Q9b)
 
 Second item of the Q9 structural-builtin tranche.  Ruby `a..b` / `a...b` (and

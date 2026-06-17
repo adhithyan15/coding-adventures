@@ -266,7 +266,7 @@ pub fn enumerate_governing(query: &Term, kb: &KnowledgeBase) -> GovernedResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{BodyLiteral, Fact, KnowledgeBase, Priority, Rule};
+    use crate::{BodyLiteral, Fact, KnowledgeBase, Priority, Provenance, Rule, TrustTier};
     use logic_core::Term;
 
     fn atom(s: &str) -> Term {
@@ -522,5 +522,60 @@ mod tests {
         let gov: Vec<&Term> = res.governing().map(|a| &a.term).collect();
         assert_eq!(gov, vec![&comp("timing", vec![atom("await")])]);
         assert!(!res.has_conflict());
+    }
+
+    /// ADJ73 PR-B-2 — END TO END: the precedence edge is a GROUNDED FACT, not a bare
+    /// `add_context_outranks` call. A `relate outranks_context(federal, state)` clause (here a
+    /// Fact carrying the Supremacy Clause as provenance) drives the same lex-superior resolution:
+    /// the federal reading governs the state reading even though state carries the higher tier,
+    /// AND the citation that justifies the precedence is retrievable for the audit trail.
+    #[test]
+    fn grounded_context_edge_fact_drives_lex_superior_with_provenance() {
+        let mut kb = KnowledgeBase::new();
+        kb.declare_functional("means", 2);
+
+        // The PRECEDENCE itself is grounded: federal outranks state *because of* the Supremacy
+        // Clause. The reason rides on the edge (one CAS edit away from correctable), not in code.
+        let edge_id = kb.add_fact(
+            Fact::certain(comp(
+                "outranks_context",
+                vec![atom("federal"), atom("state")],
+            ))
+            .with_provenance(Provenance::new(
+                "U.S. Const. art. VI, cl. 2 (Supremacy Clause)",
+                Some("cl. 2".to_string()),
+                TrustTier::Authoritative,
+            )),
+        );
+
+        // A federal reading at the LOWEST tier...
+        kb.add_rule(
+            Rule::certain(comp("means", vec![atom("waters"), atom("broad")]), vec![])
+                .with_context("federal"),
+        );
+        // ...vs a state reading at the HIGHEST tier — federal still governs (context is primary).
+        kb.add_rule(
+            Rule::certain(comp("means", vec![atom("waters"), atom("narrow")]), vec![])
+                .with_context("state")
+                .with_priority(Priority::Mandatory),
+        );
+
+        let res = enumerate_governing(&comp("means", vec![atom("waters"), var("R")]), &kb);
+        let gov: Vec<&Term> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(
+            gov,
+            vec![&comp("means", vec![atom("waters"), atom("broad")])],
+            "the federal reading governs purely because of the grounded outranks_context edge"
+        );
+        assert!(!res.has_conflict());
+
+        // The precedence is auditable: the edge fact (and its citation) is recoverable.
+        let edge = kb
+            .fact(edge_id)
+            .expect("the grounded precedence edge is a queryable fact");
+        assert_eq!(
+            edge.provenance.source,
+            "U.S. Const. art. VI, cl. 2 (Supremacy Clause)"
+        );
     }
 }

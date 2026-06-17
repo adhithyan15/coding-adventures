@@ -40,15 +40,15 @@ a redesign.
 - **MXF-1 — `matrix-ir` `F64` + `matrix-cpu` kernels** *(shipped)*. The dtype
   itself plus a working CPU executor, so an `f64` graph **builds, validates, and
   executes exactly** on CPU end-to-end.
-- **MXF-2 — `matrix-runtime` cost model** *(this PR)*. A `gflops_f64` throughput on
+- **MXF-2 — `matrix-runtime` cost model** *(shipped)*. A `gflops_f64` throughput on
   `BackendProfile` and an `F64` arm in the cost model, so the planner places
   `f64` ops on the cheapest backend that can actually run them — a backend with
   no `f64` kernel advertises `gflops_f64 = 0`, which the cost model turns into the
   ∞-cost sentinel, keeping `f64` on the CPU.
-- **MXF-3 — `array-runtime` `f64` path.** Lower `Array`s to an `F64` graph and
-  add an 8-byte codec, so `execute` keeps the exact `f64` answer (no `f32`
-  round-trip). The reference `ops` path and the executed path now agree to full
-  precision.
+- **MXF-3 — `array-runtime` `f64` path** *(this PR)*. Lower `Array`s to an `F64`
+  graph and add an 8-byte codec, so `execute` keeps the exact `f64` answer (no
+  `f32` round-trip). The reference `ops` path and the executed path now agree to
+  full precision.
 - **MXF-4 — R adopts the substrate.** Route `s-runtime`'s `%*%` (and the
   elementwise/transpose/reduction matrix ops where it wins) through
   `array_runtime::execute` at `f64`, so R gets cost-based CPU/GPU dispatch with
@@ -106,7 +106,48 @@ a redesign.
   advertises `f64` capability but `gflops_f64 = 0`) lands on the CPU — the
   decision falls through to cost, not the capability filter.
 
-## §5 Out of scope (later items / future)
+## §5 MXF-3 — what this PR delivers
+
+Before this PR, `array-runtime::execute` lowered every `Array` to an **`F32`**
+`matrix-ir` graph and crossed the boundary as 4-byte floats: the input `f64`s
+were rounded to `f32` on the way in (`v as f32`) and widened back to `f64` on the
+way out. So `execute` agreed with the [`crate::ops`] reference path only *to
+`f32` precision* — a `1.0 + 2^-40` that the reference summed exactly came back
+from `execute` as plain `1.0`. MXF-3 removes that round-trip end-to-end.
+
+### `array-runtime` — lowering (`accel.rs`)
+- `build_graph` (and `plan_backend`) now take the element **`DType`** and build
+  the `matrix-ir` graph at that dtype — `DType::F64` for an `f64` array, keeping
+  the existing `DType::F32` path unchanged for `f32` callers. Because the IR and
+  executor are dtype-agnostic, no other lowering logic changes: the dtype simply
+  threads through `input`/`add`/`matmul`/… as a per-tensor property.
+- The `usize → u32` shape cast in `shape_of` is a **trust boundary** and was
+  already a *checked* cast (a dim past `u32::MAX` is rejected with an error, never
+  silently truncated — a truncated dim would size the wrong allocation / cost the
+  wrong op). MXF-3 keeps and re-tests that guard for the F64 path.
+
+### `array-runtime` — execution (`exec.rs`)
+- A new **8-byte little-endian `f64` codec** (`f64_bytes` / `f64_from_bytes`)
+  mirroring the existing `f32` one and matching `matrix-cpu`'s
+  `read_f64_vec`/`write_f64_vec` convention exactly, so the buffers are
+  byte-compatible with the executor's `F64` kernels. `f64_from_bytes` validates
+  that the output length is a whole number of 8-byte values and errors (never
+  panics or reads out of bounds) on a short/ragged buffer.
+- `execute` routes `f64` tensors through the 8-byte codec and an `F64` graph, so
+  it reads/writes 8-byte buffers and returns the **bit-exact** `f64` result. The
+  `f32` codec and path remain for the (still-supported) `f32` lowering.
+
+### Tests
+- For `f64` inputs, `execute` (planned/executor path) is asserted **bit-exactly
+  equal** to the [`crate::ops`] reference path on values *not representable in
+  `f32`* — elementwise add/sub/mul, a reduce-`sum`, and a `matmul` whose exact
+  product rounds under `f32`. The old `f32` round-trip would have failed these;
+  full-precision agreement proves the round-trip is gone.
+- The `usize → u32` shape-cast guard is exercised (a dim `> u32::MAX` errors
+  cleanly, with no panic or truncation), and the `f32` lowering path is kept under
+  test so it is unchanged.
+
+## §6 Out of scope (later items / future)
 
 - The GPU (CUDA/Metal) executors gaining `f64` kernels — MXF-1/-3 keep `f64` on
   the CPU executor; the planner (MXF-2) simply won't place `f64` on a GPU that
@@ -114,7 +155,7 @@ a redesign.
 - `F16`/`I64` (the other reserved wire tags).
 - The specialiser fast path for `f64`.
 
-## §6 References
+## §7 References
 
 Internal: [`MX00`](MX00-matrix-execution-overview.md),
 [`MX01`](MX01-matrix-ir.md), [`MX03`](MX03-executor-protocol.md),

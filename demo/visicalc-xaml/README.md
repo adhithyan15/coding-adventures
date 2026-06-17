@@ -145,6 +145,10 @@ row-number gutter is a second virtualized `ListView` slaved to the body's
 vertical scroll, and the column-letter header follows the body's horizontal pan.
 Tap a cell → `SelectInf` (clamps, loads the source into the formula bar); press
 Enter → `CommitInf` (writes through, recomputes dependents, regrows the extent).
+The **"Fill ↓ 10"** button next to the formula bar calls
+`InfiniteSheetModel.FillDown(10)` (over the C ABI's `sc_fill`) to replicate the
+selected cell into the 10 rows below it — the engine shifts each copy's relative
+references (`=A1`→`=A2`, …), pins absolute (`$`) refs, and carries the format.
 
 `InfiniteSheetModel` (in `Engine.cs`, WinUI-free) seeds far-flung sparse cells
 (`Z1000`, `BA50`, `BB50`) and derives the extent from `UsedRange()` + a margin

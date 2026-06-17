@@ -772,8 +772,40 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
         if i > 0 {
             out.push_str(", ");
         }
-        emit_expr(out, a, indent);
+        emit_arg(out, a, indent);
     }
+}
+
+/// Emit one argument / sequence element, expanding the splat markers into
+/// Python's native spread syntax.
+///
+/// Ruby `*x` / `**x` reach the backend as `BuiltinCall("splat", [x])` /
+/// `BuiltinCall("double_splat", [x])` — sitting as a trailing call argument or
+/// as an array element.  Python has faithful native forms for both:
+///
+/// | SIR marker (Ruby) | Python emitted | meaning |
+/// |---|---|---|
+/// | `splat` (`f(*a)`, `[1, *a, 3]`) | `*a` | splice a sequence's items |
+/// | `double_splat` (`f(**h)`) | `**h` | splice a map's entries as kwargs |
+///
+/// Anything that is not a splat marker emits as an ordinary expression.  (A
+/// `double_splat` only ever appears in keyword-argument position in the SIR the
+/// Ruby frontend produces, so `**h` lands where Python accepts it; it is never
+/// emitted into a list literal.)
+fn emit_arg(out: &mut String, a: &Expr, indent: usize) {
+    if let Expr::BuiltinCall { name, args, .. } = a {
+        if name == "splat" && args.len() == 1 {
+            out.push('*');
+            emit_expr(out, &args[0], indent);
+            return;
+        }
+        if name == "double_splat" && args.len() == 1 {
+            out.push_str("**");
+            emit_expr(out, &args[0], indent);
+            return;
+        }
+    }
+    emit_expr(out, a, indent);
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {

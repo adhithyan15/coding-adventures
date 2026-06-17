@@ -47,11 +47,12 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   not a statement terminator) — the same shape as the R/S lexer's hook.
 - **W-3 — `wolfram-parser`.** The committed `_grammar.rs` compiled from
   `wolfram.grammar`, over the generic `parser::GrammarParser`.
-- **W-4 — `wolfram-runtime`.** A `WolframSession` that lowers the parsed
-  `GrammarASTNode` into `symbolic-ir`, evaluates with `symbolic-vm` (a Wolfram
-  `Backend` over the shared handler table), and applies `cas-pattern-matching`
-  for `/.` and `cas-simplify` for `Simplify`. String-in / string-out, like the
-  Maxima/Octave facades.
+- **W-4 — `wolfram-runtime`.** *(implemented — see §7.)* A `WolframSession` that
+  lowers the parsed `GrammarASTNode` into `symbolic-ir`, evaluates with
+  `symbolic-vm` (the shared `SymbolicBackend` over `build_handler_table`), and
+  applies `cas-pattern-matching` for `/.`. String-in / string-out, like the
+  Maxima/Octave facades. `Simplify`/`Expand` and the full `cas-*` surface are
+  W-6.
 - **W-5 — `wolfram-repl` + the `wolfram` (alias `math`) binary.** The
   interactive prompt (`In[n]:= ` / `Out[n]= `), line-continuation across open
   brackets, mirroring the other REPLs.
@@ -132,6 +133,84 @@ addition, not an engine change.
   (`match_pattern`/`rewrite`/`rule`/`rule_delayed`); `Simplify`/`Expand`/… use
   the `cas-*` crates (W-6).
 - **REPL (W-5):** a single-threaded driver mirroring `s-repl`/`maxima-repl`.
+
+## §7 W-4 runtime — lowering + evaluation (implemented)
+
+The `wolfram-runtime` crate (`code/packages/rust/wolfram-runtime`) is the W-4
+deliverable. It takes a parsed `GrammarASTNode` from `wolfram-parser` and:
+
+1. **Lowers** the surface tree to canonical [`symbolic-ir`](../packages/rust/symbolic-ir)
+   `IRNode`s. This is the *desugaring* step §1/§3 describe.
+2. **Evaluates** the lowered IR with a [`symbolic-vm`](../packages/rust/symbolic-vm)
+   `VM` over the shared `SymbolicBackend` (the same `build_handler_table` Macsyma
+   drives), so the whole rewrite engine is reused unchanged.
+3. **Replaces** `/.` via [`cas-pattern-matching`](../packages/rust/cas-pattern-matching)'s
+   `rewrite`, threading `Blank`/`Pattern`/`Rule` nodes lowered from `_`/`x_`/`->`.
+4. **Pretty-prints** the result back to Wolfram *surface* notation (infix
+   operators, `f[…]` application, `{…}` lists), so the string-out side reads like
+   Mathematica even though the engine speaks `Add`/`Mul`/`Pow`.
+
+### §7.1 The head-name bridge (surface → IR)
+
+The single subtlety is that Wolfram's *surface* head names are **not** the IR's
+canonical head names. The IR/VM speaks `Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg`; the
+Wolfram surface (and its `Plus[…]`/`Times[…]`/`Power[…]` head-applications)
+speaks the Mathematica vocabulary. The lowering bridges them in **both**
+directions of entry — the infix operators *and* an explicit head-application
+like `Plus[1, 2, 3]` map to the same canonical IR head, so `1 + 2` and
+`Plus[1, 2]` evaluate identically.
+
+| Wolfram surface / head | IR head | Notes |
+|------------------------|---------|-------|
+| `a + b`, `Plus[…]` | `Add` | n-ary `Plus[…]` lowers to a left-folded `Add` chain |
+| `a - b`, `Subtract[a,b]` | `Sub` | |
+| `a b` / `a*b`, `Times[…]` | `Mul` | explicit `*` required (see §4) |
+| `a / b`, `Divide[a,b]` | `Div` | |
+| `a ^ b`, `Power[a,b]` | `Pow` | right-associative |
+| `-a`, `Minus[a]` | `Neg` | |
+| `Sin[x]`, `Cos`, `Exp`, `Log`, `Sqrt`, `Tan`, … | `Sin`/`Cos`/… | already canonical — passed through |
+| `a == b`, `Equal[…]`, `Less`, `Greater`, `…` | `Equal`/`Less`/… | |
+| `a && b`, `And[…]`, `Or`, `Not` | `And`/`Or`/`Not` | |
+| `{a, b, c}`, `List[…]` | `List` | |
+| `x = e`, `Set[x,e]` | `Assign` | held head; binds `x` in the backend env |
+| `x := e`, `SetDelayed[…]` | `Define` | held head; user-function definition |
+| `_`, `x_`, `_h`, `x_h` | `Blank[]` / `Pattern[x, Blank[]]` / `Blank[h]` / `Pattern[x, Blank[h]]` | the `cas-pattern-matching` node shapes |
+| `a -> b`, `Rule[a,b]` | `Rule` | `cas-pattern-matching` rule head |
+| `a :> b`, `RuleDelayed[a,b]` | `RuleDelayed` | |
+| `expr /. rules` | *(handled in the runtime)* | `cas-pattern-matching::rewrite(expr, [rules])` |
+| any other `f[…]` | `f[…]` | unknown heads pass through unevaluated (Mathematica semantics) |
+
+An unbound symbol stays a free symbol (`SymbolicBackend::on_unresolved`), exactly
+matching Mathematica, where `x` with no value is just `x`.
+
+### §7.2 Robustness at the trust boundary
+
+`WolframSession::feed` takes arbitrary user source, so it is the trust boundary
+for the whole reused symbolic stack. Following the Maxima precedent, three
+layered guards stop a single crafted input from crashing or wedging a session:
+
+1. **Input-size cap** ([`MAX_INPUT_LEN`], 64 KiB) — a cheap first gate on memory
+   and time.
+2. **Per-statement token cap** ([`MAX_STATEMENT_TOKENS`]) — counted from the
+   *real* `wolfram-lexer` token stream (the iterative lexer cannot itself
+   overflow). A parse tree's depth is bounded by its token count, so capping
+   tokens caps recursion depth in the grammar parser, the lowering, the VM, and
+   the later `Drop` of the tree — closing the stack-overflow-on-deep-nesting
+   vector (`((((…))))`, `------…x`, `1+1+1+…`) that `catch_unwind` cannot catch.
+3. **Big bounded worker stack + `catch_unwind` + session rebuild** — evaluation
+   and pretty-printing run on a dedicated thread with a large bounded stack, any
+   unwinding panic from the reused stack is converted to a clean `Err(String)`,
+   and the session is rebuilt after a caught panic so the next call is always
+   usable.
+
+### §7.3 W-5 REPL
+
+`wolfram-repl` wraps a persistent `WolframSession` with the Mathematica console
+contract: `In[n]:= ` / `Out[n]= ` prompts, line-continuation while brackets are
+open or a string/comment is unterminated, `Quit`/`Exit`/Ctrl-D to leave, and a
+size-capped accumulation buffer. The `wolfram` (alias `math`) binary drives it
+over stdin/stdout. This mirrors `maxima-repl`'s driver; the only Wolfram-specific
+part is that a *newline* (not `;`/`$`) terminates a complete statement.
 
 ## §6 References
 

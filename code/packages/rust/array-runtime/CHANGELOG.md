@@ -3,6 +3,68 @@
 All notable changes to `array-runtime` are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] — 2026-06-17
+
+**MXF-3 — the `f64` execution path (no `f32` round-trip).** Part of MX12, which
+brings a `DType::F64` across the shared matrix substrate (`matrix-ir → matrix-cpu
+→ matrix-runtime → array-runtime`). Before this release `execute` lowered every
+array to an **`F32`** `matrix-ir` graph and crossed the boundary as 4-byte
+floats, so a `f64 → f32 → f64` round-trip rounded the result and `execute` agreed
+with the `ops` reference path only to `f32` precision. MXF-3 removes that
+round-trip: `f64` arrays now lower to an **`F64`** graph and cross the boundary as
+**8-byte** little-endian doubles, so `execute` returns the **bit-exact** `f64`
+result.
+
+### Changed
+
+- **`accel::build_graph` and `accel::plan_backend` now take an explicit
+  `dtype: DType`** (inserted after `kernel`). `DType::F64` builds a double-
+  precision graph; `DType::F32` preserves the historical single-precision path.
+  This is a **breaking** signature change for `plan_backend` (a public fn) — call
+  sites must pass the element dtype.
+- The synthetic `gpu_profile()` now advertises `gflops_f64 = 0`, matching the
+  real CUDA/Metal V1 executors (no `f64` kernel). The cost model turns that into
+  the ∞-cost sentinel, so an `f64` op is never placed on the GPU — it stays on
+  the CPU, exactly MXF-2's contract.
+
+### Added
+
+- An **8-byte little-endian `f64` codec** in `exec.rs` (`f64_bytes` /
+  `f64_from_bytes`), mirroring `matrix-cpu`'s `write_f64_vec`/`read_f64_vec`
+  byte-for-byte so the buffers are directly consumable by the executor's `F64`
+  kernels. `f64_from_bytes` validates the length is a whole number of 8-byte
+  doubles and returns an `Err` (never panics or reads out of bounds) on a short
+  or ragged buffer.
+- `execute(kernel, &a, &b)` now defaults to the **`F64`** path (since `Array` is
+  `f64`-valued), returning the bit-exact double-precision result. The legacy
+  `F32` path stays reachable for `f32` callers via the crate-internal
+  `execute_with_dtype`.
+- `execute_sum(&a) -> Result<Array, String>`: a whole-array `f64` reduction run
+  end-to-end through `matrix-cpu`'s `F64` reduce-all kernel, folding the buffer
+  in the same left-to-right order as `ops::sum` so the two agree bit-for-bit.
+- `DType` is re-exported at the crate root (so callers can pick the lowering
+  dtype for `plan_backend`).
+
+### Invariant proven in tests
+
+For `f64` inputs, `execute`/`execute_sum` equal the `ops` reference path to
+**full `f64` precision**, asserted bit-for-bit on values **not representable in
+`f32`** (e.g. `1 + 2^-40`, a `matmul` whose exact product is `1 + 2^-40`, and a
+running `sum` that carries sub-`f32` bits). The old `f32` round-trip is shown to
+collapse those same values to `1.0`/`0.0`, so the tests genuinely distinguish the
+two paths. The `usize → u32` shape-cast guard is re-tested (a dim `> u32::MAX`
+errors cleanly for both dtypes, no panic/truncation), and the `f32` path is kept
+under test, unchanged.
+
+### Tests
+
+53 tests (47 unit + 5 integration + 1 doctest). New integration suite
+`tests/f64_bit_exact.rs` proves the bit-exact `f64` invariant for elementwise,
+`matmul`, and `sum` through the public API; new unit tests cover the 8-byte
+codec round-trip / short-buffer rejection, the `F64` lowering carrying 8-byte
+tensors, and `f64` ops staying on the CPU when the same `f32` op would dispatch
+to the GPU.
+
 ## [0.2.0] — 2026-06-16
 
 **MA-2 — end-to-end execution.** MA-1 planned the lowered graph and produced

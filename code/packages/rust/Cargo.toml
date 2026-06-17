@@ -213,6 +213,8 @@ members = [
     "maxima-repl",
     "wolfram-lexer",
     "wolfram-parser",
+    "wolfram-runtime",
+    "wolfram-repl",
     "logic-gates",
     "logic-core",
     "lookup-core",

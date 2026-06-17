@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.15 — `splat` / `double_splat` lower to native spread (Q9c)
+
+Third item of the Q9 structural-builtin tranche.  Ruby `*x` / `**x` reach the
+backend as `BuiltinCall("splat", [x])` / `BuiltinCall("double_splat", [x])` —
+sitting as a trailing call argument or as an array element.  Previously these
+fell through to the eager dispatch (`_sir_call_builtin`), which has no entry for
+them, so any splat-call crashed at runtime.  `emit_args` now expands them into
+Python's faithful native spread syntax via a new `emit_arg` helper:
+
+- `splat` → `*x`  (e.g. `f(*a)`, `[1, *mid, 3]`)
+- `double_splat` → `**x`  (e.g. `f(**h)` — keyword spread)
+
+Tests: `splat_in_seq_literal_emits_native_spread_py` (`[1, *mid, 3]`) and
+`splat_and_double_splat_call_args_emit_native_py` (`(*a, **h)`), both asserting
+the dispatch fallthrough is gone.
+
 ## 0.1.14 — `range` builtin lowers to the range runtime (Q9b)
 
 Second item of the Q9 structural-builtin tranche.  Ruby `a..b` / `a...b` (and
