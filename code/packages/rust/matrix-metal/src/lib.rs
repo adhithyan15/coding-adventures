@@ -137,6 +137,9 @@ pub fn profile() -> BackendProfile {
         // a conservative 5000 (5 TFLOPS) so the planner's threshold
         // err on the side of GPU when in doubt.
         gflops_f32: 5_000,
+        // No Metal f64 kernel (Apple GPUs lack native f64); 0 makes the
+        // cost model treat f64 as infinite here, so it stays on the CPU.
+        gflops_f64: 0,
         // Integer GFLOPS unused since we don't support integer dtypes
         // yet; planner uses these only for ops it routes to us.
         gflops_u8: 0,

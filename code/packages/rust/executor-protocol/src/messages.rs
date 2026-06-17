@@ -76,6 +76,13 @@ pub struct BackendProfile {
     pub supported_dtypes: u8,
     /// Compute throughput, peak, in floating-point GFLOPS scaled.
     pub gflops_f32: u32,
+    /// Throughput for f64 (double-precision) ops.  A backend with no
+    /// f64 kernel advertises 0 here, which the cost model reads as
+    /// infinite cost — keeping f64 work on a backend (the CPU) that can
+    /// run it.  CPUs typically set this to their f32 rate (or roughly
+    /// half, since double-precision SIMD lanes are wider); the synthetic
+    /// GPU profile leaves it 0.
+    pub gflops_f64: u32,
     /// Throughput for u8 element ops.
     pub gflops_u8: u32,
     /// Throughput for i32 element ops.
@@ -555,6 +562,7 @@ mod tests {
             supported_ops: 0,
             supported_dtypes: 0,
             gflops_f32: 0,
+            gflops_f64: 0,
             gflops_u8: 0,
             gflops_i32: 0,
             host_to_device_bw: 0,
