@@ -998,6 +998,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str("))");
         return;
     }
+    // `lambda` / `->{…}` lower to `BuiltinCall("lambda", [MakeClosure])`.  The
+    // lambda *is* its closure value, so we emit the inner `MakeClosure`
+    // directly (which renders `new __Sir.Closure(...)`) rather than routing
+    // through the eager `callBuiltin` dispatch — there is no separate
+    // "lambda" runtime helper, the closure already is the result.
+    if name == "lambda" && args.len() == 1 {
+        emit_expr(out, &args[0], indent);
+        return;
+    }
     let helper = match name {
         "+" => "__Sir.add",
         "-" => "__Sir.sub",
