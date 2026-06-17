@@ -927,4 +927,18 @@ mod tests {
         assert!(a.source.contains("(-(5))"), "neg: got:\n{}", a.source);
         assert!(!a.source.contains("__Sir.callBuiltin(\"neg\""), "got:\n{}", a.source);
     }
+
+    #[test]
+    fn lambda_builtin_lowers_to_inner_closure_ts() {
+        // Ruby `lambda { … }` / `->{…}` reach the backend as
+        // `BuiltinCall("lambda", [MakeClosure])`.  The lambda *is* its closure,
+        // so it must emit the inner `MakeClosure` (→ `new __Sir.Closure`)
+        // directly, never route through the eager dispatch table.
+        let mc = Expr::MakeClosure { fn_name: "main".into(), captures: vec![], span: s() };
+        let lam = bc("lambda", vec![mc]);
+        let a = compile(&module_with_main_body(vec![], lam, &[Feature::Closures]))
+            .expect("compile");
+        assert!(a.source.contains("new __Sir.Closure("), "got:\n{}", a.source);
+        assert!(!a.source.contains("__Sir.callBuiltin(\"lambda\""), "got:\n{}", a.source);
+    }
 }

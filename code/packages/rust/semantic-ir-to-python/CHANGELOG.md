@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.13 — `lambda` builtin lowers to its inner closure (Q9a)
+
+First item of the structural-builtin follow-up tranche (Q9) the Q8d audit
+flagged.  Ruby `lambda { … }` / `->(x){…}` reach this backend as
+`BuiltinCall("lambda", [MakeClosure])`.  The lambda *is* its closure value, so
+`emit_builtin_call` now emits the inner `MakeClosure` directly (rendering
+`_sir_make_closure(...)`) instead of routing through the eager `call_builtin`
+dispatch — there is no separate `lambda` runtime helper, the closure already is
+the result.  Reuses the existing `MakeClosure` emission and `make_closure`
+runtime helper; no runtime change.  Direct-SIR test
+`lambda_builtin_lowers_to_inner_closure_py`.
+
 ## 0.1.12 — boolean/unary operator builtins (audit close-out)
 
 Builtin-coverage audit of what the Ruby frontend actually emits as a
