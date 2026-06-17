@@ -67,6 +67,11 @@ pub struct GovernedAnswer {
     /// The highest [`Standing`] over the proofs deriving this answer ([`Standing::Asserted`]
     /// if any derivation rests on a ground fact, else the max rule [`Priority`] tier).
     pub priority: Standing,
+    /// ADJ73 PR-B: the CONTEXT this answer is grounded in (the context of its highest-standing
+    /// deriving rule) — `None` for a context-free derivation. When two conflicting answers
+    /// carry contexts ordered by [`KnowledgeBase::add_context_outranks`], the one in the
+    /// greater context defeats the other *before* the [`Standing`] tier is consulted.
+    pub context: Option<String>,
     /// Indices into [`GovernedResult::dag`]`.proofs` that derive this answer.
     pub proof_indices: Vec<usize>,
     /// Whether this answer governs, was defeated, or is an unresolved conflict peer.
@@ -143,6 +148,34 @@ fn proof_priority(dag: &ProofDAG, proof_index: usize, kb: &KnowledgeBase) -> Sta
     }
 }
 
+/// ADJ73 PR-B: the CONTEXT a single proof confers — the `context` of the rule that derived the
+/// query head (the proof's first step). Fact-derived heads have no context.
+fn proof_context(dag: &ProofDAG, proof_index: usize, kb: &KnowledgeBase) -> Option<String> {
+    match dag.proofs[proof_index].steps.first().map(|s| &s.origin) {
+        Some(DerivationOrigin::FromRule(id)) => {
+            kb.find_rule_by_id(*id).and_then(|r| r.context.clone())
+        }
+        _ => None,
+    }
+}
+
+/// ADJ73 PR-B: does answer `a` DEFEAT answer `b` in a conflict group? Context precedence is
+/// primary (lex superior): if `a`'s context outranks `b`'s, `a` defeats `b` regardless of tier;
+/// if `b`'s outranks `a`'s, it does not. When the contexts are equal / incomparable / absent,
+/// the [`Standing`] tier decides. This generalizes the pure-tier rule (with no contexts it
+/// reduces to "higher tier defeats lower"), so a rulebook with no `context_order` is unchanged.
+fn defeats(a: &GovernedAnswer, b: &GovernedAnswer, kb: &KnowledgeBase) -> bool {
+    if let (Some(ca), Some(cb)) = (&a.context, &b.context) {
+        if kb.context_outranks(ca, cb) {
+            return true;
+        }
+        if kb.context_outranks(cb, ca) {
+            return false;
+        }
+    }
+    a.priority > b.priority
+}
+
 /// Enumerate all proofs of `query`, then resolve conflicting answers by defeasible precedence
 /// (ADJ73). Returns every distinct answer tagged [`GovernStatus`]. For a query over predicates
 /// none of which are declared functional, every answer is [`GovernStatus::Governing`] and the
@@ -156,23 +189,40 @@ pub fn enumerate_governing(query: &Term, kb: &KnowledgeBase) -> GovernedResult {
     for (i, proof) in dag.proofs.iter().enumerate() {
         let term = resolve_deep(query, &proof.bindings);
         let pri = proof_priority(&dag, i, kb);
+        let ctx = proof_context(&dag, i, kb);
         if let Some(a) = answers.iter_mut().find(|a| a.term == term) {
             a.proof_indices.push(i);
-            a.priority = a.priority.max(pri);
+            // Track the standing AND the context of the highest-standing derivation, so a
+            // context-precedence comparison uses the context of the rule that gave the answer
+            // its strongest footing.
+            if pri > a.priority {
+                a.priority = pri;
+                a.context = ctx;
+            }
         } else {
             answers.push(GovernedAnswer {
                 term,
                 priority: pri,
+                context: ctx,
                 proof_indices: vec![i],
                 status: GovernStatus::Governing, // provisional; resolved below
             });
         }
     }
 
-    // 2. Resolve each functional conflict group. We compute verdicts first (immutable borrow),
-    //    then apply them, to keep the borrow checker happy and the logic readable.
+    // 2. Resolve each functional conflict group via the `defeats` relation (context precedence
+    //    primary, tier secondary). An answer GOVERNS iff no other answer in its group defeats
+    //    it; a sole undefeated answer governs, multiple undefeated answers are conflict peers
+    //    (a genuine split), and a defeated answer cites a defeating witness. We compute verdicts
+    //    first (immutable borrow), then apply them.
     let keys: Vec<Option<(String, Vec<Term>)>> =
         answers.iter().map(|a| conflict_key(&a.term, kb)).collect();
+
+    let undefeated = |idx: usize, group: &[usize]| -> bool {
+        !group
+            .iter()
+            .any(|&j| j != idx && defeats(&answers[j], &answers[idx], kb))
+    };
 
     let mut verdicts: Vec<GovernStatus> = vec![GovernStatus::Governing; answers.len()];
     for (i, key_i) in keys.iter().enumerate() {
@@ -187,22 +237,23 @@ pub fn enumerate_governing(query: &Term, kb: &KnowledgeBase) -> GovernedResult {
         if group.len() < 2 {
             continue; // singleton → no contest
         }
-        let max_pri = group.iter().map(|&j| answers[j].priority).max().unwrap();
-        let winners: Vec<usize> = group
-            .iter()
-            .copied()
-            .filter(|&j| answers[j].priority == max_pri)
-            .collect();
-        verdicts[i] = if answers[i].priority < max_pri {
-            // Defeated — cite a governing winner. With a unique winner that is THE governor;
-            // with a tie, any peer is a valid "defeated by" witness.
-            GovernStatus::Defeated {
-                by: answers[winners[0]].term.clone(),
-            }
-        } else if winners.len() == 1 {
-            GovernStatus::Governing
+        verdicts[i] = if !undefeated(i, &group) {
+            // Defeated — cite a defeating witness (one of the answers that defeats i).
+            let by = group
+                .iter()
+                .find(|&&j| j != i && defeats(&answers[j], &answers[i], kb))
+                .map(|&j| answers[j].term.clone())
+                .unwrap();
+            GovernStatus::Defeated { by }
         } else {
-            GovernStatus::ConflictPeer // tied at the top with another answer
+            // i is undefeated. The unique undefeated answer governs; if several are undefeated
+            // (incomparable at the top — a true split of authority) they are conflict peers.
+            let undefeated_count = group.iter().filter(|&&j| undefeated(j, &group)).count();
+            if undefeated_count == 1 {
+                GovernStatus::Governing
+            } else {
+                GovernStatus::ConflictPeer
+            }
         };
     }
     for (a, v) in answers.iter_mut().zip(verdicts) {
@@ -358,6 +409,118 @@ mod tests {
                 comp("means", vec![atom("waters"), atom("broad")]),
             ]
         );
+        assert!(!res.has_conflict());
+    }
+
+    // ---- ADJ73 PR-B: grounded context precedence (lex superior) ----
+
+    /// A rule grounded in a higher context governs a conflicting one in a lower context — the
+    /// north-star case. ninth_circuit > district_court, so the broad reading governs.
+    #[test]
+    fn higher_context_governs_the_lower_context() {
+        let mut kb = KnowledgeBase::new();
+        kb.declare_functional("means", 2);
+        kb.add_context_outranks("ninth_circuit", "district_court");
+        kb.add_rule(
+            Rule::certain(comp("means", vec![atom("waters"), atom("broad")]), vec![])
+                .with_context("ninth_circuit"),
+        );
+        kb.add_rule(
+            Rule::certain(comp("means", vec![atom("waters"), atom("narrow")]), vec![])
+                .with_context("district_court"),
+        );
+        let res = enumerate_governing(&comp("means", vec![atom("waters"), var("R")]), &kb);
+        let gov: Vec<&Term> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(
+            gov,
+            vec![&comp("means", vec![atom("waters"), atom("broad")])]
+        );
+        assert!(!res.has_conflict());
+    }
+
+    /// Context precedence is PRIMARY: a higher-context rule with a LOWER tier still defeats a
+    /// lower-context rule carrying a higher tier (lex superior beats the explicit tier).
+    #[test]
+    fn context_precedence_outranks_the_tier() {
+        let mut kb = KnowledgeBase::new();
+        kb.declare_functional("rule_on", 1);
+        kb.add_context_outranks("federal", "state");
+        // federal rule at the LOWEST tier...
+        kb.add_rule(
+            Rule::certain(comp("rule_on", vec![atom("permitted")]), vec![]).with_context("federal"),
+        );
+        // ...vs a state rule at the HIGHEST tier — federal still governs.
+        kb.add_rule(
+            Rule::certain(comp("rule_on", vec![atom("forbidden")]), vec![])
+                .with_context("state")
+                .with_priority(Priority::Mandatory),
+        );
+        let res = enumerate_governing(&comp("rule_on", vec![var("X")]), &kb);
+        let gov: Vec<&Term> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(gov, vec![&comp("rule_on", vec![atom("permitted")])]);
+    }
+
+    /// Incomparable contexts (no order between them) fall back to the priority tier.
+    #[test]
+    fn incomparable_contexts_fall_back_to_tier() {
+        let mut kb = KnowledgeBase::new();
+        kb.declare_functional("rule_on", 1);
+        // two unrelated contexts — no edge between them.
+        kb.add_rule(
+            Rule::certain(comp("rule_on", vec![atom("a")]), vec![])
+                .with_context("oregon")
+                .with_priority(Priority::Authoritative),
+        );
+        kb.add_rule(
+            Rule::certain(comp("rule_on", vec![atom("b")]), vec![])
+                .with_context("nevada")
+                .with_priority(Priority::Specific),
+        );
+        let res = enumerate_governing(&comp("rule_on", vec![var("X")]), &kb);
+        let gov: Vec<&Term> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(gov, vec![&comp("rule_on", vec![atom("a")])]); // higher tier wins the tie
+    }
+
+    /// A cyclic context order (a > b, b > a) is detectable and never silently picks a winner.
+    #[test]
+    fn cyclic_context_order_is_detected_and_governs_nothing() {
+        let mut kb = KnowledgeBase::new();
+        kb.declare_functional("means", 2);
+        kb.add_context_outranks("a", "b");
+        kb.add_context_outranks("b", "a");
+        assert!(kb.context_order_has_cycle());
+        assert!(kb.context_outranks("a", "b") && kb.context_outranks("b", "a"));
+        kb.add_rule(
+            Rule::certain(comp("means", vec![atom("t"), atom("x")]), vec![]).with_context("a"),
+        );
+        kb.add_rule(
+            Rule::certain(comp("means", vec![atom("t"), atom("y")]), vec![]).with_context("b"),
+        );
+        let res = enumerate_governing(&comp("means", vec![atom("t"), var("R")]), &kb);
+        assert_eq!(
+            res.governing().count(),
+            0,
+            "a cycle must not crown a winner"
+        );
+    }
+
+    /// Back-compat: with NO context order declared, context-free rules resolve purely by tier
+    /// exactly as before PR-B.
+    #[test]
+    fn no_context_order_is_pure_tier_resolution() {
+        let mut kb = KnowledgeBase::new();
+        kb.declare_functional("timing", 1);
+        kb.add_rule(
+            Rule::certain(comp("timing", vec![atom("await")]), vec![])
+                .with_priority(Priority::Specific),
+        );
+        kb.add_rule(Rule::certain(
+            comp("timing", vec![atom("treat_now")]),
+            vec![],
+        ));
+        let res = enumerate_governing(&comp("timing", vec![var("D")]), &kb);
+        let gov: Vec<&Term> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(gov, vec![&comp("timing", vec![atom("await")])]);
         assert!(!res.has_conflict());
     }
 }

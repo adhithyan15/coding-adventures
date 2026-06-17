@@ -331,6 +331,13 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
   appeal-status / lex-specialis). Engine resolution queries `outranks` instead of comparing enum
   tiers when rule attributes are present; cycle/contradiction → CONFLICT. Rule attributes
   (authority/date/appeal/specificity) added as typed, provenanced metadata.
+  - **PR-B engine core ✅ DONE (logic-engine 0.19).** `Rule::context` + `Knowledge­Base::{add_context_outranks,
+    context_outranks (cycle-safe), context_order_has_cycle}` + a `defeats(a,b)` resolution that
+    makes context precedence PRIMARY (lex superior) and the tier secondary — generalizing the
+    pure-tier rule (no context order ⇒ unchanged). A cyclic order crowns nothing (safe). Still
+    to come: the grounded `context-precedence.adj` **rulebook** with byte-provenanced edges + the
+    recency/appeal/lex-specialis **meta-rules**, and the adj-lang **surface** (`context:` on a
+    rule, `context_order { … }`).
 - **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
   annotations) + regen grammar.
 - **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).

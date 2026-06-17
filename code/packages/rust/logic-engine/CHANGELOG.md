@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.19.0] - 2026-06-16 — grounded context precedence (lex superior) (ADJ73 PR-B engine core)
+
+### Added
+
+- **`Rule::context: Option<String>`** (builder `with_context`) — the context a rule is grounded
+  in (jurisdiction / guideline edition / specialty). `None` = context-free (today's behavior).
+- **`KnowledgeBase::add_context_outranks(higher, lower)`** — assert a grounded precedence edge
+  (federal > state, ninth_circuit > district_court, idsa_2024 > idsa_2004, specialist > general).
+- **`KnowledgeBase::context_outranks(a, b)`** — transitive reach over the edges (cycle-safe DFS);
+  **`context_order_has_cycle()`** — detect a cyclic order (the surface loader should reject).
+- **`govern::GovernedAnswer::context`** + a `defeats(a, b)` resolution: context precedence is
+  PRIMARY (lex superior — a higher-context answer defeats a lower-context one regardless of
+  tier); the [`Standing`] tier breaks ties the context order leaves open. An answer governs iff
+  no conflicting answer defeats it; multiple undefeated → `ConflictPeer`; a cyclic order crowns
+  nothing (safe degradation, never a wrong pick).
+
+### Unchanged (back-compat)
+
+- With NO `context_order` declared, `defeats` reduces to "higher tier wins" — resolution is
+  byte-identical to 0.18 (verified: the existing precedence + integration tests pass unchanged).
+  The two `adjudication-connector` `Rule{}` sites set `context: None`.
+
+### Scope
+
+PR-B engine core. The grounded `context-precedence` **rulebook** (each `outranks_context` edge
+citing its charter — the Supremacy Clause, etc.) + adj-lang **surface** (`context:` on a rule,
+`context_order { … }`) are the next slices (ADJ73 §7). Cycle *rejection* at load is the loader's
+job; the resolver itself stays safe regardless.
+
 ## [0.18.0] - 2026-06-16 — precedence priority is a named ENUM, not an integer (ADJ73 PR-A)
 
 ### Changed (breaking — nothing released; per user decision 1)
