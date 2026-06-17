@@ -175,9 +175,30 @@ unchanged.
     matrix subscripts are a hard error; the result size and the logical-recycle
     span are capped at `MAX_SEQ_LEN`. The empty-subscript grammar also enables
     `df[, j]` / `df[i, ]` on data frames.
-  - *Deferred (R-14):* **sub-assignment** `m[i, j] <- v` — it needs new
-    lvalue-target machinery (the evaluator currently only assigns to bare names),
-    a separable feature; today it is a clean error, not a silent no-op.
+  - *Done in R-14:* **sub-assignment** `m[i, j] <- v` (below).
+- **R-14 — index sub-assignment** *(this PR)*. `m[i, j] <- v` and the 1-D
+  `v[i] <- val`, in the shared `s-runtime`. The evaluator previously only
+  assigned to **bare names**; R-14 adds the lvalue-target machinery so the left
+  side of `<-` (or `=` / `->`) may be a **subscript expression**:
+  - When the assignment target is not a bare name, the evaluator descends to the
+    postfix `[ … ]`, requires a bare-name base, **looks up the current value of
+    that base**, resolves the subscripts (reusing R-13's `resolve_picks` for the
+    1-D case and the 2-D dimension resolver for `m[rows, cols]`), writes the RHS
+    into the selected cells, and **rebinds the modified value to the base name**.
+  - The write is **copy-then-rebind**: the base value is cloned, the clone is
+    mutated, and `define` replaces the binding. Because `SValue` bindings are
+    by-value, an earlier copy (`b <- a; a[1] <- 9`) is *not* aliased — `b` keeps
+    its old contents, matching R's copy-on-modify semantics.
+  - The RHS is **recycled** R-style to fill the selected cells (a length-1 RHS
+    broadcasts; a length-*k* RHS repeats). 1-D selection accepts the full
+    positive / negative / logical index styles; 2-D accepts `m[i, ]`, `m[, j]`,
+    and `m[rows, cols]`. The matrix keeps its `dim` after assignment.
+  - **Safety:** the selected positions are bounds-checked against the target
+    length (an out-of-range or `NA` index in an *assignment* is a hard error, not
+    a silent grow — vector auto-extension is deferred); an **empty replacement**
+    (`v[i] <- c()`) is an error; assigning into an **undefined base** is an error.
+    No write can touch another binding, so the rebind cannot corrupt unrelated
+    variables. The number of writes is bounded by the (capped) selection length.
 
 ## §4 Reuse strategy
 
