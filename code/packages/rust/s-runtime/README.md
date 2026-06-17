@@ -19,7 +19,14 @@ re-implementation.
 s-lexer → s-parser → GrammarASTNode → s-runtime (this crate) → s-repl
                                           |
                           r-vector / numeric-tower / statistics-core
+                                          |
+                          array-runtime → matrix-ir/-cpu/-runtime   (matrix %*%)
 ```
+
+The matrix product `%*%` lowers onto the **shared f64 matrix-execution
+substrate** (`array-runtime` → `matrix-ir` → `matrix-cpu`/`matrix-runtime`) — the
+same cost-based CPU/GPU planner MATLAB uses — at full `f64` precision, instead of
+a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-here).
 
 ## What "S-flavored" means here
 
@@ -37,6 +44,14 @@ s-lexer → s-parser → GrammarASTNode → s-runtime (this crate) → s-repl
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
+- **Matrices on the shared substrate (MXF-4)** — the matrix product `%*%` routes
+  through [`array_runtime::execute`]`(MatMul, …)` at `DType::F64`, so R's matmul
+  gets cost-based CPU/GPU dispatch at full double precision, with results
+  **bit-identical** to the previous loop (R's column-major `Matrix` matches
+  `array_runtime::Array`'s layout, and the `f64` kernel folds the contraction in
+  the same order). NA-bearing products fall back to the loop to preserve R's
+  exact NA bit pattern. `t()`, `rowSums`/`colSums`, `diag`, `solve`, and `det`
+  stay on their own implementations — no clean substrate primitive exists yet.
 
 ## Quick start
 
