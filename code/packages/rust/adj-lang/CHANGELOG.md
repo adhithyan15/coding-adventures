@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.16.0] - 2026-06-16 — context precedence surface (ADJ73 PR-B)
+
+### Added
+
+- **`rule { … context: <name> }`** — ground a rule in a CONTEXT (jurisdiction / guideline
+  edition / specialty). Lowers to `logic_engine::Rule::with_context`.
+- **`context_order { higher > lower, … }`** — a top-level statement declaring grounded context
+  precedence edges; each `a > b` lowers to `KnowledgeBase::add_context_outranks`. The resolver
+  consults this BEFORE the priority tier (lex superior): a rule in a greater context defeats a
+  conflicting one in a lesser context regardless of tier.
+- Grammar: `context_order_decl` added to `statement`; `rule_decl` gains a trailing
+  `[ "context" COLON IDENT ]` (after `[ "priority" … ]`). `context_order`/`context` are
+  IDENT-matched literals; `>` is the existing `GT` operator. `_parser_grammar.rs` /
+  `_lexer_grammar.rs` regenerated.
+- AST: `Statement::Rule` gains `context: Option<String>`; new `Statement::ContextOrder { edges }`.
+  Adapter: a shared `ident_after_keyword` helper extracts both `priority:` and `context:`;
+  `adapt_context_order` pairs the `IDENT > IDENT` edges (skipping the `>` Name token).
+
+### Notes
+
+Surface for logic-engine 0.19's grounded context precedence. A test compiles
+`context_order { ninth_circuit > district_court }` + `context:`-tagged rules and verifies via
+`enumerate_governing` that the higher-context rule governs **even with a lower priority tier**
+(lex superior), and that multi-edge orders lower transitively. The grounded `context-precedence`
+*rulebook* (byte-provenanced `outranks_context` edges + recency/appeal meta-rules) is the next
+slice.
+
 ## [0.15.0] - 2026-06-16 — precedence surface syntax (ADJ73 PR-C)
 
 ### Added

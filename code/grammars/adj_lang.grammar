@@ -27,6 +27,7 @@ statement   = prior_decl
             | relate_decl
             | rule_decl
             | functional_decl
+            | context_order_decl
             | query_decl
             | let_decl
             | symbol_decl
@@ -101,9 +102,20 @@ relate_decl      = "relate" term { annotation } ;
 # every grounded clause carries. A body literal prefixed with `not` is
 # negation-as-failure.
 # ----------------------------------------------------------------
-rule_decl        = "rule" LBRACE "head" COLON term "when" COLON body_literal { COMMA body_literal } { annotation } [ "priority" COLON IDENT ] RBRACE ;
+rule_decl        = "rule" LBRACE "head" COLON term "when" COLON body_literal { COMMA body_literal } { annotation } [ "priority" COLON IDENT ] [ "context" COLON IDENT ] RBRACE ;
 
 body_literal     = [ "not" ] term ;
+
+# ----------------------------------------------------------------
+# `context_order { higher > lower , … }` — ADJ73 PR-B: a grounded CONTEXT
+# precedence order. Each edge `a > b` asserts "a rule grounded in context `a`
+# outranks a conflicting rule in context `b`" (federal > state, ninth_circuit >
+# district_court, idsa_2024 > idsa_2004). Lowers to
+# `KnowledgeBase::add_context_outranks`; the resolver consults it BEFORE the
+# priority tier (lex superior). `context_order`/`context` are IDENT-matched
+# literals — no lexer keywords; `>` is the existing GT operator.
+# ----------------------------------------------------------------
+context_order_decl = "context_order" LBRACE IDENT GT IDENT { COMMA IDENT GT IDENT } RBRACE ;
 
 # ----------------------------------------------------------------
 # `functional <pred>(<arg>, …)` — ADJ73 defeasible precedence (PR-C): declare a
