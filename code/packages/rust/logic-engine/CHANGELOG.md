@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.20.0] - 2026-06-17 — context-precedence edges as grounded facts (ADJ73 PR-B-2)
+
+### Added
+
+- **Grounded `outranks_context(higher, lower)` facts now ACT as context-precedence edges.** A
+  ground fact whose functor is `outranks_context` and whose two args are atoms participates in
+  the context order exactly like an explicit `add_context_outranks` edge — but, being an ordinary
+  [`Fact`], it carries `source`/`locator`/`trust` [`Provenance`], is queryable, and is one CAS
+  edit from correctable. This is the mechanism behind ADJ73's "context must be grounded": the
+  *reason* federal outranks state (the Supremacy Clause) rides on the edge itself rather than
+  being asserted bare in host code. A `relate outranks_context(federal, state) source "…" trust
+  authoritative` clause in adj-lang already lowers to such a fact — no surface change needed.
+- **`KnowledgeBase::context_edges()`** (private) — the EFFECTIVE edge set: the union of explicit
+  `add_context_outranks` edges and grounded-fact edges. `context_outranks`, `context_order_has_cycle`,
+  and the internal `reaches_self` walk this union, so a cycle formed *across* the two sources
+  (explicit `a > b` + grounded `outranks_context(b, a)`) is still detected.
+
+### Unchanged (back-compat)
+
+- A KB with no `outranks_context` facts and no `add_context_outranks` calls is byte-identical to
+  0.19 (every existing precedence + integration test passes unchanged). A non-atom
+  `outranks_context(_, X)` fact is NOT an edge — it stays an ordinary queryable fact.
+
+### Scope
+
+PR-B-2. The grounded `context-precedence` **rulebook** (a `.adj` library of `relate
+outranks_context(…)` edges, each byte-quoting its charter — the Supremacy Clause, circuit
+precedence, guideline editions) + a worked legal example end-to-end through the CLI `governing`
+section land in PR-B-3 (now unblocked by this engine change). The recursive conflict-resolution
+meta-rules (recency / appeal-status / lex specialis as themselves-grounded rules) follow.
+
 ## [0.19.0] - 2026-06-16 — grounded context precedence (lex superior) (ADJ73 PR-B engine core)
 
 ### Added
