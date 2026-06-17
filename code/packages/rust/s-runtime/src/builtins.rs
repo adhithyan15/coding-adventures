@@ -163,6 +163,9 @@ pub fn install(env: &Env) {
     define(env, "ncol", builtin("ncol", b_ncol));
     define(env, "names", builtin("names", b_names));
     define(env, "colnames", builtin("colnames", b_names));
+    // The `names(x) <- value` replacement function and its functional form.
+    define(env, "names<-", builtin("names<-", b_set_names_replace));
+    define(env, "setNames", builtin("setNames", b_set_names));
     define(env, "dim", builtin("dim", b_dim));
     define(env, "head", builtin("head", b_head));
 
@@ -246,14 +249,74 @@ fn b_ncol(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     }
 }
 
-/// `names(df)` / `colnames(df)` — the column names.
+/// `names(x)` / `colnames(df)` — the names of `x`. For a data frame these are the
+/// column names; for a **named vector** (R-15) they are the element names (an
+/// unset name → `NA`). Anything without names is `NULL`.
 fn b_names(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     match first_positional(args)? {
         SValue::DataFrame { names, .. } => {
             Ok(SValue::Character(names.iter().cloned().map(Some).collect()))
         }
+        SValue::Named { names, .. } => Ok(SValue::Character(names.clone())),
         _ => Ok(SValue::Null),
     }
+}
+
+/// `names<-`(x, value)` — the replacement form behind `names(x) <- value`
+/// (R-15). Coerces `value` to character and attaches it as `x`'s names, R-style:
+/// a too-short names vector pads the tail with `NA`, a too-long one is an error,
+/// and `value = NULL` drops the names entirely. Names attach only to atomic
+/// vectors; on any other value the names are silently ignored (R errors, but
+/// this subset keeps it lenient and returns the value unchanged).
+fn b_set_names_replace(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // The replacement convention passes (x, value): x is positional[0], the new
+    // names are the `value =` named arg (or positional[1]).
+    let x = first_positional(args)?.clone();
+    let value = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("value"))
+        .map(|a| &a.value)
+        .or_else(|| nth_positional(args, 1));
+
+    match value {
+        // `names(x) <- NULL` clears the names.
+        None | Some(SValue::Null) => Ok(x.strip_names().clone()),
+        Some(v) => {
+            let new_names = v.as_character();
+            // Reject a names vector longer than the value (R's
+            // "'names' attribute must be the same length as the vector" — except
+            // R actually allows shorter with NA-pad; longer is the error).
+            if new_names.len() > x.length() {
+                return Err(SError::BadArgs(format!(
+                    "'names' attribute [{}] must be no longer than the vector [{}]",
+                    new_names.len(),
+                    x.length()
+                )));
+            }
+            Ok(SValue::with_names(x, new_names))
+        }
+    }
+}
+
+/// `setNames(x, nm)` — the functional form of `names(x) <- nm`: return `x` with
+/// its names set to `nm` (NA-padded / cleared by `NULL`, as `names<-`).
+fn b_set_names(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // Reuse the replacement engine, mapping the second positional to `value`.
+    let x = first_positional(args)?.clone();
+    let nm = nth_positional(args, 1).cloned().unwrap_or(SValue::Null);
+    b_set_names_replace(
+        interp,
+        &[
+            Arg {
+                name: None,
+                value: x,
+            },
+            Arg {
+                name: Some("value".to_string()),
+                value: nm,
+            },
+        ],
+    )
 }
 
 /// `dim(df)` — `c(nrow, ncol)`.

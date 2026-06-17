@@ -84,7 +84,9 @@ mod tests {
     }
 
     fn nums(src: &str) -> Vec<f64> {
-        match eval_r(src).unwrap() {
+        // See through a names attribute (R-15): a named numeric is still numeric.
+        let value = eval_r(src).unwrap();
+        match value.strip_names() {
             SValue::Double(d) => d.data().to_vec(),
             other => panic!("expected double, got {}", other.type_name()),
         }
@@ -670,6 +672,178 @@ mod tests {
         assert_eq!(
             nums("a <- c(1, 2, 3)\nb <- a\na[1] <- 99\nb\n"),
             vec![1.0, 2.0, 3.0]
+        );
+    }
+
+    // --- R-15: names() and named-vector access --------------------------
+
+    /// The names of a value as a vector of strings (an NA name → the literal
+    /// string "NA"), for assertions; panics if `x` has no names.
+    fn names_of(src: &str) -> Vec<String> {
+        match eval_r(src).unwrap() {
+            SValue::Character(v) => v
+                .into_iter()
+                .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+                .collect(),
+            other => panic!("expected character names, got {}", other.type_name()),
+        }
+    }
+
+    #[test]
+    fn named_construction_attaches_argument_names() {
+        // c(a = 1, b = 2, c = 3) attaches the names; the values are unchanged.
+        assert_eq!(nums("c(a = 1, b = 2, c = 3)\n"), vec![1.0, 2.0, 3.0]);
+        assert_eq!(
+            names_of("names(c(a = 1, b = 2, c = 3))\n"),
+            vec!["a", "b", "c"]
+        );
+        // A vector with no names anywhere stays unnamed → names() is NULL.
+        assert_eq!(show("names(c(1, 2, 3))\n"), "NULL");
+    }
+
+    #[test]
+    fn named_construction_combines_nested_names_r_style() {
+        // c(x = c(a = 1), 2): the named element of a named piece is "x.a"; the
+        // bare second element is unnamed (empty string).
+        assert_eq!(names_of("names(c(x = c(a = 1), 2))\n"), vec!["x.a", ""]);
+        // A tagged multi-element argument with no inner names → tag + position.
+        assert_eq!(names_of("names(c(p = c(1, 2)))\n"), vec!["p1", "p2"]);
+        // An inner-named, untagged argument keeps the inner names verbatim.
+        assert_eq!(
+            names_of("names(c(c(a = 1, b = 2), 3))\n"),
+            vec!["a", "b", ""]
+        );
+    }
+
+    #[test]
+    fn names_get_and_set_and_clear() {
+        // names(x) <- value sets the names.
+        assert_eq!(
+            names_of("x <- c(1, 2, 3)\nnames(x) <- c(\"a\", \"b\", \"c\")\nnames(x)\n"),
+            vec!["a", "b", "c"]
+        );
+        // A too-short names vector NA-pads the tail.
+        assert_eq!(
+            names_of("x <- c(1, 2, 3)\nnames(x) <- c(\"a\")\nnames(x)\n"),
+            vec!["a", "NA", "NA"]
+        );
+        // names(x) <- NULL drops the names entirely.
+        assert_eq!(
+            show("x <- c(a = 1, b = 2)\nnames(x) <- NULL\nnames(x)\n"),
+            "NULL"
+        );
+        // The values survive a names round-trip.
+        assert_eq!(
+            nums("x <- c(1, 2, 3)\nnames(x) <- c(\"a\", \"b\", \"c\")\nx\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn names_set_rejects_too_many_names() {
+        // A names vector longer than the value is an error (R's length rule).
+        assert!(eval_r("x <- c(1, 2)\nnames(x) <- c(\"a\", \"b\", \"c\")\n").is_err());
+    }
+
+    #[test]
+    fn set_names_functional_form() {
+        assert_eq!(
+            names_of("names(setNames(c(1, 2), c(\"a\", \"b\")))\n"),
+            vec!["a", "b"]
+        );
+        assert_eq!(
+            nums("setNames(c(10, 20), c(\"x\", \"y\"))\n"),
+            vec![10.0, 20.0]
+        );
+    }
+
+    #[test]
+    fn character_indexing_hits_and_misses() {
+        // x["b"] selects by name.
+        assert_eq!(nums("x <- c(a = 1, b = 2, c = 3)\nx[\"b\"]\n"), vec![2.0]);
+        // A vector of names selects several, in order.
+        assert_eq!(
+            nums("x <- c(a = 1, b = 2, c = 3)\nx[c(\"a\", \"c\")]\n"),
+            vec![1.0, 3.0]
+        );
+        // An unmatched name yields NA (value) and an NA name.
+        assert_eq!(show("x <- c(a = 1, b = 2)\nx[\"z\"]\n"), "<NA>\n  NA");
+        // The selected names come along.
+        assert_eq!(
+            names_of("x <- c(a = 1, b = 2, c = 3)\nnames(x[c(\"c\", \"a\")])\n"),
+            vec!["c", "a"]
+        );
+    }
+
+    #[test]
+    fn positional_negative_logical_indexing_still_work_on_named() {
+        let setup = "x <- c(a = 1, b = 2, c = 3)\n";
+        // Positional keeps names along.
+        assert_eq!(nums(&format!("{setup}x[c(1, 3)]\n")), vec![1.0, 3.0]);
+        assert_eq!(
+            names_of(&format!("{setup}names(x[c(1, 3)])\n")),
+            vec!["a", "c"]
+        );
+        // Negative excludes.
+        assert_eq!(nums(&format!("{setup}x[-2]\n")), vec![1.0, 3.0]);
+        // Logical masks.
+        assert_eq!(
+            nums(&format!("{setup}x[c(TRUE, FALSE, TRUE)]\n")),
+            vec![1.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn unnamed_vector_indexing_unchanged() {
+        // Regression: the R-13/R-14 plain-vector behavior is untouched.
+        assert_eq!(nums("c(10, 20, 30)[-2]\n"), vec![10.0, 30.0]);
+        assert_eq!(
+            nums("c(10, 20, 30)[c(TRUE, FALSE, TRUE)]\n"),
+            vec![10.0, 30.0]
+        );
+        assert_eq!(nums("c(10, 20, 30)[2]\n"), vec![20.0]);
+    }
+
+    #[test]
+    fn named_vector_prints_names_above_values() {
+        // Two aligned rows: names, then values. Column widths fit the wider cell.
+        assert_eq!(show("c(a = 1, b = 2, c = 3)\n"), "a b c\n1 2 3");
+        // Wider value column widens the name column too.
+        assert_eq!(show("c(x = 100, y = 2)\n"), "  x y\n100 2");
+    }
+
+    #[test]
+    fn names_survive_index_assignment_and_drop_through_arithmetic() {
+        // Sub-assignment into a named vector keeps the names.
+        assert_eq!(
+            names_of("x <- c(a = 1, b = 2, c = 3)\nx[2] <- 9\nnames(x)\n"),
+            vec!["a", "b", "c"]
+        );
+        assert_eq!(
+            nums("x <- c(a = 1, b = 2, c = 3)\nx[2] <- 9\nx\n"),
+            vec![1.0, 9.0, 3.0]
+        );
+        // Character-index assignment writes the named element.
+        assert_eq!(
+            nums("x <- c(a = 1, b = 2)\nx[\"a\"] <- 5\nx\n"),
+            vec![5.0, 2.0]
+        );
+        // Arithmetic drops names (R semantics): names() of x + 1 is NULL.
+        assert_eq!(show("x <- c(a = 1, b = 2)\nnames(x + 1)\n"), "NULL");
+        // length() sees through the names wrapper.
+        assert_eq!(nums("length(c(a = 1, b = 2, c = 3))\n"), vec![3.0]);
+    }
+
+    #[test]
+    fn named_character_vector_round_trips() {
+        // Names work on a character vector too.
+        assert_eq!(
+            show("x <- c(first = \"hi\", second = \"yo\")\nx[\"second\"]\n"),
+            "second\n  \"yo\""
+        );
+        assert_eq!(
+            names_of("names(c(first = \"hi\", second = \"yo\"))\n"),
+            vec!["first", "second"]
         );
     }
 }
