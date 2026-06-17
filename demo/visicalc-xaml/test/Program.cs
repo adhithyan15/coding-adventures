@@ -124,6 +124,20 @@ using (var inf = new InfiniteSheetModel())
     Check("inf commit E2", inf.RowCells(2)[4], "151.00"); // 108+14+7+22, formatted
     Check("inf commit A5", inf.RowCells(5)[0], "139.00"); // 15+108+12+4, formatted
     Check("inf commit E5", inf.RowCells(5)[4], "269.00"); // grand total, formatted
+
+    // FillDown replicates the selected cell, shifting relative refs per target.
+    // Seed a fresh column via select+commit: H1=2, H2=3, H3=4 (col 8 = H);
+    // I1 = H1*10 (col 9 = I). Select I1 and fill down 10 — each filled formula
+    // tracks its row (I2 = H2*10 = 30, I3 = H3*10 = 40), and I1 stays untouched.
+    inf.SelectInf(1, 8); inf.CommitInf("2");        // H1
+    inf.SelectInf(2, 8); inf.CommitInf("3");        // H2
+    inf.SelectInf(3, 8); inf.CommitInf("4");        // H3
+    inf.SelectInf(1, 9); inf.CommitInf("=H1*10");   // I1 = 20
+    inf.SelectInf(1, 9);
+    inf.FillDown(10);
+    Check("inf fillDown I2", inf.RowCells(2)[8], "30"); // I2 = H2*10
+    Check("inf fillDown I3", inf.RowCells(3)[8], "40"); // I3 = H3*10
+    Check("inf fillDown I1 source", inf.RowCells(1)[8], "20"); // I1 untouched
 }
 
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
