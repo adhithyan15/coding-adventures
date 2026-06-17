@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.13 — `range` builtin lowers to the range runtime (Q9b)
+
+Second item of the Q9 structural-builtin tranche.  Ruby `a..b` / `a...b` (and
+the begin/endless `a..` / `..b` forms) reach this backend as
+`BuiltinCall("range", [start, stop, exclusive])`.  JavaScript has no range type
+at all, so `emit_builtin_call` now lowers it to `__SirRange.range(...)` from the
+new per-concern package `@coding-adventures/sir-runtime-range` (the SIR
+first-class `Range` value).  A `uses_range` content-walk gates the
+`RUNTIME_RANGE` import, so pure modules never gain the dependency.  Tests:
+`range_builtin_lowers_to_runtime_and_imports_ts` (emits
+`__SirRange.range(1, 5, false)` + the import, never the dispatch fallthrough) and
+`no_range_import_when_unused_ts`.
+
 ## 0.1.12 — `lambda` builtin lowers to its inner closure (Q9a)
 
 First item of the structural-builtin follow-up tranche (Q9) the Q8d audit

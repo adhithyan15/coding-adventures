@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/sir-runtime-range",
+  "version": "0.1.0",
+  "description": "Range runtime for Semantic-IR-emitted TypeScript/JavaScript — the SIR Range value type (inclusive/exclusive, begin/endless) with iteration, membership and to-list",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "sir",
+    "semantic-ir",
+    "runtime",
+    "range",
+    "compiler",
+    "cross-language",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

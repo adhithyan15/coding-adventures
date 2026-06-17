@@ -55,6 +55,13 @@ pub const RUNTIME_REGEX: &str = r##"import * as __SirRegex from "@coding-adventu
 pub const RUNTIME_SHELL: &str = r##"import * as __SirShell from "@coding-adventures/sir-runtime-shell";
 "##;
 
+/// The range-runtime import, emitted **only** when a module calls the `range`
+/// builtin (a Ruby `a..b` / `a...b` literal).  Bound as `__SirRange`; provides
+/// the first-class `Range` value type (JavaScript has no range type at all).
+/// See `code/specs/sir-runtime.md`.
+pub const RUNTIME_RANGE: &str = r##"import * as __SirRange from "@coding-adventures/sir-runtime-range";
+"##;
+
 #[cfg(test)]
 mod tests {
     use super::*;
