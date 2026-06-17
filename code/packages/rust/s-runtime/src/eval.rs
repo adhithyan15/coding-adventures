@@ -490,6 +490,49 @@ impl Interpreter {
                 ))
             })?;
         let (a, b) = (ad.data(), bd.data());
+
+        // MXF-4 — the shared f64 substrate.
+        //
+        // The clean win is the **NA-free** case: R's `Matrix` is already a
+        // column-major `[nrow, ncol]` block of `f64`, which is exactly
+        // `array_runtime::Array`'s layout, so we hand the two operands to
+        // `array_runtime::execute(MatMul, …)`. That lowers to a `DType::F64`
+        // `matrix-ir` graph and runs on the *cost-selected* backend (CPU today,
+        // a GPU once one advertises `f64`), at full double precision (MXF-3's
+        // 8-byte codec). The result is **bit-identical** to the loop below.
+        //
+        // Why not always? R's NA is a *specific* NaN bit pattern
+        // (`r_vector::NA_REAL_BITS`). IEEE floating multiply/add on a NaN yields
+        // an *implementation-defined* NaN payload, so an NA pushed through the
+        // substrate would not reliably come back as R's NA — it would silently
+        // become a plain `NaN`. So when either operand carries an NA we keep the
+        // hand-written loop, which short-circuits any dotted column to
+        // `na_real()` exactly as before. (Empty inner dim `ak == 0` is also kept
+        // on the loop: that is a degenerate "sum of no terms" = 0 matrix, which
+        // the loop already produces and `execute` does not model.)
+        let has_na = a.iter().chain(b.iter()).any(|&x| is_na_real(x));
+        if !has_na && ak > 0 {
+            // Build column-major Arrays directly from R's column-major storage —
+            // no transpose, no semantic copy. `from_shape` validates that the
+            // data length matches `nrow*ncol`, which holds by construction here.
+            if let (Ok(am_arr), Ok(bm_arr)) = (
+                array_runtime::Array::from_shape(a.to_vec(), vec![am, ak]),
+                array_runtime::Array::from_shape(b.to_vec(), vec![bk, bn]),
+            ) {
+                if let Ok(prod) =
+                    array_runtime::execute(array_runtime::Kernel::MatMul, &am_arr, &bm_arr)
+                {
+                    return Ok(SValue::Matrix {
+                        data: Double::from_values(prod.data().to_vec()),
+                        nrow: am,
+                        ncol: bn,
+                    });
+                }
+                // Any substrate error (e.g. a future size cap) falls through to
+                // the loop, which already bounded `total` by `MAX_SEQ_LEN` above.
+            }
+        }
+
         let mut out = vec![0.0; total];
         for c in 0..bn {
             for r in 0..am {
