@@ -133,7 +133,12 @@ postfix = primary { call_suffix | dindex_suffix | index_suffix | dollar_suffix }
 
 call_suffix   = LPAREN [ arg_list ] RPAREN ;
 dindex_suffix = LBRACKET LBRACKET expr RBRACKET RBRACKET ;
-index_suffix  = LBRACKET [ arg_list ] RBRACKET ;
+# Single `[ … ]` indexing. Each comma-separated position is OPTIONAL, so a whole
+# row / column can be selected with an empty subscript: `m[i, ]`, `m[, j]`,
+# `m[, ]`. The number of positions is (number of commas + 1); a position with no
+# `subscript` means "select everything along that dimension".
+index_suffix  = LBRACKET [ subscript ] { COMMA [ subscript ] } RBRACKET ;
+subscript     = expr ;
 dollar_suffix = DOLLAR NAME ;
 
 arg_list = arg { COMMA arg } ;

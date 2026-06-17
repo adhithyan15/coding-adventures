@@ -524,4 +524,75 @@ mod tests {
         // with a 2 x 2002 RHS exceeds the column cap.
         assert!(eval_r("solve(diag(2), matrix(1, 2, 2002))\n").is_err());
     }
+
+    // --- R-13: 2-D matrix indexing -------------------------------------
+
+    #[test]
+    fn matrix_element_row_and_column_indexing() {
+        // m is column-major [[1,3,5],[2,4,6]].
+        assert_eq!(nums("matrix(1:6, 2, 3)[1, 2]\n"), vec![3.0]); // (1,2)
+        assert_eq!(nums("matrix(1:6, 2, 3)[1, ]\n"), vec![1.0, 3.0, 5.0]); // whole row 1
+        assert_eq!(nums("matrix(1:6, 2, 3)[, 2]\n"), vec![3.0, 4.0]); // whole column 2
+                                                                      // m[3] indexes the flat column-major vector.
+        assert_eq!(nums("matrix(1:6, 2, 3)[3]\n"), vec![3.0]);
+    }
+
+    #[test]
+    fn matrix_submatrix_keeps_its_shape() {
+        // A multi-row, multi-column subset stays a matrix (no drop).
+        assert_eq!(nums("dim(matrix(1:6, 2, 3)[1:2, 2:3])\n"), vec![2.0, 2.0]);
+        assert_eq!(
+            nums("c(matrix(1:6, 2, 3)[1:2, 2:3])\n"),
+            vec![3.0, 4.0, 5.0, 6.0]
+        );
+    }
+
+    #[test]
+    fn matrix_negative_and_logical_subscripts() {
+        // Negative excludes; logical masks (recycled).
+        assert_eq!(nums("matrix(1:6, 2, 3)[-1, ]\n"), vec![2.0, 4.0, 6.0]);
+        assert_eq!(
+            nums("c(matrix(1:6, 2, 3)[, -1])\n"),
+            vec![3.0, 4.0, 5.0, 6.0]
+        );
+        assert_eq!(
+            nums("matrix(1:6, 2, 3)[c(TRUE, FALSE), ]\n"),
+            vec![1.0, 3.0, 5.0]
+        );
+    }
+
+    #[test]
+    fn vector_negative_and_logical_indexing_now_work() {
+        // R-13 extended 1-D indexing too: negatives exclude, logicals mask
+        // (the logical case previously coerced to numeric and was wrong).
+        assert_eq!(nums("c(10, 20, 30)[-2]\n"), vec![10.0, 30.0]);
+        assert_eq!(
+            nums("c(10, 20, 30)[c(TRUE, FALSE, TRUE)]\n"),
+            vec![10.0, 30.0]
+        );
+        // Mixing positive and negative is an error.
+        assert!(eval_r("c(10, 20, 30)[c(-1, 2)]\n").is_err());
+    }
+
+    #[test]
+    fn matrix_out_of_bounds_subscript_is_an_error() {
+        assert!(eval_r("matrix(1:6, 2, 3)[5, 1]\n").is_err());
+        assert!(eval_r("matrix(1:6, 2, 3)[1, 9]\n").is_err());
+    }
+
+    #[test]
+    fn empty_subscript_on_a_data_frame_selects_the_whole_dimension() {
+        // The grammar change (empty subscripts) benefits data frames too.
+        assert_eq!(
+            nums("data.frame(x = 1:2, y = c(9, 8))[, 1]\n"),
+            vec![1.0, 2.0]
+        );
+    }
+
+    #[test]
+    fn matrix_sub_assignment_is_deferred() {
+        // `m[i, j] <- v` is not yet supported (R-14); it errors cleanly rather
+        // than panicking or silently doing nothing.
+        assert!(eval_r("m <- matrix(1:6, 2, 3)\nm[1, 1] <- 99\n").is_err());
+    }
 }

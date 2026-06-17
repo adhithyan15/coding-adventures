@@ -20,8 +20,8 @@ use crate::builtins;
 use crate::env::{define, lookup, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
-    arithmetic, bounded_sequence, class_of, compare, format_value, index, membership, negate, Arg,
-    Param, SValue, MAX_SEQ_LEN,
+    arithmetic, bounded_sequence, class_of, compare, format_value, index, index2d, membership,
+    negate, Arg, Param, SValue, MAX_SEQ_LEN,
 };
 use coding_adventures_s_parser::try_parse_s;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -555,12 +555,24 @@ impl Interpreter {
                     value = self.apply(value, &args, env)?;
                 }
                 "index_suffix" => {
-                    let args = self.eval_args(suffix, env)?;
-                    value = match args.len() {
-                        1 => index(&value, &args[0].value)?,
-                        // `df[rows, cols]` — 2-D subsetting (data frames).
-                        2 => crate::dataframe::index2d(&value, &args[0].value, &args[1].value)?,
-                        _ => return Err(SError::Index("too many subscripts".into())),
+                    // Each comma-separated position is optional (`m[i, ]`,
+                    // `m[, j]`); `None` means "all of that dimension".
+                    let subs = self.eval_subscripts(suffix, env)?;
+                    value = match subs.len() {
+                        // `x[i]` (or `x[]` → the whole object unchanged).
+                        1 => match &subs[0] {
+                            Some(i) => index(&value, i)?,
+                            None => value,
+                        },
+                        // `m[rows, cols]` / `df[rows, cols]` — 2-D subsetting,
+                        // with empty subscripts selecting a whole dimension.
+                        2 => index2d(&value, subs[0].as_ref(), subs[1].as_ref())?,
+                        _ => {
+                            return Err(SError::Index(format!(
+                                "incorrect number of dimensions ({})",
+                                subs.len()
+                            )))
+                        }
                     };
                     self.visible.set(true);
                 }
@@ -608,6 +620,29 @@ impl Interpreter {
             }
         }
         Ok(args)
+    }
+
+    /// Evaluate the comma-separated subscripts of an `index_suffix` into one
+    /// slot per position. A position with no `subscript` node (an empty
+    /// subscript like the row part of `m[, j]`) yields `None`, meaning "select
+    /// the whole dimension". The number of positions is (number of commas + 1).
+    fn eval_subscripts(&self, suffix: &GrammarASTNode, env: &Env) -> SResult<Vec<Option<SValue>>> {
+        let mut slots: Vec<Option<SValue>> = Vec::new();
+        let mut current: Option<SValue> = None;
+        for child in &suffix.children {
+            match child {
+                ASTNodeOrToken::Node(n) if n.rule_name == "subscript" => {
+                    current = Some(self.eval_node(only_node(n)?, env)?);
+                }
+                ASTNodeOrToken::Token(t) if t.value == "," => {
+                    slots.push(current.take());
+                }
+                // Skip the surrounding `[` / `]` tokens.
+                _ => {}
+            }
+        }
+        slots.push(current.take());
+        Ok(slots)
     }
 
     fn eval_arg(&self, arg: &GrammarASTNode, env: &Env) -> SResult<Arg> {
