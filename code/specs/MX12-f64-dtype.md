@@ -37,12 +37,14 @@ a redesign.
 
 ## §2 The rollout (one item = one PR)
 
-- **MXF-1 — `matrix-ir` `F64` + `matrix-cpu` kernels** *(this PR)*. The dtype
+- **MXF-1 — `matrix-ir` `F64` + `matrix-cpu` kernels** *(shipped)*. The dtype
   itself plus a working CPU executor, so an `f64` graph **builds, validates, and
   executes exactly** on CPU end-to-end.
-- **MXF-2 — `matrix-runtime` cost model.** A `gflops_f64` throughput on
+- **MXF-2 — `matrix-runtime` cost model** *(this PR)*. A `gflops_f64` throughput on
   `BackendProfile` and an `F64` arm in the cost model, so the planner places
-  `f64` ops on the cheapest backend (typically ~½ the `f32` GPU throughput).
+  `f64` ops on the cheapest backend that can actually run them — a backend with
+  no `f64` kernel advertises `gflops_f64 = 0`, which the cost model turns into the
+  ∞-cost sentinel, keeping `f64` on the CPU.
 - **MXF-3 — `array-runtime` `f64` path.** Lower `Array`s to an `F64` graph and
   add an 8-byte codec, so `execute` keeps the exact `f64` answer (no `f32`
   round-trip). The reference `ops` path and the executed path now agree to full
@@ -80,7 +82,31 @@ a redesign.
   would round (e.g. a sum that is not representable in `f32`), proving the new
   path is genuinely double-precision.
 
-## §4 Out of scope (later items / future)
+## §4 MXF-2 — what this PR delivers
+
+### `executor-protocol`
+- A `gflops_f64: u32` field on `BackendProfile`, sitting next to `gflops_f32`,
+  with matching `encode_profile`/`decode_profile` wire I/O (one extra `u32`,
+  inserted symmetrically so the round-trip stays balanced). Every constructor of
+  the profile — the CPU/CUDA/Metal executor defaults, the runtime/registry/test
+  stubs — sets it: CPUs to their `f32` rate, GPUs (no `f64` kernel in V1) to `0`.
+
+### `matrix-runtime`
+- `compute_cost`'s per-dtype rate selection now reads `profile.gflops_f64` for
+  `DType::F64`, replacing the MXF-1 placeholder that reused `gflops_f32`. The
+  existing `gflops == 0 → u64::MAX / 2` branch then makes an `f64` op on a
+  backend with no `f64` throughput cost *infinity*, so the planner never ships
+  `f64` to a GPU that can't run it.
+
+### Tests
+- Unit: a 4096³ `f64` matmul costs the ∞ sentinel on the GPU profile but a
+  finite amount on the CPU; halving only `gflops_f64` doubles the `f64` cost,
+  proving the F64 arm reads its own field rather than the `f32` rate.
+- Integration: an `f64` matmul planned against a CPU + a *faster* GPU (that
+  advertises `f64` capability but `gflops_f64 = 0`) lands on the CPU — the
+  decision falls through to cost, not the capability filter.
+
+## §5 Out of scope (later items / future)
 
 - The GPU (CUDA/Metal) executors gaining `f64` kernels — MXF-1/-3 keep `f64` on
   the CPU executor; the planner (MXF-2) simply won't place `f64` on a GPU that
@@ -88,7 +114,7 @@ a redesign.
 - `F16`/`I64` (the other reserved wire tags).
 - The specialiser fast path for `f64`.
 
-## §5 References
+## §6 References
 
 Internal: [`MX00`](MX00-matrix-execution-overview.md),
 [`MX01`](MX01-matrix-ir.md), [`MX03`](MX03-executor-protocol.md),
