@@ -84,7 +84,11 @@ column-letter header share one horizontal `ScrollState`, so dragging any row
 pans them all in lockstep (the header is gesture-disabled — it only follows).
 Tap a cell → `selectInf(row,col)` (clamps, loads the source into the formula
 bar); press Enter → `commitInf(text)` (writes through, recomputes dependents,
-regrows the extent). `InfiniteSheetModel` (in `Engine.kt`) seeds far-flung
+regrows the extent). The **"Fill ↓ 10"** button next to the formula bar calls
+`InfiniteSheetModel.fillDown(10)` (over the C ABI's `sc_fill`) to replicate the
+selected cell into the 10 rows below it — the engine shifts each copy's relative
+references (`=A1`→`=A2`, …), pins absolute (`$`) refs, and carries the format.
+`InfiniteSheetModel` (in `Engine.kt`) seeds far-flung
 sparse cells (`Z1000`, `BA50`, `BB50`) and derives the extent from `usedRange()`
 + a margin.
 
@@ -95,8 +99,9 @@ and asserts the window is engine-computed + dense (A1=15, E1=38, E5=169), a
 formula 1000 rows down (`Z1000` = 39) is reachable, the gaps are empty (sparse),
 column letters run AA/BA, and editing `A1` dirties the far dependent `Z1000` via
 `changedSince`. It also drives `InfiniteSheetModel` directly: `rowCells`
-one-read rows, `selectInf` clamping + source load, and `commitInf` recompute
-(A2 `8`→`108` ⇒ E2 151, A5 139, E5 269).
+one-read rows, `selectInf` clamping + source load, `commitInf` recompute
+(A2 `8`→`108` ⇒ E2 151, A5 139, E5 269), and `fillDown` (`I1 = =H1*10` filled
+down 10 rows ⇒ I2 = H2*10 = 30, I3 = H3*10 = 40, source I1 = 20 untouched).
 
 The Compose UI itself (`InfiniteSheet.kt` + the `Main.kt` toggle) is verified to
 compile against the real Compose Desktop APIs via `gradle compileKotlin`; the

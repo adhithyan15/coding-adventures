@@ -124,6 +124,20 @@ fun main() {
     check("inf commit E2", inf.rowCells(2)[4], "151.00") // 108+14+7+22, formatted
     check("inf commit A5", inf.rowCells(5)[0], "139.00") // 15+108+12+4, formatted
     check("inf commit E5", inf.rowCells(5)[4], "269.00") // grand total, formatted
+
+    // fillDown replicates the selected cell, shifting relative refs per target.
+    // Seed a fresh column via select+commit: H1=2, H2=3, H3=4 (col 8 = H);
+    // I1 = H1*10 (col 9 = I). Select I1 and fill down 10 — each filled formula
+    // tracks its row (I2 = H2*10 = 30, I3 = H3*10 = 40), and I1 stays untouched.
+    inf.selectInf(1, 8); inf.commitInf("2")        // H1
+    inf.selectInf(2, 8); inf.commitInf("3")        // H2
+    inf.selectInf(3, 8); inf.commitInf("4")        // H3
+    inf.selectInf(1, 9); inf.commitInf("=H1*10")   // I1 = 20
+    inf.selectInf(1, 9)
+    inf.fillDown(10)
+    check("inf fillDown I2", inf.rowCells(2)[8], "30") // I2 = H2*10
+    check("inf fillDown I3", inf.rowCells(3)[8], "40") // I3 = H3*10
+    check("inf fillDown I1 source", inf.rowCells(1)[8], "20") // I1 untouched
     inf.close()
 
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
