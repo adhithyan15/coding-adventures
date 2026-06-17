@@ -49,11 +49,10 @@ a redesign.
   graph and add an 8-byte codec, so `execute` keeps the exact `f64` answer (no
   `f32` round-trip). The reference `ops` path and the executed path now agree to
   full precision.
-- **MXF-4 — R adopts the substrate.** Route `s-runtime`'s `%*%` (and the
-  elementwise/transpose/reduction matrix ops where it wins) through
-  `array_runtime::execute` at `f64`, so R gets cost-based CPU/GPU dispatch with
-  no precision loss — replacing the hand-written loops. (MATLAB switching its
-  `double` ops to `F64` is a natural follow-on.)
+- **MXF-4 — R adopts the substrate** *(this PR — completes the MX12 rollout)*.
+  Route `s-runtime`'s `%*%` through `array_runtime::execute` at `f64`, so R gets
+  cost-based CPU/GPU dispatch with no precision loss — replacing the hand-written
+  loop. (MATLAB switching its `double` ops to `F64` is a natural follow-on.)
 
 ## §3 MXF-1 — what this PR delivers
 
@@ -147,7 +146,66 @@ from `execute` as plain `1.0`. MXF-3 removes that round-trip end-to-end.
   cleanly, with no panic or truncation), and the `f32` lowering path is kept under
   test so it is unchanged.
 
-## §6 Out of scope (later items / future)
+## §6 MXF-4 — what this PR delivers (completes the MX12 rollout)
+
+Before this PR, R's matrix product `a %*% b` was a **hand-written `f64` triple
+loop** in `s-runtime`'s evaluator (`eval.rs::matrix_multiply`) — exactly the
+per-language duplication the shared substrate exists to eliminate. MXF-4 routes
+it through [`array_runtime::execute`]`(Kernel::MatMul, …)` at `DType::F64`, so R's
+flagship matrix op now flows through the same cost-based CPU/GPU planner as
+MATLAB's `A * B`, at full double precision (MXF-3's bit-exact `f64` path).
+
+### `s-runtime` — `%*%` routed through the substrate (`eval.rs`)
+- `matrix_multiply` keeps its R-facing contract unchanged: a left vector is a
+  `1×n` row, a right vector an `n×1` column, conformability is checked first, and
+  the `MAX_SEQ_LEN` result-size cap is preserved (a substrate matmul never sizes
+  an allocation R's own cap would have rejected).
+- For the **NA-free** case it builds two column-major [`array_runtime::Array`]s
+  (R's `Matrix` is already column-major `[nrow, ncol]`, so the layout matches with
+  no copy of semantics) and calls `execute`, which lowers to an `F64` `matrix-ir`
+  graph and runs it on the cost-selected backend. The 8-byte `f64` codec means the
+  result is **bit-identical** to the old loop.
+- **NA correctness boundary.** R's NA is a *specific* NaN bit pattern
+  (`r_vector::NA_REAL_BITS`); IEEE arithmetic on a NaN yields an
+  *implementation-defined* NaN payload, so pushing an NA through the substrate's
+  floating multiply/add would not reliably come back as R's NA. So when **either
+  operand contains an NA**, `matrix_multiply` falls back to the original loop
+  (which short-circuits a dotted column to `na_real()` exactly as before). This
+  keeps every existing NA test bit-for-bit while the common numeric path gets
+  cost-based dispatch.
+
+### What is *left on its current implementation* (and why)
+- **`t()` (transpose)** — `array-runtime` exposes transpose only on the *reference*
+  `ops` path, not through `execute` (MXF-3 explicitly leaves `transpose`/reductions
+  un-lowered for execution). Routing it would not change the backend, so it stays
+  on its in-place column↔row reshuffle.
+- **`rowSums`/`colSums`/`apply` reductions** — `execute_sum` is **reduce-*all*** (a
+  whole-array scalar), not the *axis-wise* reduction R's row/column sums need.
+  There is no axis-reduction `execute` primitive yet, so these stay on their loops.
+- **`diag`/`solve`/`det`** — no matching `array-runtime`/`matrix-ir` primitive
+  (`solve`/`det` are LU-factorisation algorithms the substrate doesn't model); they
+  keep their hand-written implementations, including `solve`'s existing O(n³) size
+  guard. Forcing them onto the substrate was explicitly out of scope.
+- **Elementwise matrix arithmetic (`+`/`*`/…)** — R flattens matrices to a recycled
+  `Double` with NA-aware recycling and scalar broadcasting, returning a plain
+  vector; `execute`'s elementwise path is equal-shape, broadcast-free and
+  NA-agnostic, so routing it would change observable behavior. Left as-is.
+
+### Tests
+- A new s-runtime/r-runtime test asserts `%*%` through the substrate **equals a
+  known product** and is **bit-exact on an `f64`-precision case** (a factor like
+  `1 + 2^-40` that an `f32` round-trip would destroy survives).
+- **Every existing R matrix test is unchanged and still passes** — `%*%` on
+  integer matrices, the `v %*% w` dot product, `M %*% I == M`, the non-conformable
+  error, `t()`, `rowSums`/`colSums`, `apply`, `diag`, `det`, `solve` — proving the
+  substrate path is a transparent, bit-identical swap for the matmul loop.
+
+### `BUILD`
+- `s-runtime`'s `BUILD` gains `array-runtime` and its full transitive `path`-dep
+  chain (`matrix-ir`, `matrix-cpu`, `matrix-runtime`, `executor-protocol`,
+  `compute-ir`, …) installed leaf-to-root, per the monorepo's BUILD lesson.
+
+## §7 Out of scope (later items / future)
 
 - The GPU (CUDA/Metal) executors gaining `f64` kernels — MXF-1/-3 keep `f64` on
   the CPU executor; the planner (MXF-2) simply won't place `f64` on a GPU that
@@ -155,7 +213,7 @@ from `execute` as plain `1.0`. MXF-3 removes that round-trip end-to-end.
 - `F16`/`I64` (the other reserved wire tags).
 - The specialiser fast path for `f64`.
 
-## §7 References
+## §8 References
 
 Internal: [`MX00`](MX00-matrix-execution-overview.md),
 [`MX01`](MX01-matrix-ir.md), [`MX03`](MX03-executor-protocol.md),
