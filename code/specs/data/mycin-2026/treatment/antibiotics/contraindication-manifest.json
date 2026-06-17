@@ -1,0 +1,124 @@
+{
+  "kind": "contraindication",
+  "clauses": {
+    "has_class__moxifloxacin": {
+      "relation": "has_class",
+      "subject": "moxifloxacin",
+      "context": "fluoroquinolone",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "has_class__ampicillin": {
+      "relation": "has_class",
+      "subject": "ampicillin",
+      "context": "penicillin",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "has_class__ceftriaxone": {
+      "relation": "has_class",
+      "subject": "ceftriaxone",
+      "context": "cephalosporin",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "has_class__cefepime": {
+      "relation": "has_class",
+      "subject": "cefepime",
+      "context": "cephalosporin",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "has_class__meropenem": {
+      "relation": "has_class",
+      "subject": "meropenem",
+      "context": "carbapenem",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "has_class__aztreonam": {
+      "relation": "has_class",
+      "subject": "aztreonam",
+      "context": "monobactam",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "class_contraindicated_in__fluoroquinolone__pregnancy": {
+      "relation": "class_contraindicated_in",
+      "subject": "fluoroquinolone",
+      "context": "pregnancy",
+      "grounding_id": "ci_moxifloxacin_pregnancy",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Based on animal studies with moxifloxacin, moxifloxacin hydrochloride may cause fetal harm. [...] when moxifloxacin was administered to rats and rabbits during pregnancy and throughout lactation (rats only) at doses associated with maternal toxicity, decreased neonatal body weights, increased incidence of skeletal variations (rib and vertebra combined), and increased fetal loss were observed. Advise pregnant women of the potential risk to the fetus.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687"
+    },
+    "class_contraindicated_in__fluoroquinolone__qt_prolongation": {
+      "relation": "class_contraindicated_in",
+      "subject": "fluoroquinolone",
+      "context": "qt_prolongation",
+      "grounding_id": "ci_fluoroquinolone_qt",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Avoid moxifloxacin hydrochloride in patients with the following risk factors due to the lack of clinical experience with the drug in these patient populations: Known prolongation of the QT interval; Uncorrected hypokalemia or hypomagnesemia; Class IA (for example, quinidine, procainamide) or Class III (for example, amiodarone, sotalol) antiarrhythmic agents.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687"
+    },
+    "drug_contraindicated_in__tmp_smx__pregnancy": {
+      "relation": "drug_contraindicated_in",
+      "subject": "tmp_smx",
+      "context": "pregnancy",
+      "grounding_id": "ci_tmpsmx_pregnancy",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular malformations, urinary tract defects, oral clefts, and club foot.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7"
+    },
+    "class_contraindicated_in__penicillin__penicillin_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "penicillin",
+      "context": "penicillin_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "class_contraindicated_in__cephalosporin__cephalosporin_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "cephalosporin",
+      "context": "cephalosporin_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "class_contraindicated_in__penicillin__betalactam_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "penicillin",
+      "context": "betalactam_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "class_contraindicated_in__cephalosporin__betalactam_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "cephalosporin",
+      "context": "betalactam_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "class_contraindicated_in__carbapenem__betalactam_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "carbapenem",
+      "context": "betalactam_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    }
+  },
+  "hash": "feeebda9736e326b"
+}

@@ -40,12 +40,40 @@ char *sc_get_value(ScSession *s, const char *a1);                 /* -> value JS
 char *sc_get_raw(ScSession *s, const char *a1);                   /* -> typed source */
 char *sc_get_values(ScSession *s);                                /* -> {a1: value} */
 
+/* Cell display formats — an Excel-style code per cell (e.g. "#,##0.00",
+   "yyyy-mm-dd") decides how its value reads. set with an empty code to clear.
+   char* results must be freed with sc_string_free(). */
+void  sc_set_format(ScSession *s, const char *a1, const char *code);
+char *sc_get_format(ScSession *s, const char *a1);                /* -> code | ""   */
+char *sc_get_display(ScSession *s, const char *a1);               /* -> display str */
+
+/* Structural edits — insert/delete rows & columns. 1-based `at`, `count` lines.
+   The engine relocates cells and rewrites formula references (a reference to a
+   deleted line becomes #REF!); the formula echo stays in step. No return — the
+   host re-reads via sc_get_window / sc_get_raw afterwards. */
+void  sc_insert_rows(ScSession *s, uint32_t at, uint32_t count);
+void  sc_delete_rows(ScSession *s, uint32_t at, uint32_t count);
+void  sc_insert_cols(ScSession *s, uint32_t at, uint32_t count);
+void  sc_delete_cols(ScSession *s, uint32_t at, uint32_t count);
+
+/* Fill / replicate (drag-fill): copy the `src` cell across the inclusive
+   rectangle `dst_start`..`dst_end`. Relative references shift per target,
+   absolute ($) refs pin, the source's format carries along, an empty source
+   clears each target; a malformed address is a no-op. No return — the host
+   re-reads via sc_get_window / sc_get_display_window / sc_get_raw afterwards. */
+void  sc_fill(ScSession *s, const char *src, const char *dst_start, const char *dst_end);
+
 /* Viewport primitive — read just the visible window of the unbounded sheet.
    Coordinates are 1-based and inclusive. Each char* result must be freed with
    sc_string_free(). */
 /* -> {"row0":..,"col0":..,"rows":R,"cols":C,"values":[[value,..],..]} | {"error":".."} */
 char *sc_get_window(ScSession *s, uint32_t row0, uint32_t col0,
                     uint32_t row1, uint32_t col1);
+/* Like sc_get_window, but each cell is its display string (value rendered through
+   its format code); empty cells are "". The one read a virtualized grid needs. */
+/* -> {"row0":..,"col0":..,"rows":R,"cols":C,"cells":[["1,234.50",..],..]} | {"error":".."} */
+char *sc_get_display_window(ScSession *s, uint32_t row0, uint32_t col0,
+                            uint32_t row1, uint32_t col1);
 char *sc_used_range(ScSession *s);              /* -> {"minRow":..,..} | null            */
 char *sc_column_letters(ScSession *s, uint32_t index); /* 1-based index -> "A"/"AA"/...   */
 uint64_t sc_current_revision(ScSession *s);     /* per-edit revision clock (0 if s==NULL) */

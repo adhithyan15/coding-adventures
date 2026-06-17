@@ -68,4 +68,71 @@ void main() {
       expect(s.window(1000, 26, 1000, 26)[0][0], '139'); // 115+8+12+4
     });
   });
+
+  // The infinite-view binding layer (InfiniteGrid drives these): one engine read
+  // per visible row via rowCells, tap-to-select via selectInf (loading the
+  // cell's source into the formula bar), and write-through via commitInf.
+  group('InfiniteSheetModel', () {
+    test('extent grows to reach the far seeded cells', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // The seed plants Z1000 (row 1000) and BB50 (col 54), so the extent spans
+      // both far islands plus the default margins.
+      expect(m.totalRows, greaterThanOrEqualTo(1000));
+      expect(m.totalCols, greaterThanOrEqualTo(60));
+    });
+
+    test('rowCells is one engine-read row, dense then sparse', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      final row1 = m.rowCells(1);
+      expect(row1.length, m.totalCols);
+      expect(row1[0], '15'); // A1 (unformatted)
+      // E1 carries the "#,##0.00" seed format → engine renders the formatted
+      // display string (rowCells now reads sc_get_display_window).
+      expect(row1[4], '38.00'); // E1 = SUM(A1:D1), formatted
+      expect(row1[9], ''); // J1 empty (sparse)
+      // A row in the gap between the data islands is entirely blank.
+      expect(m.rowCells(200).every((c) => c.isEmpty), isTrue);
+    });
+
+    test('selectInf loads the source and clamps to the grid', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      m.selectInf(5, 1); // A5 is a formula — the bar shows the formula, not 39
+      expect(m.infAddress, 'A5');
+      expect(m.formula, '=SUM(A1:A4)');
+      m.selectInf(-3, 0); // clamps to (1, 1)
+      expect(m.selRow, 1);
+      expect(m.selCol, 1);
+    });
+
+    test('commitInf writes through and recomputes dependents', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      m.selectInf(2, 1); // A2
+      m.commitInf('108'); // 8 -> 108
+      expect(m.rowCells(2)[0], '108'); // A2 (unformatted)
+      expect(m.rowCells(2)[4], '151.00'); // E2 = 108+14+7+22, formatted
+      expect(m.rowCells(5)[0], '139.00'); // A5 = 15+108+12+4, formatted
+      expect(m.rowCells(5)[4], '269.00'); // E5 grand total, formatted
+    });
+
+    test('fillDown replicates the selected cell, shifting relative refs', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // Seed a fresh column via select+commit: H1=2, H2=3, H3=4 (col 8 = H);
+      // I1 = H1*10 (col 9 = I). Select I1 and fill down 10 — each filled formula
+      // tracks its row (I2 = H2*10 = 30, …).
+      m.selectInf(1, 8); m.commitInf('2'); // H1
+      m.selectInf(2, 8); m.commitInf('3'); // H2
+      m.selectInf(3, 8); m.commitInf('4'); // H3
+      m.selectInf(1, 9); m.commitInf('=H1*10'); // I1 = 20
+      m.selectInf(1, 9);
+      m.fillDown(10);
+      expect(m.rowCells(2)[8], '30'); // I2 = H2*10
+      expect(m.rowCells(3)[8], '40'); // I3 = H3*10
+      expect(m.rowCells(1)[8], '20'); // I1 source untouched
+    });
+  });
 }

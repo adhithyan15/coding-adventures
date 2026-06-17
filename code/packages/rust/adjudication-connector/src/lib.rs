@@ -323,10 +323,7 @@ pub fn lower_to_kb_with_provenance(
             continue;
         }
         let functor = edge.relation.as_str().replace('-', "_");
-        let head = compound(
-            &functor,
-            vec![atom(&edge.source.0), atom(&edge.target.0)],
-        );
+        let head = compound(&functor, vec![atom(&edge.source.0), atom(&edge.target.0)]);
         let id = if edge.polarity == Polarity::Denied {
             let deny_head = compound(
                 &format!("not_{functor}"),
@@ -414,10 +411,7 @@ pub fn lower_to_kb(ir_doc: &IRDocument) -> Result<KnowledgeBase, LoweringError> 
             continue;
         }
         let functor = edge.relation.as_str().replace('-', "_");
-        let head = compound(
-            &functor,
-            vec![atom(&edge.source.0), atom(&edge.target.0)],
-        );
+        let head = compound(&functor, vec![atom(&edge.source.0), atom(&edge.target.0)]);
         // Edge polarity / modality semantics: an Affirmed/Present edge
         // emits the clause as-is. Denied edges are recorded but not
         // emitted as positive clauses (the engine would have to use a
@@ -551,6 +545,9 @@ fn lower_rule_tracked(
                 head,
                 body,
                 probability: Probability::Value(p),
+                provenance: logic_engine::Provenance::unattributed(),
+                priority: logic_engine::Priority::Default,
+                context: None,
             })));
         }
         "constraint" => {
@@ -597,8 +594,8 @@ fn lower_rule_tracked(
                 .into_iter()
                 .map(BodyLiteral::Pos)
                 .collect();
-            let exceptions = decode_list(&args[2])
-                .ok_or_else(|| LoweringError::InvalidRuleBodyList {
+            let exceptions =
+                decode_list(&args[2]).ok_or_else(|| LoweringError::InvalidRuleBodyList {
                     node_id: node.id.clone(),
                     subtype: "default".to_string(),
                 })?;
@@ -741,6 +738,9 @@ fn lower_rule(
                 head,
                 body,
                 probability: Probability::Value(p),
+                provenance: logic_engine::Provenance::unattributed(),
+                priority: logic_engine::Priority::Default,
+                context: None,
             });
         }
         "constraint" => {
@@ -787,8 +787,8 @@ fn lower_rule(
                 .into_iter()
                 .map(BodyLiteral::Pos)
                 .collect();
-            let exceptions = decode_list(&args[2])
-                .ok_or_else(|| LoweringError::InvalidRuleBodyList {
+            let exceptions =
+                decode_list(&args[2]).ok_or_else(|| LoweringError::InvalidRuleBodyList {
                     node_id: node.id.clone(),
                     subtype: "default".to_string(),
                 })?;
@@ -990,7 +990,10 @@ mod tests {
         // Sanity: the KB has at least one rule (the NAF rule).
         // Use is_all_certain() as a proxy for "the KB is populated"
         // since we don't expose direct counts.
-        assert!(kb.is_all_certain(), "KB should contain only Certain clauses");
+        assert!(
+            kb.is_all_certain(),
+            "KB should contain only Certain clauses"
+        );
     }
 
     #[test]
@@ -1020,29 +1023,17 @@ mod tests {
         // definitional(parent(X, Y), [father(X, Y)])
         let xv = var("X");
         let yv = var("Y");
-        let head = compound(
-            "parent",
-            vec![Term::Var(xv.clone()), Term::Var(yv.clone())],
-        );
-        let body_lit = compound(
-            "father",
-            vec![Term::Var(xv.clone()), Term::Var(yv.clone())],
-        );
+        let head = compound("parent", vec![Term::Var(xv.clone()), Term::Var(yv.clone())]);
+        let body_lit = compound("father", vec![Term::Var(xv.clone()), Term::Var(yv.clone())]);
         let body_list = list_of(vec![body_lit]);
         let rule_term = compound("definitional", vec![head, body_list]);
 
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![
-                affirmed_fact_node(
-                    "F1",
-                    compound("father", vec![atom("homer"), atom("bart")]),
-                ),
+                affirmed_fact_node("F1", compound("father", vec![atom("homer"), atom("bart")])),
                 rule_node("R1", rule_term),
-                query_node(
-                    "Q1",
-                    compound("parent", vec![atom("homer"), atom("bart")]),
-                ),
+                query_node("Q1", compound("parent", vec![atom("homer"), atom("bart")])),
             ],
             edges: vec![],
         };
@@ -1174,10 +1165,7 @@ mod tests {
     fn unknown_rule_subtype_errors_with_functor_name() {
         let doc = IRDocument {
             document_id: doc_id(),
-            nodes: vec![rule_node(
-                "R1",
-                compound("unknownify", vec![atom("x")]),
-            )],
+            nodes: vec![rule_node("R1", compound("unknownify", vec![atom("x")]))],
             edges: vec![],
         };
         match lower_to_kb(&doc) {
@@ -1193,15 +1181,15 @@ mod tests {
         // definitional only takes 2 args
         let doc = IRDocument {
             document_id: doc_id(),
-            nodes: vec![rule_node(
-                "R1",
-                compound("definitional", vec![atom("h")]),
-            )],
+            nodes: vec![rule_node("R1", compound("definitional", vec![atom("h")]))],
             edges: vec![],
         };
         match lower_to_kb(&doc) {
             Err(LoweringError::InvalidRuleArity {
-                subtype, expected, actual, ..
+                subtype,
+                expected,
+                actual,
+                ..
             }) => {
                 assert_eq!(subtype, "definitional");
                 assert_eq!(expected, 2);
@@ -1341,10 +1329,7 @@ mod tests {
 
     #[test]
     fn lower_with_provenance_attributes_rules() {
-        let rule_term = compound(
-            "definitional",
-            vec![atom("p"), list_of(vec![atom("a")])],
-        );
+        let rule_term = compound("definitional", vec![atom("p"), list_of(vec![atom("a")])]);
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![
@@ -1363,7 +1348,7 @@ mod tests {
 
     #[test]
     fn lower_with_provenance_attributes_edges_as_facts() {
-        use adjudication_ir::{IREdge, EdgeId, EdgeRelation};
+        use adjudication_ir::{EdgeId, EdgeRelation, IREdge};
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![
@@ -1389,7 +1374,7 @@ mod tests {
 
     #[test]
     fn lower_with_provenance_skips_contains_edges() {
-        use adjudication_ir::{IREdge, EdgeId};
+        use adjudication_ir::{EdgeId, IREdge};
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![
@@ -1456,7 +1441,9 @@ mod tests {
         };
         let lowered = lower_to_kb_with_provenance(&doc, tsa_provenance()).unwrap();
         // The single fact was assigned FactId(0).
-        let prov = lowered.provenance_for_fact(FactId(0)).expect("fact 0 missing");
+        let prov = lowered
+            .provenance_for_fact(FactId(0))
+            .expect("fact 0 missing");
         assert_eq!(prov.source_rulebook_id, "tsa-rules-v1");
         assert_eq!(prov.trust_tier, TrustTier::Tentative);
         // A nonexistent ID returns None.
@@ -1477,7 +1464,11 @@ mod tests {
         let constraint = compound("constraint", vec![list_of(vec![atom("c_body")])]);
         let default = compound(
             "default",
-            vec![atom("def_head"), list_of(vec![atom("a")]), list_of(vec![atom("b")])],
+            vec![
+                atom("def_head"),
+                list_of(vec![atom("a")]),
+                list_of(vec![atom("b")]),
+            ],
         );
         let doc = IRDocument {
             document_id: doc_id(),
@@ -1500,10 +1491,7 @@ mod tests {
         // path the same way it errors from `lower_to_kb`.
         let doc = IRDocument {
             document_id: doc_id(),
-            nodes: vec![rule_node(
-                "R1",
-                compound("unknownify", vec![atom("x")]),
-            )],
+            nodes: vec![rule_node("R1", compound("unknownify", vec![atom("x")]))],
             edges: vec![],
         };
         match lower_to_kb_with_provenance(&doc, tsa_provenance()) {
@@ -1560,10 +1548,7 @@ mod tests {
     #[test]
     fn integer_probability_is_accepted_when_in_range() {
         // probabilistic(1, head, []) — integer 1, equivalent to Value(1.0)
-        let rule_term = compound(
-            "probabilistic",
-            vec![int(1), atom("h"), list_of(vec![])],
-        );
+        let rule_term = compound("probabilistic", vec![int(1), atom("h"), list_of(vec![])]);
         let doc = IRDocument {
             document_id: doc_id(),
             nodes: vec![rule_node("R1", rule_term), query_node("Q1", atom("h"))],

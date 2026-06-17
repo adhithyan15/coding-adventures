@@ -128,11 +128,42 @@ virtualizing WinUI grid (an `ItemsRepeater` / `ListView`) can render only the
 visible rectangle of an unbounded sheet (the .NET sibling of the
 web/SwiftUI/Qt/Flutter/Compose infinite views), parsed with `System.Text.Json`.
 
-Headless proof (cross-platform, runs on macOS/Linux): `scripts/verify.sh` (the
-`test/` console harness) seeds far-flung sparse cells and asserts the window is
-engine-computed + dense (A1=15, E1=38, E5=169), a formula 1000 rows down
-(`Z1000` = 39) is reachable, the gaps are empty (sparse), column letters run
-AA/BA, and editing `A1` dirties the far dependent `Z1000` via `ChangedSince`.
+### The scrollable infinite GUI (`InfiniteSheet.xaml` / `.xaml.cs`)
+
+The **Infinite sheet** button in `MainWindow` toggles from the classic 5×5 grid
+to `InfiniteSheet` — a virtualized, effectively-infinite (u32 × u32, sparse)
+view rendered on the same engine. The body is a `ListView` whose `ItemsSource`
+is just the row numbers (`1..TotalRows`); its `ItemsStackPanel` realizes a
+container only for on-screen rows, and `ContainerContentChanging` fills each
+realized row's cells from **one** engine `get_display_window` over its
+`1×TotalCols` strip (`InfiniteSheetModel.RowCells`) — display strings, each
+already rendered through its Excel-style format code (the seed formats the
+cross-foot totals as `#,##0.00` and the far-flung `Z1000` total as a percent),
+so the host paints them directly. Building the UI costs only the visible rows,
+never the whole (millions-tall) sheet. Frozen chrome by scroll-sync: the
+row-number gutter is a second virtualized `ListView` slaved to the body's
+vertical scroll, and the column-letter header follows the body's horizontal pan.
+Tap a cell → `SelectInf` (clamps, loads the source into the formula bar); press
+Enter → `CommitInf` (writes through, recomputes dependents, regrows the extent).
+
+`InfiniteSheetModel` (in `Engine.cs`, WinUI-free) seeds far-flung sparse cells
+(`Z1000`, `BA50`, `BB50`) and derives the extent from `UsedRange()` + a margin
+(saturated in `long` then clamped to `int`, guarding the u32-overflow case).
+
+### Verification
+
+The WinUI view itself is Windows-only — this macOS checkout cannot `dotnet
+build` it (same boundary the classic Grid's VM-projection notes). The
+engine-backed logic it drives is proven cross-platform by the headless console
+harness:
+
+`scripts/verify.sh` (the `test/` console harness, runs on macOS/Linux/Windows)
+seeds far-flung sparse cells and asserts the window is engine-computed + dense
+(A1=15, E1=38, E5=169), a formula 1000 rows down (`Z1000` = 39) is reachable, the
+gaps are empty (sparse), column letters run AA/BA, and editing `A1` dirties the
+far dependent `Z1000` via `ChangedSince`. It also drives `InfiniteSheetModel`
+directly: `RowCells` one-read rows, `SelectInf` clamping + source load, and
+`CommitInf` recompute (A2 `8`→`108` ⇒ E2 151, A5 139, E5 269).
 
 ## Where this fits in the cross-backend demo plan
 

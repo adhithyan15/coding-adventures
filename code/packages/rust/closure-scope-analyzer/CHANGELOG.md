@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.4.1] - 2026-06-16
+
+### Docs
+
+- Corrected a stale `analyze` doc comment that still claimed "Today we emit zero
+  references" — reference collection + resolution has been live since
+  CLOC13.0.1 (identifier uses, assignment targets, and computed member keys all
+  produce resolved `Reference`s). No code change.
+
 ## [0.4.0] - 2026-06-02
 
 ### Added — CLOC13.0.2 nested scopes (Function-body + Block)

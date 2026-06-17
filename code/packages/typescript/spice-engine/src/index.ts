@@ -589,7 +589,7 @@ export interface DeckFourierSummary {
 }
 
 export interface DeckOutputSelection {
-  readonly directive: ".save" | ".probe";
+  readonly directive: ".save" | ".probe" | ".print" | ".plot";
   readonly analysis?: "op" | "dc" | "ac" | "tran";
   readonly probes: readonly string[];
   readonly lineNumber: number;
@@ -597,7 +597,7 @@ export interface DeckOutputSelection {
 
 export interface DeckOutputDiagnostic {
   readonly code: string;
-  readonly directive: ".save" | ".probe";
+  readonly directive: ".save" | ".probe" | ".print" | ".plot";
   readonly lineNumber: number;
   readonly message: string;
   readonly severity: "error" | "warning";
@@ -646,6 +646,35 @@ export interface DeckAnalysisSummary {
   readonly endLineNumber?: number;
   readonly analyses: readonly DeckAnalysisPlan[];
   readonly diagnostics: readonly DeckAnalysisDiagnostic[];
+}
+
+export type DeckAnalysisExecutionResult =
+  | DcResult
+  | readonly DcSweepPoint[]
+  | readonly AcPoint[]
+  | readonly TransientPoint[];
+
+export interface DeckRunArtifact {
+  readonly analysis: DeckAnalysisPlan["analysis"];
+  readonly directive: DeckAnalysisPlan["directive"];
+  readonly lineNumber: number;
+  readonly resultRows: number;
+  readonly outputProbeCount: number;
+  readonly measurementCount: number;
+  readonly fourierCount: number;
+}
+
+export interface DeckAnalysisExecution {
+  readonly plan: DeckAnalysisPlan;
+  readonly result: DeckAnalysisExecutionResult;
+  readonly table: string;
+  readonly outputProbes: readonly string[];
+  readonly measurements: readonly ProbeMeasurement[];
+  readonly measurementTable: string;
+  readonly fourier: readonly FourierResult[];
+  readonly fourierTable: string;
+  readonly runArtifacts: readonly DeckRunArtifact[];
+  readonly runArtifactTable: string;
 }
 
 export interface ReleaseReadinessIssue {
@@ -2799,6 +2828,39 @@ const REQUIRED_COMPATIBILITY_ANALYSES = ["op", "dc", "ac", "tran"];
 const UNSUPPORTED_DECK_CONTROL_DIRECTIVES = new Set([".include", ".lib", ".control"]);
 const UNSUPPORTED_RESOLVED_DIRECTIVES = new Set([".control"]);
 const UNSUPPORTED_PARAMETER_DIRECTIVES = new Set<string>();
+const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
+  "op",
+  ".op",
+  "dc",
+  ".dc",
+  "ac",
+  ".ac",
+  "tran",
+  ".tran",
+  "save",
+  ".save",
+  "probe",
+  ".probe",
+  "measure",
+  ".measure",
+  "meas",
+  ".meas",
+  "four",
+  ".four",
+  "fourier",
+  ".fourier",
+  "print",
+  ".print",
+  "plot",
+  ".plot",
+]);
+const NOOP_CONTROL_BLOCK_COMMANDS = new Set(["run", ".run", "reset", ".reset", "quit", ".quit"]);
+const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set([
+  "noaskquit",
+  "filetype=ascii",
+  "wr_vecnames",
+  "wr_singlescale",
+]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2808,6 +2870,7 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
   const activeLines: string[] = [];
   const diagnostics: DeckControlDiagnostic[] = [];
   let endLineNumber: number | undefined;
+  let inControlBlock = false;
 
   const lines = netlist.split(/\r?\n/);
   for (let index = 0; index < lines.length; index++) {
@@ -2817,6 +2880,28 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
       continue;
     }
     const directive = deckDirective(stripped);
+    if (inControlBlock) {
+      if (directive === ".endc") {
+        inControlBlock = false;
+        continue;
+      }
+      const controlLine = controlBlockCommandAsDeckLine(stripped);
+      if (controlLine !== undefined) {
+        activeLines.push(controlLine);
+        continue;
+      }
+      if (isNoopControlBlockCommand(stripped)) {
+        continue;
+      }
+      diagnostics.push({
+        code: "SPICE_DECK_CONTROL_COMMAND",
+        directive: ".control",
+        lineNumber,
+        message: `${JSON.stringify(stripped)} inside .control is not executed by the deck execution foothold yet`,
+        severity: "error",
+      });
+      continue;
+    }
     if (directive === ".end") {
       endLineNumber = lineNumber;
       break;
@@ -2829,6 +2914,10 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
         message: `${directive} is not supported by the deck execution foothold yet`,
         severity: "error",
       });
+      if (directive === ".control") {
+        inControlBlock = true;
+        continue;
+      }
     }
     activeLines.push(stripped);
   }
@@ -3059,7 +3148,7 @@ export function resolveDeckOutputs(netlist: string): DeckOutputSummary {
       endLineNumber = lineNumber;
       break;
     }
-    if (directive === ".save" || directive === ".probe") {
+    if (directive === ".save" || directive === ".probe" || directive === ".print" || directive === ".plot") {
       resolveOutputLine(stripped, lineNumber, directive, state);
       continue;
     }
@@ -3344,6 +3433,7 @@ function resolveDeckLines(
 ): ResolvedDeckLines {
   const activeLines: string[] = [];
   let endLineNumber: number | undefined;
+  let inControlBlock = false;
 
   const lines = netlist.split(/\r?\n/);
   for (let index = 0; index < lines.length; index++) {
@@ -3353,6 +3443,29 @@ function resolveDeckLines(
       continue;
     }
     const directive = deckDirective(stripped);
+    if (inControlBlock) {
+      if (directive === ".endc") {
+        inControlBlock = false;
+        continue;
+      }
+      const controlLine = controlBlockCommandAsDeckLine(stripped);
+      if (controlLine !== undefined) {
+        activeLines.push(controlLine);
+        continue;
+      }
+      if (isNoopControlBlockCommand(stripped)) {
+        continue;
+      }
+      state.diagnostics.push({
+        code: "SPICE_DECK_CONTROL_COMMAND",
+        directive: ".control",
+        source,
+        lineNumber,
+        message: `${JSON.stringify(stripped)} inside .control is not executed by the deck source resolver yet`,
+        severity: "error",
+      });
+      continue;
+    }
     if (directive === ".end") {
       endLineNumber = lineNumber;
       break;
@@ -3378,6 +3491,10 @@ function resolveDeckLines(
         message: `${directive} is not supported by the deck source resolver yet`,
         severity: "error",
       });
+      if (directive === ".control") {
+        inControlBlock = true;
+        continue;
+      }
     }
     activeLines.push(stripped);
   }
@@ -4206,23 +4323,49 @@ function resolveFourierLine(
 function resolveOutputLine(
   line: string,
   lineNumber: number,
-  directive: ".save" | ".probe",
+  directive: ".save" | ".probe" | ".print" | ".plot",
   state: DeckOutputState,
 ): void {
   const tokens = directiveTokens(line);
   if (tokens.length < 2) {
+    const message = directive === ".print" || directive === ".plot"
+      ? `${directive} requires an analysis token and at least one probe token`
+      : `${directive} requires at least one probe token`;
     addOutputDiagnostic(state, {
       code: "SPICE_DECK_OUTPUT_ARGUMENT",
       directive,
       lineNumber,
-      message: `${directive} requires at least one probe token`,
+      message,
     });
     return;
   }
 
   let analysis: DeckOutputSelection["analysis"];
   let probeTokens = tokens.slice(1);
-  if (directive === ".probe") {
+  if (directive === ".print" || directive === ".plot") {
+    if (tokens.length < 3) {
+      addOutputDiagnostic(state, {
+        code: "SPICE_DECK_OUTPUT_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `${directive} requires an analysis token and at least one probe token`,
+      });
+      return;
+    }
+    const normalizedAnalysis = normalizeDeckOutputAnalysis(tokens[1]);
+    if (normalizedAnalysis === undefined) {
+      addOutputDiagnostic(state, {
+        code: "SPICE_DECK_OUTPUT_ANALYSIS",
+        directive,
+        lineNumber,
+        message: `${directive} analysis must be op, dc, ac, or tran, got ${JSON.stringify(tokens[1])}`,
+        token: tokens[1],
+      });
+      return;
+    }
+    analysis = normalizedAnalysis;
+    probeTokens = tokens.slice(2);
+  } else if (directive === ".probe") {
     const normalizedAnalysis = normalizeDeckOutputAnalysis(tokens[1]);
     if (normalizedAnalysis !== undefined) {
       analysis = normalizedAnalysis;
@@ -5556,6 +5699,38 @@ function deckDirective(line: string): string | undefined {
     return undefined;
   }
   return line.split(/\s+/, 1)[0].toLowerCase();
+}
+
+function controlBlockCommandAsDeckLine(line: string): string | undefined {
+  const parts = line.split(/\s+/, 1);
+  const command = parts[0]?.toLowerCase();
+  if (command === undefined || !SUPPORTED_CONTROL_BLOCK_COMMANDS.has(command)) {
+    return undefined;
+  }
+  const directive =
+    command === "four" || command === ".four" || command === "fourier" || command === ".fourier"
+      ? ".four"
+      : command.startsWith(".")
+        ? command
+        : `.${command}`;
+  const rest = line.slice(parts[0].length).trimStart();
+  return rest.length === 0 ? directive : `${directive} ${rest}`;
+}
+
+function isNoopControlBlockCommand(line: string): boolean {
+  const parts = line.split(/\s+/);
+  const command = parts[0]?.toLowerCase();
+  if (command === undefined) {
+    return false;
+  }
+  if (NOOP_CONTROL_BLOCK_COMMANDS.has(command)) {
+    return true;
+  }
+  return (
+    (command === "set" || command === ".set") &&
+    parts.length === 2 &&
+    NOOP_CONTROL_BLOCK_SET_OPTIONS.has(parts[1]?.toLowerCase() ?? "")
+  );
 }
 
 export function subcircuitDefinition(
@@ -7238,6 +7413,388 @@ export function formatDeckTransientTable(
   return probes.length === 0 ? formatTransientTable(points) : formatTransientTable(points, probes);
 }
 
+function deckResultRowCount(result: DeckAnalysisExecutionResult): number {
+  return Array.isArray(result) ? result.length : 1;
+}
+
+function deckRunArtifacts(
+  plan: DeckAnalysisPlan,
+  result: DeckAnalysisExecutionResult,
+  outputProbes: readonly string[],
+  measurements: readonly ProbeMeasurement[],
+  fourier: readonly FourierResult[],
+): DeckRunArtifact[] {
+  return [
+    {
+      analysis: plan.analysis,
+      directive: plan.directive,
+      lineNumber: plan.lineNumber,
+      resultRows: deckResultRowCount(result),
+      outputProbeCount: outputProbes.length,
+      measurementCount: measurements.length,
+      fourierCount: fourier.length,
+    },
+  ];
+}
+
+export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
+  const rows = [
+    "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier",
+  ];
+  for (const artifact of artifacts) {
+    rows.push(
+      [
+        artifact.analysis,
+        artifact.directive,
+        String(artifact.lineNumber),
+        String(artifact.resultRows),
+        String(artifact.outputProbeCount),
+        String(artifact.measurementCount),
+        String(artifact.fourierCount),
+      ].join("\t"),
+    );
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+function selectDeckMeasurementCardsForAnalysis(
+  netlist: string,
+  analysis: DeckAnalysisPlan["analysis"],
+): DeckMeasurementCard[] {
+  const summary = resolveDeckMeasurements(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      "runDeckAnalysis",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  return summary.measurements.filter((measurement) =>
+    measurement.analysis === analysis ||
+    (analysis === "tran" && measurement.analysis === "transient")
+  );
+}
+
+function selectDeckFourierCardsForAnalysis(
+  netlist: string,
+  analysis: DeckAnalysisPlan["analysis"],
+): DeckFourierCard[] {
+  const summary = resolveDeckFourier(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      "runDeckAnalysis",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  return analysis === "tran" ? [...summary.fourier] : [];
+}
+
+export function runDeckAnalysis(
+  circuit: Circuit,
+  netlist: string,
+  analysis?: string,
+): DeckAnalysisExecution {
+  const plan = selectDeckAnalysisPlan(netlist, analysis);
+  if (plan.analysis === "op") {
+    const result = dcOp(circuit);
+    selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const measurements: ProbeMeasurement[] = [];
+    const fourier: FourierResult[] = [];
+    const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    return {
+      plan,
+      result,
+      table: formatDeckOpTable(result, netlist),
+      outputProbes,
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
+      runArtifacts,
+      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    };
+  }
+  if (plan.analysis === "dc") {
+    const sourceName = requireDeckPlanString(plan.sourceName, plan, "sourceName");
+    const start = requireDeckPlanNumber(plan.startValue, plan, "startValue");
+    const stop = requireDeckPlanNumber(plan.stopValue, plan, "stopValue");
+    const step = requireDeckPlanNumber(plan.stepValue, plan, "stepValue");
+    const result = dcSweep(circuit, sourceName, start, stop, step);
+    const measurements = measureDcSweepCards(
+      result,
+      selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
+    );
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const fourier: FourierResult[] = [];
+    const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    return {
+      plan,
+      result,
+      table: formatDeckDcSweepTable(sourceName, result, netlist),
+      outputProbes,
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
+      runArtifacts,
+      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    };
+  }
+  if (plan.analysis === "ac") {
+    const sweepKind = requireDeckPlanString(plan.sweepKind, plan, "sweepKind");
+    const pointCount = requireDeckPlanInteger(plan.pointCount, plan, "pointCount");
+    const startFrequencyHz = requireDeckPlanNumber(
+      plan.startFrequencyHz,
+      plan,
+      "startFrequencyHz",
+    );
+    const stopFrequencyHz = requireDeckPlanNumber(plan.stopFrequencyHz, plan, "stopFrequencyHz");
+    const result = runDeckAcSweep(
+      circuit,
+      plan,
+      sweepKind,
+      pointCount,
+      startFrequencyHz,
+      stopFrequencyHz,
+    );
+    const measurements = measureAcSweepCards(
+      result,
+      selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
+    );
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const fourier: FourierResult[] = [];
+    const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    return {
+      plan,
+      result,
+      table: formatDeckAcTable(result, netlist),
+      outputProbes,
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
+      runArtifacts,
+      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    };
+  }
+  if (plan.analysis === "tran") {
+    const stepTime = requireDeckPlanNumber(plan.stepTime, plan, "stepTime");
+    const stopTime = requireDeckPlanNumber(plan.stopTime, plan, "stopTime");
+    const runStep = plan.maxStep !== undefined ? Math.min(stepTime, plan.maxStep) : stepTime;
+    const result = sampleTransientPointsPrintStep(
+      transient(circuit, runStep, stopTime),
+      stepTime,
+      plan.startTime,
+      stopTime,
+    );
+    const measurements = measureTransientCards(
+      result,
+      selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
+    );
+    const fourier = fourierTransientCards(
+      result,
+      selectDeckFourierCardsForAnalysis(netlist, plan.analysis),
+    );
+    const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    return {
+      plan,
+      result,
+      table: formatDeckTransientTable(result, netlist),
+      outputProbes,
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
+      runArtifacts,
+      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    };
+  }
+  throw invalidElement("runDeckAnalysis", `unsupported analysis ${JSON.stringify(plan.analysis)}`);
+}
+
+function requireDeckPlanString(
+  value: string | undefined,
+  plan: DeckAnalysisPlan,
+  fieldName: string,
+): string {
+  if (value !== undefined && value.length > 0) {
+    return value;
+  }
+  throw invalidElement(
+    "runDeckAnalysis",
+    `line ${plan.lineNumber}: ${plan.directive} analysis missing ${fieldName}`,
+  );
+}
+
+function requireDeckPlanNumber(
+  value: number | undefined,
+  plan: DeckAnalysisPlan,
+  fieldName: string,
+): number {
+  if (value !== undefined && Number.isFinite(value)) {
+    return value;
+  }
+  throw invalidElement(
+    "runDeckAnalysis",
+    `line ${plan.lineNumber}: ${plan.directive} analysis missing ${fieldName}`,
+  );
+}
+
+function requireDeckPlanInteger(
+  value: number | undefined,
+  plan: DeckAnalysisPlan,
+  fieldName: string,
+): number {
+  if (value !== undefined && Number.isInteger(value)) {
+    return value;
+  }
+  throw invalidElement(
+    "runDeckAnalysis",
+    `line ${plan.lineNumber}: ${plan.directive} analysis missing ${fieldName}`,
+  );
+}
+
+function sampleTransientPointsPrintStep(
+  points: readonly TransientPoint[],
+  printStep: number,
+  startTime: number | undefined,
+  stopTime: number,
+): TransientPoint[] {
+  if (points.length === 0) {
+    return [...points];
+  }
+  const epsilon = Math.max(Math.abs(stopTime), Math.abs(printStep), 1.0) * 1.0e-12;
+  const reportStart = startTime !== undefined && startTime > 0.0
+    ? startTime
+    : Math.abs(points[0]?.time ?? 0.0) <= epsilon
+      ? 0.0
+      : printStep;
+  const sampled: TransientPoint[] = [];
+  for (let index = 0; ; index += 1) {
+    const sampleTime = reportStart + index * printStep;
+    if (sampleTime > stopTime + epsilon) {
+      break;
+    }
+    sampled.push(interpolateTransientPoint(points, sampleTime));
+  }
+  return sampled;
+}
+
+function interpolateTransientPoint(
+  points: readonly TransientPoint[],
+  time: number,
+): TransientPoint {
+  const epsilon = Math.max(Math.abs(time), 1.0) * 1.0e-12;
+  for (const point of points) {
+    if (Math.abs(point.time - time) <= epsilon) {
+      return makeTransientPoint(time, new Map(point.nodeVoltages), new Map(point.branchCurrents));
+    }
+  }
+  for (let index = 0; index + 1 < points.length; index += 1) {
+    const left = points[index]!;
+    const right = points[index + 1]!;
+    if (left.time - epsilon <= time && time <= right.time + epsilon) {
+      const span = right.time - left.time;
+      if (span <= 0.0) {
+        return makeTransientPoint(time, new Map(left.nodeVoltages), new Map(left.branchCurrents));
+      }
+      const alpha = (time - left.time) / span;
+      return makeTransientPoint(
+        time,
+        interpolateValueMap(left.nodeVoltages, right.nodeVoltages, alpha),
+        interpolateValueMap(left.branchCurrents, right.branchCurrents, alpha),
+      );
+    }
+  }
+  throw invalidElement("runDeckAnalysis", "transient print point is outside output");
+}
+
+function interpolateValueMap(
+  left: ReadonlyMap<string, number>,
+  right: ReadonlyMap<string, number>,
+  alpha: number,
+): Map<string, number> {
+  const values = new Map<string, number>();
+  for (const [key, leftValue] of left) {
+    const rightValue = right.get(key) ?? leftValue;
+    values.set(key, (1.0 - alpha) * leftValue + alpha * rightValue);
+  }
+  for (const [key, rightValue] of right) {
+    if (!values.has(key)) {
+      values.set(key, rightValue);
+    }
+  }
+  return values;
+}
+
+function runDeckAcSweep(
+  circuit: Circuit,
+  plan: DeckAnalysisPlan,
+  sweepKind: string,
+  pointCount: number,
+  startFrequencyHz: number,
+  stopFrequencyHz: number,
+): AcPoint[] {
+  return deckAcFrequencies(plan, sweepKind, pointCount, startFrequencyHz, stopFrequencyHz).map(
+    (frequencyHz) => {
+      const point = acSweep(circuit, frequencyHz, frequencyHz, 1)[0];
+      if (point === undefined) {
+        throw invalidElement(
+          "runDeckAnalysis",
+          `line ${plan.lineNumber}: .ac ${sweepKind.toUpperCase()} produced no samples`,
+        );
+      }
+      return point;
+    },
+  );
+}
+
+function deckAcFrequencies(
+  plan: DeckAnalysisPlan,
+  sweepKind: string,
+  pointCount: number,
+  startFrequencyHz: number,
+  stopFrequencyHz: number,
+): number[] {
+  if (pointCount <= 0) {
+    throw invalidElement(
+      "runDeckAnalysis",
+      `line ${plan.lineNumber}: .ac pointCount must be positive`,
+    );
+  }
+  if (sweepKind === "lin") {
+    if (pointCount === 1) {
+      return [startFrequencyHz];
+    }
+    const step = (stopFrequencyHz - startFrequencyHz) / (pointCount - 1);
+    return Array.from({ length: pointCount }, (_value, index) => startFrequencyHz + index * step);
+  }
+  if (sweepKind === "dec" || sweepKind === "oct") {
+    const base = sweepKind === "dec" ? 10.0 : 2.0;
+    const ratio = base ** (1.0 / pointCount);
+    const epsilon = stopFrequencyHz * 1.0e-12;
+    const frequencies: number[] = [];
+    for (
+      let frequencyHz = startFrequencyHz;
+      frequencyHz <= stopFrequencyHz + epsilon;
+      frequencyHz *= ratio
+    ) {
+      frequencies.push(frequencyHz);
+    }
+    return frequencies;
+  }
+  throw invalidElement(
+    "runDeckAnalysis",
+    `line ${plan.lineNumber}: .ac ${sweepKind.toUpperCase()} execution is not supported yet`,
+  );
+}
+
 export function formatCornerAcTable(
   result: CornerAcSweepResult,
   probes?: readonly string[],
@@ -7691,6 +8248,10 @@ export function formatFourierTable(result: FourierResult): string {
   });
   rows.push("");
   return rows.join("\n");
+}
+
+export function formatDeckFourierTable(results: readonly FourierResult[]): string {
+  return results.map((result) => formatFourierTable(result)).join("\n");
 }
 
 export function formatCornerFourierTable(result: CornerFourierResult): string {

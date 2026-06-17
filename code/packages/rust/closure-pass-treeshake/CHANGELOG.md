@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-pass-treeshake` crate will be documented in this file.
 
+## [0.3.2] - 2026-06-16
+
+### Docs
+
+De-staled the module header, struct doc, `run` body comment, and test-module
+doc. They still claimed "v1 is identity" / "sweep deferred to CLOC13.C.1" /
+"`changed` is hard-pinned to false" / "analyzer returns empty bindings" — none
+of which has been true since the apply step and the scope-analyzer body landed.
+`TreeshakePass::run` already deletes unreferenced top-level `function`/`class`
+declarations (`changed = removed_count > 0`), as the existing
+`apply_step_drops_unreferenced_function` test asserts. No code change — this
+crate is now wired into closurec's SIMPLE pipeline, so its docs needed to stop
+describing it as a no-op.
+
 ## [0.3.1] - 2026-06-02
 
 ### Added — retention test (paired with CLOC13.0.2 activation)

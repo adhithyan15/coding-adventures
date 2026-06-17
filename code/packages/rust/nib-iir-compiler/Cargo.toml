@@ -1,8 +1,8 @@
 [package]
 name = "nib-iir-compiler"
-version = "0.13.0"
+version = "0.16.0"
 edition = "2021"
-description = "Compile Nib source to InterpreterIR (IIRModule), feeding the LANG-runtime AOT/JIT pipeline.  v0.5.0: marks main function FullyTyped so the JITCore + GenericCirJit chain can run Nib programs JIT-compiled.  v0.6.0: threads real source positions through IIRFunction::source_map for line-based debugger breakpoints."
+description = "Compile Nib source to InterpreterIR (IIRModule), feeding the LANG-runtime AOT/JIT pipeline.  v0.16.0 (LANG-FULL N3 — bitwise NOT): unary `~` now lowers to the shared IIR `not` op (was silently dropped) with the narrow result width, so every backend masks it mod-2ⁿ — `~0u8 = 255`, `~15u4 = 0`. Also fixes the single-child-wrapper passthrough in `compile_expr`, which (because it counts only child *nodes*, tokens filtered) had been unwrapping a `~x` unary_expr and discarding the operator. Runs on all 7 backends (iir-to-llvm 0.12.0 / iir-to-cil-bytecode 0.21.0 grew the `not` op last).  v0.5.0: marks main function FullyTyped so the JITCore + GenericCirJit chain can run Nib programs JIT-compiled.  v0.6.0: threads real source positions through IIRFunction::source_map for line-based debugger breakpoints."
 
 [dependencies]
 coding-adventures-nib-parser = { path = "../nib-parser" }

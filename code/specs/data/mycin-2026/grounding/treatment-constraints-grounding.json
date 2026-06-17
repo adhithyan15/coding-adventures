@@ -234,6 +234,33 @@
         "final_verdict": "grounded"
       },
       "spider_status": "grounded"
+    },
+    {
+      "id": "ci_betalactam_sidechain_mechanism",
+      "kind": "mechanism",
+      "claim": "Is penicillin-cephalosporin cross-reactivity driven by R1 side-chain similarity rather than the shared beta-lactam ring, and what does that imply for excluding cephalosporins in a penicillin-allergic patient?",
+      "grounded": {
+        "id": "ci_betalactam_sidechain_mechanism",
+        "resolved_url": "https://www.ebmconsult.com/articles/penicillin-allergy-cross-reactivity-cephalosporin-antibiotics",
+        "source_title": "Penicillin and Cephalosporin Cross-Reactivity and Risk for Allergic Reaction - EBM Consult",
+        "byte_quote": "The similarity in structure of the R1-side-chains of penicillins and cephalosporins determines the likelihood of cross-sensitivity between the drug classes - not the presence of the beta-lactam ring.",
+        "value_found": "Cross-reactivity is R1-SIDE-CHAIN-driven, NOT beta-lactam-ring-driven. The risk of a cross-reaction to cephalosporins in patients with reported (untested) penicillin allergy is <1%, ~2% with a confirmed positive penicillin skin test. Structurally-dissimilar cephalosporins (incl. 3rd-gen ceftriaxone/cefepime) therefore carry low cross-reactivity. CLINICAL IMPLICATION: a penicillin allergy should exclude penicillins + only those cephalosporins SHARING the culprit's R1 side chain - NOT the entire beta-lactam class.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "UNC inpatient penicillin-allergy guideline PDF (med.unc.edu) - relevant (cross-reactivity table + side-chain guidance) but the fetched PDF was non-extractable binary, so not usable as the cited byte-quote source.",
+          "about.ebsco.com health-notes blog ('myths debunked') - secondary blog; excluded per the standing instruction to cite a primary/clinical source."
+        ],
+        "note": "Spider run 2026-06-16 (WebSearch + WebFetch, ebmconsult HTML). Corroborated by the already-grounded ci_penicillin_cephalosporin (CDC STI 2021: 3rd-gen <1%, 1st/2nd 1-8%) and 2024 drug-allergy practice-parameter guidance that structurally-dissimilar cephalosporins may be given to IgE-mediated penicillin-allergic patients WITHOUT testing. Pairs with ci_aztreonam_safe_penicillin (monobactam <1%)."
+      },
+      "verify": {
+        "id": "ci_betalactam_sidechain_mechanism",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetch confirmed the R1-side-chain mechanism quote and the <1% (reported, untested) / ~2% (positive skin test) cross-reaction figures.",
+        "refute_attempt": "Adversarial check: sought evidence the beta-lactam RING (class-wide) drives cross-reactivity. Found none current; the historical ~10% figure is attributed to first-generation cephalosporins contaminated with penicillin and to shared side chains, not the ring. Side-chain mechanism is current consensus.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
     }
   ]
 }

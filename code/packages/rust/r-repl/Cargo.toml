@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-r-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `R` binary for the R language"
+
+[dependencies]
+coding-adventures-r-runtime = { path = "../r-runtime" }
+
+[[bin]]
+name = "R"
+path = "src/main.rs"

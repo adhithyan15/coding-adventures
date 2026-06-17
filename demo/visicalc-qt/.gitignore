@@ -12,9 +12,11 @@ test/qmake-build/
 *.o
 moc_*.cpp
 moc_predefs.h
+*.moc
 *.app/
 .qmake.stash
 tst_model
+tst_window
 
 # Vendored engine — the C ABI static library + header, built by
 # scripts/build.sh from the spreadsheet-capi crate (like the SwiftUI demo).

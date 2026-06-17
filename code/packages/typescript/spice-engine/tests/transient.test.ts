@@ -73,6 +73,7 @@ import {
   pssResidualJacobian,
   pssResidual,
   resistor,
+  runDeckAnalysis,
   sampleTransientProbeAsDigitalEvents,
   sampleTransientProbesAsDigitalEventStreams,
   measureTransientDeck,
@@ -1426,10 +1427,179 @@ describe("transient", () => {
         "0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
         "1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n",
     );
-    expect(formatDeckTransientTable(points, ".save V(mid)\n.probe tran V(vin)\n.end\n")).toBe(
-      "Index\tTime\tV(mid)\tV(vin)\n" +
-        "0\t1.000000e-03\t5.000000e+00\t1.000000e+01\n" +
-        "1\t2.000000e-03\t5.000000e+00\t1.000000e+01\n",
+    expect(
+      formatDeckTransientTable(
+        points,
+        ".save V(mid)\n.probe tran V(vin)\n.print tran I(V1)\n.plot tran V(vin)\n.end\n",
+      ),
+    ).toBe(
+      "Index\tTime\tV(mid)\tV(vin)\tI(V1)\n" +
+        "0\t1.000000e-03\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n" +
+        "1\t2.000000e-03\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n",
+    );
+  });
+
+  it("routes selected deck analysis plans into solver executions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 1.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+    const netlist = `
+.save V(mid)
+.probe dc I(V1)
+.op
+.dc V1 0 1 1
+.ac dec 1 1k 1k
+.tran 1m 1m
+.measure dc mid_avg avg V(mid)
+.measure ac mid_peak max V(mid)
+.measure tran mid_final final V(mid)
+.end
+`;
+
+    const opExecution = runDeckAnalysis(circuit, netlist, "op");
+    expect(opExecution.plan.analysis).toBe("op");
+    expect(opExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(opExecution.measurements).toEqual([]);
+    expect(opExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
+    expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
+    expect(opExecution.runArtifacts[0]?.resultRows).toBe(1);
+    expect(opExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
+        `op\t.op\t${opExecution.plan.lineNumber}\t1\t1\t0\t0\n`,
+    );
+
+    const dcExecution = runDeckAnalysis(circuit, netlist, "dc");
+    expect(dcExecution.plan.sourceName).toBe("V1");
+    expect(dcExecution.outputProbes).toEqual(["V(mid)", "I(V1)"]);
+    expect(dcExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_avg"]);
+    expect(dcExecution.measurementTable).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "mid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n",
+    );
+    expect(Array.isArray(dcExecution.result)).toBe(true);
+    expect(dcExecution.table).toBe(
+      "Index\tSource\tValue\tV(mid)\tI(V1)\n" +
+        "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
+        "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n",
+    );
+    expect(dcExecution.runArtifacts[0]?.analysis).toBe("dc");
+    expect(dcExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
+        `dc\t.dc\t${dcExecution.plan.lineNumber}\t2\t2\t1\t0\n`,
+    );
+
+    const acExecution = runDeckAnalysis(circuit, netlist, "ac");
+    expect(acExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(acExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_peak"]);
+    expect(acExecution.measurementTable).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "mid_peak\tac\tV(mid)\tmax\t\t\t5.000000e-01\n",
+    );
+    expect(Array.isArray(acExecution.result)).toBe(true);
+    expect(acExecution.table).toBe(
+      "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n",
+    );
+    expect(acExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
+        `ac\t.ac\t${acExecution.plan.lineNumber}\t1\t1\t1\t0\n`,
+    );
+
+    const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
+    expect(tranExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(tranExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_final"]);
+    expect(tranExecution.measurementTable).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "mid_final\ttran\tV(mid)\tlast\t\t\t5.000000e-01\n",
+    );
+    expect(Array.isArray(tranExecution.result)).toBe(true);
+    expect(tranExecution.table).toBe(
+      "Index\tTime\tV(mid)\n" +
+        "0\t1.000000e-03\t5.000000e-01\n",
+    );
+    expect(tranExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
+        `tran\t.tran\t${tranExecution.plan.lineNumber}\t1\t1\t1\t0\n`,
+    );
+
+    const tranWindowExecution = runDeckAnalysis(
+      circuit,
+      ".save V(mid)\n.tran 2m 6m 2m 1m uic\n.end\n",
+    );
+    expect(tranWindowExecution.plan.startTime).toBeCloseTo(2.0e-3, 12);
+    expect(tranWindowExecution.plan.maxStep).toBeCloseTo(1.0e-3, 12);
+    expect(tranWindowExecution.plan.useInitialConditions).toBe(true);
+    expect(tranWindowExecution.outputProbes).toEqual(["V(mid)"]);
+    const tranWindowPoints = tranWindowExecution.result as { time: number }[];
+    expect(tranWindowPoints).toHaveLength(3);
+    [
+      2.0e-3,
+      4.0e-3,
+      6.0e-3,
+    ].forEach((expectedTime, index) => {
+      expect(tranWindowPoints[index]?.time).toBeCloseTo(expectedTime, 12);
+    });
+    expect(tranWindowExecution.table).toBe(
+      "Index\tTime\tV(mid)\n" +
+        "0\t2.000000e-03\t5.000000e-01\n" +
+        "1\t4.000000e-03\t5.000000e-01\n" +
+        "2\t6.000000e-03\t5.000000e-01\n",
+    );
+
+    expect(() => runDeckAnalysis(circuit, netlist)).toThrow(/multiple analysis cards/);
+
+    const linExecution = runDeckAnalysis(circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n");
+    expect(linExecution.outputProbes).toEqual(["V(mid)"]);
+    const linPoints = linExecution.result as { frequencyHz: number }[];
+    expect(linPoints.map((point) => point.frequencyHz)).toEqual([1.0, 2.0, 3.0]);
+    expect(linExecution.table).toBe(
+      "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "2\t3.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n",
+    );
+
+    const octExecution = runDeckAnalysis(circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n");
+    expect(octExecution.outputProbes).toEqual(["V(mid)"]);
+    const octPoints = octExecution.result as { frequencyHz: number }[];
+    expect(octPoints.map((point) => point.frequencyHz)).toEqual([1.0, 2.0, 4.0]);
+    expect(octExecution.table).toBe(
+      "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "2\t4.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n",
+    );
+  });
+
+  it("exposes selected Fourier artifacts from deck transient execution", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 1.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+    const netlist = `
+.save V(mid)
+.op
+.tran 0.5m 1m
+.four 2k V(mid) harmonics=1
+.end
+`;
+
+    const opExecution = runDeckAnalysis(circuit, netlist, "op");
+    expect(opExecution.fourier).toEqual([]);
+    expect(opExecution.fourierTable).toBe("");
+
+    const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
+    expect(tranExecution.fourier).toHaveLength(1);
+    const result = tranExecution.fourier[0]!;
+    expect(result.fundamentalFrequencyHz).toBeCloseTo(2_000.0, 12);
+    expect(result.probes[0]?.probe).toBe("V(mid)");
+    expect(result.probes[0]?.harmonics).toHaveLength(1);
+    expect(tranExecution.fourierTable).toBe(formatFourierTable(result));
+    expect(tranExecution.runArtifacts[0]?.fourierCount).toBe(1);
+    expect(tranExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
+        `tran\t.tran\t${tranExecution.plan.lineNumber}\t2\t1\t0\t1\n`,
     );
   });
 

@@ -22,6 +22,7 @@ is reached.
 
 from __future__ import annotations
 
+import contextlib
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import replace
@@ -34,17 +35,27 @@ from sql_optimizer import optimize
 from sql_parser import parse_sql
 from sql_planner import (
     AggregateExpr,
+    AlterTableStmt,
     CreateIndexStmt,
+    CreateTableStmt,
+    CreateTriggerStmt,
     CreateViewStmt,
+    DeleteStmt,
+    DropIndexStmt,
+    DropTableStmt,
+    DropTriggerStmt,
     DropViewStmt,
     IndexScan,
+    InsertSelectStmt,
     InsertValuesStmt,
     ReleaseSavepointStmt,
     RollbackToStmt,
     SavepointStmt,
     Scan,
+    UpdateStmt,
     plan,
 )
+from sql_planner.expr import Wildcard as _Wildcard
 from sql_planner.plan import (
     Aggregate,
     DerivedTable,
@@ -69,10 +80,100 @@ from sql_vm import QueryEvent, QueryResult, execute  # noqa: F401 — QueryEvent
 
 from .adapter import to_statement
 from .binding import substitute
-from .errors import ProgrammingError, translate
+from .errors import (
+    READONLY_ERROR_MESSAGE,
+    OperationalError,
+    ProgrammingError,
+    translate,
+)
+
+# Statement types that SQLite considers "writes" — anything that mutates
+# the database file (rows OR schema).  When ``PRAGMA query_only = 1`` is
+# active on a connection, attempting any of these raises
+# ``OperationalError: attempt to write a readonly database`` (SQLITE_READONLY,
+# code 8) — matching the reference engine's stance.
+#
+# NOT included (these are deliberately allowed under query_only):
+#   * SelectStmt / UnionStmt / IntersectStmt / ExceptStmt — pure reads
+#   * BeginStmt / CommitStmt / RollbackStmt — transaction control
+#   * SavepointStmt / ReleaseSavepointStmt / RollbackToStmt — savepoint
+#     control (SQLite lets these through; the savepoint just brackets
+#     no writes)
+#   * PRAGMA, VACUUM/ANALYZE/REINDEX/EXPLAIN, ATTACH/DETACH — intercepted
+#     *before* parsing, so they never reach this gate at all.  This is
+#     important: ``PRAGMA query_only = 0`` must still work to lift the
+#     gate, and SQLite permits it.
+_WRITE_STMT_TYPES = (
+    InsertValuesStmt,
+    InsertSelectStmt,
+    UpdateStmt,
+    DeleteStmt,
+    CreateTableStmt,
+    DropTableStmt,
+    CreateIndexStmt,
+    DropIndexStmt,
+    CreateViewStmt,
+    DropViewStmt,
+    CreateTriggerStmt,
+    DropTriggerStmt,
+    AlterTableStmt,
+)
 
 if TYPE_CHECKING:
     from .advisor import IndexAdvisor
+
+
+def _collect_scan_tables(node: LogicalPlan) -> list[str]:
+    """Walk a plan tree and return table names from Scan nodes in document order.
+
+    Used by the CTAS empty-source fallback to expand ``SELECT *`` wildcards
+    into concrete column names when the source table holds no rows (so the VM
+    never emits any and ``QueryResult.columns`` stays empty).
+    """
+    if isinstance(node, Scan):
+        return [node.table]
+    result: list[str] = []
+    for child in _plan_children(node):
+        result.extend(_collect_scan_tables(child))
+    return result
+
+
+def _ctas_infer_columns(
+    backend: Backend,
+    sel_sql: str,
+    view_defs: dict[str, Any] | None,
+) -> tuple[str, ...]:
+    """Derive CTAS output column names by planning *sel_sql* without executing it.
+
+    Called only when the source SELECT returned no rows (empty table), meaning
+    ``QueryResult.columns`` is ``()``.  The plan's ``Project`` node carries
+    alias information that lets us recover the correct column names.
+
+    Column-name rules (matching VM behaviour for non-empty tables):
+
+    * Explicit ``AS alias`` → use the alias.
+    * ``SELECT *`` wildcard → expand to the backend's column names for each
+      scanned table, in scan order.
+    * Any other unnamed expression (``x * 2``, ``1``, …) → ``'?'``, matching
+      the ``'?'`` sentinel the VM emits for computed columns without an alias.
+    """
+    _ast = parse_sql(sel_sql)
+    _stmt = to_statement(_ast, view_defs=view_defs or {})
+    _lp = plan(_stmt, backend_as_schema_provider(backend))
+    _opt = optimize(_lp)
+    if not isinstance(_opt, Project):
+        return ()
+    cols: list[str] = []
+    for _item in _opt.items:
+        if isinstance(_item.expr, _Wildcard):
+            for _tbl in _collect_scan_tables(_opt.input):
+                with contextlib.suppress(Exception):
+                    cols.extend(c.name for c in backend.columns(_tbl))
+        elif _item.alias is not None:
+            cols.append(_item.alias)
+        else:
+            cols.append("?")
+    return tuple(cols)
 
 
 def run(
@@ -145,17 +246,49 @@ def run(
             re.IGNORECASE,
         ):
             return QueryResult(rows_affected=0)
-        # ATTACH DATABASE / DETACH DATABASE — accepted but no-op.
+        # ATTACH DATABASE — accepted as a no-op but schema alias is tracked.
         #
         # Real SQLite multi-database support requires per-statement schema
         # routing (e.g. ``SELECT * FROM aux.t``) which mini-sqlite does not
-        # currently implement.  We accept the syntax so ORM/migration code
-        # that opens, then re-attaches, the same logical database doesn't
-        # crash on the ATTACH call.  Queries that reference attached
-        # databases (e.g. ``aux.users``) will still fail because the planner
-        # cannot resolve the schema prefix.
-        if re.match(r"\s*(ATTACH|DETACH)\b", bound, re.IGNORECASE):
+        # currently implement.  We accept ATTACH so ORM/migration code
+        # that opens, attaches, queries, then detaches doesn't crash.
+        # Queries that reference attached databases (e.g. ``aux.users``) will
+        # still fail because the planner cannot resolve the schema prefix.
+        #
+        # We record the alias name so that a subsequent DETACH of the same
+        # alias succeeds (as SQLite would after a real attach).
+        _attach_m = re.match(
+            r"\s*ATTACH\b.*\bAS\s+([^\s;]+)",
+            bound,
+            re.IGNORECASE | re.DOTALL,
+        )
+        if _attach_m:
+            _alias = _attach_m.group(1).strip("\"'`[]").lower()
+            _schemas = _ATTACHED_SCHEMAS.setdefault(id(backend), set())
+            if len(_schemas) >= 10:  # mirrors SQLite's SQLITE_MAX_ATTACHED default
+                raise OperationalError("too many attached databases - max 10")
+            _schemas.add(_alias)
             return QueryResult(rows_affected=0)
+        # DETACH DATABASE — raise SQLite-compatible errors.
+        #
+        # SQLite raises specific OperationalError messages depending on the
+        # schema name:
+        #   DETACH main           → "cannot detach database main"
+        #   DETACH <not attached> → "no such database: <name>"
+        #   DETACH <attached>     → success (no-op in mini-sqlite)
+        _detach_m = re.match(
+            r"\s*DETACH\s+(?:DATABASE\s+)?(\S+)",
+            bound,
+            re.IGNORECASE,
+        )
+        if _detach_m:
+            _schema = _detach_m.group(1).strip("\"'`[]").lower()
+            if _schema == "main":
+                raise OperationalError("cannot detach database main")
+            if _schema in _ATTACHED_SCHEMAS.get(id(backend), set()):
+                _ATTACHED_SCHEMAS[id(backend)].discard(_schema)
+                return QueryResult(rows_affected=0)
+            raise OperationalError(f"no such database: {_detach_m.group(1).strip('\"\'`[]')}")
         # Normalise TEMP/TEMPORARY before parsing.
         #
         # SQLite allows "CREATE TEMP TABLE …" and "CREATE TEMPORARY TABLE …"
@@ -172,8 +305,115 @@ def run(
             r"\1 \2",
             bound,
         )
+        # CREATE TABLE … AS SELECT … (CTAS)
+        #
+        # SQLite's CTAS creates a new table whose column names come from the
+        # SELECT's output.  Declared types are copied from source-column
+        # declarations for bare column references; expression columns get an
+        # empty declared type (BLOB affinity — the permissive SQLite default).
+        #
+        # Mini-sqlite handles CTAS as a pre-parse interception because the SQL
+        # grammar only accepts CREATE TABLE with an explicit column list.  The
+        # steps mirror what SQLite does internally:
+        #
+        #   1. Execute the source SELECT to obtain column names and rows.
+        #   2. CREATE TABLE dst (col1, col2, …) — names only, no declared types.
+        #   3. Bulk-INSERT every source row.
+        #
+        # ``IF NOT EXISTS`` is honoured: if the table already exists the whole
+        # statement is a no-op (rows are NOT inserted into the existing table).
+        #
+        # Column type inheritance from source declarations is a known
+        # limitation: all destination columns get BLOB affinity regardless of
+        # the source schema.  Dynamic typing means query results are still
+        # correct; only ``PRAGMA table_info`` shows empty types.
+        _ctas_m = re.match(
+            r"\s*CREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)?(\S+)\s+AS\s+(.+)",
+            bound,
+            re.IGNORECASE | re.DOTALL,
+        )
+        if _ctas_m:
+            if bool(_pragma_get(backend, "query_only")):
+                raise OperationalError(READONLY_ERROR_MESSAGE)
+            _ctas_ine = bool(_ctas_m.group(1))
+            _ctas_tbl = _ctas_m.group(2).strip("\"'`[]")
+            _ctas_sel = _ctas_m.group(3).strip()
+            _ctas_kw: dict[str, Any] = dict(
+                advisor=advisor,
+                view_defs=view_defs,
+                check_registry=check_registry,
+                fk_child=fk_child,
+                fk_parent=fk_parent,
+                savepoints=savepoints,
+                trigger_executor=trigger_executor,
+                trigger_depth=trigger_depth,
+                user_functions=user_functions,
+            )
+            # Step 1 — execute the source SELECT.
+            _ctas_src = run(backend, _ctas_sel, **_ctas_kw)
+            # Step 2 — create the destination table.
+            # Every column gets BLOB affinity — the permissive SQLite default
+            # for expression columns.  Type propagation from source column
+            # declarations is a known limitation (PRAGMA table_info shows
+            # BLOB rather than the source column's declared type).
+            #
+            # When the source table is empty the VM emits no rows, leaving
+            # QueryResult.columns as ().  In that case we plan the SELECT to
+            # recover the output column names without executing it.
+            _ctas_col_names = _ctas_src.columns or _ctas_infer_columns(
+                backend, _ctas_sel, view_defs
+            )
+            # Sanitise column names: the VM uses '?' for unnamed computed
+            # columns, but '?' is a qmark placeholder in SQL; replace it with
+            # a positional synthetic name.  Double-quote identifiers so the
+            # grammar strips the delimiters and stores the bare name — backtick
+            # quoting stores names WITH the backtick characters.
+            _safe_col_names = [
+                c
+                if re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", c)
+                else f"col_{i}"
+                for i, c in enumerate(_ctas_col_names)
+            ]
+            _ctas_cols = ", ".join(f'"{n}" BLOB' for n in _safe_col_names)
+            try:
+                run(backend, f'CREATE TABLE "{_ctas_tbl}" ({_ctas_cols})', **_ctas_kw)
+            except OperationalError as _ctas_e:
+                if _ctas_ine and "already exists" in str(_ctas_e).lower():
+                    return QueryResult(rows_affected=0)
+                raise
+            # Step 3 — bulk-insert source rows.
+            if _ctas_src.rows:
+                _ctas_ph = ", ".join("?" * len(_safe_col_names))
+                for _ctas_row in _ctas_src.rows:
+                    run(
+                        backend,
+                        f'INSERT INTO "{_ctas_tbl}" VALUES ({_ctas_ph})',
+                        _ctas_row,
+                        **_ctas_kw,
+                    )
+            return QueryResult(rows_affected=len(_ctas_src.rows))
         ast = parse_sql(bound)
         stmt = to_statement(ast, view_defs=view_defs)
+
+        # ``PRAGMA query_only = 1`` puts the connection into read-only mode.
+        # SQLite rejects any write (DML or DDL) with
+        # ``OperationalError: attempt to write a readonly database``
+        # (SQLITE_READONLY).  The gate must fire BEFORE the CREATE VIEW /
+        # DROP VIEW intercept below (CREATE VIEW is a write under SQLite's
+        # rules) and before planning so we never spin up a write program
+        # only to discard it.
+        #
+        # PRAGMAs, ATTACH/DETACH, VACUUM/ANALYZE/REINDEX/EXPLAIN, and
+        # BEGIN/COMMIT/ROLLBACK/SAVEPOINT are not subject to this gate —
+        # the first four are intercepted before parsing, and the
+        # transaction-control statements are intentionally not in
+        # ``_WRITE_STMT_TYPES`` (SQLite permits them under query_only).
+        # In particular, ``PRAGMA query_only = 0`` must still succeed so
+        # callers can lift the gate without re-opening the connection.
+        if isinstance(stmt, _WRITE_STMT_TYPES) and bool(
+            _pragma_get(backend, "query_only")
+        ):
+            raise OperationalError(READONLY_ERROR_MESSAGE)
 
         # CREATE VIEW / DROP VIEW are intercepted here — the planner and VM
         # never see them.  We update the connection's view registry and return
@@ -833,19 +1073,31 @@ _PRAGMA_DEFAULTS: dict[str, tuple[object, str]] = {
     # it defensively before deciding whether to issue an explicit
     # ``PRAGMA read_uncommitted = 0`` for a clean baseline.
     "read_uncommitted": (0,                "integer"),  # bool; off by default
-    # query_only — when ON, SQLite rejects writes ("attempt to write a
-    # readonly database").  Mini-sqlite doesn't enforce the read-only
-    # semantics yet — the PRAGMA value just round-trips per connection,
-    # so callers that read it back to confirm settings see the value
-    # they wrote.  Enforcement is a future increment.
+    # query_only — when ON, SQLite rejects writes with
+    # ``OperationalError: attempt to write a readonly database``
+    # (SQLITE_READONLY).  Mini-sqlite honours this as of 2.16.0:
+    # any DML (INSERT/UPDATE/DELETE) or DDL (CREATE/DROP/ALTER)
+    # statement is rejected at the run-loop gate (see
+    # ``_WRITE_STMT_TYPES`` and the check in ``run()`` above).
+    # SELECTs, PRAGMAs, and transaction control still flow normally,
+    # so ``PRAGMA query_only = 0`` can always lift the gate.
     "query_only":       (0,                "integer"),  # bool; off by default
 }
 
 # Per-connection PRAGMA state.  Keyed by the backend object's id() so each
 # connection has its own values.  WeakValueDictionary would be ideal but
-# Backend isn't hashable in all implementations; we settle for id-keyed dict
-# and accept that values leak until the process exits.
+# Backend isn't hashable in all implementations; we settle for id-keyed dict.
+# Entries must be explicitly evicted when a connection closes (see
+# ``_pragma_clear``) to prevent id-reuse pollution: CPython can allocate a
+# new backend at the same address as a just-freed one, causing the new
+# connection to inherit the old connection's PRAGMA state.
 _PRAGMA_STATE: dict[int, dict[str, object]] = {}
+
+# Per-connection set of virtually-attached schema aliases.  Populated when
+# ATTACH succeeds (no-op) so that a subsequent DETACH of the same alias also
+# succeeds (instead of raising "no such database").  Same id-reuse caveat as
+# _PRAGMA_STATE — must be cleared in ``_pragma_clear``.
+_ATTACHED_SCHEMAS: dict[int, set[str]] = {}
 
 
 def _pragma_get(backend: Backend, name: str) -> object:
@@ -861,6 +1113,17 @@ def _pragma_set(backend: Backend, name: str, value: object) -> None:
     """Store *value* for *name* on this backend."""
     state = _PRAGMA_STATE.setdefault(id(backend), {})
     state[name] = value
+
+
+def _pragma_clear(backend: Backend) -> None:
+    """Remove all per-connection PRAGMA and attached-schema state for *backend*.
+
+    Called by :meth:`~mini_sqlite.connection.Connection.close` to prevent
+    stale state from leaking into a later connection whose backend object
+    happens to be allocated at the same memory address.
+    """
+    _PRAGMA_STATE.pop(id(backend), None)
+    _ATTACHED_SCHEMAS.pop(id(backend), None)
 
 
 def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> QueryResult:
@@ -1282,10 +1545,12 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
         # level.  Mini-sqlite has no shared cache, so this is purely a
         # round-tripped value with no semantic effect.
         "read_uncommitted",
-        # ``query_only`` is meant to reject writes when ON.  Mini-sqlite
-        # round-trips the value but does NOT yet enforce the read-only
-        # gate — INSERT/UPDATE/DELETE will still execute even when
-        # ``query_only = 1``.  Enforcement is a future increment.
+        # ``query_only`` is enforced as of mini-sqlite 2.16.0 — when ON
+        # the run-loop gate in ``run()`` rejects any DML or DDL with
+        # ``OperationalError: attempt to write a readonly database``
+        # (SQLITE_READONLY).  The PRAGMA's value still round-trips here
+        # so callers can read it back and so ``PRAGMA query_only = 0``
+        # always lifts the gate.
         "query_only",
     }
     _INT_PRAGMAS = {

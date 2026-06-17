@@ -1,3 +1,5 @@
 --emit_use_strict
 --js
 tests/diff/emit-use-strict/input/a.js
+--compilation_level
+WHITESPACE_ONLY

@@ -146,15 +146,132 @@ risks Y") — decision support, not a hidden choice.
 - **CC-2 — dose feasibility + renal/interaction caps as constraints.** Fold the dose-window
   solve into the COP (`floor ≤ dose ≤ ceiling(renal, interactions)`); UNSAT path returns the
   conflict. Ground the renal-adjustment + additive-nephrotoxicity rules (spider).
+- **REFACTOR (ADJ-first): every exclusion is now an EXPLICIT engine constraint.** Dose-infeasible
+  (CC-2), contraindicated (CC-3), and step-therapy (CC-6) drugs are unified into one
+  `forced_zero: {drug → reason}` and emitted as `constrain x_d <= 0   % excluded (reason)` in the
+  adj-lang program — not pre-removed from the candidate list in Python. So the emitted program is
+  self-documenting about *why* each drug is out, the infeasibility verdict is the engine's, and
+  the exclusion reasoning lives in ADJ, not the compiler. (Reasons are sanitized before reaching
+  the `%` comment.)
 - **CC-3 — contraindication / interaction grounding.** `contraindication-grounding.json` +
   `interaction-grounding.json` via the harness (pregnancy, QT, G6PD, allergy classes,
   drug–drug); gate → CAS; new "treatment constraints" ledger artifact.
-- **CC-4 — cost + side-effect objective.** Add the weighted objective (simplex `minimize`);
-  ground drug costs (CMS ASP / GoodRx-class public data) + side-effect weights. Output the
-  objective breakdown.
-- **CC-5 — wait-vs-treat-now decision (§4)** with the grounded time-criticality threshold.
-- **CC-6 — insurance / step-therapy (§5):** precedence constraints + the dual
-  clinical-vs-reimbursement regimen output; ground a sample payer step-therapy policy.
+- **CC-3 REFACTOR (ADJ-native): contraindications are now DERIVED BY THE ENGINE, not a
+  Python set. ✅ DONE.** The exclusion knowledge no longer lives in a `chart_to_cop.py` dict
+  (`_PREGNANCY_CONTRAINDICATED = {"moxifloxacin", "tmp_smx"}`) — that was exactly the
+  "Python rule layer in the middle" we are removing. It is now an ADJ rulebook,
+  `treatment/antibiotics/contraindications.adj`, **generated** by `contraindications_build.py`
+  from `grounding/treatment-constraints-grounding.json`: grounded `relate` facts
+  (`class_contraindicated_in(fluoroquinolone, pregnancy)` etc., each carrying its FDA
+  byte-quote + DailyMed locator at `trust authoritative`) plus **two generic, context-scoped
+  `rule { head: contraindicated($D,$C) when: active_context($C), … }` clauses** (the rulebook
+  keystone). `chart_to_cop` now only translates a chart fact into the patient's active
+  *context* (`pregnancy=present → active_context "pregnancy"`); `derive()` asks the engine
+  `? contraindicated($D,$C)` (`contraindications.derive_contraindications`, 0 model calls)
+  and folds the derived drugs into `forced_zero`. **The reasoning moved out of Python and into
+  the language.** A contraindication is McCarthy's `ist(c, φ)` — "drug excluded IN context C"
+  — so the *same* generic shape encodes any context-scoped rule corpus (e.g. "a term MEANS m
+  in jurisdiction J"); we deliberately use the domain-neutral word **context**. Demonstrated
+  by the QT-prolongation fact: the identical class rule excludes the fluoroquinolone in a
+  different context, with no new Python branch. Adding a new contraindication is now a
+  grounded fact in the rulebook + (if a new context) one row in `_CONTEXT_FROM_FACT` — no
+  drug-name logic in the compiler. Remaining CC-3 follow-ups (allergy drug-class exclusion,
+  drug–drug interactions) move into the same rulebook next.
+- **CC-3b — β-lactam allergy is SIDE-CHAIN-scoped, not class-wide (grounded; ⚠️ CHANGES
+  BEHAVIOR — review).** The current `_ALLERGY_EXCLUSION` drops the *entire* β-lactam class on a
+  penicillin allergy. The literature (spider-grounded 2026-06-16, record
+  `ci_betalactam_sidechain_mechanism` in `treatment-constraints-grounding.json`) says that is
+  wrong: *"The similarity in structure of the R1-side-chains of penicillins and cephalosporins
+  determines the likelihood of cross-sensitivity between the drug classes — not the presence of
+  the beta-lactam ring."* Cross-reaction risk to cephalosporins in reported (untested)
+  penicillin allergy is **<1%** (~2% with a positive skin test); 3rd-gen cephalosporins
+  (ceftriaxone, cefepime), carbapenems, and aztreonam are given to penicillin-allergic patients
+  **without testing** under 2024 drug-allergy practice parameters.
+  - **Corrected model (the right thing from the literature):** a penicillin allergy excludes
+    penicillins **+ only the cephalosporins/agents that SHARE the culprit's R1 side chain** — NOT
+    structurally-dissimilar β-lactams. The cross-reactivity figures are **typed quantities**
+    (`percentage`, via the typed-value pipeline), grounded, and used directly (e.g. "<1%" is a
+    `percentage` literal in the ADJ program, not prose).
+  - **✅ DONE (implemented; ⚠️ this CHANGED clinical behaviour — physician-auditor please verify).**
+    The Python `_ALLERGY_EXCLUSION` map + the blanket `betalactam_allergy_severe` token are
+    **retired**. An allergy now activates a CONTEXT and the engine derives the exclusions from
+    the grounded contraindication rulebook, scoped by pharmacologic **subclass**:
+    - `contraindications.adj` gains `has_class` facts for the β-lactam subclasses (ampicillin
+      ∈ penicillin; ceftriaxone, cefepime ∈ cephalosporin; meropenem ∈ carbapenem; aztreonam ∈
+      monobactam) + DEFINITIONAL `class_contraindicated_in` edges: `penicillin_allergy` →
+      penicillins; `cephalosporin_allergy` → cephalosporins; `betalactam_allergy` (unspecified
+      whole-class) → penicillins + cephalosporins + carbapenems (**not** monobactams). The
+      grounded literature justifies the **absences** (no rule emitted for cephalosporins under
+      `penicillin_allergy`, so they stay available).
+    - `chart_to_cop._CONTEXT_FROM_FACT` maps `allergy=penicillin → penicillin_allergy`, etc.;
+      `derive()` folds the engine-derived exclusions into `forced_zero`.
+    - **Resulting behaviour change (verified by tests):** a penicillin allergy (even
+      anaphylactic) is now **FEASIBLE** — `vancomycin + ceftriaxone` (3rd-gen, <1% cross-
+      reactivity) instead of the old blanket abstention. An **unspecified** whole-class
+      β-lactam allergy still abstains (only aztreonam survives, which can't cover *S.
+      pneumoniae*) — honest INFEASIBLE preserved.
+    - **Still authored-debt / follow-up:** true R1-side-chain *identity* per drug (so a
+      specific aminopenicillin allergy can flag the few same-side-chain cephalosporins, and a
+      severity dimension can gate anaphylaxis caution). The current cut is subclass-level,
+      which is correct for the formulary's drugs (no formulary cephalosporin shares a penicillin
+      side chain) but should refine to side-chain identity as the formulary grows.
+- **CC-4 — cost + side-effect objective. ✅ DONE.** The set-cover objective is now the
+  weighted blend `minimize Σ (w_cost·tier + w_tox·side_effects)·x_d`, emitted to the engine's
+  integer optimizer (coefficients stay integer). A chart `objective_priority` fact selects the
+  `(w_cost, w_tox)` weights (`cost`=(1,0), `balanced`=(1,1), `low_toxicity`=(1,3)); the default
+  (1,0) reproduces the historical tier-only set-cover exactly, so every prior consumer is
+  unchanged. `derive()` surfaces the per-component objective breakdown (cost / side_effects /
+  total), and the engine agrees with the Python weighted set-cover under every blend (verified
+  in `test_native_setcover`: the regimen flips cefepime→aztreonam for pseudomonas as w_tox
+  rises). Drug **cost** uses the grounded preference `tier`; the **side-effect** weights are an
+  authored-debt layer (`formulary.json` `side_effects` map, flagged) pending **CC-4b** spider
+  grounding (FDA-label adverse-event / monitoring burden) — the standard domain→ground flywheel.
+- **CC-5 — wait-vs-treat-now decision (§4). ✅ DONE.** `decide_timing(disease, culture_status,
+  clinical_status)` models the empiric-now vs await-culture choice as a function of the disease's
+  TIME-CRITICALITY (grounded threshold) and the patient's culture/clinical status: a time-critical
+  disease (meningitis, door-to-antibiotic ≤60 min) or an unstable patient → `treat_now_empiric`
+  (delay_risk high); stable + routine-acuity + culture pending → `await_culture` (delay_risk low,
+  cheaper/narrower); culture resulted → `targeted_culture_directed`. New chart facts
+  `culture_status` (pending/resulted) and `clinical_status` (critical/unstable/stable) feed it;
+  `derive()` surfaces the decision + delay_risk + rationale + threshold. The decision is reusable
+  (not meningitis-specific). The ≤60-min meningitis threshold is authored-debt (IDSA), flagged for
+  **CC-5b** spider grounding.
+- **CC-5 REFACTOR (ADJ-native): the timing DECISION is now a defeasible-precedence ladder the
+  engine resolves, not a Python if/elif. ✅ DONE.** The wait-vs-treat logic moved out of
+  `decide_timing` into `timing.adj` — a `functional timing(_)` predicate + four `priority:`-tiered
+  rules (ADJ73): resulted-culture → targeted (`mandatory`); time-critical/unstable → treat-now
+  (`authoritative`); stable+routine+pending → await (`specific`); else → treat-now (`default`).
+  `timing.derive_timing(cli, culture, clinical, acuity)` asserts the per-case facts, runs the
+  engine, and reads the **governing** answer (adj-lang-cli's `governing` section); `delay_risk`
+  is read off the governing **tier** (treat-now@authoritative = high vs @default = moderate). The
+  Python if/elif is retired — the reasoning lives in the language; the engine derives it (0 model
+  calls) and the proof shows which rule governed + what it defeated. `decide_timing` is now a thin
+  wrapper supplying the disease's acuity (from the flagged `_TIME_CRITICALITY` input table) + the
+  threshold/rationale presentation. (The disease→acuity table remains authored-debt — input data,
+  not decision logic.)
+- **CC-6 — insurance / step-therapy (§5). ✅ DONE.** A payer step-therapy rule ("won't
+  approve Y until X tried") enters as a `step_therapy` chart fact (`restricted:prerequisite`)
+  + `prior_failed` facts (drugs already tried); the precedence `x_Y ≤ tried_X` is emitted as an
+  EXPLICIT engine constraint `constrain x_Y <= 0` in the reimbursement program (the known-untried
+  `tried_X = 0` folded in) — enforced by the constraint solver and auditable in the program, NOT
+  pre-filtered in Python. `derive()` solves TWICE: `regimen`
+  is the clinically optimal one; `reimbursement` carries the payer-covered regimen, the
+  `blocked` drugs, whether it `differs_from_clinical`, and a note. Reimbursement infeasibility
+  (a rule blocking a clinically-forced drug → covered = INFEASIBLE) is surfaced **distinctly**
+  from clinical infeasibility → physician override / appeal on medical necessity. Grounding a
+  real published payer policy is the **CC-6b** follow-up.
+- **CC-6 REFACTOR (ADJ-native): the step-therapy precedence is now an ENGINE RULE, not a
+  Python set-difference. ✅ DONE.** The blocked-drug derivation left `chart_to_cop.py`
+  (`reimbursement_blocked()` is deleted) and became `step_therapy.adj` — a durable,
+  domain-neutral **negation-as-failure** rule: `reimbursement_blocked($Y) when:
+  requires_prerequisite($Y,$X), not already_tried($X)`. The per-case payer facts
+  (`requires_prerequisite` / `already_tried`) are asserted from the chart at query time;
+  `derive()` calls `step_therapy.derive_blocked(cli, …)` which runs the engine
+  (`? reimbursement_blocked($Y)`, 0 model calls) and folds the blocked drugs into the
+  reimbursement program's `forced_zero`. NAF is the natural encoding of "blocked unless the
+  step is satisfied"; the precedence reasoning lives in the language. The same `requires… ∧
+  not done…` shape is reusable across any rule corpus (a filing gated on a precondition, a
+  benefit gated on a prior step).
 - **CC-7 — full chart drive-through:** wire CH (chart→IR + de-identification) into the COP so
   a whole de-identified FHIR chart produces a regimen with the full audit trail.
 

@@ -44,19 +44,38 @@ Window {
     // spreadsheet data lives in the engine, behind `model`.
     property string formulaText: model ? model.selectedRaw : ""
 
+    // Which view is showing: the classic 5×5 cross-foot budget (the auto-
+    // generated Grid), or the virtualized infinite sheet (InfiniteSheet.qml,
+    // a sibling component rendered on the same engine via the viewport
+    // primitive). The Layout ignores items whose `visible` is false, so only
+    // the active view participates in layout.
+    property bool infinite: false
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
 
-        // Title bar.
-        Text {
+        // Title bar + view toggle.
+        RowLayout {
             Layout.fillWidth: true
             Layout.leftMargin: 16
+            Layout.rightMargin: 16
             Layout.topMargin: 16
-            text: "VISICALC · MOSAIC QT DEMO · RUST ENGINE"
-            color: "#9D9D9D"
-            font.pixelSize: 11
-            font.letterSpacing: 1.0
+            spacing: 8
+
+            Text {
+                Layout.fillWidth: true
+                text: root.infinite
+                      ? "VISICALC · INFINITE SHEET · RUST ENGINE"
+                      : "VISICALC · MOSAIC QT DEMO · RUST ENGINE"
+                color: "#9D9D9D"
+                font.pixelSize: 11
+                font.letterSpacing: 1.0
+            }
+            Button {
+                text: root.infinite ? "Classic grid" : "Infinite sheet"
+                onClicked: root.infinite = !root.infinite
+            }
         }
 
         // FormulaBar — the AUTO-GENERATED component. The host pushes the
@@ -64,6 +83,7 @@ Window {
         // edited text to the engine via `model.setSelected`, which recomputes.
         FormulaBar {
             id: formulaBar
+            visible: !root.infinite
             Layout.fillWidth: true
             Layout.topMargin: 8
             cellAddress: model ? model.cellAddress : ""
@@ -84,6 +104,7 @@ Window {
         // computed display matrix; selecting a cell (onNavigate) updates the
         // model's selection and pulls that cell's source into the formula bar.
         Grid {
+            visible: !root.infinite
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.margins: 16
@@ -107,6 +128,16 @@ Window {
             onFormulaChange: (_value) => { /* in-cell live-edit deferred */ }
             onEditCommit:    () => { /* in-cell live-edit deferred */ }
             onEditCancel:    () => { /* in-cell live-edit deferred */ }
+        }
+
+        // InfiniteSheet — the virtualized, effectively-infinite view, rendered
+        // on the same engine through the viewport primitive. A sibling QML file
+        // in this directory (auto-importable). Only laid out when active.
+        InfiniteSheet {
+            visible: root.infinite
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.margins: 8
         }
     }
 }

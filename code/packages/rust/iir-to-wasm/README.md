@@ -32,9 +32,15 @@ through a deprecated intermediate.
   emitted for `Operand::Float` and `f32.const` for narrower floats.
 - **All arithmetic and bitwise ops**: add, sub, mul, div, rem, and, or, xor,
   shl, shr, for all numeric types. **Narrow-width results wrap mod-2ⁿ**
-  (LANG-FULL E2): a `u4`/`u8`/`u16` arithmetic/bitwise/`neg`/`not` result is
-  masked with `i32.const <mask>; i32.and` after the i32 op, so `200u8+100u8=44`
-  and `~0u8=255`. `u32`/`i32` already wrap mod-2³² via the i32 op.
+  (LANG-FULL E2): narrow **unsigned** integers (`u4`/`u8`/`u16`/`u32`) ride the
+  **i64 register model** — i64 locals and `i64.*` ops over their i64-slot
+  operands — and the result is masked with `i64.const <mask>; i64.and`, so
+  `200u8+100u8=44` and `~0u8=255`. Computing wide and masking the *value* (not
+  typing the op narrow) is operand-width-agnostic: it works whatever width the
+  operands arrive at — crucial because real frontends (Nib, …) carry every
+  `const`/`let` as `i64` and put the narrow width only on the op. This matches
+  the vm-core/jit-core/LLVM/native backends. *(v0.15.0 replaced the earlier
+  i32-op-plus-`i32.and` approach, which trapped over i64 operands.)*
 - **All comparison ops**: eq, ne, lt, le, gt, ge (signed and unsigned variants
   where applicable).
 - **Function calls**: `call` instructions are lowered to WASM `call`

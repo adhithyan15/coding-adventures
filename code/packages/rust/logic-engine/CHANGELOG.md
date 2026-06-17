@@ -2,6 +2,92 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.19.0] - 2026-06-16 — grounded context precedence (lex superior) (ADJ73 PR-B engine core)
+
+### Added
+
+- **`Rule::context: Option<String>`** (builder `with_context`) — the context a rule is grounded
+  in (jurisdiction / guideline edition / specialty). `None` = context-free (today's behavior).
+- **`KnowledgeBase::add_context_outranks(higher, lower)`** — assert a grounded precedence edge
+  (federal > state, ninth_circuit > district_court, idsa_2024 > idsa_2004, specialist > general).
+- **`KnowledgeBase::context_outranks(a, b)`** — transitive reach over the edges (cycle-safe DFS);
+  **`context_order_has_cycle()`** — detect a cyclic order (the surface loader should reject).
+- **`govern::GovernedAnswer::context`** + a `defeats(a, b)` resolution: context precedence is
+  PRIMARY (lex superior — a higher-context answer defeats a lower-context one regardless of
+  tier); the [`Standing`] tier breaks ties the context order leaves open. An answer governs iff
+  no conflicting answer defeats it; multiple undefeated → `ConflictPeer`; a cyclic order crowns
+  nothing (safe degradation, never a wrong pick).
+
+### Unchanged (back-compat)
+
+- With NO `context_order` declared, `defeats` reduces to "higher tier wins" — resolution is
+  byte-identical to 0.18 (verified: the existing precedence + integration tests pass unchanged).
+  The two `adjudication-connector` `Rule{}` sites set `context: None`.
+
+### Scope
+
+PR-B engine core. The grounded `context-precedence` **rulebook** (each `outranks_context` edge
+citing its charter — the Supremacy Clause, etc.) + adj-lang **surface** (`context:` on a rule,
+`context_order { … }`) are the next slices (ADJ73 §7). Cycle *rejection* at load is the loader's
+job; the resolver itself stays safe regardless.
+
+## [0.18.0] - 2026-06-16 — precedence priority is a named ENUM, not an integer (ADJ73 PR-A)
+
+### Changed (breaking — nothing released; per user decision 1)
+
+- **`Rule::priority` is now `Priority`** (a named enum) instead of `i64`. Tiers, totally
+  ordered lowest→highest: `Default < Specific < Authoritative < Mandatory`. `Default` is the
+  implicit tier (existing rules unchanged). `Rule::with_priority` now takes a `Priority`.
+- **`GovernedAnswer::priority` is now `Standing`** (new enum): `Standing::Rule(Priority)` or
+  `Standing::Asserted` (a ground fact — outranks every rule tier, replacing the old `i64::MAX`
+  sentinel). `Standing` derives `Ord` (Asserted greatest), so the resolver compares tiers
+  without magic numbers.
+- The two `adjudication-connector` `Rule{}` literal sites set `priority: Priority::Default`.
+
+### Rationale
+
+Raw integers were magic-numbery; named tiers read correctly in grounded rulebooks and are the
+simplest *grounded precedence principle* ("a higher tier wins"). Richer, byte-provenanced
+precedence (a grounded `context-precedence` rulebook with lex-superior / recency / appeal-status
+meta-rules) is ADJ73 PR-B; the recursive grounded design is now spec'd in
+`code/specs/ADJ73-defeasible-rule-precedence.md` §2.3 + §7.
+
+### Unchanged
+
+- Resolution semantics, opt-in-per-predicate `declare_functional`, and back-compat of
+  `enumerate_all` are exactly as in 0.17.0. All 101 + 5 (govern) + 4 (precedence integration)
+  tests pass.
+
+## [0.17.0] - 2026-06-16 — defeasible rule precedence (ADJ73 PR-1)
+
+### Added
+
+- **`Rule::priority: i64`** (default `0`, builder `Rule::with_priority(p)`) — a rule's
+  precedence among *conflicting* derivations. Higher defeats lower.
+- **`KnowledgeBase::declare_functional(functor, arity)`** — mark a predicate FUNCTIONAL on
+  its last argument (at most one value per key = the preceding args). Two derivations that
+  share the key but differ on the last argument *conflict*.
+- **`govern::enumerate_governing(query, kb) -> GovernedResult`** — runs `enumerate_all`, then
+  resolves conflicting answers by precedence as a post-pass: the unique maximum-priority answer
+  in a conflict group **governs**; the rest are **`Defeated { by }`**; a tie at the maximum is
+  surfaced as **`ConflictPeer`** (never silently resolved). A fact-derived answer has priority
+  `i64::MAX` (asserted truth outranks any rule). `GovernedResult::governing()` /
+  `has_conflict()` helpers.
+
+### Unchanged (back-compat)
+
+- `enumerate_all` and SLD search are **untouched**: a query over predicates none of which are
+  declared functional returns every answer as `Governing` (today's semantics exactly).
+  Precedence is opt-in per predicate. The new `Rule.priority` field defaults to `0`; the two
+  `adjudication-connector` `Rule{}` literal sites set it explicitly.
+
+### Scope
+
+- PR-1 ships the **functional-predicate conflict relation + total integer priority**. Explicit
+  `conflict {}` sets and the `context_order` partial order (ADJ73 §2, the legal-context
+  precedence) are PR-1b — they reuse this same resolution post-pass. Surface syntax in adj-lang
+  is PR-2. See `code/specs/ADJ73-defeasible-rule-precedence.md`.
+
 ## [0.16.0] - 2026-06-14 — `KnowledgeBase::fact(id)` accessor (MYCIN-2026 REL-3)
 
 ### Added

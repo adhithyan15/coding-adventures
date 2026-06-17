@@ -599,7 +599,18 @@ impl JvmType {
 /// | anything else         | `None`   | Caller raises an error |
 fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
     match hint {
-        "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => Some(JvmType::Int),
+        // Narrow integer widths and `bool` use the JVM `int` model (LANG-FULL
+        // E2). A scalar program reaches this backend through
+        // `lang_aot::concretize_scalar_any_for_jvm`, which narrows `i64`→`i32`
+        // (the in-repo jvm-simulator is 32-bit and the entry must `ireturn`), so
+        // a narrow-unsigned op already meets `i32` operands — no `long` register
+        // model is needed. (The long model was tried in v0.13.0 and reverted: it
+        // left narrow ops `long` while concretize made the consts/return `int`,
+        // producing unverifiable bytecode — `istore` consts feeding an `lmul`,
+        // `lreturn` from an `int`-returning method.) The narrow-width WRAP is
+        // restored by masking the int result (see `emit_jvm_width_mask`). `u4`
+        // (Nib's nibble) is recognised so it gets an int slot.
+        "u4" | "u8" | "u16" | "u32" | "i8" | "i16" | "i32" | "bool" => Some(JvmType::Int),
         "i64" | "u64" => Some(JvmType::Long),
         "f32" => Some(JvmType::Float),
         "f64" => Some(JvmType::Double),
@@ -649,7 +660,9 @@ fn make_descriptor(params: &[(String, String)], return_type: &str) -> String {
 /// return-type descriptors.  Unknown types default to `"I"` (int).
 fn type_to_jvm_descriptor(hint: &str) -> &str {
     match hint {
-        "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => "I",
+        // Narrow integer widths and `bool` use the JVM `int` model (E2) — see
+        // `iir_type_to_jvm` — so their descriptor is `I`.
+        "u4" | "u8" | "u16" | "u32" | "i8" | "i16" | "i32" | "bool" => "I",
         "i64" | "u64" => "J",
         "f32" => "F",
         "f64" => "D",
@@ -918,17 +931,35 @@ fn emit_iconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i32) 
     }
 }
 
-/// Mask the `int` on top of the operand stack to a narrow width (LANG-FULL E2).
+/// Mask the narrow-width `int` on top of the operand stack to its bit width
+/// (LANG-FULL E2).
 ///
 /// JVM `int` arithmetic (`iadd`/`imul`/…) wraps mod-2³², so `u32`/`i32` are
 /// already correct.  The smaller widths (`u4`/`u8`/`u16`) need an explicit
 /// `iconst/sipush/ldc <mask>; iand` after the op so `200u8 + 100u8` becomes
 /// `44` and `~0u8` is `255` — mirroring vm-core's `mask_result`, jit-core's
-/// `MASK_WIDTH`, and the wasm `i32.and`, and the byte-tape `baload`+mask
-/// precedent.  We deliberately use a positive mask + `iand` rather than `i2b`/
-/// `i2s` (which sign-extend, giving a *signed* byte — wrong for the unsigned
-/// narrow types the LANG-FULL frontends use).  `i64`/`u64`/floats emit nothing.
-fn emit_jvm_width_mask(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, type_hint: &str) {
+/// `MASK_WIDTH`, the wasm `i64.and`, and the byte-tape `baload`+mask precedent.
+/// We deliberately use a positive mask + `iand` rather than `i2b`/`i2s` (which
+/// sign-extend, giving a *signed* byte — wrong for the unsigned narrow types the
+/// LANG-FULL frontends use).  `i64`/`u64`/floats emit nothing.
+///
+/// The mask must match the **value model** of the op it follows: a scalar
+/// (exit-code) program is concretized to `i32`, so its narrow op runs on the
+/// `int` model and the mask is an `int` `iand`. But a **printing** program (Oct's
+/// `out`, Dartmouth BASIC's `PRINT`) keeps the `i64`/`long` model — there the op
+/// is e.g. `ladd`/`lxor` and the result on the stack is a `long`, so an `int`
+/// `iand` over it is unverifiable (operand-type mismatch). For the long model we
+/// therefore push the mask as a `long` (int mask + `i2l`; the masks are positive,
+/// so the widening zero-extends) and use `land`. `jtype` is the op's `instr_jtype`,
+/// so the mask is always operand-consistent with the value it narrows. (This is the
+/// principled version of the int-only mask reverted in v0.13.0 — keyed on the op's
+/// actual model, not assumed.) `i64`/`u64`/floats emit nothing.
+fn emit_jvm_width_mask(
+    code: &mut Vec<u8>,
+    cp: &mut ConstantPoolBuilder,
+    type_hint: &str,
+    jtype: JvmType,
+) {
     let mask: i32 = match type_hint {
         "u4" => 0xF,
         "u8" => 0xFF,
@@ -936,7 +967,15 @@ fn emit_jvm_width_mask(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, type_hi
         _ => return,
     };
     emit_iconst_cp(code, cp, mask);
-    code.push(IAND);
+    match jtype {
+        // long model (printing programs): widen the mask to a long, then `land`.
+        JvmType::Long => {
+            code.push(I2L);
+            code.push(LAND);
+        }
+        // int model (concretized scalar programs): plain `iand`.
+        _ => code.push(IAND),
+    }
 }
 
 /// Emit a long constant push.
@@ -1264,6 +1303,52 @@ fn allocate_slots(
 /// `__callClosure(long[], long[])` dispatch method always returns `long`,
 /// so the receiving slot must be two-slot-wide even when the type_hint is
 /// the generic `"any"` string.
+/// A comparison op produces a 0/1 boolean `int`, whatever its operand width.
+/// Its dest slot must therefore be `int` on the JVM (see [`build_type_map`]).
+fn is_comparison_op(op: &str) -> bool {
+    matches!(
+        op,
+        "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge"
+    )
+}
+
+/// A narrow unsigned width (`u4`/`u8`/`u16`) — one that rides the JVM `int`
+/// model by default and is brought back into range by [`emit_jvm_width_mask`].
+fn is_narrow_width(hint: &str) -> bool {
+    matches!(hint, "u4" | "u8" | "u16")
+}
+
+/// True when `instr` is a narrow-width arithmetic / bitwise / unary op whose
+/// operands ride the `long` value model.
+///
+/// Two value models reach this backend (see [`iir_type_to_jvm`]): an exit-code
+/// scalar program is concretized to `i32` (operands are `int`), but a **printing**
+/// program (Oct's `out`, Dartmouth BASIC's `PRINT`) keeps the `i64`/`long` model so
+/// its value can be passed to `print_i64`. Oct's only integer type is `u8`, so a
+/// printing Oct program emits a narrow-hinted `add`/`~`/… over `long` operands. By
+/// default the narrow hint maps the op to the `int` model (`iadd`), but the operands
+/// are loaded as `long` — an unverifiable mix. Such an op must therefore stay on the
+/// `long` model (`ladd`/`lxor`/…), with the narrow hint driving only the post-op width
+/// mask (`emit_jvm_width_mask` then emits `i2l; land`). Operand types come from
+/// `type_map`; a const/def always precedes its use, so they are already recorded.
+fn narrow_op_over_long(
+    instr: &interpreter_ir::IIRInstr,
+    type_map: &HashMap<String, JvmType>,
+) -> bool {
+    if !is_narrow_width(&instr.type_hint) {
+        return false;
+    }
+    if !matches!(
+        instr.op.as_str(),
+        "add" | "sub" | "mul" | "div" | "mod" | "and" | "or" | "xor" | "not" | "neg"
+    ) {
+        return false;
+    }
+    instr.srcs.iter().any(|s| {
+        matches!(s, Operand::Var(v) if type_map.get(v) == Some(&JvmType::Long))
+    })
+}
+
 fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
     let mut map: HashMap<String, JvmType> = HashMap::new();
 
@@ -1281,6 +1366,22 @@ fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
                 JvmType::Ref
             } else if instr.op == "call_closure" {
                 // __callClosure always returns long
+                JvmType::Long
+            } else if is_comparison_op(&instr.op) {
+                // A comparison ALWAYS produces a 0/1 `int` result (it is stored
+                // with a bare `istore`), regardless of its `type_hint` — which
+                // carries the *operand* width, not the result width. Typing the
+                // dest by the hint (e.g. `i64` → `Long`) for a comparison over
+                // `long` operands gives the slot a `Long` type, so a later
+                // `jmp_if_false` reads it with `lload` while the comparison wrote
+                // it with `istore` → the verifier rejects "uninitialized register
+                // pair" (BA-JVM-1: BASIC's `IF`/`FOR` over its i64 value model,
+                // which — unlike the concretized-to-i32 scalar path — keeps the
+                // operands `long`). Force the bool result to `Int`.
+                JvmType::Int
+            } else if narrow_op_over_long(instr, &map) {
+                // A narrow op over `long` operands (a printing program) keeps its
+                // result on the `long` model; the narrow hint only drives the mask.
                 JvmType::Long
             } else {
                 iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int)
@@ -1608,7 +1709,14 @@ fn lower_function(
     while i < instrs.len() {
         let instr = &instrs[i];
         // Resolve the instruction's own JVM type (best effort; void is OK).
-        let instr_jtype = iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int);
+        // A narrow op over `long` operands stays on the `long` model (matching the
+        // `Long` slot `build_type_map` gave its dest), so the opcode (`ladd`/`lxor`/…)
+        // and the post-op mask (`i2l; land`) are operand-consistent.
+        let instr_jtype = if narrow_op_over_long(instr, &type_map) {
+            JvmType::Long
+        } else {
+            iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int)
+        };
 
         match instr.op.as_str() {
             // ── label ───────────────────────────────────────────────────────
@@ -1772,7 +1880,7 @@ fn lower_function(
                 code.push(opcode);
                 // E2: wrap a narrow (u4/u8/u16) result; u32/i32 already wrap via
                 // the i32 op, i64 via the long op.
-                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
 
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
@@ -1794,7 +1902,7 @@ fn lower_function(
                 };
                 code.push(opcode);
                 // E2: a narrow `neg` is `(0 - r)` mod-2ⁿ — mask it to the width.
-                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1819,7 +1927,7 @@ fn lower_function(
                 };
                 code.push(opcode);
                 // E2: keep a narrow bitwise result canonical for its width.
-                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1844,7 +1952,7 @@ fn lower_function(
                 }
                 // E2: `~x` on a narrow width must flip only its low bits
                 // (`~0u8 == 255`, not `-1`) — mask after the XOR.
-                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1869,7 +1977,7 @@ fn lower_function(
                 code.push(opcode);
                 // E2: a narrow left-shift can push bits past the width
                 // (`1u8 << 8`), so mask the result.
-                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1946,22 +2054,43 @@ fn lower_function(
                     function: fname.clone(),
                     detail: "mov must have a dest".to_string(),
                 })?;
-                let (dest_slot, _dest_type) = lookup_var(dest_name)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
 
                 match instr.srcs.first() {
                     Some(Operand::Var(src_name)) => {
                         let (src_slot, src_type) = lookup_var(src_name)?;
                         emit_typed_load(&mut code, src_slot, src_type);
-                        emit_typed_store(&mut code, dest_slot, src_type);
+                        // The source and dest slots can differ in width — e.g. a
+                        // bool/int comparison result mov'd into a `long`
+                        // accumulator (Oct's short-circuit `&&`/`||` over its i64
+                        // value model, which — unlike the concretized-to-i32
+                        // scalar path — keeps values `long`). Storing with the
+                        // *source* type into a wider dest slot leaves the slot's
+                        // second half uninitialized, which a later `lload` trips
+                        // (`VerifyError: uninitialized register pair`). Bridge
+                        // int↔long so the store matches the dest slot's width.
+                        match (src_type, dest_type) {
+                            (JvmType::Int, JvmType::Long) => code.push(I2L),
+                            (JvmType::Long, JvmType::Int) => code.push(L2I),
+                            _ => {}
+                        }
+                        emit_typed_store(&mut code, dest_slot, dest_type);
                     }
                     Some(Operand::Int(v)) => {
-                        // Constant mov — unusual but valid; emit iconst.
+                        // Constant mov — unusual but valid; emit iconst, widening
+                        // to long if the dest slot is `long` (same width rule).
                         emit_iconst_cp(&mut code, cp, *v as i32);
-                        emit_istore(&mut code, dest_slot);
+                        if dest_type == JvmType::Long {
+                            code.push(I2L);
+                        }
+                        emit_typed_store(&mut code, dest_slot, dest_type);
                     }
                     Some(Operand::Bool(b)) => {
                         emit_iconst(&mut code, if *b { 1 } else { 0 });
-                        emit_istore(&mut code, dest_slot);
+                        if dest_type == JvmType::Long {
+                            code.push(I2L);
+                        }
+                        emit_typed_store(&mut code, dest_slot, dest_type);
                     }
                     _ => {
                         return Err(IIRJvmError::InvalidOperand {
@@ -4046,6 +4175,68 @@ mod tests {
         let module = make_module(void_fn("main"));
         let class = lower_iir_to_jvm(&module, &make_cfg()).unwrap();
         assert_eq!(class.methods.len(), 1);
+    }
+
+    #[test]
+    fn narrow_op_over_long_operands_stays_long() {
+        // LANG-FULL O2 / JVM long model. A *printing* program (Oct `out`) keeps the
+        // i64 model, so an Oct `200 + 100` (u8 hint) has `long` operands. The `add`
+        // must compute on the long model (`ladd` + a long mask), so its dest is typed
+        // `Long` — NOT the `Int` the bare u8 hint would give. An `iadd` over `long`
+        // operands would be unverifiable. This is what makes `200u8 + 100u8 = 44`
+        // (and `~0u8 = 255`) run on the JVM for a printing program.
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "void",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i64"),
+                IIRInstr::new(
+                    "add",
+                    Some("c".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                    "u8",
+                ),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ],
+        );
+        let tm = build_type_map(&f);
+        assert_eq!(
+            tm.get("c"),
+            Some(&JvmType::Long),
+            "u8 add over long operands must stay Long; got {:?}",
+            tm.get("c")
+        );
+    }
+
+    #[test]
+    fn narrow_op_over_int_operands_stays_int() {
+        // The concretized (exit-code) path: operands are `i32`, so the narrow op uses
+        // the int model + an int mask, unchanged by the long-model fix.
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i32"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i32"),
+                IIRInstr::new(
+                    "add",
+                    Some("c".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                    "u8",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i32"),
+            ],
+        );
+        let tm = build_type_map(&f);
+        assert_eq!(
+            tm.get("c"),
+            Some(&JvmType::Int),
+            "u8 add over int operands stays Int; got {:?}",
+            tm.get("c")
+        );
     }
 
     #[test]

@@ -1,5 +1,77 @@
 # Changelog
 
+## [0.16.0] - 2026-06-16 — context precedence surface (ADJ73 PR-B)
+
+### Added
+
+- **`rule { … context: <name> }`** — ground a rule in a CONTEXT (jurisdiction / guideline
+  edition / specialty). Lowers to `logic_engine::Rule::with_context`.
+- **`context_order { higher > lower, … }`** — a top-level statement declaring grounded context
+  precedence edges; each `a > b` lowers to `KnowledgeBase::add_context_outranks`. The resolver
+  consults this BEFORE the priority tier (lex superior): a rule in a greater context defeats a
+  conflicting one in a lesser context regardless of tier.
+- Grammar: `context_order_decl` added to `statement`; `rule_decl` gains a trailing
+  `[ "context" COLON IDENT ]` (after `[ "priority" … ]`). `context_order`/`context` are
+  IDENT-matched literals; `>` is the existing `GT` operator. `_parser_grammar.rs` /
+  `_lexer_grammar.rs` regenerated.
+- AST: `Statement::Rule` gains `context: Option<String>`; new `Statement::ContextOrder { edges }`.
+  Adapter: a shared `ident_after_keyword` helper extracts both `priority:` and `context:`;
+  `adapt_context_order` pairs the `IDENT > IDENT` edges (skipping the `>` Name token).
+
+### Notes
+
+Surface for logic-engine 0.19's grounded context precedence. A test compiles
+`context_order { ninth_circuit > district_court }` + `context:`-tagged rules and verifies via
+`enumerate_governing` that the higher-context rule governs **even with a lower priority tier**
+(lex superior), and that multi-edge orders lower transitively. The grounded `context-precedence`
+*rulebook* (byte-provenanced `outranks_context` edges + recency/appeal meta-rules) is the next
+slice.
+
+## [0.15.0] - 2026-06-16 — precedence surface syntax (ADJ73 PR-C)
+
+### Added
+
+- **`rule { … priority: <tier> }`** — optional named precedence tier on a derivation rule
+  (`default` | `specific` | `authoritative` | `mandatory`). Lowers to
+  `logic_engine::Rule::with_priority(Priority::…)`; absent ⇒ `Default`. An unknown tier is a
+  clean `LowerError::UnknownPriorityTier`, not a silent default.
+- **`functional <pred>(<arg>, …)`** — top-level declaration that a predicate is functional on
+  its last argument (arg names are placeholders; only functor + arity matter). Lowers to
+  `KnowledgeBase::declare_functional(functor, arity)`. Two derivations sharing the key but
+  differing on the last arg then *conflict*, and the `priority:` tier picks the governing one
+  (`logic_engine::govern::enumerate_governing`).
+- Grammar: `functional_decl` added to `statement`; `rule_decl` gains a trailing
+  `[ "priority" COLON IDENT ]`. `functional`/`priority` are IDENT-matched literals (no new lexer
+  tokens). `_parser_grammar.rs` / `_lexer_grammar.rs` regenerated.
+- AST: `Statement::Functional { functor, arity }`; `Statement::Rule` gains `priority: Option<String>`.
+
+### Notes
+
+This is the **surface** for the merged ADJ73 engine core (logic-engine 0.18 `Priority` /
+`declare_functional` / `enumerate_governing`). Tests compile the new syntax and verify the full
+path parse → lower → `enumerate_governing` (higher tier governs; equal tiers conflict;
+non-functional predicates unaffected — back-compat). `adj-lang-cli` *governing* rendering is the
+next slice (PR-3); the CLI's existing `decide`/recall paths are unchanged.
+
+## [0.14.0] - 2026-06-16 — `rule { head: … when: … }` derivation rules (Datalog clauses)
+
+### Added
+
+- **`rule { head: <term>  when: <lit>, <lit> … }`** — a DERIVATION RULE with a body
+  (a Horn clause / Datalog rule), the missing primitive that lets a `rulebook`
+  express CONDITIONAL knowledge, not just ground `relate` edges + LR clauses. Where
+  `relate` asserts a ground fact, a `rule` lets the engine DERIVE its head whenever
+  the body holds under the current substitution — variables (`$D`) bind across head
+  and body, and a literal prefixed `not` is negation-as-failure. Lowers to the
+  existing `logic_engine::Rule { head, body }`, so `? head($X)` enumerates every
+  derivable answer via the same SLD/unification machinery `relate` resolves through.
+  This is the keystone for moving DOMAIN RULES (contraindications, step-therapy,
+  formulary policy) out of host-code and into ADJ: each domain is authored once as a
+  `rule`-bearing `rulebook`, byte-provenanced + gated into the CAS, and the engine
+  derives consequences from per-case facts. Rules carry the same `source`/`locator`/
+  `trust` annotations every grounded clause carries (new `Rule.provenance` field).
+  Block form mirrors `rulebook { … }`; `head`/`when`/`not` are IDENT-matched literals.
+
 ## [0.13.0] - 2026-06-14 — relational queries pass vocabulary enforcement (MYCIN-2026 REL-3)
 
 ### Changed

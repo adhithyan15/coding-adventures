@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-matlab-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `matlab` binary for the MATLAB language"
+
+[dependencies]
+coding-adventures-matlab-runtime = { path = "../matlab-runtime" }
+
+[[bin]]
+name = "matlab"
+path = "src/main.rs"

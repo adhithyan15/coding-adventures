@@ -37,7 +37,18 @@ server.serve()?;
 
 - `Application` — route registration, settings, before/after hooks, custom 404,
   custom 405, and panic recovery hooks
-- `Server` — platform-native server binding over `web-core::WebServer`
+- `Server` — platform-native single-reactor server binding over `web-core::WebServer`
+- `ShardedServer` — opt-in **parallel** server (WEB01a) over `web-core::ShardedWebServer`:
+  `ShardedServer::bind(host, port, worker_count, app)` dispatches handlers across
+  `worker_count` reactor shards so requests on different connections run
+  concurrently (parallel *by connection*). Same surface and semantics as `Server`.
+- `MailboxServer` — opt-in **parallel** server (WEB01b-2) over `web-core::MailboxWebServer`:
+  `MailboxServer::bind(host, port, worker_count, app)` runs a single reactor that
+  submits each request to a `worker_count`-thread pool (parallel *by request*), so
+  even sequential keep-alive on one connection doesn't serialise behind the
+  dispatcher. Cross-platform single `bind`, returns `std::io::Result`. Correct and
+  in order for one-request-and-close and sequential keep-alive; pipelined gating is
+  WEB01b-1b. `Server` (single reactor) stays the default.
 - `RequestExt` — convenience accessors for route params, query params, and body text
 - response helpers — `text`, `html`, `json`, `redirect`, `halt`, and explicit-status
   variants

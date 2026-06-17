@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-15 — gap-044b: complex template substitutions
+
+### Fixed
+- Template literal substitutions with non-identifier expressions now lex without
+  error on es2025.  Affected patterns included `${obj.name}`, `${a + b}`,
+  `${f()}`, `${{a: 1}}`, `${x ? y : z}`, and multiple substitutions in one
+  literal.  Root cause: F10 flat-mode transitions inside `${...}` overwrote the
+  active group (to "div" / "default"), causing the closing `}` to be consumed as
+  RBRACE instead of TEMPLATE_TAIL.  The fix tracks template entry depths in the
+  `lexer` crate (GrammarLexer) and overrides the group at match time.
+- 7 new regression tests covering the above shapes.
+
 ## [0.7.0] - 2026-06-14
 
 ### Added

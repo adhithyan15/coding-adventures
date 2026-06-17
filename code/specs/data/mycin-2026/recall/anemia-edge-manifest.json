@@ -1,0 +1,126 @@
+{
+  "kind": "anemia-edge",
+  "clauses": {
+    "has_mcv__iron_deficiency_anemia": {
+      "relation": "has_mcv",
+      "subject": "iron_deficiency_anemia",
+      "object": "microcytic",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Microcytosis is reflected by a reduced mean corpuscular volume (<80 fL in adults with iron deficiency).",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK560876/"
+    },
+    "classic_finding__iron_deficiency_anemia": {
+      "relation": "classic_finding",
+      "subject": "iron_deficiency_anemia",
+      "object": "koilonychia",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "It is primarily considered to be a manifestation of chronic iron deficiency anemia due to malnutrition, worms, celiac disease, gastrointestinal blood loss, and malignancy.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK559311/"
+    },
+    "has_mcv__thalassemia": {
+      "relation": "has_mcv",
+      "subject": "thalassemia",
+      "object": "microcytic",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Thalassemias are a common cause of hypochromic microcytic anemia which arises from the reduced or absent synthesis of the globin chain of hemoglobin.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK531481/"
+    },
+    "classic_finding__thalassemia": {
+      "relation": "classic_finding",
+      "subject": "thalassemia",
+      "object": "target_cells",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Peripheral blood smear in β-thalassemia minor demonstrating marked microcytosis with frequent target cells.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK545151/"
+    },
+    "has_mcv__sideroblastic_anemia": {
+      "relation": "has_mcv",
+      "subject": "sideroblastic_anemia",
+      "object": "microcytic",
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Sideroblastic anemia is typically a microcytic anemia.",
+      "url": null
+    },
+    "classic_finding__sideroblastic_anemia": {
+      "relation": "classic_finding",
+      "subject": "sideroblastic_anemia",
+      "object": "ringed_sideroblasts",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "There are different forms of sideroblastic anemia, and all forms are defined by the presence of ring sideroblasts in the bone marrow.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK538287/"
+    },
+    "has_mcv__b12_deficiency_anemia": {
+      "relation": "has_mcv",
+      "subject": "b12_deficiency_anemia",
+      "object": "macrocytic",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Macrocytic anemia is divided into 2 forms: megaloblastic (hypersegmented neutrophils) and nonmegaloblastic. The megaloblastic form is due to impaired DNA synthesis from folate or vitamin B12 deficiencies, while the nonmegaloblastic moiety occurs from multiple mechanisms.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK459295/"
+    },
+    "classic_finding__b12_deficiency_anemia": {
+      "relation": "classic_finding",
+      "subject": "b12_deficiency_anemia",
+      "object": "hypersegmented_neutrophils",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "The impaired DNA synthesis causes problems for other rapidly proliferating cell lines, such as polymorphonuclear leukocytes (PMNs). Thus, B12 deficiency characteristically results in the formation of hypersegmented neutrophils.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK441923/"
+    },
+    "has_mcv__hereditary_spherocytosis": {
+      "relation": "has_mcv",
+      "subject": "hereditary_spherocytosis",
+      "object": "normocytic",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "In hereditary spherocytosis, because RBCs are spheroidal and the mean corpuscular volume (MCV) is normal, the mean corpuscular diameter is below normal, and RBCs resemble spherocytes. The mean corpuscular hemoglobin concentration (MCHC) is increased. ... Hereditary spherocytosis is characterized by hemolysis of spheroidal RBCs and anemia.",
+      "url": "https://www.merckmanuals.com/professional/hematology-and-oncology/anemias-caused-by-hemolysis/hereditary-spherocytosis-and-hereditary-elliptocytosis"
+    },
+    "classic_finding__hereditary_spherocytosis": {
+      "relation": "classic_finding",
+      "subject": "hereditary_spherocytosis",
+      "object": "spherocytes",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "A peripheral blood smear in hereditary spherocytosis shows numerous small, dense spherocytes lacking central pallor, reflecting reduced membrane surface area and decreased red blood cell (RBC) deformability.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK539797/"
+    },
+    "has_mcv__g6pd_deficiency": {
+      "relation": "has_mcv",
+      "subject": "g6pd_deficiency",
+      "object": "normocytic",
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "G6PD deficiency causes an episodic normocytic hemolytic anemia.",
+      "url": null
+    },
+    "classic_finding__g6pd_deficiency": {
+      "relation": "classic_finding",
+      "subject": "g6pd_deficiency",
+      "object": "bite_cells",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Peripheral smears may display bite and blister cells, while supravital staining demonstrates Heinz bodies.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK470315/"
+    }
+  },
+  "hash": "cd7c8cb98dbb0110"
+}

@@ -3390,6 +3390,39 @@ pub struct DeckAnalysisSummary {
     pub diagnostics: Vec<DeckAnalysisDiagnostic>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub enum DeckAnalysisExecutionResult {
+    Op(DcResult),
+    DcSweep(Vec<DcSweepPoint>),
+    Ac(Vec<AcPoint>),
+    Tran(Vec<TransientPoint>),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckRunArtifact {
+    pub analysis: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub result_rows: usize,
+    pub output_probe_count: usize,
+    pub measurement_count: usize,
+    pub fourier_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckAnalysisExecution {
+    pub plan: DeckAnalysisPlan,
+    pub result: DeckAnalysisExecutionResult,
+    pub table: String,
+    pub output_probes: Vec<String>,
+    pub measurements: Vec<ProbeMeasurement>,
+    pub measurement_table: String,
+    pub fourier: Vec<FourierResult>,
+    pub fourier_table: String,
+    pub run_artifacts: Vec<DeckRunArtifact>,
+    pub run_artifact_table: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
@@ -3517,6 +3550,7 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
     let mut active_lines = Vec::new();
     let mut diagnostics = Vec::new();
     let mut end_line_number = None;
+    let mut in_control_block = false;
 
     for (index, raw_line) in netlist.lines().enumerate() {
         let line_number = index + 1;
@@ -3525,6 +3559,29 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
             continue;
         }
         let directive = deck_directive(stripped);
+        if in_control_block {
+            if directive.as_deref() == Some(".endc") {
+                in_control_block = false;
+                continue;
+            }
+            if let Some(control_line) = control_block_command_as_deck_line(stripped) {
+                active_lines.push(control_line);
+                continue;
+            }
+            if is_noop_control_block_command(stripped) {
+                continue;
+            }
+            diagnostics.push(DeckControlDiagnostic {
+                code: "SPICE_DECK_CONTROL_COMMAND".to_string(),
+                directive: ".control".to_string(),
+                line_number,
+                message: format!(
+                    "{stripped:?} inside .control is not executed by the deck execution foothold yet"
+                ),
+                severity: "error".to_string(),
+            });
+            continue;
+        }
         if directive.as_deref() == Some(".end") {
             end_line_number = Some(line_number);
             break;
@@ -3540,6 +3597,10 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
                     ),
                     severity: "error".to_string(),
                 });
+                if directive == ".control" {
+                    in_control_block = true;
+                    continue;
+                }
             }
         }
         active_lines.push(stripped.to_string());
@@ -3778,7 +3839,10 @@ pub fn resolve_deck_outputs(netlist: &str) -> DeckOutputSummary {
             end_line_number = Some(line_number);
             break;
         }
-        if matches!(directive.as_deref(), Some(".save" | ".probe")) {
+        if matches!(
+            directive.as_deref(),
+            Some(".save" | ".probe" | ".print" | ".plot")
+        ) {
             resolve_output_line(
                 stripped,
                 line_number,
@@ -4287,6 +4351,7 @@ fn resolve_deck_lines(
 ) -> (Vec<String>, bool, Option<usize>) {
     let mut active_lines = Vec::new();
     let mut end_line_number = None;
+    let mut in_control_block = false;
 
     for (index, raw_line) in netlist.lines().enumerate() {
         let line_number = index + 1;
@@ -4295,6 +4360,31 @@ fn resolve_deck_lines(
             continue;
         }
         let directive = deck_directive(stripped);
+        if in_control_block {
+            if directive.as_deref() == Some(".endc") {
+                in_control_block = false;
+                continue;
+            }
+            if let Some(control_line) = control_block_command_as_deck_line(stripped) {
+                active_lines.push(control_line);
+                continue;
+            }
+            if is_noop_control_block_command(stripped) {
+                continue;
+            }
+            state.diagnostics.push(DeckResolutionDiagnostic {
+                code: "SPICE_DECK_CONTROL_COMMAND".to_string(),
+                directive: ".control".to_string(),
+                source: source.to_string(),
+                line_number,
+                message: format!(
+                    "{stripped:?} inside .control is not executed by the deck source resolver yet"
+                ),
+                severity: "error".to_string(),
+                target: None,
+            });
+            continue;
+        }
         if directive.as_deref() == Some(".end") {
             end_line_number = Some(line_number);
             break;
@@ -4331,6 +4421,8 @@ fn resolve_deck_lines(
                 severity: "error".to_string(),
                 target: None,
             });
+            in_control_block = true;
+            continue;
         }
         active_lines.push(stripped.to_string());
     }
@@ -5821,18 +5913,50 @@ fn resolve_output_line(
 ) {
     let tokens = directive_tokens(line);
     if tokens.len() < 2 {
+        let message = if matches!(directive, ".print" | ".plot") {
+            format!("{directive} requires an analysis token and at least one probe token")
+        } else {
+            format!("{directive} requires at least one probe token")
+        };
         add_output_diagnostic(
             state,
             "SPICE_DECK_OUTPUT_ARGUMENT",
             directive,
             line_number,
-            &format!("{directive} requires at least one probe token"),
+            &message,
             None,
         );
         return;
     }
 
-    let (analysis, probe_tokens) = if directive == ".probe"
+    let (analysis, probe_tokens) = if matches!(directive, ".print" | ".plot") {
+        if tokens.len() < 3 {
+            add_output_diagnostic(
+                state,
+                "SPICE_DECK_OUTPUT_ARGUMENT",
+                directive,
+                line_number,
+                &format!("{directive} requires an analysis token and at least one probe token"),
+                None,
+            );
+            return;
+        }
+        let Some(analysis) = normalize_deck_output_analysis(tokens[1]) else {
+            add_output_diagnostic(
+                state,
+                "SPICE_DECK_OUTPUT_ANALYSIS",
+                directive,
+                line_number,
+                &format!(
+                    "{directive} analysis must be op, dc, ac, or tran, got {:?}",
+                    tokens[1],
+                ),
+                Some(tokens[1].to_string()),
+            );
+            return;
+        };
+        (Some(analysis.to_string()), &tokens[2..])
+    } else if directive == ".probe"
         && tokens
             .get(1)
             .and_then(|token| normalize_deck_output_analysis(token))
@@ -6751,6 +6875,49 @@ fn deck_directive(line: &str) -> Option<String> {
             .unwrap_or(line)
             .to_ascii_lowercase(),
     )
+}
+
+fn control_block_command_as_deck_line(line: &str) -> Option<String> {
+    let command_token = line.split_whitespace().next()?;
+    let command = command_token.to_ascii_lowercase();
+    let directive = match command.as_str() {
+        "op" | ".op" => ".op",
+        "dc" | ".dc" => ".dc",
+        "ac" | ".ac" => ".ac",
+        "tran" | ".tran" => ".tran",
+        "save" | ".save" => ".save",
+        "probe" | ".probe" => ".probe",
+        "measure" | ".measure" => ".measure",
+        "meas" | ".meas" => ".meas",
+        "four" | ".four" | "fourier" | ".fourier" => ".four",
+        "print" | ".print" => ".print",
+        "plot" | ".plot" => ".plot",
+        _ => return None,
+    };
+    let rest = line[command_token.len()..].trim_start();
+    if rest.is_empty() {
+        Some(directive.to_string())
+    } else {
+        Some(format!("{directive} {rest}"))
+    }
+}
+
+fn is_noop_control_block_command(line: &str) -> bool {
+    let mut parts = line.split_whitespace();
+    let Some(command) = parts.next().map(|command| command.to_ascii_lowercase()) else {
+        return false;
+    };
+    if matches!(
+        command.as_str(),
+        "run" | ".run" | "reset" | ".reset" | "quit" | ".quit"
+    ) {
+        return true;
+    }
+    if !matches!(command.as_str(), "set" | ".set") {
+        return false;
+    }
+    matches!(parts.next().map(|option| option.to_ascii_lowercase()), Some(option) if matches!(option.as_str(), "noaskquit" | "filetype=ascii" | "wr_vecnames" | "wr_singlescale"))
+        && parts.next().is_none()
 }
 
 fn is_unsupported_deck_control_directive(directive: &str) -> bool {
@@ -9397,6 +9564,442 @@ pub fn format_deck_transient_table(
     format_transient_table(points, &probe_refs)
 }
 
+fn deck_run_artifacts(
+    plan: &DeckAnalysisPlan,
+    result_rows: usize,
+    output_probes: &[String],
+    measurements: &[ProbeMeasurement],
+    fourier: &[FourierResult],
+) -> Vec<DeckRunArtifact> {
+    vec![DeckRunArtifact {
+        analysis: plan.analysis.clone(),
+        directive: plan.directive.clone(),
+        line_number: plan.line_number,
+        result_rows,
+        output_probe_count: output_probes.len(),
+        measurement_count: measurements.len(),
+        fourier_count: fourier.len(),
+    }]
+}
+
+pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
+    let mut rows = vec![
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier".to_string(),
+    ];
+    for artifact in artifacts {
+        rows.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            artifact.analysis,
+            artifact.directive,
+            artifact.line_number,
+            artifact.result_rows,
+            artifact.output_probe_count,
+            artifact.measurement_count,
+            artifact.fourier_count
+        ));
+    }
+    format!("{}\n", rows.join("\n"))
+}
+
+fn select_deck_measurement_cards_for_analysis(
+    netlist: &str,
+    analysis: &str,
+) -> Result<Vec<DeckMeasurementCard>, SpiceError> {
+    let summary = resolve_deck_measurements(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "run_deck_analysis",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    Ok(summary
+        .measurements
+        .into_iter()
+        .filter(|measurement| {
+            measurement.analysis == analysis
+                || (analysis == "tran" && measurement.analysis == "transient")
+        })
+        .collect())
+}
+
+fn select_deck_fourier_cards_for_analysis(
+    netlist: &str,
+    analysis: &str,
+) -> Result<Vec<DeckFourierCard>, SpiceError> {
+    let summary = resolve_deck_fourier(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "run_deck_analysis",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    Ok(if analysis == "tran" {
+        summary.fourier
+    } else {
+        Vec::new()
+    })
+}
+
+pub fn run_deck_analysis(
+    circuit: &Circuit,
+    netlist: &str,
+    analysis: Option<&str>,
+) -> Result<DeckAnalysisExecution, SpiceError> {
+    let plan = select_deck_analysis_plan(netlist, analysis)?;
+    match plan.analysis.as_str() {
+        "op" => {
+            let result = dc_op(circuit)?;
+            let table = format_deck_op_table(&result, netlist)?;
+            select_deck_measurement_cards_for_analysis(netlist, "op")?;
+            let measurements = Vec::new();
+            let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "op")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = select_deck_output_probes(netlist, "op")?;
+            let run_artifacts =
+                deck_run_artifacts(&plan, 1, &output_probes, &measurements, &fourier);
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Op(result),
+                table,
+                output_probes,
+                measurements,
+                measurement_table,
+                fourier,
+                fourier_table,
+                run_artifacts,
+                run_artifact_table,
+            })
+        }
+        "dc" => {
+            let source_name =
+                require_deck_plan_string(plan.source_name.as_deref(), &plan, "source_name")?
+                    .to_string();
+            let start = require_deck_plan_number(plan.start_value, &plan, "start_value")?;
+            let stop = require_deck_plan_number(plan.stop_value, &plan, "stop_value")?;
+            let step = require_deck_plan_number(plan.step_value, &plan, "step_value")?;
+            let result = dc_sweep(circuit, &source_name, start, stop, step)?;
+            let table = format_deck_dc_sweep_table(&source_name, &result, netlist)?;
+            let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "dc")?;
+            let measurements = measure_dc_sweep_cards(&result, &measurement_cards)?;
+            let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "dc")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = select_deck_output_probes(netlist, "dc")?;
+            let run_artifacts =
+                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::DcSweep(result),
+                table,
+                output_probes,
+                measurements,
+                measurement_table,
+                fourier,
+                fourier_table,
+                run_artifacts,
+                run_artifact_table,
+            })
+        }
+        "ac" => {
+            let sweep_kind =
+                require_deck_plan_string(plan.sweep_kind.as_deref(), &plan, "sweep_kind")?;
+            let point_count = require_deck_plan_usize(plan.point_count, &plan, "point_count")?;
+            let start =
+                require_deck_plan_number(plan.start_frequency_hz, &plan, "start_frequency_hz")?;
+            let stop =
+                require_deck_plan_number(plan.stop_frequency_hz, &plan, "stop_frequency_hz")?;
+            let result = run_deck_ac_sweep(circuit, &plan, sweep_kind, point_count, start, stop)?;
+            let table = format_deck_ac_table(&result, netlist)?;
+            let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "ac")?;
+            let measurements = measure_ac_sweep_cards(&result, &measurement_cards)?;
+            let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "ac")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = select_deck_output_probes(netlist, "ac")?;
+            let run_artifacts =
+                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Ac(result),
+                table,
+                output_probes,
+                measurements,
+                measurement_table,
+                fourier,
+                fourier_table,
+                run_artifacts,
+                run_artifact_table,
+            })
+        }
+        "tran" => {
+            let step_time = require_deck_plan_number(plan.step_time, &plan, "step_time")?;
+            let stop_time = require_deck_plan_number(plan.stop_time, &plan, "stop_time")?;
+            let run_step = plan
+                .max_step
+                .map_or(step_time, |max_step| step_time.min(max_step));
+            let result = sample_transient_points_print_step(
+                transient(circuit, run_step, stop_time)?,
+                step_time,
+                plan.start_time,
+                stop_time,
+            )?;
+            let table = format_deck_transient_table(&result, netlist)?;
+            let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "tran")?;
+            let measurements = measure_transient_cards(&result, &measurement_cards)?;
+            let measurement_table = format_measurement_table(&measurements);
+            let fourier_cards = select_deck_fourier_cards_for_analysis(netlist, "tran")?;
+            let fourier = fourier_transient_cards(&result, &fourier_cards)?;
+            let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = select_deck_output_probes(netlist, "tran")?;
+            let run_artifacts =
+                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Tran(result),
+                table,
+                output_probes,
+                measurements,
+                measurement_table,
+                fourier,
+                fourier_table,
+                run_artifacts,
+                run_artifact_table,
+            })
+        }
+        _ => Err(SpiceError::InvalidElement {
+            name: "run_deck_analysis".to_string(),
+            reason: format!("unsupported analysis {:?}", plan.analysis),
+        }),
+    }
+}
+
+fn require_deck_plan_string<'a>(
+    value: Option<&'a str>,
+    plan: &DeckAnalysisPlan,
+    field_name: &str,
+) -> Result<&'a str, SpiceError> {
+    if let Some(value) = value {
+        if !value.is_empty() {
+            return Ok(value);
+        }
+    }
+    Err(deck_plan_error(
+        plan,
+        format!("{} analysis missing {field_name}", plan.directive),
+    ))
+}
+
+fn require_deck_plan_number(
+    value: Option<f64>,
+    plan: &DeckAnalysisPlan,
+    field_name: &str,
+) -> Result<f64, SpiceError> {
+    match value {
+        Some(value) if value.is_finite() => Ok(value),
+        _ => Err(deck_plan_error(
+            plan,
+            format!("{} analysis missing {field_name}", plan.directive),
+        )),
+    }
+}
+
+fn require_deck_plan_usize(
+    value: Option<usize>,
+    plan: &DeckAnalysisPlan,
+    field_name: &str,
+) -> Result<usize, SpiceError> {
+    value.ok_or_else(|| {
+        deck_plan_error(
+            plan,
+            format!("{} analysis missing {field_name}", plan.directive),
+        )
+    })
+}
+
+fn sample_transient_points_print_step(
+    points: Vec<TransientPoint>,
+    print_step: f64,
+    start_time: Option<f64>,
+    stop_time: f64,
+) -> Result<Vec<TransientPoint>, SpiceError> {
+    if points.is_empty() {
+        return Ok(points);
+    }
+    let epsilon = stop_time.abs().max(print_step.abs()).max(1.0) * 1.0e-12;
+    let report_start = if let Some(start_time) = start_time.filter(|value| *value > 0.0) {
+        start_time
+    } else if points[0].time.abs() <= epsilon {
+        0.0
+    } else {
+        print_step
+    };
+    let mut sampled = Vec::new();
+    let mut index = 0usize;
+    loop {
+        let sample_time = report_start + index as f64 * print_step;
+        if sample_time > stop_time + epsilon {
+            break;
+        }
+        sampled.push(interpolate_transient_point(&points, sample_time)?);
+        index += 1;
+    }
+    Ok(sampled)
+}
+
+fn interpolate_transient_point(
+    points: &[TransientPoint],
+    time: f64,
+) -> Result<TransientPoint, SpiceError> {
+    let epsilon = time.abs().max(1.0) * 1.0e-12;
+    for point in points {
+        if (point.time - time).abs() <= epsilon {
+            return Ok(TransientPoint {
+                time,
+                node_voltages: point.node_voltages.clone(),
+                branch_currents: point.branch_currents.clone(),
+            });
+        }
+    }
+    for pair in points.windows(2) {
+        let left = &pair[0];
+        let right = &pair[1];
+        if left.time - epsilon <= time && time <= right.time + epsilon {
+            let span = right.time - left.time;
+            if span <= 0.0 {
+                return Ok(TransientPoint {
+                    time,
+                    node_voltages: left.node_voltages.clone(),
+                    branch_currents: left.branch_currents.clone(),
+                });
+            }
+            let alpha = (time - left.time) / span;
+            return Ok(TransientPoint {
+                time,
+                node_voltages: interpolate_value_map(
+                    &left.node_voltages,
+                    &right.node_voltages,
+                    alpha,
+                ),
+                branch_currents: interpolate_value_map(
+                    &left.branch_currents,
+                    &right.branch_currents,
+                    alpha,
+                ),
+            });
+        }
+    }
+    Err(SpiceError::InvalidElement {
+        name: "run_deck_analysis".to_string(),
+        reason: "transient print point is outside output".to_string(),
+    })
+}
+
+fn interpolate_value_map(
+    left: &BTreeMap<String, f64>,
+    right: &BTreeMap<String, f64>,
+    alpha: f64,
+) -> BTreeMap<String, f64> {
+    let mut values = BTreeMap::new();
+    for key in left
+        .keys()
+        .chain(right.keys())
+        .cloned()
+        .collect::<BTreeSet<_>>()
+    {
+        let left_value = left
+            .get(&key)
+            .copied()
+            .or_else(|| right.get(&key).copied())
+            .unwrap_or(0.0);
+        let right_value = right.get(&key).copied().unwrap_or(left_value);
+        values.insert(key, (1.0 - alpha) * left_value + alpha * right_value);
+    }
+    values
+}
+
+fn deck_plan_error(plan: &DeckAnalysisPlan, reason: String) -> SpiceError {
+    SpiceError::InvalidElement {
+        name: "run_deck_analysis".to_string(),
+        reason: format!("line {}: {reason}", plan.line_number),
+    }
+}
+
+fn run_deck_ac_sweep(
+    circuit: &Circuit,
+    plan: &DeckAnalysisPlan,
+    sweep_kind: &str,
+    point_count: usize,
+    start_hz: f64,
+    stop_hz: f64,
+) -> Result<Vec<AcPoint>, SpiceError> {
+    let mut points = Vec::new();
+    for frequency_hz in deck_ac_frequencies(plan, sweep_kind, point_count, start_hz, stop_hz)? {
+        let point = ac_sweep(circuit, frequency_hz, frequency_hz, 1)?
+            .into_iter()
+            .next()
+            .ok_or(SpiceError::SingularMatrix)?;
+        points.push(point);
+    }
+    Ok(points)
+}
+
+fn deck_ac_frequencies(
+    plan: &DeckAnalysisPlan,
+    sweep_kind: &str,
+    point_count: usize,
+    start_hz: f64,
+    stop_hz: f64,
+) -> Result<Vec<f64>, SpiceError> {
+    if point_count == 0 {
+        return Err(deck_plan_error(
+            plan,
+            ".ac point_count must be positive".to_string(),
+        ));
+    }
+    match sweep_kind {
+        "lin" => {
+            if point_count == 1 {
+                return Ok(vec![start_hz]);
+            }
+            let step = (stop_hz - start_hz) / (point_count - 1) as f64;
+            Ok((0..point_count)
+                .map(|index| start_hz + index as f64 * step)
+                .collect())
+        }
+        "dec" | "oct" => {
+            let base = if sweep_kind == "dec" {
+                10.0_f64
+            } else {
+                2.0_f64
+            };
+            let ratio = base.powf(1.0 / point_count as f64);
+            let epsilon = stop_hz * 1.0e-12;
+            let mut frequencies = Vec::new();
+            let mut frequency_hz = start_hz;
+            while frequency_hz <= stop_hz + epsilon {
+                frequencies.push(frequency_hz);
+                frequency_hz *= ratio;
+            }
+            Ok(frequencies)
+        }
+        _ => Err(deck_plan_error(
+            plan,
+            format!(
+                ".ac {} execution is not supported yet",
+                sweep_kind.to_ascii_uppercase()
+            ),
+        )),
+    }
+}
+
 pub fn format_corner_ac_table(
     result: &CornerAcSweepResult,
     probes: &[&str],
@@ -9835,6 +10438,14 @@ pub fn format_fourier_table(result: &FourierResult) -> String {
     }
     rows.push(String::new());
     rows.join("\n")
+}
+
+pub fn format_deck_fourier_table(results: &[FourierResult]) -> String {
+    results
+        .iter()
+        .map(format_fourier_table)
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 pub fn format_corner_fourier_table(result: &CornerFourierResult) -> String {

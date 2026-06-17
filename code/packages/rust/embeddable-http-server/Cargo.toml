@@ -10,3 +10,6 @@ http-core = { path = "../http-core" }
 http1 = { path = "../http1" }
 tcp-runtime = { path = "../tcp-runtime" }
 transport-platform = { path = "../transport-platform" }
+# WEB01b: the in-process mailbox job pool for deferred-response (parallel) serving.
+embeddable-tcp-server = { path = "../embeddable-tcp-server" }
+generic-job-protocol = { path = "../generic-job-protocol" }

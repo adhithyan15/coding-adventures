@@ -63,11 +63,45 @@ rectangle of an unbounded sheet (the Compose sibling of the web/SwiftUI/Qt/
 Flutter infinite views). The window JSON is nested, so it's parsed by a tiny
 in-file JSON reader rather than `display()`'s per-value regex.
 
+### The scrollable infinite GUI (`InfiniteSheet.kt`)
+
+The **Infinite sheet** button in the running app toggles from the classic 5×5
+grid to `InfiniteSheet` — a virtualized, effectively-infinite (u32 × u32,
+sparse) sheet rendered on the same engine. The body is a `LazyColumn`, which
+natively virtualizes: it composes a row item only while it's near the viewport
+and recycles it on scroll, so a 1000-row sheet costs the handful of rows you can
+see. Each composed row makes **one** engine `get_display_window` over its
+`1×totalCols` strip (`InfiniteSheetModel.rowCells`) — display strings, each
+already rendered through its Excel-style format code (the seed formats the
+cross-foot totals as `#,##0.00` and the far-flung `Z1000` total as a percent),
+so the Compose host paints them directly. Per-frame engine work is proportional
+to *visible* rows, never the sheet's height.
+
+Frozen chrome without a second scroller: the row-number gutter rides as each
+`LazyColumn` row's first child, *outside* the horizontal scroll, so it stays
+pinned left and scrolls vertically with the body for free; every row and the
+column-letter header share one horizontal `ScrollState`, so dragging any row
+pans them all in lockstep (the header is gesture-disabled — it only follows).
+Tap a cell → `selectInf(row,col)` (clamps, loads the source into the formula
+bar); press Enter → `commitInf(text)` (writes through, recomputes dependents,
+regrows the extent). `InfiniteSheetModel` (in `Engine.kt`) seeds far-flung
+sparse cells (`Z1000`, `BA50`, `BB50`) and derives the extent from `usedRange()`
++ a margin.
+
+### Verification
+
 Headless proof: `scripts/verify.sh` (kotlinc + FFM) seeds far-flung sparse cells
 and asserts the window is engine-computed + dense (A1=15, E1=38, E5=169), a
 formula 1000 rows down (`Z1000` = 39) is reachable, the gaps are empty (sparse),
 column letters run AA/BA, and editing `A1` dirties the far dependent `Z1000` via
-`changedSince`.
+`changedSince`. It also drives `InfiniteSheetModel` directly: `rowCells`
+one-read rows, `selectInf` clamping + source load, and `commitInf` recompute
+(A2 `8`→`108` ⇒ E2 151, A5 139, E5 269).
+
+The Compose UI itself (`InfiniteSheet.kt` + the `Main.kt` toggle) is verified to
+compile against the real Compose Desktop APIs via `gradle compileKotlin`; the
+engine-backed logic it drives is the headlessly-proven model above. (A live GUI
+needs a Compose Desktop window — `gradle run`.)
 
 ## Why "Compose for Desktop" rather than Jetpack Compose for Android?
 
@@ -96,7 +130,8 @@ demo/visicalc-compose/
 ├── test/
 │   └── EngineSmoke.kt            ← asserts the grid is engine-computed + recomputes
 └── src/main/kotlin/
-    ├── Main.kt                   ← `application { Window { ... } }`, binds the engine model
-    ├── Engine.kt                 ← Java FFM bindings + SpreadsheetModel
+    ├── Main.kt                   ← `application { Window { ... } }`; classic grid + infinite toggle
+    ├── InfiniteSheet.kt          ← virtualized infinite-sheet composable (LazyColumn over the viewport)
+    ├── Engine.kt                 ← Java FFM bindings + SpreadsheetModel + InfiniteSheetModel
     └── generated/                ← FormulaBar.kt + Grid.kt (mosaic-compile output)
 ```

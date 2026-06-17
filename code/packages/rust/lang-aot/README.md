@@ -4,6 +4,30 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
+> **LANG-FULL O2 — Oct bitwise `~` + u8 wrap on all 7 backends (v0.92.0):**
+> `tests/lang_matrix.rs` adds `out(1, ~0)` → `255` and `out(1, 200 + 100)` → `44` (wrap).
+> `oct-iir-compiler` 0.7.0 emits the `u8` hint on arithmetic/bitwise/`~` (Oct's only integer
+> type is u8); `iir-to-jvm-class-file` 0.14.0 masks a narrow op on the JVM **long** model
+> (`i2l; land`) since Oct's printing programs keep the i64 model — the int `iand` was
+> unverifiable over longs. Completes Oct O2.
+
+> **LANG-FULL N3 — Nib bitwise `~` runs on all 7 backends (v0.91.0):**
+> `tests/lang_matrix.rs` adds two executed `~` programs — `~0u8 == 255` and `~15u4 == 0`.
+> `nib-iir-compiler` 0.16.0 lowers unary `~` to the IIR `not` op (it had been silently
+> dropped) with the narrow width so every backend masks it mod-2ⁿ; `iir-to-cil-bytecode`
+> 0.21.0 adds the unary `not` arm to its textual `.il` emitter — the last backend that
+> couldn't assemble `~` on CoreCLR. Completes Nib N3 (`& | ^ ~`).
+
+> **LANG-FULL B1-stdin — Brainfuck reads real input on all 7 backends (v0.90.0):**
+> `tests/lang_matrix.rs` adds two executed stdin programs — `,+.` (read a byte, `+`,
+> print: `"A"` → `"B"`) and `,.,.` (echo two bytes: `"Hi"` → `"Hi"`). The four
+> subprocess columns (native/LLVM/JVM/CLR) read real process stdin via the new
+> `output_with_stdin` helper; WASM/VM/JIT `getchar` drains a per-program `program_stdin`
+> buffer. Harness-only — every backend already compiled `,`→`getchar`. Both programs
+> read exactly the supplied bytes (no EOF-gated loop), so they terminate identically
+> despite the backends' divergent `getchar`-EOF convention (0 vs -1); normalising EOF
+> (so `,[.,]` cat works) is a separate item.
+
 > **LANG-MATRIX Brainfuck — CODE-GEN MATRIX COMPLETE (v0.65.0–v0.68.0):** Brainfuck now
 > runs on **every code-gen backend** — LLVM, WASM, JVM, **and CLR** (plus native).
 > `lower_brainfuck_for_aot` widens the frontend's narrow cell (`u8`) and pointer (`u32`)

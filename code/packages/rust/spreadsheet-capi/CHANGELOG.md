@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.6.0
+
+**`sc_fill` over the C ABI.** New
+`sc_fill(s, src, dst_start, dst_end)` (three A1 C strings, void return),
+declared in `include/spreadsheet.h` — drag-fill: replicate the `src` cell across
+the inclusive rectangle, relative refs shifting per target, absolute (`$`) refs
+pinned, the source's format carried along, an empty source clearing each target;
+a malformed address is a no-op. Delegates to `SpreadsheetSession::fill`;
+null-session safe. New C ABI round-trip test (formula shift + null-session
+no-op).
+
+## 0.5.0
+
+**`sc_get_display_window` over the C ABI.** New
+`sc_get_display_window(s, row0, col0, row1, col1)` (→ display-window JSON, freed
+with `sc_string_free`), declared in `include/spreadsheet.h`. Like `sc_get_window`
+but each cell is its display string (value rendered through its format code;
+empty cells `""`) — the one read a native virtualized grid needs per frame.
+Delegates to `SpreadsheetSession::get_display_window`; null-session safe. The C
+ABI round-trip test now also exercises it (formatted cell + bad-window/null
+guards).
+
+## 0.4.0
+
+**Cell display formats over the C ABI.** New `sc_set_format(s, a1, code)` (void),
+`sc_get_format(s, a1)` (→ code | `""`), and `sc_get_display(s, a1)` (→ the value
+rendered through its format), declared in `include/spreadsheet.h`. Delegate to
+`SpreadsheetSession`'s format API; null-session safe.
+
+## 0.3.0
+
+**Insert/delete rows & columns over the C ABI.** New `void`-returning exports
+`sc_insert_rows` / `sc_delete_rows` / `sc_insert_cols` / `sc_delete_cols(s, at,
+count)` (1-based), declared in `include/spreadsheet.h`. They delegate to
+`SpreadsheetSession`'s new structural-edit methods; the host re-reads via
+`sc_get_window` / `sc_get_raw` afterwards. Null-session safe (no-op).
+
 ## 0.2.0
 
 Viewport C ABI for the virtualized infinite sheet, mirroring

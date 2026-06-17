@@ -61,6 +61,10 @@ with_clause       = "WITH" [ "RECURSIVE" ] cte_def { "," cte_def } ;
 cte_def           = NAME [ "(" NAME { "," NAME } ")" ] "AS"
                     [ [ "NOT" ] "MATERIALIZED" ]
                     "(" query_stmt ")" ;
+# Grammar note: [ "ALL" ] is written for all three operators so the parser can
+# produce a useful token-stream and the adapter can emit the correct error.
+# Only UNION ALL is valid in SQLite; the adapter rejects INTERSECT ALL and
+# EXCEPT ALL with OperationalError: near "ALL": syntax error.
 set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ]
                     ( values_stmt | select_stmt ) ;
 
@@ -69,10 +73,10 @@ set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ]
 select_stmt       = "SELECT" [ "DISTINCT" | "ALL" ] select_list
                     [ "FROM" table_ref { join_clause } ]
                     [ where_clause ] [ group_clause ] [ having_clause ]
-                    [ order_clause ] [ limit_clause ] ;
+                    [ window_clause ] [ order_clause ] [ limit_clause ] ;
 
 select_list       = STAR | select_item { "," select_item } ;
-select_item       = expr [ "AS" NAME ] ;
+select_item       = expr [ [ "AS" ] NAME ] ;
 
 # table_ref: try derived-table form first (starts with "(") then plain name.
 # PEG backtracking ensures "(SELECT ...)" matches the first branch and
@@ -211,6 +215,8 @@ insert_body       = "VALUES" row_value { "," row_value }
 # value — useful when the table has an INTEGER PRIMARY KEY plus all
 # other columns have DEFAULT clauses (or are NULLable).
 row_value         = "(" expr { "," expr } ")" ;
+# row_value_list is used by row-value comparisons: (a,b) IN ((x,y),(p,q))
+row_value_list    = row_value { "," row_value } ;
 
 update_stmt       = "UPDATE" NAME "SET" assignment { "," assignment }
                     [ where_clause ] [ returning_clause ] ;
@@ -227,8 +233,18 @@ returning_item    = "*" | expr ;
 # ── CREATE TABLE / DROP TABLE ─────────────────────────────────────────────────
 
 create_table_stmt = "CREATE" "TABLE" [ "IF" "NOT" "EXISTS" ] NAME
-                    "(" col_def { "," col_def } ")"
+                    "(" col_def { "," col_def } { "," table_constraint } ")"
                     [ table_options ] ;
+# Table-level constraints appear after the column definitions.  Each
+# starts with a keyword, which lets the PEG parser distinguish them from
+# col_def (which starts with NAME).  Mini-sqlite enforces PRIMARY KEY and
+# UNIQUE by promoting the flag onto the matching column definition(s);
+# CHECK and FOREIGN KEY are parsed and accepted but not enforced.
+table_constraint  = ( "PRIMARY" "KEY" "(" NAME { "," NAME } ")" )
+                  | ( "UNIQUE"  "(" NAME { "," NAME } ")" )
+                  | ( "CHECK"   "(" expr ")" )
+                  | ( "FOREIGN" "KEY" "(" NAME { "," NAME } ")"
+                      "REFERENCES" NAME [ "(" NAME { "," NAME } ")" ] ) ;
 # Trailing table options (SQLite 3.8.2+ / 3.37+ extensions):
 #   WITHOUT ROWID — store rows in the primary-key B-tree instead of a
 #                   rowid table.  Mini-sqlite accepts and ignores.
@@ -356,7 +372,14 @@ not_expr          = "NOT" not_expr | comparison ;
 # of any comparison.  The COLLATE clause is also accepted in ORDER
 # BY items separately (see ``order_item``).
 collated          = bitwise [ "COLLATE" NAME ] ;
-comparison        = collated [ cmp_op collated
+# Row-value comparisons: (a,b) = (c,d), (a,b) IN ((x,y),...).
+# These three alternatives must precede the scalar ``collated [...]`` form
+# so the PEG parser tries row_value first when it sees "(".  The NOT IN
+# alternative comes before IN so "NOT" is not left unconsumed.
+comparison        = row_value cmp_op row_value
+                  | row_value "NOT" "IN" "(" row_value_list ")"
+                  | row_value "IN" "(" row_value_list ")"
+                  | collated [ cmp_op collated
                   | "BETWEEN" collated "AND" collated
                   | "NOT" "BETWEEN" collated "AND" collated
                   | "IN" "(" [ in_expr ] ")"
@@ -488,8 +511,10 @@ cast_expr         = "CAST" "(" expr "AS" NAME ")" ;
 # PEG backtracking ensures NAME "(" without a following OVER falls through to
 # function_call.
 
-window_func_call  = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" "(" window_spec ")" ;
+window_func_call  = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" ( "(" window_spec ")" | window_name_ref ) ;
+window_name_ref   = NAME ;
 window_spec       = [ partition_clause ] [ order_clause ] [ frame_clause ] ;
+window_clause     = "WINDOW" NAME "AS" "(" window_spec ")" { "," NAME "AS" "(" window_spec ")" } ;
 partition_clause  = "PARTITION" "BY" expr { "," expr } ;
 value_list        = expr { "," expr } ;
 
@@ -544,7 +569,7 @@ frame_bound   = "UNBOUNDED" "PRECEDING"
 
 create_trigger_stmt = "CREATE" "TRIGGER" NAME
                       ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
-                      "FOR" "EACH" "ROW"
+                      [ "FOR" "EACH" "ROW" ]
                       "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
 
 trigger_body_stmt   = insert_stmt | replace_stmt | update_stmt | delete_stmt | query_stmt ;

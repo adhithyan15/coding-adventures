@@ -1,0 +1,14 @@
+[package]
+name = "coding-adventures-s-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Tree-walking evaluator for the historical Bell Labs S statistical language"
+
+[dependencies]
+coding-adventures-s-parser = { path = "../s-parser" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+r-vector = { path = "../r-vector" }
+numeric-tower = { path = "../numeric-tower" }
+statistics-core = { path = "../statistics-core" }
+regex = "1"

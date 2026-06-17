@@ -29,7 +29,9 @@ tcp-runtime + transport-platform (kqueue / epoll / IOCP)
 | Response building    | `WebResponse` — fluent builder, converts to `HttpResponse` |
 | Lifecycle hooks      | `HookRegistry` — 12 hook points, `Arc<dyn Fn>` closures |
 | Dispatch pipeline    | `WebApp::handle` — full lifecycle in one call |
-| Server binding       | `WebServer` — thin wrapper around `HttpServer` |
+| Server binding       | `WebServer` — thin wrapper around `HttpServer` (single reactor) |
+| Parallel by connection | `ShardedWebServer` (WEB01a-2) — N reactor shards, inline dispatch |
+| Parallel by request  | `MailboxWebServer` (WEB01b-2) — single reactor + worker pool |
 
 ## Quick start
 

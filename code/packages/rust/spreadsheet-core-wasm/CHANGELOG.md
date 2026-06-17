@@ -1,5 +1,58 @@
 # Changelog
 
+## 0.6.0
+
+**`fill` (drag-fill) over the JSON facade.** New
+`fill(src_a1, dst_start_a1, dst_end_a1)` replicates the source cell across the
+inclusive A1 rectangle, wrapping the engine's `Workbook::fill` (spreadsheet-core
+0.7.0): relative references shift per target, absolute (`$`) refs pin, the
+source's format carries along, an empty source clears each target, and a
+malformed address is a no-op.
+
+- Keeps the `raw` echo map honest: each target's stored source is the source's
+  source with its references shifted (`parse → shift → serialize`, the
+  copy/paste sibling of `rewrite_raw_for_edit`), so the formula bar shows the
+  filled formula. Offsets computed in i64 then clamped (matching the engine, so
+  a high-coordinate anchor can't overflow), and the facade mirrors the engine's
+  `MAX_RANGE_CELLS` guard so the raw-map loop also stays bounded.
+- 3 new tests (formula shift + echo, literal copy / clear-from-empty, bad-address
+  no-op).
+
+## 0.5.0
+
+**`get_display_window`** — a windowed read returning each cell's **formatted
+display string**, the format-aware sibling of `get_window`. Wraps the engine's
+`Workbook::get_display_window` (added in `spreadsheet-core` 0.6.0) at the JSON
+boundary so a virtualized host fetches a dense, ready-to-paint rectangle per
+frame instead of re-deriving number formatting in JS.
+
+- `get_display_window(row0, col0, row1, col1) -> String` →
+  `{"row0":1,"col0":1,"rows":R,"cols":C,"cells":[["1,234.50",…],…]}`, a row-major
+  `R×C` array of display strings (empty cells `""`). A bad request
+  (inverted / oversized / 0-coord) returns `{"error":"#REF!"}`, mirroring
+  `get_window`.
+- 1 new test (formatted/percent/text/empty cells row-major + the bounds guards).
+
+## 0.4.0
+
+**Cell display formats.** `set_format(a1, code)` / `get_format(a1)` /
+`get_display(a1)` expose the engine's cell-format API: set an Excel-style code
+(empty clears it), read it back, and get the value rendered through it (e.g.
+`1234.5` with `"#,##0.00"` → `"1,234.50"`). `get_display` is the display string a
+cell paints — distinct from `get_value` (typed JSON) and `get_raw` (source). 1
+new test.
+
+## 0.3.0
+
+**Insert/delete rows & columns.** `insert_rows` / `delete_rows` / `insert_cols`
+/ `delete_cols(at, count)` (1-based) call through to the engine — which relocates
+cells and rewrites every formula's references (a reference to a deleted line →
+`#REF!`) — and keep this facade's `raw` echo map in step: each raw entry's
+address is relocated the same way, and a formula's *source* is rewritten via the
+shared `parse → FormulaAst::adjust → to_formula_string`, so the formula bar
+echoes the post-edit references. An insert that would push a non-empty cell off
+the u32 grid edge is rejected wholesale (mirrors the engine's guard). 3 new tests.
+
 ## 0.2.0
 
 Viewport primitive (for the virtualized infinite sheet), wrapping

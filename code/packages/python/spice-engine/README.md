@@ -64,7 +64,8 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
-| `resolve_deck_outputs`, `format_deck_*_table` | `.SAVE` / `.PROBE` output | Parsed deck-selected OP, DC sweep, AC, and transient tables |
+| `resolve_deck_outputs`, `format_deck_*_table` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables |
+| `format_deck_run_artifact_table` | Deck execution artifact | Stable selected-run row, output-probe, measurement, and Fourier counts |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
@@ -100,15 +101,30 @@ for malformed arguments, unsupported AC sweep modes, invalid sweep intervals,
 and unresolved scalar expressions. `select_deck_analysis_plan()` picks one
 explicit card by analysis alias, defaults decks without analysis cards to an
 implicit `.op`, and reports ambiguity before solver dispatch.
-`resolve_deck_outputs()` and `select_deck_output_probes()` extract `.save` and
-scoped or global `.probe` cards before `.end`, normalize and deduplicate output
-probes in deck order, and feed `format_deck_op_table()`,
+`run_deck_analysis()` executes one selected `.op`, `.dc`, `.ac LIN`,
+`.ac DEC`, `.ac OCT`, or `.tran` plan against an existing `Circuit` and
+returns the plan, solver result, deck-selected output table, and normalized
+output probes that produced the table, plus selected `.measure` results and a
+stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
+`.tran` plans also return selected `.four` harmonic results and a stable
+Fourier table. Executions also include a selected-run artifact summary plus
+`format_deck_run_artifact_table()` output for stable result-row,
+output-probe, measurement, and Fourier counts. They route `START` output
+filtering, use `.tran TSTEP` as the output print grid, apply `MAXSTEP` as an
+internal fixed-step cap, and carry `UIC` initial-condition intent through that
+stable transient table surface.
+`resolve_deck_outputs()` and `select_deck_output_probes()` extract `.save`,
+scoped or global `.probe`, scoped `.print <analysis> ...`, and scoped
+`.plot <analysis> ...` cards before `.end`, normalize and deduplicate output
+probes in deck order, and feed
+`format_deck_op_table()`,
 `format_deck_dc_sweep_table()`, `format_deck_ac_table()`, and
 `format_deck_transient_table()` for stable deck-selected text output.
-`resolve_deck_fourier()`, `fourier_transient_cards()`, and
-`fourier_transient_deck()` extract parsed `.four` / `.FOUR` cards before
-`.end` and route transient samples into the existing SPICE-style Fourier result
-shape with optional `HARMONICS=` and `FROM=` controls.
+`resolve_deck_fourier()`, `fourier_transient_cards()`,
+`fourier_transient_deck()`, and `format_deck_fourier_table()` extract parsed
+`.four` / `.FOUR` cards before `.end` and route transient samples into the
+existing SPICE-style Fourier result shape with optional `HARMONICS=` and
+`FROM=` controls.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
 size, selected real solver path, tolerance, convergence aid, and final Newton
@@ -142,13 +158,21 @@ notes. `release_readiness_gates()` validates the corpus metadata, while
 provide stable tab-separated summaries for package checks.
 `analyze_deck_controls()` provides the shared deck-control boundary foothold:
 it returns active lines before `.end` and stable diagnostics for unsupported
-`.include`, `.lib`, and `.control` directives before future include/library
-resolution and control-block execution are in scope.
+`.include`, `.lib`, and `.control` directives. Inside `.control` blocks,
+selected analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
+`measure`, `meas`, `four`, `fourier`, `print`, and `plot`) are normalized into
+dotted deck cards, while `run`, `reset`, `quit`, and the UI-only
+`set noaskquit` option plus the ASCII rawfile-format `set filetype=ascii`
+option and vector-name/single-scale rawfile output toggles (`set wr_vecnames`,
+`set wr_singlescale`) are accepted as no-op control markers. Other
+unrecognized non-comment commands emit diagnostics until a broader executed
+control subset is in scope.
 `resolve_deck_sources()` is the first include/library resolution layer: callers
 provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable
 diagnostics for missing files, missing sections, unterminated sections, cycles,
-and still-unsupported `.control` blocks.
+and still-unsupported `.control` block commands that are not part of the
+selected analysis/output subset.
 `resolve_deck_parameters()` evaluates scalar whitespace-tokenized `.param`
 assignments, collects scalar `.func` definitions before `.end`, preserves
 parameter order, rewrites braced and quoted active-line expressions, and emits
@@ -171,14 +195,20 @@ signatures, arguments, or empty expressions.
 `FIND ... AT=` sample points and `WHEN probe=target` crossings with optional
 `RISE`, `FALL`, or `CROSS` counters, and reports stable diagnostics for
 unsupported analyses, modes, options, expressions, and invalid windows.
-`resolve_deck_outputs()` extracts `.save` and `.probe` cards before `.end`,
-preserves non-output active lines, and reports stable diagnostics for missing
-probe lists or malformed `V(node)` / `I(source)` probes.
+`resolve_deck_outputs()` extracts `.save`, `.probe`, `.print`, and `.plot`
+cards before `.end`, preserves non-output active lines, and reports stable
+diagnostics for missing probe lists, unsupported scoped output analyses, or
+malformed `V(node)` / `I(source)` probes.
 `resolve_deck_analyses()` extracts `.op`, `.dc`, `.ac`, and `.tran` cards
 before `.end`, preserves non-analysis active lines, and reports stable
 diagnostics for malformed deck-level analysis controls.
 `select_deck_analysis_plan()` returns one selected or implicit plan for
 downstream deck execution helpers.
+`run_deck_analysis()` routes that selected plan into the matching solver and
+stable deck-selected table output with normalized output-probe artifacts,
+selected measurement artifacts, selected transient Fourier artifacts,
+selected-run artifact summaries, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency
+grids, and `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
 
 ## Controlled source examples
 

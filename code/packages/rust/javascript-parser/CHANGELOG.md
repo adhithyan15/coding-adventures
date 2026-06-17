@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-15
+
+### Fixed — member-expression suffix chains were silently truncated
+
+`grammar_to_program`'s `convert_member_expression` dropped every property
+suffix past the first Node child. The early-return guard counted only the
+*Node* children (`nodes.len() == 1`), but the grammar rule
+
+```text
+member_expression = primary_expression { DOT NAME | LBRACKET expr RBRACKET | … }
+```
+
+emits a **flat** child list: one primary Node followed by suffix *tokens*
+(`.`, `NAME`) and Nodes (`[expr]`). With one Node child (`a`) but two suffix
+tokens (`.`, `b`), `a.b` was misclassified as a bare primary and collapsed to
+`a`; `a.b.c` collapsed to `a.c`; and `a.b(c)` produced the callee `a` — so a
+method call like `console.log(x)` bridged (and emitted) as `console(x)`,
+silently changing program meaning.
+
+The conversion now walks the full suffix repetition left-to-right, folding each
+`.NAME` and `[expr]` onto the growing base (mirroring the already-correct
+`convert_optional_chain_expression`). A tagged-template suffix on a member base
+is reported as `UnsupportedSyntax` (Phase 2) rather than mis-bridged.
+
+- The bare-primary fast path now checks `node.children.len() == 1` (total
+  children) instead of `nodes.len() == 1` (Node children only).
+- **5 new bridge unit tests**: `member_dot_single` (`a.b`), `member_dot_chain`
+  (`a.b.c`), `member_computed_then_dot` (`a[0].b`), `member_dot_then_computed`
+  (`a.b[c]`), and `member_method_call_keeps_property` (`a.b(c)` keeps the
+  `a.b` callee).
+
+This bug was latent until now because the only consumer (closurec's SIMPLE
+level) discarded the bridged `Program` and emitted via whitespace-only; wiring
+the typed emitter exposed it.
+
+## [0.7.0] - 2026-06-15
+
+### Changed
+- Transitive upgrade: `coding-adventures-javascript-lexer` 0.8.0 (via `lexer`
+  0.5.0) fixes gap-044b — template literal substitutions with non-identifier
+  expressions no longer produce a LexerError.  No API changes in this crate.
+
 ## [0.6.0] - 2026-06-14
 
 ### Added

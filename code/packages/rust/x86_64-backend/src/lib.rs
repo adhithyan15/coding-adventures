@@ -576,9 +576,9 @@ fn emit_instr(
     }
 
     // --- add_<ty> / sub_<ty> / mul_<ty> ---
-    if op.starts_with("add_") { return emit_binop(asm, alloc, instr, BinOp::Add); }
-    if op.starts_with("sub_") { return emit_binop(asm, alloc, instr, BinOp::Sub); }
-    if op.starts_with("mul_") { return emit_binop(asm, alloc, instr, BinOp::Mul); }
+    if let Some(ty) = op.strip_prefix("add_") { return emit_binop(asm, alloc, instr, BinOp::Add, ty); }
+    if let Some(ty) = op.strip_prefix("sub_") { return emit_binop(asm, alloc, instr, BinOp::Sub, ty); }
+    if let Some(ty) = op.strip_prefix("mul_") { return emit_binop(asm, alloc, instr, BinOp::Mul, ty); }
 
     // --- cmp_<rel>_<ty> ---
     if let Some(rest) = op.strip_prefix("cmp_") {
@@ -962,37 +962,39 @@ fn emit_instr(
     if let Some(ty) = op.strip_prefix("mod_") { return emit_divmod(asm, alloc, instr, ty, true);  }
 
     // and_<ty> / or_<ty> / xor_<ty>
-    if op.starts_with("and_") { return emit_bitwise(asm, alloc, instr, Bitwise::And); }
-    if op.starts_with("or_")  { return emit_bitwise(asm, alloc, instr, Bitwise::Or);  }
-    if op.starts_with("xor_") { return emit_bitwise(asm, alloc, instr, Bitwise::Xor); }
+    if let Some(ty) = op.strip_prefix("and_") { return emit_bitwise(asm, alloc, instr, Bitwise::And, ty); }
+    if let Some(ty) = op.strip_prefix("or_")  { return emit_bitwise(asm, alloc, instr, Bitwise::Or,  ty); }
+    if let Some(ty) = op.strip_prefix("xor_") { return emit_bitwise(asm, alloc, instr, Bitwise::Xor, ty); }
 
     // shl_<ty>: logical shift left (same for signed/unsigned).
-    if op.starts_with("shl_") { return emit_shift(asm, alloc, instr, ShiftKind::Shl); }
+    if let Some(ty) = op.strip_prefix("shl_") { return emit_shift(asm, alloc, instr, ShiftKind::Shl, ty); }
     // shr_<ty>: arithmetic for signed (SAR), logical for unsigned (SHR).
     if let Some(ty) = op.strip_prefix("shr_") {
         let kind = if ty.starts_with('i') { ShiftKind::Sar } else { ShiftKind::Shr };
-        return emit_shift(asm, alloc, instr, kind);
+        return emit_shift(asm, alloc, instr, kind, ty);
     }
 
     // neg_<ty> dest = -src
-    if op.starts_with("neg_") {
+    if let Some(ty) = op.strip_prefix("neg_") {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_operand(asm, alloc, Reg::Rax, src);
         asm.neg_(Reg::Rax);
+        mask_narrow(asm, Reg::Rax, ty); // E2: -x mod 2ⁿ for narrow widths
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
         return Ok(());
     }
 
     // not_<ty> dest = ~src
-    if op.starts_with("not_") {
+    if let Some(ty) = op.strip_prefix("not_") {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_operand(asm, alloc, Reg::Rax, src);
         asm.not_(Reg::Rax);
+        mask_narrow(asm, Reg::Rax, ty); // E2: ~x flips only the low n bits for a uⁿ
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
         return Ok(());
@@ -1047,6 +1049,9 @@ fn emit_divmod(
     if signed { asm.idiv(Reg::Rcx); } else { asm.div(Reg::Rcx); }
     // Result lives in RAX (quotient) or RDX (remainder).
     let result_reg = if is_mod { Reg::Rdx } else { Reg::Rax };
+    // E2: quotient/remainder of in-range uⁿ operands already fits, so this mask
+    // is a no-op; kept uniform with the other narrow ops.
+    mask_narrow(asm, result_reg, ty);
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), result_reg);
     Ok(())
@@ -1064,6 +1069,7 @@ fn emit_bitwise(
     alloc: &mut RegAlloc,
     instr: &CIRInstr,
     op: Bitwise,
+    ty: &str,
 ) -> Result<(), BackendError> {
     let dest = require_dest(instr)?;
     let lhs = instr.srcs.first()
@@ -1077,6 +1083,9 @@ fn emit_bitwise(
         Bitwise::Or  => asm.or_(Reg::Rax,  Reg::Rcx),
         Bitwise::Xor => asm.xor_(Reg::Rax, Reg::Rcx),
     }
+    // E2: AND/OR/XOR of two already-masked uⁿ operands stays in range, so this
+    // mask is provably redundant — kept uniform with the other narrow ops.
+    mask_narrow(asm, Reg::Rax, ty);
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
     Ok(())
@@ -1096,6 +1105,7 @@ fn emit_shift(
     alloc: &mut RegAlloc,
     instr: &CIRInstr,
     kind: ShiftKind,
+    ty: &str,
 ) -> Result<(), BackendError> {
     let dest = require_dest(instr)?;
     let lhs = instr.srcs.first()
@@ -1112,6 +1122,10 @@ fn emit_shift(
         ShiftKind::Shr => asm.shr_cl(Reg::Rax),
         ShiftKind::Sar => asm.sar_cl(Reg::Rax),
     }
+    // E2: a left shift can push bits above the declared width (`1u8 << 8` must
+    // be 0, not 256), so mask the result.  Right shifts only shrink the value,
+    // so the mask is a no-op there — applied uniformly for simplicity.
+    mask_narrow(asm, Reg::Rax, ty);
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
     Ok(())
@@ -1124,11 +1138,40 @@ fn emit_shift(
 #[derive(Debug, Clone, Copy)]
 enum BinOp { Add, Sub, Mul }
 
+/// LANG-FULL E2 (native-AOT leg): the bit-width of a narrow **unsigned** type,
+/// or `None` for full-width / signed / non-integer types.  See [`mask_narrow`].
+fn narrow_unsigned_bits(ty: &str) -> Option<u32> {
+    match ty {
+        "u4"  => Some(4),
+        "u8"  => Some(8),
+        "u16" => Some(16),
+        "u32" => Some(32),
+        _ => None, // u64 / i* / f* / bool / void — no masking
+    }
+}
+
+/// Mask the value in `reg` down to `ty`'s width when `ty` is a narrow unsigned
+/// type, so narrow arithmetic *wraps* mod-2ⁿ instead of keeping the full 64-bit
+/// result (`add_u8 200, 100` → 44, not 300).  Mirrors the masks the other
+/// backends (vm-core, jit-core, wasm, jvm, cil) already emit.  `RCX` is the
+/// scratch register for the mask constant; the stack-spill allocator keeps every
+/// live value in a stack slot, so `RCX` is free between instructions.  `reg` is
+/// always `RAX` or `RDX` here (never `RCX`).  A no-op for full-width / signed /
+/// non-integer types.
+fn mask_narrow(asm: &mut Assembler, reg: Reg, ty: &str) {
+    if let Some(bits) = narrow_unsigned_bits(ty) {
+        let mask = (1u64 << bits) - 1;
+        asm.mov_r64_imm64(Reg::Rcx, mask);
+        asm.and_(reg, Reg::Rcx);
+    }
+}
+
 fn emit_binop(
     asm: &mut Assembler,
     alloc: &mut RegAlloc,
     instr: &CIRInstr,
     op: BinOp,
+    ty: &str,
 ) -> Result<(), BackendError> {
     let dest = require_dest(instr)?;
     let lhs = instr.srcs.first()
@@ -1142,6 +1185,7 @@ fn emit_binop(
         BinOp::Sub => asm.sub(Reg::Rax, Reg::Rcx),
         BinOp::Mul => asm.imul(Reg::Rax, Reg::Rcx),
     }
+    mask_narrow(asm, Reg::Rax, ty); // E2: wrap u8/u16/u32 results mod 2ⁿ
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
     Ok(())
@@ -2318,5 +2362,64 @@ mod tests {
             .filter(|r| r.symbol == "__twig_print_i64")
             .collect();
         assert_eq!(plt.len(), 1);
+    }
+
+    // =======================================================================
+    // LANG-FULL E2 (native-AOT leg): narrow-width unsigned masking
+    // =======================================================================
+    //
+    // x86_64 mirrors the aarch64 backend: after each narrow `uⁿ` op the codegen
+    // appends `movabs rcx, <mask>; and <dst>, rcx` so the result wraps mod-2ⁿ
+    // (`add_u8 200, 100` → 44, not 300).  There is no in-repo x86 JIT loader, so
+    // the *executed* value proof for x86_64 is the lang-aot matrix on a Linux
+    // x86_64 CI runner (and the aarch64 backend proves the masked values by
+    // directly executing its output).  Here we prove the mask bytes are emitted.
+
+    fn typed_instr(op: &str, dest: Option<&str>, srcs: Vec<Op>, ty: &str) -> CIRInstr {
+        CIRInstr { op: op.into(), dest: dest.map(str::to_string), srcs, ty: ty.into(), deopt_to: None }
+    }
+
+    /// Compile `const a; const b; <op> v0 = a,b; ret v0` at width `ty`, return
+    /// the byte length of the generated function.
+    fn narrow_binop_len(full_op: &str, ty: &str) -> usize {
+        let ir = vec![
+            typed_instr(&format!("const_{ty}"), Some("a"), vec![Op::Int(200)], ty),
+            typed_instr(&format!("const_{ty}"), Some("b"), vec![Op::Int(100)], ty),
+            typed_instr(full_op, Some("v0"), vec![Op::Var("a".into()), Op::Var("b".into())], ty),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+        ];
+        compile_function(&fn_ctx("f", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("narrow binop must lower")
+            .len()
+    }
+
+    #[test]
+    fn narrow_add_emits_extra_mask_bytes() {
+        // u8 add masks its result; u64 add does not — so the u8 function is
+        // strictly longer (the `movabs rcx,mask; and rax,rcx` mask sequence).
+        assert!(
+            narrow_binop_len("add_u8", "u8") > narrow_binop_len("add_u64", "u64"),
+            "u8 add must emit a width mask the u64 add omits",
+        );
+    }
+
+    #[test]
+    fn narrow_widths_all_emit_mask() {
+        let wide = narrow_binop_len("add_u64", "u64");
+        for ty in ["u4", "u8", "u16", "u32"] {
+            assert!(
+                narrow_binop_len(&format!("add_{ty}"), ty) > wide,
+                "{ty} add must emit a width mask",
+            );
+        }
+    }
+
+    #[test]
+    fn i64_op_is_never_masked() {
+        // i64 is full-width — identical length to the unmasked u64 form.
+        assert_eq!(
+            narrow_binop_len("add_i64", "i64"),
+            narrow_binop_len("add_u64", "u64"),
+        );
     }
 }

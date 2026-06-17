@@ -113,6 +113,44 @@ packages a typed surface for:
   publication readiness into final archive verification checks
 - Hue package release archive validation summaries that turn archive
   verification readiness into final archive validation checks
+- Hue package release archive certification summaries that turn archive
+  validation readiness into final archive certification checks
+- Hue package release archive approval summaries that turn archive
+  certification readiness into final archive approval checks
+- Hue package release archive activation summaries that turn archive approval
+  readiness into final archive activation checks
+- Hue package release archive rollout summaries that turn archive activation
+  readiness into final archive rollout checks
+- Hue package release archive adoption summaries that turn archive rollout
+  readiness into final archive adoption checks
+- Hue package release archive acceptance summaries that turn archive adoption
+  readiness into final archive acceptance checks
+- Hue package release archive distribution summaries that turn archive
+  acceptance readiness into final archive distribution checks
+- Hue package release archive export summaries that turn archive distribution
+  readiness into final archive export checks
+- Hue package release archive import summaries that turn archive export
+  readiness into final archive import checks
+- Hue package release archive ingest summaries that turn archive import
+  readiness into final archive ingest checks
+- Hue package release archive load summaries that turn archive ingest
+  readiness into final archive load checks
+- Hue package release archive restore summaries that turn archive load
+  readiness into final archive restore checks
+- Hue package release archive recovery summaries that turn archive restore
+  readiness into final archive recovery checks
+- Hue package release archive replay summaries that turn archive recovery
+  readiness into final archive replay checks
+- Hue package release archive reconciliation summaries that turn archive replay
+  readiness into final archive reconciliation checks
+- Hue package release archive settlement summaries that turn archive
+  reconciliation readiness into final archive settlement checks
+- Hue package release archive finalization summaries that turn archive
+  settlement readiness into final archive finalization checks
+- Hue package release archive confirmation summaries that turn archive
+  finalization readiness into final archive confirmation checks
+- Hue package release archive attestation summaries that turn archive
+  confirmation readiness into final archive attestation checks
 
 ## Dependencies
 

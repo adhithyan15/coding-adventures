@@ -38,10 +38,14 @@ def test_scenario_selection_and_provenance():
     assert "pseudomonas" in neuro.organisms
 
 
-def test_allergy_becomes_exclusion():
-    cop = cc.compile_cop([cc.ChartFact("allergy", "penicillin", "anaphylaxis")])
-    assert "betalactam_allergy_severe" in cop.exclusions
-    assert any(c["type"] == "exclusion" for c in cop.constraints)
+def test_allergy_activates_a_context():
+    # CC-3b: a penicillin allergy activates the "penicillin_allergy" CONTEXT (the engine then
+    # derives the side-chain-scoped exclusions in derive()) — it no longer adds a blanket token.
+    cop = cc.compile_cop([cc.ChartFact("allergy", "penicillin", "rash")])
+    assert cop.active_contexts == {"penicillin_allergy"}
+    assert not cop.exclusions
+    ctx = [c for c in cop.constraints if c["type"] == "context" and c["detail"] == "penicillin_allergy"]
+    assert len(ctx) == 1 and ctx[0]["from"] == "allergy=penicillin"
 
 
 def test_culture_resistance_becomes_defeated_edge():
@@ -81,16 +85,18 @@ def test_dose_infeasibility_folds_into_the_cover():
     assert any(c["type"] == "dose_infeasible" for c in risky["constraints"])
 
 
-def test_pregnancy_contraindicates_drugs():
-    # CC-3: a pregnancy fact excludes the pregnancy-contraindicated drugs by name, each with
-    # its own provenance constraint (the rules are grounded in treatment-constraints).
+def test_pregnancy_activates_a_clinical_context():
+    # CC-3 (ADJ-native): compile_cop no longer decides WHICH drugs are contraindicated —
+    # that is the engine's job (see test_pregnancy_engine_behaviour). A pregnancy fact only
+    # activates the "pregnancy" clinical CONTEXT, recorded as a provenance constraint.
     cop = cc.compile_cop([cc.ChartFact("pregnancy", "present", "28wk")])
-    assert cop.contraindicated == {"moxifloxacin", "tmp_smx"}
-    ci = [c for c in cop.constraints if c["type"] == "contraindication"]
-    assert len(ci) == 2 and all(c["from"] == "pregnancy=present" for c in ci)
-    # A non-'present' pregnancy value applies nothing and is discarded (no silent effect).
+    assert cop.active_contexts == {"pregnancy"}
+    assert not cop.contraindicated  # populated by the engine in derive(), not here
+    ctx = [c for c in cop.constraints if c["type"] == "context"]
+    assert len(ctx) == 1 and ctx[0]["from"] == "pregnancy=present" and ctx[0]["detail"] == "pregnancy"
+    # A non-'present' pregnancy value activates no context and is discarded (no silent effect).
     cop2 = cc.compile_cop([cc.ChartFact("pregnancy", "unknown")])
-    assert not cop2.contraindicated and any("pregnancy" in d["fact"] for d in cop2.discards)
+    assert not cop2.active_contexts and any("pregnancy" in d["fact"] for d in cop2.discards)
 
 
 def test_pregnancy_engine_behaviour():
@@ -101,11 +107,140 @@ def test_pregnancy_engine_behaviour():
     # pregnancy-contraindicated); moxifloxacin/tmp_smx are flagged contraindicated.
     ok = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("pregnancy", "present")])
     assert ok["regimen"] and {"moxifloxacin", "tmp_smx"} <= set(ok["contraindicated"])
-    # Pregnant + penicillin allergy → β-lactams AND the fluoroquinolone/TMP-SMX alternatives
-    # all excluded → honest abstention with the conflict named.
+    # CC-3b: pregnant + PENICILLIN allergy is now FEASIBLE — a penicillin allergy excludes only
+    # penicillins (ampicillin), NOT 3rd-gen cephalosporins, so vancomycin + ceftriaxone stands
+    # (ceftriaxone cross-reactivity <1%). ampicillin + the pregnancy drugs are contraindicated.
+    pcn = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("pregnancy", "present"),
+                          cc.ChartFact("allergy", "penicillin")])
+    assert pcn["regimen"] and "ceftriaxone" in pcn["regimen"], pcn
+    assert {"ampicillin", "moxifloxacin", "tmp_smx"} <= set(pcn["contraindicated"])
+    # Pregnant + an UNSPECIFIED whole-class β-lactam allergy → penicillins/cephalosporins/
+    # carbapenems all out (only aztreonam survives, which can't cover S. pneumoniae) AND the
+    # fluoroquinolone/TMP-SMX alternatives are pregnancy-contraindicated → honest abstention.
     none = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("pregnancy", "present"),
-                           cc.ChartFact("allergy", "penicillin")])
+                           cc.ChartFact("allergy", "betalactam")])
     assert none["regimen"] is None and none["outcome"] == "infeasible" and none["conflict"] is not None
+
+
+def test_objective_priority_sets_the_cost_side_effect_weights():
+    # CC-4: an objective_priority chart fact selects the (w_cost, w_tox) blend the
+    # set-cover minimizes, with provenance. Default (no such fact) stays tier-only (1,0).
+    default = cc.compile_cop([cc.ChartFact("age_band", "adult")])
+    assert default.weights == (1, 0)
+    low_tox = cc.compile_cop([cc.ChartFact("age_band", "adult"),
+                              cc.ChartFact("objective_priority", "low_toxicity", "frail, polypharmacy")])
+    assert low_tox.weights == (1, 3)
+    assert any(c["type"] == "objective" for c in low_tox.constraints)
+    # An unknown priority applies nothing and is discarded (no silent default change).
+    bad = cc.compile_cop([cc.ChartFact("objective_priority", "cheapest_please")])
+    assert bad.weights == (1, 0) and any("objective_priority" in d["fact"] for d in bad.discards)
+
+
+def test_objective_breakdown_surfaced_with_chart_weights():
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # derive() surfaces the CC-4 objective breakdown, carrying the chart's weights; the
+    # total is internally consistent (w_cost·cost + w_tox·side_effects) for any priority.
+    r = cc.derive(cli, [cc.ChartFact("setting", "post_neurosurgical"),
+                        cc.ChartFact("objective_priority", "low_toxicity")])
+    ob = r["objective"]
+    assert ob is not None and ob["weights"] == {"w_cost": 1, "w_tox": 3}, ob
+    assert ob["total"] == 1 * ob["cost"] + 3 * ob["side_effects"], ob
+
+
+def test_decide_timing_decision_table():
+    # CC-5 (§4) ADJ-NATIVE: the wait-vs-treat-now DECISION is now derived by the engine from
+    # the timing.adj precedence ladder (decide_timing wraps timing.derive_timing). Same
+    # outcomes as the retired Python if/elif, keyed by (disease acuity, culture, clinical).
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # Time-critical disease (meningitis) → empiric now, high delay_risk, with the threshold.
+    t = cc.decide_timing(cli, "meningitis", "pending", "stable")
+    assert t["decision"] == "treat_now_empiric" and t["delay_risk"] == "high", t
+    assert t["threshold"]["treat_within_min"] == 60 and t["threshold"]["trust"]
+    assert t["standing"] == "authoritative"  # the time-critical rule governed
+    # A critical patient forces empiric-now even for a routine-acuity disease.
+    assert cc.decide_timing(cli, "cellulitis", "pending", "critical")["decision"] == "treat_now_empiric"
+    # Stable + non-time-critical + culture pending → awaiting the culture is defensible.
+    aw = cc.decide_timing(cli, "cellulitis", "pending", "stable")
+    assert aw["decision"] == "await_culture" and aw["delay_risk"] == "low", aw
+    # Culture already back → targeted, the wait question is moot.
+    assert cc.decide_timing(cli, "meningitis", "resulted", "stable")["decision"] == "targeted_culture_directed"
+    # No timing info on a routine disease → conservative treat-now (don't gamble), moderate risk.
+    none = cc.decide_timing(cli, "cellulitis", "", "")
+    assert none["decision"] == "treat_now_empiric" and none["delay_risk"] == "moderate", none
+
+
+def test_timing_facts_compile_and_surface_in_derive():
+    # culture_status / clinical_status compile into timing inputs with provenance.
+    cop = cc.compile_cop([cc.ChartFact("culture_status", "pending", "cultures sent"),
+                          cc.ChartFact("clinical_status", "critical", "obtunded, hypotensive")])
+    assert cop.culture_status == "pending" and cop.clinical_status == "critical"
+    assert sum(c["type"] == "timing_input" for c in cop.constraints) == 2
+    # Unrecognized values are discarded, never silently set.
+    bad = cc.compile_cop([cc.ChartFact("culture_status", "maybe")])
+    assert not bad.culture_status and any("culture_status" in d["fact"] for d in bad.discards)
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # derive() surfaces the timing decision; meningitis is time-critical → empiric now.
+    r = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("culture_status", "pending")])
+    assert r["timing"]["decision"] == "treat_now_empiric" and r["timing"]["delay_risk"] == "high"
+
+
+def test_step_therapy_facts_compile_and_reimbursement_blocked_logic():
+    # CC-6: a step_therapy rule "restricted:prerequisite" + a prior_failed drug compile
+    # into the payer-policy COP inputs with provenance.
+    cop = cc.compile_cop([cc.ChartFact("step_therapy", "cefepime:meropenem", "payer policy"),
+                          cc.ChartFact("prior_failed", "ampicillin", "failed amp last week")])
+    assert ("cefepime", "meropenem") in cop.step_therapy
+    assert "ampicillin" in cop.tried
+    assert any(c["type"] == "step_therapy" for c in cop.constraints)
+    assert any(c["type"] == "prior_treatment" for c in cop.constraints)
+    bad = cc.compile_cop([cc.ChartFact("step_therapy", "no_colon_here")])
+    assert not bad.step_therapy and any("step_therapy" in d["fact"] for d in bad.discards)
+    # The precedence x_Y ≤ tried_X is now DERIVED BY THE ENGINE (step_therapy.adj, NAF) —
+    # covered by test_step_therapy.py and the engine-gated test_dual_* path below.
+
+
+def test_dual_clinical_vs_reimbursement_regimen():
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # post-neurosurgical: clinical optimum uses cefepime. A payer step-therapy rule
+    # "cefepime needs meropenem tried first" (meropenem NOT tried) → the reimbursement-
+    # covered regimen drops cefepime and differs; the clinical regimen is unchanged.
+    r = cc.derive(cli, [cc.ChartFact("setting", "post_neurosurgical"),
+                        cc.ChartFact("step_therapy", "cefepime:meropenem", "payer policy")])
+    assert "cefepime" in r["regimen"]                       # clinical optimum keeps cefepime
+    rb = r["reimbursement"]
+    assert rb is not None and rb["blocked"] == ["cefepime"] and rb["differs_from_clinical"]
+    assert "cefepime" not in (rb["covered_regimen"] or [])  # payer-covered regimen drops it
+    assert rb["covered_regimen"] is not None and rb["note"]
+    # Once meropenem has been tried/failed, the prerequisite is satisfied → no divergence.
+    r2 = cc.derive(cli, [cc.ChartFact("setting", "post_neurosurgical"),
+                         cc.ChartFact("step_therapy", "cefepime:meropenem"),
+                         cc.ChartFact("prior_failed", "meropenem")])
+    assert not r2["reimbursement"]["differs_from_clinical"]
+    # No payer rules → no reimbursement block at all (additive, opt-in).
+    assert cc.derive(cli, [cc.ChartFact("age_band", "adult")])["reimbursement"] is None
+
+
+def test_step_therapy_can_be_reimbursement_infeasible_distinct_from_clinical():
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # A step-therapy rule that blocks a CLINICALLY-FORCED drug (vancomycin is the only
+    # resistant-pneumococcus coverer) → a clinically valid regimen exists, but it is
+    # reimbursement-INFEASIBLE → surfaced distinctly for physician override / appeal.
+    r = cc.derive(cli, [cc.ChartFact("age_band", "adult"),
+                        cc.ChartFact("step_therapy", "vancomycin:meropenem")])
+    assert r["regimen"] is not None                          # clinically feasible
+    rb = r["reimbursement"]
+    assert rb["covered_regimen"] is None and rb["covered_outcome"] == "infeasible"
+    assert rb["differs_from_clinical"] and "appeal" in rb["note"]
 
 
 def test_unmapped_fact_is_discarded_not_ignored():
@@ -113,9 +248,9 @@ def test_unmapped_fact_is_discarded_not_ignored():
     cop = cc.compile_cop([cc.ChartFact("age_band", "adult"),
                           cc.ChartFact("favorite_color", "blue")])
     assert any("favorite_color" in d["fact"] and d["reason"] for d in cop.discards)
-    # An allergen with no grounded exclusion rule yet is also discarded (not excluded).
+    # An allergen with no grounded allergy context yet is also discarded (no context activated).
     cop2 = cc.compile_cop([cc.ChartFact("allergy", "sulfa")])
-    assert not cop2.exclusions and any("sulfa" in d["fact"] for d in cop2.discards)
+    assert not cop2.active_contexts and any("sulfa" in d["fact"] for d in cop2.discards)
 
 
 def test_engine_reproduces_existing_regimens():
@@ -127,11 +262,15 @@ def test_engine_reproduces_existing_regimens():
         "adult_community": {"ceftriaxone", "vancomycin"},
         "over_50_or_immunocompromised": {"ampicillin", "ceftriaxone", "vancomycin"},
         "post_neurosurgical_or_shunt": {"cefepime", "vancomycin"},
+        # CC-3b: a penicillin allergy keeps the 3rd-gen cephalosporin (cross-reactivity <1%),
+        # so the regimen is unchanged from adult_community — vancomycin + ceftriaxone.
+        "penicillin_allergic_adult": {"ceftriaxone", "vancomycin"},
     }
     for name, regimen in want.items():
         r = cc.derive(cli, cc.CHARTS[name])
         assert r["regimen"] is not None and set(r["regimen"]) == regimen, (name, r["regimen"])
-    # Severe β-lactam allergy → honest abstention (INFEASIBLE), never a fabricated regimen.
+    # An UNSPECIFIED whole-class β-lactam allergy → honest abstention (INFEASIBLE), never a
+    # fabricated regimen (only aztreonam survives, which can't cover S. pneumoniae).
     alg = cc.derive(cli, cc.CHARTS["betalactam_allergic_adult"])
     assert alg["regimen"] is None and alg["outcome"] == "infeasible", alg
     assert alg["conflict"] is not None, "infeasible must name the conflicting constraint"
@@ -141,11 +280,18 @@ def test_engine_reproduces_existing_regimens():
 
 def main() -> int:
     test_scenario_selection_and_provenance()
-    test_allergy_becomes_exclusion()
+    test_allergy_activates_a_context()
     test_culture_resistance_becomes_defeated_edge()
     test_dose_risk_facts_become_dose_constraints()
+    test_objective_priority_sets_the_cost_side_effect_weights()
+    test_objective_breakdown_surfaced_with_chart_weights()
+    test_decide_timing_decision_table()
+    test_timing_facts_compile_and_surface_in_derive()
+    test_step_therapy_facts_compile_and_reimbursement_blocked_logic()
+    test_dual_clinical_vs_reimbursement_regimen()
+    test_step_therapy_can_be_reimbursement_infeasible_distinct_from_clinical()
     test_dose_infeasibility_folds_into_the_cover()
-    test_pregnancy_contraindicates_drugs()
+    test_pregnancy_activates_a_clinical_context()
     test_pregnancy_engine_behaviour()
     test_unmapped_fact_is_discarded_not_ignored()
     test_engine_reproduces_existing_regimens()

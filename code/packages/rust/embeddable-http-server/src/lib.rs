@@ -9,10 +9,13 @@ use std::fmt;
 use std::net::{SocketAddr, ToSocketAddrs};
 use std::sync::Arc;
 
+use embeddable_tcp_server::{EmbeddableTcpServer, EmbeddableTcpServerOptions, TcpMailboxFrame};
+use generic_job_protocol::{JobRequest, JobResult};
 use http1::{parse_request_head, Http1ParseError};
 use http_core::{BodyKind, Header, RequestHead};
 use tcp_runtime::{
-    PlatformError, TcpConnectionInfo, TcpHandlerResult, TcpRuntime, TcpRuntimeOptions,
+    PlatformError, ShardedStopHandle, ShardedTcpRuntime, TcpConnectionInfo, TcpHandlerResult,
+    TcpRuntime, TcpRuntimeOptions,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -370,6 +373,319 @@ impl HttpServer<transport_platform::windows::WindowsTransportPlatform> {
     }
 }
 
+/// A parallel HTTP/1 server: the **sharded** counterpart of [`HttpServer`]
+/// (LANG-FULL / WEB01a-1).
+///
+/// `HttpServer` drives every connection on a single reactor thread, so handlers
+/// never overlap — one slow request stalls all others. `ShardedHttpServer` runs
+/// the **same** per-connection [`HttpConnectionState`] machine across
+/// `worker_count` reactor threads (a [`ShardedTcpRuntime`]). Connections are
+/// distributed across the shards (with an explicit accept fan-out on macOS/BSD,
+/// since `SO_REUSEPORT` does not load-balance accepts there), so requests on
+/// *different* connections handled by different shards run **concurrently**.
+///
+/// The request handler contract is unchanged: it is still a synchronous
+/// `Fn(HttpRequest) -> HttpResponse` invoked inline on the owning shard, so the
+/// response is produced and written on the same thread and HTTP/1.1 response
+/// ordering on a single connection is preserved automatically. The handler is
+/// shared (`Arc`) across all shards and must therefore be `Send + Sync`.
+///
+/// Two pipelined requests on the *same* connection still serialise — that is
+/// correct for HTTP/1.1 (responses must be written in request order). Parallelism
+/// is across connections, bounded by `worker_count`.
+pub struct ShardedHttpServer<P> {
+    runtime: ShardedTcpRuntime<P, HttpConnectionState>,
+}
+
+impl<P> ShardedHttpServer<P> {
+    /// The local socket address the server is bound to.
+    pub fn local_addr(&self) -> SocketAddr {
+        self.runtime.local_addr()
+    }
+
+    /// The number of reactor shards (handler-parallelism degree).
+    pub fn worker_count(&self) -> usize {
+        self.runtime.worker_count()
+    }
+
+    /// A handle that can stop every shard from another thread.
+    pub fn stop_handle(&self) -> ShardedStopHandle {
+        self.runtime.stop_handle()
+    }
+}
+
+impl<P> ShardedHttpServer<P>
+where
+    P: transport_platform::TransportPlatform + Send + 'static,
+{
+    /// Run all shard reactors until stopped. Blocks the calling thread.
+    pub fn serve(&mut self) -> Result<(), PlatformError> {
+        self.runtime.serve()
+    }
+}
+
+/// Build the `(init, receive)` closures shared by every platform's sharded bind.
+/// The `on_close` is a no-op (mirrors [`HttpServer::bind`]). Factored out so the
+/// per-platform constructors below stay one line of real logic each.
+///
+/// Returns the handler wrapped in an `Arc` plus a clone of the options for the
+/// per-connection state factory — both captured by the returned closures.
+macro_rules! sharded_http_closures {
+    ($handler:expr, $options:expr) => {{
+        let handler: HttpHandler = Arc::new($handler);
+        let state_options = $options.clone();
+        (
+            move |_info: TcpConnectionInfo| HttpConnectionState::new(&state_options),
+            move |info: TcpConnectionInfo, state: &mut HttpConnectionState, bytes: &[u8]| {
+                state.receive(info, bytes, &handler)
+            },
+        )
+    }};
+}
+
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+impl ShardedHttpServer<transport_platform::bsd::KqueueTransportPlatform> {
+    /// Bind a kqueue-backed sharded server (macOS / BSD) with `worker_count`
+    /// reactor shards.
+    pub fn bind_kqueue_sharded<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        let (init, receive) = sharded_http_closures!(handler, options);
+        let runtime = TcpRuntime::bind_kqueue_sharded_with_state(
+            addr,
+            options.tcp,
+            worker_count,
+            init,
+            receive,
+            |_, _| {},
+        )?;
+        Ok(Self { runtime })
+    }
+}
+
+#[cfg(target_os = "linux")]
+impl ShardedHttpServer<transport_platform::linux::EpollTransportPlatform> {
+    /// Bind an epoll-backed sharded server (Linux) with `worker_count` reactor
+    /// shards.
+    pub fn bind_epoll_sharded<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        let (init, receive) = sharded_http_closures!(handler, options);
+        let runtime = TcpRuntime::bind_epoll_sharded_with_state(
+            addr,
+            options.tcp,
+            worker_count,
+            init,
+            receive,
+            |_, _| {},
+        )?;
+        Ok(Self { runtime })
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl ShardedHttpServer<transport_platform::windows::WindowsTransportPlatform> {
+    /// Bind an IOCP-backed sharded server (Windows) with `worker_count` reactor
+    /// shards.
+    pub fn bind_windows_sharded<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        let (init, receive) = sharded_http_closures!(handler, options);
+        let runtime = TcpRuntime::bind_windows_sharded_with_state(
+            addr,
+            options.tcp,
+            worker_count,
+            init,
+            receive,
+            |_, _| {},
+        )?;
+        Ok(Self { runtime })
+    }
+}
+
+/// A **deferred-response / mailbox** HTTP server (WEB01b-1a): per-request
+/// parallelism via an in-process worker pool.
+///
+/// `HttpServer` runs one reactor with an inline handler; `ShardedHttpServer`
+/// runs N reactors with inline handlers (parallel *by connection*).
+/// `MailboxHttpServer` runs a single reactor that, on framing a complete
+/// request, **submits it as a job** to a `worker_count`-thread pool and returns
+/// immediately; a worker runs the handler and a response-router thread writes the
+/// serialized response back to the originating connection. Handler concurrency is
+/// thereby decoupled from the I/O thread — parallel *by request*.
+///
+/// Each framed request is submitted to the pool as it arrives, so a single
+/// connection can have many requests in flight at once (full HTTP/1.1
+/// pipelining). **WEB01b-1b** keeps the wire correct: the server enables the
+/// mailbox's `ordered_responses`, so the response router writes each connection's
+/// replies in **submission order** (a per-connection reorder buffer) even though
+/// the worker pool finishes them out of order. The reorder buffer is bounded by
+/// the pool's queue depth — a connection that pipelines past it is shed with a
+/// 503 (backpressure), never unbounded buffering. (We intentionally do not use
+/// `stream-reactor`'s `defer_read` for gating: it replays the deferred chunk on
+/// resume, which would corrupt framing for bytes the handler already consumed —
+/// see the handler comment in `bind`.) Parallelism is across requests, bounded by
+/// `worker_count`. The platform (kqueue / epoll / IOCP) is selected internally by
+/// `EmbeddableTcpServer`, so this type is cross-platform with no per-OS binds.
+#[derive(Clone)]
+pub struct MailboxHttpServer {
+    inner: EmbeddableTcpServer<HttpConnectionState>,
+}
+
+impl MailboxHttpServer {
+    /// Bind `host:port` with a `worker_count`-thread handler pool.
+    pub fn bind<F>(
+        host: &str,
+        port: u16,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> std::io::Result<Self>
+    where
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        let handler = Arc::new(handler);
+        let state_options = options.clone();
+        let inner = EmbeddableTcpServer::new_inprocess_mailbox(
+            EmbeddableTcpServerOptions {
+                host: host.to_string(),
+                port,
+                worker_processes: worker_count.max(1),
+                // WEB01b-1b: write each connection's responses back in submission
+                // order so a pipelined keep-alive connection's replies stay in
+                // HTTP/1.1 request order even when the pool finishes them out of
+                // order (the pool is unordered). The reorder buffer is bounded by
+                // the pool's queue depth — a connection that pipelines past it gets
+                // a 503 (backpressure), not unbounded buffering.
+                ordered_responses: true,
+                ..EmbeddableTcpServerOptions::default()
+            },
+            // init — one HTTP connection state (buffer + limits) per connection.
+            move |_info: TcpConnectionInfo| HttpConnectionState::new(&state_options),
+            // handler — frame each complete request as it arrives and submit it as
+            // a job to the pool. The worker runs the handler off the reactor thread
+            // and the response router writes the reply back.
+            //
+            // Once the buffer holds no further complete request we return
+            // `default()` (keep reading) — deliberately NOT `defer_read()`. In
+            // `stream-reactor`, `defer_read` does not mean "pause output"; it means
+            // "I did NOT consume these bytes — replay this chunk when reads resume."
+            // Since we DID consume the bytes here (drained the buffer and submitted
+            // the jobs), returning `defer_read` would have the reactor replay the
+            // already-consumed chunk on the next `resume_all_reads()` (which fires
+            // for ANY connection's response), re-feeding a possibly TCP-fragmented
+            // tail into the buffer — corrupting framing (a duplicate submit, or a
+            // malformed-head 400 emitted before the real response). So we keep
+            // reading instead. Pipelined requests on one connection are all
+            // submitted; the mailbox's `ordered_responses` (enabled below) writes
+            // their replies back in submission order via a per-connection reorder
+            // buffer (WEB01b-1b), so the wire stays HTTP/1.1-correct.
+            |info: TcpConnectionInfo, state: &mut HttpConnectionState, bytes: &[u8], submitter| {
+                state.buffer.extend_from_slice(bytes);
+                // Drain EVERY complete request the read delivered — a single TCP
+                // read can carry more than one (coalesced segments, or a pipelined
+                // client). Calling `pop_request` only once would strand the extras
+                // in the buffer until the next read, hanging a client that sent them
+                // together and then waited. Each iteration submits one framed
+                // request; `pop_request` returns `Ok(None)` when only a partial
+                // request remains (keep reading) and `Err` on a malformed/oversize
+                // one (close with an error response).
+                loop {
+                    match state.pop_request(info) {
+                        Ok(Some(request)) => match submitter.submit(info.id, request) {
+                            // Keep draining any further buffered requests.
+                            Ok(_) => continue,
+                            // Pool queue full → shed load with 503 (backpressure),
+                            // rather than buffering unboundedly.
+                            Err(_) => {
+                                return TcpHandlerResult::write_and_close(serialize_response(
+                                    &HttpResponse::new(503, "Service Unavailable")
+                                        .with_header("Content-Type", "text/plain")
+                                        .close(),
+                                ))
+                            }
+                        },
+                        Ok(None) => return TcpHandlerResult::default(),
+                        Err(error) => {
+                            return TcpHandlerResult::write_and_close(serialize_response(
+                                &error_response(error),
+                            ))
+                        }
+                    }
+                }
+            },
+            // on_close — nothing connection-specific to release.
+            |_info, _state| {},
+            // map_response — serialize the worker's response back to the connection.
+            |response: HttpResponse| {
+                let close = response.close;
+                let bytes = serialize_response(&response);
+                Ok(if close {
+                    TcpMailboxFrame::write_and_close(bytes)
+                } else {
+                    TcpMailboxFrame::write(bytes)
+                })
+            },
+            // worker_fn — run the user handler on a pool thread; honor Connection: close.
+            move |job: JobRequest<HttpRequest>| {
+                let request = job.payload;
+                let wants_close = request.wants_connection_close();
+                let mut response = handler(request);
+                response.close = response.close || wants_close;
+                JobResult::Ok { payload: response }
+            },
+        )?;
+        Ok(Self { inner })
+    }
+
+    /// The local socket address the server is bound to.
+    pub fn local_addr(&self) -> SocketAddr {
+        self.inner.local_addr()
+    }
+
+    /// Whether the server is currently serving.
+    pub fn is_running(&self) -> bool {
+        self.inner.is_running()
+    }
+
+    /// Signal the server to stop.
+    pub fn stop(&self) {
+        self.inner.stop();
+    }
+
+    /// Run the event loop until stopped. Blocks the calling thread.
+    pub fn serve(&self) -> std::io::Result<()> {
+        self.inner.serve()
+    }
+}
+
 fn serialize_response(response: &HttpResponse) -> Vec<u8> {
     let mut output = Vec::new();
     let reason = if response.reason.is_empty() {
@@ -709,5 +1025,313 @@ mod tests {
         F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
     {
         HttpServer::bind_windows(addr, options, handler)
+    }
+
+    // ── WEB01a-1: sharded server bind + concurrency test ──────────────────────
+
+    #[cfg(any(
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd",
+        target_os = "dragonfly"
+    ))]
+    fn bind_native_sharded_http_server<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<ShardedHttpServer<transport_platform::bsd::KqueueTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        ShardedHttpServer::bind_kqueue_sharded(addr, options, worker_count, handler)
+    }
+
+    #[cfg(target_os = "linux")]
+    fn bind_native_sharded_http_server<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<ShardedHttpServer<transport_platform::linux::EpollTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        ShardedHttpServer::bind_epoll_sharded(addr, options, worker_count, handler)
+    }
+
+    #[cfg(target_os = "windows")]
+    fn bind_native_sharded_http_server<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<ShardedHttpServer<transport_platform::windows::WindowsTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        ShardedHttpServer::bind_windows_sharded(addr, options, worker_count, handler)
+    }
+
+    /// A `ShardedHttpServer` with several reactor shards serves many concurrent
+    /// clients correctly: every request gets its matching response and the
+    /// handler is invoked exactly once per request, regardless of which shard a
+    /// connection lands on. This proves the sharded wiring (WEB01a-1) preserves
+    /// the single-server request/response contract under cross-connection
+    /// parallelism. (Throughput *scaling* is measured separately on a CPU-bound
+    /// benchmark — see WEB01a-2; an echo handler is latency-bound and would not
+    /// show speedup here.)
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn sharded_http_server_serves_concurrent_clients_across_shards() {
+        let worker_count = 4;
+        let client_count = 16;
+        let requests_per_client = 4;
+        let seen_requests = Arc::new(AtomicUsize::new(0));
+        let handler_seen = Arc::clone(&seen_requests);
+
+        let mut server = bind_native_sharded_http_server(
+            ("127.0.0.1", 0),
+            HttpServerOptions::default(),
+            worker_count,
+            move |request| {
+                handler_seen.fetch_add(1, Ordering::SeqCst);
+                HttpResponse::ok(format!("ok:{}:{}", request.method(), request.target()))
+                    .with_header("Content-Type", "text/plain")
+            },
+        )
+        .expect("bind sharded HTTP server");
+        assert_eq!(server.worker_count(), worker_count, "all requested shards spawned");
+
+        let addr = server.local_addr();
+        let stop = server.stop_handle();
+        let server_thread = thread::spawn(move || server.serve());
+        let barrier = Arc::new(Barrier::new(client_count));
+
+        let clients = (0..client_count)
+            .map(|client_index| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    barrier.wait(); // release all clients at once → spread across shards
+                    exercise_http_client(addr, client_index, requests_per_client)
+                })
+            })
+            .collect::<Vec<_>>();
+
+        for client in clients {
+            client
+                .join()
+                .expect("sharded client thread")
+                .expect("sharded client");
+        }
+
+        stop.stop();
+        server_thread
+            .join()
+            .expect("sharded server thread")
+            .expect("sharded server result");
+        assert_eq!(
+            seen_requests.load(Ordering::SeqCst),
+            client_count * requests_per_client,
+            "every request handled exactly once across all shards",
+        );
+    }
+
+    /// A `MailboxHttpServer` handles requests **concurrently** on a SINGLE reactor
+    /// by submitting them to its worker pool (WEB01b-1a). Proven deterministically
+    /// (not by wall-clock): each handler bumps an in-flight gauge, holds briefly,
+    /// and records the max simultaneous handlers. A single reactor calling the
+    /// handler inline could never exceed 1; observing >= 2 proves the pool runs
+    /// handlers in parallel while the lone reactor keeps accepting connections.
+    /// One request per connection (`Connection: close`) — 1a's supported case;
+    /// pipelined-response gating/ordering is WEB01b-1b.
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn mailbox_http_server_handles_requests_concurrently() {
+        let worker_count = 4;
+        let client_count = 8;
+        let in_flight = Arc::new(AtomicUsize::new(0));
+        let max_in_flight = Arc::new(AtomicUsize::new(0));
+        let handler_in_flight = Arc::clone(&in_flight);
+        let handler_max = Arc::clone(&max_in_flight);
+
+        let server = MailboxHttpServer::bind(
+            "127.0.0.1",
+            0,
+            HttpServerOptions::default(),
+            worker_count,
+            move |request| {
+                let now = handler_in_flight.fetch_add(1, Ordering::SeqCst) + 1;
+                handler_max.fetch_max(now, Ordering::SeqCst);
+                thread::sleep(Duration::from_millis(40));
+                handler_in_flight.fetch_sub(1, Ordering::SeqCst);
+                HttpResponse::ok(format!("ok:{}:{}", request.method(), request.target()))
+                    .with_header("Content-Type", "text/plain")
+            },
+        )
+        .expect("bind mailbox HTTP server");
+
+        let addr = server.local_addr();
+        let serve_handle = {
+            let server = server.clone();
+            thread::spawn(move || server.serve())
+        };
+        // Give the reactor a moment to start accepting.
+        thread::sleep(Duration::from_millis(50));
+
+        // A realistic single-request client: connect, then (after the barrier)
+        // write one `Connection: close` request and read the response to EOF —
+        // WITHOUT half-closing the write side first (a client that `shutdown`s
+        // its write half before reading would race the deferred write against the
+        // FIN-driven close; real HTTP clients keep the connection open until they
+        // have read the response).
+        let barrier = Arc::new(Barrier::new(client_count));
+        let clients = (0..client_count)
+            .map(|client_index| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || -> io::Result<()> {
+                    let mut stream = TcpStream::connect(addr)?;
+                    stream.set_read_timeout(Some(Duration::from_secs(10)))?;
+                    barrier.wait(); // release together so handlers overlap in the pool
+                    write!(
+                        stream,
+                        "GET /work/{client_index} HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n"
+                    )?;
+                    let mut response = Vec::new();
+                    stream.read_to_end(&mut response)?; // server closes after the response
+                    let text = String::from_utf8_lossy(&response);
+                    if !text.starts_with("HTTP/1.1 200") {
+                        return Err(io::Error::new(
+                            io::ErrorKind::InvalidData,
+                            format!("expected 200, got: {text}"),
+                        ));
+                    }
+                    Ok(())
+                })
+            })
+            .collect::<Vec<_>>();
+
+        for client in clients {
+            client
+                .join()
+                .expect("mailbox client thread")
+                .expect("mailbox client");
+        }
+
+        let observed_max = max_in_flight.load(Ordering::SeqCst);
+        server.stop();
+        let _ = serve_handle.join();
+        assert!(
+            observed_max >= 2,
+            "expected concurrent handler execution via the pool on a single reactor, but the \
+             max observed in-flight handlers was {observed_max} (inline dispatch never exceeds 1)",
+        );
+    }
+
+    /// WEB01b-1b: a `MailboxHttpServer` writes a **pipelined** connection's
+    /// responses in REQUEST order, even though the (unordered) worker pool
+    /// finishes them out of order. Determinism: the handler for request `k` sleeps
+    /// `(n-1-k)*30ms`, so the LAST pipelined request finishes FIRST in the pool.
+    /// Without the per-connection reorder buffer the client would read the bodies
+    /// reversed; with it (WEB01b-1b's `ordered_responses`), they come back
+    /// `r0, r1, …, r{n-1}` — the request order.
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn mailbox_http_server_preserves_pipelined_response_order() {
+        // Split a raw byte stream of back-to-back HTTP/1 responses into the body
+        // of each, in wire order, using each response's Content-Length.
+        fn parse_http_bodies(raw: &[u8]) -> Vec<String> {
+            fn find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
+                haystack.windows(needle.len()).position(|w| w == needle)
+            }
+            let mut bodies = Vec::new();
+            let mut pos = 0;
+            while pos < raw.len() {
+                let rest = &raw[pos..];
+                let Some(boundary) = find(rest, b"\r\n\r\n") else {
+                    break;
+                };
+                let head = String::from_utf8_lossy(&rest[..boundary]);
+                let content_length = head
+                    .lines()
+                    .find_map(|line| {
+                        line.trim()
+                            .to_ascii_lowercase()
+                            .strip_prefix("content-length:")
+                            .map(|value| value.trim().parse::<usize>().unwrap_or(0))
+                    })
+                    .unwrap_or(0);
+                let body_start = pos + boundary + 4;
+                let body_end = body_start + content_length;
+                if body_end > raw.len() {
+                    break;
+                }
+                bodies.push(String::from_utf8_lossy(&raw[body_start..body_end]).into_owned());
+                pos = body_end;
+            }
+            bodies
+        }
+
+        let worker_count = 4;
+        let n = 4usize;
+
+        let server = MailboxHttpServer::bind(
+            "127.0.0.1",
+            0,
+            HttpServerOptions::default(),
+            worker_count,
+            move |request| {
+                // "/rK" → sleep longer for smaller K, so completion order is reversed.
+                let k: usize = request
+                    .target()
+                    .trim_start_matches("/r")
+                    .parse()
+                    .unwrap_or(0);
+                thread::sleep(Duration::from_millis(((n - 1 - k) * 30) as u64));
+                HttpResponse::ok(format!("r{k}")).with_header("Content-Type", "text/plain")
+            },
+        )
+        .expect("bind mailbox HTTP server");
+
+        let addr = server.local_addr();
+        let serve_handle = {
+            let server = server.clone();
+            thread::spawn(move || server.serve())
+        };
+        thread::sleep(Duration::from_millis(50));
+
+        // One connection; all N requests pipelined in a single write (keep-alive,
+        // the last carrying `Connection: close` so the server closes after the
+        // final response and we can read to EOF).
+        let mut stream = TcpStream::connect(addr).expect("connect");
+        stream
+            .set_read_timeout(Some(Duration::from_secs(10)))
+            .unwrap();
+        let mut pipelined = String::new();
+        for k in 0..n {
+            let close = if k == n - 1 { "Connection: close\r\n" } else { "" };
+            pipelined.push_str(&format!("GET /r{k} HTTP/1.1\r\nHost: localhost\r\n{close}\r\n"));
+        }
+        stream
+            .write_all(pipelined.as_bytes())
+            .expect("write pipelined requests");
+
+        let mut raw = Vec::new();
+        stream.read_to_end(&mut raw).expect("read all responses");
+
+        let bodies = parse_http_bodies(&raw);
+        server.stop();
+        let _ = serve_handle.join();
+
+        let expected: Vec<String> = (0..n).map(|k| format!("r{k}")).collect();
+        assert_eq!(
+            bodies, expected,
+            "pipelined responses must be written in request order despite out-of-order \
+             completion (got {bodies:?})",
+        );
     }
 }

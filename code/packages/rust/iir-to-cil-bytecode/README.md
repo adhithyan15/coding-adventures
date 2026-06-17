@@ -129,9 +129,13 @@ covers the integer **arithmetic** (`add`/`sub`/`mul`/`div`/`mod` → `add`/`sub`
 and **comparison** (`cmp_*` → `ceq`/`clt`/`cgt`, negating the other three with `ldc.i4.0; ceq`)
 rows above — previously only the binary codegen path emitted them, which is why running
 the LANG-MATRIX expression languages (Nib/Oct/ALGOL) on the real CLR first surfaced the gap.
-As of 0.19.0 the textual path likewise covers the **bitwise/shift** row
+As of 0.19.0 the textual path likewise covers the **binary bitwise/shift** row
 (`and`/`or`/`xor`/`shl`/`shr` → the identically named CIL opcodes) — the same kind of
 bytecode-path-only gap, surfaced by running Nib `& | ^` on the real CLR (LANG-FULL N3).
+As of **0.21.0** it also covers the **unary `not`** op (Nib `~`) → the CIL `not` opcode
+(one's complement) + the E2 narrow mask, so `~0u8 = 255` / `~15u4 = 0` assemble on real
+CoreCLR — the last `not`-shaped gap (the bytecode path had it since the E2 work; the
+textual `.il` path had no `not` arm at all, only the lispy `call_builtin "not"`).
 
 As of 0.17.0 it also emits the **`print_i64`** I/O primitive (Dartmouth BASIC's `PRINT`)
 as `call void [System.Console]System.Console::WriteLine(int32)`; for a program that
@@ -161,6 +165,15 @@ value overflows its width unless masked. After a `u4`/`u8`/`u16` `add`/`sub`/`mu
 is used — not `conv.u1`/`conv.i1`, which sign-extend — to keep the unsigned widths
 unsigned, exactly like the JVM `iand` and wasm `i32.and` masks. The narrow `type_hint`s
 that trigger the mask are wired into the Nib/Oct frontends in the E2 integration PR (6/6).
+
+As of v0.20.1 this is **verified to work for the i64 frontend value model**. A real
+frontend (Nib) materialises every `const`/`let` as `i64` and carries the narrow width
+only on the op. The wasm and jvm backends had to grow an i64/long register model so a
+narrow op wouldn't trap over those `i64` operands — but the CIL backend needs no such
+rework, because it is **uniformly int32**: `cil_local_type` maps every scalar (incl.
+`i64`) to `int32`, and `const` emits `ldc.i4`. So the `i64` consts collapse to `int32`
+and the mask stays int32-consistent. The `e2_u8_op_over_i64_operands_stays_int32`
+regression test asserts the emitted IL has no `int64`/`ldc.i8` and still masks.
 
 ## How CIL synthesis works for derived operations
 

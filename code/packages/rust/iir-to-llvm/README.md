@@ -89,6 +89,8 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.8.0  | Lisp lambda (F7) — declare `lispy_to_exit_code` runtime switch; **LLVM McCarthy-complete F1–F7** (McCarthy W13b). |
 | v0.9.0  | Byte-tape ops `alloc_bytes`→`@calloc`, `load_byte`/`store_byte` (zext/trunc at the byte boundary), `putchar`/`getchar` libc builtins, + slot-dest SSA rename. **Brainfuck runs on LLVM** (LANG-MATRIX LM-L Brainfuck). |
 | v0.10.0 | Reassigned **parameters** are promoted to i64 stack slots (initialised from the incoming argument, narrow args zext'd) — a parameter accumulated across a loop back-edge is no longer silently dropped (LANG-FULL — LLVM first-class). |
+| v0.11.0 | **Narrow unsigned arithmetic wraps mod-2ⁿ** (LANG-FULL E2). A `u4`/`u8`/`u16`/`u32` op computes at i64 then `and i64 …, <mask>` (see below). Adds `u4` to the supported types. |
+| v0.12.0 | **Bitwise `not`** — synthesised as `xor x, -1` (LLVM has no `not`); a narrow width masks the result (`~0u8 = 255`). Unblocks Nib N3-`~` / Oct O2-`~`. |
 | (later) | GC, debug info via `!dbg`. |
 
 ### Byte-tape memory (v0.9.0)
@@ -108,6 +110,31 @@ native x86_64 backend already uses (LANG76). This crate's lowering:
 Byte width lives **only at the tape boundary** (the `zext`/`trunc`); every register
 in between is a uniform `i64`, which is what lets the i64-only stack-slot model
 consume Brainfuck's reassigned `ptr`/`v` without a width mismatch.
+
+### Narrow-width register arithmetic (v0.11.0, LANG-FULL E2)
+
+The same "uniform i64 in registers" model is exactly why narrow **unsigned**
+arithmetic must wrap with a *value mask*, not a narrow-typed op. A `u8` add
+whose operands are `i64` SSA values cannot be `add i8 %a, %b` — that is invalid
+IR `clang` rejects. So `add`/`sub`/`mul`/`div`/`mod` and `and`/`or`/`xor` on a
+`u4`/`u8`/`u16`/`u32` `type_hint` compute at i64 and mask the result back into
+the width:
+
+```llvm
+  %__nw1 = add i64 200, 100     ; compute wide
+  %v     = and i64 %__nw1, 255  ; 300 & 0xFF = 44   (u8 wrap)
+```
+
+| type_hint | mask         |  | type_hint | mask         |
+|-----------|--------------|--|-----------|--------------|
+| `u4`      | `0xF`        |  | `u16`     | `0xFFFF`     |
+| `u8`      | `0xFF`       |  | `u32`     | `0xFFFFFFFF` |
+
+`u64`/`i64` (full word), signed narrow widths, and floats get no mask. This
+mirrors the VM/JIT/wasm/JVM/CLR backends (each masks the narrow result by
+`type_hint`) and generalises the byte-tape's 8-bit `store_byte` wrap to register
+arithmetic. Verified by RUNNING the emitted `.ll` through real `clang`:
+`200u8 + 100u8` exits `44`.
 
 See [`code/specs/iir-to-llvm.md`](../../../specs/iir-to-llvm.md) for the
 full spec and [`code/specs/MULTILANG-BACKEND-PLAN.md`](../../../specs/MULTILANG-BACKEND-PLAN.md)

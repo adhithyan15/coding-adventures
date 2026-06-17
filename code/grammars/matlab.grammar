@@ -1,0 +1,181 @@
+# MATLAB Language Grammar
+# ============================================================================
+#
+# Parses the token stream from `matlab-lexer` into a tree the (future)
+# `matlab-runtime` walks by rule name. See code/specs/MA01-matlab-language.md.
+#
+# PRECEDENCE (loosest → tightest), matching MATLAB:
+#   assignment  =
+#   ||                       (short-circuit or)
+#   &&                       (short-circuit and)
+#   |                        (elementwise or)
+#   &                        (elementwise and)
+#   == ~= < > <= >=          (comparison)
+#   :                        (colon — ranges a:b, a:b:c)
+#   + -                      (additive)
+#   * / \ .* ./ .\           (multiplicative, matrix AND elementwise — same level)
+#   + - ~                    (unary prefix)
+#   ^ .^                     (power, binds tighter than unary minus)
+#   ' .' ( ) { } .           (postfix: transpose, call/index, cell-index, field)
+#   primary                  (literals, names, [ ] matrices, { } cells, @lambda)
+#
+# Left-associativity is encoded with `{ ... }` (repetition); right-associativity
+# (assignment, power) with `[ ... self ]` (optional self-recursion), exactly as
+# in r.grammar.
+#
+# THE `end` KEYWORD has two meanings — block terminator (`if … end`) and the
+# last-index sentinel (`A(end)`). `matlab-parser`'s pre-parse hook retags every
+# `end` that sits inside `( ) [ ] { }` to a NAME *before* parsing, so the
+# `"end"` literals below only ever close blocks, and `A(end)`/`A(2:end)` parse
+# via the ordinary NAME path.
+
+# ============================================================================
+# Program and statements
+# ============================================================================
+
+program = { statement_line } ;
+
+# A statement plus its terminator. A bare terminator is a blank/!separator line.
+# The terminator token (`;` vs newline/comma) is kept in the tree so the runtime
+# can honour `;`-suppressed display.
+statement_line = statement stmt_term
+               | statement
+               | stmt_term ;
+
+stmt_term = NEWLINE | SEMICOLON | COMMA ;
+
+statement = func_def
+          | if_stmt
+          | for_stmt
+          | while_stmt
+          | switch_stmt
+          | try_stmt
+          | break_stmt
+          | continue_stmt
+          | return_stmt
+          | global_stmt
+          | expr ;
+
+# A block body is a run of statement lines; it stops at the keyword that closes
+# its construct (`end`/`else`/`elseif`/`case`/`otherwise`/`catch`), none of which
+# can begin a statement.
+block_body = { statement_line } ;
+
+# ============================================================================
+# Control flow
+# ============================================================================
+
+if_stmt = "if" expr block_body { elseif_clause } [ else_clause ] "end" ;
+elseif_clause = "elseif" expr block_body ;
+else_clause = "else" block_body ;
+
+for_stmt = "for" NAME EQ expr block_body "end" ;
+
+while_stmt = "while" expr block_body "end" ;
+
+switch_stmt = "switch" expr block_body { case_clause } [ otherwise_clause ] "end" ;
+case_clause = "case" expr block_body ;
+otherwise_clause = "otherwise" block_body ;
+
+try_stmt = "try" block_body [ catch_clause ] "end" ;
+catch_clause = "catch" [ NAME ] block_body ;
+
+break_stmt = "break" ;
+continue_stmt = "continue" ;
+return_stmt = "return" ;
+global_stmt = ( "global" | "persistent" ) name_list ;
+
+# ============================================================================
+# Function definitions
+#
+#   function out = name(a, b) … end
+#   function [o1, o2] = name(a) … end
+#   function name(a) … end                 (no return)
+# ============================================================================
+
+func_def = "function" [ func_returns ] NAME [ LPAREN [ name_list ] RPAREN ] block_body "end" ;
+func_returns = NAME EQ
+             | LBRACKET [ name_list ] RBRACKET EQ ;
+name_list = NAME { COMMA NAME } ;
+
+# ============================================================================
+# Expression precedence cascade (loosest → tightest)
+# ============================================================================
+
+expr = assignment ;
+
+# `=` is assignment (comparison is `==`); right-associative.
+assignment = logical_or [ EQ assignment ] ;
+
+logical_or  = logical_and { OR_OR logical_and } ;
+logical_and = bit_or { AND_AND bit_or } ;
+bit_or  = bit_and { PIPE bit_and } ;
+bit_and = comparison { AMP comparison } ;
+
+comparison = colon_expr { ( EQ_EQ | NE | LE | GE | LT | GT ) colon_expr } ;
+
+# The colon: `a:b` (range) or `a:b:c` (range with step). Binds looser than `+ -`
+# (so `1:n+1` is `1:(n+1)`) and tighter than comparison.
+colon_expr = additive [ COLON additive [ COLON additive ] ] ;
+
+additive = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+
+# Matrix and elementwise multiply/divide share one precedence level in MATLAB.
+multiplicative = unary { ( STAR | SLASH | BACKSLASH | ELEM_MUL | ELEM_RDIV | ELEM_LDIV ) unary } ;
+
+# Unary prefix. Looser than power, so `-2^2` is `-(2^2)`.
+unary = ( PLUS | MINUS | TILDE ) unary
+      | power ;
+
+# Power, right-associative; the right operand is `unary` so `2^-3` parses.
+power = postfix [ ( CARET | ELEM_POW ) unary ] ;
+
+# Postfix (tightest): transpose, calls/indexing, cell indexing, field access.
+postfix = primary { transpose_suffix | call_suffix | cell_suffix | field_suffix } ;
+
+transpose_suffix = TRANSPOSE | ELEM_TRANSPOSE ;
+call_suffix  = LPAREN [ arg_list ] RPAREN ;
+cell_suffix  = LBRACE [ arg_list ] RBRACE ;
+field_suffix = DOT NAME ;
+
+# Index/call arguments: a lone `:` means "the whole dimension" (`A(:,k)`).
+arg_list = arg { COMMA arg } ;
+arg = COLON | expr ;
+
+# ============================================================================
+# Primary expressions
+# ============================================================================
+
+primary = NUMBER
+        | STRING
+        | matrix_literal
+        | cell_literal
+        | lambda
+        | group
+        | NAME ;
+
+group = LPAREN expr RPAREN ;
+
+lambda = AT LPAREN [ name_list ] RPAREN expr ;
+
+# ============================================================================
+# Matrix and cell literals
+#
+#   [1 2 3]        a row (elements juxtaposed; whitespace was stripped by the
+#                  lexer, so adjacent expressions — with an optional comma —
+#                  are the columns)
+#   [1, 2, 3]      a row (explicit commas)
+#   [1 2; 3 4]     two rows (`;` or a newline separates rows; the lexer keeps
+#                  bracket-interior newlines for exactly this)
+#   { … }          a cell array, same shape
+#
+# (Whitespace-sensitive cases like `[1 -2]` vs `[1 - 2]` collapse to one form
+# because the lexer drops whitespace; write `[1, -2]` to force two elements.)
+# ============================================================================
+
+matrix_literal = LBRACKET [ matrix_rows ] RBRACKET ;
+cell_literal = LBRACE [ matrix_rows ] RBRACE ;
+
+matrix_rows = matrix_row { row_sep matrix_row } [ row_sep ] ;
+row_sep = SEMICOLON | NEWLINE ;
+matrix_row = expr { [ COMMA ] expr } ;

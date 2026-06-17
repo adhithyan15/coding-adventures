@@ -66,6 +66,8 @@ SpreadsheetModel::SpreadsheetModel(QObject *parent)
     : QObject(parent), session_(sc_session_new()) {
     seed();
     recompute();
+    computeExtent();
+    selectInf(1, 1); // prime the infinite-view selection/formula bar at A1
 }
 
 SpreadsheetModel::~SpreadsheetModel() {
@@ -92,9 +94,31 @@ void SpreadsheetModel::seed() {
         {"A4", "4"},  {"B4", "11"}, {"C4", "3"},  {"D4", "17"}, {"E4", "=SUM(A4:D4)"},
         {"A5", "=SUM(A1:A4)"}, {"B5", "=SUM(B1:B4)"}, {"C5", "=SUM(C1:C4)"},
         {"D5", "=SUM(D1:D4)"}, {"E5", "=SUM(E1:E4)"},
+        // Far-flung, sparse cells so the infinite view has something to scroll to
+        // (the 5×5 parity grid only ever shows A1:E5, so these don't affect it).
+        {"Z1000", "=SUM(A1:A4)"},                    // row 1000, col 26: 39
+        {"BA50", "far cell"}, {"BB50", "=Z1000*2"},  // row 50, col 53/54: 78
     };
     for (const auto &cell : cells) {
         takeString(sc_set_cell(session_, cell.a1, cell.raw));
+    }
+
+    // Attach Excel-style format codes so the engine's display path is visible in
+    // the infinite view (which now renders via sc_get_display_window): the
+    // cross-foot totals read with thousands grouping + two decimals, and the
+    // far-flung Z1000 total as a percent. Values are unchanged — only how the
+    // display strings render. Identical to the web demo's seeded formats.
+    static const struct {
+        const char *a1;
+        const char *code;
+    } formats[] = {
+        {"E1", "#,##0.00"}, {"E2", "#,##0.00"}, {"E3", "#,##0.00"},
+        {"E4", "#,##0.00"}, {"E5", "#,##0.00"},
+        {"A5", "#,##0.00"}, {"B5", "#,##0.00"}, {"C5", "#,##0.00"}, {"D5", "#,##0.00"},
+        {"Z1000", "0.0%"}, // 39 → "3900.0%": proves the format applies far off-origin
+    };
+    for (const auto &f : formats) {
+        sc_set_format(session_, f.a1, f.code);
     }
 }
 
@@ -152,17 +176,22 @@ void SpreadsheetModel::select(int row, int col) {
 // — the Qt sibling of the SwiftUI/web infinite views. 1-based inclusive coords.
 
 QVariantList SpreadsheetModel::window(int row0, int col0, int row1, int col1) const {
-    const QString json = takeString(sc_get_window(
+    // sc_get_display_window returns each cell already rendered through its format
+    // code as a display STRING (the format-aware sibling of sc_get_window), so the
+    // QML grid paints the strings directly and never re-derives number formatting.
+    // The JSON is {"row0":..,"cols":..,"cells":[["1,234.50",..],..]} (empty cells
+    // ""), or {"error":".."} on a bad/oversized request.
+    const QString json = takeString(sc_get_display_window(
         session_, static_cast<quint32>(row0), static_cast<quint32>(col0),
         static_cast<quint32>(row1), static_cast<quint32>(col1)));
     QVariantList rows;
     const QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
     if (!doc.isObject()) return rows; // bad/oversized request → empty
-    const QJsonArray values = doc.object().value(QStringLiteral("values")).toArray();
-    for (const QJsonValue &rowVal : values) {
+    const QJsonArray cells = doc.object().value(QStringLiteral("cells")).toArray();
+    for (const QJsonValue &rowVal : cells) {
         QVariantList row;
         for (const QJsonValue &cell : rowVal.toArray()) {
-            row.append(displayValue(cell.toObject()));
+            row.append(cell.toString());
         }
         rows.append(QVariant(row));
     }
@@ -211,4 +240,83 @@ void SpreadsheetModel::setCell(const QString &a1, const QString &raw) {
     const QByteArray rawUtf8 = raw.toUtf8();
     takeString(sc_set_cell(session_, a1Utf8.constData(), rawUtf8.constData()));
     recompute();
+}
+
+// ── Infinite-sheet view (InfiniteSheet.qml) ──────────────────────────
+// The Qt sibling of the SwiftUI InfiniteGridView / web infinite.html. A
+// virtualized QML ListView renders only the visible rows; each visible delegate
+// asks `rowCells(row)` for that row's display strings (one engine `get_window`
+// over a 1×totalCols strip), so an unbounded sheet costs only what's on screen.
+
+QString SpreadsheetModel::rawAt(const QString &a1) const {
+    const QByteArray a1Utf8 = a1.toUtf8();
+    return takeString(sc_get_raw(session_, a1Utf8.constData()));
+}
+
+QString SpreadsheetModel::infAddress() const {
+    return columnLetters(infCol_) + QString::number(infRow_);
+}
+
+// One row of the infinite view: columns 1..totalCols_ as display strings. The
+// engine read is a single-row window; we return its first (only) row, or an
+// empty list if the request was rejected/oversized.
+QVariantList SpreadsheetModel::rowCells(int row) const {
+    if (row < 1) return QVariantList();
+    const QVariantList rows = window(row, 1, row, totalCols_);
+    if (rows.isEmpty()) return QVariantList();
+    return rows.first().toList();
+}
+
+// Re-derive the virtual grid size from the engine's data extent plus a margin so
+// you can scroll past the data into blank space. Mirrors WindowedSheetModel.resize().
+void SpreadsheetModel::computeExtent() {
+    const QVariantMap u = usedRange();
+    const int maxRow = u.value(QStringLiteral("maxRow"), 1).toInt();
+    const int maxCol = u.value(QStringLiteral("maxCol"), 1).toInt();
+    totalRows_ = std::max(maxRow + 200, 1000);
+    totalCols_ = std::max(maxCol + 30, 60);
+    emit extentChanged();
+}
+
+// Move the infinite-view selection (clamped to the virtual grid; col/row ≥ 1)
+// and pull the selected cell's raw source into the formula bar.
+void SpreadsheetModel::selectInf(int row, int col) {
+    infRow_ = std::max(1, std::min(totalRows_, row));
+    infCol_ = std::max(1, std::min(totalCols_, col));
+    infFormula_ = rawAt(infAddress());
+    emit infSelectionChanged();
+}
+
+// Commit the formula bar into the selected infinite-view cell: write through to
+// the engine (which recomputes every dependent), grow the extent if the edit
+// reached new ground, re-read the source, and bump `revision` so the visible
+// ListView delegates re-fetch their rows.
+void SpreadsheetModel::commitInf(const QString &raw) {
+    const QString a1 = infAddress();
+    const QByteArray a1Utf8 = a1.toUtf8();
+    const QByteArray rawUtf8 = raw.toUtf8();
+    takeString(sc_set_cell(session_, a1Utf8.constData(), rawUtf8.constData()));
+    recompute();        // keep the 5×5 parity grid in sync too
+    computeExtent();
+    infFormula_ = rawAt(a1);
+    revision_++;
+    emit infSelectionChanged();
+    emit revisionChanged();
+}
+
+// Drag-fill: the engine replicates the `src` cell across the inclusive A1
+// rectangle (relative refs shift per target, absolute ($) refs pin, the format
+// carries). sc_fill returns void; we then recompute the parity grid, regrow the
+// extent if the fill reached new ground, and bump `revision` so the visible rows
+// re-fetch. A malformed address is a no-op inside the engine.
+void SpreadsheetModel::fill(const QString &src, const QString &dstStart, const QString &dstEnd) {
+    const QByteArray s = src.toUtf8();
+    const QByteArray ds = dstStart.toUtf8();
+    const QByteArray de = dstEnd.toUtf8();
+    sc_fill(session_, s.constData(), ds.constData(), de.constData());
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
 }

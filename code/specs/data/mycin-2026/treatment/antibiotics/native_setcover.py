@@ -53,9 +53,17 @@ def _sym(prefix: str, *parts: str) -> str:
     return name
 
 
+def _safe_reason(reason: str) -> str:
+    """Sanitize an exclusion reason before it goes into a `%` line-comment in the emitted
+    program — keep only an alnum/space/_-: subset (no newline can escape the comment),
+    bounded length. Never interpolate a reason string into the program unvalidated."""
+    return re.sub(r"[^A-Za-z0-9 _:-]", "", reason)[:80]
+
+
 def emit_program(organisms: list[str], exclusions: set[str],
                  defeated: set[tuple[str, str]] = frozenset(),
-                 dose_excluded: set[str] = frozenset()) -> tuple[str, dict, bool]:
+                 weights: tuple[int, int] = reg.DEFAULT_WEIGHTS,
+                 forced_zero: dict[str, str] | None = None) -> tuple[str, dict, bool]:
     """Emit the adj-lang integer program for this cover. Returns (program text,
     {x_var → drug}, feasible?) — feasible is False if some organism has no coverer
     (the program is then trivially infeasible and the engine will say so).
@@ -67,13 +75,20 @@ def emit_program(organisms: list[str], exclusions: set[str],
     A combination is defeated for an organism if any of its members is resistant to
     that organism (the synergy rationale is undercut).
 
-    `dose_excluded` (CC-2) is the set of drugs that have NO safe-and-effective dose for
-    this patient — their efficacy floor exceeds their toxicity ceiling once the chart's
-    renal/interaction risks shrink it (dose_window UNSAT). Such a drug is dropped from the
-    candidate set before the cover is built, so the optimizer re-derives around it (or
-    abstains if it was load-bearing) — dose feasibility folded INTO the cover, not a
-    post-hoc warning."""
-    cands = [d for d in reg.candidates(exclusions) if d not in dose_excluded]
+    `forced_zero` maps a drug → the REASON it is unavailable for this patient, and every
+    such drug is pinned out by an EXPLICIT engine constraint `x_d <= 0   % excluded (reason)`
+    — NOT silently dropped from the candidate set in Python. This unifies every exclusion
+    family as auditable constraints visible in the emitted program:
+      - dose-infeasible (CC-2): no safe-and-effective dose under the chart's renal/interaction
+        risks (the efficacy floor exceeds the toxicity ceiling);
+      - contraindicated (CC-3): e.g. a drug contraindicated in pregnancy;
+      - step-therapy (CC-6): a payer won't reimburse the drug until a prerequisite is tried
+        (the `x_Y ≤ tried_X` precedence with the known-untried `tried_X = 0` folded in).
+    A forced-zero drug keeps its selector variable (so the reason is on the record and any
+    covering combination it belongs to is correctly disabled via `y <= x_d`); the constraint,
+    not its absence, removes it — so the engine, not Python, owns the exclusion + infeasibility."""
+    forced_zero = forced_zero or {}
+    cands = list(reg.candidates(exclusions))
     lines: list[str] = []
     xvar = {d: _sym("x", d) for d in cands}
     var_to_drug = {v: d for d, v in xvar.items()}
@@ -114,23 +129,44 @@ def emit_program(organisms: list[str], exclusions: set[str],
             feasible = False  # no drug or combination covers this organism
             lines.append(f"constrain 0 >= 1   % UNCOVERABLE: {org}")
 
+    # Exclusions as EXPLICIT constraints: every forced-zero drug is pinned out by
+    # `constrain x_d <= 0`, with its reason in the comment — so dose-infeasibility (CC-2),
+    # contraindication (CC-3), and step-therapy (CC-6) are all auditable in the program and
+    # the resulting infeasibility is the engine's verdict, not a Python pre-filter.
+    for d in cands:
+        if d in forced_zero:
+            lines.append(f"constrain {xvar[d]} <= 0   % excluded ({_safe_reason(forced_zero[d])})")
+
+    # CC-4 objective: minimize Σ (w_cost·tier + w_tox·side_effects)·x_d. The coefficient
+    # is a non-negative integer (validated below), so this stays in the engine's INTEGER
+    # optimizer. weights=(1,0) reproduces the historical tier-only objective exactly.
+    w_cost, w_tox = weights
+    for w in (w_cost, w_tox):
+        if not isinstance(w, int) or isinstance(w, bool) or w < 0:
+            raise ValueError(f"unsafe objective weight {w!r} (must be a non-negative int)")
     obj_terms = []
     for d in cands:
         tier = reg.DRUGS[d]["tier"]
-        if not isinstance(tier, int) or isinstance(tier, bool) or tier < 0:
-            raise ValueError(f"unsafe tier {tier!r} for {d} (must be a non-negative int)")
-        obj_terms.append(f"{tier} * {xvar[d]}")
+        tox = reg.DRUGS[d].get("side_effects", 0)
+        for fld, val in (("tier", tier), ("side_effects", tox)):
+            if not isinstance(val, int) or isinstance(val, bool) or val < 0:
+                raise ValueError(f"unsafe {fld} {val!r} for {d} (must be a non-negative int)")
+        coeff = w_cost * tier + w_tox * tox
+        obj_terms.append(f"{coeff} * {xvar[d]}")
     lines.append(f"minimize {' + '.join(obj_terms)}")
     return "\n".join(lines) + "\n", var_to_drug, feasible
 
 
 def solve(cli: Path, organisms: list[str], exclusions: set[str],
           defeated: set[tuple[str, str]] = frozenset(),
-          dose_excluded: set[str] = frozenset()) -> dict:
+          weights: tuple[int, int] = reg.DEFAULT_WEIGHTS,
+          forced_zero: dict[str, str] | None = None) -> dict:
     """Run the emitted program through the engine; return the engine's regimen.
     `defeated` carries culture-sensitivity results (resistant drug→organism edges);
-    `dose_excluded` carries drugs with no safe-and-effective dose for this patient (CC-2)."""
-    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated, dose_excluded)
+    `weights`=(w_cost, w_tox) is the CC-4 cost+side-effect objective blend (default (1,0));
+    `forced_zero` maps drug→reason for every drug pinned out by an explicit `x_d <= 0`
+    constraint (dose-infeasible / contraindicated / step-therapy)."""
+    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated, weights, forced_zero)
     fd, name = tempfile.mkstemp(suffix=".adj", prefix="_tmp_native_", dir=HERE)
     p = Path(name)
     try:
@@ -153,8 +189,18 @@ def solve(cli: Path, organisms: list[str], exclusions: set[str],
         for a in opt.get("assignments", [])
         if a["name"] in var_to_drug and abs(a["value"] - 1) < 1e-9
     )
+    # CC-4 objective breakdown — recovered from the chosen drugs for provenance: the
+    # cost (Σ tier) and side-effect (Σ side_effects) components that sum (under `weights`)
+    # to the engine's reported objective value. `cost` stays the engine's optimal value
+    # (back-compatible: under default weights it is exactly Σ tier, as before).
+    w_cost, w_tox = weights
+    cost_component = sum(reg.DRUGS[d]["tier"] for d in chosen)
+    tox_component = sum(reg.DRUGS[d].get("side_effects", 0) for d in chosen)
     return {"regimen": chosen, "outcome": "optimal", "cost": opt.get("value"),
-            "binding": opt.get("binding")}
+            "binding": opt.get("binding"),
+            "objective": {"weights": {"w_cost": w_cost, "w_tox": w_tox},
+                          "cost": cost_component, "side_effects": tox_component,
+                          "total": w_cost * cost_component + w_tox * tox_component}}
 
 
 def main() -> int:

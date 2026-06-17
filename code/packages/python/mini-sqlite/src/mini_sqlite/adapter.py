@@ -33,7 +33,7 @@ the binding layer substitutes them with real values before planning.
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field, replace
 from typing import cast
 
 from lang_parser import ASTNode
@@ -429,6 +429,13 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode, str]:
     The body may be a ``select_stmt`` (the usual case) or a
     ``values_stmt`` (``UNION ALL VALUES (1)``).  The caller dispatches
     on ``body_rule`` to call the right translator.
+
+    SQLite compatibility note: only ``UNION ALL`` is valid.  SQLite parses
+    ``INTERSECT ALL`` and ``EXCEPT ALL`` as syntax errors because neither the
+    SQL-92 nor the SQLite dialect defines bag semantics for those two operators.
+    We enforce the same restriction here so callers get the same
+    ``OperationalError: near "ALL": syntax error`` they would from the real
+    SQLite engine.
     """
     op: str | None = None
     all_flag = False
@@ -446,6 +453,11 @@ def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode, str]:
             body_rule = c.rule_name
     if op is None or body_node is None or body_rule is None:
         raise ProgrammingError("malformed set_op_clause")
+    # SQLite only supports UNION ALL.  INTERSECT ALL and EXCEPT ALL are not
+    # part of the SQLite dialect (the grammar accepts them so the parser can
+    # report a clean error rather than a confusing token-mismatch).
+    if op in ("INTERSECT", "EXCEPT") and all_flag:
+        raise OperationalError('near "ALL": syntax error')
     return op, all_flag, body_node, body_rule
 
 
@@ -522,12 +534,57 @@ def _values_stmt(node: ASTNode) -> Statement:
 # --------------------------------------------------------------------------
 
 
+def _extract_window_clause(node: ASTNode | None, state: _PlaceholderCounter) -> None:
+    """Populate state.window_defs from a window_clause node (may be None).
+
+    Grammar::
+
+        window_clause = "WINDOW" NAME "AS" "(" window_spec ")"
+                        { "," NAME "AS" "(" window_spec ")" } ;
+
+    Each NAME → window_spec pair is stored in state.window_defs so that
+    _window_func_call() can resolve OVER <name> references.
+    """
+    if node is None:
+        return
+    # Walk children collecting NAME / window_spec pairs.
+    # Layout: WINDOW NAME AS ( window_spec ) [, NAME AS ( window_spec ) ...]
+    children = node.children
+    i = 0
+    while i < len(children):
+        c = children[i]
+        # Skip WINDOW keyword and commas.
+        if isinstance(c, Token) and _token_type(c) in ("KEYWORD", "COMMA"):
+            i += 1
+            continue
+        # A NAME token starts a window definition.
+        if isinstance(c, Token) and _token_type(c) == "NAME":
+            win_name = c.value.upper()
+            # Skip AS and LPAREN; find the window_spec node.
+            j = i + 1
+            while j < len(children):
+                inner = children[j]
+                if isinstance(inner, ASTNode) and inner.rule_name == "window_spec":
+                    state.window_defs[win_name] = inner
+                    i = j + 1
+                    break
+                j += 1
+            else:
+                i += 1
+            continue
+        i += 1
+
+
 def _select(
     node: ASTNode,
     ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> SelectStmt:
     state = _PlaceholderCounter()
+
+    # WINDOW clause must be populated before the select_list so that any
+    # OVER <name> reference in the column expressions can resolve.
+    _extract_window_clause(_maybe_child(node, "window_clause"), state)
 
     distinct = _has_keyword_child(node, "DISTINCT")
     items = _select_list(_child_node(node, "select_list"), state)
@@ -581,14 +638,23 @@ def _select_list(node: ASTNode, state: _PlaceholderCounter) -> tuple[SelectItem,
 
 
 def _select_item(node: ASTNode, state: _PlaceholderCounter) -> SelectItem:
-    # select_item = expr [ "AS" NAME ]
+    # select_item = expr [ [ "AS" ] NAME ]
+    # SQLite allows bare alias without AS: SELECT 1 x  ≡  SELECT 1 AS x.
+    # The grammar makes AS optional; the adapter handles both forms.
+    # NAME never matches keywords (FROM, WHERE, …) so there is no ambiguity.
     expr = _expr(_child_node(node, "expr"), state)
     alias = None
     for i, c in enumerate(node.children):
-        if _is_keyword(c, "AS") and i + 1 < len(node.children):
-            nxt = node.children[i + 1]
-            if isinstance(nxt, Token):
-                alias = nxt.value
+        if _is_keyword(c, "AS"):
+            # Full form: AS NAME
+            if i + 1 < len(node.children):
+                nxt = node.children[i + 1]
+                if isinstance(nxt, Token):
+                    alias = nxt.value
+            break
+        if isinstance(c, Token) and _token_type(c) == "NAME":
+            # Bare alias without AS — direct NAME child of select_item
+            alias = c.value
             break
     return SelectItem(expr=expr, alias=alias)
 
@@ -1482,8 +1548,14 @@ def _alter_table(node: ASTNode) -> AlterTableStmt:
 def _create_table(node: ASTNode) -> CreateTableStmt:
     # create_table_stmt =
     #   "CREATE" "TABLE" ["IF" "NOT" "EXISTS"] NAME
-    #   "(" col_def { "," col_def } ")"
+    #   "(" col_def { "," col_def } { "," table_constraint } ")"
     #   [ table_options ]
+    #
+    # Table-level constraints (PRIMARY KEY, UNIQUE) promote the matching
+    # flag onto the corresponding column definitions.  CHECK and FOREIGN
+    # KEY table constraints are parsed and accepted but not enforced —
+    # they live only in the grammar; the planner has no representation for
+    # multi-column or deferred constraints.
     #
     # ``table_options = table_option {"," table_option}`` and
     # ``table_option = "STRICT" | "WITHOUT" NAME``.  We currently honour
@@ -1494,6 +1566,40 @@ def _create_table(node: ASTNode) -> CreateTableStmt:
     assert table_tok is not None
     state = _PlaceholderCounter()
     cols = tuple(_col_def(c, state) for c in _child_nodes(node, "col_def"))
+
+    # Apply table-level PRIMARY KEY and UNIQUE constraints.
+    col_index = {c.name: i for i, c in enumerate(cols)}
+    cols_list = list(cols)
+    for tc in _child_nodes(node, "table_constraint"):
+        # The first KEYWORD child identifies the constraint type.
+        first_kw = next(
+            (c.value.upper() for c in tc.children
+             if isinstance(c, Token) and _token_type(c) == "KEYWORD"),
+            None,
+        )
+        if first_kw in ("CHECK", "FOREIGN"):
+            continue  # not enforced at this layer
+        # Collect direct NAME children — the constrained column names.
+        names = [
+            c.value for c in tc.children if isinstance(c, Token) and _token_type(c) == "NAME"
+        ]
+        if first_kw == "PRIMARY" and len(names) == 1:
+            # Single-column table-level PRIMARY KEY — promote the flag.
+            # Multi-column composite PKs cannot be expressed per-column,
+            # so they are parsed and accepted but not enforced.
+            col_name = names[0]
+            if col_name in col_index:
+                idx = col_index[col_name]
+                cols_list[idx] = replace(cols_list[idx], primary_key=True)
+        elif first_kw == "UNIQUE" and len(names) == 1:
+            # Same reasoning: single-column UNIQUE is promotable; composite
+            # UNIQUE is silently accepted.
+            col_name = names[0]
+            if col_name in col_index:
+                idx = col_index[col_name]
+                cols_list[idx] = replace(cols_list[idx], unique=True)
+    cols = tuple(cols_list)
+
     strict = False
     opts_node = _maybe_child(node, "table_options")
     if opts_node is not None:
@@ -1834,8 +1940,14 @@ def _create_trigger(node: ASTNode) -> CreateTriggerStmt:
         create_trigger_stmt =
             "CREATE" "TRIGGER" NAME
             ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
-            "FOR" "EACH" "ROW"
+            [ "FOR" "EACH" "ROW" ]
             "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
+
+    SQLite makes ``FOR EACH ROW`` optional (it has been the only granularity
+    since SQLite has no statement-level triggers, so the clause is redundant).
+    The grammar now accepts it as an optional clause; the adapter ignores it
+    either way because it uses keyword scanning — FOR/EACH/ROW are not
+    surfaced as KEYWORD tokens by the lexer.
 
     NAME tokens appear in order: trigger_name, table_name.
     KEYWORD tokens carry BEFORE/AFTER and INSERT/UPDATE/DELETE.
@@ -1936,6 +2048,7 @@ class _PlaceholderCounter:
     """Monotonic counter for placeholder positions. Left-to-right discovery order."""
 
     count: int = 0
+    window_defs: dict = field(default_factory=dict)  # name → window_spec ASTNode
 
     def next(self) -> int:
         n = self.count
@@ -2016,15 +2129,138 @@ def _collated(node: ASTNode, state: _PlaceholderCounter) -> tuple[Expr, str | No
     return expr, None
 
 
+def _lex_cmp(lhs: list[Expr], rhs: list[Expr], strict_op: BinaryOp, final_op: BinaryOp) -> Expr:
+    """Build a lexicographic comparison for row values (iterative, right-to-left).
+
+    Truth table for ``(a, b) < (x, y)`` (strict_op=LT, final_op=LT):
+
+    +-------+-------+-------+--------+
+    | a < x | a = x | b < y | result |
+    +-------+-------+-------+--------+
+    | TRUE  |   -   |   -   | TRUE   |
+    | FALSE | TRUE  | TRUE  | TRUE   |
+    | FALSE | TRUE  | FALSE | FALSE  |
+    | FALSE | FALSE |   -   | FALSE  |
+    +-------+-------+-------+--------+
+
+    Expands to ``a < x OR (a = x AND b < y)``.
+
+    Built right-to-left to avoid Python recursion limits on wide row values.
+    """
+    result: Expr = BinaryExpr(op=final_op, left=lhs[-1], right=rhs[-1])
+    for lv, rv in zip(reversed(lhs[:-1]), reversed(rhs[:-1]), strict=True):
+        result = BinaryExpr(
+            op=BinaryOp.OR,
+            left=BinaryExpr(op=strict_op, left=lv, right=rv),
+            right=BinaryExpr(
+                op=BinaryOp.AND,
+                left=BinaryExpr(op=BinaryOp.EQ, left=lv, right=rv),
+                right=result,
+            ),
+        )
+    return result
+
+
+def _expand_row_value_cmp(lhs: list[Expr], op: BinaryOp, rhs: list[Expr]) -> Expr:
+    """Expand a row-value comparison ``(a, b, …) op (x, y, …)`` to scalars.
+
+    Semantics mirror SQLite's row-value specification:
+
+    * ``=``  → ``a=x AND b=y AND …``
+    * ``!=`` → ``a!=x OR b!=y OR …``  (any differing column → unequal)
+    * ``<``  → lexicographic: ``a<x OR (a=x AND b<y) OR …``
+    * ``<=`` → ``a<x OR (a=x AND b<=y) OR …``
+    * ``>``  → symmetric to ``<``
+    * ``>=`` → symmetric to ``<=``
+    """
+    n = len(lhs)
+    if n == 0:
+        return Literal(value=1 if op == BinaryOp.EQ else 0)
+    if n != len(rhs):
+        raise ProgrammingError(
+            f"row value misuse: left side has {n} column(s), right side has {len(rhs)}"
+        )
+    if op == BinaryOp.EQ:
+        result: Expr = BinaryExpr(op=BinaryOp.EQ, left=lhs[0], right=rhs[0])
+        for lv, rv in zip(lhs[1:], rhs[1:], strict=True):
+            result = BinaryExpr(
+                op=BinaryOp.AND, left=result,
+                right=BinaryExpr(op=BinaryOp.EQ, left=lv, right=rv),
+            )
+        return result
+    if op == BinaryOp.NOT_EQ:
+        result = BinaryExpr(op=BinaryOp.NOT_EQ, left=lhs[0], right=rhs[0])
+        for lv, rv in zip(lhs[1:], rhs[1:], strict=True):
+            result = BinaryExpr(
+                op=BinaryOp.OR, left=result,
+                right=BinaryExpr(op=BinaryOp.NOT_EQ, left=lv, right=rv),
+            )
+        return result
+    if op in (BinaryOp.LT, BinaryOp.LTE):
+        return _lex_cmp(lhs, rhs, BinaryOp.LT, op)
+    if op in (BinaryOp.GT, BinaryOp.GTE):
+        return _lex_cmp(lhs, rhs, BinaryOp.GT, op)
+    raise ProgrammingError(f"unsupported row-value comparison operator: {op}")
+
+
+def _expand_row_value_in(
+    lhs: list[Expr],
+    candidates: list[list[Expr]],
+    negated: bool,
+) -> Expr:
+    """Expand ``(a, b) IN ((x, y), (p, q))`` to ``(a=x AND b=y) OR (a=p AND b=q)``.
+
+    The empty-list case ``(a, b) IN ()`` expands to the constant FALSE (0),
+    and ``(a, b) NOT IN ()`` expands to TRUE (1), matching SQLite's semantics.
+    """
+    if not candidates:
+        always_false: Expr = Literal(value=0)
+        return UnaryExpr(op=UnaryOp.NOT, operand=always_false) if negated else always_false
+    clauses: list[Expr] = [_expand_row_value_cmp(lhs, BinaryOp.EQ, cand) for cand in candidates]
+    result: Expr = clauses[0]
+    for clause in clauses[1:]:
+        result = BinaryExpr(op=BinaryOp.OR, left=result, right=clause)
+    return UnaryExpr(op=UnaryOp.NOT, operand=result) if negated else result
+
+
 def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     """Comparison covers: bare collated, cmp_op, BETWEEN, IN, LIKE, IS NULL.
 
-    Grammar: ``comparison = collated [cmp_op collated | "BETWEEN" ... | ...]``.
-    If the only child is a ``collated``, we pass through (after applying any
-    COLLATE transform).  Otherwise we inspect the following children to pick
-    the right expression shape, and propagate any COLLATE clause across the
-    operands.
+    Grammar (after row-value extension):
+    ``comparison = row_value cmp_op row_value
+                 | row_value [NOT] IN ( row_value_list )
+                 | collated [cmp_op collated | "BETWEEN" ... | ...]``.
+
+    Row-value forms are expanded to equivalent scalar BinaryExpr trees so
+    the planner and VM require no changes.  Scalar forms are unchanged.
     """
+    # Row-value comparison: first ASTNode child is a row_value, not a collated.
+    first_rv = next(
+        (c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "row_value"),
+        None,
+    )
+    if first_rv is not None:
+        row_value_nodes = [
+            c for c in node.children
+            if isinstance(c, ASTNode) and c.rule_name == "row_value"
+        ]
+        lhs_exprs = list(_row_value(row_value_nodes[0], state))
+        cmp = _maybe_child(node, "cmp_op")
+        if cmp is not None:
+            op = _cmp_op_to_binop(cmp)
+            rhs_exprs = list(_row_value(row_value_nodes[1], state))
+            return _expand_row_value_cmp(lhs_exprs, op, rhs_exprs)
+        negated = _has_keyword_child(node, "NOT")
+        rv_list_node = _maybe_child(node, "row_value_list")
+        if rv_list_node is not None:
+            cand_nodes = [
+                c for c in rv_list_node.children
+                if isinstance(c, ASTNode) and c.rule_name == "row_value"
+            ]
+            candidates = [list(_row_value(rv, state)) for rv in cand_nodes]
+            return _expand_row_value_in(lhs_exprs, candidates, negated)
+        raise ProgrammingError("malformed row-value comparison")
+
     collateds = [c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "collated"]
     left, left_coll = _collated(collateds[0], state)
 
@@ -2690,8 +2926,22 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
                 extra_args_tuple = tuple(_expr(e, state) for e in exprs[1:])
     # Arg-free ranking functions keep func_name as-is (row_number, rank, dense_rank).
 
-    # Extract the window_spec node.
+    # Extract the window_spec node — either inline (OVER (...)) or a named
+    # reference (OVER name) that resolves via state.window_defs.
     ws = _maybe_child(node, "window_spec")
+    if ws is None:
+        win_name_ref = _maybe_child(node, "window_name_ref")
+        if win_name_ref is not None:
+            tok = next(
+                (c for c in win_name_ref.children if isinstance(c, Token)),
+                None,
+            )
+            if tok is not None:
+                ws = state.window_defs.get(tok.value.upper())
+                if ws is None:
+                    raise OperationalError(
+                        f"no such window definition: {tok.value!r}"
+                    )
 
     # PARTITION BY clause.
     partition_exprs: list[Expr] = []

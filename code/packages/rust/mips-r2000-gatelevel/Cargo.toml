@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-mips-r2000-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "MIPS R2000 gate-level simulator — every operation routes through real logic gates"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+arithmetic = { path = "../arithmetic" }

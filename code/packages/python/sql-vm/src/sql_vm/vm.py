@@ -1659,13 +1659,25 @@ def _frame_slice(
 
     When an explicit ``spec.frame`` is given, it overrides the default.
 
-    Implementation notes
-    --------------------
-    ``RANGE`` and ``GROUPS`` modes peer-group semantics are approximated as
-    ``ROWS`` physical positions — correct when all ORDER BY keys are distinct
-    (the common case).  For ``RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT
-    ROW``, the approximation is exact regardless of ties because the cumulative
-    default stops at the current physical row position.
+    RANGE mode and peer groups
+    --------------------------
+    In ``RANGE`` mode ``CURRENT ROW`` does **not** mean the physical row at
+    position ``i``; it means all rows that are *peers* of row ``i`` — i.e.
+    every row whose ORDER BY key values equal those of row ``i``.
+
+    Example: ``COUNT(*) OVER (ORDER BY a)`` with data ``(1, 2, 2, 3)``
+
+    Under ROWS semantics (incorrect default):
+        row 0 (a=1) → frame [0..0], count=1
+        row 1 (a=2) → frame [0..1], count=2  ← wrong
+        row 2 (a=2) → frame [0..2], count=3
+        row 3 (a=3) → frame [0..3], count=4
+
+    Under RANGE semantics (correct, matching SQLite):
+        row 0 (a=1) → frame [0..0], count=1
+        row 1 (a=2) → frame [0..2], count=3  ← both a=2 rows are in the frame
+        row 2 (a=2) → frame [0..2], count=3
+        row 3 (a=3) → frame [0..3], count=4
 
     Args:
         partition: The sorted list of row dicts for this partition.
@@ -1679,14 +1691,44 @@ def _frame_slice(
     n = len(partition)
     frame = spec.frame
 
+    # ── Peer-group helpers (used for RANGE CURRENT ROW bounds) ───────────────
+    # In RANGE mode the ORDER BY key of row i is compared against its
+    # neighbours to determine the peer group boundaries.
+
+    def _order_key(row: dict[str, SqlValue]) -> tuple[object, ...]:  # type: ignore[type-arg]
+        return tuple(row.get(col) for col, _ in spec.order_cols)
+
+    def _peer_group_start() -> int:
+        """Inclusive index of the first row in the peer group of row i."""
+        if not spec.order_cols:
+            return 0
+        k = _order_key(partition[i])
+        j = i
+        while j > 0 and _order_key(partition[j - 1]) == k:
+            j -= 1
+        return j
+
+    def _peer_group_end() -> int:
+        """Exclusive index past the last row in the peer group of row i."""
+        if not spec.order_cols:
+            return n
+        k = _order_key(partition[i])
+        j = i + 1
+        while j < n and _order_key(partition[j]) == k:
+            j += 1
+        return j
+
     if frame is None:
         # Apply SQL-standard defaults.
         if not spec.order_cols:
-            return partition          # full-partition frame
-        return partition[:i + 1]      # cumulative (UNBOUNDED PRECEDING → CURRENT ROW)
+            return partition          # full-partition (RANGE UNBOUNDED PRECEDING/FOLLOWING)
+        # Default: RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
+        # In RANGE mode CURRENT ROW = end of the peer group.
+        return partition[: _peer_group_end()]
 
     # --- Explicit frame ---------------------------------------------------
-    # Convert a FrameBound to an inclusive start index or exclusive end index.
+    # In RANGE mode, CURRENT ROW bounds expand to peer-group boundaries.
+    is_range = getattr(frame, "unit", "ROWS") == "RANGE"
 
     def _start(bound: object) -> int:  # type: ignore[return]
         """Inclusive start index."""
@@ -1695,7 +1737,7 @@ def _frame_slice(
         if k == "UNBOUNDED_PRECEDING":
             return 0
         if k == "CURRENT_ROW":
-            return i
+            return _peer_group_start() if is_range else i
         if k == "PRECEDING":
             return max(0, i - off)
         if k == "FOLLOWING":
@@ -1711,7 +1753,7 @@ def _frame_slice(
         if k == "UNBOUNDED_PRECEDING":
             return min(n, 1)           # only first row
         if k == "CURRENT_ROW":
-            return i + 1
+            return _peer_group_end() if is_range else i + 1
         if k == "PRECEDING":
             return max(0, i - off + 1)
         if k == "FOLLOWING":

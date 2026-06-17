@@ -375,18 +375,109 @@ fn arith_div_signed_emits_sdiv() {
 
 #[test]
 fn arith_div_unsigned_emits_udiv() {
+    // A `u32` divide. Every IIR value flows through an i64 slot in this backend
+    // (frontends widen params/returns to i64 and carry the narrow width only on
+    // the operation's type_hint — exactly this shape), so the unsigned divide
+    // computes at i64 (`udiv`, NOT `sdiv`) and then masks the result to 32 bits
+    // (E2 register width & wrap). Operand width stays i64; only the value wraps.
     let f = IIRFunction::new(
         "f",
-        vec![("a".into(), "u32".into()), ("b".into(), "u32".into())],
-        "u32",
+        vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+        "i64",
         vec![
             IIRInstr::new("div", Some("v".into()),
                 vec![Operand::Var("a".into()), Operand::Var("b".into())], "u32"),
-            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "u32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
         ]);
     let ll = lower(&module_with(f));
-    assert!(ll.contains("%v = udiv i32 %a, %b"),
-        "expected udiv for u32; got:\n{ll}");
+    assert!(ll.contains("udiv i64 %a, %b"),
+        "expected unsigned udiv at i64 width; got:\n{ll}");
+    assert!(ll.contains(", 4294967295"),
+        "expected the u32 wrap mask (0xFFFFFFFF); got:\n{ll}");
+}
+
+// ── E2 — register width & wrap (narrow unsigned arithmetic) ──────────────────
+
+/// Build `f(a: i64, b: i64) -> i64 { v = <op>(a, b) : <hint>; ret v }` — the
+/// shape every frontend produces for a narrow-typed binary op (i64 slots, the
+/// narrow width carried only on the op's type_hint).
+fn narrow_binop_fn(op: &str, hint: &str) -> IIRFunction {
+    IIRFunction::new(
+        "f",
+        vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new(op, Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], hint),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    )
+}
+
+/// Bitwise NOT — LLVM has no `not` instruction, so it is `xor x, -1`. For a
+/// narrow unsigned width the E2 mask brings it into range (`~0u8 = 255`).
+/// Unlocks Nib N3-`~` / Oct O2-`~`. (Verified end-to-end on real `clang`:
+/// `not 0 : u8` returns exit `255`.)
+#[test]
+fn not_u8_is_xor_minus1_then_masked() {
+    let f = IIRFunction::new("f", vec![("a".into(), "i64".into())], "i64", vec![
+        IIRInstr::new("not", Some("v".into()), vec![Operand::Var("a".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("xor i64 %a, -1"), "u8 not is `xor i64 a, -1`; got:\n{ll}");
+    assert!(ll.contains(", 255"), "u8 not masks with 0xFF (so ~0u8 = 255); got:\n{ll}");
+}
+
+#[test]
+fn not_i64_is_plain_xor_no_mask() {
+    let f = IIRFunction::new("f", vec![("a".into(), "i64".into())], "i64", vec![
+        IIRInstr::new("not", Some("v".into()), vec![Operand::Var("a".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("xor i64 %a, -1"), "i64 not is `xor i64 a, -1`; got:\n{ll}");
+    assert!(!ll.contains(", 255") && !ll.contains(", 4294967295"),
+        "full-width i64 not gets no mask; got:\n{ll}");
+}
+
+#[test]
+fn e2_u8_add_computes_at_i64_then_masks() {
+    // `200u8 + 100u8 = 44`: add at i64 (operands are i64 slots), then `and` to
+    // 8 bits. Typing the add `i8` over i64 SSA operands would be invalid IR —
+    // this is why the wrap is a mask, not a narrow-typed op.
+    let ll = lower(&module_with(narrow_binop_fn("add", "u8")));
+    assert!(ll.contains("add i64 %a, %b"), "u8 add computes at i64; got:\n{ll}");
+    assert!(ll.contains(", 255"), "u8 add masks with 0xFF; got:\n{ll}");
+}
+
+#[test]
+fn e2_u16_and_u4_masks_match_width() {
+    let ll16 = lower(&module_with(narrow_binop_fn("mul", "u16")));
+    assert!(ll16.contains("mul i64 %a, %b") && ll16.contains(", 65535"),
+        "u16 mul → mul i64 + mask 0xFFFF; got:\n{ll16}");
+    let ll4 = lower(&module_with(narrow_binop_fn("sub", "u4")));
+    assert!(ll4.contains("sub i64 %a, %b") && ll4.contains(", 15"),
+        "u4 sub → sub i64 + mask 0xF; got:\n{ll4}");
+}
+
+#[test]
+fn e2_bitwise_u8_xor_masks() {
+    let ll = lower(&module_with(narrow_binop_fn("xor", "u8")));
+    assert!(ll.contains("xor i64 %a, %b") && ll.contains(", 255"),
+        "u8 xor → xor i64 + mask 0xFF; got:\n{ll}");
+}
+
+#[test]
+fn e2_wide_widths_emit_no_mask() {
+    // i64/u64 are full-word; signed narrow (i8/i16/i32) are out of E2 scope —
+    // none of them gets a width mask, so the op is a plain single instruction.
+    for hint in ["i64", "u64"] {
+        let ll = lower(&module_with(narrow_binop_fn("add", hint)));
+        assert!(ll.contains("add i64 %a, %b"), "{hint} add at i64; got:\n{ll}");
+        assert!(!ll.contains(", 255") && !ll.contains(", 4294967295"),
+            "{hint} add must NOT mask; got:\n{ll}");
+    }
 }
 
 #[test]

@@ -53,6 +53,14 @@ internal static class ScNative
     // char* results, except sc_current_revision returns the u64 directly.
     [DllImport("spreadsheet_capi")]
     internal static extern IntPtr sc_get_window(IntPtr s, uint row0, uint col0, uint row1, uint col1);
+    // Format-aware sibling of sc_get_window: each cell is its display string.
+    [DllImport("spreadsheet_capi")]
+    internal static extern IntPtr sc_get_display_window(IntPtr s, uint row0, uint col0, uint row1, uint col1);
+    // sc_set_format(session, a1, code) → void (an empty code clears the format).
+    [DllImport("spreadsheet_capi")]
+    internal static extern void sc_set_format(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string a1,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string code);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_used_range(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_column_letters(IntPtr s, uint index);
     [DllImport("spreadsheet_capi")] internal static extern ulong sc_current_revision(IntPtr s);
@@ -105,6 +113,11 @@ public sealed class SpreadsheetSession : IDisposable
     public string SetCell(string a1, string raw) => Take(ScNative.sc_set_cell(_handle, a1, raw));
     public string GetValueJson(string a1) => Take(ScNative.sc_get_value(_handle, a1));
     public string GetRaw(string a1) => Take(ScNative.sc_get_raw(_handle, a1));
+
+    /// Set a cell's display format code (an Excel-style code like "#,##0.00" or
+    /// "0%"); an empty code clears it. Drives the engine's display path that
+    /// <see cref="Window"/> reads through sc_get_display_window.
+    public void SetFormat(string a1, string code) => ScNative.sc_set_format(_handle, a1, code);
 
     /// The display string for a cell — what a spreadsheet should show. Parses
     /// the engine's JSON (the fixed shape every backend's engine emits).
@@ -162,18 +175,23 @@ public sealed class SpreadsheetSession : IDisposable
 
     /// Dense display strings for the inclusive 1-based rectangle, row-major
     /// (empty cells become ""). Empty list on a bad/oversized request.
+    ///
+    /// Reads sc_get_display_window: each cell arrives already rendered through its
+    /// format code as a display string, so the host paints it directly and never
+    /// re-derives number formatting. The format-aware sibling of sc_get_window;
+    /// the JSON is {...,"cells":[["1,234.50",…],…]}.
     public IReadOnlyList<IReadOnlyList<string>> Window(uint row0, uint col0, uint row1, uint col1)
     {
-        string json = Take(ScNative.sc_get_window(_handle, row0, col0, row1, col1));
+        string json = Take(ScNative.sc_get_display_window(_handle, row0, col0, row1, col1));
         var rows = new List<IReadOnlyList<string>>();
         try
         {
             using var doc = JsonDocument.Parse(json);
-            if (!doc.RootElement.TryGetProperty("values", out var values)) return rows;
-            foreach (var rowEl in values.EnumerateArray())
+            if (!doc.RootElement.TryGetProperty("cells", out var cells)) return rows;
+            foreach (var rowEl in cells.EnumerateArray())
             {
                 var row = new List<string>();
-                foreach (var cell in rowEl.EnumerateArray()) row.Add(DisplayValue(cell));
+                foreach (var cell in rowEl.EnumerateArray()) row.Add(cell.GetString() ?? string.Empty);
                 rows.Add(row);
             }
         }
@@ -290,6 +308,127 @@ public sealed class SpreadsheetModel : IDisposable
     public void SetCell(int r, int c, string raw)
     {
         if (c >= 1) _session.SetCell(Address(r, c), raw);
+    }
+
+    public void Dispose() => _session.Dispose();
+}
+
+/// Engine-backed model for the VIRTUALIZED infinite sheet — the .NET sibling of
+/// the SwiftUI `WindowedSheetModel`, the Qt `SpreadsheetModel` infinite-view
+/// state, the Flutter/Compose `InfiniteSheetModel`. It seeds a deliberately
+/// far-flung, sparse dataset and exposes one-row windowed reads plus the data
+/// extent, so a virtualizing XAML `ListView` (which realizes only on-screen
+/// items) can render only the visible rectangle of an effectively-unbounded
+/// (u32 × u32) sheet.
+///
+/// Plain .NET (no WinUI types), so the same cross-platform console test that
+/// proves `SpreadsheetModel` also proves this. All coordinates are 1-based
+/// (row/col ≥ 1, col 1 = "A"), matching the engine.
+public sealed class InfiniteSheetModel : IDisposable
+{
+    private readonly SpreadsheetSession _session = new();
+
+    /// The virtual grid size, derived from the data extent plus a margin so you
+    /// can scroll past the data into blank space.
+    public int TotalRows { get; private set; } = 1000;
+    public int TotalCols { get; private set; } = 60;
+
+    /// The selected cell (1-based) and the formula-bar text (its raw source).
+    public int SelRow { get; private set; } = 1;
+    public int SelCol { get; private set; } = 1;
+    public string Formula { get; private set; } = string.Empty;
+
+    public InfiniteSheetModel()
+    {
+        Seed();
+        ComputeExtent();
+        SelectInf(1, 1); // prime the selection + formula bar at A1
+    }
+
+    /// The classic cross-footing budget PLUS far-flung cells (a formula at
+    /// `Z1000`, a couple near `BA50`/`BB50`) to prove the sheet is sparse and
+    /// unbounded — identical seed to the SwiftUI/Qt/Flutter/Compose infinite views.
+    private void Seed()
+    {
+        (string a1, string raw)[] cells =
+        {
+            ("A1", "15"), ("B1", "3"),  ("C1", "12"), ("D1", "8"),  ("E1", "=SUM(A1:D1)"),
+            ("A2", "8"),  ("B2", "14"), ("C2", "7"),  ("D2", "22"), ("E2", "=SUM(A2:D2)"),
+            ("A3", "12"), ("B3", "9"),  ("C3", "18"), ("D3", "6"),  ("E3", "=SUM(A3:D3)"),
+            ("A4", "4"),  ("B4", "11"), ("C4", "3"),  ("D4", "17"), ("E4", "=SUM(A4:D4)"),
+            ("A5", "=SUM(A1:A4)"), ("B5", "=SUM(B1:B4)"), ("C5", "=SUM(C1:C4)"),
+            ("D5", "=SUM(D1:D4)"), ("E5", "=SUM(E1:E4)"),
+            ("Z1000", "=SUM(A1:A4)"),                 // 1000 rows down: 39
+            ("BA50", "far cell"), ("BB50", "=Z1000*2"), // col 53/54, row 50: 78
+        };
+        foreach (var (a1, raw) in cells) _session.SetCell(a1, raw);
+
+        // Attach Excel-style format codes so the engine's display path is visible
+        // in the windowed view (which renders via sc_get_display_window): the
+        // cross-foot totals read with thousands grouping + two decimals, and the
+        // far-flung Z1000 total as a percent. Values are unchanged — only how the
+        // display strings render. Identical to the web/Qt/Flutter/Compose demos.
+        (string a1, string code)[] formats =
+        {
+            ("E1", "#,##0.00"), ("E2", "#,##0.00"), ("E3", "#,##0.00"),
+            ("E4", "#,##0.00"), ("E5", "#,##0.00"),
+            ("A5", "#,##0.00"), ("B5", "#,##0.00"), ("C5", "#,##0.00"), ("D5", "#,##0.00"),
+            ("Z1000", "0.0%"), // 39 → "3900.0%": proves the format applies far off-origin
+        };
+        foreach (var (a1, code) in formats) _session.SetFormat(a1, code);
+    }
+
+    /// Re-derive the virtual grid size from the engine's data extent plus a
+    /// comfortable margin. The `+ margin` is done in `long` and saturated back
+    /// into `int`: the engine is u32-backed, so a `maxRow`/`maxCol` near
+    /// `int.MaxValue` would otherwise overflow the add to a negative size. Not
+    /// reachable in this demo (the only far cell is the fixed Z1000), but the
+    /// saturation keeps the model safe against any sheet.
+    public void ComputeExtent()
+    {
+        var u = _session.UsedRange();
+        long maxRow = u?.maxRow ?? 1u;
+        long maxCol = u?.maxCol ?? 1u;
+        TotalRows = Saturate(maxRow + 200, floor: 1000);
+        TotalCols = Saturate(maxCol + 30, floor: 60);
+    }
+
+    private static int Saturate(long value, int floor) =>
+        (int)Math.Clamp(value, floor, int.MaxValue);
+
+    /// Column letters for a 1-based index (`1` → `"A"`, `27` → `"AA"`).
+    public string ColumnLetters(int index) => _session.ColumnLetters((uint)index);
+
+    /// The A1 address of the selected cell (e.g. `"Z1000"`).
+    public string InfAddress => $"{_session.ColumnLetters((uint)SelCol)}{SelRow}";
+
+    /// One row's display strings (columns 1..TotalCols) — what a virtualized
+    /// `ListView` item renders. A single engine `get_window` over a 1×N strip;
+    /// returns an empty list if the request was rejected/oversized.
+    public IReadOnlyList<string> RowCells(int row)
+    {
+        if (row < 1) return Array.Empty<string>();
+        var w = _session.Window((uint)row, 1, (uint)row, (uint)TotalCols);
+        return w.Count == 0 ? Array.Empty<string>() : w[0];
+    }
+
+    /// Move the selection (clamped to the virtual grid; row/col ≥ 1) and pull the
+    /// selected cell's raw source into the formula bar.
+    public void SelectInf(int row, int col)
+    {
+        SelRow = Math.Clamp(row, 1, TotalRows);
+        SelCol = Math.Clamp(col, 1, TotalCols);
+        Formula = _session.GetRaw(InfAddress);
+    }
+
+    /// Commit the formula bar into the selected cell: write through to the engine
+    /// (which recomputes every dependent), grow the extent if the edit reached new
+    /// ground, and re-read the canonicalised source back into the bar.
+    public void CommitInf(string raw)
+    {
+        _session.SetCell(InfAddress, raw);
+        ComputeExtent();
+        Formula = _session.GetRaw(InfAddress);
     }
 
     public void Dispose() => _session.Dispose();

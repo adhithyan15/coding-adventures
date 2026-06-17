@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-javascript-lexer"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
 description = "JavaScript lexer — tokenizes JavaScript source code against any ECMAScript edition (es1 through es2025) using the grammar-driven lexer. Includes correlation-vector plumbing per CLOC03."
 

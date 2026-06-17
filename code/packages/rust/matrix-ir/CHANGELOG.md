@@ -3,6 +3,15 @@
 All notable changes to `matrix-ir` are documented here.  The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [unreleased] — MX12 f64 dtype
+
+### Added — `DType::F64` (MX12)
+
+IEEE-754 double precision, wire tag `0x05`, `size_bytes() == 8`. The float-only
+ops (`Sqrt`/`Exp`/`Log`/`Tanh`/`Recip`/`Div`/`Pow`) now accept `F64` as well as
+`F32` via a new `DType::is_float()` predicate. Lets `f64`-native languages (R,
+MATLAB doubles) lower onto the shared substrate at full precision.
+
 ## [0.3.0] — 2026-05-13
 
 ### Added — `Op::Concat` (V2 op, wire tag 0x1D)

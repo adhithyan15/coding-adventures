@@ -50,11 +50,22 @@ attribute and AST export markers to build the do-not-rename set.
     itself.
   - `cost = 3` — two-pass walk (collect bindings, then
     substitute) plus the name allocator.
-- `Pass::run` is **identity** in v1: `javascript-ast` ships only
-  `Program` / `SourceType` today, so there are no `Identifier` /
-  `VariableDeclarator` / `FunctionDeclaration` nodes to rename.
-  The real two-pass walk slots into `Pass::run` once the AST
-  grows variants.
+- `Pass::run` renames the **uniquely-bound names of leaf functions** (parameters and
+  function-body var/let/const, in functions with no nested function) to short
+  names:
+
+  ```js
+  function f(longName) { return longName + 1; }
+  // ⇒ function f(a) { return a + 1 }
+  ```
+
+  It is a self-contained, scope-aware α-rename. It conservatively never
+  touches module/global top-level names, free globals (`console`),
+  property names (`obj.x`, `{ x: … }`), parameters re-declared as a
+  local, or single-character params. Fresh names avoid every identifier
+  in the function, so a rename can't collide or capture a global.
+  Broader renaming (locals, non-leaf scopes, module-private top-level
+  names) is future work on the same walker.
 
 ## Where this pass sits
 
