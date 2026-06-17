@@ -334,10 +334,16 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
   - **PR-B engine core ✅ DONE (logic-engine 0.19).** `Rule::context` + `Knowledge­Base::{add_context_outranks,
     context_outranks (cycle-safe), context_order_has_cycle}` + a `defeats(a,b)` resolution that
     makes context precedence PRIMARY (lex superior) and the tier secondary — generalizing the
-    pure-tier rule (no context order ⇒ unchanged). A cyclic order crowns nothing (safe). Still
-    to come: the grounded `context-precedence.adj` **rulebook** with byte-provenanced edges + the
-    recency/appeal/lex-specialis **meta-rules**, and the adj-lang **surface** (`context:` on a
-    rule, `context_order { … }`).
+    pure-tier rule (no context order ⇒ unchanged). A cyclic order crowns nothing (safe).
+  - **PR-B surface ✅ DONE (adj-lang 0.16).** `context:` on a rule + `context_order { a > b }`.
+  - **PR-B-2 grounded edges ✅ DONE (logic-engine 0.20).** A ground `outranks_context(higher,
+    lower)` **fact** now participates in the context order exactly like an explicit edge, so the
+    precedence edge carries `source`/`locator`/`trust` provenance (the *reason* — Supremacy
+    Clause, circuit precedence, guideline year — rides on the edge, not host code). `context_edges()`
+    unions explicit + grounded edges; cycle detection spans both. This is the decision-§2.3
+    keystone: "context precedence is itself grounded, in its own rulebook, with provenance on WHY."
+    Still to come: the `context-precedence.adj` **rulebook** of byte-quoted edges + a worked legal
+    example through the CLI (PR-B-3 / PR-E), then the recency/appeal/lex-specialis **meta-rules**.
 - **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
   annotations) + regen grammar.
 - **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).
