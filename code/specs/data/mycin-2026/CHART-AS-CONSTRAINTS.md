@@ -236,6 +236,19 @@ risks Y") — decision support, not a hidden choice.
   `derive()` surfaces the decision + delay_risk + rationale + threshold. The decision is reusable
   (not meningitis-specific). The ≤60-min meningitis threshold is authored-debt (IDSA), flagged for
   **CC-5b** spider grounding.
+- **CC-5 REFACTOR (ADJ-native): the timing DECISION is now a defeasible-precedence ladder the
+  engine resolves, not a Python if/elif. ✅ DONE.** The wait-vs-treat logic moved out of
+  `decide_timing` into `timing.adj` — a `functional timing(_)` predicate + four `priority:`-tiered
+  rules (ADJ73): resulted-culture → targeted (`mandatory`); time-critical/unstable → treat-now
+  (`authoritative`); stable+routine+pending → await (`specific`); else → treat-now (`default`).
+  `timing.derive_timing(cli, culture, clinical, acuity)` asserts the per-case facts, runs the
+  engine, and reads the **governing** answer (adj-lang-cli's `governing` section); `delay_risk`
+  is read off the governing **tier** (treat-now@authoritative = high vs @default = moderate). The
+  Python if/elif is retired — the reasoning lives in the language; the engine derives it (0 model
+  calls) and the proof shows which rule governed + what it defeated. `decide_timing` is now a thin
+  wrapper supplying the disease's acuity (from the flagged `_TIME_CRITICALITY` input table) + the
+  threshold/rationale presentation. (The disease→acuity table remains authored-debt — input data,
+  not decision logic.)
 - **CC-6 — insurance / step-therapy (§5). ✅ DONE.** A payer step-therapy rule ("won't
   approve Y until X tried") enters as a `step_therapy` chart fact (`restricted:prerequisite`)
   + `prior_failed` facts (drugs already tried); the precedence `x_Y ≤ tried_X` is emitted as an

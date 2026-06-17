@@ -1,0 +1,63 @@
+% ============================================================================
+% timing — the wait-vs-treat-now decision as a DEFEASIBLE PRECEDENCE ladder (ADJ-native).
+% ============================================================================
+% MYCIN-2026 (therapy layer, CC-5).  Empiric-now vs await-culture is a priority
+% ladder: a resulted culture moots the question; a time-critical disease or an
+% unstable patient forces treat-now; a stable + routine + culture-pending patient
+% may safely await; otherwise treat now (conservative default).  This is exactly a
+% "defaults with exceptions" rulebook — `functional timing(_)` makes the four
+% decisions mutually exclusive, and the `priority:` tier picks the governing one
+% (ADJ73).  The Python if/elif ladder (`decide_timing`) is RETIRED; the reasoning
+% lives in the language, the engine derives the decision (`? timing($D)`, 0 model
+% calls), and the audit trail shows which rule governed and what it defeated.
+%
+% The per-case inputs (culture_status / clinical_status / disease_acuity) are
+% asserted by the runtime (timing.py) from the chart + the disease's acuity.  The
+% ≤60-min door-to-antibiotic threshold behind `time_critical` is AUTHORED-DEBT
+% (IDSA), flagged for spider grounding (CC-5b) — same status as before; only the
+% DECISION LOGIC moves here, not the threshold's provenance.
+% ============================================================================
+
+dictionary timing_vocab {
+    define decision        : entity   surface "wait-vs-treat decision"
+    define clinical_state  : entity   surface "clinical status"
+    define culture_state   : entity   surface "culture status"
+    define acuity_level    : entity   surface "disease acuity"
+    define marker          : entity   surface "per-case marker"
+
+    % per-case inputs (asserted by the runtime).
+    define culture_status  : relation from culture_state to culture_state
+    define clinical_status : relation from clinical_state to clinical_state
+    define disease_acuity  : relation from acuity_level to acuity_level
+    define case_active     : relation from marker to marker
+    % DERIVED, functional: the single governing timing decision.
+    define timing          : relation from decision to decision
+}
+
+% `timing` admits at most one governing value — the four rules below conflict, and
+% precedence (not order) resolves them.
+functional timing(decision)
+
+rulebook timing_decision {
+    use timing_vocab
+
+    % resulted culture → targeted (culture-directed): the wait question is moot. Highest.
+    rule { head: timing(targeted_culture_directed)
+           when: culture_status(resulted)                              priority: mandatory }
+
+    % time-critical disease OR an unstable/critical patient → treat empirically NOW
+    % (delay raises mortality above the grounded threshold). Beats the await rule.
+    rule { head: timing(treat_now_empiric) when: disease_acuity(time_critical) priority: authoritative }
+    rule { head: timing(treat_now_empiric) when: clinical_status(critical)     priority: authoritative }
+    rule { head: timing(treat_now_empiric) when: clinical_status(unstable)     priority: authoritative }
+
+    % stable + routine acuity + culture pending → safe to AWAIT (narrow, cheaper,
+    % fewer side effects). Defensible only when delay is safe.
+    rule { head: timing(await_culture)
+           when: clinical_status(stable), disease_acuity(routine), culture_status(pending)
+                                                                       priority: specific }
+
+    % conservative default: treat now (don't gamble on a benign course). Gated on the
+    % always-asserted per-case marker so it fires whenever nothing higher does.
+    rule { head: timing(treat_now_empiric) when: case_active(yes)      priority: default }
+}
