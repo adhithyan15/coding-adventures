@@ -113,5 +113,17 @@ const d = wb.changedSince(rev);
 ok(!d.stale && d.changed.includes("A1") && d.changed.includes("E1") && d.changed.includes("Z1000"),
   `edit A1 dirtied ${d.changed.length} cells incl. far Z1000: ${d.changed.join(",")}`);
 
+// Drag-fill (the "Fill ↓ 10" button): G1 = F1*2, fill into G2:G3 — each copy's
+// relative reference tracks its row (the same engine.fill the button calls).
+wb.setCell("F1", "10");
+wb.setCell("F2", "20");
+wb.setCell("F3", "30");
+wb.setCell("G1", "=F1*2"); // 20
+wb.fill("G1", "G2", "G3");
+const fillWin = wb.getDisplayWindow(2, 7, 3, 7); // G2:G3 (col 7 = G)
+ok(fillWin.cells[0][0] === "40" && fillWin.cells[1][0] === "60",
+  `fill G1 down → G2=${fillWin.cells[0][0]} (F2*2), G3=${fillWin.cells[1][0]} (F3*2)`);
+ok(wb.getRaw("G3") === "=(F3*2)", `filled G3 source tracked the row: ${wb.getRaw("G3")}`);
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);
