@@ -190,6 +190,10 @@ sequence of one-PR items run through the autonomous loop (§8).
 - **Wolfram:** W-1 spec + `wolfram.tokens/grammar` (M-expressions); W-2 lexer;
   W-3 parser; W-4 `wolfram-runtime` (rewrite rules + `/.`/`:>` over `symbolic-vm`);
   W-5 repl + binary; W-6 the `cas-*` function surface under Wolfram names.
+  *(W-1 delivered: see [MA04](MA04-wolfram-language.md). Unlike Maxima, the
+  syntax genuinely differs from Macsyma — `f[x]`/`{a,b}`/`/.`/`->`/`x_` — so this
+  is a real new frontend over the shared `symbolic-vm`/`cas-*` engine, not a
+  reuse of the Macsyma grammar.)*
 
 ## §8 Plugging into the autonomous loop
 
