@@ -123,18 +123,40 @@ _OBJECTIVE_WEIGHTS = {"cost": (1, 0), "balanced": (1, 1), "low_toxicity": (1, 3)
 # CC-5: the wait-vs-treat-now decision (§4). Empiric-now vs await-culture is a real
 # tradeoff: treating now buys broad coverage (more cost + side-effect burden) but
 # `delay_risk = 0`; awaiting the culture is cheaper/narrower but incurs delay_risk. The
-# disease's TIME-CRITICALITY decides which dominates. For bacterial meningitis the door-to-
-# antibiotic window is ~60 min — delay raises mortality — so empiric-now dominates regardless
-# of cost/toxicity. This threshold is AUTHORED-DEBT (the IDSA recommendation), flagged for
-# CC-5b spider grounding; `routine` acuity (a non-time-critical infection) leaves room to
-# await a culture when the patient is stable. The decision is reusable: it's a function of
-# (disease acuity, culture status, clinical stability), not meningitis-specific.
+# disease's TIME-CRITICALITY decides which dominates: for bacterial meningitis it is a
+# neurologic emergency and antibiotics must start AS SOON AS POSSIBLE — delay worsens outcome —
+# so empiric-now dominates regardless of cost/toxicity. `routine` acuity (a non-time-critical
+# infection) leaves room to await a culture when the patient is stable. The decision is
+# reusable: a function of (disease acuity, culture status, clinical stability), not
+# meningitis-specific.
+#
+# CC-5b — GROUNDED (was AUTHORED-DEBT). The time-criticality of bacterial meningitis is now
+# carried by VERBATIM guideline quotes, not a paraphrase. HONESTY CORRECTION: the IDSA
+# meningitis guideline (Tunkel 2004) says start antimicrobials "as soon as possible" and that
+# it is "a neurologic emergency" — it does NOT set a hard numeric door-to-antibiotic threshold
+# for meningitis. The earlier "≤60 min / ≤1 hour" figure was an unsupported overclaim (a
+# sepsis/quality-bundle number, not IDSA meningitis guidance), so we represent the urgency
+# QUALITATIVELY exactly as the source states (`treat_target: as_soon_as_possible`) rather than
+# asserting a threshold no cited source supports — grounding catching a mis-asserted pivot value
+# is the point. See `time-criticality.SOURCES.md` for the retrieval trail.
 _TIME_CRITICALITY = {
-    "meningitis": {"acuity": "time_critical", "treat_within_min": 60,
-                   "source": "Suspected bacterial meningitis is a medical emergency; "
-                             "empiric antibiotics should be started without delay (target "
-                             "≤1 hour), as delay increases mortality and morbidity (IDSA).",
-                   "trust": "consensus"},  # [FLAG: authored — ground in CC-5b]
+    "meningitis": {
+        "acuity": "time_critical",
+        # Qualitative target faithful to the source — NOT a numeric ≤60-min claim (see above).
+        "treat_target": "as_soon_as_possible",
+        "source": (
+            "Begin antimicrobial therapy as soon as possible: \"When a patient presents with "
+            "suspected acute bacterial meningitis, the physician should begin antimicrobial "
+            "therapy as soon as possible.\" Bacterial meningitis is a neurologic emergency: "
+            "\"Bacterial meningitis is a neurologic emergency; progression to more severe "
+            "disease reduces the patient's likelihood of a full recovery.\""
+        ),
+        "locator": (
+            "IDSA Practice Guidelines for the Management of Bacterial Meningitis (Tunkel et al., "
+            "Clin Infect Dis 2004;39:1267); AAFP summary (Am Fam Physician 2005;71(10):2003)"
+        ),
+        "trust": "authoritative",
+    },
 }
 
 
@@ -334,8 +356,9 @@ def decide_timing(cli: Path, disease: str, culture_status: str, clinical_status:
         "culture_status": culture_status or "unknown",
         "rationale": _TIMING_RATIONALE.get((decision, delay_risk), ""),
     }
-    # Carry the grounded (flagged) door-to-antibiotic threshold when one is recorded.
-    threshold = {k: tc[k] for k in ("treat_within_min", "source", "trust") if k in tc}
+    # Carry the grounded time-criticality basis (verbatim guideline quote + locator + trust +
+    # the qualitative treat target) when one is recorded for this disease.
+    threshold = {k: tc[k] for k in ("treat_target", "source", "locator", "trust") if k in tc}
     if threshold:
         out["threshold"] = threshold
     return out
