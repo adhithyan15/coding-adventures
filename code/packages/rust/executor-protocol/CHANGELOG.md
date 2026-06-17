@@ -7,6 +7,13 @@ format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `BackendProfile.gflops_f64` (MX12 / MXF-2): an `f64` (double-precision)
+  compute-throughput field, sitting beside `gflops_f32`. A backend with no
+  `f64` kernel advertises `0` here; the `matrix-runtime` cost model reads that
+  as infinite cost and keeps `f64` work on a backend that can run it. The field
+  is encoded/decoded as one extra `u32` in `encode_profile`/`decode_profile`,
+  inserted symmetrically right after `gflops_f32` (this changes the
+  `BackendProfile` wire layout — both ends must be built from this version).
 - `ProtocolSurfaceSummary` plus `protocol_surface_summary()` for
   payload-free host/tool/catalog introspection of protocol version,
   frame version, message counts, kernel-source counts, and specialised

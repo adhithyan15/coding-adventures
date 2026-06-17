@@ -5,10 +5,25 @@ format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [unreleased] — MX12 f64 dtype
 
-### Changed — cost model accepts `DType::F64` (MX12)
+### Changed — cost model uses a dedicated `gflops_f64` rate (MXF-2)
 
-`compute_cost` handles `F64` (using the `f32` GFLOPS rate as a placeholder; MXF-2
-adds a dedicated `gflops_f64`), so graphs with `f64` tensors plan without panic.
+`compute_cost`'s `DType::F64` arm now reads `profile.gflops_f64` instead of the
+MXF-1 `gflops_f32` placeholder. A backend with no `f64` kernel advertises
+`gflops_f64 = 0`, which the existing `gflops == 0 → u64::MAX / 2` branch turns
+into the ∞-cost sentinel — so the planner keeps `f64` work on a backend (the CPU)
+that can actually run it, and never ships it to a GPU lacking an `f64` kernel. CPU
+profiles mirror their `f32` rate; the synthetic GPU profiles set `gflops_f64 = 0`.
+
+New tests: a giant `f64` matmul costs the ∞ sentinel on the GPU but a finite
+amount on the CPU; halving only `gflops_f64` doubles the `f64` cost (proving the
+arm reads its own field); and an `f64` matmul planned against a CPU + a faster
+GPU (which advertises `f64` capability but `gflops_f64 = 0`) lands on the CPU.
+
+### Changed — cost model accepts `DType::F64` (MXF-1)
+
+`compute_cost` handles `F64` (originally using the `f32` GFLOPS rate as a
+placeholder, replaced by `gflops_f64` in MXF-2 above), so graphs with `f64`
+tensors plan without panic.
 
 ## [0.10.0] — 2026-05-13
 
