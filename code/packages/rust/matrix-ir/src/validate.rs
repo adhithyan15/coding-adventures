@@ -17,10 +17,7 @@ use crate::tensor::{DType, Shape, Tensor, TensorId};
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum IrError {
     /// A `TensorId` referenced by an op is out of range of `Graph.tensors`.
-    UndefinedTensor {
-        op_index: u32,
-        tensor: TensorId,
-    },
+    UndefinedTensor { op_index: u32, tensor: TensorId },
     /// Two inputs that should have matching shapes do not.
     ShapeMismatch {
         op_index: u32,
@@ -46,22 +43,12 @@ pub enum IrError {
         actual: usize,
     },
     /// A constant's table index references a constant that doesn't exist.
-    UndefinedConstant {
-        op_index: u32,
-        constant: u32,
-    },
+    UndefinedConstant { op_index: u32, constant: u32 },
     /// A `Const` op's tensor table index doesn't match its constant
     /// table tensor id.
-    ConstantTensorMismatch {
-        op_index: u32,
-        constant_index: u32,
-    },
+    ConstantTensorMismatch { op_index: u32, constant_index: u32 },
     /// A reduction or shape op got an axis or perm value out of range.
-    InvalidAxis {
-        op_index: u32,
-        axis: u32,
-        rank: u32,
-    },
+    InvalidAxis { op_index: u32, axis: u32, rank: u32 },
     /// A transpose perm is not a permutation of `0..rank`.
     InvalidPermutation { op_index: u32, perm: Vec<u32> },
     /// A reshape would change the element count.
@@ -79,17 +66,11 @@ pub enum IrError {
     /// A slice has out-of-bounds parameters: bad axis, zero step,
     /// `start > end`, or `end > axis_dim`.  `reason` is a short
     /// human-readable tag.
-    InvalidSlice {
-        op_index: u32,
-        reason: &'static str,
-    },
+    InvalidSlice { op_index: u32, reason: &'static str },
     /// A concat is malformed: empty inputs, dtype mismatch across
     /// inputs, rank mismatch, or non-axis dim mismatch.  `reason`
     /// is a short human-readable tag.
-    InvalidConcat {
-        op_index: u32,
-        reason: &'static str,
-    },
+    InvalidConcat { op_index: u32, reason: &'static str },
     /// A matmul received an input with the wrong rank.
     BadMatMulRank {
         op_index: u32,
@@ -154,15 +135,15 @@ impl Graph {
 
         // ──── Constants ────
         for (ci, c) in self.constants.iter().enumerate() {
-            let expected = c
-                .tensor
-                .shape
-                .byte_size(c.tensor.dtype)
-                .ok_or(IrError::ConstantByteLength {
-                    constant_index: ci as u32,
-                    expected: usize::MAX,
-                    actual: c.bytes.len(),
-                })? as usize;
+            let expected =
+                c.tensor
+                    .shape
+                    .byte_size(c.tensor.dtype)
+                    .ok_or(IrError::ConstantByteLength {
+                        constant_index: ci as u32,
+                        expected: usize::MAX,
+                        actual: c.bytes.len(),
+                    })? as usize;
             if c.bytes.len() != expected {
                 return Err(IrError::ConstantByteLength {
                     constant_index: ci as u32,
@@ -234,8 +215,7 @@ impl Graph {
     fn check_op_semantics(&self, i: u32, op: &Op) -> Result<(), IrError> {
         match op {
             // ──── elementwise unary ────
-            Op::Neg { input, output }
-            | Op::Abs { input, output } => {
+            Op::Neg { input, output } | Op::Abs { input, output } => {
                 let inp = self.must_tensor(i, *input)?;
                 self.expect_output(i, *output, &inp.dtype, &inp.shape)?;
                 Ok(())
@@ -246,7 +226,7 @@ impl Graph {
             | Op::Tanh { input, output }
             | Op::Recip { input, output } => {
                 let inp = self.must_tensor(i, *input)?;
-                if inp.dtype != DType::F32 {
+                if !inp.dtype.is_float() {
                     return Err(IrError::NonFloatDType {
                         op_index: i,
                         op_name: op_name(op),
@@ -267,8 +247,7 @@ impl Graph {
                 Ok(())
             }
             // ──── elementwise binary (float-required) ────
-            Op::Div { lhs, rhs, output }
-            | Op::Pow { lhs, rhs, output } => {
+            Op::Div { lhs, rhs, output } | Op::Pow { lhs, rhs, output } => {
                 self.check_elem_binary(i, *lhs, *rhs, *output, true)?;
                 Ok(())
             }
@@ -350,15 +329,15 @@ impl Graph {
                     }
                     seen[p] = true;
                 }
-                let expected_dims: Vec<u32> = perm
-                    .iter()
-                    .map(|&p| inp.shape.dims[p as usize])
-                    .collect();
+                let expected_dims: Vec<u32> =
+                    perm.iter().map(|&p| inp.shape.dims[p as usize]).collect();
                 self.expect_output(
                     i,
                     *output,
                     &inp.dtype,
-                    &Shape { dims: expected_dims },
+                    &Shape {
+                        dims: expected_dims,
+                    },
                 )?;
                 Ok(())
             }
@@ -504,12 +483,13 @@ impl Graph {
 
             // ──── constants ────
             Op::Const { constant, output } => {
-                let c = self.constants.get(*constant as usize).ok_or(
-                    IrError::UndefinedConstant {
-                        op_index: i,
-                        constant: *constant,
-                    },
-                )?;
+                let c =
+                    self.constants
+                        .get(*constant as usize)
+                        .ok_or(IrError::UndefinedConstant {
+                            op_index: i,
+                            constant: *constant,
+                        })?;
                 let out = self.must_tensor(i, *output)?;
                 if c.tensor.dtype != out.dtype || c.tensor.shape != out.shape {
                     return Err(IrError::ConstantTensorMismatch {
@@ -569,13 +549,12 @@ impl Graph {
                             });
                         }
                     }
-                    axis_total =
-                        axis_total
-                            .checked_add(t.shape.dims[*axis as usize])
-                            .ok_or(IrError::InvalidConcat {
-                                op_index: i,
-                                reason: "axis dim overflows u32",
-                            })?;
+                    axis_total = axis_total.checked_add(t.shape.dims[*axis as usize]).ok_or(
+                        IrError::InvalidConcat {
+                            op_index: i,
+                            reason: "axis dim overflows u32",
+                        },
+                    )?;
                 }
                 let mut new_dims = first.shape.dims.clone();
                 new_dims[*axis as usize] = axis_total;
@@ -683,7 +662,7 @@ impl Graph {
                 actual: r.shape.clone(),
             });
         }
-        if require_float && l.dtype != DType::F32 {
+        if require_float && !l.dtype.is_float() {
             return Err(IrError::NonFloatDType {
                 op_index: i,
                 op_name: "binary-float-op",

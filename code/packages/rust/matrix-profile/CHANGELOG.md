@@ -1,5 +1,12 @@
 # Changelog — matrix-profile
 
+## [0.3.1] — 2026-06-16
+
+### Changed — `DType::F64` (MX12)
+
+The range-observation and constant-encoding paths handle `F64` (8-byte
+little-endian), alongside `F32`.
+
 ## [0.3.0] — 2026-05-14
 
 ### Added — MX05 Phase 5 (deoptimisation hooks)

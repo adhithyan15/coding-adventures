@@ -38,8 +38,12 @@ pub fn estimate_flops(op: &Op, output_shape: Option<&Shape>, input_shape: Option
     match op {
         // Cheap elementwise.
         Op::Neg { .. } | Op::Abs { .. } | Op::Cast { .. } => out_numel,
-        Op::Add { .. } | Op::Sub { .. } | Op::Mul { .. } | Op::Div { .. }
-        | Op::Max { .. } | Op::Min { .. } => out_numel,
+        Op::Add { .. }
+        | Op::Sub { .. }
+        | Op::Mul { .. }
+        | Op::Div { .. }
+        | Op::Max { .. }
+        | Op::Min { .. } => out_numel,
         Op::Equal { .. } | Op::Less { .. } | Op::Greater { .. } | Op::Where { .. } => out_numel,
         // Transcendentals — count as 5 ops to reflect the typical
         // hardware latency of pow/exp/log instructions.
@@ -79,9 +83,7 @@ pub fn estimate_matmul_flops(a: &Tensor, b: &Tensor) -> u64 {
     let m = a.shape.dims[0] as u64;
     let k = a.shape.dims[1] as u64;
     let n = b.shape.dims[1] as u64;
-    2u64.saturating_mul(m)
-        .saturating_mul(k)
-        .saturating_mul(n)
+    2u64.saturating_mul(m).saturating_mul(k).saturating_mul(n)
 }
 
 /// Estimate the time (in nanoseconds) to transfer `bytes` between
@@ -133,6 +135,12 @@ pub enum TransferDirection {
 pub fn compute_cost(flops: u64, dtype: DType, profile: &BackendProfile) -> u64 {
     let gflops = match dtype {
         DType::F32 => profile.gflops_f32,
+        // MXF-1: f64 runs only on the CPU executor (no GPU f64 kernel yet), and
+        // the CPU's f64 throughput is ~its f32 throughput, so the f32 rate is a
+        // fair placeholder. MXF-2 adds a dedicated `gflops_f64` to the profile
+        // (CPU set, GPU left at 0 until a GPU f64 kernel exists) so the planner
+        // keeps f64 off GPUs that can't run it.
+        DType::F64 => profile.gflops_f32,
         DType::U8 => profile.gflops_u8,
         DType::I32 => profile.gflops_i32,
     };
@@ -160,7 +168,7 @@ mod tests {
             kind: "cpu".to_string(),
             supported_ops: 0xFFFF_FFFF,
             supported_dtypes: 0x07,
-            gflops_f32: 40,         // 40 GFLOPS
+            gflops_f32: 40, // 40 GFLOPS
             gflops_u8: 40,
             gflops_i32: 40,
             host_to_device_bw: 100, // bytes/ns; effectively no transfer cost
@@ -182,7 +190,7 @@ mod tests {
             gflops_f32: 5_000,
             gflops_u8: 2_500,
             gflops_i32: 2_500,
-            host_to_device_bw: 10,  // bytes/ns = 10 GB/s
+            host_to_device_bw: 10, // bytes/ns = 10 GB/s
             device_to_host_bw: 10,
             device_internal_bw: 500,
             launch_overhead_ns: 1_000,

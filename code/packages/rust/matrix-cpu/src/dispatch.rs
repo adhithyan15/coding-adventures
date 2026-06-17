@@ -109,7 +109,10 @@ pub fn run(buffers: &mut BufferStore, graph: &ComputeGraph) -> Result<Vec<OpTimi
 
     for (op_idx, pop) in graph.ops.iter().enumerate() {
         match pop {
-            PlacedOp::Alloc { residency: r, bytes } => {
+            PlacedOp::Alloc {
+                residency: r,
+                bytes,
+            } => {
                 buffers.alloc(r.buffer, *bytes as usize);
             }
             PlacedOp::Free { residency: r } => {
@@ -160,76 +163,159 @@ pub fn run(buffers: &mut BufferStore, graph: &ComputeGraph) -> Result<Vec<OpTimi
 fn exec_compute(buffers: &mut BufferStore, graph: &ComputeGraph, op: &Op) -> Result<(), String> {
     match op {
         // ──── Elementwise unary ────
-        Op::Neg { input, output } => unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
-            DType::F32 => eval::unary_f32(x, y, n, |v| -v),
-            DType::I32 => eval::unary_i32(x, y, n, |v| v.wrapping_neg()),
-            DType::U8 => eval::unary_u8(x, y, |v| v.wrapping_neg()),
-        }),
-        Op::Abs { input, output } => unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
-            DType::F32 => eval::unary_f32(x, y, n, |v| v.abs()),
-            DType::I32 => eval::unary_i32(x, y, n, |v| v.wrapping_abs()),
-            DType::U8 => eval::unary_u8(x, y, |v| v),
-        }),
-        Op::Sqrt { input, output } => unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
-            DType::F32 => eval::unary_f32(x, y, n, |v| v.sqrt()),
-            _ => unreachable!("sqrt is float-only per validator"),
-        }),
-        Op::Exp { input, output } => unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
-            DType::F32 => eval::unary_f32(x, y, n, |v| v.exp()),
-            _ => unreachable!("exp is float-only"),
-        }),
-        Op::Log { input, output } => unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
-            DType::F32 => eval::unary_f32(x, y, n, |v| v.ln()),
-            _ => unreachable!("log is float-only"),
-        }),
-        Op::Tanh { input, output } => unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
-            DType::F32 => eval::unary_f32(x, y, n, |v| v.tanh()),
-            _ => unreachable!("tanh is float-only"),
-        }),
-        Op::Recip { input, output } => unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
-            DType::F32 => eval::unary_f32(x, y, n, |v| 1.0 / v),
-            _ => unreachable!("recip is float-only"),
-        }),
+        Op::Neg { input, output } => {
+            unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
+                DType::F32 => eval::unary_f32(x, y, n, |v| -v),
+                DType::F64 => eval::unary_f64(x, y, n, |v| -v),
+                DType::I32 => eval::unary_i32(x, y, n, |v| v.wrapping_neg()),
+                DType::U8 => eval::unary_u8(x, y, |v| v.wrapping_neg()),
+            })
+        }
+        Op::Abs { input, output } => {
+            unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
+                DType::F32 => eval::unary_f32(x, y, n, |v| v.abs()),
+                DType::F64 => eval::unary_f64(x, y, n, |v| v.abs()),
+                DType::I32 => eval::unary_i32(x, y, n, |v| v.wrapping_abs()),
+                DType::U8 => eval::unary_u8(x, y, |v| v),
+            })
+        }
+        Op::Sqrt { input, output } => {
+            unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
+                DType::F32 => eval::unary_f32(x, y, n, |v| v.sqrt()),
+                DType::F64 => eval::unary_f64(x, y, n, |v| v.sqrt()),
+                _ => unreachable!("sqrt is float-only per validator"),
+            })
+        }
+        Op::Exp { input, output } => {
+            unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
+                DType::F32 => eval::unary_f32(x, y, n, |v| v.exp()),
+                DType::F64 => eval::unary_f64(x, y, n, |v| v.exp()),
+                _ => unreachable!("exp is float-only"),
+            })
+        }
+        Op::Log { input, output } => {
+            unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
+                DType::F32 => eval::unary_f32(x, y, n, |v| v.ln()),
+                DType::F64 => eval::unary_f64(x, y, n, |v| v.ln()),
+                _ => unreachable!("log is float-only"),
+            })
+        }
+        Op::Tanh { input, output } => {
+            unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
+                DType::F32 => eval::unary_f32(x, y, n, |v| v.tanh()),
+                DType::F64 => eval::unary_f64(x, y, n, |v| v.tanh()),
+                _ => unreachable!("tanh is float-only"),
+            })
+        }
+        Op::Recip { input, output } => {
+            unary_op(buffers, graph, *input, *output, |dt, x, y, n| match dt {
+                DType::F32 => eval::unary_f32(x, y, n, |v| 1.0 / v),
+                DType::F64 => eval::unary_f64(x, y, n, |v| 1.0 / v),
+                _ => unreachable!("recip is float-only"),
+            })
+        }
 
         // ──── Elementwise binary ────
-        Op::Add { lhs, rhs, output } => bin_op(buffers, graph, *lhs, *rhs, *output, |dt, a, b, c, n| match dt {
-            DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x + y),
-            DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.wrapping_add(y)),
-            DType::U8 => eval::binary_u8(a, b, c, |x, y| x.wrapping_add(y)),
-        }),
-        Op::Sub { lhs, rhs, output } => bin_op(buffers, graph, *lhs, *rhs, *output, |dt, a, b, c, n| match dt {
-            DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x - y),
-            DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.wrapping_sub(y)),
-            DType::U8 => eval::binary_u8(a, b, c, |x, y| x.wrapping_sub(y)),
-        }),
-        Op::Mul { lhs, rhs, output } => bin_op(buffers, graph, *lhs, *rhs, *output, |dt, a, b, c, n| match dt {
-            DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x * y),
-            DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.wrapping_mul(y)),
-            DType::U8 => eval::binary_u8(a, b, c, |x, y| x.wrapping_mul(y)),
-        }),
-        Op::Div { lhs, rhs, output } => bin_op(buffers, graph, *lhs, *rhs, *output, |dt, a, b, c, n| match dt {
-            DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x / y),
-            _ => unreachable!("div is float-only in V1"),
-        }),
-        Op::Max { lhs, rhs, output } => bin_op(buffers, graph, *lhs, *rhs, *output, |dt, a, b, c, n| match dt {
-            DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x.max(y)),
-            DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.max(y)),
-            DType::U8 => eval::binary_u8(a, b, c, |x, y| x.max(y)),
-        }),
-        Op::Min { lhs, rhs, output } => bin_op(buffers, graph, *lhs, *rhs, *output, |dt, a, b, c, n| match dt {
-            DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x.min(y)),
-            DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.min(y)),
-            DType::U8 => eval::binary_u8(a, b, c, |x, y| x.min(y)),
-        }),
-        Op::Pow { lhs, rhs, output } => bin_op(buffers, graph, *lhs, *rhs, *output, |dt, a, b, c, n| match dt {
-            DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x.powf(y)),
-            _ => unreachable!("pow is float-only"),
-        }),
+        Op::Add { lhs, rhs, output } => bin_op(
+            buffers,
+            graph,
+            *lhs,
+            *rhs,
+            *output,
+            |dt, a, b, c, n| match dt {
+                DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x + y),
+                DType::F64 => eval::binary_f64(a, b, c, n, |x, y| x + y),
+                DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.wrapping_add(y)),
+                DType::U8 => eval::binary_u8(a, b, c, |x, y| x.wrapping_add(y)),
+            },
+        ),
+        Op::Sub { lhs, rhs, output } => bin_op(
+            buffers,
+            graph,
+            *lhs,
+            *rhs,
+            *output,
+            |dt, a, b, c, n| match dt {
+                DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x - y),
+                DType::F64 => eval::binary_f64(a, b, c, n, |x, y| x - y),
+                DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.wrapping_sub(y)),
+                DType::U8 => eval::binary_u8(a, b, c, |x, y| x.wrapping_sub(y)),
+            },
+        ),
+        Op::Mul { lhs, rhs, output } => bin_op(
+            buffers,
+            graph,
+            *lhs,
+            *rhs,
+            *output,
+            |dt, a, b, c, n| match dt {
+                DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x * y),
+                DType::F64 => eval::binary_f64(a, b, c, n, |x, y| x * y),
+                DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.wrapping_mul(y)),
+                DType::U8 => eval::binary_u8(a, b, c, |x, y| x.wrapping_mul(y)),
+            },
+        ),
+        Op::Div { lhs, rhs, output } => bin_op(
+            buffers,
+            graph,
+            *lhs,
+            *rhs,
+            *output,
+            |dt, a, b, c, n| match dt {
+                DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x / y),
+                DType::F64 => eval::binary_f64(a, b, c, n, |x, y| x / y),
+                _ => unreachable!("div is float-only in V1"),
+            },
+        ),
+        Op::Max { lhs, rhs, output } => bin_op(
+            buffers,
+            graph,
+            *lhs,
+            *rhs,
+            *output,
+            |dt, a, b, c, n| match dt {
+                DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x.max(y)),
+                DType::F64 => eval::binary_f64(a, b, c, n, |x, y| x.max(y)),
+                DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.max(y)),
+                DType::U8 => eval::binary_u8(a, b, c, |x, y| x.max(y)),
+            },
+        ),
+        Op::Min { lhs, rhs, output } => bin_op(
+            buffers,
+            graph,
+            *lhs,
+            *rhs,
+            *output,
+            |dt, a, b, c, n| match dt {
+                DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x.min(y)),
+                DType::F64 => eval::binary_f64(a, b, c, n, |x, y| x.min(y)),
+                DType::I32 => eval::binary_i32(a, b, c, n, |x, y| x.min(y)),
+                DType::U8 => eval::binary_u8(a, b, c, |x, y| x.min(y)),
+            },
+        ),
+        Op::Pow { lhs, rhs, output } => bin_op(
+            buffers,
+            graph,
+            *lhs,
+            *rhs,
+            *output,
+            |dt, a, b, c, n| match dt {
+                DType::F32 => eval::binary_f32(a, b, c, n, |x, y| x.powf(y)),
+                DType::F64 => eval::binary_f64(a, b, c, n, |x, y| x.powf(y)),
+                _ => unreachable!("pow is float-only"),
+            },
+        ),
 
         // ──── Comparison (output is U8) ────
-        Op::Equal { lhs, rhs, output } => compare_op(buffers, graph, *lhs, *rhs, *output, |a, b| a == b),
-        Op::Less { lhs, rhs, output } => compare_op(buffers, graph, *lhs, *rhs, *output, |a, b| a < b),
-        Op::Greater { lhs, rhs, output } => compare_op(buffers, graph, *lhs, *rhs, *output, |a, b| a > b),
+        Op::Equal { lhs, rhs, output } => {
+            compare_op(buffers, graph, *lhs, *rhs, *output, |a, b| a == b)
+        }
+        Op::Less { lhs, rhs, output } => {
+            compare_op(buffers, graph, *lhs, *rhs, *output, |a, b| a < b)
+        }
+        Op::Greater { lhs, rhs, output } => {
+            compare_op(buffers, graph, *lhs, *rhs, *output, |a, b| a > b)
+        }
 
         // ──── Where ────
         Op::Where {
@@ -237,7 +323,14 @@ fn exec_compute(buffers: &mut BufferStore, graph: &ComputeGraph, op: &Op) -> Res
             true_value,
             false_value,
             output,
-        } => where_op(buffers, graph, *predicate, *true_value, *false_value, *output),
+        } => where_op(
+            buffers,
+            graph,
+            *predicate,
+            *true_value,
+            *false_value,
+            *output,
+        ),
 
         // ──── Reductions ────
         Op::ReduceSum {
@@ -245,19 +338,43 @@ fn exec_compute(buffers: &mut BufferStore, graph: &ComputeGraph, op: &Op) -> Res
             axes,
             keep_dims,
             output,
-        } => reduce_op(buffers, graph, *input, axes, *keep_dims, *output, ReduceKind::Sum),
+        } => reduce_op(
+            buffers,
+            graph,
+            *input,
+            axes,
+            *keep_dims,
+            *output,
+            ReduceKind::Sum,
+        ),
         Op::ReduceMax {
             input,
             axes,
             keep_dims,
             output,
-        } => reduce_op(buffers, graph, *input, axes, *keep_dims, *output, ReduceKind::Max),
+        } => reduce_op(
+            buffers,
+            graph,
+            *input,
+            axes,
+            *keep_dims,
+            *output,
+            ReduceKind::Max,
+        ),
         Op::ReduceMean {
             input,
             axes,
             keep_dims,
             output,
-        } => reduce_op(buffers, graph, *input, axes, *keep_dims, *output, ReduceKind::Mean),
+        } => reduce_op(
+            buffers,
+            graph,
+            *input,
+            axes,
+            *keep_dims,
+            *output,
+            ReduceKind::Mean,
+        ),
 
         // ──── Shape ops ────
         Op::Reshape {
@@ -316,15 +433,8 @@ fn exec_compute(buffers: &mut BufferStore, graph: &ComputeGraph, op: &Op) -> Res
             let out_t = lookup_meta(graph, *output)?;
             let in_buf = lookup_buffer(buffers, graph, in_t.id)?.to_vec();
             let elem = in_t.dtype.size_bytes();
-            let (out_bytes, _out_dims) = eval::slice_bytes(
-                &in_buf,
-                &in_t.shape.dims,
-                *axis,
-                *start,
-                *end,
-                *step,
-                elem,
-            );
+            let (out_bytes, _out_dims) =
+                eval::slice_bytes(&in_buf, &in_t.shape.dims, *axis, *start, *end, *step, elem);
             let out_residency = lookup_residency(graph, out_t.id)?;
             buffers.write(out_residency.buffer, 0, &out_bytes)?;
             Ok(())
@@ -373,6 +483,7 @@ fn exec_compute(buffers: &mut BufferStore, graph: &ComputeGraph, op: &Op) -> Res
             let mut c_bytes = vec![0u8; m * n * elem];
             match ta.dtype {
                 DType::F32 => eval::matmul_f32(&a_buf, &b_buf, &mut c_bytes, m, k, n),
+                DType::F64 => eval::matmul_f64(&a_buf, &b_buf, &mut c_bytes, m, k, n),
                 DType::I32 => eval::matmul_i32(&a_buf, &b_buf, &mut c_bytes, m, k, n),
                 DType::U8 => eval::matmul_u8(&a_buf, &b_buf, &mut c_bytes, m, k, n),
             }
@@ -520,6 +631,13 @@ fn compare_op(
                 out_bytes[i] = if f(xs[i] as f64, ys[i] as f64) { 1 } else { 0 };
             }
         }
+        DType::F64 => {
+            let xs = eval::read_f64_vec(&l_buf, n);
+            let ys = eval::read_f64_vec(&r_buf, n);
+            for i in 0..n {
+                out_bytes[i] = if f(xs[i], ys[i]) { 1 } else { 0 };
+            }
+        }
         DType::I32 => {
             let xs = eval::read_i32_vec(&l_buf, n);
             let ys = eval::read_i32_vec(&r_buf, n);
@@ -529,7 +647,11 @@ fn compare_op(
         }
         DType::U8 => {
             for i in 0..n {
-                out_bytes[i] = if f(l_buf[i] as f64, r_buf[i] as f64) { 1 } else { 0 };
+                out_bytes[i] = if f(l_buf[i] as f64, r_buf[i] as f64) {
+                    1
+                } else {
+                    0
+                };
             }
         }
     }
@@ -606,6 +728,22 @@ fn reduce_op(
                     *v /= reduced_count as f32;
                 }
                 eval::write_f32_vec(&mut bytes, &vals);
+            }
+            (bytes, dims)
+        }
+        DType::F64 => {
+            let (init, fold): (f64, fn(f64, f64) -> f64) = match kind {
+                ReduceKind::Sum | ReduceKind::Mean => (0.0, |a, b| a + b),
+                ReduceKind::Max => (f64::NEG_INFINITY, |a, b| a.max(b)),
+            };
+            let (mut bytes, dims) = eval::reduce_f64(&in_buf, in_dims, axes, keep_dims, init, fold);
+            if matches!(kind, ReduceKind::Mean) && reduced_count > 0 {
+                let n_out = bytes.len() / 8;
+                let mut vals = eval::read_f64_vec(&bytes, n_out);
+                for v in vals.iter_mut() {
+                    *v /= reduced_count as f64;
+                }
+                eval::write_f64_vec(&mut bytes, &vals);
             }
             (bytes, dims)
         }

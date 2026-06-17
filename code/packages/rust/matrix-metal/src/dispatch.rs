@@ -676,6 +676,15 @@ fn cast_dispatch(
         matrix_ir::DType::F32 => "cast_f32_to_f32",
         matrix_ir::DType::U8 => "cast_u8_to_f32",
         matrix_ir::DType::I32 => "cast_i32_to_f32",
+        // F64 has no Metal kernel — the cost model keeps f64 work on the CPU,
+        // so an f64 cast reaching this GPU backend indicates a planner bug.
+        matrix_ir::DType::F64 => {
+            return Err(format!(
+                "matrix-metal cast: unsupported input dtype {:?} (f64 stays on CPU; \
+                 the GPU backend ships no f64 kernels)",
+                in_t.dtype
+            ))
+        }
     };
     let pipeline = ctx
         .pipelines
