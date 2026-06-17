@@ -269,11 +269,19 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // conflicting derivations are resolved by precedence (enumerate_governing).
                 kb.declare_functional(functor, *arity);
             }
+            Statement::ContextOrder { edges } => {
+                // ADJ73 PR-B: each `a > b` edge asserts that context `a` outranks context `b`
+                // (lex superior) — consulted before the priority tier in resolution.
+                for (higher, lower) in edges {
+                    kb.add_context_outranks(higher.clone(), lower.clone());
+                }
+            }
             Statement::Rule {
                 head,
                 body,
                 annotations,
                 priority,
+                context,
             } => {
                 // A derivation rule → `logic_engine::Rule { head, body }`. Head and body
                 // share ONE variable scope so a `$Var` in the head unifies with the same
@@ -304,11 +312,14 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                         return Err(LowerError::UnknownPriorityTier { tier: other.into() })
                     }
                 };
-                kb.add_rule(
-                    Rule::certain(head_term, body_lits)
-                        .with_provenance(prov)
-                        .with_priority(tier),
-                );
+                // ADJ73 PR-B: the optional `context: <name>` grounds the rule in a context.
+                let mut rule = Rule::certain(head_term, body_lits)
+                    .with_provenance(prov)
+                    .with_priority(tier);
+                if let Some(ctx) = context {
+                    rule = rule.with_context(ctx.clone());
+                }
+                kb.add_rule(rule);
             }
             Statement::Query { conclusion } => {
                 // Lower with a per-query variable scope so repeated `$Var`s in one
@@ -1738,5 +1749,43 @@ rule { head: note(b) when: gate(t) priority: default }
             format!("{err:?}").contains("UnknownPriorityTier"),
             "expected UnknownPriorityTier, got {err:?}"
         );
+    }
+
+    // ---- ADJ73 PR-B: context precedence surface (`context:` + `context_order`) ----
+
+    /// `context_order { higher > lower }` + `context:` on rules → the higher-context rule
+    /// governs the lower-context one, and context precedence BEATS the priority tier (lex
+    /// superior): the broad reading governs despite carrying the lower `default` tier.
+    #[test]
+    fn context_order_and_context_resolve_lex_superior() {
+        use logic_engine::enumerate_governing;
+        let prog = "\
+functional means(term, reading)
+context_order { ninth_circuit > district_court }
+relate gate(t)
+rule { head: means(waters, broad) when: gate(t) priority: default context: ninth_circuit }
+rule { head: means(waters, narrow) when: gate(t) priority: authoritative context: district_court }
+? means(waters, $R)";
+        let lowered = compile(prog).unwrap();
+        let res = enumerate_governing(&lowered.queries[0], &lowered.kb);
+        let gov: Vec<&CoreTerm> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(gov.len(), 1, "exactly one governs: {res:?}");
+        assert!(matches!(gov[0], CoreTerm::Compound { args, .. }
+            if args == &[CoreTerm::Atom("waters".into()), CoreTerm::Atom("broad".into())]));
+        assert!(!res.has_conflict());
+    }
+
+    /// A multi-edge `context_order` lowers every edge (transitive: federal > circuit > state).
+    #[test]
+    fn context_order_lowers_multiple_edges_transitively() {
+        let prog = "\
+context_order { federal > circuit, circuit > state }
+relate x(t)
+rule { head: r(a) when: x(t) }";
+        let lowered = compile(prog).unwrap();
+        // federal transitively outranks state via circuit.
+        assert!(lowered.kb.context_outranks("federal", "state"));
+        assert!(lowered.kb.context_outranks("federal", "circuit"));
+        assert!(!lowered.kb.context_outranks("state", "federal"));
     }
 }
