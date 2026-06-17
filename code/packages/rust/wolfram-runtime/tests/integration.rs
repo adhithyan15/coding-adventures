@@ -125,3 +125,109 @@ fn a_small_program() {
     // 32 + 12 = 44
     assert_eq!(out, "Out[3]= 44\n");
 }
+
+// ===========================================================================
+// W-5 — list / functional / control / numeric built-ins, end-to-end.
+// Each case is one of the acceptance examples from the W-5 brief.
+// ===========================================================================
+
+/// `Length`, `First`, `Last` on list literals.
+#[test]
+fn w5_length_first_last() {
+    assert_eq!(eval("Length[{1, 2, 3}]\n").unwrap(), "Out[1]= 3\n");
+    assert_eq!(eval("First[{9, 8}]\n").unwrap(), "Out[1]= 9\n");
+    assert_eq!(eval("Last[{9, 8, 7}]\n").unwrap(), "Out[1]= 7\n");
+    // Length of an empty list is 0.
+    assert_eq!(eval("Length[{}]\n").unwrap(), "Out[1]= 0\n");
+}
+
+/// `First`/`Last` of an empty list are left unevaluated (no panic).
+#[test]
+fn w5_first_of_empty_is_unevaluated() {
+    assert_eq!(eval("First[{}]\n").unwrap(), "Out[1]= First[{}]\n");
+}
+
+/// `Part` — 1-based, with negatives and the `0` (head) index.
+#[test]
+fn w5_part() {
+    assert_eq!(eval("Part[{a, b, c}, 2]\n").unwrap(), "Out[1]= b\n");
+    assert_eq!(eval("Part[{a, b, c}, -1]\n").unwrap(), "Out[1]= c\n");
+    // Out of range stays unevaluated.
+    assert_eq!(
+        eval("Part[{a, b, c}, 9]\n").unwrap(),
+        "Out[1]= Part[{a, b, c}, 9]\n"
+    );
+}
+
+/// `Append` builds a new list.
+#[test]
+fn w5_append() {
+    assert_eq!(eval("Append[{1, 2}, 3]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+}
+
+/// `Range` in its one-, two-, and three-argument forms.
+#[test]
+fn w5_range() {
+    assert_eq!(eval("Range[3]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+    assert_eq!(eval("Range[2, 5]\n").unwrap(), "Out[1]= {2, 3, 4, 5}\n");
+    assert_eq!(eval("Range[1, 7, 2]\n").unwrap(), "Out[1]= {1, 3, 5, 7}\n");
+}
+
+/// `Range[10^9]`-style giant span is refused (left unevaluated), never
+/// allocated — the W-5 DoS cap.
+#[test]
+fn w5_range_oversize_is_unevaluated_not_oom() {
+    // 100_000_000 is well above MAX_RANGE_LENGTH; this must NOT hang/OOM.
+    let out = eval("Range[100000000]\n").unwrap();
+    assert_eq!(out, "Out[1]= Range[100000000]\n");
+}
+
+/// `Map` applies a function element-wise and re-evaluates the results.
+#[test]
+fn w5_map() {
+    // f is unbound, so the results stay symbolic f[1], f[2].
+    assert_eq!(eval("Map[f, {1, 2}]\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
+    // A built-in folds: Map[Sin, {0}] → {0}.
+    assert_eq!(eval("Map[Sin, {0}]\n").unwrap(), "Out[1]= {0}\n");
+}
+
+/// `Apply` swaps the list head and re-evaluates: `Apply[Plus, {…}]` sums via the
+/// Plus→Add bridge.
+#[test]
+fn w5_apply() {
+    assert_eq!(eval("Apply[Plus, {1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
+    assert_eq!(eval("Apply[Times, {2, 3, 4}]\n").unwrap(), "Out[1]= 24\n");
+    // Apply with an unbound head stays symbolic as the application.
+    assert_eq!(eval("Apply[g, {a, b}]\n").unwrap(), "Out[1]= g[a, b]\n");
+}
+
+/// `If` — the held control head selects a branch; comparisons drive the test.
+#[test]
+fn w5_if() {
+    assert_eq!(eval("If[1 > 0, a, b]\n").unwrap(), "Out[1]= a\n");
+    assert_eq!(eval("If[1 < 0, a, b]\n").unwrap(), "Out[1]= b\n");
+    // A non-boolean condition leaves the If unevaluated.
+    assert_eq!(eval("If[x, a, b]\n").unwrap(), "Out[1]= If[x, a, b]\n");
+}
+
+/// `N` coerces exact numbers to floats and maps over a list.
+#[test]
+fn w5_numeric_n() {
+    assert_eq!(eval("N[1/2]\n").unwrap(), "Out[1]= 0.5\n");
+    assert_eq!(eval("N[3]\n").unwrap(), "Out[1]= 3.0\n");
+    assert_eq!(eval("N[{1, 1/4}]\n").unwrap(), "Out[1]= {1.0, 0.25}\n");
+}
+
+/// Built-ins compose: the VM evaluates inner heads before the outer one.
+#[test]
+fn w5_builtins_compose() {
+    // Length[Append[Range[3], 9]] = Length[{1,2,3,9}] = 4
+    assert_eq!(
+        eval("Length[Append[Range[3], 9]]\n").unwrap(),
+        "Out[1]= 4\n"
+    );
+    // First[Map[f, Range[2]]] = First[{f[1], f[2]}] = f[1]
+    assert_eq!(eval("First[Map[f, Range[2]]]\n").unwrap(), "Out[1]= f[1]\n");
+    // Apply[Plus, Range[4]] = 1+2+3+4 = 10
+    assert_eq!(eval("Apply[Plus, Range[4]]\n").unwrap(), "Out[1]= 10\n");
+}
