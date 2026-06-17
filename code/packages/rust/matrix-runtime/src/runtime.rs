@@ -103,6 +103,7 @@ mod tests {
             supported_ops: 0xFFFF_FFFF,
             supported_dtypes: 0x07,
             gflops_f32: 40,
+            gflops_f64: 40,
             gflops_u8: 40,
             gflops_i32: 40,
             host_to_device_bw: 100,
