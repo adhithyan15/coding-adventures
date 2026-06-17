@@ -1,0 +1,81 @@
+% =====================================================================
+% context-precedence.adj — a GROUNDED context-precedence rulebook
+% (ADJ73 PR-B-3, decision §2.3: "context precedence is itself grounded,
+%  in its own rulebook, with provenance on WHY").
+%
+% WHAT THIS IS
+% ------------
+% Defeasible precedence (ADJ73) resolves a conflict between two rules that
+% derive incompatible conclusions. The PRIMARY tiebreaker is *lex superior*:
+% a rule grounded in a higher-authority CONTEXT defeats a conflicting rule in
+% a lower context — BEFORE the priority tier is even consulted. This file is
+% the precedence order itself, and the whole point is that each edge is a
+% GROUNDED FACT carrying its charter:
+%
+%     relate outranks_context(higher, lower)  source "…"  locator "…"  trust …
+%
+% An `outranks_context(a, b)` fact means "context `a` outranks context `b`".
+% The logic-engine (>= 0.20) reads these facts as directed edges in the
+% context order (KnowledgeBase::context_adjacency), so `context_outranks`
+% walks them transitively and `enumerate_governing` applies lex superior.
+% Because the edge is an ordinary byte-provenanced Fact, it is queryable
+% (`? outranks_context(federal, $lower)`), auditable (its source rides on it),
+% and ONE CAS EDIT from correctable — exactly like every clinical/legal fact
+% in this framework. Nothing here is asserted bare in host code.
+%
+% WHY NOT JUST `context_order { federal > state }`?
+% -------------------------------------------------
+% That bare surface form (adj-lang 0.16) declares the same edges but carries
+% NO provenance — it cannot answer "says who?". A precedence order that the
+% system relies on to overturn one authority with another MUST itself be
+% defensible. So the durable, checked-in form is grounded facts, and the bare
+% `context_order` block is reserved for throwaway/inline examples.
+%
+% SCOPE (this file): the two *lex superior* (authority-hierarchy) edges, each
+% grounded to a primary source. The other classical conflict-resolution canons
+% — lex posterior (recency: a newer enactment/guideline supersedes an older
+% one, e.g. idsa_2024 > idsa_2004) and lex specialis (the more specific rule
+% controls) — are NOT hand-asserted as edges here. They are themselves grounded
+% META-RULES that DERIVE precedence from rule attributes (enactment date,
+% specificity, appeal status); they land in PR-B-4 so the recursive structure
+% the spec calls for (§7) stays honest: an edge that can be derived should be
+% derived, not duplicated as a bare fact.
+% =====================================================================
+
+% ---------------------------------------------------------------------
+% EDGE 1 — federal > state (the Supremacy Clause).
+%
+% Federal law is "the supreme Law of the Land", and state judges are bound by
+% it notwithstanding contrary state law. So a rule grounded in `federal`
+% context outranks a conflicting rule grounded in `state` context. This is the
+% canonical lex-superior instance and ADJ73's north-star (§5.3).
+%
+% Verbatim charter (locator art. VI, cl. 2):
+%   "This Constitution, and the laws of the United States which shall be made
+%    in pursuance thereof; … shall be the supreme law of the land; and the
+%    judges in every state shall be bound thereby, anything in the Constitution
+%    or laws of any State to the contrary notwithstanding."
+% ---------------------------------------------------------------------
+relate outranks_context(federal, state)
+  source "U.S. Const. art. VI, cl. 2 (Supremacy Clause): \"This Constitution, and the laws of the United States which shall be made in pursuance thereof; and all treaties made, or which shall be made, under the authority of the United States, shall be the supreme law of the land; and the judges in every state shall be bound thereby, anything in the Constitution or laws of any State to the contrary notwithstanding.\""
+  locator "U.S. Const. art. VI, cl. 2"
+  trust authoritative
+
+% ---------------------------------------------------------------------
+% EDGE 2 — ninth_circuit > district_court (vertical stare decisis).
+%
+% Within a circuit, a U.S. Court of Appeals decision binds every U.S. district
+% court in that circuit (vertical stare decisis). So a reading grounded in
+% `ninth_circuit` context outranks a conflicting reading a `district_court`
+% adopted on its own. (A decision of one circuit does NOT bind district courts
+% in another circuit — modelled by the ABSENCE of such an edge, so those
+% contexts are incomparable and fall back to the priority tier.)
+%
+% Verbatim charter:
+%   "a federal circuit decision is binding on all federal district courts
+%    within its circuit, but not federal courts in other circuits"
+% ---------------------------------------------------------------------
+relate outranks_context(ninth_circuit, district_court)
+  source "Binding v. Persuasive Authority (American University, Washington College of Law, 1L Legal Research Primer): \"a federal circuit decision is binding on all federal district courts within its circuit, but not federal courts in other circuits.\""
+  locator "WCL 1L Legal Research Primer — Binding v. Persuasive Authority"
+  trust authoritative
