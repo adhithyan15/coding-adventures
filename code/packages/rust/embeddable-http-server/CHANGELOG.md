@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **WEB01b-1b: pipelined-response ordering for `MailboxHttpServer`.** The server
+  now enables the mailbox's `ordered_responses`, so a single connection's replies
+  are written back in **request order** even when the worker pool finishes them
+  out of order — full HTTP/1.1 keep-alive pipelining is now correct (1a already
+  submitted every framed request; 1b makes the wire order right). The per-
+  connection reorder buffer is bounded by the pool's queue depth, so a connection
+  that pipelines past it is shed with a 503 rather than buffering unboundedly. New
+  test `mailbox_http_server_preserves_pipelined_response_order` pipelines 4
+  requests whose handlers finish in reverse order and asserts the bodies come back
+  `r0, r1, r2, r3` (it fails without the reorder buffer). See
+  `code/specs/WEB01b-mailbox-parallelism.md`.
+
 - **WEB01b-1a: `MailboxHttpServer`** — a deferred-response, *per-request*-parallel
   HTTP server. A single reactor frames each request and **submits it as a job** to
   an in-process `worker_count`-thread pool (`embeddable-tcp-server`'s
