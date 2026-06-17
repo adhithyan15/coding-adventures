@@ -89,10 +89,47 @@ let res = enumerate_governing(&/* timing($D) */, &kb);
 Priority is a **named enum tier** (`Default < Specific < Authoritative < Mandatory`), not a raw
 integer; a ground fact (`Standing::Asserted`) outranks every rule tier. A predicate that is
 **not** declared functional never conflicts, so every answer governs and `enumerate_all`
-semantics are unchanged — precedence is opt-in per predicate. The richer, byte-provenanced
-mechanism — a grounded `context-precedence` rulebook (lex-superior / recency / appeal-status,
-for jurisdiction/specialist precedence) — and the adj-lang surface syntax are staged in
-`code/specs/ADJ73-defeasible-rule-precedence.md` (§2.3, §7).
+semantics are unchanged — precedence is opt-in per predicate.
+
+**Grounded context precedence (v0.19, lex superior).** A rule can be grounded in a *context*
+(`Rule::with_context("ninth_circuit")`), and a partial order over contexts
+(`kb.add_context_outranks("ninth_circuit", "district_court")`) makes the rule in the **greater**
+context defeat a conflicting one in a lesser context — *before* the tier is consulted (the tier
+breaks ties the context order leaves open):
+
+```rust
+kb.declare_functional("means", 2);
+kb.add_context_outranks("ninth_circuit", "district_court");  // grounded precedence edge
+kb.add_rule(Rule::certain(/* means(waters, broad) */).with_context("ninth_circuit"));
+kb.add_rule(Rule::certain(/* means(waters, narrow) */).with_context("district_court"));
+// → means(waters, broad) governs; the district reading is Defeated { by: … }.
+```
+
+`context_outranks` is cycle-safe; a cyclic order (`context_order_has_cycle`) crowns nothing
+rather than picking wrong. With no context order declared, resolution is pure-tier (back-compat).
+
+**Grounded precedence edges (v0.20).** `add_context_outranks` edges carry no provenance. The
+*grounded* way to declare precedence is a `relate outranks_context(higher, lower)` clause — an
+ordinary [`Fact`] carrying `source`/`locator`/`trust`, queryable and one CAS edit from
+correctable. Such a fact participates in the context order exactly like an explicit edge, so the
+*reason* one context outranks another rides on the edge itself:
+
+```rust
+// federal outranks state BECAUSE of the Supremacy Clause — the citation is on the edge.
+kb.add_fact(
+    Fact::certain(/* outranks_context(federal, state) */)
+        .with_provenance(Provenance::new(
+            "U.S. Const. art. VI, cl. 2 (Supremacy Clause)", Some("cl. 2".into()),
+            TrustTier::Authoritative)),
+);
+// a federal rule now governs a conflicting state rule even at a lower tier; the edge is auditable.
+```
+
+`context_adjacency()` unions the explicit and grounded edges into one directed graph, so the
+cycle check (a single Kahn pass) and `context_outranks` (a cycle-safe DFS) span both sources.
+The grounded `context-precedence` *rulebook* (a `.adj` library of such edges, each byte-quoting
+its charter) + a worked legal example through the CLI `governing` section land in PR-B-3
+(`code/specs/ADJ73-defeasible-rule-precedence.md` §2.3, §7).
 
 ## Why Probability From Day One
 

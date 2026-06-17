@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.1.14 — `splat` lowers to native spread; `double_splat` deferred (Q9c)
+
+Third item of the Q9 structural-builtin tranche.  Ruby `*x` / `**x` reach the
+backend as `BuiltinCall("splat", [x])` / `BuiltinCall("double_splat", [x])`.
+`emit_args` now expands them via a new `emit_arg` helper:
+
+- `splat` → `...x`  (e.g. `f(*a)` → `f(...a)`, `[1, *mid, 3]` → `[1, ...mid, 3]`)
+  — fully native JS spread.
+- `double_splat` in call position → **deferred (v0 cut-line)**.  JavaScript has
+  no keyword-argument call form and an SIR map is a `Map`, which does not spread
+  into an object literal or a call, so there is no faithful native form.  `**h`
+  falls through to the eager dispatch (`__Sir.callBuiltin("double_splat", …)`),
+  which raises a clear unknown-builtin error rather than emitting silently wrong
+  code.  (Python, which has `**`, lowers it natively — see its 0.1.15.)
+
+Tests: `splat_in_seq_literal_emits_native_spread_ts` (`[1, ...mid, 3]`),
+`splat_call_arg_emits_native_spread_ts` (`(...a)`), and
+`double_splat_call_arg_is_deferred_to_dispatch_ts` (asserts the documented
+dispatch fallthrough, and that it is *not* mis-emitted as a JS spread).
+
+## 0.1.13 — `range` builtin lowers to the range runtime (Q9b)
+
+Second item of the Q9 structural-builtin tranche.  Ruby `a..b` / `a...b` (and
+the begin/endless `a..` / `..b` forms) reach this backend as
+`BuiltinCall("range", [start, stop, exclusive])`.  JavaScript has no range type
+at all, so `emit_builtin_call` now lowers it to `__SirRange.range(...)` from the
+new per-concern package `@coding-adventures/sir-runtime-range` (the SIR
+first-class `Range` value).  A `uses_range` content-walk gates the
+`RUNTIME_RANGE` import, so pure modules never gain the dependency.  Tests:
+`range_builtin_lowers_to_runtime_and_imports_ts` (emits
+`__SirRange.range(1, 5, false)` + the import, never the dispatch fallthrough) and
+`no_range_import_when_unused_ts`.
+
+## 0.1.12 — `lambda` builtin lowers to its inner closure (Q9a)
+
+First item of the structural-builtin follow-up tranche (Q9) the Q8d audit
+flagged.  Ruby `lambda { … }` / `->(x){…}` reach this backend as
+`BuiltinCall("lambda", [MakeClosure])`.  The lambda *is* its closure value, so
+`emit_builtin_call` now emits the inner `MakeClosure` directly (rendering
+`new __Sir.Closure(...)`) instead of routing through the eager `callBuiltin`
+dispatch — there is no separate `lambda` runtime helper, the closure already is
+the result.  Reuses the existing `MakeClosure` emission and `Closure` runtime
+type; no runtime change.  Direct-SIR test
+`lambda_builtin_lowers_to_inner_closure_ts`.
+
 ## 0.1.11 — boolean/unary operator builtins (audit close-out)
 
 Builtin-coverage audit of what the Ruby frontend emits as a `BuiltinCall`

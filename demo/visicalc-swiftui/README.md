@@ -82,10 +82,17 @@ formatting. The sheet is u32 × u32 and sparse; a two-axis
 `ScrollView` sized from `used_range` drives the scrollbars, and only the visible
 window of cells is built into the view via `SpreadsheetSession.window(...)`.
 
+The **"Fill ↓ 10"** button next to the formula bar calls
+`WindowedSheetModel.fillDown(10)` (over the C ABI's `sc_fill`) to replicate the
+selected cell into the 10 rows below it — the engine shifts each copy's relative
+references (`=A1`→`=A2`, …), pins absolute (`$`) refs, and carries the format.
+
 Headless proof: `Tests/VisiCalcTests/WindowedModelTests.swift` asserts the
 window is engine-computed and dense, a formula 1000 rows down (`Z1000` = 39) is
-reachable, the gaps are empty (sparse), column letters run AA/BA/BB, and editing
-`A1` dirties the far dependent `Z1000` via `changedSince`. Run with `swift test`.
+reachable, the gaps are empty (sparse), column letters run AA/BA/BB, editing
+`A1` dirties the far dependent `Z1000` via `changedSince`, and `fillDown`
+replicates a relative formula down a column (`I1 = =H1*10` filled down ⇒ I2 = 30,
+I3 = 40, source I1 = 20 untouched). Run with `swift test`.
 
 ## Notes
 

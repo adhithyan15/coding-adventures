@@ -2,6 +2,75 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-06-16
+
+### Added
+
+- **Index sub-assignment (R-14)** — the left side of an assignment may now be a
+  subscript expression, not just a bare name. `eval_indexed_assignment` descends
+  to the postfix `[ … ]`, requires a bare-name base, looks up its current value,
+  resolves the subscripts, writes the (recycled) RHS into the selected cells, and
+  rebinds the modified value to the base name. Supported: 1-D `v[i] <- val`,
+  `v[-i] <- val`, `v[logical] <- val` (full `resolve_picks` styles), and 2-D
+  `m[i, j] <- v`, `m[i, ] <- v`, `m[, j] <- v`, `m[rows, cols] <- v`. New free
+  functions `assign_index` / `assign_index2d` (with `assign_positions` /
+  `write_recycled` helpers) in `value.rs`.
+
+### Safety
+
+- Sub-assignment is **copy-on-modify**: the base value is cloned, mutated, and
+  re-`define`d, so a prior copy (`b <- a; a[1] <- 9`) is never aliased and the
+  rebind cannot corrupt any other binding. An out-of-range or `NA` index in an
+  assignment is a hard error (no silent auto-grow); an empty replacement
+  (`v[i] <- c()`) is an error; assigning into an undefined base is an error.
+  Write counts are bounded by the (`MAX_SEQ_LEN`-capped) selection length.
+
+## [0.9.0] - 2026-06-16
+
+### Added
+
+- **2-D matrix indexing (R-13)** — the `[` subscript operator extended to two
+  dimensions. An `index_suffix` grammar change makes each comma-separated
+  subscript optional, so `m[i, j]`, `m[i, ]` (whole row), `m[, j]` (whole
+  column), and `m[rows, cols]` (sub-matrix) all work on `SValue::Matrix`
+  (1-based, column-major). A 2-D result follows R's `drop = TRUE` (a single
+  row/column collapses to a vector). `m[i]` indexes the flat column-major
+  vector. The empty-subscript grammar also enables `df[, j]` / `df[i, ]`.
+
+### Changed
+
+- **Index resolution now supports all three R styles** (`resolve_picks`):
+  **positive** (1-based; `0` drops, out-of-range/`NA` → `NA`), **negative**
+  (`-k` excludes; cannot mix with positive), and **logical** (a mask recycled to
+  the dimension). This fixes 1-D vector indexing — `v[-2]` and
+  `v[c(TRUE, FALSE)]` now behave correctly (logical indices were previously
+  mis-coerced to numbers). `dataframe::index2d` now takes optional (`None` =
+  whole-dimension) subscripts.
+
+### Security
+
+- Out-of-range matrix subscripts are a hard error; the logical-recycle span and
+  the 2-D result size are capped at `MAX_SEQ_LEN`, so negative/logical index
+  expansion cannot be turned into unbounded allocation.
+
+## [0.8.0] - 2026-06-16
+
+### Added
+
+- **Matrix linear algebra (R-12)** — builtins operating on the R-11
+  `SValue::Matrix`: `diag()` (R's extract-diagonal / build-diagonal /
+  make-identity overload, with `nrow`/`ncol`); the margin reductions
+  `rowSums`/`colSums`/`rowMeans`/`colMeans` (with an `na.rm` option; an all-`NA`
+  mean is `NaN`); `cbind()`/`rbind()` (bind vectors and matrices by column/row,
+  recycling vectors, erroring on a mismatched matrix dimension, `NULL` for the
+  empty call); and `solve()`/`det()` (matrix inverse, linear solve `a %*% x = b`,
+  and determinant) via Gaussian elimination with partial pivoting — no LU
+  primitive exists in the substrate, so it is implemented directly. A singular
+  matrix is a clean error (`det` returns `0`); `NA` makes `det` return `NA` and
+  `solve` an error; the `solve`/`det` order is capped at `MAX_SOLVE_DIM` (1000)
+  so the `O(n³)` work cannot become a denial-of-service, and all construction is
+  bounded by `MAX_SEQ_LEN`.
+
 ## [0.7.0] - 2026-06-16
 
 ### Added

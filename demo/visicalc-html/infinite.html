@@ -46,6 +46,11 @@
       flex: 1; background: #121212; color: var(--fg); border: 1px solid var(--line);
       padding: 5px 8px; font: inherit; border-radius: 3px;
     }
+    .bar button {
+      background: var(--head-bg); color: var(--fg); border: 1px solid var(--line);
+      padding: 5px 10px; font: inherit; border-radius: 3px; cursor: pointer; white-space: nowrap;
+    }
+    .bar button:hover { border-color: var(--sel-line); }
     .status { color: var(--muted); margin: 8px 0 0; font-size: 11px; }
     .status b { color: var(--sel-line); font-weight: 600; }
 
@@ -87,6 +92,7 @@
     <div class="bar">
       <span class="addr" id="addr">A1</span>
       <input id="formula" placeholder="Enter a value or formula (e.g. =SUM(A1:A4)) and press Enter" />
+      <button id="fillDown" title="Replicate the selected cell into the 10 rows below it (drag-fill)">Fill ↓ 10</button>
     </div>
 
     <div class="sheet" id="sheet">
@@ -220,6 +226,22 @@
       formulaEl.value = workbook.getRaw(a1(selRow, selCol));
       render();
       statusEl.innerHTML += " &nbsp;·&nbsp; last edit → " + esc(note);
+    });
+
+    // Drag-fill: replicate the selected cell into the 10 rows below it. The
+    // engine shifts each copy's relative references (=A1 → =A2, …), pins absolute
+    // ($) refs, and carries the format — all in one engine call.
+    document.getElementById("fillDown").addEventListener("click", function () {
+      var src = a1(selRow, selCol);
+      var first = a1(selRow + 1, selCol);
+      var last = a1(selRow + 10, selCol);
+      var rev = workbook.currentRevision();
+      workbook.fill(src, first, last);
+      var diff = workbook.changedSince(rev);
+      var note = diff.stale ? "(stale — full refresh)" :
+        diff.changed.length + " cell(s) filled: " + diff.changed.slice(0, 8).join(", ");
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; filled " + esc(src) + " ↓ → " + esc(note);
     });
 
     // The classic cross-footing budget, PLUS deliberately far-flung cells to

@@ -13,7 +13,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, arrays, `DEF FN`, `READ`/`DATA`, `^`; loops/IF/GOTO execute only on the VM/JIT |
-| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être), u8 not modeled, `&&`/`||` not short-circuit, `~` knowingly wrong |
+| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2); intrinsics + `static` remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | scalar `integer`/`boolean` only: no arrays, procedures, call-by-name, reals, strings, switches, `own` |
 
 **Goal of this campaign:** make every language a *full* implementation —
@@ -146,8 +146,9 @@ multiple languages; close an enabler before the features that depend on it.
       (native/LLVM/WASM/JVM/CLR/VM/JIT). N6 ✅. **N7** (`+%`/`+?`) ✅ (nib-iir-compiler 0.15.0).
       **N3-`~`** ✅ (nib-iir-compiler 0.16.0 lowers unary `~` → IIR `not` narrow-masked;
       `~0u8 == 255` / `~15u4 == 0` run on all 7 backends — needed `iir-to-llvm` 0.12.0's `not`
-      op + `iir-to-cil-bytecode` 0.21.0's textual-`.il` `not` arm). **Oct O2-`~`** still open
-      (Oct has no type checker — needs narrow-type tracking first). **E2 integration complete.**
+      op + `iir-to-cil-bytecode` 0.21.0's textual-`.il` `not` arm). **Oct O2-`~`** ✅ too
+      (oct-iir-compiler 0.7.0 — Oct's single integer width makes every int op u8; needed a JVM
+      long-model mask fix in iir-to-jvm-class-file 0.14.0). **E2 integration complete.**
 - **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and
   literals on every backend. Unlocks ALGOL reals and BASIC floats. *(Audit which backends
   already emit f64 ops; extend the rest.)*
@@ -230,7 +231,14 @@ backend immediately) come before the enabler-dependent items.
   `lang_matrix.rs` program runs on all 7 backends**. Also fixed Oct non-void function returns
   to materialise as `i64` (the `side() -> u8` helper exposed `define i8 @side()` mismatching its
   i64 body on LLVM).
-- ☐ **O2** — proper `~` 8-bit mask + u8 wrap (needs **E2**).
+- ✅ **O2** — bitwise `~` 8-bit mask + u8 wrap. Oct's only integer type is `u8` (the 8008
+  byte) and the spec wraps mod-256, so `oct-iir-compiler` 0.7.0 emits the `u8` type_hint on
+  arithmetic/bitwise/`~` (comparisons stay i64); every backend masks the result. Verified by
+  RUNNING `out(1, ~0)`→`255` and `out(1, 200 + 100)`→`44` on native/LLVM/WASM/JVM/CLR/VM/JIT.
+  Surfaced + fixed a JVM dual-model bug: Oct's *printing* programs keep the i64/long model, so
+  a narrow op had `long` operands — `iir-to-jvm-class-file` 0.14.0 now masks those with
+  `i2l; land` (the int `iand` was unverifiable over longs → empty output). (Logical `!` still
+  deferred — a separate item; only `~` is in O2.)
 - ☐ **O3** — `static` globals (currently silently dropped) — now verifiable via `out`.
 - ☐ **O4** — ⚠ Intel-8008 intrinsics (`in`/`out`/`adc`/`sbb`/`rlc`/`rrc`/`ral`/`rar`/`carry`/`parity`).
   These are hardware-specific; on general backends they need a host/IIR-builtin model or a

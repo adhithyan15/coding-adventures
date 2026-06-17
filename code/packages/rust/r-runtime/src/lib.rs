@@ -410,4 +410,266 @@ mod tests {
     fn non_conformable_product_is_an_error() {
         assert!(eval_r("matrix(1:6, 2, 3) %*% matrix(1:6, 2, 3)\n").is_err());
     }
+
+    // --- R-12: matrix linear algebra ------------------------------------
+
+    fn approx(src: &str, expected: &[f64]) {
+        let got = nums(src);
+        assert_eq!(got.len(), expected.len(), "length for {src:?}: {got:?}");
+        for (g, e) in got.iter().zip(expected) {
+            assert!((g - e).abs() < 1e-9, "for {src:?}: {got:?} != {expected:?}");
+        }
+    }
+
+    #[test]
+    fn diag_extracts_builds_and_makes_identity() {
+        // Extract: the diagonal of a matrix.
+        assert_eq!(nums("diag(matrix(1:9, 3, 3))\n"), vec![1.0, 5.0, 9.0]);
+        // Build: a diagonal matrix from a vector (column-major).
+        assert_eq!(
+            nums("c(diag(c(1, 2, 3)))\n"),
+            vec![1.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 3.0]
+        );
+        // Identity: a single number → its identity matrix.
+        assert_eq!(nums("c(diag(2))\n"), vec![1.0, 0.0, 0.0, 1.0]);
+        assert_eq!(nums("dim(diag(3))\n"), vec![3.0, 3.0]);
+    }
+
+    #[test]
+    fn margin_sums_and_means() {
+        assert_eq!(nums("rowSums(matrix(1:6, 2, 3))\n"), vec![9.0, 12.0]);
+        assert_eq!(nums("colSums(matrix(1:6, 2, 3))\n"), vec![3.0, 7.0, 11.0]);
+        assert_eq!(nums("rowMeans(matrix(1:6, 2, 3))\n"), vec![3.0, 4.0]);
+        assert_eq!(nums("colMeans(matrix(1:6, 2, 3))\n"), vec![1.5, 3.5, 5.5]);
+    }
+
+    #[test]
+    fn margin_reductions_handle_na() {
+        // NA in a row propagates by default, is dropped with na.rm = TRUE.
+        assert_eq!(show("rowSums(matrix(c(1, NA, 3, 4), 2, 2))\n"), "[1]  4 NA");
+        assert_eq!(
+            nums("rowSums(matrix(c(1, NA, 3, 4), 2, 2), na.rm = TRUE)\n"),
+            vec![4.0, 4.0]
+        );
+    }
+
+    #[test]
+    fn rowsums_rejects_a_non_matrix() {
+        assert!(eval_r("rowSums(c(1, 2, 3))\n").is_err());
+    }
+
+    #[test]
+    fn cbind_and_rbind_vectors() {
+        // cbind: each vector a column (column-major flatten recovers them).
+        assert_eq!(
+            nums("c(cbind(c(1, 2), c(3, 4)))\n"),
+            vec![1.0, 2.0, 3.0, 4.0]
+        );
+        assert_eq!(nums("dim(cbind(c(1, 2, 3), c(4, 5, 6)))\n"), vec![3.0, 2.0]);
+        // rbind: each vector a row.
+        assert_eq!(
+            nums("c(rbind(c(1, 2), c(3, 4)))\n"),
+            vec![1.0, 3.0, 2.0, 4.0]
+        );
+        // A length-1 column is recycled to the common height.
+        assert_eq!(nums("c(cbind(1, c(2, 3)))\n"), vec![1.0, 1.0, 2.0, 3.0]);
+    }
+
+    #[test]
+    fn cbind_binds_a_matrix_and_a_vector() {
+        assert_eq!(
+            nums("dim(cbind(matrix(1:4, 2, 2), c(5, 6)))\n"),
+            vec![2.0, 3.0]
+        );
+        // A matrix whose row count doesn't match is an error.
+        assert!(eval_r("cbind(matrix(1:4, 2, 2), c(5, 6, 7))\n").is_err());
+    }
+
+    #[test]
+    fn determinant_of_a_matrix() {
+        // [[1,3],[2,4]] (column-major c(1,2,3,4)) has det 1*4 - 3*2 = -2.
+        assert_eq!(nums("det(matrix(c(1, 2, 3, 4), 2, 2))\n"), vec![-2.0]);
+        // A singular matrix has determinant 0.
+        assert_eq!(nums("det(matrix(c(1, 2, 2, 4), 2, 2))\n"), vec![0.0]);
+        // NA anywhere → NA.
+        assert_eq!(show("det(matrix(c(1, NA, 3, 4), 2, 2))\n"), "[1] NA");
+    }
+
+    #[test]
+    fn solve_inverts_and_solves() {
+        // The inverse of 2*I is 0.5*I.
+        approx(
+            "c(solve(matrix(c(2, 0, 0, 2), 2, 2)))\n",
+            &[0.5, 0.0, 0.0, 0.5],
+        );
+        // solve(a, b): 2I x = (4, 6) → x = (2, 3).
+        approx("solve(matrix(c(2, 0, 0, 2), 2, 2), c(4, 6))\n", &[2.0, 3.0]);
+        // A non-trivial round-trip: solve(a) %*% a == I.
+        approx(
+            "c(solve(matrix(c(4, 2, 7, 6), 2, 2)) %*% matrix(c(4, 2, 7, 6), 2, 2))\n",
+            &[1.0, 0.0, 0.0, 1.0],
+        );
+    }
+
+    #[test]
+    fn solve_of_a_singular_matrix_is_an_error() {
+        assert!(eval_r("solve(matrix(c(1, 2, 2, 4), 2, 2))\n").is_err());
+    }
+
+    #[test]
+    fn solve_rejects_an_over_large_or_over_wide_problem() {
+        // The order is capped (O(n^3) DoS guard)…
+        assert!(eval_r("solve(matrix(0, 1001, 1001))\n").is_err());
+        // …and so is the right-hand-side width (O(n^2 * m) guard): a 2x2 system
+        // with a 2 x 2002 RHS exceeds the column cap.
+        assert!(eval_r("solve(diag(2), matrix(1, 2, 2002))\n").is_err());
+    }
+
+    // --- R-13: 2-D matrix indexing -------------------------------------
+
+    #[test]
+    fn matrix_element_row_and_column_indexing() {
+        // m is column-major [[1,3,5],[2,4,6]].
+        assert_eq!(nums("matrix(1:6, 2, 3)[1, 2]\n"), vec![3.0]); // (1,2)
+        assert_eq!(nums("matrix(1:6, 2, 3)[1, ]\n"), vec![1.0, 3.0, 5.0]); // whole row 1
+        assert_eq!(nums("matrix(1:6, 2, 3)[, 2]\n"), vec![3.0, 4.0]); // whole column 2
+                                                                      // m[3] indexes the flat column-major vector.
+        assert_eq!(nums("matrix(1:6, 2, 3)[3]\n"), vec![3.0]);
+    }
+
+    #[test]
+    fn matrix_submatrix_keeps_its_shape() {
+        // A multi-row, multi-column subset stays a matrix (no drop).
+        assert_eq!(nums("dim(matrix(1:6, 2, 3)[1:2, 2:3])\n"), vec![2.0, 2.0]);
+        assert_eq!(
+            nums("c(matrix(1:6, 2, 3)[1:2, 2:3])\n"),
+            vec![3.0, 4.0, 5.0, 6.0]
+        );
+    }
+
+    #[test]
+    fn matrix_negative_and_logical_subscripts() {
+        // Negative excludes; logical masks (recycled).
+        assert_eq!(nums("matrix(1:6, 2, 3)[-1, ]\n"), vec![2.0, 4.0, 6.0]);
+        assert_eq!(
+            nums("c(matrix(1:6, 2, 3)[, -1])\n"),
+            vec![3.0, 4.0, 5.0, 6.0]
+        );
+        assert_eq!(
+            nums("matrix(1:6, 2, 3)[c(TRUE, FALSE), ]\n"),
+            vec![1.0, 3.0, 5.0]
+        );
+    }
+
+    #[test]
+    fn vector_negative_and_logical_indexing_now_work() {
+        // R-13 extended 1-D indexing too: negatives exclude, logicals mask
+        // (the logical case previously coerced to numeric and was wrong).
+        assert_eq!(nums("c(10, 20, 30)[-2]\n"), vec![10.0, 30.0]);
+        assert_eq!(
+            nums("c(10, 20, 30)[c(TRUE, FALSE, TRUE)]\n"),
+            vec![10.0, 30.0]
+        );
+        // Mixing positive and negative is an error.
+        assert!(eval_r("c(10, 20, 30)[c(-1, 2)]\n").is_err());
+    }
+
+    #[test]
+    fn matrix_out_of_bounds_subscript_is_an_error() {
+        assert!(eval_r("matrix(1:6, 2, 3)[5, 1]\n").is_err());
+        assert!(eval_r("matrix(1:6, 2, 3)[1, 9]\n").is_err());
+    }
+
+    #[test]
+    fn empty_subscript_on_a_data_frame_selects_the_whole_dimension() {
+        // The grammar change (empty subscripts) benefits data frames too.
+        assert_eq!(
+            nums("data.frame(x = 1:2, y = c(9, 8))[, 1]\n"),
+            vec![1.0, 2.0]
+        );
+    }
+
+    // --- R-14: sub-assignment ------------------------------------------
+
+    #[test]
+    fn vector_element_and_multi_assignment() {
+        assert_eq!(nums("v <- c(1, 2, 3)\nv[2] <- 9\nv\n"), vec![1.0, 9.0, 3.0]);
+        assert_eq!(
+            nums("v <- c(1, 2, 3)\nv[c(1, 3)] <- 0\nv\n"),
+            vec![0.0, 2.0, 0.0]
+        );
+        // The RHS recycles to fill the selected cells.
+        assert_eq!(
+            nums("v <- c(1, 2, 3, 4)\nv[c(1, 2, 3, 4)] <- c(10, 20)\nv\n"),
+            vec![10.0, 20.0, 10.0, 20.0]
+        );
+    }
+
+    #[test]
+    fn vector_negative_and_logical_assignment() {
+        assert_eq!(
+            nums("v <- c(1, 2, 3)\nv[-2] <- 7\nv\n"),
+            vec![7.0, 2.0, 7.0]
+        );
+        assert_eq!(
+            nums("v <- c(1, 2, 3)\nv[c(TRUE, FALSE, TRUE)] <- 5\nv\n"),
+            vec![5.0, 2.0, 5.0]
+        );
+    }
+
+    #[test]
+    fn matrix_element_row_and_column_assignment() {
+        // Element: m[1,2] <- 9 (column-major (1,2) is flat index 2).
+        assert_eq!(
+            nums("m <- matrix(1:6, 2, 3)\nm[1, 2] <- 9\nc(m)\n"),
+            vec![1.0, 2.0, 9.0, 4.0, 5.0, 6.0]
+        );
+        // Whole row: recycles the scalar across the row.
+        assert_eq!(
+            nums("m <- matrix(1:6, 2, 3)\nm[1, ] <- 0\nc(m)\n"),
+            vec![0.0, 2.0, 0.0, 4.0, 0.0, 6.0]
+        );
+        // Whole column: a length-2 RHS fills column 2.
+        assert_eq!(
+            nums("m <- matrix(1:6, 2, 3)\nm[, 2] <- c(7, 8)\nc(m)\n"),
+            vec![1.0, 2.0, 7.0, 8.0, 5.0, 6.0]
+        );
+        // The matrix keeps its shape after assignment.
+        assert_eq!(
+            nums("m <- matrix(1:6, 2, 3)\nm[1, 1] <- 99\ndim(m)\n"),
+            vec![2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn matrix_submatrix_assignment_recycles() {
+        // m[,] <- 1 fills every cell.
+        assert_eq!(
+            nums("m <- matrix(1:4, 2, 2)\nm[, ] <- 1\nc(m)\n"),
+            vec![1.0, 1.0, 1.0, 1.0]
+        );
+        // A 2x2 block written with 4 values, column-major fill order.
+        assert_eq!(
+            nums("m <- matrix(0, 2, 2)\nm[1:2, 1:2] <- c(1, 2, 3, 4)\nc(m)\n"),
+            vec![1.0, 2.0, 3.0, 4.0]
+        );
+    }
+
+    #[test]
+    fn out_of_range_or_undefined_assignment_is_an_error() {
+        assert!(eval_r("m <- matrix(1:6, 2, 3)\nm[5, 1] <- 9\n").is_err());
+        // Assigning into an undefined variable's index is an error.
+        assert!(eval_r("x[1] <- 9\n").is_err());
+        // An empty replacement is an error.
+        assert!(eval_r("v <- c(1, 2, 3)\nv[1] <- c()\n").is_err());
+    }
+
+    #[test]
+    fn assignment_returns_the_value_invisibly_and_does_not_alias() {
+        // The base is rebound to a fresh value; a prior copy is unchanged.
+        assert_eq!(
+            nums("a <- c(1, 2, 3)\nb <- a\na[1] <- 99\nb\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+    }
 }

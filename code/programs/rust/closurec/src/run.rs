@@ -151,9 +151,9 @@ impl std::error::Error for CompilerError {}
 /// | Level             | Transform                                         |
 /// |-------------------|---------------------------------------------------|
 /// | `WhitespaceOnly`  | strip comments + collapse whitespace              |
-/// | `Simple`          | bridge-parse → whitespace_only (CLOC12.137 v1;    |
-/// |                   | typed passes land in follow-up PRs)               |
-/// | `Advanced`        | identity (future: typed passes)                   |
+/// | `Simple`          | bridge → typed optimization pipeline → emit       |
+/// | `Advanced`        | same typed pipeline as `Simple` (≥ SIMPLE;        |
+/// |                   | advanced-only passes land here as implemented)    |
 /// | `Bundle`          | identity                                          |
 /// | `TranspileOnly`   | identity                                          |
 ///
@@ -191,7 +191,8 @@ pub fn transform_source(
 /// |--------------------|--------------------|------------------|------------------------------------------|
 /// | WhitespaceOnly     | `compilation_level`| `whitespace_only`| `{input_byte_len, output_byte_len}`      |
 /// | Simple             | `compilation_level`| `simple_v2`      | `{level, bridge_status, passes, input_byte_len, output_byte_len}` |
-/// | Advanced / other   | `compilation_level`| `identity`       | `{level: "ADVANCED" \| "BUNDLE" \| ...}` |
+/// | Advanced           | `compilation_level`| `advanced_v1`    | same shape as `simple_v2` (shares the pipeline)  |
+/// | Bundle / Transpile | `compilation_level`| `identity`       | `{level: "BUNDLE" \| "TRANSPILE_ONLY"}` |
 /// | Defines            | `defines`          | `applied`        | `{input_byte_len, output_byte_len, defines_count}` |
 ///
 /// **`bridge_status`** (Simple only): `"ok"` if the full
@@ -356,9 +357,10 @@ pub fn transform_source_with_cv(
     // implement Copy, but we can reborrow at each call site.
     let mut cv_pair = cv;
 
-    // bridge_status is set only for CompilationLevel::Simple and
-    // threaded into the CV contribution below. Other levels leave
-    // it None, where the CV block substitutes "n/a".
+    // bridge_status is set for the typed-pipeline levels (Simple and
+    // Advanced, which share that pipeline) and threaded into the CV
+    // contribution below. Other levels leave it None, where the CV block
+    // substitutes "n/a".
     let mut simple_bridge_status: Option<String> = None;
 
     // Step 1 — compilation-level transform.
@@ -402,7 +404,14 @@ pub fn transform_source_with_cv(
         // correlation-vector trace can show whether the run was a true
         // optimized emit (`"ok"`) or a degrade (`"parse_error:…"`,
         // `"unsupported_syntax:…"`, `"pass_error:…"`, `"emit_error:…"`).
-        CompilationLevel::Simple => {
+        // ADVANCED currently runs the *same* typed optimization pipeline
+        // as SIMPLE. It is specified to be at least as aggressive as
+        // SIMPLE, so reusing the SIMPLE pipeline is a correct lower bound
+        // (and removes the former literal no-op, where ADVANCED returned
+        // the source verbatim). Advanced-only passes — aggressive
+        // property/global renaming, cross-module tree-shaking — layer on
+        // here as they are implemented.
+        CompilationLevel::Simple | CompilationLevel::Advanced => {
             // Attempt the typed optimization path. `Some(code)` means
             // the full parse→bridge→passes→emit chain succeeded;
             // `None` means we should degrade to whitespace_only.
@@ -442,10 +451,10 @@ pub fn transform_source_with_cv(
                 }
             }
         }
-        // Advanced / Bundle / TranspileOnly: identity until typed passes land.
-        CompilationLevel::Advanced
-        | CompilationLevel::Bundle
-        | CompilationLevel::TranspileOnly => source.to_string(),
+        // Bundle / TranspileOnly: identity for now (module bundling and
+        // language down-levelling are orthogonal to the optimization
+        // pipeline and land separately).
+        CompilationLevel::Bundle | CompilationLevel::TranspileOnly => source.to_string(),
     };
 
     if let Some((log, cv_id, _token_ids)) = cv_pair.as_mut() {
@@ -465,50 +474,51 @@ pub fn transform_source_with_cv(
                         ),
                     ],
                 ),
-                CompilationLevel::Simple => (
-                    "simple_v2",
-                    vec![
-                        ("level", serde_json::Value::String("SIMPLE".into())),
-                        (
-                            "bridge_status",
-                            serde_json::Value::String(
-                                simple_bridge_status
-                                    .as_deref()
-                                    .unwrap_or("n/a")
-                                    .into(),
+                // SIMPLE and ADVANCED share the typed optimization
+                // pipeline, so they share this contribution shape. The
+                // tag and `level` distinguish them; ADVANCED runs the same
+                // passes today (it is ≥ SIMPLE) and gains advanced-only
+                // passes here as they land.
+                CompilationLevel::Simple | CompilationLevel::Advanced => {
+                    let (tag, level) = match config.compilation.level {
+                        CompilationLevel::Advanced => ("advanced_v1", "ADVANCED"),
+                        _ => ("simple_v2", "SIMPLE"),
+                    };
+                    (
+                        tag,
+                        vec![
+                            ("level", serde_json::Value::String(level.into())),
+                            (
+                                "bridge_status",
+                                serde_json::Value::String(
+                                    simple_bridge_status.as_deref().unwrap_or("n/a").into(),
+                                ),
                             ),
-                        ),
-                        // The optimization passes that ran (in order).
-                        // A degrade (`bridge_status != "ok"`) still
-                        // lists them — they were the *intended* pipeline
-                        // even when the run fell back to whitespace_only.
-                        (
-                            "passes",
-                            serde_json::Value::Array(
-                                SIMPLE_PASS_NAMES
-                                    .iter()
-                                    .map(|p| serde_json::Value::String((*p).into()))
-                                    .collect(),
+                            // The optimization passes that ran (in order).
+                            // A degrade (`bridge_status != "ok"`) still
+                            // lists them — they were the *intended*
+                            // pipeline even when the run fell back to
+                            // whitespace_only.
+                            (
+                                "passes",
+                                serde_json::Value::Array(
+                                    SIMPLE_PASS_NAMES
+                                        .iter()
+                                        .map(|p| serde_json::Value::String((*p).into()))
+                                        .collect(),
+                                ),
                             ),
-                        ),
-                        (
-                            "input_byte_len",
-                            serde_json::Value::Number(
-                                (source.len() as u64).into(),
+                            (
+                                "input_byte_len",
+                                serde_json::Value::Number((source.len() as u64).into()),
                             ),
-                        ),
-                        (
-                            "output_byte_len",
-                            serde_json::Value::Number(
-                                (after_level.len() as u64).into(),
+                            (
+                                "output_byte_len",
+                                serde_json::Value::Number((after_level.len() as u64).into()),
                             ),
-                        ),
-                    ],
-                ),
-                CompilationLevel::Advanced => (
-                    "identity",
-                    vec![("level", serde_json::Value::String("ADVANCED".into()))],
-                ),
+                        ],
+                    )
+                }
                 CompilationLevel::Bundle => (
                     "identity",
                     vec![("level", serde_json::Value::String("BUNDLE".into()))],
@@ -5881,6 +5891,52 @@ mod tests {
         let out = transform_source("function f(longName) { return longName + 1; } f(5);", &cfg)
             .expect("ok");
         assert_eq!(out, "function f(longName){return longName+1};f(5);");
+    }
+
+    #[test]
+    fn advanced_optimizes_like_simple() {
+        // CLOC12.161: ADVANCED was a literal no-op (returned the source
+        // verbatim). It now runs the typed pipeline; this input is folded
+        // and renamed instead of passed through.
+        let src = "function f(longName) { return longName + 1; } f(5);";
+        let advanced = transform_source(
+            src,
+            &CompilerConfig {
+                compilation: crate::config::CompilationConfig {
+                    level: crate::config::CompilationLevel::Advanced,
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+        )
+        .expect("ok");
+        assert_eq!(advanced, "function f(a){return a + 1};f(5);");
+        assert_ne!(advanced, src, "ADVANCED must no longer be an identity no-op");
+    }
+
+    #[test]
+    fn advanced_matches_simple_output() {
+        // ADVANCED reuses the SIMPLE pipeline today, so the two levels
+        // produce identical output. (When advanced-only passes land, this
+        // test documents the point at which they diverge.)
+        let src = "var dead = 1 + 2; function g(value) { return value * 2; } use(g(4));";
+        let mk = |level| {
+            transform_source(
+                src,
+                &CompilerConfig {
+                    compilation: crate::config::CompilationConfig {
+                        level,
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .expect("ok")
+        };
+        assert_eq!(
+            mk(crate::config::CompilationLevel::Advanced),
+            mk(crate::config::CompilationLevel::Simple),
+        );
     }
 
     #[test]

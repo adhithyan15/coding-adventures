@@ -178,7 +178,11 @@ sequence of one-PR items run through the autonomous loop (§8).
 ### Item breakdown for the first three waves (illustrative)
 
 - **Maxima:** M-1 spec + grammar diff from Macsyma; M-2 lexer/parser; M-3 runtime
-  alias over `macsyma-runtime`; M-4 GPL-era builtins.
+  alias over `macsyma-runtime`; M-4 GPL-era builtins. *(Delivered: see
+  [MA03](MA03-maxima-language.md). The grammar diff is empty for the supported
+  subset — Maxima parses identically to Macsyma — so M-1/M-2 collapsed and Maxima
+  shipped as just the runtime alias + REPL, the symbolic-CAS analogue of
+  Octave-over-MATLAB. No `maxima.tokens`/`maxima.grammar`.)*
 - **MATLAB/Octave:** ML-1 spec + `array-runtime` (Wave 0); ML-2 `matlab.tokens/grammar`
   + lexer; ML-3 parser; ML-4 `matlab-runtime` (matrix literals, `\`/`'`/`end`,
   ranges, broadcasting → `matrix-ir`); ML-5 `matlab-repl` + binary; ML-6 Octave
@@ -186,6 +190,10 @@ sequence of one-PR items run through the autonomous loop (§8).
 - **Wolfram:** W-1 spec + `wolfram.tokens/grammar` (M-expressions); W-2 lexer;
   W-3 parser; W-4 `wolfram-runtime` (rewrite rules + `/.`/`:>` over `symbolic-vm`);
   W-5 repl + binary; W-6 the `cas-*` function surface under Wolfram names.
+  *(W-1 delivered: see [MA04](MA04-wolfram-language.md). Unlike Maxima, the
+  syntax genuinely differs from Macsyma — `f[x]`/`{a,b}`/`/.`/`->`/`x_` — so this
+  is a real new frontend over the shared `symbolic-vm`/`cas-*` engine, not a
+  reuse of the Macsyma grammar.)*
 
 ## §8 Plugging into the autonomous loop
 

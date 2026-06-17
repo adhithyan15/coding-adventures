@@ -221,6 +221,7 @@ fn is_constant_input(tobs: &TensorObservation, invocation_count: u64, threshold:
 fn encode_constant_bytes(tobs: &TensorObservation, dtype: DType) -> Vec<u8> {
     match dtype {
         DType::F32 => (tobs.observed_min as f32).to_le_bytes().to_vec(),
+        DType::F64 => tobs.observed_min.to_le_bytes().to_vec(),
         DType::U8 => {
             let v = tobs.observed_min.clamp(0.0, 255.0) as u8;
             vec![v]
@@ -248,7 +249,7 @@ fn narrowable_range(tobs: &TensorObservation, dtype: DType) -> Option<RangeClass
         return None;
     }
     match dtype {
-        DType::F32 => {
+        DType::F32 | DType::F64 => {
             // Always emit FloatBits — backends decide whether the
             // bounds are tight enough to do anything with.  Skip the
             // sentinel "no observation" range.
@@ -270,7 +271,11 @@ fn narrowable_range(tobs: &TensorObservation, dtype: DType) -> Option<RangeClass
 /// trigger narrowing.
 #[allow(dead_code)]
 fn range_class_for_observation(observation: &ProfileObservation, dtype: DType) -> RangeClass {
-    for tobs in observation.tensor_observations.iter().filter(|t| t.is_input) {
+    for tobs in observation
+        .tensor_observations
+        .iter()
+        .filter(|t| t.is_input)
+    {
         if let Some(rc) = narrowable_range(tobs, dtype) {
             return rc;
         }
@@ -356,10 +361,9 @@ mod tests {
         let o = obs(2000, vec![t_in(0, -1.0, 1.0, 2000)]);
         let key = p.should_specialise(&o, 0x07, DType::F32, 1).unwrap();
         let (lo, hi) = match key.range_class {
-            RangeClass::FloatBits {
-                min_bits,
-                max_bits,
-            } => (f64::from_bits(min_bits), f64::from_bits(max_bits)),
+            RangeClass::FloatBits { min_bits, max_bits } => {
+                (f64::from_bits(min_bits), f64::from_bits(max_bits))
+            }
             other => panic!("expected FloatBits, got {:?}", other),
         };
         assert_eq!(lo, -1.0);
@@ -446,10 +450,7 @@ mod tests {
     #[test]
     fn unbounded_range_does_not_fire_narrowing() {
         let p = DefaultPolicy::new();
-        let o = obs(
-            2000,
-            vec![t_in(0, f64::NEG_INFINITY, f64::INFINITY, 2000)],
-        );
+        let o = obs(2000, vec![t_in(0, f64::NEG_INFINITY, f64::INFINITY, 2000)]);
         assert!(p.should_specialise(&o, 0x07, DType::F32, 1).is_none());
     }
 

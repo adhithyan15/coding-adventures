@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.20.0] - 2026-06-17 — context-precedence edges as grounded facts (ADJ73 PR-B-2)
+
+### Added
+
+- **Grounded `outranks_context(higher, lower)` facts now ACT as context-precedence edges.** A
+  ground fact whose functor is `outranks_context` and whose two args are atoms participates in
+  the context order exactly like an explicit `add_context_outranks` edge — but, being an ordinary
+  [`Fact`], it carries `source`/`locator`/`trust` [`Provenance`], is queryable, and is one CAS
+  edit from correctable. This is the mechanism behind ADJ73's "context must be grounded": the
+  *reason* federal outranks state (the Supremacy Clause) rides on the edge itself rather than
+  being asserted bare in host code. A `relate outranks_context(federal, state) source "…" trust
+  authoritative` clause in adj-lang already lowers to such a fact — no surface change needed.
+- **`KnowledgeBase::context_adjacency()`** (private) — the EFFECTIVE order as a directed
+  adjacency map `higher → [lowers]`, unioning explicit `add_context_outranks` edges and
+  grounded-fact edges. `context_outranks` is a cycle-safe DFS over it (O(V+E)); `context_order_has_cycle`
+  is a single Kahn topological-sort pass (O(V+E)) — both detect a cycle formed *across* the two
+  sources (explicit `a > b` + grounded `outranks_context(b, a)`). The per-node adjacency lookup
+  replaces the prior full-edge-list rescan so the order scales to large rule corpora.
+
+### Unchanged (back-compat)
+
+- A KB with no `outranks_context` facts and no `add_context_outranks` calls is byte-identical to
+  0.19 (every existing precedence + integration test passes unchanged). A non-atom
+  `outranks_context(_, X)` fact is NOT an edge — it stays an ordinary queryable fact.
+
+### Scope
+
+PR-B-2. The grounded `context-precedence` **rulebook** (a `.adj` library of `relate
+outranks_context(…)` edges, each byte-quoting its charter — the Supremacy Clause, circuit
+precedence, guideline editions) + a worked legal example end-to-end through the CLI `governing`
+section land in PR-B-3 (now unblocked by this engine change). The recursive conflict-resolution
+meta-rules (recency / appeal-status / lex specialis as themselves-grounded rules) follow.
+
+## [0.19.0] - 2026-06-16 — grounded context precedence (lex superior) (ADJ73 PR-B engine core)
+
+### Added
+
+- **`Rule::context: Option<String>`** (builder `with_context`) — the context a rule is grounded
+  in (jurisdiction / guideline edition / specialty). `None` = context-free (today's behavior).
+- **`KnowledgeBase::add_context_outranks(higher, lower)`** — assert a grounded precedence edge
+  (federal > state, ninth_circuit > district_court, idsa_2024 > idsa_2004, specialist > general).
+- **`KnowledgeBase::context_outranks(a, b)`** — transitive reach over the edges (cycle-safe DFS);
+  **`context_order_has_cycle()`** — detect a cyclic order (the surface loader should reject).
+- **`govern::GovernedAnswer::context`** + a `defeats(a, b)` resolution: context precedence is
+  PRIMARY (lex superior — a higher-context answer defeats a lower-context one regardless of
+  tier); the [`Standing`] tier breaks ties the context order leaves open. An answer governs iff
+  no conflicting answer defeats it; multiple undefeated → `ConflictPeer`; a cyclic order crowns
+  nothing (safe degradation, never a wrong pick).
+
+### Unchanged (back-compat)
+
+- With NO `context_order` declared, `defeats` reduces to "higher tier wins" — resolution is
+  byte-identical to 0.18 (verified: the existing precedence + integration tests pass unchanged).
+  The two `adjudication-connector` `Rule{}` sites set `context: None`.
+
+### Scope
+
+PR-B engine core. The grounded `context-precedence` **rulebook** (each `outranks_context` edge
+citing its charter — the Supremacy Clause, etc.) + adj-lang **surface** (`context:` on a rule,
+`context_order { … }`) are the next slices (ADJ73 §7). Cycle *rejection* at load is the loader's
+job; the resolver itself stays safe regardless.
+
 ## [0.18.0] - 2026-06-16 — precedence priority is a named ENUM, not an integer (ADJ73 PR-A)
 
 ### Changed (breaking — nothing released; per user decision 1)

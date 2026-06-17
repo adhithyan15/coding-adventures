@@ -68,6 +68,14 @@ fn uses_shell(m: &Module) -> bool {
     module_uses_builtin(m, "backtick")
 }
 
+/// True if the module calls the `range` builtin (a Ruby `a..b` / `a...b`
+/// literal lowers to `BuiltinCall("range", [start, stop, exclusive])`).  Range
+/// carries no SIR `Feature`, so we detect it by builtin name; a positive result
+/// gates the `@coding-adventures/sir-runtime-range` import.
+fn uses_range(m: &Module) -> bool {
+    module_uses_builtin(m, "range")
+}
+
 /// Walk every function body for a `BuiltinCall` named `name` — gates
 /// per-concern imports for builtins that carry no `Feature` flag.  Exhaustive
 /// over `Stmt`/`Expr` so a new node can't silently hide a use.
@@ -214,6 +222,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only backtick-using modules import the shell runtime.
     if uses_shell(m) {
         out.push_str(crate::runtime::RUNTIME_SHELL);
+    }
+    // Only range-using modules import the range runtime.
+    if uses_range(m) {
+        out.push_str(crate::runtime::RUNTIME_RANGE);
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
@@ -887,8 +899,40 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
         if i > 0 {
             out.push_str(", ");
         }
-        emit_expr(out, a, indent);
+        emit_arg(out, a, indent);
     }
+}
+
+/// Emit one argument / sequence element, expanding the splat marker into
+/// JavaScript's native spread syntax.
+///
+/// Ruby `*x` / `**x` reach the backend as `BuiltinCall("splat", [x])` /
+/// `BuiltinCall("double_splat", [x])` — a trailing call argument or an array
+/// element.
+///
+/// | SIR marker (Ruby) | TS emitted | meaning |
+/// |---|---|---|
+/// | `splat` (`f(*a)`, `[1, *a, 3]`) | `...a` | spread an iterable's items |
+/// | `double_splat` (`f(**h)`) | *(deferred)* | no faithful JS form — see below |
+///
+/// **`splat`** maps cleanly to JS `...` (array/argument spread).
+///
+/// **`double_splat`** has no faithful JS equivalent: JavaScript has no
+/// keyword-argument call form, and an SIR map is a `Map`, which does not spread
+/// into an object literal or a call.  Per the v0 cut-line documented in
+/// `code/specs/sir-runtime.md`, TS call-position `**h` is **deferred** — it
+/// falls through to the eager dispatch (`__Sir.callBuiltin("double_splat", …)`),
+/// which raises a clear unknown-builtin error rather than emitting silently
+/// wrong code.  Python, which *does* have `**`, lowers it natively.
+fn emit_arg(out: &mut String, a: &Expr, indent: usize) {
+    if let Expr::BuiltinCall { name, args, .. } = a {
+        if name == "splat" && args.len() == 1 {
+            out.push_str("...");
+            emit_expr(out, &args[0], indent);
+            return;
+        }
+    }
+    emit_expr(out, a, indent);
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
@@ -964,6 +1008,16 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push(')');
         return;
     }
+    // `range` (a Ruby `a..b` / `a...b` literal) → construct a first-class SIR
+    // `Range` via the range runtime.  Args are `[start, stop, exclusive]`
+    // (start/stop may be `NilLit` for the begin/endless forms).  Gated by
+    // `uses_range`.
+    if name == "range" {
+        out.push_str("__SirRange.range(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
     // Ruby `&&`/`and` and `||`/`or` lower to `BuiltinCall("and"/"or", [lhs,
     // rhs])`.  They must **short-circuit** and use SIR truthiness, so they
     // emit the same truthy-guarded arrow IIFE as `Expr::LogicalAnd`/`LogicalOr`
@@ -996,6 +1050,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str("(-(");
         emit_expr(out, &args[0], indent);
         out.push_str("))");
+        return;
+    }
+    // `lambda` / `->{…}` lower to `BuiltinCall("lambda", [MakeClosure])`.  The
+    // lambda *is* its closure value, so we emit the inner `MakeClosure`
+    // directly (which renders `new __Sir.Closure(...)`) rather than routing
+    // through the eager `callBuiltin` dispatch — there is no separate
+    // "lambda" runtime helper, the closure already is the result.
+    if name == "lambda" && args.len() == 1 {
+        emit_expr(out, &args[0], indent);
         return;
     }
     let helper = match name {

@@ -1043,4 +1043,122 @@ mod tests {
         // None of these route through the eager dispatch table.
         assert!(!a.source.contains("_sir_call_builtin(\"neg\""), "got:\n{}", a.source);
     }
+
+    #[test]
+    fn lambda_builtin_lowers_to_inner_closure_py() {
+        // Ruby `lambda { … }` / `->{…}` reach the backend as
+        // `BuiltinCall("lambda", [MakeClosure])`.  The lambda *is* its closure,
+        // so it must emit the inner `MakeClosure` (→ `_sir_make_closure`)
+        // directly, never route through the eager dispatch table.
+        let mc = Expr::MakeClosure { fn_name: "main".into(), captures: vec![], span: s() };
+        let lam = bc("lambda", vec![mc]);
+        let a = compile(&module_with_main_body(vec![], lam, &[Feature::Closures]))
+            .expect("compile");
+        assert!(a.source.contains("_sir_make_closure("), "got:\n{}", a.source);
+        assert!(!a.source.contains("_sir_call_builtin(\"lambda\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn range_builtin_lowers_to_runtime_and_imports_py() {
+        // Ruby `a..b` / `a...b` reach the backend as
+        // `BuiltinCall("range", [start, stop, exclusive])`.  It must lower to the
+        // `_sir_range(...)` constructor, gate in the range-runtime import, and
+        // never route through the eager dispatch table.
+        let rng = bc(
+            "range",
+            vec![
+                Expr::IntLit { value: 1, span: s() },
+                Expr::IntLit { value: 5, span: s() },
+                Expr::BoolLit { value: false, span: s() },
+            ],
+        );
+        let a = compile(&module_with_main_body(vec![], rng, &[])).expect("compile");
+        assert!(a.source.contains("_sir_range(1, 5, False)"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("from coding_adventures_sir_runtime_range import"),
+            "missing range import; got:\n{}",
+            a.source
+        );
+        assert!(!a.source.contains("_sir_call_builtin(\"range\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn splat_in_seq_literal_emits_native_spread_py() {
+        use semantic_ir::{Scope, Stmt};
+        // Ruby `mid = [9]; [1, *mid, 3]` reaches the backend as a `SeqLit` whose
+        // middle element is `BuiltinCall("splat", [mid])`.  Python splices it
+        // natively as `*mid` inside the list literal — never the dispatch path.
+        let bind = Stmt::LetBinding {
+            name: "mid".into(),
+            sir_type: None,
+            value: Expr::SeqLit { items: vec![Expr::IntLit { value: 9, span: s() }], span: s() },
+            span: s(),
+        };
+        let mid = Expr::VarRef { name: "mid".into(), scope: Scope::Local, span: s() };
+        let seq = Expr::SeqLit {
+            items: vec![
+                Expr::IntLit { value: 1, span: s() },
+                bc("splat", vec![mid]),
+                Expr::IntLit { value: 3, span: s() },
+            ],
+            span: s(),
+        };
+        let a = compile(&module_with_main_body(vec![bind], seq, &[Feature::Sequences]))
+            .expect("compile");
+        assert!(a.source.contains("[1, *mid, 3]"), "got:\n{}", a.source);
+        assert!(!a.source.contains("_sir_call_builtin(\"splat\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn splat_and_double_splat_call_args_emit_native_py() {
+        use semantic_ir::{Scope, Stmt};
+        // Ruby `a = [1]; h = {}; main(*a, **h)` — the call args are
+        // `BuiltinCall("splat", [a])` and `BuiltinCall("double_splat", [h])`.
+        // Python emits both natively: `*a` (positional spread) and `**h`
+        // (keyword spread).  (Targets `main`, which exists, so the module
+        // validates; the spread shape is independent of the callee name.)
+        let binds = vec![
+            Stmt::LetBinding {
+                name: "a".into(),
+                sir_type: None,
+                value: Expr::SeqLit { items: vec![Expr::IntLit { value: 1, span: s() }], span: s() },
+                span: s(),
+            },
+            Stmt::LetBinding {
+                name: "h".into(),
+                sir_type: None,
+                value: Expr::MapLit { entries: vec![], span: s() },
+                span: s(),
+            },
+        ];
+        let a_arg = bc("splat", vec![Expr::VarRef { name: "a".into(), scope: Scope::Local, span: s() }]);
+        let h_arg = bc("double_splat", vec![Expr::VarRef { name: "h".into(), scope: Scope::Local, span: s() }]);
+        let call = Expr::DirectCall {
+            fn_name: "main".into(),
+            args: vec![a_arg, h_arg],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let a = compile(&module_with_main_body(binds, call, &[Feature::Sequences, Feature::Maps]))
+            .expect("compile");
+        assert!(a.source.contains("(*a, **h)"), "got:\n{}", a.source);
+        assert!(!a.source.contains("_sir_call_builtin(\"splat\""), "got:\n{}", a.source);
+        assert!(!a.source.contains("_sir_call_builtin(\"double_splat\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn no_range_import_when_unused_py() {
+        // A module that never builds a range must not gain the range dependency.
+        let a = compile(&module_with_main_body(
+            vec![],
+            Expr::IntLit { value: 7, span: s() },
+            &[],
+        ))
+        .expect("compile");
+        assert!(
+            !a.source.contains("coding_adventures_sir_runtime_range"),
+            "unexpected range import; got:\n{}",
+            a.source
+        );
+    }
 }

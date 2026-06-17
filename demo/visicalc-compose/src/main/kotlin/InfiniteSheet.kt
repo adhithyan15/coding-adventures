@@ -101,13 +101,20 @@ fun InfiniteSheet() {
         rev++
     }
 
+    // Drag-fill: replicate the selected cell into the 10 rows below it. The engine
+    // shifts each copy's relative refs, pins absolute ($) refs, carries the format.
+    fun fillDown() {
+        model.fillDown(10)
+        rev++
+    }
+
     Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
         // ── Formula bar: the selected cell's address + an editable source ──
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(model.infAddress(), DIM, GUTTER_W)
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .height(28.dp)
                     .background(CHROME)
                     .border(1.dp, BORDER)
@@ -123,6 +130,22 @@ fun InfiniteSheet() {
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = { commit() }),
                     modifier = Modifier.fillMaxWidth(),
+                )
+            }
+            Spacer(Modifier.width(8.dp))
+            // Drag-fill: replicate the selected cell into the 10 rows below it.
+            androidx.compose.material.OutlinedButton(
+                onClick = { fillDown() },
+                colors = androidx.compose.material.ButtonDefaults.outlinedButtonColors(
+                    backgroundColor = CHROME,
+                    contentColor = INK,
+                ),
+                border = androidx.compose.foundation.BorderStroke(1.dp, BORDER),
+            ) {
+                androidx.compose.material.Text(
+                    "Fill ↓ 10",
+                    fontSize = 12.sp,
+                    fontFamily = MONO,
                 )
             }
         }

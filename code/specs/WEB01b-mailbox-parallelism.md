@@ -150,14 +150,39 @@ connection" un-gates. Read the mailbox write-back path / connection bookkeeping 
 
 ## Phased PR plan
 
-1. **WEB01b spec** (this file).
-2. **WEB01b-1 — `embeddable-http-server` mailbox serve** + ordering + backpressure;
-   the deterministic ordering and parallelism tests. The riskiest PR.
+1. **WEB01b spec** (this file). ✅ merged.
+2. **WEB01b-1a — `embeddable-http-server` `MailboxHttpServer`** (the approved
+   bounded slice): per-request submit-to-pool + backpressure (503) + the
+   deterministic in-flight-gauge parallelism test. ✅ merged (PR #6047). Scope is
+   one-request-and-close + *sequential* keep-alive; the original `defer_read`
+   read-gating was removed (it *replays* the consumed chunk — see the CI-fix note
+   in that PR and `lessons.md`). Pipelined gating/ordering is deferred to 1b.
 3. **WEB01b-2 — `web-core` `MailboxWebServer`** (`worker_fn = app.handle`) +
    `conduit` `MailboxServer` (opt-in), with the in-flight-gauge parallelism test
-   through the facade.
-4. **WEB01b-3 — comparative benchmark** (`#[ignore]`): single-reactor vs sharded
+   through the facade. ✅ done (this PR). Single cross-platform `bind`,
+   `std::io::Result` (the mailbox stack is `io::Error`-based), `Clone`; mirrors the
+   `ShardedWebServer`/`ShardedServer` surface. web-core 0.2.0→0.3.0, conduit
+   0.2.0→0.3.0.
+4. **WEB01b-1b — per-connection reorder buffer** for the *pipelined* path:
+   reassemble the unordered pool's responses into HTTP/1.1 wire order (the pool is
+   `supports_ordered_responses = false`). ✅ done. Implemented as an opt-in
+   `ordered_responses` flag on `EmbeddableTcpServerOptions` (default off → existing
+   consumers byte-identical; `MailboxHttpServer` is the only opt-in): the submitter
+   records each connection's job-ids in submission order and the router buffers a
+   finished response until every earlier one on that connection has been written.
+   No separate in-flight *gate* was needed — the reorder buffer is already bounded
+   by the pool's queue depth (a connection that pipelines past it is shed with a
+   503). Deterministic tests at both layers:
+   `inprocess_mailbox_orders_responses_by_submission_when_enabled`
+   (embeddable-tcp-server) and `mailbox_http_server_preserves_pipelined_response_order`
+   (embeddable-http-server) — both fail without the buffer.
+5. **WEB01b-3 — comparative benchmark** (`#[ignore]`): single-reactor vs sharded
    (WEB01a) vs mailbox (WEB01b) on a CPU-bound load; document when to pick which.
+   ✅ done — `web_serving_modes_cpu_bound_comparison` in
+   `code/packages/rust/web-core/tests/web_core_test.rs` (web-core 0.3.1). Prints a
+   wall-clock + speedup table for all three modes; asserts both parallel modes
+   beat the single reactor on ≥ 2 cores. Sample (14 cores): single 180ms, sharded
+   5.5×, mailbox 6.6×.
 
 ## Open questions (for sign-off before WEB01b-1)
 

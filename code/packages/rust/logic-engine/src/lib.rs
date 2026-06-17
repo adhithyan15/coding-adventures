@@ -247,6 +247,15 @@ pub struct Rule {
     /// exception ladders. Richer, byte-provenanced precedence (lex-superior / recency /
     /// appeal-status over a grounded `context-precedence` rulebook) is ADJ73 PR-B.
     pub priority: Priority,
+    /// ADJ73 PR-B (grounded context precedence): the CONTEXT this rule is grounded in — a
+    /// jurisdiction (`ninth_circuit`), guideline edition (`idsa_2024`), specialty
+    /// (`specialist`), etc. `None` for a context-free rule (today's behavior). When two
+    /// conflicting rules carry contexts ordered by [`KnowledgeBase::add_context_outranks`]
+    /// (e.g. `ninth_circuit` outranks `district_court`), the rule in the GREATER context
+    /// defeats the other — the McCarthy lex-superior relation — *before* the priority tier is
+    /// consulted (the tier breaks ties the context order leaves open). Only
+    /// [`crate::govern::enumerate_governing`] reads it.
+    pub context: Option<String>,
 }
 
 /// ADJ73 defeasible-precedence TIER (decision 1: named enum, not raw integers). Totally
@@ -280,6 +289,7 @@ impl Rule {
             probability: Probability::Certain,
             provenance: Provenance::unattributed(),
             priority: Priority::Default,
+            context: None,
         }
     }
 
@@ -294,6 +304,7 @@ impl Rule {
             probability: Probability::Value(p),
             provenance: Provenance::unattributed(),
             priority: Priority::Default,
+            context: None,
         }
     }
 
@@ -308,6 +319,14 @@ impl Rule {
     /// among conflicting derivations). Builder-style, mirrors [`Self::with_provenance`].
     pub fn with_priority(mut self, priority: Priority) -> Self {
         self.priority = priority;
+        self
+    }
+
+    /// ADJ73 PR-B: ground the rule in a CONTEXT (a jurisdiction / guideline edition /
+    /// specialty). Combined with [`KnowledgeBase::add_context_outranks`], the rule in the
+    /// greater context defeats a conflicting one in a lesser context (lex superior).
+    pub fn with_context(mut self, context: impl Into<String>) -> Self {
+        self.context = Some(context.into());
         self
     }
 }
@@ -388,6 +407,16 @@ pub struct KnowledgeBase {
     /// highest-priority one. A predicate not listed here is monotonic (every derivation
     /// governs) — this is what makes precedence opt-in and `enumerate_all` unchanged.
     functional_predicates: HashSet<ClauseIndex>,
+    /// ADJ73 PR-B: the EXPLICIT half of the CONTEXT precedence order — directed edges
+    /// `(higher, lower)` meaning "a rule in `higher` outranks a conflicting rule in `lower`"
+    /// (federal > state, ninth_circuit > district_court, idsa_2024 > idsa_2004,
+    /// specialist > general), declared via [`Self::add_context_outranks`] (the bare
+    /// `context_order { a > b }` surface form). These edges carry NO provenance. The GROUNDED
+    /// half — edges that DO carry a byte-quote (the Supremacy Clause, etc.) — lives as ordinary
+    /// `outranks_context(higher, lower)` facts in the fact store; [`Self::context_adjacency`] unions
+    /// the two so both feed [`crate::govern::enumerate_governing`], which consults the order
+    /// BEFORE the priority tier (lex superior). Transitive reach is computed cycle-safely.
+    context_order: Vec<(String, String)>,
     next_fact_id: u64,
     next_rule_id: u64,
     next_prior_id: u64,
@@ -476,6 +505,122 @@ impl KnowledgeBase {
         ClauseIndex::from_term(term)
             .map(|idx| self.functional_predicates.contains(&idx))
             .unwrap_or(false)
+    }
+
+    /// ADJ73 PR-B: assert that context `higher` OUTRANKS context `lower` (a grounded
+    /// precedence edge — federal > state, ninth_circuit > district_court). Idempotent; the
+    /// transitive closure is computed on query. Adding a back-edge that creates a cycle is
+    /// *allowed* here (the loader may reject it), but [`Self::context_outranks`] is cycle-safe
+    /// and a mutual outrank degrades to an unresolved conflict rather than a wrong pick.
+    pub fn add_context_outranks(&mut self, higher: impl Into<String>, lower: impl Into<String>) {
+        let edge = (higher.into(), lower.into());
+        if !self.context_order.contains(&edge) {
+            self.context_order.push(edge);
+        }
+    }
+
+    /// ADJ73 PR-B: the EFFECTIVE context-precedence edges — the union of two sources, so an edge
+    /// may be declared either way and both participate in the same `lex superior` resolution:
+    ///
+    ///  1. **Explicit** edges from [`Self::add_context_outranks`] (the bare `context_order { a > b }`
+    ///     surface form) — convenient but unprovenanced.
+    ///  2. **Grounded** edges from any ground fact `outranks_context(higher, lower)` — the
+    ///     byte-provenanced form. A `relate outranks_context(federal, state) source "…Supremacy
+    ///     Clause…" trust authoritative` clause is an ordinary [`Fact`] (queryable, CAS-correctable,
+    ///     carrying [`Fact::provenance`]) that ALSO acts as a precedence edge. This is the whole
+    ///     point of ADJ73's "context must be grounded": the *reason* federal outranks state is the
+    ///     cited clause, riding on the edge itself rather than asserted bare in host code.
+    ///
+    /// Both args of the grounding fact must be atoms; a fact with a variable or nested compound arg
+    /// is not a ground edge and is ignored here (it stays a normal queryable fact). Returns the
+    /// edges as a directed ADJACENCY MAP `higher → [lowers]` so a graph walk does a single O(1)
+    /// neighbour lookup per node instead of re-scanning the whole edge list (the context order is
+    /// meant to scale to large rule corpora — e.g. a jurisdiction graph over the US Code — so the
+    /// walks below stay O(V+E), not O(V·E)). Borrows from `&self`, so the `&str`s live as long as
+    /// the borrow.
+    fn context_adjacency(&self) -> HashMap<&str, Vec<&str>> {
+        let mut adj: HashMap<&str, Vec<&str>> = HashMap::new();
+        // 1. Explicit edges (the bare `context_order { a > b }` surface form).
+        for (hi, lo) in &self.context_order {
+            adj.entry(hi.as_str()).or_default().push(lo.as_str());
+        }
+        // 2. Grounded edges — any ground `outranks_context(higher, lower)` fact (both args atoms).
+        for fact in self.facts.values().flatten() {
+            if let Term::Compound { functor, args } = &fact.term {
+                if functor == "outranks_context" && args.len() == 2 {
+                    if let (Term::Atom(hi), Term::Atom(lo)) = (&args[0], &args[1]) {
+                        adj.entry(hi.as_str()).or_default().push(lo.as_str());
+                    }
+                }
+            }
+        }
+        adj
+    }
+
+    /// ADJ73 PR-B: does context `a` outrank context `b` (directly or transitively)? Cycle-safe
+    /// DFS over the effective context adjacency (explicit + grounded-fact edges, see
+    /// [`Self::context_adjacency`]). `a == b` is `false` (a context does not outrank itself).
+    /// Returns `false` when there is no directed path `a → … → b`.
+    pub fn context_outranks(&self, a: &str, b: &str) -> bool {
+        if a == b {
+            return false;
+        }
+        let adj = self.context_adjacency();
+        let mut stack = vec![a];
+        let mut seen: HashSet<&str> = HashSet::new();
+        while let Some(node) = stack.pop() {
+            if !seen.insert(node) {
+                continue; // already visited — cycle-safe
+            }
+            if let Some(neighbours) = adj.get(node) {
+                for &lo in neighbours {
+                    if lo == b {
+                        return true;
+                    }
+                    stack.push(lo);
+                }
+            }
+        }
+        false
+    }
+
+    /// ADJ73 PR-B: `true` iff the effective context order (explicit + grounded-fact edges, see
+    /// [`Self::context_adjacency`]) contains a cycle (e.g. `a > b`, `b > a`, or a self-loop). The
+    /// surface/loader should reject such a rulebook; the resolver itself stays safe regardless.
+    /// Catches a cycle formed *across* the two edge sources too (an explicit `a > b` plus a
+    /// grounded `outranks_context(b, a)` fact). Single Kahn topological-sort pass: a directed
+    /// acyclic graph fully drains to zero in-degree, so any node left unremoved lies on a cycle.
+    pub fn context_order_has_cycle(&self) -> bool {
+        let adj = self.context_adjacency();
+        // In-degree of every node that appears as a head or a tail.
+        let mut in_degree: HashMap<&str, usize> = HashMap::new();
+        for (&hi, lowers) in &adj {
+            in_degree.entry(hi).or_insert(0);
+            for &lo in lowers {
+                *in_degree.entry(lo).or_insert(0) += 1;
+            }
+        }
+        // Kahn: repeatedly retire a zero-in-degree node, decrementing its successors.
+        let mut ready: Vec<&str> = in_degree
+            .iter()
+            .filter(|&(_, &d)| d == 0)
+            .map(|(&n, _)| n)
+            .collect();
+        let mut retired = 0usize;
+        while let Some(node) = ready.pop() {
+            retired += 1;
+            if let Some(neighbours) = adj.get(node) {
+                for &lo in neighbours {
+                    let d = in_degree.get_mut(lo).expect("successor was counted above");
+                    *d -= 1;
+                    if *d == 0 {
+                        ready.push(lo);
+                    }
+                }
+            }
+        }
+        // Anything not retired sits on (or downstream of) a cycle.
+        retired != in_degree.len()
     }
 
     /// Walk every Fact and every Rule once; return `true` iff every
@@ -1214,5 +1359,102 @@ mod tests {
         let s = find_first(&compound("p", vec![Term::Var(w.clone())]), &kb)
             .expect("p(W) should succeed via q(a, a)");
         assert_eq!(s.walk_var(&w), atom("a"));
+    }
+
+    // -----------------------------------------------------------------------
+    // ADJ73 PR-B-2 — GROUNDED context-precedence edges.
+    //
+    // A `relate outranks_context(higher, lower)` clause lowers to an ordinary
+    // ground Fact. These tests prove that such a fact PARTICIPATES in the
+    // context order exactly like an explicit `add_context_outranks` edge — so
+    // the *reason* one context outranks another (the Supremacy Clause, a
+    // circuit-precedence rule, a guideline year) can ride on the edge as
+    // byte-provenance instead of being asserted bare in host code.
+    // -----------------------------------------------------------------------
+
+    /// Helper: a ground `outranks_context(higher, lower)` edge fact.
+    fn outranks_context_fact(higher: &str, lower: &str) -> Fact {
+        Fact::certain(compound(
+            "outranks_context",
+            vec![atom(higher), atom(lower)],
+        ))
+    }
+
+    #[test]
+    fn grounded_outranks_context_fact_is_a_context_edge() {
+        // No explicit add_context_outranks — the ONLY edge is the grounded fact.
+        let mut kb = empty_kb();
+        kb.add_fact(outranks_context_fact("federal", "state"));
+        assert!(
+            kb.context_outranks("federal", "state"),
+            "a grounded outranks_context fact should drive the context order"
+        );
+        // Direction matters: the reverse does not hold.
+        assert!(!kb.context_outranks("state", "federal"));
+        // A context never outranks itself.
+        assert!(!kb.context_outranks("federal", "federal"));
+    }
+
+    #[test]
+    fn grounded_edges_compose_transitively_with_explicit_edges() {
+        // Mix the two sources: explicit federal > circuit, grounded circuit > district.
+        // The transitive reach federal → district must hold across both kinds of edge.
+        let mut kb = empty_kb();
+        kb.add_context_outranks("federal", "circuit");
+        kb.add_fact(outranks_context_fact("circuit", "district"));
+        assert!(kb.context_outranks("federal", "circuit"));
+        assert!(kb.context_outranks("circuit", "district"));
+        assert!(
+            kb.context_outranks("federal", "district"),
+            "transitive reach must span explicit + grounded edges"
+        );
+    }
+
+    #[test]
+    fn cycle_detection_spans_explicit_and_grounded_edges() {
+        // A cycle formed ACROSS the two sources (explicit a > b, grounded b > a)
+        // must still be caught — else the loader would accept a contradictory order.
+        let mut kb = empty_kb();
+        kb.add_context_outranks("a", "b");
+        kb.add_fact(outranks_context_fact("b", "a"));
+        assert!(kb.context_order_has_cycle());
+        // The resolver stays safe regardless: a mutual outrank is reported both ways
+        // (the caller's defeats() then yields a peer/conflict, never a wrong pick).
+        assert!(kb.context_outranks("a", "b") && kb.context_outranks("b", "a"));
+    }
+
+    #[test]
+    fn grounded_edge_carries_retrievable_provenance() {
+        // The whole point of "grounded context": the fact that establishes the edge
+        // is queryable and its citation is retrievable — the edge explains itself.
+        let mut kb = empty_kb();
+        let prov = Provenance::new(
+            "U.S. Const. art. VI, cl. 2 (Supremacy Clause)",
+            Some("cl. 2".to_string()),
+            TrustTier::Authoritative,
+        );
+        let id =
+            kb.add_fact(outranks_context_fact("federal", "state").with_provenance(prov.clone()));
+        // The edge is live...
+        assert!(kb.context_outranks("federal", "state"));
+        // ...AND its source is recoverable for the audit trail.
+        let f = kb
+            .fact(id)
+            .expect("the grounded edge fact is stored and queryable");
+        assert_eq!(f.provenance.source, prov.source);
+        assert_eq!(f.provenance.trust_tier, TrustTier::Authoritative);
+    }
+
+    #[test]
+    fn non_atom_outranks_context_fact_is_not_an_edge() {
+        // A variable/compound arg is not a ground edge — it stays an ordinary fact
+        // and does not silently inject a precedence relation.
+        let mut kb = empty_kb();
+        kb.add_fact(Fact::certain(compound(
+            "outranks_context",
+            vec![atom("federal"), Term::Var(var("X"))],
+        )));
+        assert!(!kb.context_outranks("federal", "state"));
+        assert!(!kb.context_order_has_cycle());
     }
 }

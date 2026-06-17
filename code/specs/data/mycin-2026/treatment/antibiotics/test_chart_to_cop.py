@@ -150,21 +150,27 @@ def test_objective_breakdown_surfaced_with_chart_weights():
 
 
 def test_decide_timing_decision_table():
-    # CC-5 (§4): the wait-vs-treat-now decision is a function of (disease acuity, culture
-    # status, clinical stability). Pure — no engine needed.
+    # CC-5 (§4) ADJ-NATIVE: the wait-vs-treat-now DECISION is now derived by the engine from
+    # the timing.adj precedence ladder (decide_timing wraps timing.derive_timing). Same
+    # outcomes as the retired Python if/elif, keyed by (disease acuity, culture, clinical).
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
     # Time-critical disease (meningitis) → empiric now, high delay_risk, with the threshold.
-    t = cc.decide_timing("meningitis", "pending", "stable")
-    assert t["decision"] == "treat_now_empiric" and t["delay_risk"] == "high"
+    t = cc.decide_timing(cli, "meningitis", "pending", "stable")
+    assert t["decision"] == "treat_now_empiric" and t["delay_risk"] == "high", t
     assert t["threshold"]["treat_within_min"] == 60 and t["threshold"]["trust"]
+    assert t["standing"] == "authoritative"  # the time-critical rule governed
     # A critical patient forces empiric-now even for a routine-acuity disease.
-    assert cc.decide_timing("cellulitis", "pending", "critical")["decision"] == "treat_now_empiric"
+    assert cc.decide_timing(cli, "cellulitis", "pending", "critical")["decision"] == "treat_now_empiric"
     # Stable + non-time-critical + culture pending → awaiting the culture is defensible.
-    aw = cc.decide_timing("cellulitis", "pending", "stable")
-    assert aw["decision"] == "await_culture" and aw["delay_risk"] == "low"
+    aw = cc.decide_timing(cli, "cellulitis", "pending", "stable")
+    assert aw["decision"] == "await_culture" and aw["delay_risk"] == "low", aw
     # Culture already back → targeted, the wait question is moot.
-    assert cc.decide_timing("meningitis", "resulted", "stable")["decision"] == "targeted_culture_directed"
-    # No timing info on a routine disease → conservative treat-now (don't gamble).
-    assert cc.decide_timing("cellulitis", "", "")["decision"] == "treat_now_empiric"
+    assert cc.decide_timing(cli, "meningitis", "resulted", "stable")["decision"] == "targeted_culture_directed"
+    # No timing info on a routine disease → conservative treat-now (don't gamble), moderate risk.
+    none = cc.decide_timing(cli, "cellulitis", "", "")
+    assert none["decision"] == "treat_now_empiric" and none["delay_risk"] == "moderate", none
 
 
 def test_timing_facts_compile_and_surface_in_derive():
@@ -195,9 +201,8 @@ def test_step_therapy_facts_compile_and_reimbursement_blocked_logic():
     assert any(c["type"] == "prior_treatment" for c in cop.constraints)
     bad = cc.compile_cop([cc.ChartFact("step_therapy", "no_colon_here")])
     assert not bad.step_therapy and any("step_therapy" in d["fact"] for d in bad.discards)
-    # The precedence x_Y ≤ tried_X: Y blocked iff its prerequisite X is not in `tried`.
-    assert cc.reimbursement_blocked({("cefepime", "meropenem")}, set()) == {"cefepime"}
-    assert cc.reimbursement_blocked({("cefepime", "meropenem")}, {"meropenem"}) == set()
+    # The precedence x_Y ≤ tried_X is now DERIVED BY THE ENGINE (step_therapy.adj, NAF) —
+    # covered by test_step_therapy.py and the engine-gated test_dual_* path below.
 
 
 def test_dual_clinical_vs_reimbursement_regimen():

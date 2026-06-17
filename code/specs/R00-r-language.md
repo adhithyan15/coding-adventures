@@ -134,6 +134,71 @@ unchanged.
   product; the result-size and all loops are capped at `MAX_SEQ_LEN`. Matrices
   coerce to their flat vector (`c(m)`, `sum(m)`) and print with R's `[,j]`/`[i,]`
   console layout.
+- **R-12 — matrix linear algebra** *(this PR)*. The builtins that turn the R-11
+  matrix type into a usable linear-algebra object, all in the shared `s-runtime`:
+  - `diag(x)` — the R triple-meaning overload: `diag(M)` extracts a matrix's
+    diagonal as a vector; `diag(v)` for a length-`> 1` vector builds the square
+    matrix with `v` on the diagonal; `diag(n)` for a single number builds the
+    `n × n` identity. The vector/identity forms also accept `nrow`/`ncol`.
+  - `rowSums`/`colSums`/`rowMeans`/`colMeans(x)` — the margin reductions, with an
+    `na.rm = FALSE` option (NA in a margin propagates unless removed; an all-`NA`
+    mean is `NaN`). Each returns a plain vector.
+  - `cbind(…)` / `rbind(…)` — bind vectors and matrices by column / by row.
+    Vectors are recycled to the common row (resp. column) length; a matrix whose
+    rows (resp. columns) don't match is an error. The empty call is `NULL`.
+  - `solve(a)` / `solve(a, b)` — the matrix inverse, and the solution `x` of
+    `a %*% x = b` (`b` a vector or matrix). `det(a)` — the determinant. Both use
+    **Gaussian elimination with partial pivoting** (no LU primitive exists in the
+    substrate, so it is implemented directly); a singular `a` is a clean error
+    (`det` of a singular matrix is `0`), an `NA` in `a` makes `det` return `NA`
+    and `solve` an error, and the dimension is capped (`MAX_SOLVE_DIM`) so the
+    `O(n³)` work cannot be turned into a denial-of-service. All construction is
+    bounded by `MAX_SEQ_LEN`.
+- **R-13 — 2-D matrix indexing** *(this PR)*. The `[` subscript operator extended
+  to two dimensions and to R's full index styles, in the shared `s-runtime`:
+  - A **grammar change** makes each comma-separated subscript *optional*, so an
+    empty subscript selects a whole dimension: `m[i, j]` (one element),
+    `m[i, ]` (a whole row), `m[, j]` (a whole column), `m[rows, cols]`
+    (a sub-matrix). `index_suffix` becomes
+    `LBRACKET [ subscript ] { COMMA [ subscript ] } RBRACKET` in both `s.grammar`
+    and `r.grammar` (regenerated); the evaluator reads one slot per
+    comma-separated position, `None` meaning "all of that dimension".
+  - Each subscript resolves through a shared `resolve_picks` that now supports
+    all three R index styles: **positive** (1-based; `0` drops, out-of-range/`NA`
+    → `NA`), **negative** (`-k` *excludes* position `k`; cannot be mixed with
+    positive), and **logical** (a mask recycled to the dimension; `TRUE` selects).
+    This also fixes 1-D vector indexing — `v[-2]` and `v[c(TRUE, FALSE)]` now
+    behave correctly (logical indices were previously mis-coerced to numbers).
+  - `m[i]` indexes the **flat column-major** vector (dropping matrix structure,
+    as R does). A 2-D result follows R's default `drop = TRUE`: a single row or
+    column collapses to a vector, otherwise the result is a matrix. Out-of-range
+    matrix subscripts are a hard error; the result size and the logical-recycle
+    span are capped at `MAX_SEQ_LEN`. The empty-subscript grammar also enables
+    `df[, j]` / `df[i, ]` on data frames.
+  - *Done in R-14:* **sub-assignment** `m[i, j] <- v` (below).
+- **R-14 — index sub-assignment** *(this PR)*. `m[i, j] <- v` and the 1-D
+  `v[i] <- val`, in the shared `s-runtime`. The evaluator previously only
+  assigned to **bare names**; R-14 adds the lvalue-target machinery so the left
+  side of `<-` (or `=` / `->`) may be a **subscript expression**:
+  - When the assignment target is not a bare name, the evaluator descends to the
+    postfix `[ … ]`, requires a bare-name base, **looks up the current value of
+    that base**, resolves the subscripts (reusing R-13's `resolve_picks` for the
+    1-D case and the 2-D dimension resolver for `m[rows, cols]`), writes the RHS
+    into the selected cells, and **rebinds the modified value to the base name**.
+  - The write is **copy-then-rebind**: the base value is cloned, the clone is
+    mutated, and `define` replaces the binding. Because `SValue` bindings are
+    by-value, an earlier copy (`b <- a; a[1] <- 9`) is *not* aliased — `b` keeps
+    its old contents, matching R's copy-on-modify semantics.
+  - The RHS is **recycled** R-style to fill the selected cells (a length-1 RHS
+    broadcasts; a length-*k* RHS repeats). 1-D selection accepts the full
+    positive / negative / logical index styles; 2-D accepts `m[i, ]`, `m[, j]`,
+    and `m[rows, cols]`. The matrix keeps its `dim` after assignment.
+  - **Safety:** the selected positions are bounds-checked against the target
+    length (an out-of-range or `NA` index in an *assignment* is a hard error, not
+    a silent grow — vector auto-extension is deferred); an **empty replacement**
+    (`v[i] <- c()`) is an error; assigning into an **undefined base** is an error.
+    No write can touch another binding, so the rebind cannot corrupt unrelated
+    variables. The number of writes is bounded by the (capped) selection length.
 
 ## §4 Reuse strategy
 

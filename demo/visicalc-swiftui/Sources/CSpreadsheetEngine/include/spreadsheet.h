@@ -47,6 +47,13 @@ void  sc_set_format(ScSession *s, const char *a1, const char *code);
 char *sc_get_format(ScSession *s, const char *a1);                /* -> code | ""   */
 char *sc_get_display(ScSession *s, const char *a1);               /* -> display str */
 
+/* Fill / replicate (drag-fill): copy the `src` cell across the inclusive
+   rectangle `dst_start`..`dst_end`. Relative references shift per target,
+   absolute ($) refs pin, the source's format carries along, an empty source
+   clears each target; a malformed address is a no-op. No return — the host
+   re-reads via sc_get_window / sc_get_display_window / sc_get_raw afterwards. */
+void  sc_fill(ScSession *s, const char *src, const char *dst_start, const char *dst_end);
+
 /* Structural edits — insert/delete rows & columns. 1-based `at`, `count` lines.
    The engine relocates cells and rewrites formula references (a reference to a
    deleted line becomes #REF!); the formula echo stays in step. No return — the

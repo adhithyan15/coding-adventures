@@ -83,15 +83,23 @@ pub fn extract(value: &SValue, key: &SValue) -> SResult<SValue> {
     }
 }
 
-/// `df[rows, cols]` — a 2-D subset. Returns the lone column (as a vector) when a
-/// single column is selected, otherwise a narrower data frame.
-pub fn index2d(value: &SValue, rows: &SValue, cols: &SValue) -> SResult<SValue> {
+/// `df[rows, cols]` — a 2-D subset. Either subscript may be `None` (an empty
+/// subscript selecting the whole dimension). Returns the lone column (as a
+/// vector) when a single column is selected, otherwise a narrower data frame.
+pub fn index2d(value: &SValue, rows: Option<&SValue>, cols: Option<&SValue>) -> SResult<SValue> {
     match value {
         SValue::DataFrame { names, columns } => {
-            let picks = resolve_columns(names, columns.len(), cols)?;
+            // `None` columns → all columns, in order.
+            let picks = match cols {
+                None => (0..columns.len()).collect::<Vec<_>>(),
+                Some(c) => resolve_columns(names, columns.len(), c)?,
+            };
             let selected: Vec<SValue> = picks
                 .iter()
-                .map(|&ci| index(&columns[ci], rows))
+                .map(|&ci| match rows {
+                    None => Ok(columns[ci].clone()), // whole column
+                    Some(r) => index(&columns[ci], r),
+                })
                 .collect::<SResult<_>>()?;
             if selected.len() == 1 {
                 Ok(selected.into_iter().next().unwrap())

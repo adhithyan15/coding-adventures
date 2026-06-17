@@ -110,6 +110,8 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "observe_decl" => adapt_observe(child),
         "relate_decl" => adapt_relate(child),
         "rule_decl" => adapt_rule(child),
+        "functional_decl" => adapt_functional(child),
+        "context_order_decl" => adapt_context_order(child),
         "query_decl" => adapt_query(child),
         "let_decl" => adapt_let(child),
         "symbol_decl" => adapt_symbol(child),
@@ -324,11 +326,83 @@ fn adapt_rule(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         });
     }
     let annotations = collect_annotations(node)?;
+    // ADJ73: optional trailing `priority: <tier>` (PR-C) and `context: <name>` (PR-B). Each
+    // value is the first Name token AFTER its keyword literal (the COLON is a separate token).
+    // Only structural Name tokens appear at the rule_decl level (head/when/priority/context +
+    // the two values); body/head TERMS are Nodes, so they cannot be mistaken for a value.
+    let priority = ident_after_keyword(node, "priority");
+    let context = ident_after_keyword(node, "context");
     Ok(Statement::Rule {
         head,
         body,
         annotations,
+        priority,
+        context,
     })
+}
+
+/// The IDENT token that immediately follows the keyword literal `keyword` among a node's direct
+/// token children (e.g. the tier after `priority`, the context after `context`). `None` if the
+/// keyword is absent.
+fn ident_after_keyword(node: &GrammarASTNode, keyword: &str) -> Option<String> {
+    let mut seen = false;
+    for child in &node.children {
+        if let ASTNodeOrToken::Token(t) = child {
+            if t.type_ == TokenType::Name && t.value == keyword {
+                seen = true;
+            } else if seen && t.type_ == TokenType::Name {
+                return Some(t.value.clone());
+            }
+        }
+    }
+    None
+}
+
+fn adapt_context_order(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // context_order_decl = "context_order" "{" IDENT ">" IDENT { "," IDENT ">" IDENT } "}"
+    // The IDENT tokens come in (higher, lower) pairs. Collect the Name tokens in order and pair
+    // them up, skipping the `context_order` keyword and the `>` operator (the lexer surfaces GT
+    // as a Name token whose value is ">"). Commas/braces are non-Name tokens, already excluded.
+    let idents: Vec<String> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t)
+                if t.type_ == TokenType::Name && t.value != "context_order" && t.value != ">" =>
+            {
+                Some(t.value.clone())
+            }
+            _ => None,
+        })
+        .collect();
+    if idents.is_empty() || idents.len() % 2 != 0 {
+        return Err(AdapterError::MissingChild {
+            rule: "context_order_decl".into(),
+            position: "higher > lower context pairs",
+        });
+    }
+    let edges = idents
+        .chunks_exact(2)
+        .map(|p| (p[0].clone(), p[1].clone()))
+        .collect();
+    Ok(Statement::ContextOrder { edges })
+}
+
+fn adapt_functional(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // functional_decl = "functional" term — declare a predicate functional on its last
+    // argument. Only the functor + arity of the term matter (arg names are placeholders).
+    let term = expect_term_child(node, "functional_decl")?;
+    let (functor, arity) = match &term {
+        Term::Compound { functor, args } => (functor.clone(), args.len()),
+        Term::Atom(name) => (name.clone(), 0),
+        _ => {
+            return Err(AdapterError::MissingChild {
+                rule: "functional_decl".into(),
+                position: "predicate term (compound or atom)",
+            })
+        }
+    };
+    Ok(Statement::Functional { functor, arity })
 }
 
 fn adapt_query(node: &GrammarASTNode) -> Result<Statement, AdapterError> {

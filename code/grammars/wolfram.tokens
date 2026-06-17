@@ -1,0 +1,97 @@
+# Wolfram Language Token Grammar
+# ============================================================================
+#
+# Tokenizes a subset of the Wolfram Language (Mathematica). Wolfram's surface
+# syntax differs from Macsyma's — function application uses SQUARE brackets
+# (`f[x]`), lists use BRACES (`{a, b}`), and the language is built around the
+# replacement operators `/.`, `->`, `:>` and the pattern blanks `_`/`x_`. So,
+# unlike Maxima (which reuses the Macsyma frontend), Wolfram gets its own lexer
+# and parser; only the symbolic engine underneath is shared. See
+# code/specs/MA04-wolfram-language.md.
+#
+# Wolfram is CASE-SENSITIVE (`Sin` is the builtin, `sin` is an ordinary symbol),
+# so case_sensitive is left at its default (true).
+#
+# @version 1
+
+# Strings keep their backslash escapes as raw text; the runtime decodes them.
+escapes: none
+
+# ============================================================================
+# SECTION 1: Multi-character operators
+#
+# Longest-match-first: every multi-character operator is listed before the
+# shorter operator(s) it begins with, so `:=`/`:>` win over a bare `:`, `->`
+# over `-`, `==` over `=`, `/.` over `/`, and `&&`/`||` are the only `&`/`|`
+# forms in this subset.
+# ============================================================================
+
+SETDELAYED  = ":="
+RULEDELAYED = ":>"
+RULE        = "->"
+REPLACEALL  = "/."
+
+EQUAL       = "=="
+UNEQUAL     = "!="
+LE          = "<="
+GE          = ">="
+
+AND         = "&&"
+OR          = "||"
+
+# ============================================================================
+# SECTION 2: Single-character operators and delimiters
+# ============================================================================
+
+PLUS      = "+"
+MINUS     = "-"
+TIMES     = "*"
+SLASH     = "/"
+POWER     = "^"
+SET       = "="
+LESS      = "<"
+GREATER   = ">"
+NOT       = "!"
+
+# `_` is the pattern Blank — it is NOT a symbol/name character in Wolfram
+# (unlike R). `x_` therefore lexes as NAME `x` followed by BLANK.
+BLANK     = "_"
+
+LBRACKET  = "["
+RBRACKET  = "]"
+LBRACE    = "{"
+RBRACE    = "}"
+LPAREN    = "("
+RPAREN    = ")"
+
+COMMA     = ","
+SEMI      = ";"
+
+# ============================================================================
+# SECTION 3: Literal value tokens
+#
+# NUMBER requires a leading digit, so `.5` is not a number and `/.` is never
+# mistaken for the start of a float. NAME is a case-sensitive identifier; builtin
+# heads (Sin, Plus, If, True) are ordinary capitalized NAMEs resolved by the
+# runtime, so there is no `keywords:` block.
+# ============================================================================
+
+NUMBER = /[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?/
+NAME   = /[a-zA-Z][a-zA-Z0-9]*/
+STRING = /"([^"\\]|\\.)*"/
+
+# ============================================================================
+# SECTION 4: Significant newlines + skip patterns
+#
+# A newline terminates a top-level statement (Wolfram has no required statement
+# terminator), so NEWLINE is a real token — but the W-2 lexer drops newlines that
+# fall inside `[ ]`/`{ }`/`( )` so a call or list may span lines. Spaces/tabs and
+# `(* … *)` comments are consumed silently. (The comment regex is non-nesting for
+# simplicity; true Wolfram comments nest.)
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /\(\*([^*]|\*[^)])*\*\)/

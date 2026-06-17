@@ -116,6 +116,10 @@ public:
     // Commit the formula bar into the selected infinite-view cell: write through,
     // recompute, resize the extent, bump `revision` so the rows re-fetch.
     Q_INVOKABLE void commitInf(const QString &raw);
+    // Drag-fill: replicate the `src` cell across the inclusive A1 rectangle
+    // `dstStart`..`dstEnd` (relative refs shift, absolute pin, format carried);
+    // resizes the extent and bumps `revision` so the visible rows re-fetch.
+    Q_INVOKABLE void fill(const QString &src, const QString &dstStart, const QString &dstEnd);
 
 signals:
     // viewportRows changed (after a recompute) — QML rebinds the grid.

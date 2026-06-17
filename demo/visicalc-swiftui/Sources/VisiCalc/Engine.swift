@@ -38,6 +38,16 @@ final class SpreadsheetSession {
     /// `window` reads through `sc_get_display_window`.
     func setFormat(_ a1: String, _ code: String) { sc_set_format(handle, a1, code) }
 
+    /// Drag-fill: replicate the `src` cell across the inclusive A1 rectangle
+    /// `dstStart`..`dstEnd`. Relative references shift per target (`=A1` filled
+    /// one row down becomes `=A2`), absolute (`$`) refs pin, off-grid refs become
+    /// `#REF!`, and the source's display format rides along; the engine recomputes
+    /// every dependent. Reaches `sc_fill` — the same path the web/Qt/Flutter/
+    /// Compose/XAML demos drive.
+    func fill(_ src: String, _ dstStart: String, _ dstEnd: String) {
+        sc_fill(handle, src, dstStart, dstEnd)
+    }
+
     /// The computed value of a cell as the string a spreadsheet should show.
     /// Parses the engine's JSON (`{"kind":...}`) — the same shape the TS and
     /// WASM engines emit.

@@ -24,6 +24,7 @@ fn cpu_default() -> BackendProfile {
         supported_ops: 0xFFFF_FFFF,
         supported_dtypes: 0x07,
         gflops_f32: 40,
+        gflops_f64: 40,
         gflops_u8: 40,
         gflops_i32: 40,
         host_to_device_bw: 100,
@@ -43,6 +44,7 @@ fn fast_gpu() -> BackendProfile {
         supported_ops: 0xFFFF_FFFF,
         supported_dtypes: 0x07,
         gflops_f32: 5_000, // 125× faster than CPU
+        gflops_f64: 0,     // no GPU f64 kernel
         gflops_u8: 2_500,
         gflops_i32: 2_500,
         host_to_device_bw: 10, // Slow PCIe
@@ -325,4 +327,55 @@ fn plan_function_works_with_registry() {
 
     let placed = plan(&g, &r).expect("plan");
     placed.validate().expect("validates");
+}
+
+// ─────────────────── f64 cost-model routing (MXF-2) ───────────────────
+
+/// An f64 matmul must land on the CPU even when a much faster GPU is
+/// registered: the GPU advertises f64 *capability* but `gflops_f64 = 0`,
+/// so the cost model assigns it the ∞-cost sentinel and the planner keeps
+/// the work on the CPU — the only backend with a real f64 kernel.
+#[test]
+fn f64_matmul_plans_onto_cpu_not_gpu() {
+    // Both profiles must *claim* f64 support (bit 5, since `DType::F64`'s wire
+    // tag is `0x05`) so the capability filter passes and the decision falls to
+    // cost.  Without this, f64 would reach the CPU via the fallback path and
+    // never exercise the cost model at all.
+    const F64_BIT: u8 = 1 << 5;
+    let mut cpu = cpu_default();
+    cpu.supported_dtypes |= F64_BIT; // CPU has the f64 kernel + throughput
+    let mut gpu = fast_gpu();
+    gpu.supported_dtypes |= F64_BIT; // GPU claims f64 but `gflops_f64 == 0`
+
+    let mut rt = Runtime::new(cpu);
+    let gpu_id = rt.register("gpu", gpu);
+
+    let mut g = GraphBuilder::new();
+    let a = g.input(DType::F64, Shape::from(&[4096, 4096]));
+    let b = g.input(DType::F64, Shape::from(&[4096, 4096]));
+    let c = g.matmul(&a, &b);
+    g.output(&c);
+    let g = g.build().unwrap();
+
+    let placed = rt.plan(&g).expect("plan");
+    placed.validate().expect("validates");
+
+    let mm_executor = placed.ops.iter().find_map(|o| match o {
+        PlacedOp::Compute {
+            op: Op::MatMul { .. },
+            executor,
+            ..
+        } => Some(*executor),
+        _ => None,
+    });
+    assert_eq!(
+        mm_executor,
+        Some(CPU_EXECUTOR),
+        "f64 matmul must stay on CPU even with a faster GPU present"
+    );
+    assert_ne!(
+        mm_executor,
+        Some(gpu_id),
+        "f64 must not ship to the f64-less GPU"
+    );
 }

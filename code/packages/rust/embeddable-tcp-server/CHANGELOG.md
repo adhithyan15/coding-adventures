@@ -6,6 +6,18 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- **WEB01b-1b: `ordered_responses` option** for the in-process mailbox. When set,
+  the response router writes each connection's responses back in **submission
+  order** (not worker-completion order) via a per-connection reorder buffer: the
+  submitter records each connection's job-ids in submission order, and the router
+  buffers a finished response until every earlier one on the same connection has
+  been written. This is what a pipelined HTTP/1.1 keep-alive connection needs — the
+  pool is unordered (`supports_ordered_responses: false`), so without it a
+  connection's replies could be written out of request order. Default `false`
+  preserves the exact completion-order behaviour for all other consumers
+  (`MailboxHttpServer` is the only opt-in). New test
+  `inprocess_mailbox_orders_responses_by_submission_when_enabled` proves it
+  deterministically (workers finish `3,2,1,0`; the wire reads `0,1,2,3`).
 - Added `new_inprocess_mailbox` in `EmbeddableTcpServer` to run job execution in
   `generic-job-runtime`'s `RustThreadPool` while keeping the TCP callback and
   mailbox return path unchanged.

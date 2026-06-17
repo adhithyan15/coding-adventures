@@ -38,8 +38,12 @@ pub fn estimate_flops(op: &Op, output_shape: Option<&Shape>, input_shape: Option
     match op {
         // Cheap elementwise.
         Op::Neg { .. } | Op::Abs { .. } | Op::Cast { .. } => out_numel,
-        Op::Add { .. } | Op::Sub { .. } | Op::Mul { .. } | Op::Div { .. }
-        | Op::Max { .. } | Op::Min { .. } => out_numel,
+        Op::Add { .. }
+        | Op::Sub { .. }
+        | Op::Mul { .. }
+        | Op::Div { .. }
+        | Op::Max { .. }
+        | Op::Min { .. } => out_numel,
         Op::Equal { .. } | Op::Less { .. } | Op::Greater { .. } | Op::Where { .. } => out_numel,
         // Transcendentals — count as 5 ops to reflect the typical
         // hardware latency of pow/exp/log instructions.
@@ -79,9 +83,7 @@ pub fn estimate_matmul_flops(a: &Tensor, b: &Tensor) -> u64 {
     let m = a.shape.dims[0] as u64;
     let k = a.shape.dims[1] as u64;
     let n = b.shape.dims[1] as u64;
-    2u64.saturating_mul(m)
-        .saturating_mul(k)
-        .saturating_mul(n)
+    2u64.saturating_mul(m).saturating_mul(k).saturating_mul(n)
 }
 
 /// Estimate the time (in nanoseconds) to transfer `bytes` between
@@ -133,6 +135,12 @@ pub enum TransferDirection {
 pub fn compute_cost(flops: u64, dtype: DType, profile: &BackendProfile) -> u64 {
     let gflops = match dtype {
         DType::F32 => profile.gflops_f32,
+        // MXF-2: f64 has its own throughput field.  A CPU sets it (≈ its f32
+        // rate); a backend with no f64 kernel — e.g. the synthetic GPU profile —
+        // leaves it 0, which the `gflops == 0` branch below turns into the
+        // ~infinite-cost sentinel, keeping f64 work on a backend that can
+        // actually run it.  This replaces the MXF-1 f32-rate placeholder.
+        DType::F64 => profile.gflops_f64,
         DType::U8 => profile.gflops_u8,
         DType::I32 => profile.gflops_i32,
     };
@@ -160,7 +168,8 @@ mod tests {
             kind: "cpu".to_string(),
             supported_ops: 0xFFFF_FFFF,
             supported_dtypes: 0x07,
-            gflops_f32: 40,         // 40 GFLOPS
+            gflops_f32: 40, // 40 GFLOPS
+            gflops_f64: 40, // CPU runs f64 at ≈ its f32 rate
             gflops_u8: 40,
             gflops_i32: 40,
             host_to_device_bw: 100, // bytes/ns; effectively no transfer cost
@@ -180,9 +189,10 @@ mod tests {
             supported_ops: 0xFFFF_FFFF,
             supported_dtypes: 0x07,
             gflops_f32: 5_000,
+            gflops_f64: 0, // no GPU f64 kernel → cost model treats f64 as ∞
             gflops_u8: 2_500,
             gflops_i32: 2_500,
-            host_to_device_bw: 10,  // bytes/ns = 10 GB/s
+            host_to_device_bw: 10, // bytes/ns = 10 GB/s
             device_to_host_bw: 10,
             device_internal_bw: 500,
             launch_overhead_ns: 1_000,
@@ -219,6 +229,39 @@ mod tests {
             + 2 * transfer_cost_ns(bytes, &gpu_profile(), TransferDirection::HostToDevice);
         // GPU should win even with 2 transfers.
         assert!(gpu_ns < cpu_ns, "GPU {} should beat CPU {}", gpu_ns, cpu_ns);
+    }
+
+    #[test]
+    fn f64_matmul_stays_on_cpu_even_when_large() {
+        // A 4096³ f64 matmul is enormous (137 G flops), yet it must stay on
+        // the CPU: the synthetic GPU advertises `gflops_f64 = 0`, so the cost
+        // model hands back the ∞ sentinel for the GPU and a finite cost for the
+        // CPU — CPU wins no matter how big the workload is.
+        let a = Tensor::new(TensorId(0), DType::F64, Shape::from(&[4096, 4096]));
+        let b = Tensor::new(TensorId(1), DType::F64, Shape::from(&[4096, 4096]));
+        let flops = estimate_matmul_flops(&a, &b);
+        let cpu_ns = compute_cost(flops, DType::F64, &cpu_profile());
+        let gpu_ns = compute_cost(flops, DType::F64, &gpu_profile());
+        let sentinel = u64::MAX / 2;
+        assert_eq!(gpu_ns, sentinel, "GPU f64 cost should be the ∞ sentinel");
+        assert!(
+            cpu_ns < sentinel,
+            "CPU f64 cost should be finite, not the sentinel: {cpu_ns}"
+        );
+        assert!(cpu_ns < gpu_ns, "CPU {cpu_ns} should beat GPU {gpu_ns} for f64");
+    }
+
+    #[test]
+    fn f64_uses_its_own_throughput_not_f32() {
+        // Halving only `gflops_f64` (leaving `gflops_f32` alone) must double the
+        // f64 cost — proving the F64 arm reads its own field, not the f32 rate.
+        let half_f64 = BackendProfile {
+            gflops_f64: 20,
+            ..cpu_profile()
+        };
+        let f32_ns = compute_cost(40_000, DType::F32, &cpu_profile());
+        let f64_ns = compute_cost(40_000, DType::F64, &half_f64);
+        assert_eq!(f64_ns, 2 * f32_ns, "f64 at half rate should cost double");
     }
 
     #[test]

@@ -187,33 +187,96 @@ impl GraphBuilder {
 
     /// Elementwise `lhs + rhs`.
     pub fn add(&mut self, lhs: &Tensor, rhs: &Tensor) -> Tensor {
-        self.binary(lhs, rhs, |l, r, o| Op::Add { lhs: l, rhs: r, output: o }, "add")
+        self.binary(
+            lhs,
+            rhs,
+            |l, r, o| Op::Add {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
+            "add",
+        )
     }
     /// Elementwise `lhs - rhs`.
     pub fn sub(&mut self, lhs: &Tensor, rhs: &Tensor) -> Tensor {
-        self.binary(lhs, rhs, |l, r, o| Op::Sub { lhs: l, rhs: r, output: o }, "sub")
+        self.binary(
+            lhs,
+            rhs,
+            |l, r, o| Op::Sub {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
+            "sub",
+        )
     }
     /// Elementwise `lhs * rhs`.
     pub fn mul(&mut self, lhs: &Tensor, rhs: &Tensor) -> Tensor {
-        self.binary(lhs, rhs, |l, r, o| Op::Mul { lhs: l, rhs: r, output: o }, "mul")
+        self.binary(
+            lhs,
+            rhs,
+            |l, r, o| Op::Mul {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
+            "mul",
+        )
     }
     /// Elementwise `lhs / rhs`.  Float-only.
     pub fn div(&mut self, lhs: &Tensor, rhs: &Tensor) -> Tensor {
         assert_float(lhs.dtype, "div");
-        self.binary(lhs, rhs, |l, r, o| Op::Div { lhs: l, rhs: r, output: o }, "div")
+        self.binary(
+            lhs,
+            rhs,
+            |l, r, o| Op::Div {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
+            "div",
+        )
     }
     /// Elementwise `max(lhs, rhs)`.
     pub fn max(&mut self, lhs: &Tensor, rhs: &Tensor) -> Tensor {
-        self.binary(lhs, rhs, |l, r, o| Op::Max { lhs: l, rhs: r, output: o }, "max")
+        self.binary(
+            lhs,
+            rhs,
+            |l, r, o| Op::Max {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
+            "max",
+        )
     }
     /// Elementwise `min(lhs, rhs)`.
     pub fn min(&mut self, lhs: &Tensor, rhs: &Tensor) -> Tensor {
-        self.binary(lhs, rhs, |l, r, o| Op::Min { lhs: l, rhs: r, output: o }, "min")
+        self.binary(
+            lhs,
+            rhs,
+            |l, r, o| Op::Min {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
+            "min",
+        )
     }
     /// Elementwise `lhs ^ rhs`.  Float-only.
     pub fn pow(&mut self, lhs: &Tensor, rhs: &Tensor) -> Tensor {
         assert_float(lhs.dtype, "pow");
-        self.binary(lhs, rhs, |l, r, o| Op::Pow { lhs: l, rhs: r, output: o }, "pow")
+        self.binary(
+            lhs,
+            rhs,
+            |l, r, o| Op::Pow {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
+            "pow",
+        )
     }
 
     // ──────────── reductions ────────────
@@ -228,7 +291,13 @@ impl GraphBuilder {
     ) -> Tensor {
         let rank = input.shape.rank() as u32;
         for &a in &axes {
-            assert!(a < rank, "{}: axis {} out of range (rank {})", op_name, a, rank);
+            assert!(
+                a < rank,
+                "{}: axis {} out of range (rank {})",
+                op_name,
+                a,
+                rank
+            );
         }
         let out_shape = reduce_shape(&input.shape, &axes, keep_dims);
         let out = self.alloc(input.dtype, out_shape);
@@ -318,10 +387,7 @@ impl GraphBuilder {
             assert!(!seen[p], "transpose: perm contains duplicate {}", p);
             seen[p] = true;
         }
-        let new_dims: Vec<u32> = perm
-            .iter()
-            .map(|&p| input.shape.dims[p as usize])
-            .collect();
+        let new_dims: Vec<u32> = perm.iter().map(|&p| input.shape.dims[p as usize]).collect();
         let out = self.alloc(input.dtype, Shape { dims: new_dims });
         self.ops.push(Op::Transpose {
             input: input.id,
@@ -377,14 +443,7 @@ impl GraphBuilder {
     ///
     /// Equivalent to numpy `x[..., start:end:step, ...]` with the
     /// slice placed on axis `axis`.
-    pub fn slice(
-        &mut self,
-        input: &Tensor,
-        axis: u32,
-        start: u32,
-        end: u32,
-        step: u32,
-    ) -> Tensor {
+    pub fn slice(&mut self, input: &Tensor, axis: u32, start: u32, end: u32, step: u32) -> Tensor {
         assert!(
             (axis as usize) < input.shape.rank(),
             "slice: axis {} out of bounds for rank {}",
@@ -491,11 +550,7 @@ impl GraphBuilder {
         assert_eq!(b.shape.rank(), 2, "matmul: rhs rank must be 2");
         let (m, k1) = (a.shape.dims[0], a.shape.dims[1]);
         let (k2, n) = (b.shape.dims[0], b.shape.dims[1]);
-        assert_eq!(
-            k1, k2,
-            "matmul: inner dims mismatch ({} vs {})",
-            k1, k2
-        );
+        assert_eq!(k1, k2, "matmul: inner dims mismatch ({} vs {})", k1, k2);
         let out = self.alloc(a.dtype, Shape::from(&[m, n]));
         self.ops.push(Op::MatMul {
             a: a.id,
@@ -514,16 +569,8 @@ impl GraphBuilder {
         ctor: fn(TensorId, TensorId, TensorId) -> Op,
         op_name: &'static str,
     ) -> Tensor {
-        assert_eq!(
-            lhs.dtype, rhs.dtype,
-            "{}: dtype mismatch",
-            op_name
-        );
-        assert_eq!(
-            lhs.shape, rhs.shape,
-            "{}: shape mismatch",
-            op_name
-        );
+        assert_eq!(lhs.dtype, rhs.dtype, "{}: dtype mismatch", op_name);
+        assert_eq!(lhs.shape, rhs.shape, "{}: shape mismatch", op_name);
         let out = self.alloc(DType::U8, lhs.shape.clone());
         self.ops.push(ctor(lhs.id, rhs.id, out.id));
         out
@@ -534,7 +581,11 @@ impl GraphBuilder {
         self.compare(
             lhs,
             rhs,
-            |l, r, o| Op::Equal { lhs: l, rhs: r, output: o },
+            |l, r, o| Op::Equal {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
             "equal",
         )
     }
@@ -543,7 +594,11 @@ impl GraphBuilder {
         self.compare(
             lhs,
             rhs,
-            |l, r, o| Op::Less { lhs: l, rhs: r, output: o },
+            |l, r, o| Op::Less {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
             "less",
         )
     }
@@ -552,7 +607,11 @@ impl GraphBuilder {
         self.compare(
             lhs,
             rhs,
-            |l, r, o| Op::Greater { lhs: l, rhs: r, output: o },
+            |l, r, o| Op::Greater {
+                lhs: l,
+                rhs: r,
+                output: o,
+            },
             "greater",
         )
     }
@@ -562,9 +621,18 @@ impl GraphBuilder {
     /// Per-element `predicate ? true_value : false_value`.
     pub fn where_(&mut self, predicate: &Tensor, t: &Tensor, f: &Tensor) -> Tensor {
         assert_eq!(predicate.dtype, DType::U8, "where: predicate must be u8");
-        assert_eq!(predicate.shape, t.shape, "where: predicate/true_value shape mismatch");
-        assert_eq!(t.shape, f.shape, "where: true_value/false_value shape mismatch");
-        assert_eq!(t.dtype, f.dtype, "where: true_value/false_value dtype mismatch");
+        assert_eq!(
+            predicate.shape, t.shape,
+            "where: predicate/true_value shape mismatch"
+        );
+        assert_eq!(
+            t.shape, f.shape,
+            "where: true_value/false_value shape mismatch"
+        );
+        assert_eq!(
+            t.dtype, f.dtype,
+            "where: true_value/false_value dtype mismatch"
+        );
         let out = self.alloc(t.dtype, t.shape.clone());
         self.ops.push(Op::Where {
             predicate: predicate.id,
@@ -608,7 +676,7 @@ impl GraphBuilder {
 
 fn assert_float(dt: DType, op_name: &'static str) {
     assert!(
-        matches!(dt, DType::F32),
+        dt.is_float(),
         "{}: dtype must be a float (got {})",
         op_name,
         dt

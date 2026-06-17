@@ -1,0 +1,18 @@
+[package]
+name = "coding-adventures-maxima-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Maxima runtime — a thin session facade reusing the Macsyma symbolic stack"
+license = "MIT"
+
+[dependencies]
+# Renamed so the source can refer to the dependency by its short crate name
+# `macsyma_runtime` while the published package keeps its `coding-adventures-`
+# prefix (the same pattern matlab-runtime uses for array-runtime).
+macsyma_runtime = { package = "coding-adventures-macsyma-runtime", path = "../macsyma-runtime" }
+# The same lexer the macsyma parser consumes. We tokenize once up front (the
+# lexer is iterative, so unlike the parser it cannot stack-overflow) to measure
+# per-statement token counts from the *real* token stream — comments and
+# whitespace already skipped, strings already coalesced — rather than re-deriving
+# the lexical model in the façade (which is bypassable, as a review found).
+macsyma_lexer = { package = "coding-adventures-macsyma-lexer", path = "../macsyma-lexer" }

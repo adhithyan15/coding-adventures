@@ -32,11 +32,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Formula bar: the selected cell's address + an editable source line. -->
+        <!-- Formula bar: the selected cell's address + an editable source line,
+             plus a "Fill ↓ 10" button that drag-fills the selection down. -->
         <Grid Grid.Row="0" Margin="0,0,0,6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="64"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="AddressText" Grid.Column="0"
                        VerticalAlignment="Center"
@@ -45,6 +47,13 @@
                      Background="#2D2D30" Foreground="#CCCCCC" BorderBrush="#3F3F46"
                      FontSize="13" FontFamily="Consolas"
                      KeyDown="FormulaBox_KeyDown"/>
+            <!-- Drag-fill: replicate the selected cell into the 10 rows below it. -->
+            <Button x:Name="FillButton" Grid.Column="2" Margin="8,0,0,0" Height="28"
+                    Background="#2D2D30" Foreground="#CCCCCC" BorderBrush="#3F3F46"
+                    BorderThickness="1" FontSize="12" FontFamily="Consolas"
+                    Content="Fill ↓ 10"
+                    ToolTipService.ToolTip="Replicate the selected cell into the 10 rows below it"
+                    Click="FillButton_Click"/>
         </Grid>
 
         <!-- Column-letter header (frozen vertically, follows horizontal pan). -->

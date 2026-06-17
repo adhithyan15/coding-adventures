@@ -117,7 +117,11 @@ Two-axis scroll with frozen chrome, kept in sync by one-way controller links
 follows the body's horizontal pan and the row-number gutter (its own virtualized
 `ListView`) follows the body's vertical scroll. Tap a cell → `selectInf(row,col)`
 (clamps, loads the source into the formula bar); press Enter → `commitInf(text)`
-(writes through, recomputes dependents, regrows the extent). `InfiniteSheetModel`
+(writes through, recomputes dependents, regrows the extent). The **"Fill ↓ 10"**
+button calls `InfiniteSheetModel.fillDown(10)` (over the C ABI's `sc_fill`) to
+replicate the selected cell into the 10 rows below it — the engine shifts each
+copy's relative references (`=A1`→`=A2`, …), pins absolute (`$`) refs, and
+carries the format. `InfiniteSheetModel`
 (in `lib/engine.dart`) seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) so
 there's something to scroll to, and derives the extent from `usedRange()` + a
 margin.

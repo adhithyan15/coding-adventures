@@ -927,4 +927,136 @@ mod tests {
         assert!(a.source.contains("(-(5))"), "neg: got:\n{}", a.source);
         assert!(!a.source.contains("__Sir.callBuiltin(\"neg\""), "got:\n{}", a.source);
     }
+
+    #[test]
+    fn lambda_builtin_lowers_to_inner_closure_ts() {
+        // Ruby `lambda { … }` / `->{…}` reach the backend as
+        // `BuiltinCall("lambda", [MakeClosure])`.  The lambda *is* its closure,
+        // so it must emit the inner `MakeClosure` (→ `new __Sir.Closure`)
+        // directly, never route through the eager dispatch table.
+        let mc = Expr::MakeClosure { fn_name: "main".into(), captures: vec![], span: s() };
+        let lam = bc("lambda", vec![mc]);
+        let a = compile(&module_with_main_body(vec![], lam, &[Feature::Closures]))
+            .expect("compile");
+        assert!(a.source.contains("new __Sir.Closure("), "got:\n{}", a.source);
+        assert!(!a.source.contains("__Sir.callBuiltin(\"lambda\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn range_builtin_lowers_to_runtime_and_imports_ts() {
+        // Ruby `a..b` / `a...b` reach the backend as
+        // `BuiltinCall("range", [start, stop, exclusive])`.  It must lower to the
+        // `__SirRange.range(...)` constructor, gate in the range-runtime import,
+        // and never route through the eager dispatch table.
+        let rng = bc(
+            "range",
+            vec![
+                Expr::IntLit { value: 1, span: s() },
+                Expr::IntLit { value: 5, span: s() },
+                Expr::BoolLit { value: false, span: s() },
+            ],
+        );
+        let a = compile(&module_with_main_body(vec![], rng, &[])).expect("compile");
+        assert!(a.source.contains("__SirRange.range(1, 5, false)"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("from \"@coding-adventures/sir-runtime-range\""),
+            "missing range import; got:\n{}",
+            a.source
+        );
+        assert!(!a.source.contains("__Sir.callBuiltin(\"range\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn splat_in_seq_literal_emits_native_spread_ts() {
+        use semantic_ir::{Scope, Stmt};
+        // Ruby `mid = [9]; [1, *mid, 3]` → a `SeqLit` whose middle element is
+        // `BuiltinCall("splat", [mid])`.  TypeScript splices it natively as
+        // `...mid` inside the array literal.
+        let bind = Stmt::LetBinding {
+            name: "mid".into(),
+            sir_type: None,
+            value: Expr::SeqLit { items: vec![Expr::IntLit { value: 9, span: s() }], span: s() },
+            span: s(),
+        };
+        let mid = Expr::VarRef { name: "mid".into(), scope: Scope::Local, span: s() };
+        let seq = Expr::SeqLit {
+            items: vec![
+                Expr::IntLit { value: 1, span: s() },
+                bc("splat", vec![mid]),
+                Expr::IntLit { value: 3, span: s() },
+            ],
+            span: s(),
+        };
+        let a = compile(&module_with_main_body(vec![bind], seq, &[Feature::Sequences]))
+            .expect("compile");
+        assert!(a.source.contains("[1, ...mid, 3]"), "got:\n{}", a.source);
+        assert!(!a.source.contains("__Sir.callBuiltin(\"splat\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn splat_call_arg_emits_native_spread_ts() {
+        use semantic_ir::{Scope, Stmt};
+        // Ruby `a = [1]; main(*a)` → `DirectCall` with arg
+        // `BuiltinCall("splat", [a])` → native `...a` argument spread.
+        let bind = Stmt::LetBinding {
+            name: "a".into(),
+            sir_type: None,
+            value: Expr::SeqLit { items: vec![Expr::IntLit { value: 1, span: s() }], span: s() },
+            span: s(),
+        };
+        let a_arg = bc("splat", vec![Expr::VarRef { name: "a".into(), scope: Scope::Local, span: s() }]);
+        let call = Expr::DirectCall {
+            fn_name: "main".into(),
+            args: vec![a_arg],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let a = compile(&module_with_main_body(vec![bind], call, &[Feature::Sequences]))
+            .expect("compile");
+        assert!(a.source.contains("(...a)"), "got:\n{}", a.source);
+        assert!(!a.source.contains("__Sir.callBuiltin(\"splat\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn double_splat_call_arg_is_deferred_to_dispatch_ts() {
+        use semantic_ir::{Scope, Stmt};
+        // TS has no faithful keyword-spread form (no kwargs; SIR maps are
+        // `Map`), so per the v0 cut-line `**h` in call position is deferred: it
+        // falls through to the eager dispatch, which raises a clear
+        // unknown-builtin error rather than emitting silently wrong code.
+        let bind = Stmt::LetBinding {
+            name: "h".into(),
+            sir_type: None,
+            value: Expr::MapLit { entries: vec![], span: s() },
+            span: s(),
+        };
+        let h_arg = bc("double_splat", vec![Expr::VarRef { name: "h".into(), scope: Scope::Local, span: s() }]);
+        let call = Expr::DirectCall {
+            fn_name: "main".into(),
+            args: vec![h_arg],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let a = compile(&module_with_main_body(vec![bind], call, &[Feature::Maps]))
+            .expect("compile");
+        assert!(a.source.contains("__Sir.callBuiltin(\"double_splat\""), "got:\n{}", a.source);
+        // It is NOT mistakenly emitted as a JS spread.
+        assert!(!a.source.contains("(...h)"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn no_range_import_when_unused_ts() {
+        // A module that never builds a range must not gain the range dependency.
+        let a = compile(&module_with_main_body(
+            vec![],
+            Expr::IntLit { value: 7, span: s() },
+            &[],
+        ))
+        .expect("compile");
+        assert!(
+            !a.source.contains("@coding-adventures/sir-runtime-range"),
+            "unexpected range import; got:\n{}",
+            a.source
+        );
+    }
 }

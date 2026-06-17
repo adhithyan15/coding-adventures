@@ -173,6 +173,15 @@ public sealed partial class InfiniteSheet : UserControl
         e.Handled = true;
     }
 
+    /// Drag-fill: replicate the selected cell into the 10 rows below it. The
+    /// engine shifts each copy's relative refs, pins absolute ($) refs, carries
+    /// the format, and recomputes every dependent; then repaint the visible rows.
+    private void FillButton_Click(object sender, RoutedEventArgs e)
+    {
+        _model.FillDown(10);
+        RepaintRealizedRows();
+    }
+
     private void RefreshFormulaBar()
     {
         AddressText.Text = _model.InfAddress;

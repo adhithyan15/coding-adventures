@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-06-16
+
+### Added (via the shared `s-runtime` lvalue machinery)
+
+- **R-14 — index sub-assignment**: `m[i, j] <- v`, `m[i, ] <- v`, `m[, j] <- v`,
+  `m[rows, cols] <- v`, and 1-D `v[i] <- val`, `v[-i] <- val`,
+  `v[logical] <- val`. The RHS recycles R-style; the matrix keeps its `dim`.
+  Sub-assignment is copy-on-modify (a prior `b <- a` copy is unaffected); an
+  out-of-range/`NA` index, an empty replacement, or an undefined base are clean
+  errors. This completes the R-13 deferral. See `s-runtime` 0.10.0.
+
+## [0.8.0] - 2026-06-16
+
+### Added (via the shared `s-runtime` + the `r.grammar` index_suffix change)
+
+- **R-13 — 2-D matrix indexing**: `m[i, j]`, `m[i, ]`, `m[, j]`, `m[rows, cols]`
+  (drop-to-vector on a single row/column), `m[i]` linear indexing, and full
+  positive / negative / logical subscript support (which also fixes 1-D vector
+  negative/logical indexing). Sub-assignment `m[i, j] <- v` is deferred to R-14.
+  See `s-runtime` 0.9.0.
+
+## [0.7.0] - 2026-06-16
+
+### Added (via the shared `s-runtime`)
+
+- **R-12 — matrix linear algebra**: `diag()`, `rowSums`/`colSums`/`rowMeans`/
+  `colMeans` (with `na.rm`), `cbind()`/`rbind()`, and `solve()`/`det()`. See
+  `s-runtime` 0.8.0.
+
 ## [0.6.0] - 2026-06-16
 
 ### Added (via the shared `s-runtime`)

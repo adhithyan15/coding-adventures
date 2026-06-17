@@ -541,19 +541,19 @@ impl ShardedHttpServer<transport_platform::windows::WindowsTransportPlatform> {
 /// serialized response back to the originating connection. Handler concurrency is
 /// thereby decoupled from the I/O thread — parallel *by request*.
 ///
-/// **WEB01b-1a scope.** Each framed request is submitted to the pool as it
-/// arrives, and the router writes responses back as workers finish. This serves
-/// one-request-and-close and *sequential* keep-alive correctly and in order
-/// (a sequential client has at most one request in flight at a time, so the
-/// unordered pool cannot reorder its responses). Gating a *pipelined* connection
-/// to one in-flight request — and reordering the pool's out-of-order responses
-/// into HTTP/1.1 wire order — needs a per-connection reorder buffer and is
-/// **WEB01b-1b**. (We intentionally do not use `stream-reactor`'s `defer_read`
-/// here: it replays the deferred chunk on resume, which would corrupt framing
-/// for bytes the handler already consumed — see the handler comment in `bind`.)
-/// Parallelism is across requests, bounded by `worker_count`. The platform
-/// (kqueue / epoll / IOCP) is selected internally by `EmbeddableTcpServer`, so
-/// this type is cross-platform with no per-OS binds.
+/// Each framed request is submitted to the pool as it arrives, so a single
+/// connection can have many requests in flight at once (full HTTP/1.1
+/// pipelining). **WEB01b-1b** keeps the wire correct: the server enables the
+/// mailbox's `ordered_responses`, so the response router writes each connection's
+/// replies in **submission order** (a per-connection reorder buffer) even though
+/// the worker pool finishes them out of order. The reorder buffer is bounded by
+/// the pool's queue depth — a connection that pipelines past it is shed with a
+/// 503 (backpressure), never unbounded buffering. (We intentionally do not use
+/// `stream-reactor`'s `defer_read` for gating: it replays the deferred chunk on
+/// resume, which would corrupt framing for bytes the handler already consumed —
+/// see the handler comment in `bind`.) Parallelism is across requests, bounded by
+/// `worker_count`. The platform (kqueue / epoll / IOCP) is selected internally by
+/// `EmbeddableTcpServer`, so this type is cross-platform with no per-OS binds.
 #[derive(Clone)]
 pub struct MailboxHttpServer {
     inner: EmbeddableTcpServer<HttpConnectionState>,
@@ -578,6 +578,13 @@ impl MailboxHttpServer {
                 host: host.to_string(),
                 port,
                 worker_processes: worker_count.max(1),
+                // WEB01b-1b: write each connection's responses back in submission
+                // order so a pipelined keep-alive connection's replies stay in
+                // HTTP/1.1 request order even when the pool finishes them out of
+                // order (the pool is unordered). The reorder buffer is bounded by
+                // the pool's queue depth — a connection that pipelines past it gets
+                // a 503 (backpressure), not unbounded buffering.
+                ordered_responses: true,
                 ..EmbeddableTcpServerOptions::default()
             },
             // init — one HTTP connection state (buffer + limits) per connection.
@@ -596,10 +603,10 @@ impl MailboxHttpServer {
             // for ANY connection's response), re-feeding a possibly TCP-fragmented
             // tail into the buffer — corrupting framing (a duplicate submit, or a
             // malformed-head 400 emitted before the real response). So we keep
-            // reading instead. This serves one-request-and-close and sequential
-            // keep-alive correctly and in order; gating a PIPELINED connection to
-            // one in-flight request (and reordering the unordered pool's responses)
-            // is WEB01b-1b's job — it needs a per-connection reorder buffer regardless.
+            // reading instead. Pipelined requests on one connection are all
+            // submitted; the mailbox's `ordered_responses` (enabled below) writes
+            // their replies back in submission order via a per-connection reorder
+            // buffer (WEB01b-1b), so the wire stays HTTP/1.1-correct.
             |info: TcpConnectionInfo, state: &mut HttpConnectionState, bytes: &[u8], submitter| {
                 state.buffer.extend_from_slice(bytes);
                 // Drain EVERY complete request the read delivered — a single TCP
@@ -1222,6 +1229,109 @@ mod tests {
             observed_max >= 2,
             "expected concurrent handler execution via the pool on a single reactor, but the \
              max observed in-flight handlers was {observed_max} (inline dispatch never exceeds 1)",
+        );
+    }
+
+    /// WEB01b-1b: a `MailboxHttpServer` writes a **pipelined** connection's
+    /// responses in REQUEST order, even though the (unordered) worker pool
+    /// finishes them out of order. Determinism: the handler for request `k` sleeps
+    /// `(n-1-k)*30ms`, so the LAST pipelined request finishes FIRST in the pool.
+    /// Without the per-connection reorder buffer the client would read the bodies
+    /// reversed; with it (WEB01b-1b's `ordered_responses`), they come back
+    /// `r0, r1, …, r{n-1}` — the request order.
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn mailbox_http_server_preserves_pipelined_response_order() {
+        // Split a raw byte stream of back-to-back HTTP/1 responses into the body
+        // of each, in wire order, using each response's Content-Length.
+        fn parse_http_bodies(raw: &[u8]) -> Vec<String> {
+            fn find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
+                haystack.windows(needle.len()).position(|w| w == needle)
+            }
+            let mut bodies = Vec::new();
+            let mut pos = 0;
+            while pos < raw.len() {
+                let rest = &raw[pos..];
+                let Some(boundary) = find(rest, b"\r\n\r\n") else {
+                    break;
+                };
+                let head = String::from_utf8_lossy(&rest[..boundary]);
+                let content_length = head
+                    .lines()
+                    .find_map(|line| {
+                        line.trim()
+                            .to_ascii_lowercase()
+                            .strip_prefix("content-length:")
+                            .map(|value| value.trim().parse::<usize>().unwrap_or(0))
+                    })
+                    .unwrap_or(0);
+                let body_start = pos + boundary + 4;
+                let body_end = body_start + content_length;
+                if body_end > raw.len() {
+                    break;
+                }
+                bodies.push(String::from_utf8_lossy(&raw[body_start..body_end]).into_owned());
+                pos = body_end;
+            }
+            bodies
+        }
+
+        let worker_count = 4;
+        let n = 4usize;
+
+        let server = MailboxHttpServer::bind(
+            "127.0.0.1",
+            0,
+            HttpServerOptions::default(),
+            worker_count,
+            move |request| {
+                // "/rK" → sleep longer for smaller K, so completion order is reversed.
+                let k: usize = request
+                    .target()
+                    .trim_start_matches("/r")
+                    .parse()
+                    .unwrap_or(0);
+                thread::sleep(Duration::from_millis(((n - 1 - k) * 30) as u64));
+                HttpResponse::ok(format!("r{k}")).with_header("Content-Type", "text/plain")
+            },
+        )
+        .expect("bind mailbox HTTP server");
+
+        let addr = server.local_addr();
+        let serve_handle = {
+            let server = server.clone();
+            thread::spawn(move || server.serve())
+        };
+        thread::sleep(Duration::from_millis(50));
+
+        // One connection; all N requests pipelined in a single write (keep-alive,
+        // the last carrying `Connection: close` so the server closes after the
+        // final response and we can read to EOF).
+        let mut stream = TcpStream::connect(addr).expect("connect");
+        stream
+            .set_read_timeout(Some(Duration::from_secs(10)))
+            .unwrap();
+        let mut pipelined = String::new();
+        for k in 0..n {
+            let close = if k == n - 1 { "Connection: close\r\n" } else { "" };
+            pipelined.push_str(&format!("GET /r{k} HTTP/1.1\r\nHost: localhost\r\n{close}\r\n"));
+        }
+        stream
+            .write_all(pipelined.as_bytes())
+            .expect("write pipelined requests");
+
+        let mut raw = Vec::new();
+        stream.read_to_end(&mut raw).expect("read all responses");
+
+        let bodies = parse_http_bodies(&raw);
+        server.stop();
+        let _ = serve_handle.join();
+
+        let expected: Vec<String> = (0..n).map(|k| format!("r{k}")).collect();
+        assert_eq!(
+            bodies, expected,
+            "pipelined responses must be written in request order despite out-of-order \
+             completion (got {bodies:?})",
         );
     }
 }

@@ -547,6 +547,7 @@ fn lower_rule_tracked(
                 probability: Probability::Value(p),
                 provenance: logic_engine::Provenance::unattributed(),
                 priority: logic_engine::Priority::Default,
+                context: None,
             })));
         }
         "constraint" => {
@@ -739,6 +740,7 @@ fn lower_rule(
                 probability: Probability::Value(p),
                 provenance: logic_engine::Provenance::unattributed(),
                 priority: logic_engine::Priority::Default,
+                context: None,
             });
         }
         "constraint" => {
