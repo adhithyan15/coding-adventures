@@ -47,17 +47,21 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   not a statement terminator) — the same shape as the R/S lexer's hook.
 - **W-3 — `wolfram-parser`.** The committed `_grammar.rs` compiled from
   `wolfram.grammar`, over the generic `parser::GrammarParser`.
-- **W-4 — `wolfram-runtime`.** *(implemented — see §7.)* A `WolframSession` that
-  lowers the parsed `GrammarASTNode` into `symbolic-ir`, evaluates with
-  `symbolic-vm` (the shared `SymbolicBackend` over `build_handler_table`), and
-  applies `cas-pattern-matching` for `/.`. String-in / string-out, like the
-  Maxima/Octave facades. `Simplify`/`Expand` and the full `cas-*` surface are
-  W-6.
-- **W-5 — `wolfram-repl` + the `wolfram` (alias `math`) binary.** The
-  interactive prompt (`In[n]:= ` / `Out[n]= `), line-continuation across open
-  brackets, mirroring the other REPLs.
-- **W-6 — the `cas-*` function surface under Wolfram names** (`Sin`, `Expand`,
-  `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing `cas-*` crates.
+- **W-4 — `wolfram-runtime` + `wolfram-repl`.** *(implemented — see §7.)* A
+  `WolframSession` that lowers the parsed `GrammarASTNode` into `symbolic-ir`,
+  evaluates with `symbolic-vm` (the shared `SymbolicBackend` over
+  `build_handler_table`), and applies `cas-pattern-matching` for `/.`. String-in /
+  string-out, like the Maxima/Octave facades, plus the interactive
+  `wolfram-repl` (`In[n]:= ` / `Out[n]= `, the `wolfram`/`math` binary).
+  `Simplify`/`Expand` and the full `cas-*` surface are W-6.
+- **W-5 — more built-ins & evaluation.** *(implemented — see §8.)* List,
+  functional, control, and numeric built-ins lowered onto the *same* symbolic
+  substrate (no bespoke evaluator): `Length`, `First`, `Last`, `Part`, `Append`,
+  `Range`, `Map`, `Apply`, `If`, `N`, and the comparison/equality/logical heads.
+- **W-6 — the `cas-*` function surface under Wolfram names** (`Expand`,
+  `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing `cas-*` crates,
+  plus the operator sugar deferred from W-5 (`/@`, `@@`, `[[ ]]`, and the `&&`,
+  `||`, `<=`, `>=` *long-name* heads if any further grammar work is needed).
 
 ## §3 The supported surface (the grammar)
 
@@ -106,8 +110,11 @@ W-1 grammar deliberately omits, to be added later if warranted:
 - **Implicit multiplication by juxtaposition.** Real Wolfram reads `2 x` as
   `2*x`; that is genuinely hard in a context-free grammar, so this subset
   **requires an explicit `*`**. (`2 x` will not parse; write `2*x`.)
-- **`[[ … ]]` `Part`, `;;` `Span`**, `@`/`@@`/`/@` (prefix/apply/map), `&`
-  pure functions and `#`/`#1` slots, `~f~` infix, `|` `Alternatives`,
+- **The `[[ … ]]` `Part` *sugar*, `;;` `Span`**, `@`/`@@`/`/@`
+  (prefix/apply/map), `&` pure functions and `#`/`#1` slots, `~f~` infix, `|`
+  `Alternatives`, — the `Part[expr, i]`, `Map[f, list]`, and `Apply[f, list]`
+  *head* forms ship in W-5 (§8); only the operator sugar (`[[ ]]`, `/@`, `@@`)
+  is deferred to W-6.
   `..`/`...` repeated patterns, `/;` `Condition`, `:` `Optional`/`Pattern`
   binding, `'` `Derivative`, `%` `Out`, contexts/backtick symbols.
 - **`CompoundExpression` inside an expression** — `;` is supported only as a
@@ -203,7 +210,7 @@ layered guards stop a single crafted input from crashing or wedging a session:
    and the session is rebuilt after a caught panic so the next call is always
    usable.
 
-### §7.3 W-5 REPL
+### §7.3 The REPL (shipped with W-4)
 
 `wolfram-repl` wraps a persistent `WolframSession` with the Mathematica console
 contract: `In[n]:= ` / `Out[n]= ` prompts, line-continuation while brackets are
@@ -211,6 +218,64 @@ open or a string/comment is unterminated, `Quit`/`Exit`/Ctrl-D to leave, and a
 size-capped accumulation buffer. The `wolfram` (alias `math`) binary drives it
 over stdin/stdout. This mirrors `maxima-repl`'s driver; the only Wolfram-specific
 part is that a *newline* (not `;`/`$`) terminates a complete statement.
+
+## §8 W-5 built-ins & evaluation (implemented)
+
+W-4 gave `wolfram-runtime` arithmetic, comparison, logic, lists-as-data,
+patterns/`/.`, `Set`/`SetDelayed`, and the elementary functions inherited from
+the shared `SymbolicBackend`. W-5 adds the **list, functional, control, and
+numeric built-ins** every introductory Wolfram session reaches for — and adds
+them the *same* way W-4 added everything else: by lowering onto the shared
+symbolic substrate, never a bespoke evaluator (convention: reuse shared infra).
+
+### §8.1 What W-5 adds
+
+| Surface form | Result | Notes |
+|--------------|--------|-------|
+| `Length[{a, b, c}]` | `3` | element count of a `List`; `Length` of a non-list (an atom or other head) is `0`, matching Wolfram |
+| `First[{x, y}]` | `x` | first element; `First[{}]` is left **unevaluated** (`First[{}]`), never a panic — empty-list access has no value |
+| `Last[{x, y}]` | `y` | last element; `Last[{}]` likewise unevaluated |
+| `Part[{a, b, c}, 2]` | `b` | **1-based** `i`-th element (`Part[expr, 0]` is the head); negative `i` counts from the end (`Part[{a,b,c}, -1]` is `c`); an out-of-range or non-integer index is left unevaluated |
+| `Append[{a, b}, c]` | `{a, b, c}` | a new list with `c` appended (the original is unchanged — values are immutable) |
+| `Range[3]` | `{1, 2, 3}` | `Range[n]` is `{1, …, n}`; `Range[a, b]` is `{a, …, b}`; `Range[a, b, d]` steps by `d`. **DoS-capped**: a span that would produce more than `MAX_RANGE_LENGTH` elements is left unevaluated rather than allocated |
+| `Map[f, {a, b}]` | `{f[a], f[b]}` | apply `f` to each element; the results are re-evaluated, so `Map[Sin, {0}]` is `{0}` |
+| `Apply[f, {a, b}]` | `f[a, b]` | replace the list's `List` head with `f`; `Apply[Plus, {1, 2, 3}]` is `6` because the `Plus`→`Add` bridge then folds it |
+| `If[cond, t, f]` | `t` or `f` | already worked in W-4 via the shared held `If` handler; W-5 pins it with tests. `If[cond, t]` with a false `cond` yields `False`; a non-boolean `cond` leaves the `If` unevaluated |
+| `N[1/2]` | `0.5` | numeric coercion: an exact `Integer`/`Rational` becomes a `Float`; already-float and symbolic values pass through; `N` maps over a list element-wise |
+
+`Length`, `First`, `Last`, `Part`, `Append`, `Range`, `Map`, `Apply`, and `N` are
+**function-call heads** the existing `head[args]` grammar already parses — no
+grammar/lexer change is needed for W-5. The comparison heads (`==`, `!=`, `<`,
+`>`, `<=`, `>=`), the logical operators (`&&`, `||`, `!`), and `If` were already
+wired through evaluation in W-4 (the grammar carries `LE`/`GE`/`AND`/`OR` tokens);
+W-5 only adds end-to-end tests for them.
+
+### §8.2 Where the handlers live — a decorator backend
+
+W-5 does **not** edit `symbolic-vm`'s shared `build_handler_table`. These
+built-ins are dispatched by a thin `WolframBackend` *decorator* that wraps the
+stock `SymbolicBackend`: it answers `handler_for` from its own small table of
+Wolfram list/functional/numeric handlers and **delegates everything else** —
+`lookup`, `bind`, `on_unresolved`, `on_unknown_head`, `rules`, `hold_heads`, and
+every arithmetic/elementary head — straight to the inner `SymbolicBackend`. This
+keeps the new surface local to the Wolfram lane (no 50-dependent rebuild of the
+shared crate) while still reusing the entire evaluation engine, the `Plus`→`Add`
+bridge, user-defined functions, and `/.`. Argument evaluation is unchanged: the
+VM eagerly evaluates a built-in's arguments before the handler runs (so
+`Length[Append[{1}, 2]]` sees the already-built `{1, 2}`), exactly as for `Sin`.
+
+### §8.3 DoS surface
+
+`Range` is the one new built-in that turns a *small* input into a *large*
+allocation, so it is explicitly capped: any `Range[…]` whose element count would
+exceed `MAX_RANGE_LENGTH` (a generous bound, far beyond interactive use) is left
+unevaluated instead of allocated, so `Range[10^9]` cannot exhaust memory. The
+other built-ins are size-preserving or shrinking (`Map`/`Append` are bounded by
+their already-materialised input list, which the W-4 per-statement token cap and
+input-size cap already bound). `Part`/`First`/`Last` reject out-of-range and
+empty-list access by leaving the expression unevaluated rather than indexing out
+of bounds. All of this runs inside the W-4 worker-thread `catch_unwind`, so even
+an unforeseen panic in a handler becomes a clean `Err` and the session is rebuilt.
 
 ## §6 References
 
