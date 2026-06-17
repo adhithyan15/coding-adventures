@@ -3,6 +3,27 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.0] — 2026-06-16 (narrow-width mask on the LONG model — LANG-FULL O2)
+
+### Fixed — a narrow-width op over `long` operands now masks correctly
+
+The E2 width mask (`emit_jvm_width_mask`) assumed the **int** model: a scalar exit-code
+program is concretized to `i32` (`lang_aot::concretize_scalar_any_for_jvm`), so a narrow
+`u4`/`u8`/`u16` op runs on `int` and the mask is `iconst <m>; iand`. But a **printing**
+program (Oct's `out`, Dartmouth BASIC's `PRINT`) keeps the `i64`/`long` model so its value
+can reach `print_i64`. Oct's only integer type is `u8`, so a printing Oct program (`out(1,
+200 + 100)`) emits a narrow-hinted `add`/`~` over **`long`** operands — and the bare `u8`
+hint mapped it to `iadd`/`iand`, an unverifiable mix over longs. Result: every Oct printing
+program with arithmetic returned empty on real `java` (`got ""`).
+
+Now a narrow op whose operands ride the long model stays on the long model: `ladd`/`lxor`/…
+for the op, and `i2l; land` for the mask (the masks are positive, so widening zero-extends).
+`narrow_op_over_long` keys this off the actual operand types — used in both `build_type_map`
+(so the dest gets a `Long` slot) and the op loop (so the opcode and mask agree). Concretized
+int-model programs are unchanged (operands are `int` → the int path). Fixes Oct
+`200u8 + 100u8 = 44` and `~0u8 = 255` on real `java`. New tests
+`narrow_op_over_long_operands_stays_long`, `narrow_op_over_int_operands_stays_int`.
+
 ## [0.13.3] — 2026-06-16 (Oct `&&`/`||` run on the JVM — BA-JVM-1 follow-through)
 
 ### Fixed — a `mov` bridges int↔long when the dest slot width differs
