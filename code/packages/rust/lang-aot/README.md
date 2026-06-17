@@ -4,6 +4,13 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
+> **LANG-FULL O2 — Oct bitwise `~` + u8 wrap on all 7 backends (v0.92.0):**
+> `tests/lang_matrix.rs` adds `out(1, ~0)` → `255` and `out(1, 200 + 100)` → `44` (wrap).
+> `oct-iir-compiler` 0.7.0 emits the `u8` hint on arithmetic/bitwise/`~` (Oct's only integer
+> type is u8); `iir-to-jvm-class-file` 0.14.0 masks a narrow op on the JVM **long** model
+> (`i2l; land`) since Oct's printing programs keep the i64 model — the int `iand` was
+> unverifiable over longs. Completes Oct O2.
+
 > **LANG-FULL N3 — Nib bitwise `~` runs on all 7 backends (v0.91.0):**
 > `tests/lang_matrix.rs` adds two executed `~` programs — `~0u8 == 255` and `~15u4 == 0`.
 > `nib-iir-compiler` 0.16.0 lowers unary `~` to the IIR `not` op (it had been silently

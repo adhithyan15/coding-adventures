@@ -1,5 +1,24 @@
 # Changelog — `oct-iir-compiler`
 
+## 0.7.0 — 2026-06-16 — u8 width & wrap: bitwise `~` and wrapping arithmetic (LANG-FULL O2)
+
+Oct's only integer type is `u8` (the 8008 byte; `bool` is the only other type), and the
+language spec says arithmetic "wraps modulo 256". Until now every value collapsed to an
+unmasked `i64`, so `200 + 100` produced `300` and `~0` produced `-1`. Now:
+
+- **Arithmetic / bitwise ops carry the `u8` type_hint** (`add`/`sub`/`and`/`or`/`xor`), so
+  every backend masks the result mod-2⁸: `200 + 100 = 44`. A **comparison** (`cmp_*`) keeps
+  the `i64` hint — its 0/1 `bool` result must not be masked and its operands ride i64 slots.
+- **Unary `~` lowers to the `not` op with the `u8` hint** (it already emitted `not`, but at
+  `i64` width — flipping all 64 bits). Now `~0 = 255`. Logical `!` is unchanged (still a
+  bare `not`; proper boolean negation is a separate item — only `~` is in O2 scope).
+
+There is no width to *track* the way Nib does — Oct has exactly one integer width, so every
+integer op is `u8` by construction. Proven by RUNNING on all 7 backends (`out(1, ~0)` → 255,
+`out(1, 200 + 100)` → 44). Needs `iir-to-jvm-class-file` 0.14.0 (Oct's printing programs keep
+the JVM long model, where the narrow mask had to become `i2l; land`). New unit tests
+`o2_arithmetic_carries_u8_hint_so_it_wraps`, `o2_bitwise_not_carries_u8_hint`.
+
 ## 0.6.0 — 2026-06-13 — short-circuit `&&` / `||` + i64 function returns (LANG-FULL O1)
 
 ### `&&` / `||` now short-circuit
