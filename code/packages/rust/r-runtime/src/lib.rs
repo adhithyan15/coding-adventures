@@ -589,10 +589,87 @@ mod tests {
         );
     }
 
+    // --- R-14: sub-assignment ------------------------------------------
+
     #[test]
-    fn matrix_sub_assignment_is_deferred() {
-        // `m[i, j] <- v` is not yet supported (R-14); it errors cleanly rather
-        // than panicking or silently doing nothing.
-        assert!(eval_r("m <- matrix(1:6, 2, 3)\nm[1, 1] <- 99\n").is_err());
+    fn vector_element_and_multi_assignment() {
+        assert_eq!(nums("v <- c(1, 2, 3)\nv[2] <- 9\nv\n"), vec![1.0, 9.0, 3.0]);
+        assert_eq!(
+            nums("v <- c(1, 2, 3)\nv[c(1, 3)] <- 0\nv\n"),
+            vec![0.0, 2.0, 0.0]
+        );
+        // The RHS recycles to fill the selected cells.
+        assert_eq!(
+            nums("v <- c(1, 2, 3, 4)\nv[c(1, 2, 3, 4)] <- c(10, 20)\nv\n"),
+            vec![10.0, 20.0, 10.0, 20.0]
+        );
+    }
+
+    #[test]
+    fn vector_negative_and_logical_assignment() {
+        assert_eq!(
+            nums("v <- c(1, 2, 3)\nv[-2] <- 7\nv\n"),
+            vec![7.0, 2.0, 7.0]
+        );
+        assert_eq!(
+            nums("v <- c(1, 2, 3)\nv[c(TRUE, FALSE, TRUE)] <- 5\nv\n"),
+            vec![5.0, 2.0, 5.0]
+        );
+    }
+
+    #[test]
+    fn matrix_element_row_and_column_assignment() {
+        // Element: m[1,2] <- 9 (column-major (1,2) is flat index 2).
+        assert_eq!(
+            nums("m <- matrix(1:6, 2, 3)\nm[1, 2] <- 9\nc(m)\n"),
+            vec![1.0, 2.0, 9.0, 4.0, 5.0, 6.0]
+        );
+        // Whole row: recycles the scalar across the row.
+        assert_eq!(
+            nums("m <- matrix(1:6, 2, 3)\nm[1, ] <- 0\nc(m)\n"),
+            vec![0.0, 2.0, 0.0, 4.0, 0.0, 6.0]
+        );
+        // Whole column: a length-2 RHS fills column 2.
+        assert_eq!(
+            nums("m <- matrix(1:6, 2, 3)\nm[, 2] <- c(7, 8)\nc(m)\n"),
+            vec![1.0, 2.0, 7.0, 8.0, 5.0, 6.0]
+        );
+        // The matrix keeps its shape after assignment.
+        assert_eq!(
+            nums("m <- matrix(1:6, 2, 3)\nm[1, 1] <- 99\ndim(m)\n"),
+            vec![2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn matrix_submatrix_assignment_recycles() {
+        // m[,] <- 1 fills every cell.
+        assert_eq!(
+            nums("m <- matrix(1:4, 2, 2)\nm[, ] <- 1\nc(m)\n"),
+            vec![1.0, 1.0, 1.0, 1.0]
+        );
+        // A 2x2 block written with 4 values, column-major fill order.
+        assert_eq!(
+            nums("m <- matrix(0, 2, 2)\nm[1:2, 1:2] <- c(1, 2, 3, 4)\nc(m)\n"),
+            vec![1.0, 2.0, 3.0, 4.0]
+        );
+    }
+
+    #[test]
+    fn out_of_range_or_undefined_assignment_is_an_error() {
+        assert!(eval_r("m <- matrix(1:6, 2, 3)\nm[5, 1] <- 9\n").is_err());
+        // Assigning into an undefined variable's index is an error.
+        assert!(eval_r("x[1] <- 9\n").is_err());
+        // An empty replacement is an error.
+        assert!(eval_r("v <- c(1, 2, 3)\nv[1] <- c()\n").is_err());
+    }
+
+    #[test]
+    fn assignment_returns_the_value_invisibly_and_does_not_alias() {
+        // The base is rebound to a fresh value; a prior copy is unchanged.
+        assert_eq!(
+            nums("a <- c(1, 2, 3)\nb <- a\na[1] <- 99\nb\n"),
+            vec![1.0, 2.0, 3.0]
+        );
     }
 }
