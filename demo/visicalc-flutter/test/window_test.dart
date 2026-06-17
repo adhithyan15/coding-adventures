@@ -117,5 +117,22 @@ void main() {
       expect(m.rowCells(5)[0], '139.00'); // A5 = 15+108+12+4, formatted
       expect(m.rowCells(5)[4], '269.00'); // E5 grand total, formatted
     });
+
+    test('fillDown replicates the selected cell, shifting relative refs', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // Seed a fresh column via select+commit: H1=2, H2=3, H3=4 (col 8 = H);
+      // I1 = H1*10 (col 9 = I). Select I1 and fill down 10 — each filled formula
+      // tracks its row (I2 = H2*10 = 30, …).
+      m.selectInf(1, 8); m.commitInf('2'); // H1
+      m.selectInf(2, 8); m.commitInf('3'); // H2
+      m.selectInf(3, 8); m.commitInf('4'); // H3
+      m.selectInf(1, 9); m.commitInf('=H1*10'); // I1 = 20
+      m.selectInf(1, 9);
+      m.fillDown(10);
+      expect(m.rowCells(2)[8], '30'); // I2 = H2*10
+      expect(m.rowCells(3)[8], '40'); // I3 = H3*10
+      expect(m.rowCells(1)[8], '20'); // I1 source untouched
+    });
   });
 }
