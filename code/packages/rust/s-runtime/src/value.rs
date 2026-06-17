@@ -777,6 +777,117 @@ fn index_matrix_2d(
 }
 
 // ===========================================================================
+// Sub-assignment — `x[i] <- v`, `m[i, j] <- v` (R-14)
+// ===========================================================================
+
+/// Resolve a subscript into concrete write positions, rejecting `NA` /
+/// out-of-range (R forbids assigning *to* an `NA` or beyond-the-end position —
+/// the vector-extending case is deferred). `None` means the whole length.
+fn assign_positions(len: usize, slot: Option<&SValue>) -> SResult<Vec<usize>> {
+    match slot {
+        None => Ok((0..len).collect()),
+        Some(idx) => resolve_picks(len, idx)?
+            .into_iter()
+            .map(|p| {
+                p.ok_or_else(|| {
+                    SError::Index("NAs/out-of-range are not allowed in index assignment".into())
+                })
+            })
+            .collect(),
+    }
+}
+
+/// Write the recycled numeric `rhs` into `slots` of `out` (R recycles the
+/// replacement to fill the selected cells; an empty replacement is an error).
+fn write_recycled(out: &mut [f64], slots: &[usize], rhs: &Double) -> SResult<()> {
+    if rhs.is_empty() {
+        return Err(SError::BadArgs("replacement has length zero".into()));
+    }
+    let src = rhs.data();
+    for (k, &pos) in slots.iter().enumerate() {
+        out[pos] = src[k % src.len()];
+    }
+    Ok(())
+}
+
+/// `base[idx] <- rhs` — single-subscript assignment. Numeric only; a matrix
+/// keeps its shape (linear write over the flat column-major data). Returns the
+/// modified value (the caller rebinds it), so the original binding is never
+/// mutated in place — no aliasing.
+pub fn assign_index(base: &SValue, idx: Option<&SValue>, rhs: &SValue) -> SResult<SValue> {
+    let rhs_d = rhs.as_double()?;
+    match base {
+        SValue::Matrix { data, nrow, ncol } => {
+            let slots = assign_positions(data.len(), idx)?;
+            let mut out = data.data().to_vec();
+            write_recycled(&mut out, &slots, &rhs_d)?;
+            Ok(SValue::Matrix {
+                data: Double::from_values(out),
+                nrow: *nrow,
+                ncol: *ncol,
+            })
+        }
+        SValue::Double(d) => {
+            let slots = assign_positions(d.len(), idx)?;
+            let mut out = d.data().to_vec();
+            write_recycled(&mut out, &slots, &rhs_d)?;
+            Ok(SValue::Double(Double::from_values(out)))
+        }
+        SValue::Classed { inner, class } => Ok(SValue::Classed {
+            inner: Box::new(assign_index(inner, idx, rhs)?),
+            class: class.clone(),
+        }),
+        other => Err(SError::TypeError(format!(
+            "cannot index-assign into a value of type '{}'",
+            other.type_name()
+        ))),
+    }
+}
+
+/// `m[rows, cols] <- rhs` — two-subscript matrix assignment (column-major; the
+/// recycled `rhs` fills the selected cells in column order, matching R).
+pub fn assign_index2d(
+    base: &SValue,
+    rows: Option<&SValue>,
+    cols: Option<&SValue>,
+    rhs: &SValue,
+) -> SResult<SValue> {
+    match base {
+        SValue::Matrix { data, nrow, ncol } => {
+            let (nrow, ncol) = (*nrow, *ncol);
+            let rsel = resolve_dim(rows, nrow)?;
+            let csel = resolve_dim(cols, ncol)?;
+            let rhs_d = rhs.as_double()?;
+            if rhs_d.is_empty() {
+                return Err(SError::BadArgs("replacement has length zero".into()));
+            }
+            let src = rhs_d.data();
+            let mut out = data.data().to_vec();
+            let mut k = 0usize;
+            for &c in &csel {
+                for &r in &rsel {
+                    out[c * nrow + r] = src[k % src.len()];
+                    k += 1;
+                }
+            }
+            Ok(SValue::Matrix {
+                data: Double::from_values(out),
+                nrow,
+                ncol,
+            })
+        }
+        SValue::Classed { inner, class } => Ok(SValue::Classed {
+            inner: Box::new(assign_index2d(inner, rows, cols, rhs)?),
+            class: class.clone(),
+        }),
+        other => Err(SError::Index(format!(
+            "incorrect number of dimensions for {}",
+            other.type_name()
+        ))),
+    }
+}
+
+// ===========================================================================
 // Formatting — the printed representation, with the [i] index prefix
 // ===========================================================================
 

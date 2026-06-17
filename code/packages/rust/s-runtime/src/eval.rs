@@ -20,8 +20,8 @@ use crate::builtins;
 use crate::env::{define, lookup, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
-    arithmetic, bounded_sequence, class_of, compare, format_value, index, index2d, membership,
-    negate, Arg, Param, SValue, MAX_SEQ_LEN,
+    arithmetic, assign_index, assign_index2d, bounded_sequence, class_of, compare, format_value,
+    index, index2d, membership, negate, Arg, Param, SValue, MAX_SEQ_LEN,
 };
 use coding_adventures_s_parser::try_parse_s;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -263,10 +263,56 @@ impl Interpreter {
         } else {
             (nodes[0], nodes[1]) // target <- value
         };
-        let name = lvalue_name(target_node)?;
         let value = self.eval_node(value_node, env)?;
-        define(env, &name, value.clone());
-        self.as_invisible(value)
+        // A bare-name target is the simple case; otherwise try `x[...] <- v`
+        // sub-assignment (R-14) before giving up.
+        match lvalue_name(target_node) {
+            Ok(name) => {
+                define(env, &name, value.clone());
+                self.as_invisible(value)
+            }
+            Err(simple_err) => self.eval_indexed_assignment(target_node, value, env, simple_err),
+        }
+    }
+
+    /// Handle `x[i] <- v` / `m[i, j] <- v` — evaluate the base variable, resolve
+    /// the subscripts, write the recycled RHS into the selected cells of a
+    /// *clone*, and rebind the base name (so other bindings can't be corrupted).
+    fn eval_indexed_assignment(
+        &self,
+        target: &GrammarASTNode,
+        rhs: SValue,
+        env: &Env,
+        simple_err: SError,
+    ) -> SResult<SValue> {
+        // The target must reduce to a `postfix` of the form `NAME [ subscripts ]`.
+        let postfix = descend_to_postfix(target).ok_or(simple_err)?;
+        let parts = node_children(postfix);
+        // primary + exactly one index_suffix (no chained `$`/`[[`/`()` for now).
+        let (primary, suffix) = match parts.as_slice() {
+            [primary, suffix] if suffix.rule_name == "index_suffix" => (*primary, *suffix),
+            _ => {
+                return Err(SError::TypeError(
+                    "unsupported assignment target (only `x[...] <- v` is supported)".into(),
+                ))
+            }
+        };
+        let base_name = lvalue_name(primary)?;
+        let current =
+            lookup(env, &base_name).ok_or_else(|| SError::Undefined(base_name.clone()))?;
+
+        let subs = self.eval_subscripts(suffix, env)?;
+        let updated = match subs.len() {
+            1 => assign_index(&current, subs[0].as_ref(), &rhs)?,
+            2 => assign_index2d(&current, subs[0].as_ref(), subs[1].as_ref(), &rhs)?,
+            n => {
+                return Err(SError::Index(format!(
+                    "incorrect number of dimensions ({n}) in assignment"
+                )))
+            }
+        };
+        define(env, &base_name, updated);
+        self.as_invisible(rhs)
     }
 
     // -----------------------------------------------------------------------
