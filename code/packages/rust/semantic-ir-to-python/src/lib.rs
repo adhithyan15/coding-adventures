@@ -1057,4 +1057,44 @@ mod tests {
         assert!(a.source.contains("_sir_make_closure("), "got:\n{}", a.source);
         assert!(!a.source.contains("_sir_call_builtin(\"lambda\""), "got:\n{}", a.source);
     }
+
+    #[test]
+    fn range_builtin_lowers_to_runtime_and_imports_py() {
+        // Ruby `a..b` / `a...b` reach the backend as
+        // `BuiltinCall("range", [start, stop, exclusive])`.  It must lower to the
+        // `_sir_range(...)` constructor, gate in the range-runtime import, and
+        // never route through the eager dispatch table.
+        let rng = bc(
+            "range",
+            vec![
+                Expr::IntLit { value: 1, span: s() },
+                Expr::IntLit { value: 5, span: s() },
+                Expr::BoolLit { value: false, span: s() },
+            ],
+        );
+        let a = compile(&module_with_main_body(vec![], rng, &[])).expect("compile");
+        assert!(a.source.contains("_sir_range(1, 5, False)"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("from coding_adventures_sir_runtime_range import"),
+            "missing range import; got:\n{}",
+            a.source
+        );
+        assert!(!a.source.contains("_sir_call_builtin(\"range\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn no_range_import_when_unused_py() {
+        // A module that never builds a range must not gain the range dependency.
+        let a = compile(&module_with_main_body(
+            vec![],
+            Expr::IntLit { value: 7, span: s() },
+            &[],
+        ))
+        .expect("compile");
+        assert!(
+            !a.source.contains("coding_adventures_sir_runtime_range"),
+            "unexpected range import; got:\n{}",
+            a.source
+        );
+    }
 }

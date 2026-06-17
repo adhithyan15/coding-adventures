@@ -59,6 +59,14 @@ fn uses_shell(m: &Module) -> bool {
     module_uses_builtin(m, "backtick")
 }
 
+/// True if the module calls the `range` builtin (a Ruby `a..b` / `a...b`
+/// literal lowers to `BuiltinCall("range", [start, stop, exclusive])`).  Range
+/// is not a SIR `Feature`, so we detect it by walking for the builtin name; a
+/// positive result gates the `coding-adventures-sir-runtime-range` import.
+fn uses_range(m: &Module) -> bool {
+    module_uses_builtin(m, "range")
+}
+
 /// Walk every function body looking for a `BuiltinCall` named `name`.  Used to
 /// gate per-concern runtime imports for builtins that carry no `Feature` flag
 /// (e.g. `regex`).  Exhaustive over `Stmt`/`Expr` so a new node can't silently
@@ -194,6 +202,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only backtick-using modules import the shell runtime.
     if uses_shell(m) {
         out.push_str(crate::runtime::RUNTIME_SHELL);
+    }
+    // Only range-using modules import the range runtime.
+    if uses_range(m) {
+        out.push_str(crate::runtime::RUNTIME_RANGE);
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
@@ -831,6 +843,16 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // returning the command's stdout.  Gated by `uses_shell`.
     if name == "backtick" {
         out.push_str("_sir_shell_backtick(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    // `range` (a Ruby `a..b` / `a...b` literal) → construct a first-class SIR
+    // `Range` via the range runtime.  Args are `[start, stop, exclusive]`
+    // (start/stop may be `NilLit` for the begin/endless forms).  Gated by
+    // `uses_range`.
+    if name == "range" {
+        out.push_str("_sir_range(");
         emit_args(out, args, indent);
         out.push(')');
         return;
