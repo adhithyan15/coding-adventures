@@ -58,4 +58,20 @@ final class WindowedModelTests: XCTestCase {
         // 115+8+12+4 = 139, formatted as a percent ("0.0%") → "13900.0%".
         XCTAssertEqual(m.window(rows: 1000...1000, cols: 26...26)[0][0], "13900.0%")
     }
+
+    /// Drag-fill replicates the selected cell, shifting relative refs per target.
+    func testFillDownShiftsRelativeReferences() {
+        let m = WindowedSheetModel()
+        // Seed a fresh column: H1=2, H2=3, H3=4 (col 8 = H); I1 = H1*10 (col 9 = I).
+        m.setCell("H1", "2")
+        m.setCell("H2", "3")
+        m.setCell("H3", "4")
+        m.setCell("I1", "=H1*10") // 20
+        // Select I1 and fill down 10 — each filled formula tracks its row.
+        m.select(row: 1, col: 9)
+        m.fillDown(10)
+        XCTAssertEqual(m.rowCells(2)[8], "30") // I2 = H2*10
+        XCTAssertEqual(m.rowCells(3)[8], "40") // I3 = H3*10
+        XCTAssertEqual(m.rowCells(1)[8], "20") // I1 source untouched
+    }
 }
