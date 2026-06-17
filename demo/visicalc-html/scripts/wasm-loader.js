@@ -107,6 +107,20 @@
           getFormat: (a1) => call1("get_format", String(a1)),
           getDisplay: (a1) => call1("get_display", String(a1)),
 
+          // Drag-fill: replicate the `src` cell across the inclusive A1
+          // rectangle `dstStart`..`dstEnd`. Relative refs shift per target,
+          // absolute ($) refs pin, the source's format carries along, an empty
+          // source clears each target. Re-read via getDisplayWindow afterwards.
+          fill: (src, dstStart, dstEnd) => {
+            const [sp, sl] = writeStr(String(src));
+            const [ap, al] = writeStr(String(dstStart));
+            const [ep, el] = writeStr(String(dstEnd));
+            ex.fill(sp, sl, ap, al, ep, el);
+            freeInput(sp, sl);
+            freeInput(ap, al);
+            freeInput(ep, el);
+          },
+
           // Viewport primitive — render only the visible window of an unbounded
           // sheet. 1-based inclusive coords.
           getWindow: (row0, col0, row1, col1) =>
