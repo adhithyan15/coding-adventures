@@ -211,6 +211,7 @@ members = [
     "octave-repl",
     "maxima-runtime",
     "maxima-repl",
+    "wolfram-lexer",
     "logic-gates",
     "logic-core",
     "lookup-core",
