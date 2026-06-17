@@ -199,6 +199,14 @@ v0 eight). `TailCalls` and `Intrinsics` remain rejected.
 
 - Go and Rust backends (static typing + Ruby exceptions/OOP make them a separate,
   larger effort).
+- **TypeScript call-position `**h` (double-splat).** Ruby `*x` / `**x` reach the
+  backend as `BuiltinCall("splat"/"double_splat", [x])`; `splat` lowers natively
+  to `*x` (Python) / `...x` (TS), and `double_splat` to `**x` in Python.
+  TypeScript has no faithful form for `**h` in call position — JS has no
+  keyword-argument call form and an SIR map is a `Map` (no object-literal/call
+  spread) — so it is a documented v0 cut-line: it falls through to the eager
+  dispatch, which raises a clear unknown-builtin error rather than emitting
+  silently wrong code.
 - Idiomatic-quality / style-transfer of emitted code (correct + readable, not
   hand-written-equivalent).
 - Changes to `semantic-ir` core or any frontend — this is purely backend

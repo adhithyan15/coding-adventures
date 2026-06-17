@@ -899,8 +899,40 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
         if i > 0 {
             out.push_str(", ");
         }
-        emit_expr(out, a, indent);
+        emit_arg(out, a, indent);
     }
+}
+
+/// Emit one argument / sequence element, expanding the splat marker into
+/// JavaScript's native spread syntax.
+///
+/// Ruby `*x` / `**x` reach the backend as `BuiltinCall("splat", [x])` /
+/// `BuiltinCall("double_splat", [x])` — a trailing call argument or an array
+/// element.
+///
+/// | SIR marker (Ruby) | TS emitted | meaning |
+/// |---|---|---|
+/// | `splat` (`f(*a)`, `[1, *a, 3]`) | `...a` | spread an iterable's items |
+/// | `double_splat` (`f(**h)`) | *(deferred)* | no faithful JS form — see below |
+///
+/// **`splat`** maps cleanly to JS `...` (array/argument spread).
+///
+/// **`double_splat`** has no faithful JS equivalent: JavaScript has no
+/// keyword-argument call form, and an SIR map is a `Map`, which does not spread
+/// into an object literal or a call.  Per the v0 cut-line documented in
+/// `code/specs/sir-runtime.md`, TS call-position `**h` is **deferred** — it
+/// falls through to the eager dispatch (`__Sir.callBuiltin("double_splat", …)`),
+/// which raises a clear unknown-builtin error rather than emitting silently
+/// wrong code.  Python, which *does* have `**`, lowers it natively.
+fn emit_arg(out: &mut String, a: &Expr, indent: usize) {
+    if let Expr::BuiltinCall { name, args, .. } = a {
+        if name == "splat" && args.len() == 1 {
+            out.push_str("...");
+            emit_expr(out, &args[0], indent);
+            return;
+        }
+    }
+    emit_expr(out, a, indent);
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
