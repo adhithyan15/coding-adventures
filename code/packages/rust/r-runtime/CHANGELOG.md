@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-06-16
+
+### Added (via the shared `s-runtime` + the `r.grammar` index_suffix change)
+
+- **R-13 — 2-D matrix indexing**: `m[i, j]`, `m[i, ]`, `m[, j]`, `m[rows, cols]`
+  (drop-to-vector on a single row/column), `m[i]` linear indexing, and full
+  positive / negative / logical subscript support (which also fixes 1-D vector
+  negative/logical indexing). Sub-assignment `m[i, j] <- v` is deferred to R-14.
+  See `s-runtime` 0.9.0.
+
 ## [0.7.0] - 2026-06-16
 
 ### Added (via the shared `s-runtime`)

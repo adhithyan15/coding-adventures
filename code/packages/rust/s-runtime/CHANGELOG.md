@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-06-16
+
+### Added
+
+- **2-D matrix indexing (R-13)** — the `[` subscript operator extended to two
+  dimensions. An `index_suffix` grammar change makes each comma-separated
+  subscript optional, so `m[i, j]`, `m[i, ]` (whole row), `m[, j]` (whole
+  column), and `m[rows, cols]` (sub-matrix) all work on `SValue::Matrix`
+  (1-based, column-major). A 2-D result follows R's `drop = TRUE` (a single
+  row/column collapses to a vector). `m[i]` indexes the flat column-major
+  vector. The empty-subscript grammar also enables `df[, j]` / `df[i, ]`.
+
+### Changed
+
+- **Index resolution now supports all three R styles** (`resolve_picks`):
+  **positive** (1-based; `0` drops, out-of-range/`NA` → `NA`), **negative**
+  (`-k` excludes; cannot mix with positive), and **logical** (a mask recycled to
+  the dimension). This fixes 1-D vector indexing — `v[-2]` and
+  `v[c(TRUE, FALSE)]` now behave correctly (logical indices were previously
+  mis-coerced to numbers). `dataframe::index2d` now takes optional (`None` =
+  whole-dimension) subscripts.
+
+### Security
+
+- Out-of-range matrix subscripts are a hard error; the logical-recycle span and
+  the 2-D result size are capped at `MAX_SEQ_LEN`, so negative/logical index
+  expansion cannot be turned into unbounded allocation.
+
 ## [0.8.0] - 2026-06-16
 
 ### Added

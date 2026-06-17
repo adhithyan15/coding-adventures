@@ -562,25 +562,75 @@ fn compare_ord(op: &str, ord: std::cmp::Ordering) -> bool {
 // Indexing — x[i] with a positive-integer index vector (v1)
 // ===========================================================================
 
-/// Index `base` with the numeric index vector `idx` (1-based). Index `0` is
-/// dropped (as in S); an out-of-range or `NA` index yields `NA`. Negative and
-/// logical indices are not supported in v1.
-pub fn index(base: &SValue, idx: &SValue) -> SResult<SValue> {
-    let positions = idx.as_double()?;
-    let len = base.length();
+/// Resolve an index vector against a dimension of length `len` into a list of
+/// selected 0-based positions (`Some(i)`), where `None` marks a slot that
+/// should become `NA` (an out-of-range or `NA` index). Supports R's three index
+/// styles:
+///
+/// * **logical** — a mask recycled to `len`; `TRUE` selects, `FALSE` skips, a
+///   `TRUE` past the end (a longer mask) and an `NA` both yield an `NA` slot;
+/// * **negative** — `-k` *excludes* position `k` (cannot be mixed with positive
+///   subscripts, and `NA` is not allowed);
+/// * **positive** — 1-based selection; `0` selects nothing, out-of-range/`NA`
+///   yield an `NA` slot.
+fn resolve_picks(len: usize, idx: &SValue) -> SResult<Vec<Option<usize>>> {
+    // Logical mask (recycled to the longer of len / mask length).
+    if let SValue::Logical(mask) = idx {
+        if mask.is_empty() {
+            return Ok(Vec::new());
+        }
+        let span = len.max(mask.len());
+        if span > MAX_SEQ_LEN {
+            return Err(SError::Index(format!(
+                "logical index too long (limit {MAX_SEQ_LEN})"
+            )));
+        }
+        let mut picks = Vec::new();
+        for i in 0..span {
+            match mask[i % mask.len()] {
+                Some(true) => picks.push(if i < len { Some(i) } else { None }),
+                Some(false) => {}
+                None => picks.push(None),
+            }
+        }
+        return Ok(picks);
+    }
 
-    // Resolve each requested 1-based position into either Some(0-based) or None
-    // (meaning NA / drop). 0 is dropped entirely.
+    let positions = idx.as_double()?;
+    let any_neg = positions.iter().any(|p| !is_na_real(p) && p < 0.0);
+    let any_pos = positions.iter().any(|p| !is_na_real(p) && p >= 1.0);
+    if any_neg && any_pos {
+        return Err(SError::Index(
+            "can't mix positive and negative subscripts".into(),
+        ));
+    }
+
+    if any_neg {
+        // Negative subscripts EXCLUDE; NA is not allowed, out-of-range is ignored.
+        if positions.iter().any(is_na_real) {
+            return Err(SError::Index(
+                "NAs are not allowed in negative subscripts".into(),
+            ));
+        }
+        let mut excluded = vec![false; len];
+        for p in positions.iter() {
+            if p == 0.0 {
+                continue;
+            }
+            let drop = (-p) as usize; // 1-based magnitude
+            if drop >= 1 && drop <= len {
+                excluded[drop - 1] = true;
+            }
+        }
+        return Ok((0..len).filter(|i| !excluded[*i]).map(Some).collect());
+    }
+
+    // Positive (the common case): 1-based, 0 drops, out-of-range/NA → NA slot.
     let mut picks: Vec<Option<usize>> = Vec::new();
     for p in positions.iter() {
         if is_na_real(p) {
             picks.push(None);
             continue;
-        }
-        if p < 0.0 {
-            return Err(SError::Index(
-                "negative subscripts are not supported in v1".into(),
-            ));
         }
         let one_based = p as usize; // truncates toward zero, like S
         if one_based == 0 {
@@ -592,6 +642,20 @@ pub fn index(base: &SValue, idx: &SValue) -> SResult<SValue> {
             picks.push(Some(one_based - 1));
         }
     }
+    Ok(picks)
+}
+
+/// Index `base` with the index vector `idx` (1-based; positive, negative, or
+/// logical — see [`resolve_picks`]). A `Matrix` is indexed *linearly* over its
+/// flat column-major data (dropping its matrix structure, as R does for `m[i]`).
+pub fn index(base: &SValue, idx: &SValue) -> SResult<SValue> {
+    // `m[i]` — single-subscript indexing of a matrix is over the flat vector.
+    if let SValue::Matrix { data, .. } = base {
+        return index(&SValue::Double(data.clone()), idx);
+    }
+
+    let len = base.length();
+    let picks = resolve_picks(len, idx)?;
 
     Ok(match base {
         SValue::Double(d) => SValue::Double(Double::from_values(
@@ -638,6 +702,78 @@ pub fn index(base: &SValue, idx: &SValue) -> SResult<SValue> {
             )))
         }
     })
+}
+
+// ===========================================================================
+// 2-D indexing — `x[rows, cols]` (R-13)
+// ===========================================================================
+
+/// `x[rows, cols]` — two-subscript indexing, where each subscript is `None`
+/// (an empty subscript: select the whole dimension) or `Some(idx)`. Dispatches
+/// to matrix or data-frame 2-D subsetting.
+pub fn index2d(value: &SValue, rows: Option<&SValue>, cols: Option<&SValue>) -> SResult<SValue> {
+    match value {
+        SValue::Matrix { data, nrow, ncol } => index_matrix_2d(data, *nrow, *ncol, rows, cols),
+        SValue::DataFrame { .. } => crate::dataframe::index2d(value, rows, cols),
+        SValue::Classed { inner, .. } => index2d(inner, rows, cols),
+        other => Err(SError::Index(format!(
+            "incorrect number of dimensions for {}",
+            other.type_name()
+        ))),
+    }
+}
+
+/// Resolve one matrix subscript into concrete 0-based positions along a
+/// dimension of length `dim`. An empty subscript (`None`) is the whole
+/// dimension; otherwise NA / out-of-range positions are a hard error (R rejects
+/// them for matrix subscripts rather than producing NA rows).
+fn resolve_dim(slot: Option<&SValue>, dim: usize) -> SResult<Vec<usize>> {
+    match slot {
+        None => Ok((0..dim).collect()),
+        Some(idx) => resolve_picks(dim, idx)?
+            .into_iter()
+            .map(|p| p.ok_or_else(|| SError::Index("subscript out of bounds".into())))
+            .collect(),
+    }
+}
+
+/// `m[rows, cols]` over a column-major matrix. The result is the `rows × cols`
+/// sub-rectangle; following R's default `drop = TRUE`, a single-row or
+/// single-column result collapses to a plain vector.
+fn index_matrix_2d(
+    data: &Double,
+    nrow: usize,
+    ncol: usize,
+    rows: Option<&SValue>,
+    cols: Option<&SValue>,
+) -> SResult<SValue> {
+    let rsel = resolve_dim(rows, nrow)?;
+    let csel = resolve_dim(cols, ncol)?;
+    let (out_nrow, out_ncol) = (rsel.len(), csel.len());
+    let total = out_nrow
+        .checked_mul(out_ncol)
+        .filter(|&t| t <= MAX_SEQ_LEN)
+        .ok_or_else(|| SError::Index(format!("matrix subset too large (limit {MAX_SEQ_LEN})")))?;
+
+    let src = data.data();
+    let mut out = vec![0.0; total];
+    for (oc, &c) in csel.iter().enumerate() {
+        for (or, &r) in rsel.iter().enumerate() {
+            // Both are column-major: (r, c) at c*nrow + r.
+            out[oc * out_nrow + or] = src[c * nrow + r];
+        }
+    }
+
+    // drop = TRUE: a single row or column becomes a vector.
+    if out_nrow == 1 || out_ncol == 1 {
+        Ok(SValue::Double(Double::from_values(out)))
+    } else {
+        Ok(SValue::Matrix {
+            data: Double::from_values(out),
+            nrow: out_nrow,
+            ncol: out_ncol,
+        })
+    }
 }
 
 // ===========================================================================
@@ -1097,8 +1233,22 @@ mod tests {
         );
         let oob = index(&base, &SValue::scalar(9.0)).unwrap();
         assert!(is_na_real(dbl(&oob)[0]));
-        // negative subscript is rejected in v1
-        assert!(index(&base, &SValue::scalar(-1.0)).is_err());
+        // negative subscript EXCLUDES that position (R-13)
+        assert_eq!(
+            dbl(&index(&base, &SValue::scalar(-1.0)).unwrap()),
+            vec![20.0, 30.0]
+        );
+        // mixing positive and negative is an error
+        assert!(index(&base, &SValue::doubles(vec![-1.0, 2.0])).is_err());
+        // a logical mask selects by position (recycled)
+        assert_eq!(
+            dbl(&index(
+                &base,
+                &SValue::Logical(vec![Some(true), Some(false), Some(true)])
+            )
+            .unwrap()),
+            vec![10.0, 30.0]
+        );
         // logical and character vectors are subsettable too
         let lg = index(
             &SValue::Logical(vec![Some(true), Some(false)]),

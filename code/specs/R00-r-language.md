@@ -154,6 +154,30 @@ unchanged.
     and `solve` an error, and the dimension is capped (`MAX_SOLVE_DIM`) so the
     `O(n³)` work cannot be turned into a denial-of-service. All construction is
     bounded by `MAX_SEQ_LEN`.
+- **R-13 — 2-D matrix indexing** *(this PR)*. The `[` subscript operator extended
+  to two dimensions and to R's full index styles, in the shared `s-runtime`:
+  - A **grammar change** makes each comma-separated subscript *optional*, so an
+    empty subscript selects a whole dimension: `m[i, j]` (one element),
+    `m[i, ]` (a whole row), `m[, j]` (a whole column), `m[rows, cols]`
+    (a sub-matrix). `index_suffix` becomes
+    `LBRACKET [ subscript ] { COMMA [ subscript ] } RBRACKET` in both `s.grammar`
+    and `r.grammar` (regenerated); the evaluator reads one slot per
+    comma-separated position, `None` meaning "all of that dimension".
+  - Each subscript resolves through a shared `resolve_picks` that now supports
+    all three R index styles: **positive** (1-based; `0` drops, out-of-range/`NA`
+    → `NA`), **negative** (`-k` *excludes* position `k`; cannot be mixed with
+    positive), and **logical** (a mask recycled to the dimension; `TRUE` selects).
+    This also fixes 1-D vector indexing — `v[-2]` and `v[c(TRUE, FALSE)]` now
+    behave correctly (logical indices were previously mis-coerced to numbers).
+  - `m[i]` indexes the **flat column-major** vector (dropping matrix structure,
+    as R does). A 2-D result follows R's default `drop = TRUE`: a single row or
+    column collapses to a vector, otherwise the result is a matrix. Out-of-range
+    matrix subscripts are a hard error; the result size and the logical-recycle
+    span are capped at `MAX_SEQ_LEN`. The empty-subscript grammar also enables
+    `df[, j]` / `df[i, ]` on data frames.
+  - *Deferred (R-14):* **sub-assignment** `m[i, j] <- v` — it needs new
+    lvalue-target machinery (the evaluator currently only assigns to bare names),
+    a separable feature; today it is a clean error, not a silent no-op.
 
 ## §4 Reuse strategy
 
