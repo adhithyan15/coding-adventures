@@ -35,7 +35,7 @@ use symbolic_vm::SymbolicBackend;
 
 use symbolic_ir::{IRApply, IRNode};
 
-use crate::builtins::{build_wolfram_builtins, ITERATION_HEADS};
+use crate::builtins::{build_wolfram_builtins, ITERATION_HEADS, SCOPING_HEADS};
 
 /// The Wolfram evaluation backend: a [`SymbolicBackend`] plus the W-5 built-in
 /// handler table.
@@ -45,9 +45,11 @@ pub struct WolframBackend {
     /// The W-5 list/functional/numeric handlers, consulted *before* `inner`.
     builtins: HashMap<String, Handler>,
     /// The set of heads whose args must NOT be pre-evaluated — the union of the
-    /// inner backend's held set (`If`, `Assign`, `Define`, …) and the W-7
-    /// iteration heads (`Table`, `Do`, `Sum`, `Product`), which must hold their
-    /// body + iterator spec so the local index can be bound per step.
+    /// inner backend's held set (`If`, `Assign`, `Define`, …), the W-7 iteration
+    /// heads (`Table`, `Do`, `Sum`, `Product`), which must hold their body +
+    /// iterator spec so the local index can be bound per step, and the W-8
+    /// local-scoping heads (`With`, `Module`, `Block`), which must hold their
+    /// declaration list + body so the locals can be bound into the body.
     ///
     /// `hold_heads` returns `&HashSet`, so the union must be *materialised and
     /// owned* here — we cannot synthesise it per-call. It is computed once at
@@ -64,6 +66,11 @@ impl WolframBackend {
         // one-time union is correct — no inner head is added after this point.
         let mut held: HashSet<String> = inner.hold_heads().iter().cloned().collect();
         for head in ITERATION_HEADS {
+            held.insert(head.to_string());
+        }
+        // W-8 local-scoping heads must also be held so their decl list + body
+        // arrive unevaluated and the locals can be bound into the body.
+        for head in SCOPING_HEADS {
             held.insert(head.to_string());
         }
         Self {
@@ -111,9 +118,9 @@ impl Backend for WolframBackend {
 
     fn hold_heads(&self) -> &HashSet<String> {
         // The W-5 heads are all non-held (eager args). W-7 adds the iteration
-        // heads (`Table`, `Do`, `Sum`, `Product`) to the inner backend's held
-        // set (`If`, `Assign`, `Define`, …); the union was materialised in
-        // `new()`.
+        // heads (`Table`, `Do`, `Sum`, `Product`) and W-8 adds the scoping heads
+        // (`With`, `Module`, `Block`) to the inner backend's held set (`If`,
+        // `Assign`, `Define`, …); the union was materialised in `new()`.
         &self.held
     }
 }
@@ -162,6 +169,38 @@ mod tests {
             assert!(held.contains(head), "{head} should be held");
         }
         assert!(held.contains("If"), "inner held set must be preserved");
+    }
+
+    #[test]
+    fn scoping_heads_are_held() {
+        // W-8: With/Module/Block must be held so the decl list + body arrive
+        // unevaluated and the locals can be bound into the body. The inner held
+        // set (If, …) and the W-7 iteration heads must survive the union.
+        let backend = WolframBackend::new();
+        let held = backend.hold_heads();
+        for head in ["With", "Module", "Block"] {
+            assert!(held.contains(head), "{head} should be held");
+        }
+        assert!(held.contains("If"), "inner held set must be preserved");
+        assert!(held.contains("Table"), "W-7 held set must be preserved");
+    }
+
+    #[test]
+    fn with_evaluates_end_to_end_through_the_vm() {
+        // With[{x = 3}, x^2] → 9: the decl RHS is evaluated, x is substituted
+        // into the held body, and the squaring re-eval goes through the real VM.
+        let mut vm = VM::new(Box::new(WolframBackend::new()));
+        let out = vm.eval(apply(
+            sym("With"),
+            vec![
+                apply(
+                    sym(LIST),
+                    vec![apply(sym("Assign"), vec![sym("x"), int(3)])],
+                ),
+                apply(sym("Pow"), vec![sym("x"), int(2)]),
+            ],
+        ));
+        assert_eq!(out, int(9));
     }
 
     #[test]
