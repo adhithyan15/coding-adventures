@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Accept selected `.control` block `write <rawfile> [probes...]` rawfile-write
+  markers as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Rawfile
+  serialization remains out of scope for this marker.
 - Accept selected `.control` block `set appendwrite` rawfile append-write
   options as no-op control commands in `analyze_deck_controls` and
   `resolve_deck_sources`, matching Python and TypeScript.

@@ -6913,6 +6913,9 @@ fn is_noop_control_block_command(line: &str) -> bool {
     ) {
         return true;
     }
+    if matches!(command.as_str(), "write" | ".write") {
+        return parts.next().is_some();
+    }
     if !matches!(command.as_str(), "set" | ".set") {
         return false;
     }

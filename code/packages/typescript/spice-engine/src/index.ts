@@ -2855,6 +2855,7 @@ const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
   ".plot",
 ]);
 const NOOP_CONTROL_BLOCK_COMMANDS = new Set(["run", ".run", "reset", ".reset", "quit", ".quit"]);
+const NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS = new Set(["write", ".write"]);
 const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set([
   "noaskquit",
   "filetype=ascii",
@@ -5726,6 +5727,9 @@ function isNoopControlBlockCommand(line: string): boolean {
   }
   if (NOOP_CONTROL_BLOCK_COMMANDS.has(command)) {
     return true;
+  }
+  if (NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS.has(command)) {
+    return parts.length >= 2;
   }
   return (
     (command === "set" || command === ".set") &&
