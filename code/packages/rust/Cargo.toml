@@ -553,6 +553,7 @@ members = [
     "closure-pass-dce",
     "closure-pass-fold-control-flow",
     "closure-pass-inline",
+    "closure-pass-inline-variables",
     "closure-pass-pipeline",
     "closure-pass-remove-unused-vars",
     "closure-pass-rename",

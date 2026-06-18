@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.148.0] - 2026-06-17
+
+### Added (CLOC13.H — `inline-variables` constant propagation in SIMPLE)
+
+The SIMPLE pipeline gains a new pass, `inline-variables`
+(`coding-adventures-closure-pass-inline-variables` `0.1.0`), registered
+between `inline` and `remove-unused-vars`. It propagates a top-level `const`
+bound to a **literal** to its use sites, so remove-unused-vars deletes the
+now-unreferenced binding and the fixed-point constant-fold sweep folds the
+result:
+
+```js
+const RATE = 2;
+total(base * RATE);
+margin(RATE + 1);
+//  closurec --compilation_level SIMPLE  ⇒  total(base * 2); margin(3);
+```
+
+Only `const` (never `let`/`var` — reassignable) bound to a literal (never an
+identifier/call/member — which could change or have getters) is propagated,
+and only when the name is declared exactly once in the whole program (no
+shadowing). Single use → always; multiple uses → only when the literal is
+short. `SIMPLE_PASS_NAMES` is now
+`constant-fold → fold-control-flow → dce → inline → inline-variables →
+remove-unused-vars → treeshake → rename`.
+
+### Fixtures / tests
+
+- New `tests/diff/simple-inline-variables/` fixture + harness
+  (`const RATE = 2; total(base * RATE); margin(RATE + 1);` →
+  `total(base * 2);margin(3);`), plus a
+  `simple_propagates_const_literal_and_removes_binding` unit test.
+- Updated the `simple_v2` CV trace's `passes` assertion to include
+  `inline-variables`.
+- Version bumped `0.147.0 → 0.148.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
 ## [0.147.0] - 2026-06-17
 
 ### Changed (CLOC13.G — `inline` now inlines small functions at multiple sites)
