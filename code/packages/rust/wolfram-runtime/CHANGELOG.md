@@ -4,6 +4,60 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] — 2026-06-17
+
+The **W-7** deliverable (MA04 §10): iteration constructs — the first Wolfram-lane
+forms that introduce a *scoped local index*. `Table`, `Do`, `Sum`, and `Product`
+bind a fresh variable `i` to each value of a range and evaluate a body once per
+value, lowered onto the *same* `symbolic-vm` substrate (no bespoke loop opcode,
+no new evaluator).
+
+### Added (iteration heads)
+
+- **`Table[expr, {i, imax}]`** / **`{i, imin, imax}`** / **`{i, imin, imax, di}`**
+  → the list of `expr` evaluated with `i` bound over the range. So
+  `Table[i^2, {i, 3}]` is `{1, 4, 9}` and `Table[i, {i, 2, 4}]` is `{2, 3, 4}`.
+- **`Do[expr, {i, n}]`** → evaluate `expr` `n` times for side effects (e.g. a
+  `Set` in the body), returning `Null`.
+- **`Sum[expr, {i, imin, imax}]`** → fold `+` over the range
+  (`Sum[i, {i, 1, 10}]` is `55`); an empty range sums to `0`.
+- **`Product[expr, {i, imin, imax}]`** → fold `×`
+  (`Product[i, {i, 1, 4}]` is `24`); an empty range is `1`.
+
+### How the index binds
+
+- The four heads are **held** — `WolframBackend::hold_heads` now returns the
+  union of the inner `SymbolicBackend` held set (`If`, `Assign`, `Define`, …) and
+  `{Table, Do, Sum, Product}`, so the body and iterator spec arrive unevaluated.
+- Each iteration binds `i → value` with the **same `vm.rs::substitute`** that
+  binds user-function parameters, then re-evaluates the body through the VM. The
+  index stays *local* (it never leaks into the session), and nested `Table`s each
+  bind their own index cleanly.
+- The iterator-spec *bounds* are evaluated by the handler (the head is held, so
+  `{i, 1+1}` and `{i, n}`-with-`n`-bound resolve correctly), while the body
+  stays held until substitution.
+
+### DoS surface
+
+- The per-iteration count is **capped at `MAX_RANGE_LENGTH`** (the same bound
+  `Range` uses), computed in `i128` *before* any allocation or looping — an
+  oversize or extreme-span iterator (e.g. `Table[0, {i, 2000000}]`) is left
+  unevaluated rather than hanging or exhausting memory. `Do` is capped
+  identically (the cap bounds wall-clock work, not just memory), and the cap
+  composes for nested `Table`. A malformed spec (`{i}` with no bound, a zero
+  step, a non-integer/non-symbol binder, or a non-list spec) stays unevaluated —
+  never a panic. See MA04 §10.3.
+
+### Notes
+
+- No grammar/lexer change: `Table[…]`/`Do[…]`/`Sum[…]`/`Product[…]` are ordinary
+  `Head[args]` applications over list-literal specs the W-1 grammar already
+  parses. W-7 touches only `wolfram-runtime` (`builtins.rs` + `backend.rs`).
+- `Sum`/`Product` fold onto the canonical `Add`/`Mul` IR heads, so symbolic terms
+  combine through the same engine as `1 + 2` (a symbolic body like
+  `Sum[x, {i, 1, 3}]` yields `x + x + x`, the engine doing no further `3x`
+  normalisation — consistent with W-4 behaviour).
+
 ## [0.3.0] — 2026-06-17
 
 The **W-6** deliverable (MA04 §9): operator sugar for the W-5 Tier-1 heads. No
