@@ -106,6 +106,27 @@ Item {
                     doc.fill(doc.infAddress, first, last);
                 }
             }
+            // Clipboard: copy/cut the selected cell, paste at the selection. The
+            // engine shifts the pasted formula's relative refs by the offset,
+            // pins absolute ($) refs, carries the format; a cut clears on paste.
+            Button {
+                text: "Copy"
+                ToolTip.visible: hovered
+                ToolTip.text: "Copy the selected cell to the clipboard"
+                onClicked: if (doc) doc.copy(doc.infAddress, doc.infAddress)
+            }
+            Button {
+                text: "Cut"
+                ToolTip.visible: hovered
+                ToolTip.text: "Cut the selected cell (cleared when you paste)"
+                onClicked: if (doc) doc.cut(doc.infAddress, doc.infAddress)
+            }
+            Button {
+                text: "Paste"
+                ToolTip.visible: hovered
+                ToolTip.text: "Paste the clipboard at the selected cell, shifting relative references"
+                onClicked: if (doc) doc.paste(doc.infAddress)
+            }
         }
 
         // ── Column-letter header (frozen vertically, scrolls horizontally) ──
