@@ -2892,6 +2892,7 @@ const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set([
   "appendwrite",
 ]);
 const SCRIPT_CONTROL_BLOCK_COMMANDS = new Set(["source", ".source", "shell", ".shell"]);
+const WORKDIR_CONTROL_BLOCK_COMMANDS = new Set(["cd", ".cd"]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2930,6 +2931,16 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
           directive: ".control",
           lineNumber,
           message: controlBlockScriptPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isWorkdirControlBlockCommand(stripped)) {
+        diagnostics.push({
+          code: "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+          directive: ".control",
+          lineNumber,
+          message: controlBlockWorkdirPolicyMessage(stripped),
           severity: "error",
         });
         continue;
@@ -3504,6 +3515,17 @@ function resolveDeckLines(
           source,
           lineNumber,
           message: controlBlockScriptPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isWorkdirControlBlockCommand(stripped)) {
+        state.diagnostics.push({
+          code: "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+          directive: ".control",
+          source,
+          lineNumber,
+          message: controlBlockWorkdirPolicyMessage(stripped),
           severity: "error",
         });
         continue;
@@ -5796,8 +5818,17 @@ function isScriptControlBlockCommand(line: string): boolean {
   return command !== undefined && SCRIPT_CONTROL_BLOCK_COMMANDS.has(command);
 }
 
+function isWorkdirControlBlockCommand(line: string): boolean {
+  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
+  return command !== undefined && WORKDIR_CONTROL_BLOCK_COMMANDS.has(command);
+}
+
 function controlBlockScriptPolicyMessage(line: string): string {
   return `${JSON.stringify(line)} inside .control is not executed because external script and shell commands are disabled by the deck execution policy`;
+}
+
+function controlBlockWorkdirPolicyMessage(line: string): string {
+  return `${JSON.stringify(line)} inside .control is not executed because working-directory mutation is disabled by the deck execution policy`;
 }
 
 export function subcircuitDefinition(

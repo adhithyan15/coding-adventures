@@ -47,7 +47,9 @@ downstream tools to compare.
      inspection, introspection, and console/debug commands are accepted as
      no-op control markers, while selected `source` and `shell` external
      script/shell commands now emit explicit policy diagnostics instead of
-     generic unsupported-command diagnostics; parsed
+     generic unsupported-command diagnostics, and selected `cd`
+     working-directory mutation commands now emit explicit policy diagnostics
+     instead of generic unsupported-command diagnostics; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -687,6 +689,17 @@ downstream tools to compare.
       control flow, variables, and unrecognized non-comment commands inside
       `.control` blocks remain diagnostic-only so unsupported script execution
       policy is explicit.
+
+62. Selected `.control` working-directory policy diagnostics.
+    - Status: completed in this selected control working-directory policy
+      diagnostics slice.
+    - Python, Rust, and TypeScript now emit explicit diagnostics for selected
+      `.control` block `cd` working-directory mutation commands instead of
+      generic unsupported-command diagnostics.
+    - Working-directory mutation, external script execution, shelling out,
+      control flow, variables, and unrecognized non-comment commands inside
+      `.control` blocks remain diagnostic-only so unsupported execution policy
+      is explicit.
 
 ## Backlog
 

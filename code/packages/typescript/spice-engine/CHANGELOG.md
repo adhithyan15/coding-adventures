@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Emit explicit policy diagnostics for selected `.control` block `cd`
+  working-directory mutation commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust. Working-directory mutation
+  remains disabled by the deck execution policy.
 - Emit explicit policy diagnostics for selected `.control` block `source` and
   `shell` external script/shell commands in `analyzeDeckControls` and
   `resolveDeckSources`, matching Python and Rust. External script execution

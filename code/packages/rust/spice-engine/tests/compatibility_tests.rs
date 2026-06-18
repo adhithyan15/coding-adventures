@@ -160,6 +160,8 @@ source nested-control.cir
 .source dotted-control.cir
 shell echo nope
 .shell echo dotted
+cd models
+.cd /tmp
 run
 quit
 .endc
@@ -205,7 +207,9 @@ quit
             (".control", 33, "error"),
             (".control", 34, "error"),
             (".control", 35, "error"),
-            (".control", 36, "error")
+            (".control", 36, "error"),
+            (".control", 37, "error"),
+            (".control", 38, "error")
         ]
     );
     assert_eq!(
@@ -223,7 +227,9 @@ quit
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
-            "SPICE_DECK_CONTROL_SCRIPT_COMMAND"
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND"
         ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
@@ -375,6 +381,8 @@ four 2k V(b)
 source plain-control.cir
 .shell echo nope
 shell echo plain
+.cd nested
+cd /tmp
 run
 .quit
 .endc
@@ -413,7 +421,9 @@ run
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
-            "SPICE_DECK_CONTROL_SCRIPT_COMMAND"
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND"
         ]
     );
     assert_eq!(
@@ -428,7 +438,9 @@ run
             (".control", 32),
             (".control", 33),
             (".control", 34),
-            (".control", 35)
+            (".control", 35),
+            (".control", 36),
+            (".control", 37)
         ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
