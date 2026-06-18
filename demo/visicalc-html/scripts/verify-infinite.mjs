@@ -125,5 +125,22 @@ ok(fillWin.cells[0][0] === "40" && fillWin.cells[1][0] === "60",
   `fill G1 down → G2=${fillWin.cells[0][0]} (F2*2), G3=${fillWin.cells[1][0]} (F3*2)`);
 ok(wb.getRaw("G3") === "=(F3*2)", `filled G3 source tracked the row: ${wb.getRaw("G3")}`);
 
+// Clipboard (the Copy/Cut/Paste buttons): copy the block F1:G1 (F1=10,
+// G1 = F1*2) and paste at F4 — the block shifts as a unit, so the paste writes
+// F4=10 (the copied literal) and G4 = F4*2 = 20, the echo tracking the row.
+wb.copy("F1", "G1");
+const pasted = wb.paste("F4");
+const pasteWin = wb.getDisplayWindow(4, 7, 4, 7); // G4 (col 7 = G)
+ok(pasted === true, `paste applied (returned ${pasted})`);
+ok(pasteWin.cells[0][0] === "20", `copy F1:G1 → paste at F4: G4=${pasteWin.cells[0][0]} (F4*2)`);
+ok(wb.getRaw("G4") === "=(F4*2)", `pasted G4 source shifted as a unit: ${wb.getRaw("G4")}`);
+// Cut moves: cut A1, paste at H1, source clears; a second paste is a no-op.
+wb.setCell("A1", "99");
+wb.cut("A1", "A1");
+ok(wb.paste("H1") === true, "cut paste applied");
+ok(wb.getDisplayWindow(1, 8, 1, 8).cells[0][0] === "99", "cut moved value to H1");
+ok(wb.getDisplayWindow(1, 1, 1, 1).cells[0][0] === "", "cut cleared the source A1");
+ok(wb.paste("J1") === false, "cut buffer consumed (second paste is a no-op)");
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);

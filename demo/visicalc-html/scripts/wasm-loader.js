@@ -121,6 +121,33 @@
             freeInput(ep, el);
           },
 
+          // Clipboard: copy/cut capture the inclusive rectangle start..end (a
+          // whole-block copy that pastes as a unit); paste places the block so
+          // its top-left lands at dstStart, shifting the block's refs by the
+          // destination's offset. paste returns true when applied, false for a
+          // no-op (empty clipboard / malformed address / off-grid). A cut is a
+          // one-shot move whose paste clears the source it didn't overwrite.
+          copy: (start, end) => {
+            const [sp, sl] = writeStr(String(start));
+            const [ep, el] = writeStr(String(end));
+            ex.copy(sp, sl, ep, el);
+            freeInput(sp, sl);
+            freeInput(ep, el);
+          },
+          cut: (start, end) => {
+            const [sp, sl] = writeStr(String(start));
+            const [ep, el] = writeStr(String(end));
+            ex.cut(sp, sl, ep, el);
+            freeInput(sp, sl);
+            freeInput(ep, el);
+          },
+          paste: (dstStart) => {
+            const [dp, dl] = writeStr(String(dstStart));
+            const ok = ex.paste(dp, dl);
+            freeInput(dp, dl);
+            return ok === 1;
+          },
+
           // Viewport primitive — render only the visible window of an unbounded
           // sheet. 1-based inclusive coords.
           getWindow: (row0, col0, row1, col1) =>
