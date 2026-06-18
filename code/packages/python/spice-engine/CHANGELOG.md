@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck control console marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `echo`, `rusage`, and `where` console/debug
+  commands as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript. Actual console/debug output
+  remains out of scope for these markers.
+
 - **Deck control introspection marker routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
   `.control` block read-only `status`, `version`, and `help` UI introspection

@@ -136,6 +136,9 @@ showmod Q1
 status
 version
 help tran
+echo running selected deck
+rusage all
+where
 run
 quit
 .endc
@@ -261,6 +264,9 @@ four 2k V(b)
 .status
 .version
 .help tran
+.echo running selected deck
+.rusage all
+.where
 run
 .quit
 .endc
