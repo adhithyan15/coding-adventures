@@ -156,10 +156,15 @@ def test_decide_timing_decision_table():
     cli = decide_mod.find_cli()
     if cli is None:
         return
-    # Time-critical disease (meningitis) → empiric now, high delay_risk, with the threshold.
+    # Time-critical disease (meningitis) → empiric now, high delay_risk, with the GROUNDED
+    # time-criticality basis (CC-5b): a verbatim guideline quote + qualitative treat target,
+    # NOT the retired (unsupported) ≤60-min numeric threshold.
     t = cc.decide_timing(cli, "meningitis", "pending", "stable")
     assert t["decision"] == "treat_now_empiric" and t["delay_risk"] == "high", t
-    assert t["threshold"]["treat_within_min"] == 60 and t["threshold"]["trust"]
+    assert t["threshold"]["treat_target"] == "as_soon_as_possible", t
+    assert t["threshold"]["trust"] == "authoritative", t
+    assert "as soon as possible" in t["threshold"]["source"], t  # verbatim guideline quote rides on it
+    assert "treat_within_min" not in t["threshold"], "the unsupported ≤60-min overclaim is retired"
     assert t["standing"] == "authoritative"  # the time-critical rule governed
     # A critical patient forces empiric-now even for a routine-acuity disease.
     assert cc.decide_timing(cli, "cellulitis", "pending", "critical")["decision"] == "treat_now_empiric"
