@@ -96,6 +96,8 @@
       <button id="copyCell" title="Copy the selected cell to the clipboard">Copy</button>
       <button id="cutCell" title="Cut the selected cell (cleared when you paste)">Cut</button>
       <button id="pasteCell" title="Paste the clipboard at the selected cell, shifting relative references">Paste</button>
+      <button id="saveBook" title="Serialize the whole workbook (formulas + formats) to browser storage">Save</button>
+      <button id="loadBook" title="Reload the workbook from the last saved snapshot">Load</button>
     </div>
 
     <div class="sheet" id="sheet">
@@ -275,6 +277,39 @@
         diff.changed.length + " cell(s): " + diff.changed.slice(0, 8).join(", ");
       render();
       statusEl.innerHTML += " &nbsp;·&nbsp; pasted at " + esc(dst) + " → " + esc(note);
+    });
+
+    // Save / load: serialize the whole workbook to a single JSON document and
+    // stash it in the browser's localStorage; Load deserializes it back. The
+    // document captures only the SOURCE (formula text + typed literals) and
+    // per-cell formats — not the computed values, which the engine recomputes on
+    // load (so the snapshot is small and can never disagree with itself). A
+    // loaded formula stays live: edit a precedent and its dependents recompute.
+    var SAVE_KEY = "visicalc-infinite-save";
+    document.getElementById("saveBook").addEventListener("click", function () {
+      var json = workbook.serialize();
+      try {
+        localStorage.setItem(SAVE_KEY, json);
+        statusEl.innerHTML += " &nbsp;·&nbsp; saved " + json.length + " bytes to browser storage";
+      } catch (e) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; save failed: " + esc(String(e));
+      }
+    });
+    document.getElementById("loadBook").addEventListener("click", function () {
+      var json = null;
+      try { json = localStorage.getItem(SAVE_KEY); } catch (e) { /* storage off */ }
+      if (!json) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; nothing saved yet (press Save first)";
+        return;
+      }
+      var ok = workbook.deserialize(json);
+      if (!ok) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; load failed (corrupt or unsupported snapshot)";
+        return;
+      }
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol)); // refresh the bar
+      statusEl.innerHTML += " &nbsp;·&nbsp; loaded snapshot (" + json.length + " bytes)";
     });
 
     // The classic cross-footing budget, PLUS deliberately far-flung cells to

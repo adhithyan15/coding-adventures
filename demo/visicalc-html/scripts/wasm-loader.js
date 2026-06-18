@@ -148,6 +148,17 @@
             return ok === 1;
           },
 
+          // Save / load: serialize the workbook's SOURCE (formula text + typed
+          // literals) + formats to a JSON string, and restore from one. Computed
+          // values recompute on load, so a loaded formula stays live.
+          serialize: () => call0("serialize"),
+          deserialize: (data) => {
+            const [dp, dl] = writeStr(String(data));
+            const ok = ex.deserialize(dp, dl);
+            freeInput(dp, dl);
+            return ok === 1;
+          },
+
           // Viewport primitive — render only the visible window of an unbounded
           // sheet. 1-based inclusive coords.
           getWindow: (row0, col0, row1, col1) =>
