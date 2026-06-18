@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Emit explicit policy diagnostics for selected `.control` block `source` and
+  `shell` external script/shell commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust. External script execution
+  and shelling out remain disabled by the deck execution policy.
 - Accept selected `.control` block read-only `echo`, `rusage`, and `where`
   console/debug commands as no-op control commands in `analyzeDeckControls`
   and `resolveDeckSources`, matching Python and Rust. Actual console/debug

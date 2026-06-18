@@ -550,6 +550,7 @@ _NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS = frozenset({"wrdata", ".wrdata"})
 _NOOP_CONTROL_BLOCK_SET_OPTIONS = frozenset(
     {"noaskquit", "filetype=ascii", "wr_vecnames", "wr_singlescale", "appendwrite"}
 )
+_SCRIPT_CONTROL_BLOCK_COMMANDS = frozenset({"source", ".source", "shell", ".shell"})
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,
@@ -586,6 +587,17 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
                 active_lines.append(control_line)
                 continue
             if _is_noop_control_block_command(stripped):
+                continue
+            if _is_script_control_block_command(stripped):
+                diagnostics.append(
+                    DeckControlDiagnostic(
+                        code="SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+                        directive=".control",
+                        line_number=line_number,
+                        message=_control_block_script_policy_message(stripped),
+                        severity="error",
+                    )
+                )
                 continue
             diagnostics.append(
                 DeckControlDiagnostic(
@@ -3071,6 +3083,19 @@ def _resolve_deck_lines(
                 continue
             if _is_noop_control_block_command(stripped):
                 continue
+            if _is_script_control_block_command(stripped):
+                state.diagnostics.append(
+                    DeckResolutionDiagnostic(
+                        code="SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+                        directive=".control",
+                        source=source,
+                        line_number=line_number,
+                        message=_control_block_script_policy_message(stripped),
+                        severity="error",
+                        target=None,
+                    )
+                )
+                continue
             state.diagnostics.append(
                 DeckResolutionDiagnostic(
                     code="SPICE_DECK_CONTROL_COMMAND",
@@ -3388,4 +3413,16 @@ def _is_noop_control_block_command(line: str) -> bool:
         command in {"set", ".set"}
         and len(parts) == 2
         and parts[1].lower() in _NOOP_CONTROL_BLOCK_SET_OPTIONS
+    )
+
+
+def _is_script_control_block_command(line: str) -> bool:
+    parts = line.split(maxsplit=1)
+    return bool(parts) and parts[0].lower() in _SCRIPT_CONTROL_BLOCK_COMMANDS
+
+
+def _control_block_script_policy_message(line: str) -> str:
+    return (
+        f"{line!r} inside .control is not executed because external script "
+        "and shell commands are disabled by the deck execution policy"
     )
