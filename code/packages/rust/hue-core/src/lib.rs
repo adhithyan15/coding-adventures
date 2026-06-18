@@ -10924,60 +10924,24 @@ pub fn hue_package_release_readiness_evidence_summary(
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct HuePackageReleaseArchiveNotarizationSummary {
+pub struct HuePackageReleaseEvidenceIndexSummary {
     pub release_readiness_evidence_summary: HuePackageReleaseReadinessEvidenceSummary,
-    pub required_archive_notarization_check_count: usize,
-    pub passed_archive_notarization_check_count: usize,
-    pub blocked_archive_notarization_check_count: usize,
-    pub worker_process_ready: bool,
-    pub command_flow_ready: bool,
-    pub pairing_flow_ready: bool,
-    pub event_stream_ready: bool,
-    pub physical_presence_required: bool,
-    pub package_release_ready: bool,
-    pub release_archive_evidence_ledger_ready: bool,
-    pub release_archive_evidence_ready: bool,
-    pub release_archive_attestation_ready: bool,
-    pub release_archive_confirmation_ready: bool,
-    pub release_archive_finalization_ready: bool,
-    pub release_archive_settlement_ready: bool,
-    pub release_archive_reconciliation_ready: bool,
-    pub release_archive_replay_ready: bool,
-    pub release_archive_recovery_ready: bool,
-    pub release_archive_restore_ready: bool,
-    pub release_archive_load_ready: bool,
-    pub release_archive_ingest_ready: bool,
-    pub release_archive_import_ready: bool,
-    pub release_archive_export_ready: bool,
-    pub release_archive_distribution_ready: bool,
-    pub release_archive_acceptance_ready: bool,
-    pub release_archive_adoption_ready: bool,
-    pub release_archive_rollout_ready: bool,
-    pub release_archive_activation_ready: bool,
-    pub release_archive_approval_ready: bool,
-    pub release_archive_certification_ready: bool,
-    pub release_archive_validation_ready: bool,
-    pub release_archive_verification_ready: bool,
-    pub release_archive_publication_ready: bool,
-    pub release_archive_completion_ready: bool,
-    pub release_archive_supervisor_ready: bool,
-    pub release_archive_operator_ready: bool,
-    pub release_archive_dispatch_ready: bool,
-    pub release_archive_handoff_ready: bool,
-    pub release_archive_closure_ready: bool,
-    pub release_archive_signoff_ready: bool,
-    pub release_archive_ready: bool,
-    pub release_closure_ready: bool,
-    pub release_signoff_ready: bool,
-    pub release_audit_ready: bool,
-    pub operator_ready: bool,
-    pub coordination_ready: bool,
-    pub publish_gate_ready: bool,
+    pub required_release_evidence_index_check_count: usize,
+    pub passed_release_evidence_index_check_count: usize,
+    pub blocked_release_evidence_index_check_count: usize,
+    pub indexed_release_readiness_evidence_check_count: usize,
+    pub indexed_archive_evidence_ledger_check_count: usize,
+    pub blocked_indexed_release_evidence_check_count: usize,
+    pub blocked_indexed_archive_evidence_ledger_check_count: usize,
     pub release_readiness_evidence_ready: bool,
-    pub release_archive_notarization_ready: bool,
+    pub runtime_evidence_ready: bool,
+    pub archive_evidence_ready: bool,
+    pub release_closeout_ready: bool,
+    pub operations_ready: bool,
+    pub release_evidence_index_ready: bool,
 }
 
-impl HuePackageReleaseArchiveNotarizationSummary {
+impl HuePackageReleaseEvidenceIndexSummary {
     pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
         Self::from_release_readiness_evidence_summary(
             hue_package_release_readiness_evidence_summary(plan),
@@ -10987,130 +10951,177 @@ impl HuePackageReleaseArchiveNotarizationSummary {
     pub fn from_release_readiness_evidence_summary(
         release_readiness_evidence_summary: HuePackageReleaseReadinessEvidenceSummary,
     ) -> Self {
-        let worker_process_ready = release_readiness_evidence_summary.worker_process_ready;
-        let command_flow_ready = release_readiness_evidence_summary.command_flow_ready;
-        let pairing_flow_ready = release_readiness_evidence_summary.pairing_flow_ready;
-        let event_stream_ready = release_readiness_evidence_summary.event_stream_ready;
-        let physical_presence_required =
-            release_readiness_evidence_summary.physical_presence_required;
-        let package_release_ready = release_readiness_evidence_summary.package_release_ready;
-        let release_archive_evidence_ledger_ready =
-            release_readiness_evidence_summary.release_archive_evidence_ledger_ready;
-        let release_archive_evidence_ready =
-            release_readiness_evidence_summary.release_archive_evidence_ready;
-        let release_archive_attestation_ready =
-            release_readiness_evidence_summary.release_archive_attestation_ready;
-        let release_archive_confirmation_ready =
-            release_readiness_evidence_summary.release_archive_confirmation_ready;
-        let release_archive_finalization_ready =
-            release_readiness_evidence_summary.release_archive_finalization_ready;
-        let release_archive_settlement_ready =
-            release_readiness_evidence_summary.release_archive_settlement_ready;
-        let release_archive_reconciliation_ready =
-            release_readiness_evidence_summary.release_archive_reconciliation_ready;
-        let release_archive_replay_ready =
-            release_readiness_evidence_summary.release_archive_replay_ready;
-        let release_archive_recovery_ready =
-            release_readiness_evidence_summary.release_archive_recovery_ready;
-        let release_archive_restore_ready =
-            release_readiness_evidence_summary.release_archive_restore_ready;
-        let release_archive_load_ready =
-            release_readiness_evidence_summary.release_archive_load_ready;
-        let release_archive_ingest_ready =
-            release_readiness_evidence_summary.release_archive_ingest_ready;
-        let release_archive_import_ready =
-            release_readiness_evidence_summary.release_archive_import_ready;
-        let release_archive_export_ready =
-            release_readiness_evidence_summary.release_archive_export_ready;
-        let release_archive_distribution_ready =
-            release_readiness_evidence_summary.release_archive_distribution_ready;
-        let release_archive_acceptance_ready =
-            release_readiness_evidence_summary.release_archive_acceptance_ready;
-        let release_archive_adoption_ready =
-            release_readiness_evidence_summary.release_archive_adoption_ready;
-        let release_archive_rollout_ready =
-            release_readiness_evidence_summary.release_archive_rollout_ready;
-        let release_archive_activation_ready =
-            release_readiness_evidence_summary.release_archive_activation_ready;
-        let release_archive_approval_ready =
-            release_readiness_evidence_summary.release_archive_approval_ready;
-        let release_archive_certification_ready =
-            release_readiness_evidence_summary.release_archive_certification_ready;
-        let release_archive_validation_ready =
-            release_readiness_evidence_summary.release_archive_validation_ready;
-        let release_archive_verification_ready =
-            release_readiness_evidence_summary.release_archive_verification_ready;
-        let release_archive_publication_ready =
-            release_readiness_evidence_summary.release_archive_publication_ready;
-        let release_archive_completion_ready =
-            release_readiness_evidence_summary.release_archive_completion_ready;
-        let release_archive_supervisor_ready =
-            release_readiness_evidence_summary.release_archive_supervisor_ready;
-        let release_archive_operator_ready =
-            release_readiness_evidence_summary.release_archive_operator_ready;
-        let release_archive_dispatch_ready =
-            release_readiness_evidence_summary.release_archive_dispatch_ready;
-        let release_archive_handoff_ready =
-            release_readiness_evidence_summary.release_archive_handoff_ready;
-        let release_archive_closure_ready =
-            release_readiness_evidence_summary.release_archive_closure_ready;
-        let release_archive_signoff_ready =
-            release_readiness_evidence_summary.release_archive_signoff_ready;
-        let release_archive_ready = release_readiness_evidence_summary.release_archive_ready;
-        let release_closure_ready = release_readiness_evidence_summary.release_closure_ready;
-        let release_signoff_ready = release_readiness_evidence_summary.release_signoff_ready;
-        let release_audit_ready = release_readiness_evidence_summary.release_audit_ready;
-        let operator_ready = release_readiness_evidence_summary.operator_ready;
-        let coordination_ready = release_readiness_evidence_summary.coordination_ready;
-        let publish_gate_ready = release_readiness_evidence_summary.publish_gate_ready;
         let release_readiness_evidence_ready =
-            release_readiness_evidence_summary.release_readiness_evidence_ready;
+            release_readiness_evidence_summary.is_release_readiness_evidence_ready();
+        let runtime_evidence_ready = release_readiness_evidence_summary.worker_process_ready
+            && release_readiness_evidence_summary.command_flow_ready
+            && release_readiness_evidence_summary.pairing_flow_ready
+            && release_readiness_evidence_summary.event_stream_ready
+            && release_readiness_evidence_summary.physical_presence_required
+            && release_readiness_evidence_summary.package_release_ready;
+        let archive_evidence_ready = release_readiness_evidence_summary
+            .release_archive_evidence_ledger_ready
+            && release_readiness_evidence_summary.release_archive_evidence_ready
+            && release_readiness_evidence_summary.release_archive_attestation_ready
+            && release_readiness_evidence_summary.release_archive_confirmation_ready
+            && release_readiness_evidence_summary.release_archive_finalization_ready
+            && release_readiness_evidence_summary.release_archive_settlement_ready
+            && release_readiness_evidence_summary.release_archive_reconciliation_ready
+            && release_readiness_evidence_summary.release_archive_replay_ready
+            && release_readiness_evidence_summary.release_archive_recovery_ready
+            && release_readiness_evidence_summary.release_archive_restore_ready
+            && release_readiness_evidence_summary.release_archive_load_ready
+            && release_readiness_evidence_summary.release_archive_ingest_ready
+            && release_readiness_evidence_summary.release_archive_import_ready
+            && release_readiness_evidence_summary.release_archive_export_ready
+            && release_readiness_evidence_summary.release_archive_distribution_ready
+            && release_readiness_evidence_summary.release_archive_acceptance_ready
+            && release_readiness_evidence_summary.release_archive_adoption_ready
+            && release_readiness_evidence_summary.release_archive_rollout_ready
+            && release_readiness_evidence_summary.release_archive_activation_ready
+            && release_readiness_evidence_summary.release_archive_approval_ready
+            && release_readiness_evidence_summary.release_archive_certification_ready
+            && release_readiness_evidence_summary.release_archive_validation_ready
+            && release_readiness_evidence_summary.release_archive_verification_ready
+            && release_readiness_evidence_summary.release_archive_publication_ready
+            && release_readiness_evidence_summary.release_archive_completion_ready
+            && release_readiness_evidence_summary.release_archive_supervisor_ready
+            && release_readiness_evidence_summary.release_archive_operator_ready
+            && release_readiness_evidence_summary.release_archive_dispatch_ready
+            && release_readiness_evidence_summary.release_archive_handoff_ready
+            && release_readiness_evidence_summary.release_archive_closure_ready
+            && release_readiness_evidence_summary.release_archive_signoff_ready
+            && release_readiness_evidence_summary.release_archive_ready;
+        let release_closeout_ready = release_readiness_evidence_summary.release_closure_ready
+            && release_readiness_evidence_summary.release_signoff_ready
+            && release_readiness_evidence_summary.release_audit_ready;
+        let operations_ready = release_readiness_evidence_summary.operator_ready
+            && release_readiness_evidence_summary.coordination_ready
+            && release_readiness_evidence_summary.publish_gate_ready;
         let checks = [
-            worker_process_ready,
-            command_flow_ready,
-            pairing_flow_ready,
-            event_stream_ready,
-            physical_presence_required,
-            package_release_ready,
-            release_archive_evidence_ledger_ready,
-            release_archive_evidence_ready,
-            release_archive_attestation_ready,
-            release_archive_confirmation_ready,
-            release_archive_finalization_ready,
-            release_archive_settlement_ready,
-            release_archive_reconciliation_ready,
-            release_archive_replay_ready,
-            release_archive_recovery_ready,
-            release_archive_restore_ready,
-            release_archive_load_ready,
-            release_archive_ingest_ready,
-            release_archive_import_ready,
-            release_archive_export_ready,
-            release_archive_distribution_ready,
-            release_archive_acceptance_ready,
-            release_archive_adoption_ready,
-            release_archive_rollout_ready,
-            release_archive_activation_ready,
-            release_archive_approval_ready,
-            release_archive_certification_ready,
-            release_archive_validation_ready,
-            release_archive_verification_ready,
-            release_archive_publication_ready,
-            release_archive_completion_ready,
-            release_archive_supervisor_ready,
-            release_archive_operator_ready,
-            release_archive_dispatch_ready,
-            release_archive_handoff_ready,
-            release_archive_closure_ready,
-            release_archive_signoff_ready,
-            release_archive_ready,
-            release_closure_ready,
-            release_signoff_ready,
-            release_audit_ready,
-            operator_ready,
-            coordination_ready,
-            publish_gate_ready,
             release_readiness_evidence_ready,
+            runtime_evidence_ready,
+            archive_evidence_ready,
+            release_closeout_ready,
+            operations_ready,
+        ];
+        let passed_release_evidence_index_check_count =
+            checks.iter().filter(|ready| **ready).count();
+        let required_release_evidence_index_check_count = checks.len();
+        let blocked_release_evidence_index_check_count =
+            required_release_evidence_index_check_count - passed_release_evidence_index_check_count;
+        let release_evidence_index_ready = blocked_release_evidence_index_check_count == 0;
+        let indexed_release_readiness_evidence_check_count =
+            release_readiness_evidence_summary.required_release_readiness_evidence_check_count;
+        let indexed_archive_evidence_ledger_check_count = release_readiness_evidence_summary
+            .archive_evidence_ledger_summary
+            .required_archive_evidence_ledger_check_count;
+        let blocked_indexed_release_evidence_check_count =
+            release_readiness_evidence_summary.blocked_release_readiness_evidence_check_count;
+        let blocked_indexed_archive_evidence_ledger_check_count =
+            release_readiness_evidence_summary
+                .archive_evidence_ledger_summary
+                .blocked_archive_evidence_ledger_check_count;
+
+        Self {
+            release_readiness_evidence_summary,
+            required_release_evidence_index_check_count,
+            passed_release_evidence_index_check_count,
+            blocked_release_evidence_index_check_count,
+            indexed_release_readiness_evidence_check_count,
+            indexed_archive_evidence_ledger_check_count,
+            blocked_indexed_release_evidence_check_count,
+            blocked_indexed_archive_evidence_ledger_check_count,
+            release_readiness_evidence_ready,
+            runtime_evidence_ready,
+            archive_evidence_ready,
+            release_closeout_ready,
+            operations_ready,
+            release_evidence_index_ready,
+        }
+    }
+
+    pub fn is_release_evidence_index_ready(self) -> bool {
+        self.release_evidence_index_ready
+    }
+
+    pub fn has_blocked_release_evidence_index_checks(self) -> bool {
+        self.blocked_release_evidence_index_check_count > 0
+    }
+
+    pub fn has_blocked_indexed_release_evidence_checks(self) -> bool {
+        self.blocked_indexed_release_evidence_check_count > 0
+    }
+
+    pub fn has_blocked_indexed_archive_evidence_ledger_checks(self) -> bool {
+        self.blocked_indexed_archive_evidence_ledger_check_count > 0
+    }
+
+    pub fn needs_release_readiness_evidence(self) -> bool {
+        !self.release_readiness_evidence_ready
+    }
+
+    pub fn needs_runtime_evidence(self) -> bool {
+        !self.runtime_evidence_ready
+    }
+
+    pub fn needs_archive_evidence(self) -> bool {
+        !self.archive_evidence_ready
+    }
+
+    pub fn needs_release_closeout(self) -> bool {
+        !self.release_closeout_ready
+    }
+
+    pub fn needs_operations(self) -> bool {
+        !self.operations_ready
+    }
+}
+
+pub fn hue_package_release_evidence_index_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseEvidenceIndexSummary {
+    HuePackageReleaseEvidenceIndexSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveNotarizationSummary {
+    pub release_evidence_index_summary: HuePackageReleaseEvidenceIndexSummary,
+    pub required_archive_notarization_check_count: usize,
+    pub passed_archive_notarization_check_count: usize,
+    pub blocked_archive_notarization_check_count: usize,
+    pub release_readiness_evidence_ready: bool,
+    pub runtime_evidence_ready: bool,
+    pub archive_evidence_ready: bool,
+    pub release_closeout_ready: bool,
+    pub operations_ready: bool,
+    pub release_evidence_index_ready: bool,
+    pub release_archive_notarization_ready: bool,
+}
+
+impl HuePackageReleaseArchiveNotarizationSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_release_evidence_index_summary(hue_package_release_evidence_index_summary(plan))
+    }
+
+    pub fn from_release_evidence_index_summary(
+        release_evidence_index_summary: HuePackageReleaseEvidenceIndexSummary,
+    ) -> Self {
+        let release_readiness_evidence_ready =
+            release_evidence_index_summary.release_readiness_evidence_ready;
+        let runtime_evidence_ready = release_evidence_index_summary.runtime_evidence_ready;
+        let archive_evidence_ready = release_evidence_index_summary.archive_evidence_ready;
+        let release_closeout_ready = release_evidence_index_summary.release_closeout_ready;
+        let operations_ready = release_evidence_index_summary.operations_ready;
+        let release_evidence_index_ready =
+            release_evidence_index_summary.is_release_evidence_index_ready();
+        let checks = [
+            release_readiness_evidence_ready,
+            runtime_evidence_ready,
+            archive_evidence_ready,
+            release_closeout_ready,
+            operations_ready,
+            release_evidence_index_ready,
         ];
         let passed_archive_notarization_check_count = checks.iter().filter(|ready| **ready).count();
         let required_archive_notarization_check_count = checks.len();
@@ -11119,55 +11130,16 @@ impl HuePackageReleaseArchiveNotarizationSummary {
         let release_archive_notarization_ready = blocked_archive_notarization_check_count == 0;
 
         Self {
-            release_readiness_evidence_summary,
+            release_evidence_index_summary,
             required_archive_notarization_check_count,
             passed_archive_notarization_check_count,
             blocked_archive_notarization_check_count,
-            worker_process_ready,
-            command_flow_ready,
-            pairing_flow_ready,
-            event_stream_ready,
-            physical_presence_required,
-            package_release_ready,
-            release_archive_evidence_ledger_ready,
-            release_archive_evidence_ready,
-            release_archive_attestation_ready,
-            release_archive_confirmation_ready,
-            release_archive_finalization_ready,
-            release_archive_settlement_ready,
-            release_archive_reconciliation_ready,
-            release_archive_replay_ready,
-            release_archive_recovery_ready,
-            release_archive_restore_ready,
-            release_archive_load_ready,
-            release_archive_ingest_ready,
-            release_archive_import_ready,
-            release_archive_export_ready,
-            release_archive_distribution_ready,
-            release_archive_acceptance_ready,
-            release_archive_adoption_ready,
-            release_archive_rollout_ready,
-            release_archive_activation_ready,
-            release_archive_approval_ready,
-            release_archive_certification_ready,
-            release_archive_validation_ready,
-            release_archive_verification_ready,
-            release_archive_publication_ready,
-            release_archive_completion_ready,
-            release_archive_supervisor_ready,
-            release_archive_operator_ready,
-            release_archive_dispatch_ready,
-            release_archive_handoff_ready,
-            release_archive_closure_ready,
-            release_archive_signoff_ready,
-            release_archive_ready,
-            release_closure_ready,
-            release_signoff_ready,
-            release_audit_ready,
-            operator_ready,
-            coordination_ready,
-            publish_gate_ready,
             release_readiness_evidence_ready,
+            runtime_evidence_ready,
+            archive_evidence_ready,
+            release_closeout_ready,
+            operations_ready,
+            release_evidence_index_ready,
             release_archive_notarization_ready,
         }
     }
@@ -11180,52 +11152,28 @@ impl HuePackageReleaseArchiveNotarizationSummary {
         self.blocked_archive_notarization_check_count > 0
     }
 
-    pub fn needs_worker_process(self) -> bool {
-        !self.worker_process_ready
-    }
-
-    pub fn needs_command_flow(self) -> bool {
-        !self.command_flow_ready
-    }
-
-    pub fn needs_pairing_flow(self) -> bool {
-        !self.pairing_flow_ready
-    }
-
-    pub fn needs_event_stream(self) -> bool {
-        !self.event_stream_ready
-    }
-
-    pub fn needs_physical_presence_requirement(self) -> bool {
-        !self.physical_presence_required
-    }
-
-    pub fn needs_package_release(self) -> bool {
-        !self.package_release_ready
-    }
-
     pub fn needs_release_readiness_evidence(self) -> bool {
         !self.release_readiness_evidence_ready
     }
 
-    pub fn needs_release_archive_evidence_ledger(self) -> bool {
-        !self.release_archive_evidence_ledger_ready
+    pub fn needs_runtime_evidence(self) -> bool {
+        !self.runtime_evidence_ready
     }
 
-    pub fn needs_release_archive_evidence(self) -> bool {
-        !self.release_archive_evidence_ready
+    pub fn needs_archive_evidence(self) -> bool {
+        !self.archive_evidence_ready
     }
 
-    pub fn needs_release_archive_attestation(self) -> bool {
-        !self.release_archive_attestation_ready
+    pub fn needs_release_closeout(self) -> bool {
+        !self.release_closeout_ready
     }
 
-    pub fn needs_release_archive(self) -> bool {
-        !self.release_archive_ready
+    pub fn needs_operations(self) -> bool {
+        !self.operations_ready
     }
 
-    pub fn needs_publish_gate(self) -> bool {
-        !self.publish_gate_ready
+    pub fn needs_release_evidence_index(self) -> bool {
+        !self.release_evidence_index_ready
     }
 }
 
@@ -20362,6 +20310,99 @@ mod tests {
     }
 
     #[test]
+    fn hue_package_release_evidence_index_summary_reports_ready_release_evidence_index() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_evidence_index_summary(&plan);
+
+        assert_eq!(
+            summary.release_readiness_evidence_summary,
+            hue_package_release_readiness_evidence_summary(&plan)
+        );
+        assert_eq!(summary.required_release_evidence_index_check_count, 5);
+        assert_eq!(summary.passed_release_evidence_index_check_count, 5);
+        assert_eq!(summary.blocked_release_evidence_index_check_count, 0);
+        assert_eq!(summary.indexed_release_readiness_evidence_check_count, 44);
+        assert_eq!(summary.indexed_archive_evidence_ledger_check_count, 37);
+        assert_eq!(summary.blocked_indexed_release_evidence_check_count, 0);
+        assert_eq!(
+            summary.blocked_indexed_archive_evidence_ledger_check_count,
+            0
+        );
+        assert!(summary.release_readiness_evidence_ready);
+        assert!(summary.runtime_evidence_ready);
+        assert!(summary.archive_evidence_ready);
+        assert!(summary.release_closeout_ready);
+        assert!(summary.operations_ready);
+        assert!(summary.release_evidence_index_ready);
+        assert!(summary.is_release_evidence_index_ready());
+        assert!(!summary.has_blocked_release_evidence_index_checks());
+        assert!(!summary.has_blocked_indexed_release_evidence_checks());
+        assert!(!summary.has_blocked_indexed_archive_evidence_ledger_checks());
+        assert!(!summary.needs_release_readiness_evidence());
+        assert!(!summary.needs_runtime_evidence());
+        assert!(!summary.needs_archive_evidence());
+        assert!(!summary.needs_release_closeout());
+        assert!(!summary.needs_operations());
+    }
+
+    #[test]
+    fn hue_package_release_evidence_index_summary_routes_blocked_release_evidence_index() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseEvidenceIndexSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_release_evidence_index_check_count, 5);
+        assert_eq!(summary.passed_release_evidence_index_check_count, 0);
+        assert_eq!(summary.blocked_release_evidence_index_check_count, 5);
+        assert_eq!(summary.indexed_release_readiness_evidence_check_count, 44);
+        assert_eq!(summary.indexed_archive_evidence_ledger_check_count, 37);
+        assert_eq!(summary.blocked_indexed_release_evidence_check_count, 42);
+        assert_eq!(
+            summary.blocked_indexed_archive_evidence_ledger_check_count,
+            37
+        );
+        assert!(!summary.release_readiness_evidence_ready);
+        assert!(!summary.runtime_evidence_ready);
+        assert!(!summary.archive_evidence_ready);
+        assert!(!summary.release_closeout_ready);
+        assert!(!summary.operations_ready);
+        assert!(!summary.release_evidence_index_ready);
+        assert!(!summary.is_release_evidence_index_ready());
+        assert!(summary.has_blocked_release_evidence_index_checks());
+        assert!(summary.has_blocked_indexed_release_evidence_checks());
+        assert!(summary.has_blocked_indexed_archive_evidence_ledger_checks());
+        assert!(summary.needs_release_readiness_evidence());
+        assert!(summary.needs_runtime_evidence());
+        assert!(summary.needs_archive_evidence());
+        assert!(summary.needs_release_closeout());
+        assert!(summary.needs_operations());
+    }
+
+    #[test]
     fn hue_package_release_archive_notarization_summary_reports_ready_archive_notarization() {
         let plan = hue_pairing_plan_for_discovered_bridge(
             DiscoveredHueBridge {
@@ -20377,24 +20418,27 @@ mod tests {
         let summary = hue_package_release_archive_notarization_summary(&plan);
 
         assert_eq!(
-            summary.release_readiness_evidence_summary,
-            hue_package_release_readiness_evidence_summary(&plan)
+            summary.release_evidence_index_summary,
+            hue_package_release_evidence_index_summary(&plan)
         );
-        assert_eq!(summary.required_archive_notarization_check_count, 45);
-        assert_eq!(summary.passed_archive_notarization_check_count, 45);
+        assert_eq!(summary.required_archive_notarization_check_count, 6);
+        assert_eq!(summary.passed_archive_notarization_check_count, 6);
         assert_eq!(summary.blocked_archive_notarization_check_count, 0);
         assert!(summary.release_readiness_evidence_ready);
-        assert!(summary.release_archive_evidence_ledger_ready);
-        assert!(summary.release_archive_evidence_ready);
+        assert!(summary.runtime_evidence_ready);
+        assert!(summary.archive_evidence_ready);
+        assert!(summary.release_closeout_ready);
+        assert!(summary.operations_ready);
+        assert!(summary.release_evidence_index_ready);
         assert!(summary.release_archive_notarization_ready);
         assert!(summary.is_release_archive_notarization_ready());
         assert!(!summary.has_blocked_archive_notarization_checks());
         assert!(!summary.needs_release_readiness_evidence());
-        assert!(!summary.needs_release_archive_evidence_ledger());
-        assert!(!summary.needs_release_archive_evidence());
-        assert!(!summary.needs_release_archive_attestation());
-        assert!(!summary.needs_release_archive());
-        assert!(!summary.needs_publish_gate());
+        assert!(!summary.needs_runtime_evidence());
+        assert!(!summary.needs_archive_evidence());
+        assert!(!summary.needs_release_closeout());
+        assert!(!summary.needs_operations());
+        assert!(!summary.needs_release_evidence_index());
     }
 
     #[test]
@@ -20417,32 +20461,23 @@ mod tests {
 
         let summary = HuePackageReleaseArchiveNotarizationSummary::from_pairing_plan(&plan);
 
-        assert_eq!(summary.required_archive_notarization_check_count, 45);
-        assert_eq!(summary.passed_archive_notarization_check_count, 2);
-        assert_eq!(summary.blocked_archive_notarization_check_count, 43);
-        assert!(summary.worker_process_ready);
-        assert!(summary.command_flow_ready);
-        assert!(!summary.pairing_flow_ready);
-        assert!(!summary.event_stream_ready);
-        assert!(!summary.physical_presence_required);
-        assert!(!summary.package_release_ready);
+        assert_eq!(summary.required_archive_notarization_check_count, 6);
+        assert_eq!(summary.passed_archive_notarization_check_count, 0);
+        assert_eq!(summary.blocked_archive_notarization_check_count, 6);
         assert!(!summary.release_readiness_evidence_ready);
-        assert!(!summary.release_archive_evidence_ledger_ready);
-        assert!(!summary.release_archive_evidence_ready);
+        assert!(!summary.runtime_evidence_ready);
+        assert!(!summary.archive_evidence_ready);
+        assert!(!summary.release_closeout_ready);
+        assert!(!summary.operations_ready);
+        assert!(!summary.release_evidence_index_ready);
         assert!(!summary.release_archive_notarization_ready);
         assert!(!summary.is_release_archive_notarization_ready());
         assert!(summary.has_blocked_archive_notarization_checks());
-        assert!(!summary.needs_worker_process());
-        assert!(!summary.needs_command_flow());
-        assert!(summary.needs_pairing_flow());
-        assert!(summary.needs_event_stream());
-        assert!(summary.needs_physical_presence_requirement());
-        assert!(summary.needs_package_release());
         assert!(summary.needs_release_readiness_evidence());
-        assert!(summary.needs_release_archive_evidence_ledger());
-        assert!(summary.needs_release_archive_evidence());
-        assert!(summary.needs_release_archive_attestation());
-        assert!(summary.needs_release_archive());
-        assert!(summary.needs_publish_gate());
+        assert!(summary.needs_runtime_evidence());
+        assert!(summary.needs_archive_evidence());
+        assert!(summary.needs_release_closeout());
+        assert!(summary.needs_operations());
+        assert!(summary.needs_release_evidence_index());
     }
 }
