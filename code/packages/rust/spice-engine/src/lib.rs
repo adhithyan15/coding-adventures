@@ -3571,6 +3571,16 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
             if is_noop_control_block_command(stripped) {
                 continue;
             }
+            if is_script_control_block_command(stripped) {
+                diagnostics.push(DeckControlDiagnostic {
+                    code: "SPICE_DECK_CONTROL_SCRIPT_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    line_number,
+                    message: control_block_script_policy_message(stripped),
+                    severity: "error".to_string(),
+                });
+                continue;
+            }
             diagnostics.push(DeckControlDiagnostic {
                 code: "SPICE_DECK_CONTROL_COMMAND".to_string(),
                 directive: ".control".to_string(),
@@ -4370,6 +4380,18 @@ fn resolve_deck_lines(
                 continue;
             }
             if is_noop_control_block_command(stripped) {
+                continue;
+            }
+            if is_script_control_block_command(stripped) {
+                state.diagnostics.push(DeckResolutionDiagnostic {
+                    code: "SPICE_DECK_CONTROL_SCRIPT_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    source: source.to_string(),
+                    line_number,
+                    message: control_block_script_policy_message(stripped),
+                    severity: "error".to_string(),
+                    target: None,
+                });
                 continue;
             }
             state.diagnostics.push(DeckResolutionDiagnostic {
@@ -6949,6 +6971,23 @@ fn is_noop_control_block_command(line: &str) -> bool {
     }
     matches!(parts.next().map(|option| option.to_ascii_lowercase()), Some(option) if matches!(option.as_str(), "noaskquit" | "filetype=ascii" | "wr_vecnames" | "wr_singlescale" | "appendwrite"))
         && parts.next().is_none()
+}
+
+fn is_script_control_block_command(line: &str) -> bool {
+    let Some(command) = line
+        .split_whitespace()
+        .next()
+        .map(|command| command.to_ascii_lowercase())
+    else {
+        return false;
+    };
+    matches!(command.as_str(), "source" | ".source" | "shell" | ".shell")
+}
+
+fn control_block_script_policy_message(line: &str) -> String {
+    format!(
+        "{line:?} inside .control is not executed because external script and shell commands are disabled by the deck execution policy"
+    )
 }
 
 fn is_unsupported_deck_control_directive(directive: &str) -> bool {

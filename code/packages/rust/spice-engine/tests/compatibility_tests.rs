@@ -156,6 +156,10 @@ help tran
 echo running selected deck
 rusage all
 where
+source nested-control.cir
+.source dotted-control.cir
+shell echo nope
+.shell echo dotted
 run
 quit
 .endc
@@ -197,7 +201,11 @@ quit
             (".lib", 3, "error"),
             (".control", 4, "error"),
             (".control", 19, "error"),
-            (".control", 22, "error")
+            (".control", 22, "error"),
+            (".control", 33, "error"),
+            (".control", 34, "error"),
+            (".control", 35, "error"),
+            (".control", 36, "error")
         ]
     );
     assert_eq!(
@@ -211,7 +219,11 @@ quit
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_CONTROL_COMMAND",
-            "SPICE_DECK_CONTROL_COMMAND"
+            "SPICE_DECK_CONTROL_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND"
         ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
@@ -359,6 +371,10 @@ four 2k V(b)
 .echo running selected deck
 .rusage all
 .where
+.source nested-control.cir
+source plain-control.cir
+.shell echo nope
+shell echo plain
 run
 .quit
 .endc
@@ -393,7 +409,11 @@ run
             "SPICE_DECK_INCLUDE_NOT_FOUND",
             "SPICE_DECK_INCLUDE_CYCLE",
             "SPICE_DECK_LIB_SECTION_NOT_FOUND",
-            "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND"
         ]
     );
     assert_eq!(
@@ -403,7 +423,13 @@ run
             .skip(3)
             .map(|diagnostic| (diagnostic.directive.as_str(), diagnostic.line_number))
             .collect::<Vec<_>>(),
-        vec![(".control", 5)]
+        vec![
+            (".control", 5),
+            (".control", 32),
+            (".control", 33),
+            (".control", 34),
+            (".control", 35)
+        ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
     let measurement_summary = resolve_deck_measurements(&measurement_deck);

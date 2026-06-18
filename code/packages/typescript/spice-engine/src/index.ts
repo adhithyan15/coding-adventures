@@ -2891,6 +2891,7 @@ const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set([
   "wr_singlescale",
   "appendwrite",
 ]);
+const SCRIPT_CONTROL_BLOCK_COMMANDS = new Set(["source", ".source", "shell", ".shell"]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2921,6 +2922,16 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
         continue;
       }
       if (isNoopControlBlockCommand(stripped)) {
+        continue;
+      }
+      if (isScriptControlBlockCommand(stripped)) {
+        diagnostics.push({
+          code: "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+          directive: ".control",
+          lineNumber,
+          message: controlBlockScriptPolicyMessage(stripped),
+          severity: "error",
+        });
         continue;
       }
       diagnostics.push({
@@ -3484,6 +3495,17 @@ function resolveDeckLines(
         continue;
       }
       if (isNoopControlBlockCommand(stripped)) {
+        continue;
+      }
+      if (isScriptControlBlockCommand(stripped)) {
+        state.diagnostics.push({
+          code: "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+          directive: ".control",
+          source,
+          lineNumber,
+          message: controlBlockScriptPolicyMessage(stripped),
+          severity: "error",
+        });
         continue;
       }
       state.diagnostics.push({
@@ -5767,6 +5789,15 @@ function isNoopControlBlockCommand(line: string): boolean {
     parts.length === 2 &&
     NOOP_CONTROL_BLOCK_SET_OPTIONS.has(parts[1]?.toLowerCase() ?? "")
   );
+}
+
+function isScriptControlBlockCommand(line: string): boolean {
+  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
+  return command !== undefined && SCRIPT_CONTROL_BLOCK_COMMANDS.has(command);
+}
+
+function controlBlockScriptPolicyMessage(line: string): string {
+  return `${JSON.stringify(line)} inside .control is not executed because external script and shell commands are disabled by the deck execution policy`;
 }
 
 export function subcircuitDefinition(

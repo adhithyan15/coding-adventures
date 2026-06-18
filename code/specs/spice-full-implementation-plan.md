@@ -45,7 +45,9 @@ downstream tools to compare.
      no-op control markers, and read-only `display` / `listing` / `show` /
      `showmod` / `status` / `version` / `help` / `echo` / `rusage` / `where`
      inspection, introspection, and console/debug commands are accepted as
-     no-op control markers; parsed
+     no-op control markers, while selected `source` and `shell` external
+     script/shell commands now emit explicit policy diagnostics instead of
+     generic unsupported-command diagnostics; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -674,6 +676,17 @@ downstream tools to compare.
       script execution, other `set` variables, and unrecognized non-comment
       commands inside `.control` blocks remain diagnostic-only so unsupported
       UI output and script state are explicit.
+
+61. Selected `.control` script execution policy diagnostics.
+    - Status: completed in this selected control script-policy diagnostics
+      slice.
+    - Python, Rust, and TypeScript now emit explicit diagnostics for selected
+      `.control` block `source` and `shell` external script/shell commands
+      instead of generic unsupported-command diagnostics.
+    - External script execution, shelling out, working-directory mutation,
+      control flow, variables, and unrecognized non-comment commands inside
+      `.control` blocks remain diagnostic-only so unsupported script execution
+      policy is explicit.
 
 ## Backlog
 

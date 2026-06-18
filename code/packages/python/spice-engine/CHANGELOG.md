@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck control script policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block `source` and `shell`
+  external script/shell commands instead of generic unsupported-command
+  diagnostics, matching Rust and TypeScript. External script execution and
+  shelling out remain disabled by the deck execution policy.
+
 - **Deck control console marker routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
   `.control` block read-only `echo`, `rusage`, and `where` console/debug
