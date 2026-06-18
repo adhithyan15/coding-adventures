@@ -346,16 +346,19 @@ impl Interpreter {
         let fn_name = lvalue_name(primary)
             .map_err(|_| SError::TypeError("invalid replacement-function target".into()))?;
 
-        // The call must have exactly one argument, and it must be a bare-name
-        // variable (the object being modified): `names(x) <- v`.
+        // The call must have at least one argument; the *first* is the bare-name
+        // variable being modified (`names(x) <- v`, `attr(x, "foo") <- v`). Any
+        // further arguments (`attr`'s `which`, etc.) are passed through to the
+        // replacement function ahead of `value`, matching R's desugaring
+        // `x <- \`f<-\`(x, <extra args>, value = v)`.
         let arg_values = self.eval_args(call_suffix, env)?;
-        if arg_values.len() != 1 {
+        if arg_values.is_empty() {
             return Err(SError::BadArgs(format!(
-                "{fn_name}(...) <- value: the replacement target must take exactly one argument"
+                "{fn_name}(...) <- value: the replacement target must take at least one argument"
             )));
         }
 
-        // Recover the bare-name of that single argument from the parse tree (we
+        // Recover the bare-name of the *first* argument from the parse tree (we
         // need the *name* to rebind, not just its value).
         let arg_node = call_suffix
             .children
@@ -375,20 +378,23 @@ impl Interpreter {
         let current =
             lookup(env, &target_name).ok_or_else(|| SError::Undefined(target_name.clone()))?;
 
-        // Look up `\`f<-\`` and call it with (current, value = rhs).
+        // Look up `\`f<-\`` and call it with (current, <extra args…>, value = rhs):
+        // the first call arg is replaced by the variable's current value, the
+        // remaining call args (e.g. `which`) pass through unchanged, and the RHS
+        // is appended as the named `value` argument.
         let replacement_name = format!("{fn_name}<-");
         let func = lookup(env, &replacement_name)
             .ok_or_else(|| SError::Undefined(replacement_name.clone()))?;
-        let call_args = [
-            Arg {
-                name: None,
-                value: current,
-            },
-            Arg {
-                name: Some("value".to_string()),
-                value: rhs.clone(),
-            },
-        ];
+        let mut call_args: Vec<Arg> = Vec::with_capacity(arg_values.len() + 1);
+        call_args.push(Arg {
+            name: None,
+            value: current,
+        });
+        call_args.extend(arg_values.into_iter().skip(1));
+        call_args.push(Arg {
+            name: Some("value".to_string()),
+            value: rhs.clone(),
+        });
         let updated = self.call_value(func, &call_args)?;
         define(env, &target_name, updated);
         self.as_invisible(rhs)
@@ -1202,6 +1208,7 @@ pub(crate) fn nth_element(value: &SValue, i: usize) -> SValue {
         },
         SValue::Classed { inner, .. } => nth_element(inner, i),
         SValue::Named { values, .. } => nth_element(values, i),
+        SValue::Attributed { inner, .. } => nth_element(inner, i),
         SValue::List { items, .. } => items.get(i).cloned().unwrap_or(SValue::Null),
         _ => SValue::Null,
     }

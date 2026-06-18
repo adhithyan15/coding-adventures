@@ -9,7 +9,9 @@
 use crate::env::{define, Env};
 use crate::error::{SError, SResult};
 use crate::eval::{nth_element, Interpreter};
-use crate::value::{bounded_sequence, class_of, combine, index, Arg, SValue, MAX_SEQ_LEN};
+use crate::value::{
+    bounded_sequence, class_of, combine, index, Arg, SValue, MAX_ATTRIBUTES, MAX_SEQ_LEN,
+};
 use r_vector::{is_na_real, na_real, Double};
 use statistics_core::distributions::{dnorm, pnorm, qnorm, rnorm};
 use statistics_core::distributions_more::{
@@ -149,6 +151,13 @@ pub fn install(env: &Env) {
     define(env, "structure", builtin("structure", b_structure));
     define(env, "inherits", builtin("inherits", b_inherits));
     define(env, "unclass", builtin("unclass", b_unclass));
+
+    // R-16 — general attributes. `attr<-` / `attributes<-` slot into the
+    // replacement-function lvalue path R-15 added (`f(x) <- v` ≡ `x <- \`f<-\`(x, v)`).
+    define(env, "attr", builtin("attr", b_attr));
+    define(env, "attr<-", builtin("attr<-", b_attr_replace));
+    define(env, "attributes", builtin("attributes", b_attributes));
+    define(env, "attributes<-", builtin("attributes<-", b_attributes_replace));
 
     // v2 — factors.
     define(env, "factor", builtin("factor", b_factor));
@@ -1147,20 +1156,26 @@ fn b_class(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     Ok(SValue::Character(classes.into_iter().map(Some).collect()))
 }
 
-/// `structure(x, class = …)` — attach an explicit S3 class to a value. v2
-/// supports the `class` attribute; other attributes are accepted but ignored.
+/// `structure(x, ...)` — return `x` with each named `...` argument attached as an
+/// attribute (R-16). `structure(1:3, class = "myc", foo = "bar")` attaches both
+/// the special `class` and the general `foo`. Each named argument is routed
+/// through the same per-name logic as `attr<-` (special names — `names`/`.Names`,
+/// `class`, `dim`/`.Dim` — go to their dedicated wrappers; the rest into the
+/// general attribute map), so a single call can set `dim`, `names`, and arbitrary
+/// attributes consistently. The first positional argument is `x`; any further
+/// positional arguments are ignored (R has no positional `...` attributes here).
 fn b_structure(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    let inner = first_positional(args)?.clone();
-    match args.iter().find(|a| a.name.as_deref() == Some("class")) {
-        Some(arg) => {
-            let class: Vec<String> = arg.value.as_character().into_iter().flatten().collect();
-            Ok(SValue::Classed {
-                inner: Box::new(inner),
-                class,
-            })
+    let mut value = first_positional(args)?.clone();
+    for a in args {
+        if let Some(name) = &a.name {
+            // `.Data` is R's positional alias for the object itself; skip it.
+            if name == ".Data" {
+                continue;
+            }
+            value = set_attr(value, name, &a.value)?;
         }
-        None => Ok(inner),
     }
+    Ok(value)
 }
 
 /// `inherits(x, what)` — whether any class of `x` matches `what`.
@@ -1190,6 +1205,359 @@ fn b_unclass(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     match first_positional(args)? {
         SValue::Classed { inner, .. } => Ok((**inner).clone()),
         other => Ok(other.clone()),
+    }
+}
+
+// ===========================================================================
+// R-16 — general attributes (attr / attributes / structure)
+// ===========================================================================
+//
+// R's attribute system is an open key→value metadata map on every object. Three
+// attributes are *special* — `names`, `class`, `dim` — and we keep them in their
+// dedicated representations so they can never disagree with the wrappers built
+// for them:
+//
+//   | attribute | where it actually lives           | get reads                | set routes to        |
+//   |-----------|-----------------------------------|--------------------------|----------------------|
+//   | "names"   | `SValue::Named.names` (R-15)      | `names(x)`               | `with_names`         |
+//   | "class"   | `SValue::Classed.class` (S v2)    | `class_of` (explicit)    | `Classed` / `unclass`|
+//   | "dim"     | `SValue::Matrix{nrow,ncol}` (R-11)| `c(nrow, ncol)`          | reshape into Matrix  |
+//
+// Every *other* attribute is stored generally in `SValue::Attributed.attrs`.
+// Because the special ones are never duplicated into that map, `attr(x,"names")`
+// *is* `names(x)` — both read the same field — and likewise for class/dim. R
+// also accepts `.Names`/`.Dim` as aliases for `names`/`dim`, which we honour.
+
+/// `attr(x, which)` — the named attribute, or `NULL` if absent. Special names are
+/// synthesized from the dedicated wrappers; everything else is looked up in the
+/// general attribute map.
+fn get_attr(x: &SValue, which: &str) -> SValue {
+    match which {
+        "names" | ".Names" => match x {
+            SValue::Named { names, .. } => SValue::Character(names.clone()),
+            SValue::DataFrame { names, .. } => {
+                SValue::Character(names.iter().cloned().map(Some).collect())
+            }
+            // Names live *inside* the class/general wrappers — see through them.
+            SValue::Attributed { inner, .. } => get_attr(inner, "names"),
+            SValue::Classed { inner, .. } => get_attr(inner, "names"),
+            _ => SValue::Null,
+        },
+        "class" => match x {
+            // Only an *explicitly* set class is an attribute; the implicit class
+            // of a bare vector is not (matching R's `attr(1, "class")` → NULL).
+            SValue::Classed { class, .. } => {
+                SValue::Character(class.iter().cloned().map(|c| Some(c)).collect())
+            }
+            // See through a general-attribute wrapper to find an inner class.
+            SValue::Attributed { inner, .. } => get_attr(inner, "class"),
+            SValue::Named { values, .. } => get_attr(values, "class"),
+            _ => SValue::Null,
+        },
+        "dim" | ".Dim" => match x {
+            SValue::Matrix { nrow, ncol, .. } => SValue::doubles(vec![*nrow as f64, *ncol as f64]),
+            SValue::Attributed { inner, .. } => get_attr(inner, "dim"),
+            SValue::Classed { inner, .. } => get_attr(inner, "dim"),
+            SValue::Named { values, .. } => get_attr(values, "dim"),
+            _ => SValue::Null,
+        },
+        // A general attribute: look it up in the map (seeing through Named/Classed
+        // so `attr(setNames(structure(...)), "foo")` still finds `foo`).
+        _ => match x {
+            SValue::Attributed { attrs, .. } => attrs
+                .iter()
+                .find(|(k, _)| k == which)
+                .map(|(_, v)| v.clone())
+                .unwrap_or(SValue::Null),
+            SValue::Named { values, .. } => get_attr(values, which),
+            SValue::Classed { inner, .. } => get_attr(inner, which),
+            _ => SValue::Null,
+        },
+    }
+}
+
+/// `attr(x, which) <- value` — set/replace/remove a single attribute, returning
+/// the modified value. Assigning `NULL` *removes* the attribute. Special names
+/// route to their dedicated wrappers; the rest go into the general map (bounded
+/// by [`MAX_ATTRIBUTES`]). Never panics on malformed input — a bad `dim` or
+/// over-long `names` returns a clean `SError`.
+fn set_attr(x: SValue, which: &str, value: &SValue) -> SResult<SValue> {
+    let removing = matches!(value, SValue::Null);
+    match which {
+        "names" | ".Names" => set_names_attr(x, value),
+        "class" => Ok(set_class_attr(x, value)),
+        "dim" | ".Dim" => set_dim_attr(x, value),
+        _ => set_general_attr(x, which, value, removing),
+    }
+}
+
+/// Route a `names`/`class`/`dim` set into the existing wrapper machinery, leaving
+/// the general-attribute layer (if any) intact around the result.
+///
+/// Set the `names` attribute, reusing R-15's `with_names` (NA-pad / truncate /
+/// `NULL`-clear), preserving any general attributes around it.
+fn set_names_attr(x: SValue, value: &SValue) -> SResult<SValue> {
+    // Peel a general-attribute wrapper so names attach to the bare value, then
+    // re-wrap. (`names<-` semantics are unchanged from R-15.)
+    let (attrs, bare) = split_general(x);
+    let renamed = match value {
+        SValue::Null => bare.strip_names().clone(),
+        v => {
+            let new_names = v.as_character();
+            if new_names.len() > bare.length() {
+                return Err(SError::BadArgs(format!(
+                    "'names' attribute [{}] must be no longer than the vector [{}]",
+                    new_names.len(),
+                    bare.length()
+                )));
+            }
+            SValue::with_names(bare, new_names)
+        }
+    };
+    Ok(SValue::with_general_attrs(renamed, attrs))
+}
+
+/// Set (or, with `NULL`, clear) the explicit S3 `class`, preserving general attrs.
+fn set_class_attr(x: SValue, value: &SValue) -> SValue {
+    let (attrs, bare) = split_general(x);
+    // `unclass` first so re-setting replaces rather than nests.
+    let unclassed = match bare {
+        SValue::Classed { inner, .. } => *inner,
+        other => other,
+    };
+    let classed = match value {
+        SValue::Null => unclassed,
+        v => {
+            let class: Vec<String> = v.as_character().into_iter().flatten().collect();
+            if class.is_empty() {
+                unclassed
+            } else {
+                SValue::Classed {
+                    inner: Box::new(unclassed),
+                    class,
+                }
+            }
+        }
+    };
+    SValue::with_general_attrs(classed, attrs)
+}
+
+/// Set (or, with `NULL`, clear) the `dim` attribute. Setting `dim <- c(nr, nc)`
+/// reshapes a length-`nr*nc` numeric vector into a column-major matrix; the
+/// product must equal the element count (as in R). Clearing turns a matrix back
+/// into its flat vector. General attributes are preserved around the result.
+fn set_dim_attr(x: SValue, value: &SValue) -> SResult<SValue> {
+    let (attrs, bare) = split_general(x);
+    let reshaped = match value {
+        // Clearing dim: a matrix collapses to its flat column-major vector.
+        SValue::Null => match bare {
+            SValue::Matrix { data, .. } => SValue::Double(data),
+            other => other,
+        },
+        v => {
+            let dims = v.as_double()?;
+            if dims.len() != 2 {
+                return Err(SError::BadArgs(
+                    "dim<-: only 2-D dims (c(nrow, ncol)) are supported".into(),
+                ));
+            }
+            let nr = dim_component(dims.get_value(0))?;
+            let nc = dim_component(dims.get_value(1))?;
+            // Checked product, bounded — never allocate an oversize matrix.
+            let total = nr
+                .checked_mul(nc)
+                .filter(|&t| t <= MAX_SEQ_LEN)
+                .ok_or_else(|| {
+                    SError::BadArgs(format!("dim<-: dimensions too large (limit {MAX_SEQ_LEN})"))
+                })?;
+            let data = bare.as_double()?;
+            if data.len() != total {
+                return Err(SError::BadArgs(format!(
+                    "dim<-: dims [product {total}] do not match the length of object [{}]",
+                    data.len()
+                )));
+            }
+            SValue::Matrix {
+                data,
+                nrow: nr,
+                ncol: nc,
+            }
+        }
+    };
+    Ok(SValue::with_general_attrs(reshaped, attrs))
+}
+
+/// Validate one `dim` component: a finite non-negative integer.
+fn dim_component(x: Option<f64>) -> SResult<usize> {
+    match x {
+        Some(v) if v.is_finite() && v >= 0.0 && v.fract() == 0.0 => Ok(v as usize),
+        _ => Err(SError::BadArgs("dim<-: each dimension must be a non-negative integer".into())),
+    }
+}
+
+/// Set/replace/remove a *general* (non-special) attribute in the `Attributed`
+/// map, bounded by [`MAX_ATTRIBUTES`].
+fn set_general_attr(x: SValue, which: &str, value: &SValue, removing: bool) -> SResult<SValue> {
+    // Pull the current general attrs off (if any), keeping the special wrappers.
+    let (mut attrs, bare) = split_general(x);
+    if let Some(pos) = attrs.iter().position(|(k, _)| k == which) {
+        if removing {
+            attrs.remove(pos);
+        } else {
+            attrs[pos].1 = value.clone();
+        }
+    } else if !removing {
+        if attrs.len() >= MAX_ATTRIBUTES {
+            return Err(SError::BadArgs(format!(
+                "too many attributes (limit {MAX_ATTRIBUTES})"
+            )));
+        }
+        attrs.push((which.to_string(), value.clone()));
+    }
+    Ok(SValue::with_general_attrs(bare, attrs))
+}
+
+/// Split a value into its general-attribute list (empty if none) and the bare
+/// value underneath the `Attributed` wrapper. Special wrappers (`Named`,
+/// `Classed`, `Matrix`) stay intact inside `bare`.
+fn split_general(x: SValue) -> (Vec<(String, SValue)>, SValue) {
+    match x {
+        SValue::Attributed { attrs, inner } => (attrs, *inner),
+        other => (Vec::new(), other),
+    }
+}
+
+/// `attr(x, which)` — get a single attribute (or `NULL`). `which` is the second
+/// positional (or `which =`) argument, coerced to its first character element.
+fn b_attr(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let which = attr_which(args)?;
+    Ok(get_attr(x, &which))
+}
+
+/// `attr<-`(x, which, value)` — the replacement form behind `attr(x, which) <- v`.
+/// The replacement convention passes `(x, which, value = v)`.
+fn b_attr_replace(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.clone();
+    let which = attr_which(args)?;
+    let value = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("value"))
+        .map(|a| &a.value)
+        .or_else(|| nth_positional(args, 2))
+        .cloned()
+        .unwrap_or(SValue::Null);
+    set_attr(x, &which, &value)
+}
+
+/// Read the `which` argument of `attr` / `attr<-`: the `which =` named arg, or
+/// the second positional. Must be a non-`NA` character scalar.
+fn attr_which(args: &[Arg]) -> SResult<String> {
+    let v = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("which"))
+        .map(|a| &a.value)
+        .or_else(|| nth_positional(args, 1))
+        .ok_or_else(|| SError::BadArgs("attr: 'which' is missing".into()))?;
+    v.as_character()
+        .into_iter()
+        .next()
+        .flatten()
+        .ok_or_else(|| SError::BadArgs("attr: 'which' must be a non-NA character string".into()))
+}
+
+/// `attributes(x)` — *all* attributes as a named list (or `NULL` if none). The
+/// special attributes come first in R's canonical order (`names`, then `dim`,
+/// then the general ones in insertion order), with `class` last.
+fn b_attributes(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let mut pairs: Vec<(Option<String>, SValue)> = Vec::new();
+
+    // names, then dim (special, canonical order).
+    let names = get_attr(x, "names");
+    if !matches!(names, SValue::Null) {
+        pairs.push((Some("names".to_string()), names));
+    }
+    let dim = get_attr(x, "dim");
+    if !matches!(dim, SValue::Null) {
+        pairs.push((Some("dim".to_string()), dim));
+    }
+    // General attributes, in insertion order. The general-attribute wrapper is
+    // always the *outermost* layer (every `set_attr`/`structure` re-wraps it
+    // outside the special `Named`/`Classed`/`Matrix` wrappers), so a single
+    // `general_attrs()` on `x` sees them all.
+    if let Some(attrs) = x.general_attrs() {
+        for (k, v) in attrs {
+            pairs.push((Some(k.clone()), v.clone()));
+        }
+    }
+    // class last.
+    let class = get_attr(x, "class");
+    if !matches!(class, SValue::Null) {
+        pairs.push((Some("class".to_string()), class));
+    }
+
+    if pairs.is_empty() {
+        Ok(SValue::Null)
+    } else {
+        Ok(SValue::list(pairs))
+    }
+}
+
+/// `attributes<-`(x, value)` — replace the *whole* attribute set. `value` is a
+/// named list (each element applied as the matching attribute) or `NULL` (clear
+/// every attribute). An unnamed element, or a non-list / non-NULL `value`, is an
+/// error. Bounded by [`MAX_ATTRIBUTES`] via the per-attribute `set_attr` path.
+fn b_attributes_replace(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.clone();
+    let value = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("value"))
+        .map(|a| &a.value)
+        .or_else(|| nth_positional(args, 1))
+        .cloned()
+        .unwrap_or(SValue::Null);
+
+    // Start from a fully bare value: clearing every attribute is the baseline.
+    let bare = strip_all_attrs(x);
+    match value {
+        SValue::Null => Ok(bare),
+        SValue::List { names, items } => {
+            if items.len() > MAX_ATTRIBUTES {
+                return Err(SError::BadArgs(format!(
+                    "attributes<-: too many attributes (limit {MAX_ATTRIBUTES})"
+                )));
+            }
+            let mut out = bare;
+            for (name, item) in names.iter().zip(items.iter()) {
+                let key = name
+                    .as_deref()
+                    .filter(|s| !s.is_empty())
+                    .ok_or_else(|| {
+                        SError::BadArgs(
+                            "attributes<-: all attributes in the list must be named".into(),
+                        )
+                    })?;
+                out = set_attr(out, key, item)?;
+            }
+            Ok(out)
+        }
+        other => Err(SError::TypeError(format!(
+            "attributes<-: value must be a named list or NULL (got {})",
+            other.type_name()
+        ))),
+    }
+}
+
+/// Strip *every* attribute (special and general) from a value, returning the bare
+/// underlying vector — the baseline for `attributes(x) <- list(...)`.
+fn strip_all_attrs(x: SValue) -> SValue {
+    match x {
+        SValue::Attributed { inner, .. } => strip_all_attrs(*inner),
+        SValue::Named { values, .. } => strip_all_attrs(*values),
+        SValue::Classed { inner, .. } => strip_all_attrs(*inner),
+        SValue::Matrix { data, .. } => SValue::Double(data),
+        other => other,
     }
 }
 
