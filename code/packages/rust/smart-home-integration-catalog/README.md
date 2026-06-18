@@ -53,6 +53,9 @@ runtime and Chief of Staff tools a typed catalog for:
   lessons overlap a priority-bounded reusable primitive backlog
 - low-level Zigbee, Z-Wave, and Thread primitive-readiness rows and summaries
   for checking radio substrate, controller, network-key, and supervision gaps
+- mesh readiness package summaries that combine Zigbee, Z-Wave, and Thread
+  primitive substrate readiness with mesh-scoped activation evidence
+  remediation rollups
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and
