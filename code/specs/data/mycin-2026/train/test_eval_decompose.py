@@ -93,6 +93,43 @@ def test_a_near_miss_prediction_is_caught_by_the_eval():
     assert s["near_miss_violations"] == 1 and s["false_positive_facts"] == 1, s
 
 
+def test_parse_ir_extracts_json_from_noisy_output():
+    # The model may wrap its JSON in prose / code fences; parse_ir pulls the first object out.
+    assert ed.parse_ir('Sure! ```json\n{"chart_facts": [], "discard": []}\n``` done')["chart_facts"] == []
+    assert ed.parse_ir("no json here") == {}  # garbage → empty IR (penalized, never crashes)
+    assert ed.parse_ir('{"findings": [{"functor": "fever"}]}')["findings"][0]["functor"] == "fever"
+
+
+def test_model_mode_wiring_scores_a_stub_generator_perfectly():
+    # The --model path is exercised end-to-end WITHOUT MLX via an injected `gen`: the stub finds
+    # which eval note is in the prompt and returns that record's gold as JSON. predict_with_model
+    # builds the (shape-correct) prompt, calls gen, parses, and scores → a perfect self-equivalent
+    # run. This pins the prompt-build → generate → parse → score wiring offline.
+    import json as _json
+    dictionary = _json.loads((ed.HERE.parent / "warm" / "dictionary.json").read_text())
+
+    def stub_gen(prompt: str) -> str:
+        rec = next(r for r in RECORDS if r["note"] in prompt)
+        return "model says: " + _json.dumps(rec["gold"])  # prose wrapper exercises parse_ir too
+
+    preds = ed.predict_with_model(RECORDS, stub_gen, dictionary)
+    assert set(preds) == {r["id"] for r in RECORDS}
+    _, agg = ed.score_predictions(RECORDS, preds)
+    assert agg["fact_f1"] == 1.0 and agg["span_faithfulness"] == 1.0
+    assert agg["near_miss_violations"] == 0 and agg["false_positive_facts"] == 0
+
+
+def test_build_prompt_is_shape_appropriate_and_contains_the_note():
+    cf = next(r for r in RECORDS if r["shape"] == "chart_facts")
+    fnd = next(r for r in RECORDS if r["shape"] == "findings")
+    import json as _json
+    dictionary = _json.loads((ed.HERE.parent / "warm" / "dictionary.json").read_text())
+    p_cf = ed.build_prompt(cf, dictionary)
+    p_fnd = ed.build_prompt(fnd, dictionary)
+    assert cf["note"] in p_cf and "chart" in p_cf.lower()
+    assert fnd["note"] in p_fnd and "finding" in p_fnd.lower()
+
+
 def main() -> int:
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     failed = 0

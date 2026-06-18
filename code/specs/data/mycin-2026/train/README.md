@@ -91,12 +91,21 @@ faithfulness is measurable without re-running the model.
 
 A held-out benchmark to score against: **`decompose_eval.jsonl`** — a small, HAND-CURATED set of
 prose vignettes + gold IR across both shapes and the hard cases (near-miss family-history /
-absence / efficacy / hedge, and honest abstain). `eval_decompose.py` scores a model's predictions
-against it (`--pred predictions.jsonl`) and reports the aggregate; `--self-check` scores the gold
-as the prediction (a perfect 1.0 / zero violations — the offline CI sanity check). The set is
-curated, not teacher-generated, so it stays a stable benchmark; `test_eval_decompose.py` pins that
-every gold span is verbatim, every chart-fact is COP-consumable, every near-miss is a discard, and
-the set + scorer compose to a perfect self-check.
+absence / efficacy / hedge, and honest abstain). `eval_decompose.py` scores a model three ways:
+`--model <path> [--adapter ...]` runs an MLX model (base or base+LoRA) as the decomposer over the
+eval notes — using the SAME prompts the training data was generated under (so train and eval
+match) — parses its JSON, and reports the fidelity aggregate; `--pred predictions.jsonl` scores
+pre-computed predictions; `--self-check` scores the gold as the prediction (a perfect 1.0 / zero
+violations — the offline CI sanity check). The set is curated, not teacher-generated, so it stays
+a stable benchmark. `test_eval_decompose.py` pins that every gold span is verbatim, every
+chart-fact is COP-consumable, every near-miss is a discard, the set + scorer compose to a perfect
+self-check, AND the `--model` wiring (prompt → generate → parse → score) is correct end-to-end via
+an injected stub generator — so the whole path is verified without needing MLX in CI.
+
+```sh
+# score a fine-tune's decompose FIDELITY directly (facts/spans/discards/near-misses):
+python3 eval_decompose.py --model mlx-community/gemma-3-1b-it-4bit --adapter adapters
+```
 
 ## Result
 
