@@ -125,9 +125,9 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
-    AssignmentTarget, BindingTarget, CallExpression, Declaration, Expression, ForInit,
-    FunctionDeclaration, FunctionParam, Program, ProgramItem, PropertyKey, Statement,
-    VariableDeclaration,
+    AssignmentTarget, BindingTarget, BlockStatement, CallExpression, Declaration, Expression,
+    ExpressionStatement, ForInit, FunctionDeclaration, FunctionParam, NullLiteral, Program,
+    ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
 };
 
 /// `Pass::depends_on` value. Kept as a `const` so future tests and
@@ -245,9 +245,10 @@ fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
             }
         }
     }
-    if candidates.is_empty() {
-        return false;
-    }
+    // NOTE: no early return on an empty expression-candidate set — Phase 4
+    // (void statement-helper inlining) runs independently of the
+    // expression candidates, so the empty Phase-3 loop below just falls
+    // through to it.
 
     // Phase 3 — for each candidate, decide whether to inline ALL its
     // call sites. We `tally` two numbers in one walk:
@@ -287,6 +288,19 @@ fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
             changed = true;
         }
     }
+
+    // Phase 4 — CLOC15 PR-1: inline single-use *void multi-statement*
+    // helpers by splicing their (parameter-substituted, locals-renamed)
+    // body statements at the call site. This is the statement-level
+    // counterpart to the expression-swap above; see
+    // [`inline_void_statement_helpers`] and the CLOC15 spec for the full
+    // soundness argument. It runs after the expression inliner because
+    // the two operate on disjoint function shapes (`{ return EXPR; }` vs.
+    // a multi-statement void body), so neither perturbs the other's
+    // candidate set, and the declaration-count map stays valid (inlining
+    // removes call sites, never declarations).
+    changed |= inline_void_statement_helpers(program, &decl_counts, nodes_touched);
+
     changed
 }
 
@@ -1119,6 +1133,802 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
     }
 }
 
+// =========================================================================
+// CLOC15 PR-1 — void multi-statement statement-helper inlining
+// =========================================================================
+//
+// The expression inliner above handles only the `{ return EXPR; }` shape:
+// a single call *expression* is swapped for a single *expression*. A real
+// helper, though, is usually several statements:
+//
+// ```js
+// function track(name, value) {
+//   const event = name + ":" + value;   // a local binding
+//   metrics.push(event);                 // a free global (`metrics`)
+// }
+// track("click", 1);                     // result discarded
+// ```
+//
+// Inlining `track("click", 1)` means replacing the ONE call statement with
+// the TWO body statements — a 1 → N statement splice. That needs a walker
+// that can see the enclosing statement *list*, which the expression
+// inliner (threading `&mut Expression`) structurally cannot. This is that
+// walker, restricted to the provably-safe first slice from the CLOC15
+// spec.
+//
+// # The slice (every condition is a hard reject — declining is never wrong)
+//
+//   1. **Single-use, single-declaration.** The helper's name is declared
+//      exactly once in the whole program (no shadowing — same guard the
+//      expression inliner uses) and used exactly once.
+//   2. **The one use is a discarded statement call** — the call is the
+//      entire expression of an `ExpressionStatement` (`track(…);`), not a
+//      value (`x = track(…)`, `log(track(…))`). A discarded result means
+//      there is no return value to capture (that is PR-2/PR-3).
+//   3. **The body is straight-line, no `return`.** Each statement is an
+//      `ExpressionStatement` or a `let` / `const` `VariableDeclaration` —
+//      nothing else (no `return`, `if`, loops, `var`, nested blocks, …).
+//      No control construct means a flat splice cannot mis-scope control
+//      flow; no `var` means no function-scoped hoisting to reason about.
+//   4. **No `this` / `arguments`.** Their meaning is bound by the callee's
+//      own call frame; splicing into the caller would silently rebind
+//      them. Rejected explicitly.
+//   5. **Callee locals are alpha-renamed to program-fresh names** before
+//      splicing, so a spliced `let event` can never collide with — or
+//      shadow — a binding already live at the call site.
+//   6. **Free identifiers must be true globals.** A body identifier that
+//      is neither a parameter nor a callee-local (`metrics`, `console`)
+//      must be a name that is **never declared as a binding anywhere in
+//      the program**. Such a name has no declaration to be shadowed by, so
+//      it resolves to the same global at the definition site and at every
+//      possible splice site — soundness without a scope analyzer. (This is
+//      the conservative bootstrap the spec's Open Question 1 sanctions; a
+//      later slice can widen it to "global-and-unshadowed-here" using
+//      `closure-scope-analyzer`. It declines, e.g., a helper that calls
+//      another top-level function — sound, just not yet capable.)
+//   7. **Arguments are side-effect-free** — literals or bare identifiers
+//      (the existing [`is_simple_arg`] gate). Then substituting an
+//      argument for a parameter used zero, one, or many times neither
+//      drops nor duplicates a side effect, and evaluation order is moot.
+//   8. **No capture through substitution** — guaranteed by (5) + (7): the
+//      locals an argument identifier could be captured by are all fresh.
+//
+// Everything outside this subset is left untouched. Broader shapes
+// (tail-`return` with a discarded or captured result, `var` locals, `if`,
+// non-simple arguments, multi-use under a budget) are the later CLOC15
+// slices on this same walker.
+
+/// One inlinable void multi-statement helper: its name, parameter names in
+/// order, the body statements to splice, and the set of local binding
+/// names the body declares (to be alpha-renamed at the splice site).
+struct VoidStmtCandidate {
+    name: String,
+    params: Vec<String>,
+    body: Vec<Statement>,
+    locals: Vec<String>,
+}
+
+/// Find every qualifying void statement-helper and splice its single call.
+/// Returns whether anything changed.
+fn inline_void_statement_helpers(
+    program: &mut Program,
+    decl_counts: &HashMap<String, usize>,
+    nodes_touched: &mut u32,
+) -> bool {
+    // Collect candidates from the top-level function declarations (top
+    // level only, mirroring the expression inliner: no enclosing scope to
+    // capture, and the free-identifier guard is reasoned against the whole
+    // program).
+    let mut candidates: Vec<VoidStmtCandidate> = Vec::new();
+    for item in &program.body {
+        if let ProgramItem::Declaration(Declaration::FunctionDeclaration(fd)) = item {
+            if let Some(c) = void_candidate_from_function(fd, decl_counts) {
+                candidates.push(c);
+            }
+        }
+    }
+    if candidates.is_empty() {
+        return false;
+    }
+
+    // The fresh-name avoidance set: every variable identifier (declaration
+    // OR use) anywhere in the program. A callee local renamed to a name
+    // outside this set cannot collide with a binding live at the splice
+    // site (it is in no declaration) nor shadow a global the body reads (it
+    // is in no use) — the property that makes condition 5 sound without a
+    // scope resolver. Computed once; splicing introduces only fresh names,
+    // so it never goes stale in a way that matters.
+    let mut avoid: HashSet<String> = decl_counts.keys().cloned().collect();
+    collect_used_idents_program(program, &mut avoid);
+
+    let mut changed = false;
+    for cand in &candidates {
+        // Gate on the use shape before touching the tree. `uses` counts
+        // every binding-use of the name; `inlinable` counts calls with the
+        // right arity and side-effect-free arguments (in any position).
+        // A valid candidate's body never references its own name (that
+        // would be a declared free identifier, rejected at candidate time),
+        // so all uses are external. We require exactly one use that is an
+        // inlinable call; the splice walker then confirms it sits at
+        // statement position (result discarded) and rewrites it.
+        let (uses, inlinable) = name_use_and_call_counts(program, &cand.name, cand.params.len());
+        if uses != 1 || inlinable != 1 {
+            continue;
+        }
+        if splice_void_call_program(program, cand, &mut avoid, nodes_touched) {
+            changed = true;
+        }
+    }
+    changed
+}
+
+/// Decide whether a top-level function declaration is a void
+/// statement-helper candidate. Returns its name, params, body statements,
+/// and declared local names when every structural condition holds.
+fn void_candidate_from_function(
+    fd: &FunctionDeclaration,
+    decl_counts: &HashMap<String, usize>,
+) -> Option<VoidStmtCandidate> {
+    // (3a) Plain function only — generators / async carry resumable state.
+    if fd.generator || fd.is_async {
+        return None;
+    }
+
+    // (1) The name must be declared exactly once in the whole program, so
+    // every use of the identifier resolves to this function.
+    if decl_counts.get(&fd.id.name).copied().unwrap_or(0) != 1 {
+        return None;
+    }
+
+    // Parameter names must be distinct (unambiguous substitution map).
+    let mut params: Vec<String> = Vec::with_capacity(fd.params.len());
+    let mut param_set: HashSet<String> = HashSet::new();
+    for p in &fd.params {
+        let FunctionParam::Identifier(id) = p;
+        if !param_set.insert(id.name.clone()) {
+            return None;
+        }
+        params.push(id.name.clone());
+    }
+
+    // (3) Body shape: each statement is an `ExpressionStatement` or a
+    // `let`/`const` `VariableDeclaration`. No `return`, no control flow, no
+    // `var`, no nested blocks. We also collect the local binding names.
+    let mut locals: Vec<String> = Vec::new();
+    let mut local_set: HashSet<String> = HashSet::new();
+    for stmt in &fd.body.body {
+        match stmt {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_)) => {}
+            Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
+                // (3) `var` is function-scoped and would hoist into the
+                // caller on a flat splice — out of this slice; let/const
+                // are block-scoped, so a fresh-renamed binding is inert.
+                if vd.kind == VarKind::Var {
+                    return None;
+                }
+                for d in &vd.declarations {
+                    let BindingTarget::Identifier(id) = &d.id;
+                    locals.push(id.name.clone());
+                    local_set.insert(id.name.clone());
+                }
+            }
+            // Anything else (return, if, while, for, throw, break,
+            // continue, switch, labeled, empty, nested block, a nested
+            // function declaration) is outside the first slice.
+            _ => return None,
+        }
+    }
+
+    // Defense in depth: a `let`/`const` local that shares a parameter's
+    // spelling is a SyntaxError in conformant JS, so a faithful parser
+    // never produces it. But the name-based alpha-renamer is not
+    // scope-aware — it would rename *every* occurrence of the shared name,
+    // including ones the parameter-substitution step expects to replace
+    // with an argument. Rather than rely on the input being well-formed,
+    // decline outright when params and locals collide. (Declining is never
+    // a miscompile.)
+    if params.iter().any(|p| local_set.contains(p)) {
+        return None;
+    }
+
+    // (4) + (6) Walk every body expression's binding-use identifiers. Each
+    // must be a parameter, a callee-local, or a true global (never declared
+    // anywhere). `this` / `arguments` are rejected outright.
+    let mut used: HashSet<String> = HashSet::new();
+    for stmt in &fd.body.body {
+        collect_used_idents_stmt(stmt, &mut used);
+    }
+    for name in &used {
+        if name == "this" || name == "arguments" {
+            return None; // (4) frame-bound meaning would change on splice
+        }
+        if param_set.contains(name) || local_set.contains(name) {
+            continue; // a parameter or a callee-local — handled by splicing
+        }
+        // (6) a free identifier: sound only if it is a true global, i.e.
+        // never declared as a binding anywhere (so unshadowable everywhere).
+        if decl_counts.get(name).copied().unwrap_or(0) != 0 {
+            return None;
+        }
+    }
+
+    Some(VoidStmtCandidate {
+        name: fd.id.name.clone(),
+        params,
+        body: fd.body.body.clone(),
+        locals,
+    })
+}
+
+/// Count, for `name`, every binding-use and how many of those are
+/// inlinable calls (right arity, side-effect-free args), reusing the
+/// expression inliner's [`tally_program`]. The probe's `return_expr` is a
+/// placeholder — `tally_program` reads only the name and parameter count.
+fn name_use_and_call_counts(program: &Program, name: &str, arity: usize) -> (usize, usize) {
+    let probe = InlineCandidate {
+        name: name.to_string(),
+        params: vec![String::new(); arity],
+        return_expr: Expression::NullLiteral(NullLiteral { cv: None }),
+    };
+    let t = tally_program(program, &probe);
+    (t.uses, t.inlinable)
+}
+
+/// Is `ce` the discardable statement call we splice — `name(args)` with the
+/// right arity and side-effect-free arguments?
+fn is_void_target_call(ce: &CallExpression, cand: &VoidStmtCandidate) -> bool {
+    matches!(&*ce.callee, Expression::Identifier(id) if id.name == cand.name)
+        && ce.arguments.len() == cand.params.len()
+        && ce.arguments.iter().all(is_simple_arg)
+}
+
+/// Walk the program's statement structure and replace the single
+/// statement-position call `cand.name(args);` with the spliced body.
+/// Returns whether the splice happened (false if the sole call sits in a
+/// value position, which this slice declines).
+fn splice_void_call_program(
+    program: &mut Program,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> bool {
+    // The top level is a `Vec<ProgramItem>`. Splicing here means rewriting
+    // a `ProgramItem::Statement(ExpressionStatement(call))` into the body
+    // statements. We rebuild the vector so a 1 → N expansion is natural.
+    let mut changed = false;
+    let mut new_items: Vec<ProgramItem> = Vec::with_capacity(program.body.len());
+    for item in std::mem::take(&mut program.body) {
+        match item {
+            ProgramItem::Statement(stmt) => {
+                if let Some(spliced) = try_splice_statement(&stmt, cand, avoid, nodes_touched) {
+                    for s in spliced {
+                        new_items.push(ProgramItem::Statement(s));
+                    }
+                    changed = true;
+                } else {
+                    let mut stmt = stmt;
+                    changed |= splice_void_in_stmt(&mut stmt, cand, avoid, nodes_touched);
+                    new_items.push(ProgramItem::Statement(stmt));
+                }
+            }
+            ProgramItem::Declaration(mut d) => {
+                changed |= splice_void_in_decl(&mut d, cand, avoid, nodes_touched);
+                new_items.push(ProgramItem::Declaration(d));
+            }
+        }
+    }
+    program.body = new_items;
+    changed
+}
+
+/// If `stmt` is exactly `ExpressionStatement(cand.name(args))`, build and
+/// return the spliced replacement statements; otherwise `None`.
+fn try_splice_statement(
+    stmt: &Statement,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> Option<Vec<Statement>> {
+    if let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = stmt {
+        if let Expression::CallExpression(ce) = &es.expression {
+            if is_void_target_call(ce, cand) {
+                return Some(build_spliced_body(
+                    cand,
+                    &ce.arguments,
+                    avoid,
+                    nodes_touched,
+                ));
+            }
+        }
+    }
+    None
+}
+
+/// Recurse into a statement, splicing the target call in any nested
+/// statement *list* (block / switch-case) or single-statement *slot*
+/// (`if`/loop/labeled body). For a single slot we wrap the spliced
+/// statements in a fresh `BlockStatement`: the body is straight-line
+/// `let`/`const` + expressions with no control flow, so block-scoping the
+/// (already-fresh) locals is observationally inert and keeps an
+/// unbraced `if (c) f();` correct.
+fn splice_void_in_stmt(
+    stmt: &mut Statement,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> bool {
+    *nodes_touched += 1;
+    match stmt {
+        Statement::Declaration(d) => splice_void_in_decl(d, cand, avoid, nodes_touched),
+        Statement::Tagged(t) => match t {
+            TaggedStatement::BlockStatement(b) => {
+                splice_void_in_stmt_vec(&mut b.body, cand, avoid, nodes_touched)
+            }
+            TaggedStatement::IfStatement(is) => {
+                let mut changed =
+                    splice_void_in_slot(&mut is.consequent, cand, avoid, nodes_touched);
+                if let Some(alt) = &mut is.alternate {
+                    changed |= splice_void_in_slot(alt, cand, avoid, nodes_touched);
+                }
+                changed
+            }
+            TaggedStatement::WhileStatement(ws) => {
+                splice_void_in_slot(&mut ws.body, cand, avoid, nodes_touched)
+            }
+            TaggedStatement::ForStatement(fs) => {
+                splice_void_in_slot(&mut fs.body, cand, avoid, nodes_touched)
+            }
+            TaggedStatement::LabeledStatement(ls) => {
+                splice_void_in_slot(&mut ls.body, cand, avoid, nodes_touched)
+            }
+            TaggedStatement::SwitchStatement(ss) => {
+                let mut changed = false;
+                for c in &mut ss.cases {
+                    changed |=
+                        splice_void_in_stmt_vec(&mut c.consequent, cand, avoid, nodes_touched);
+                }
+                changed
+            }
+            // Leaf / expression-only statements hold no nested statement
+            // list to splice into. (A target call inside one of these — an
+            // `ExpressionStatement` whose expression is NOT the bare call,
+            // a `return`/`throw` argument, etc. — is a value position this
+            // slice declines.)
+            TaggedStatement::ExpressionStatement(_)
+            | TaggedStatement::ReturnStatement(_)
+            | TaggedStatement::ThrowStatement(_)
+            | TaggedStatement::BreakStatement(_)
+            | TaggedStatement::ContinueStatement(_)
+            | TaggedStatement::EmptyStatement(_) => false,
+        },
+    }
+}
+
+/// Splice within a `Vec<Statement>` (block body, switch case): rebuild the
+/// list, expanding a matched call statement into the body statements.
+fn splice_void_in_stmt_vec(
+    list: &mut Vec<Statement>,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> bool {
+    let mut changed = false;
+    let mut out: Vec<Statement> = Vec::with_capacity(list.len());
+    for stmt in std::mem::take(list) {
+        if let Some(spliced) = try_splice_statement(&stmt, cand, avoid, nodes_touched) {
+            out.extend(spliced);
+            changed = true;
+        } else {
+            let mut stmt = stmt;
+            changed |= splice_void_in_stmt(&mut stmt, cand, avoid, nodes_touched);
+            out.push(stmt);
+        }
+    }
+    *list = out;
+    changed
+}
+
+/// Splice into a single-statement *slot* (the body of an `if`/loop/labeled
+/// statement). If the slot itself is the matched call, replace it with a
+/// `BlockStatement` holding the spliced statements; otherwise recurse.
+fn splice_void_in_slot(
+    slot: &mut Statement,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> bool {
+    if let Some(spliced) = try_splice_statement(slot, cand, avoid, nodes_touched) {
+        *slot = Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+            cv: None,
+            body: spliced,
+        }));
+        true
+    } else {
+        splice_void_in_stmt(slot, cand, avoid, nodes_touched)
+    }
+}
+
+fn splice_void_in_decl(
+    decl: &mut Declaration,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> bool {
+    match decl {
+        // A function body is a `Vec<Statement>` the call may live in.
+        Declaration::FunctionDeclaration(fd) => {
+            splice_void_in_stmt_vec(&mut fd.body.body, cand, avoid, nodes_touched)
+        }
+        // Variable initializers are expressions — a call there is a value
+        // position, declined by this slice.
+        Declaration::VariableDeclaration(_) => false,
+    }
+}
+
+/// Build the statement list to splice in for one call site: a clone of the
+/// body with (a) callee locals alpha-renamed to program-fresh names, then
+/// (b) parameters substituted by their (simple) arguments. Newly minted
+/// fresh names are added to `avoid` so a second splice cannot reuse them.
+fn build_spliced_body(
+    cand: &VoidStmtCandidate,
+    args: &[Expression],
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> Vec<Statement> {
+    let mut body = cand.body.clone();
+
+    // (a) Alpha-rename callee locals → fresh. Renaming the binding *and*
+    // every in-body use of it makes a spliced `let event` collision-proof
+    // against the call-site scope.
+    if !cand.locals.is_empty() {
+        let mut gen = FreshNames::new();
+        let mut rename: HashMap<String, String> = HashMap::new();
+        for local in &cand.locals {
+            let fresh = gen.next(avoid);
+            avoid.insert(fresh.clone());
+            rename.insert(local.clone(), fresh);
+        }
+        for stmt in &mut body {
+            rename_in_stmt(stmt, &rename);
+        }
+    }
+
+    // (b) Substitute parameters → arguments. Args are simple (literal /
+    // identifier), so this is duplication-safe regardless of use count,
+    // and — because the locals are now fresh — an identifier argument can
+    // never be captured by a callee local.
+    if !cand.params.is_empty() {
+        let map: HashMap<String, Expression> = cand
+            .params
+            .iter()
+            .cloned()
+            .zip(args.iter().cloned())
+            .collect();
+        for stmt in &mut body {
+            substitute_in_stmt(stmt, &map);
+        }
+    }
+
+    *nodes_touched += body.len() as u32;
+    body
+}
+
+// ---- statement-level rename (callee-local alpha-renaming) -----------------
+
+/// Rename binding identifiers in a body statement per `map` — both the
+/// declared name of a `let`/`const` and every use of it in expressions.
+/// Only the two statement shapes the candidate admits are handled; any
+/// other shape is left untouched (it cannot occur in a valid body).
+fn rename_in_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
+    match stmt {
+        Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+            rename_in_expr(&mut es.expression, map)
+        }
+        Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
+            for d in &mut vd.declarations {
+                let BindingTarget::Identifier(id) = &mut d.id;
+                if let Some(fresh) = map.get(&id.name) {
+                    id.name = fresh.clone();
+                }
+                if let Some(init) = &mut d.init {
+                    rename_in_expr(init, map);
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Rename binding-use identifiers in an expression per `map`. Mirrors
+/// [`collect_binding_idents_expr`] / [`substitute`]: property names (a
+/// non-computed member `.x`, a non-computed object key) are never renamed.
+fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
+    match expr {
+        Expression::Identifier(id) => {
+            if let Some(fresh) = map.get(&id.name) {
+                id.name = fresh.clone();
+            }
+        }
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::UndefinedLiteral(_) => {}
+        Expression::BinaryExpression(be) => {
+            rename_in_expr(&mut be.left, map);
+            rename_in_expr(&mut be.right, map);
+        }
+        Expression::LogicalExpression(le) => {
+            rename_in_expr(&mut le.left, map);
+            rename_in_expr(&mut le.right, map);
+        }
+        Expression::UnaryExpression(ue) => rename_in_expr(&mut ue.argument, map),
+        Expression::AssignmentExpression(ae) => {
+            match &mut ae.left {
+                AssignmentTarget::Identifier(id) => {
+                    if let Some(fresh) = map.get(&id.name) {
+                        id.name = fresh.clone();
+                    }
+                }
+                AssignmentTarget::MemberExpression(m) => {
+                    rename_in_expr(&mut m.object, map);
+                    if m.computed {
+                        rename_in_expr(&mut m.property, map);
+                    }
+                }
+            }
+            rename_in_expr(&mut ae.right, map);
+        }
+        Expression::ConditionalExpression(ce) => {
+            rename_in_expr(&mut ce.test, map);
+            rename_in_expr(&mut ce.consequent, map);
+            rename_in_expr(&mut ce.alternate, map);
+        }
+        Expression::CallExpression(ce) => {
+            rename_in_expr(&mut ce.callee, map);
+            for a in &mut ce.arguments {
+                rename_in_expr(a, map);
+            }
+        }
+        Expression::MemberExpression(m) => {
+            rename_in_expr(&mut m.object, map);
+            if m.computed {
+                rename_in_expr(&mut m.property, map);
+            }
+        }
+        Expression::ArrayExpression(ae) => {
+            for el in ae.elements.iter_mut().flatten() {
+                rename_in_expr(el, map);
+            }
+        }
+        Expression::ObjectExpression(oe) => {
+            for prop in &mut oe.properties {
+                if prop.computed {
+                    if let PropertyKey::Expression(e) = &mut prop.key {
+                        rename_in_expr(e, map);
+                    }
+                }
+                rename_in_expr(&mut prop.value, map);
+            }
+        }
+    }
+}
+
+/// Apply parameter→argument [`substitute`] across a body statement (the
+/// two admitted shapes).
+fn substitute_in_stmt(stmt: &mut Statement, map: &HashMap<String, Expression>) {
+    match stmt {
+        Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+            substitute(&mut es.expression, map)
+        }
+        Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
+            for d in &mut vd.declarations {
+                if let Some(init) = &mut d.init {
+                    substitute(init, map);
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
+// ---- used-identifier collection (free-var guard + fresh-name avoidance) ---
+
+/// Collect every binding-use identifier name in the program into `out`,
+/// recursing into nested function bodies. Used both to vet a candidate's
+/// free identifiers and to build the fresh-name avoidance set. Property
+/// names are excluded (handled by [`collect_binding_idents_expr`]).
+fn collect_used_idents_program(program: &Program, out: &mut HashSet<String>) {
+    for item in &program.body {
+        match item {
+            ProgramItem::Declaration(d) => collect_used_idents_decl(d, out),
+            ProgramItem::Statement(s) => collect_used_idents_stmt(s, out),
+        }
+    }
+}
+
+fn collect_used_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
+    match decl {
+        Declaration::VariableDeclaration(vd) => {
+            for d in &vd.declarations {
+                if let Some(init) = &d.init {
+                    collect_binding_idents_expr(init, out);
+                }
+            }
+        }
+        Declaration::FunctionDeclaration(fd) => {
+            for s in &fd.body.body {
+                collect_used_idents_stmt(s, out);
+            }
+        }
+    }
+}
+
+fn collect_used_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
+    match stmt {
+        Statement::Declaration(d) => collect_used_idents_decl(d, out),
+        Statement::Tagged(t) => match t {
+            TaggedStatement::ExpressionStatement(es) => {
+                collect_binding_idents_expr(&es.expression, out)
+            }
+            TaggedStatement::BlockStatement(b) => {
+                for s in &b.body {
+                    collect_used_idents_stmt(s, out);
+                }
+            }
+            TaggedStatement::IfStatement(is) => {
+                collect_binding_idents_expr(&is.test, out);
+                collect_used_idents_stmt(&is.consequent, out);
+                if let Some(alt) = &is.alternate {
+                    collect_used_idents_stmt(alt, out);
+                }
+            }
+            TaggedStatement::WhileStatement(ws) => {
+                collect_binding_idents_expr(&ws.test, out);
+                collect_used_idents_stmt(&ws.body, out);
+            }
+            TaggedStatement::ForStatement(fs) => {
+                if let Some(init) = &fs.init {
+                    match init {
+                        ForInit::VariableDeclaration(vd) => {
+                            for d in &vd.declarations {
+                                if let Some(i) = &d.init {
+                                    collect_binding_idents_expr(i, out);
+                                }
+                            }
+                        }
+                        ForInit::Expression(e) => collect_binding_idents_expr(e, out),
+                    }
+                }
+                if let Some(test) = &fs.test {
+                    collect_binding_idents_expr(test, out);
+                }
+                if let Some(update) = &fs.update {
+                    collect_binding_idents_expr(update, out);
+                }
+                collect_used_idents_stmt(&fs.body, out);
+            }
+            TaggedStatement::ReturnStatement(rs) => {
+                if let Some(a) = &rs.argument {
+                    collect_binding_idents_expr(a, out);
+                }
+            }
+            TaggedStatement::ThrowStatement(ts) => collect_binding_idents_expr(&ts.argument, out),
+            TaggedStatement::LabeledStatement(ls) => collect_used_idents_stmt(&ls.body, out),
+            TaggedStatement::SwitchStatement(ss) => {
+                collect_binding_idents_expr(&ss.discriminant, out);
+                for c in &ss.cases {
+                    if let Some(test) = &c.test {
+                        collect_binding_idents_expr(test, out);
+                    }
+                    for s in &c.consequent {
+                        collect_used_idents_stmt(s, out);
+                    }
+                }
+            }
+            TaggedStatement::BreakStatement(_)
+            | TaggedStatement::ContinueStatement(_)
+            | TaggedStatement::EmptyStatement(_) => {}
+        },
+    }
+}
+
+// ---- fresh-name generation (callee-local alpha-renaming) ------------------
+
+/// Reserved words a fresh local name must never collide with. Kept local
+/// to this crate (the `rename` family keeps its own private copy); a
+/// shared primitive is a reasonable future extraction, but duplicating a
+/// short, stable list here avoids a premature cross-crate coupling.
+const RESERVED: &[&str] = &[
+    "do",
+    "if",
+    "in",
+    "for",
+    "let",
+    "new",
+    "try",
+    "var",
+    "case",
+    "else",
+    "enum",
+    "eval",
+    "null",
+    "this",
+    "true",
+    "void",
+    "with",
+    "break",
+    "catch",
+    "class",
+    "const",
+    "false",
+    "super",
+    "throw",
+    "while",
+    "yield",
+    "delete",
+    "export",
+    "import",
+    "public",
+    "return",
+    "static",
+    "switch",
+    "typeof",
+    "default",
+    "extends",
+    "finally",
+    "package",
+    "private",
+    "continue",
+    "debugger",
+    "function",
+    "arguments",
+    "interface",
+    "protected",
+    "implements",
+    "instanceof",
+];
+
+/// Base-26 fresh-name generator (`a`, `b`, …, `z`, `aa`, …) that skips
+/// reserved words and any name in the caller-supplied avoidance set.
+/// Mirrors the generator the `rename` passes use; here it produces names
+/// guaranteed not to clash with anything in the program.
+struct FreshNames {
+    counter: usize,
+}
+
+impl FreshNames {
+    fn new() -> Self {
+        FreshNames { counter: 0 }
+    }
+
+    /// Yield the next name not in `avoid` and not reserved.
+    fn next(&mut self, avoid: &HashSet<String>) -> String {
+        loop {
+            let name = Self::encode(self.counter);
+            self.counter += 1;
+            if !RESERVED.contains(&name.as_str()) && !avoid.contains(&name) {
+                return name;
+            }
+        }
+    }
+
+    /// Encode `n` as a lowercase base-26 identifier: 0→`a`, 25→`z`,
+    /// 26→`aa`, … (bijective base-26, so every n maps to a distinct name).
+    fn encode(mut n: usize) -> String {
+        let mut chars = Vec::new();
+        loop {
+            chars.push((b'a' + (n % 26) as u8) as char);
+            if n < 26 {
+                break;
+            }
+            n = n / 26 - 1;
+        }
+        chars.iter().rev().collect()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     //! Tests pin the public contract (name, policy, cost, deps), the
@@ -1449,12 +2259,169 @@ mod tests {
     }
 
     #[test]
-    fn does_not_inline_multi_statement_body() {
-        // Body has a local + a return — not the `{ return EXPR; }`
-        // shape — so it is not a candidate.
+    fn does_not_inline_multi_statement_body_with_return() {
+        // Body has a local + a return — neither the `{ return EXPR; }`
+        // expression shape nor the no-return void shape (CLOC15 PR-1
+        // forbids `return`), and it is used as a value — so it is not a
+        // candidate for either inliner.
         assert_eq!(
             inline_source("function f(x) { var t = x * 2; return t; } use(f(3));"),
             "function f(x){var t=x * 2;return t};use(f(3));"
+        );
+    }
+
+    // =====================================================================
+    // CLOC15 PR-1: void multi-statement statement-helper inlining
+    // =====================================================================
+
+    #[test]
+    fn inlines_void_helper_with_local_and_free_global() {
+        // The signature case: a single-use void helper with a local
+        // (`e`) and a free global (`metrics`), called as a statement, is
+        // replaced by its body. The local is alpha-renamed to a fresh
+        // name and the parameters are substituted by the (simple) args.
+        // The dead declaration is left for downstream passes.
+        assert_eq!(
+            inline_source(
+                "function track(n, v) { const e = n + v; metrics.push(e); } track(a, b);"
+            ),
+            "function track(n,v){const e=n + v;metrics.push(e)};const c=a + b;metrics.push(c);"
+        );
+    }
+
+    #[test]
+    fn inlines_void_helper_no_locals() {
+        // No locals, only free globals + a param: both call sites of the
+        // body run with the argument substituted in.
+        assert_eq!(
+            inline_source("function log2(x) { console.log(x); console.log(x); } log2(v);"),
+            "function log2(x){console.log(x);console.log(x)};console.log(v);console.log(v);"
+        );
+    }
+
+    #[test]
+    fn alpha_renames_local_that_would_collide_with_argument() {
+        // The body's local `c` would collide with the argument `c` once
+        // substituted. Alpha-renaming the local to a program-fresh name
+        // keeps them distinct — the soundness crux of statement splicing.
+        assert_eq!(
+            inline_source("function f(x) { const c = x; sink(c); } f(c);"),
+            "function f(x){const c=x;sink(c)};const a=c;sink(a);"
+        );
+    }
+
+    #[test]
+    fn inlines_empty_void_helper_drops_the_call() {
+        // An empty body splices nothing — the call statement disappears.
+        // Sound because the (simple) argument has no side effect to drop.
+        assert_eq!(
+            inline_source("function noop(x) {} noop(v);"),
+            "function noop(x){};"
+        );
+    }
+
+    #[test]
+    fn wraps_spliced_body_in_block_at_unbraced_if() {
+        // The single call sits in an unbraced `if` consequent. Splicing
+        // two statements there must wrap them in a block, or only the
+        // first would be guarded by the condition.
+        assert_eq!(
+            inline_source("function f() { a(); b(); } if (c) f();"),
+            "function f(){a();b()};if(c){a();b()}"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_void_helper_used_as_value() {
+        // The sole use is a value position (`var x = f()`), not a
+        // discarded statement call. This slice declines it.
+        assert_eq!(
+            inline_source("function f() { sink(1); } var x = f();"),
+            "function f(){sink(1)};var x=f();"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_void_helper_with_var_local() {
+        // `var` is function-scoped and would hoist into the caller on a
+        // flat splice — outside the first slice (let/const only).
+        assert_eq!(
+            inline_source("function f(x) { var t = x; sink(t); } f(a);"),
+            "function f(x){var t=x;sink(t)};f(a);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_void_helper_with_tail_return() {
+        // A trailing `return` is PR-2, not PR-1 — declined here.
+        assert_eq!(
+            inline_source("function f(x) { sink(x); return 1; } f(a);"),
+            "function f(x){sink(x);return 1};f(a);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_void_helper_referencing_arguments() {
+        // `arguments` is bound by the callee's own frame; splicing would
+        // rebind it. Rejected.
+        assert_eq!(
+            inline_source("function f() { sink(arguments); } f();"),
+            "function f(){sink(arguments)};f();"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_void_helper_with_free_declared_name() {
+        // The body reads a top-level `const K` — a free identifier that
+        // IS declared somewhere, so the conservative global-only rule
+        // (PR-1) cannot prove it unshadowed at the splice site. Declined.
+        assert_eq!(
+            inline_source("const K = 5; function f() { sink(K); } f();"),
+            "const K=5;function f(){sink(K)};f();"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_void_helper_with_side_effecting_argument() {
+        // The argument `g()` has a side effect; substituting it for a
+        // parameter used any number of times could drop or duplicate it.
+        // The simple-arg gate declines this call.
+        assert_eq!(
+            inline_source("function f(x) { sink(x); } f(g());"),
+            "function f(x){sink(x)};f(g());"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_multi_use_void_helper() {
+        // Two call sites — statement splicing of a multi-use body is a
+        // separate, budgeted concern (a non-goal for PR-1). Declined.
+        assert_eq!(
+            inline_source("function f(x) { sink(x); } f(a); f(b);"),
+            "function f(x){sink(x)};f(a);f(b);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_void_helper_with_param_local_name_collision() {
+        // A `let` local sharing a parameter's name is illegal JS (a
+        // faithful parser never emits it), but the name-based alpha-renamer
+        // is not scope-aware, so we decline outright rather than risk a
+        // mis-rename. Defense in depth against a non-conformant parser.
+        assert_eq!(
+            inline_source("function f(x) { const x = 1; sink(x); } f(a);"),
+            "function f(x){const x=1;sink(x)};f(a);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_recursive_void_helper() {
+        // `f` appears free in its own body (a declared name), so it is not
+        // a candidate — recursion excluded, and the sole-external-use
+        // invariant preserved.
+        assert_eq!(
+            inline_source("function f(x) { if (x) f(x); } g(f);"),
+            "function f(x){if(x)f(x);};g(f);"
         );
     }
 }

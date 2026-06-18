@@ -2,6 +2,70 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-18
+
+### Added (CLOC15 PR-1 — void multi-statement statement-helper inlining)
+
+The inliner is no longer limited to the `{ return EXPR; }` expression
+shape. A new statement-level path splices a **single-use void
+multi-statement helper** at its (statement-position) call site — the
+1 → N statement splice the expression walker structurally could not do:
+
+```js
+function track(n, v) { const e = n + v; metrics.push(e); }
+track(a, b);
+// SIMPLE  ⇒  const c = a + b; metrics.push(c);
+//           (helper inlined — local `e` alpha-renamed to a fresh `c`,
+//            params substituted — then the dead declaration is removed
+//            by remove-unused-vars / treeshake)
+```
+
+This implements the first staged slice of the
+[CLOC15 spec](../../../specs/CLOC15-multi-statement-inlining.md). It is
+**sound-by-construction** — every condition below is a hard reject, and
+declining to inline is never a miscompile:
+
+- **Single-use, single-declaration** — the helper's name is declared
+  exactly once (no shadowing) and used exactly once.
+- **The one use is a discarded statement call** (`track(…);`), not a
+  value (`x = track(…)`, `log(track(…))`). A discarded result means
+  there is nothing to capture — value capture is a later slice (PR-3).
+- **Straight-line body, no `return`** — each body statement is an
+  `ExpressionStatement` or a `let` / `const` `VariableDeclaration`;
+  nothing else (no `return`, control flow, `var`, or nested blocks).
+- **No `this` / `arguments`** — their meaning is frame-bound and would
+  silently rebind on a splice; rejected explicitly.
+- **Callee locals are alpha-renamed to program-fresh names** before
+  splicing (a base-26 generator avoiding every identifier in the
+  program), so a spliced `let e` can never collide with or shadow a
+  binding live at the call site.
+- **Free identifiers must be true globals** — a body name that is
+  neither a parameter nor a callee-local must be declared *nowhere* in
+  the program, so it is unshadowable at any splice site. (The
+  conservative bootstrap the spec's Open Question 1 sanctions; a later
+  slice can widen it via `closure-scope-analyzer`.)
+- **Side-effect-free arguments** (the existing `is_simple_arg` gate) —
+  substituting them for a parameter used any number of times never
+  drops or duplicates a side effect.
+
+When the call sits in an unbraced single-statement slot (`if (c) f();`),
+the spliced statements are wrapped in a fresh block so control flow stays
+correct; in a real statement list they are spliced in flat.
+
+- Runs as a new Phase 4 after the expression inliner. The two operate on
+  disjoint function shapes, so neither perturbs the other's candidate
+  set, and the declaration-count map stays valid (inlining removes call
+  sites, never declarations).
+- A `let`/`const` local sharing a parameter's spelling (illegal JS, but
+  cheap to guard) is declined — the name-based alpha-renamer is not
+  scope-aware, so this is defense in depth against a non-conformant
+  parser rather than a path reachable from valid input.
+- 14 new tests: the signature local+global splice, the no-locals case,
+  alpha-rename-avoids-argument-collision, empty-body call drop, the
+  unbraced-`if` block wrap, and eight decline cases (value-position use,
+  `var` local, tail `return`, `arguments`, free *declared* name,
+  side-effecting argument, multi-use, recursion, param/local collision).
+
 ## [0.4.0] - 2026-06-17
 
 ### Added (CLOC13.G — multi-use inlining under a size budget)
