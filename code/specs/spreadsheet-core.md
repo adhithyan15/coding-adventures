@@ -236,6 +236,40 @@ pub enum RecalcMode {
 The workbook is the unit of recalc. Multi-sheet dependencies live in
 the same graph.
 
+### Range operations — fill, cut/copy/paste
+
+Two operations replicate cells across the grid, both built on
+`FormulaAst::shift(d_row, d_col)` — a pure copy/paste reference rewrite that
+tracks **relative** refs and pins **absolute** (`$`) refs (the sibling of
+`adjust`, which moves both for structural edits). A reference shifted off the
+top/left edge collapses to `#REF!`.
+
+- **Fill** (`Workbook::fill(sheet, src, dst)`) replicates one `src` cell across
+  every cell of the `dst` range; each target shifts the formula by *its own*
+  offset from `src` (so `=A1` filled down a column becomes `=A2`, `=A3`, …). A
+  literal copies unchanged, an empty source clears each target, and the source's
+  display format rides along.
+
+- **Clipboard** (`copy`/`cut`/`paste`) captures a whole **rectangle** and shifts
+  it as a *unit*: every cell's formula shifts by the same block delta
+  `dst_anchor − src_anchor`, so the block's internal structure is preserved
+  (`=A1` copied two columns right pastes as `=C1`). `copy` leaves a reusable
+  buffer; `cut` is a one-shot move whose `paste` clears the source cells it
+  didn't overwrite. A paste overwrites the whole destination rectangle, so blank
+  source cells erase their targets; content and format both ride along.
+
+Both cap the affected range at `MAX_RANGE_CELLS` (DoS guard), treat an unknown
+sheet as a no-op, and compute their shift delta in `i64` clamped into `shift`'s
+`i32` contract so a high-coordinate operation can't overflow. `paste` returns
+`false` (writing nothing) when the clipboard is empty or the destination would
+run past the u32 grid edge.
+
+> Divergence from Excel: a **cut** shifts the moved formulas' own references
+> like a copy, rather than preserving them as a true move does. Excel's move
+> additionally rewrites *outside* references that pointed into the moved range;
+> the engine keeps cut a thin layer over the copy machinery and does not (yet)
+> track those inbound references.
+
 ---
 
 ## §5 The Dependency Graph
