@@ -67,6 +67,19 @@ internal static class ScNative
         [MarshalAs(UnmanagedType.LPUTF8Str)] string src,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string dstStart,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string dstEnd);
+    // sc_copy / sc_cut(session, start, end) → void (clipboard capture; two A1 strings).
+    [DllImport("spreadsheet_capi")]
+    internal static extern void sc_copy(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string start,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string end);
+    [DllImport("spreadsheet_capi")]
+    internal static extern void sc_cut(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string start,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string end);
+    // sc_paste(session, dst_start) → int (1 applied, 0 no-op).
+    [DllImport("spreadsheet_capi")]
+    internal static extern int sc_paste(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string dstStart);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_used_range(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_column_letters(IntPtr s, uint index);
     [DllImport("spreadsheet_capi")] internal static extern ulong sc_current_revision(IntPtr s);
@@ -132,6 +145,21 @@ public sealed class SpreadsheetSession : IDisposable
     /// every dependent. Reaches sc_fill — the same path every other backend drives.
     public void Fill(string src, string dstStart, string dstEnd) =>
         ScNative.sc_fill(_handle, src, dstStart, dstEnd);
+
+    /// Copy the inclusive rectangle `start`..`end` into the clipboard — a
+    /// whole-block copy that pastes as a unit. The source is untouched; the
+    /// buffer survives any number of pastes.
+    public void Copy(string start, string end) => ScNative.sc_copy(_handle, start, end);
+
+    /// Cut the inclusive rectangle `start`..`end`. Like <see cref="Copy"/> but a
+    /// one-shot move: the paste that places it clears the source it didn't overwrite.
+    public void Cut(string start, string end) => ScNative.sc_cut(_handle, start, end);
+
+    /// Paste the clipboard so its top-left lands at `dstStart`. Returns `true`
+    /// when applied, `false` (a no-op) for an empty clipboard, malformed address,
+    /// or off-grid destination. The block's references shift by the destination's
+    /// offset; content and format ride along.
+    public bool Paste(string dstStart) => ScNative.sc_paste(_handle, dstStart) != 0;
 
     /// The display string for a cell — what a spreadsheet should show. Parses
     /// the engine's JSON (the fixed shape every backend's engine emits).
@@ -464,6 +492,20 @@ public sealed class InfiniteSheetModel : IDisposable
         int last = Saturate((long)SelRow + rows, floor: 1);
         _session.Fill(InfAddress, $"{col}{first}", $"{col}{last}");
         ComputeExtent();
+    }
+
+    /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
+    /// engine shifts the pasted formula's relative references by the destination's
+    /// offset, pins absolute (`$`) refs, carries the format; a cut clears the
+    /// source on paste. <see cref="PasteCell"/> returns false (a no-op) when the
+    /// clipboard is empty, and regrows the extent on success.
+    public void CopyCell() => _session.Copy(InfAddress, InfAddress);
+    public void CutCell() => _session.Cut(InfAddress, InfAddress);
+    public bool PasteCell()
+    {
+        bool ok = _session.Paste(InfAddress);
+        if (ok) ComputeExtent();
+        return ok;
     }
 
     public void Dispose() => _session.Dispose();

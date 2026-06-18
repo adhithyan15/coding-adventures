@@ -182,6 +182,17 @@ public sealed partial class InfiniteSheet : UserControl
         RepaintRealizedRows();
     }
 
+    /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
+    /// engine shifts the pasted formula's relative refs by the destination's
+    /// offset, pins absolute ($) refs, carries the format; a cut clears the source
+    /// on paste. Paste repaints the realized rows when it actually applied.
+    private void CopyButton_Click(object sender, RoutedEventArgs e) => _model.CopyCell();
+    private void CutButton_Click(object sender, RoutedEventArgs e) => _model.CutCell();
+    private void PasteButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_model.PasteCell()) RepaintRealizedRows();
+    }
+
     private void RefreshFormulaBar()
     {
         AddressText.Text = _model.InfAddress;
