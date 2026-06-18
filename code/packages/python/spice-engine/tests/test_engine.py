@@ -6791,9 +6791,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
     assert op_execution.run_artifacts[0].result_rows == 1
+    assert op_execution.run_artifacts[0].output_probes == ["V(mid)"]
     assert op_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"op\t.op\t{op_execution.plan.line_number}\t1\t1\t0\t0\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n"
+        f"op\t.op\t{op_execution.plan.line_number}\t1\t1\tV(mid)\t0\t0\n"
     )
 
     dc_execution = run_deck_analysis(circuit, netlist, "dc")
@@ -6812,9 +6813,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
     )
     assert dc_execution.run_artifacts[0].analysis == "dc"
+    assert dc_execution.run_artifacts[0].output_probes == ["V(mid)", "I(V1)"]
     assert dc_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"dc\t.dc\t{dc_execution.plan.line_number}\t2\t2\t1\t0\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n"
+        f"dc\t.dc\t{dc_execution.plan.line_number}\t2\t2\tV(mid);I(V1)\t1\t0\n"
     )
 
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
@@ -6830,9 +6832,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
         "0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
     )
+    assert ac_execution.run_artifacts[0].output_probes == ["V(mid)"]
     assert ac_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"ac\t.ac\t{ac_execution.plan.line_number}\t1\t1\t1\t0\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n"
+        f"ac\t.ac\t{ac_execution.plan.line_number}\t1\t1\tV(mid)\t1\t0\n"
     )
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
@@ -6850,9 +6853,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "0\t0.000000e+00\t5.000000e-01\n"
         "1\t1.000000e-03\t5.000000e-01\n"
     )
+    assert tran_execution.run_artifacts[0].output_probes == ["V(mid)"]
     assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"tran\t.tran\t{tran_execution.plan.line_number}\t2\t1\t1\t0\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n"
+        f"tran\t.tran\t{tran_execution.plan.line_number}\t2\t1\tV(mid)\t1\t0\n"
     )
 
     tran_window_execution = run_deck_analysis(
@@ -6926,9 +6930,10 @@ def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
     assert len(result.probes[0].harmonics) == 1
     assert tran_execution.fourier_table == format_fourier_table(result)
     assert tran_execution.run_artifacts[0].fourier_count == 1
+    assert tran_execution.run_artifacts[0].output_probes == ["V(mid)"]
     assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"tran\t.tran\t{tran_execution.plan.line_number}\t3\t1\t0\t1\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n"
+        f"tran\t.tran\t{tran_execution.plan.line_number}\t3\t1\tV(mid)\t0\t1\n"
     )
 
 
