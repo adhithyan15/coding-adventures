@@ -4,6 +4,58 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] — 2026-06-17
+
+The **W-8** deliverable (MA04 §11): local scoping — the three Wolfram heads that
+bind named locals over a body. `With`, `Module`, and `Block` are lowered onto the
+*same* substrate as W-7's iteration index: held heads + the `vm.rs::substitute`
+primitive. No new evaluator, no opcode, no grammar change.
+
+### Added (local-scoping heads)
+
+- **`With[{x = e, …}, body]`** → `body` with each local bound to its **evaluated**
+  RHS, substituted in and re-evaluated. Lexical and immediate, parallel binding
+  (each RHS sees the surrounding scope, so a decl may reference an outer binding).
+  So `With[{x = 3}, x^2]` is `9` and `With[{a = 1, b = 2}, a + b]` is `3`.
+- **`Module[{x, y = e}, body]`** → lexically-scoped locals. An initialised decl
+  (`y = e`) binds like `With`; an **uninitialised** decl (`x`) is α-renamed to a
+  fresh gensym `x$nnn` (mirroring real Wolfram) so it stays undefined and cannot
+  resolve to — or be captured by — a same-named global. `Module[{a = 1, b = 2},
+  a + b]` is `3`.
+- **`Block[{x = e}, body]`** → temporarily binds `x` over `body`. For the
+  substitution-based subset a self-contained body is observably identical to
+  `With`; `Block[{x = 5}, x + 1]` is `6`. (See §11.3 for the dynamic-scope
+  simplification.)
+
+### Binding mechanism (MA04 §11.2–§11.3)
+
+- The three heads are **held** (added to the `WolframBackend` decorator's
+  `hold_heads` set, union with the inner held set and W-7's iteration heads) so
+  the declaration list and body arrive unevaluated.
+- Each decl's RHS is evaluated through `vm.eval`; the collected `name → value`
+  mapping is applied to a **copy** of the held body via the same `substitute`
+  used for user-function parameters and the W-7 index, then the result is
+  evaluated. Because the session environment is never mutated, **locals do not
+  leak** (`x` is still free after `With[{x = 3}, x]`) and never clobber a global.
+- Uninitialised `Module` locals are gensym-renamed (a monotonic `AtomicU64`
+  counter) — the documented capture-avoidance simplification in place of full
+  α-renaming of every local.
+
+### Robustness (MA04 §11.4)
+
+- Malformed forms are left **unevaluated**, never a panic: a non-`List` first
+  argument (`With[x, body]`), a `With`/`Block` local with no value
+  (`With[{x}, body]`), a non-symbol assignment target (`f[x] = 1`), or the wrong
+  arity. No new allocation source — the body is substituted once per scope entry,
+  bounded by the W-4 input/token caps; nested scopes recurse over strictly
+  smaller bodies.
+
+### Tests
+
+- W-8 acceptance values; no-leak and no-clobber guards; nested scoping; a decl
+  referring to an outer binding; the gensym shadow of a global by an
+  uninitialised `Module` local; and the malformed-form / wrong-arity guards.
+
 ## [0.4.0] — 2026-06-17
 
 The **W-7** deliverable (MA04 §10): iteration constructs — the first Wolfram-lane
