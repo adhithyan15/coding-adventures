@@ -349,6 +349,157 @@ impl EcosystemPrimitiveCoverage {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
+    pub protocol: ProtocolFamily,
+    pub required_primitives: Vec<PrimitiveFamily>,
+    pub available_primitives: Vec<PrimitiveFamily>,
+    pub missing_primitives: Vec<PrimitiveFamily>,
+    pub required_primitive_count: usize,
+    pub available_primitive_count: usize,
+    pub missing_primitive_count: usize,
+    pub ready: bool,
+    pub radio_network_key_ready: bool,
+    pub supervision_ready: bool,
+}
+
+impl IntegrationMeshProtocolPrimitiveReadinessRow {
+    pub fn from_protocol(
+        protocol: ProtocolFamily,
+        available_primitives: &[PrimitiveFamily],
+    ) -> Option<Self> {
+        if !is_low_level_mesh_protocol(&protocol) {
+            return None;
+        }
+
+        let required_primitives = protocol_primitives(&protocol).to_vec();
+        let available_set: BTreeSet<PrimitiveFamily> =
+            available_primitives.iter().copied().collect();
+        let available_primitives = required_primitives
+            .iter()
+            .copied()
+            .filter(|primitive| available_set.contains(primitive))
+            .collect::<Vec<_>>();
+        let missing_primitives = required_primitives
+            .iter()
+            .copied()
+            .filter(|primitive| !available_set.contains(primitive))
+            .collect::<Vec<_>>();
+        let required_primitive_count = required_primitives.len();
+        let available_primitive_count = available_primitives.len();
+        let missing_primitive_count = missing_primitives.len();
+        let radio_network_key_ready = !required_primitives
+            .contains(&PrimitiveFamily::RadioNetworkKey)
+            || available_primitives.contains(&PrimitiveFamily::RadioNetworkKey);
+        let supervision_ready = !required_primitives.contains(&PrimitiveFamily::Supervision)
+            || available_primitives.contains(&PrimitiveFamily::Supervision);
+
+        Some(Self {
+            protocol,
+            required_primitives,
+            available_primitives,
+            missing_primitives,
+            required_primitive_count,
+            available_primitive_count,
+            missing_primitive_count,
+            ready: missing_primitive_count == 0,
+            radio_network_key_ready,
+            supervision_ready,
+        })
+    }
+
+    pub fn is_ready(&self) -> bool {
+        self.ready
+    }
+
+    pub fn has_missing_primitives(&self) -> bool {
+        self.missing_primitive_count > 0
+    }
+
+    pub fn missing_radio_network_key(&self) -> bool {
+        self.missing_primitives
+            .contains(&PrimitiveFamily::RadioNetworkKey)
+    }
+
+    pub fn missing_supervision(&self) -> bool {
+        self.missing_primitives
+            .contains(&PrimitiveFamily::Supervision)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolPrimitiveReadinessSummary {
+    pub total_protocols: usize,
+    pub ready_protocols: usize,
+    pub blocked_protocols: usize,
+    pub unique_required_primitives: Vec<PrimitiveFamily>,
+    pub unique_missing_primitives: Vec<PrimitiveFamily>,
+    pub required_primitive_count: usize,
+    pub missing_primitive_count: usize,
+    pub radio_network_key_blockers: usize,
+    pub supervision_blockers: usize,
+    pub first_blocked_protocol: Option<ProtocolFamily>,
+}
+
+impl IntegrationMeshProtocolPrimitiveReadinessSummary {
+    pub fn from_rows<'a>(
+        rows: impl IntoIterator<Item = &'a IntegrationMeshProtocolPrimitiveReadinessRow>,
+    ) -> Self {
+        let rows = rows.into_iter().collect::<Vec<_>>();
+        let unique_required_primitives = rows
+            .iter()
+            .flat_map(|row| row.required_primitives.iter().copied())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let unique_missing_primitives = rows
+            .iter()
+            .flat_map(|row| row.missing_primitives.iter().copied())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let ready_protocols = rows.iter().filter(|row| row.ready).count();
+        let blocked_protocols = rows.len().saturating_sub(ready_protocols);
+        let first_blocked_protocol = rows
+            .iter()
+            .filter(|row| row.has_missing_primitives())
+            .min_by_key(|row| mesh_protocol_sort_key(&row.protocol))
+            .map(|row| row.protocol.clone());
+
+        Self {
+            total_protocols: rows.len(),
+            ready_protocols,
+            blocked_protocols,
+            required_primitive_count: unique_required_primitives.len(),
+            missing_primitive_count: unique_missing_primitives.len(),
+            unique_required_primitives,
+            unique_missing_primitives,
+            radio_network_key_blockers: rows
+                .iter()
+                .filter(|row| row.missing_radio_network_key())
+                .count(),
+            supervision_blockers: rows.iter().filter(|row| row.missing_supervision()).count(),
+            first_blocked_protocol,
+        }
+    }
+
+    pub fn all_ready(&self) -> bool {
+        self.total_protocols > 0 && self.blocked_protocols == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_protocols > 0
+    }
+
+    pub fn needs_radio_network_key(&self) -> bool {
+        self.radio_network_key_blockers > 0
+    }
+
+    pub fn needs_supervision(&self) -> bool {
+        self.supervision_blockers > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
     pub display_name: String,
@@ -19899,6 +20050,51 @@ fn protocol_primitives(protocol: &ProtocolFamily) -> &'static [PrimitiveFamily] 
     }
 }
 
+pub fn low_level_mesh_protocols() -> Vec<ProtocolFamily> {
+    vec![
+        ProtocolFamily::Zigbee,
+        ProtocolFamily::ZWave,
+        ProtocolFamily::Thread,
+    ]
+}
+
+pub fn mesh_protocol_primitive_readiness_rows(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolPrimitiveReadinessRow> {
+    low_level_mesh_protocols()
+        .into_iter()
+        .filter_map(|protocol| {
+            IntegrationMeshProtocolPrimitiveReadinessRow::from_protocol(
+                protocol,
+                available_primitives,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_primitive_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolPrimitiveReadinessSummary {
+    let rows = mesh_protocol_primitive_readiness_rows(available_primitives);
+    IntegrationMeshProtocolPrimitiveReadinessSummary::from_rows(rows.iter())
+}
+
+fn is_low_level_mesh_protocol(protocol: &ProtocolFamily) -> bool {
+    matches!(
+        protocol,
+        ProtocolFamily::Zigbee | ProtocolFamily::ZWave | ProtocolFamily::Thread
+    )
+}
+
+fn mesh_protocol_sort_key(protocol: &ProtocolFamily) -> u8 {
+    match protocol {
+        ProtocolFamily::Zigbee => 0,
+        ProtocolFamily::ZWave => 1,
+        ProtocolFamily::Thread => 2,
+        _ => u8::MAX,
+    }
+}
+
 fn local_transport_primitives(
     connectivity: ConnectivityClass,
     discovery: &[DiscoveryMechanism],
@@ -25719,6 +25915,71 @@ mod tests {
         assert_eq!(summary.total_blocked_integrations, 0);
         assert_eq!(summary.first_blocked_priority, None);
         assert_eq!(summary.highest_policy_tier, PrivilegeTier::ReadOnly);
+    }
+
+    #[test]
+    fn mesh_protocol_primitive_readiness_groups_radio_substrate_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let rows = mesh_protocol_primitive_readiness_rows(&available_primitives);
+        let summary = IntegrationMeshProtocolPrimitiveReadinessSummary::from_rows(rows.iter());
+
+        assert_eq!(rows.len(), 3);
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.ready_protocols, 0);
+        assert_eq!(summary.blocked_protocols, 3);
+        assert_eq!(summary.required_primitive_count, 7);
+        assert_eq!(summary.missing_primitive_count, 3);
+        assert_eq!(summary.radio_network_key_blockers, 3);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, Some(ProtocolFamily::Zigbee));
+        assert!(summary.has_blockers());
+        assert!(summary.needs_radio_network_key());
+        assert!(!summary.needs_supervision());
+        assert!(!summary.all_ready());
+        assert!(summary
+            .unique_missing_primitives
+            .contains(&PrimitiveFamily::RadioNetworkKey));
+        assert!(summary
+            .unique_missing_primitives
+            .contains(&PrimitiveFamily::ZWaveSerialApi));
+        assert!(summary
+            .unique_missing_primitives
+            .contains(&PrimitiveFamily::Mdns));
+
+        let zigbee = rows
+            .iter()
+            .find(|row| row.protocol == ProtocolFamily::Zigbee)
+            .unwrap();
+        assert_eq!(zigbee.required_primitive_count, 5);
+        assert_eq!(zigbee.available_primitive_count, 4);
+        assert_eq!(zigbee.missing_primitive_count, 1);
+        assert!(zigbee.missing_radio_network_key());
+        assert!(!zigbee.missing_supervision());
+    }
+
+    #[test]
+    fn mesh_protocol_primitive_readiness_marks_full_substrate_ready() {
+        let rows = mesh_protocol_primitive_readiness_rows(all_primitive_families());
+        let summary = mesh_protocol_primitive_readiness_summary(all_primitive_families());
+
+        assert_eq!(rows.len(), 3);
+        assert!(rows
+            .iter()
+            .all(IntegrationMeshProtocolPrimitiveReadinessRow::is_ready));
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.ready_protocols, 3);
+        assert_eq!(summary.blocked_protocols, 0);
+        assert_eq!(summary.missing_primitive_count, 0);
+        assert_eq!(summary.radio_network_key_blockers, 0);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, None);
+        assert!(summary.all_ready());
+        assert!(!summary.has_blockers());
     }
 
     #[test]
