@@ -80,6 +80,12 @@ internal static class ScNative
     [DllImport("spreadsheet_capi")]
     internal static extern int sc_paste(IntPtr s,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string dstStart);
+    // sc_serialize(session) → char* (workbook source + formats as JSON);
+    // sc_deserialize(session, data) → int (1 loaded, 0 malformed/unsupported).
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_serialize(IntPtr s);
+    [DllImport("spreadsheet_capi")]
+    internal static extern int sc_deserialize(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string data);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_used_range(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_column_letters(IntPtr s, uint index);
     [DllImport("spreadsheet_capi")] internal static extern ulong sc_current_revision(IntPtr s);
@@ -160,6 +166,19 @@ public sealed class SpreadsheetSession : IDisposable
     /// or off-grid destination. The block's references shift by the destination's
     /// offset; content and format ride along.
     public bool Paste(string dstStart) => ScNative.sc_paste(_handle, dstStart) != 0;
+
+    /// Serialize the whole workbook to a self-contained JSON document — the
+    /// SOURCE (formula text + typed literals) + per-cell formats, not the
+    /// computed values (those recompute on load, so the document is small and
+    /// can't disagree with itself). <see cref="Take"/> frees the engine's char*;
+    /// the host persists the returned string wherever it likes.
+    public string Serialize() => Take(ScNative.sc_serialize(_handle));
+
+    /// Replace the workbook from a document produced by <see cref="Serialize"/>.
+    /// Returns `true` on success, `false` for malformed / unsupported input (the
+    /// workbook is left untouched — the engine validates before it mutates).
+    /// Formulas reload live.
+    public bool Deserialize(string data) => ScNative.sc_deserialize(_handle, data) != 0;
 
     /// The display string for a cell — what a spreadsheet should show. Parses
     /// the engine's JSON (the fixed shape every backend's engine emits).
@@ -505,6 +524,23 @@ public sealed class InfiniteSheetModel : IDisposable
     {
         bool ok = _session.Paste(InfAddress);
         if (ok) ComputeExtent();
+        return ok;
+    }
+
+    /// Save / load: serialize the whole workbook to a JSON document, and restore
+    /// it. The document stores only the source + formats — computed values
+    /// recompute on load, so a loaded formula stays live. <see cref="LoadBook"/>
+    /// returns false (workbook untouched) for malformed input; on success it
+    /// regrows the extent and refreshes the formula bar so the view re-reads.
+    public string SaveBook() => _session.Serialize();
+    public bool LoadBook(string data)
+    {
+        bool ok = _session.Deserialize(data);
+        if (ok)
+        {
+            ComputeExtent();
+            Formula = _session.GetRaw(InfAddress);
+        }
         return ok;
     }
 
