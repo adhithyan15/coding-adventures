@@ -768,6 +768,14 @@ downstream tools to compare.
       solver and stable transfer-function table while exposing a one-row deck-run
       artifact for the transfer probe.
 
+69. Deck run sensitivity routing.
+    - Status: completed in this deck run sensitivity routing slice.
+    - Python, Rust, and TypeScript selected deck executions now parse top-level
+      `.sens V(node)` analysis cards into the shared deck-analysis plan surface.
+    - Selected `.sens` deck executions route through the existing DC sensitivity
+      solver and stable sensitivity table while exposing a one-row deck-run
+      artifact for the sensitivity probe.
+
 ## Backlog
 
 1. Deck execution layer.

@@ -1869,6 +1869,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 .ac dec 1 1k 1k
 .tran 1m 1m
 .tf V(mid) V1
+.sens V(mid)
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -2034,6 +2035,41 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         format!(
             "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntf\t.tf\t{}\t1\t1\tV(mid)\t0\t\t0\t\n",
             tf_execution.plan.line_number
+        )
+    );
+
+    let sens_execution = run_deck_analysis(&circuit, netlist, Some("sens")).unwrap();
+    assert_eq!(sens_execution.plan.output_node.as_deref(), Some("mid"));
+    assert_eq!(sens_execution.plan.source_name, None);
+    match &sens_execution.result {
+        DeckAnalysisExecutionResult::Sens(result) => {
+            assert_eq!(result.output_node, "mid");
+            assert_eq!(result.entries.len(), 3);
+        }
+        other => panic!("expected sensitivity result, got {other:?}"),
+    }
+    assert_eq!(sens_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert!(sens_execution.measurements.is_empty());
+    assert_eq!(
+        sens_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    );
+    assert!(sens_execution.table.starts_with(
+        "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity\n"
+    ));
+    assert_eq!(sens_execution.run_artifacts[0].analysis, "sens");
+    assert_eq!(sens_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(
+        sens_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert!(sens_execution.run_artifacts[0].measurement_names.is_empty());
+    assert!(sens_execution.run_artifacts[0].fourier_probes.is_empty());
+    assert_eq!(
+        sens_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\nsens\t.sens\t{}\t1\t1\tV(mid)\t0\t\t0\t\n",
+            sens_execution.plan.line_number
         )
     );
 

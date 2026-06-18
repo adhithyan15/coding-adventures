@@ -1452,6 +1452,7 @@ describe("transient", () => {
 .ac dec 1 1k 1k
 .tran 1m 1m
 .tf V(mid) V1
+.sens V(mid)
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -1562,6 +1563,31 @@ describe("transient", () => {
     expect(tfExecution.runArtifactTable).toBe(
       "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
         `tf\t.tf\t${tfExecution.plan.lineNumber}\t1\t1\tV(mid)\t0\t\t0\t\n`,
+    );
+
+    const sensExecution = runDeckAnalysis(circuit, netlist, "sens");
+    expect(sensExecution.plan.outputNode).toBe("mid");
+    expect(sensExecution.plan.sourceName).toBeUndefined();
+    const sensResult = sensExecution.result as {
+      readonly outputNode: string;
+      readonly entries: readonly unknown[];
+    };
+    expect(sensResult.outputNode).toBe("mid");
+    expect(sensResult.entries).toHaveLength(3);
+    expect(sensExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(sensExecution.measurements).toEqual([]);
+    expect(sensExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
+    expect(sensExecution.table.startsWith(
+      "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity\n",
+    )).toBe(true);
+    expect(sensExecution.runArtifacts[0]?.analysis).toBe("sens");
+    expect(sensExecution.runArtifacts[0]?.resultRows).toBe(1);
+    expect(sensExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(sensExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(sensExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
+    expect(sensExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
+        `sens\t.sens\t${sensExecution.plan.lineNumber}\t1\t1\tV(mid)\t0\t\t0\t\n`,
     );
 
     const tranWindowExecution = runDeckAnalysis(

@@ -3398,6 +3398,7 @@ pub enum DeckAnalysisExecutionResult {
     Ac(Vec<AcPoint>),
     Tran(Vec<TransientPoint>),
     Tf(TfResult),
+    Sens(SensResult),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -3952,7 +3953,7 @@ pub fn resolve_deck_analyses(netlist: &str) -> DeckAnalysisSummary {
         }
         if matches!(
             directive.as_deref(),
-            Some(".op" | ".dc" | ".ac" | ".tran" | ".tf")
+            Some(".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens")
         ) {
             resolve_analysis_line(
                 stripped,
@@ -5384,6 +5385,7 @@ fn resolve_analysis_line(
         ".ac" => resolve_ac_analysis(&tokens, line_number, state),
         ".tran" => resolve_tran_analysis(&tokens, line_number, state),
         ".tf" => resolve_tf_analysis(&tokens, line_number, state),
+        ".sens" => resolve_sens_analysis(&tokens, line_number, state),
         _ => {}
     }
 }
@@ -5726,6 +5728,54 @@ fn resolve_tf_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         analysis: "tf".to_string(),
         line_number,
         source_name: Some(input_source),
+        output_node: Some(output_probe[2..output_probe.len() - 1].to_string()),
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind: None,
+        point_count: None,
+        start_frequency_hz: None,
+        stop_frequency_hz: None,
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
+    });
+}
+
+fn resolve_sens_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
+    if tokens.len() != 2 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".sens",
+            line_number,
+            ".sens requires one output voltage probe token",
+            None,
+        );
+        return;
+    }
+    let output_probe = normalize_deck_output_probe(&unquote_token(tokens[1]));
+    let Some(output_probe) = output_probe.filter(|probe| probe.starts_with("V(")) else {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".sens",
+            line_number,
+            &format!(
+                ".sens output must be a voltage probe V(node), got {:?}",
+                tokens[1]
+            ),
+            Some(tokens[1].to_string()),
+        );
+        return;
+    };
+    state.analyses.push(DeckAnalysisPlan {
+        directive: ".sens".to_string(),
+        analysis: "sens".to_string(),
+        line_number,
+        source_name: None,
         output_node: Some(output_probe[2..output_probe.len() - 1].to_string()),
         start_value: None,
         stop_value: None,
@@ -6836,6 +6886,7 @@ fn normalize_deck_analysis_name(analysis: &str) -> Option<&'static str> {
         "ac" | "ac-sweep" | "acsweep" => Some("ac"),
         "tran" | "transient" => Some("tran"),
         "tf" | "transfer-function" | "transferfunction" => Some("tf"),
+        "sens" | "sensitivity" => Some("sens"),
         _ => None,
     }
 }
@@ -9861,6 +9912,10 @@ pub fn format_deck_tf_table(result: &TfResult) -> String {
     format_tf_table(result)
 }
 
+pub fn format_deck_sens_table(result: &SensResult) -> String {
+    format_sens_table(result)
+}
+
 fn deck_run_artifacts(
     plan: &DeckAnalysisPlan,
     result_rows: usize,
@@ -10104,6 +10159,33 @@ pub fn run_deck_analysis(
                 plan,
                 result: DeckAnalysisExecutionResult::Tf(result.clone()),
                 table: format_deck_tf_table(&result),
+                output_probes,
+                measurements,
+                measurement_table,
+                fourier,
+                fourier_table,
+                run_artifacts,
+                run_artifact_table,
+            })
+        }
+        "sens" => {
+            let output_node =
+                require_deck_plan_string(plan.output_node.as_deref(), &plan, "output_node")?;
+            let result = sens_dc(circuit, output_node)?;
+            select_deck_measurement_cards_for_analysis(netlist, "sens")?;
+            let measurements = Vec::new();
+            let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "sens")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = vec![format!("V({output_node})")];
+            let run_artifacts =
+                deck_run_artifacts(&plan, 1, &output_probes, &measurements, &fourier);
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Sens(result.clone()),
+                table: format_deck_sens_table(&result),
                 output_probes,
                 measurements,
                 measurement_table,
