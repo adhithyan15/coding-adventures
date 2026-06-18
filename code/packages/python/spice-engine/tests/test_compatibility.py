@@ -145,6 +145,10 @@ shell echo nope
 .shell echo dotted
 cd models
 .cd /tmp
+if $&run_monte
+.while $&again
+foreach dev M1 M2
+.repeat 2
 run
 quit
 .endc
@@ -177,6 +181,10 @@ quit
         (".control", 36, "error"),
         (".control", 37, "error"),
         (".control", 38, "error"),
+        (".control", 39, "error"),
+        (".control", 40, "error"),
+        (".control", 41, "error"),
+        (".control", 42, "error"),
     ]
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
@@ -190,6 +198,10 @@ quit
         "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
         "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
         "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
     ]
     measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
     assert [
@@ -291,6 +303,10 @@ source plain-control.cir
 shell echo plain
 .cd nested
 cd /tmp
+.if $&run_monte
+while $&again
+.foreach dev M1 M2
+repeat 2
 run
 .quit
 .endc
@@ -327,6 +343,10 @@ run
         "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
         "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
         "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
     ]
     assert [(diag.directive, diag.line_number) for diag in summary.diagnostics[3:]] == [
         (".control", 5),
@@ -336,6 +356,10 @@ run
         (".control", 35),
         (".control", 36),
         (".control", 37),
+        (".control", 38),
+        (".control", 39),
+        (".control", 40),
+        (".control", 41),
     ]
     measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
     assert [

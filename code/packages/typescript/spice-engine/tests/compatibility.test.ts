@@ -149,6 +149,10 @@ shell echo nope
 .shell echo dotted
 cd models
 .cd /tmp
+if $&run_monte
+.while $&again
+foreach dev M1 M2
+.repeat 2
 run
 quit
 .endc
@@ -184,6 +188,10 @@ quit
       [".control", 36, "error"],
       [".control", 37, "error"],
       [".control", 38, "error"],
+      [".control", 39, "error"],
+      [".control", 40, "error"],
+      [".control", 41, "error"],
+      [".control", 42, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
@@ -197,6 +205,10 @@ quit
       "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
       "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
       "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
     ]);
     const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
     expect(measurementSummary.measurements.map((card) => [
@@ -298,6 +310,10 @@ source plain-control.cir
 shell echo plain
 .cd nested
 cd /tmp
+.if $&run_monte
+while $&again
+.foreach dev M1 M2
+repeat 2
 run
 .quit
 .endc
@@ -332,6 +348,10 @@ run
       "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
       "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
       "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
     ]);
     expect(summary.diagnostics.slice(3).map(({ directive, lineNumber }) => [
       directive,
@@ -344,6 +364,10 @@ run
       [".control", 35],
       [".control", 36],
       [".control", 37],
+      [".control", 38],
+      [".control", 39],
+      [".control", 40],
+      [".control", 41],
     ]);
     const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
     expect(measurementSummary.measurements.map((card) => [

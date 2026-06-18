@@ -2893,6 +2893,26 @@ const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set([
 ]);
 const SCRIPT_CONTROL_BLOCK_COMMANDS = new Set(["source", ".source", "shell", ".shell"]);
 const WORKDIR_CONTROL_BLOCK_COMMANDS = new Set(["cd", ".cd"]);
+const CONTROL_FLOW_CONTROL_BLOCK_COMMANDS = new Set([
+  "if",
+  ".if",
+  "else",
+  ".else",
+  "end",
+  ".end",
+  "while",
+  ".while",
+  "foreach",
+  ".foreach",
+  "repeat",
+  ".repeat",
+  "dowhile",
+  ".dowhile",
+  "break",
+  ".break",
+  "continue",
+  ".continue",
+]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2941,6 +2961,16 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
           directive: ".control",
           lineNumber,
           message: controlBlockWorkdirPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isControlFlowControlBlockCommand(stripped)) {
+        diagnostics.push({
+          code: "SPICE_DECK_CONTROL_FLOW_COMMAND",
+          directive: ".control",
+          lineNumber,
+          message: controlBlockFlowPolicyMessage(stripped),
           severity: "error",
         });
         continue;
@@ -3526,6 +3556,17 @@ function resolveDeckLines(
           source,
           lineNumber,
           message: controlBlockWorkdirPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isControlFlowControlBlockCommand(stripped)) {
+        state.diagnostics.push({
+          code: "SPICE_DECK_CONTROL_FLOW_COMMAND",
+          directive: ".control",
+          source,
+          lineNumber,
+          message: controlBlockFlowPolicyMessage(stripped),
           severity: "error",
         });
         continue;
@@ -5823,12 +5864,21 @@ function isWorkdirControlBlockCommand(line: string): boolean {
   return command !== undefined && WORKDIR_CONTROL_BLOCK_COMMANDS.has(command);
 }
 
+function isControlFlowControlBlockCommand(line: string): boolean {
+  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
+  return command !== undefined && CONTROL_FLOW_CONTROL_BLOCK_COMMANDS.has(command);
+}
+
 function controlBlockScriptPolicyMessage(line: string): string {
   return `${JSON.stringify(line)} inside .control is not executed because external script and shell commands are disabled by the deck execution policy`;
 }
 
 function controlBlockWorkdirPolicyMessage(line: string): string {
   return `${JSON.stringify(line)} inside .control is not executed because working-directory mutation is disabled by the deck execution policy`;
+}
+
+function controlBlockFlowPolicyMessage(line: string): string {
+  return `${JSON.stringify(line)} inside .control is not executed because control-flow commands are disabled by the deck execution policy`;
 }
 
 export function subcircuitDefinition(

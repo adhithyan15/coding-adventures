@@ -162,6 +162,10 @@ shell echo nope
 .shell echo dotted
 cd models
 .cd /tmp
+if $&run_monte
+.while $&again
+foreach dev M1 M2
+.repeat 2
 run
 quit
 .endc
@@ -209,7 +213,11 @@ quit
             (".control", 35, "error"),
             (".control", 36, "error"),
             (".control", 37, "error"),
-            (".control", 38, "error")
+            (".control", 38, "error"),
+            (".control", 39, "error"),
+            (".control", 40, "error"),
+            (".control", 41, "error"),
+            (".control", 42, "error")
         ]
     );
     assert_eq!(
@@ -229,7 +237,11 @@ quit
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
             "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
-            "SPICE_DECK_CONTROL_WORKDIR_COMMAND"
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND"
         ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
@@ -383,6 +395,10 @@ source plain-control.cir
 shell echo plain
 .cd nested
 cd /tmp
+.if $&run_monte
+while $&again
+.foreach dev M1 M2
+repeat 2
 run
 .quit
 .endc
@@ -423,7 +439,11 @@ run
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
             "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
-            "SPICE_DECK_CONTROL_WORKDIR_COMMAND"
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND"
         ]
     );
     assert_eq!(
@@ -440,7 +460,11 @@ run
             (".control", 34),
             (".control", 35),
             (".control", 36),
-            (".control", 37)
+            (".control", 37),
+            (".control", 38),
+            (".control", 39),
+            (".control", 40),
+            (".control", 41)
         ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Emit explicit policy diagnostics for selected `.control` block control-flow
+  commands, including `if`, `while`, `foreach`, and `repeat`, in
+  `analyzeDeckControls` and `resolveDeckSources`, matching Python and Rust.
+  Control-flow execution remains disabled by the deck execution policy.
 - Emit explicit policy diagnostics for selected `.control` block `cd`
   working-directory mutation commands in `analyzeDeckControls` and
   `resolveDeckSources`, matching Python and Rust. Working-directory mutation
