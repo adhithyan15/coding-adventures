@@ -316,6 +316,31 @@ NA-padding recycling (too-short pads with `NA`, `NULL` clears) via a general
 name (unmatched → `NA`). A named vector prints names above values in aligned
 columns instead of the `[i]` prefix.
 
+### V2.8 General attributes (`attr`, `attributes`, `structure`)
+
+V2.7's `names` is *one* attribute; V2.8 adds the **general attribute system** —
+the open key→value metadata map R attaches to any object. The *special*
+attributes `names`, `class`, and `dim` keep their dedicated representations
+(`SValue::Named`, `SValue::Classed`, `SValue::Matrix`); a new transparent wrapper
+`SValue::Attributed { attrs: Vec<(String, SValue)>, inner }` stores every *other*
+attribute as an insertion-ordered association list. Like `Named`/`Classed` it is
+**see-through** (`length`, `type_name`, coercions, arithmetic, comparison,
+`class`, indexing, printing all delegate to `inner`); only the attribute builtins
+read the map.
+
+Because the three special attributes are *never* duplicated into the general map,
+the consistency invariant is structural: `attr(x, "names")` reads the same field
+`names(x)` does, `attr(x, "class")` agrees with `class(x)`/`class_of`, and
+`attr(x, "dim")` agrees with the matrix `dim` (R-11). `attr(x, which)` gets one
+attribute (or `NULL`); `attr(x, which) <- value` sets/replaces it (`NULL`
+removes) through the V2.7 replacement-function lvalue path (`\`attr<-\``).
+`attributes(x)` returns all attributes as a named list (or `NULL`);
+`attributes(x) <- list(...)` replaces them. `structure(x, ...)` attaches each
+named `...` argument as an attribute, routing special names appropriately. The
+general map is bounded (`MAX_ATTRIBUTES`) and a `"dim"` reshape is length-checked
+against `MAX_SEQ_LEN`, so attacker-controlled attribute input cannot exhaust
+memory or panic.
+
 ## §9 Divergences from ST00 (spec-sync)
 
 1. **S before R.** ST00 specs R first; we implement historical S first. The two
