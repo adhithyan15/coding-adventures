@@ -61834,6 +61834,16 @@ mod tests {
 
     #[test]
     fn activation_waiver_erasure_tools_project_purge_lineage_end_to_end() {
+        std::thread::Builder::new()
+            .name("activation-waiver-erasure-e2e".to_string())
+            .stack_size(16 * 1024 * 1024)
+            .spawn(activation_waiver_erasure_tools_project_purge_lineage_end_to_end_inner)
+            .unwrap()
+            .join()
+            .unwrap();
+    }
+
+    fn activation_waiver_erasure_tools_project_purge_lineage_end_to_end_inner() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
