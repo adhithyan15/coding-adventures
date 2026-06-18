@@ -1,0 +1,40 @@
+% =====================================================================
+% context-precedence-resolve.adj — the shared CANON-RESOLUTION layer (ADJ73 §4.3).
+%
+% Every grounded precedence source — the lex-superior edges (context-precedence.adj)
+% and the conflict-resolution canons (context-precedence-meta.adj) — emits a
+% canon-TAGGED edge:
+%
+%     outranks_context_by(Higher, Lower, Canon)
+%
+% This module turns those tagged edges into the engine's effective context order
+% (`outranks_context/2`, which logic-engine ≥ 0.21 reads as the precedence graph),
+% applying the jurisdiction's grounded canon-ordering when two canons collide:
+%
+%   • an edge HOLDS unless its REVERSE comes from a HIGHER-RANKED canon;
+%   • "higher-ranked" is a grounded `canon_outranks(Winner, Loser)` fact (e.g.
+%     `canon_outranks(lex_specialis, lex_superior)` for a jurisdiction that lets
+%     the specific provision beat a higher-authority general one) — itself
+%     byte-provenanced, so the tiebreak is auditable and correctable.
+%
+% When NO canon-ordering covers a collision, BOTH reverse edges survive → the
+% engine's mutual-defeat handling (logic-engine 0.22) abstains as CONFLICT (the
+% honest §4.3 default). So precedence resolution is grounded all the way up:
+% primitive fact → canon-tagged edge → canon-ordering → effective order.
+%
+% Import this module from any rulebook that emits `outranks_context_by/3`
+% (idempotent by path, so importing it transitively from several files is safe).
+% =====================================================================
+
+% An edge holds iff it is NOT canon-defeated (negation-as-failure over the ordering).
+rule {
+  head: outranks_context($Higher, $Lower)
+  when: outranks_context_by($Higher, $Lower, $Canon), not canon_defeated($Higher, $Lower, $Canon)
+}
+
+% An edge `Higher > Lower` (from canon C) is canon-defeated iff the REVERSE edge
+% `Lower > Higher` is asserted by some canon C2 that the jurisdiction ranks above C.
+rule {
+  head: canon_defeated($Higher, $Lower, $Canon)
+  when: outranks_context_by($Lower, $Higher, $Other), canon_outranks($Other, $Canon)
+}

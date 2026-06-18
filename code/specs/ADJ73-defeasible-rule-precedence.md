@@ -385,9 +385,18 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
     `worked-canon-tiebreaker-example.adj` (lex specialis prevails over lex superior here → the
     specific state reading governs) + `a_grounded_canon_ordering_resolves_the_collision`. The
     canon-ordering is itself a grounded fact, so the recursion stays grounded; remove it and the
-    rulebook falls back to §4.3 abstention. Still to come: migrate the SHARED
-    `context-precedence(-meta).adj` rulebook to the tagged `outranks_context_by/3` form (proven
-    self-contained first), so a jurisdiction's `canon_outranks` applies uniformly.
+    rulebook falls back to §4.3 abstention.
+  - **PR-B-8 shared-rulebook migration ✅ DONE (data only — no engine change).** The proven
+    pattern is now the SUBSTRATE: every grounded source emits a canon-TAGGED edge
+    `outranks_context_by(Higher, Lower, Canon)` — the lex-superior edges in `context-precedence.adj`
+    (canon `lex_superior`) and the three canon meta-rules in `context-precedence-meta.adj`
+    (`appeal_status` / `lex_posterior` / `lex_specialis`). A shared `context-precedence-resolve.adj`
+    module (imported idempotently by both) holds the NAF resolution. So ANY jurisdiction's grounded
+    `canon_outranks` ordering now applies uniformly across all canons; absent one, a collision
+    abstains (§4.3). All worked examples + golden tests pass unchanged (the audit query now recalls
+    the tagged `outranks_context_by` fact, which carries the charter). This completes the ADJ73
+    defeasible-precedence arc: lex superior → posterior → specialis → honest CONFLICT → resolving
+    tiebreaker → uniform grounded substrate.
 - **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
   annotations) + regen grammar.
 - **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).
