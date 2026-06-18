@@ -1094,6 +1094,61 @@ impl IntegrationMeshReleaseReadinessSummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightReadinessSummary {
+    pub release_readiness_summary: IntegrationMeshReleaseReadinessSummary,
+    pub preflight_summary: IntegrationMeshProtocolSubstratePreflightSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub total_blocker_count: usize,
+    pub operator_required_checks: usize,
+    pub first_failed_protocol: Option<ProtocolFamily>,
+    pub first_failed_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_failed_primitive: Option<PrimitiveFamily>,
+    pub next_remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    pub preflight_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightReadinessSummary {
+    pub fn from_parts(
+        release_readiness_summary: IntegrationMeshReleaseReadinessSummary,
+        preflight_summary: IntegrationMeshProtocolSubstratePreflightSummary,
+    ) -> Self {
+        let total_blocker_count =
+            release_readiness_summary.release_blocker_count + preflight_summary.blocking_checks;
+
+        Self {
+            total_protocols: release_readiness_summary.total_protocols,
+            total_preflight_checks: preflight_summary.total_checks,
+            preflight_blocker_count: preflight_summary.blocking_checks,
+            release_blocker_count: release_readiness_summary.release_blocker_count,
+            total_blocker_count,
+            operator_required_checks: preflight_summary.operator_required_checks,
+            first_failed_protocol: preflight_summary.first_failed_protocol.clone(),
+            first_failed_stage: preflight_summary.first_failed_stage,
+            first_failed_primitive: preflight_summary.first_failed_primitive,
+            next_remediation_kind: release_readiness_summary.next_remediation_kind,
+            preflight_ready: preflight_summary.ready(),
+            release_ready: release_readiness_summary.release_ready,
+            ready_for_release: preflight_summary.ready() && release_readiness_summary.release_ready,
+            release_readiness_summary,
+            preflight_summary,
+        }
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.total_blocker_count > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_checks > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationMeshReadinessHandoffKind {
     SubstrateAction,
@@ -21482,6 +21537,40 @@ pub fn mesh_release_readiness_summary(
     )
 }
 
+pub fn mesh_preflight_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightReadinessSummary {
+    let release_readiness_summary = mesh_release_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let preflight_summary = mesh_protocol_substrate_preflight_summary(available_primitives);
+
+    IntegrationMeshPreflightReadinessSummary::from_parts(
+        release_readiness_summary,
+        preflight_summary,
+    )
+}
+
+pub fn mesh_preflight_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_readiness_handoff_packages_from_summary(
     summary: &IntegrationMeshActionReadinessSummary,
     actions: &[IntegrationMeshProtocolSubstrateAction],
@@ -28155,6 +28244,72 @@ mod tests {
                 .total_actions,
             0
         );
+    }
+
+    #[test]
+    fn mesh_preflight_readiness_summary_combines_preflight_and_release_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary =
+            mesh_preflight_readiness_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.operator_required_checks, 4);
+        assert_eq!(summary.first_failed_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_failed_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_failed_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(summary.release_blocker_count >= 5);
+        assert_eq!(
+            summary.total_blocker_count,
+            summary.release_blocker_count + summary.preflight_blocker_count
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(summary.preflight_summary.failed_checks, 5);
+        assert_eq!(
+            summary.release_readiness_summary.queued_substrate_actions,
+            5
+        );
+    }
+
+    #[test]
+    fn mesh_preflight_readiness_summary_marks_preflight_clear_state() {
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
+        ];
+        let summary =
+            mesh_preflight_readiness_summary(all_primitive_families(), &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.operator_required_checks, 0);
+        assert_eq!(summary.first_failed_protocol, None);
+        assert_eq!(summary.first_failed_stage, None);
+        assert_eq!(summary.first_failed_primitive, None);
+        assert_eq!(summary.preflight_summary.passed_checks, 16);
+        assert!(summary.preflight_ready);
+        assert_eq!(summary.total_blocker_count, summary.release_blocker_count);
+        assert_eq!(summary.ready_for_release, summary.release_ready);
+        assert!(!summary.needs_operator());
     }
 
     #[test]
