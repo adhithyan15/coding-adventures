@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.9.0
+
+**Persistence — serialize / deserialize (save / load).** `Workbook::serialize`
+captures the whole workbook as a portable JSON string; `Workbook::deserialize`
+rebuilds a workbook from one. The engine side of save/load — no I/O happens here,
+the caller supplies/keeps the bytes.
+
+- `Workbook::serialize() -> String` (`workbook.rs`): per sheet, every **source**
+  cell (a formula's text, or a literal's typed value) + every **format**
+  (including formats on otherwise-empty cells, which outlive content). Computed
+  values are deliberately NOT stored — `deserialize` recomputes them, so the file
+  is small and can't disagree with the engine. Cells and formats are sorted by
+  (row, col), so output is stable (byte-identical for equal workbooks — handy for
+  diffing and tests). Shape, version 1:
+  `{"version":1,"sheets":[{"name":..,"cells":[{"a1":"A1","value":{"number":15.0}},
+  {"a1":"E1","formula":"=SUM(A1:D1)"}],"formats":[{"a1":"E1","code":"#,##0.00"}]}]}`.
+  A literal value is one of `{"number":n}` / `{"text":s}` / `{"bool":b}` /
+  `{"error":"#REF!"}`; a non-finite number degrades to `#NUM!` (JSON can't hold
+  NaN/∞), matching how it reads in the grid.
+- `Workbook::deserialize(&str) -> Result<(), String>`: validates the JSON +
+  `version` + `sheets` array BEFORE mutating (a bad file leaves the workbook
+  untouched), then clears sheets/graph/clipboard/changelog and rebuilds in file
+  order (so a single-sheet host keeps `SheetId(0)`), and `recalc_all` repopulates
+  caches (revision bumps once). A stored formula that no longer parses is kept as
+  its literal text rather than dropped — no user input is silently lost. Errs on
+  malformed JSON, unsupported version, missing `sheets`, or a bad cell address.
+- New dependency: `serde_json` (the engine had none; serialization is pure
+  String↔state, no I/O, `forbid(unsafe_code)` intact). 4 round-trip tests
+  (values+formulas+formats incl. empty-cell format + stable re-serialize;
+  replace-not-merge; reject bad JSON/version/missing-sheets; keep-bad-formula-as-text).
+  Spec §16 (Persistence) rewritten from "out of scope" to this JSON format.
+
 ## 0.8.0
 
 **Clipboard — cut / copy / paste.** A stateful clipboard on `Workbook`, layered
