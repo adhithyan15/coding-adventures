@@ -7,7 +7,7 @@ pipeline (CLOC12.161).
 |------|------|
 | `flags.txt` | `--compilation_level ADVANCED --js input/a.js` |
 | `input/a.js` | A program with a foldable expr, an unused var, and a renameable param |
-| `expected.stdout` | `function compute(a){return a + 1};report(compute(7));sink(compute);` |
+| `expected.stdout` | `function c(a){return a + 1};report(c(7));sink(c);` |
 
 ADVANCED used to be a **literal no-op** — it returned the source verbatim. It
 now runs the **same typed optimization pipeline as SIMPLE** (it is specified to
@@ -24,9 +24,12 @@ inliner would substitute the body at the call site, so the value use keeps
 this fixture's focus on fold + dead-code removal + rename. Inlining has its
 own pass-crate tests.
 
-ADVANCED and SIMPLE produce identical output today; advanced-only passes
-(aggressive property/global renaming, cross-module tree-shaking) layer on as
-they are implemented.
+ADVANCED now DIVERGES from SIMPLE: the `rename-globals` pass shortens the
+private top-level function `compute` to `c` (SIMPLE keeps `compute`, since a
+top-level name may be externally visible). `report` / `sink` are free globals
+and `--externs` could protect `compute`; both are left alone here. Further
+advanced-only passes (aggressive property renaming, cross-module tree-shaking)
+layer on as they are implemented.
 
 Regenerate the expected file after an intentional behavior change:
 
