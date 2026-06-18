@@ -569,6 +569,137 @@ impl IntegrationMeshProtocolSubstrateActionSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightCheck {
+    pub sequence: usize,
+    pub protocol: ProtocolFamily,
+    pub primitive: PrimitiveFamily,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub required: bool,
+    pub passed: bool,
+    pub blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightCheck {
+    pub fn from_stage_row(sequence: usize, row: &IntegrationMeshProtocolSubstrateStageRow) -> Self {
+        let operator_required = matches!(
+            row.stage,
+            IntegrationMeshProtocolSubstrateStage::Radio
+                | IntegrationMeshProtocolSubstrateStage::NetworkSecurity
+        );
+
+        Self {
+            sequence,
+            protocol: row.protocol.clone(),
+            primitive: row.primitive,
+            stage: row.stage,
+            required: true,
+            passed: row.is_ready(),
+            blocking: row.is_blocked(),
+            operator_required: operator_required && row.is_blocked(),
+        }
+    }
+
+    pub fn passed(&self) -> bool {
+        self.passed
+    }
+
+    pub fn failed(&self) -> bool {
+        !self.passed
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightSummary {
+    pub total_checks: usize,
+    pub passed_checks: usize,
+    pub failed_checks: usize,
+    pub blocking_checks: usize,
+    pub operator_required_checks: usize,
+    pub controller_blockers: usize,
+    pub radio_blockers: usize,
+    pub discovery_blockers: usize,
+    pub network_security_blockers: usize,
+    pub supervision_blockers: usize,
+    pub first_failed_protocol: Option<ProtocolFamily>,
+    pub first_failed_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_failed_primitive: Option<PrimitiveFamily>,
+    pub preflight_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightSummary {
+    pub fn from_checks<'a>(
+        checks: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightCheck>,
+    ) -> Self {
+        let checks = checks.into_iter().collect::<Vec<_>>();
+        let passed_checks = checks.iter().filter(|check| check.passed()).count();
+        let failed_checks = checks.len().saturating_sub(passed_checks);
+        let first_failed = checks
+            .iter()
+            .filter(|check| check.failed())
+            .min_by_key(|check| check.sequence);
+
+        Self {
+            total_checks: checks.len(),
+            passed_checks,
+            failed_checks,
+            blocking_checks: checks
+                .iter()
+                .filter(|check| check.blocks_preflight())
+                .count(),
+            operator_required_checks: checks
+                .iter()
+                .filter(|check| check.requires_operator())
+                .count(),
+            controller_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_failed_protocol: first_failed.map(|check| check.protocol.clone()),
+            first_failed_stage: first_failed.map(|check| check.stage),
+            first_failed_primitive: first_failed.map(|check| check.primitive),
+            preflight_ready: !checks.is_empty() && failed_checks == 0,
+        }
+    }
+
+    pub fn ready(&self) -> bool {
+        self.preflight_ready
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_checks > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_checks > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
     pub required_primitives: Vec<PrimitiveFamily>,
@@ -21201,6 +21332,30 @@ pub fn mesh_protocol_substrate_action_summary(
     IntegrationMeshProtocolSubstrateActionSummary::from_actions(actions.iter())
 }
 
+pub fn mesh_protocol_substrate_preflight_checks(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightCheck> {
+    let rows = mesh_protocol_substrate_stage_rows(available_primitives);
+    let mut checks = rows
+        .iter()
+        .map(|row| IntegrationMeshProtocolSubstratePreflightCheck::from_stage_row(0, row))
+        .collect::<Vec<_>>();
+    checks.sort_by(compare_mesh_substrate_preflight_checks);
+
+    for (index, check) in checks.iter_mut().enumerate() {
+        check.sequence = index + 1;
+    }
+
+    checks
+}
+
+pub fn mesh_protocol_substrate_preflight_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightSummary {
+    let checks = mesh_protocol_substrate_preflight_checks(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightSummary::from_checks(checks.iter())
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -21501,6 +21656,32 @@ fn mesh_substrate_action_count<'a>(
     actions
         .into_iter()
         .filter(|action| action.stage == stage)
+        .count()
+}
+
+fn compare_mesh_substrate_preflight_checks(
+    left: &IntegrationMeshProtocolSubstratePreflightCheck,
+    right: &IntegrationMeshProtocolSubstratePreflightCheck,
+) -> Ordering {
+    (
+        left.stage,
+        mesh_protocol_sort_key(&left.protocol),
+        left.primitive,
+    )
+        .cmp(&(
+            right.stage,
+            mesh_protocol_sort_key(&right.protocol),
+            right.primitive,
+        ))
+}
+
+fn mesh_substrate_preflight_blockers<'a>(
+    checks: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightCheck>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    checks
+        .into_iter()
+        .filter(|check| check.stage == stage && check.blocks_preflight())
         .count()
 }
 
@@ -27663,6 +27844,83 @@ mod tests {
         assert_eq!(summary.first_primitive, None);
         assert!(summary.is_empty());
         assert!(!summary.has_actions());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_checks_surface_operator_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let checks = mesh_protocol_substrate_preflight_checks(&available_primitives);
+        let summary = IntegrationMeshProtocolSubstratePreflightSummary::from_checks(checks.iter());
+
+        assert_eq!(checks.len(), 16);
+        assert_eq!(summary.total_checks, 16);
+        assert_eq!(summary.passed_checks, 11);
+        assert_eq!(summary.failed_checks, 5);
+        assert_eq!(summary.blocking_checks, 5);
+        assert_eq!(summary.operator_required_checks, 4);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 1);
+        assert_eq!(summary.discovery_blockers, 1);
+        assert_eq!(summary.network_security_blockers, 3);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_failed_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_failed_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_failed_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.ready());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+
+        let first = &checks[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.protocol, ProtocolFamily::Zigbee);
+        assert_eq!(
+            first.stage,
+            IntegrationMeshProtocolSubstrateStage::Controller
+        );
+        assert!(first.passed());
+        assert!(!first.requires_operator());
+
+        let first_failed = checks.iter().find(|check| check.failed()).unwrap();
+        assert_eq!(first_failed.protocol, ProtocolFamily::ZWave);
+        assert_eq!(
+            first_failed.stage,
+            IntegrationMeshProtocolSubstrateStage::Radio
+        );
+        assert!(first_failed.blocks_preflight());
+        assert!(first_failed.requires_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_checks_mark_ready_substrate() {
+        let checks = mesh_protocol_substrate_preflight_checks(all_primitive_families());
+        let summary = mesh_protocol_substrate_preflight_summary(all_primitive_families());
+
+        assert_eq!(checks.len(), 16);
+        assert!(checks
+            .iter()
+            .all(IntegrationMeshProtocolSubstratePreflightCheck::passed));
+        assert_eq!(summary.total_checks, 16);
+        assert_eq!(summary.passed_checks, 16);
+        assert_eq!(summary.failed_checks, 0);
+        assert_eq!(summary.blocking_checks, 0);
+        assert_eq!(summary.operator_required_checks, 0);
+        assert_eq!(summary.first_failed_protocol, None);
+        assert_eq!(summary.first_failed_stage, None);
+        assert_eq!(summary.first_failed_primitive, None);
+        assert!(summary.ready());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
     }
 
     #[test]
