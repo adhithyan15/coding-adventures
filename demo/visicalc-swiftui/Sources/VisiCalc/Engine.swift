@@ -69,6 +69,23 @@ final class SpreadsheetSession {
         sc_paste(handle, dstStart) != 0
     }
 
+    /// Serialize the whole workbook to a self-contained JSON document — the
+    /// SOURCE (formula text + typed literals) + per-cell formats, not the
+    /// computed values (those recompute on load, so the document is small and
+    /// can't disagree with itself). `take` frees the engine's `char*`; the host
+    /// persists the returned string wherever it likes. Reaches `sc_serialize`.
+    func serialize() -> String {
+        take(sc_serialize(handle))
+    }
+
+    /// Replace the workbook from a document produced by `serialize`. Returns
+    /// `true` on success, `false` for malformed / unsupported input (the workbook
+    /// is left untouched — the engine validates before it mutates). Formulas
+    /// reload live. Reaches `sc_deserialize`.
+    func deserialize(_ data: String) -> Bool {
+        sc_deserialize(handle, data) != 0
+    }
+
     /// The computed value of a cell as the string a spreadsheet should show.
     /// Parses the engine's JSON (`{"kind":...}`) — the same shape the TS and
     /// WASM engines emit.

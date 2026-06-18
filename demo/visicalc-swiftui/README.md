@@ -92,6 +92,12 @@ The **Copy / Cut / Paste** buttons drive the engine's clipboard
 with its relative references shifted by the destination's offset (absolute `$`
 refs pinned, format carried); a cut clears the source on paste, and `pasteCell`
 returns `false` (a no-op) for an empty clipboard.
+The **Save / Load** buttons serialize the whole workbook
+(`WindowedSheetModel.saveBook` over the C ABI's `sc_serialize`) to a JSON
+document held in memory and restore it (`loadBook` / `sc_deserialize`): the
+document captures only the source (formula text + typed literals) and per-cell
+formats — not the computed values, which the engine recomputes on load, so a
+loaded formula stays live.
 
 Headless proof: `Tests/VisiCalcTests/WindowedModelTests.swift` asserts the
 window is engine-computed and dense, a formula 1000 rows down (`Z1000` = 39) is
@@ -100,7 +106,9 @@ reachable, the gaps are empty (sparse), column letters run AA/BA/BB, editing
 replicates a relative formula down a column (`I1 = =H1*10` filled down ⇒ I2 = 30,
 I3 = 40, source I1 = 20 untouched), and the clipboard (copy `I1 = =H1*2` → paste
 at I2 ⇒ I2 = H2*2 = 14; cut A1 → move to C1, A1 clears, a second paste is a
-no-op). Run with `swift test`.
+no-op), and a save/load round trip (`saveBook` → mutate A1 ⇒ E1 523.00 →
+`loadBook` restores A1 15 / E1 38.00, the loaded formula stays live with A1=5 ⇒
+E1 28.00, and malformed input is rejected). Run with `swift test`.
 
 ## Notes
 

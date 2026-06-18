@@ -47,25 +47,6 @@ void  sc_set_format(ScSession *s, const char *a1, const char *code);
 char *sc_get_format(ScSession *s, const char *a1);                /* -> code | ""   */
 char *sc_get_display(ScSession *s, const char *a1);               /* -> display str */
 
-/* Fill / replicate (drag-fill): copy the `src` cell across the inclusive
-   rectangle `dst_start`..`dst_end`. Relative references shift per target,
-   absolute ($) refs pin, the source's format carries along, an empty source
-   clears each target; a malformed address is a no-op. No return — the host
-   re-reads via sc_get_window / sc_get_display_window / sc_get_raw afterwards. */
-void  sc_fill(ScSession *s, const char *src, const char *dst_start, const char *dst_end);
-
-/* Clipboard — cut / copy / paste. copy/cut capture the inclusive rectangle
-   `start`..`end` (content + format + the typed source) as a whole-block copy
-   that pastes as a unit. A copy's buffer survives any number of pastes; a cut is
-   a one-shot move whose paste clears the source it didn't overwrite. paste
-   places the block so its top-left lands at `dst_start`, shifting the block's
-   references by the destination's offset; it returns 1 when applied, 0 for a
-   no-op (empty clipboard / malformed address / off-grid). The host re-reads via
-   sc_get_window / sc_get_display_window / sc_get_raw afterwards. */
-void  sc_copy(ScSession *s, const char *start, const char *end);
-void  sc_cut(ScSession *s, const char *start, const char *end);
-int   sc_paste(ScSession *s, const char *dst_start);
-
 /* Structural edits — insert/delete rows & columns. 1-based `at`, `count` lines.
    The engine relocates cells and rewrites formula references (a reference to a
    deleted line becomes #REF!); the formula echo stays in step. No return — the
@@ -74,6 +55,34 @@ void  sc_insert_rows(ScSession *s, uint32_t at, uint32_t count);
 void  sc_delete_rows(ScSession *s, uint32_t at, uint32_t count);
 void  sc_insert_cols(ScSession *s, uint32_t at, uint32_t count);
 void  sc_delete_cols(ScSession *s, uint32_t at, uint32_t count);
+
+/* Fill / replicate (drag-fill): copy the `src` cell across the inclusive
+   rectangle `dst_start`..`dst_end`. Relative references shift per target,
+   absolute ($) refs pin, the source's format carries along, an empty source
+   clears each target; a malformed address is a no-op. No return — the host
+   re-reads via sc_get_window / sc_get_display_window / sc_get_raw afterwards. */
+void  sc_fill(ScSession *s, const char *src, const char *dst_start, const char *dst_end);
+
+/* Clipboard — cut / copy / paste. copy/cut capture the inclusive rectangle
+   `start`..`end` (content + format + the typed source). A copy's buffer survives
+   any number of pastes; a cut is a one-shot move whose paste clears the source it
+   didn't overwrite. paste places the block so its top-left lands at `dst_start`,
+   shifting the whole block's references by the destination's offset; it returns 1
+   when applied, 0 for a no-op (empty clipboard / malformed address / off-grid).
+   No char* results — the host re-reads via sc_get_window / sc_get_display_window /
+   sc_get_raw afterwards. A malformed/oversized range on copy/cut is a no-op. */
+void  sc_copy(ScSession *s, const char *start, const char *end);
+void  sc_cut(ScSession *s, const char *start, const char *end);
+int   sc_paste(ScSession *s, const char *dst_start);
+
+/* Save / load. sc_serialize() returns a self-contained JSON document holding the
+   workbook's SOURCE (formula text + typed literals) and per-cell formats — not the
+   computed values, which recompute on load (small file, can't disagree with itself).
+   Free the returned string with sc_string_free(). sc_deserialize() replaces the
+   workbook with such a document: returns 1 on success, 0 if the data is malformed or
+   an unsupported version (the existing workbook is left untouched on failure). */
+char *sc_serialize(ScSession *s);
+int   sc_deserialize(ScSession *s, const char *data);
 
 /* Viewport primitive — read just the visible window of the unbounded sheet.
    Coordinates are 1-based and inclusive. Each char* result must be freed with
