@@ -134,5 +134,25 @@ void main() {
       expect(m.rowCells(3)[8], '40'); // I3 = H3*10
       expect(m.rowCells(1)[8], '20'); // I1 source untouched
     });
+
+    test('clipboard copyCell/cutCell/pasteCell shifts a formula and moves a cut', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // Seed H1=5, H2=7; I1 = H1*2 (col 8 = H, col 9 = I). Copy I1, then paste at
+      // I2 — the relative ref shifts by the destination's offset, so I2 = H2*2.
+      m.selectInf(1, 8); m.commitInf('5'); // H1
+      m.selectInf(2, 8); m.commitInf('7'); // H2
+      m.selectInf(1, 9); m.commitInf('=H1*2'); // I1 = 10
+      m.selectInf(1, 9); m.copyCell(); // copy I1
+      m.selectInf(2, 9); expect(m.pasteCell(), isTrue); // paste at I2
+      expect(m.rowCells(2)[8], '14'); // I2 = H2*2 = 14
+      // Cut A1, move it to C1: source clears, a second paste is a no-op.
+      m.selectInf(1, 1); m.commitInf('99'); // A1
+      m.selectInf(1, 1); m.cutCell();
+      m.selectInf(1, 3); expect(m.pasteCell(), isTrue); // paste at C1
+      expect(m.rowCells(1)[2], '99'); // C1 moved
+      expect(m.rowCells(1)[0], ''); // A1 cleared
+      m.selectInf(1, 5); expect(m.pasteCell(), isFalse); // buffer consumed
+    });
   });
 }

@@ -114,6 +114,29 @@ class _InfiniteGridState extends State<InfiniteGrid> {
     setState(() => _model.fillDown(10));
   }
 
+  // Clipboard: copy/cut the selected cell, then paste at the selection. The
+  // engine shifts the pasted formula's relative refs by the destination's
+  // offset, pins absolute ($) refs, carries the format; a cut clears on paste.
+  void _copy() => _model.copyCell();
+  void _cut() => _model.cutCell();
+  void _paste() => setState(() => _model.pasteCell());
+
+  // A compact outlined button for the clipboard controls, matching "Fill ↓ 10".
+  Widget _clipButton(String label, String tip, VoidCallback onPressed) {
+    return Tooltip(
+      message: tip,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: _ink,
+          side: const BorderSide(color: _border),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        ),
+        child: Text(label, style: const TextStyle(fontFamily: _mono, fontSize: 12)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -171,6 +194,13 @@ class _InfiniteGridState extends State<InfiniteGrid> {
               child: const Text('Fill ↓ 10', style: TextStyle(fontFamily: _mono, fontSize: 12)),
             ),
           ),
+          const SizedBox(width: 8),
+          // Clipboard: copy/cut the selected cell, paste at the selection.
+          _clipButton('Copy', 'Copy the selected cell to the clipboard', _copy),
+          const SizedBox(width: 8),
+          _clipButton('Cut', 'Cut the selected cell (cleared when you paste)', _cut),
+          const SizedBox(width: 8),
+          _clipButton('Paste', 'Paste the clipboard at the selected cell, shifting relative references', _paste),
         ],
       ),
     );
