@@ -1465,9 +1465,10 @@ describe("transient", () => {
     expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
     expect(opExecution.runArtifacts[0]?.resultRows).toBe(1);
     expect(opExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(opExecution.runArtifacts[0]?.measurementNames).toEqual([]);
     expect(opExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n" +
-        `op\t.op\t${opExecution.plan.lineNumber}\t1\t1\tV(mid)\t0\t0\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
+        `op\t.op\t${opExecution.plan.lineNumber}\t1\t1\tV(mid)\t0\t\t0\n`,
     );
 
     const dcExecution = runDeckAnalysis(circuit, netlist, "dc");
@@ -1486,9 +1487,10 @@ describe("transient", () => {
     );
     expect(dcExecution.runArtifacts[0]?.analysis).toBe("dc");
     expect(dcExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)", "I(V1)"]);
+    expect(dcExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_avg"]);
     expect(dcExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n" +
-        `dc\t.dc\t${dcExecution.plan.lineNumber}\t2\t2\tV(mid);I(V1)\t1\t0\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
+        `dc\t.dc\t${dcExecution.plan.lineNumber}\t2\t2\tV(mid);I(V1)\t1\tmid_avg\t0\n`,
     );
 
     const acExecution = runDeckAnalysis(circuit, netlist, "ac");
@@ -1504,9 +1506,10 @@ describe("transient", () => {
         "0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n",
     );
     expect(acExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(acExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_peak"]);
     expect(acExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n" +
-        `ac\t.ac\t${acExecution.plan.lineNumber}\t1\t1\tV(mid)\t1\t0\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
+        `ac\t.ac\t${acExecution.plan.lineNumber}\t1\t1\tV(mid)\t1\tmid_peak\t0\n`,
     );
 
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
@@ -1522,9 +1525,10 @@ describe("transient", () => {
         "0\t1.000000e-03\t5.000000e-01\n",
     );
     expect(tranExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(tranExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_final"]);
     expect(tranExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n" +
-        `tran\t.tran\t${tranExecution.plan.lineNumber}\t1\t1\tV(mid)\t1\t0\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
+        `tran\t.tran\t${tranExecution.plan.lineNumber}\t1\t1\tV(mid)\t1\tmid_final\t0\n`,
     );
 
     const tranWindowExecution = runDeckAnalysis(
@@ -1602,9 +1606,10 @@ describe("transient", () => {
     expect(tranExecution.fourierTable).toBe(formatFourierTable(result));
     expect(tranExecution.runArtifacts[0]?.fourierCount).toBe(1);
     expect(tranExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(tranExecution.runArtifacts[0]?.measurementNames).toEqual([]);
     expect(tranExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier\n" +
-        `tran\t.tran\t${tranExecution.plan.lineNumber}\t2\t1\tV(mid)\t0\t1\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
+        `tran\t.tran\t${tranExecution.plan.lineNumber}\t2\t1\tV(mid)\t0\t\t1\n`,
     );
   });
 

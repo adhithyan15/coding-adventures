@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected measurement names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `MeasurementList` column
+  from `format_deck_run_artifact_table`, matching Python and TypeScript.
 - Add normalized output-probe names to selected-run artifacts in
   `run_deck_analysis` and render them in a stable `OutputProbeList` column
   from `format_deck_run_artifact_table`, matching Python and TypeScript.
