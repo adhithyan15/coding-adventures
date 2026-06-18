@@ -141,6 +141,29 @@ final class WindowedSheetModel: ObservableObject {
         revision += 1
     }
 
+    /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
+    /// engine shifts the pasted formula's relative references by the
+    /// destination's offset, pins absolute (`$`) refs, carries the format; a cut
+    /// clears the source on paste. `pasteCell` returns `false` (a no-op) for an
+    /// empty clipboard, and resizes the extent + bumps `revision` on success.
+    func copyCell() {
+        let a = address(selectedRow, selectedCol)
+        session.copy(a, a)
+    }
+    func cutCell() {
+        let a = address(selectedRow, selectedCol)
+        session.cut(a, a)
+    }
+    @discardableResult
+    func pasteCell() -> Bool {
+        let ok = session.paste(address(selectedRow, selectedCol))
+        if ok {
+            resize()
+            revision += 1
+        }
+        return ok
+    }
+
     /// Write `raw` into an explicit A1 cell and return the cells it dirtied.
     /// (Kept for the headless `WindowedModelTests`.)
     @discardableResult
@@ -204,6 +227,17 @@ struct InfiniteGridView: View {
             Button("Fill ↓ 10") { model.fillDown(10) }
                 .font(.system(size: 11, design: .monospaced))
                 .help("Replicate the selected cell into the 10 rows below it")
+            // Clipboard: copy/cut the selected cell, paste at the selection. The
+            // engine shifts the pasted formula's relative refs by the offset.
+            Button("Copy") { model.copyCell() }
+                .font(.system(size: 11, design: .monospaced))
+                .help("Copy the selected cell to the clipboard")
+            Button("Cut") { model.cutCell() }
+                .font(.system(size: 11, design: .monospaced))
+                .help("Cut the selected cell (cleared when you paste)")
+            Button("Paste") { model.pasteCell() }
+                .font(.system(size: 11, design: .monospaced))
+                .help("Paste the clipboard at the selected cell, shifting relative references")
         }
         .padding(.bottom, 8)
     }
