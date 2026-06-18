@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.149.0] - 2026-06-18
+
+### Added (CLOC13.I — ADVANCED diverges from SIMPLE: aggressive top-level renaming)
+
+`--compilation_level ADVANCED` now produces genuinely smaller output than
+SIMPLE for the first time. ADVANCED runs the SIMPLE pipeline PLUS the
+`rename-globals` pass (`coding-adventures-closure-pass-rename-globals`),
+appended after `rename`, which shortens program-private top-level names
+(`function` / `var` / `let` / `const`) that survive the structural passes:
+
+```js
+function helper() { sideEffect(); return value; }
+helper();
+//  SIMPLE   => function helper(){sideEffect();return value};helper();
+//  ADVANCED => function a(){sideEffect();return value};a();
+```
+
+- **`--externs` is now read** (it was parsed-then-discarded). Each externs file
+  is parsed and its top-level declared names collected into the **do-not-rename
+  set** — the external boundary ADVANCED must preserve. Degrade-safe: an
+  unreadable / unparseable / bridge-rejected externs file contributes no names
+  rather than failing the build. A `--externs` file declaring `helper` keeps it
+  under ADVANCED.
+- SIMPLE is unchanged (it never touches top-level names, since in a Script a
+  top-level name may be externally visible). The ADVANCED rename is sound only
+  under Closure's whole-program / externs contract — see the
+  `closure-pass-rename-globals` crate.
+- The `advanced_v1` CV trace's `passes` now lists `rename-globals`
+  (`ADVANCED_PASS_NAMES`); SIMPLE's `simple_v2` list is unchanged.
+
+### Fixtures / tests
+
+- New `tests/diff/advanced-rename-globals/` fixture + a dual-level harness that
+  runs BOTH levels and asserts ADVANCED renamed the top-level `helper` while
+  SIMPLE kept it (and ADVANCED is smaller), plus a
+  `advanced_renames_surviving_top_level_function` unit test.
+- Updated the `advanced-optimizes` fixture (ADVANCED now renames its surviving
+  `compute`) and the `advanced_matches_simple_output` test's comment (the two
+  levels match only when no top-level name survives).
+- Version bumped `0.148.0 -> 0.149.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
 ## [0.148.0] - 2026-06-17
 
 ### Added (CLOC13.H — `inline-variables` constant propagation in SIMPLE)

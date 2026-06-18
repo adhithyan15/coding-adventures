@@ -191,7 +191,7 @@ pub fn transform_source(
 /// |--------------------|--------------------|------------------|------------------------------------------|
 /// | WhitespaceOnly     | `compilation_level`| `whitespace_only`| `{input_byte_len, output_byte_len}`      |
 /// | Simple             | `compilation_level`| `simple_v2`      | `{level, bridge_status, passes, input_byte_len, output_byte_len}` |
-/// | Advanced           | `compilation_level`| `advanced_v1`    | same shape as `simple_v2` (shares the pipeline)  |
+/// | Advanced           | `compilation_level`| `advanced_v1`    | same shape as `simple_v2`; `passes` adds `rename-globals` (aggressive top-level renaming) |
 /// | Bundle / Transpile | `compilation_level`| `identity`       | `{level: "BUNDLE" \| "TRANSPILE_ONLY"}` |
 /// | Defines            | `defines`          | `applied`        | `{input_byte_len, output_byte_len, defines_count}` |
 ///
@@ -249,6 +249,24 @@ const SIMPLE_PASS_NAMES: &[&str] = &[
     "rename",
 ];
 
+/// The ADVANCED pipeline = every SIMPLE pass, then `rename-globals` —
+/// aggressive renaming of program-private top-level names (the canonical
+/// ADVANCED-over-SIMPLE win). It runs *after* `rename` (which shortens
+/// leaf-function locals) so the two renamers shorten disjoint name
+/// layers. `rename-globals` is gated by the `--externs` do-not-rename
+/// boundary; see [`externs_do_not_rename`].
+const ADVANCED_PASS_NAMES: &[&str] = &[
+    "constant-fold",
+    "fold-control-flow",
+    "dce",
+    "inline",
+    "inline-variables",
+    "remove-unused-vars",
+    "treeshake",
+    "rename",
+    "rename-globals",
+];
+
 /// Run the SIMPLE optimization pipeline over a bridged `Program` and
 /// emit the result as JavaScript text.
 ///
@@ -274,6 +292,19 @@ fn run_simple_pipeline(
     program: coding_adventures_javascript_ast::Program,
     status: &mut Option<String>,
 ) -> Option<String> {
+    run_typed_pipeline(program, status, None)
+}
+
+/// Run the typed-AST optimization pipeline. `advanced_externs`
+/// distinguishes the two levels: `None` is SIMPLE; `Some(set)` is
+/// ADVANCED, which appends the `rename-globals` pass (gated by the
+/// externs do-not-rename `set`) after the SIMPLE passes. See
+/// [`run_simple_pipeline`] / [`SIMPLE_PASS_NAMES`] / [`ADVANCED_PASS_NAMES`].
+fn run_typed_pipeline(
+    program: coding_adventures_javascript_ast::Program,
+    status: &mut Option<String>,
+    advanced_externs: Option<std::collections::HashSet<String>>,
+) -> Option<String> {
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
     use coding_adventures_closure_pass_dce::DcePass;
@@ -283,6 +314,7 @@ fn run_simple_pipeline(
     use coding_adventures_closure_pass_pipeline::PassPipeline;
     use coding_adventures_closure_pass_remove_unused_vars::RemoveUnusedVarsPass;
     use coding_adventures_closure_pass_rename::RenamePass;
+    use coding_adventures_closure_pass_rename_globals::RenameGlobalsPass;
     use coding_adventures_closure_pass_treeshake::TreeshakePass;
     use coding_adventures_correlation_vector::CVLog;
     use coding_adventures_type_sidecar::Sidecar;
@@ -310,11 +342,18 @@ fn run_simple_pipeline(
     pipeline.add(Box::new(InlineVariablesPass::new()));
     pipeline.add(Box::new(RemoveUnusedVarsPass::new()));
     pipeline.add(Box::new(TreeshakePass::new()));
-    // rename runs last: it shortens leaf-function parameter names after
-    // every structural pass has finished removing/rewriting code. It has
-    // no dependencies (correct standalone), so registration order places
-    // it at the end.
+    // rename runs last among the SIMPLE passes: it shortens leaf-function
+    // parameter names after every structural pass has finished
+    // removing/rewriting code. It has no dependencies (correct
+    // standalone), so registration order places it at the end.
     pipeline.add(Box::new(RenamePass::new()));
+
+    // ADVANCED only: shorten program-private TOP-LEVEL names too, gated by
+    // the externs do-not-rename boundary. Registered after `rename` so the
+    // two renamers shorten disjoint name layers (locals vs top-level).
+    if let Some(externs) = advanced_externs {
+        pipeline.add(Box::new(RenameGlobalsPass::new(externs)));
+    }
 
     let optimized = match pipeline.run(program, &sidecar, &mut pass_cv) {
         Ok(out) => out.program,
@@ -429,7 +468,16 @@ pub fn transform_source_with_cv(
                     None
                 }
                 Ok(node) => match bridge::grammar_to_program(&node, es_version) {
-                    Ok(program) => run_simple_pipeline(program, &mut simple_bridge_status),
+                    Ok(program) => {
+                        // ADVANCED adds aggressive top-level renaming,
+                        // gated by the externs do-not-rename boundary;
+                        // SIMPLE runs the typed pipeline unchanged.
+                        let advanced_externs = match config.compilation.level {
+                            CompilationLevel::Advanced => Some(externs_do_not_rename(config)),
+                            _ => None,
+                        };
+                        run_typed_pipeline(program, &mut simple_bridge_status, advanced_externs)
+                    }
                     Err(BridgeError::UnsupportedSyntax { rule, location }) => {
                         simple_bridge_status =
                             Some(format!("unsupported_syntax:{rule}@{location}"));
@@ -486,9 +534,9 @@ pub fn transform_source_with_cv(
                 // passes today (it is ≥ SIMPLE) and gains advanced-only
                 // passes here as they land.
                 CompilationLevel::Simple | CompilationLevel::Advanced => {
-                    let (tag, level) = match config.compilation.level {
-                        CompilationLevel::Advanced => ("advanced_v1", "ADVANCED"),
-                        _ => ("simple_v2", "SIMPLE"),
+                    let (tag, level, passes_list) = match config.compilation.level {
+                        CompilationLevel::Advanced => ("advanced_v1", "ADVANCED", ADVANCED_PASS_NAMES),
+                        _ => ("simple_v2", "SIMPLE", SIMPLE_PASS_NAMES),
                     };
                     (
                         tag,
@@ -508,7 +556,7 @@ pub fn transform_source_with_cv(
                             (
                                 "passes",
                                 serde_json::Value::Array(
-                                    SIMPLE_PASS_NAMES
+                                    passes_list
                                         .iter()
                                         .map(|p| serde_json::Value::String((*p).into()))
                                         .collect(),
@@ -643,6 +691,64 @@ pub fn resolve_externs(config: &CompilerConfig) -> Result<Vec<PathBuf>, Compiler
         return Ok(Vec::new());
     }
     globs::expand_js_patterns(&config.io.externs).map_err(CompilerError::ExternsGlobExpansion)
+}
+
+/// Collect the externs **do-not-rename** set — the top-level names
+/// declared in the `--externs` files. These are the program's external
+/// boundary: ADVANCED's `rename-globals` pass renames every other
+/// top-level name but must keep these (they're referenced from outside
+/// this compilation). Returns the union of every externs file's top-level
+/// `function` ids and `var`/`let`/`const` target names.
+///
+/// **Degrade-safe.** A glob failure, an unreadable file, a parse error,
+/// or a bridge rejection on any externs file simply contributes no names
+/// from that file rather than failing the compile — the same best-effort
+/// posture the typed pipeline uses on the main input. (A genuine
+/// bad-glob is surfaced earlier, by `resolve_externs` in `run_compiler`.)
+fn externs_do_not_rename(config: &CompilerConfig) -> std::collections::HashSet<String> {
+    use coding_adventures_javascript_ast::{BindingTarget, Declaration, ProgramItem, Statement};
+
+    let mut names = std::collections::HashSet::new();
+    let paths = match resolve_externs(config) {
+        Ok(p) => p,
+        Err(_) => return names,
+    };
+    let es = map_language_in_to_es_version(config);
+    for path in paths {
+        let src = match fs::read_to_string(&path) {
+            Ok(s) => s,
+            Err(_) => continue,
+        };
+        let node = match parse_javascript_typed(&src, es) {
+            Ok(n) => n,
+            Err(_) => continue,
+        };
+        let program = match bridge::grammar_to_program(&node, es) {
+            Ok(p) => p,
+            Err(_) => continue,
+        };
+        for item in &program.body {
+            match item {
+                ProgramItem::Declaration(Declaration::FunctionDeclaration(fd))
+                | ProgramItem::Statement(Statement::Declaration(
+                    Declaration::FunctionDeclaration(fd),
+                )) => {
+                    names.insert(fd.id.name.clone());
+                }
+                ProgramItem::Declaration(Declaration::VariableDeclaration(vd))
+                | ProgramItem::Statement(Statement::Declaration(
+                    Declaration::VariableDeclaration(vd),
+                )) => {
+                    for d in &vd.declarations {
+                        let BindingTarget::Identifier(id) = &d.id;
+                        names.insert(id.name.clone());
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+    names
 }
 
 /// Run the compiler with `config`.
@@ -5941,9 +6047,13 @@ mod tests {
 
     #[test]
     fn advanced_matches_simple_output() {
-        // ADVANCED reuses the SIMPLE pipeline today, so the two levels
-        // produce identical output. (When advanced-only passes land, this
-        // test documents the point at which they diverge.)
+        // ADVANCED adds `rename-globals` on top of the SIMPLE pipeline, but
+        // it only differs when a top-level name SURVIVES to the end. Here
+        // `g` is a single-use leaf function, so `inline`/`treeshake`
+        // delete it entirely — nothing top-level remains, so ADVANCED and
+        // SIMPLE produce identical output for THIS input. See
+        // `advanced_renames_surviving_top_level_function` for the divergent
+        // case.
         let src = "var dead = 1 + 2; function g(value) { return value * 2; } use(g(4));";
         let mk = |level| {
             transform_source(
@@ -5961,6 +6071,40 @@ mod tests {
         assert_eq!(
             mk(crate::config::CompilationLevel::Advanced),
             mk(crate::config::CompilationLevel::Simple),
+        );
+    }
+
+    #[test]
+    fn advanced_renames_surviving_top_level_function() {
+        // CLOC13.I: a top-level function that SURVIVES SIMPLE (multi-
+        // statement body, so `inline` leaves it; called, so `treeshake`
+        // keeps it) is shortened by ADVANCED's `rename-globals` pass —
+        // the first point where ADVANCED produces smaller output than
+        // SIMPLE. SIMPLE keeps the top-level name (it may be external).
+        let src = "function helper() { sideEffect(); return value; } helper();";
+        let mk = |level| {
+            transform_source(
+                src,
+                &CompilerConfig {
+                    compilation: crate::config::CompilationConfig {
+                        level,
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .expect("ok")
+        };
+        let simple = mk(crate::config::CompilationLevel::Simple);
+        let advanced = mk(crate::config::CompilationLevel::Advanced);
+        assert_eq!(
+            simple,
+            "function helper(){sideEffect();return value};helper();"
+        );
+        assert_eq!(advanced, "function a(){sideEffect();return value};a();");
+        assert!(
+            advanced.len() < simple.len(),
+            "ADVANCED must be smaller than SIMPLE here"
         );
     }
 
