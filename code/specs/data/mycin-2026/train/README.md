@@ -89,12 +89,23 @@ counterpart** — the messy-input front door to the constraint solver (the CC-7 
 
 Same backward-generation + byte-provenance discipline: sample a chart-fact set from the
 **closed** vocabulary (exactly what `compile_cop` maps), a teacher writes a chart note
-stating them (+ a non-charting distractor), and the gold IR is derived from the note with
-verbatim spans + a justified `discard` list. The headline guarantee
+stating them (+ distractors), and the gold IR is derived from the note with verbatim spans
++ a justified `discard` list. The headline guarantee
 (`test_gen_chart_data.py`) is the **F3→F2 consumability contract**: every `(kind, value)`
 the generator can sample is fed through `compile_cop` and asserted *not discarded* — so the
 decomposer's gold can never contain a chart fact the COP would silently drop (closed-vocab
 adherence proven against the actual downstream consumer, not just a schema).
+
+**Discard hardening — near-miss look-alikes.** Beyond generic non-charting noise, the
+generator injects `NEAR_MISS_DISTRACTORS`: phrases that *superficially resemble* a controlled
+kind but must be rejected — the wrong **subject** ("his father has CKD" ≠ the patient's
+`renal_status`), an **absence** ("no known drug allergies" / a negative β-hCG — never coin a
+fact from a negation), the wrong **relation** ("penicillin cleared her last UTI" is efficacy,
+not an `allergy`), or the wrong **quantity** ("weight loss of 10 kg" ≠ a dosing body weight).
+False-positive extraction on these is the #1 failure mode of a fine-tuned small decomposer, so
+each lands in the gold `discard` with a reason naming the trap. Tests pin that a near-miss is
+discarded, never coined, and that a real fact + its look-alike in one note yields exactly one
+fact (the discrimination boundary, not just "not a chart fact").
 
 ```sh
 python3 gen_chart_data.py --n 200 --teacher llama3.1:8b   # → data/chart_{train,valid}.jsonl
