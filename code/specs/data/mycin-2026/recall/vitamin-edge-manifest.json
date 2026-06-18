@@ -145,11 +145,11 @@
       "relation": "deficiency_causes",
       "subject": "vitamin_k",
       "object": "coagulopathy",
-      "status": "direction_only",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Vitamin K deficiency causes a bleeding diathesis (coagulopathy).",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK536983/"
     },
     "classic_finding__vitamin_k": {
       "relation": "classic_finding",
@@ -162,5 +162,5 @@
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK536983/"
     }
   },
-  "hash": "d3367d0d986110cc"
+  "hash": "05c3b6137380a80b"
 }
