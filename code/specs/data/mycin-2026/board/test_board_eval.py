@@ -72,21 +72,27 @@ def test_defensibility_is_full() -> None:
 def test_grounded_coverage_is_the_live_grounding_number() -> None:
     card, _ = _card()
     s = card.summary()
-    # REL-13b spider-grounded the coagulation domain (14/15 edges). 51 of the 53 recall
-    # answers across all FIVE domains now cite an authoritative edge: grounded-coverage
-    # 96%. Two holdouts stay consensus + FLAG (direction_only) — the adversarial verify
-    # could not pin them verbatim, so the framework declines to claim grounding it cannot
-    # defend, by design: cortisol_def (endocrine) and factor7_def_factor (coagulation,
-    # factor_deficiency__factor_vii_deficiency).
-    assert s["grounded_coverage"] == round(51 / 53, 4)   # 0.9623
-    assert s["grounded_correct"] == 51
+    # REL-13b spider-grounded the coagulation domain, and REL-14 re-grounded its lone
+    # holdout (factor_deficiency__factor_vii_deficiency): the original byte_quote pinned
+    # the disorder's onset/category but not the deficiency-OF-factor identity, so verify
+    # landed at direction_only. REL-14 found a stronger source whose verbatim span self-
+    # contains the relation ("Factor VII deficiency is a bleeding disorder characterized
+    # by a lack in the production of factor VII"), lifting it to authoritative. 52 of the
+    # 53 recall answers across all FIVE domains now cite an authoritative edge:
+    # grounded-coverage 98%. ONE holdout stays consensus + FLAG (direction_only) — the
+    # adversarial verify could not pin it verbatim, so the framework declines to claim
+    # grounding it cannot defend, by design: cortisol_def (endocrine,
+    # deficiency_syndrome__cortisol — the only verbatim spans frame cortisol deficiency
+    # as a consequence/feature of Addison disease, not the named-syndrome identity).
+    assert s["grounded_coverage"] == round(52 / 53, 4)   # 0.9811
+    assert s["grounded_correct"] == 52
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia
     assert by_id["cortisol_gland"].trust == "authoritative"        # endocrine, grounded (REL-12b)
     assert by_id["hemophilia_a_factor"].trust == "authoritative"   # coagulation, grounded (REL-13b)
+    assert by_id["factor7_def_factor"].trust == "authoritative"    # coagulation, re-grounded (REL-14)
     assert by_id["cortisol_def"].trust == "consensus"              # endocrine direction_only holdout
-    assert by_id["factor7_def_factor"].trust == "consensus"        # coagulation direction_only holdout
 
 
 def test_gate_exit_code_zero_when_no_fabrication() -> None:
