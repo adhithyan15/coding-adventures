@@ -131,6 +131,8 @@ wrdata out.dat V(out)
 wrdata empty.dat
 display all
 listing physical
+show all
+showmod Q1
 run
 quit
 .endc
@@ -251,6 +253,8 @@ four 2k V(b)
 .wrdata out.dat V(a)
 .display all
 .listing deck
+.show all
+.showmod Q1
 run
 .quit
 .endc
