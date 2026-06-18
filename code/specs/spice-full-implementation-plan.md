@@ -40,8 +40,9 @@ downstream tools to compare.
      `set noaskquit` options plus ASCII rawfile-format `set filetype=ascii`
      options, rawfile vector-name/single-scale toggles (`set wr_vecnames`,
      `set wr_singlescale`), and rawfile append-write `set appendwrite` options
-     plus target-bearing rawfile `write <rawfile> [probes...]` markers are
-     accepted as no-op control markers; parsed
+     plus target-bearing rawfile `write <rawfile> [probes...]` markers and
+     ASCII data-write `wrdata <file> <probes...>` markers are accepted as
+     no-op control markers; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -616,6 +617,17 @@ downstream tools to compare.
       commands, other `set` variables, and unrecognized non-comment commands
       inside `.control` blocks remain diagnostic-only so unsupported file I/O
       and script state are explicit.
+
+56. Selected `.control` WRDATA marker routing.
+    - Status: completed in this selected control WRDATA marker routing slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      `wrdata <file> <probes...>` ASCII data-write markers as no-op control
+      commands when both a target path token and at least one vector/probe token
+      are present.
+    - Actual ASCII data-file serialization, rawfile serialization, binary
+      rawfile formats, other file-writing commands, other `set` variables, and
+      unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported file I/O and script state are explicit.
 
 ## Backlog
 
