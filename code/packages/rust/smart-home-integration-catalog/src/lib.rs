@@ -348,6 +348,136 @@ impl EcosystemPrimitiveCoverage {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshProtocolSubstrateStage {
+    Controller,
+    Radio,
+    Discovery,
+    NetworkSecurity,
+    Supervision,
+}
+
+impl IntegrationMeshProtocolSubstrateStage {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Controller => "controller",
+            Self::Radio => "radio",
+            Self::Discovery => "discovery",
+            Self::NetworkSecurity => "network_security",
+            Self::Supervision => "supervision",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstrateStageRow {
+    pub protocol: ProtocolFamily,
+    pub primitive: PrimitiveFamily,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub available: bool,
+}
+
+impl IntegrationMeshProtocolSubstrateStageRow {
+    pub fn is_ready(&self) -> bool {
+        self.available
+    }
+
+    pub fn is_blocked(&self) -> bool {
+        !self.available
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstrateStageSummary {
+    pub total_rows: usize,
+    pub ready_rows: usize,
+    pub blocked_rows: usize,
+    pub unique_required_stages: Vec<IntegrationMeshProtocolSubstrateStage>,
+    pub unique_blocked_stages: Vec<IntegrationMeshProtocolSubstrateStage>,
+    pub controller_blockers: usize,
+    pub radio_blockers: usize,
+    pub discovery_blockers: usize,
+    pub network_security_blockers: usize,
+    pub supervision_blockers: usize,
+    pub first_blocked_protocol: Option<ProtocolFamily>,
+    pub first_blocked_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+}
+
+impl IntegrationMeshProtocolSubstrateStageSummary {
+    pub fn from_rows<'a>(
+        rows: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstrateStageRow>,
+    ) -> Self {
+        let rows = rows.into_iter().collect::<Vec<_>>();
+        let unique_required_stages = rows
+            .iter()
+            .map(|row| row.stage)
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let unique_blocked_stages = rows
+            .iter()
+            .filter(|row| row.is_blocked())
+            .map(|row| row.stage)
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let ready_rows = rows.iter().filter(|row| row.is_ready()).count();
+        let blocked_rows = rows.len().saturating_sub(ready_rows);
+        let first_blocked = rows
+            .iter()
+            .filter(|row| row.is_blocked())
+            .min_by_key(|row| {
+                (
+                    mesh_protocol_sort_key(&row.protocol),
+                    row.stage,
+                    row.primitive,
+                )
+            });
+
+        Self {
+            total_rows: rows.len(),
+            ready_rows,
+            blocked_rows,
+            unique_required_stages,
+            unique_blocked_stages,
+            controller_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_blocked_protocol: first_blocked.map(|row| row.protocol.clone()),
+            first_blocked_stage: first_blocked.map(|row| row.stage),
+        }
+    }
+
+    pub fn all_ready(&self) -> bool {
+        self.total_rows > 0 && self.blocked_rows == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+
+    pub fn needs_network_security(&self) -> bool {
+        self.network_security_blockers > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
@@ -20415,6 +20545,38 @@ pub fn mesh_protocol_primitive_readiness_summary(
     IntegrationMeshProtocolPrimitiveReadinessSummary::from_rows(rows.iter())
 }
 
+pub fn mesh_protocol_substrate_stage_rows(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstrateStageRow> {
+    let available_set = available_primitives
+        .iter()
+        .copied()
+        .collect::<BTreeSet<_>>();
+    let mut rows = Vec::new();
+
+    for protocol in low_level_mesh_protocols() {
+        for primitive in protocol_primitives(&protocol).iter().copied() {
+            if let Some(stage) = mesh_protocol_substrate_stage(primitive) {
+                rows.push(IntegrationMeshProtocolSubstrateStageRow {
+                    protocol: protocol.clone(),
+                    primitive,
+                    stage,
+                    available: available_set.contains(&primitive),
+                });
+            }
+        }
+    }
+
+    rows
+}
+
+pub fn mesh_protocol_substrate_stage_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstrateStageSummary {
+    let rows = mesh_protocol_substrate_stage_rows(available_primitives);
+    IntegrationMeshProtocolSubstrateStageSummary::from_rows(rows.iter())
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -20482,6 +20644,34 @@ fn mesh_protocol_sort_key(protocol: &ProtocolFamily) -> u8 {
         ProtocolFamily::Thread => 2,
         _ => u8::MAX,
     }
+}
+
+fn mesh_protocol_substrate_stage(
+    primitive: PrimitiveFamily,
+) -> Option<IntegrationMeshProtocolSubstrateStage> {
+    match primitive {
+        PrimitiveFamily::Usb | PrimitiveFamily::SerialController => {
+            Some(IntegrationMeshProtocolSubstrateStage::Controller)
+        }
+        PrimitiveFamily::Radio802154 | PrimitiveFamily::ZWaveSerialApi => {
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        }
+        PrimitiveFamily::Mdns => Some(IntegrationMeshProtocolSubstrateStage::Discovery),
+        PrimitiveFamily::RadioNetworkKey => {
+            Some(IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+        }
+        PrimitiveFamily::Supervision => Some(IntegrationMeshProtocolSubstrateStage::Supervision),
+        _ => None,
+    }
+}
+
+fn mesh_substrate_stage_blockers<'a>(
+    rows: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstrateStageRow>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    rows.into_iter()
+        .filter(|row| row.stage == stage && row.is_blocked())
+        .count()
 }
 
 fn local_transport_primitives(
@@ -26475,6 +26665,84 @@ mod tests {
         assert_eq!(summary.first_blocked_protocol, None);
         assert!(summary.all_ready());
         assert!(!summary.has_blockers());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_stage_readiness_groups_low_level_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let rows = mesh_protocol_substrate_stage_rows(&available_primitives);
+        let summary = IntegrationMeshProtocolSubstrateStageSummary::from_rows(rows.iter());
+
+        assert_eq!(rows.len(), 16);
+        assert_eq!(summary.total_rows, 16);
+        assert_eq!(summary.ready_rows, 11);
+        assert_eq!(summary.blocked_rows, 5);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 1);
+        assert_eq!(summary.discovery_blockers, 1);
+        assert_eq!(summary.network_security_blockers, 3);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, Some(ProtocolFamily::Zigbee));
+        assert_eq!(
+            summary.first_blocked_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+        );
+        assert!(summary.has_blockers());
+        assert!(summary.needs_network_security());
+        assert!(!summary.all_ready());
+        assert!(summary
+            .unique_blocked_stages
+            .contains(&IntegrationMeshProtocolSubstrateStage::Radio));
+        assert!(summary
+            .unique_blocked_stages
+            .contains(&IntegrationMeshProtocolSubstrateStage::Discovery));
+        assert!(summary
+            .unique_blocked_stages
+            .contains(&IntegrationMeshProtocolSubstrateStage::NetworkSecurity));
+
+        let zwave_radio = rows
+            .iter()
+            .find(|row| {
+                row.protocol == ProtocolFamily::ZWave
+                    && row.primitive == PrimitiveFamily::ZWaveSerialApi
+            })
+            .unwrap();
+        assert_eq!(
+            zwave_radio.stage,
+            IntegrationMeshProtocolSubstrateStage::Radio
+        );
+        assert!(zwave_radio.is_blocked());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_stage_readiness_marks_full_substrate_ready() {
+        let rows = mesh_protocol_substrate_stage_rows(all_primitive_families());
+        let summary = mesh_protocol_substrate_stage_summary(all_primitive_families());
+
+        assert_eq!(rows.len(), 16);
+        assert!(rows
+            .iter()
+            .all(IntegrationMeshProtocolSubstrateStageRow::is_ready));
+        assert_eq!(summary.total_rows, 16);
+        assert_eq!(summary.ready_rows, 16);
+        assert_eq!(summary.blocked_rows, 0);
+        assert_eq!(summary.unique_required_stages.len(), 5);
+        assert_eq!(summary.unique_blocked_stages.len(), 0);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 0);
+        assert_eq!(summary.discovery_blockers, 0);
+        assert_eq!(summary.network_security_blockers, 0);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, None);
+        assert_eq!(summary.first_blocked_stage, None);
+        assert!(summary.all_ready());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_network_security());
     }
 
     #[test]
