@@ -557,6 +557,7 @@ members = [
     "closure-pass-pipeline",
     "closure-pass-remove-unused-vars",
     "closure-pass-rename",
+    "closure-pass-rename-globals",
     "closure-pass-treeshake",
     "closure-scope-analyzer",
     "closure-source-map",
