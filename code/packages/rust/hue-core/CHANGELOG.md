@@ -111,6 +111,14 @@ All notable changes to this package will be documented in this file.
   finalization readiness into final archive confirmation checks.
 - Hue package release archive attestation summaries that turn archive
   confirmation readiness into final archive attestation checks.
+- Hue package release archive evidence summaries that turn archive attestation
+  readiness into final archive evidence checks.
+- Hue package release archive evidence ledger summaries that turn archive
+  evidence readiness into ledger-level release archive evidence checks.
+- Hue package release readiness evidence summaries that combine package release
+  readiness with release archive evidence ledger checks.
+- Hue package release evidence index summaries that group readiness, archive,
+  closeout, and operations evidence into a compact release evidence index.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
