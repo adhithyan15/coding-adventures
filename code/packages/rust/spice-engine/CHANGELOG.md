@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Accept selected `.control` block read-only `display` and `listing`
+  inspection commands as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Actual
+  console/listing output remains out of scope for these markers.
 - Accept selected `.control` block `wrdata <file> <probes...>` ASCII
   data-write markers as no-op control commands in `analyze_deck_controls` and
   `resolve_deck_sources`, matching Python and TypeScript. Actual data-file

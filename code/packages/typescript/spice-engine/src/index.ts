@@ -2854,7 +2854,18 @@ const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
   "plot",
   ".plot",
 ]);
-const NOOP_CONTROL_BLOCK_COMMANDS = new Set(["run", ".run", "reset", ".reset", "quit", ".quit"]);
+const NOOP_CONTROL_BLOCK_COMMANDS = new Set([
+  "display",
+  ".display",
+  "listing",
+  ".listing",
+  "run",
+  ".run",
+  "reset",
+  ".reset",
+  "quit",
+  ".quit",
+]);
 const NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS = new Set(["write", ".write"]);
 const NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS = new Set(["wrdata", ".wrdata"]);
 const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set([

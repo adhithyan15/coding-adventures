@@ -516,7 +516,18 @@ _SUPPORTED_CONTROL_BLOCK_COMMANDS = frozenset(
     }
 )
 _NOOP_CONTROL_BLOCK_COMMANDS = frozenset(
-    {"run", ".run", "reset", ".reset", "quit", ".quit"}
+    {
+        "display",
+        ".display",
+        "listing",
+        ".listing",
+        "run",
+        ".run",
+        "reset",
+        ".reset",
+        "quit",
+        ".quit",
+    }
 )
 _NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS = frozenset({"write", ".write"})
 _NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS = frozenset({"wrdata", ".wrdata"})
