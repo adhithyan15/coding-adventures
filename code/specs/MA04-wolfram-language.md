@@ -72,6 +72,17 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   W-4 `substitute` used for user-function parameter binding; the per-iteration
   count is DoS-capped exactly like `Range` (§10.3). No grammar change — these are
   ordinary `Head[args]` forms the existing grammar already parses.
+- **W-10 — functional-iteration combinators `Nest`, `NestList`, `Fold`,
+  `FoldList`.** *(implemented — see §13.)* The point-free iteration heads every
+  functional-programming session reaches for, lowered onto the *same* substrate:
+  `Nest[f, x, n]` applies `f` to `x` `n` times, `NestList` collects the `n+1`
+  intermediate results, `Fold[f, x0, list]` left-folds `f` over a list, and
+  `FoldList` collects the running accumulations. The function-application reuses
+  the **exact** `Map`/`Apply` path (`build_canonical_application` + `vm.eval`) and
+  the W-5 `list_elements` accessor; the iteration count `n` and the result-list
+  length are DoS-capped exactly like `Range`/the list ops (§13.3). No grammar
+  change — these are ordinary `Head[args]` forms the existing grammar already
+  parses.
 - **Future — the `cas-*` function surface under Wolfram names** (`Expand`,
   `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing `cas-*` crates.
 
@@ -675,6 +686,97 @@ back, never a panic.
 touches only `wolfram-runtime`'s builtin handler table; the lexer, grammar,
 `_grammar.rs`, and the decorator's held set are untouched (none of these heads is
 held — their arguments are eagerly evaluated before the handler runs).
+
+## §13 W-10 functional-iteration combinators `Nest`, `NestList`, `Fold`, `FoldList` (implemented)
+
+W-5 gave the *structural* and *higher-order* list built-ins (`Map`, `Apply`); W-7
+gave *iterator-bound* evaluation over an index (`Table`, `Sum`); W-9 gave the
+*manipulation* heads (`Sort`, `Select`, `Total`). W-10 adds the four **functional
+combinators** that iterate a *function* — the point-free idioms (`Nest`,
+`NestList`, `Fold`, `FoldList`) that functional-programming sessions reach for —
+lowered onto the **same substrate**: each function application reuses the *exact*
+`Map`/`Apply` path (`build_canonical_application(f, args)` then `vm.eval`), so any
+callable works (a built-in like `Plus`, a user-defined `SetDelayed` function
+`g[a_] := …`, or a bridged head). Like W-5/W-9 these are plain `Head[args]`
+applications, so **there is no grammar change**: W-10 touches only
+`wolfram-runtime` (the builtin handler table). All four are eager (non-held) heads
+— `f`, the seed, and the list arrive already-evaluated — so the `WolframBackend`
+held set is untouched.
+
+### §13.1 What W-10 adds
+
+| Surface form            | Result                                              | Reuses |
+|-------------------------|-----------------------------------------------------|--------|
+| `Nest[f, x, n]`         | `f` applied to `x` `n` times: `f[f[…f[x]…]]`         | the `Map`/`Apply` application path |
+| `NestList[f, x, n]`     | `{x, f[x], f[f[x]], …}` — the `n+1` intermediates    | the `Map`/`Apply` application path |
+| `Fold[f, x0, list]`     | left fold: `f[…f[f[x0, l₁], l₂]…, lₙ]`               | the application path + `list_elements` |
+| `FoldList[f, x0, list]` | `{x0, f[x0,l₁], f[f[x0,l₁],l₂], …}` — running accums | the application path + `list_elements` |
+
+Worked examples (the W-10 acceptance tests):
+
+```wolfram
+Nest[f, x, 3]            (* f[f[f[x]]]  — symbolic f *)
+Nest[f, x, 0]            (* x  — zero applications is the identity *)
+NestList[f, x, 2]        (* {x, f[x], f[f[x]]} *)
+Fold[Plus, 0, {1, 2, 3}] (* 6 *)
+FoldList[Plus, 0, {1, 2, 3}]  (* {0, 1, 3, 6} *)
+g[a_] := a + 1; NestList[g, 0, 3]  (* {0, 1, 2, 3} — a user function *)
+```
+
+### §13.2 The application path — reusing `Map`/`Apply`
+
+Every combinator iterates by building `f[acc]` (unary, for `Nest`/`NestList`) or
+`f[acc, element]` (binary, for `Fold`/`FoldList`) and re-evaluating it through the
+VM. The construction is the **same** `build_canonical_application(f, args)` that
+`Map`/`Apply`/`Select` use, so the surface→IR head bridge (`Plus`→`Add`, …) and
+user-defined functions both resolve. A symbolic `f` (no definition) leaves each
+`f[acc]` unevaluated, so `Nest[f, x, 3]` returns the literal nested expression
+`f[f[f[x]]]` — exactly Wolfram's behaviour for an undefined head. Pure-function
+syntax (`#`/`&`) is **not** required here (it is the planned W-11 grammar-change
+item); a named `SetDelayed` function is the canonical way to supply a non-trivial
+`f` in this lane, and the worked example above tests exactly that.
+
+`Nest[f, x, 0]` is the identity (`x`); `Fold`/`FoldList` over the empty list `{}`
+return the seed (`x0`) / the single-element list `{x0}` respectively — the
+mathematically correct degenerate cases.
+
+### §13.3 DoS surface — bounded iteration count, bounded result size
+
+W-10 introduces two growth surfaces, both capped with the **same** machinery the
+existing list/iteration ops use:
+
+- **Iteration count `n`** (`Nest`/`NestList`). A tiny input (`Nest[f, x, 10^9]`)
+  would otherwise drive a billion `vm.eval` calls. `n` is read as an exact
+  non-negative integer and capped at [`MAX_LIST_LENGTH`] (= `MAX_RANGE_LENGTH`,
+  1,000,000) **before** the loop runs; an over-cap `n` (or a negative / non-integer
+  `n`) leaves the whole form unevaluated rather than iterating. This mirrors the
+  `Range`/`plan_iterator` count cap exactly.
+- **Result-list size** (`NestList`/`FoldList`). `NestList` materialises `n+1`
+  elements and `FoldList` materialises `len+1`; both are bounded — `NestList` by
+  the capped `n`, `FoldList` by the (source-bounded) input list length, with a
+  defensive `MAX_LIST_LENGTH` check so the `n+1`/`len+1` allocation can never
+  exceed the cap.
+
+`Nest`/`Fold` (the scalar-result forms) hold only the running accumulator, so they
+add no result-size surface beyond the iteration count. Each step re-evaluates
+through `vm.eval`, so a numeric fold (`Fold[Plus, 0, {1,2,3}]`) collapses as it
+accumulates rather than building a giant unevaluated tree; a symbolic one
+(`Nest[f, x, 3]`) grows linearly with `n`, which the `n` cap bounds.
+
+Every malformed form follows the W-5 convention and is **left unevaluated** —
+echoed back, never a panic: a negative or non-integer `n`, a non-list third
+argument to `Fold`/`FoldList`, the wrong arity, or an over-cap `n`. A
+non-callable `f` is *not* an error — each `f[acc]` simply stays unevaluated (as
+`Nest[f, x, 3]` → `f[f[f[x]]]` demonstrates), exactly as an undefined head does
+everywhere else in the subset.
+
+### §13.4 No grammar change
+
+`Nest[…]`, `NestList[…]`, `Fold[…]`, `FoldList[…]` are all ordinary `Head[args]`
+applications. W-10 touches only `wolfram-runtime`'s builtin handler table; the
+lexer, grammar, `_grammar.rs`, and the decorator's held set are untouched (none of
+these heads is held — `f`, the seed, and the list are eagerly evaluated before the
+handler runs).
 
 ## §6 References
 
