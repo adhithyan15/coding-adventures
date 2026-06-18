@@ -30,6 +30,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - activation evidence scorecard summaries that roll integration evidence
   briefings into catalog-wide ready, blocked, lane, local/cloud, and
   policy-tier counts for Chief planning
+- activation evidence rows that project each integration briefing into a
+  compact sorted ready/blocker row with the next blocked evidence lane and
+  missing-prerequisite counts
 - read-only D18D tool descriptors for listing/describing integrations and
   primitive families
 - typed ecosystem-survey source rows that map Home Assistant, Hubitat, Homey
