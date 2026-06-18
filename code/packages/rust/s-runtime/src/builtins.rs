@@ -2189,8 +2189,13 @@ fn b_modify_list(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .ok_or_else(|| SError::BadArgs(format!("modifyList: 'val' must be a list, got {}", val.type_name())))?;
 
     // Every element of `val` must be named (R errors on an unnamed overlay
-    // element — there is no positional notion of "modify").
-    if v_names.iter().any(|n| n.as_deref().map(str::is_empty).unwrap_or(true)) {
+    // element — there is no positional notion of "modify"). A names vector
+    // shorter than the values, or a `None`/empty name, both count as unnamed.
+    let all_named = v_names.len() == v_items.len()
+        && v_names
+            .iter()
+            .all(|n| n.as_deref().is_some_and(|s| !s.is_empty()));
+    if !all_named {
         return Err(SError::BadArgs(
             "modifyList: elements of 'val' must all be named".into(),
         ));
@@ -2203,9 +2208,12 @@ fn b_modify_list(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let mut items: Vec<SValue> = x_items.to_vec();
     let mut to_remove: Vec<usize> = Vec::new();
 
-    for (i, vname) in v_names.iter().enumerate() {
-        let name = vname.as_deref().unwrap_or_default();
-        let new_value = &v_items[i];
+    // Iterate over the *values* so the index can never run past `v_items`
+    // (the `List` fields are public, so we do not assume `v_names` and
+    // `v_items` are the same length — a missing name is treated as unnamed,
+    // which the all-named check below already rejects).
+    for (i, new_value) in v_items.iter().enumerate() {
+        let name = v_names.get(i).and_then(|n| n.as_deref()).unwrap_or_default();
         let pos = names.iter().position(|n| n.as_deref() == Some(name));
         match (pos, matches!(new_value, SValue::Null)) {
             // Existing name, NULL value → remove (record the index).
