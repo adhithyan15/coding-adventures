@@ -579,3 +579,112 @@ fn w8_does_not_disturb_existing_forms() {
     assert_eq!(eval("Sum[i, {i, 1, 10}]\n").unwrap(), "Out[1]= 55\n");
     assert_eq!(eval("Map[f, {1, 2}]\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
 }
+
+// ---------------------------------------------------------------------------
+// W-9 list-manipulation builtins — Sort, Reverse, Join, Flatten, Select, Count,
+// Total (plus the EvenQ/OddQ predicates). Full parse → lower → eval → print.
+// ---------------------------------------------------------------------------
+
+/// `Sort` orders a numeric list ascending, and round-trips through the printer.
+#[test]
+fn w9_sort_orders_ascending() {
+    assert_eq!(eval("Sort[{3, 1, 2}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+    assert_eq!(eval("Sort[{}]\n").unwrap(), "Out[1]= {}\n");
+    // Numbers sort before symbols in the subset's canonical order.
+    assert_eq!(
+        eval("Sort[{c, 2, a, 1}]\n").unwrap(),
+        "Out[1]= {1, 2, a, c}\n"
+    );
+}
+
+/// `Reverse` reverses a list.
+#[test]
+fn w9_reverse_reverses() {
+    assert_eq!(eval("Reverse[{1, 2, 3}]\n").unwrap(), "Out[1]= {3, 2, 1}\n");
+    assert_eq!(eval("Reverse[{}]\n").unwrap(), "Out[1]= {}\n");
+}
+
+/// `Join` concatenates two or more lists.
+#[test]
+fn w9_join_concatenates() {
+    assert_eq!(eval("Join[{1}, {2, 3}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+    assert_eq!(
+        eval("Join[{1}, {2}, {3}]\n").unwrap(),
+        "Out[1]= {1, 2, 3}\n"
+    );
+    // A non-list argument leaves the form unevaluated.
+    assert_eq!(eval("Join[{1}, 2]\n").unwrap(), "Out[1]= Join[{1}, 2]\n");
+}
+
+/// `Flatten` flattens all levels by default; `Flatten[list, n]` only the top n.
+#[test]
+fn w9_flatten_full_and_depth_n() {
+    assert_eq!(
+        eval("Flatten[{{1, 2}, {3}}]\n").unwrap(),
+        "Out[1]= {1, 2, 3}\n"
+    );
+    // All levels.
+    assert_eq!(
+        eval("Flatten[{1, {2, {3}}}]\n").unwrap(),
+        "Out[1]= {1, 2, 3}\n"
+    );
+    // One level only — the inner {3} survives.
+    assert_eq!(
+        eval("Flatten[{1, {2, {3}}}, 1]\n").unwrap(),
+        "Out[1]= {1, 2, {3}}\n"
+    );
+}
+
+/// `EvenQ`/`OddQ` classify integers (and are False for non-integers).
+#[test]
+fn w9_even_q_and_odd_q() {
+    assert_eq!(eval("EvenQ[4]\n").unwrap(), "Out[1]= True\n");
+    assert_eq!(eval("OddQ[3]\n").unwrap(), "Out[1]= True\n");
+    assert_eq!(eval("EvenQ[3]\n").unwrap(), "Out[1]= False\n");
+    assert_eq!(eval("EvenQ[x]\n").unwrap(), "Out[1]= False\n");
+}
+
+/// `Select`/`Count` apply a predicate (here the built-in `EvenQ`) to each element.
+#[test]
+fn w9_select_and_count_with_a_predicate() {
+    assert_eq!(
+        eval("Select[{1, 2, 3, 4}, EvenQ]\n").unwrap(),
+        "Out[1]= {2, 4}\n"
+    );
+    assert_eq!(eval("Count[{1, 2, 3, 4}, EvenQ]\n").unwrap(), "Out[1]= 2\n");
+}
+
+/// `Select`/`Count` also accept a *user-defined* predicate — the same
+/// application path as `Map`/`Apply`, so a `SetDelayed` function works.
+#[test]
+fn w9_select_with_a_user_defined_predicate() {
+    let mut s = WolframSession::new();
+    // big[x_] := x > 2  — a comparison predicate returning True/False.
+    s.feed("big[x_] := x > 2\n").unwrap();
+    assert_eq!(
+        s.feed("Select[{1, 2, 3, 4}, big]\n").unwrap(),
+        "Out[2]= {3, 4}\n"
+    );
+    assert_eq!(
+        s.feed("Count[{1, 2, 3, 4}, big]\n").unwrap(),
+        "Out[3]= 2\n"
+    );
+}
+
+/// `Total` sums a list onto the shared `Add` head.
+#[test]
+fn w9_total_sums() {
+    assert_eq!(eval("Total[{1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
+    assert_eq!(eval("Total[{}]\n").unwrap(), "Out[1]= 0\n");
+    // Consistent with Sum over a range.
+    assert_eq!(eval("Sum[i, {i, 1, 3}]\n").unwrap(), "Out[1]= 6\n");
+}
+
+/// W-4..W-8 behaviour is unchanged by the W-9 handlers (regression guard).
+#[test]
+fn w9_does_not_disturb_existing_forms() {
+    assert_eq!(eval("1 + 2*3\n").unwrap(), "Out[1]= 7\n");
+    assert_eq!(eval("Map[f, {1, 2}]\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
+    assert_eq!(eval("Range[3]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+    assert_eq!(eval("With[{x = 3}, x^2]\n").unwrap(), "Out[1]= 9\n");
+}

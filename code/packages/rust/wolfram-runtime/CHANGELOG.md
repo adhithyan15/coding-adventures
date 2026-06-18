@@ -4,6 +4,66 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] — 2026-06-17
+
+The **W-9** deliverable (MA04 §12): list-manipulation builtins — the reordering,
+concatenating, flattening, filtering, counting, and summing heads every
+list-processing session reaches for. Lowered onto the *same* substrate as W-5
+(the `list_elements` accessor, the `Map`/`Apply` predicate-application path, and
+the canonical `Add` fold). All are plain `Head[args]` applications — **no grammar
+change** — and all are eager (non-held), so the `WolframBackend` held set is
+untouched.
+
+### Added (list-manipulation heads)
+
+- **`Sort[list]`** → ascending in the subset's documented total canonical order
+  (`canonical_cmp`): numbers (by `f64` magnitude) < symbols < strings < compound
+  expressions; total and stable, so it never panics and is reproducible across
+  runs. Pure-numeric lists sort numerically (`Sort[{3, 1, 2}]` → `{1, 2, 3}`).
+- **`Reverse[list]`** → the list reversed.
+- **`Join[a, b, …]`** → two or more lists concatenated. The combined length is
+  capped at `MAX_LIST_LENGTH` (checked with `checked_add` before allocating); a
+  non-list argument leaves the form unevaluated.
+- **`Flatten[list]`** → every nested sub-list spliced in at **all** levels;
+  **`Flatten[list, n]`** → only the top `n` levels of nested sub-lists. Output
+  length capped at `MAX_LIST_LENGTH`, recursion bounded by the (token-capped)
+  input nesting. A negative/non-integer depth, or a non-list, stays unevaluated.
+- **`Select[list, pred]`** / **`Count[list, pred]`** → keep / tally elements where
+  `pred[e]` evaluates to the `True` symbol. The predicate is applied through the
+  **same** path as `Map`/`Apply` (`build_canonical_application` + `vm.eval`), so a
+  built-in predicate, a user `SetDelayed` function, or a bridged head all work.
+  Function-predicate `Count` is the documented simplification versus full Wolfram
+  pattern-matching `Count` (MA04 §12.3).
+- **`Total[list]`** → the sum of the elements, folded onto the canonical `Add`
+  head (consistent with W-7 `Sum` over a range); an empty list totals to `0`.
+
+### Added (parity predicates)
+
+- **`EvenQ[n]`** / **`OddQ[n]`** → `True`/`False` on integer parity (so
+  `Select`/`Count` are testable; the W-5/W-6 surface had no predicate head).
+  `rem_euclid(2)` classifies negatives correctly; a non-integer argument is
+  `False` (matching Wolfram), wrong arity stays unevaluated.
+
+### Safety / DoS (MA04 §12.4)
+
+- `Join`/`Flatten` outputs are bounded by `MAX_LIST_LENGTH` (= `MAX_RANGE_LENGTH`,
+  1,000,000), checked before allocation; `Flatten` recursion is depth-bounded.
+- The size-non-increasing heads (`Sort`, `Reverse`, `Select`, `Count`, `Total`)
+  add no new allocation source — their output is at most the source-bounded input.
+- Every malformed form (non-list arg, non-callable predicate, bad depth, wrong
+  arity) is **left unevaluated** — echoed back, never a panic — per the W-5
+  convention.
+
+### Tests
+
+- Unit tests for each head over a real VM, plus the malformed/edge cases
+  (oversize/negative depth, non-list, unbound predicate, extreme parity).
+  `Select`/`Count` predicate tests run over a real `WolframBackend` so `EvenQ`
+  resolves.
+- End-to-end integration tests through `eval`/`WolframSession` for every
+  acceptance example in the brief, a user-defined predicate, and a regression
+  guard that W-4..W-8 behaviour is unchanged.
+
 ## [0.5.0] — 2026-06-17
 
 The **W-8** deliverable (MA04 §11): local scoping — the three Wolfram heads that

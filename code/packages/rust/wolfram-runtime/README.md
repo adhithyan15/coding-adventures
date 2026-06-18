@@ -9,7 +9,8 @@ Macsyma/Maxima drive rather than writing a bespoke evaluator.
 
 See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfram-language.md)
 §7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), §10 (W-7
-iteration constructs), and §11 (W-8 local scoping).
+iteration constructs), §11 (W-8 local scoping), and §12 (W-9 list-manipulation
+builtins).
 
 ## What it does
 
@@ -93,6 +94,15 @@ assert_eq!(eval("With[{x = 3}, x^2]\n").unwrap(), "Out[1]= 9\n");
 assert_eq!(eval("With[{a = 1, b = 2}, a + b]\n").unwrap(), "Out[1]= 3\n");
 assert_eq!(eval("Module[{a = 1, b = 2}, a + b]\n").unwrap(), "Out[1]= 3\n");
 assert_eq!(eval("Block[{x = 5}, x + 1]\n").unwrap(), "Out[1]= 6\n");
+
+// W-9 list manipulation — reorder, concatenate, flatten, filter, count, sum:
+assert_eq!(eval("Sort[{3, 1, 2}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+assert_eq!(eval("Reverse[{1, 2, 3}]\n").unwrap(), "Out[1]= {3, 2, 1}\n");
+assert_eq!(eval("Join[{1}, {2, 3}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+assert_eq!(eval("Flatten[{{1, 2}, {3}}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+assert_eq!(eval("Select[{1, 2, 3, 4}, EvenQ]\n").unwrap(), "Out[1]= {2, 4}\n");
+assert_eq!(eval("Count[{1, 2, 3, 4}, EvenQ]\n").unwrap(), "Out[1]= 2\n");
+assert_eq!(eval("Total[{1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -191,6 +201,36 @@ bodies this subset supports (see MA04 §11.3). A malformed form (a non-list decl
 argument, a `With`/`Block` local with no value, a non-symbol assignment target,
 the wrong arity) is left unevaluated rather than panicking.
 
+**W-9** adds the list-manipulation heads — reorder, concatenate, flatten, filter,
+count, sum — lowered onto the same W-5 substrate (the list accessor, the
+`Map`/`Apply` application path, the `Add` fold). All are eager `Head[args]` forms
+(no grammar change, nothing held):
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Sort` | `Sort[{3, 1, 2}]` | `{1, 2, 3}` |
+| `Reverse` | `Reverse[{1, 2, 3}]` | `{3, 2, 1}` |
+| `Join` | `Join[{1}, {2, 3}]` | `{1, 2, 3}` |
+| `Flatten` | `Flatten[{{1, 2}, {3}}]` | `{1, 2, 3}` |
+| `Flatten` | `Flatten[{1, {2, {3}}}, 1]` | `{1, 2, {3}}` |
+| `Select` | `Select[{1, 2, 3, 4}, EvenQ]` | `{2, 4}` |
+| `Count` | `Count[{1, 2, 3, 4}, EvenQ]` | `2` |
+| `Total` | `Total[{1, 2, 3}]` | `6` |
+| `EvenQ` / `OddQ` | `EvenQ[4]` | `True` |
+
+`Sort` uses a documented total canonical order over `IRNode` (numbers by
+magnitude < symbols < strings < compound; stable, panic-free); pure-numeric lists
+sort numerically. `Select`/`Count` apply `pred[e]` through the **same** path as
+`Map`/`Apply` and keep/tally where it evaluates to `True`, so a built-in `EvenQ`, a
+user `f[x_] := …` predicate, or any bridged head all work (function-predicate
+`Count` is the documented simplification versus full pattern matching). `Total`
+folds onto the canonical `Add` head, consistent with W-7 `Sum`. `Flatten` defaults
+to flattening **all** levels; `Flatten[list, n]` flattens only the top `n` levels.
+`Join`/`Flatten` outputs are DoS-capped at `MAX_LIST_LENGTH` (= `MAX_RANGE_LENGTH`,
+1,000,000); the minimal `EvenQ`/`OddQ` parity predicates exist so `Select`/`Count`
+are testable. Every malformed form (non-list, non-callable predicate, bad depth,
+wrong arity) is left unevaluated rather than panicking.
+
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
@@ -219,6 +259,10 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
 - **W-8** (this crate) — the `With`/`Module`/`Block` local-scoping heads, named
   locals bound into a held body via substitution (no session leak, no global
   clobber; `Module` gensym-renames uninitialised locals). No grammar change.
+- **W-9** (this crate) — the `Sort`/`Reverse`/`Join`/`Flatten`/`Select`/`Count`/
+  `Total` list-manipulation heads (plus `EvenQ`/`OddQ` predicates), lowered onto
+  the W-5 list/`Map`/`Apply`/`Add` substrate, DoS-capped on `Join`/`Flatten`
+  output. No grammar change.
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 

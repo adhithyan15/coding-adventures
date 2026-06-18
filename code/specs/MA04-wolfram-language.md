@@ -564,6 +564,118 @@ is the ordinary `Set` infix already parsed since W-1. W-8 touches only
 `wolfram-runtime` (the builtin handler table and the decorator's held set); the
 lexer, grammar, and `_grammar.rs` are untouched.
 
+## §12 W-9 list-manipulation builtins `Sort`, `Reverse`, `Join`, `Flatten`, `Select`, `Count`, `Total` (implemented)
+
+W-5 gave the *structural* list built-ins (`Length`, `First`, `Part`, `Append`,
+`Range`, `Map`, `Apply`). W-9 adds the *manipulation* heads every list-processing
+session reaches for — reordering, concatenating, flattening, filtering, counting,
+and summing — lowered onto the **same substrate** (the W-5 list machinery, the
+`Map`/`Apply` re-evaluation path, and the canonical `Add` fold). Like W-5 these
+are plain `Head[args]` applications, so **there is no grammar change**: W-9 touches
+only `wolfram-runtime` (the builtin handler table).
+
+### §12.1 What W-9 adds
+
+| Surface form                | Result                                | Reuses |
+|-----------------------------|---------------------------------------|--------|
+| `Sort[list]`                | ascending in canonical order          | a total order over `IRNode` |
+| `Reverse[list]`             | the list reversed                     | the W-5 `list_elements` accessor |
+| `Join[a, b, …]`             | the lists concatenated (2+ args)      | the W-5 `list_elements` accessor |
+| `Flatten[list]`             | all sub-lists spliced in, **all levels** | recursive splice |
+| `Flatten[list, n]`          | flatten the top `n` levels only       | depth-bounded recursive splice |
+| `Select[list, pred]`        | elements where `pred[e]` → `True`     | the `Map`/`Apply` application path |
+| `Count[list, pred]`         | count of elements where `pred[e]` → `True` | the `Map`/`Apply` application path |
+| `Total[list]`               | sum of the elements                   | the canonical `Add` fold (as W-7 `Sum`) |
+| `EvenQ[n]` / `OddQ[n]`      | `True`/`False` integer-parity predicate | a minimal predicate primitive (see §12.3) |
+
+Worked examples (the W-9 acceptance tests):
+
+```wolfram
+Sort[{3, 1, 2}]          (* {1, 2, 3} *)
+Reverse[{1, 2, 3}]       (* {3, 2, 1} *)
+Join[{1}, {2, 3}]        (* {1, 2, 3} *)
+Join[{1}, {2}, {3}]      (* {1, 2, 3} *)
+Flatten[{{1, 2}, {3}}]   (* {1, 2, 3} *)
+Flatten[{1, {2, {3}}}]   (* {1, 2, 3}  — all levels *)
+Flatten[{1, {2, {3}}}, 1](* {1, 2, {3}}  — one level only *)
+Select[{1, 2, 3, 4}, EvenQ]  (* {2, 4} *)
+Count[{1, 2, 3, 4}, EvenQ]   (* 2 *)
+Total[{1, 2, 3}]         (* 6 *)
+```
+
+### §12.2 `Sort` — a total canonical order over `IRNode`
+
+Real Wolfram's canonical order is an elaborate cross-type comparison. The subset
+ships a **documented simplification**: a deterministic total order over the
+`IRNode` variants that agrees with Wolfram for the common cases an introductory
+session sorts — pure-numeric lists sort numerically (`{3, 1, 2}` → `{1, 2, 3}`),
+and mixed/symbolic lists sort by a stable, well-defined key (numbers before
+symbols before strings before compound expressions; within numbers by value;
+within symbols/strings lexicographically; within compound expressions by head
+then by arguments). The order is *total* (every pair compares), so `Sort` never
+panics and is deterministic across runs. It is **not** bit-for-bit Wolfram
+canonical order for every exotic mix — that is out of scope and documented here.
+Numeric comparison coerces integers, rationals, and floats to a common `f64`
+magnitude so `{2, 1/2, 1.5}` orders sensibly; equal magnitudes fall back to the
+type/structure key so the order stays total and stable.
+
+### §12.3 `Select`/`Count` — the predicate application path, and `EvenQ`/`OddQ`
+
+`Select[list, pred]` and `Count[list, pred]` apply `pred` to each element and keep
+(or tally) those where the result is the symbol `True`. The application reuses the
+**exact** `Map`/`Apply` path: `build_canonical_application(pred, [e])` builds
+`pred[e]` and `vm.eval` re-evaluates it through the shared engine, so any callable
+— a built-in predicate, a user-defined `SetDelayed` function `f[x_] := …`, or a
+bridged head — works as the predicate. Only a result that evaluates to the literal
+`True` symbol counts; anything else (`False`, an unevaluated `pred[e]`, a number)
+is treated as "not selected". This is the **documented simplification** versus
+full Wolfram pattern-matching `Count` (where the second argument may be a pattern
+like `_Integer`): W-9 supports a *function* predicate, which is the common
+introductory case and reuses the existing application machinery.
+
+Because the W-5/W-6 surface offers no parity predicate, and `Select`/`Count` need
+a *testable* one, W-9 adds two minimal predicate primitives:
+
+- `EvenQ[n]` → `True` if `n` is an even integer, else `False`.
+- `OddQ[n]` → `True` if `n` is an odd integer, else `False`.
+
+A non-integer argument yields `False` (matching Wolfram: `EvenQ[x]` is `False`,
+not unevaluated, for a non-integer). Even-ness is tested as `n.rem_euclid(2) == 0`
+so a negative `n` is handled correctly (`EvenQ[-4]` → `True`). These are eager
+(non-held) heads like every other W-9 built-in.
+
+### §12.4 DoS surface — bounded outputs, bounded recursion
+
+W-9's heads either **shrink or preserve** their input size, or grow it by
+concatenation/flattening, so all are bounded by the W-4 input/token caps that
+already bound the materialised input lists:
+
+- `Sort`/`Reverse`/`Select`/`Count`/`Total` are size-non-increasing — their output
+  is at most as large as the input list, which is itself bounded by the source
+  size. `Sort` allocates one comparison key vector; the sort is `O(n log n)`.
+- `Join` concatenates its already-materialised argument lists; the result length is
+  the sum of the inputs, each of which is source-bounded. As a defensive guard the
+  combined length is capped at [`MAX_LIST_LENGTH`] (= `MAX_RANGE_LENGTH`,
+  1,000,000); an over-cap `Join` is left unevaluated rather than allocated.
+- `Flatten` splices nested lists into one flat list. Two bounds keep it safe: the
+  **recursion depth** is bounded (full-flatten recurses on structure, which is
+  bounded by the token-capped input nesting; the explicit-`n` form additionally
+  stops after `n` levels), and the **output length** is capped at
+  `MAX_LIST_LENGTH`, so a crafted deeply/widely nested list cannot exhaust memory.
+
+Every malformed form (`Sort` of a non-list, `Select` with a non-list or a
+non-callable predicate, `Join` of a non-list argument, `Flatten` with a negative/
+non-integer depth) follows the W-5 convention and is **left unevaluated** — echoed
+back, never a panic.
+
+### §12.5 No grammar change
+
+`Sort[…]`, `Reverse[…]`, `Join[…]`, `Flatten[…]`, `Select[…]`, `Count[…]`,
+`Total[…]`, `EvenQ[…]`, `OddQ[…]` are all ordinary `Head[args]` applications. W-9
+touches only `wolfram-runtime`'s builtin handler table; the lexer, grammar,
+`_grammar.rs`, and the decorator's held set are untouched (none of these heads is
+held — their arguments are eagerly evaluated before the handler runs).
+
 ## §6 References
 
 Internal: [`HML00`](HML00-historical-math-languages-roadmap.md),
