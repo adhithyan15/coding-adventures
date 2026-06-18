@@ -1,9 +1,21 @@
 #!/usr/bin/env python3
 """recall.py — relational recall as a binding query (MYCIN-2026 REL-1 prototype).
 
+⚠ DEPRECATED AS AN ANSWER PATH (kept as the REL-1 semantics prototype + a parse
+utility). Recall is now answered by the NATIVE adj-lang engine — the same CPU
+reasoner that runs the differential and the constraint solver — via a binding query
+`? relation(subject, $Var)` over the imported grounded edge rulebooks (see
+board/board_eval.py::resolve_recall and recall/iem-recall-case.adj). This Python
+`RelationStore` was a proof-of-semantics written BEFORE the native grammar/engine
+existed (REL-2/REL-3); the board scorer no longer uses it to answer questions —
+there is ONE engine for every tactic. This module is retained because (a) it is the
+literate explanation of recall-as-a-binding-query, and (b) `parse_edges` is a handy
+standalone `.adj` edge reader the gate tests reuse. Do not route new answer logic
+through it; extend the native engine instead.
+
 This is the executable heart of REL-1 (see REL-1-RELATIONAL-RECALL.md): it proves
 the *semantics* of fact recall — "which enzyme is deficient in Tay-Sachs?" — as a
-single-hop binding query over a grounded knowledge graph, BEFORE we extend the Rust
+single-hop binding query over a grounded knowledge graph, BEFORE we extended the Rust
 grammar/engine (staged to REL-2/REL-3). It answers deterministically, on the CPU,
 with **zero model calls at answer time** (the warm-path thesis), and every answer
 carries a PROOF: the byte-provenanced edge that justifies it and its citation.
