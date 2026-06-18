@@ -65,6 +65,11 @@ class _InfiniteGridState extends State<InfiniteGrid> {
 
   final _formulaCtrl = TextEditingController();
 
+  // In-memory "saved file" slot for the Save / Load buttons: Save stows the
+  // serialized workbook here, Load restores from it. (A real app would write
+  // this string to a file; the demo keeps the round trip self-contained.)
+  String _savedSnapshot = '';
+
   @override
   void initState() {
     super.initState();
@@ -120,6 +125,18 @@ class _InfiniteGridState extends State<InfiniteGrid> {
   void _copy() => _model.copyCell();
   void _cut() => _model.cutCell();
   void _paste() => setState(() => _model.pasteCell());
+
+  // Save / load: serialize the whole workbook (formulas + formats) to a JSON
+  // document held in memory, and restore it. Computed values recompute on load,
+  // so a loaded formula stays live; the formula bar re-reads after a load.
+  void _save() => setState(() => _savedSnapshot = _model.saveBook());
+  void _load() {
+    if (_savedSnapshot.isEmpty) return;
+    setState(() {
+      _model.loadBook(_savedSnapshot);
+      _formulaCtrl.text = _model.formula;
+    });
+  }
 
   // A compact outlined button for the clipboard controls, matching "Fill ↓ 10".
   Widget _clipButton(String label, String tip, VoidCallback onPressed) {
@@ -201,6 +218,11 @@ class _InfiniteGridState extends State<InfiniteGrid> {
           _clipButton('Cut', 'Cut the selected cell (cleared when you paste)', _cut),
           const SizedBox(width: 8),
           _clipButton('Paste', 'Paste the clipboard at the selected cell, shifting relative references', _paste),
+          const SizedBox(width: 8),
+          // Save / load: serialize the whole workbook to memory, and restore it.
+          _clipButton('Save', 'Serialize the whole workbook to memory', _save),
+          const SizedBox(width: 8),
+          _clipButton('Load', 'Restore the workbook from the last save', _load),
         ],
       ),
     );

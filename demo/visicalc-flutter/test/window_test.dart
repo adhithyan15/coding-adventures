@@ -154,5 +154,26 @@ void main() {
       expect(m.rowCells(1)[0], ''); // A1 cleared
       m.selectInf(1, 5); expect(m.pasteCell(), isFalse); // buffer consumed
     });
+
+    test('saveBook/loadBook round trips and keeps formulas live', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // Default seed: A1=15, E1 = SUM(A1:D1) = 38 (formatted "38.00").
+      final snapshot = m.saveBook();
+      expect(snapshot, isNotEmpty);
+      // Mutate away from the saved state so a load has to visibly undo it.
+      m.selectInf(1, 1); m.commitInf('500'); // E1 → 500+3+12+8 = 523
+      expect(m.rowCells(1)[4], '523.00');
+      // Restore: A1 → 15, E1 recomputes through its format back to "38.00".
+      expect(m.loadBook(snapshot), isTrue);
+      expect(m.rowCells(1)[0], '15');
+      expect(m.rowCells(1)[4], '38.00');
+      // The loaded formula is live, not frozen: edit a precedent and E1 recomputes.
+      m.selectInf(1, 1); m.commitInf('5'); // 5+3+12+8 = 28
+      expect(m.rowCells(1)[4], '28.00');
+      // Garbage in is rejected (false), leaving the workbook intact.
+      expect(m.loadBook('not a workbook'), isFalse);
+      expect(m.rowCells(1)[4], '28.00');
+    });
   });
 }

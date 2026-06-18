@@ -96,6 +96,11 @@ class SpreadsheetSession {
   late final _ClipD _copyFn;
   late final _ClipD _cutFn;
   late final _PasteD _pasteFn;
+  // Save / load: sc_serialize(session) → char* (same shape as the no-arg reads);
+  // sc_deserialize(session, data) → int (same shape as sc_paste: session + one
+  // string → 1/0).
+  late final _NoArgD _serializeFn;
+  late final _PasteD _deserializeFn;
   late final _NoArgD _usedRangeFn;
   late final _ColLettersD _columnLettersFn;
   late final _CurrentRevD _currentRevisionFn;
@@ -119,6 +124,8 @@ class SpreadsheetSession {
     _copyFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_copy');
     _cutFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_cut');
     _pasteFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_paste');
+    _serializeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_serialize');
+    _deserializeFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_deserialize');
     _usedRangeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_used_range');
     _columnLettersFn = _lib.lookupFunction<_ColLettersC, _ColLettersD>('sc_column_letters');
     _currentRevisionFn = _lib.lookupFunction<_CurrentRevC, _CurrentRevD>('sc_current_revision');
@@ -321,6 +328,25 @@ class SpreadsheetSession {
       return _pasteFn(_handle, dstPtr) != 0;
     } finally {
       _freeCString(dstPtr);
+    }
+  }
+
+  /// Serialize the whole workbook to a self-contained JSON document — the
+  /// SOURCE (formula text + typed literals) + per-cell formats, not the computed
+  /// values (those recompute on load, so the document is small and can't disagree
+  /// with itself). The engine owns no I/O; the host persists the returned string
+  /// wherever it likes. (`_takeString` frees the engine's char* allocation.)
+  String serialize() => _takeString(_serializeFn(_handle));
+
+  /// Replace the workbook from a document produced by [serialize]. Returns `true`
+  /// on success, `false` for malformed / unsupported input (the workbook is left
+  /// untouched — the engine validates before it mutates). Formulas reload live.
+  bool deserialize(String data) {
+    final dataPtr = _toCString(data);
+    try {
+      return _deserializeFn(_handle, dataPtr) != 0;
+    } finally {
+      _freeCString(dataPtr);
     }
   }
 
@@ -567,6 +593,21 @@ class InfiniteSheetModel {
   bool pasteCell() {
     final ok = _session.paste(infAddress);
     if (ok) computeExtent();
+    return ok;
+  }
+
+  /// Save / load: serialize the whole workbook to a JSON document, and restore
+  /// it. The document stores only the source + formats — computed values
+  /// recompute on load, so a loaded formula stays live. [loadBook] returns false
+  /// (workbook untouched) for malformed input; on success it regrows the extent
+  /// and refreshes the formula bar so the view re-reads.
+  String saveBook() => _session.serialize();
+  bool loadBook(String data) {
+    final ok = _session.deserialize(data);
+    if (ok) {
+      computeExtent();
+      formula = _session.getRaw(infAddress);
+    }
     return ok;
   }
 }
