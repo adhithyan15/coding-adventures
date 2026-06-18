@@ -138,6 +138,20 @@ fun main() {
     check("inf fillDown I2", inf.rowCells(2)[8], "30") // I2 = H2*10
     check("inf fillDown I3", inf.rowCells(3)[8], "40") // I3 = H3*10
     check("inf fillDown I1 source", inf.rowCells(1)[8], "20") // I1 untouched
+
+    // Clipboard: copy I1 (= H1*10) and paste at I4 — the relative ref shifts by
+    // the destination's offset, so I4 = H4*10. (H4 unset → 0, so seed it.)
+    inf.selectInf(4, 8); inf.commitInf("6")        // H4 = 6
+    inf.selectInf(1, 9); inf.copyCell()            // copy I1
+    inf.selectInf(4, 9); check("inf pasteCell applied", inf.pasteCell().toString(), "true")
+    check("inf paste I4 = H4*10", inf.rowCells(4)[8], "60") // I4 = H4*10 = 60
+    // Cut A1 and move it to C1: source clears, a second paste is a no-op.
+    inf.selectInf(1, 1); inf.commitInf("99")       // A1
+    inf.selectInf(1, 1); inf.cutCell()
+    inf.selectInf(1, 3); check("inf cut paste applied", inf.pasteCell().toString(), "true")
+    check("inf cut moved C1", inf.rowCells(1)[2], "99") // C1 (col 3, index 2)
+    check("inf cut cleared A1", inf.rowCells(1)[0], "") // A1 cleared
+    inf.selectInf(1, 5); check("inf cut buffer consumed", inf.pasteCell().toString(), "false")
     inf.close()
 
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
