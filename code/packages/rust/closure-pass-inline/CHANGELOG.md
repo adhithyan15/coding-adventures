@@ -2,6 +2,56 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-18
+
+### Added (CLOC15 PR-2 — tail `return` with a discarded result)
+
+The void statement-helper inliner (PR-1) now admits an **optional trailing
+`return`** as the body's final statement. Because the call site discards
+the result (the use is a statement call, not a value), the returned value
+is never read, so the tail return is normalized for the splice:
+
+```js
+function init(n) { setup(n); return ready(); }
+init(cfg);
+// SIMPLE  ⇒  setup(cfg); ready();
+//   (the tail `return ready()` is kept as `ready();` for its side effect;
+//    the dead declaration is then removed by remove-unused-vars/treeshake)
+```
+
+`normalize_tail_return`:
+
+- `return;` (no argument) → **dropped** (a no-op once the value is discarded);
+- `return E;` where `E` is **provably inert** — a literal, or a bare read
+  of a parameter / callee-local (a binding that always exists, so the read
+  neither throws nor has a side effect) → **dropped**;
+- `return E;` otherwise → rewritten to `E;` (an `ExpressionStatement`), so
+  `E` is still evaluated for its side effects with the value discarded —
+  exactly what the original function did before returning.
+
+A bare *global* identifier (`return glob`) is deliberately **not** dropped:
+reading an undeclared global throws `ReferenceError`, which must be
+preserved as `glob;`.
+
+This also unlocks a shape the expression inliner cannot reach — a body that
+is a single `return g()` where `g` is a free global: the expression inliner
+requires every identifier to be a parameter, but the discarded-statement
+splice turns `f();` into `g();`.
+
+Soundness rests on the **tail** restriction: a `return` anywhere but the
+final position would change control flow when spliced (the caller's
+following statements would still run), so an early `return` is a hard
+reject — the body must be straight-line to the optional tail return.
+
+- 6 new pass tests (literal/bare/param-identifier dropped, effectful call
+  kept as `E;`, single-`return`-of-free-global splice, free-global
+  identifier kept, early-`return` declined).
+- Two closurec fixtures (`simple_dce_drops_dead_after_return`,
+  `advanced-rename-globals`) updated: their helpers are now called twice so
+  they survive the single-use statement-inliner, preserving each test's
+  original intent (observing DCE-after-return / ADVANCED renaming a
+  *surviving* top-level function) rather than collapsing away.
+
 ## [0.5.0] - 2026-06-18
 
 ### Added (CLOC15 PR-1 — void multi-statement statement-helper inlining)
