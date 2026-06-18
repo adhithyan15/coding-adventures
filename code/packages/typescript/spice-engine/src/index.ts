@@ -2913,6 +2913,18 @@ const CONTROL_FLOW_CONTROL_BLOCK_COMMANDS = new Set([
   "continue",
   ".continue",
 ]);
+const VARIABLE_CONTROL_BLOCK_COMMANDS = new Set([
+  "let",
+  ".let",
+  "alter",
+  ".alter",
+  "alterparam",
+  ".alterparam",
+  "set",
+  ".set",
+  "unset",
+  ".unset",
+]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2971,6 +2983,16 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
           directive: ".control",
           lineNumber,
           message: controlBlockFlowPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isVariableControlBlockCommand(stripped)) {
+        diagnostics.push({
+          code: "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+          directive: ".control",
+          lineNumber,
+          message: controlBlockVariablePolicyMessage(stripped),
           severity: "error",
         });
         continue;
@@ -3567,6 +3589,17 @@ function resolveDeckLines(
           source,
           lineNumber,
           message: controlBlockFlowPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isVariableControlBlockCommand(stripped)) {
+        state.diagnostics.push({
+          code: "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+          directive: ".control",
+          source,
+          lineNumber,
+          message: controlBlockVariablePolicyMessage(stripped),
           severity: "error",
         });
         continue;
@@ -5869,6 +5902,11 @@ function isControlFlowControlBlockCommand(line: string): boolean {
   return command !== undefined && CONTROL_FLOW_CONTROL_BLOCK_COMMANDS.has(command);
 }
 
+function isVariableControlBlockCommand(line: string): boolean {
+  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
+  return command !== undefined && VARIABLE_CONTROL_BLOCK_COMMANDS.has(command);
+}
+
 function controlBlockScriptPolicyMessage(line: string): string {
   return `${JSON.stringify(line)} inside .control is not executed because external script and shell commands are disabled by the deck execution policy`;
 }
@@ -5879,6 +5917,10 @@ function controlBlockWorkdirPolicyMessage(line: string): string {
 
 function controlBlockFlowPolicyMessage(line: string): string {
   return `${JSON.stringify(line)} inside .control is not executed because control-flow commands are disabled by the deck execution policy`;
+}
+
+function controlBlockVariablePolicyMessage(line: string): string {
+  return `${JSON.stringify(line)} inside .control is not executed because control variables and circuit mutation commands are disabled by the deck execution policy`;
 }
 
 export function subcircuitDefinition(

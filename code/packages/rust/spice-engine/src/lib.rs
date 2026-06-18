@@ -3601,6 +3601,16 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
                 });
                 continue;
             }
+            if is_variable_control_block_command(stripped) {
+                diagnostics.push(DeckControlDiagnostic {
+                    code: "SPICE_DECK_CONTROL_VARIABLE_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    line_number,
+                    message: control_block_variable_policy_message(stripped),
+                    severity: "error".to_string(),
+                });
+                continue;
+            }
             diagnostics.push(DeckControlDiagnostic {
                 code: "SPICE_DECK_CONTROL_COMMAND".to_string(),
                 directive: ".control".to_string(),
@@ -4433,6 +4443,18 @@ fn resolve_deck_lines(
                     source: source.to_string(),
                     line_number,
                     message: control_block_flow_policy_message(stripped),
+                    severity: "error".to_string(),
+                    target: None,
+                });
+                continue;
+            }
+            if is_variable_control_block_command(stripped) {
+                state.diagnostics.push(DeckResolutionDiagnostic {
+                    code: "SPICE_DECK_CONTROL_VARIABLE_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    source: source.to_string(),
+                    line_number,
+                    message: control_block_variable_policy_message(stripped),
                     severity: "error".to_string(),
                     target: None,
                 });
@@ -7069,6 +7091,29 @@ fn is_control_flow_control_block_command(line: &str) -> bool {
     )
 }
 
+fn is_variable_control_block_command(line: &str) -> bool {
+    let Some(command) = line
+        .split_whitespace()
+        .next()
+        .map(|command| command.to_ascii_lowercase())
+    else {
+        return false;
+    };
+    matches!(
+        command.as_str(),
+        "let"
+            | ".let"
+            | "alter"
+            | ".alter"
+            | "alterparam"
+            | ".alterparam"
+            | "set"
+            | ".set"
+            | "unset"
+            | ".unset"
+    )
+}
+
 fn control_block_script_policy_message(line: &str) -> String {
     format!(
         "{line:?} inside .control is not executed because external script and shell commands are disabled by the deck execution policy"
@@ -7084,6 +7129,12 @@ fn control_block_workdir_policy_message(line: &str) -> String {
 fn control_block_flow_policy_message(line: &str) -> String {
     format!(
         "{line:?} inside .control is not executed because control-flow commands are disabled by the deck execution policy"
+    )
+}
+
+fn control_block_variable_policy_message(line: &str) -> String {
+    format!(
+        "{line:?} inside .control is not executed because control variables and circuit mutation commands are disabled by the deck execution policy"
     )
 }
 

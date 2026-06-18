@@ -574,6 +574,20 @@ _CONTROL_FLOW_CONTROL_BLOCK_COMMANDS = frozenset(
         ".continue",
     }
 )
+_VARIABLE_CONTROL_BLOCK_COMMANDS = frozenset(
+    {
+        "let",
+        ".let",
+        "alter",
+        ".alter",
+        "alterparam",
+        ".alterparam",
+        "set",
+        ".set",
+        "unset",
+        ".unset",
+    }
+)
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,
@@ -640,6 +654,17 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
                         directive=".control",
                         line_number=line_number,
                         message=_control_block_flow_policy_message(stripped),
+                        severity="error",
+                    )
+                )
+                continue
+            if _is_variable_control_block_command(stripped):
+                diagnostics.append(
+                    DeckControlDiagnostic(
+                        code="SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+                        directive=".control",
+                        line_number=line_number,
+                        message=_control_block_variable_policy_message(stripped),
                         severity="error",
                     )
                 )
@@ -3167,6 +3192,19 @@ def _resolve_deck_lines(
                     )
                 )
                 continue
+            if _is_variable_control_block_command(stripped):
+                state.diagnostics.append(
+                    DeckResolutionDiagnostic(
+                        code="SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+                        directive=".control",
+                        source=source,
+                        line_number=line_number,
+                        message=_control_block_variable_policy_message(stripped),
+                        severity="error",
+                        target=None,
+                    )
+                )
+                continue
             state.diagnostics.append(
                 DeckResolutionDiagnostic(
                     code="SPICE_DECK_CONTROL_COMMAND",
@@ -3502,6 +3540,11 @@ def _is_control_flow_control_block_command(line: str) -> bool:
     return bool(parts) and parts[0].lower() in _CONTROL_FLOW_CONTROL_BLOCK_COMMANDS
 
 
+def _is_variable_control_block_command(line: str) -> bool:
+    parts = line.split(maxsplit=1)
+    return bool(parts) and parts[0].lower() in _VARIABLE_CONTROL_BLOCK_COMMANDS
+
+
 def _control_block_script_policy_message(line: str) -> str:
     return (
         f"{line!r} inside .control is not executed because external script "
@@ -3520,4 +3563,11 @@ def _control_block_flow_policy_message(line: str) -> str:
     return (
         f"{line!r} inside .control is not executed because control-flow "
         "commands are disabled by the deck execution policy"
+    )
+
+
+def _control_block_variable_policy_message(line: str) -> str:
+    return (
+        f"{line!r} inside .control is not executed because control variables "
+        "and circuit mutation commands are disabled by the deck execution policy"
     )

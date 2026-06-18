@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck control variable policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block variable/state mutation
+  commands, including `let`, `alter`, `alterparam`, `set`, and `unset`,
+  instead of generic unsupported-command diagnostics, matching Rust and
+  TypeScript. Accepted no-op `set` options still route as no-op markers.
+
 - **Deck control-flow policy diagnostics** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
   policy diagnostics for selected `.control` block control-flow commands,

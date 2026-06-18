@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Emit explicit policy diagnostics for selected `.control` block
+  variable/state mutation commands, including `let`, `alter`, `alterparam`,
+  `set`, and `unset`, in `analyze_deck_controls` and `resolve_deck_sources`,
+  matching Python and TypeScript. Accepted no-op `set` options still route as
+  no-op markers.
 - Emit explicit policy diagnostics for selected `.control` block control-flow
   commands, including `if`, `while`, `foreach`, and `repeat`, in
   `analyze_deck_controls` and `resolve_deck_sources`, matching Python and
