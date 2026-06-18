@@ -584,6 +584,117 @@ impl IntegrationReadinessPackageSummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceBriefingSummary {
+    pub activation_package: IntegrationActivationPackageSummary,
+    pub readiness_package: IntegrationReadinessPackageSummary,
+    pub required_evidence_lane_count: usize,
+    pub passed_evidence_lane_count: usize,
+    pub blocked_evidence_lane_count: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub catalog_evidence_ready: bool,
+    pub activation_plan_evidence_ready: bool,
+    pub readiness_evidence_ready: bool,
+    pub policy_evidence_ready: bool,
+    pub local_boundary_evidence_ready: bool,
+    pub evidence_briefing_ready: bool,
+}
+
+impl IntegrationActivationEvidenceBriefingSummary {
+    pub fn from_entry(
+        entry: &IntegrationCatalogEntry,
+        available_primitives: &[PrimitiveFamily],
+        allowed_capabilities: &[CapabilityId],
+        enabled_integrations: &[IntegrationId],
+    ) -> Self {
+        let activation_package = IntegrationActivationPackageSummary::from_entry(entry);
+        let readiness_package = IntegrationReadinessPackageSummary::from_entry(
+            entry,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+        Self::from_packages(activation_package, readiness_package)
+    }
+
+    pub fn from_packages(
+        activation_package: IntegrationActivationPackageSummary,
+        readiness_package: IntegrationReadinessPackageSummary,
+    ) -> Self {
+        let catalog_evidence_ready = activation_package.catalog_entry.has_catalog_metadata();
+        let activation_plan_evidence_ready =
+            activation_package.direct_activation && activation_package.has_prerequisites();
+        let readiness_evidence_ready = readiness_package.activation_ready;
+        let policy_evidence_ready = readiness_package.has_policy_review();
+        let local_boundary_evidence_ready =
+            readiness_package.local_only && !readiness_package.cloud_required;
+        let lanes = [
+            catalog_evidence_ready,
+            activation_plan_evidence_ready,
+            readiness_evidence_ready,
+            policy_evidence_ready,
+            local_boundary_evidence_ready,
+        ];
+        let passed_evidence_lane_count = lanes.iter().filter(|ready| **ready).count();
+        let required_evidence_lane_count = lanes.len();
+        let blocked_evidence_lane_count = required_evidence_lane_count - passed_evidence_lane_count;
+        let evidence_briefing_ready = blocked_evidence_lane_count == 0;
+        let missing_prerequisite_count = readiness_package.missing_prerequisite_count;
+        let missing_primitive_count = readiness_package.missing_primitive_count;
+        let missing_capability_count = readiness_package.missing_capability_count;
+        let missing_dependency_count = readiness_package.missing_dependency_count;
+
+        Self {
+            activation_package,
+            readiness_package,
+            required_evidence_lane_count,
+            passed_evidence_lane_count,
+            blocked_evidence_lane_count,
+            missing_prerequisite_count,
+            missing_primitive_count,
+            missing_capability_count,
+            missing_dependency_count,
+            catalog_evidence_ready,
+            activation_plan_evidence_ready,
+            readiness_evidence_ready,
+            policy_evidence_ready,
+            local_boundary_evidence_ready,
+            evidence_briefing_ready,
+        }
+    }
+
+    pub fn is_evidence_briefing_ready(&self) -> bool {
+        self.evidence_briefing_ready
+    }
+
+    pub fn has_blocked_evidence_lanes(&self) -> bool {
+        self.blocked_evidence_lane_count > 0
+    }
+
+    pub fn needs_catalog_evidence(&self) -> bool {
+        !self.catalog_evidence_ready
+    }
+
+    pub fn needs_activation_plan_evidence(&self) -> bool {
+        !self.activation_plan_evidence_ready
+    }
+
+    pub fn needs_readiness_evidence(&self) -> bool {
+        !self.readiness_evidence_ready
+    }
+
+    pub fn needs_policy_evidence(&self) -> bool {
+        !self.policy_evidence_ready
+    }
+
+    pub fn needs_local_boundary_evidence(&self) -> bool {
+        !self.local_boundary_evidence_ready
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IntegrationCatalogSort {
     PriorityThenName,
@@ -15548,6 +15659,19 @@ pub fn hue_readiness_package_summary(
     )
 }
 
+pub fn hue_activation_evidence_briefing_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationActivationEvidenceBriefingSummary {
+    IntegrationActivationEvidenceBriefingSummary::from_entry(
+        &hue_entry(),
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 pub fn find_entry<'a>(
     catalog: &'a [IntegrationCatalogEntry],
     integration_id: &IntegrationId,
@@ -24587,6 +24711,88 @@ mod tests {
         assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
         assert!(summary.local_only);
         assert!(!summary.cloud_required);
+    }
+
+    #[test]
+    fn hue_activation_evidence_briefing_summary_routes_missing_rollout_inputs() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let available_primitives = vec![
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = hue_activation_evidence_briefing_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(
+            summary.activation_package,
+            IntegrationActivationPackageSummary::from_entry(hue)
+        );
+        assert_eq!(
+            summary.readiness_package,
+            hue_readiness_package_summary(&available_primitives, &allowed_capabilities, &[])
+        );
+        assert_eq!(summary.required_evidence_lane_count, 5);
+        assert_eq!(summary.passed_evidence_lane_count, 4);
+        assert_eq!(summary.blocked_evidence_lane_count, 1);
+        assert_eq!(summary.missing_prerequisite_count, 11);
+        assert_eq!(summary.missing_primitive_count, 9);
+        assert_eq!(summary.missing_capability_count, 2);
+        assert_eq!(summary.missing_dependency_count, 0);
+        assert!(summary.catalog_evidence_ready);
+        assert!(summary.activation_plan_evidence_ready);
+        assert!(!summary.readiness_evidence_ready);
+        assert!(summary.policy_evidence_ready);
+        assert!(summary.local_boundary_evidence_ready);
+        assert!(!summary.evidence_briefing_ready);
+        assert!(!summary.is_evidence_briefing_ready());
+        assert!(summary.has_blocked_evidence_lanes());
+        assert!(!summary.needs_catalog_evidence());
+        assert!(!summary.needs_activation_plan_evidence());
+        assert!(summary.needs_readiness_evidence());
+        assert!(!summary.needs_policy_evidence());
+        assert!(!summary.needs_local_boundary_evidence());
+    }
+
+    #[test]
+    fn hue_activation_evidence_briefing_summary_marks_ready_rollout_evidence() {
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = hue_activation_evidence_briefing_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.required_evidence_lane_count, 5);
+        assert_eq!(summary.passed_evidence_lane_count, 5);
+        assert_eq!(summary.blocked_evidence_lane_count, 0);
+        assert_eq!(summary.missing_prerequisite_count, 0);
+        assert_eq!(summary.missing_primitive_count, 0);
+        assert_eq!(summary.missing_capability_count, 0);
+        assert_eq!(summary.missing_dependency_count, 0);
+        assert!(summary.catalog_evidence_ready);
+        assert!(summary.activation_plan_evidence_ready);
+        assert!(summary.readiness_evidence_ready);
+        assert!(summary.policy_evidence_ready);
+        assert!(summary.local_boundary_evidence_ready);
+        assert!(summary.evidence_briefing_ready);
+        assert!(summary.is_evidence_briefing_ready());
+        assert!(!summary.has_blocked_evidence_lanes());
+        assert!(!summary.needs_catalog_evidence());
+        assert!(!summary.needs_activation_plan_evidence());
+        assert!(!summary.needs_readiness_evidence());
+        assert!(!summary.needs_policy_evidence());
+        assert!(!summary.needs_local_boundary_evidence());
     }
 
     #[test]

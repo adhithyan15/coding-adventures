@@ -38,6 +38,10 @@ All notable changes to this package will be documented in this file.
   and policy-review shape.
 - `IntegrationReadinessPackageSummary` and `hue_readiness_package_summary` for
   joining Hue activation-package shape with host-specific readiness blockers.
+- `IntegrationActivationEvidenceBriefingSummary` and
+  `hue_activation_evidence_briefing_summary` for compact catalog,
+  activation-plan, readiness, policy, and local-boundary release evidence
+  briefs.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
