@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.15 — `defined?` lowers to a non-evaluating description (Q9d)
+
+Fourth item of the Q9 structural-builtin tranche.  Ruby `defined?(x)` reaches
+the backend as `BuiltinCall("defined?", [operand])`; its operand must **never**
+be evaluated.  `emit_builtin_call` now inspects the operand's SIR shape at emit
+time and emits a constant description string, never rendering the operand:
+
+- local / param / capture `VarRef` → `"local-variable"`
+- `Const` → `"constant"`; `Instance` → `"instance-variable"`;
+  `ClassVar` → `"class variable"`; `Global` → `"global-variable"`;
+  builtin-name → `"method"`
+- any other expression → `"expression"`
+
+Same shape→description table and v0 simplifications as the Python backend (see
+its 0.1.16 and `code/specs/sir-runtime.md`); the non-evaluation contract holds
+for every shape.  Tests: `defined_local_var_emits_static_description_ts` and
+`defined_does_not_evaluate_operand_ts`.
+
 ## 0.1.14 — `splat` lowers to native spread; `double_splat` deferred (Q9c)
 
 Third item of the Q9 structural-builtin tranche.  Ruby `*x` / `**x` reach the
