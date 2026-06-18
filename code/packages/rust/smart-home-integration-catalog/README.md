@@ -63,6 +63,8 @@ runtime and Chief of Staff tools a typed catalog for:
 - mesh stage release summaries that combine substrate-stage blockers,
   primitive-readiness blockers, and mesh-scoped remediation into one release
   readiness rollup
+- mesh action readiness summaries that combine release readiness with the
+  substrate action queue and next concrete low-level action
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and

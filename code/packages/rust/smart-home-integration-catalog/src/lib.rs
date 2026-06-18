@@ -852,6 +852,55 @@ impl IntegrationMeshStageReleaseSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshActionReadinessSummary {
+    pub release_summary: IntegrationMeshStageReleaseSummary,
+    pub action_summary: IntegrationMeshProtocolSubstrateActionSummary,
+    pub total_protocols: usize,
+    pub queued_substrate_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub remediation_item_count: usize,
+    pub first_action_protocol: Option<ProtocolFamily>,
+    pub first_action_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_primitive: Option<PrimitiveFamily>,
+    pub substrate_actions_ready: bool,
+    pub release_ready: bool,
+}
+
+impl IntegrationMeshActionReadinessSummary {
+    pub fn from_parts(
+        release_summary: IntegrationMeshStageReleaseSummary,
+        action_summary: IntegrationMeshProtocolSubstrateActionSummary,
+    ) -> Self {
+        let substrate_actions_ready = action_summary.is_empty();
+        let release_ready = release_summary.release_ready && substrate_actions_ready;
+
+        Self {
+            total_protocols: release_summary.total_protocols,
+            queued_substrate_actions: action_summary.total_actions,
+            queued_stage_count: mesh_substrate_action_stage_count(&action_summary),
+            queued_primitive_count: action_summary.unique_primitives,
+            remediation_item_count: release_summary.remediation_item_count,
+            first_action_protocol: action_summary.first_protocol.clone(),
+            first_action_stage: action_summary.first_stage,
+            first_action_primitive: action_summary.first_primitive,
+            release_summary,
+            action_summary,
+            substrate_actions_ready,
+            release_ready,
+        }
+    }
+
+    pub fn has_substrate_actions(&self) -> bool {
+        self.queued_substrate_actions > 0
+    }
+
+    pub fn has_remediations(&self) -> bool {
+        self.remediation_item_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
     pub display_name: String,
@@ -20823,6 +20872,37 @@ pub fn mesh_stage_release_summary(
     )
 }
 
+pub fn mesh_action_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshActionReadinessSummary {
+    let release_summary = mesh_stage_release_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let action_summary = mesh_protocol_substrate_action_summary(available_primitives);
+
+    IntegrationMeshActionReadinessSummary::from_parts(release_summary, action_summary)
+}
+
+pub fn mesh_action_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshActionReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_action_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_protocol_catalog_entries(
     catalog: &[IntegrationCatalogEntry],
 ) -> Vec<IntegrationCatalogEntry> {
@@ -20917,6 +20997,21 @@ fn protocol_sort_token(protocol: &ProtocolFamily) -> String {
         ProtocolFamily::Vendor(value) => format!("vendor:{value}"),
         _ => format!("{protocol:?}"),
     }
+}
+
+fn mesh_substrate_action_stage_count(
+    summary: &IntegrationMeshProtocolSubstrateActionSummary,
+) -> usize {
+    [
+        summary.controller_actions,
+        summary.radio_actions,
+        summary.discovery_actions,
+        summary.network_security_actions,
+        summary.supervision_actions,
+    ]
+    .into_iter()
+    .filter(|count| *count > 0)
+    .count()
 }
 
 fn local_transport_primitives(
@@ -27169,6 +27264,64 @@ mod tests {
         assert!(summary.substrate_stage_summary.all_ready());
         assert!(summary.package_summary.primitive_substrate_ready);
         assert!(!summary.has_stage_blockers());
+    }
+
+    #[test]
+    fn mesh_action_readiness_summary_surfaces_next_substrate_action() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary =
+            mesh_action_readiness_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.queued_substrate_actions, 5);
+        assert_eq!(summary.queued_stage_count, 3);
+        assert_eq!(summary.queued_primitive_count, 3);
+        assert!(summary.remediation_item_count > 0);
+        assert_eq!(summary.first_action_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_action_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.substrate_actions_ready);
+        assert!(!summary.release_ready);
+        assert!(summary.has_substrate_actions());
+        assert!(summary.has_remediations());
+        assert_eq!(summary.action_summary.total_actions, 5);
+        assert_eq!(summary.release_summary.stage_blocker_count, 5);
+    }
+
+    #[test]
+    fn mesh_action_readiness_summary_marks_clear_substrate_actions() {
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
+        ];
+        let summary =
+            mesh_action_readiness_summary(all_primitive_families(), &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.queued_substrate_actions, 0);
+        assert_eq!(summary.queued_stage_count, 0);
+        assert_eq!(summary.queued_primitive_count, 0);
+        assert_eq!(summary.first_action_protocol, None);
+        assert_eq!(summary.first_action_stage, None);
+        assert_eq!(summary.first_action_primitive, None);
+        assert!(summary.substrate_actions_ready);
+        assert!(!summary.has_substrate_actions());
+        assert_eq!(summary.action_summary.total_actions, 0);
+        assert_eq!(summary.release_summary.stage_blocker_count, 0);
     }
 
     #[test]
