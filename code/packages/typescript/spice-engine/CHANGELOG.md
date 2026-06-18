@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Accept selected `.control` block read-only `echo`, `rusage`, and `where`
+  console/debug commands as no-op control commands in `analyzeDeckControls`
+  and `resolveDeckSources`, matching Python and Rust. Actual console/debug
+  output remains out of scope for these markers.
 - Accept selected `.control` block read-only `status`, `version`, and `help`
   UI introspection commands as no-op control commands in `analyzeDeckControls`
   and `resolveDeckSources`, matching Python and Rust. Actual console/help

@@ -43,8 +43,9 @@ downstream tools to compare.
      plus target-bearing rawfile `write <rawfile> [probes...]` markers and
      ASCII data-write `wrdata <file> <probes...>` markers are accepted as
      no-op control markers, and read-only `display` / `listing` / `show` /
-     `showmod` / `status` / `version` / `help` inspection and introspection
-     commands are accepted as no-op control markers; parsed
+     `showmod` / `status` / `version` / `help` / `echo` / `rusage` / `where`
+     inspection, introspection, and console/debug commands are accepted as
+     no-op control markers; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -662,6 +663,17 @@ downstream tools to compare.
       variables, and unrecognized non-comment commands inside `.control`
       blocks remain diagnostic-only so unsupported UI output and script state
       are explicit.
+
+60. Selected `.control` console/debug marker routing.
+    - Status: completed in this selected control console/debug-marker routing
+      slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      read-only `echo`, `rusage`, and `where` console/debug commands as no-op
+      control commands.
+    - Actual console/debug output, mutating control-flow commands, external
+      script execution, other `set` variables, and unrecognized non-comment
+      commands inside `.control` blocks remain diagnostic-only so unsupported
+      UI output and script state are explicit.
 
 ## Backlog
 
