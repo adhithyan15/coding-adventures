@@ -77,7 +77,26 @@ pub struct SpreadsheetSession {
     /// user's text. Its lifecycle tracks the engine's: kept on a copy, dropped
     /// on the paste that consumes a cut, untouched on a rejected paste.
     clip: Option<RawClip>,
+    /// Undo history: serialized full-document snapshots of the state *before*
+    /// each mutating edit, newest at the back. [`undo`](Self::undo) pops one and
+    /// restores it; [`redo`](Self::redo) replays from `redo_stack`. We snapshot
+    /// the whole document (source + formats, via [`serialize`](Self::serialize))
+    /// rather than per-op inverses, so undo/redo is automatically correct for
+    /// *every* edit — set, fill, clipboard, structural, format, load — and any
+    /// future one, with no per-op bookkeeping. The clipboard buffer is a
+    /// transient editing aid, not document state, so it is deliberately *not*
+    /// captured (undo restores cells, not what's on the clipboard).
+    undo_stack: Vec<String>,
+    /// Redo history: snapshots of states undone away, newest at the back. Any new
+    /// edit clears this (you can't redo past a fresh divergence) — the standard
+    /// linear undo model.
+    redo_stack: Vec<String>,
 }
+
+/// How many undo snapshots to retain. Old entries past this are dropped from the
+/// front, so history is bounded regardless of session length (the oldest edits
+/// become un-undoable, exactly like a real editor's finite history).
+const MAX_HISTORY: usize = 100;
 
 /// The facade's raw-text snapshot of a copied/cut rectangle, paired 1:1 with the
 /// engine's clipboard. Offsets are from the source range's top-left anchor.
@@ -101,7 +120,73 @@ impl SpreadsheetSession {
             sheet,
             raw: HashMap::new(),
             clip: None,
+            undo_stack: Vec::new(),
+            redo_stack: Vec::new(),
         }
+    }
+
+    // ── Undo / redo ─────────────────────────────────────────────────
+    //
+    // History is snapshot-based: every mutating edit is run through [`mutate`],
+    // which captures the document (serialize) before the edit and, *only if the
+    // edit actually changed something*, pushes that pre-state onto `undo_stack`
+    // and clears `redo_stack`. So a no-op (a failed `set_cell`, a `copy` that
+    // only touches the clipboard, an off-grid `fill`) leaves history untouched —
+    // the user never has to press undo twice for one visible change. `undo`/
+    // `redo` swap snapshots between the two stacks and restore via the same
+    // machinery `deserialize` uses, so they correctly rebuild the formula-bar
+    // echo and recompute every dependent.
+
+    /// Run a mutating edit, recording an undo checkpoint iff it changed the
+    /// document. `before`/`after` are full serializations; comparing them gates
+    /// out no-ops so history stays meaningful (a sparse demo sheet serializes to
+    /// a few hundred bytes, so the double-serialize is cheap).
+    fn mutate<T>(&mut self, f: impl FnOnce(&mut Self) -> T) -> T {
+        let before = self.wb.serialize();
+        let result = f(self);
+        if self.wb.serialize() != before {
+            self.undo_stack.push(before);
+            // Bound the history: drop the oldest snapshot once we exceed the cap.
+            if self.undo_stack.len() > MAX_HISTORY {
+                self.undo_stack.remove(0);
+            }
+            self.redo_stack.clear();
+        }
+        result
+    }
+
+    /// `true` if there is an edit to undo.
+    pub fn can_undo(&self) -> bool {
+        !self.undo_stack.is_empty()
+    }
+
+    /// `true` if there is an undone edit to redo.
+    pub fn can_redo(&self) -> bool {
+        !self.redo_stack.is_empty()
+    }
+
+    /// Undo the most recent edit: restore the document to its state before that
+    /// edit, pushing the current state onto the redo stack. Returns `false`
+    /// (nothing happened) when there is nothing to undo.
+    pub fn undo(&mut self) -> bool {
+        let Some(prev) = self.undo_stack.pop() else {
+            return false;
+        };
+        self.redo_stack.push(self.wb.serialize());
+        self.load_snapshot(&prev);
+        true
+    }
+
+    /// Redo the most recently undone edit: restore the state that was undone
+    /// away, pushing the current state back onto the undo stack. Returns `false`
+    /// when there is nothing to redo.
+    pub fn redo(&mut self) -> bool {
+        let Some(next) = self.redo_stack.pop() else {
+            return false;
+        };
+        self.undo_stack.push(self.wb.serialize());
+        self.load_snapshot(&next);
+        true
     }
 
     /// Set a cell from a raw, user-typed string and recompute dependents.
@@ -119,11 +204,13 @@ impl SpreadsheetSession {
     /// and keeps the typed text (so the formula bar can still show it), exactly
     /// as a spreadsheet would.
     pub fn set_cell(&mut self, a1: &str, raw: &str) -> String {
-        match catch_unwind(AssertUnwindSafe(|| self.set_cell_inner(a1, raw))) {
-            Ok(Ok(())) => json!({ "ok": true }).to_string(),
-            Ok(Err(msg)) => json!({ "ok": false, "error": msg }).to_string(),
-            Err(_) => json!({ "ok": false, "error": "internal error" }).to_string(),
-        }
+        self.mutate(|s| {
+            match catch_unwind(AssertUnwindSafe(|| s.set_cell_inner(a1, raw))) {
+                Ok(Ok(())) => json!({ "ok": true }).to_string(),
+                Ok(Err(msg)) => json!({ "ok": false, "error": msg }).to_string(),
+                Err(_) => json!({ "ok": false, "error": "internal error" }).to_string(),
+            }
+        })
     }
 
     fn set_cell_inner(&mut self, a1: &str, raw: &str) -> Result<(), String> {
@@ -182,6 +269,10 @@ impl SpreadsheetSession {
     }
 
     fn structural_edit(&mut self, edit: StructuralEdit) {
+        self.mutate(|s| s.structural_edit_inner(edit));
+    }
+
+    fn structural_edit_inner(&mut self, edit: StructuralEdit) {
         // Mirror the engine's guard: an insert that would push a non-empty cell
         // off the u32 grid edge is rejected wholesale (the saturating shift would
         // otherwise collide raw entries onto the same address). Both sides apply
@@ -229,6 +320,10 @@ impl SpreadsheetSession {
     /// echo map honest — each target's stored source is the source's source with
     /// its references shifted (so the formula bar shows the filled formula).
     pub fn fill(&mut self, src_a1: &str, dst_start_a1: &str, dst_end_a1: &str) {
+        self.mutate(|s| s.fill_inner(src_a1, dst_start_a1, dst_end_a1));
+    }
+
+    fn fill_inner(&mut self, src_a1: &str, dst_start_a1: &str, dst_end_a1: &str) {
         let (Ok(src), Ok(ds), Ok(de)) = (
             CellAddress::parse(src_a1),
             CellAddress::parse(dst_start_a1),
@@ -336,6 +431,10 @@ impl SpreadsheetSession {
     /// echo all ride along, and source blanks erase their targets. A cut then
     /// clears the source echo it didn't overwrite and consumes the buffer.
     pub fn paste(&mut self, dst_start_a1: &str) -> bool {
+        self.mutate(|s| s.paste_inner(dst_start_a1))
+    }
+
+    fn paste_inner(&mut self, dst_start_a1: &str) -> bool {
         let Some(clip) = self.clip.take() else {
             return false;
         };
@@ -419,6 +518,18 @@ impl SpreadsheetSession {
     /// pinned single sheet is re-bound (a zero-sheet file gets a fresh "Sheet1"
     /// so the facade stays usable).
     pub fn deserialize(&mut self, data: &str) -> bool {
+        // A file-load is an undoable edit, so route it through `mutate` (which
+        // checkpoints iff the document actually changed). undo/redo restore via
+        // `load_snapshot` directly, bypassing history.
+        self.mutate(|s| s.load_snapshot(data))
+    }
+
+    /// Restore the document from a JSON snapshot, *without* touching history.
+    /// Shared by the public [`deserialize`](Self::deserialize) (a user load) and
+    /// by [`undo`](Self::undo)/[`redo`](Self::redo). Returns `true` on success,
+    /// `false` for malformed JSON / unsupported version / bad structure (the
+    /// engine leaves itself untouched on a bad header).
+    fn load_snapshot(&mut self, data: &str) -> bool {
         if self.wb.deserialize(data).is_err() {
             return false;
         }
@@ -495,9 +606,12 @@ impl SpreadsheetSession {
     /// Set a cell's display format code. An empty code clears it (the cell falls
     /// back to `General`). A malformed address is a no-op.
     pub fn set_format(&mut self, a1: &str, code: &str) {
-        if let Ok(addr) = CellAddress::parse(a1) {
-            self.wb.set_format(self.sheet, addr, code);
-        }
+        self.mutate(|s| {
+            if let Ok(addr) = CellAddress::parse(a1) {
+                let sheet = s.sheet;
+                s.wb.set_format(sheet, addr, code);
+            }
+        });
     }
 
     /// A cell's display format code, or `""` if it uses the default (`General`).
@@ -962,6 +1076,81 @@ mod tests {
         assert!(s.deserialize(r#"{"version":1,"sheets":[]}"#));
         s.set_cell("A1", "1"); // no panic — the pinned sheet was re-created
         assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":1.0}"#);
+    }
+
+    #[test]
+    fn undo_redo_walks_the_edit_history() {
+        let mut s = SpreadsheetSession::new();
+        assert!(!s.can_undo()); // fresh session: nothing to undo
+        assert!(!s.can_redo());
+
+        s.set_cell("A1", "1");
+        s.set_cell("A1", "2");
+        s.set_cell("B1", "=A1*10"); // 20
+        assert_eq!(s.get_value("B1"), r#"{"kind":"number","value":20.0}"#);
+        assert!(s.can_undo());
+
+        // Undo the formula: B1 is gone, A1 still 2.
+        assert!(s.undo());
+        assert_eq!(s.get_raw("B1"), "");
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":2.0}"#);
+        // Undo A1=2 → back to A1=1.
+        assert!(s.undo());
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":1.0}"#);
+
+        // Redo replays A1=2, then the formula (which recomputes live: 20).
+        assert!(s.redo());
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":2.0}"#);
+        assert!(s.redo());
+        assert_eq!(s.get_raw("B1"), "=A1*10");
+        assert_eq!(s.get_value("B1"), r#"{"kind":"number","value":20.0}"#);
+        assert!(!s.can_redo());
+
+        // Undo back one, then a NEW edit clears the redo branch.
+        assert!(s.undo()); // remove B1 again
+        assert!(s.can_redo());
+        s.set_cell("C1", "9");
+        assert!(!s.can_redo(), "a fresh edit forks history, dropping redo");
+
+        // A loaded formula stays live after undo: A1 still feeds nothing now, but
+        // editing a precedent of a *restored* formula recomputes it.
+        assert!(s.undo()); // undo C1
+        assert!(s.undo()); // undo A1=2 → A1=1 (B1 already gone)
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":1.0}"#);
+    }
+
+    #[test]
+    fn no_op_edits_do_not_pollute_history() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "5");
+        assert!(s.can_undo());
+        let depth_before = s.undo_stack.len();
+
+        // A failed set (bad address), a copy (clipboard only — no cell change),
+        // and a fill from an empty source into an empty target all leave the
+        // document unchanged → no new undo checkpoint.
+        s.set_cell("not-an-address", "1");
+        s.copy("A1", "A1");
+        s.fill("X1", "X2", "X2"); // empty → empty: a true no-op
+        // Re-set A1 to the SAME value: still a no-op for the document.
+        s.set_cell("A1", "5");
+        assert_eq!(s.undo_stack.len(), depth_before, "no-ops added no history");
+
+        // One real edit adds exactly one checkpoint.
+        s.set_cell("A1", "6");
+        assert_eq!(s.undo_stack.len(), depth_before + 1);
+        assert!(s.undo());
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":5.0}"#);
+    }
+
+    #[test]
+    fn undo_redo_on_empty_history_is_a_safe_noop() {
+        let mut s = SpreadsheetSession::new();
+        assert!(!s.undo());
+        assert!(!s.redo());
+        // History survives reads; still nothing to do.
+        let _ = s.get_value("A1");
+        assert!(!s.undo());
     }
 
     #[test]
