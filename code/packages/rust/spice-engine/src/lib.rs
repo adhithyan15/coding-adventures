@@ -6909,7 +6909,16 @@ fn is_noop_control_block_command(line: &str) -> bool {
     };
     if matches!(
         command.as_str(),
-        "run" | ".run" | "reset" | ".reset" | "quit" | ".quit"
+        "display"
+            | ".display"
+            | "listing"
+            | ".listing"
+            | "run"
+            | ".run"
+            | "reset"
+            | ".reset"
+            | "quit"
+            | ".quit"
     ) {
         return true;
     }

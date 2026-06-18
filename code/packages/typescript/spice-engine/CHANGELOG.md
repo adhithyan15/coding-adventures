@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Accept selected `.control` block read-only `display` and `listing`
+  inspection commands as no-op control commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust. Actual console/listing
+  output remains out of scope for these markers.
 - Accept selected `.control` block `wrdata <file> <probes...>` ASCII
   data-write markers as no-op control commands in `analyzeDeckControls` and
   `resolveDeckSources`, matching Python and Rust. Actual data-file

@@ -133,6 +133,8 @@ set filetype=binary
 write out.raw V(out)
 wrdata out.dat V(out)
 wrdata empty.dat
+display all
+listing physical
 run
 quit
 .endc
@@ -254,6 +256,8 @@ four 2k V(b)
 .set appendwrite
 .write out.raw V(a)
 .wrdata out.dat V(a)
+.display all
+.listing deck
 run
 .quit
 .endc

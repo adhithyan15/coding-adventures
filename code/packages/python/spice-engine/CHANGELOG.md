@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck control inspection marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `display` and `listing` inspection commands as
+  no-op control commands instead of reporting unsupported-command diagnostics,
+  matching Rust and TypeScript. Actual console/listing output remains out of
+  scope for these markers.
+
 - **Deck control WRDATA marker routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
   `.control` block `wrdata <file> <probes...>` ASCII data-write markers as
