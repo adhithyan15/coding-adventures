@@ -53,6 +53,8 @@ Chief of Staff job/session/agent
   -> activation-decision list and summary reads for approve/block queue planning
   -> activation-evidence list and summary reads for approval/block evidence rows
   -> activation-evidence remediation list and summary reads for D23A lane fixes
+  -> activation-evidence lane inventory and scorecard summary reads for blocker
+     lane rollups
   -> activation-dossier list and summary reads for bundled decision evidence
   -> activation-dashboard list and summary reads for priority-wave status cards
   -> activation-timeline list and summary reads for ordered wave milestones
@@ -130,6 +132,9 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_evidence_summary`
 - `smart_home.list_integration_activation_evidence_remediation`
 - `smart_home.get_integration_activation_evidence_remediation_summary`
+- `smart_home.list_integration_activation_evidence_lane_inventory`
+- `smart_home.get_integration_activation_evidence_lane_inventory_summary`
+- `smart_home.get_integration_activation_evidence_scorecard_summary`
 - `smart_home.list_integration_activation_dossiers`
 - `smart_home.get_integration_activation_dossier_summary`
 - `smart_home.list_integration_activation_readouts`
