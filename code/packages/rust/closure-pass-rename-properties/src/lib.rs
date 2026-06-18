@@ -384,6 +384,55 @@ fn rename_properties(
     true
 }
 
+/// Collect **every property name that appears anywhere** in `program` —
+/// the property-namespace boundary an externs file declares.
+///
+/// This is the property-renaming analogue of collecting an externs file's
+/// top-level variable/function names (the *value*-namespace boundary). A
+/// driver that wants to feed an externs file's properties into a
+/// [`RenamePropertiesPass`] `do_not_rename` set walks each externs program
+/// through this function and unions the results.
+///
+/// We return the **union of dotted and quoted occurrences**, deliberately
+/// over-collecting:
+///
+/// * `el.innerHTML` (dotted)        → `innerHTML`
+/// * `obj["data-id"]` (quoted)      → `data-id`
+/// * `{ onload: f }` (unquoted key) → `onload`
+/// * `{ "aria-label": s }` (quoted) → `aria-label`
+///
+/// Why every occurrence, not just the renameable (dotted) ones? Because an
+/// externs file is a *declaration of the external boundary*: any property
+/// it names is part of the host/library contract and must be preserved in
+/// the program being compiled. Including quoted names too only ever
+/// *protects more* — forgoing a rename is never a miscompile, whereas
+/// renaming a genuinely external property is. (Computed dynamic keys like
+/// `obj[runtimeExpr]` contribute nothing — there is no static name to
+/// protect; that access is the author's own contract, exactly as in the
+/// pass itself.)
+///
+/// ```
+/// use coding_adventures_closure_pass_rename_properties::collect_property_names;
+/// use coding_adventures_javascript_ast::{Program, SourceType};
+/// use coding_adventures_javascript_tokens::EsVersion;
+/// // An empty externs program declares no property boundary.
+/// let empty = Program::new("ext.1".to_string(), EsVersion::Es2025, SourceType::Module);
+/// assert!(collect_property_names(&empty).is_empty());
+/// ```
+pub fn collect_property_names(program: &Program) -> HashSet<String> {
+    let mut cls = Classify::default();
+    let mut nodes_touched: u32 = 0;
+    for item in &program.body {
+        classify_item(item, &mut cls, &mut nodes_touched);
+    }
+    // The union of both buckets: dotted (renameable-shape) and quoted
+    // (off-limits-shape) occurrences. As an externs boundary, both kinds
+    // are equally external and must be protected.
+    let mut names = cls.dotted_seen;
+    names.extend(cls.quoted);
+    names
+}
+
 /// Generates `a`, `b`, …, `z`, `aa`, … skipping reserved words and the
 /// caller's `avoid` set.
 struct FreshNames {
@@ -943,5 +992,94 @@ mod tests {
         // outer object's property (`outerField`) is seen first → `a`,
         // then `innerField` → `b`.
         assert_eq!(rename("read(a.outerField.innerField);"), "read(a.a.b);");
+    }
+
+    // ----- collect_property_names (externs property boundary) -----
+
+    /// Parse `src` and collect its property names — the helper a driver
+    /// uses to turn an externs file into a `do_not_rename` set.
+    fn collect(src: &str) -> HashSet<String> {
+        let es = EsVersion::Es2025;
+        let node = parse_javascript_typed(src, es).expect("parse");
+        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        collect_property_names(&prog)
+    }
+
+    #[test]
+    fn collect_empty_program_is_empty() {
+        assert!(collect_property_names(&program()).is_empty());
+    }
+
+    #[test]
+    fn collect_dotted_member_read() {
+        // `el.innerHTML` — a dotted access names `innerHTML` as external.
+        let names = collect("read(el.innerHTML);");
+        assert!(names.contains("innerHTML"));
+    }
+
+    #[test]
+    fn collect_quoted_member_read() {
+        // `obj["data-id"]` — a quoted access still names `data-id`. As an
+        // externs boundary we protect it (over-collecting is always safe).
+        let names = collect("read(obj[\"data-id\"]);");
+        assert!(names.contains("data-id"));
+    }
+
+    #[test]
+    fn collect_unquoted_object_key() {
+        // `{ onload: f }` — an unquoted key names `onload`.
+        let names = collect("var handlers = { onload: cb };");
+        assert!(names.contains("onload"));
+    }
+
+    #[test]
+    fn collect_quoted_object_key() {
+        // `{ "aria-label": s }` — a quoted key names `aria-label`.
+        let names = collect("var attrs = { \"aria-label\": label };");
+        assert!(names.contains("aria-label"));
+    }
+
+    #[test]
+    fn collect_unions_multiple_occurrences() {
+        // Dotted + quoted + object-key occurrences all land in one set.
+        let names =
+            collect("read(el.innerHTML); read(node[\"textContent\"]); var o = { onclick: h };");
+        assert!(names.contains("innerHTML"));
+        assert!(names.contains("textContent"));
+        assert!(names.contains("onclick"));
+    }
+
+    #[test]
+    fn collect_ignores_dynamic_computed_key() {
+        // `obj[runtimeKey]` has no static name — there is nothing to
+        // protect, so it contributes nothing to the boundary. (`prefix`
+        // is still collected from the dotted access.)
+        let names = collect("read(obj[runtimeKey]); read(obj.prefix);");
+        assert!(names.contains("prefix"));
+        assert!(!names.contains("runtimeKey"));
+    }
+
+    #[test]
+    fn collect_walks_into_function_bodies() {
+        // Property accesses nested inside a function declaration are still
+        // part of the externs boundary.
+        let names = collect("function api(x){ return x.payload; }");
+        assert!(names.contains("payload"));
+    }
+
+    #[test]
+    fn collected_externs_protect_a_property_from_rename() {
+        // End-to-end intent: feeding collected externs names into the pass
+        // keeps those properties while still renaming program-private ones.
+        let externs = collect("read(boundary.innerHTML);");
+        let externs_vec: Vec<&str> = externs.iter().map(|s| s.as_str()).collect();
+        // `innerHTML` is in the boundary → kept; `secretField` is private
+        // → renamed to a short name.
+        let out = rename_with(
+            "read(node.innerHTML); read(node.secretField); read(node.secretField);",
+            &externs_vec,
+        );
+        assert!(out.contains(".innerHTML"));
+        assert!(!out.contains("secretField"));
     }
 }

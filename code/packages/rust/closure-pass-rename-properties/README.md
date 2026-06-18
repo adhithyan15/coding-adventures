@@ -52,11 +52,37 @@ when a variable `a` exists).
 - Dynamic computed access `obj[runtimeString]` is the author's contract
   responsibility, exactly as in Closure.
 
+## Building the externs property boundary — `collect_property_names`
+
+The pass protects a `do_not_rename` set, but a driver needs to *build* that
+set from the user's `--externs` files. The crate exposes:
+
+```rust
+pub fn collect_property_names(program: &Program) -> HashSet<String>
+```
+
+It returns **every property name appearing anywhere** in a program — dotted
+(`el.innerHTML`), quoted (`obj["data-id"]`), and object keys (unquoted
+`{ onload: f }` and quoted `{ "aria-label": s }`). A driver parses each
+`--externs` file, walks it through `collect_property_names`, unions the
+results, and hands that set to `RenamePropertiesPass::new`. It over-collects
+deliberately: any property an externs file names is external and must be
+preserved, and forgoing a rename is never a miscompile. Dynamic computed
+keys (`obj[runtimeExpr]`) contribute nothing — there is no static name.
+
+This is the property-namespace twin of collecting an externs file's
+top-level variable/function names (the value-namespace boundary that gates
+`rename-globals`).
+
 ## Status
 
-This crate is the **algorithmic core**; wiring it into ADVANCED (collect
-externs property names + decide the safe-by-default policy) is a
-deliberate follow-up.
+This crate is the **algorithmic core** plus the externs-boundary collector.
+It is wired into closurec's ADVANCED level under a **safe-by-default policy**:
+property renaming runs only when the user passes at least one `--externs`
+file (opting into the externs contract and supplying the host/DOM property
+boundary). Without `--externs`, ADVANCED leaves property names untouched —
+the built-in list omits the DOM, so renaming by default would miscompile
+browser code.
 
 ## Dependency whitelist
 
