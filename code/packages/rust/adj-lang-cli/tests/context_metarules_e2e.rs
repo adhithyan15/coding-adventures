@@ -143,3 +143,30 @@ fn lex_specialis_metarule_picks_the_more_specific_statute() {
         "clean override, not a split: {s}"
     );
 }
+
+#[test]
+fn colliding_canons_abstain_with_an_honest_conflict() {
+    // ADJ73 §4.3: lex superior (federal > state) and lex specialis (state is more specific →
+    // state > federal) point OPPOSITE ways. The contradiction has no further grounded tiebreaker,
+    // so the engine ABSTAINS — both readings are conflict_peers and has_conflict is true — rather
+    // than silently crowning one canon (or silently double-defeating both). The "else CONFLICT".
+    let (ok, s) = run("worked-canon-conflict-example.adj");
+    assert!(ok, "cli should succeed: {s}");
+    assert!(
+        s.contains("\"has_conflict\":true"),
+        "the canon collision is flagged: {s}"
+    );
+    // Neither reading is silently 'defeated' or 'governing' — both are surfaced as peers.
+    assert!(
+        s.contains("\"status\":\"conflict_peer\""),
+        "the colliding readings are conflict peers: {s}"
+    );
+    assert!(
+        !s.contains("\"status\":\"governing\""),
+        "nothing governs under contradictory precedence: {s}"
+    );
+    assert!(
+        s.contains("\"context\":\"federal\"") && s.contains("\"context\":\"state\""),
+        "both contexts are present in the unresolved set: {s}"
+    );
+}

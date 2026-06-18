@@ -1,0 +1,52 @@
+% =====================================================================
+% worked-canon-conflict-example.adj — when canons COLLIDE (ADJ73 §4.3).
+%
+% THE CASE.  A matter is governed two ways:
+%   • a GENERAL federal provision says "permitted" (context: federal);
+%   • a SPECIFIC state provision says "prohibited" (context: state).
+% Which governs?  Two grounded canons point OPPOSITE ways:
+%   • LEX SUPERIOR (context-precedence.adj): federal outranks state (Supremacy Clause)
+%       ⇒ the federal "permitted" reading should win.
+%   • LEX SPECIALIS (context-precedence-meta.adj): the more-specific provision controls,
+%     and here the state statute is the specific one (`more_specific(state, federal)`)
+%       ⇒ the state "prohibited" reading should win.
+%
+% The two derived/asserted edges form a CONTRADICTION: federal > state AND state > federal.
+% There is no further grounded meta-rule yet to break this particular tie, so the honest
+% outcome is **CONFLICT** — the engine ABSTAINS rather than silently pick one canon:
+%
+%   rule_on(matter, permitted)   status conflict_peer   context federal
+%   rule_on(matter, prohibited)  status conflict_peer   context state
+%   has_conflict: true
+%
+% This is ADJ73 §4.3: "when lex specialis and lex superior point opposite ways, a further
+% grounded meta-rule decides — else CONFLICT (abstain)." Neither reading is silently
+% defeated; both are surfaced as peers so a human (or a future grounded tiebreaker
+% meta-rule, e.g. "in this jurisdiction lex specialis prevails over lex superior for
+% statutory interpretation") resolves it. 0 answer-time model calls. The right behavior
+% for a genuine split of authority is to say so, not to guess.
+% =====================================================================
+
+import "context-precedence.adj"        % grounded lex-superior edges (federal > state, …)
+import "context-precedence-meta.adj"   % the conflict-resolution canons (incl. lex specialis)
+
+functional rule_on(topic, ruling)
+
+% The STATE provision is the more specific one on this matter → lex specialis derives
+% outranks_context(state, federal), which contradicts the grounded federal > state edge.
+relate more_specific(state, federal)
+  source "The state statute addresses this specific situation; the federal provision is general."
+  locator "statutory subject-matter comparison"
+  trust authoritative
+
+% The general federal reading (permitted), grounded in the federal context.
+rule { head: rule_on(matter, permitted)  when: federal_general  context: federal }
+
+% The specific state reading (prohibited), grounded in the state context.
+rule { head: rule_on(matter, prohibited) when: state_specific   context: state }
+
+observe federal_general
+observe state_specific
+
+% Which governs?  → CONFLICT: the two canons contradict and nothing breaks the tie → abstain.
+? rule_on(matter, $ruling)
