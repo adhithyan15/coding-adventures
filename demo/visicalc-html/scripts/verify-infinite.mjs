@@ -171,5 +171,28 @@ ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] === "28.00",
 ok(wb.deserialize("not a workbook") === false, "deserialize rejects malformed input");
 ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] === "28.00", "rejected load left the workbook intact");
 
+// Undo / redo (the Undo / Redo buttons): make two fresh edits, walk the history
+// back and forward, and confirm a restored formula recomputes live. Uses a fresh
+// session so the long edit history above doesn't muddy the expected can-undo end.
+const wbh = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+ok(wbh.canUndo() === false, "fresh session has nothing to undo");
+wbh.setCell("A1", "1");
+wbh.setCell("B1", "=A1*10"); // 10
+ok(wbh.canUndo() === true, "after edits, canUndo is true");
+ok(wbh.undo() === true, "undo the formula");
+ok(wbh.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "", "B1 cleared by undo");
+ok(wbh.undo() === true, "undo the literal");
+ok(wbh.getDisplayWindow(1, 1, 1, 1).cells[0][0] === "", "A1 cleared by undo");
+ok(wbh.canUndo() === false && wbh.undo() === false, "history bottom: nothing to undo");
+ok(wbh.redo() === true, "redo the literal");
+ok(wbh.redo() === true, "redo the formula");
+ok(wbh.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "10",
+  `B1 recomputed live after redo: ${wbh.getDisplayWindow(1, 2, 1, 2).cells[0][0]}`);
+ok(wbh.canRedo() === false && wbh.redo() === false, "history top: nothing to redo");
+// A fresh edit forks history (drops the redo branch).
+wbh.undo(); // back to A1=1, B1 gone
+wbh.setCell("C1", "9");
+ok(wbh.canRedo() === false, "a fresh edit clears the redo branch");
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);

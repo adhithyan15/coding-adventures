@@ -35,12 +35,17 @@ it through a C ABI.)
 > (`workbook.deserialize`): the document captures only the *source* (formula text
 > + typed literals) and per-cell formats — not the computed values, which the
 > engine recomputes on load, so a loaded formula stays live.
+> The **Undo / Redo** buttons walk the engine's snapshot history
+> (`workbook.undo`/`redo`, gated by `canUndo`/`canRedo`): every edit is
+> reversible, a restored formula recomputes live, and a fresh edit forks history
+> (drops the redo branch).
 > Headless proof: `node scripts/verify-infinite.mjs` replays the exact windowing
 > math against the committed WASM bundle and asserts the render stays bounded,
 > the formatted display strings are correct, a formula 1000 rows down is
 > reachable, the gaps are empty (sparse), an edit's diff reaches the far cell
-> that depends on it, and a save → mutate → load round trip restores the
-> workbook (formulas recompute live; garbage input is rejected).
+> that depends on it, a save → mutate → load round trip restores the
+> workbook (formulas recompute live; garbage input is rejected), and an
+> undo/redo walk reverses two edits then replays them with the formula live.
 
 ## What it shows
 

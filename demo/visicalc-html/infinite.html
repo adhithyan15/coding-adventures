@@ -98,6 +98,8 @@
       <button id="pasteCell" title="Paste the clipboard at the selected cell, shifting relative references">Paste</button>
       <button id="saveBook" title="Serialize the whole workbook (formulas + formats) to browser storage">Save</button>
       <button id="loadBook" title="Reload the workbook from the last saved snapshot">Load</button>
+      <button id="undoBtn" title="Undo the last edit">Undo</button>
+      <button id="redoBtn" title="Redo the last undone edit">Redo</button>
     </div>
 
     <div class="sheet" id="sheet">
@@ -198,6 +200,8 @@
         TOTAL_COLS + "</b> cols &nbsp;·&nbsp; DOM cells materialized: <b>" +
         cellsEl.children.length + "</b> &nbsp;·&nbsp; revision <b>" +
         workbook.currentRevision() + "</b>";
+
+      refreshHistoryButtons(); // keep Undo/Redo enabled state in step with history
     }
 
     var ticking = false;
@@ -310,6 +314,26 @@
       render();
       formulaEl.value = workbook.getRaw(a1(selRow, selCol)); // refresh the bar
       statusEl.innerHTML += " &nbsp;·&nbsp; loaded snapshot (" + json.length + " bytes)";
+    });
+
+    // Undo / redo: walk the engine's snapshot history. After a successful
+    // undo/redo the whole visible window is re-read (any cell could have changed)
+    // and the formula bar re-synced; the buttons disable at the ends of history.
+    function refreshHistoryButtons() {
+      document.getElementById("undoBtn").disabled = !workbook.canUndo();
+      document.getElementById("redoBtn").disabled = !workbook.canRedo();
+    }
+    document.getElementById("undoBtn").addEventListener("click", function () {
+      if (!workbook.undo()) return;
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      statusEl.innerHTML += " &nbsp;·&nbsp; undo";
+    });
+    document.getElementById("redoBtn").addEventListener("click", function () {
+      if (!workbook.redo()) return;
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      statusEl.innerHTML += " &nbsp;·&nbsp; redo";
     });
 
     // The classic cross-footing budget, PLUS deliberately far-flung cells to
