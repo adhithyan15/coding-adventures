@@ -119,6 +119,9 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_mesh_substrate_stage_summary`,
   `smart_home.get_integration_mesh_readiness_package_summary`, and
   `smart_home.get_integration_mesh_stage_release_summary`.
+- Added D18D handlers for D23 mesh substrate action queues and action-readiness
+  rollups: `smart_home.list_integration_mesh_substrate_actions` and
+  `smart_home.get_integration_mesh_action_readiness_summary`.
 - Added D18D handlers for D23A activation remediation work orders:
   `smart_home.list_integration_activation_remediation` and
   `smart_home.get_integration_activation_remediation_summary`.
