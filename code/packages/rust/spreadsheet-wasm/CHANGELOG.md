@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0
+
+**Undo / redo (session history).** New zero-arg linear-memory exports `undo()`, `redo()`, `can_undo()`, `can_redo()` — each returns `i32` (1/0), no string marshalling. JS loader gains `undo()` / `redo()` / `canUndo()` / `canRedo()` (each → `boolean`). Rebuilt `pkg/spreadsheet_engine.wasm`. `js/smoke.mjs` extended: make two edits, undo both (B1 then A1 gone), redo both (the formula recomputes live → 10), and confirm `canUndo`/`canRedo` gate correctly and a redo at the top is a no-op. Delegates to spreadsheet-core-wasm 0.9.0's snapshot-based history.
+
 ## 0.8.0
 
 **Save / load (serialize).** New linear-memory exports `serialize() -> *u8` (a packed JSON document of the workbook's source + formats; read via the existing output convention) and `deserialize(data*, len) -> i32` (1 = loaded, 0 = malformed / unsupported version, leaving the workbook untouched). JS loader gains `serialize() -> string` and `deserialize(data) -> boolean`. Rebuilt `pkg/spreadsheet_engine.wasm`. `js/smoke.mjs` extended: serialize the workbook → load into a fresh session → confirm a moved cell and a live formula (edit F3 → G3 = F3*2 recomputes), and that garbage input is rejected.

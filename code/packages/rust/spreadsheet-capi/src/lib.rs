@@ -395,6 +395,79 @@ pub unsafe extern "C" fn sc_deserialize(s: *mut ScSession, data: *const c_char) 
     }
 }
 
+/// `undo()` — revert the most recent edit, restoring the document to its state
+/// before that edit. Returns `1` if an edit was undone, `0` if there was nothing
+/// to undo (or `s` is null). The host re-reads via `sc_get_window` /
+/// `sc_get_display_window` / `sc_get_raw` afterwards. See
+/// [`SpreadsheetSession::undo`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_undo(s: *mut ScSession) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    if (*s).inner.undo() {
+        1
+    } else {
+        0
+    }
+}
+
+/// `redo()` — replay the most recently undone edit. Returns `1` if an edit was
+/// redone, `0` if there was nothing to redo (or `s` is null). See
+/// [`SpreadsheetSession::redo`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_redo(s: *mut ScSession) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    if (*s).inner.redo() {
+        1
+    } else {
+        0
+    }
+}
+
+/// `can_undo()` → `1` if there is an edit to undo, else `0` (and `0` on a null
+/// `s`). Lets a host enable/disable an Undo control. See
+/// [`SpreadsheetSession::can_undo`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_can_undo(s: *mut ScSession) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    if (*s).inner.can_undo() {
+        1
+    } else {
+        0
+    }
+}
+
+/// `can_redo()` → `1` if there is an undone edit to redo, else `0` (and `0` on a
+/// null `s`). See [`SpreadsheetSession::can_redo`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_can_redo(s: *mut ScSession) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    if (*s).inner.can_redo() {
+        1
+    } else {
+        0
+    }
+}
+
 /// `get_display_window(row0, col0, row1, col1)` → display-window JSON (each cell
 /// is its value rendered through its format code). See
 /// [`SpreadsheetSession::get_display_window`]. Returns null only on a null `s`.
@@ -607,6 +680,43 @@ mod tests {
             assert_eq!(sc_deserialize(ptr::null_mut(), cdata.as_ptr()), 0);
             sc_session_free(s);
             sc_session_free(t);
+        }
+    }
+
+    #[test]
+    fn c_abi_undo_redo() {
+        unsafe {
+            let s = sc_session_new();
+            // Fresh session: nothing to undo or redo.
+            assert_eq!(sc_can_undo(s), 0);
+            assert_eq!(sc_can_redo(s), 0);
+
+            set(s, "A1", "1");
+            set(s, "B1", "=A1*10"); // 10
+            assert_eq!(value(s, "B1"), r#"{"kind":"number","value":10.0}"#);
+            assert_eq!(sc_can_undo(s), 1);
+
+            // Undo the formula, then the literal.
+            assert_eq!(sc_undo(s), 1);
+            assert_eq!(value(s, "B1"), r#"{"kind":"empty"}"#);
+            assert_eq!(sc_undo(s), 1);
+            assert_eq!(value(s, "A1"), r#"{"kind":"empty"}"#);
+            assert_eq!(sc_can_undo(s), 0);
+
+            // Redo both: B1 recomputes live (10).
+            assert_eq!(sc_redo(s), 1);
+            assert_eq!(value(s, "A1"), r#"{"kind":"number","value":1.0}"#);
+            assert_eq!(sc_redo(s), 1);
+            assert_eq!(value(s, "B1"), r#"{"kind":"number","value":10.0}"#);
+            assert_eq!(sc_can_redo(s), 0);
+            assert_eq!(sc_redo(s), 0); // nothing left to redo
+
+            // Null session: every call is a safe 0.
+            assert_eq!(sc_undo(ptr::null_mut()), 0);
+            assert_eq!(sc_redo(ptr::null_mut()), 0);
+            assert_eq!(sc_can_undo(ptr::null_mut()), 0);
+            assert_eq!(sc_can_redo(ptr::null_mut()), 0);
+            sc_session_free(s);
         }
     }
 
