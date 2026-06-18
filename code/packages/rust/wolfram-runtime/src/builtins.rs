@@ -43,7 +43,7 @@ use symbolic_vm::backend::{handler_fn, Handler};
 use symbolic_vm::vm::substitute;
 use symbolic_vm::VM;
 
-use symbolic_ir::{apply, flt, int, sym, IRApply, IRNode, ADD, LIST, MUL};
+use symbolic_ir::{apply, flt, int, sym, IRApply, IRNode, ADD, ASSIGN, LIST, MUL};
 
 use crate::lower::build_canonical_application;
 
@@ -83,6 +83,12 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("Do".to_string(), handler_fn(do_handler));
     m.insert("Sum".to_string(), handler_fn(sum_handler));
     m.insert("Product".to_string(), handler_fn(product_handler));
+    // W-8 local-scoping constructs. These are *held* heads (see [`SCOPING_HEADS`]
+    // and the `WolframBackend` held set) — their declaration list and body arrive
+    // unevaluated so the locals can be bound into the body before it evaluates.
+    m.insert("With".to_string(), handler_fn(with_handler));
+    m.insert("Module".to_string(), handler_fn(module_handler));
+    m.insert("Block".to_string(), handler_fn(block_handler));
     m
 }
 
@@ -98,6 +104,20 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
 /// (they may be expressions like `{i, n}`) while substituting `i` into the body
 /// per iteration.
 pub const ITERATION_HEADS: [&str; 4] = ["Table", "Do", "Sum", "Product"];
+
+/// The W-8 local-scoping heads, which must be **held** (args not pre-evaluated)
+/// so that the declaration list and body arrive unevaluated — the locals are
+/// bound *into* the body via `substitute` before the body is evaluated. The
+/// [`WolframBackend`](crate::backend::WolframBackend) folds these into its
+/// `hold_heads` set (union with the inner held set and [`ITERATION_HEADS`]).
+///
+/// Why held? `With[{x = 3}, x^2]` must *not* evaluate `x^2` up front — `x` is a
+/// local binder, and an eager eval would resolve it to a free symbol (or a
+/// stale global) with nothing left to substitute. Holding keeps both the decl
+/// list (`{x = 3}`, lowered to `List(Assign(x, 3))`) and the body (`x^2`)
+/// literal; the handler then evaluates each declaration's RHS itself and
+/// substitutes the locals into the body per scope entry.
+pub const SCOPING_HEADS: [&str; 3] = ["With", "Module", "Block"];
 
 // ---------------------------------------------------------------------------
 // List inspection — Length / First / Last / Part
@@ -465,6 +485,171 @@ fn fold_iteration(vm: &mut VM, expr: IRApply, op: &str, identity: IRNode) -> IRN
         acc = vm.eval(apply(sym(op), vec![acc, term]));
     }
     acc
+}
+
+// ---------------------------------------------------------------------------
+// Local scoping — With / Module / Block (W-8)
+// ---------------------------------------------------------------------------
+//
+// All three share one shape: a held declaration list `{x = e, …}` (lowered to
+// `List(Assign(x, e), …)`) and a held body. The handler parses the decls,
+// evaluates each RHS through the VM, builds an `index → value` mapping, and then
+// substitutes that mapping into the body before evaluating it — the **same**
+// `substitute` primitive W-7's iteration index and user-function parameters use.
+//
+// Substituting into a *copy* of the held body (rather than mutating the session
+// environment) is what makes the locals genuinely local: nothing is ever written
+// to the global env, so a local can neither leak past the body nor clobber a
+// same-named global. After `With[{x = 3}, x]`, a bare `x` is still the free
+// symbol `x`. (MA04 §11.2–§11.3.)
+//
+// The three heads differ only in how a declaration is allowed to look:
+//   * `With`  — every decl MUST be `name = value`; the value is evaluated.
+//   * `Module`— a decl may be `name = value` (evaluated) OR a bare `name`
+//               (uninitialised). An uninitialised local is **α-renamed** to a
+//               fresh gensym (`name$nnn`, mirroring real Wolfram) so it can never
+//               resolve to — and is never captured by — a same-named *global*.
+//   * `Block` — same decl grammar as `With` here. Its dynamic-vs-lexical scope
+//               difference is unobservable for the substitution-based subset
+//               (MA04 §11.3); a self-contained body behaves identically.
+//
+// Why gensym for uninitialised Module locals specifically? Mapping `u → u` (the
+// identity) would *not* shadow a global: `substitute` would leave the body's `u`
+// as the symbol `u`, which `vm.eval` then resolves against the session env to
+// any `u = 42` binding — a capture leak. Renaming `u → u$nnn` produces a symbol
+// the env has never bound, so it stays free (undefined) exactly as a fresh local
+// should. Initialised locals (`y = e`) don't need this: their `y` is replaced by
+// the *value* `eval(e)`, so no `y` symbol survives in the body to be captured.
+
+use std::sync::atomic::{AtomicU64, Ordering};
+
+/// Monotonic counter for `Module`'s gensym renaming of uninitialised locals.
+///
+/// Each uninitialised `Module` local `x` is renamed to `x$<n>` for a unique `n`,
+/// so it cannot collide with a global, a sibling local, or an outer scope's
+/// local of the same name. `Relaxed` ordering is sufficient — we only need each
+/// fetched value to be distinct, not ordered relative to other memory.
+static MODULE_GENSYM_COUNTER: AtomicU64 = AtomicU64::new(0);
+
+/// Allocate a fresh, never-before-used local name for `base` (e.g. `x` → `x$7`).
+fn fresh_local_name(base: &str) -> String {
+    let n = MODULE_GENSYM_COUNTER.fetch_add(1, Ordering::Relaxed);
+    format!("{base}${n}")
+}
+
+/// `With[{x = e, …}, body]` — bind each local to its evaluated RHS, substitute
+/// into the body, and evaluate. Lexical, immediate (the RHS is evaluated against
+/// the surrounding scope, so a decl may reference an outer binding). Every decl
+/// must be an initialised `name = value`; a bare-symbol decl (no value) or any
+/// other malformed decl/arity/non-list leaves the whole `With` unevaluated.
+fn with_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    scope_handler(vm, expr, /* allow_uninitialised = */ false)
+}
+
+/// `Block[{x = e}, body]` — temporarily binds `x` for the duration of `body`.
+/// In real Wolfram this is *dynamic* scope (it shadows a global `x`); for the
+/// substitution-based subset shipped here a self-contained body is observably
+/// identical to `With` (MA04 §11.3), so it shares the same decl grammar
+/// (every local must be initialised) and the same substitution mechanism.
+fn block_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    scope_handler(vm, expr, /* allow_uninitialised = */ false)
+}
+
+/// `Module[{x, y = e}, body]` — lexically-scoped locals. An initialised decl
+/// (`y = e`) is evaluated like `With`; an *uninitialised* decl (`x`) is α-renamed
+/// to a fresh gensym (`x$nnn`) so the body sees an undefined symbol that can
+/// never resolve to — or be captured by — a same-named global. This is the one
+/// head that accepts a bare-symbol declaration.
+fn module_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    scope_handler(vm, expr, /* allow_uninitialised = */ true)
+}
+
+/// Shared core of `With`/`Module`/`Block`: parse `{decls}`, evaluate each
+/// declaration's RHS, build the local mapping, substitute it into the body, and
+/// evaluate. `allow_uninitialised` controls whether a bare-symbol decl (no `=`)
+/// is permitted (`Module`) or rejected (`With`/`Block`).
+///
+/// Returns the form **unevaluated** (never a panic) on any malformed input:
+/// wrong arity, a non-`List` first argument, or a declaration that is neither a
+/// bare symbol nor a `name = value` assignment (or a bare symbol where a value
+/// is required). This mirrors the W-5/W-7 "I can't reduce this" convention.
+fn scope_handler(vm: &mut VM, expr: IRApply, allow_uninitialised: bool) -> IRNode {
+    // Head[{decls}, body] — exactly two arguments.
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    // The first argument must be a literal `List` of declarations.
+    let Some(decls) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+
+    // Parse + evaluate every declaration into a (name, value) pair. A single
+    // malformed declaration aborts the whole form (left unevaluated) — we do not
+    // partially bind.
+    let mut mapping: StdHashMap<String, IRNode> = StdHashMap::new();
+    for decl in &decls {
+        let Some((name, value)) = eval_decl(vm, decl, allow_uninitialised) else {
+            return unevaluated(expr);
+        };
+        // A later decl with the same name shadows an earlier one (last wins),
+        // matching how a repeated local would behave; harmless for valid input.
+        mapping.insert(name, value);
+    }
+
+    // Bind the locals into a *copy* of the held body and evaluate. Because this
+    // never touches the session environment, the locals do not leak (MA04 §11.2).
+    let body = substitute(expr.args[1].clone(), &mapping);
+    vm.eval(body)
+}
+
+/// Parse one declaration node into `(name, replacement)` — the symbol the body
+/// binds and the IR node every free occurrence of it is replaced with.
+///
+/// Accepts two shapes:
+/// - `Assign(name, rhs)` (the lowering of `name = value`): `name` must be a bare
+///   symbol; `rhs` is **evaluated** through the VM (so `With[{x = 1 + 1}, …]`
+///   binds `x → 2`, and an RHS referring to an outer binding resolves). The
+///   replacement is the evaluated *value*.
+/// - a bare `Symbol(name)` — only when `allow_uninitialised` (i.e. `Module`): the
+///   local is α-renamed to a fresh gensym `name$nnn`. The replacement is that
+///   fresh symbol, so the body sees an undefined local that cannot resolve to a
+///   global (see the module-scoping note above).
+///
+/// Returns `None` (→ the caller leaves the whole scoping form unevaluated) for a
+/// non-symbol assignment target (`f[x] = 1`, `1 = 2`), a bare symbol where a
+/// value is required (`With`/`Block`), or any other node shape.
+fn eval_decl(
+    vm: &mut VM,
+    decl: &IRNode,
+    allow_uninitialised: bool,
+) -> Option<(String, IRNode)> {
+    match decl {
+        // `name = value` → Assign(name, value).
+        IRNode::Apply(app) if is_assign(&app.head) && app.args.len() == 2 => {
+            let name = match &app.args[0] {
+                IRNode::Symbol(s) => s.clone(),
+                // A non-symbol assignment target (`f[x] = 1`, `1 = 2`) is not a
+                // valid local declaration.
+                _ => return None,
+            };
+            let value = vm.eval(app.args[1].clone());
+            Some((name, value))
+        }
+        // A bare symbol `x` — an uninitialised local (Module only). It is renamed
+        // to a fresh gensym so the body sees an undefined local, never a global.
+        IRNode::Symbol(name) if allow_uninitialised => {
+            Some((name.clone(), sym(fresh_local_name(name))))
+        }
+        // Anything else (a bare symbol where a value is required, a literal, a
+        // non-Assign application) is malformed.
+        _ => None,
+    }
+}
+
+/// True if `head` is the `Assign` symbol (the IR head a surface `x = e`
+/// declaration lowers to).
+fn is_assign(head: &IRNode) -> bool {
+    matches!(head, IRNode::Symbol(s) if s == ASSIGN)
 }
 
 // ---------------------------------------------------------------------------
@@ -864,5 +1049,197 @@ mod tests {
         // Only the 2-arg (body, spec) form is valid.
         assert_eq!(run("Table", vec![sym("i")]), apply(sym("Table"), vec![sym("i")]));
         assert_eq!(run("Sum", vec![]), apply(sym("Sum"), vec![]));
+    }
+
+    // -----------------------------------------------------------------------
+    // W-8 local-scoping handlers (unit level — handlers run over a real VM so
+    // the decl-RHS eval, the substitute into the held body, and the body re-eval
+    // all exercise the shared SymbolicBackend handler table).
+    // -----------------------------------------------------------------------
+
+    /// `name = value` declaration helper (the lowering of an in-`{…}` `Set`).
+    fn decl(name: &str, value: IRNode) -> IRNode {
+        apply(sym(ASSIGN), vec![sym(name), value])
+    }
+
+    #[test]
+    fn with_binds_a_single_local_and_evaluates_the_body() {
+        // With[{x = 3}, x^2] → 9 (Pow is an inner-backend head).
+        assert_eq!(
+            run(
+                "With",
+                vec![
+                    list(vec![decl("x", int(3))]),
+                    apply(sym("Pow"), vec![sym("x"), int(2)])
+                ]
+            ),
+            int(9)
+        );
+    }
+
+    #[test]
+    fn with_binds_multiple_locals_in_parallel() {
+        // With[{a = 1, b = 2}, a + b] → 3.
+        assert_eq!(
+            run(
+                "With",
+                vec![
+                    list(vec![decl("a", int(1)), decl("b", int(2))]),
+                    apply(sym("Add"), vec![sym("a"), sym("b")])
+                ]
+            ),
+            int(3)
+        );
+    }
+
+    #[test]
+    fn with_evaluates_the_decl_rhs() {
+        // With[{x = 1 + 1}, x] → 2 — the RHS is evaluated before substitution.
+        assert_eq!(
+            run(
+                "With",
+                vec![
+                    list(vec![decl("x", apply(sym("Add"), vec![int(1), int(1)]))]),
+                    sym("x")
+                ]
+            ),
+            int(2)
+        );
+    }
+
+    #[test]
+    fn module_with_initialised_locals_behaves_like_with() {
+        // Module[{a = 1, b = 2}, a + b] → 3.
+        assert_eq!(
+            run(
+                "Module",
+                vec![
+                    list(vec![decl("a", int(1)), decl("b", int(2))]),
+                    apply(sym("Add"), vec![sym("a"), sym("b")])
+                ]
+            ),
+            int(3)
+        );
+    }
+
+    #[test]
+    fn module_uninitialised_local_stays_symbolic() {
+        // Module[{x}, x] → x$nnn — an uninitialised local is α-renamed to a fresh
+        // gensym, so the body sees an undefined symbol (never a global). We assert
+        // the *shape* (a free symbol whose name starts with the base) rather than
+        // the exact gensym number, which is non-deterministic across the suite.
+        match run("Module", vec![list(vec![sym("x")]), sym("x")]) {
+            IRNode::Symbol(s) => assert!(
+                s == "x" || s.starts_with("x$"),
+                "expected a fresh `x` local, got {s:?}"
+            ),
+            other => panic!("expected a symbol, got {other}"),
+        }
+        // A mix: Module[{x, y = 2}, y] → 2 (uninitialised x is harmless).
+        assert_eq!(
+            run(
+                "Module",
+                vec![list(vec![sym("x"), decl("y", int(2))]), sym("y")]
+            ),
+            int(2)
+        );
+    }
+
+    #[test]
+    fn module_uninitialised_local_does_not_resolve_to_a_global() {
+        // With a global `u = 42` bound in the backend, Module[{u}, u] must NOT
+        // return 42 — the gensym rename gives the local a name the env never
+        // bound, so it stays free. This is the capture-leak guard.
+        use symbolic_vm::backend::Backend;
+        let table = build_wolfram_builtins();
+        let handler = table.get("Module").expect("no Module builtin").clone();
+        let mut backend = SymbolicBackend::new();
+        backend.bind("u", int(42));
+        let mut vm = VM::new(Box::new(backend));
+        let out = handler(
+            &mut vm,
+            IRApply {
+                head: sym("Module"),
+                args: vec![list(vec![sym("u")]), sym("u")],
+            },
+        );
+        match out {
+            IRNode::Symbol(s) => assert!(
+                s.starts_with("u$"),
+                "uninitialised local must be a fresh gensym, got {s:?}"
+            ),
+            other => panic!("expected a fresh symbol, not the global 42: {other}"),
+        }
+    }
+
+    #[test]
+    fn block_binds_like_with_for_self_contained_bodies() {
+        // Block[{x = 5}, x + 1] → 6.
+        assert_eq!(
+            run(
+                "Block",
+                vec![
+                    list(vec![decl("x", int(5))]),
+                    apply(sym("Add"), vec![sym("x"), int(1)])
+                ]
+            ),
+            int(6)
+        );
+    }
+
+    #[test]
+    fn with_uninitialised_local_is_rejected() {
+        // With requires every local to be initialised; a bare `x` leaves the
+        // whole form unevaluated (Block too).
+        let form = vec![list(vec![sym("x")]), sym("x")];
+        assert_eq!(
+            run("With", form.clone()),
+            apply(sym("With"), form.clone())
+        );
+        assert_eq!(run("Block", form.clone()), apply(sym("Block"), form));
+    }
+
+    #[test]
+    fn scoping_with_malformed_decls_stays_unevaluated() {
+        // First argument not a list.
+        assert_eq!(
+            run("With", vec![sym("x"), sym("x")]),
+            apply(sym("With"), vec![sym("x"), sym("x")])
+        );
+        // A decl that is a literal, not a symbol or assignment.
+        let lit = vec![list(vec![int(7)]), int(1)];
+        assert_eq!(run("With", lit.clone()), apply(sym("With"), lit));
+        // A non-symbol assignment target: f[x] = 1.
+        let bad_target = vec![
+            list(vec![apply(
+                sym(ASSIGN),
+                vec![apply(sym("f"), vec![sym("x")]), int(1)],
+            )]),
+            int(1),
+        ];
+        assert_eq!(
+            run("With", bad_target.clone()),
+            apply(sym("With"), bad_target)
+        );
+    }
+
+    #[test]
+    fn scoping_wrong_arity_stays_unevaluated() {
+        // Only the 2-arg (decls, body) form is valid.
+        assert_eq!(
+            run("With", vec![list(vec![decl("x", int(1))])]),
+            apply(sym("With"), vec![list(vec![decl("x", int(1))])])
+        );
+        assert_eq!(run("Module", vec![]), apply(sym("Module"), vec![]));
+        assert_eq!(
+            run(
+                "Block",
+                vec![list(vec![decl("x", int(1))]), int(1), int(2)]
+            ),
+            apply(
+                sym("Block"),
+                vec![list(vec![decl("x", int(1))]), int(1), int(2)]
+            )
+        );
     }
 }

@@ -8,8 +8,8 @@ M-expression AST from
 Macsyma/Maxima drive rather than writing a bespoke evaluator.
 
 See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfram-language.md)
-§7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), and §10 (W-7
-iteration constructs).
+§7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), §10 (W-7
+iteration constructs), and §11 (W-8 local scoping).
 
 ## What it does
 
@@ -88,6 +88,12 @@ assert_eq!(eval("Sum[i, {i, 1, 10}]\n").unwrap(), "Out[1]= 55\n");
 assert_eq!(eval("Product[i, {i, 1, 4}]\n").unwrap(), "Out[1]= 24\n");
 assert_eq!(eval("Do[i, {i, 3}]\n").unwrap(), "Out[1]= Null\n");
 
+// W-8 local scoping — bind named locals over a body (locals never leak):
+assert_eq!(eval("With[{x = 3}, x^2]\n").unwrap(), "Out[1]= 9\n");
+assert_eq!(eval("With[{a = 1, b = 2}, a + b]\n").unwrap(), "Out[1]= 3\n");
+assert_eq!(eval("Module[{a = 1, b = 2}, a + b]\n").unwrap(), "Out[1]= 3\n");
+assert_eq!(eval("Block[{x = 5}, x + 1]\n").unwrap(), "Out[1]= 6\n");
+
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
 s.feed("square[x_] := x^2;\n").unwrap();   // `;` suppresses display
@@ -159,6 +165,32 @@ hangs), and a malformed spec (`{i}` with no bound, a zero step, a non-integer
 bound) is left unevaluated rather than panicking. No grammar change — these are
 ordinary `Head[args]` forms.
 
+**W-8** adds the local-scoping heads — the generalisation of W-7's local index
+into named locals over a body, lowered onto the same held-head + substitution
+substrate:
+
+| Head | Example | Result |
+|------|---------|--------|
+| `With` | `With[{x = 3}, x^2]` | `9` |
+| `With` | `With[{a = 1, b = 2}, a + b]` | `3` |
+| `Module` | `Module[{a = 1, b = 2}, a + b]` | `3` |
+| `Block` | `Block[{x = 5}, x + 1]` | `6` |
+
+All three are `Head[{decls}, body]` forms (no grammar change — `{x = e, …}` is an
+ordinary list of `Set` nodes). They are **held** so the decl list and body arrive
+unevaluated; the handler evaluates each decl's RHS, then binds the locals into a
+*copy* of the body with the *same* `substitute` that binds W-7's index and
+user-function parameters. Because the session environment is never touched, a
+**local never leaks** (`x` is still free after `With[{x = 3}, x]`) and never
+clobbers a same-named global. `With`/`Block` require every local initialised
+(`name = value`); `Module` also accepts a bare `name`, which it α-renames to a
+fresh gensym `name$nnn` (as real Wolfram does) so an uninitialised local stays
+undefined and cannot capture a global. `Block`'s dynamic scope is approximated by
+lexical substitution — observably identical to `With` for the self-contained
+bodies this subset supports (see MA04 §11.3). A malformed form (a non-list decl
+argument, a `With`/`Block` local with no value, a non-symbol assignment target,
+the wrong arity) is left unevaluated rather than panicking.
+
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
@@ -184,6 +216,9 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
 - **W-7** (this crate) — the `Table`/`Do`/`Sum`/`Product` iteration constructs,
   iterator-bound evaluation over a local index (held heads + per-step
   substitution), DoS-capped like `Range`. No grammar change.
+- **W-8** (this crate) — the `With`/`Module`/`Block` local-scoping heads, named
+  locals bound into a held body via substitution (no session leak, no global
+  clobber; `Module` gensym-renames uninitialised locals). No grammar change.
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 

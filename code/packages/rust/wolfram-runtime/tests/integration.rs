@@ -449,3 +449,133 @@ fn w7_negative_and_descending_ranges() {
     assert_eq!(eval("Table[i, {i, -2, 2}]\n").unwrap(), "Out[1]= {-2, -1, 0, 1, 2}\n");
     assert_eq!(eval("Table[i, {i, 5, 1, -2}]\n").unwrap(), "Out[1]= {5, 3, 1}\n");
 }
+
+// ---------------------------------------------------------------------------
+// W-8 — local scoping (With, Module, Block)
+// ---------------------------------------------------------------------------
+
+/// `With[{x = e}, body]` substitutes the evaluated value of `x` into `body`.
+/// The canonical acceptance values from the W-8 brief.
+#[test]
+fn w8_with_single_and_multiple_locals() {
+    // With[{x = 3}, x^2] → 9.
+    assert_eq!(eval("With[{x = 3}, x^2]\n").unwrap(), "Out[1]= 9\n");
+    // With[{a = 1, b = 2}, a + b] → 3 (parallel binding).
+    assert_eq!(eval("With[{a = 1, b = 2}, a + b]\n").unwrap(), "Out[1]= 3\n");
+}
+
+/// `Module[{x, y = e}, body]` — initialised locals bind like `With`; the
+/// acceptance value `Module[{a = 1, b = 2}, a + b]` → `3`.
+#[test]
+fn w8_module_initialised_locals() {
+    assert_eq!(eval("Module[{a = 1, b = 2}, a + b]\n").unwrap(), "Out[1]= 3\n");
+}
+
+/// `Block[{x = e}, body]` — for a self-contained body it binds like `With`;
+/// `Block[{x = 5}, x + 1]` → `6`.
+#[test]
+fn w8_block_binds_local() {
+    assert_eq!(eval("Block[{x = 5}, x + 1]\n").unwrap(), "Out[1]= 6\n");
+}
+
+/// **Locals do not leak to the session.** After `With[{x = 3}, x]`, a bare `x`
+/// is still the free symbol `x` (the session env was never written). Same for
+/// `Module` and `Block`.
+#[test]
+fn w8_locals_do_not_leak() {
+    let mut s = WolframSession::new();
+    assert_eq!(s.feed("With[{x = 3}, x]\n").unwrap(), "Out[1]= 3\n");
+    // `x` is still unbound (free), not 3 — no env leak.
+    assert_eq!(s.feed("x\n").unwrap(), "Out[2]= x\n");
+
+    let mut s = WolframSession::new();
+    assert_eq!(s.feed("Module[{y = 7}, y]\n").unwrap(), "Out[1]= 7\n");
+    assert_eq!(s.feed("y\n").unwrap(), "Out[2]= y\n");
+
+    let mut s = WolframSession::new();
+    assert_eq!(s.feed("Block[{z = 9}, z]\n").unwrap(), "Out[1]= 9\n");
+    assert_eq!(s.feed("z\n").unwrap(), "Out[2]= z\n");
+}
+
+/// A local must not *clobber* a same-named global: a global `x` set before the
+/// scope is unchanged by a `With`/`Module`/`Block` that binds its own `x`.
+#[test]
+fn w8_local_does_not_clobber_a_global() {
+    let mut s = WolframSession::new();
+    s.feed("x = 100\n").unwrap();
+    // Inside the scope, the local `x` shadows the global.
+    assert_eq!(s.feed("With[{x = 1}, x]\n").unwrap(), "Out[2]= 1\n");
+    // The global `x` is untouched afterwards.
+    assert_eq!(s.feed("x\n").unwrap(), "Out[3]= 100\n");
+}
+
+/// Nested scoping: each level binds its own local cleanly, and an inner body
+/// sees both the inner and the (already-substituted) outer local.
+#[test]
+fn w8_nested_scopes() {
+    // With[{x = 1}, With[{y = 2}, x + y]] → 3.
+    assert_eq!(
+        eval("With[{x = 1}, With[{y = 2}, x + y]]\n").unwrap(),
+        "Out[1]= 3\n"
+    );
+    // Module nested inside With composes too.
+    assert_eq!(
+        eval("With[{a = 10}, Module[{b = 5}, a + b]]\n").unwrap(),
+        "Out[1]= 15\n"
+    );
+}
+
+/// A declaration may **refer to an outer binding** — the RHS is evaluated
+/// against the surrounding scope before substitution.
+#[test]
+fn w8_decl_refers_to_outer_binding() {
+    // The inner decl `y = x + 1` reads the outer local `x = 1` → y = 2.
+    assert_eq!(
+        eval("With[{x = 1}, With[{y = x + 1}, y]]\n").unwrap(),
+        "Out[1]= 2\n"
+    );
+    // A decl reading a session binding.
+    let mut s = WolframSession::new();
+    s.feed("n = 4\n").unwrap();
+    assert_eq!(s.feed("With[{m = n + 1}, m]\n").unwrap(), "Out[2]= 5\n");
+}
+
+/// `Module` allows an *uninitialised* local, which stays symbolic in the body
+/// (it is α-renamed to a fresh gensym, so it does not resolve to any global of
+/// the same name).
+#[test]
+fn w8_module_uninitialised_local_is_symbolic() {
+    // Module[{u}, u + 1] → 1 + u$nnn (u stays a free symbol; `+` keeps it
+    // symbolic). The base name survives in the gensym, so the output mentions u.
+    let out = eval("Module[{u}, u + 1]\n").unwrap();
+    assert!(out.contains('u'), "uninitialised local should stay symbolic: {out:?}");
+    // Even with a global `u = 42` set, the uninitialised Module local shadows it:
+    // the result is a fresh `u$nnn` symbol, NOT the global value 42.
+    let mut s = WolframSession::new();
+    s.feed("u = 42\n").unwrap();
+    let out = s.feed("Module[{u}, u]\n").unwrap();
+    assert!(
+        out.contains("u$") && !out.contains("42"),
+        "uninitialised local must shadow the global, got {out:?}"
+    );
+}
+
+/// Malformed scoping forms are left unevaluated (never a panic): a non-list
+/// declaration argument, a `With`/`Block` local with no value, wrong arity.
+#[test]
+fn w8_malformed_forms_stay_unevaluated() {
+    // First argument not a list.
+    assert_eq!(eval("With[x, x]\n").unwrap(), "Out[1]= With[x, x]\n");
+    // With requires an initialised local; a bare `x` is rejected.
+    assert_eq!(eval("With[{x}, x]\n").unwrap(), "Out[1]= With[{x}, x]\n");
+    assert_eq!(eval("Block[{x}, x]\n").unwrap(), "Out[1]= Block[{x}, x]\n");
+}
+
+/// W-4..W-7 behaviour is unchanged by the W-8 handlers (regression guard).
+#[test]
+fn w8_does_not_disturb_existing_forms() {
+    assert_eq!(eval("1 + 2*3\n").unwrap(), "Out[1]= 7\n");
+    assert_eq!(eval("Table[i^2, {i, 3}]\n").unwrap(), "Out[1]= {1, 4, 9}\n");
+    assert_eq!(eval("Sum[i, {i, 1, 10}]\n").unwrap(), "Out[1]= 55\n");
+    assert_eq!(eval("Map[f, {1, 2}]\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
+}

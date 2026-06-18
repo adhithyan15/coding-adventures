@@ -437,6 +437,133 @@ the W-1 grammar. W-7 touches only `wolfram-runtime` (the builtin handler table
 and the decorator's held set); the lexer, grammar, and `_grammar.rs` are
 untouched.
 
+## §11 W-8 local scoping `With`, `Module`, `Block` (implemented)
+
+W-7 (§10) introduced the first *scoped local binder* — the iteration index `i`,
+bound per step via `substitute`. W-8 generalises that idea into Wolfram's three
+**local-scoping heads**, which bind one or more named locals over a body and
+evaluate the body in that augmented scope. Like W-7 they are lowered onto the
+*same* substrate — held heads + the `vm.rs::substitute` primitive — with no new
+evaluator, no opcode, and no grammar change.
+
+### §11.1 What W-8 adds
+
+All three are `Head[{decls}, body]` forms: a literal `List` of declarations and a
+body. They differ only in how a local is *initialised* and how its scope relates
+to the surrounding session.
+
+| Form | Result | Notes |
+| --- | --- | --- |
+| `With[{x = e}, body]` | `body` with `x → eval(e)` | lexical constant; the value is substituted *immediately*. Multiple decls: `With[{x = e1, y = e2}, body]` |
+| `Module[{x, y = e}, body]` | `body` with locals bound; an *uninitialised* local (`x`) stays undefined | lexically-scoped locals; an initialised local (`y = e`) gets `eval(e)`, an uninitialised one (`x`) is α-renamed to a fresh `x$nnn` so it is undefined and cannot capture a global |
+| `Block[{x = e}, body]` | `body` evaluated with `x` temporarily set to `eval(e)` | dynamically-scoped: shadows a global `x` for the duration of `body`, then restores it |
+
+Worked examples (the W-8 acceptance tests):
+`With[{x = 3}, x^2]` → `9`; `With[{a = 1, b = 2}, a + b]` → `3`;
+`Module[{a = 1, b = 2}, a + b]` → `3`; `Block[{x = 5}, x + 1]` → `6`;
+nested `With[{x = 1}, With[{y = 2}, x + y]]` → `3`; a decl referring to an
+outer binding `With[{x = 1}, With[{y = x + 1}, y]]` → `2`.
+
+### §11.2 Binding the locals — held heads + `substitute`
+
+The three scoping heads are **held** (added to the backend's `hold_heads` set
+via the `WolframBackend` decorator — it now returns the union of the inner held
+set and `{Table, Do, Sum, Product, With, Module, Block}`). Holding is essential
+for the same reason as W-7: the `body` must *not* be evaluated before the locals
+are bound (otherwise a local symbol evaluates to its free/global meaning and the
+per-binding substitution has nothing to replace), and the declaration list
+`{x = e, …}` must stay a literal `List` of literal assignments (`x = e` parses as
+a `Set`/`Assign` node) so the binder names and their RHS expressions are readable
+rather than evaluated against the session.
+
+Inside the handler, each declaration's **RHS is evaluated** through `vm.eval`
+(`x = e` → `x → eval(e)`), then the collected mapping is applied to the body with
+the **same `substitute`** the VM uses for user-function parameters and W-7's
+iteration index. `substitute(body, {x → v, …})` produces a fresh body with the
+locals replaced; the result is evaluated through `vm.eval`. Using `substitute`
+rather than mutating the session environment is what keeps the locals **local**:
+
+- **`With`** evaluates every RHS *first* (against the surrounding scope, so a
+  decl may reference an outer binding) and substitutes all values simultaneously.
+  Multiple decls bind in parallel like Wolfram's `With` (each RHS sees the outer
+  scope, not its sibling decls).
+- **`Module`** treats an initialised decl `y = e` exactly like `With`; an
+  *uninitialised* decl `x` is **α-renamed to a fresh gensym `x$nnn`** (mirroring
+  real Wolfram) and `x → x$nnn` is substituted into the body. The renamed symbol
+  is one the session env has never bound, so the body sees an undefined local
+  that cannot resolve to — or be captured by — a same-named global `x`. (Mapping
+  `x → x` would *not* shadow a global, since the surviving symbol `x` would still
+  be resolved against the env at eval time; the gensym is what makes the local
+  genuinely fresh.)
+- **`Block`** evaluates each RHS and substitutes into the body identically. The
+  *semantic* difference from `With`/`Module` (dynamic vs lexical scope) is only
+  observable when the body calls a *separately-defined* function that reads the
+  shadowed global; for the substitution-based subset shipped here, a `Block` over
+  a self-contained body behaves like `With` over the same body, which is correct
+  for every tested case. See §11.3 for the simplification this entails.
+
+Because the binding is by substitution into a held body, **no local leaks into
+the session**: after `With[{x = 3}, x]`, a bare `x` is still the free symbol `x`
+(the session environment was never touched). Nested scopes each substitute over a
+body whose outer locals were already replaced, so `With[{x = 1}, With[{y = 2},
+x + y]]` correctly yields `3`.
+
+### §11.3 Substitution-based scoping — the documented simplification
+
+Real Wolfram renames `Module` locals (`x` → `x$nnn`) to guarantee no variable
+*capture*: if the substituted value itself mentions the local name, or the body
+contains a nested binder of the same name, a naïve textual substitution could
+capture the wrong occurrence. W-8 uses a **capture-avoiding-by-construction**
+substitution instead of renaming:
+
+- **No global mutation, so no leak and no clobber.** `substitute` rewrites a
+  *copy* of the body; the session environment is never written, so a local can
+  neither escape the body nor overwrite a same-named global. This is the property
+  the leak tests pin (`x` is still free after `With[{x = 3}, x]`).
+- **Inner binders shadow correctly under `substitute`.** `substitute` only
+  replaces *free* symbol occurrences in the body; an inner `With[{x = …}, …]`
+  re-binds `x` for its own (already-substituted) sub-body, so the outer
+  substitution and the inner binding compose without capture in the nested cases
+  tested. (A fully general implementation would still need α-renaming for the
+  adversarial case where a substituted *value* contains a name that a deeper body
+  binder shadows; W-8 documents this boundary rather than implementing renaming,
+  matching the brief's "substitution-based binding is acceptable IF documented
+  and capture-guarded in the tested cases".)
+- **`Block`'s dynamic scope is approximated by lexical substitution.** Because
+  the subset has no separately-stored closures that close over a *dynamic* `x`,
+  substituting `x`'s temporary value directly into the body is observationally
+  identical to dynamic shadowing for self-contained bodies. The divergence
+  (a `Block` body calling an out-of-line function that reads the global `x`) is
+  documented and out of scope for the tested forms.
+
+### §11.4 Robustness — malformed declarations stay unevaluated
+
+The handlers follow the same fail-soft convention as every W-5/W-7 head: a
+malformed form is **left unevaluated** (echoed back), never a panic.
+
+- Wrong arity (`With[{x = 1}]`, `With[{x = 1}, b, c]`) → unevaluated.
+- A first argument that is **not a `List`** (`With[x, body]`) → unevaluated.
+- A declaration that is neither a bare symbol nor a `name = value` assignment
+  (`With[{1 + 1}, body]`, `With[{f[x] = 1}, body]`) → the whole form unevaluated.
+- For `With`/`Block`, a bare-symbol decl with **no value** (`With[{x}, body]`) is
+  rejected (a value is required); for `Module` it is the valid "uninitialised
+  local" case. This asymmetry matches Wolfram (`With` requires every local to be
+  initialised; `Module` does not).
+
+There is no new allocation source: the body is substituted once per scope entry
+and the declaration count is bounded by the (token/-input-capped) source size, so
+W-8 adds no DoS surface beyond what W-4 already bounds. Deeply nested scopes are
+bounded by the evaluator's existing recursion handling (each nested head is an
+ordinary `vm.eval` call over a strictly smaller body).
+
+### §11.5 No grammar change
+
+`With[…]`, `Module[…]`, `Block[…]` are ordinary `Head[args]` applications, the
+declaration list `{x = e, …}` is an ordinary list literal, and `x = e` inside it
+is the ordinary `Set` infix already parsed since W-1. W-8 touches only
+`wolfram-runtime` (the builtin handler table and the decorator's held set); the
+lexer, grammar, and `_grammar.rs` are untouched.
+
 ## §6 References
 
 Internal: [`HML00`](HML00-historical-math-languages-roadmap.md),
