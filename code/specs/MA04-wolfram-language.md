@@ -63,6 +63,15 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   `Apply[f, x]`, `x[[i]]` ≡ `Part[x, i]`. A grammar + lexer change (new tokens
   `MAP`/`APPLY`/`LDBRACKET`/`RDBRACKET`) desugaring to the *same* W-5 Tier-1
   heads, so each sugar form evaluates identically to its head form.
+- **W-7 — iteration constructs `Table`, `Do`, `Sum`, `Product`.**
+  *(implemented — see §10.)* Iterator-bound evaluation over a local index,
+  lowered onto the *same* substrate: `Table[expr, {i, imax}]` builds a list of
+  `expr` with `i` bound over a range, `Do[expr, {i, n}]` evaluates `expr` `n`
+  times for side effects (returns `Null`), `Sum`/`Product` fold `+`/`×` over the
+  range. The iterator spec `{i, …}` reuses the W-5 `Range` span machinery and the
+  W-4 `substitute` used for user-function parameter binding; the per-iteration
+  count is DoS-capped exactly like `Range` (§10.3). No grammar change — these are
+  ordinary `Head[args]` forms the existing grammar already parses.
 - **Future — the `cas-*` function surface under Wolfram names** (`Expand`,
   `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing `cas-*` crates.
 
@@ -345,6 +354,88 @@ to `Part`, which only ever *reads* one element. The one new shape is
 postfix step parsed iteratively (not by grammar recursion) and one `Part` apply,
 so a deeply-chained part expression is linear in source length and bounded by the
 W-4 per-statement token cap — it cannot trigger unbounded parser recursion.
+
+## §10 W-7 iteration constructs `Table`, `Do`, `Sum`, `Product` (implemented)
+
+W-4 through W-6 evaluate expressions that have **no local binder** — every
+symbol is either a global binding or a free variable. W-7 adds the first
+constructs that introduce a *scoped local index*: the iteration heads bind a
+fresh variable `i` to each value of a range and evaluate a body once per value.
+They are the Wolfram analogue of a `for` loop, but lowered onto the *same*
+symbolic substrate — no bespoke loop opcode, no new evaluator.
+
+### §10.1 What W-7 adds
+
+| Form | Result | Notes |
+| --- | --- | --- |
+| `Table[expr, {i, imax}]` | `{expr[i→1], …, expr[i→imax]}` | a list; `i` ranges `1..imax` |
+| `Table[expr, {i, imin, imax}]` | `{expr[i→imin], …, expr[i→imax]}` | explicit lower bound |
+| `Table[expr, {i, imin, imax, di}]` | stepped by `di` | reuses the W-5 `Range` 3-bound form |
+| `Do[expr, {i, imax}]` | `Null` | evaluates `expr` `imax` times for side effects |
+| `Sum[expr, {i, imin, imax}]` | `expr[i→imin] + … + expr[i→imax]` | folds `Plus`; empty range → `0` |
+| `Product[expr, {i, imin, imax}]` | `expr[i→imin] × … × expr[i→imax]` | folds `Times`; empty range → `1` |
+
+Worked examples (the W-7 acceptance tests):
+`Table[i^2, {i, 3}]` → `{1, 4, 9}`; `Table[i, {i, 2, 4}]` → `{2, 3, 4}`;
+`Sum[i, {i, 1, 10}]` → `55`; `Product[i, {i, 1, 4}]` → `24`;
+`Do[…, {i, 3}]` → `Null` (body runs 3×); nested
+`Table[Table[i*j, {j, 2}], {i, 2}]` → `{{1, 2}, {2, 4}}` (`i*j` for `i∈{1,2}`,
+`j∈{1,2}`).
+
+### §10.2 Binding the local index — held heads + `substitute`
+
+The four iteration heads are **held** (added to the backend's `hold_heads` set
+via the W-5 `WolframBackend` decorator — it now returns the union of the inner
+held set and `{Table, Do, Sum, Product}`). Holding is essential: the body `expr`
+must *not* be evaluated before `i` is bound (otherwise `i` evaluates to a free
+symbol and the per-iteration substitution has nothing to replace), and the
+iterator spec `{i, …}` must stay a literal `List` so the binder name `i` is
+readable rather than evaluated.
+
+Inside the handler, for each value `v` in the range the body is bound by the
+**same `substitute`** the VM already uses for user-function parameters
+(`vm.rs::substitute`): `substitute(expr, {i → v})` produces a fresh body with `i`
+replaced, which is then evaluated through `vm.eval`. This matches "how the
+runtime already binds symbols" (function-parameter substitution) rather than
+mutating the global environment — so a `Table` never leaks `i` into the session
+and nested `Table`s each bind their own index cleanly (the inner `substitute`
+runs over a body whose outer index was already replaced).
+
+The iterator-spec **bounds** are sub-expressions that *do* need evaluating
+(`{i, n}` where `n` is a bound variable, `{i, 2+1}`). Because the head is held,
+the handler evaluates each bound through `vm.eval` itself before reading it as an
+integer — the body stays held, the bounds get evaluated. A spec with a
+non-integer bound, the wrong arity (`{i}` with no bound, `{}`), or a non-symbol
+binder is left **unevaluated** (the Wolfram "I can't reduce this" convention),
+never a panic.
+
+### §10.3 DoS surface — the per-iteration cap composes
+
+Iteration is the second allocation source after `Range` (§8.3): a tiny input
+(`Table[0, {i, 10^9}]`) would otherwise build a billion-element list or spin a
+billion-iteration loop. W-7 caps the iteration count with the **same**
+`MAX_RANGE_LENGTH` bound `Range` uses, computed from the spec bounds *before* any
+allocation or looping — an over-large iterator leaves the whole form unevaluated
+rather than hanging or exhausting memory. `Do` is capped identically even though
+it allocates nothing, because the cap bounds *wall-clock work*, not just memory.
+
+The cap **composes** for nested iteration: a nested `Table[Table[…, {j, m}], {i,
+n}]` builds the inner `Table` `n` times, and each inner build is itself capped at
+`MAX_RANGE_LENGTH`, so the outer count `n` and inner count `m` are each bounded —
+there is no multiplicative blow-up past `n · MAX_RANGE_LENGTH` body evaluations
+for an `n`-row table, and `n` itself is capped. All bound arithmetic
+(`imax − imin`, the count, the running index) is done in `i128` with the same
+overflow-safe pattern as `Range`, so a crafted `i64::MIN`/`i64::MAX` bound cannot
+overflow — it simply falls outside the valid count range and the form stays
+unevaluated.
+
+### §10.4 No grammar change
+
+`Table[…]`, `Do[…]`, `Sum[…]`, `Product[…]` are ordinary `Head[args]`
+applications and `{i, …}` is an ordinary list literal — both already parse under
+the W-1 grammar. W-7 touches only `wolfram-runtime` (the builtin handler table
+and the decorator's held set); the lexer, grammar, and `_grammar.rs` are
+untouched.
 
 ## §6 References
 
