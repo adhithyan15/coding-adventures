@@ -67,6 +67,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshStageReleaseSummary` and helpers for combining substrate
   stage blockers, primitive readiness blockers, and mesh-scoped remediation
   into a single release readiness rollup.
+- `IntegrationMeshActionReadinessSummary` and helpers for combining mesh
+  release readiness with the substrate action queue and next concrete low-level
+  action.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
