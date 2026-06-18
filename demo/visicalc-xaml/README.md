@@ -149,6 +149,12 @@ The **"Fill ↓ 10"** button next to the formula bar calls
 `InfiniteSheetModel.FillDown(10)` (over the C ABI's `sc_fill`) to replicate the
 selected cell into the 10 rows below it — the engine shifts each copy's relative
 references (`=A1`→`=A2`, …), pins absolute (`$`) refs, and carries the format.
+The **Copy / Cut / Paste** buttons drive the engine's clipboard
+(`InfiniteSheetModel.CopyCell`/`CutCell`/`PasteCell` over the C ABI's
+`sc_copy`/`sc_cut`/`sc_paste`): copy the selected cell, then paste it elsewhere
+with its relative references shifted by the destination's offset (absolute `$`
+refs pinned, format carried); a cut clears the source on paste, and `PasteCell`
+returns `false` (a no-op) for an empty clipboard.
 
 `InfiniteSheetModel` (in `Engine.cs`, WinUI-free) seeds far-flung sparse cells
 (`Z1000`, `BA50`, `BB50`) and derives the extent from `UsedRange()` + a margin

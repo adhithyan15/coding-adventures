@@ -138,6 +138,20 @@ using (var inf = new InfiniteSheetModel())
     Check("inf fillDown I2", inf.RowCells(2)[8], "30"); // I2 = H2*10
     Check("inf fillDown I3", inf.RowCells(3)[8], "40"); // I3 = H3*10
     Check("inf fillDown I1 source", inf.RowCells(1)[8], "20"); // I1 untouched
+
+    // Clipboard: copy I1 (= H1*10) and paste at I4 — the relative ref shifts by
+    // the destination's offset, so I4 = H4*10. (Seed H4 first.)
+    inf.SelectInf(4, 8); inf.CommitInf("6");        // H4 = 6
+    inf.SelectInf(1, 9); inf.CopyCell();            // copy I1
+    inf.SelectInf(4, 9); Check("inf pasteCell applied", inf.PasteCell().ToString(), "True");
+    Check("inf paste I4 = H4*10", inf.RowCells(4)[8], "60"); // I4 = H4*10 = 60
+    // Cut A1 and move it to C1: source clears, a second paste is a no-op.
+    inf.SelectInf(1, 1); inf.CommitInf("99");       // A1
+    inf.SelectInf(1, 1); inf.CutCell();
+    inf.SelectInf(1, 3); Check("inf cut paste applied", inf.PasteCell().ToString(), "True");
+    Check("inf cut moved C1", inf.RowCells(1)[2], "99"); // C1 (col 3, index 2)
+    Check("inf cut cleared A1", inf.RowCells(1)[0], ""); // A1 cleared
+    inf.SelectInf(1, 5); Check("inf cut buffer consumed", inf.PasteCell().ToString(), "False");
 }
 
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
