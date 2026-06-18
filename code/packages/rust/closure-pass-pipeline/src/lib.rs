@@ -12,9 +12,11 @@
 //!   `invalidates`, `iteration_policy`, `cost`, `run`.
 //! - Topo-sort scheduling by `depends_on`. Cycles produce a clear
 //!   [`PassError`].
-//! - `OneShot` iteration. `FixedPoint` is accepted but executes once
-//!   in v1 (with a diagnostic note) — fixed-point looping lands once
-//!   we have a pass that actually mutates the AST.
+//! - `OneShot` and `FixedPoint` iteration. The scheduler runs the
+//!   whole topo order in repeated *sweeps* and keeps sweeping while any
+//!   `FixedPoint` pass reports a change, up to [`MAX_SWEEPS`]. This is
+//!   what lets transforms cascade: `inline` turns `double(7)` into
+//!   `7 * 2`, and the next sweep's `constant-fold` folds it to `14`.
 //! - Per-pass [`PassStats`] in the final [`PipelineOutput`] so callers
 //!   can see what ran.
 //! - Cost / budget gating: deferred to a follow-up. v1 ignores
@@ -49,10 +51,14 @@ use coding_adventures_type_sidecar::Sidecar;
 pub enum IterationPolicy {
     /// Run exactly once. The default.
     OneShot,
-    /// Re-run until [`PassOutput::changed`] is `false` (or the
-    /// per-pipeline fixed-point cap is hit). v1 executes a
-    /// FixedPoint pass once and notes the limitation; the full loop
-    /// arrives with the first mutating pass.
+    /// Participate in the pipeline's fixed-point loop: the scheduler
+    /// re-runs the whole pass order in sweeps and keeps sweeping while
+    /// *any* `FixedPoint` pass reports [`PassOutput::changed`] — so a
+    /// transform one pass exposes (e.g. `inline` turning `double(7)`
+    /// into `7 * 2`) is picked up by an earlier pass on the next sweep
+    /// (`constant-fold` folding it to `14`). Bounded by
+    /// [`PassPipeline`]'s sweep cap as a backstop against a
+    /// non-convergent pass.
     FixedPoint,
 }
 
@@ -178,11 +184,25 @@ pub struct PipelineOutput {
     pub execution_order: Vec<String>,
 }
 
+/// Maximum number of full pipeline sweeps [`PassPipeline::run`] will
+/// perform before giving up on convergence.
+///
+/// A real optimization fixed point is reached in a handful of sweeps —
+/// each `FixedPoint` change strictly simplifies the program (folds
+/// shrink expressions, inlines remove calls, DCE/treeshake delete
+/// nodes), so the iteration count is bounded by expression/chain depth,
+/// not program size. This cap is therefore deliberately generous: it
+/// exists only as a backstop against a *buggy* pass that reports
+/// `changed = true` without making progress (e.g. two passes that undo
+/// each other's work). Hitting it emits a `pipeline.fixed-point-cap-reached`
+/// note.
+pub const MAX_SWEEPS: usize = 100;
+
 /// The pass scheduler.
 ///
 /// Build one with [`PassPipeline::new`], register passes with
 /// [`PassPipeline::add`], then call [`PassPipeline::run`] to execute
-/// the whole graph.
+/// the whole graph to a fixed point.
 pub struct PassPipeline {
     passes: Vec<Box<dyn Pass>>,
 }
@@ -216,7 +236,25 @@ impl PassPipeline {
         self.passes.is_empty()
     }
 
-    /// Run the pipeline. See module docs for behavior.
+    /// Run the pipeline to a fixed point. See module docs for behavior.
+    ///
+    /// The scheduler topo-sorts the passes once, then runs that order in
+    /// repeated **sweeps**. After each sweep it asks: did any
+    /// `FixedPoint` pass report a change? If so — and we're under
+    /// [`MAX_SWEEPS`] — it runs another sweep, so a transform one pass
+    /// exposes is picked up by an earlier pass next time around
+    /// (`inline`'s `7 * 2` → `constant-fold`'s `14`). When a sweep makes
+    /// no `FixedPoint` change, the program has converged and we stop.
+    ///
+    /// `OneShot` passes re-run each sweep too, but their `changed` flag
+    /// does **not** drive the loop — they are expected to be idempotent
+    /// at the fixed point (running them again is a no-op), so re-running
+    /// them just lets them observe the final program (e.g. `rename`
+    /// shortens names on the fully-folded output) without risking a
+    /// spin. The [`MAX_SWEEPS`] cap is the backstop against a buggy pass
+    /// that reports `changed = true` forever (e.g. two passes that undo
+    /// each other); hitting it surfaces a `pipeline.fixed-point-cap-reached`
+    /// note rather than silently under- or over-optimizing.
     pub fn run(
         &self,
         program: Program,
@@ -224,72 +262,95 @@ impl PassPipeline {
         cv: &mut CVLog,
     ) -> Result<PipelineOutput, PassError> {
         let order = self.topo_sort()?;
-        let mut current = program;
-        let mut diagnostics = Vec::new();
-        let mut stats = HashMap::new();
 
         // Build a lookup so we can fetch passes by name during execution.
-        let by_name: HashMap<&'static str, &dyn Pass> = self
-            .passes
-            .iter()
-            .map(|p| (p.name(), p.as_ref()))
-            .collect();
+        let by_name: HashMap<&'static str, &dyn Pass> =
+            self.passes.iter().map(|p| (p.name(), p.as_ref())).collect();
 
-        for name in &order {
-            let pass = *by_name
-                .get(name.as_str())
-                .expect("topo-sort returns only registered passes");
+        let mut current = program;
+        // Diagnostics + stats describe the FINAL (converged) sweep — an
+        // earlier sweep's diagnostics referred to a transient
+        // intermediate program, so we keep only the last sweep's.
+        let mut diagnostics = Vec::new();
+        let mut stats = HashMap::new();
+        let mut converged = false;
 
-            let ctx = PassContext {
-                program: &current,
-                sidecar,
-                cv,
-            };
-            let output = pass.run(ctx)?;
+        for _sweep in 0..MAX_SWEEPS {
+            let mut sweep_diagnostics = Vec::new();
+            let mut sweep_stats = HashMap::new();
+            let mut fixed_point_changed = false;
 
-            // Append CV contributions the pass returned to the log.
-            // The pass's own name should already match its
-            // contribution.source per the CLOC06 review checklist.
-            // We tag-append against the new program root's CV since
-            // that's the durable handle.
-            //
-            // CLOC09 made Program.cv optional. When tracing is
-            // disabled (cv == None), there's no CV id to attach
-            // contributions to — passes shouldn't be emitting them
-            // in that mode anyway, but we skip silently here for
-            // safety.
-            if let Some(ref prog_cv) = current.cv {
-                for c in &output.contributions {
-                    let _ = cv.contribute(prog_cv, &c.source, &c.tag, c.meta.clone());
+            for name in &order {
+                let pass = *by_name
+                    .get(name.as_str())
+                    .expect("topo-sort returns only registered passes");
+
+                let ctx = PassContext {
+                    program: &current,
+                    sidecar,
+                    cv,
+                };
+                let output = pass.run(ctx)?;
+
+                // Append CV contributions the pass returned to the log.
+                // The pass's own name should already match its
+                // contribution.source per the CLOC06 review checklist.
+                // We tag-append against the program root's CV since
+                // that's the durable handle. Contributions accumulate
+                // across sweeps — each is a real transformation in the
+                // provenance record.
+                //
+                // CLOC09 made Program.cv optional. When tracing is
+                // disabled (cv == None), there's no CV id to attach
+                // contributions to — passes shouldn't be emitting them
+                // in that mode anyway, but we skip silently here for
+                // safety.
+                if let Some(ref prog_cv) = current.cv {
+                    for c in &output.contributions {
+                        let _ = cv.contribute(prog_cv, &c.source, &c.tag, c.meta.clone());
+                    }
                 }
+
+                // Only a FixedPoint pass's change drives another sweep.
+                // A OneShot pass that reports a change does not spin the
+                // loop (it is expected to converge in one application).
+                if output.changed && pass.iteration_policy() == IterationPolicy::FixedPoint {
+                    fixed_point_changed = true;
+                }
+
+                sweep_diagnostics.extend(output.diagnostics);
+                sweep_stats.insert(pass.name().to_string(), output.stats);
+                current = output.program;
             }
 
-            // If this pass requested FixedPoint, v1 notes the
-            // limitation as a diagnostic and runs only once.
-            if pass.iteration_policy() == IterationPolicy::FixedPoint {
-                // Diagnostic.cv is still plain String (closure-typechecker
-                // hasn't migrated to Option<CvId> yet — tracked as a
-                // Phase 1.x follow-up). For untraced programs we emit
-                // an empty cv to keep the diagnostic shape stable —
-                // tooling that filters on diagnostic.cv just sees "".
-                diagnostics.push(Diagnostic {
-                    cv: current.cv.clone().unwrap_or_default(),
-                    severity: coding_adventures_closure_typechecker::Severity::Note,
-                    group: coding_adventures_closure_typechecker::DiagnosticGroup::new(
-                        "pipeline.fixed-point-not-yet-iterated",
-                    ),
-                    message: format!(
-                        "pass {:?} requested FixedPoint iteration but v1 only runs it once; \
-                         multi-iteration support arrives with the first mutating pass.",
-                        pass.name()
-                    ),
-                });
-            }
+            // Keep this sweep's diagnostics + stats as the running final.
+            diagnostics = sweep_diagnostics;
+            stats = sweep_stats;
 
-            // Roll diagnostics + stats into the pipeline accumulators.
-            diagnostics.extend(output.diagnostics);
-            stats.insert(pass.name().to_string(), output.stats);
-            current = output.program;
+            if !fixed_point_changed {
+                converged = true;
+                break;
+            }
+        }
+
+        if !converged {
+            // We ran out of sweeps with a FixedPoint pass still asking
+            // for more. Surface it rather than pretending we converged.
+            // Diagnostic.cv is still plain String (closure-typechecker
+            // hasn't migrated to Option<CvId>); for untraced programs we
+            // emit an empty cv to keep the diagnostic shape stable.
+            diagnostics.push(Diagnostic {
+                cv: current.cv.clone().unwrap_or_default(),
+                severity: coding_adventures_closure_typechecker::Severity::Note,
+                group: coding_adventures_closure_typechecker::DiagnosticGroup::new(
+                    "pipeline.fixed-point-cap-reached",
+                ),
+                message: format!(
+                    "pipeline stopped after {MAX_SWEEPS} sweeps without reaching a fixed \
+                     point; a FixedPoint pass is still reporting changes (possible \
+                     non-convergent pass)."
+                ),
+            });
         }
 
         Ok(PipelineOutput {
@@ -373,10 +434,7 @@ impl PassPipeline {
                 .filter(|n| !order.iter().any(|o| o == n))
                 .collect();
             return Err(PassError {
-                pass_name: remaining
-                    .first()
-                    .map(|s| s.to_string())
-                    .unwrap_or_default(),
+                pass_name: remaining.first().map(|s| s.to_string()).unwrap_or_default(),
                 message: format!(
                     "dependency cycle detected among passes: {}",
                     remaining
@@ -691,7 +749,10 @@ mod tests {
         let out = pipeline
             .run(program(), &Sidecar::new(), &mut cv)
             .expect("pipeline runs cleanly");
-        assert_eq!(out.execution_order, vec!["alpha".to_string(), "beta".to_string()]);
+        assert_eq!(
+            out.execution_order,
+            vec!["alpha".to_string(), "beta".to_string()]
+        );
     }
 
     #[test]
@@ -704,7 +765,10 @@ mod tests {
 
         let mut cv = CVLog::new(true);
         let out = pipeline.run(program(), &Sidecar::new(), &mut cv).unwrap();
-        assert_eq!(out.execution_order, vec!["alpha".to_string(), "beta".to_string()]);
+        assert_eq!(
+            out.execution_order,
+            vec!["alpha".to_string(), "beta".to_string()]
+        );
     }
 
     #[test]
@@ -739,7 +803,11 @@ mod tests {
     }
 
     #[test]
-    fn fixed_point_runs_once_with_diagnostic_note() {
+    fn fixed_point_pass_that_never_changes_converges_in_one_sweep() {
+        // A FixedPoint pass that reports `changed = false` converges
+        // immediately — no "not-yet-iterated" note (that limitation is
+        // gone), and no "cap-reached" note (we converged well inside the
+        // cap).
         let mut pipeline = PassPipeline::new();
         pipeline.add(Box::new(
             NoOpPass::new("fp").with_policy(IterationPolicy::FixedPoint),
@@ -748,13 +816,163 @@ mod tests {
         let mut cv = CVLog::new(true);
         let out = pipeline.run(program(), &Sidecar::new(), &mut cv).unwrap();
         assert_eq!(out.execution_order, vec!["fp".to_string()]);
-        // The diagnostic about FixedPoint not being iterated yet
-        // should be present.
+        assert_eq!(out.stats["fp"].nodes_touched, 1);
+        assert!(
+            !out.diagnostics
+                .iter()
+                .any(|d| d.group.0 == "pipeline.fixed-point-not-yet-iterated"),
+            "the not-yet-iterated limitation is gone; got {:?}",
+            out.diagnostics
+        );
+        assert!(
+            !out.diagnostics
+                .iter()
+                .any(|d| d.group.0 == "pipeline.fixed-point-cap-reached"),
+            "a non-changing pass must not hit the sweep cap; got {:?}",
+            out.diagnostics
+        );
+    }
+
+    /// A FixedPoint pass that reports `changed = true` for its first
+    /// `n` runs and `false` thereafter — models a pass whose work
+    /// cascades across a bounded number of sweeps. Uses interior
+    /// mutability because `Pass::run` takes `&self`.
+    struct CountingPass {
+        name_: &'static str,
+        remaining: std::sync::atomic::AtomicUsize,
+        runs: std::sync::Arc<std::sync::atomic::AtomicUsize>,
+    }
+
+    impl CountingPass {
+        fn new(name: &'static str, changes: usize) -> Self {
+            Self {
+                name_: name,
+                remaining: std::sync::atomic::AtomicUsize::new(changes),
+                runs: std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0)),
+            }
+        }
+    }
+
+    impl Pass for CountingPass {
+        fn name(&self) -> &'static str {
+            self.name_
+        }
+        fn iteration_policy(&self) -> IterationPolicy {
+            IterationPolicy::FixedPoint
+        }
+        fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+            use std::sync::atomic::Ordering;
+            self.runs.fetch_add(1, Ordering::SeqCst);
+            // Decrement the change budget; report `changed` while it lasts.
+            let changed = self
+                .remaining
+                .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |r| {
+                    if r > 0 {
+                        Some(r - 1)
+                    } else {
+                        None
+                    }
+                })
+                .is_ok();
+            Ok(PassOutput {
+                program: ctx.program.clone(),
+                contributions: Vec::new(),
+                changed,
+                diagnostics: Vec::new(),
+                stats: PassStats { nodes_touched: 1 },
+            })
+        }
+    }
+
+    #[test]
+    fn fixed_point_iterates_until_no_pass_reports_change() {
+        // A pass that reports `changed` three times should be run four
+        // times total: three changing sweeps plus one confirming sweep
+        // that reports no change and ends the loop.
+        let pass = CountingPass::new("counter", 3);
+        let runs = pass.runs.clone();
+
+        let mut pipeline = PassPipeline::new();
+        pipeline.add(Box::new(pass));
+
+        let mut cv = CVLog::new(true);
+        let out = pipeline.run(program(), &Sidecar::new(), &mut cv).unwrap();
+
+        assert_eq!(
+            runs.load(std::sync::atomic::Ordering::SeqCst),
+            4,
+            "3 changing sweeps + 1 confirming sweep"
+        );
+        // Converged inside the cap → no cap-reached note.
+        assert!(!out
+            .diagnostics
+            .iter()
+            .any(|d| d.group.0 == "pipeline.fixed-point-cap-reached"));
+        // execution_order is the topo order (distinct passes), not the
+        // per-sweep run log.
+        assert_eq!(out.execution_order, vec!["counter".to_string()]);
+    }
+
+    #[test]
+    fn one_shot_change_does_not_drive_the_loop() {
+        // A OneShot pass that always reports `changed = true` must NOT
+        // spin the loop — only FixedPoint changes do. So the pipeline
+        // converges in a single sweep despite the perpetual `changed`.
+        struct AlwaysChangesOneShot;
+        impl Pass for AlwaysChangesOneShot {
+            fn name(&self) -> &'static str {
+                "oneshot"
+            }
+            fn iteration_policy(&self) -> IterationPolicy {
+                IterationPolicy::OneShot
+            }
+            fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+                Ok(PassOutput {
+                    program: ctx.program.clone(),
+                    contributions: Vec::new(),
+                    changed: true, // would spin the loop if OneShot drove it
+                    diagnostics: Vec::new(),
+                    stats: PassStats { nodes_touched: 1 },
+                })
+            }
+        }
+
+        let mut pipeline = PassPipeline::new();
+        pipeline.add(Box::new(AlwaysChangesOneShot));
+
+        let mut cv = CVLog::new(true);
+        let out = pipeline.run(program(), &Sidecar::new(), &mut cv).unwrap();
+        // Did not hit the cap → converged in one sweep.
+        assert!(!out
+            .diagnostics
+            .iter()
+            .any(|d| d.group.0 == "pipeline.fixed-point-cap-reached"));
+    }
+
+    #[test]
+    fn non_convergent_pass_hits_the_cap_and_notes_it() {
+        // A FixedPoint pass that ALWAYS reports `changed` (more changes
+        // than the cap) must stop after MAX_SWEEPS and surface the
+        // cap-reached note rather than looping forever.
+        let pass = CountingPass::new("runaway", MAX_SWEEPS + 50);
+        let runs = pass.runs.clone();
+
+        let mut pipeline = PassPipeline::new();
+        pipeline.add(Box::new(pass));
+
+        let mut cv = CVLog::new(true);
+        let out = pipeline.run(program(), &Sidecar::new(), &mut cv).unwrap();
+
+        assert_eq!(
+            runs.load(std::sync::atomic::Ordering::SeqCst),
+            MAX_SWEEPS,
+            "the cap bounds the number of sweeps"
+        );
         assert!(
             out.diagnostics
                 .iter()
-                .any(|d| d.group.0 == "pipeline.fixed-point-not-yet-iterated"),
-            "expected a FixedPoint note diagnostic; got {:?}",
+                .any(|d| d.group.0 == "pipeline.fixed-point-cap-reached"),
+            "hitting the cap must surface a note; got {:?}",
             out.diagnostics
         );
     }
@@ -865,7 +1083,12 @@ mod tests {
         }
         assert_eq!(
             r.registered_names(),
-            vec!["alpha".to_string(), "beta".to_string(), "mu".to_string(), "zeta".to_string()],
+            vec![
+                "alpha".to_string(),
+                "beta".to_string(),
+                "mu".to_string(),
+                "zeta".to_string()
+            ],
         );
     }
 
@@ -908,8 +1131,8 @@ mod tests {
         // Each build_pipeline call should re-invoke the factory.
         // We verify by sharing an Arc<AtomicUsize> counter that
         // increments on each construction.
-        use std::sync::Arc;
         use std::sync::atomic::{AtomicUsize, Ordering};
+        use std::sync::Arc;
 
         let mut r = PassRegistry::new();
         let counter = Arc::new(AtomicUsize::new(0));
@@ -923,10 +1146,10 @@ mod tests {
         let _p1 = r.build_pipeline(&["counter"]).unwrap();
         let _p2 = r.build_pipeline(&["counter"]).unwrap();
         let _p3 = r.build_pipeline(&["counter", "counter"]).ok(); // would error
-        // Two successful single-pass builds → factory called twice;
-        // the third build fails (PassPipeline rejects duplicate names
-        // at run time, but build_pipeline itself does invoke the
-        // factory once per name before adding). We assert at least 2.
+                                                                  // Two successful single-pass builds → factory called twice;
+                                                                  // the third build fails (PassPipeline rejects duplicate names
+                                                                  // at run time, but build_pipeline itself does invoke the
+                                                                  // factory once per name before adding). We assert at least 2.
         assert!(counter.load(Ordering::SeqCst) >= 2);
     }
 

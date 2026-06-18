@@ -1130,11 +1130,14 @@ mod tests {
         let out = pipeline.run(program(), &Sidecar::new(), &mut cv).unwrap();
         assert_eq!(out.execution_order, vec!["inline".to_string()]);
         assert_eq!(out.stats["inline"].nodes_touched, 1);
+        // The pipeline now iterates FixedPoint passes to a fixed point;
+        // a non-changing solo pass converges in one sweep, so the old
+        // "not-yet-iterated" limitation note is gone.
         assert!(
-            out.diagnostics
+            !out.diagnostics
                 .iter()
                 .any(|d| d.group.0 == "pipeline.fixed-point-not-yet-iterated"),
-            "expected the pipeline's FixedPoint note; got {:?}",
+            "the not-yet-iterated note must be gone now that the pipeline iterates; got {:?}",
             out.diagnostics
         );
     }

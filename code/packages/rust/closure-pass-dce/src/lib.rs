@@ -1211,7 +1211,10 @@ mod tests {
             .run(program(), &Sidecar::new(), &mut cv)
             .expect("pipeline should run cleanly");
         assert_eq!(out.execution_order, vec!["dce".to_string()]);
-        assert!(out
+        // The pipeline now iterates to a fixed point; a non-changing
+        // solo pass converges in one sweep, so the old "not-yet-iterated"
+        // note is gone.
+        assert!(!out
             .diagnostics
             .iter()
             .any(|d| d.group.0 == "pipeline.fixed-point-not-yet-iterated"));
