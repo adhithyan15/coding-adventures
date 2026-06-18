@@ -70,6 +70,20 @@ All notable changes to this project will be documented in this file.
     right-aligned values, each column the wider of the two — instead of the `[i]`
     prefix; an unset name prints `<NA>`.
 
+### Changed
+
+- **`%*%` adopts the shared f64 matrix-execution substrate (MXF-4)** — R's
+  matrix product, formerly a hand-written `f64` triple loop in `eval.rs`, now
+  routes through [`array_runtime::execute`]`(Kernel::MatMul, …)` at
+  `DType::F64`. R's matmul therefore flows through the same cost-based CPU/GPU
+  planner as MATLAB's `A * B`, at full double precision (MXF-3's bit-exact
+  8-byte `f64` path) — completing the MX12 `f64`-substrate rollout. R's `Matrix`
+  is already column-major `[nrow, ncol]`, identical to `array_runtime::Array`'s
+  layout, and `matrix-cpu`'s `matmul_f64` folds the contraction left-to-right
+  from `0.0` just as the old loop did, so results are **bit-identical**. Adds
+  `array-runtime` as a dependency (it pulls `matrix-ir`/`matrix-cpu`/
+  `matrix-runtime`/`executor-protocol`/`compute-ir` transitively).
+
 ### Safety
 
 - The names vector is always kept exactly as long as the values (every
@@ -77,6 +91,18 @@ All notable changes to this project will be documented in this file.
   index out of bounds; the by-name index path reuses the bounded `resolve_picks`.
   No new unbounded allocation or integer-overflow surface — name lengths ride the
   same vector-length channels already capped at `MAX_SEQ_LEN`.
+- **NA correctness boundary (MXF-4).** R's NA is a *specific* NaN bit pattern;
+  IEEE arithmetic on a NaN yields an implementation-defined payload, so an NA
+  pushed through the substrate's floating multiply/add would not reliably return
+  as R's NA. When either operand contains an NA (or the inner dimension is `0`),
+  `matrix_multiply` keeps the original loop, which emits `na_real()` exactly as
+  before. The conformability check and the `MAX_SEQ_LEN` result-size cap are
+  preserved ahead of dispatch; any substrate error falls through to the bounded
+  loop. `t()`, `rowSums`/`colSums`/`apply`, `diag`, `solve`, and `det` are left
+  on their existing implementations — none has a matching `array-runtime`
+  primitive (transpose/axis-reductions are not lowered for execution;
+  `solve`/`det` are LU algorithms the substrate doesn't model), and `solve`
+  keeps its O(n³) size guard.
 
 ## [0.10.0] - 2026-06-16
 

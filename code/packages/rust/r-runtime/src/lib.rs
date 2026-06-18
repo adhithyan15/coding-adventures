@@ -413,6 +413,49 @@ mod tests {
         assert!(eval_r("matrix(1:6, 2, 3) %*% matrix(1:6, 2, 3)\n").is_err());
     }
 
+    // --- MXF-4: `%*%` routes through the shared f64 substrate -------------
+    //
+    // The NA-free matmul now flows through `array_runtime::execute(MatMul, …)`
+    // at `DType::F64`. These tests pin (a) a known product and (b) that the path
+    // keeps **full f64 precision** — a factor an `f32` round-trip would have
+    // destroyed survives bit-for-bit. NA inputs fall back to the loop, which
+    // still produces R's exact NA.
+    #[test]
+    fn matmul_substrate_matches_a_known_product() {
+        // A (2x3) %*% B (3x2) with A = [[1,3,5],[2,4,6]] and (column-major)
+        // B = [[1,4],[2,5],[3,6]]: the product is [[22,49],[28,64]], which
+        // flattens column-major to 22, 28, 49, 64.
+        assert_eq!(
+            nums("c(matrix(1:6, 2, 3) %*% matrix(1:6, 3, 2))\n"),
+            vec![22.0, 28.0, 49.0, 64.0]
+        );
+    }
+
+    #[test]
+    fn matmul_substrate_preserves_f64_precision() {
+        // 1 + 2^-40 is exactly representable in f64 but rounds to 1.0 in f32.
+        // A 1x1 product `[1 + 2^-40] %*% [1]` must come back as the exact f64
+        // value — proving the substrate path is genuine double precision (no
+        // f32 round-trip), bit-identical to R's old loop.
+        let got = nums("x <- 1 + 2^-40\nc(matrix(x, 1, 1) %*% matrix(1, 1, 1))\n");
+        assert_eq!(got, vec![1.0 + 2f64.powi(-40)]);
+        // And the exact value is *not* 1.0 (the f32 round-trip answer).
+        assert_ne!(got[0], 1.0);
+    }
+
+    #[test]
+    fn matmul_with_na_still_propagates_na() {
+        // An NA in either operand must yield R's NA (the loop fallback), not a
+        // plain NaN from the substrate's floating arithmetic.
+        // A = (column-major) [[1,3],[NA,4]] times the 2x2 identity. Every result
+        // cell whose dotted row touches the NA is NA, so the column-major flatten
+        // is 1, NA, 3, NA (cells (1,0) and (1,1) both dot the NA-bearing row).
+        assert_eq!(
+            show("c(matrix(c(1, NA, 3, 4), 2, 2) %*% matrix(c(1, 0, 0, 1), 2, 2))\n"),
+            "[1]  1 NA  3 NA"
+        );
+    }
+
     // --- R-12: matrix linear algebra ------------------------------------
 
     fn approx(src: &str, expected: &[f64]) {
