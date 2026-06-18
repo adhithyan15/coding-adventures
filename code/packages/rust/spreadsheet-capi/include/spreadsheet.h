@@ -63,6 +63,18 @@ void  sc_delete_cols(ScSession *s, uint32_t at, uint32_t count);
    re-reads via sc_get_window / sc_get_display_window / sc_get_raw afterwards. */
 void  sc_fill(ScSession *s, const char *src, const char *dst_start, const char *dst_end);
 
+/* Clipboard — cut / copy / paste. copy/cut capture the inclusive rectangle
+   `start`..`end` (content + format + the typed source). A copy's buffer survives
+   any number of pastes; a cut is a one-shot move whose paste clears the source it
+   didn't overwrite. paste places the block so its top-left lands at `dst_start`,
+   shifting the whole block's references by the destination's offset; it returns 1
+   when applied, 0 for a no-op (empty clipboard / malformed address / off-grid).
+   No char* results — the host re-reads via sc_get_window / sc_get_display_window /
+   sc_get_raw afterwards. A malformed/oversized range on copy/cut is a no-op. */
+void  sc_copy(ScSession *s, const char *start, const char *end);
+void  sc_cut(ScSession *s, const char *start, const char *end);
+int   sc_paste(ScSession *s, const char *dst_start);
+
 /* Viewport primitive — read just the visible window of the unbounded sheet.
    Coordinates are 1-based and inclusive. Each char* result must be freed with
    sc_string_free(). */
