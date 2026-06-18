@@ -58,6 +58,20 @@ use crate::lower::build_canonical_application;
 /// already-materialised input, which the W-4 input-size / token caps bound.
 pub const MAX_RANGE_LENGTH: usize = 1_000_000;
 
+/// Maximum number of elements a W-9 list-*growing* built-in (`Join`, `Flatten`)
+/// may materialise into its result.
+///
+/// `Join` and `Flatten` are the two W-9 heads whose output can be *larger* than
+/// any single input — `Join` sums its argument lengths, `Flatten` splices nested
+/// sub-lists into one flat list. Both inputs are themselves bounded by the W-4
+/// input/token caps, so this guard is defensive (a deeply/widely nested literal
+/// or a long chain of `Join`s could still aim for a large allocation); a result
+/// that would exceed this bound is left unevaluated rather than allocated. The
+/// other W-9 heads (`Sort`, `Reverse`, `Select`, `Count`, `Total`) are
+/// size-non-increasing and need no separate cap. Shares `MAX_RANGE_LENGTH`'s
+/// value (1,000,000) — already far beyond any interactive list.
+pub const MAX_LIST_LENGTH: usize = MAX_RANGE_LENGTH;
+
 /// Build the W-5 Wolfram built-in handler table.
 ///
 /// Keyed on the **surface** Wolfram head names (`"Length"`, `"Map"`, …) since
@@ -89,6 +103,20 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("With".to_string(), handler_fn(with_handler));
     m.insert("Module".to_string(), handler_fn(module_handler));
     m.insert("Block".to_string(), handler_fn(block_handler));
+    // W-9 list-manipulation constructs. All are *eager* (non-held) heads — their
+    // arguments are evaluated before the handler runs, exactly like the W-5 list
+    // built-ins — so they are *not* added to the `WolframBackend` held set.
+    m.insert("Sort".to_string(), handler_fn(sort_handler));
+    m.insert("Reverse".to_string(), handler_fn(reverse_handler));
+    m.insert("Join".to_string(), handler_fn(join_handler));
+    m.insert("Flatten".to_string(), handler_fn(flatten_handler));
+    m.insert("Select".to_string(), handler_fn(select_handler));
+    m.insert("Count".to_string(), handler_fn(count_handler));
+    m.insert("Total".to_string(), handler_fn(total_handler));
+    // W-9 parity predicates — the minimal predicate primitives that make
+    // `Select`/`Count` testable (the W-5/W-6 surface had no predicate head).
+    m.insert("EvenQ".to_string(), handler_fn(even_q_handler));
+    m.insert("OddQ".to_string(), handler_fn(odd_q_handler));
     m
 }
 
@@ -690,6 +718,275 @@ fn numericise(node: &IRNode) -> IRNode {
 }
 
 // ---------------------------------------------------------------------------
+// List manipulation — Sort / Reverse / Join / Flatten (W-9)
+// ---------------------------------------------------------------------------
+
+/// `Sort[{c, a, b}]` → `{a, b, c}` — ascending in the subset's canonical order
+/// ([`canonical_cmp`]). For a pure-numeric list this is numeric order
+/// (`Sort[{3, 1, 2}]` → `{1, 2, 3}`); for mixed/symbolic lists it is the
+/// documented total order (numbers < symbols < strings < compound, then by
+/// value/name/structure). `Sort` of a non-list is left unevaluated.
+///
+/// The sort is *stable* (`sort_by`, not `sort_unstable_by`) so equal-key
+/// elements keep their input order — deterministic across runs.
+fn sort_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(mut elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    elems.sort_by(canonical_cmp);
+    apply(sym(LIST), elems)
+}
+
+/// `Reverse[{1, 2, 3}]` → `{3, 2, 1}`. `Reverse` of a non-list is left
+/// unevaluated. Size-preserving — no new DoS surface.
+fn reverse_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(mut elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    elems.reverse();
+    apply(sym(LIST), elems)
+}
+
+/// `Join[a, b, …]` → the lists concatenated, in order. Two or more list
+/// arguments are required; if *any* argument is not a list the whole form is left
+/// unevaluated (Wolfram's `Join` requires every argument to share the same head).
+///
+/// **DoS-capped**: the combined length is bounded by [`MAX_LIST_LENGTH`] — an
+/// over-cap join is left unevaluated rather than allocated. The total length is
+/// accumulated in `usize` with `checked_add` so a crafted chain cannot overflow
+/// the running count.
+fn join_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() < 2 {
+        return unevaluated(expr);
+    }
+    // First pass: every argument must be a list, and the *combined* length must
+    // not exceed the cap — checked before any allocation so an over-cap join is
+    // never built.
+    let mut lists: Vec<Vec<IRNode>> = Vec::with_capacity(expr.args.len());
+    let mut total: usize = 0;
+    for arg in &expr.args {
+        let Some(elems) = list_elements(arg) else {
+            return unevaluated(expr);
+        };
+        total = match total.checked_add(elems.len()) {
+            Some(t) if t <= MAX_LIST_LENGTH => t,
+            // Over the cap (or a usize overflow) — refuse, leave unevaluated.
+            _ => return unevaluated(expr),
+        };
+        lists.push(elems);
+    }
+    let mut out = Vec::with_capacity(total);
+    for elems in lists {
+        out.extend(elems);
+    }
+    apply(sym(LIST), out)
+}
+
+/// `Flatten[list]` → every nested sub-list spliced in at **all** levels;
+/// `Flatten[list, n]` → only the top `n` levels are flattened (a deeper sub-list
+/// is left intact).
+///
+/// `Flatten[{{1, 2}, {3}}]` → `{1, 2, 3}`; `Flatten[{1, {2, {3}}}]` →
+/// `{1, 2, 3}`; `Flatten[{1, {2, {3}}}, 1]` → `{1, 2, {3}}` (one level only).
+///
+/// **DoS-bounded** on two axes: the recursion depth is bounded (the full-flatten
+/// recurses on structure, itself bounded by the token-capped input nesting; the
+/// `n`-form additionally stops after `n` levels), and the output length is capped
+/// at [`MAX_LIST_LENGTH`] — once the accumulator reaches the cap the whole form
+/// is left unevaluated rather than grown without bound. A non-list first
+/// argument, or a negative/non-integer depth, leaves the form unevaluated.
+fn flatten_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    // Resolve the optional depth: absent → flatten all levels (i64::MAX as a
+    // sentinel "unbounded"); present → an exact non-negative integer.
+    let depth: i64 = match expr.args.as_slice() {
+        [_] => i64::MAX,
+        [_, d] => match as_i64(d) {
+            Some(n) if n >= 0 => n,
+            // A negative or non-integer depth is malformed.
+            _ => return unevaluated(expr),
+        },
+        _ => return unevaluated(expr),
+    };
+    let Some(top_elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    // The *top* list is always the result container — unwrapping it does not cost
+    // a level. `depth` counts how many levels of *nested sub-lists* to splice, so
+    // `Flatten[list, 1]` splices the sub-lists that are direct elements of `list`.
+    // Each top element is flattened with the full `depth`.
+    let mut out: Vec<IRNode> = Vec::new();
+    for elem in &top_elems {
+        // `flatten_into` returns `false` if the cap was hit mid-flatten; in that
+        // case leave the whole form unevaluated rather than return a truncated list.
+        if !flatten_into(elem, depth, &mut out) {
+            return unevaluated(expr);
+        }
+    }
+    apply(sym(LIST), out)
+}
+
+/// Splice `node` into `out`: if `node` is a sub-list and `depth > 0`, recurse
+/// into each of its elements with one less level remaining; otherwise push `node`
+/// verbatim. `i64::MAX` for `depth` means "unbounded — descend through every
+/// nested list". Returns `false` if appending would exceed [`MAX_LIST_LENGTH`]
+/// (the DoS cap), so the caller can reject the whole `Flatten`.
+///
+/// Each recursive step decrements `depth`, so the `n`-form splices exactly `n`
+/// levels of nested sub-lists; the unbounded form saturates at `i64::MAX - 1` and
+/// keeps descending, but real recursion depth is bounded by the (token-capped)
+/// input nesting, so it always terminates.
+fn flatten_into(node: &IRNode, depth: i64, out: &mut Vec<IRNode>) -> bool {
+    match list_elements(node) {
+        // A sub-list, and we still have levels to splice: descend into each element.
+        Some(elems) if depth > 0 => {
+            for elem in &elems {
+                if !flatten_into(elem, depth.saturating_sub(1), out) {
+                    return false;
+                }
+            }
+            true
+        }
+        // A non-list element, or depth exhausted: push the element verbatim
+        // (capping the output length first).
+        _ => {
+            if out.len() >= MAX_LIST_LENGTH {
+                return false;
+            }
+            out.push(node.clone());
+            true
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Filtering / counting — Select / Count (W-9)
+// ---------------------------------------------------------------------------
+
+/// `Select[{1, 2, 3, 4}, EvenQ]` → `{2, 4}` — keep each element for which
+/// `pred[e]` evaluates to the `True` symbol. The predicate is applied through the
+/// **same** path as `Map`/`Apply`: `build_canonical_application(pred, [e])` then
+/// `vm.eval`, so any callable (a built-in `EvenQ`, a user `f[x_] := …`, a bridged
+/// head) works. A non-list second argument, or wrong arity, leaves the form
+/// unevaluated. The output is at most as long as the input — no new DoS surface.
+fn select_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    let pred = expr.args[1].clone();
+    let kept: Vec<IRNode> = elems
+        .into_iter()
+        .filter(|e| predicate_is_true(vm, &pred, e))
+        .collect();
+    apply(sym(LIST), kept)
+}
+
+/// `Count[{1, 2, 3, 4}, EvenQ]` → `2` — the number of elements for which
+/// `pred[e]` evaluates to `True`. Shares the predicate-application path with
+/// [`select_handler`]. This is the **documented simplification** versus full
+/// Wolfram pattern-matching `Count` (where the second argument may be a pattern):
+/// W-9 supports a *function* predicate, the common introductory case (MA04 §12.3).
+/// A non-list first argument, or wrong arity, leaves the form unevaluated.
+fn count_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    let pred = expr.args[1].clone();
+    let n = elems
+        .iter()
+        .filter(|e| predicate_is_true(vm, &pred, e))
+        .count();
+    int(n as i64)
+}
+
+/// Apply `pred` to `element` and report whether the result is the literal `True`
+/// symbol. Builds `pred[element]` via the canonical application path (the same
+/// one `Map`/`Apply` use, so the `Plus`→`Add`-style bridges and user functions
+/// all resolve) and re-evaluates it through the VM. Any result other than the
+/// `True` symbol — `False`, an unevaluated `pred[element]`, a number — counts as
+/// *not* selected; this never panics on a non-callable predicate (an unbound head
+/// just leaves `pred[element]` unevaluated, which is not `True`).
+fn predicate_is_true(vm: &mut VM, pred: &IRNode, element: &IRNode) -> bool {
+    let applied = build_canonical_application(pred.clone(), vec![element.clone()]);
+    matches!(vm.eval(applied), IRNode::Symbol(s) if s == "True")
+}
+
+// ---------------------------------------------------------------------------
+// Summation — Total (W-9)
+// ---------------------------------------------------------------------------
+
+/// `Total[{1, 2, 3}]` → `6` — the sum of the list's elements, folded onto the
+/// shared `Add` head (so symbolic terms combine via the same engine as `1 + 2`,
+/// consistent with W-7 `Sum` over a range). An empty list totals to `0`. `Total`
+/// of a non-list is left unevaluated.
+///
+/// The fold is left-associative and each step is re-evaluated through the VM, so
+/// numeric terms collapse as they accumulate rather than building a giant
+/// unevaluated tree — identical in shape to W-7's `fold_iteration`.
+fn total_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    let mut acc = int(0);
+    for elem in elems {
+        acc = vm.eval(apply(sym(ADD), vec![acc, elem]));
+    }
+    acc
+}
+
+// ---------------------------------------------------------------------------
+// Parity predicates — EvenQ / OddQ (W-9)
+// ---------------------------------------------------------------------------
+
+/// `EvenQ[n]` → `True` if `n` is an even integer, else `False`. A non-integer
+/// argument (a rational, float, symbol, or list) is `False`, matching Wolfram
+/// (`EvenQ[x]` is `False`, not unevaluated). Wrong arity stays unevaluated.
+///
+/// Even-ness uses `rem_euclid(2)` so a *negative* `n` is classified correctly
+/// (`EvenQ[-4]` → `True`), unlike the truncating `%` which would still be fine
+/// for `== 0` but `rem_euclid` makes the intent explicit.
+fn even_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    parity_q(expr, /* want_even = */ true)
+}
+
+/// `OddQ[n]` → `True` if `n` is an odd integer, else `False`. See [`even_q_handler`].
+fn odd_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    parity_q(expr, /* want_even = */ false)
+}
+
+/// Shared core of `EvenQ`/`OddQ`: `True`/`False` on integer parity, `False` for a
+/// non-integer, unevaluated for the wrong arity.
+fn parity_q(expr: IRApply, want_even: bool) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let is_even = match &expr.args[0] {
+        IRNode::Integer(n) => n.rem_euclid(2) == 0,
+        // A non-integer is neither EvenQ nor OddQ → False.
+        _ => return sym("False"),
+    };
+    if is_even == want_even {
+        sym("True")
+    } else {
+        sym("False")
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Small shared helpers
 // ---------------------------------------------------------------------------
 
@@ -738,6 +1035,98 @@ fn unevaluated(expr: IRApply) -> IRNode {
     IRNode::Apply(Box::new(expr))
 }
 
+/// The subset's **canonical total order** over `IRNode`, used by `Sort` (MA04
+/// §12.2). A *documented simplification* of Wolfram's full canonical order: it
+/// agrees with Wolfram for the common cases (pure-numeric lists sort numerically,
+/// symbols/strings lexicographically) and is otherwise a deterministic, total,
+/// stable order so `Sort` never panics and is reproducible across runs.
+///
+/// The ordering is, in tiers:
+///
+/// 1. **all numbers** (Integer/Rational/Float) — compared by their `f64`
+///    magnitude, so `2`, `1/2`, `1.5` interleave sensibly; ties (equal magnitude,
+///    e.g. `2` vs `2.0`) fall through to the type tag so the order stays total and
+///    stable.
+/// 2. **symbols** — lexicographic by name.
+/// 3. **strings** — lexicographic.
+/// 4. **compound `Apply`** — by head first (recursively), then argument count,
+///    then arguments left-to-right (recursively).
+///
+/// Across tiers, the *tier index* decides (numbers < symbols < strings <
+/// compound). `f64` comparison uses `total_cmp`, which is a true total order even
+/// for `NaN`, so the comparator is panic-free.
+fn canonical_cmp(a: &IRNode, b: &IRNode) -> std::cmp::Ordering {
+    use std::cmp::Ordering;
+    // Numbers form one tier, compared by magnitude regardless of exact subtype.
+    let a_num = numeric_magnitude(a);
+    let b_num = numeric_magnitude(b);
+    match (a_num, b_num) {
+        (Some(x), Some(y)) => x
+            .total_cmp(&y)
+            // Equal magnitude (`2` vs `2.0`): break by the type tag so the order
+            // is total and stable (numbers stay grouped, ordering is fixed).
+            .then_with(|| type_tag(a).cmp(&type_tag(b))),
+        // A number sorts before any non-number.
+        (Some(_), None) => Ordering::Less,
+        (None, Some(_)) => Ordering::Greater,
+        // Neither is a number: order by tier tag, then within-tier.
+        (None, None) => type_tag(a)
+            .cmp(&type_tag(b))
+            .then_with(|| within_tier_cmp(a, b)),
+    }
+}
+
+/// The `f64` magnitude of a numeric node (Integer/Rational/Float), or `None` for
+/// a non-number. Used to put every number in one comparison tier in
+/// [`canonical_cmp`]. Lossy for huge integers, but only the *ordering* matters
+/// and equal-magnitude ties fall back to the type tag, so the order stays total.
+fn numeric_magnitude(node: &IRNode) -> Option<f64> {
+    match node {
+        IRNode::Integer(n) => Some(*n as f64),
+        IRNode::Rational(num, den) => Some(*num as f64 / *den as f64),
+        IRNode::Float(f) => Some(*f),
+        _ => None,
+    }
+}
+
+/// A stable tier tag fixing the cross-type order: numbers (0) < symbols (1) <
+/// strings (2) < compound (3). Within the number tier the three subtypes get
+/// distinct tags (0/1/2 offset into the number band) only as an equal-magnitude
+/// tie-break, which keeps the order total without disturbing magnitude order.
+fn type_tag(node: &IRNode) -> u8 {
+    match node {
+        IRNode::Integer(_) => 0,
+        IRNode::Rational(..) => 1,
+        IRNode::Float(_) => 2,
+        IRNode::Symbol(_) => 3,
+        IRNode::Str(_) => 4,
+        IRNode::Apply(_) => 5,
+    }
+}
+
+/// Order two *same-tier* non-numeric nodes: symbols and strings lexicographically,
+/// compound expressions by head then arity then arguments (recursively). Mixed
+/// tiers never reach here (the caller orders those by [`type_tag`]); a defensive
+/// `Equal` is returned for any residual mismatch so the comparator stays total.
+fn within_tier_cmp(a: &IRNode, b: &IRNode) -> std::cmp::Ordering {
+    use std::cmp::Ordering;
+    match (a, b) {
+        (IRNode::Symbol(x), IRNode::Symbol(y)) => x.cmp(y),
+        (IRNode::Str(x), IRNode::Str(y)) => x.cmp(y),
+        (IRNode::Apply(x), IRNode::Apply(y)) => canonical_cmp(&x.head, &y.head)
+            .then_with(|| x.args.len().cmp(&y.args.len()))
+            .then_with(|| {
+                x.args
+                    .iter()
+                    .zip(y.args.iter())
+                    .map(|(ax, bx)| canonical_cmp(ax, bx))
+                    .find(|o| *o != Ordering::Equal)
+                    .unwrap_or(Ordering::Equal)
+            }),
+        _ => Ordering::Equal,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -750,6 +1139,18 @@ mod tests {
         let table = build_wolfram_builtins();
         let handler = table.get(head).expect("no such builtin").clone();
         let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+        handler(&mut vm, IRApply { head: sym(head), args })
+    }
+
+    /// Like [`run`], but over a real [`WolframBackend`] so a handler that
+    /// re-evaluates a *Wolfram* head through the VM (e.g. `Select`/`Count`
+    /// applying the `EvenQ` predicate) can resolve it. The plain `run` helper uses
+    /// a bare `SymbolicBackend`, which does not know the W-9 predicate heads.
+    fn run_wolfram(head: &str, args: Vec<IRNode>) -> IRNode {
+        use crate::backend::WolframBackend;
+        let table = build_wolfram_builtins();
+        let handler = table.get(head).expect("no such builtin").clone();
+        let mut vm = VM::new(Box::new(WolframBackend::new()));
         handler(&mut vm, IRApply { head: sym(head), args })
     }
 
@@ -1240,6 +1641,253 @@ mod tests {
                 sym("Block"),
                 vec![list(vec![decl("x", int(1))]), int(1), int(2)]
             )
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-9 list-manipulation handlers (unit level — Select/Count/Total run over a
+    // real VM so the predicate-application path and the Add fold exercise the
+    // shared SymbolicBackend handler table).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn sort_orders_a_numeric_list_ascending() {
+        assert_eq!(
+            run("Sort", vec![list(vec![int(3), int(1), int(2)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Mixed magnitudes (int / rational / float) interleave by value.
+        assert_eq!(
+            run(
+                "Sort",
+                vec![list(vec![int(2), IRNode::rational(1, 2), flt(1.5)])]
+            ),
+            list(vec![IRNode::rational(1, 2), flt(1.5), int(2)])
+        );
+        // Empty and singleton lists are fixed points.
+        assert_eq!(run("Sort", vec![list(vec![])]), list(vec![]));
+        assert_eq!(run("Sort", vec![list(vec![int(7)])]), list(vec![int(7)]));
+    }
+
+    #[test]
+    fn sort_orders_symbols_and_mixed_types_canonically() {
+        // Symbols sort lexicographically, and numbers sort before symbols.
+        assert_eq!(
+            run(
+                "Sort",
+                vec![list(vec![sym("c"), int(2), sym("a"), int(1)])]
+            ),
+            list(vec![int(1), int(2), sym("a"), sym("c")])
+        );
+    }
+
+    #[test]
+    fn sort_of_a_non_list_stays_unevaluated() {
+        assert_eq!(run("Sort", vec![sym("x")]), apply(sym("Sort"), vec![sym("x")]));
+        // Wrong arity too.
+        assert_eq!(run("Sort", vec![]), apply(sym("Sort"), vec![]));
+    }
+
+    #[test]
+    fn reverse_reverses_a_list() {
+        assert_eq!(
+            run("Reverse", vec![list(vec![int(1), int(2), int(3)])]),
+            list(vec![int(3), int(2), int(1)])
+        );
+        assert_eq!(run("Reverse", vec![list(vec![])]), list(vec![]));
+        // Non-list stays unevaluated.
+        assert_eq!(
+            run("Reverse", vec![int(5)]),
+            apply(sym("Reverse"), vec![int(5)])
+        );
+    }
+
+    #[test]
+    fn join_concatenates_two_or_more_lists() {
+        assert_eq!(
+            run("Join", vec![list(vec![int(1)]), list(vec![int(2), int(3)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Three-argument form.
+        assert_eq!(
+            run(
+                "Join",
+                vec![list(vec![int(1)]), list(vec![int(2)]), list(vec![int(3)])]
+            ),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Joining with an empty list is the identity.
+        assert_eq!(
+            run("Join", vec![list(vec![int(1)]), list(vec![])]),
+            list(vec![int(1)])
+        );
+    }
+
+    #[test]
+    fn join_with_a_non_list_or_too_few_args_stays_unevaluated() {
+        // A non-list argument aborts the whole join.
+        assert_eq!(
+            run("Join", vec![list(vec![int(1)]), int(2)]),
+            apply(sym("Join"), vec![list(vec![int(1)]), int(2)])
+        );
+        // Fewer than two arguments is malformed.
+        assert_eq!(
+            run("Join", vec![list(vec![int(1)])]),
+            apply(sym("Join"), vec![list(vec![int(1)])])
+        );
+    }
+
+    #[test]
+    fn flatten_full_flattens_all_levels() {
+        // One level.
+        assert_eq!(
+            run("Flatten", vec![list(vec![list(vec![int(1), int(2)]), list(vec![int(3)])])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Deep nesting, all levels.
+        assert_eq!(
+            run(
+                "Flatten",
+                vec![list(vec![int(1), list(vec![int(2), list(vec![int(3)])])])]
+            ),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Already flat is a fixed point.
+        assert_eq!(
+            run("Flatten", vec![list(vec![int(1), int(2)])]),
+            list(vec![int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn flatten_with_explicit_depth_stops_after_n_levels() {
+        // Depth 1: only the top level is spliced; the inner {3} survives.
+        assert_eq!(
+            run(
+                "Flatten",
+                vec![
+                    list(vec![int(1), list(vec![int(2), list(vec![int(3)])])]),
+                    int(1)
+                ]
+            ),
+            list(vec![int(1), int(2), list(vec![int(3)])])
+        );
+        // Depth 0: nothing is descended — the list is returned element-wise as-is.
+        assert_eq!(
+            run(
+                "Flatten",
+                vec![list(vec![int(1), list(vec![int(2)])]), int(0)]
+            ),
+            list(vec![int(1), list(vec![int(2)])])
+        );
+    }
+
+    #[test]
+    fn flatten_malformed_stays_unevaluated() {
+        // Non-list first argument.
+        assert_eq!(
+            run("Flatten", vec![int(5)]),
+            apply(sym("Flatten"), vec![int(5)])
+        );
+        // Negative depth.
+        assert_eq!(
+            run("Flatten", vec![list(vec![int(1)]), int(-1)]),
+            apply(sym("Flatten"), vec![list(vec![int(1)]), int(-1)])
+        );
+        // Non-integer depth.
+        assert_eq!(
+            run("Flatten", vec![list(vec![int(1)]), sym("x")]),
+            apply(sym("Flatten"), vec![list(vec![int(1)]), sym("x")])
+        );
+    }
+
+    #[test]
+    fn even_q_and_odd_q_classify_integers() {
+        assert_eq!(run("EvenQ", vec![int(4)]), sym("True"));
+        assert_eq!(run("EvenQ", vec![int(3)]), sym("False"));
+        assert_eq!(run("OddQ", vec![int(3)]), sym("True"));
+        assert_eq!(run("OddQ", vec![int(4)]), sym("False"));
+        // Negative integers are classified correctly (rem_euclid).
+        assert_eq!(run("EvenQ", vec![int(-4)]), sym("True"));
+        assert_eq!(run("OddQ", vec![int(-3)]), sym("True"));
+        // Zero is even.
+        assert_eq!(run("EvenQ", vec![int(0)]), sym("True"));
+        // A non-integer is neither even nor odd → False.
+        assert_eq!(run("EvenQ", vec![sym("x")]), sym("False"));
+        assert_eq!(run("OddQ", vec![flt(2.0)]), sym("False"));
+        // Wrong arity stays unevaluated.
+        assert_eq!(run("EvenQ", vec![]), apply(sym("EvenQ"), vec![]));
+    }
+
+    #[test]
+    fn select_keeps_elements_passing_the_predicate() {
+        // Select[{1, 2, 3, 4}, EvenQ] → {2, 4}.
+        assert_eq!(
+            run_wolfram(
+                "Select",
+                vec![list(vec![int(1), int(2), int(3), int(4)]), sym("EvenQ")]
+            ),
+            list(vec![int(2), int(4)])
+        );
+        // A predicate that never fires gives the empty list.
+        assert_eq!(
+            run_wolfram("Select", vec![list(vec![int(1), int(3)]), sym("EvenQ")]),
+            list(vec![])
+        );
+    }
+
+    #[test]
+    fn select_with_an_unbound_predicate_selects_nothing() {
+        // `f[e]` stays unevaluated (f unbound) — never the True symbol — so no
+        // element is selected and nothing panics.
+        assert_eq!(
+            run("Select", vec![list(vec![int(1), int(2)]), sym("f")]),
+            list(vec![])
+        );
+        // Non-list / wrong arity stay unevaluated.
+        assert_eq!(
+            run("Select", vec![int(1), sym("EvenQ")]),
+            apply(sym("Select"), vec![int(1), sym("EvenQ")])
+        );
+    }
+
+    #[test]
+    fn count_tallies_elements_passing_the_predicate() {
+        // Count[{1, 2, 3, 4}, EvenQ] → 2.
+        assert_eq!(
+            run_wolfram(
+                "Count",
+                vec![list(vec![int(1), int(2), int(3), int(4)]), sym("EvenQ")]
+            ),
+            int(2)
+        );
+        assert_eq!(
+            run_wolfram("Count", vec![list(vec![int(1), int(3), int(5)]), sym("EvenQ")]),
+            int(0)
+        );
+        // Non-list stays unevaluated.
+        assert_eq!(
+            run("Count", vec![sym("x"), sym("EvenQ")]),
+            apply(sym("Count"), vec![sym("x"), sym("EvenQ")])
+        );
+    }
+
+    #[test]
+    fn total_sums_a_list_onto_add() {
+        assert_eq!(run("Total", vec![list(vec![int(1), int(2), int(3)])]), int(6));
+        // An empty list totals to 0.
+        assert_eq!(run("Total", vec![list(vec![])]), int(0));
+        // Symbolic terms combine via the Add engine: Total[{x, x}] → 2 x ... but
+        // at minimum x + 1 + 2 collapses the numbers; assert the all-symbol case
+        // stays as a sum (handled by the shared Add handler).
+        assert_eq!(
+            run("Total", vec![list(vec![int(10), int(20)])]),
+            int(30)
+        );
+        // Non-list stays unevaluated.
+        assert_eq!(
+            run("Total", vec![sym("x")]),
+            apply(sym("Total"), vec![sym("x")])
         );
     }
 }
