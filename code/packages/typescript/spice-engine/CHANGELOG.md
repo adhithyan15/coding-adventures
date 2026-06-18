@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected measurement names to selected-run artifacts in
+  `runDeckAnalysis` and render them in a stable `MeasurementList` column from
+  `formatDeckRunArtifactTable`, matching Python and Rust.
 - Add normalized output-probe names to selected-run artifacts in
   `runDeckAnalysis` and render them in a stable `OutputProbeList` column from
   `formatDeckRunArtifactTable`, matching Python and Rust.
