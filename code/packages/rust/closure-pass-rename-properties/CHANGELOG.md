@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.3.0] - 2026-06-18
+
+### Added (CLOC13.L — bundled DOM/host property boundary, `DOM_PROPERTIES`)
+
+A curated `DOM_PROPERTIES` list (~300 names) is now **always protected**
+alongside the ECMAScript `BUILTIN_PROPERTIES`, closing the documented gap
+that "the built-in list covers ECMAScript but NOT the DOM/host." Common
+browser-surface property names — `innerHTML`, `textContent`, `classList`,
+`addEventListener`, `onclick`/`onload`/… inline handlers, `querySelector`,
+`getAttribute`, `style`, `dataset`, Window/Document/Location/History/
+Storage/Navigator members, XHR/fetch/Response fields, drag-and-drop, and
+event-object properties — are kept out of the box, so the pass no longer
+renames a DOM property the author never listed in `--externs` (which would
+silently break browser code).
+
+- **Always-on, additive, sound.** The protected baseline is now
+  `BUILTIN_PROPERTIES ∪ DOM_PROPERTIES`; `--externs` still unions on top.
+  Over-protecting a program-private property that happens to share a DOM
+  name merely forgoes a rename — never a miscompile (the same posture the
+  ECMAScript list already had). The bundle is a safety net, not a
+  replacement: vendor-/library-specific external properties still need a
+  `--externs` file, which remains the authoritative boundary.
+- Grouped by host area (EventTarget/events, inline `on*` handlers,
+  Node/Element, classList, form/input, attributes, CSSOM, Document, Window,
+  Location/History/Storage/Navigator, XHR/fetch/Response, drag-and-drop) for
+  auditability.
+- 2 new tests: a DOM property (`innerHTML`/`addEventListener`/`onclick`) is
+  kept with no `--externs` while a program-private property is still
+  renamed; a lone unlisted DOM property is kept (the safety net).
+
 ## [0.2.0] - 2026-06-18
 
 ### Added (CLOC13.K — `collect_property_names`, the externs property boundary)
