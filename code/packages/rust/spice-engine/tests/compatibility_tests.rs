@@ -1109,6 +1109,7 @@ R1 in out 1k
 .dc V1 0 5 1
 .ac dec 10 1k 1Meg
 .tran 1u 2m 0 10u uic
+.tf V(out) V1
 .end
 .tran 1u 1m
 ",
@@ -1119,7 +1120,7 @@ R1 in out 1k
         vec!["V1 in 0 DC 0".to_string(), "R1 in out 1k".to_string()]
     );
     assert!(summary.terminated);
-    assert_eq!(summary.end_line_number, Some(8));
+    assert_eq!(summary.end_line_number, Some(9));
     assert!(summary.diagnostics.is_empty());
     assert_eq!(
         summary
@@ -1127,7 +1128,7 @@ R1 in out 1k
             .iter()
             .map(|analysis| analysis.analysis.as_str())
             .collect::<Vec<_>>(),
-        vec!["op", "dc", "ac", "tran"]
+        vec!["op", "dc", "ac", "tran", "tf"]
     );
 
     let dc = &summary.analyses[1];
@@ -1151,6 +1152,11 @@ R1 in out 1k
     assert!((tran.start_time.unwrap() - 0.0).abs() < 1.0e-12);
     assert!((tran.max_step.unwrap() - 1.0e-5).abs() < 1.0e-12);
     assert!(tran.use_initial_conditions);
+
+    let tf = &summary.analyses[4];
+    assert_eq!(tf.directive, ".tf");
+    assert_eq!(tf.output_node.as_deref(), Some("out"));
+    assert_eq!(tf.source_name.as_deref(), Some("V1"));
 }
 
 #[test]
@@ -1218,6 +1224,21 @@ V1 in 0 DC 0
     assert_eq!(selected.analysis, "tran");
     assert_eq!(selected.line_number, 4);
     assert!((selected.stop_time.unwrap() - 2.0e-3).abs() < 1.0e-12);
+
+    let tf = select_deck_analysis_plan(
+        "
+V1 in 0 DC 1
+R1 in out 1k
+.tf V(out) V1
+.end
+",
+        Some("transfer-function"),
+    )
+    .unwrap();
+    assert_eq!(tf.directive, ".tf");
+    assert_eq!(tf.analysis, "tf");
+    assert_eq!(tf.output_node.as_deref(), Some("out"));
+    assert_eq!(tf.source_name.as_deref(), Some("V1"));
 }
 
 #[test]

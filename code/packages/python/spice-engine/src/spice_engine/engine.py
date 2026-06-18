@@ -2293,6 +2293,12 @@ def format_deck_transient_table(
     )
 
 
+def format_deck_tf_table(result: TfResult) -> str:
+    """Format a deck-selected transfer-function result."""
+
+    return format_tf_table(result)
+
+
 @dataclass(frozen=True)
 class DeckRunArtifact:
     """Stable metadata for one selected deck analysis execution."""
@@ -2314,7 +2320,7 @@ class DeckAnalysisExecution:
     """A selected deck analysis plan plus its executed solver output."""
 
     plan: DeckAnalysisPlan
-    result: DcResult | DcSweepResult | AcResult | TransientResult
+    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult
     table: str
     output_probes: list[str]
     measurements: list[ProbeMeasurement]
@@ -2357,16 +2363,16 @@ def _select_deck_fourier_cards_for_analysis(
 
 
 def _deck_result_row_count(
-    result: DcResult | DcSweepResult | AcResult | TransientResult,
+    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult,
 ) -> int:
-    if isinstance(result, DcResult):
+    if isinstance(result, (DcResult, TfResult)):
         return 1
     return len(result.points)
 
 
 def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
-    result: DcResult | DcSweepResult | AcResult | TransientResult,
+    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult,
     output_probes: list[str],
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
@@ -2531,6 +2537,30 @@ def run_deck_analysis(
             plan=plan,
             result=result,
             table=format_deck_transient_table(result, netlist),
+            output_probes=output_probes,
+            measurements=measurements,
+            measurement_table=format_measurement_table(measurements),
+            fourier=fourier,
+            fourier_table=format_deck_fourier_table(fourier),
+            run_artifacts=run_artifacts,
+            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+        )
+    if plan.analysis == "tf":
+        output_node = _require_deck_plan_string(plan, "output_node")
+        input_source = _require_deck_plan_string(plan, "source_name")
+        result = tf(circuit, output_node=output_node, input_source=input_source)
+        _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
+        measurements = []
+        _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
+        fourier = []
+        output_probes = [f"V({output_node})"]
+        run_artifacts = _deck_run_artifacts(
+            plan, result, output_probes, measurements, fourier
+        )
+        return DeckAnalysisExecution(
+            plan=plan,
+            result=result,
+            table=format_deck_tf_table(result),
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),

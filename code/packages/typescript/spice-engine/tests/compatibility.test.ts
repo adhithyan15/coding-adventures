@@ -860,19 +860,21 @@ R1 in out 1k
 .dc V1 0 5 1
 .ac dec 10 1k 1Meg
 .tran 1u 2m 0 10u uic
+.tf V(out) V1
 .end
 .tran 1u 1m
 `);
 
     expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 0", "R1 in out 1k"]);
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(8);
+    expect(summary.endLineNumber).toBe(9);
     expect(summary.diagnostics).toStrictEqual([]);
     expect(summary.analyses.map((analysis) => analysis.analysis)).toStrictEqual([
       "op",
       "dc",
       "ac",
       "tran",
+      "tf",
     ]);
 
     const dc = summary.analyses[1];
@@ -896,6 +898,11 @@ R1 in out 1k
     expect(tran.startTime).toBeCloseTo(0.0);
     expect(tran.maxStep).toBeCloseTo(1.0e-5);
     expect(tran.useInitialConditions).toBe(true);
+
+    const tf = summary.analyses[4];
+    expect(tf.directive).toBe(".tf");
+    expect(tf.outputNode).toBe("out");
+    expect(tf.sourceName).toBe("V1");
   });
 
   it("reports invalid deck analysis cards", () => {
@@ -945,6 +952,20 @@ V1 in 0 DC 0
     expect(selected.analysis).toBe("tran");
     expect(selected.lineNumber).toBe(4);
     expect(selected.stopTime).toBeCloseTo(2.0e-3);
+
+    const tf = selectDeckAnalysisPlan(
+      `
+V1 in 0 DC 1
+R1 in out 1k
+.tf V(out) V1
+.end
+`,
+      "transfer-function",
+    );
+    expect(tf.directive).toBe(".tf");
+    expect(tf.analysis).toBe("tf");
+    expect(tf.outputNode).toBe("out");
+    expect(tf.sourceName).toBe("V1");
   });
 
   it("reports ambiguous or invalid deck analysis plan selection", () => {

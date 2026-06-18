@@ -797,6 +797,7 @@ R1 in out 1k
 .dc V1 0 5 1
 .ac dec 10 1k 1Meg
 .tran 1u 2m 0 10u uic
+.tf V(out) V1
 .end
 .tran 1u 1m
 """
@@ -804,13 +805,14 @@ R1 in out 1k
 
     assert summary.active_lines == ("V1 in 0 DC 0", "R1 in out 1k")
     assert summary.terminated is True
-    assert summary.end_line_number == 8
+    assert summary.end_line_number == 9
     assert summary.diagnostics == ()
     assert [analysis.analysis for analysis in summary.analyses] == [
         "op",
         "dc",
         "ac",
         "tran",
+        "tf",
     ]
 
     dc = summary.analyses[1]
@@ -834,6 +836,11 @@ R1 in out 1k
     assert tran.start_time == pytest.approx(0.0)
     assert tran.max_step == pytest.approx(1.0e-5)
     assert tran.use_initial_conditions is True
+
+    tf = summary.analyses[4]
+    assert tf.directive == ".tf"
+    assert tf.output_node == "out"
+    assert tf.source_name == "V1"
 
 
 def test_resolve_deck_analyses_reports_invalid_cards() -> None:
@@ -887,6 +894,20 @@ V1 in 0 DC 0
     assert selected.analysis == "tran"
     assert selected.line_number == 4
     assert selected.stop_time == pytest.approx(2.0e-3)
+
+    tf = select_deck_analysis_plan(
+        """
+V1 in 0 DC 1
+R1 in out 1k
+.tf V(out) V1
+.end
+""",
+        "transfer-function",
+    )
+    assert tf.directive == ".tf"
+    assert tf.analysis == "tf"
+    assert tf.output_node == "out"
+    assert tf.source_name == "V1"
 
 
 def test_select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() -> None:
