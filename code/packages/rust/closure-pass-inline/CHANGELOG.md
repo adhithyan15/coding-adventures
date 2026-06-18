@@ -2,6 +2,51 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-17
+
+### Added (CLOC13.G — multi-use inlining under a size budget)
+
+The pass no longer inlines only single-use functions; it now inlines a callee
+at **all** its call sites when doing so is a size win:
+
+```js
+function sq(x) { return x * x; }
+a(sq(3));
+b(sq(4));
+// SIMPLE  ⇒  a(9); b(16);   (both sites inlined, then constant-fold)
+```
+
+- A function is inlined only when **every** use of its name is an inlinable
+  call (matching arity, side-effect-free args) — `uses == inlinable_calls`. If
+  even one use is a value (`g(f)`) or a non-inlinable call, the whole function
+  is declined: partial inlining would duplicate the body *and* keep the
+  declaration, usually a net loss.
+- **Single-use** → always inlined (a strict win). **Multi-use (N>1)** → inlined
+  only when the body fits the budget `expr_node_count(body) <= 2 + params.len()`
+  (see `multiuse_budget_ok`), so the substituted body is never larger than the
+  call it replaces — duplicating it across the sites can't grow the output, and
+  removing the declaration is a pure saving. A body too large to duplicate is
+  left alone.
+- All the soundness guarantees of the single-use slice carry over unchanged
+  (top-level plain function, body `{ return EXPR }`, every identifier a
+  parameter → no capture/`this`/`arguments`/recursion, name declared once,
+  side-effect-free args → safe to duplicate). Multi-use adds no new soundness
+  obligation; the budget is purely a "worth it?" knob.
+
+### Internals
+- `count_name_uses_*` → `tally_*`: one walk now counts both total uses and
+  inlinable calls (`Tally { uses, inlinable }`).
+- `inline_single_call` → `inline_all_calls`: the substitution walk no longer
+  short-circuits on the first match — it rewrites every call site.
+- New `expr_node_count` / `multiuse_budget_ok` / `is_inlinable_call` helpers.
+
+### Tests
+- New roundtrip tests: multi-use small body inlined at both sites; multi-use
+  large body declined (over budget); declined when one of several uses is a
+  value; declined when one call has a side-effecting argument.
+
+Crate bumped `0.3.0 → 0.4.0`.
+
 ## [0.3.0] - 2026-06-17
 
 ### Added (CLOC13.B.1 — real call-site substitution)

@@ -5693,17 +5693,17 @@ mod tests {
             },
             ..Default::default()
         };
-        // `f` is called so treeshake keeps the declaration (see the
-        // companion dead-after-return test). It is called TWICE so the
-        // single-use inliner leaves it in place — keeping this test
+        // `f` is referenced so treeshake keeps the declaration. The
+        // extra value use `sink(f)` (not a call) makes the inliner
+        // decline `f` — uses != inlinable-calls — so this test stays
         // focused on DCE's empty-statement sweep rather than inlining.
         let out = transform_source(
-            "function f() { if (4 > 5) { x(); } return 2; } f(); f();",
+            "function f() { if (4 > 5) { x(); } return 2; } f(); sink(f);",
             &cfg,
         )
         .expect("ok");
         assert_eq!(
-            out, "function f(){return 2};f();f();",
+            out, "function f(){return 2};f();sink(f);",
             "dce must sweep the empty statement left by fold-control-flow"
         );
     }
@@ -5820,12 +5820,13 @@ mod tests {
             },
             ..Default::default()
         };
-        // Called TWICE so the single-use inliner leaves `f` in place —
-        // this test isolates treeshake's keep-referenced behaviour.
-        let out = transform_source("function f() { return 2; } log(f()); log(f());", &cfg)
+        // The value use `sink(f)` (not a call) makes the inliner decline
+        // `f`, so this test isolates treeshake's keep-referenced
+        // behaviour rather than exercising inlining.
+        let out = transform_source("function f() { return 2; } log(f()); sink(f);", &cfg)
             .expect("ok");
         assert_eq!(
-            out, "function f(){return 2};log(f());log(f());",
+            out, "function f(){return 2};log(f());sink(f);",
             "a called function must be kept"
         );
     }
@@ -5862,14 +5863,14 @@ mod tests {
             },
             ..Default::default()
         };
-        // Called TWICE so the single-use inliner leaves `f` in place —
-        // this test isolates rename's parameter-shortening.
+        // The value use `sink(f)` (not a call) makes the inliner decline
+        // `f`, so this test isolates rename's parameter-shortening.
         let out = transform_source(
-            "function f(longName) { return longName + 1; } f(5); f(6);",
+            "function f(longName) { return longName + 1; } f(5); sink(f);",
             &cfg,
         )
         .expect("ok");
-        assert_eq!(out, "function f(a){return a + 1};f(5);f(6);");
+        assert_eq!(out, "function f(a){return a + 1};f(5);sink(f);");
     }
 
     #[test]
@@ -5883,14 +5884,14 @@ mod tests {
             },
             ..Default::default()
         };
-        // Called TWICE so the single-use inliner leaves `f` in place —
-        // this test isolates rename's property-name preservation.
+        // The value use `sink(f)` (not a call) makes the inliner decline
+        // `f`, so this test isolates rename's property-name preservation.
         let out = transform_source(
-            "function f(obj) { return obj.longName; } f(x); f(y);",
+            "function f(obj) { return obj.longName; } f(x); sink(f);",
             &cfg,
         )
         .expect("ok");
-        assert_eq!(out, "function f(a){return a.longName};f(x);f(y);");
+        assert_eq!(out, "function f(a){return a.longName};f(x);sink(f);");
     }
 
     #[test]
@@ -5913,10 +5914,10 @@ mod tests {
     fn advanced_optimizes_like_simple() {
         // CLOC12.161: ADVANCED was a literal no-op (returned the source
         // verbatim). It now runs the typed pipeline; this input is folded
-        // and renamed instead of passed through. `f` is called TWICE so
-        // the single-use inliner leaves it in place — keeping the assert
+        // and renamed instead of passed through. The value use `sink(f)`
+        // (not a call) makes the inliner decline `f`, keeping the assert
         // on rename's parameter-shortening.
-        let src = "function f(longName) { return longName + 1; } f(5); f(6);";
+        let src = "function f(longName) { return longName + 1; } f(5); sink(f);";
         let advanced = transform_source(
             src,
             &CompilerConfig {
@@ -5928,7 +5929,7 @@ mod tests {
             },
         )
         .expect("ok");
-        assert_eq!(advanced, "function f(a){return a + 1};f(5);f(6);");
+        assert_eq!(advanced, "function f(a){return a + 1};f(5);sink(f);");
         assert_ne!(advanced, src, "ADVANCED must no longer be an identity no-op");
     }
 
@@ -5977,6 +5978,23 @@ mod tests {
             out, "log(14);",
             "inline → fold cascade must converge to the folded constant"
         );
+    }
+
+    #[test]
+    fn simple_inlines_small_function_at_multiple_sites() {
+        // CLOC13.G: a small pure function (`x * x`, within the size
+        // budget) is inlined at BOTH call sites, treeshake removes it,
+        // and constant-fold folds the literal results.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function sq(x) { return x * x; } a(sq(3)); b(sq(4));", &cfg)
+            .expect("ok");
+        assert_eq!(out, "a(9);b(16);");
     }
 
     #[test]

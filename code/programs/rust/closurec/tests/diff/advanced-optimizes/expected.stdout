@@ -1,1 +1,1 @@
-function compute(a){return a + 1};report(compute(7));report(compute(8));
+function compute(a){return a + 1};report(compute(7));sink(compute);

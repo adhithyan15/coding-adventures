@@ -59,20 +59,39 @@
 //!      — we can count and locate its call site by name without a
 //!      full scope resolver. (Same self-contained philosophy as the
 //!      `rename` pass.)
-//!   5. **`f` is used exactly once, and that use is the call we are
-//!      inlining**, with `arguments.len() == params.len()`.
-//!      Single-use is the unambiguous size win (clone the body once,
-//!      not N times) and sidesteps the multi-site budget decision.
+//!   5. **Every use of `f` is an inlinable call** with
+//!      `arguments.len() == params.len()` — i.e. there is no use of
+//!      `f` as a *value* (`g(f)`) and no call with the wrong arity or
+//!      side-effecting arguments. Then inlining *all* the calls leaves
+//!      `f` unreferenced so the later passes delete it; if even one
+//!      use is not an inlinable call we decline the whole function
+//!      (partial inlining would duplicate the body *and* keep the
+//!      declaration — usually a net loss).
 //!   6. **Every argument is side-effect-free** — a literal or a bare
 //!      identifier. Then substituting an argument for a parameter
 //!      that the body uses zero, one, or many times can neither drop
 //!      nor duplicate a side effect, so the argument-evaluation
 //!      hazard vanishes.
 //!
-//! Everything outside this subset is left untouched (`changed`
-//! stays `false`). Broader inlining — multi-use callees under a size
-//! budget, function *expressions*, bodies with locals/branches —
-//! is future work on the same walker.
+//! # Single-use vs. multi-use (the only "is it worth it?" knob)
+//!
+//! All of the above is about *soundness*. The single remaining
+//! question — *is it worth it?* — splits on the number of call sites:
+//!
+//!   * **One call site** → always inline. One substitution, the
+//!     declaration removed: a strict size win.
+//!   * **N > 1 call sites** → inline only when the body fits a
+//!     conservative size budget — `expr_node_count(body) <= 2 +
+//!     params.len()`, i.e. the substituted body is no larger than the
+//!     call it replaces (see [`multiuse_budget_ok`]). Then duplicating
+//!     it across the sites never grows the output, and removing the
+//!     declaration is a pure saving. A body too large to duplicate is
+//!     left alone.
+//!
+//! Everything outside this subset is left untouched (`changed` stays
+//! `false`). Broader inlining — function *expressions*, bodies with
+//! locals/branches, multi-use bodies above the budget — is future work
+//! on the same walker.
 //!
 //! # Why this enables downstream folding
 //!
@@ -106,8 +125,9 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
-    AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionDeclaration,
-    FunctionParam, Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
+    AssignmentTarget, BindingTarget, CallExpression, Declaration, Expression, ForInit,
+    FunctionDeclaration, FunctionParam, Program, ProgramItem, PropertyKey, Statement,
+    VariableDeclaration,
 };
 
 /// `Pass::depends_on` value. Kept as a `const` so future tests and
@@ -167,8 +187,9 @@ impl Pass for InlinePass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
-        // Real transform: inline single-use top-level leaf functions
-        // whose body is `return EXPR` with no free identifiers. See
+        // Real transform: inline top-level leaf functions whose body is
+        // `return EXPR` with no free identifiers — single-use always,
+        // multi-use under a size budget. See
         // [`inline_program`] and the crate-level docs for the full
         // safety argument. An empty / construct-free program is left
         // untouched (`changed = false`, `nodes_touched = 1`).
@@ -187,7 +208,7 @@ impl Pass for InlinePass {
 }
 
 // =========================================================================
-// Inlining implementation (single-use top-level leaf functions)
+// Inlining implementation (top-level leaf functions, single- and multi-use)
 // =========================================================================
 
 /// One inlinable function: its name, parameter names in order, and a
@@ -199,8 +220,9 @@ struct InlineCandidate {
     return_expr: Expression,
 }
 
-/// Walk the whole program and inline every qualifying single-use
-/// top-level function. Returns whether anything changed.
+/// Walk the whole program and inline every qualifying top-level
+/// function (single-use always; multi-use under the size budget).
+/// Returns whether anything changed.
 fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
     // Phase 1 — count how many times each *name* is declared as a
     // binding anywhere in the program (function names, parameters,
@@ -227,22 +249,131 @@ fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
         return false;
     }
 
-    // Phase 3 — for each candidate, require exactly one use in the
-    // program; then find that single call and substitute. Counting
-    // and substituting on the (progressively mutated) program is
+    // Phase 3 — for each candidate, decide whether to inline ALL its
+    // call sites. We `tally` two numbers in one walk:
+    //   * `uses`      — every binding-use of the name;
+    //   * `inlinable` — calls `name(args)` with matching arity and
+    //                   side-effect-free arguments.
+    //
+    // We inline only when `uses == inlinable` (and `uses > 0`): every
+    // use is an inlinable call, so after substituting them all the
+    // function declaration is unreferenced and the later
+    // remove-unused-vars / treeshake passes delete it. If even one use
+    // is a non-call value (`g(f)`) or a non-inlinable call (wrong
+    // arity / side-effecting argument), we skip the whole function —
+    // partial inlining would duplicate the body *and* keep the
+    // declaration, usually a net loss.
+    //
+    //   * 1 call site  → always inline (a strict win — one substitution,
+    //     the declaration removed).
+    //   * N>1 sites    → inline only when the body fits the size budget
+    //     (see [`multiuse_budget_ok`]) so duplicating it across the
+    //     sites never grows the output.
+    //
+    // Counting + substituting on the progressively-mutated program is
     // sound: an inlined body contains only the call's own simple
     // arguments, so it neither adds nor removes uses of any *other*
     // candidate's name.
     let mut changed = false;
     for cand in &candidates {
-        if count_name_uses_program(program, &cand.name) != 1 {
-            continue; // multi-use (budget decision) or a non-call value use
+        let tally = tally_program(program, cand);
+        if tally.uses == 0 || tally.uses != tally.inlinable {
+            continue; // unused, a non-call value use, or a non-inlinable call
         }
-        if inline_single_call(program, cand) {
+        if tally.uses > 1 && !multiuse_budget_ok(cand) {
+            continue; // multi-use body too large to duplicate — net loss
+        }
+        if inline_all_calls(program, cand) {
             changed = true;
         }
     }
     changed
+}
+
+/// The two counts [`inline_program`] needs per candidate, gathered in a
+/// single walk: total binding-uses of the name, and how many of those
+/// are inlinable calls.
+#[derive(Default)]
+struct Tally {
+    uses: usize,
+    inlinable: usize,
+}
+
+/// Is `ce` a call we can inline for `cand` — `cand.name(args)` with the
+/// right number of side-effect-free arguments?
+fn is_inlinable_call(ce: &CallExpression, cand: &InlineCandidate) -> bool {
+    matches!(&*ce.callee, Expression::Identifier(id) if id.name == cand.name)
+        && ce.arguments.len() == cand.params.len()
+        && ce.arguments.iter().all(is_simple_arg)
+}
+
+/// Conservative size budget for inlining a callee used at MORE THAN ONE
+/// site. A call `f(a₁, …, aₙ)` is a tree of `2 + n` nodes (the call
+/// node, the callee identifier, and one node per side-effect-free
+/// argument). Substituting the body replaces each param (1 node) with
+/// its argument (also 1 node — a literal or identifier), so the
+/// substituted body has exactly `expr_node_count(return_expr)` nodes.
+/// Requiring that to be `<= 2 + params.len()` guarantees the
+/// replacement is no larger than the call it replaces — so inlining at
+/// every site never grows the output, and removing the now-dead
+/// declaration is a pure saving.
+///
+/// Single-use inlining needs no budget (one substitution, declaration
+/// gone — always a win); this gate applies only to N>1 sites. The
+/// post-inline `constant-fold` sweep often shrinks literal-argument
+/// results further (`f(7)` → `7 * 2` → `14`), but we don't lean on
+/// that here.
+fn multiuse_budget_ok(cand: &InlineCandidate) -> bool {
+    expr_node_count(&cand.return_expr) <= 2 + cand.params.len()
+}
+
+/// Structural node count of an expression tree (every [`Expression`]
+/// node counts as 1, plus its children). Used by [`multiuse_budget_ok`].
+fn expr_node_count(expr: &Expression) -> usize {
+    1 + match expr {
+        Expression::Identifier(_)
+        | Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::UndefinedLiteral(_) => 0,
+        Expression::BinaryExpression(be) => expr_node_count(&be.left) + expr_node_count(&be.right),
+        Expression::LogicalExpression(le) => expr_node_count(&le.left) + expr_node_count(&le.right),
+        Expression::UnaryExpression(ue) => expr_node_count(&ue.argument),
+        Expression::AssignmentExpression(ae) => {
+            let left = match &ae.left {
+                AssignmentTarget::Identifier(_) => 1,
+                AssignmentTarget::MemberExpression(m) => {
+                    1 + expr_node_count(&m.object) + expr_node_count(&m.property)
+                }
+            };
+            left + expr_node_count(&ae.right)
+        }
+        Expression::ConditionalExpression(ce) => {
+            expr_node_count(&ce.test)
+                + expr_node_count(&ce.consequent)
+                + expr_node_count(&ce.alternate)
+        }
+        Expression::CallExpression(ce) => {
+            expr_node_count(&ce.callee) + ce.arguments.iter().map(expr_node_count).sum::<usize>()
+        }
+        Expression::MemberExpression(m) => {
+            expr_node_count(&m.object) + expr_node_count(&m.property)
+        }
+        Expression::ArrayExpression(ae) => ae.elements.iter().flatten().map(expr_node_count).sum(),
+        Expression::ObjectExpression(oe) => oe
+            .properties
+            .iter()
+            .map(|p| {
+                let key = match &p.key {
+                    PropertyKey::Expression(e) => expr_node_count(e),
+                    _ => 1,
+                };
+                key + expr_node_count(&p.value)
+            })
+            .sum(),
+    }
 }
 
 /// Decide whether a top-level function declaration is an inline
@@ -510,62 +641,60 @@ fn collect_binding_idents_member(
     }
 }
 
-// ---- use counting --------------------------------------------------------
+// ---- use + inlinable-call counting ---------------------------------------
 
-/// Count the *uses* (binding-use-position occurrences) of `name`
-/// across the whole program. Declarations, property names, and label
-/// names are not uses. Recurses into nested function bodies because a
-/// call site can live anywhere.
-fn count_name_uses_program(program: &Program, name: &str) -> usize {
-    let mut count = 0;
+/// Walk the whole program once and tally, for `cand`: every binding-use
+/// of its name, and how many of those are inlinable calls. Declarations,
+/// property names, and label names are not uses. Recurses into nested
+/// function bodies because a call site can live anywhere.
+fn tally_program(program: &Program, cand: &InlineCandidate) -> Tally {
+    let mut t = Tally::default();
     for item in &program.body {
         match item {
-            ProgramItem::Declaration(d) => count_uses_decl(d, name, &mut count),
-            ProgramItem::Statement(s) => count_uses_stmt(s, name, &mut count),
+            ProgramItem::Declaration(d) => tally_decl(d, cand, &mut t),
+            ProgramItem::Statement(s) => tally_stmt(s, cand, &mut t),
         }
     }
-    count
+    t
 }
 
-fn count_uses_decl(decl: &Declaration, name: &str, count: &mut usize) {
+fn tally_decl(decl: &Declaration, cand: &InlineCandidate, t: &mut Tally) {
     match decl {
         Declaration::VariableDeclaration(vd) => {
             for d in &vd.declarations {
                 if let Some(init) = &d.init {
-                    count_uses_expr(init, name, count);
+                    tally_expr(init, cand, t);
                 }
             }
         }
         Declaration::FunctionDeclaration(fd) => {
             for s in &fd.body.body {
-                count_uses_stmt(s, name, count);
+                tally_stmt(s, cand, t);
             }
         }
     }
 }
 
-fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
+fn tally_stmt(stmt: &Statement, cand: &InlineCandidate, t: &mut Tally) {
     match stmt {
-        Statement::Declaration(d) => count_uses_decl(d, name, count),
-        Statement::Tagged(t) => match t {
-            TaggedStatement::ExpressionStatement(es) => {
-                count_uses_expr(&es.expression, name, count)
-            }
+        Statement::Declaration(d) => tally_decl(d, cand, t),
+        Statement::Tagged(tagged) => match tagged {
+            TaggedStatement::ExpressionStatement(es) => tally_expr(&es.expression, cand, t),
             TaggedStatement::BlockStatement(b) => {
                 for s in &b.body {
-                    count_uses_stmt(s, name, count);
+                    tally_stmt(s, cand, t);
                 }
             }
             TaggedStatement::IfStatement(is) => {
-                count_uses_expr(&is.test, name, count);
-                count_uses_stmt(&is.consequent, name, count);
+                tally_expr(&is.test, cand, t);
+                tally_stmt(&is.consequent, cand, t);
                 if let Some(alt) = &is.alternate {
-                    count_uses_stmt(alt, name, count);
+                    tally_stmt(alt, cand, t);
                 }
             }
             TaggedStatement::WhileStatement(ws) => {
-                count_uses_expr(&ws.test, name, count);
-                count_uses_stmt(&ws.body, name, count);
+                tally_expr(&ws.test, cand, t);
+                tally_stmt(&ws.body, cand, t);
             }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &fs.init {
@@ -573,36 +702,36 @@ fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
                         ForInit::VariableDeclaration(vd) => {
                             for d in &vd.declarations {
                                 if let Some(i) = &d.init {
-                                    count_uses_expr(i, name, count);
+                                    tally_expr(i, cand, t);
                                 }
                             }
                         }
-                        ForInit::Expression(e) => count_uses_expr(e, name, count),
+                        ForInit::Expression(e) => tally_expr(e, cand, t),
                     }
                 }
                 if let Some(test) = &fs.test {
-                    count_uses_expr(test, name, count);
+                    tally_expr(test, cand, t);
                 }
                 if let Some(update) = &fs.update {
-                    count_uses_expr(update, name, count);
+                    tally_expr(update, cand, t);
                 }
-                count_uses_stmt(&fs.body, name, count);
+                tally_stmt(&fs.body, cand, t);
             }
             TaggedStatement::ReturnStatement(rs) => {
                 if let Some(a) = &rs.argument {
-                    count_uses_expr(a, name, count);
+                    tally_expr(a, cand, t);
                 }
             }
-            TaggedStatement::ThrowStatement(ts) => count_uses_expr(&ts.argument, name, count),
-            TaggedStatement::LabeledStatement(ls) => count_uses_stmt(&ls.body, name, count),
+            TaggedStatement::ThrowStatement(ts) => tally_expr(&ts.argument, cand, t),
+            TaggedStatement::LabeledStatement(ls) => tally_stmt(&ls.body, cand, t),
             TaggedStatement::SwitchStatement(ss) => {
-                count_uses_expr(&ss.discriminant, name, count);
+                tally_expr(&ss.discriminant, cand, t);
                 for c in &ss.cases {
                     if let Some(test) = &c.test {
-                        count_uses_expr(test, name, count);
+                        tally_expr(test, cand, t);
                     }
                     for s in &c.consequent {
-                        count_uses_stmt(s, name, count);
+                        tally_stmt(s, cand, t);
                     }
                 }
             }
@@ -615,11 +744,11 @@ fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
     }
 }
 
-fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
+fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
     match expr {
         Expression::Identifier(id) => {
-            if id.name == name {
-                *count += 1;
+            if id.name == cand.name {
+                t.uses += 1;
             }
         }
         Expression::NumericLiteral(_)
@@ -629,202 +758,199 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
         | Expression::BigIntLiteral(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
-            count_uses_expr(&be.left, name, count);
-            count_uses_expr(&be.right, name, count);
+            tally_expr(&be.left, cand, t);
+            tally_expr(&be.right, cand, t);
         }
         Expression::LogicalExpression(le) => {
-            count_uses_expr(&le.left, name, count);
-            count_uses_expr(&le.right, name, count);
+            tally_expr(&le.left, cand, t);
+            tally_expr(&le.right, cand, t);
         }
-        Expression::UnaryExpression(ue) => count_uses_expr(&ue.argument, name, count),
+        Expression::UnaryExpression(ue) => tally_expr(&ue.argument, cand, t),
         Expression::AssignmentExpression(ae) => {
             match &ae.left {
                 AssignmentTarget::Identifier(id) => {
-                    if id.name == name {
-                        *count += 1;
+                    if id.name == cand.name {
+                        t.uses += 1;
                     }
                 }
                 AssignmentTarget::MemberExpression(m) => {
-                    count_uses_member(&m.object, &m.property, m.computed, name, count)
+                    tally_member(&m.object, &m.property, m.computed, cand, t)
                 }
             }
-            count_uses_expr(&ae.right, name, count);
+            tally_expr(&ae.right, cand, t);
         }
         Expression::ConditionalExpression(ce) => {
-            count_uses_expr(&ce.test, name, count);
-            count_uses_expr(&ce.consequent, name, count);
-            count_uses_expr(&ce.alternate, name, count);
+            tally_expr(&ce.test, cand, t);
+            tally_expr(&ce.consequent, cand, t);
+            tally_expr(&ce.alternate, cand, t);
         }
         Expression::CallExpression(ce) => {
-            count_uses_expr(&ce.callee, name, count);
+            // A call whose callee is our name, with the right arity and
+            // side-effect-free args, is an inlinable call. (Its callee
+            // identifier is also counted as a use when we recurse — so
+            // `uses == inlinable` exactly when every use is such a call.)
+            if is_inlinable_call(ce, cand) {
+                t.inlinable += 1;
+            }
+            tally_expr(&ce.callee, cand, t);
             for a in &ce.arguments {
-                count_uses_expr(a, name, count);
+                tally_expr(a, cand, t);
             }
         }
         Expression::MemberExpression(m) => {
-            count_uses_member(&m.object, &m.property, m.computed, name, count)
+            tally_member(&m.object, &m.property, m.computed, cand, t)
         }
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter().flatten() {
-                count_uses_expr(el, name, count);
+                tally_expr(el, cand, t);
             }
         }
         Expression::ObjectExpression(oe) => {
             for prop in &oe.properties {
                 if prop.computed {
                     if let PropertyKey::Expression(e) = &prop.key {
-                        count_uses_expr(e, name, count);
+                        tally_expr(e, cand, t);
                     }
                 }
-                count_uses_expr(&prop.value, name, count);
+                tally_expr(&prop.value, cand, t);
             }
         }
     }
 }
 
-fn count_uses_member(
+fn tally_member(
     object: &Expression,
     property: &Expression,
     computed: bool,
-    name: &str,
-    count: &mut usize,
+    cand: &InlineCandidate,
+    t: &mut Tally,
 ) {
-    count_uses_expr(object, name, count);
+    tally_expr(object, cand, t);
     if computed {
-        count_uses_expr(property, name, count);
+        tally_expr(property, cand, t);
     }
 }
 
 // ---- call substitution ---------------------------------------------------
 
-/// Find the single call `cand.name(args)` in the program and, if its
-/// arity matches and all arguments are side-effect-free, replace it
-/// with the substituted callee body. Returns whether a replacement
-/// was made. (The caller guarantees exactly one use of the name, so
-/// there is at most one such call.)
-fn inline_single_call(program: &mut Program, cand: &InlineCandidate) -> bool {
+/// Replace EVERY inlinable call `cand.name(args)` in the program with
+/// the substituted callee body. Returns whether any replacement was
+/// made. The caller has already verified (via [`tally_program`]) that
+/// every use of the name is such a call, so after this the function is
+/// unreferenced. Unlike the single-use case there may be several sites,
+/// so the walk does not short-circuit — it visits and rewrites them all.
+fn inline_all_calls(program: &mut Program, cand: &InlineCandidate) -> bool {
+    let mut changed = false;
     for item in &mut program.body {
-        let replaced = match item {
+        changed |= match item {
             ProgramItem::Declaration(d) => inline_in_decl(d, cand),
             ProgramItem::Statement(s) => inline_in_stmt(s, cand),
         };
-        if replaced {
-            return true;
-        }
     }
-    false
+    changed
 }
 
 fn inline_in_decl(decl: &mut Declaration, cand: &InlineCandidate) -> bool {
+    let mut changed = false;
     match decl {
         Declaration::VariableDeclaration(vd) => {
             for d in &mut vd.declarations {
                 if let Some(init) = &mut d.init {
-                    if inline_in_expr(init, cand) {
-                        return true;
-                    }
+                    changed |= inline_in_expr(init, cand);
                 }
             }
-            false
         }
         Declaration::FunctionDeclaration(fd) => {
             for s in &mut fd.body.body {
-                if inline_in_stmt(s, cand) {
-                    return true;
-                }
+                changed |= inline_in_stmt(s, cand);
             }
-            false
         }
     }
+    changed
 }
 
 fn inline_in_stmt(stmt: &mut Statement, cand: &InlineCandidate) -> bool {
+    let mut changed = false;
     match stmt {
-        Statement::Declaration(d) => inline_in_decl(d, cand),
+        Statement::Declaration(d) => changed |= inline_in_decl(d, cand),
         Statement::Tagged(t) => match t {
-            TaggedStatement::ExpressionStatement(es) => inline_in_expr(&mut es.expression, cand),
+            TaggedStatement::ExpressionStatement(es) => {
+                changed |= inline_in_expr(&mut es.expression, cand)
+            }
             TaggedStatement::BlockStatement(b) => {
                 for s in &mut b.body {
-                    if inline_in_stmt(s, cand) {
-                        return true;
-                    }
+                    changed |= inline_in_stmt(s, cand);
                 }
-                false
             }
             TaggedStatement::IfStatement(is) => {
-                inline_in_expr(&mut is.test, cand)
-                    || inline_in_stmt(&mut is.consequent, cand)
-                    || is
-                        .alternate
-                        .as_mut()
-                        .is_some_and(|alt| inline_in_stmt(alt, cand))
+                changed |= inline_in_expr(&mut is.test, cand);
+                changed |= inline_in_stmt(&mut is.consequent, cand);
+                if let Some(alt) = &mut is.alternate {
+                    changed |= inline_in_stmt(alt, cand);
+                }
             }
             TaggedStatement::WhileStatement(ws) => {
-                inline_in_expr(&mut ws.test, cand) || inline_in_stmt(&mut ws.body, cand)
+                changed |= inline_in_expr(&mut ws.test, cand);
+                changed |= inline_in_stmt(&mut ws.body, cand);
             }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &mut fs.init {
-                    let hit = match init {
-                        ForInit::VariableDeclaration(vd) => vd
-                            .declarations
-                            .iter_mut()
-                            .any(|d| d.init.as_mut().is_some_and(|i| inline_in_expr(i, cand))),
-                        ForInit::Expression(e) => inline_in_expr(e, cand),
-                    };
-                    if hit {
-                        return true;
+                    match init {
+                        ForInit::VariableDeclaration(vd) => {
+                            for d in &mut vd.declarations {
+                                if let Some(i) = &mut d.init {
+                                    changed |= inline_in_expr(i, cand);
+                                }
+                            }
+                        }
+                        ForInit::Expression(e) => changed |= inline_in_expr(e, cand),
                     }
                 }
                 if let Some(test) = &mut fs.test {
-                    if inline_in_expr(test, cand) {
-                        return true;
-                    }
+                    changed |= inline_in_expr(test, cand);
                 }
                 if let Some(update) = &mut fs.update {
-                    if inline_in_expr(update, cand) {
-                        return true;
-                    }
+                    changed |= inline_in_expr(update, cand);
                 }
-                inline_in_stmt(&mut fs.body, cand)
+                changed |= inline_in_stmt(&mut fs.body, cand);
             }
-            TaggedStatement::ReturnStatement(rs) => rs
-                .argument
-                .as_mut()
-                .is_some_and(|a| inline_in_expr(a, cand)),
-            TaggedStatement::ThrowStatement(ts) => inline_in_expr(&mut ts.argument, cand),
-            TaggedStatement::LabeledStatement(ls) => inline_in_stmt(&mut ls.body, cand),
-            TaggedStatement::SwitchStatement(ss) => {
-                if inline_in_expr(&mut ss.discriminant, cand) {
-                    return true;
+            TaggedStatement::ReturnStatement(rs) => {
+                if let Some(a) = &mut rs.argument {
+                    changed |= inline_in_expr(a, cand);
                 }
+            }
+            TaggedStatement::ThrowStatement(ts) => {
+                changed |= inline_in_expr(&mut ts.argument, cand)
+            }
+            TaggedStatement::LabeledStatement(ls) => changed |= inline_in_stmt(&mut ls.body, cand),
+            TaggedStatement::SwitchStatement(ss) => {
+                changed |= inline_in_expr(&mut ss.discriminant, cand);
                 for c in &mut ss.cases {
                     if let Some(test) = &mut c.test {
-                        if inline_in_expr(test, cand) {
-                            return true;
-                        }
+                        changed |= inline_in_expr(test, cand);
                     }
                     for s in &mut c.consequent {
-                        if inline_in_stmt(s, cand) {
-                            return true;
-                        }
+                        changed |= inline_in_stmt(s, cand);
                     }
                 }
-                false
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => false,
+            | TaggedStatement::EmptyStatement(_) => {}
         },
     }
+    changed
 }
 
 fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
-    // If THIS node is the call we are inlining, replace it in place.
+    // If THIS node is an inlinable call, replace it in place. The
+    // substituted body contains only this call's own simple arguments
+    // (no call to `cand.name`), so there is nothing further to inline
+    // inside the replacement — we return without recursing into it. We
+    // do NOT short-circuit at the sibling/parent level: a multi-use
+    // callee has several call sites and every one must be rewritten.
     if let Expression::CallExpression(ce) = expr {
-        let is_target = matches!(&*ce.callee, Expression::Identifier(id) if id.name == cand.name)
-            && ce.arguments.len() == cand.params.len()
-            && ce.arguments.iter().all(is_simple_arg);
-        if is_target {
+        if is_inlinable_call(ce, cand) {
             // Build an OWNED name → argument map (cloning the simple
             // args) so no borrow of `ce` outlives the `*expr = …`
             // overwrite below.
@@ -839,19 +965,16 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
             *expr = replacement;
             return true;
         }
-        // Not our call — recurse into the callee and arguments (the
+        // Not our call — recurse into the callee and every argument (the
         // target call might be nested, e.g. `outer(double(7))`).
-        if inline_in_expr(&mut ce.callee, cand) {
-            return true;
-        }
+        let mut changed = inline_in_expr(&mut ce.callee, cand);
         for a in &mut ce.arguments {
-            if inline_in_expr(a, cand) {
-                return true;
-            }
+            changed |= inline_in_expr(a, cand);
         }
-        return false;
+        return changed;
     }
 
+    let mut changed = false;
     match expr {
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
@@ -859,64 +982,63 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
-        | Expression::UndefinedLiteral(_) => false,
+        | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
-            inline_in_expr(&mut be.left, cand) || inline_in_expr(&mut be.right, cand)
+            changed |= inline_in_expr(&mut be.left, cand);
+            changed |= inline_in_expr(&mut be.right, cand);
         }
         Expression::LogicalExpression(le) => {
-            inline_in_expr(&mut le.left, cand) || inline_in_expr(&mut le.right, cand)
+            changed |= inline_in_expr(&mut le.left, cand);
+            changed |= inline_in_expr(&mut le.right, cand);
         }
-        Expression::UnaryExpression(ue) => inline_in_expr(&mut ue.argument, cand),
+        Expression::UnaryExpression(ue) => changed |= inline_in_expr(&mut ue.argument, cand),
         Expression::AssignmentExpression(ae) => {
-            let left_hit = match &mut ae.left {
-                AssignmentTarget::Identifier(_) => false,
-                AssignmentTarget::MemberExpression(m) => inline_in_member(m, cand),
-            };
-            left_hit || inline_in_expr(&mut ae.right, cand)
+            if let AssignmentTarget::MemberExpression(m) = &mut ae.left {
+                changed |= inline_in_member(m, cand);
+            }
+            changed |= inline_in_expr(&mut ae.right, cand);
         }
         Expression::ConditionalExpression(ce) => {
-            inline_in_expr(&mut ce.test, cand)
-                || inline_in_expr(&mut ce.consequent, cand)
-                || inline_in_expr(&mut ce.alternate, cand)
+            changed |= inline_in_expr(&mut ce.test, cand);
+            changed |= inline_in_expr(&mut ce.consequent, cand);
+            changed |= inline_in_expr(&mut ce.alternate, cand);
         }
         // CallExpression handled above.
         Expression::CallExpression(_) => unreachable!("CallExpression handled before this match"),
-        Expression::MemberExpression(m) => inline_in_member(m, cand),
-        Expression::ArrayExpression(ae) => ae
-            .elements
-            .iter_mut()
-            .flatten()
-            .any(|el| inline_in_expr(el, cand)),
-        Expression::ObjectExpression(oe) => oe.properties.iter_mut().any(|prop| {
-            // A computed key `[expr]` is a sub-expression to walk; a
-            // plain identifier / string / number key is a property name.
-            let key_hit = if prop.computed {
-                if let PropertyKey::Expression(e) = &mut prop.key {
-                    inline_in_expr(e, cand)
-                } else {
-                    false
+        Expression::MemberExpression(m) => changed |= inline_in_member(m, cand),
+        Expression::ArrayExpression(ae) => {
+            for el in ae.elements.iter_mut().flatten() {
+                changed |= inline_in_expr(el, cand);
+            }
+        }
+        Expression::ObjectExpression(oe) => {
+            for prop in &mut oe.properties {
+                // A computed key `[expr]` is a sub-expression to walk; a
+                // plain identifier / string / number key is a property
+                // name.
+                if prop.computed {
+                    if let PropertyKey::Expression(e) = &mut prop.key {
+                        changed |= inline_in_expr(e, cand);
+                    }
                 }
-            } else {
-                false
-            };
-            key_hit || inline_in_expr(&mut prop.value, cand)
-        }),
+                changed |= inline_in_expr(&mut prop.value, cand);
+            }
+        }
     }
+    changed
 }
 
 fn inline_in_member(
     m: &mut coding_adventures_javascript_ast::MemberExpression,
     cand: &InlineCandidate,
 ) -> bool {
-    if inline_in_expr(&mut m.object, cand) {
-        return true;
-    }
+    let mut changed = inline_in_expr(&mut m.object, cand);
     // Only a computed property `o[expr]` is a sub-expression to walk;
     // a non-computed `.name` is a property name.
     if m.computed {
-        return inline_in_expr(&mut m.property, cand);
+        changed |= inline_in_expr(&mut m.property, cand);
     }
-    false
+    changed
 }
 
 /// Substitute parameter identifiers with their argument expressions in
@@ -1217,11 +1339,48 @@ mod tests {
     }
 
     #[test]
-    fn does_not_inline_multi_use_function() {
-        // Two call sites → not the single-use slice. Left unchanged.
+    fn inlines_multi_use_small_body() {
+        // Two call sites of a tiny body (`x * 2` is 3 nodes, the budget
+        // for one param is 2 + 1 = 3) → both sites are inlined. The dead
+        // declaration is left for the downstream passes to remove.
         assert_eq!(
             inline_source("function d(x) { return x * 2; } a(d(1)); b(d(2));"),
-            "function d(x){return x * 2};a(d(1));b(d(2));"
+            "function d(x){return x * 2};a(1 * 2);b(2 * 2);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_multi_use_large_body() {
+        // `x * x * x` is 5 nodes; the budget for one param is 2 + 1 = 3.
+        // Duplicating a 5-node body across two sites could grow the
+        // output, so multi-use inlining is declined. (A single call site
+        // WOULD still be inlined — see the single-use tests.)
+        assert_eq!(
+            inline_source("function cube(x) { return x * x * x; } a(cube(p)); b(cube(q));"),
+            "function cube(x){return x * x * x};a(cube(p));b(cube(q));"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_when_one_of_several_uses_is_not_a_call() {
+        // `f` is used 3 times: two inlinable calls and one value use
+        // (`keep(f)`). Inlining the calls would leave `f` still
+        // referenced, so the declaration couldn't be removed — a likely
+        // net loss. We decline the whole function (uses != inlinable).
+        assert_eq!(
+            inline_source("function f(x) { return x * 2; } a(f(1)); b(f(2)); keep(f);"),
+            "function f(x){return x * 2};a(f(1));b(f(2));keep(f);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_multi_use_when_one_call_has_bad_args() {
+        // Two calls, but one passes a side-effecting argument `g()`.
+        // That call is not inlinable, so uses != inlinable → the whole
+        // function is declined (no partial inlining).
+        assert_eq!(
+            inline_source("function d(x) { return x * 2; } a(d(1)); b(d(g()));"),
+            "function d(x){return x * 2};a(d(1));b(d(g()));"
         );
     }
 
