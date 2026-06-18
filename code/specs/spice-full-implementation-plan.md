@@ -42,8 +42,8 @@ downstream tools to compare.
      `set wr_singlescale`), and rawfile append-write `set appendwrite` options
      plus target-bearing rawfile `write <rawfile> [probes...]` markers and
      ASCII data-write `wrdata <file> <probes...>` markers are accepted as
-     no-op control markers, and read-only `display` / `listing` inspection
-     commands are accepted as no-op control markers; parsed
+     no-op control markers, and read-only `display` / `listing` / `show` /
+     `showmod` inspection commands are accepted as no-op control markers; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -640,6 +640,16 @@ downstream tools to compare.
       `set` variables, and unrecognized non-comment commands inside `.control`
       blocks remain diagnostic-only so unsupported UI output and script state
       are explicit.
+
+58. Selected `.control` SHOW marker routing.
+    - Status: completed in this selected control show-marker routing slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      read-only `show` and `showmod` device/model inspection commands as no-op
+      control commands.
+    - Actual console/model inspection output, mutating control-flow commands,
+      other `set` variables, and unrecognized non-comment commands inside
+      `.control` blocks remain diagnostic-only so unsupported UI output and
+      script state are explicit.
 
 ## Backlog
 
