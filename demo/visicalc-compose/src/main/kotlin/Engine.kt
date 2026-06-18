@@ -55,6 +55,10 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     private val scCut = handle("sc_cut", FunctionDescriptor.ofVoid(ptr, ptr, ptr))
     // sc_paste(session, dst_start) -> int (1 applied, 0 no-op).
     private val scPaste = handle("sc_paste", FunctionDescriptor.of(i32, ptr, ptr))
+    // sc_serialize(session) -> char* (workbook source + formats as JSON);
+    // sc_deserialize(session, data) -> int (1 loaded, 0 malformed/unsupported).
+    private val scSerialize = handle("sc_serialize", FunctionDescriptor.of(ptr, ptr))
+    private val scDeserialize = handle("sc_deserialize", FunctionDescriptor.of(i32, ptr, ptr))
     private val scUsedRange = handle("sc_used_range", FunctionDescriptor.of(ptr, ptr))
     private val scColumnLetters = handle("sc_column_letters", FunctionDescriptor.of(ptr, ptr, i32))
     private val scCurrentRevision = handle("sc_current_revision", FunctionDescriptor.of(i64, ptr))
@@ -155,6 +159,21 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     /// offset; content and format ride along.
     fun paste(dstStart: String): Boolean = Arena.ofConfined().use { a ->
         (scPaste.invoke(session, a.allocateUtf8String(dstStart)) as Int) != 0
+    }
+
+    /// Serialize the whole workbook to a self-contained JSON document — the
+    /// SOURCE (formula text + typed literals) + per-cell formats, not the
+    /// computed values (those recompute on load, so the document is small and
+    /// can't disagree with itself). [take] frees the engine's char*; the host
+    /// persists the returned string wherever it likes.
+    fun serialize(): String = take(scSerialize.invoke(session) as MemorySegment)
+
+    /// Replace the workbook from a document produced by [serialize]. Returns
+    /// `true` on success, `false` for malformed / unsupported input (the workbook
+    /// is left untouched — the engine validates before it mutates). Formulas
+    /// reload live.
+    fun deserialize(data: String): Boolean = Arena.ofConfined().use { a ->
+        (scDeserialize.invoke(session, a.allocateUtf8String(data)) as Int) != 0
     }
 
     /// Dense display strings for the inclusive 1-based rectangle, row-major
@@ -422,6 +441,21 @@ class InfiniteSheetModel(
     fun pasteCell(): Boolean {
         val ok = session.paste(infAddress())
         if (ok) computeExtent()
+        return ok
+    }
+
+    /// Save / load: serialize the whole workbook to a JSON document, and restore
+    /// it. The document stores only the source + formats — computed values
+    /// recompute on load, so a loaded formula stays live. [loadBook] returns
+    /// false (workbook untouched) for malformed input; on success it regrows the
+    /// extent and refreshes the formula bar so the view re-reads.
+    fun saveBook(): String = session.serialize()
+    fun loadBook(data: String): Boolean {
+        val ok = session.deserialize(data)
+        if (ok) {
+            computeExtent()
+            formula = session.getRaw(infAddress())
+        }
         return ok
     }
 
