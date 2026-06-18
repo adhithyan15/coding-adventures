@@ -58,16 +58,30 @@ pre-gate); the gate only converts a wrong answer into an abstention. It is the
 mechanism, not a claim: "no wrong answers" is enforced by checking the query against
 the source, exactly as the rest of the framework checks facts against grounded bytes.
 
-## The honest residual
+## The residual — now closed by the RELATION gate (REL-OFFLINE-2)
 
-The gate validates the **subject**, not the **relation**. Qwen2.5-0.5B's 2 remaining
-wrong answers are right-subject / wrong-relation: e.g. it asked `has_mcv(hereditary_
-spherocytosis)` for a stem about the classic *finding* — `hereditary_spherocytosis`
-**is** named in the stem (so it passes the subject gate), but `has_mcv` resolves to a
-real edge (`normocytic`) that isn't what the question asked. Gating the relation
-against the question's interrogative (what is being asked — an enzyme? a finding? a
-test?) is the clear next slice; it would close this gap without hand-authoring, by the
-same attestation principle.
+The subject gate alone left one gap: right-subject / **wrong-relation**. Qwen2.5-0.5B
+asked `has_mcv(hereditary_spherocytosis)` for a stem about the classic *finding* —
+`hereditary_spherocytosis` **is** named (so the subject gate passes), but `has_mcv`
+resolves to a real edge (`normocytic`) that isn't what the question asked → a confident
+wrong answer.
+
+The **relation gate** (`decompose_query.relation_attested_in_stem`) closes it: the
+stem's interrogative must contain a cue for the chosen relation (cues derived purely
+from the relation name + its conventional variable — `has_mcv` + `Class` →
+`{mcv, class}` — no new hand-authored knowledge; whole-word match so `class` is not
+found inside `classic`). Re-scoring the committed transcripts through both gates
+(deterministic — the gate is a pure function of the recorded `model_query` + stem):
+
+| model | recorded wrong | + relation gate |
+|---|---|---|
+| Gemma-3-4B-it | 0 | 19 correct · 8 abstained · **0 wrong** · 100% |
+| Qwen2.5-0.5B-it | 2 | 4 correct · 23 abstained · **0 wrong** · **100%** |
+
+Qwen's two `has_mcv`-on-finding errors (`ft_hs_finding`, `ft_g6pd_finding`) flip to
+abstentions; Gemma is unchanged (its mis-maps were already caught by the subject gate).
+**Both models now reach 0 wrong / 100% defensibility on the recorded runs** — a weak
+local model's errors are honest UNKNOWNs, never confident wrong answers.
 
 ## Caveats
 

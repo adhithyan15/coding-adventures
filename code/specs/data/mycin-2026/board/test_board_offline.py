@@ -122,6 +122,45 @@ def test_faithfulness_gate_turns_misdecomposition_into_abstention() -> None:
         "relation": "deficient_in", "subject": "fabry", "var": "Enzyme"}
 
 
+def test_relation_cues_derive_only_from_controlled_vocab() -> None:
+    # Cues are the relation name's word-parts + its conventional variable — no new
+    # medical knowledge, just the words the relation is already spelled with.
+    assert dq.RELATION_CUES["has_mcv"] == {"mcv", "class"}
+    assert dq.RELATION_CUES["classic_finding"] == {"classic", "finding"}
+    assert dq.RELATION_CUES["deficient_in"] == {"deficient", "enzyme"}  # structural "in" dropped
+
+
+def test_relation_gate_attests_interrogative() -> None:
+    # The stem must ASK for what the relation answers (whole-word cue match).
+    assert dq.relation_attested_in_stem("classic_finding", "What is the classic smear finding?")
+    # has_mcv is NOT what a finding question asks — and 'class' must not match inside 'classic'.
+    assert not dq.relation_attested_in_stem("has_mcv", "What is the classic peripheral-smear finding?")
+    assert dq.relation_attested_in_stem("has_mcv", "What MCV class is iron deficiency anemia?")
+
+
+def test_relation_gate_turns_wrong_relation_into_abstention() -> None:
+    # The documented residual: right subject, WRONG relation (has_mcv on a finding stem)
+    # resolved to a real-but-wrong edge. The relation gate rejects it → abstain.
+    stem = "A patient with hereditary spherocytosis. What is the classic peripheral-smear finding?"
+    vocab = dq.build_vocab()
+    wrong_rel = lambda _p: ('{"relation": "has_mcv", "subject": "hereditary_spherocytosis", '  # noqa: E731
+                            '"var": "Class"}')
+    assert dq.decompose(stem, wrong_rel, vocab, faithful=True) is None
+    # The correct relation for that stem is attested and passes.
+    right_rel = lambda _p: ('{"relation": "classic_finding", "subject": "hereditary_spherocytosis", '  # noqa: E731
+                            '"var": "Finding"}')
+    assert dq.decompose(stem, right_rel, vocab, faithful=True) == {
+        "relation": "classic_finding", "subject": "hereditary_spherocytosis", "var": "Finding"}
+
+
+def test_every_gold_query_passes_both_gates() -> None:
+    # No gold query may be false-rejected by either gate (subject AND relation attested).
+    for it in _items():
+        q, stem = it["query"], it["stem"]
+        assert dq.attested_in_stem(q["subject"], stem), f"subject gate false-rejects {it['id']}"
+        assert dq.relation_attested_in_stem(q["relation"], stem), f"relation gate false-rejects {it['id']}"
+
+
 # ---- 3. end-to-end offline scoring --------------------------------------------
 
 def _items():
