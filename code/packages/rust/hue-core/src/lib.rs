@@ -11084,6 +11084,105 @@ pub fn hue_package_release_evidence_index_summary(
     HuePackageReleaseEvidenceIndexSummary::from_pairing_plan(plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseArchiveNotarizationSummary {
+    pub release_evidence_index_summary: HuePackageReleaseEvidenceIndexSummary,
+    pub required_archive_notarization_check_count: usize,
+    pub passed_archive_notarization_check_count: usize,
+    pub blocked_archive_notarization_check_count: usize,
+    pub release_readiness_evidence_ready: bool,
+    pub runtime_evidence_ready: bool,
+    pub archive_evidence_ready: bool,
+    pub release_closeout_ready: bool,
+    pub operations_ready: bool,
+    pub release_evidence_index_ready: bool,
+    pub release_archive_notarization_ready: bool,
+}
+
+impl HuePackageReleaseArchiveNotarizationSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_release_evidence_index_summary(hue_package_release_evidence_index_summary(plan))
+    }
+
+    pub fn from_release_evidence_index_summary(
+        release_evidence_index_summary: HuePackageReleaseEvidenceIndexSummary,
+    ) -> Self {
+        let release_readiness_evidence_ready =
+            release_evidence_index_summary.release_readiness_evidence_ready;
+        let runtime_evidence_ready = release_evidence_index_summary.runtime_evidence_ready;
+        let archive_evidence_ready = release_evidence_index_summary.archive_evidence_ready;
+        let release_closeout_ready = release_evidence_index_summary.release_closeout_ready;
+        let operations_ready = release_evidence_index_summary.operations_ready;
+        let release_evidence_index_ready =
+            release_evidence_index_summary.is_release_evidence_index_ready();
+        let checks = [
+            release_readiness_evidence_ready,
+            runtime_evidence_ready,
+            archive_evidence_ready,
+            release_closeout_ready,
+            operations_ready,
+            release_evidence_index_ready,
+        ];
+        let passed_archive_notarization_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_archive_notarization_check_count = checks.len();
+        let blocked_archive_notarization_check_count =
+            required_archive_notarization_check_count - passed_archive_notarization_check_count;
+        let release_archive_notarization_ready = blocked_archive_notarization_check_count == 0;
+
+        Self {
+            release_evidence_index_summary,
+            required_archive_notarization_check_count,
+            passed_archive_notarization_check_count,
+            blocked_archive_notarization_check_count,
+            release_readiness_evidence_ready,
+            runtime_evidence_ready,
+            archive_evidence_ready,
+            release_closeout_ready,
+            operations_ready,
+            release_evidence_index_ready,
+            release_archive_notarization_ready,
+        }
+    }
+
+    pub fn is_release_archive_notarization_ready(self) -> bool {
+        self.release_archive_notarization_ready
+    }
+
+    pub fn has_blocked_archive_notarization_checks(self) -> bool {
+        self.blocked_archive_notarization_check_count > 0
+    }
+
+    pub fn needs_release_readiness_evidence(self) -> bool {
+        !self.release_readiness_evidence_ready
+    }
+
+    pub fn needs_runtime_evidence(self) -> bool {
+        !self.runtime_evidence_ready
+    }
+
+    pub fn needs_archive_evidence(self) -> bool {
+        !self.archive_evidence_ready
+    }
+
+    pub fn needs_release_closeout(self) -> bool {
+        !self.release_closeout_ready
+    }
+
+    pub fn needs_operations(self) -> bool {
+        !self.operations_ready
+    }
+
+    pub fn needs_release_evidence_index(self) -> bool {
+        !self.release_evidence_index_ready
+    }
+}
+
+pub fn hue_package_release_archive_notarization_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseArchiveNotarizationSummary {
+    HuePackageReleaseArchiveNotarizationSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -20301,5 +20400,84 @@ mod tests {
         assert!(summary.needs_archive_evidence());
         assert!(summary.needs_release_closeout());
         assert!(summary.needs_operations());
+    }
+
+    #[test]
+    fn hue_package_release_archive_notarization_summary_reports_ready_archive_notarization() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_archive_notarization_summary(&plan);
+
+        assert_eq!(
+            summary.release_evidence_index_summary,
+            hue_package_release_evidence_index_summary(&plan)
+        );
+        assert_eq!(summary.required_archive_notarization_check_count, 6);
+        assert_eq!(summary.passed_archive_notarization_check_count, 6);
+        assert_eq!(summary.blocked_archive_notarization_check_count, 0);
+        assert!(summary.release_readiness_evidence_ready);
+        assert!(summary.runtime_evidence_ready);
+        assert!(summary.archive_evidence_ready);
+        assert!(summary.release_closeout_ready);
+        assert!(summary.operations_ready);
+        assert!(summary.release_evidence_index_ready);
+        assert!(summary.release_archive_notarization_ready);
+        assert!(summary.is_release_archive_notarization_ready());
+        assert!(!summary.has_blocked_archive_notarization_checks());
+        assert!(!summary.needs_release_readiness_evidence());
+        assert!(!summary.needs_runtime_evidence());
+        assert!(!summary.needs_archive_evidence());
+        assert!(!summary.needs_release_closeout());
+        assert!(!summary.needs_operations());
+        assert!(!summary.needs_release_evidence_index());
+    }
+
+    #[test]
+    fn hue_package_release_archive_notarization_summary_routes_blocked_archive_notarization() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseArchiveNotarizationSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_archive_notarization_check_count, 6);
+        assert_eq!(summary.passed_archive_notarization_check_count, 0);
+        assert_eq!(summary.blocked_archive_notarization_check_count, 6);
+        assert!(!summary.release_readiness_evidence_ready);
+        assert!(!summary.runtime_evidence_ready);
+        assert!(!summary.archive_evidence_ready);
+        assert!(!summary.release_closeout_ready);
+        assert!(!summary.operations_ready);
+        assert!(!summary.release_evidence_index_ready);
+        assert!(!summary.release_archive_notarization_ready);
+        assert!(!summary.is_release_archive_notarization_ready());
+        assert!(summary.has_blocked_archive_notarization_checks());
+        assert!(summary.needs_release_readiness_evidence());
+        assert!(summary.needs_runtime_evidence());
+        assert!(summary.needs_archive_evidence());
+        assert!(summary.needs_release_closeout());
+        assert!(summary.needs_operations());
+        assert!(summary.needs_release_evidence_index());
     }
 }
