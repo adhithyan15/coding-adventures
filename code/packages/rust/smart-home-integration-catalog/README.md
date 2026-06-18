@@ -58,6 +58,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - mesh readiness package summaries that combine Zigbee, Z-Wave, and Thread
   primitive substrate readiness with mesh-scoped activation evidence
   remediation rollups
+- mesh stage release summaries that combine substrate-stage blockers,
+  primitive-readiness blockers, and mesh-scoped remediation into one release
+  readiness rollup
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and

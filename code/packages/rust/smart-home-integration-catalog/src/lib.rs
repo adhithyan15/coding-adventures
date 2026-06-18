@@ -695,6 +695,73 @@ impl IntegrationMeshReadinessPackageSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshStageReleaseSummary {
+    pub package_summary: IntegrationMeshReadinessPackageSummary,
+    pub substrate_stage_summary: IntegrationMeshProtocolSubstrateStageSummary,
+    pub total_protocols: usize,
+    pub stage_blocker_count: usize,
+    pub primitive_blocker_count: usize,
+    pub remediation_item_count: usize,
+    pub controller_blockers: usize,
+    pub radio_blockers: usize,
+    pub discovery_blockers: usize,
+    pub network_security_blockers: usize,
+    pub supervision_blockers: usize,
+    pub first_blocked_protocol: Option<ProtocolFamily>,
+    pub first_blocked_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub next_remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    pub substrate_ready: bool,
+    pub package_ready: bool,
+    pub release_ready: bool,
+}
+
+impl IntegrationMeshStageReleaseSummary {
+    pub fn from_parts(
+        package_summary: IntegrationMeshReadinessPackageSummary,
+        substrate_stage_summary: IntegrationMeshProtocolSubstrateStageSummary,
+    ) -> Self {
+        let substrate_ready = substrate_stage_summary.all_ready();
+        let package_ready = package_summary.release_ready;
+        let release_ready = substrate_ready && package_ready;
+
+        Self {
+            total_protocols: package_summary.total_protocols,
+            stage_blocker_count: substrate_stage_summary.blocked_rows,
+            primitive_blocker_count: package_summary.missing_primitive_count,
+            remediation_item_count: package_summary.remediation_item_count,
+            controller_blockers: substrate_stage_summary.controller_blockers,
+            radio_blockers: substrate_stage_summary.radio_blockers,
+            discovery_blockers: substrate_stage_summary.discovery_blockers,
+            network_security_blockers: substrate_stage_summary.network_security_blockers,
+            supervision_blockers: substrate_stage_summary.supervision_blockers,
+            first_blocked_protocol: substrate_stage_summary
+                .first_blocked_protocol
+                .clone()
+                .or_else(|| package_summary.first_blocked_protocol.clone()),
+            first_blocked_stage: substrate_stage_summary.first_blocked_stage,
+            next_remediation_kind: package_summary.next_remediation_kind,
+            package_summary,
+            substrate_stage_summary,
+            substrate_ready,
+            package_ready,
+            release_ready,
+        }
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.release_ready
+    }
+
+    pub fn has_stage_blockers(&self) -> bool {
+        self.stage_blocker_count > 0
+    }
+
+    pub fn has_remediations(&self) -> bool {
+        self.remediation_item_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
     pub display_name: String,
@@ -20611,6 +20678,37 @@ pub fn mesh_readiness_package_summary(
     )
 }
 
+pub fn mesh_stage_release_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshStageReleaseSummary {
+    let package_summary = mesh_readiness_package_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let substrate_stage_summary = mesh_protocol_substrate_stage_summary(available_primitives);
+
+    IntegrationMeshStageReleaseSummary::from_parts(package_summary, substrate_stage_summary)
+}
+
+pub fn mesh_stage_release_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshStageReleaseSummary {
+    let catalog = first_party_catalog();
+    mesh_stage_release_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_protocol_catalog_entries(
     catalog: &[IntegrationCatalogEntry],
 ) -> Vec<IntegrationCatalogEntry> {
@@ -26798,6 +26896,68 @@ mod tests {
         assert!(!summary.needs_radio_network_key());
         assert!(!summary.needs_supervision());
         assert_eq!(summary.mesh_primitive_summary.missing_primitive_count, 0);
+    }
+
+    #[test]
+    fn mesh_stage_release_summary_combines_stage_and_package_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_stage_release_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.stage_blocker_count, 5);
+        assert_eq!(summary.primitive_blocker_count, 3);
+        assert!(summary.remediation_item_count > 0);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 1);
+        assert_eq!(summary.discovery_blockers, 1);
+        assert_eq!(summary.network_security_blockers, 3);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, Some(ProtocolFamily::Zigbee));
+        assert_eq!(
+            summary.first_blocked_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+        );
+        assert!(!summary.substrate_ready);
+        assert!(!summary.package_ready);
+        assert!(!summary.release_ready);
+        assert!(summary.has_blockers());
+        assert!(summary.has_stage_blockers());
+        assert!(summary.has_remediations());
+        assert_eq!(summary.substrate_stage_summary.blocked_rows, 5);
+        assert_eq!(summary.package_summary.missing_primitive_count, 3);
+    }
+
+    #[test]
+    fn mesh_stage_release_summary_marks_full_substrate_ready() {
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
+        ];
+        let summary =
+            mesh_stage_release_summary(all_primitive_families(), &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.stage_blocker_count, 0);
+        assert_eq!(summary.primitive_blocker_count, 0);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 0);
+        assert_eq!(summary.discovery_blockers, 0);
+        assert_eq!(summary.network_security_blockers, 0);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, None);
+        assert_eq!(summary.first_blocked_stage, None);
+        assert!(summary.substrate_ready);
+        assert!(summary.substrate_stage_summary.all_ready());
+        assert!(summary.package_summary.primitive_substrate_ready);
+        assert!(!summary.has_stage_blockers());
     }
 
     #[test]

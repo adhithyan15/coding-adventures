@@ -61,6 +61,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshProtocolSubstrateStageRow` and summary helpers for
   classifying low-level mesh primitive blockers into controller, radio,
   discovery, network-security, and supervision stages.
+- `IntegrationMeshStageReleaseSummary` and helpers for combining substrate
+  stage blockers, primitive readiness blockers, and mesh-scoped remediation
+  into a single release readiness rollup.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
