@@ -1,0 +1,84 @@
+% =====================================================================
+% worked-canon-tiebreaker-example.adj — RESOLVING a canon collision with a
+% grounded canon-ordering (ADJ73 §4.3, the resolving tiebreaker).
+%
+% worked-canon-conflict-example.adj showed the HONEST DEFAULT: when lex superior
+% (federal > state) and lex specialis (state > federal) point opposite ways and
+% nothing breaks the tie, the engine ABSTAINS (CONFLICT). This file shows the
+% RESOLUTION: a jurisdiction that has decided how to rank the canons supplies one
+% more grounded fact — `canon_outranks(lex_specialis, lex_superior)` — and the
+% collision resolves to a CITED decision instead of an abstention.
+%
+% THE KEY MOVE — entirely in the language, no engine change. Each canon derives a
+% context edge TAGGED with the canon that produced it:
+%       outranks_context_by(Higher, Lower, Canon)
+% and a single resolution rule (negation-as-failure) keeps an edge unless the
+% REVERSE edge comes from a higher-ranked canon:
+%       outranks_context(H, L) :- outranks_context_by(H, L, C), not canon_defeated(H, L, C).
+%       canon_defeated(H, L, C) :- outranks_context_by(L, H, C2), canon_outranks(C2, C).
+% The engine (logic-engine ≥ 0.21) reads the resolved `outranks_context/2` as the
+% context order, so the survivor drives `lex superior` exactly as before. The
+% recursion bottoms out at grounded facts at every layer — the primitive
+% (`more_specific`), the canon edge, AND the canon-ordering — each byte-cited.
+%
+% THE CASE (same collision as worked-canon-conflict-example.adj):
+%   • lex superior: federal > state (Supremacy Clause)
+%   • lex specialis: state > federal (the state statute is the specific one)
+%   • this jurisdiction's interpretive rule: lex specialis prevails over lex superior.
+% Resolution: the federal>state edge is canon-defeated (its reverse comes from the
+% higher-ranked lex specialis), so only state>federal survives → the SPECIFIC state
+% reading GOVERNS:
+%
+%   rule_on(matter, prohibited)  status governing   context state
+%   rule_on(matter, permitted)   status defeated     context federal
+%   has_conflict: false
+%
+% REMOVE the `canon_outranks` fact and this same rulebook ABSTAINS (the §4.3
+% default) — the tiebreaker is opt-in and itself grounded. 0 answer-time model calls.
+% =====================================================================
+
+functional rule_on(topic, ruling)
+
+% --- the two canons, each emitting a CANON-TAGGED edge ---
+
+% LEX SUPERIOR (federal > state) — grounded, tagged with its canon.
+relate outranks_context_by(federal, state, lex_superior)
+  source "U.S. Const. art. VI, cl. 2 (Supremacy Clause): federal law is the supreme law of the land."
+  locator "U.S. Const. art. VI, cl. 2"
+  trust authoritative
+
+% LEX SPECIALIS — the state statute is the more specific provision on this matter; the canon
+% derives state > federal, tagged.
+relate more_specific(state, federal)
+  source "The state statute addresses this specific situation; the federal provision is general."
+  locator "statutory subject-matter comparison"
+  trust authoritative
+rule {
+  head: outranks_context_by($Specific, $General, lex_specialis)
+  when: more_specific($Specific, $General)
+  source "Lex specialis derogat legi generali: the specific provision governs the general."
+  trust authoritative
+}
+
+% --- the GROUNDED canon-ordering (the tiebreaker itself, byte-provenanced) ---
+% This jurisdiction resolves a specific-vs-general collision in favor of the specific provision.
+% Remove this fact and the collision falls back to the honest CONFLICT (§4.3 abstention).
+relate canon_outranks(lex_specialis, lex_superior)
+  source "Where a specific statutory provision conflicts with a general one on the same matter, the specific provision controls (lex specialis), even over a higher-authority general rule, for statutory interpretation in this jurisdiction."
+  locator "jurisdiction interpretive canon-ordering"
+  trust authoritative
+
+% --- the resolution (in-language, negation-as-failure) ---
+% An edge holds unless its reverse comes from a higher-ranked canon.
+rule { head: outranks_context($H, $L)  when: outranks_context_by($H, $L, $C), not canon_defeated($H, $L, $C) }
+rule { head: canon_defeated($H, $L, $C)  when: outranks_context_by($L, $H, $C2), canon_outranks($C2, $C) }
+
+% --- the case: a general federal reading vs a specific state reading ---
+rule { head: rule_on(matter, permitted)  when: federal_general  context: federal }
+rule { head: rule_on(matter, prohibited) when: state_specific   context: state }
+
+observe federal_general
+observe state_specific
+
+% Which governs?  → the specific state reading, by the grounded canon-ordering (no abstention).
+? rule_on(matter, $ruling)

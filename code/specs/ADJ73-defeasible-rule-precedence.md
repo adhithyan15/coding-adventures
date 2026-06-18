@@ -374,9 +374,20 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
     so neither is silently `Defeated` — the group abstains as `ConflictPeer` / `has_conflict`. This
     closes the "else CONFLICT (abstain)" guarantee (previously the engine produced a misleading
     "both defeated, no conflict flag"). `worked-canon-conflict-example.adj` +
-    `colliding_canons_abstain_with_an_honest_conflict`. Still to come (the RESOLVING tiebreaker):
-    a grounded meta-rule that turns a *chosen* collision into a cited decision — needs each derived
-    edge tagged with its canon + a grounded canon-ordering, so the engine picks with provenance.
+    `colliding_canons_abstain_with_an_honest_conflict`.
+  - **PR-B-7 resolving tiebreaker ✅ DONE (no engine change — pure in-language pattern).** A
+    chosen collision RESOLVES to a cited decision via: (a) canon-TAGGED edges
+    `outranks_context_by(Higher, Lower, Canon)`, (b) a grounded `canon_outranks(C2, C1)` ordering,
+    and (c) a negation-as-failure resolution rule — `outranks_context(H,L) :-
+    outranks_context_by(H,L,C), not canon_defeated(H,L,C)` with `canon_defeated(H,L,C) :-
+    outranks_context_by(L,H,C2), canon_outranks(C2,C)`. The engine's existing NAF + derived-edge
+    machinery (PR-B-4) does the rest — `context_adjacency` reads the resolved `outranks_context/2`.
+    `worked-canon-tiebreaker-example.adj` (lex specialis prevails over lex superior here → the
+    specific state reading governs) + `a_grounded_canon_ordering_resolves_the_collision`. The
+    canon-ordering is itself a grounded fact, so the recursion stays grounded; remove it and the
+    rulebook falls back to §4.3 abstention. Still to come: migrate the SHARED
+    `context-precedence(-meta).adj` rulebook to the tagged `outranks_context_by/3` form (proven
+    self-contained first), so a jurisdiction's `canon_outranks` applies uniformly.
 - **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
   annotations) + regen grammar.
 - **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).
