@@ -154,6 +154,44 @@ export function createEngine(wasmBytes) {
           freeInput(ep, el);
         },
 
+        /**
+         * Copy the inclusive rectangle `start`..`end` into the clipboard — a
+         * whole-block copy that pastes as a unit (the sibling of fill). The
+         * source is untouched and the buffer survives any number of pastes.
+         */
+        copy: (start, end) => {
+          const [sp, sl] = writeStr(String(start));
+          const [ep, el] = writeStr(String(end));
+          ex.copy(sp, sl, ep, el);
+          freeInput(sp, sl);
+          freeInput(ep, el);
+        },
+
+        /**
+         * Cut the inclusive rectangle `start`..`end`. Like copy but a one-shot
+         * move: the paste that places it clears the source it didn't overwrite
+         * and consumes the buffer.
+         */
+        cut: (start, end) => {
+          const [sp, sl] = writeStr(String(start));
+          const [ep, el] = writeStr(String(end));
+          ex.cut(sp, sl, ep, el);
+          freeInput(sp, sl);
+          freeInput(ep, el);
+        },
+
+        /**
+         * Paste the clipboard so its top-left lands at `dstStart`. Returns `true`
+         * when applied, `false` for a no-op (empty clipboard, malformed address,
+         * or off-grid). Re-read via getWindow / getDisplayWindow / getRaw after.
+         */
+        paste: (dstStart) => {
+          const [dp, dl] = writeStr(String(dstStart));
+          const ok = ex.paste(dp, dl);
+          freeInput(dp, dl);
+          return ok === 1;
+        },
+
         // ── Viewport primitive (virtualized infinite sheet) ──────────
         // A scrolling host renders only the visible window of an unbounded
         // sheet: getWindow for the visible rectangle, usedRange for scrollbar

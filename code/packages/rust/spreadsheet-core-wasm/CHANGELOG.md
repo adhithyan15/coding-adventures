@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+**Clipboard — cut / copy / paste.** `copy(start, end)` / `cut(start, end)` capture the inclusive rectangle into the engine's clipboard and mirror each cell's raw source into a facade-side `RawClip`; `paste(dst_start) -> bool` places the block at `dst_start`, shifting the whole block's references by the destination's offset and keeping the `raw` echo in step (each target's source is the shifted source; blanks erase). A cut clears the source echo it didn't overwrite and consumes the buffer; a copy is repeatable. `has_clipboard()` reports whether a block is held. The facade mirrors the engine's `MAX_RANGE_CELLS` guard and i64-clamped delta, and tracks the engine's buffer lifecycle exactly (kept on reject/copy, dropped on cut-paste). 3 tests.
+
 ## 0.6.0
 
 **`fill` (drag-fill) over the JSON facade.** New

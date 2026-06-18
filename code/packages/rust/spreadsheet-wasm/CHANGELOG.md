@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+**Clipboard — cut / copy / paste.** New linear-memory exports `copy(start*, len, end*, len)`, `cut(...)` (void), and `paste(dst*, len) -> i32` (1/0). JS loader gains `copy(start, end)`, `cut(start, end)`, and `paste(dstStart) -> boolean`. Rebuilt `pkg/spreadsheet_engine.wasm`. `js/smoke.mjs` extended: copy F1:G1 → paste at F3 (G3 = F3*2, echo `=(F3*2)`), cut A1 → move to C1 (source clears, second paste returns false).
+
 ## 0.6.0
 
 **`fill` (drag-fill) over the WASM ABI.** New

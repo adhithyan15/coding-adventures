@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+**Clipboard — cut / copy / paste.** New C ABI exports `sc_copy(s, start, end)`, `sc_cut(s, start, end)` (void), and `sc_paste(s, dst_start) -> int` (1 = applied, 0 = no-op for empty clipboard / malformed address / off-grid). Declared in `include/spreadsheet.h`. Null session is a safe no-op (paste returns 0). 1 round-trip test (copy→paste shift, cut→move + source-clear + one-shot, null-safety).
+
 ## 0.6.0
 
 **`sc_fill` over the C ABI.** New

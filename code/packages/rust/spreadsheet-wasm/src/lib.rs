@@ -291,6 +291,61 @@ pub unsafe extern "C" fn fill(
     SESSION.with(|s| s.borrow_mut().fill(&src, &dst_start, &dst_end));
 }
 
+/// `copy(start, end)` — copy the inclusive rectangle `start`..`end` into the
+/// clipboard (a whole-block copy that pastes as a unit). The source is left
+/// untouched; the buffer survives any number of pastes. See
+/// [`SpreadsheetSession::copy`].
+///
+/// # Safety
+/// Both `(ptr, len)` pairs must describe readable byte ranges (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn copy(
+    start_ptr: *const u8,
+    start_len: usize,
+    end_ptr: *const u8,
+    end_len: usize,
+) {
+    let start = read_input(start_ptr, start_len);
+    let end = read_input(end_ptr, end_len);
+    SESSION.with(|s| s.borrow_mut().copy(&start, &end));
+}
+
+/// `cut(start, end)` — like [`copy`] but a one-shot move: the paste that places
+/// it clears the source it didn't overwrite and consumes the buffer. See
+/// [`SpreadsheetSession::cut`].
+///
+/// # Safety
+/// Both `(ptr, len)` pairs must describe readable byte ranges (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn cut(
+    start_ptr: *const u8,
+    start_len: usize,
+    end_ptr: *const u8,
+    end_len: usize,
+) {
+    let start = read_input(start_ptr, start_len);
+    let end = read_input(end_ptr, end_len);
+    SESSION.with(|s| s.borrow_mut().cut(&start, &end));
+}
+
+/// `paste(dst_start)` — paste the clipboard so its top-left lands at
+/// `dst_start`. Returns `1` when applied, `0` for a no-op (empty clipboard,
+/// malformed address, or off-grid). Unlike the string-returning exports this
+/// returns the flag directly — no pointer to free. See
+/// [`SpreadsheetSession::paste`].
+///
+/// # Safety
+/// The `(ptr, len)` pair must describe a readable byte range (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn paste(dst_start_ptr: *const u8, dst_start_len: usize) -> i32 {
+    let dst_start = read_input(dst_start_ptr, dst_start_len);
+    if SESSION.with(|s| s.borrow_mut().paste(&dst_start)) {
+        1
+    } else {
+        0
+    }
+}
+
 // ── Viewport primitive (virtualized infinite sheet) ──────────────────
 // These take integer coordinates directly (no pointer marshalling), so a
 // scrolling JS host can fetch just the visible window of an unbounded sheet.

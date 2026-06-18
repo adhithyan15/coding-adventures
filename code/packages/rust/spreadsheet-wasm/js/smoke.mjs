@@ -91,6 +91,20 @@ wb.fill("G1", "G2", "G2");
 check("fill G2 = F2*2", wb.getValue("G2"), { kind: "number", value: 40 });
 check("fill G2 raw shifted", wb.getRaw("G2"), "=(F2*2)");
 
+// Clipboard: copy the block F1:G1 (G1 = F1*2) and paste at F3 — the relative ref
+// shifts as a unit, so G3 = F3*2 and the echo shows the shifted source.
+check("copy/paste applied", wb.copy("F1", "G1"), undefined); // copy returns nothing
+check("paste returns true", wb.paste("F3"), true);
+check("paste G3 = F3*2", wb.getValue("G3"), { kind: "number", value: 20 }); // F3=10*2
+check("paste G3 raw shifted", wb.getRaw("G3"), "=(F3*2)");
+// Cut a cell, move it, and confirm the source clears + a 2nd paste is a no-op.
+wb.setCell("A1", "7");
+wb.cut("A1", "A1");
+check("cut paste returns true", wb.paste("C1"), true);
+check("cut moved value", wb.getValue("C1"), { kind: "number", value: 7 });
+check("cut cleared source", wb.getValue("A1"), { kind: "empty" });
+check("cut buffer consumed", wb.paste("E1"), false);
+
 // Fresh workbook is empty.
 const wb2 = engine.createSpreadsheet();
 check("reset clears values", wb2.getValues(), {});

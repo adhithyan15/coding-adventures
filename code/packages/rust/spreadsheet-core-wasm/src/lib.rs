@@ -71,6 +71,24 @@ pub struct SpreadsheetSession {
     /// What was literally typed into each cell — the source of truth for
     /// [`get_raw`](Self::get_raw), independent of the engine's internals.
     raw: HashMap<CellAddress, String>,
+    /// A facade-side mirror of the engine's clipboard, holding the *raw* (typed)
+    /// source of each copied/cut cell so [`paste`](Self::paste) can keep the
+    /// `raw` echo map in step — the engine stores parsed content, not the
+    /// user's text. Its lifecycle tracks the engine's: kept on a copy, dropped
+    /// on the paste that consumes a cut, untouched on a rejected paste.
+    clip: Option<RawClip>,
+}
+
+/// The facade's raw-text snapshot of a copied/cut rectangle, paired 1:1 with the
+/// engine's clipboard. Offsets are from the source range's top-left anchor.
+struct RawClip {
+    anchor: CellAddress,
+    source: CellRange,
+    rows: u32,
+    cols: u32,
+    is_cut: bool,
+    /// `(d_row, d_col) → raw text` for the non-blank source cells.
+    cells: HashMap<(u32, u32), String>,
 }
 
 impl SpreadsheetSession {
@@ -82,6 +100,7 @@ impl SpreadsheetSession {
             wb,
             sheet,
             raw: HashMap::new(),
+            clip: None,
         }
     }
 
@@ -251,6 +270,136 @@ impl SpreadsheetSession {
                 }
             }
         }
+    }
+
+    /// Copy the inclusive rectangle `start_a1`..`end_a1` into the clipboard — a
+    /// whole-block copy that pastes as a unit (the sibling of [`fill`](Self::fill),
+    /// which replicates one cell). Content + format are captured by the engine;
+    /// this facade also snapshots each cell's raw source so [`paste`](Self::paste)
+    /// can keep the formula-bar echo in step. The source is left untouched; the
+    /// buffer survives any number of pastes. Malformed addresses or a rectangle
+    /// over `MAX_RANGE_CELLS` are a no-op.
+    pub fn copy(&mut self, start_a1: &str, end_a1: &str) {
+        self.snapshot(start_a1, end_a1, false);
+    }
+
+    /// Cut the inclusive rectangle `start_a1`..`end_a1` into the clipboard. Like
+    /// [`copy`](Self::copy) but a one-shot move: the [`paste`](Self::paste) that
+    /// places it clears the source cells it didn't overwrite and consumes the
+    /// buffer. The source is not cleared until paste.
+    pub fn cut(&mut self, start_a1: &str, end_a1: &str) {
+        self.snapshot(start_a1, end_a1, true);
+    }
+
+    /// Shared capture for [`copy`]/[`cut`]: drive the engine's clipboard and
+    /// mirror the raw echo into a [`RawClip`].
+    fn snapshot(&mut self, start_a1: &str, end_a1: &str, is_cut: bool) {
+        let (Ok(start), Ok(end)) = (CellAddress::parse(start_a1), CellAddress::parse(end_a1)) else {
+            return;
+        };
+        let range = CellRange::new(start, end);
+        // Mirror the engine's DoS guard so the raw-snapshot loop stays bounded.
+        if range.cell_count() > MAX_RANGE_CELLS {
+            return;
+        }
+
+        if is_cut {
+            self.wb.cut(self.sheet, range);
+        } else {
+            self.wb.copy(self.sheet, range);
+        }
+
+        let anchor = range.start;
+        let mut cells = HashMap::new();
+        for row in range.start.row..=range.end.row {
+            for col in range.start.col..=range.end.col {
+                if let Some(raw) = self.raw.get(&CellAddress::new(row, col)) {
+                    cells.insert((row - anchor.row, col - anchor.col), raw.clone());
+                }
+            }
+        }
+        self.clip = Some(RawClip {
+            anchor,
+            source: range,
+            rows: range.end.row - range.start.row + 1,
+            cols: range.end.col - range.start.col + 1,
+            is_cut,
+            cells,
+        });
+    }
+
+    /// Paste the clipboard so its top-left lands at `dst_start_a1`. Returns `true`
+    /// when applied, `false` (a no-op) for an empty clipboard, a malformed
+    /// address, or a destination that would run past the grid edge — exactly
+    /// tracking the engine's `paste`. The whole block's references shift by the
+    /// destination's offset from the source anchor; content, format, and the raw
+    /// echo all ride along, and source blanks erase their targets. A cut then
+    /// clears the source echo it didn't overwrite and consumes the buffer.
+    pub fn paste(&mut self, dst_start_a1: &str) -> bool {
+        let Some(clip) = self.clip.take() else {
+            return false;
+        };
+        let Ok(dst) = CellAddress::parse(dst_start_a1) else {
+            self.clip = Some(clip); // bad address — keep the buffer
+            return false;
+        };
+
+        // Drive the engine; it enforces every guard (off-grid, sheet, bounds) and
+        // reports whether a paste happened. If it declined, leave the raw echo
+        // and the facade buffer exactly as they were.
+        if !self.wb.paste(self.sheet, dst) {
+            self.clip = Some(clip);
+            return false;
+        }
+
+        // Engine pasted: rewrite the raw echo for the destination rectangle. The
+        // whole block shifts by the same delta (dst − anchor), i64-clamped into
+        // the i32 contract like fill, so a high-coordinate paste can't overflow.
+        let d_row =
+            (dst.row as i64 - clip.anchor.row as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+        let d_col =
+            (dst.col as i64 - clip.anchor.col as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+        for dr in 0..clip.rows {
+            for dc in 0..clip.cols {
+                let target = CellAddress::new(dst.row + dr, dst.col + dc);
+                match clip.cells.get(&(dr, dc)) {
+                    Some(raw) => {
+                        self.raw.insert(target, rewrite_raw_for_fill(raw, d_row, d_col));
+                    }
+                    None => {
+                        self.raw.remove(&target); // source blank → erase target echo
+                    }
+                }
+            }
+        }
+
+        // A cut moves: clear the source echo the paste didn't overwrite.
+        if clip.is_cut {
+            let dst_end_row = dst.row + clip.rows - 1;
+            let dst_end_col = dst.col + clip.cols - 1;
+            for row in clip.source.start.row..=clip.source.end.row {
+                for col in clip.source.start.col..=clip.source.end.col {
+                    let covered = row >= dst.row
+                        && row <= dst_end_row
+                        && col >= dst.col
+                        && col <= dst_end_col;
+                    if !covered {
+                        self.raw.remove(&CellAddress::new(row, col));
+                    }
+                }
+            }
+        }
+
+        // Copy's buffer survives for reuse; a cut's is consumed (matching engine).
+        if !clip.is_cut {
+            self.clip = Some(clip);
+        }
+        true
+    }
+
+    /// Whether the clipboard currently holds a copied/cut block.
+    pub fn has_clipboard(&self) -> bool {
+        self.clip.is_some()
     }
 
     /// Get a cell's *computed* value as a JSON object (see [`value_to_json`] for
@@ -656,6 +805,46 @@ mod tests {
         s.set_cell("A1", "1");
         s.fill("not-an-addr", "B1", "B2"); // no panic, nothing filled
         assert_eq!(s.get_value("B1"), r#"{"kind":"empty"}"#);
+    }
+
+    #[test]
+    fn copy_paste_shifts_block_and_echoes_shifted_source() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("B1", "5");
+        s.set_cell("C1", "=B1*2"); // 10
+        s.copy("B1", "C1"); // copy the 1×2 block
+        assert!(s.has_clipboard());
+        assert!(s.paste("B2")); // paste at B2
+
+        assert_eq!(s.get_value("B2"), r#"{"kind":"number","value":5.0}"#);
+        assert_eq!(s.get_value("C2"), r#"{"kind":"number","value":10.0}"#); // B2*2
+        // The echo shows the shifted source (binary op parenthesised).
+        assert_eq!(s.get_raw("C2"), "=(B2*2)");
+        // A copy survives for another paste; the source is untouched.
+        assert!(s.has_clipboard());
+        assert_eq!(s.get_raw("C1"), "=B1*2");
+    }
+
+    #[test]
+    fn cut_paste_moves_and_clears_source_echo() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "7");
+        s.cut("A1", "A1");
+        assert!(s.paste("C1"));
+        assert_eq!(s.get_value("C1"), r#"{"kind":"number","value":7.0}"#);
+        assert_eq!(s.get_raw("C1"), "7");
+        assert_eq!(s.get_value("A1"), r#"{"kind":"empty"}"#); // source value cleared
+        assert_eq!(s.get_raw("A1"), ""); // source echo cleared
+        // Buffer consumed: a second paste is a no-op.
+        assert!(!s.has_clipboard());
+        assert!(!s.paste("E1"));
+    }
+
+    #[test]
+    fn paste_without_copy_is_noop() {
+        let mut s = SpreadsheetSession::new();
+        assert!(!s.has_clipboard());
+        assert!(!s.paste("A1"));
     }
 
     #[test]
