@@ -155,6 +155,12 @@ The **Copy / Cut / Paste** buttons drive the engine's clipboard
 with its relative references shifted by the destination's offset (absolute `$`
 refs pinned, format carried); a cut clears the source on paste, and `PasteCell`
 returns `false` (a no-op) for an empty clipboard.
+The **Save / Load** buttons serialize the whole workbook
+(`InfiniteSheetModel.SaveBook` over the C ABI's `sc_serialize`) to a JSON
+document held in memory and restore it (`LoadBook` / `sc_deserialize`): the
+document captures only the source (formula text + typed literals) and per-cell
+formats — not the computed values, which the engine recomputes on load, so a
+loaded formula stays live.
 
 `InfiniteSheetModel` (in `Engine.cs`, WinUI-free) seeds far-flung sparse cells
 (`Z1000`, `BA50`, `BB50`) and derives the extent from `UsedRange()` + a margin
@@ -172,8 +178,11 @@ seeds far-flung sparse cells and asserts the window is engine-computed + dense
 (A1=15, E1=38, E5=169), a formula 1000 rows down (`Z1000` = 39) is reachable, the
 gaps are empty (sparse), column letters run AA/BA, and editing `A1` dirties the
 far dependent `Z1000` via `ChangedSince`. It also drives `InfiniteSheetModel`
-directly: `RowCells` one-read rows, `SelectInf` clamping + source load, and
-`CommitInf` recompute (A2 `8`→`108` ⇒ E2 151, A5 139, E5 269).
+directly: `RowCells` one-read rows, `SelectInf` clamping + source load,
+`CommitInf` recompute (A2 `8`→`108` ⇒ E2 151, A5 139, E5 269), drag-fill,
+clipboard copy/cut/paste, and a save/load round trip (`SaveBook` → mutate A1 ⇒
+E1 523.00 → `LoadBook` restores A1 15 / E1 38.00, the loaded formula stays live
+with A1=5 ⇒ E1 28.00, and malformed input is rejected).
 
 ## Where this fits in the cross-backend demo plan
 

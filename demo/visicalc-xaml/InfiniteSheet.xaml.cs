@@ -47,6 +47,11 @@ public sealed partial class InfiniteSheet : UserControl
 
     private readonly InfiniteSheetModel _model = new();
     private List<int> _rowNumbers = new();
+
+    // In-memory "saved file" slot for the Save / Load buttons: Save stows the
+    // serialized workbook here, Load restores from it. (A real app would write it
+    // to a file; the demo keeps the round trip self-contained.)
+    private string _savedSnapshot = string.Empty;
     private ScrollViewer? _bodyInnerSv, _gutterInnerSv;
 
     public InfiniteSheet()
@@ -191,6 +196,22 @@ public sealed partial class InfiniteSheet : UserControl
     private void PasteButton_Click(object sender, RoutedEventArgs e)
     {
         if (_model.PasteCell()) RepaintRealizedRows();
+    }
+
+    /// Save / load: serialize the whole workbook (formulas + formats) to a JSON
+    /// document held in memory, and restore it. Computed values recompute on load,
+    /// so a loaded formula stays live; the formula bar and rows re-read after Load.
+    private void SaveButton_Click(object sender, RoutedEventArgs e) =>
+        _savedSnapshot = _model.SaveBook();
+
+    private void LoadButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_savedSnapshot.Length == 0) return;
+        if (_model.LoadBook(_savedSnapshot))
+        {
+            RefreshFormulaBar();
+            RepaintRealizedRows();
+        }
     }
 
     private void RefreshFormulaBar()

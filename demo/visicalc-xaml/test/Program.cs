@@ -154,5 +154,23 @@ using (var inf = new InfiniteSheetModel())
     inf.SelectInf(1, 5); Check("inf cut buffer consumed", inf.PasteCell().ToString(), "False");
 }
 
+// Save / load (the Save / Load buttons drive SaveBook/LoadBook): serialize a
+// fresh seeded workbook, mutate it, restore the snapshot, and confirm the
+// loaded formula stays LIVE (the document stores source + formats, not values).
+using (var sl = new InfiniteSheetModel())
+{
+    string snapshot = sl.SaveBook();
+    Check("serialize non-empty", (snapshot.Length > 0).ToString(), "True");
+    sl.SelectInf(1, 1); sl.CommitInf("500");                 // E1 → 500+3+12+8 = 523
+    Check("mutated E1", sl.RowCells(1)[4], "523.00");
+    Check("loadBook ok", sl.LoadBook(snapshot).ToString(), "True");
+    Check("loaded A1", sl.RowCells(1)[0], "15");             // restored
+    Check("loaded E1 formatted", sl.RowCells(1)[4], "38.00"); // recomputed through format
+    sl.SelectInf(1, 1); sl.CommitInf("5");                   // live: 5+3+12+8 = 28
+    Check("loaded formula live", sl.RowCells(1)[4], "28.00");
+    Check("loadBook rejects garbage", sl.LoadBook("not a workbook").ToString(), "False");
+    Check("workbook intact after reject", sl.RowCells(1)[4], "28.00");
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;
