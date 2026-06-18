@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.145.0] - 2026-06-17
+
+### Changed (CLOC13.B.1 — `inline` pass now does real work in SIMPLE/ADVANCED)
+
+The `inline` pass in the SIMPLE (and therefore ADVANCED) pipeline was an
+identity stub; it now performs real single-use function inlining
+(`coding-adventures-closure-pass-inline` `0.2.0 → 0.3.0`). A single-use
+top-level leaf function whose body is `{ return EXPR; }` (with no free
+identifiers) is substituted at its call site, and the now-dead declaration is
+removed by the downstream `remove-unused-vars` / `treeshake` passes:
+
+```js
+// in.js
+function double(x) { return x * 2; }
+log(double(7));
+//  closurec --compilation_level SIMPLE --js in.js  ⇒  log(7 * 2);
+```
+
+The inliner is deliberately conservative — see the `closure-pass-inline`
+crate for the full provably-safe slice (top-level plain function, pure
+`return` body, no free identifiers, declared once, used once, side-effect-free
+arguments). Multi-use callees, function expressions, and bodies with
+locals/branches are left untouched.
+
+### Fixtures / tests
+
+- Updated the `simple-rename`, `simple-treeshake`, and `advanced-optimizes`
+  diff fixtures (and the corresponding `run.rs` unit tests) to call their
+  demonstration function **twice**, so the single-use inliner leaves it in
+  place — keeping each fixture focused on the pass it is meant to exercise
+  (rename / treeshake / fold) rather than having the function inlined away.
+- Version bumped `0.144.0 → 0.145.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
 ## [0.144.0] - 2026-06-16
 
 ### Changed (CLOC12.161 — ADVANCED now optimizes instead of being a no-op)

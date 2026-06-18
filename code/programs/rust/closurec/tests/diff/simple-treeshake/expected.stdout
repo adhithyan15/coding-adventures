@@ -1,2 +1,1 @@
-function live(){return 2};log(live());
-
+function live(){return 2};log(live());log(live());
