@@ -43,6 +43,7 @@ use smart_home_integration_catalog::{
     activation_delivery_manifests_from_release_packets, activation_dependency_graph_from_reports,
     activation_deployment_records_from_delivery_manifests, activation_dossiers_from_candidates,
     activation_escalation_cases_from_rollups, activation_evidence_from_candidates,
+    activation_evidence_remediation_items_at_or_before_priority,
     activation_execution_packets_from_handoff_packages,
     activation_forecasts_from_timeline_milestones, activation_guardrail_checks_from_rollups,
     activation_handoff_packages_from_runbook_entries, activation_health_from_candidates,
@@ -91,7 +92,9 @@ use smart_home_integration_catalog::{
     IntegrationActivationDossierItem, IntegrationActivationDossierSummary,
     IntegrationActivationEscalationCase, IntegrationActivationEscalationCaseKind,
     IntegrationActivationEscalationSummary, IntegrationActivationEvidenceItem,
-    IntegrationActivationEvidenceKind, IntegrationActivationEvidenceStatus,
+    IntegrationActivationEvidenceKind, IntegrationActivationEvidenceLane,
+    IntegrationActivationEvidenceRemediationItem, IntegrationActivationEvidenceRemediationKind,
+    IntegrationActivationEvidenceRemediationSummary, IntegrationActivationEvidenceStatus,
     IntegrationActivationEvidenceSummary, IntegrationActivationExecutionPacket,
     IntegrationActivationExecutionStatus, IntegrationActivationExecutionSummary,
     IntegrationActivationForecastAction, IntegrationActivationForecastItem,
@@ -290,6 +293,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_TOOL_ID: &str =
     "smart_home.list_integration_activation_evidence";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_evidence_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_TOOL_ID: &str =
+    "smart_home.list_integration_activation_evidence_remediation";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_evidence_remediation_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID: &str =
     "smart_home.list_integration_activation_dossiers";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID: &str =
@@ -710,6 +717,22 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SUMMARY_TOOL_ID => {
                     let query = integration_activation_evidence_query(&arguments)?;
                     Ok(get_integration_activation_evidence_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_TOOL_ID => {
+                    let query = integration_activation_evidence_remediation_query(&arguments)?;
+                    Ok(
+                        list_integration_activation_evidence_remediation_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_evidence_remediation_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_evidence_remediation_summary_output_handler_output(
+                            query,
+                        ),
+                    )
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID => {
                     let query = integration_activation_dossier_query(&arguments)?;
@@ -2323,6 +2346,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation evidence summary",
             "Return compact counts for activation evidence supporting approvals, policy review, and blocker decisions.",
             integration_activation_evidence_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_TOOL_ID,
+            "List smart-home integration activation evidence remediation",
+            "List D23A catalog-owned activation evidence remediation lanes before Chief-specific escalation or owner-lane response work.",
+            integration_activation_evidence_remediation_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_evidence_remediation", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_evidence_remediation",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation evidence remediation summary",
+            "Return compact counts for D23A activation evidence remediation lanes, missing inputs, blocked integrations, and human-review pressure.",
+            integration_activation_evidence_remediation_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -6498,6 +6555,16 @@ struct IntegrationActivationEvidenceQuery {
     blocked_only: Option<bool>,
     requires_attention: Option<bool>,
     evidence_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationEvidenceRemediationQuery {
+    candidates: IntegrationActivationCandidateQuery,
+    remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    lane: Option<IntegrationActivationEvidenceLane>,
+    requires_human_review: Option<bool>,
+    has_missing_inputs: Option<bool>,
+    remediation_limit: Option<usize>,
 }
 
 #[derive(Debug, Clone)]
@@ -14253,6 +14320,39 @@ fn integration_activation_evidence_query(
     })
 }
 
+fn integration_activation_evidence_remediation_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationEvidenceRemediationQuery, ToolCallError> {
+    let remediation_kind = optional_string(arguments, "evidence_remediation_kind")?
+        .or(optional_string(arguments, "remediation_kind")?)
+        .map(|label| parse_activation_evidence_remediation_kind(&label))
+        .transpose()?;
+    let lane = optional_string(arguments, "evidence_remediation_lane")?
+        .or(optional_string(arguments, "lane")?)
+        .map(|label| parse_activation_evidence_lane(&label))
+        .transpose()?;
+    let remediation_limit = optional_u64(arguments, "evidence_remediation_limit")?
+        .or(optional_u64(arguments, "remediation_limit")?)
+        .map(|value| value as usize);
+
+    Ok(IntegrationActivationEvidenceRemediationQuery {
+        candidates: integration_activation_candidate_query(arguments)?,
+        remediation_kind,
+        lane,
+        requires_human_review: optional_bool(
+            arguments,
+            "evidence_remediation_requires_human_review",
+        )?
+        .or(optional_bool(
+            arguments,
+            "remediation_requires_human_review",
+        )?),
+        has_missing_inputs: optional_bool(arguments, "evidence_remediation_has_missing_inputs")?
+            .or(optional_bool(arguments, "remediation_has_missing_inputs")?),
+        remediation_limit,
+    })
+}
+
 fn integration_activation_dossier_query(
     arguments: &JsonValue,
 ) -> Result<IntegrationActivationDossierQuery, ToolCallError> {
@@ -16655,6 +16755,39 @@ fn integration_activation_evidence_for_query(
     }
 
     (evidence, catalog_count)
+}
+
+fn integration_activation_evidence_remediation_items_for_query(
+    query: &IntegrationActivationEvidenceRemediationQuery,
+) -> (Vec<IntegrationActivationEvidenceRemediationItem>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let readiness = &query.candidates.readiness;
+    let mut remediations = activation_evidence_remediation_items_at_or_before_priority(
+        &catalog,
+        readiness.priority_at_or_before,
+        &readiness.available_primitives,
+        &readiness.allowed_capabilities,
+        &readiness.enabled_integrations,
+    );
+
+    if let Some(remediation_kind) = query.remediation_kind {
+        remediations.retain(|item| item.remediation_kind == remediation_kind);
+    }
+    if let Some(lane) = query.lane {
+        remediations.retain(|item| item.lane == lane);
+    }
+    if let Some(requires_human_review) = query.requires_human_review {
+        remediations.retain(|item| item.requires_human_review() == requires_human_review);
+    }
+    if let Some(has_missing_inputs) = query.has_missing_inputs {
+        remediations.retain(|item| item.has_missing_inputs() == has_missing_inputs);
+    }
+    if let Some(limit) = query.remediation_limit {
+        remediations.truncate(limit);
+    }
+
+    (remediations, catalog_count)
 }
 
 fn integration_activation_dossiers_for_query(
@@ -19992,6 +20125,92 @@ fn get_integration_activation_evidence_summary_output_handler_output(
                 integer(summary.blocking_evidence as i64),
             ),
             ("review_evidence", integer(summary.review_evidence as i64)),
+        ]),
+    )
+}
+
+fn list_integration_activation_evidence_remediation_output_handler_output(
+    query: IntegrationActivationEvidenceRemediationQuery,
+) -> ToolHandlerOutput {
+    let (remediations, catalog_count) =
+        integration_activation_evidence_remediation_items_for_query(&query);
+    let summary = IntegrationActivationEvidenceRemediationSummary::from_items(remediations.iter());
+    let count = remediations.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_evidence_remediation",
+            JsonValue::Array(
+                remediations
+                    .iter()
+                    .map(activation_evidence_remediation_item_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_evidence_remediation_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_evidence_remediation"),
+            ),
+            ("remediations", integer(count as i64)),
+            (
+                "blocked_integrations",
+                integer(summary.total_blocked_integrations as i64),
+            ),
+            (
+                "readiness_remediation_items",
+                integer(summary.readiness_remediation_items as i64),
+            ),
+            (
+                "requires_human_review",
+                JsonValue::Bool(summary.requires_human_review()),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_evidence_remediation_summary_output_handler_output(
+    query: IntegrationActivationEvidenceRemediationQuery,
+) -> ToolHandlerOutput {
+    let (remediations, _) = integration_activation_evidence_remediation_items_for_query(&query);
+    let summary = IntegrationActivationEvidenceRemediationSummary::from_items(remediations.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_evidence_remediation_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_evidence_remediation_summary"),
+            ),
+            (
+                "total_remediation_items",
+                integer(summary.total_remediation_items as i64),
+            ),
+            (
+                "blocked_integrations",
+                integer(summary.total_blocked_integrations as i64),
+            ),
+            (
+                "readiness_remediation_items",
+                integer(summary.readiness_remediation_items as i64),
+            ),
+            (
+                "requires_human_review",
+                JsonValue::Bool(summary.requires_human_review()),
+            ),
         ]),
     )
 }
@@ -28334,6 +28553,173 @@ fn integration_activation_evidence_summary_json(
         (
             "requires_attention",
             JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
+fn activation_evidence_remediation_item_json(
+    remediation: &IntegrationActivationEvidenceRemediationItem,
+) -> JsonValue {
+    object([
+        ("sequence", integer(remediation.sequence as i64)),
+        (
+            "remediation_kind",
+            string(remediation.remediation_kind.as_str()),
+        ),
+        ("lane", string(remediation.lane.as_str())),
+        ("priority", integer(remediation.priority as i64)),
+        (
+            "blocked_integration_count",
+            integer(remediation.blocked_integration_count as i64),
+        ),
+        (
+            "missing_prerequisite_count",
+            integer(remediation.missing_prerequisite_count as i64),
+        ),
+        (
+            "missing_primitive_count",
+            integer(remediation.missing_primitive_count as i64),
+        ),
+        (
+            "missing_capability_count",
+            integer(remediation.missing_capability_count as i64),
+        ),
+        (
+            "missing_dependency_count",
+            integer(remediation.missing_dependency_count as i64),
+        ),
+        (
+            "local_only_integrations",
+            integer(remediation.local_only_integrations as i64),
+        ),
+        (
+            "cloud_required_integrations",
+            integer(remediation.cloud_required_integrations as i64),
+        ),
+        (
+            "human_review_integrations",
+            integer(remediation.human_review_integrations as i64),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(remediation.highest_policy_tier)),
+        ),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                remediation
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        ("has_blockers", JsonValue::Bool(remediation.has_blockers())),
+        (
+            "requires_human_review",
+            JsonValue::Bool(remediation.requires_human_review()),
+        ),
+        (
+            "has_missing_inputs",
+            JsonValue::Bool(remediation.has_missing_inputs()),
+        ),
+    ])
+}
+
+fn integration_activation_evidence_remediation_summary_json(
+    summary: &IntegrationActivationEvidenceRemediationSummary,
+) -> JsonValue {
+    object([
+        (
+            "total_remediation_items",
+            integer(summary.total_remediation_items as i64),
+        ),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "total_blocked_integrations",
+            integer(summary.total_blocked_integrations as i64),
+        ),
+        (
+            "catalog_remediation_items",
+            integer(summary.catalog_remediation_items as i64),
+        ),
+        (
+            "activation_plan_remediation_items",
+            integer(summary.activation_plan_remediation_items as i64),
+        ),
+        (
+            "readiness_remediation_items",
+            integer(summary.readiness_remediation_items as i64),
+        ),
+        (
+            "policy_remediation_items",
+            integer(summary.policy_remediation_items as i64),
+        ),
+        (
+            "local_boundary_remediation_items",
+            integer(summary.local_boundary_remediation_items as i64),
+        ),
+        (
+            "missing_prerequisite_count",
+            integer(summary.missing_prerequisite_count as i64),
+        ),
+        (
+            "missing_primitive_count",
+            integer(summary.missing_primitive_count as i64),
+        ),
+        (
+            "missing_capability_count",
+            integer(summary.missing_capability_count as i64),
+        ),
+        (
+            "missing_dependency_count",
+            integer(summary.missing_dependency_count as i64),
+        ),
+        (
+            "local_only_integrations",
+            integer(summary.local_only_integrations as i64),
+        ),
+        (
+            "cloud_required_integrations",
+            integer(summary.cloud_required_integrations as i64),
+        ),
+        (
+            "human_review_integrations",
+            integer(summary.human_review_integrations as i64),
+        ),
+        (
+            "first_remediation_priority",
+            summary
+                .first_remediation_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_remediation_kind",
+            summary
+                .next_remediation_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_remediations",
+            JsonValue::Bool(summary.has_remediations()),
+        ),
+        (
+            "has_readiness_remediation",
+            JsonValue::Bool(summary.has_readiness_remediation()),
+        ),
+        (
+            "requires_human_review",
+            JsonValue::Bool(summary.requires_human_review()),
         ),
     ])
 }
@@ -42914,6 +43300,52 @@ fn parse_activation_response_owner_lane(
     }
 }
 
+fn parse_activation_evidence_lane(
+    label: &str,
+) -> Result<IntegrationActivationEvidenceLane, ToolCallError> {
+    match label {
+        "catalog" | "catalog_evidence" => Ok(IntegrationActivationEvidenceLane::Catalog),
+        "activation_plan" | "plan" | "activation" => {
+            Ok(IntegrationActivationEvidenceLane::ActivationPlan)
+        }
+        "readiness" | "readiness_inputs" | "inputs" => {
+            Ok(IntegrationActivationEvidenceLane::Readiness)
+        }
+        "policy" | "policy_review" | "security" => Ok(IntegrationActivationEvidenceLane::Policy),
+        "local_boundary" | "boundary" | "local" => {
+            Ok(IntegrationActivationEvidenceLane::LocalBoundary)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation evidence lane `{label}`"
+        ))),
+    }
+}
+
+fn parse_activation_evidence_remediation_kind(
+    label: &str,
+) -> Result<IntegrationActivationEvidenceRemediationKind, ToolCallError> {
+    match label {
+        "complete_catalog_evidence" | "catalog" | "catalog_evidence" => {
+            Ok(IntegrationActivationEvidenceRemediationKind::CompleteCatalogEvidence)
+        }
+        "complete_activation_plan" | "activation_plan" | "plan" => {
+            Ok(IntegrationActivationEvidenceRemediationKind::CompleteActivationPlan)
+        }
+        "supply_readiness_inputs" | "readiness" | "readiness_inputs" | "inputs" => {
+            Ok(IntegrationActivationEvidenceRemediationKind::SupplyReadinessInputs)
+        }
+        "complete_policy_review" | "policy" | "policy_review" | "security" => {
+            Ok(IntegrationActivationEvidenceRemediationKind::CompletePolicyReview)
+        }
+        "resolve_local_boundary" | "local_boundary" | "boundary" | "local" => {
+            Ok(IntegrationActivationEvidenceRemediationKind::ResolveLocalBoundary)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation evidence remediation kind `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_remediation_kind(
     label: &str,
 ) -> Result<IntegrationActivationRemediationKind, ToolCallError> {
@@ -44586,6 +45018,54 @@ fn integration_activation_evidence_query_schema() -> JsonSchema {
         properties.push(SchemaProperty::new(
             "requires_attention",
             JsonSchema::Boolean,
+        ));
+    }
+    schema
+}
+
+fn integration_activation_evidence_remediation_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_candidate_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        if let Some(limit) = properties
+            .iter_mut()
+            .find(|property| property.name == "limit")
+        {
+            limit.name = "evidence_remediation_limit".to_string();
+        }
+        properties.push(SchemaProperty::new(
+            "evidence_remediation_kind",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new("remediation_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "evidence_remediation_lane",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new("lane", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "evidence_remediation_requires_human_review",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "remediation_requires_human_review",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "evidence_remediation_has_missing_inputs",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "remediation_has_missing_inputs",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "remediation_limit",
+            JsonSchema::Integer,
         ));
     }
     schema
@@ -46999,7 +47479,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 179);
+        assert_eq!(definitions.len(), 181);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -47270,6 +47750,12 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -47516,7 +48002,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            171
+            173
         );
         assert_eq!(
             export
@@ -47541,6 +48027,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_APPROVAL_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -48156,11 +48650,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(179))
+            Some(&integer(181))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(171))
+            Some(&integer(173))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -49817,6 +50311,180 @@ mod tests {
         );
         assert_eq!(
             field(activation_evidence_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let list_activation_evidence_remediation_request = request(
+            "call-list-integration-activation-evidence-remediation",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "evidence_remediation_kind",
+                    string("supply_readiness_inputs"),
+                ),
+                ("evidence_remediation_lane", string("readiness")),
+                (
+                    "evidence_remediation_requires_human_review",
+                    JsonValue::Bool(true),
+                ),
+                (
+                    "evidence_remediation_has_missing_inputs",
+                    JsonValue::Bool(true),
+                ),
+                ("evidence_remediation_limit", integer(3)),
+            ]),
+            5_900,
+        );
+        let list_activation_evidence_remediation_trace =
+            tool_runtime.invoke_with_events(&list_activation_evidence_remediation_request);
+        assert!(list_activation_evidence_remediation_trace.result.ok);
+        assert_eq!(
+            list_activation_evidence_remediation_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_evidence_remediation_output =
+            list_activation_evidence_remediation_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let activation_evidence_remediation_count =
+            integer_value(field(list_activation_evidence_remediation_output, "count").unwrap())
+                .unwrap();
+        assert!((1..=3).contains(&activation_evidence_remediation_count));
+        let activation_evidence_remediation_summary =
+            field(list_activation_evidence_remediation_output, "summary").unwrap();
+        assert_eq!(
+            field(
+                activation_evidence_remediation_summary,
+                "total_remediation_items"
+            ),
+            Some(&integer(activation_evidence_remediation_count))
+        );
+        assert_eq!(
+            field(
+                activation_evidence_remediation_summary,
+                "next_remediation_kind"
+            ),
+            Some(&string("supply_readiness_inputs"))
+        );
+        assert_eq!(
+            field(
+                activation_evidence_remediation_summary,
+                "has_readiness_remediation"
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(
+                activation_evidence_remediation_summary,
+                "requires_human_review"
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_evidence_remediation = array_item(
+            field(
+                list_activation_evidence_remediation_output,
+                "activation_evidence_remediation",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_evidence_remediation, "remediation_kind"),
+            Some(&string("supply_readiness_inputs"))
+        );
+        assert_eq!(
+            field(activation_evidence_remediation, "lane"),
+            Some(&string("readiness"))
+        );
+        assert_eq!(
+            field(activation_evidence_remediation, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_evidence_remediation, "has_missing_inputs"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_evidence_remediation, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_evidence_remediation_summary_request = request(
+            "call-integration-activation-evidence-remediation-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("evidence_remediation_lane", string("readiness")),
+            ]),
+            5_901,
+        );
+        let activation_evidence_remediation_summary_trace =
+            tool_runtime.invoke_with_events(&activation_evidence_remediation_summary_request);
+        assert!(activation_evidence_remediation_summary_trace.result.ok);
+        assert_eq!(
+            activation_evidence_remediation_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_evidence_remediation_summary_output =
+            activation_evidence_remediation_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let activation_evidence_remediation_rollup =
+            field(activation_evidence_remediation_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(
+                field(
+                    activation_evidence_remediation_rollup,
+                    "total_remediation_items"
+                )
+                .unwrap()
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(
+                activation_evidence_remediation_rollup,
+                "has_readiness_remediation"
+            ),
             Some(&JsonValue::Bool(true))
         );
 

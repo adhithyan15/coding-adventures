@@ -1481,6 +1481,8 @@ pub enum SmartHomeTool {
     GetIntegrationActivationDecisionSummary,
     ListIntegrationActivationEvidence,
     GetIntegrationActivationEvidenceSummary,
+    ListIntegrationActivationEvidenceRemediation,
+    GetIntegrationActivationEvidenceRemediationSummary,
     ListIntegrationActivationDossiers,
     GetIntegrationActivationDossierSummary,
     ListIntegrationActivationReadouts,
@@ -1726,6 +1728,12 @@ impl SmartHomeTool {
             }
             Self::GetIntegrationActivationEvidenceSummary => {
                 read_tool("smart_home.get_integration_activation_evidence_summary")
+            }
+            Self::ListIntegrationActivationEvidenceRemediation => {
+                read_tool("smart_home.list_integration_activation_evidence_remediation")
+            }
+            Self::GetIntegrationActivationEvidenceRemediationSummary => {
+                read_tool("smart_home.get_integration_activation_evidence_remediation_summary")
             }
             Self::ListIntegrationActivationDossiers => {
                 read_tool("smart_home.list_integration_activation_dossiers")
@@ -2678,6 +2686,8 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetIntegrationActivationDecisionSummary,
         SmartHomeTool::ListIntegrationActivationEvidence,
         SmartHomeTool::GetIntegrationActivationEvidenceSummary,
+        SmartHomeTool::ListIntegrationActivationEvidenceRemediation,
+        SmartHomeTool::GetIntegrationActivationEvidenceRemediationSummary,
         SmartHomeTool::ListIntegrationActivationDossiers,
         SmartHomeTool::GetIntegrationActivationDossierSummary,
         SmartHomeTool::ListIntegrationActivationReadouts,
@@ -3616,7 +3626,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 179);
+        assert_eq!(catalog.len(), 181);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_integrations"
@@ -3772,6 +3782,14 @@ mod tests {
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
             == "smart_home.get_integration_activation_evidence_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_evidence_remediation"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_evidence_remediation_summary"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
@@ -4346,15 +4364,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 179);
-        assert_eq!(summary.read_tools, 171);
+        assert_eq!(summary.total_tools, 181);
+        assert_eq!(summary.read_tools, 173);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 171);
+        assert_eq!(summary.read_only_tier_tools, 173);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 179);
+        assert_eq!(summary.total_required_capabilities, 181);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());
