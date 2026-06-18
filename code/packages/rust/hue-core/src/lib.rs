@@ -10923,6 +10923,167 @@ pub fn hue_package_release_readiness_evidence_summary(
     HuePackageReleaseReadinessEvidenceSummary::from_pairing_plan(plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseEvidenceIndexSummary {
+    pub release_readiness_evidence_summary: HuePackageReleaseReadinessEvidenceSummary,
+    pub required_release_evidence_index_check_count: usize,
+    pub passed_release_evidence_index_check_count: usize,
+    pub blocked_release_evidence_index_check_count: usize,
+    pub indexed_release_readiness_evidence_check_count: usize,
+    pub indexed_archive_evidence_ledger_check_count: usize,
+    pub blocked_indexed_release_evidence_check_count: usize,
+    pub blocked_indexed_archive_evidence_ledger_check_count: usize,
+    pub release_readiness_evidence_ready: bool,
+    pub runtime_evidence_ready: bool,
+    pub archive_evidence_ready: bool,
+    pub release_closeout_ready: bool,
+    pub operations_ready: bool,
+    pub release_evidence_index_ready: bool,
+}
+
+impl HuePackageReleaseEvidenceIndexSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_release_readiness_evidence_summary(
+            hue_package_release_readiness_evidence_summary(plan),
+        )
+    }
+
+    pub fn from_release_readiness_evidence_summary(
+        release_readiness_evidence_summary: HuePackageReleaseReadinessEvidenceSummary,
+    ) -> Self {
+        let release_readiness_evidence_ready =
+            release_readiness_evidence_summary.is_release_readiness_evidence_ready();
+        let runtime_evidence_ready = release_readiness_evidence_summary.worker_process_ready
+            && release_readiness_evidence_summary.command_flow_ready
+            && release_readiness_evidence_summary.pairing_flow_ready
+            && release_readiness_evidence_summary.event_stream_ready
+            && release_readiness_evidence_summary.physical_presence_required
+            && release_readiness_evidence_summary.package_release_ready;
+        let archive_evidence_ready = release_readiness_evidence_summary
+            .release_archive_evidence_ledger_ready
+            && release_readiness_evidence_summary.release_archive_evidence_ready
+            && release_readiness_evidence_summary.release_archive_attestation_ready
+            && release_readiness_evidence_summary.release_archive_confirmation_ready
+            && release_readiness_evidence_summary.release_archive_finalization_ready
+            && release_readiness_evidence_summary.release_archive_settlement_ready
+            && release_readiness_evidence_summary.release_archive_reconciliation_ready
+            && release_readiness_evidence_summary.release_archive_replay_ready
+            && release_readiness_evidence_summary.release_archive_recovery_ready
+            && release_readiness_evidence_summary.release_archive_restore_ready
+            && release_readiness_evidence_summary.release_archive_load_ready
+            && release_readiness_evidence_summary.release_archive_ingest_ready
+            && release_readiness_evidence_summary.release_archive_import_ready
+            && release_readiness_evidence_summary.release_archive_export_ready
+            && release_readiness_evidence_summary.release_archive_distribution_ready
+            && release_readiness_evidence_summary.release_archive_acceptance_ready
+            && release_readiness_evidence_summary.release_archive_adoption_ready
+            && release_readiness_evidence_summary.release_archive_rollout_ready
+            && release_readiness_evidence_summary.release_archive_activation_ready
+            && release_readiness_evidence_summary.release_archive_approval_ready
+            && release_readiness_evidence_summary.release_archive_certification_ready
+            && release_readiness_evidence_summary.release_archive_validation_ready
+            && release_readiness_evidence_summary.release_archive_verification_ready
+            && release_readiness_evidence_summary.release_archive_publication_ready
+            && release_readiness_evidence_summary.release_archive_completion_ready
+            && release_readiness_evidence_summary.release_archive_supervisor_ready
+            && release_readiness_evidence_summary.release_archive_operator_ready
+            && release_readiness_evidence_summary.release_archive_dispatch_ready
+            && release_readiness_evidence_summary.release_archive_handoff_ready
+            && release_readiness_evidence_summary.release_archive_closure_ready
+            && release_readiness_evidence_summary.release_archive_signoff_ready
+            && release_readiness_evidence_summary.release_archive_ready;
+        let release_closeout_ready = release_readiness_evidence_summary.release_closure_ready
+            && release_readiness_evidence_summary.release_signoff_ready
+            && release_readiness_evidence_summary.release_audit_ready;
+        let operations_ready = release_readiness_evidence_summary.operator_ready
+            && release_readiness_evidence_summary.coordination_ready
+            && release_readiness_evidence_summary.publish_gate_ready;
+        let checks = [
+            release_readiness_evidence_ready,
+            runtime_evidence_ready,
+            archive_evidence_ready,
+            release_closeout_ready,
+            operations_ready,
+        ];
+        let passed_release_evidence_index_check_count =
+            checks.iter().filter(|ready| **ready).count();
+        let required_release_evidence_index_check_count = checks.len();
+        let blocked_release_evidence_index_check_count =
+            required_release_evidence_index_check_count - passed_release_evidence_index_check_count;
+        let release_evidence_index_ready = blocked_release_evidence_index_check_count == 0;
+        let indexed_release_readiness_evidence_check_count =
+            release_readiness_evidence_summary.required_release_readiness_evidence_check_count;
+        let indexed_archive_evidence_ledger_check_count = release_readiness_evidence_summary
+            .archive_evidence_ledger_summary
+            .required_archive_evidence_ledger_check_count;
+        let blocked_indexed_release_evidence_check_count =
+            release_readiness_evidence_summary.blocked_release_readiness_evidence_check_count;
+        let blocked_indexed_archive_evidence_ledger_check_count =
+            release_readiness_evidence_summary
+                .archive_evidence_ledger_summary
+                .blocked_archive_evidence_ledger_check_count;
+
+        Self {
+            release_readiness_evidence_summary,
+            required_release_evidence_index_check_count,
+            passed_release_evidence_index_check_count,
+            blocked_release_evidence_index_check_count,
+            indexed_release_readiness_evidence_check_count,
+            indexed_archive_evidence_ledger_check_count,
+            blocked_indexed_release_evidence_check_count,
+            blocked_indexed_archive_evidence_ledger_check_count,
+            release_readiness_evidence_ready,
+            runtime_evidence_ready,
+            archive_evidence_ready,
+            release_closeout_ready,
+            operations_ready,
+            release_evidence_index_ready,
+        }
+    }
+
+    pub fn is_release_evidence_index_ready(self) -> bool {
+        self.release_evidence_index_ready
+    }
+
+    pub fn has_blocked_release_evidence_index_checks(self) -> bool {
+        self.blocked_release_evidence_index_check_count > 0
+    }
+
+    pub fn has_blocked_indexed_release_evidence_checks(self) -> bool {
+        self.blocked_indexed_release_evidence_check_count > 0
+    }
+
+    pub fn has_blocked_indexed_archive_evidence_ledger_checks(self) -> bool {
+        self.blocked_indexed_archive_evidence_ledger_check_count > 0
+    }
+
+    pub fn needs_release_readiness_evidence(self) -> bool {
+        !self.release_readiness_evidence_ready
+    }
+
+    pub fn needs_runtime_evidence(self) -> bool {
+        !self.runtime_evidence_ready
+    }
+
+    pub fn needs_archive_evidence(self) -> bool {
+        !self.archive_evidence_ready
+    }
+
+    pub fn needs_release_closeout(self) -> bool {
+        !self.release_closeout_ready
+    }
+
+    pub fn needs_operations(self) -> bool {
+        !self.operations_ready
+    }
+}
+
+pub fn hue_package_release_evidence_index_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseEvidenceIndexSummary {
+    HuePackageReleaseEvidenceIndexSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -20047,5 +20208,98 @@ mod tests {
         assert!(summary.needs_operator_readiness());
         assert!(summary.needs_coordination());
         assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_evidence_index_summary_reports_ready_release_evidence_index() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_evidence_index_summary(&plan);
+
+        assert_eq!(
+            summary.release_readiness_evidence_summary,
+            hue_package_release_readiness_evidence_summary(&plan)
+        );
+        assert_eq!(summary.required_release_evidence_index_check_count, 5);
+        assert_eq!(summary.passed_release_evidence_index_check_count, 5);
+        assert_eq!(summary.blocked_release_evidence_index_check_count, 0);
+        assert_eq!(summary.indexed_release_readiness_evidence_check_count, 44);
+        assert_eq!(summary.indexed_archive_evidence_ledger_check_count, 37);
+        assert_eq!(summary.blocked_indexed_release_evidence_check_count, 0);
+        assert_eq!(
+            summary.blocked_indexed_archive_evidence_ledger_check_count,
+            0
+        );
+        assert!(summary.release_readiness_evidence_ready);
+        assert!(summary.runtime_evidence_ready);
+        assert!(summary.archive_evidence_ready);
+        assert!(summary.release_closeout_ready);
+        assert!(summary.operations_ready);
+        assert!(summary.release_evidence_index_ready);
+        assert!(summary.is_release_evidence_index_ready());
+        assert!(!summary.has_blocked_release_evidence_index_checks());
+        assert!(!summary.has_blocked_indexed_release_evidence_checks());
+        assert!(!summary.has_blocked_indexed_archive_evidence_ledger_checks());
+        assert!(!summary.needs_release_readiness_evidence());
+        assert!(!summary.needs_runtime_evidence());
+        assert!(!summary.needs_archive_evidence());
+        assert!(!summary.needs_release_closeout());
+        assert!(!summary.needs_operations());
+    }
+
+    #[test]
+    fn hue_package_release_evidence_index_summary_routes_blocked_release_evidence_index() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseEvidenceIndexSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_release_evidence_index_check_count, 5);
+        assert_eq!(summary.passed_release_evidence_index_check_count, 0);
+        assert_eq!(summary.blocked_release_evidence_index_check_count, 5);
+        assert_eq!(summary.indexed_release_readiness_evidence_check_count, 44);
+        assert_eq!(summary.indexed_archive_evidence_ledger_check_count, 37);
+        assert_eq!(summary.blocked_indexed_release_evidence_check_count, 42);
+        assert_eq!(
+            summary.blocked_indexed_archive_evidence_ledger_check_count,
+            37
+        );
+        assert!(!summary.release_readiness_evidence_ready);
+        assert!(!summary.runtime_evidence_ready);
+        assert!(!summary.archive_evidence_ready);
+        assert!(!summary.release_closeout_ready);
+        assert!(!summary.operations_ready);
+        assert!(!summary.release_evidence_index_ready);
+        assert!(!summary.is_release_evidence_index_ready());
+        assert!(summary.has_blocked_release_evidence_index_checks());
+        assert!(summary.has_blocked_indexed_release_evidence_checks());
+        assert!(summary.has_blocked_indexed_archive_evidence_ledger_checks());
+        assert!(summary.needs_release_readiness_evidence());
+        assert!(summary.needs_runtime_evidence());
+        assert!(summary.needs_archive_evidence());
+        assert!(summary.needs_release_closeout());
+        assert!(summary.needs_operations());
     }
 }
