@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.3.0] - 2026-06-17
+
+### Added (CLOC13.B.1 — real call-site substitution)
+- `InlinePass::run` is now a **real transform**: it inlines single-use top-level leaf functions whose body is exactly `{ return EXPR; }`, replacing the call with the substituted body. `log(double(7))` for `function double(x) { return x * 2; }` becomes `log(7 * 2)` (and the now-dead `double` declaration is removed by the later remove-unused-vars / treeshake passes — this pass deliberately leaves it in place).
+- The implementation is **self-contained** (its own name-based shadow + use analysis over the Phase-1 AST), mirroring the `rename` pass's philosophy — it no longer relies on `closure-scope-analyzer`'s candidate scan (which keyed on optional per-node CvIds that the bridge does not populate).
+
+### The provably-safe slice (every hard inlining hazard made structurally impossible)
+A call `f(a₁, …, aₙ)` is inlined only when ALL hold:
+1. **`f` is a top-level plain `function`** (not generator / not `async`) — no enclosing scope to capture, no resumable state.
+2. **`f`'s body is exactly `{ return EXPR; }`** — substitution is a pure expression-for-expression swap; no locals/branches to splice.
+3. **Every identifier in `EXPR` is one of `f`'s parameters** — the capture guard. No free identifiers ⇒ no global capture, no `this`/`arguments`, and recursion excluded for free (a self-call makes `f` a free identifier).
+4. **`f`'s name is declared exactly once in the whole program** — no shadowing, so every use of the identifier resolves to this function and can be counted/located by name.
+5. **`f` is used exactly once, and that use is the call**, with `arguments.len() == params.len()` — the unambiguous single-use size win.
+6. **Every argument is side-effect-free** (a literal or bare identifier) — substituting for a parameter used zero/one/many times can neither drop nor duplicate a side effect.
+
+Everything outside this subset is left untouched (`changed` stays `false`). The `changed = true` it now returns when it does inline is safe under `IterationPolicy::FixedPoint`: each round strictly removes a single-use callee's only reference, so the candidate set shrinks monotonically and the fixed point is reached in finitely many steps.
+
+### Precedence
+- Substitution operates on the typed AST, so the precedence-aware `closure-emitter` parenthesizes correctly — e.g. inlining a `BinaryExpression` body into a higher-precedence position emits the necessary parens from the tree structure.
+
+### Tests
+- 15 new source → bridge → inline → emit roundtrip tests covering the positive cases (single-use, identifier args, two params, computed members, nested-call arguments, property-name preservation) and every rejection (multi-use, recursive, free global, shadowed name, arity mismatch, side-effecting argument, non-call value use, multi-statement body).
+
+### Dependencies
+- Removed the (now unused) `closure-scope-analyzer`/`serde_json`/`type-sidecar`/`correlation-vector` reliance from the transform path; kept as deps for parity with sibling pass crates. Added dev-deps `coding-adventures-javascript-parser` and `coding-adventures-closure-emitter` for the roundtrip tests. Crate bumped `0.2.0 → 0.3.0`.
+
 ## [0.2.0] - 2026-06-01
 
 ### Added (CLOC13.B — consume `closure-scope-analyzer`)

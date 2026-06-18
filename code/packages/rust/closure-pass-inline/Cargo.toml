@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-inline"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Function-inlining pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Substitutes small or single-use function bodies at their call sites to enable downstream folding and shrink call overhead."
 
@@ -15,3 +15,7 @@ serde_json = "1"
 [dev-dependencies]
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constant-fold" }
+# Test the real source -> bridge -> inline -> emit roundtrip against the
+# actual AST shape the parser produces (not hand-built ASTs).
+coding-adventures-javascript-parser = { path = "../javascript-parser" }
+coding-adventures-closure-emitter = { path = "../closure-emitter" }
