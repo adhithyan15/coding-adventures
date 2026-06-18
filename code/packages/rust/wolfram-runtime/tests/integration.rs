@@ -688,3 +688,91 @@ fn w9_does_not_disturb_existing_forms() {
     assert_eq!(eval("Range[3]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
     assert_eq!(eval("With[{x = 3}, x^2]\n").unwrap(), "Out[1]= 9\n");
 }
+
+// ---------------------------------------------------------------------------
+// W-10 functional-iteration combinators — Nest, NestList, Fold, FoldList
+// ---------------------------------------------------------------------------
+
+/// `Nest[f, x, n]` applies a *symbolic* `f` `n` times, building the literal nest.
+#[test]
+fn w10_nest_symbolic() {
+    assert_eq!(eval("Nest[f, x, 3]\n").unwrap(), "Out[1]= f[f[f[x]]]\n");
+    // Zero applications is the identity.
+    assert_eq!(eval("Nest[f, x, 0]\n").unwrap(), "Out[1]= x\n");
+}
+
+/// `NestList[f, x, n]` collects the `n + 1` intermediates, seed included.
+#[test]
+fn w10_nest_list_symbolic() {
+    assert_eq!(
+        eval("NestList[f, x, 2]\n").unwrap(),
+        "Out[1]= {x, f[x], f[f[x]]}\n"
+    );
+}
+
+/// `Nest`/`NestList` over a *user-defined* `SetDelayed` function reduce at each
+/// step — the same application path as `Map`. `g[a_] := a + 1` is the canonical
+/// W-10 driver (pure-function `#`/`&` syntax is the planned W-11 item).
+#[test]
+fn w10_nest_list_with_a_user_function() {
+    let mut s = WolframSession::new();
+    s.feed("g[a_] := a + 1\n").unwrap();
+    // NestList[g, 0, 3] → {0, 1, 2, 3}.
+    assert_eq!(s.feed("NestList[g, 0, 3]\n").unwrap(), "Out[2]= {0, 1, 2, 3}\n");
+    // Nest[g, 0, 3] → 3 (the last of those).
+    assert_eq!(s.feed("Nest[g, 0, 3]\n").unwrap(), "Out[3]= 3\n");
+}
+
+/// `Fold[f, x0, list]` is a left fold; with `Plus` it totals.
+#[test]
+fn w10_fold_left_folds() {
+    assert_eq!(eval("Fold[Plus, 0, {1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
+    // Left-associative: ((10 - 1) - 2) - 3 = 4.
+    assert_eq!(
+        eval("Fold[Subtract, 10, {1, 2, 3}]\n").unwrap(),
+        "Out[1]= 4\n"
+    );
+    // Empty list → the seed.
+    assert_eq!(eval("Fold[Plus, 42, {}]\n").unwrap(), "Out[1]= 42\n");
+}
+
+/// `FoldList[f, x0, list]` collects the running accumulations, seed included.
+#[test]
+fn w10_fold_list_running_accumulations() {
+    assert_eq!(
+        eval("FoldList[Plus, 0, {1, 2, 3}]\n").unwrap(),
+        "Out[1]= {0, 1, 3, 6}\n"
+    );
+    // Empty list → just the seed.
+    assert_eq!(eval("FoldList[Plus, 7, {}]\n").unwrap(), "Out[1]= {7}\n");
+}
+
+/// Malformed / DoS forms are left unevaluated (echoed back), never a panic.
+#[test]
+fn w10_malformed_forms_stay_unevaluated() {
+    // Negative count.
+    assert_eq!(
+        eval("Nest[f, x, -1]\n").unwrap(),
+        "Out[1]= Nest[f, x, -1]\n"
+    );
+    // Non-list third argument to Fold.
+    assert_eq!(
+        eval("Fold[Plus, 0, x]\n").unwrap(),
+        "Out[1]= Fold[Plus, 0, x]\n"
+    );
+    // An enormous count is refused before iterating (DoS cap) — a tiny input
+    // (1000001 > MAX_LIST_LENGTH) cannot drive a million-plus evals.
+    assert_eq!(
+        eval("Nest[f, x, 1000001]\n").unwrap(),
+        "Out[1]= Nest[f, x, 1000001]\n"
+    );
+}
+
+/// W-4..W-9 behaviour is unchanged by the W-10 handlers (regression guard).
+#[test]
+fn w10_does_not_disturb_existing_forms() {
+    assert_eq!(eval("1 + 2*3\n").unwrap(), "Out[1]= 7\n");
+    assert_eq!(eval("Map[f, {1, 2}]\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
+    assert_eq!(eval("Total[{1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
+    assert_eq!(eval("With[{x = 3}, x^2]\n").unwrap(), "Out[1]= 9\n");
+}
