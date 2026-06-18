@@ -43,14 +43,16 @@
 //!     `{ "x": 1 }` is currently collapsed to an identifier key by the
 //!     parser bridge, so it is NOT a usable quoting signal — protect such
 //!     names via `--externs` instead.
-//!   * **It is not a [`BUILTIN_PROPERTIES`]** (`length`, `prototype`,
-//!     `toString`, `push`, …). closurec ships no browser/ECMAScript
-//!     externs file, so this list is the default-externs substitute that
-//!     keeps `arr.length` from becoming `arr.a`. It covers the common
-//!     ECMAScript surface but **not the DOM/host** — host property names
-//!     (`innerHTML`, `addEventListener`, …) must be supplied via
-//!     `--externs`. The [`RenamePropertiesPass::new`] do-not-rename set
-//!     extends the built-ins with the externs files' property names.
+//!   * **It is not a bundled built-in** — neither [`BUILTIN_PROPERTIES`]
+//!     (the ECMAScript surface: `length`, `prototype`, `toString`, `push`,
+//!     …) nor [`DOM_PROPERTIES`] (the browser/host surface: `innerHTML`,
+//!     `addEventListener`, `onclick`, `classList`, …). closurec ships no
+//!     externs file, so these two lists are the default-externs substitute
+//!     that keeps `arr.length` from becoming `arr.a` and `el.innerHTML`
+//!     from becoming `el.a`. They cover the common ECMAScript + DOM surface
+//!     out of the box; vendor-/library-specific external properties still
+//!     need a `--externs` file, which the [`RenamePropertiesPass::new`]
+//!     do-not-rename set unions on top of the bundled lists.
 //!   * **It is longer than one character** (already minimal otherwise).
 //!
 //! **Dynamic computed access (`obj[expr]`) is the author's
@@ -90,12 +92,14 @@ const DEPS: &[&str] = &[];
 /// Reserved words we must never emit as a fresh short name.
 const RESERVED: &[&str] = &["do", "if", "in", "of", "as", "is", "or"];
 
-/// Built-in property names that must never be renamed — the
-/// default-externs substitute (closurec ships no browser/ECMAScript
-/// externs file). Renaming any of these would break code that uses the
-/// standard library (`arr.length`, `x.toString()`, `p.then(...)`, …). The
-/// user's `--externs` files extend this boundary; this list covers the
-/// common ECMAScript surface so the pass is safe by default.
+/// Built-in **ECMAScript** property names that must never be renamed — the
+/// default-externs substitute (closurec ships no externs file). Renaming
+/// any of these would break code that uses the standard library
+/// (`arr.length`, `x.toString()`, `p.then(...)`, …). The browser/host
+/// surface lives in the companion [`DOM_PROPERTIES`] list; both are always
+/// protected, and the user's `--externs` files extend the boundary further.
+/// Together they cover the common ECMAScript + DOM surface so the pass is
+/// safe by default.
 ///
 /// It is intentionally conservative (over-protecting a user-defined
 /// property that happens to share a built-in's name merely forgoes a
@@ -246,6 +250,482 @@ const BUILTIN_PROPERTIES: &[&str] = &[
     "assert",
 ];
 
+/// Curated **DOM / host** property names that must never be renamed — the
+/// part of the external boundary the bundled [`BUILTIN_PROPERTIES`]
+/// (ECMAScript only) used to omit. closurec ships no browser externs file,
+/// so renaming `el.innerHTML`, `node.addEventListener`, or `btn.onclick`
+/// would silently break browser code that the host (the DOM, the event
+/// system, CSSOM, the fetch/XHR stack, storage, …) reads or writes by name.
+///
+/// Like [`BUILTIN_PROPERTIES`] this list is **always protected** in addition
+/// to the externs do-not-rename set, and is deliberately conservative:
+/// over-protecting a user-defined property that happens to share a DOM name
+/// merely forgoes a rename — never a miscompile. It cannot be exhaustive
+/// (host surfaces evolve and vendor-/library-specific properties exist), so
+/// a `--externs` file remains the authoritative boundary; this bundle is the
+/// safety net that covers the common browser surface out of the box.
+///
+/// Grouped by host area for auditability. Names already covered by
+/// [`BUILTIN_PROPERTIES`] (e.g. `length`, `value`, `name`) are not repeated;
+/// the two lists are unioned where the protected set is built.
+const DOM_PROPERTIES: &[&str] = &[
+    // ---- EventTarget / events ----
+    "addEventListener",
+    "removeEventListener",
+    "dispatchEvent",
+    "preventDefault",
+    "stopPropagation",
+    "stopImmediatePropagation",
+    "target",
+    "currentTarget",
+    "relatedTarget",
+    "srcElement",
+    "type",
+    "bubbles",
+    "cancelable",
+    "composed",
+    "defaultPrevented",
+    "eventPhase",
+    "isTrusted",
+    "timeStamp",
+    "detail",
+    "key",
+    "code",
+    "keyCode",
+    "charCode",
+    "which",
+    "altKey",
+    "ctrlKey",
+    "shiftKey",
+    "metaKey",
+    "button",
+    "buttons",
+    "clientX",
+    "clientY",
+    "screenX",
+    "screenY",
+    "pageX",
+    "pageY",
+    "offsetX",
+    "offsetY",
+    "movementX",
+    "movementY",
+    "deltaX",
+    "deltaY",
+    "deltaZ",
+    "deltaMode",
+    "touches",
+    "targetTouches",
+    "changedTouches",
+    "pointerId",
+    "pointerType",
+    "pressure",
+    // ---- common inline event handlers (on*) ----
+    "onclick",
+    "ondblclick",
+    "onmousedown",
+    "onmouseup",
+    "onmousemove",
+    "onmouseover",
+    "onmouseout",
+    "onmouseenter",
+    "onmouseleave",
+    "oncontextmenu",
+    "onwheel",
+    "onkeydown",
+    "onkeyup",
+    "onkeypress",
+    "onfocus",
+    "onblur",
+    "onfocusin",
+    "onfocusout",
+    "onchange",
+    "oninput",
+    "oninvalid",
+    "onsubmit",
+    "onreset",
+    "onselect",
+    "onload",
+    "onunload",
+    "onbeforeunload",
+    "onerror",
+    "onresize",
+    "onscroll",
+    "onhashchange",
+    "onpopstate",
+    "onpageshow",
+    "onpagehide",
+    "onreadystatechange",
+    "ondomcontentloaded",
+    "onanimationstart",
+    "onanimationend",
+    "onanimationiteration",
+    "ontransitionend",
+    "ondragstart",
+    "ondrag",
+    "ondragend",
+    "ondragenter",
+    "ondragover",
+    "ondragleave",
+    "ondrop",
+    "ontouchstart",
+    "ontouchmove",
+    "ontouchend",
+    "ontouchcancel",
+    "onpointerdown",
+    "onpointerup",
+    "onpointermove",
+    "onpointerenter",
+    "onpointerleave",
+    "onmessage",
+    "onopen",
+    "onclose",
+    // ---- Node / Element ----
+    "nodeType",
+    "nodeName",
+    "nodeValue",
+    "textContent",
+    "innerHTML",
+    "outerHTML",
+    "innerText",
+    "outerText",
+    "tagName",
+    "localName",
+    "namespaceURI",
+    "id",
+    "className",
+    "classList",
+    "attributes",
+    "dataset",
+    "style",
+    "title",
+    "lang",
+    "dir",
+    "hidden",
+    "tabIndex",
+    "contentEditable",
+    "isContentEditable",
+    "draggable",
+    "spellcheck",
+    "accessKey",
+    "parentNode",
+    "parentElement",
+    "childNodes",
+    "children",
+    "firstChild",
+    "lastChild",
+    "firstElementChild",
+    "lastElementChild",
+    "nextSibling",
+    "previousSibling",
+    "nextElementSibling",
+    "previousElementSibling",
+    "childElementCount",
+    "ownerDocument",
+    "shadowRoot",
+    "assignedSlot",
+    "appendChild",
+    "removeChild",
+    "replaceChild",
+    "insertBefore",
+    "cloneNode",
+    "contains",
+    "compareDocumentPosition",
+    "normalize",
+    "append",
+    "prepend",
+    "before",
+    "after",
+    "replaceWith",
+    "remove",
+    "insertAdjacentHTML",
+    "insertAdjacentText",
+    "insertAdjacentElement",
+    "getAttribute",
+    "setAttribute",
+    "removeAttribute",
+    "hasAttribute",
+    "hasAttributes",
+    "getAttributeNS",
+    "setAttributeNS",
+    "removeAttributeNS",
+    "toggleAttribute",
+    "getAttributeNames",
+    "querySelector",
+    "querySelectorAll",
+    "getElementById",
+    "getElementsByClassName",
+    "getElementsByTagName",
+    "getElementsByName",
+    "closest",
+    "matches",
+    "getBoundingClientRect",
+    "getClientRects",
+    "scrollIntoView",
+    "scrollTo",
+    "scrollBy",
+    "focus",
+    "blur",
+    "click",
+    "clientWidth",
+    "clientHeight",
+    "clientLeft",
+    "clientTop",
+    "offsetWidth",
+    "offsetHeight",
+    "offsetLeft",
+    "offsetTop",
+    "offsetParent",
+    "scrollWidth",
+    "scrollHeight",
+    "scrollLeft",
+    "scrollTop",
+    // ---- classList / DOMTokenList ----
+    "toggle",
+    "replace",
+    "item",
+    // ---- form / input ----
+    "checked",
+    "selected",
+    "disabled",
+    "readOnly",
+    "required",
+    "multiple",
+    "placeholder",
+    "defaultValue",
+    "defaultChecked",
+    "selectedIndex",
+    "selectedOptions",
+    "options",
+    "elements",
+    "form",
+    "files",
+    "validity",
+    "validationMessage",
+    "willValidate",
+    "checkValidity",
+    "reportValidity",
+    "setCustomValidity",
+    "setSelectionRange",
+    "select",
+    "submit",
+    "reset",
+    "labels",
+    "htmlFor",
+    "action",
+    "method",
+    "enctype",
+    "autocomplete",
+    "autofocus",
+    "maxLength",
+    "minLength",
+    "min",
+    "max",
+    "step",
+    "pattern",
+    // ---- attributes commonly read by name ----
+    "href",
+    "src",
+    "srcset",
+    "alt",
+    "rel",
+    "media",
+    "content",
+    "width",
+    "height",
+    "rows",
+    "cols",
+    "colSpan",
+    "rowSpan",
+    "cellPadding",
+    "cellSpacing",
+    "crossOrigin",
+    "referrerPolicy",
+    "loading",
+    "decoding",
+    "currentSrc",
+    "naturalWidth",
+    "naturalHeight",
+    "complete",
+    // ---- CSSStyleDeclaration ----
+    "cssText",
+    "getPropertyValue",
+    "setProperty",
+    "removeProperty",
+    "getPropertyPriority",
+    // ---- Document ----
+    "documentElement",
+    "head",
+    "body",
+    "title",
+    "URL",
+    "documentURI",
+    "domain",
+    "referrer",
+    "cookie",
+    "readyState",
+    "characterSet",
+    "contentType",
+    "createElement",
+    "createElementNS",
+    "createTextNode",
+    "createComment",
+    "createDocumentFragment",
+    "createEvent",
+    "createRange",
+    "createTreeWalker",
+    "importNode",
+    "adoptNode",
+    "write",
+    "writeln",
+    "execCommand",
+    "elementFromPoint",
+    "getSelection",
+    "hasFocus",
+    "activeElement",
+    "defaultView",
+    "scrollingElement",
+    "visibilityState",
+    "hidden",
+    // ---- Window ----
+    "document",
+    "location",
+    "navigator",
+    "history",
+    "screen",
+    "frames",
+    "parent",
+    "top",
+    "self",
+    "window",
+    "opener",
+    "frameElement",
+    "innerWidth",
+    "innerHeight",
+    "outerWidth",
+    "outerHeight",
+    "scrollX",
+    "scrollY",
+    "pageXOffset",
+    "pageYOffset",
+    "devicePixelRatio",
+    "localStorage",
+    "sessionStorage",
+    "performance",
+    "crypto",
+    "console",
+    "alert",
+    "confirm",
+    "prompt",
+    "open",
+    "close",
+    "print",
+    "focus",
+    "blur",
+    "scroll",
+    "moveTo",
+    "moveBy",
+    "resizeTo",
+    "resizeBy",
+    "requestAnimationFrame",
+    "cancelAnimationFrame",
+    "requestIdleCallback",
+    "cancelIdleCallback",
+    "setTimeout",
+    "clearTimeout",
+    "setInterval",
+    "clearInterval",
+    "getComputedStyle",
+    "matchMedia",
+    "postMessage",
+    "fetch",
+    "btoa",
+    "atob",
+    "structuredClone",
+    "queueMicrotask",
+    "getSelection",
+    // ---- Location ----
+    "protocol",
+    "host",
+    "hostname",
+    "port",
+    "pathname",
+    "search",
+    "hash",
+    "origin",
+    "username",
+    "password",
+    "assign",
+    "reload",
+    "toString",
+    // ---- History ----
+    "pushState",
+    "replaceState",
+    "go",
+    "back",
+    "forward",
+    "scrollRestoration",
+    // ---- Storage ----
+    "getItem",
+    "setItem",
+    "removeItem",
+    "clear",
+    "key",
+    // ---- Navigator ----
+    "userAgent",
+    "platform",
+    "language",
+    "languages",
+    "onLine",
+    "cookieEnabled",
+    "hardwareConcurrency",
+    "deviceMemory",
+    "maxTouchPoints",
+    "sendBeacon",
+    "vibrate",
+    "clipboard",
+    "geolocation",
+    "mediaDevices",
+    "serviceWorker",
+    "permissions",
+    // ---- XHR / fetch / Response ----
+    "responseType",
+    "responseText",
+    "responseXML",
+    "response",
+    "status",
+    "statusText",
+    "withCredentials",
+    "timeout",
+    "readyState",
+    "send",
+    "abort",
+    "getResponseHeader",
+    "getAllResponseHeaders",
+    "setRequestHeader",
+    "overrideMimeType",
+    "ok",
+    "redirected",
+    "headers",
+    "url",
+    "body",
+    "bodyUsed",
+    "arrayBuffer",
+    "blob",
+    "formData",
+    "clone",
+    "text",
+    "json",
+    // ---- CustomEvent / dataTransfer ----
+    "dataTransfer",
+    "effectAllowed",
+    "dropEffect",
+    "setData",
+    "getData",
+    "clearData",
+    "setDragImage",
+];
+
 /// Aggressive property renaming pass. Holds the **do-not-rename set** of
 /// property names supplied at construction (typically the property names
 /// collected from `--externs` files); the built-in property list is
@@ -346,16 +826,22 @@ fn rename_properties(
     }
 
     // 2. Decide the renames. A property is renameable when it appears
-    //    dotted, never quoted, is not a built-in, is not in the externs
-    //    do-not-rename set, and is longer than one character.
-    let builtins: HashSet<&str> = BUILTIN_PROPERTIES.iter().copied().collect();
+    //    dotted, never quoted, is not a built-in (ECMAScript OR DOM/host),
+    //    is not in the externs do-not-rename set, and is longer than one
+    //    character. The protected baseline is the union of the bundled
+    //    ECMAScript and DOM/host property lists.
+    let builtins: HashSet<&str> = BUILTIN_PROPERTIES
+        .iter()
+        .chain(DOM_PROPERTIES.iter())
+        .copied()
+        .collect();
     // Fresh names avoid every property name in the program plus the
     // built-ins and externs set (property namespace only — variable names
     // are irrelevant).
     let mut avoid: HashSet<String> = HashSet::new();
     avoid.extend(cls.dotted_seen.iter().cloned());
     avoid.extend(cls.quoted.iter().cloned());
-    avoid.extend(BUILTIN_PROPERTIES.iter().map(|s| s.to_string()));
+    avoid.extend(builtins.iter().map(|s| s.to_string()));
     avoid.extend(do_not_rename.iter().cloned());
 
     let mut map: HashMap<String, String> = HashMap::new();
@@ -963,6 +1449,30 @@ mod tests {
         assert_eq!(
             rename_with("read(obj.apiField); read(obj.helperField);", &["apiField"]),
             "read(obj.apiField);read(obj.a);"
+        );
+    }
+
+    #[test]
+    fn does_not_rename_dom_properties() {
+        // The bundled DOM/host list protects `innerHTML`, `addEventListener`,
+        // and `onclick` out of the box — no `--externs` needed — while the
+        // program-private `secretField` is still renamed. Without the DOM
+        // bundle these would be renamed and break browser code.
+        assert_eq!(
+            rename(
+                "el.addEventListener(t, h); read(el.innerHTML); read(el.onclick); read(el.secretField); read(el.secretField);"
+            ),
+            "el.addEventListener(t,h);read(el.innerHTML);read(el.onclick);read(el.a);read(el.a);"
+        );
+    }
+
+    #[test]
+    fn dom_property_protected_without_externs() {
+        // A lone DOM property the author never lists in externs is still
+        // kept — the safety net the DOM bundle provides.
+        assert_eq!(
+            rename("read(node.textContent); read(node.textContent);"),
+            "read(node.textContent);read(node.textContent);"
         );
     }
 

@@ -30,8 +30,10 @@ A property name is renamed only when it:
 1. appears dotted / unquoted;
 2. is NOT quoted via a computed string member (`obj["x"]` — the bridge
    preserves this; the author quoted it to mean "external/dynamic");
-3. is not a `BUILTIN_PROPERTIES` (a bundled ECMAScript default-externs
-   substitute — `length`, `prototype`, `toString`, `push`, …);
+3. is not a bundled built-in — neither `BUILTIN_PROPERTIES` (the ECMAScript
+   surface — `length`, `prototype`, `toString`, `push`, …) nor
+   `DOM_PROPERTIES` (the browser/host surface — `innerHTML`, `classList`,
+   `addEventListener`, `onclick`, `querySelector`, …);
 4. is not in the externs do-not-rename set; and
 5. is longer than one character.
 
@@ -40,11 +42,19 @@ only avoids other property names + the built-ins + the externs set
 (property names are their own namespace; a property may become `a` even
 when a variable `a` exists).
 
+The bundled boundary now covers both the **ECMAScript** surface
+(`BUILTIN_PROPERTIES`) and the common **DOM/host** surface (`DOM_PROPERTIES`
+— ~300 names: events, inline `on*` handlers, Node/Element, form/input,
+attributes, CSSOM, Document, Window, Location/History/Storage/Navigator,
+XHR/fetch/Response, drag-and-drop). So `el.innerHTML` and `node.onclick`
+are kept out of the box with no `--externs` file.
+
 ### Honest limitations
 
-- The built-in list covers ECMAScript but **not the DOM/host** — host
-  property names (`innerHTML`, `addEventListener`, …) must be supplied via
-  `--externs` or they will be renamed.
+- The bundled DOM list is **curated, not exhaustive** — host surfaces evolve
+  and vendor-/library-specific external properties exist. A `--externs` file
+  remains the authoritative boundary; the bundle is the safety net for the
+  common browser surface.
 - The parser bridge currently collapses a quoted object key `{ "x": 1 }`
   to an identifier key, so object-key quoting is **not** a usable
   do-not-rename signal (only computed-member quoting `obj["x"]` is) —
@@ -76,13 +86,14 @@ top-level variable/function names (the value-namespace boundary that gates
 
 ## Status
 
-This crate is the **algorithmic core** plus the externs-boundary collector.
-It is wired into closurec's ADVANCED level under a **safe-by-default policy**:
-property renaming runs only when the user passes at least one `--externs`
-file (opting into the externs contract and supplying the host/DOM property
-boundary). Without `--externs`, ADVANCED leaves property names untouched —
-the built-in list omits the DOM, so renaming by default would miscompile
-browser code.
+This crate is the **algorithmic core**, the externs-boundary collector, and
+the bundled ECMAScript + DOM/host protected lists. It is wired into
+closurec's ADVANCED level under a **safe-by-default policy**: property
+renaming runs only when the user passes at least one `--externs` file
+(opting into the externs contract). The bundled `DOM_PROPERTIES` list keeps
+the common browser surface safe even when the externs file doesn't list it,
+but `--externs` remains the authoritative boundary for vendor-/library-
+specific external properties, so the opt-in gate stays.
 
 ## Dependency whitelist
 
