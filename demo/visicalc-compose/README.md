@@ -94,6 +94,12 @@ The **Copy / Cut / Paste** buttons drive the engine's clipboard
 with its relative references shifted by the destination's offset (absolute `$`
 refs pinned, format carried); a cut clears the source on paste, and `pasteCell`
 returns `false` (a no-op) for an empty clipboard.
+The **Save / Load** buttons serialize the whole workbook
+(`InfiniteSheetModel.saveBook` over the C ABI's `sc_serialize`) to a JSON
+document held in memory and restore it (`loadBook` / `sc_deserialize`): the
+document captures only the source (formula text + typed literals) and per-cell
+formats — not the computed values, which the engine recomputes on load, so a
+loaded formula stays live.
 `InfiniteSheetModel` (in `Engine.kt`) seeds far-flung
 sparse cells (`Z1000`, `BA50`, `BB50`) and derives the extent from `usedRange()`
 + a margin.
@@ -109,7 +115,10 @@ one-read rows, `selectInf` clamping + source load, `commitInf` recompute
 (A2 `8`→`108` ⇒ E2 151, A5 139, E5 269), `fillDown` (`I1 = =H1*10` filled
 down 10 rows ⇒ I2 = H2*10 = 30, I3 = H3*10 = 40, source I1 = 20 untouched), and
 the clipboard (`copyCell` I1 → `pasteCell` at I4 ⇒ I4 = H4*10 = 60; `cutCell` A1
-→ paste at C1 moves it, A1 clears, a second paste returns false).
+→ paste at C1 moves it, A1 clears, a second paste returns false), and a
+save/load round trip (`saveBook` → mutate A1 ⇒ E1 523.00 → `loadBook` restores
+A1 15 / E1 38.00, the loaded formula stays live with A1=5 ⇒ E1 28.00, and
+malformed input is rejected).
 
 The Compose UI itself (`InfiniteSheet.kt` + the `Main.kt` toggle) is verified to
 compile against the real Compose Desktop APIs via `gradle compileKotlin`; the

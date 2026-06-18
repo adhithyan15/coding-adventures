@@ -87,6 +87,10 @@ fun InfiniteSheet() {
     var selCol by remember { mutableStateOf(model.selCol) }
     var formula by remember { mutableStateOf(model.formula) }
     var rev by remember { mutableStateOf(0) }
+    // In-memory "saved file" slot for the Save / Load buttons: Save stows the
+    // serialized workbook here, Load restores from it. (A real app would write
+    // it to a file; the demo keeps the round trip self-contained.)
+    var savedSnapshot by remember { mutableStateOf("") }
 
     fun select(row: Int, col: Int) {
         model.selectInf(row, col)
@@ -115,6 +119,19 @@ fun InfiniteSheet() {
     fun cutCell() = model.cutCell()
     fun pasteCell() {
         model.pasteCell()
+        rev++
+    }
+
+    // Save / load: serialize the whole workbook (formulas + formats) to a JSON
+    // document held in memory, and restore it. Computed values recompute on load,
+    // so a loaded formula stays live; the formula bar re-reads after a load.
+    fun saveBook() {
+        savedSnapshot = model.saveBook()
+    }
+    fun loadBook() {
+        if (savedSnapshot.isEmpty()) return
+        model.loadBook(savedSnapshot)
+        formula = model.formula
         rev++
     }
 
@@ -165,6 +182,11 @@ fun InfiniteSheet() {
             clipButton("Cut") { cutCell() }
             Spacer(Modifier.width(8.dp))
             clipButton("Paste") { pasteCell() }
+            // Save / load: serialize the whole workbook to memory, and restore it.
+            Spacer(Modifier.width(8.dp))
+            clipButton("Save") { saveBook() }
+            Spacer(Modifier.width(8.dp))
+            clipButton("Load") { loadBook() }
         }
 
         Spacer(Modifier.height(6.dp))

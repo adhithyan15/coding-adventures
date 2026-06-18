@@ -154,6 +154,23 @@ fun main() {
     inf.selectInf(1, 5); check("inf cut buffer consumed", inf.pasteCell().toString(), "false")
     inf.close()
 
+    // Save / load (the Save / Load buttons drive saveBook/loadBook): serialize a
+    // fresh seeded workbook, mutate it, restore the snapshot, and confirm the
+    // loaded formula stays LIVE (the document stores source + formats, not values).
+    val sl = InfiniteSheetModel()
+    val snapshot = sl.saveBook()
+    check("serialize non-empty", snapshot.isNotEmpty().toString(), "true")
+    sl.selectInf(1, 1); sl.commitInf("500")              // E1 → 500+3+12+8 = 523
+    check("mutated E1", sl.rowCells(1)[4], "523.00")
+    check("loadBook ok", sl.loadBook(snapshot).toString(), "true")
+    check("loaded A1", sl.rowCells(1)[0], "15")          // restored
+    check("loaded E1 formatted", sl.rowCells(1)[4], "38.00") // recomputed through format
+    sl.selectInf(1, 1); sl.commitInf("5")                // live: 5+3+12+8 = 28
+    check("loaded formula live", sl.rowCells(1)[4], "28.00")
+    check("loadBook rejects garbage", sl.loadBook("not a workbook").toString(), "false")
+    check("workbook intact after reject", sl.rowCells(1)[4], "28.00")
+    sl.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }
