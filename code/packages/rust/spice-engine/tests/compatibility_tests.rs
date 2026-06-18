@@ -166,6 +166,12 @@ if $&run_monte
 .while $&again
 foreach dev M1 M2
 .repeat 2
+let gain = 2
+.let bias = v(out)
+alter R1=2k
+.alterparam gain=3
+set temp=27
+.unset temp
 run
 quit
 .endc
@@ -217,7 +223,13 @@ quit
             (".control", 39, "error"),
             (".control", 40, "error"),
             (".control", 41, "error"),
-            (".control", 42, "error")
+            (".control", 42, "error"),
+            (".control", 43, "error"),
+            (".control", 44, "error"),
+            (".control", 45, "error"),
+            (".control", 46, "error"),
+            (".control", 47, "error"),
+            (".control", 48, "error")
         ]
     );
     assert_eq!(
@@ -230,7 +242,7 @@ quit
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-            "SPICE_DECK_CONTROL_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
             "SPICE_DECK_CONTROL_COMMAND",
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
             "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
@@ -241,7 +253,13 @@ quit
             "SPICE_DECK_CONTROL_FLOW_COMMAND",
             "SPICE_DECK_CONTROL_FLOW_COMMAND",
             "SPICE_DECK_CONTROL_FLOW_COMMAND",
-            "SPICE_DECK_CONTROL_FLOW_COMMAND"
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND"
         ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
@@ -399,6 +417,11 @@ cd /tmp
 while $&again
 .foreach dev M1 M2
 repeat 2
+.let gain = 2
+alter R1=2k
+.alterparam gain=3
+set temp=27
+.unset temp
 run
 .quit
 .endc
@@ -443,7 +466,12 @@ run
             "SPICE_DECK_CONTROL_FLOW_COMMAND",
             "SPICE_DECK_CONTROL_FLOW_COMMAND",
             "SPICE_DECK_CONTROL_FLOW_COMMAND",
-            "SPICE_DECK_CONTROL_FLOW_COMMAND"
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND"
         ]
     );
     assert_eq!(
@@ -464,7 +492,12 @@ run
             (".control", 38),
             (".control", 39),
             (".control", 40),
-            (".control", 41)
+            (".control", 41),
+            (".control", 42),
+            (".control", 43),
+            (".control", 44),
+            (".control", 45),
+            (".control", 46)
         ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));

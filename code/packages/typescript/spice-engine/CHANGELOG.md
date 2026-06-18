@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Emit explicit policy diagnostics for selected `.control` block
+  variable/state mutation commands, including `let`, `alter`, `alterparam`,
+  `set`, and `unset`, in `analyzeDeckControls` and `resolveDeckSources`,
+  matching Python and Rust. Accepted no-op `set` options still route as no-op
+  markers.
 - Emit explicit policy diagnostics for selected `.control` block control-flow
   commands, including `if`, `while`, `foreach`, and `repeat`, in
   `analyzeDeckControls` and `resolveDeckSources`, matching Python and Rust.
