@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2026-06-17
+
+### Added (via the shared `s-runtime`)
+
+- **R-17 — `do.call`, named-list access polish, `modifyList`**:
+  `do.call(what, args)` builds and evaluates a call to `what` (a function value,
+  or a string naming one) with the elements of the list `args` spread as
+  arguments — unnamed positional, named by name — so
+  `do.call(paste, list("a", "b", sep = "-"))` is `"a-b"`. `modifyList(x, val)`
+  overlays `val`'s elements onto `x` by name (replace / append / `NULL` removes).
+  The R-6 named-list access operators are pinned: `lst$name` / `lst[["name"]]` by
+  name, `lst[[i]]` by position, a missing name → `NULL` (not an error), and they
+  see through classed / attribute-carrying list wrappers. Both builtins are
+  bounded against crafted oversize inputs and return clean errors (never panics)
+  on a non-list, non-callable, or unnamed-element argument. See `s-runtime`
+  0.13.0.
+
 ## [0.11.0] - 2026-06-17
 
 ### Added (via the shared `s-runtime`)

@@ -55,6 +55,15 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   `names(x)`, `attr(x, "class")` with `class(x)`, and `attr(x, "dim")` with the
   matrix `dim` by construction. The general map is bounded and malformed input
   fails closed.
+- **`do.call`, `modifyList`, named-list access** (R-17): `do.call(what, args)`
+  calls `what` (a function value, or a string naming one) with the elements of
+  the list `args` spread as positional and named arguments — reusing
+  `Interpreter::call_value`, so `do.call(paste, list("a", "b", sep = "-"))` is
+  `"a-b"`. `modifyList(x, val)` overlays `val` onto `x` by name (replace / append
+  / `NULL` removes). `lst$name` / `lst[["name"]]` / `lst[[i]]` index a list by
+  name or position (missing name → `NULL`), seeing through the transparent
+  `Classed`/`Attributed`/`Named` wrappers. Argument/result sizes are bounded and
+  malformed input (non-list, non-callable, unnamed `val` element) fails closed.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
