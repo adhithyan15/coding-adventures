@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-06-17
+
+### Added (via the shared `s-runtime`)
+
+- **R-15 — `names()` and named-vector access**: `c(a = 1, b = 2)` attaches names
+  (nested named pieces combine R-style — `c(x = c(a = 1), 2)` → `"x.a"`, `""`);
+  `names(x)` gets them (`NULL` if unset); `names(x) <- value` sets them with R's
+  NA-padding recycling (`NULL` clears); `setNames(x, nm)` is the functional form;
+  `x["b"]` / `x[c("a","c")]` index by name (unmatched → `NA`). Positional /
+  negative / logical indexing still work and carry names along; sub-assignment
+  (`x[2] <- 9`, `x["a"] <- 5`) keeps names; arithmetic drops them, as in R. Named
+  vectors print names above values in aligned columns instead of the `[i]` prefix
+  — a user-visible change in the R REPL. See `s-runtime` 0.11.0.
+
 ## [0.9.0] - 2026-06-16
 
 ### Added (via the shared `s-runtime` lvalue machinery)

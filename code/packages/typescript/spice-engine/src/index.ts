@@ -2860,6 +2860,7 @@ const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set([
   "filetype=ascii",
   "wr_vecnames",
   "wr_singlescale",
+  "appendwrite",
 ]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {

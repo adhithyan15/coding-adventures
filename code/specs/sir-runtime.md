@@ -207,6 +207,18 @@ v0 eight). `TailCalls` and `Intrinsics` remain rejected.
   spread) — so it is a documented v0 cut-line: it falls through to the eager
   dispatch, which raises a clear unknown-builtin error rather than emitting
   silently wrong code.
+- **`defined?` runtime-presence fidelity.** Ruby `defined?(x)` reaches the
+  backend as `BuiltinCall("defined?", [operand])` and must never evaluate its
+  operand. Both backends inspect the operand's SIR shape at emit time and emit a
+  constant description string (local→`"local-variable"`, const→`"constant"`,
+  `@x`→`"instance-variable"`, `@@x`→`"class variable"`, `$x`→`"global-variable"`,
+  builtin→`"method"`, anything else→`"expression"`). The **non-evaluation
+  contract is honoured for every shape**. v0 simplifications: an instance/class/
+  global variable reports its static description rather than the runtime
+  `nil`-when-unset Ruby would give (no presence predicate in the per-concern
+  runtimes yet), and a general/method-call operand reports the generic
+  `"expression"` rather than Ruby's exact category (`"method"`, `"assignment"`,
+  …). Both are non-evaluating and documented.
 - Idiomatic-quality / style-transfer of emitted code (correct + readable, not
   hand-written-equivalent).
 - Changes to `semantic-ir` core or any frontend — this is purely backend

@@ -19,10 +19,15 @@ R source ──▶ r_parser::try_parse_r ──▶ GrammarASTNode
                                          Outcome
 ```
 
-The value model, recycling, NA semantics, S3 dispatch, factors, data frames, and
-every built-in are exactly those of `s-runtime` — R gets them for free. The
-R-specific surface (the `=` / `->>` assignment operators and the typed-`NA`
-constants) is handled in the shared evaluator.
+The value model, recycling, NA semantics, S3 dispatch, factors, data frames,
+matrices, named vectors, and every built-in are exactly those of `s-runtime` — R
+gets them for free. The R-specific surface (the `=` / `->>` assignment operators
+and the typed-`NA` constants) is handled in the shared evaluator.
+
+Recent additions reach R unchanged through this reuse: **named vectors (R-15)** —
+`c(a = 1, b = 2)` attaches names, `names(x)` / `names(x) <- value` /
+`setNames(x, nm)` get and set them, `x["b"]` indexes by name, and a named vector
+prints names above values instead of the `[i]` prefix.
 
 ## Usage
 

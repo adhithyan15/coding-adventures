@@ -934,6 +934,44 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         emit_expr(out, &args[0], indent);
         return;
     }
+    // `defined?(x)` lowers to `BuiltinCall("defined?", [operand])`.  The single
+    // most important Ruby contract here is that `defined?` **never evaluates its
+    // operand** — `defined?(expensive_call)` must not call it.  So we inspect
+    // the operand's SIR *shape at emit time* and emit a constant description
+    // string; the operand expression is never rendered, so it cannot run.
+    //
+    // | operand shape | emitted | Ruby `defined?` returns |
+    // |---|---|---|
+    // | local / param / capture VarRef | `"local-variable"` | "local-variable" |
+    // | `Const` VarRef                 | `"constant"`       | "constant" |
+    // | `Instance` (`@x`) VarRef       | `"instance-variable"` | desc, or nil if unset |
+    // | `ClassVar` (`@@x`) VarRef      | `"class variable"` | desc, or nil if unset |
+    // | `Global` (`$x`) VarRef         | `"global-variable"`| desc, or nil if unset |
+    // | builtin-name VarRef            | `"method"`         | "method" |
+    // | any other expr (literal, call) | `"expression"`     | "expression"/"method"/… |
+    //
+    // v0 simplification (documented in `code/specs/sir-runtime.md`): for an
+    // instance/class/global variable we emit the static description rather than
+    // performing the runtime presence check Ruby uses to return `nil` when the
+    // variable is unset (the per-concern runtimes expose no presence predicate
+    // yet); and a general/method-call operand reports the generic `"expression"`
+    // rather than Ruby's exact category.  The non-evaluation contract holds for
+    // every shape — that is the property that actually matters.
+    if name == "defined?" && args.len() == 1 {
+        let desc = match &args[0] {
+            Expr::VarRef { scope, .. } => match scope {
+                Scope::Local | Scope::Param | Scope::Capture => "local-variable",
+                Scope::Const => "constant",
+                Scope::Instance => "instance-variable",
+                Scope::ClassVar => "class variable",
+                Scope::Global => "global-variable",
+                Scope::Builtin => "method",
+            },
+            _ => "expression",
+        };
+        out.push_str(&quote_py_string(desc));
+        return;
+    }
     let helper = match name {
         "+" => "_sir_plus",
         "-" => "_sir_minus",

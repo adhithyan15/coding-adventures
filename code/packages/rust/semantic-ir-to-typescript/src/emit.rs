@@ -1061,6 +1061,30 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         emit_expr(out, &args[0], indent);
         return;
     }
+    // `defined?(x)` lowers to `BuiltinCall("defined?", [operand])`.  Ruby's
+    // contract: `defined?` **never evaluates its operand** — so we inspect the
+    // operand's SIR shape at emit time and emit a constant description string;
+    // the operand is never rendered, so it cannot run.  Same shape→description
+    // table and v0 simplifications as the Python backend (see its comment and
+    // `code/specs/sir-runtime.md`): instance/class/global vars report their
+    // static description rather than the runtime nil-when-unset; general/method
+    // operands report the generic `"expression"`.  The non-evaluation contract
+    // holds for every shape.
+    if name == "defined?" && args.len() == 1 {
+        let desc = match &args[0] {
+            Expr::VarRef { scope, .. } => match scope {
+                Scope::Local | Scope::Param | Scope::Capture => "local-variable",
+                Scope::Const => "constant",
+                Scope::Instance => "instance-variable",
+                Scope::ClassVar => "class variable",
+                Scope::Global => "global-variable",
+                Scope::Builtin => "method",
+            },
+            _ => "expression",
+        };
+        out.push_str(&quote_ts_string(desc));
+        return;
+    }
     let helper = match name {
         "+" => "__Sir.add",
         "-" => "__Sir.sub",
