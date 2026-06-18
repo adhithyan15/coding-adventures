@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.146.0] - 2026-06-17
+
+### Changed (CLOC13.F — SIMPLE/ADVANCED pipeline now runs to a fixed point)
+
+The pass pipeline (`coding-adventures-closure-pass-pipeline` `0.2.0 → 0.3.0`)
+no longer runs each pass exactly once — it sweeps the pass order repeatedly
+while any `FixedPoint` pass still reports a change, so a transform one pass
+exposes is picked up by an earlier pass on the next sweep. This makes
+optimizations **cascade**:
+
+```js
+// in.js
+function double(x) { return x * 2; }
+log(double(7));
+//  closurec --compilation_level SIMPLE --js in.js
+//  before: log(7 * 2);   (inline ran after constant-fold, so 7*2 never folded)
+//  now:    log(14);       (sweep 2's constant-fold folds inline's output)
+```
+
+This applies to both SIMPLE and ADVANCED (which share the pipeline). No new
+passes were added — existing real passes (`constant-fold`, `inline`,
+`dce`, `treeshake`, …) simply compose to convergence now. Bounded by a
+generous per-run sweep cap as a backstop against a non-convergent pass.
+
+### Fixtures / tests
+
+- New `tests/diff/simple-fixpoint/` fixture + harness proving the two-sweep
+  `inline → constant-fold` cascade (`log(double(7))` → `log(14)`), plus a
+  `simple_pipeline_iterates_to_a_fixed_point` unit test.
+- Version bumped `0.145.0 → 0.146.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
 ## [0.145.0] - 2026-06-17
 
 ### Changed (CLOC13.B.1 — `inline` pass now does real work in SIMPLE/ADVANCED)

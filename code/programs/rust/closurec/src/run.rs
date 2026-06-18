@@ -5958,6 +5958,28 @@ mod tests {
     }
 
     #[test]
+    fn simple_pipeline_iterates_to_a_fixed_point() {
+        // CLOC13.F: the pipeline now runs to a fixed point. `inline`
+        // turns the single-use `double(7)` into `7 * 2` (sweep 1), and
+        // `constant-fold` — which ran *before* inline in sweep 1 — folds
+        // it to `14` on sweep 2. Before fixed-point iteration the
+        // pipeline ran each pass once and stopped at `log(7 * 2);`.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function double(x) { return x * 2; } log(double(7));", &cfg)
+            .expect("ok");
+        assert_eq!(
+            out, "log(14);",
+            "inline → fold cascade must converge to the folded constant"
+        );
+    }
+
+    #[test]
     fn simple_level_bridge_ok_status_in_cv() {
         // When the source parses cleanly, the CV contribution for the
         // `compilation_level` stage must carry bridge_status = "ok".

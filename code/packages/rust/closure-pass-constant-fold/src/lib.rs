@@ -2242,9 +2242,10 @@ mod tests {
 
         assert_eq!(out.execution_order, vec!["constant-fold".to_string()]);
         assert!(out.stats.contains_key("constant-fold"));
-        // FixedPoint policy → v0.1.0 pipeline emits the "not yet
-        // iterated" note diagnostic. Holds even for the real body.
-        assert!(out
+        // The pipeline now iterates FixedPoint passes to a fixed point;
+        // a non-changing solo pass converges in one sweep, so the old
+        // "not-yet-iterated" limitation note is gone.
+        assert!(!out
             .diagnostics
             .iter()
             .any(|d| d.group.0 == "pipeline.fixed-point-not-yet-iterated"));
