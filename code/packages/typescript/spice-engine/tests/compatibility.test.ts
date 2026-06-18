@@ -131,6 +131,8 @@ set wr_singlescale
 set appendwrite
 set filetype=binary
 write out.raw V(out)
+wrdata out.dat V(out)
+wrdata empty.dat
 run
 quit
 .endc
@@ -159,11 +161,13 @@ quit
       [".lib", 3, "error"],
       [".control", 4, "error"],
       [".control", 19, "error"],
+      [".control", 22, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+      "SPICE_DECK_CONTROL_COMMAND",
       "SPICE_DECK_CONTROL_COMMAND",
     ]);
     const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
@@ -249,6 +253,7 @@ four 2k V(b)
 .set wr_singlescale
 .set appendwrite
 .write out.raw V(a)
+.wrdata out.dat V(a)
 run
 .quit
 .endc

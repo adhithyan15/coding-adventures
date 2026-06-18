@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck control WRDATA marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `wrdata <file> <probes...>` ASCII data-write markers as
+  no-op control commands instead of reporting unsupported-command diagnostics,
+  matching Rust and TypeScript. Actual data-file serialization remains out of
+  scope for this marker.
+
 - **Deck control rawfile write marker routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
   `.control` block `write <rawfile> [probes...]` rawfile-write markers as

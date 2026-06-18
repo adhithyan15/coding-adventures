@@ -519,6 +519,7 @@ _NOOP_CONTROL_BLOCK_COMMANDS = frozenset(
     {"run", ".run", "reset", ".reset", "quit", ".quit"}
 )
 _NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS = frozenset({"write", ".write"})
+_NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS = frozenset({"wrdata", ".wrdata"})
 _NOOP_CONTROL_BLOCK_SET_OPTIONS = frozenset(
     {"noaskquit", "filetype=ascii", "wr_vecnames", "wr_singlescale", "appendwrite"}
 )
@@ -3354,6 +3355,8 @@ def _is_noop_control_block_command(line: str) -> bool:
         return True
     if command in _NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS:
         return len(parts) >= 2
+    if command in _NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS:
+        return len(parts) >= 3
     return (
         command in {"set", ".set"}
         and len(parts) == 2
