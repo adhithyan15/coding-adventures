@@ -6793,9 +6793,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.run_artifacts[0].result_rows == 1
     assert op_execution.run_artifacts[0].output_probes == ["V(mid)"]
     assert op_execution.run_artifacts[0].measurement_names == []
+    assert op_execution.run_artifacts[0].fourier_probes == []
     assert op_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n"
-        f"op\t.op\t{op_execution.plan.line_number}\t1\t1\tV(mid)\t0\t\t0\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"op\t.op\t{op_execution.plan.line_number}\t1\t1\tV(mid)\t0\t\t0\t\n"
     )
 
     dc_execution = run_deck_analysis(circuit, netlist, "dc")
@@ -6816,9 +6817,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.run_artifacts[0].analysis == "dc"
     assert dc_execution.run_artifacts[0].output_probes == ["V(mid)", "I(V1)"]
     assert dc_execution.run_artifacts[0].measurement_names == ["mid_avg"]
+    assert dc_execution.run_artifacts[0].fourier_probes == []
     assert dc_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n"
-        f"dc\t.dc\t{dc_execution.plan.line_number}\t2\t2\tV(mid);I(V1)\t1\tmid_avg\t0\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"dc\t.dc\t{dc_execution.plan.line_number}\t2\t2\tV(mid);I(V1)\t1\tmid_avg\t0\t\n"
     )
 
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
@@ -6836,9 +6838,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
     assert ac_execution.run_artifacts[0].output_probes == ["V(mid)"]
     assert ac_execution.run_artifacts[0].measurement_names == ["mid_peak"]
+    assert ac_execution.run_artifacts[0].fourier_probes == []
     assert ac_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n"
-        f"ac\t.ac\t{ac_execution.plan.line_number}\t1\t1\tV(mid)\t1\tmid_peak\t0\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"ac\t.ac\t{ac_execution.plan.line_number}\t1\t1\tV(mid)\t1\tmid_peak\t0\t\n"
     )
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
@@ -6858,9 +6861,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
     assert tran_execution.run_artifacts[0].output_probes == ["V(mid)"]
     assert tran_execution.run_artifacts[0].measurement_names == ["mid_final"]
+    assert tran_execution.run_artifacts[0].fourier_probes == []
     assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n"
-        f"tran\t.tran\t{tran_execution.plan.line_number}\t2\t1\tV(mid)\t1\tmid_final\t0\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"tran\t.tran\t{tran_execution.plan.line_number}\t2\t1\tV(mid)\t1\tmid_final\t0\t\n"
     )
 
     tran_window_execution = run_deck_analysis(
@@ -6936,9 +6940,10 @@ def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
     assert tran_execution.run_artifacts[0].fourier_count == 1
     assert tran_execution.run_artifacts[0].output_probes == ["V(mid)"]
     assert tran_execution.run_artifacts[0].measurement_names == []
+    assert tran_execution.run_artifacts[0].fourier_probes == ["V(mid)"]
     assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n"
-        f"tran\t.tran\t{tran_execution.plan.line_number}\t3\t1\tV(mid)\t0\t\t1\n"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"tran\t.tran\t{tran_execution.plan.line_number}\t3\t1\tV(mid)\t0\t\t1\tV(mid)\n"
     )
 
 

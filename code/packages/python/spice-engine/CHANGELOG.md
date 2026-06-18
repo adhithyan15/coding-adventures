@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck run Fourier artifact probes** —
+  `run_deck_analysis()` selected-run artifacts now include selected Fourier
+  probe names alongside the Fourier result count, and
+  `format_deck_run_artifact_table()` renders a stable `FourierList` column,
+  matching Rust and TypeScript.
+
 - **Deck run measurement artifact names** —
   `run_deck_analysis()` selected-run artifacts now include selected
   measurement names alongside the measurement count, and

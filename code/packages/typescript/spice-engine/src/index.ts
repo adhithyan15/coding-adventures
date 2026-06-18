@@ -664,6 +664,7 @@ export interface DeckRunArtifact {
   readonly measurementCount: number;
   readonly measurementNames: readonly string[];
   readonly fourierCount: number;
+  readonly fourierProbes: readonly string[];
 }
 
 export interface DeckAnalysisExecution {
@@ -7627,13 +7628,14 @@ function deckRunArtifacts(
       measurementCount: measurements.length,
       measurementNames: measurements.map((measurement) => measurement.name),
       fourierCount: fourier.length,
+      fourierProbes: fourier.flatMap((result) => result.probes.map((probe) => probe.probe)),
     },
   ];
 }
 
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [
-    "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier",
+    "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList",
   ];
   for (const artifact of artifacts) {
     rows.push(
@@ -7647,6 +7649,7 @@ export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]
         String(artifact.measurementCount),
         artifact.measurementNames.join(";"),
         String(artifact.fourierCount),
+        artifact.fourierProbes.join(";"),
       ].join("\t"),
     );
   }
