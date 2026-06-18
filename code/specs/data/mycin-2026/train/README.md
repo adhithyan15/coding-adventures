@@ -39,10 +39,16 @@ prompt asks for, derived **deterministically from the teacher's prose** by
 - **inference justification** — each finding gets an `ENTAILED` verdict when its
   span was found verbatim, or `LEAP` when it was not (which `ir_to_adj` then drops —
   the safe behavior: the model is taught to mark, not fabricate, unstated findings).
-- **discard** — a third of vignettes carry an injected non-diagnostic **distractor**
-  (a vital sign, social-history detail, symptomatic med). When it lands in the
-  prose, the gold records it as a `discard` `{span, reason}`, teaching the model to
-  set a red herring aside *with a justification* rather than coin a finding from it.
+- **discard** — vignettes carry injected **distractors** the gold must set aside with a
+  reason. Two pools: generic non-diagnostic details (a vital sign, social history, a
+  symptomatic med) AND hard **near-miss look-alikes** (`NEAR_MISS_DISTRACTORS`) that read
+  like a finding but map to none — the wrong **subject** ("his father had meningitis"), a
+  **hedge** ("concern for meningitis", "cannot exclude pleocytosis"), a **process not a
+  result** ("CSF sent for culture", "cultures pending"), or a **reference** ("guidelines note
+  CSF lactate aids diagnosis"). (A *negated* finding — "no fever" — is NOT a discard; it is a
+  real finding with `polarity:denied`.) When a distractor lands in the prose the gold records
+  it as a `discard` `{span, reason}` — teaching the model the discrimination boundary, the #1
+  over-extraction failure mode of a fine-tuned decomposer.
 
 So the model learns the discipline the framework demands of itself: extract only
 what the bytes support, cite the span, and justify both what it keeps and what it

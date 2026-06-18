@@ -126,10 +126,43 @@ def test_build_gold_ir_records_negation_polarity():
 
 
 def test_distractors_pool_is_well_formed():
-    assert gd.DISTRACTORS, "need a distractor pool to teach justified discard"
-    for phrase, reason in gd.DISTRACTORS:
+    assert gd.DISTRACTORS and gd.NEAR_MISS_DISTRACTORS, "need pools to teach justified discard"
+    for phrase, reason in gd.DISTRACTORS + gd.NEAR_MISS_DISTRACTORS:
         assert isinstance(phrase, str) and len(phrase) >= 4
         assert isinstance(reason, str) and reason
+
+
+def test_near_miss_distractors_are_discarded_never_coined():
+    # A near-miss look-alike in the prose (with NO matching sampled finding) must be recorded
+    # as a justified discard and coin NO finding — only sampled findings become findings, so the
+    # gold is correct by construction; this pins that contract over the whole near-miss pool.
+    surfaces = {"fever": ["fever"]}
+    for phrase, reason in gd.NEAR_MISS_DISTRACTORS:
+        vignette = f"The patient has a fever. {phrase}."
+        findings = [{"functor": "fever", "value": "present", "polarity": "stated"}]
+        gold = gd.build_gold_ir(vignette, findings, [(phrase, reason)], surfaces)
+        # exactly the one sampled finding (fever) — the near-miss coined no spurious finding.
+        assert [f["functor"] for f in gold["findings"]] == ["fever"], (phrase, gold)
+        # and the near-miss is set aside with its reason, span verbatim in the prose.
+        assert len(gold["discard"]) == 1, gold
+        assert gold["discard"][0]["span"].lower() in vignette.lower()
+        assert gold["discard"][0]["reason"] == reason
+
+
+def test_near_miss_does_not_coin_a_family_history_finding():
+    # Discrimination: the SAME concept (seizure / meningitis) appears as a real patient finding
+    # AND as a relative's history in one vignette. Only the patient's finding is coined; the
+    # family-history phrase is discarded — never a second finding from the wrong subject.
+    surfaces = {"seizure": ["had a seizure"]}
+    vignette = ("The patient had a seizure on arrival; a sibling with a history of recurrent "
+                "seizures is noted in the family history.")
+    findings = [{"functor": "seizure", "value": "present", "polarity": "stated"}]
+    near = ("a sibling with a history of recurrent seizures",
+            "family history of seizures, NOT this patient's seizure finding — wrong subject")
+    gold = gd.build_gold_ir(vignette, findings, [near], surfaces)
+    seizure_findings = [f for f in gold["findings"] if f["functor"] == "seizure"]
+    assert len(seizure_findings) == 1 and seizure_findings[0]["span"] == "had a seizure", gold
+    assert any("sibling" in d["span"] for d in gold["discard"]), gold
 
 
 def main() -> int:
@@ -140,8 +173,11 @@ def main() -> int:
     test_build_gold_ir_marks_unstated_findings_inferred_and_leap()
     test_build_gold_ir_records_negation_polarity()
     test_distractors_pool_is_well_formed()
+    test_near_miss_distractors_are_discarded_never_coined()
+    test_near_miss_does_not_coin_a_family_history_finding()
     print("test_gen_data: PASS (closed-vocab adherence; hints don't leak; gold IR carries "
-          "byte-provenance spans, ENTAILED/LEAP inference verdicts, and justified discards)")
+          "byte-provenance spans, ENTAILED/LEAP inference verdicts, justified discards, and "
+          "near-miss discrimination)")
     return 0
 
 
