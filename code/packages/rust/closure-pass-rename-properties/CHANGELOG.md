@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.2.0] - 2026-06-18
+
+### Added (CLOC13.K — `collect_property_names`, the externs property boundary)
+
+A public function `collect_property_names(program) -> HashSet<String>` that
+returns **every property name appearing anywhere** in a program — dotted member
+accesses (`el.innerHTML`), quoted member accesses (`obj["data-id"]`), unquoted
+object keys (`{ onload: f }`), and quoted object keys (`{ "aria-label": s }`).
+
+This is the property-namespace analogue of collecting an externs file's
+top-level variable/function names (the value-namespace boundary). A driver
+(closurec) walks each `--externs` file through this function and unions the
+results into the `do_not_rename` set it hands `RenamePropertiesPass::new`, so the
+external host/library property surface is preserved while program-private
+properties are still shortened.
+
+- **Over-collects on purpose.** Both renameable (dotted) and off-limits (quoted)
+  occurrences are returned: as an externs boundary, every named property is
+  external and must be protected. Forgoing a rename is never a miscompile;
+  renaming a genuinely external property is. Dynamic computed keys
+  (`obj[runtimeExpr]`) contribute nothing — there is no static name to protect.
+- Reuses the pass's existing whole-program `classify_item` walk (no second
+  traversal implementation to keep in sync).
+- 9 new unit tests + 1 doctest covering each occurrence shape, dynamic-key
+  exclusion, function-body recursion, and an end-to-end "collected externs
+  protect a property" round-trip.
+
 ## [0.1.0] - 2026-06-18
 
 ### Added (CLOC13.J — aggressive property renaming, algorithmic core)

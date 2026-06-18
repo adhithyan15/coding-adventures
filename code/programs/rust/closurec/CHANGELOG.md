@@ -2,6 +2,60 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.150.0] - 2026-06-18
+
+### Added (CLOC13.K — ADVANCED property renaming, gated on `--externs`)
+
+`--compilation_level ADVANCED` now also shortens program-private **property**
+names via the `rename-properties` pass
+(`coding-adventures-closure-pass-rename-properties` 0.2.0), appended after
+`rename-globals`. Properties live in their own namespace, so this is a second
+independent ADVANCED-over-SIMPLE size win on top of top-level renaming:
+
+```js
+read(obj.innerHTML); read(obj.secretField); read(obj.secretField);
+//  externs file: read(node.innerHTML);   // declares innerHTML external
+//  ADVANCED + --externs => read(obj.innerHTML);read(obj.a);read(obj.a);
+```
+
+**Safe-by-default — gated on `--externs`.** Property renaming runs ONLY when
+the user supplies at least one `--externs` file. The pass's bundled built-in
+list covers ECMAScript but NOT the DOM/host, so renaming properties
+unconditionally would rewrite `el.innerHTML` / `node.onload` and break browser
+code. Supplying `--externs` is the user opting into the externs contract AND
+declaring the external property boundary. Without it, ADVANCED leaves property
+names untouched (only `rename-globals` runs, exactly as in 0.149.0).
+
+- **New `collect_externs_property_names(config)`** — the property-namespace twin
+  of `externs_do_not_rename`. It walks every `--externs` file through the
+  rename-properties crate's new `collect_property_names`, unioning every
+  property name they mention (dotted, quoted, and object keys) into the pass's
+  do-not-rename set.
+- **Fail-closed, NOT degrade-safe.** Unlike `externs_do_not_rename` (whose
+  pass is sound with an empty keep-set), property renaming is sound only
+  *because* the user declared the boundary — so the boundary's contents are
+  what make it safe. If any externs source fails to resolve/read/parse/bridge,
+  `collect_externs_property_names` returns `None` and property renaming is
+  **disabled** for the run, rather than running against an empty/partial
+  boundary (which would rename an externally-observable property — a
+  miscompile, in exactly the case the user opted into safety). The CV `passes`
+  trace is driven off the *same* decision, so it can never claim
+  `rename-properties` ran when it didn't.
+- **`run_typed_pipeline` now takes `Option<AdvancedConfig>`** (was
+  `Option<HashSet<String>>`). `AdvancedConfig` carries both externs boundaries —
+  the value-namespace keep-set for `rename-globals` (always runs under ADVANCED)
+  and the optional property-namespace keep-set that gates `rename-properties`.
+  The now-redundant `run_simple_pipeline` wrapper was removed (the unified
+  caller passes `None` for SIMPLE directly).
+- The correlation-vector `passes` trace lists `rename-properties` for ADVANCED
+  only when `--externs` was supplied (the pass is conditional).
+- SIMPLE output is byte-for-byte unchanged; ADVANCED without `--externs` is
+  unchanged from 0.149.0.
+- 4 new integration tests pin the policy (SIMPLE / no-externs ADVANCED leave
+  properties alone; ADVANCED + externs renames a private property, keeps the
+  externs-declared one, and shrinks output; ADVANCED + an unparseable externs
+  file fails closed and renames nothing).
+
 ## [0.149.0] - 2026-06-18
 
 ### Added (CLOC13.I — ADVANCED diverges from SIMPLE: aggressive top-level renaming)
