@@ -747,6 +747,50 @@ formula as its literal text rather than dropping it. Loading and saving **XLSX**
 (with all the file format's quirks) remains out of scope — that's a future
 `xlsx-io` layer on top of this.
 
+### §16.1 Undo / Redo (session history)
+
+Undo/redo is a **session-layer** feature built directly on §16's serialize/
+deserialize, and lives in the host-facing session facade (`spreadsheet-core-wasm`
+`SpreadsheetSession`), not the pure-calc `Workbook`. The session exposes:
+
+```rust
+pub fn undo(&mut self) -> bool;      // restore the state before the last edit
+pub fn redo(&mut self) -> bool;      // replay the most recently undone edit
+pub fn can_undo(&self) -> bool;
+pub fn can_redo(&self) -> bool;
+```
+
+The model is **snapshot-based, not per-op inverse**. Every mutating session
+method (set-cell, set-format, fill, clipboard paste, structural insert/delete,
+load) runs through one internal `mutate` gate that:
+
+1. serializes the document *before* the edit;
+2. runs the edit;
+3. serializes again and, **only if the two differ**, pushes the pre-edit
+   snapshot onto an undo stack and clears the redo stack.
+
+Consequences, all intentional:
+
+- **Correct for every edit, present and future.** Because the unit of history is
+  a whole-document snapshot (the §16 source-only JSON), undo/redo needs no
+  knowledge of *what* an edit did — a new mutating op gets undo for free just by
+  going through `mutate`. This trades a per-edit double-serialize (cheap on the
+  sparse sheets the engine targets — a few hundred bytes) for zero per-op inverse
+  logic, which is the bug-prone part of command-stack undo.
+- **No-ops never enter history.** A failed edit (bad address), a `copy` (which
+  only touches the transient clipboard), an empty→empty `fill`, or a re-set to
+  the identical value all leave the serialization unchanged, so the user never
+  presses undo twice for one visible change.
+- **Restored formulas stay live.** `undo`/`redo` restore via the same
+  `deserialize` path (`recalc_all`), so a brought-back formula recomputes against
+  the restored precedents and keeps recalculating on later edits.
+- **Linear history.** A fresh edit after an undo clears the redo stack (you can't
+  redo across a divergence). History is bounded to `MAX_HISTORY` (100) snapshots,
+  oldest dropped — finite memory regardless of session length.
+- **The clipboard is not history.** The copy/cut buffer is transient editing
+  state, not document state, so it is deliberately excluded from snapshots; undo
+  restores cells, not what is on the clipboard.
+
 ---
 
 ## §17 Test Vectors
