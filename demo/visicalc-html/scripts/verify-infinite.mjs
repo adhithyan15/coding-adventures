@@ -142,5 +142,34 @@ ok(wb.getDisplayWindow(1, 8, 1, 8).cells[0][0] === "99", "cut moved value to H1"
 ok(wb.getDisplayWindow(1, 1, 1, 1).cells[0][0] === "", "cut cleared the source A1");
 ok(wb.paste("J1") === false, "cut buffer consumed (second paste is a no-op)");
 
+// Save / load (the Save / Load buttons): serialize the whole workbook to one
+// JSON document, mutate the live sheet, then deserialize the snapshot back and
+// confirm the workbook is restored — and that a loaded formula stays LIVE (the
+// document stores source + formats, not computed values, so editing a precedent
+// recomputes its dependents). This is exactly what the buttons do, minus the
+// localStorage round-trip (a plain string here).
+const snapshot = wb.serialize();
+ok(typeof snapshot === "string" && snapshot.length > 0, "serialize produced a JSON document");
+// Scribble over the sheet so a successful load has to visibly undo it (A1 was
+// cut away — empty — at snapshot time, so push it to 500 ⇒ E1 = 523.00).
+wb.setCell("A1", "500");
+ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] !== "23.00", "sheet mutated away from the saved state");
+// Load it back. At snapshot time the clipboard test had cut A1 away (empty), so
+// E1 = SUM(A1:D1) = 0+3+12+8 = 23, formatted "#,##0.00" → "23.00"; Z1000 =
+// SUM(A1:A4) = 0+8+12+4 = 24, formatted "0.0%" → "2400.0%".
+ok(wb.deserialize(snapshot) === true, "deserialize restored the snapshot");
+ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] === "23.00",
+  `loaded E1 recomputed through its format: ${wb.getDisplayWindow(1, 5, 1, 5).cells[0][0]}`);
+ok(wb.getRaw("E1") === "=SUM(A1:D1)", `loaded E1 source preserved: ${wb.getRaw("E1")}`);
+ok(wb.getDisplayWindow(1000, 26, 1000, 26).cells[0][0] === "2400.0%",
+  `loaded far Z1000 recomputed + formatted: ${wb.getDisplayWindow(1000, 26, 1000, 26).cells[0][0]}`);
+// The loaded formula is live, not frozen: edit a precedent and E1 recomputes.
+wb.setCell("A1", "5"); // 5+3+12+8 = 28
+ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] === "28.00",
+  `loaded formula stayed live (A1=5 ⇒ E1=${wb.getDisplayWindow(1, 5, 1, 5).cells[0][0]})`);
+// Garbage in is rejected without disturbing the workbook.
+ok(wb.deserialize("not a workbook") === false, "deserialize rejects malformed input");
+ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] === "28.00", "rejected load left the workbook intact");
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);
