@@ -64,7 +64,8 @@ use smart_home_integration_catalog::{
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
     entries_requiring_primitive, find_entry, first_party_catalog, mesh_action_readiness_summary,
     mesh_protocol_primitive_readiness_rows, mesh_protocol_substrate_actions,
-    mesh_protocol_substrate_stage_rows, mesh_readiness_package_summary, mesh_stage_release_summary,
+    mesh_protocol_substrate_stage_rows, mesh_readiness_package_summary,
+    mesh_release_readiness_summary, mesh_stage_release_summary,
     policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
     primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
     readiness_gap_inventory_from_reports, readiness_report_for_plan,
@@ -144,7 +145,8 @@ use smart_home_integration_catalog::{
     IntegrationMeshProtocolSubstrateAction, IntegrationMeshProtocolSubstrateActionSummary,
     IntegrationMeshProtocolSubstrateStage, IntegrationMeshProtocolSubstrateStageRow,
     IntegrationMeshProtocolSubstrateStageSummary, IntegrationMeshReadinessPackageSummary,
-    IntegrationMeshStageReleaseSummary, IntegrationPolicySurface,
+    IntegrationMeshReleaseReadinessSummary, IntegrationMeshStageReleaseSummary,
+    IntegrationPolicySurface,
     IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
     IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
     IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
@@ -332,6 +334,8 @@ pub const SMART_HOME_GET_INTEGRATION_MESH_STAGE_RELEASE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_stage_release_summary";
 pub const SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_action_readiness_summary";
+pub const SMART_HOME_GET_INTEGRATION_MESH_RELEASE_READINESS_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_mesh_release_readiness_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID: &str =
     "smart_home.list_integration_activation_dossiers";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID: &str =
@@ -832,6 +836,10 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(get_integration_mesh_action_readiness_summary_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_MESH_RELEASE_READINESS_SUMMARY_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(get_integration_mesh_release_readiness_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID => {
                     let query = integration_activation_dossier_query(&arguments)?;
@@ -2640,6 +2648,17 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID,
             "Get smart-home integration mesh action readiness summary",
             "Return D23 mesh action readiness counts combining queued substrate actions with stage release blockers.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_RELEASE_READINESS_SUMMARY_TOOL_ID,
+            "Get smart-home integration mesh release readiness summary",
+            "Return package-facing D23 mesh release readiness counts across package, substrate-stage, queued-action, and remediation blockers.",
             integration_readiness_query_schema(true),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
@@ -16842,6 +16861,16 @@ fn integration_mesh_action_readiness_summary_for_query(
     )
 }
 
+fn integration_mesh_release_readiness_summary_for_query(
+    query: &IntegrationReadinessQuery,
+) -> IntegrationMeshReleaseReadinessSummary {
+    mesh_release_readiness_summary(
+        &query.available_primitives,
+        &query.allowed_capabilities,
+        &query.enabled_integrations,
+    )
+}
+
 fn integration_activation_dependency_graph_for_query(
     query: &IntegrationActivationDependencyQuery,
 ) -> (IntegrationActivationDependencyGraph, usize) {
@@ -21072,6 +21101,39 @@ fn get_integration_mesh_action_readiness_summary_output_handler_output(
             (
                 "queued_stage_count",
                 integer(summary.queued_stage_count as i64),
+            ),
+            (
+                "remediation_item_count",
+                integer(summary.remediation_item_count as i64),
+            ),
+            ("release_ready", JsonValue::Bool(summary.release_ready)),
+        ]),
+    )
+}
+
+fn get_integration_mesh_release_readiness_summary_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let summary = integration_mesh_release_readiness_summary_for_query(&query);
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        mesh_release_readiness_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_mesh_release_readiness_summary"),
+            ),
+            (
+                "release_blocker_count",
+                integer(summary.release_blocker_count as i64),
+            ),
+            (
+                "queued_substrate_actions",
+                integer(summary.queued_substrate_actions as i64),
             ),
             (
                 "remediation_item_count",
@@ -42254,6 +42316,93 @@ fn mesh_action_readiness_summary_json(
     ])
 }
 
+fn mesh_release_readiness_summary_json(
+    summary: &IntegrationMeshReleaseReadinessSummary,
+) -> JsonValue {
+    object([
+        (
+            "action_readiness_summary",
+            mesh_action_readiness_summary_json(&summary.action_readiness_summary),
+        ),
+        ("total_protocols", integer(summary.total_protocols as i64)),
+        (
+            "release_blocker_count",
+            integer(summary.release_blocker_count as i64),
+        ),
+        (
+            "stage_blocker_count",
+            integer(summary.stage_blocker_count as i64),
+        ),
+        (
+            "primitive_blocker_count",
+            integer(summary.primitive_blocker_count as i64),
+        ),
+        (
+            "remediation_item_count",
+            integer(summary.remediation_item_count as i64),
+        ),
+        (
+            "queued_substrate_actions",
+            integer(summary.queued_substrate_actions as i64),
+        ),
+        (
+            "first_blocked_protocol",
+            summary
+                .first_blocked_protocol
+                .as_ref()
+                .map(protocol_family_label)
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_stage",
+            summary
+                .first_blocked_stage
+                .map(|stage| string(stage.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_protocol",
+            summary
+                .first_action_protocol
+                .as_ref()
+                .map(protocol_family_label)
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_stage",
+            summary
+                .first_action_stage
+                .map(|stage| string(stage.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_remediation_kind",
+            summary
+                .next_remediation_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("package_ready", JsonValue::Bool(summary.package_ready)),
+        ("substrate_ready", JsonValue::Bool(summary.substrate_ready)),
+        (
+            "substrate_actions_ready",
+            JsonValue::Bool(summary.substrate_actions_ready),
+        ),
+        ("release_ready", JsonValue::Bool(summary.release_ready)),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_queued_actions",
+            JsonValue::Bool(summary.has_queued_actions()),
+        ),
+        (
+            "has_remediations",
+            JsonValue::Bool(summary.has_remediations()),
+        ),
+    ])
+}
+
 fn mesh_stage_release_summary_json(summary: &IntegrationMeshStageReleaseSummary) -> JsonValue {
     object([
         (
@@ -49169,7 +49318,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 193);
+        assert_eq!(definitions.len(), 194);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -49367,6 +49516,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_MESH_RELEASE_READINESS_SUMMARY_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -49725,7 +49877,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            185
+            186
         );
         assert_eq!(
             export
@@ -49794,6 +49946,10 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_MESH_STAGE_RELEASE_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_RELEASE_READINESS_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -50409,11 +50565,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(193))
+            Some(&integer(194))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(185))
+            Some(&integer(186))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -52998,6 +53154,65 @@ mod tests {
             field(mesh_action_summary, "network_security_actions"),
             Some(&integer(3))
         );
+
+        let mesh_release_readiness_summary_request = request(
+            "call-integration-mesh-release-readiness-summary",
+            SMART_HOME_GET_INTEGRATION_MESH_RELEASE_READINESS_SUMMARY_TOOL_ID,
+            object([
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("usb"),
+                        string("serial_controller"),
+                        string("radio_802154"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+            ]),
+            5_913,
+        );
+        let mesh_release_readiness_summary_trace =
+            tool_runtime.invoke_with_events(&mesh_release_readiness_summary_request);
+        assert!(mesh_release_readiness_summary_trace.result.ok);
+        assert_eq!(
+            mesh_release_readiness_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let mesh_release_readiness_summary_output = mesh_release_readiness_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let mesh_release_readiness_rollup =
+            field(mesh_release_readiness_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(mesh_release_readiness_rollup, "queued_substrate_actions"),
+            Some(&integer(5))
+        );
+        assert!(
+            integer_value(field(mesh_release_readiness_rollup, "release_blocker_count").unwrap())
+                .unwrap()
+                >= 5
+        );
+        assert_eq!(
+            field(mesh_release_readiness_rollup, "substrate_actions_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(mesh_release_readiness_rollup, "release_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert!(field(
+            mesh_release_readiness_rollup,
+            "action_readiness_summary"
+        )
+        .is_some());
 
         let list_activation_dossiers_request = request(
             "call-list-integration-activation-dossiers",
