@@ -112,11 +112,14 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_activation_evidence_lane_inventory_summary`, and
   `smart_home.get_integration_activation_evidence_scorecard_summary`.
 - Added D18D handlers for D23 mesh primitive readiness, substrate-stage
-  readiness, package readiness, and stage-release summaries:
+  readiness, substrate-action queues, package readiness, and stage-release
+  summaries:
   `smart_home.list_integration_mesh_primitive_readiness`,
   `smart_home.get_integration_mesh_primitive_readiness_summary`,
   `smart_home.list_integration_mesh_substrate_stages`,
   `smart_home.get_integration_mesh_substrate_stage_summary`,
+  `smart_home.list_integration_mesh_substrate_actions`,
+  `smart_home.get_integration_mesh_substrate_action_summary`,
   `smart_home.get_integration_mesh_readiness_package_summary`, and
   `smart_home.get_integration_mesh_stage_release_summary`.
 - Added D18D handlers for D23 mesh substrate action queues and action-readiness

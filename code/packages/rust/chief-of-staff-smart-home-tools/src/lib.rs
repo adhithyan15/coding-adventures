@@ -322,12 +322,14 @@ pub const SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_STAGES_TOOL_ID: &str =
     "smart_home.list_integration_mesh_substrate_stages";
 pub const SMART_HOME_GET_INTEGRATION_MESH_SUBSTRATE_STAGE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_substrate_stage_summary";
+pub const SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_ACTIONS_TOOL_ID: &str =
+    "smart_home.list_integration_mesh_substrate_actions";
+pub const SMART_HOME_GET_INTEGRATION_MESH_SUBSTRATE_ACTION_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_mesh_substrate_action_summary";
 pub const SMART_HOME_GET_INTEGRATION_MESH_READINESS_PACKAGE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_readiness_package_summary";
 pub const SMART_HOME_GET_INTEGRATION_MESH_STAGE_RELEASE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_stage_release_summary";
-pub const SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_ACTIONS_TOOL_ID: &str =
-    "smart_home.list_integration_mesh_substrate_actions";
 pub const SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_action_readiness_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID: &str =
@@ -811,6 +813,14 @@ impl SmartHomeToolBridge {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(get_integration_mesh_substrate_stage_summary_output_handler_output(query))
                 }
+                SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_ACTIONS_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(list_integration_mesh_substrate_actions_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_MESH_SUBSTRATE_ACTION_SUMMARY_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(get_integration_mesh_substrate_action_summary_output_handler_output(query))
+                }
                 SMART_HOME_GET_INTEGRATION_MESH_READINESS_PACKAGE_SUMMARY_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(get_integration_mesh_readiness_package_summary_output_handler_output(query))
@@ -818,10 +828,6 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_MESH_STAGE_RELEASE_SUMMARY_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(get_integration_mesh_stage_release_summary_output_handler_output(query))
-                }
-                SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_ACTIONS_TOOL_ID => {
-                    let query = integration_readiness_query(&arguments)?;
-                    Ok(list_integration_mesh_substrate_actions_output_handler_output(query))
                 }
                 SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
@@ -2581,6 +2587,34 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             ),
         ),
         read_definition(
+            SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_ACTIONS_TOOL_ID,
+            "List smart-home integration mesh substrate actions",
+            "List D23 mesh protocol substrate action queue rows for blocked low-level radio, discovery, network-security, and supervision work.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new("mesh_substrate_actions", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                ],
+                vec!["mesh_substrate_actions", "summary", "count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_SUBSTRATE_ACTION_SUMMARY_TOOL_ID,
+            "Get smart-home integration mesh substrate action summary",
+            "Return compact D23 mesh substrate action counts and first queued low-level protocol action.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
             SMART_HOME_GET_INTEGRATION_MESH_READINESS_PACKAGE_SUMMARY_TOOL_ID,
             "Get smart-home integration mesh readiness package summary",
             "Return D23 mesh readiness package counts combining primitive readiness with activation evidence remediation pressure.",
@@ -2599,23 +2633,6 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
-                false,
-            ),
-        ),
-        read_definition(
-            SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_ACTIONS_TOOL_ID,
-            "List smart-home integration mesh substrate actions",
-            "List D23 mesh protocol substrate actions that should be cleared before Chief-specific mesh release coordination.",
-            integration_readiness_query_schema(true),
-            object_schema(
-                vec![
-                    SchemaProperty::new("mesh_substrate_actions", JsonSchema::Array {
-                        items: Box::new(JsonSchema::Any),
-                    }),
-                    SchemaProperty::new("summary", JsonSchema::Any),
-                    SchemaProperty::new("count", JsonSchema::Integer),
-                ],
-                vec!["mesh_substrate_actions", "summary", "count"],
                 false,
             ),
         ),
@@ -16780,6 +16797,21 @@ fn integration_mesh_substrate_stage_rows_for_query(
     rows
 }
 
+fn integration_mesh_substrate_actions_for_query(
+    query: &IntegrationReadinessQuery,
+) -> Vec<IntegrationMeshProtocolSubstrateAction> {
+    let mut actions = mesh_protocol_substrate_actions(&query.available_primitives);
+
+    if query.activation_ready == Some(true) {
+        actions.clear();
+    }
+    if let Some(limit) = query.limit {
+        actions.truncate(limit);
+    }
+
+    actions
+}
+
 fn integration_mesh_readiness_package_summary_for_query(
     query: &IntegrationReadinessQuery,
 ) -> IntegrationMeshReadinessPackageSummary {
@@ -16798,21 +16830,6 @@ fn integration_mesh_stage_release_summary_for_query(
         &query.allowed_capabilities,
         &query.enabled_integrations,
     )
-}
-
-fn integration_mesh_substrate_actions_for_query(
-    query: &IntegrationReadinessQuery,
-) -> Vec<IntegrationMeshProtocolSubstrateAction> {
-    let mut actions = mesh_protocol_substrate_actions(&query.available_primitives);
-
-    if matches!(query.activation_ready, Some(true)) {
-        actions.clear();
-    }
-    if let Some(limit) = query.limit {
-        actions.truncate(limit);
-    }
-
-    actions
 }
 
 fn integration_mesh_action_readiness_summary_for_query(
@@ -20885,6 +20902,90 @@ fn get_integration_mesh_substrate_stage_summary_output_handler_output(
     )
 }
 
+fn list_integration_mesh_substrate_actions_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let actions = integration_mesh_substrate_actions_for_query(&query);
+    let summary = IntegrationMeshProtocolSubstrateActionSummary::from_actions(actions.iter());
+    let count = actions.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "mesh_substrate_actions",
+            JsonValue::Array(
+                actions
+                    .iter()
+                    .map(mesh_protocol_substrate_action_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            mesh_protocol_substrate_action_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_mesh_substrate_actions"),
+            ),
+            ("actions", integer(count as i64)),
+            (
+                "network_security_actions",
+                integer(summary.network_security_actions as i64),
+            ),
+            ("unique_protocols", integer(summary.unique_protocols as i64)),
+            (
+                "first_protocol",
+                summary
+                    .first_protocol
+                    .as_ref()
+                    .map(protocol_family_label)
+                    .map(string)
+                    .unwrap_or(JsonValue::Null),
+            ),
+            ("has_actions", JsonValue::Bool(summary.has_actions())),
+        ]),
+    )
+}
+
+fn get_integration_mesh_substrate_action_summary_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let actions = integration_mesh_substrate_actions_for_query(&query);
+    let summary = IntegrationMeshProtocolSubstrateActionSummary::from_actions(actions.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        mesh_protocol_substrate_action_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_mesh_substrate_action_summary"),
+            ),
+            ("total_actions", integer(summary.total_actions as i64)),
+            (
+                "network_security_actions",
+                integer(summary.network_security_actions as i64),
+            ),
+            (
+                "first_stage",
+                summary
+                    .first_stage
+                    .map(|stage| string(stage.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+            ("has_actions", JsonValue::Bool(summary.has_actions())),
+        ]),
+    )
+}
+
 fn get_integration_mesh_readiness_package_summary_output_handler_output(
     query: IntegrationReadinessQuery,
 ) -> ToolHandlerOutput {
@@ -20944,47 +21045,6 @@ fn get_integration_mesh_stage_release_summary_output_handler_output(
                 integer(summary.remediation_item_count as i64),
             ),
             ("release_ready", JsonValue::Bool(summary.release_ready)),
-        ]),
-    )
-}
-
-fn list_integration_mesh_substrate_actions_output_handler_output(
-    query: IntegrationReadinessQuery,
-) -> ToolHandlerOutput {
-    let actions = integration_mesh_substrate_actions_for_query(&query);
-    let summary = IntegrationMeshProtocolSubstrateActionSummary::from_actions(actions.iter());
-    let count = actions.len();
-
-    ToolHandlerOutput::new(object([
-        (
-            "mesh_substrate_actions",
-            JsonValue::Array(
-                actions
-                    .iter()
-                    .map(mesh_protocol_substrate_action_json)
-                    .collect(),
-            ),
-        ),
-        (
-            "summary",
-            mesh_protocol_substrate_action_summary_json(&summary),
-        ),
-        ("count", integer(count as i64)),
-    ]))
-    .with_event(
-        ToolEventKind::Progress,
-        object([
-            (
-                "operation",
-                string("list_integration_mesh_substrate_actions"),
-            ),
-            ("actions", integer(count as i64)),
-            ("unique_protocols", integer(summary.unique_protocols as i64)),
-            (
-                "network_security_actions",
-                integer(summary.network_security_actions as i64),
-            ),
-            ("has_actions", JsonValue::Bool(summary.has_actions())),
         ]),
     )
 }
@@ -49109,7 +49169,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 192);
+        assert_eq!(definitions.len(), 193);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -49665,7 +49725,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            184
+            185
         );
         assert_eq!(
             export
@@ -50349,11 +50409,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(192))
+            Some(&integer(193))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(184))
+            Some(&integer(185))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -52602,6 +52662,125 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_mesh_substrate_actions_request = request(
+            "call-list-integration-mesh-substrate-actions",
+            SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_ACTIONS_TOOL_ID,
+            object([
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("usb"),
+                        string("serial_controller"),
+                        string("radio_802154"),
+                        string("supervision"),
+                    ]),
+                ),
+                ("activation_ready", JsonValue::Bool(false)),
+                ("limit", integer(2)),
+            ]),
+            5_909,
+        );
+        let list_mesh_substrate_actions_trace =
+            tool_runtime.invoke_with_events(&list_mesh_substrate_actions_request);
+        assert!(list_mesh_substrate_actions_trace.result.ok);
+        assert_eq!(
+            list_mesh_substrate_actions_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_mesh_substrate_actions_output = list_mesh_substrate_actions_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        assert_eq!(
+            field(list_mesh_substrate_actions_output, "count"),
+            Some(&integer(2))
+        );
+        let mesh_substrate_action_summary =
+            field(list_mesh_substrate_actions_output, "summary").unwrap();
+        assert_eq!(
+            field(mesh_substrate_action_summary, "total_actions"),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(mesh_substrate_action_summary, "has_actions"),
+            Some(&JsonValue::Bool(true))
+        );
+        let mesh_substrate_action = array_item(
+            field(
+                list_mesh_substrate_actions_output,
+                "mesh_substrate_actions",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(mesh_substrate_action, "sequence"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(mesh_substrate_action, "protocol"),
+            Some(&string("zwave"))
+        );
+        assert_eq!(
+            field(mesh_substrate_action, "stage"),
+            Some(&string("radio"))
+        );
+        assert_eq!(
+            field(mesh_substrate_action, "primitive"),
+            Some(&string("zwave_serial_api"))
+        );
+
+        let mesh_substrate_action_summary_request = request(
+            "call-integration-mesh-substrate-action-summary",
+            SMART_HOME_GET_INTEGRATION_MESH_SUBSTRATE_ACTION_SUMMARY_TOOL_ID,
+            object([(
+                "available_primitives",
+                JsonValue::Array(vec![
+                    string("usb"),
+                    string("serial_controller"),
+                    string("radio_802154"),
+                    string("supervision"),
+                ]),
+            )]),
+            5_910,
+        );
+        let mesh_substrate_action_summary_trace =
+            tool_runtime.invoke_with_events(&mesh_substrate_action_summary_request);
+        assert!(mesh_substrate_action_summary_trace.result.ok);
+        assert_eq!(
+            mesh_substrate_action_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let mesh_substrate_action_summary_output = mesh_substrate_action_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let mesh_substrate_action_rollup =
+            field(mesh_substrate_action_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(mesh_substrate_action_rollup, "total_actions"),
+            Some(&integer(5))
+        );
+        assert_eq!(
+            field(mesh_substrate_action_rollup, "network_security_actions"),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(mesh_substrate_action_rollup, "first_protocol"),
+            Some(&string("zwave"))
+        );
+        assert_eq!(
+            field(mesh_substrate_action_rollup, "first_stage"),
+            Some(&string("radio"))
+        );
+
         let mesh_readiness_package_summary_request = request(
             "call-integration-mesh-readiness-package-summary",
             SMART_HOME_GET_INTEGRATION_MESH_READINESS_PACKAGE_SUMMARY_TOOL_ID,
@@ -52620,7 +52799,7 @@ mod tests {
                     JsonValue::Array(vec![string("smart_home.read")]),
                 ),
             ]),
-            5_909,
+            5_911,
         );
         let mesh_readiness_package_summary_trace =
             tool_runtime.invoke_with_events(&mesh_readiness_package_summary_request);
@@ -52670,7 +52849,7 @@ mod tests {
                     JsonValue::Array(vec![string("smart_home.read")]),
                 ),
             ]),
-            5_910,
+            5_912,
         );
         let mesh_stage_release_summary_trace =
             tool_runtime.invoke_with_events(&mesh_stage_release_summary_request);

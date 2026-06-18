@@ -1594,9 +1594,10 @@ pub enum SmartHomeTool {
     GetIntegrationMeshPrimitiveReadinessSummary,
     ListIntegrationMeshSubstrateStages,
     GetIntegrationMeshSubstrateStageSummary,
+    ListIntegrationMeshSubstrateActions,
+    GetIntegrationMeshSubstrateActionSummary,
     GetIntegrationMeshReadinessPackageSummary,
     GetIntegrationMeshStageReleaseSummary,
-    ListIntegrationMeshSubstrateActions,
     GetIntegrationMeshActionReadinessSummary,
     Discover,
     PairBridge,
@@ -2077,14 +2078,17 @@ impl SmartHomeTool {
             Self::GetIntegrationMeshSubstrateStageSummary => {
                 read_tool("smart_home.get_integration_mesh_substrate_stage_summary")
             }
+            Self::ListIntegrationMeshSubstrateActions => {
+                read_tool("smart_home.list_integration_mesh_substrate_actions")
+            }
+            Self::GetIntegrationMeshSubstrateActionSummary => {
+                read_tool("smart_home.get_integration_mesh_substrate_action_summary")
+            }
             Self::GetIntegrationMeshReadinessPackageSummary => {
                 read_tool("smart_home.get_integration_mesh_readiness_package_summary")
             }
             Self::GetIntegrationMeshStageReleaseSummary => {
                 read_tool("smart_home.get_integration_mesh_stage_release_summary")
-            }
-            Self::ListIntegrationMeshSubstrateActions => {
-                read_tool("smart_home.list_integration_mesh_substrate_actions")
             }
             Self::GetIntegrationMeshActionReadinessSummary => {
                 read_tool("smart_home.get_integration_mesh_action_readiness_summary")
@@ -2843,9 +2847,10 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetIntegrationMeshPrimitiveReadinessSummary,
         SmartHomeTool::ListIntegrationMeshSubstrateStages,
         SmartHomeTool::GetIntegrationMeshSubstrateStageSummary,
+        SmartHomeTool::ListIntegrationMeshSubstrateActions,
+        SmartHomeTool::GetIntegrationMeshSubstrateActionSummary,
         SmartHomeTool::GetIntegrationMeshReadinessPackageSummary,
         SmartHomeTool::GetIntegrationMeshStageReleaseSummary,
-        SmartHomeTool::ListIntegrationMeshSubstrateActions,
         SmartHomeTool::GetIntegrationMeshActionReadinessSummary,
         SmartHomeTool::Discover,
         SmartHomeTool::PairBridge,
@@ -3681,7 +3686,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 192);
+        assert_eq!(catalog.len(), 193);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_integrations"
@@ -3921,9 +3926,10 @@ mod tests {
             "smart_home.get_integration_mesh_primitive_readiness_summary",
             "smart_home.list_integration_mesh_substrate_stages",
             "smart_home.get_integration_mesh_substrate_stage_summary",
+            "smart_home.list_integration_mesh_substrate_actions",
+            "smart_home.get_integration_mesh_substrate_action_summary",
             "smart_home.get_integration_mesh_readiness_package_summary",
             "smart_home.get_integration_mesh_stage_release_summary",
-            "smart_home.list_integration_mesh_substrate_actions",
             "smart_home.get_integration_mesh_action_readiness_summary",
         ] {
             assert!(catalog.iter().any(|tool| tool.tool_id == tool_id
@@ -4445,15 +4451,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 192);
-        assert_eq!(summary.read_tools, 184);
+        assert_eq!(summary.total_tools, 193);
+        assert_eq!(summary.read_tools, 185);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 184);
+        assert_eq!(summary.read_only_tier_tools, 185);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 192);
+        assert_eq!(summary.total_required_capabilities, 193);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());
