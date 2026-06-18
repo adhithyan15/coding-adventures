@@ -41,6 +41,12 @@ Item {
     // Alias it once as `doc` and use that everywhere to dodge the shadowing.
     readonly property var doc: model
 
+    // In-memory "saved file" slot for the Save / Load buttons: Save stows the
+    // serialized workbook here, Load restores from it. (A real app would write
+    // this string to a file or QSettings; the demo keeps it in memory so the
+    // round trip is self-contained.)
+    property string savedSnapshot: ""
+
     // Cell geometry (pixels). The gutter and body share rowH so their two
     // ListViews scroll in lockstep.
     readonly property int rowH: 24
@@ -126,6 +132,22 @@ Item {
                 ToolTip.visible: hovered
                 ToolTip.text: "Paste the clipboard at the selected cell, shifting relative references"
                 onClicked: if (doc) doc.paste(doc.infAddress)
+            }
+            // Save / load: serialize the whole workbook (formulas + formats) to a
+            // JSON document and restore it. The document stores only the source —
+            // computed values recompute on load, so a loaded formula stays live.
+            Button {
+                text: "Save"
+                ToolTip.visible: hovered
+                ToolTip.text: "Serialize the whole workbook to memory"
+                onClicked: if (doc) sheet.savedSnapshot = doc.serialize()
+            }
+            Button {
+                text: "Load"
+                enabled: sheet.savedSnapshot.length > 0
+                ToolTip.visible: hovered
+                ToolTip.text: "Restore the workbook from the last save"
+                onClicked: if (doc) doc.deserialize(sheet.savedSnapshot)
             }
         }
 
