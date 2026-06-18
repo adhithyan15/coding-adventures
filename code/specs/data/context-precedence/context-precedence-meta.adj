@@ -66,3 +66,32 @@ rule {
   locator "Wikipedia, \"Implied repeal\" — leges posteriores priores contrarias abrogant"
   trust authoritative
 }
+
+% ---------------------------------------------------------------------
+% CANON 3 — LEX SPECIALIS (the specific governs the general). When two rules
+% both apply to the same situation, the one governing the more specific subject
+% matter controls the one governing only general matters. So
+% `more_specific(S, G)` ⇒ context S outranks context G. The case supplies the
+% primitive `relate more_specific(specific_statute, general_statute) source
+% "<why S is the more specific provision>"`, and this rule derives the edge.
+%
+% Verbatim charter (lex specialis derogat legi generali):
+%   "The lex specialis doctrine, also referred to as generalia specialibus non
+%    derogant (\"the general does not [derogate] from the specific\"), states
+%    that if two laws govern the same factual situation, a law governing a
+%    specific subject matter (lex specialis) overrides a law governing only
+%    general matters (lex generalis)."
+%
+% NOTE (§4.3): lex specialis and lex superior can point OPPOSITE ways (a general
+% rule from a higher authority vs a specific rule from a lower one). This rule
+% only contributes the lex-specialis edge; when the two orders conflict, the
+% engine's cycle/ambiguity handling surfaces it (no silent pick) until a further
+% grounded tiebreaker meta-rule is added. That tiebreaker is the next slice.
+% ---------------------------------------------------------------------
+rule {
+  head: outranks_context($Specific, $General)
+  when: more_specific($Specific, $General)
+  source "Lex specialis derogat legi generali — Lex specialis (Wikipedia): \"The lex specialis doctrine, also referred to as generalia specialibus non derogant (\\\"the general does not [derogate] from the specific\\\"), states that if two laws govern the same factual situation, a law governing a specific subject matter (lex specialis) overrides a law governing only general matters (lex generalis).\""
+  locator "Wikipedia, \"Lex specialis\" — generalia specialibus non derogant"
+  trust authoritative
+}
