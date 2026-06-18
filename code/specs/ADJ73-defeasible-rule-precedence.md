@@ -361,9 +361,15 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
     reversed Ninth Circuit reading (`worked-appeal-example.adj`), and `idsa_2024 > idsa_2004` is
     *derived* from a grounded `supersedes` fact (`worked-supersession-example.adj`). The recursion
     bottoms out at cited primitive facts — an edge that can be derived is derived, not duplicated.
-    Golden test `adj-lang-cli/tests/context_metarules_e2e.rs`. Still to come: **lex specialis**
-    (needs a comparable specificity attribute on rules) + the lex-specialis-vs-lex-superior
-    tiebreaker meta-rule (§4.3).
+    Golden test `adj-lang-cli/tests/context_metarules_e2e.rs`.
+  - **PR-B-5 lex specialis ✅ DONE (no engine change — pure grounded meta-rule on the PR-B-4
+    machinery).** Added canon 3 `outranks_context($S,$G) :- more_specific($S,$G)` (citing *lex
+    specialis derogat legi generali*) to `context-precedence-meta.adj` + `worked-lex-specialis-example.adj`
+    (a specific wilderness-trail statute governs a general traffic statute despite the general's
+    `mandatory` tier). Completes the three classical canons (lex superior / lex posterior / lex
+    specialis). Still to come: the lex-specialis-vs-lex-superior **tiebreaker** (§4.3) — when a
+    specific lower-authority rule and a general higher-authority rule point opposite ways the two
+    derived orders conflict; a further grounded meta-rule must decide, else `CONFLICT` (abstain).
 - **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
   annotations) + regen grammar.
 - **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).

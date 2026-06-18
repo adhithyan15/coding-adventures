@@ -7,10 +7,12 @@
 //! the engine (logic-engine >= 0.21) reads as a context-order edge. These tests prove the derived
 //! edge drives `lex superior` end-to-end on the two worked examples, at 0 answer-time model calls:
 //!
-//!   * worked-appeal-example.adj — a Supreme Court reversal flips a (now-reversed) Ninth Circuit
-//!     reading that sits at the HIGHEST tier; the SCOTUS reading governs via the DERIVED edge.
+//!   * worked-appeal-example.adj — appeal status: a Supreme Court reversal flips a (now-reversed)
+//!     Ninth Circuit reading that sits at the HIGHEST tier; the SCOTUS reading governs.
 //!   * worked-supersession-example.adj — lex posterior: the 2024 guideline edition supersedes the
 //!     2004 one, so the current recommendation governs the legacy one.
+//!   * worked-lex-specialis-example.adj — lex specialis: the specific statute governs the general
+//!     one on the same matter, despite the general statute's higher tier.
 
 use std::path::PathBuf;
 use std::process::Command;
@@ -102,5 +104,42 @@ fn lex_posterior_metarule_picks_the_newer_edition() {
     assert!(
         s.contains("\"has_conflict\":false"),
         "clean supersession, not a split: {s}"
+    );
+}
+
+#[test]
+fn lex_specialis_metarule_picks_the_more_specific_statute() {
+    let (ok, s) = run("worked-lex-specialis-example.adj");
+    assert!(ok, "cli should succeed: {s}");
+    // The specific (wilderness-trail) statute's reading governs the general (traffic) statute's,
+    // via the lex-specialis meta-rule deriving the edge from a grounded `more_specific` fact —
+    // despite the general statute sitting at the higher `mandatory` tier.
+    assert!(
+        s.contains("rule_on(trail_access, prohibited)"),
+        "carries the specific-statute reading: {s}"
+    );
+    assert!(
+        s.contains("\"status\":\"governing\""),
+        "specific statute governs: {s}"
+    );
+    assert!(
+        s.contains("\"context\":\"trail_statute\""),
+        "governed in the specific (trail) statute context: {s}"
+    );
+    assert!(
+        s.contains("\"defeated_by\":\"rule_on(trail_access, prohibited)\""),
+        "the general statute reading is defeated by the specific one: {s}"
+    );
+    assert!(
+        s.contains("\"context\":\"traffic_statute\""),
+        "the defeated one is the general (traffic) statute: {s}"
+    );
+    assert!(
+        s.contains("\"standing\":\"mandatory\""),
+        "the defeated general reading was top-tier: {s}"
+    );
+    assert!(
+        s.contains("\"has_conflict\":false"),
+        "clean override, not a split: {s}"
     );
 }
