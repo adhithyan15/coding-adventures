@@ -52,6 +52,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationEvidenceLaneInventoryItem` and lane inventory helpers
   for grouping blocked evidence rows by their first catalog, activation-plan,
   readiness, policy, or local-boundary blocker lane.
+- `IntegrationActivationEvidenceRemediationItem` and remediation helpers for
+  turning evidence lane inventories into sorted catalog-owned remediation
+  plans before Chief-specific escalation tooling consumes them.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,

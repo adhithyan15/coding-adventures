@@ -861,6 +861,77 @@ pub struct IntegrationActivationEvidenceLaneInventorySummary {
     pub highest_policy_tier: PrivilegeTier,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationEvidenceRemediationKind {
+    CompleteCatalogEvidence,
+    CompleteActivationPlan,
+    SupplyReadinessInputs,
+    CompletePolicyReview,
+    ResolveLocalBoundary,
+}
+
+impl IntegrationActivationEvidenceRemediationKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::CompleteCatalogEvidence => "complete_catalog_evidence",
+            Self::CompleteActivationPlan => "complete_activation_plan",
+            Self::SupplyReadinessInputs => "supply_readiness_inputs",
+            Self::CompletePolicyReview => "complete_policy_review",
+            Self::ResolveLocalBoundary => "resolve_local_boundary",
+        }
+    }
+
+    pub fn from_lane(lane: IntegrationActivationEvidenceLane) -> Self {
+        match lane {
+            IntegrationActivationEvidenceLane::Catalog => Self::CompleteCatalogEvidence,
+            IntegrationActivationEvidenceLane::ActivationPlan => Self::CompleteActivationPlan,
+            IntegrationActivationEvidenceLane::Readiness => Self::SupplyReadinessInputs,
+            IntegrationActivationEvidenceLane::Policy => Self::CompletePolicyReview,
+            IntegrationActivationEvidenceLane::LocalBoundary => Self::ResolveLocalBoundary,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceRemediationItem {
+    pub sequence: usize,
+    pub remediation_kind: IntegrationActivationEvidenceRemediationKind,
+    pub lane: IntegrationActivationEvidenceLane,
+    pub priority: u8,
+    pub blocked_integration_count: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub human_review_integrations: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub integration_ids: Vec<IntegrationId>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceRemediationSummary {
+    pub total_remediation_items: usize,
+    pub unique_integrations: usize,
+    pub total_blocked_integrations: usize,
+    pub catalog_remediation_items: usize,
+    pub activation_plan_remediation_items: usize,
+    pub readiness_remediation_items: usize,
+    pub policy_remediation_items: usize,
+    pub local_boundary_remediation_items: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub human_review_integrations: usize,
+    pub first_remediation_priority: Option<u8>,
+    pub next_remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
 impl IntegrationActivationEvidenceBriefingSummary {
     pub fn from_entry(
         entry: &IntegrationCatalogEntry,
@@ -1119,6 +1190,138 @@ impl IntegrationActivationEvidenceLaneInventorySummary {
 
     pub fn has_readiness_lane(&self) -> bool {
         self.readiness_lane_blocked_integrations > 0
+    }
+}
+
+impl IntegrationActivationEvidenceRemediationItem {
+    pub fn from_lane_inventory_item(
+        sequence: usize,
+        item: &IntegrationActivationEvidenceLaneInventoryItem,
+    ) -> Self {
+        Self {
+            sequence,
+            remediation_kind: IntegrationActivationEvidenceRemediationKind::from_lane(item.lane),
+            lane: item.lane,
+            priority: item.first_blocked_priority,
+            blocked_integration_count: item.blocked_integration_count,
+            missing_prerequisite_count: item.missing_prerequisite_count,
+            missing_primitive_count: item.missing_primitive_count,
+            missing_capability_count: item.missing_capability_count,
+            missing_dependency_count: item.missing_dependency_count,
+            local_only_integrations: item.local_only_integrations,
+            cloud_required_integrations: item.cloud_required_integrations,
+            human_review_integrations: item.human_review_integrations,
+            highest_policy_tier: item.highest_policy_tier,
+            integration_ids: item.integration_ids.clone(),
+        }
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_integration_count > 0
+    }
+
+    pub fn includes_integration(&self, integration_id: &IntegrationId) -> bool {
+        self.integration_ids.contains(integration_id)
+    }
+
+    pub fn requires_human_review(&self) -> bool {
+        self.human_review_integrations > 0
+    }
+
+    pub fn has_missing_inputs(&self) -> bool {
+        self.missing_prerequisite_count > 0
+            || self.missing_primitive_count > 0
+            || self.missing_capability_count > 0
+            || self.missing_dependency_count > 0
+    }
+}
+
+impl IntegrationActivationEvidenceRemediationSummary {
+    pub fn from_items<'a>(
+        items: impl IntoIterator<Item = &'a IntegrationActivationEvidenceRemediationItem>,
+    ) -> Self {
+        let mut summary = Self {
+            total_remediation_items: 0,
+            unique_integrations: 0,
+            total_blocked_integrations: 0,
+            catalog_remediation_items: 0,
+            activation_plan_remediation_items: 0,
+            readiness_remediation_items: 0,
+            policy_remediation_items: 0,
+            local_boundary_remediation_items: 0,
+            missing_prerequisite_count: 0,
+            missing_primitive_count: 0,
+            missing_capability_count: 0,
+            missing_dependency_count: 0,
+            local_only_integrations: 0,
+            cloud_required_integrations: 0,
+            human_review_integrations: 0,
+            first_remediation_priority: None,
+            next_remediation_kind: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for item in items {
+            summary.total_remediation_items += 1;
+            summary.total_blocked_integrations += item.blocked_integration_count;
+            summary.missing_prerequisite_count += item.missing_prerequisite_count;
+            summary.missing_primitive_count += item.missing_primitive_count;
+            summary.missing_capability_count += item.missing_capability_count;
+            summary.missing_dependency_count += item.missing_dependency_count;
+            summary.local_only_integrations += item.local_only_integrations;
+            summary.cloud_required_integrations += item.cloud_required_integrations;
+            summary.human_review_integrations += item.human_review_integrations;
+            summary.highest_policy_tier = summary.highest_policy_tier.max(item.highest_policy_tier);
+
+            if summary.next_remediation_kind.is_none() {
+                summary.next_remediation_kind = Some(item.remediation_kind);
+            }
+            summary.first_remediation_priority = Some(
+                summary
+                    .first_remediation_priority
+                    .map_or(item.priority, |existing| existing.min(item.priority)),
+            );
+
+            match item.remediation_kind {
+                IntegrationActivationEvidenceRemediationKind::CompleteCatalogEvidence => {
+                    summary.catalog_remediation_items += 1;
+                }
+                IntegrationActivationEvidenceRemediationKind::CompleteActivationPlan => {
+                    summary.activation_plan_remediation_items += 1;
+                }
+                IntegrationActivationEvidenceRemediationKind::SupplyReadinessInputs => {
+                    summary.readiness_remediation_items += 1;
+                }
+                IntegrationActivationEvidenceRemediationKind::CompletePolicyReview => {
+                    summary.policy_remediation_items += 1;
+                }
+                IntegrationActivationEvidenceRemediationKind::ResolveLocalBoundary => {
+                    summary.local_boundary_remediation_items += 1;
+                }
+            }
+
+            integration_ids.extend(item.integration_ids.iter().cloned());
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_remediation_items == 0
+    }
+
+    pub fn has_remediations(&self) -> bool {
+        self.total_remediation_items > 0
+    }
+
+    pub fn has_readiness_remediation(&self) -> bool {
+        self.readiness_remediation_items > 0
+    }
+
+    pub fn requires_human_review(&self) -> bool {
+        self.human_review_integrations > 0
     }
 }
 
@@ -16360,6 +16563,59 @@ pub fn activation_evidence_lane_inventory_at_or_before_priority(
     activation_evidence_lane_inventory_from_rows(rows.iter())
 }
 
+pub fn activation_evidence_remediation_items_from_inventory<'a>(
+    inventory: impl IntoIterator<Item = &'a IntegrationActivationEvidenceLaneInventoryItem>,
+) -> Vec<IntegrationActivationEvidenceRemediationItem> {
+    let mut items = inventory
+        .into_iter()
+        .map(|item| IntegrationActivationEvidenceRemediationItem::from_lane_inventory_item(0, item))
+        .collect::<Vec<_>>();
+    items.sort_by(compare_activation_evidence_remediation_items);
+    for (index, item) in items.iter_mut().enumerate() {
+        item.sequence = index + 1;
+    }
+    items
+}
+
+pub fn activation_evidence_remediation_items_from_rows<'a>(
+    rows: impl IntoIterator<Item = &'a IntegrationActivationEvidenceRow>,
+) -> Vec<IntegrationActivationEvidenceRemediationItem> {
+    let inventory = activation_evidence_lane_inventory_from_rows(rows);
+    activation_evidence_remediation_items_from_inventory(inventory.iter())
+}
+
+pub fn activation_evidence_remediation_items_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceRemediationItem> {
+    let inventory = activation_evidence_lane_inventory_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_evidence_remediation_items_from_inventory(inventory.iter())
+}
+
+pub fn activation_evidence_remediation_items_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceRemediationItem> {
+    let inventory = activation_evidence_lane_inventory_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_evidence_remediation_items_from_inventory(inventory.iter())
+}
+
 pub fn activation_evidence_scorecard_summary(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -16446,6 +16702,21 @@ fn compare_activation_evidence_lane_inventory_items(
                 .blocked_integration_count
                 .cmp(&left.blocked_integration_count)
         })
+        .then_with(|| left.lane.cmp(&right.lane))
+}
+
+fn compare_activation_evidence_remediation_items(
+    left: &IntegrationActivationEvidenceRemediationItem,
+    right: &IntegrationActivationEvidenceRemediationItem,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| {
+            right
+                .blocked_integration_count
+                .cmp(&left.blocked_integration_count)
+        })
+        .then_with(|| left.remediation_kind.cmp(&right.remediation_kind))
         .then_with(|| left.lane.cmp(&right.lane))
 }
 
@@ -25914,6 +26185,112 @@ mod tests {
         assert!(!summary.has_readiness_lane());
         assert_eq!(summary.total_blocked_integrations, 0);
         assert_eq!(summary.first_blocked_priority, None);
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::ReadOnly);
+    }
+
+    #[test]
+    fn activation_evidence_remediation_items_plan_priority_wave_work() {
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let rows = activation_evidence_rows_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let inventory = activation_evidence_lane_inventory_from_rows(rows.iter());
+        let from_inventory = activation_evidence_remediation_items_from_inventory(inventory.iter());
+        let from_rows = activation_evidence_remediation_items_from_rows(rows.iter());
+        let summary = IntegrationActivationEvidenceRemediationSummary::from_items(from_rows.iter());
+
+        assert_eq!(from_rows, from_inventory);
+        assert!(!from_rows.is_empty());
+        assert!(from_rows
+            .iter()
+            .enumerate()
+            .all(|(index, item)| { item.sequence == index + 1 && item.has_blockers() }));
+        assert!(from_rows.windows(2).all(|window| {
+            window[0].priority < window[1].priority
+                || (window[0].priority == window[1].priority
+                    && window[0].blocked_integration_count >= window[1].blocked_integration_count)
+        }));
+
+        let readiness = from_rows
+            .iter()
+            .find(|item| {
+                item.remediation_kind
+                    == IntegrationActivationEvidenceRemediationKind::SupplyReadinessInputs
+            })
+            .unwrap();
+        assert_eq!(readiness.lane, IntegrationActivationEvidenceLane::Readiness);
+        assert_eq!(
+            readiness.remediation_kind.as_str(),
+            "supply_readiness_inputs"
+        );
+        assert!(readiness.includes_integration(&IntegrationId::trusted("hue")));
+        assert!(readiness.requires_human_review());
+        assert!(readiness.has_missing_inputs());
+        assert!(readiness.missing_prerequisite_count > 0);
+        assert!(readiness.missing_capability_count > 0);
+        assert_eq!(readiness.priority, 0);
+        assert_eq!(readiness.highest_policy_tier, PrivilegeTier::HighRisk);
+
+        assert_eq!(summary.total_remediation_items, from_rows.len());
+        assert_eq!(
+            summary.unique_integrations,
+            rows.iter().filter(|row| row.has_blockers()).count()
+        );
+        assert_eq!(
+            summary.total_blocked_integrations,
+            from_rows
+                .iter()
+                .map(|item| item.blocked_integration_count)
+                .sum::<usize>()
+        );
+        assert!(summary.has_remediations());
+        assert!(summary.has_readiness_remediation());
+        assert!(summary.requires_human_review());
+        assert_eq!(summary.first_remediation_priority, Some(0));
+        assert_eq!(
+            summary.next_remediation_kind,
+            Some(IntegrationActivationEvidenceRemediationKind::SupplyReadinessInputs)
+        );
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+    }
+
+    #[test]
+    fn activation_evidence_remediation_items_mark_ready_catalog_context() {
+        let catalog = vec![hue_entry()];
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let items = activation_evidence_remediation_items_for_catalog(
+            &catalog,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let summary = IntegrationActivationEvidenceRemediationSummary::from_items(items.iter());
+
+        assert!(items.is_empty());
+        assert!(summary.is_empty());
+        assert!(!summary.has_remediations());
+        assert!(!summary.has_readiness_remediation());
+        assert!(!summary.requires_human_review());
+        assert_eq!(summary.total_blocked_integrations, 0);
+        assert_eq!(summary.first_remediation_priority, None);
+        assert_eq!(summary.next_remediation_kind, None);
         assert_eq!(summary.highest_policy_tier, PrivilegeTier::ReadOnly);
     }
 

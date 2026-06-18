@@ -36,6 +36,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - activation evidence lane inventories that group blocked integration rows by
   first-blocked catalog, activation-plan, readiness, policy, or local-boundary
   lane for reusable release planning
+- activation evidence remediation items that turn lane inventories into a
+  sorted catalog-owned work plan before Chief-specific escalation or response
+  tooling
 - read-only D18D tool descriptors for listing/describing integrations and
   primitive families
 - typed ecosystem-survey source rows that map Home Assistant, Hubitat, Homey
