@@ -243,6 +243,7 @@ const SIMPLE_PASS_NAMES: &[&str] = &[
     "fold-control-flow",
     "dce",
     "inline",
+    "inline-variables",
     "remove-unused-vars",
     "treeshake",
     "rename",
@@ -278,6 +279,7 @@ fn run_simple_pipeline(
     use coding_adventures_closure_pass_dce::DcePass;
     use coding_adventures_closure_pass_fold_control_flow::FoldControlFlowPass;
     use coding_adventures_closure_pass_inline::InlinePass;
+    use coding_adventures_closure_pass_inline_variables::InlineVariablesPass;
     use coding_adventures_closure_pass_pipeline::PassPipeline;
     use coding_adventures_closure_pass_remove_unused_vars::RemoveUnusedVarsPass;
     use coding_adventures_closure_pass_rename::RenamePass;
@@ -302,6 +304,10 @@ fn run_simple_pipeline(
     pipeline.add(Box::new(FoldControlFlowPass::new()));
     pipeline.add(Box::new(DcePass::new()));
     pipeline.add(Box::new(InlinePass::new()));
+    // inline-variables propagates a top-level `const = literal` to its
+    // use sites; it runs before remove-unused-vars, which then deletes
+    // the now-unreferenced `const` declaration.
+    pipeline.add(Box::new(InlineVariablesPass::new()));
     pipeline.add(Box::new(RemoveUnusedVarsPass::new()));
     pipeline.add(Box::new(TreeshakePass::new()));
     // rename runs last: it shortens leaf-function parameter names after
@@ -5998,6 +6004,24 @@ mod tests {
     }
 
     #[test]
+    fn simple_propagates_const_literal_and_removes_binding() {
+        // CLOC13.H: a top-level `const` bound to a literal is propagated
+        // to its use sites, remove-unused-vars deletes the binding, and
+        // constant-fold folds the now-concrete `2 + 1`.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out =
+            transform_source("const RATE = 2; total(base * RATE); margin(RATE + 1);", &cfg)
+                .expect("ok");
+        assert_eq!(out, "total(base * 2);margin(3);");
+    }
+
+    #[test]
     fn simple_level_bridge_ok_status_in_cv() {
         // When the source parses cleanly, the CV contribution for the
         // `compilation_level` stage must carry bridge_status = "ok".
@@ -6036,7 +6060,7 @@ mod tests {
         // The pass pipeline must be recorded in the trace, in order.
         assert!(
             body.contains(
-                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"remove-unused-vars\",\"treeshake\",\"rename\"]"
+                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"inline-variables\",\"remove-unused-vars\",\"treeshake\",\"rename\"]"
             ),
             "expected passes list in CV sidecar: {body}"
         );

@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closurec"
-version = "0.147.0"
+version = "0.148.0"
 edition = "2021"
 description = "closurec — CLI driver for the Closure Compiler clone. Mirrors the upstream Java Closure Compiler's command-line flag surface (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility. Per CLOC08."
 
@@ -28,6 +28,7 @@ coding-adventures-closure-pass-constant-fold = { path = "../../../packages/rust/
 coding-adventures-closure-pass-fold-control-flow = { path = "../../../packages/rust/closure-pass-fold-control-flow" }
 coding-adventures-closure-pass-dce = { path = "../../../packages/rust/closure-pass-dce" }
 coding-adventures-closure-pass-inline = { path = "../../../packages/rust/closure-pass-inline" }
+coding-adventures-closure-pass-inline-variables = { path = "../../../packages/rust/closure-pass-inline-variables" }
 coding-adventures-closure-pass-rename = { path = "../../../packages/rust/closure-pass-rename" }
 coding-adventures-closure-pass-treeshake = { path = "../../../packages/rust/closure-pass-treeshake" }
 coding-adventures-closure-pass-collapse-properties = { path = "../../../packages/rust/closure-pass-collapse-properties" }
