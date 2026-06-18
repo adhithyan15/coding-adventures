@@ -342,13 +342,23 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
     Clause, circuit precedence, guideline year — rides on the edge, not host code). `context_edges()`
     unions explicit + grounded edges; cycle detection spans both. This is the decision-§2.3
     keystone: "context precedence is itself grounded, in its own rulebook, with provenance on WHY."
-    Still to come: the `context-precedence.adj` **rulebook** of byte-quoted edges + a worked legal
-    example through the CLI (PR-B-3 / PR-E), then the recency/appeal/lex-specialis **meta-rules**.
+  - **PR-B-3 grounded rulebook + worked example ✅ DONE (adj-lang-cli 0.8).**
+    `code/specs/data/context-precedence/`: a grounded `context-precedence.adj` rulebook —
+    `outranks_context(federal, state)` byte-quoting the Supremacy Clause and
+    `outranks_context(ninth_circuit, district_court)` byte-quoting vertical stare decisis (verbatim
+    primary-source quotes + locator + `authoritative` tier; `SOURCES.md` ledger) — plus a worked
+    legal example that `import`s it and proves *lex superior* end-to-end through the CLI: the
+    circuit's broad reading **governs** a district court's narrow reading **despite its higher
+    `mandatory` tier**. Governing answers now carry their `context` in the JSON. Golden test
+    `adj-lang-cli/tests/context_precedence_e2e.rs`. Still to come: the recency / appeal-status /
+    lex-specialis **meta-rules** (PR-B-4) that *derive* precedence from grounded rule attributes
+    (e.g. `idsa_2024 > idsa_2004` as lex posterior) rather than asserting each edge bare.
 - **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
   annotations) + regen grammar.
 - **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).
-- **PR-E — legal `context-precedence` worked example** (federal>state grounded to the Supremacy
-  Clause; a reversed-on-appeal defeat) proving the recursive grounded mechanism end-to-end.
+- **PR-E — legal `context-precedence` worked example** — the lex-superior half (federal>state /
+  ninth_circuit>district_court grounded to the Supremacy Clause + vertical stare decisis) is
+  ✅ DONE in **PR-B-3**; the reversed-on-appeal defeat folds into the appeal-status meta-rule (PR-B-4).
 
 Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`, babysit.
 

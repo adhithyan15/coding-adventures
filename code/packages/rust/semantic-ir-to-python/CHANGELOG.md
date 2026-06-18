@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.1.16 — `defined?` lowers to a non-evaluating description (Q9d)
+
+Fourth item of the Q9 structural-builtin tranche.  Ruby `defined?(x)` reaches
+the backend as `BuiltinCall("defined?", [operand])` (a `PURE` builtin whose
+operand must **never** be evaluated — `defined?(expensive_call)` must not call
+it).  Previously it fell through to the eager dispatch
+(`_sir_call_builtin("defined?", [operand])`), which both lacked a `defined?`
+entry **and** evaluated the operand.  `emit_builtin_call` now inspects the
+operand's SIR shape at emit time and emits a constant description string,
+without ever rendering the operand:
+
+- local / param / capture `VarRef` → `"local-variable"`
+- `Const` `VarRef` → `"constant"`
+- `Instance` (`@x`) → `"instance-variable"`; `ClassVar` (`@@x`) → `"class variable"`;
+  `Global` (`$x`) → `"global-variable"`; builtin-name → `"method"`
+- any other expression (literal, method call, …) → `"expression"`
+
+The non-evaluation contract holds for **every** shape (the property that
+matters).  v0 simplifications (documented in `code/specs/sir-runtime.md`):
+instance/class/global vars report their static description rather than the
+runtime `nil`-when-unset (the per-concern runtimes expose no presence predicate
+yet), and a general/method operand reports the generic `"expression"` rather
+than Ruby's exact category.  Tests: `defined_local_var_emits_static_description_py`
+and `defined_does_not_evaluate_operand_py` (asserts the operand literal is never
+emitted).
+
 ## 0.1.15 — `splat` / `double_splat` lower to native spread (Q9c)
 
 Third item of the Q9 structural-builtin tranche.  Ruby `*x` / `**x` reach the

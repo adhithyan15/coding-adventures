@@ -1147,6 +1147,36 @@ mod tests {
     }
 
     #[test]
+    fn defined_local_var_emits_static_description_py() {
+        use semantic_ir::{Scope, Stmt};
+        // `x = 1; defined?(x)` → the description "local-variable", emitted as a
+        // constant string — never the dispatch fallthrough.
+        let bind = Stmt::LetBinding {
+            name: "x".into(),
+            sir_type: None,
+            value: Expr::IntLit { value: 1, span: s() },
+            span: s(),
+        };
+        let d = bc("defined?", vec![Expr::VarRef { name: "x".into(), scope: Scope::Local, span: s() }]);
+        let a = compile(&module_with_main_body(vec![bind], d, &[])).expect("compile");
+        assert!(a.source.contains("\"local-variable\""), "got:\n{}", a.source);
+        assert!(!a.source.contains("_sir_call_builtin(\"defined?\""), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn defined_does_not_evaluate_operand_py() {
+        // The core Ruby contract: `defined?` must NOT evaluate its operand.  For
+        // `defined?(99)` we emit the constant "expression" and the operand
+        // literal `99` must NOT appear anywhere in the output (proof it was not
+        // rendered/evaluated).
+        let d = bc("defined?", vec![Expr::IntLit { value: 99, span: s() }]);
+        let a = compile(&module_with_main_body(vec![], d, &[])).expect("compile");
+        assert!(a.source.contains("\"expression\""), "got:\n{}", a.source);
+        assert!(!a.source.contains("99"), "operand was evaluated; got:\n{}", a.source);
+        assert!(!a.source.contains("_sir_call_builtin(\"defined?\""), "got:\n{}", a.source);
+    }
+
+    #[test]
     fn no_range_import_when_unused_py() {
         // A module that never builds a range must not gain the range dependency.
         let a = compile(&module_with_main_body(

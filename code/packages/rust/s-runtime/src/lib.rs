@@ -49,9 +49,11 @@ mod tests {
         format_value(&value).join("\n")
     }
 
-    /// Evaluate and return the numeric data of a `Double` result.
+    /// Evaluate and return the numeric data of a `Double` result (seeing through
+    /// a names attribute — a named numeric is still numeric).
     fn nums(src: &str) -> Vec<f64> {
-        match eval_s(src).unwrap() {
+        let value = eval_s(src).unwrap();
+        match value.strip_names() {
             SValue::Double(d) => d.data().to_vec(),
             other => panic!("expected double, got {}", other.type_name()),
         }
@@ -908,5 +910,61 @@ mod tests {
                                                       // Required parameters can't be omitted.
         assert!(eval_s("dbinom(1)\n").is_err());
         assert!(eval_s("dpois(1)\n").is_err());
+    }
+
+    // --- R-15: named vectors through the S pipeline ----------------------
+
+    /// The names of `src`'s result as strings (NA → "NA"); panics if unnamed.
+    fn names_of(src: &str) -> Vec<String> {
+        match eval_s(src).unwrap() {
+            SValue::Character(v) => v
+                .into_iter()
+                .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+                .collect(),
+            other => panic!("expected character, got {}", other.type_name()),
+        }
+    }
+
+    #[test]
+    fn named_vectors_through_s_syntax() {
+        // c(name = value) attaches names (S uses `=` for argument names).
+        assert_eq!(
+            names_of("names(c(a = 1, b = 2, c = 3))\n"),
+            vec!["a", "b", "c"]
+        );
+        assert_eq!(nums("c(a = 1, b = 2)\n"), vec![1.0, 2.0]);
+        // names(x) <- value (S `<-` assignment, replacement function path).
+        assert_eq!(
+            names_of("x <- c(1, 2, 3)\nnames(x) <- c(\"p\", \"q\", \"r\")\nnames(x)\n"),
+            vec!["p", "q", "r"]
+        );
+        // NA-pad on a short names vector.
+        assert_eq!(
+            names_of("x <- c(1, 2, 3)\nnames(x) <- c(\"p\")\nnames(x)\n"),
+            vec!["p", "NA", "NA"]
+        );
+        // Clearing names with NULL.
+        assert_eq!(show("x <- c(a = 1)\nnames(x) <- NULL\nnames(x)\n"), "NULL");
+        // Character indexing by name.
+        assert_eq!(nums("x <- c(a = 1, b = 2, c = 3)\nx[\"b\"]\n"), vec![2.0]);
+        assert_eq!(
+            nums("x <- c(a = 1, b = 2, c = 3)\nx[c(\"a\", \"c\")]\n"),
+            vec![1.0, 3.0]
+        );
+        // setNames functional form (no underscore, so it is writable in S).
+        assert_eq!(
+            names_of("names(setNames(c(1, 2), c(\"x\", \"y\")))\n"),
+            vec!["x", "y"]
+        );
+        // Printing: names above values.
+        assert_eq!(show("c(a = 1, b = 2, c = 3)\n"), "a b c\n1 2 3");
+    }
+
+    #[test]
+    fn named_vector_replacement_errors_are_clean() {
+        // Too many names is an error.
+        assert!(eval_s("x <- c(1, 2)\nnames(x) <- c(\"a\", \"b\", \"c\")\n").is_err());
+        // A replacement target that isn't a registered `f<-` is undefined.
+        assert!(eval_s("x <- c(1, 2)\nnope(x) <- 5\n").is_err());
     }
 }

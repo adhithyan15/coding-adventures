@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ## [0.11.0] - 2026-06-17
 
+### Added
+
+- **Named vectors / the `names` attribute (R-15)** — a new transparent wrapper
+  `SValue::Named { names, values }` carries a parallel `Vec<Option<String>>` of
+  element names beside a boxed atomic value (`Double`/`Logical`/`Character`). Like
+  `SValue::Classed` it is *see-through*: `length`, `type_name`, `class_of`, the
+  coercions, `arithmetic`, `compare`, and `truthy` all delegate to the inner
+  value, so names drop exactly where R drops them and survive where R keeps them.
+  - `c(a = 1, b = 2)` attaches argument tags; nested named pieces combine R-style
+    (`c(x = c(a = 1), 2)` → names `"x.a"`, `""`; `c(p = c(1, 2))` → `"p1"`, `"p2"`).
+    `combine` builds names only when some argument is tagged or already named.
+  - `names(x)` returns the character names (or `NULL`); the `names<-` replacement
+    function sets them with R's NA-padding recycling (too-short pads with `NA`,
+    too-long is an error, `NULL` clears), and `setNames(x, nm)` is the functional
+    form. A general **replacement-function lvalue path** in the evaluator desugars
+    `f(x) <- v` to ``x <- `f<-`(x, v)`` (reusable for future `levels<-`/`dim<-`).
+  - **Character indexing** `x["b"]` / `x[c("a","c")]` selects by name (unmatched →
+    `NA`); a `resolve_picks_named` helper extends `resolve_picks` with the
+    by-name path. Positional / negative / logical indexing still work and now
+    **carry the selected names along**. `assign_index` keeps names through
+    `v[i] <- val` and resolves a character subscript by name.
+  - **Printing** lays a named vector out R-style — right-aligned names above
+    right-aligned values, each column the wider of the two — instead of the `[i]`
+    prefix; an unset name prints `<NA>`.
+
 ### Changed
 
 - **`%*%` adopts the shared f64 matrix-execution substrate (MXF-4)** — R's
@@ -20,7 +45,12 @@ All notable changes to this project will be documented in this file.
 
 ### Safety
 
-- **NA correctness boundary.** R's NA is a *specific* NaN bit pattern;
+- The names vector is always kept exactly as long as the values (every
+  constructor truncates / `NA`-pads via `with_names`), so a name lookup can never
+  index out of bounds; the by-name index path reuses the bounded `resolve_picks`.
+  No new unbounded allocation or integer-overflow surface — name lengths ride the
+  same vector-length channels already capped at `MAX_SEQ_LEN`.
+- **NA correctness boundary (MXF-4).** R's NA is a *specific* NaN bit pattern;
   IEEE arithmetic on a NaN yields an implementation-defined payload, so an NA
   pushed through the substrate's floating multiply/add would not reliably return
   as R's NA. When either operand contains an NA (or the inner dimension is `0`),

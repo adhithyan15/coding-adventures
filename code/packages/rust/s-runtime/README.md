@@ -41,6 +41,12 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
 - **Index sub-assignment** (R-14): the left side of `<-` may be a subscript,
   e.g. `v[i] <- x`, `v[-i] <- x`, `m[i, j] <- x`, `m[, j] <- x` — copy-on-modify,
   RHS recycled, so a prior `b <- a` copy is never aliased.
+- **Named vectors / the `names` attribute** (R-15): `c(a = 1, b = 2)` attaches
+  names (nested named pieces combine R-style), `names(x)` gets them and
+  `names(x) <- value` / `setNames(x, nm)` set them (NA-pad short, `NULL` clears),
+  `x["b"]` indexes by name, and a named vector prints names above values. Names
+  are a transparent `SValue::Named` wrapper — they ride through indexing and drop
+  through arithmetic, exactly as in R.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

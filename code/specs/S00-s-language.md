@@ -296,6 +296,26 @@ an aligned table. (Empty-subscript forms `df[, c]` / `df[r, ]` are deferred —
 they need an empty grammar argument, which v2 does not yet add; pass an explicit
 row/column vector instead.)
 
+### V2.7 Named vectors (the `names` attribute)
+
+Atomic vectors may carry a *names* attribute — the R feature that the deferred
+`table` (V2.5) was waiting on. A new transparent wrapper
+`SValue::Named { names, values }` holds a `Vec<Option<String>>` (one slot per
+element, `None` = an unset/`NA` name) beside a boxed atomic value. Like
+`SValue::Classed` it is **see-through**: `length`, `type_name`, the coercions,
+arithmetic, comparison, and `class` all delegate to the inner value, so names are
+silently dropped exactly where R drops them (binary arithmetic, comparison, `c()`
+of unnamed pieces) and preserved where R keeps them (positional/character
+indexing, `rev` via index, the value as returned). Construction:
+`c(a = 1, b = 2)` attaches argument names, and nested named pieces combine
+R-style (`c(x = c(a = 1), 2)` → names `"x.a"`, `""`). `names(x)` returns the
+character names vector (or `NULL`); `names(x) <- value` sets them with R's
+NA-padding recycling (too-short pads with `NA`, `NULL` clears) via a general
+**replacement-function** lvalue path (`f(x) <- v` ≡ ``x <- `f<-`(x, v)``);
+`setNames(x, nm)` is the functional form. `x["b"]` / `x[c("a","c")]` select by
+name (unmatched → `NA`). A named vector prints names above values in aligned
+columns instead of the `[i]` prefix.
+
 ## §9 Divergences from ST00 (spec-sync)
 
 1. **S before R.** ST00 specs R first; we implement historical S first. The two

@@ -38,8 +38,9 @@ downstream tools to compare.
      `measure`, `meas`, `four`, `fourier`, `print`, and `plot`) now normalize
      into dotted deck cards while `run`, `reset`, `quit`, and UI-only
      `set noaskquit` options plus ASCII rawfile-format `set filetype=ascii`
-     options and rawfile vector-name/single-scale toggles (`set wr_vecnames`,
-     `set wr_singlescale`) are accepted as no-op control markers; parsed
+     options, rawfile vector-name/single-scale toggles (`set wr_vecnames`,
+     `set wr_singlescale`), and rawfile append-write `set appendwrite` options
+     are accepted as no-op control markers; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -593,6 +594,16 @@ downstream tools to compare.
     - Other `set` variables, rawfile file-writing commands, and unrecognized
       non-comment commands inside `.control` blocks remain diagnostic-only so
       unsupported file I/O and script state are explicit.
+
+54. Selected `.control` appendwrite option routing.
+    - Status: completed in this selected control appendwrite-option routing
+      slice.
+    - Python, Rust, and TypeScript now accept exact selected `.control` block
+      `set appendwrite` rawfile append-write options as no-op control commands.
+    - Binary rawfile formats, actual rawfile file-writing commands, other `set`
+      variables, and unrecognized non-comment commands inside `.control` blocks
+      remain diagnostic-only so unsupported file I/O and script state are
+      explicit.
 
 ## Backlog
 
