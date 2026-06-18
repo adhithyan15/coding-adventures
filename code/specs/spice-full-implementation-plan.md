@@ -49,7 +49,10 @@ downstream tools to compare.
      script/shell commands now emit explicit policy diagnostics instead of
      generic unsupported-command diagnostics, and selected `cd`
      working-directory mutation commands now emit explicit policy diagnostics
-     instead of generic unsupported-command diagnostics; parsed
+     instead of generic unsupported-command diagnostics, and selected
+     control-flow commands (`if`, `while`, `foreach`, and `repeat`) now emit
+     explicit policy diagnostics instead of generic unsupported-command
+     diagnostics; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -700,6 +703,18 @@ downstream tools to compare.
       control flow, variables, and unrecognized non-comment commands inside
       `.control` blocks remain diagnostic-only so unsupported execution policy
       is explicit.
+
+63. Selected `.control` control-flow policy diagnostics.
+    - Status: completed in this selected control-flow policy diagnostics
+      slice.
+    - Python, Rust, and TypeScript now emit explicit diagnostics for selected
+      `.control` block control-flow commands, including `if`, `while`,
+      `foreach`, and `repeat`, instead of generic unsupported-command
+      diagnostics.
+    - Control-flow execution, variables, working-directory mutation, external
+      script execution, shelling out, and unrecognized non-comment commands
+      inside `.control` blocks remain diagnostic-only so unsupported execution
+      policy is explicit.
 
 ## Backlog
 

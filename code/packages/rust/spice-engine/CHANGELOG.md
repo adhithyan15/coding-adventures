@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Emit explicit policy diagnostics for selected `.control` block control-flow
+  commands, including `if`, `while`, `foreach`, and `repeat`, in
+  `analyze_deck_controls` and `resolve_deck_sources`, matching Python and
+  TypeScript. Control-flow execution remains disabled by the deck execution
+  policy.
 - Emit explicit policy diagnostics for selected `.control` block `cd`
   working-directory mutation commands in `analyze_deck_controls` and
   `resolve_deck_sources`, matching Python and TypeScript. Working-directory

@@ -139,8 +139,10 @@ control markers. Read-only control inspection commands (`display`, `listing`,
 are also accepted as no-op markers. External script and shell commands
 (`source` and `shell`) emit explicit policy diagnostics and are not executed.
 Working-directory mutation commands (`cd`) also emit explicit policy
-diagnostics and are not executed. Other unrecognized non-comment commands emit
-diagnostics until a broader executed control subset is in scope.
+diagnostics and are not executed. Control-flow commands (`if`, `while`,
+`foreach`, and `repeat`) emit explicit policy diagnostics as well. Other
+unrecognized non-comment commands emit diagnostics until a broader executed
+control subset is in scope.
 `resolve_deck_sources` is the first include/library resolution layer: callers
 provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable
