@@ -55,6 +55,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationEvidenceRemediationItem` and remediation helpers for
   turning evidence lane inventories into sorted catalog-owned remediation
   plans before Chief-specific escalation tooling consumes them.
+- `IntegrationMeshReadinessPackageSummary` and mesh readiness package helpers
+  for combining Zigbee, Z-Wave, and Thread primitive substrate readiness with
+  mesh-scoped activation evidence remediation rollups.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
