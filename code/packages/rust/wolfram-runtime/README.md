@@ -8,7 +8,8 @@ M-expression AST from
 Macsyma/Maxima drive rather than writing a bespoke evaluator.
 
 See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfram-language.md)
-§7 (W-4 runtime), §8 (W-5 built-ins), and §9 (W-6 operator sugar).
+§7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), and §10 (W-7
+iteration constructs).
 
 ## What it does
 
@@ -81,6 +82,12 @@ assert_eq!(eval("f /@ {1, 2}\n").unwrap(), "Out[1]= {f[1], f[2]}\n"); // Map
 assert_eq!(eval("Plus @@ {1, 2, 3}\n").unwrap(), "Out[1]= 6\n");      // Apply
 assert_eq!(eval("{a, b, c}[[2]]\n").unwrap(), "Out[1]= b\n");          // Part
 
+// W-7 iteration constructs — bind a local index over a range:
+assert_eq!(eval("Table[i^2, {i, 3}]\n").unwrap(), "Out[1]= {1, 4, 9}\n");
+assert_eq!(eval("Sum[i, {i, 1, 10}]\n").unwrap(), "Out[1]= 55\n");
+assert_eq!(eval("Product[i, {i, 1, 4}]\n").unwrap(), "Out[1]= 24\n");
+assert_eq!(eval("Do[i, {i, 3}]\n").unwrap(), "Out[1]= Null\n");
+
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
 s.feed("square[x_] := x^2;\n").unwrap();   // `;` suppresses display
@@ -128,6 +135,30 @@ to the exact same head so the results are byte-identical:
 `Part[Part[x,i],j]`) and interleaves with `f[…]` application; `/@` and `@@` share
 one left-associative precedence level (parenthesise when mixing them).
 
+**W-7** adds the iteration constructs — the first forms that introduce a *scoped
+local index*. Each binds a fresh `i` over a range and evaluates a body per value,
+folded onto the same engine:
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Table` | `Table[i^2, {i, 3}]` | `{1, 4, 9}` |
+| `Table` | `Table[i, {i, 2, 4}]` | `{2, 3, 4}` |
+| `Do` | `Do[x = i, {i, 3}]` (runs 3×, side effects) | `Null` |
+| `Sum` | `Sum[i, {i, 1, 10}]` | `55` (empty range → `0`) |
+| `Product` | `Product[i, {i, 1, 4}]` | `24` (empty range → `1`) |
+
+The iterator spec `{i, …}` accepts the same 1-/2-/3-bound forms as `Range`
+(`{i, imax}`, `{i, imin, imax}`, `{i, imin, imax, di}`). The four heads are
+**held** so the body and spec arrive unevaluated; each iteration binds `i → value`
+with the *same* substitution that binds user-function parameters, so the index
+stays local (no session leak) and nested `Table`s bind their own index cleanly.
+The spec *bounds* are still evaluated (a bound may be `{i, 1+1}` or reference a
+session binding). An over-large iterator is capped at `MAX_RANGE_LENGTH` *before*
+allocation/looping (so `Table[0, {i, 2000000}]` stays unevaluated, never OOMs or
+hangs), and a malformed spec (`{i}` with no bound, a zero step, a non-integer
+bound) is left unevaluated rather than panicking. No grammar change — these are
+ordinary `Head[args]` forms.
+
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
@@ -150,6 +181,9 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   added via the `WolframBackend` decorator.
 - **W-6** (this crate) — the `/@`/`@@`/`[[ ]]` operator sugar (a lexer+grammar
   change), each desugaring to the W-5 `Map`/`Apply`/`Part` head.
+- **W-7** (this crate) — the `Table`/`Do`/`Sum`/`Product` iteration constructs,
+  iterator-bound evaluation over a local index (held heads + per-step
+  substitution), DoS-capped like `Range`. No grammar change.
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 

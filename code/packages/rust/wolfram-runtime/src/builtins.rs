@@ -37,10 +37,13 @@
 
 use std::collections::HashMap;
 
+use std::collections::HashMap as StdHashMap;
+
 use symbolic_vm::backend::{handler_fn, Handler};
+use symbolic_vm::vm::substitute;
 use symbolic_vm::VM;
 
-use symbolic_ir::{apply, flt, int, sym, IRApply, IRNode, LIST};
+use symbolic_ir::{apply, flt, int, sym, IRApply, IRNode, ADD, LIST, MUL};
 
 use crate::lower::build_canonical_application;
 
@@ -73,8 +76,28 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("Map".to_string(), handler_fn(map_handler));
     m.insert("Apply".to_string(), handler_fn(apply_handler));
     m.insert("N".to_string(), handler_fn(n_handler));
+    // W-7 iteration constructs. These are *held* heads (see
+    // [`ITERATION_HEADS`] and the `WolframBackend` held set) — their body and
+    // iterator spec arrive unevaluated so the local index can be bound per step.
+    m.insert("Table".to_string(), handler_fn(table_handler));
+    m.insert("Do".to_string(), handler_fn(do_handler));
+    m.insert("Sum".to_string(), handler_fn(sum_handler));
+    m.insert("Product".to_string(), handler_fn(product_handler));
     m
 }
+
+/// The W-7 iteration heads, which must be **held** (args not pre-evaluated) so
+/// that the iterator index `i` can be bound into the body before each
+/// evaluation. The [`WolframBackend`](crate::backend::WolframBackend) folds
+/// these into its `hold_heads` set (union with the inner backend's held set).
+///
+/// Why held? `Table[i^2, {i, 3}]` must *not* evaluate `i^2` up front — `i` is a
+/// local binder, and an eager eval would resolve it to a free symbol with
+/// nothing left to substitute. Holding keeps both the body (`i^2`) and the
+/// spec (`{i, 3}`) literal; the handler then evaluates the spec *bounds* itself
+/// (they may be expressions like `{i, n}`) while substituting `i` into the body
+/// per iteration.
+pub const ITERATION_HEADS: [&str; 4] = ["Table", "Do", "Sum", "Product"];
 
 // ---------------------------------------------------------------------------
 // List inspection — Length / First / Last / Part
@@ -257,6 +280,191 @@ fn apply_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         return unevaluated(expr);
     };
     vm.eval(build_canonical_application(f, elems))
+}
+
+// ---------------------------------------------------------------------------
+// Iteration — Table / Do / Sum / Product (W-7)
+// ---------------------------------------------------------------------------
+//
+// All four share one shape: a held body `expr` and a held iterator spec
+// `{i, …}`. The handler evaluates the spec bounds (they may be expressions),
+// builds the bounded sequence of index values (capped at `MAX_RANGE_LENGTH`
+// like `Range`), then for each value `v` substitutes `i → v` into the body and
+// re-evaluates it through the VM. They differ only in what they do with the
+// per-iteration results: collect (`Table`), discard (`Do`), fold-`+` (`Sum`),
+// fold-`×` (`Product`).
+
+/// A parsed, validated iterator specification: the binder name and the concrete
+/// integer values the index takes, in order.
+struct IteratorPlan {
+    /// The local index symbol (the `i` in `{i, …}`).
+    index: String,
+    /// The materialised sequence of index values (already DoS-capped).
+    values: Vec<i64>,
+}
+
+/// Parse and evaluate an iterator spec `{i, imax}` / `{i, imin, imax}` /
+/// `{i, imin, imax, di}` into an [`IteratorPlan`].
+///
+/// Returns `None` (→ the caller leaves the whole form unevaluated) when:
+/// - the spec is not a `List`, or its first element is not a bare symbol;
+/// - it has the wrong arity (`{i}` with no bound, `{}`, or 5+ elements);
+/// - a bound does not evaluate to an exact integer;
+/// - the resulting count would exceed [`MAX_RANGE_LENGTH`] (the DoS cap).
+///
+/// The bound sub-expressions are evaluated through `vm` (the head is held, so
+/// they arrive unevaluated — `{i, n}` with `n` a bound variable must be
+/// resolved here). All arithmetic is `i128` so a crafted `i64::MIN`/`i64::MAX`
+/// bound cannot overflow; an out-of-range count simply yields `None`.
+fn plan_iterator(vm: &mut VM, spec: &IRNode) -> Option<IteratorPlan> {
+    let elems = list_elements(spec)?;
+    // {index, bound...} — at least the binder and one bound.
+    if elems.len() < 2 || elems.len() > 4 {
+        return None;
+    }
+    let index = match &elems[0] {
+        IRNode::Symbol(s) => s.clone(),
+        _ => return None,
+    };
+
+    // Evaluate each bound expression, then read it as an exact integer.
+    let bound = |vm: &mut VM, node: &IRNode| -> Option<i64> {
+        let evaled = vm.eval(node.clone());
+        as_i64(&evaled)
+    };
+
+    let (start, end, step) = match &elems[1..] {
+        // {i, imax} → i ranges 1..=imax.
+        [imax] => (1i64, bound(vm, imax)?, 1i64),
+        // {i, imin, imax} → i ranges imin..=imax.
+        [imin, imax] => (bound(vm, imin)?, bound(vm, imax)?, 1i64),
+        // {i, imin, imax, di} → stepped.
+        [imin, imax, di] => (bound(vm, imin)?, bound(vm, imax)?, bound(vm, di)?),
+        _ => return None,
+    };
+
+    let values = range_values(start, end, step)?;
+    Some(IteratorPlan { index, values })
+}
+
+/// Materialise the integer sequence `start, start+step, …` up to `end`,
+/// **DoS-capped** at [`MAX_RANGE_LENGTH`]. Mirrors the `Range` span logic
+/// exactly (zero step refused, wrong-way step → empty, count computed in `i128`
+/// before allocating). Returns `None` for a zero step or an oversize count so
+/// the caller leaves the iteration form unevaluated; an empty range is `Some`
+/// of an empty vector (a valid, if degenerate, iteration: `Sum` → 0, etc.).
+fn range_values(start: i64, end: i64, step: i64) -> Option<Vec<i64>> {
+    // A zero step never terminates — refuse it (form left unevaluated).
+    if step == 0 {
+        return None;
+    }
+    // A step pointing away from `end` is an empty iteration.
+    if (step > 0 && start > end) || (step < 0 && start < end) {
+        return Some(Vec::new());
+    }
+    // Count before allocating so an oversize span is rejected, never built.
+    let span = (end as i128) - (start as i128);
+    let count = (span / (step as i128)) + 1; // span and step share sign here
+    if count <= 0 {
+        return Some(Vec::new());
+    }
+    if count as u128 > MAX_RANGE_LENGTH as u128 {
+        return None; // DoS cap — caller leaves the form unevaluated.
+    }
+    let mut values = Vec::with_capacity(count as usize);
+    let mut value = start as i128;
+    for _ in 0..count {
+        values.push(value as i64);
+        value += step as i128;
+    }
+    Some(values)
+}
+
+/// Bind `index → value` into `body` (a fresh copy via the VM's `substitute`,
+/// the same primitive that binds user-function parameters) and evaluate it.
+///
+/// Using `substitute` rather than mutating the backend environment keeps the
+/// index *local*: it never leaks into the session, and a nested `Table` binds
+/// its own index over a body whose outer index was already replaced.
+fn eval_body_at(vm: &mut VM, body: &IRNode, index: &str, value: i64) -> IRNode {
+    let mut mapping: StdHashMap<String, IRNode> = StdHashMap::new();
+    mapping.insert(index.to_string(), int(value));
+    let bound = substitute(body.clone(), &mapping);
+    vm.eval(bound)
+}
+
+/// `Table[expr, {i, …}]` → the list of `expr` evaluated with `i` bound to each
+/// value of the range. A malformed spec (or oversize range) leaves the whole
+/// `Table` unevaluated.
+fn table_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(plan) = plan_iterator(vm, &expr.args[1]) else {
+        return unevaluated(expr);
+    };
+    let body = expr.args[0].clone();
+    let elems: Vec<IRNode> = plan
+        .values
+        .iter()
+        .map(|&v| eval_body_at(vm, &body, &plan.index, v))
+        .collect();
+    apply(sym(LIST), elems)
+}
+
+/// `Do[expr, {i, n}]` → evaluate `expr` once per index value **for side
+/// effects**, discarding each result, and return `Null` (a bare symbol, exactly
+/// how Wolfram prints it). A malformed/oversize spec leaves `Do` unevaluated.
+fn do_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(plan) = plan_iterator(vm, &expr.args[1]) else {
+        return unevaluated(expr);
+    };
+    let body = expr.args[0].clone();
+    for &v in &plan.values {
+        // Evaluated purely for effect (e.g. a `Set` inside the body).
+        let _ = eval_body_at(vm, &body, &plan.index, v);
+    }
+    sym("Null")
+}
+
+/// `Sum[expr, {i, imin, imax}]` → the sum of `expr` over the range, folded onto
+/// the shared `Add` head (so symbolic terms combine via the same engine as
+/// `1 + 2`). An empty range sums to `0`. A malformed/oversize spec leaves `Sum`
+/// unevaluated.
+fn sum_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    fold_iteration(vm, expr, ADD, int(0))
+}
+
+/// `Product[expr, {i, imin, imax}]` → the product of `expr` over the range,
+/// folded onto the shared `Mul` head. An empty range is `1`. A malformed/
+/// oversize spec leaves `Product` unevaluated.
+fn product_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    fold_iteration(vm, expr, MUL, int(1))
+}
+
+/// Shared core of `Sum`/`Product`: evaluate the body at each index and fold the
+/// results with a binary `op` (`Add`/`Mul`), seeded with `identity` (`0`/`1`)
+/// so an empty range returns the identity. The fold is left-associative —
+/// `op(op(op(identity, t1), t2), t3)` — and each step is re-evaluated through
+/// the VM so numeric terms collapse as they accumulate (rather than building a
+/// giant unevaluated tree).
+fn fold_iteration(vm: &mut VM, expr: IRApply, op: &str, identity: IRNode) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(plan) = plan_iterator(vm, &expr.args[1]) else {
+        return unevaluated(expr);
+    };
+    let body = expr.args[0].clone();
+    let mut acc = identity;
+    for &v in &plan.values {
+        let term = eval_body_at(vm, &body, &plan.index, v);
+        acc = vm.eval(apply(sym(op), vec![acc, term]));
+    }
+    acc
 }
 
 // ---------------------------------------------------------------------------
@@ -521,5 +729,140 @@ mod tests {
             run("Part", vec![list(vec![int(1)])]),
             apply(sym("Part"), vec![list(vec![int(1)])])
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-7 iteration handlers (unit level — handlers run over a real VM so the
+    // per-iteration substitute + re-eval, and the Add/Mul folds, exercise the
+    // shared SymbolicBackend handler table).
+    // -----------------------------------------------------------------------
+
+    /// `{i, bounds…}` spec helper.
+    fn spec(parts: Vec<IRNode>) -> IRNode {
+        list(parts)
+    }
+
+    #[test]
+    fn table_builds_the_indexed_list() {
+        // Table[i, {i, 3}] → {1, 2, 3} (body is the bare index).
+        assert_eq!(
+            run("Table", vec![sym("i"), spec(vec![sym("i"), int(3)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Table[Add(i, 10), {i, 2, 4}] → {12, 13, 14} — the body re-evaluates
+        // through the Add handler with i substituted.
+        assert_eq!(
+            run(
+                "Table",
+                vec![
+                    apply(sym("Add"), vec![sym("i"), int(10)]),
+                    spec(vec![sym("i"), int(2), int(4)])
+                ]
+            ),
+            list(vec![int(12), int(13), int(14)])
+        );
+    }
+
+    #[test]
+    fn sum_and_product_fold_over_the_range() {
+        // Sum[i, {i, 1, 10}] → 55.
+        assert_eq!(
+            run("Sum", vec![sym("i"), spec(vec![sym("i"), int(1), int(10)])]),
+            int(55)
+        );
+        // Product[i, {i, 1, 4}] → 24.
+        assert_eq!(
+            run("Product", vec![sym("i"), spec(vec![sym("i"), int(1), int(4)])]),
+            int(24)
+        );
+    }
+
+    #[test]
+    fn sum_and_product_of_empty_range_are_identities() {
+        // A wrong-way range iterates zero times → fold identity (0 / 1).
+        assert_eq!(
+            run("Sum", vec![sym("i"), spec(vec![sym("i"), int(5), int(1)])]),
+            int(0)
+        );
+        assert_eq!(
+            run("Product", vec![sym("i"), spec(vec![sym("i"), int(5), int(1)])]),
+            int(1)
+        );
+        // Table over an empty range is the empty list.
+        assert_eq!(
+            run("Table", vec![sym("i"), spec(vec![sym("i"), int(0)])]),
+            list(vec![])
+        );
+    }
+
+    #[test]
+    fn do_returns_null() {
+        // Do[i, {i, 3}] → Null (the body is pure here, so there is nothing to
+        // observe besides the Null return and the absence of a panic).
+        assert_eq!(
+            run("Do", vec![sym("i"), spec(vec![sym("i"), int(3)])]),
+            sym("Null")
+        );
+    }
+
+    #[test]
+    fn iteration_with_oversize_range_stays_unevaluated() {
+        // A count beyond MAX_RANGE_LENGTH leaves the whole form unevaluated —
+        // never allocated, never looped.
+        let big = (MAX_RANGE_LENGTH as i64) + 5;
+        let s = spec(vec![sym("i"), int(big)]);
+        assert_eq!(
+            run("Table", vec![sym("i"), s.clone()]),
+            apply(sym("Table"), vec![sym("i"), s.clone()])
+        );
+        assert_eq!(
+            run("Do", vec![sym("i"), s.clone()]),
+            apply(sym("Do"), vec![sym("i"), s])
+        );
+    }
+
+    #[test]
+    fn iteration_with_malformed_spec_stays_unevaluated() {
+        // {i} — no bound.
+        let no_bound = spec(vec![sym("i")]);
+        assert_eq!(
+            run("Table", vec![sym("i"), no_bound.clone()]),
+            apply(sym("Table"), vec![sym("i"), no_bound])
+        );
+        // Zero step.
+        let zero_step = spec(vec![sym("i"), int(1), int(5), int(0)]);
+        assert_eq!(
+            run("Table", vec![sym("i"), zero_step.clone()]),
+            apply(sym("Table"), vec![sym("i"), zero_step])
+        );
+        // Non-symbol binder.
+        let bad_binder = spec(vec![int(7), int(3)]);
+        assert_eq!(
+            run("Sum", vec![sym("i"), bad_binder.clone()]),
+            apply(sym("Sum"), vec![sym("i"), bad_binder])
+        );
+        // Spec is not a list at all.
+        assert_eq!(
+            run("Table", vec![sym("i"), int(3)]),
+            apply(sym("Table"), vec![sym("i"), int(3)])
+        );
+    }
+
+    #[test]
+    fn iteration_extreme_bounds_do_not_overflow() {
+        // A span wider than i64 but with valid i64 bounds: the i128 count
+        // exceeds the cap and the form stays unevaluated — no overflow panic.
+        let s = spec(vec![sym("i"), int(-9_000_000_000_000_000_000), int(9_000_000_000_000_000_000)]);
+        assert_eq!(
+            run("Sum", vec![int(1), s.clone()]),
+            apply(sym("Sum"), vec![int(1), s])
+        );
+    }
+
+    #[test]
+    fn iteration_wrong_arity_stays_unevaluated() {
+        // Only the 2-arg (body, spec) form is valid.
+        assert_eq!(run("Table", vec![sym("i")]), apply(sym("Table"), vec![sym("i")]));
+        assert_eq!(run("Sum", vec![]), apply(sym("Sum"), vec![]));
     }
 }
