@@ -1,0 +1,169 @@
+# USMLE-DOMAIN-MAP — every domain needed to pass the medical licensing exams
+
+This is the campaign roadmap for the board-exam north star: get MYCIN-2026 to pass the
+United States Medical Licensing Examination (USMLE Step 1, Step 2 CK, Step 3) and the
+subspecialty boards, built **organ-by-organ, discipline-by-discipline**, with every
+answer a citable, correctable proof — never a hallucination. It enumerates the full
+domain space (so nothing is missed), maps each cell to the engine tactic that answers
+it, records what is already built, and sets a prioritized build order.
+
+Sources (the official content classification this map is grounded in):
+- [USMLE Step 1 Content Outline & Specifications](https://www.usmle.org/exam-resources/step-1-materials/step-1-content-outline-and-specifications)
+- [USMLE Step 2 CK Content Outline & Specifications](https://www.usmle.org/exam-resources/step-2-ck-materials/step-2-ck-content-outline-specifications)
+- [USMLE Step 3 Content Outline & Specifications](https://www.usmle.org/exam-resources/step-3-materials/step-3-content-outline-and-specifications)
+- [Public USMLE Content Outline (PDF)](https://www.usmle.org/sites/default/files/2022-01/USMLE_Content_Outline_0.pdf)
+- [Public USMLE Physician Tasks/Competencies (PDF)](https://www.usmle.org/sites/default/files/2022-01/USMLE_Physician_Tasks_Competencies_2.pdf)
+
+## The three classification axes (USMLE's own)
+
+Every USMLE item is classified on three axes. The domain space is their product.
+
+**Axis A — Organ systems** (the content outline; ~18 fine categories under 11 named
+groups). Each system splits into *normal processes*, *abnormal processes*, and
+*principles of therapy*:
+
+1. Immune system
+2. Blood & lymphoreticular system
+3. Behavioral health
+4. Nervous system & special senses
+5. Skin & subcutaneous tissue
+6. Musculoskeletal system
+7. Cardiovascular system
+8. Respiratory system
+9. Gastrointestinal system
+10. Renal & urinary system
+11. Pregnancy, childbirth & the puerperium
+12. Female reproductive system & breast
+13. Male reproductive system
+14. Endocrine system
+15. Multisystem processes & disorders (incl. infectious disease, neoplasia, genetics)
+16. Biostatistics, epidemiology & population health
+17. Social sciences (communication, ethics, systems-based practice, patient safety)
+18. Human development (life-cycle, normal growth)
+
+**Axis B — Disciplines** (the foundational + clinical sciences):
+Pathology · Physiology · Pharmacology · Microbiology · Immunology · Biochemistry ·
+Nutrition · Genetics · Gross anatomy & embryology · Histology & cell biology ·
+Behavioral sciences. Step 2/3 add the clinical disciplines: Internal medicine ·
+Surgery · Pediatrics · Obstetrics & gynecology · Psychiatry.
+
+**Axis C — Physician tasks / competencies:**
+Medical knowledge (foundational-science recall) · Patient care: **diagnosis** ·
+Patient care: **management** · History & physical · Communication & interpersonal
+skills · Practice-based learning (biostatistics/EBM) · Systems-based practice & patient
+safety · Professionalism.
+
+## Mapping the axes to the ONE engine (the unifying claim)
+
+Every question type collapses to a query over the same grounded knowledge graph + the
+native adj-lang engine. There is no per-question-type code — only a tactic:
+
+| Physician task (Axis C) | MYCIN tactic | Engine | Example item |
+|---|---|---|---|
+| Medical knowledge / recall | **recall** — relational binding query | SLD over grounded edges | "Which enzyme is deficient in Tay-Sachs?" |
+| Diagnosis (vignette → dx) | **differential** — LR engine ranks hypotheses | likelihood-ratio proof DAG | "Most likely diagnosis?" |
+| Management (next best step) | **management** — chart-as-constraints solve | adj-constraint-solver | "Best empiric regimen?" / INFEASIBLE |
+| Biostatistics / EBM | **biostat** — compute over the LR substrate | compute evaluator | sensitivity, PPV, NNT, pre→post-test odds |
+| H&P / communication / ethics | (future) constraint + precedence over guideline rules | defeasible-precedence engine | "Next best step in disclosure?" |
+
+Recall is the zero-uncertainty single-hop special case of the differential
+([[project_board_exam_goal]]); biostat is the LR engine read near-free. So the whole
+exam reduces to: **ground the edges, then query them.** Grounding is always via the
+pipeline — spider → byte-provenance → adversarial gate → CAS, nothing human-authored
+([[feedback_nothing_human_authored]]).
+
+## Recall relation schema per discipline (the binding-query vocabulary)
+
+Recall is the densest, most automatable region (foundational science). Each discipline
+contributes a family of typed relations `relation(subject, $Var)` the engine binds:
+
+- **Biochemistry / IEM** — `deficient_in(disease, $Enzyme)`, `accumulates(disease, $Substrate)`, `inherited_as(disease, $Pattern)`, `cofactor_of(enzyme, $Vitamin)`, `rate_limiting_enzyme(pathway, $Enzyme)`
+- **Nutrition** — `deficiency_causes(vitamin, $Disease)`, `classic_finding(vitamin, $Finding)`
+- **Hematology** — `has_mcv(anemia, $Class)`, `factor_deficiency(disorder, $Factor)`, `coag_inheritance(disorder, $Pattern)`, `prolonged_test(disorder, $Test)`, `classic_finding(disorder, $Finding)`
+- **Endocrine** — `secreted_by(hormone, $Gland)`, `deficiency_syndrome(hormone, $Syndrome)`, `excess_syndrome(hormone, $Syndrome)`, `stimulated_by` / `inhibited_by`
+- **Microbiology** — `gram_stain(organism, $Result)`, `morphology(organism, $Shape)`, `causes(organism, $Disease)`, `virulence_factor(organism, $Factor)`, `treated_with(organism, $Drug)`, `transmission(organism, $Route)`
+- **Pharmacology** — `mechanism(drug, $MOA)`, `drug_class(drug, $Class)`, `treats(drug, $Indication)`, `adverse_effect(drug, $AE)`, `metabolized_by(drug, $Enzyme)`, `antidote_for(toxin, $Antidote)`
+- **Immunology** — `mediated_by(reaction, $Cell)`, `hypersensitivity_type(disease, $Type)`, `deficiency_of(immunodeficiency, $Component)`, `associated_hla(disease, $HLA)`
+- **Pathology** — `tumor_marker(neoplasm, $Marker)`, `oncogene(cancer, $Gene)`, `histology(disease, $Finding)`, `associated_with(disease, $Association)`
+- **Genetics** — `inheritance(disorder, $Pattern)`, `gene_defect(disorder, $Gene)`, `trinucleotide_repeat(disorder, $Repeat)`, `imprinting(disorder, $Parent)`
+- **Anatomy / neuro** — `innervated_by(muscle, $Nerve)`, `lesion_causes(tract, $Deficit)`, `blood_supply(structure, $Artery)`, `dermatome(level, $Region)`
+
+A new discipline = drop in its `<domain>-edges.adj` (gate-generated, spider-grounded) +
+its board items + the filename in `board_eval.EDGE_FILES`; the harness scores it
+unchanged. Adding a relation just widens the schema — the engine already binds any
+`relate(rel, args)`.
+
+## Built vs. to-build matrix
+
+### Built (grounded, scored, merged)
+| domain | discipline | relations | edges | board items |
+|---|---|---|---|---|
+| IEM (inborn errors) | Biochemistry/Genetics | deficient_in, accumulates, inherited_as | 36 (35 grounded) | ✓ |
+| Vitamins | Nutrition | deficiency_causes, classic_finding | 16 grounded | ✓ |
+| Anemia | Hematology/Path | has_mcv, classic_finding | grounded | ✓ |
+| Endocrine | Endocrine/Path | secreted_by, deficiency_syndrome | grounded | ✓ |
+| Coagulation | Hematology | factor_deficiency, coag_inheritance, prolonged_test | 15 grounded | ✓ |
+| Meningitis | Infectious dz | **differential** (LR) + **management** (constraints) | grounded LRs + formulary | ✓ |
+| Bacteremia / UTI | Infectious dz | organism-id + treatment | grounded | ✓ |
+
+Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
+faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
+
+### To build (prioritized — highest yield / densest / most automatable first)
+
+**Tier 1 — high-yield foundational recall (Step 1 backbone):**
+1. **Microbiology** — bacteria/virus/fungi/parasite → gram-stain, morphology, disease,
+   virulence factor, treatment. The single densest recall region; clean relational facts.
+2. **Pharmacology** — drug → mechanism, class, indication, adverse effect, antidote.
+   Dense, relational, subject-named in stems.
+3. **Immunology** — hypersensitivity types, immunodeficiencies, HLA associations, cytokines.
+4. **Genetics** — inheritance patterns, trinucleotide repeats, imprinting, gene defects
+   (extends the IEM substrate).
+
+**Tier 2 — organ-system pathology (Step 1/2 diagnosis):**
+5. Cardiovascular (murmurs→lesion, ECG→arrhythmia, drug→effect)
+6. Respiratory (PFT pattern→disease, ABG→disorder)
+7. Renal/urinary (acid-base, electrolyte, glomerular disease→finding)
+8. Gastrointestinal (LFT pattern→disease, biopsy→diagnosis)
+9. Neurology & special senses (lesion→deficit, tract→sign)
+10. Musculoskeletal / rheumatology (autoantibody→disease)
+11. Skin/derm (lesion→diagnosis)
+12. Reproductive (ob/gyn + male), Breast
+
+**Tier 3 — clinical reasoning (Step 2/3):**
+13. Biostatistics & EBM as a first-class **biostat** tactic (sensitivity/PPV/NNT/LR,
+    pre→post-test odds) over the compute evaluator — near-free given the LR engine.
+14. Behavioral health / psychiatry (criteria→diagnosis; constraint over DSM-style rules).
+15. Management verticals beyond meningitis (chart-as-constraints per organ system).
+16. Ethics / communication / patient-safety (defeasible-precedence over guideline rules).
+
+## Build protocol (per domain, one PR each)
+
+Each domain follows the proven REL-10/11/12 + grounding pattern:
+1. **Spec/edges** — define the relations; author the `<domain>-edges.adj` skeleton via
+   the gate (`<domain>_edge_ground.py`), initially `trust consensus` (authored-debt).
+2. **Spider-ground** — run the grounding spider → byte-provenance JSON → adversarial
+   write-gate (N readers × byte-stability × blind judge) → ACCEPT/FLAG → regenerate.
+   Decline (leave `consensus`) any edge no authoritative self-contained span defends —
+   honest abstention beats fabricated grounding.
+3. **Board items** — add free-text + structured board questions; wire into
+   `board/items.json` + `board/free_text_board.json` + `EDGE_FILES`.
+4. **Score** — `board_eval` (native engine) + `board_offline` (offline, 0 online calls);
+   defensibility must stay 100% (never fabricate), grounded-coverage climbs.
+5. **Gate / test / security-review / PR / babysit → merge → loop.**
+
+## Non-negotiables (carried from the framework)
+- Nothing human-authored: facts enter the CAS only via spider → provenance → gate.
+- One engine for every tactic; no per-question-type Python.
+- Every answer is a citable, correctable proof; the system is decision *support*, never
+  a replacement; honest abstention is a feature, not a failure.
+- Decompose may use a LOCAL in-memory model only; the engine answers; **zero online
+  calls at answer time** (the licensing-exam constraint).
+
+## Coverage accounting (the watchable number)
+
+The north-star metric: **% of the USMLE content outline covered by grounded, scored
+domains.** Today: 5 recall domains + ID differential/management (a slice of Multisystem,
+Endocrine, Hematology, Biochemistry, Nutrition). Each merged domain PR moves this number;
+this map is the denominator. The campaign is done when every Tier-1/2/3 cell above has a
+grounded, scored domain and the board bank samples each.
