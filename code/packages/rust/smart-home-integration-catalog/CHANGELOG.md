@@ -70,6 +70,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshActionReadinessSummary` and helpers for combining mesh
   release readiness with the substrate action queue and next concrete low-level
   action.
+- `IntegrationMeshReadinessHandoffPackage`, summary helpers, and D23 mesh
+  readiness handoff projections for release coordination across substrate
+  actions, evidence remediation, and release-ready state.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
