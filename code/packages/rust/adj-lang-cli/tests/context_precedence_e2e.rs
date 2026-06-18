@@ -89,12 +89,16 @@ fn the_precedence_edge_is_auditable_with_its_charter() {
     let dir = std::env::temp_dir().join(format!("adjcli_ctxaudit_{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
-    // Copy the committed rulebook beside a tiny query case so the import resolves locally.
-    let rulebook = std::fs::read_to_string(data("context-precedence.adj")).unwrap();
-    std::fs::write(dir.join("context-precedence.adj"), rulebook).unwrap();
+    // Copy the committed rulebook + its shared resolve module beside a tiny query case so the
+    // import chain resolves locally. The grounded charter now rides on the canon-TAGGED edge
+    // fact `outranks_context_by(…, lex_superior)` (the bare `outranks_context/2` is the resolved
+    // order, derived); audit by recalling the tagged edge.
+    for f in ["context-precedence.adj", "context-precedence-resolve.adj"] {
+        std::fs::write(dir.join(f), std::fs::read_to_string(data(f)).unwrap()).unwrap();
+    }
     std::fs::write(
         dir.join("audit.adj"),
-        "import \"context-precedence.adj\"\n? outranks_context(ninth_circuit, $lower)\n",
+        "import \"context-precedence.adj\"\n? outranks_context_by(ninth_circuit, district_court, $canon)\n",
     )
     .unwrap();
 
@@ -105,10 +109,10 @@ fn the_precedence_edge_is_auditable_with_its_charter() {
     let s = String::from_utf8(out.stdout).unwrap();
     assert!(out.status.success(), "cli should succeed: {s}");
 
-    // The edge is recalled, bound to district_court...
+    // The tagged edge is recalled, bound to district_court + the lex_superior canon...
     assert!(
-        s.contains("outranks_context(ninth_circuit, district_court)"),
-        "recalls the grounded precedence edge: {s}"
+        s.contains("outranks_context_by(ninth_circuit, district_court, lex_superior)"),
+        "recalls the grounded canon-tagged precedence edge: {s}"
     );
     // ...and its charter (the verbatim stare-decisis quote) is on the citation.
     assert!(

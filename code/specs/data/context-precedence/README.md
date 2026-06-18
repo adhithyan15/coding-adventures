@@ -33,8 +33,8 @@ The `governing` section resolves the conflict (0 answer-time model calls):
 
 The broad circuit reading wins on **context** (lex superior), not tier — the narrow reading sits
 at the higher `mandatory` tier and is still defeated. The precedence is auditable: a binding
-query `? outranks_context(ninth_circuit, $lower)` recalls the governing edge **with** its
-charter (the verbatim stare-decisis quote).
+query `? outranks_context_by(ninth_circuit, $lower, $canon)` recalls the grounded canon-tagged
+edge **with** its charter (the verbatim stare-decisis quote) and the canon that asserts it.
 
 ## How it fits
 
@@ -57,7 +57,11 @@ This is the data/worked-example layer of the ADJ73 precedence arc:
   RESOLVES a chosen collision into a **cited decision** (`worked-canon-tiebreaker-example.adj`):
   the canon-ordering is itself a grounded fact, so the recursion stays grounded all the way up.
   Remove it → fall back to abstention.
-- **next** — migrate the shared `context-precedence(-meta).adj` rulebook to the canon-tagged
-  `outranks_context_by/3` + resolution form (the tiebreaker pattern is proven self-contained
-  first), so any jurisdiction's `canon_outranks` ordering applies uniformly. See the spec
+- **uniform substrate** (the shared rulebook migrated) — `context-precedence.adj` (lex-superior
+  edges) and `context-precedence-meta.adj` (the three canons) now all emit canon-tagged
+  `outranks_context_by/3`, and the shared `context-precedence-resolve.adj` module (imported by
+  both, idempotently) holds the NAF resolution. So a jurisdiction's grounded `canon_outranks`
+  ordering applies **uniformly** across every canon; absent one, a collision abstains (§4.3). The
+  audit query is now `? outranks_context_by(H, $lower, $canon)` (the tagged fact carries the
+  charter). This completes the precedence arc as a uniform grounded substrate. See the spec
   `code/specs/ADJ73-defeasible-rule-precedence.md` §4.3, §7.
