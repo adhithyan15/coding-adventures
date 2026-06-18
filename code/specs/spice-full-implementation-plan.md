@@ -40,7 +40,8 @@ downstream tools to compare.
      `set noaskquit` options plus ASCII rawfile-format `set filetype=ascii`
      options, rawfile vector-name/single-scale toggles (`set wr_vecnames`,
      `set wr_singlescale`), and rawfile append-write `set appendwrite` options
-     are accepted as no-op control markers; parsed
+     plus target-bearing rawfile `write <rawfile> [probes...]` markers are
+     accepted as no-op control markers; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -600,10 +601,21 @@ downstream tools to compare.
       slice.
     - Python, Rust, and TypeScript now accept exact selected `.control` block
       `set appendwrite` rawfile append-write options as no-op control commands.
-    - Binary rawfile formats, actual rawfile file-writing commands, other `set`
+    - Binary rawfile formats, actual rawfile serialization, other `set`
       variables, and unrecognized non-comment commands inside `.control` blocks
       remain diagnostic-only so unsupported file I/O and script state are
       explicit.
+
+55. Selected `.control` rawfile write marker routing.
+    - Status: completed in this selected control rawfile-write marker routing
+      slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      `write <rawfile> [probes...]` rawfile-write markers as no-op control
+      commands when a target path token is present.
+    - Actual rawfile serialization, binary rawfile formats, other file-writing
+      commands, other `set` variables, and unrecognized non-comment commands
+      inside `.control` blocks remain diagnostic-only so unsupported file I/O
+      and script state are explicit.
 
 ## Backlog
 

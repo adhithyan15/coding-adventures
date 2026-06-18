@@ -126,7 +126,7 @@ set wr_vecnames
 set wr_singlescale
 set appendwrite
 set filetype=binary
-write out.raw
+write out.raw V(out)
 run
 quit
 .endc
@@ -152,13 +152,11 @@ quit
         (".lib", 3, "error"),
         (".control", 4, "error"),
         (".control", 19, "error"),
-        (".control", 20, "error"),
     ]
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-        "SPICE_DECK_CONTROL_COMMAND",
         "SPICE_DECK_CONTROL_COMMAND",
     ]
     measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
@@ -243,6 +241,7 @@ four 2k V(b)
 .set wr_vecnames
 .set wr_singlescale
 .set appendwrite
+.write out.raw V(a)
 run
 .quit
 .endc

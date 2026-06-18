@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Accept selected `.control` block `write <rawfile> [probes...]` rawfile-write
+  markers as no-op control commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust. Rawfile serialization remains
+  out of scope for this marker.
 - Accept selected `.control` block `set appendwrite` rawfile append-write
   options as no-op control commands in `analyzeDeckControls` and
   `resolveDeckSources`, matching Python and Rust.

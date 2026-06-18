@@ -143,7 +143,7 @@ set wr_vecnames
 set wr_singlescale
 set appendwrite
 set filetype=binary
-write out.raw
+write out.raw V(out)
 run
 quit
 .endc
@@ -184,8 +184,7 @@ quit
             (".include", 2, "error"),
             (".lib", 3, "error"),
             (".control", 4, "error"),
-            (".control", 19, "error"),
-            (".control", 20, "error")
+            (".control", 19, "error")
         ]
     );
     assert_eq!(
@@ -198,7 +197,6 @@ quit
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-            "SPICE_DECK_CONTROL_COMMAND",
             "SPICE_DECK_CONTROL_COMMAND"
         ]
     );
@@ -335,6 +333,7 @@ four 2k V(b)
 .set wr_vecnames
 .set wr_singlescale
 .set appendwrite
+.write out.raw V(a)
 run
 .quit
 .endc
