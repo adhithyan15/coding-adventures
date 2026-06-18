@@ -33,6 +33,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - activation evidence rows that project each integration briefing into a
   compact sorted ready/blocker row with the next blocked evidence lane and
   missing-prerequisite counts
+- activation evidence lane inventories that group blocked integration rows by
+  first-blocked catalog, activation-plan, readiness, policy, or local-boundary
+  lane for reusable release planning
 - read-only D18D tool descriptors for listing/describing integrations and
   primitive families
 - typed ecosystem-survey source rows that map Home Assistant, Hubitat, Homey
