@@ -75,6 +75,20 @@ engine's diagnosis vs gold — identical scoring to `../bench/bench_models.py`, 
 base-vs-specialist is apples-to-apples. The model never diagnoses; it only
 decomposes.
 
+### Decompose fidelity, scored directly (`decompose_score.py`)
+
+The diagnosis outcome above is a coarse, end-to-end proxy. `decompose_score.py` scores the
+decomposer's fidelity **directly and model-free** — a pure `score_decompose(predicted_ir,
+gold_ir, note)` over either IR shape (findings or chart-facts) returning: fact
+precision/recall/F1 (by identity key — for findings the key includes `polarity`, so a flipped
+negation does not match), **span_faithfulness** (every cited span must be a verbatim substring of
+the note — the byte-provenance discipline measured directly), discard precision/recall, and two
+integer counts that should be 0 — **near_miss_violations** (a fact coined from a span the gold
+says to discard — the over-extraction failure the `NEAR_MISS_DISTRACTORS` train against) and
+**false_positive_facts**. The model run that produces `predicted_ir` is the caller's step; the
+scoring is deterministic and fully unit-tested (`test_decompose_score.py`), so a fine-tune's
+faithfulness is measurable without re-running the model.
+
 ## Result
 
 Training the framework-authored data took the base model from **0/4 → 4/4** on the
