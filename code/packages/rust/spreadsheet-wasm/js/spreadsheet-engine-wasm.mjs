@@ -192,6 +192,26 @@ export function createEngine(wasmBytes) {
           return ok === 1;
         },
 
+        // ── Save / load (serialize) ──────────────────────────────────
+        // A round-trippable JSON document of the workbook's SOURCE (formula
+        // text + typed literals) and formats — not computed values, which
+        // recompute on load. Persist the string, then deserialize to restore.
+
+        /** Serialize the workbook to a self-contained JSON document string. */
+        serialize: () => call0("serialize"),
+        /**
+         * Replace the workbook with a document from `serialize`. Returns `true`
+         * on success, `false` if the data is malformed or an unsupported version
+         * (the existing workbook is left untouched on failure). Re-read via
+         * getWindow / getDisplayWindow / getRaw afterwards.
+         */
+        deserialize: (data) => {
+          const [dp, dl] = writeStr(String(data));
+          const ok = ex.deserialize(dp, dl);
+          freeInput(dp, dl);
+          return ok === 1;
+        },
+
         // ── Viewport primitive (virtualized infinite sheet) ──────────
         // A scrolling host renders only the visible window of an unbounded
         // sheet: getWindow for the visible rectangle, usedRange for scrollbar

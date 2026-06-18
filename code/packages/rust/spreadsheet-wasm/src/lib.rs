@@ -346,6 +346,35 @@ pub unsafe extern "C" fn paste(dst_start_ptr: *const u8, dst_start_len: usize) -
     }
 }
 
+// ── Save / load (serialize) ──────────────────────────────────────────
+
+/// `serialize()` → a packed JSON document holding the workbook's SOURCE (formula
+/// text + typed literals) and per-cell formats — not the computed values, which
+/// recompute on load. The host reads it via [`read_output`] and must release it
+/// with [`dealloc`], like any packed string. See [`SpreadsheetSession::serialize`].
+#[no_mangle]
+pub extern "C" fn serialize() -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().serialize()))
+}
+
+/// `deserialize(data)` — replace the workbook with a document produced by
+/// [`serialize`]. Returns `1` on success, `0` if the data is malformed or an
+/// unsupported version (the existing workbook is left untouched on failure).
+/// Returns the flag directly — no pointer to free. See
+/// [`SpreadsheetSession::deserialize`].
+///
+/// # Safety
+/// The `(ptr, len)` pair must describe a readable byte range (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn deserialize(data_ptr: *const u8, data_len: usize) -> i32 {
+    let data = read_input(data_ptr, data_len);
+    if SESSION.with(|s| s.borrow_mut().deserialize(&data)) {
+        1
+    } else {
+        0
+    }
+}
+
 // ── Viewport primitive (virtualized infinite sheet) ──────────────────
 // These take integer coordinates directly (no pointer marshalling), so a
 // scrolling JS host can fetch just the visible window of an unbounded sheet.

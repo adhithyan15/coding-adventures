@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+**Save / load (serialize).** New `serialize() -> String` delegates to the engine's `Workbook::serialize` (spreadsheet-core 0.9.0), returning a self-contained JSON document of the workbook's source (formula text + typed literals) and per-cell formats. `deserialize(data) -> bool` replaces the workbook from such a document (`Workbook::deserialize`): on success it re-binds the active sheet and rebuilds the facade's `raw` echo map from the loaded JSON (literals reconstructed via the new `raw_from_value_json` helper — integers without a trailing `.0`, text verbatim, booleans as `TRUE`/`FALSE`, errors as their code; formulas restored exactly), returning `true`; on malformed/unsupported input it leaves the workbook untouched and returns `false`. Formulas reload live (recompute on edit). 2 tests (round-trip through the facade incl. format + live recompute; bad-JSON / version / zero-sheet handling).
+
 ## 0.7.0
 
 **Clipboard — cut / copy / paste.** `copy(start, end)` / `cut(start, end)` capture the inclusive rectangle into the engine's clipboard and mirror each cell's raw source into a facade-side `RawClip`; `paste(dst_start) -> bool` places the block at `dst_start`, shifting the whole block's references by the destination's offset and keeping the `raw` echo in step (each target's source is the shifted source; blanks erase). A cut clears the source echo it didn't overwrite and consumes the buffer; a copy is repeatable. `has_clipboard()` reports whether a block is held. The facade mirrors the engine's `MAX_RANGE_CELLS` guard and i64-clamped delta, and tracks the engine's buffer lifecycle exactly (kept on reject/copy, dropped on cut-paste). 3 tests.

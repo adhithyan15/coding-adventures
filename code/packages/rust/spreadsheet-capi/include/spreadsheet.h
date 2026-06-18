@@ -75,6 +75,15 @@ void  sc_copy(ScSession *s, const char *start, const char *end);
 void  sc_cut(ScSession *s, const char *start, const char *end);
 int   sc_paste(ScSession *s, const char *dst_start);
 
+/* Save / load. sc_serialize() returns a self-contained JSON document holding the
+   workbook's SOURCE (formula text + typed literals) and per-cell formats — not the
+   computed values, which recompute on load (small file, can't disagree with itself).
+   Free the returned string with sc_string_free(). sc_deserialize() replaces the
+   workbook with such a document: returns 1 on success, 0 if the data is malformed or
+   an unsupported version (the existing workbook is left untouched on failure). */
+char *sc_serialize(ScSession *s);
+int   sc_deserialize(ScSession *s, const char *data);
+
 /* Viewport primitive — read just the visible window of the unbounded sheet.
    Coordinates are 1-based and inclusive. Each char* result must be freed with
    sc_string_free(). */

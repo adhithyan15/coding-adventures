@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+**Save / load (serialize).** New C ABI exports `sc_serialize(s) -> char*` (a self-contained JSON document of the workbook's source + formats; free with `sc_string_free`) and `sc_deserialize(s, data) -> int` (1 = loaded, 0 = malformed / unsupported version, in which case the existing workbook is left untouched). Declared in `include/spreadsheet.h`. Null session is safe (serialize → null, deserialize → 0). 1 round-trip test (serialize → load into a fresh session → live recompute; garbage rejected; null-safety).
+
 ## 0.7.0
 
 **Clipboard — cut / copy / paste.** New C ABI exports `sc_copy(s, start, end)`, `sc_cut(s, start, end)` (void), and `sc_paste(s, dst_start) -> int` (1 = applied, 0 = no-op for empty clipboard / malformed address / off-grid). Declared in `include/spreadsheet.h`. Null session is a safe no-op (paste returns 0). 1 round-trip test (copy→paste shift, cut→move + source-clear + one-shot, null-safety).
