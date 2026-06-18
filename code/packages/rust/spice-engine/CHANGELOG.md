@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Emit explicit policy diagnostics for selected `.control` block `cd`
+  working-directory mutation commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Working-directory
+  mutation remains disabled by the deck execution policy.
 - Emit explicit policy diagnostics for selected `.control` block `source` and
   `shell` external script/shell commands in `analyze_deck_controls` and
   `resolve_deck_sources`, matching Python and TypeScript. External script

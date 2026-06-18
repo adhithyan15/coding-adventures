@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck control working-directory policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block `cd` working-directory
+  mutation commands instead of generic unsupported-command diagnostics,
+  matching Rust and TypeScript. Working-directory mutation remains disabled by
+  the deck execution policy.
+
 - **Deck control script policy diagnostics** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
   policy diagnostics for selected `.control` block `source` and `shell`

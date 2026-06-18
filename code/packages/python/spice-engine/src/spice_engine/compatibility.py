@@ -551,6 +551,7 @@ _NOOP_CONTROL_BLOCK_SET_OPTIONS = frozenset(
     {"noaskquit", "filetype=ascii", "wr_vecnames", "wr_singlescale", "appendwrite"}
 )
 _SCRIPT_CONTROL_BLOCK_COMMANDS = frozenset({"source", ".source", "shell", ".shell"})
+_WORKDIR_CONTROL_BLOCK_COMMANDS = frozenset({"cd", ".cd"})
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,
@@ -595,6 +596,17 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
                         directive=".control",
                         line_number=line_number,
                         message=_control_block_script_policy_message(stripped),
+                        severity="error",
+                    )
+                )
+                continue
+            if _is_workdir_control_block_command(stripped):
+                diagnostics.append(
+                    DeckControlDiagnostic(
+                        code="SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+                        directive=".control",
+                        line_number=line_number,
+                        message=_control_block_workdir_policy_message(stripped),
                         severity="error",
                     )
                 )
@@ -3096,6 +3108,19 @@ def _resolve_deck_lines(
                     )
                 )
                 continue
+            if _is_workdir_control_block_command(stripped):
+                state.diagnostics.append(
+                    DeckResolutionDiagnostic(
+                        code="SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+                        directive=".control",
+                        source=source,
+                        line_number=line_number,
+                        message=_control_block_workdir_policy_message(stripped),
+                        severity="error",
+                        target=None,
+                    )
+                )
+                continue
             state.diagnostics.append(
                 DeckResolutionDiagnostic(
                     code="SPICE_DECK_CONTROL_COMMAND",
@@ -3421,8 +3446,20 @@ def _is_script_control_block_command(line: str) -> bool:
     return bool(parts) and parts[0].lower() in _SCRIPT_CONTROL_BLOCK_COMMANDS
 
 
+def _is_workdir_control_block_command(line: str) -> bool:
+    parts = line.split(maxsplit=1)
+    return bool(parts) and parts[0].lower() in _WORKDIR_CONTROL_BLOCK_COMMANDS
+
+
 def _control_block_script_policy_message(line: str) -> str:
     return (
         f"{line!r} inside .control is not executed because external script "
         "and shell commands are disabled by the deck execution policy"
+    )
+
+
+def _control_block_workdir_policy_message(line: str) -> str:
+    return (
+        f"{line!r} inside .control is not executed because working-directory "
+        "mutation is disabled by the deck execution policy"
     )
