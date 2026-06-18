@@ -55,6 +55,9 @@ Chief of Staff job/session/agent
   -> activation-evidence remediation list and summary reads for D23A lane fixes
   -> activation-evidence lane inventory and scorecard summary reads for blocker
      lane rollups
+  -> mesh primitive-readiness and substrate-stage reads for low-level protocol
+     release blockers
+  -> mesh readiness package and stage-release summary reads for release go/no-go
   -> activation-dossier list and summary reads for bundled decision evidence
   -> activation-dashboard list and summary reads for priority-wave status cards
   -> activation-timeline list and summary reads for ordered wave milestones
@@ -135,6 +138,12 @@ Chief of Staff job/session/agent
 - `smart_home.list_integration_activation_evidence_lane_inventory`
 - `smart_home.get_integration_activation_evidence_lane_inventory_summary`
 - `smart_home.get_integration_activation_evidence_scorecard_summary`
+- `smart_home.list_integration_mesh_primitive_readiness`
+- `smart_home.get_integration_mesh_primitive_readiness_summary`
+- `smart_home.list_integration_mesh_substrate_stages`
+- `smart_home.get_integration_mesh_substrate_stage_summary`
+- `smart_home.get_integration_mesh_readiness_package_summary`
+- `smart_home.get_integration_mesh_stage_release_summary`
 - `smart_home.list_integration_activation_dossiers`
 - `smart_home.get_integration_activation_dossier_summary`
 - `smart_home.list_integration_activation_readouts`
