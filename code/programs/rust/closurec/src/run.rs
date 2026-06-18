@@ -255,6 +255,13 @@ const SIMPLE_PASS_NAMES: &[&str] = &[
 /// leaf-function locals) so the two renamers shorten disjoint name
 /// layers. `rename-globals` is gated by the `--externs` do-not-rename
 /// boundary; see [`externs_do_not_rename`].
+///
+/// A further `rename-properties` pass runs after `rename-globals` **only
+/// when the user supplied `--externs`** (it is appended dynamically at the
+/// trace site, not listed here, because it is conditional). Property
+/// renaming is unsafe without an externs property boundary — the bundled
+/// built-in list omits the DOM — so it is opt-in via the externs contract.
+/// See [`AdvancedConfig`] and [`collect_externs_property_names`].
 const ADVANCED_PASS_NAMES: &[&str] = &[
     "constant-fold",
     "fold-control-flow",
@@ -267,43 +274,56 @@ const ADVANCED_PASS_NAMES: &[&str] = &[
     "rename-globals",
 ];
 
-/// Run the SIMPLE optimization pipeline over a bridged `Program` and
-/// emit the result as JavaScript text.
+/// ADVANCED-only pipeline configuration. Passing `Some` to
+/// [`run_typed_pipeline`] selects ADVANCED; `None` is SIMPLE.
 ///
-/// This is the "happy path" half of the SIMPLE level. The caller has
-/// already turned source text into a typed [`Program`] via the
-/// grammar parser and the bridge; this function runs the pass
-/// pipeline ([`SIMPLE_PASS_NAMES`]) over it and serialises the
-/// optimized tree back to JS with [`closure_emitter::emit`].
-///
-/// Returns `Some(code)` on success and `None` if a pass or the
-/// emitter fails — in which case the caller degrades to
-/// `whitespace_only`. Either way it records the outcome in
-/// `*status` (`"ok"`, `"pass_error:<e>"`, or `"emit_error:<e>"`) so
-/// the correlation-vector trace can distinguish a true optimized emit
-/// from a degrade.
-///
-/// The pass pipeline and emitter both want a type [`Sidecar`] and a
-/// [`CVLog`]. SIMPLE v2 has no type-inference stage yet, so we pass an
-/// empty sidecar; the pass-internal CV log is created disabled because
-/// the per-byte SIMPLE trace is emitted by the caller's stage block,
-/// not by the individual passes.
-fn run_simple_pipeline(
-    program: coding_adventures_javascript_ast::Program,
-    status: &mut Option<String>,
-) -> Option<String> {
-    run_typed_pipeline(program, status, None)
+/// The two fields encode the two halves of the externs contract — the
+/// value namespace (which top-level identifiers are external) and the
+/// property namespace (which member/key names are external). They are
+/// independent boundaries: `rename-globals` always runs under ADVANCED
+/// (with an empty keep-set when no externs were given, since top-level
+/// renaming is sound under closurec's whole-program contract), whereas
+/// `rename-properties` is **gated on the user supplying `--externs`** —
+/// without an externs file we have no DOM/host property boundary and the
+/// bundled built-in list omits the DOM, so renaming properties by default
+/// would miscompile browser code.
+struct AdvancedConfig {
+    /// Top-level names the `rename-globals` pass must keep (the externs
+    /// value-namespace boundary; empty when no `--externs` were given).
+    do_not_rename_globals: std::collections::HashSet<String>,
+    /// When `Some`, run `rename-properties` gated on this externs
+    /// property-namespace boundary. `None` means property renaming stays
+    /// OFF — either the user passed no `--externs`, or (fail-closed) an
+    /// externs source could not be loaded, so the boundary is untrustworthy
+    /// and renaming would risk a miscompile. See
+    /// [`collect_externs_property_names`].
+    rename_properties_externs: Option<std::collections::HashSet<String>>,
 }
 
-/// Run the typed-AST optimization pipeline. `advanced_externs`
-/// distinguishes the two levels: `None` is SIMPLE; `Some(set)` is
-/// ADVANCED, which appends the `rename-globals` pass (gated by the
-/// externs do-not-rename `set`) after the SIMPLE passes. See
-/// [`run_simple_pipeline`] / [`SIMPLE_PASS_NAMES`] / [`ADVANCED_PASS_NAMES`].
+/// Run the typed-AST optimization pipeline over a bridged `Program` and
+/// emit the result as JavaScript text.
+///
+/// The caller has already turned source text into a typed [`Program`] via
+/// the grammar parser and the bridge; this runs the pass pipeline over it
+/// and serialises the optimized tree back to JS with
+/// [`closure_emitter::emit`]. Returns `Some(code)` on success and `None`
+/// if a pass or the emitter fails — the caller then degrades to
+/// `whitespace_only`. Either way it records the outcome in `*status`
+/// (`"ok"`, `"pass_error:<e>"`, or `"emit_error:<e>"`) so the
+/// correlation-vector trace can distinguish a true optimized emit from a
+/// degrade. SIMPLE v2 has no type-inference stage yet, so an empty
+/// [`Sidecar`] is passed; the pass-internal [`CVLog`] is disabled because
+/// the per-byte trace is emitted by the caller's stage block.
+///
+/// `advanced` distinguishes the two levels: `None` is SIMPLE; `Some(cfg)`
+/// is ADVANCED, which appends `rename-globals` (always) and
+/// `rename-properties` (only when `cfg.rename_properties_externs` is
+/// `Some`) after the SIMPLE passes. See [`SIMPLE_PASS_NAMES`] /
+/// [`ADVANCED_PASS_NAMES`] / [`AdvancedConfig`].
 fn run_typed_pipeline(
     program: coding_adventures_javascript_ast::Program,
     status: &mut Option<String>,
-    advanced_externs: Option<std::collections::HashSet<String>>,
+    advanced: Option<AdvancedConfig>,
 ) -> Option<String> {
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
@@ -315,6 +335,7 @@ fn run_typed_pipeline(
     use coding_adventures_closure_pass_remove_unused_vars::RemoveUnusedVarsPass;
     use coding_adventures_closure_pass_rename::RenamePass;
     use coding_adventures_closure_pass_rename_globals::RenameGlobalsPass;
+    use coding_adventures_closure_pass_rename_properties::RenamePropertiesPass;
     use coding_adventures_closure_pass_treeshake::TreeshakePass;
     use coding_adventures_correlation_vector::CVLog;
     use coding_adventures_type_sidecar::Sidecar;
@@ -348,11 +369,20 @@ fn run_typed_pipeline(
     // standalone), so registration order places it at the end.
     pipeline.add(Box::new(RenamePass::new()));
 
-    // ADVANCED only: shorten program-private TOP-LEVEL names too, gated by
-    // the externs do-not-rename boundary. Registered after `rename` so the
-    // two renamers shorten disjoint name layers (locals vs top-level).
-    if let Some(externs) = advanced_externs {
-        pipeline.add(Box::new(RenameGlobalsPass::new(externs)));
+    // ADVANCED only. Registered after `rename` so the renamers shorten
+    // disjoint name layers (locals → globals → properties).
+    if let Some(adv) = advanced {
+        // `rename-globals` shortens program-private TOP-LEVEL names, gated
+        // by the externs value-namespace boundary (empty keep-set is sound
+        // here — top-level renaming holds under the whole-program contract).
+        pipeline.add(Box::new(RenameGlobalsPass::new(adv.do_not_rename_globals)));
+        // `rename-properties` shortens program-private PROPERTY names, but
+        // only when the user opted into the externs contract by supplying
+        // `--externs` (the property-namespace boundary). Without it the pass
+        // does not run at all — see [`AdvancedConfig`] for why.
+        if let Some(prop_externs) = adv.rename_properties_externs {
+            pipeline.add(Box::new(RenamePropertiesPass::new(prop_externs)));
+        }
     }
 
     let optimized = match pipeline.run(program, &sidecar, &mut pass_cv) {
@@ -407,6 +437,24 @@ pub fn transform_source_with_cv(
     // contribution below. Other levels leave it None, where the CV block
     // substitutes "n/a".
     let mut simple_bridge_status: Option<String> = None;
+
+    // Decide ADVANCED property renaming ONCE, fail-closed, so the pipeline
+    // and the CV trace below agree (they must never disagree — one running
+    // the pass while the other omits it from the trace). `Some` means
+    // `rename-properties` will run against this externs property boundary;
+    // `None` means it will not (SIMPLE, no `--externs`, or — critically — an
+    // externs source that failed to load, which DISABLES the pass rather
+    // than running it against an empty/partial boundary). See
+    // [`collect_externs_property_names`].
+    let rename_properties_externs: Option<std::collections::HashSet<String>> =
+        if matches!(config.compilation.level, CompilationLevel::Advanced)
+            && !config.io.externs.is_empty()
+        {
+            collect_externs_property_names(config)
+        } else {
+            None
+        };
+    let will_rename_properties = rename_properties_externs.is_some();
 
     // Step 1 — compilation-level transform.
     let after_level = match config.compilation.level {
@@ -469,14 +517,20 @@ pub fn transform_source_with_cv(
                 }
                 Ok(node) => match bridge::grammar_to_program(&node, es_version) {
                     Ok(program) => {
-                        // ADVANCED adds aggressive top-level renaming,
-                        // gated by the externs do-not-rename boundary;
-                        // SIMPLE runs the typed pipeline unchanged.
-                        let advanced_externs = match config.compilation.level {
-                            CompilationLevel::Advanced => Some(externs_do_not_rename(config)),
+                        // ADVANCED adds aggressive renaming on top of the
+                        // SIMPLE pipeline. `rename-globals` runs always
+                        // (gated by the externs value boundary), and
+                        // `rename-properties` runs only with the (fail-closed)
+                        // property boundary decided above — SIMPLE runs the
+                        // typed pipeline unchanged.
+                        let advanced = match config.compilation.level {
+                            CompilationLevel::Advanced => Some(AdvancedConfig {
+                                do_not_rename_globals: externs_do_not_rename(config),
+                                rename_properties_externs,
+                            }),
                             _ => None,
                         };
-                        run_typed_pipeline(program, &mut simple_bridge_status, advanced_externs)
+                        run_typed_pipeline(program, &mut simple_bridge_status, advanced)
                     }
                     Err(BridgeError::UnsupportedSyntax { rule, location }) => {
                         simple_bridge_status =
@@ -534,10 +588,22 @@ pub fn transform_source_with_cv(
                 // passes today (it is ≥ SIMPLE) and gains advanced-only
                 // passes here as they land.
                 CompilationLevel::Simple | CompilationLevel::Advanced => {
-                    let (tag, level, passes_list) = match config.compilation.level {
-                        CompilationLevel::Advanced => ("advanced_v1", "ADVANCED", ADVANCED_PASS_NAMES),
-                        _ => ("simple_v2", "SIMPLE", SIMPLE_PASS_NAMES),
-                    };
+                    // The pass list is dynamic for ADVANCED: `rename-properties`
+                    // appears in the trace exactly when it actually ran —
+                    // `will_rename_properties` is the SAME fail-closed decision
+                    // that gated the pipeline above, so the trace can never
+                    // disagree with what executed.
+                    let (tag, level, passes_list): (&str, &str, Vec<&str>) =
+                        match config.compilation.level {
+                            CompilationLevel::Advanced => {
+                                let mut passes: Vec<&str> = ADVANCED_PASS_NAMES.to_vec();
+                                if will_rename_properties {
+                                    passes.push("rename-properties");
+                                }
+                                ("advanced_v1", "ADVANCED", passes)
+                            }
+                            _ => ("simple_v2", "SIMPLE", SIMPLE_PASS_NAMES.to_vec()),
+                        };
                     (
                         tag,
                         vec![
@@ -749,6 +815,59 @@ fn externs_do_not_rename(config: &CompilerConfig) -> std::collections::HashSet<S
         }
     }
     names
+}
+
+/// Collect the externs **property** do-not-rename set — every property
+/// name mentioned in the `--externs` files. This is the *property*
+/// namespace twin of [`externs_do_not_rename`] (which collects top-level
+/// *variable* names). ADVANCED's `rename-properties` pass renames every
+/// other program-private property but must keep these (they are the
+/// host/library surface — `innerHTML`, `addEventListener`, …).
+///
+/// The actual walk lives in the rename-properties crate
+/// (`collect_property_names`) so there is one whole-program property
+/// traversal to keep in sync, reused here and by the pass itself.
+///
+/// # Fail-closed, NOT degrade-safe
+///
+/// Unlike [`externs_do_not_rename`] (whose pass, `rename-globals`, runs at
+/// ADVANCED regardless and is sound with an empty keep-set under the
+/// whole-program contract), `rename-properties` is sound **only because the
+/// user declared the external property boundary via `--externs`**. So the
+/// boundary's *contents* — not the mere presence of the flag — are what
+/// make renaming safe. If any externs source fails to resolve, read,
+/// parse, or bridge, we return [`None`], and the caller **disables property
+/// renaming entirely** for this run. Silently contributing a partial (or
+/// empty) boundary would let an externally-observable property be renamed —
+/// a miscompile of valid input, in precisely the case the user opted into
+/// safety. A typo'd path, a permission error, or an externs file using
+/// syntax the Phase-1 parser rejects must turn the pass OFF, never run it
+/// against a shrunken boundary.
+///
+/// Returns `Some(set)` only when EVERY resolved externs file successfully
+/// contributed its property names (the set may legitimately be empty if the
+/// externs files mention no properties). Callers only invoke this when
+/// `config.io.externs` is non-empty.
+fn collect_externs_property_names(
+    config: &CompilerConfig,
+) -> Option<std::collections::HashSet<String>> {
+    use coding_adventures_closure_pass_rename_properties::collect_property_names;
+
+    // A glob failure here would already have been surfaced by
+    // `resolve_externs` in `run_compiler`; treat it as fail-closed anyway.
+    let paths = resolve_externs(config).ok()?;
+    let es = map_language_in_to_es_version(config);
+    let mut names = std::collections::HashSet::new();
+    for path in paths {
+        // Any read/parse/bridge failure disables the pass (`?` → None) — a
+        // partial boundary is unsound, so we refuse to optimize rather than
+        // risk renaming an external property.
+        let src = fs::read_to_string(&path).ok()?;
+        let node = parse_javascript_typed(&src, es).ok()?;
+        let program = bridge::grammar_to_program(&node, es).ok()?;
+        names.extend(collect_property_names(&program));
+    }
+    Some(names)
 }
 
 /// Run the compiler with `config`.
@@ -6105,6 +6224,137 @@ mod tests {
         assert!(
             advanced.len() < simple.len(),
             "ADVANCED must be smaller than SIMPLE here"
+        );
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC13.K — ADVANCED property renaming, gated on --externs
+    //
+    // `rename-properties` shortens program-private property names. It is
+    // unsafe to run unconditionally (the bundled built-in list omits the
+    // DOM, so `el.innerHTML`/`node.onload` would be renamed and break
+    // browser code), so closurec runs it ONLY when the user supplies at
+    // least one `--externs` file — opting into the externs contract AND
+    // providing the host/DOM property boundary. These three tests pin the
+    // policy: SIMPLE and no-externs ADVANCED leave properties alone;
+    // ADVANCED + externs renames a private property while keeping an
+    // externs-declared one.
+    // ------------------------------------------------------------------
+
+    /// Top-level program whose property accesses survive every structural
+    /// pass: `secretField` is program-private (renameable), `innerHTML` is
+    /// declared in the externs file below (must be kept). `read`/`obj` are
+    /// free globals, untouched by `rename-globals`.
+    const PROP_INPUT: &str =
+        "read(obj.innerHTML);\nread(obj.secretField);\nread(obj.secretField);\n";
+    /// An externs file declaring `innerHTML` as part of the external
+    /// surface (and nothing about `secretField`).
+    const PROP_EXTERNS: &str = "var node;\nread(node.innerHTML);\n";
+    /// An externs file the Phase-1 bridge REJECTS (member-assignment
+    /// statement). Loading it fails, so the property boundary cannot be
+    /// established — property renaming must fail closed (stay OFF).
+    const BAD_EXTERNS: &str = "node.innerHTML = 1;\n";
+
+    /// Compile `PROP_INPUT` at `level`, optionally with an externs file
+    /// whose body is `externs`, and return stdout. Writes real temp files
+    /// because the externs boundary is collected from `--externs` paths on
+    /// disk. `label` makes the temp paths unique per call so
+    /// concurrently-running tests (cargo runs them on multiple threads)
+    /// never share — and delete — a file.
+    fn compile_prop(
+        level: crate::config::CompilationLevel,
+        externs: Option<&str>,
+        label: &str,
+    ) -> String {
+        let in_path = temp_path(&format!("prop-{label}-in.js"));
+        fs::write(&in_path, PROP_INPUT).expect("setup");
+        let mut io = IoConfig {
+            js_patterns: vec![in_path.to_string_lossy().to_string()],
+            ..Default::default()
+        };
+        let ext_path = temp_path(&format!("prop-{label}-ext.js"));
+        if let Some(body) = externs {
+            fs::write(&ext_path, body).expect("setup");
+            io.externs = vec![ext_path.to_string_lossy().to_string()];
+        }
+        let cfg = CompilerConfig {
+            io,
+            compilation: crate::config::CompilationConfig {
+                level,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = run_compiler(&cfg).expect("ok").stdout_text;
+        let _ = fs::remove_file(&in_path);
+        let _ = fs::remove_file(&ext_path);
+        out
+    }
+
+    #[test]
+    fn simple_does_not_rename_properties() {
+        // SIMPLE never renames properties — both names survive verbatim.
+        let out = compile_prop(crate::config::CompilationLevel::Simple, None, "simple");
+        assert!(out.contains(".innerHTML"), "got: {out}");
+        assert!(out.contains(".secretField"), "got: {out}");
+    }
+
+    #[test]
+    fn advanced_without_externs_does_not_rename_properties() {
+        // ADVANCED with NO --externs leaves properties untouched: there is
+        // no host/DOM property boundary, so renaming would be unsound.
+        let out = compile_prop(crate::config::CompilationLevel::Advanced, None, "adv-noext");
+        assert!(out.contains(".innerHTML"), "got: {out}");
+        assert!(out.contains(".secretField"), "got: {out}");
+    }
+
+    #[test]
+    fn advanced_with_externs_renames_private_property_only() {
+        // ADVANCED + --externs: `secretField` (program-private) is renamed
+        // away; `innerHTML` (declared in the externs file) is kept.
+        let out = compile_prop(
+            crate::config::CompilationLevel::Advanced,
+            Some(PROP_EXTERNS),
+            "adv-ext",
+        );
+        assert!(
+            out.contains(".innerHTML"),
+            "externs-declared property must be kept; got: {out}"
+        );
+        assert!(
+            !out.contains("secretField"),
+            "private property must be renamed away; got: {out}"
+        );
+        // And it actually shrank versus the no-externs ADVANCED output.
+        let baseline = compile_prop(crate::config::CompilationLevel::Advanced, None, "adv-base");
+        assert!(
+            out.len() < baseline.len(),
+            "property renaming must shrink output: {} vs {}",
+            out.len(),
+            baseline.len()
+        );
+    }
+
+    #[test]
+    fn advanced_with_unparseable_externs_disables_property_renaming() {
+        // FAIL-CLOSED: the user supplied `--externs`, but the file fails to
+        // parse, so the property boundary can't be established. Property
+        // renaming must NOT run against an empty/partial boundary — doing so
+        // would rename an externally-observable property (a miscompile of
+        // valid input). Both names must survive untouched, exactly as if no
+        // externs had been supplied.
+        let out = compile_prop(
+            crate::config::CompilationLevel::Advanced,
+            Some(BAD_EXTERNS),
+            "adv-bad",
+        );
+        assert!(
+            out.contains(".innerHTML"),
+            "must not rename when externs failed to load; got: {out}"
+        );
+        assert!(
+            out.contains(".secretField"),
+            "must not rename when externs failed to load; got: {out}"
         );
     }
 

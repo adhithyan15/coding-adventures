@@ -558,6 +558,7 @@ members = [
     "closure-pass-remove-unused-vars",
     "closure-pass-rename",
     "closure-pass-rename-globals",
+    "closure-pass-rename-properties",
     "closure-pass-treeshake",
     "closure-scope-analyzer",
     "closure-source-map",

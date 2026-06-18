@@ -62,7 +62,7 @@ use smart_home_integration_catalog::{
     activation_verification_checkpoints_from_execution_packets,
     activation_watchtower_signals_from_command_center_sections, describe_primitive_family,
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
-    entries_requiring_primitive, find_entry, first_party_catalog,
+    entries_requiring_primitive, find_entry, first_party_catalog, mesh_action_readiness_summary,
     mesh_protocol_primitive_readiness_rows, mesh_protocol_substrate_actions,
     mesh_protocol_substrate_stage_rows, mesh_readiness_package_summary, mesh_stage_release_summary,
     policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
@@ -139,17 +139,17 @@ use smart_home_integration_catalog::{
     IntegrationActivationVerificationStatus, IntegrationActivationVerificationSummary,
     IntegrationActivationWatchtowerSignal, IntegrationActivationWatchtowerSignalKind,
     IntegrationActivationWatchtowerSummary, IntegrationCatalogEntry, IntegrationCatalogQuery,
-    IntegrationCatalogSort, IntegrationCategory, IntegrationMeshProtocolPrimitiveReadinessRow,
-    IntegrationMeshProtocolPrimitiveReadinessSummary, IntegrationMeshProtocolSubstrateAction,
-    IntegrationMeshProtocolSubstrateActionSummary, IntegrationMeshProtocolSubstrateStage,
-    IntegrationMeshProtocolSubstrateStageRow, IntegrationMeshProtocolSubstrateStageSummary,
-    IntegrationMeshReadinessPackageSummary, IntegrationMeshStageReleaseSummary,
-    IntegrationPolicySurface, IntegrationPolicySurfaceInventoryItem,
-    IntegrationPolicySurfaceSummary, IntegrationReadinessCapabilityGap,
-    IntegrationReadinessDependencyGap, IntegrationReadinessGapInventory,
-    IntegrationReadinessPrimitiveGap, IntegrationReadinessReport, IntegrationReadinessSummary,
-    PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary, PrimitiveBacklogItem,
-    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+    IntegrationCatalogSort, IntegrationCategory, IntegrationMeshActionReadinessSummary,
+    IntegrationMeshProtocolPrimitiveReadinessRow, IntegrationMeshProtocolPrimitiveReadinessSummary,
+    IntegrationMeshProtocolSubstrateAction, IntegrationMeshProtocolSubstrateActionSummary,
+    IntegrationMeshProtocolSubstrateStage, IntegrationMeshProtocolSubstrateStageRow,
+    IntegrationMeshProtocolSubstrateStageSummary, IntegrationMeshReadinessPackageSummary,
+    IntegrationMeshStageReleaseSummary, IntegrationPolicySurface,
+    IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
+    IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
+    IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
+    IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary,
+    PrimitiveBacklogItem, PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
@@ -330,6 +330,8 @@ pub const SMART_HOME_GET_INTEGRATION_MESH_READINESS_PACKAGE_SUMMARY_TOOL_ID: &st
     "smart_home.get_integration_mesh_readiness_package_summary";
 pub const SMART_HOME_GET_INTEGRATION_MESH_STAGE_RELEASE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_stage_release_summary";
+pub const SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_mesh_action_readiness_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID: &str =
     "smart_home.list_integration_activation_dossiers";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID: &str =
@@ -826,6 +828,10 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_MESH_STAGE_RELEASE_SUMMARY_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(get_integration_mesh_stage_release_summary_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(get_integration_mesh_action_readiness_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID => {
                     let query = integration_activation_dossier_query(&arguments)?;
@@ -2623,6 +2629,17 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             SMART_HOME_GET_INTEGRATION_MESH_STAGE_RELEASE_SUMMARY_TOOL_ID,
             "Get smart-home integration mesh stage release summary",
             "Return D23 mesh stage release readiness counts combining substrate stage and package release blockers.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID,
+            "Get smart-home integration mesh action readiness summary",
+            "Return D23 mesh action readiness counts combining queued substrate actions with stage release blockers.",
             integration_readiness_query_schema(true),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
@@ -16815,6 +16832,16 @@ fn integration_mesh_stage_release_summary_for_query(
     )
 }
 
+fn integration_mesh_action_readiness_summary_for_query(
+    query: &IntegrationReadinessQuery,
+) -> IntegrationMeshActionReadinessSummary {
+    mesh_action_readiness_summary(
+        &query.available_primitives,
+        &query.allowed_capabilities,
+        &query.enabled_integrations,
+    )
+}
+
 fn integration_activation_dependency_graph_for_query(
     query: &IntegrationActivationDependencyQuery,
 ) -> (IntegrationActivationDependencyGraph, usize) {
@@ -20910,6 +20937,7 @@ fn list_integration_mesh_substrate_actions_output_handler_output(
                 "network_security_actions",
                 integer(summary.network_security_actions as i64),
             ),
+            ("unique_protocols", integer(summary.unique_protocols as i64)),
             (
                 "first_protocol",
                 summary
@@ -21011,6 +21039,39 @@ fn get_integration_mesh_stage_release_summary_output_handler_output(
             (
                 "primitive_blocker_count",
                 integer(summary.primitive_blocker_count as i64),
+            ),
+            (
+                "remediation_item_count",
+                integer(summary.remediation_item_count as i64),
+            ),
+            ("release_ready", JsonValue::Bool(summary.release_ready)),
+        ]),
+    )
+}
+
+fn get_integration_mesh_action_readiness_summary_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let summary = integration_mesh_action_readiness_summary_for_query(&query);
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        mesh_action_readiness_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_mesh_action_readiness_summary"),
+            ),
+            (
+                "queued_substrate_actions",
+                integer(summary.queued_substrate_actions as i64),
+            ),
+            (
+                "queued_stage_count",
+                integer(summary.queued_stage_count as i64),
             ),
             (
                 "remediation_item_count",
@@ -41982,6 +42043,8 @@ fn mesh_protocol_substrate_action_json(
         ("protocol", string(protocol_family_label(&action.protocol))),
         ("primitive", string(action.primitive.as_str())),
         ("stage", string(action.stage.as_str())),
+        ("ready", JsonValue::Bool(false)),
+        ("blocked", JsonValue::Bool(true)),
     ])
 }
 
@@ -41990,10 +42053,7 @@ fn mesh_protocol_substrate_action_summary_json(
 ) -> JsonValue {
     object([
         ("total_actions", integer(summary.total_actions as i64)),
-        (
-            "unique_protocols",
-            integer(summary.unique_protocols as i64),
-        ),
+        ("unique_protocols", integer(summary.unique_protocols as i64)),
         (
             "unique_primitives",
             integer(summary.unique_primitives as i64),
@@ -42122,6 +42182,74 @@ fn mesh_readiness_package_summary_json(
         (
             "needs_supervision",
             JsonValue::Bool(summary.needs_supervision()),
+        ),
+    ])
+}
+
+fn mesh_action_readiness_summary_json(
+    summary: &IntegrationMeshActionReadinessSummary,
+) -> JsonValue {
+    object([
+        (
+            "release_summary",
+            mesh_stage_release_summary_json(&summary.release_summary),
+        ),
+        (
+            "action_summary",
+            mesh_protocol_substrate_action_summary_json(&summary.action_summary),
+        ),
+        ("total_protocols", integer(summary.total_protocols as i64)),
+        (
+            "queued_substrate_actions",
+            integer(summary.queued_substrate_actions as i64),
+        ),
+        (
+            "queued_stage_count",
+            integer(summary.queued_stage_count as i64),
+        ),
+        (
+            "queued_primitive_count",
+            integer(summary.queued_primitive_count as i64),
+        ),
+        (
+            "remediation_item_count",
+            integer(summary.remediation_item_count as i64),
+        ),
+        (
+            "first_action_protocol",
+            summary
+                .first_action_protocol
+                .as_ref()
+                .map(protocol_family_label)
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_stage",
+            summary
+                .first_action_stage
+                .map(|stage| string(stage.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_primitive",
+            summary
+                .first_action_primitive
+                .map(|primitive| string(primitive.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "substrate_actions_ready",
+            JsonValue::Bool(summary.substrate_actions_ready),
+        ),
+        ("release_ready", JsonValue::Bool(summary.release_ready)),
+        (
+            "has_substrate_actions",
+            JsonValue::Bool(summary.has_substrate_actions()),
+        ),
+        (
+            "has_remediations",
+            JsonValue::Bool(summary.has_remediations()),
         ),
     ])
 }
@@ -49041,7 +49169,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 192);
+        assert_eq!(definitions.len(), 193);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -49233,6 +49361,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_MESH_STAGE_RELEASE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_ACTIONS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -49591,7 +49725,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            184
+            185
         );
         assert_eq!(
             export
@@ -50275,11 +50409,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(192))
+            Some(&integer(193))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(184))
+            Some(&integer(185))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -52748,6 +52882,121 @@ mod tests {
         assert_eq!(
             field(mesh_stage_release_rollup, "has_blockers"),
             Some(&JsonValue::Bool(true))
+        );
+
+        let list_mesh_substrate_actions_request = request(
+            "call-list-integration-mesh-substrate-actions",
+            SMART_HOME_LIST_INTEGRATION_MESH_SUBSTRATE_ACTIONS_TOOL_ID,
+            object([
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("usb"),
+                        string("serial_controller"),
+                        string("radio_802154"),
+                        string("supervision"),
+                    ]),
+                ),
+                ("activation_ready", JsonValue::Bool(false)),
+                ("limit", integer(2)),
+            ]),
+            5_911,
+        );
+        let list_mesh_substrate_actions_trace =
+            tool_runtime.invoke_with_events(&list_mesh_substrate_actions_request);
+        assert!(list_mesh_substrate_actions_trace.result.ok);
+        assert_eq!(
+            list_mesh_substrate_actions_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_mesh_substrate_actions_output = list_mesh_substrate_actions_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        assert_eq!(
+            field(list_mesh_substrate_actions_output, "count"),
+            Some(&integer(2))
+        );
+        let mesh_substrate_action_summary =
+            field(list_mesh_substrate_actions_output, "summary").unwrap();
+        assert_eq!(
+            field(mesh_substrate_action_summary, "total_actions"),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(mesh_substrate_action_summary, "has_actions"),
+            Some(&JsonValue::Bool(true))
+        );
+        let mesh_substrate_action = array_item(
+            field(list_mesh_substrate_actions_output, "mesh_substrate_actions").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(field(mesh_substrate_action, "sequence"), Some(&integer(1)));
+        assert_eq!(
+            field(mesh_substrate_action, "blocked"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(matches!(
+            field(mesh_substrate_action, "stage"),
+            Some(JsonValue::String(_))
+        ));
+
+        let mesh_action_readiness_summary_request = request(
+            "call-integration-mesh-action-readiness-summary",
+            SMART_HOME_GET_INTEGRATION_MESH_ACTION_READINESS_SUMMARY_TOOL_ID,
+            object([
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("usb"),
+                        string("serial_controller"),
+                        string("radio_802154"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+            ]),
+            5_912,
+        );
+        let mesh_action_readiness_summary_trace =
+            tool_runtime.invoke_with_events(&mesh_action_readiness_summary_request);
+        assert!(mesh_action_readiness_summary_trace.result.ok);
+        assert_eq!(
+            mesh_action_readiness_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let mesh_action_readiness_summary_output = mesh_action_readiness_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let mesh_action_readiness_rollup =
+            field(mesh_action_readiness_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(mesh_action_readiness_rollup, "queued_substrate_actions"),
+            Some(&integer(5))
+        );
+        assert_eq!(
+            field(mesh_action_readiness_rollup, "substrate_actions_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(mesh_action_readiness_rollup, "release_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        let mesh_action_summary = field(mesh_action_readiness_rollup, "action_summary").unwrap();
+        assert_eq!(
+            field(mesh_action_summary, "network_security_actions"),
+            Some(&integer(3))
         );
 
         let list_activation_dossiers_request = request(

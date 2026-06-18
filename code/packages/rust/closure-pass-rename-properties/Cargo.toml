@@ -1,0 +1,16 @@
+[package]
+name = "coding-adventures-closure-pass-rename-properties"
+version = "0.2.0"
+edition = "2021"
+description = "Aggressive property renaming pass for the Closure Compiler clone (ADVANCED-only). Consistently shortens program-private object property names that are never quoted/computed and not in the built-in or externs do-not-rename boundary."
+
+[dependencies]
+coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
+coding-adventures-javascript-ast = { path = "../javascript-ast" }
+
+[dev-dependencies]
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+coding-adventures-javascript-parser = { path = "../javascript-parser" }
+coding-adventures-closure-emitter = { path = "../closure-emitter" }
+coding-adventures-type-sidecar = { path = "../type-sidecar" }
+coding_adventures_correlation_vector = { path = "../correlation-vector" }

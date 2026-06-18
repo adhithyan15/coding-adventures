@@ -164,6 +164,26 @@ final class WindowedSheetModel: ObservableObject {
         return ok
     }
 
+    /// Save / load: serialize the whole workbook to a JSON document, and restore
+    /// it. The document stores only the source + formats — computed values
+    /// recompute on load, so a loaded formula stays live. `loadBook` returns
+    /// `false` (workbook untouched) for malformed input; on success it resizes
+    /// the extent, refreshes the formula bar, and bumps `revision` so the view
+    /// re-reads.
+    func saveBook() -> String {
+        session.serialize()
+    }
+    @discardableResult
+    func loadBook(_ data: String) -> Bool {
+        let ok = session.deserialize(data)
+        if ok {
+            resize()
+            formulaText = session.getRaw(address(selectedRow, selectedCol))
+            revision += 1
+        }
+        return ok
+    }
+
     /// Write `raw` into an explicit A1 cell and return the cells it dirtied.
     /// (Kept for the headless `WindowedModelTests`.)
     @discardableResult
@@ -179,6 +199,11 @@ final class WindowedSheetModel: ObservableObject {
 /// The virtualized, editable grid view.
 struct InfiniteGridView: View {
     @ObservedObject var model: WindowedSheetModel
+
+    // In-memory "saved file" slot for the Save / Load buttons: Save stows the
+    // serialized workbook here, Load restores from it. (A real app would write it
+    // to a file; the demo keeps the round trip self-contained.)
+    @State private var savedSnapshot = ""
 
     static let rowH: CGFloat = 22
     static let colW: CGFloat = 80
@@ -238,6 +263,14 @@ struct InfiniteGridView: View {
             Button("Paste") { model.pasteCell() }
                 .font(.system(size: 11, design: .monospaced))
                 .help("Paste the clipboard at the selected cell, shifting relative references")
+            // Save / load: serialize the whole workbook to memory, and restore it.
+            Button("Save") { savedSnapshot = model.saveBook() }
+                .font(.system(size: 11, design: .monospaced))
+                .help("Serialize the whole workbook to memory")
+            Button("Load") { if !savedSnapshot.isEmpty { model.loadBook(savedSnapshot) } }
+                .font(.system(size: 11, design: .monospaced))
+                .disabled(savedSnapshot.isEmpty)
+                .help("Restore the workbook from the last save")
         }
         .padding(.bottom, 8)
     }

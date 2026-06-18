@@ -96,8 +96,9 @@ rulebook vitamin_facts {
 
     % --- Vitamin K -------------------------------------------------------
     relate deficiency_causes(vitamin_k, coagulopathy)
-        source "Vitamin K deficiency causes a bleeding diathesis (coagulopathy)."
-        trust consensus   % [FLAG: direction_only]
+        source "Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK536983/"
+        trust authoritative
     relate classic_finding(vitamin_k, prolonged_prothrombin_time)
         source "Across age groups, vitamin K deficiency is characterized by impaired γ-carboxylation of clotting factors, leading to prolonged prothrombin time with normal platelet counts and fibrinogen levels."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK536983/"
