@@ -73,8 +73,20 @@ let out2 = vm.execute_module(&module, b"\x61\x62\x63").unwrap(); // abc
 | `+` | `load_mem v ptr u8` + `const k 1 u8` + `add v v k u8` + `store_mem ptr v u8` |
 | `-` | `load_mem v ptr u8` + `const k 1 u8` + `sub v v k u8` + `store_mem ptr v u8` |
 | `.` | `load_mem v ptr u8` + `call_builtin putchar v void` |
-| `,` | `call_builtin getchar () u8` → `v` + `store_mem ptr v u8` |
+| `,` | `call_builtin getchar () i64` → test `v & ~0xFF` (EOF?) → store `0` (EOF) or the byte (`u8`) |
 | `[`…`]` | structured loop (label + guard + body + back-edge) |
+
+### `,` and end-of-input (B1-eof)
+
+`getchar` returns a byte (0–255) or `-1` at end-of-input — but the runtimes widen that
+`-1` differently (LLVM sign-extends to `0xFF…FF`; the native path zero-extends the `i32` to
+`0x0000_0000_FFFF_FFFF`), so a signed `< 0` test is not portable. `,` instead reads at `i64`
+and tests the bits **above** the low byte with the mask `~0xFF` (`-256`): those bits are `0`
+for any valid byte and non-zero for `-1` under either extension. On EOF it stores `0`,
+otherwise the byte — each branch doing its own `store_mem` so no register crosses the merge
+(Brainfuck keeps all state in the tape; the IIR has no phi nodes). This is the "EOF leaves 0"
+convention the canonical cat `,[.,]` relies on, so cat now halts on **every** backend
+(`"Hi"` → `"Hi"`). A program that never reads past its input never reaches the EOF branch.
 
 ## Where it fits in the stack
 
