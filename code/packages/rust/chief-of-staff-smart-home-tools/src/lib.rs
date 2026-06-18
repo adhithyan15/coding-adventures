@@ -65,8 +65,8 @@ use smart_home_integration_catalog::{
     entries_requiring_primitive, find_entry, first_party_catalog, mesh_action_readiness_summary,
     mesh_protocol_primitive_readiness_rows, mesh_protocol_substrate_actions,
     mesh_protocol_substrate_stage_rows, mesh_readiness_handoff_packages,
-    mesh_readiness_handoff_summary, mesh_readiness_package_summary, mesh_release_readiness_summary,
-    mesh_stage_release_summary,
+    mesh_readiness_handoff_summary, mesh_readiness_package_summary, mesh_release_readiness_checks,
+    mesh_release_readiness_summary, mesh_stage_release_summary,
     policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
     primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
     readiness_gap_inventory_from_reports, readiness_report_for_plan,
@@ -148,13 +148,15 @@ use smart_home_integration_catalog::{
     IntegrationMeshProtocolSubstrateStageSummary, IntegrationMeshReadinessHandoffKind,
     IntegrationMeshReadinessHandoffPackage, IntegrationMeshReadinessHandoffStatus,
     IntegrationMeshReadinessHandoffSummary, IntegrationMeshReadinessPackageSummary,
+    IntegrationMeshReleaseReadinessCheck, IntegrationMeshReleaseReadinessCheckKind,
+    IntegrationMeshReleaseReadinessCheckSummary, IntegrationMeshReleaseReadinessStatus,
     IntegrationMeshReleaseReadinessSummary, IntegrationMeshStageReleaseSummary,
-    IntegrationPolicySurface,
-    IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
-    IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
-    IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
-    IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary,
-    PrimitiveBacklogItem, PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+    IntegrationPolicySurface, IntegrationPolicySurfaceInventoryItem,
+    IntegrationPolicySurfaceSummary, IntegrationReadinessCapabilityGap,
+    IntegrationReadinessDependencyGap, IntegrationReadinessGapInventory,
+    IntegrationReadinessPrimitiveGap, IntegrationReadinessReport, IntegrationReadinessSummary,
+    PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary, PrimitiveBacklogItem,
+    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
@@ -343,6 +345,8 @@ pub const SMART_HOME_LIST_INTEGRATION_MESH_READINESS_HANDOFFS_TOOL_ID: &str =
     "smart_home.list_integration_mesh_readiness_handoffs";
 pub const SMART_HOME_GET_INTEGRATION_MESH_READINESS_HANDOFF_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_readiness_handoff_summary";
+pub const SMART_HOME_LIST_INTEGRATION_MESH_RELEASE_READINESS_CHECKS_TOOL_ID: &str =
+    "smart_home.list_integration_mesh_release_readiness_checks";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID: &str =
     "smart_home.list_integration_activation_dossiers";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID: &str =
@@ -855,6 +859,10 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_MESH_READINESS_HANDOFF_SUMMARY_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(get_integration_mesh_readiness_handoff_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_MESH_RELEASE_READINESS_CHECKS_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(list_integration_mesh_release_readiness_checks_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID => {
                     let query = integration_activation_dossier_query(&arguments)?;
@@ -2706,6 +2714,23 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_MESH_RELEASE_READINESS_CHECKS_TOOL_ID,
+            "List smart-home integration mesh release readiness checks",
+            "List D23 mesh release-readiness gate checks derived from handoff packages, evidence remediation, operator work, and release packet readiness.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new("mesh_release_readiness_checks", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                ],
+                vec!["mesh_release_readiness_checks", "summary", "count"],
                 false,
             ),
         ),
@@ -16943,6 +16968,25 @@ fn integration_mesh_readiness_handoff_summary_for_query(
     )
 }
 
+fn integration_mesh_release_readiness_checks_for_query(
+    query: &IntegrationReadinessQuery,
+) -> Vec<IntegrationMeshReleaseReadinessCheck> {
+    let mut checks = mesh_release_readiness_checks(
+        &query.available_primitives,
+        &query.allowed_capabilities,
+        &query.enabled_integrations,
+    );
+
+    if let Some(activation_ready) = query.activation_ready {
+        checks.retain(|check| check.ready() == activation_ready);
+    }
+    if let Some(limit) = query.limit {
+        checks.truncate(limit);
+    }
+
+    checks
+}
+
 fn integration_activation_dependency_graph_for_query(
     query: &IntegrationActivationDependencyQuery,
 ) -> (IntegrationActivationDependencyGraph, usize) {
@@ -21285,6 +21329,50 @@ fn get_integration_mesh_readiness_handoff_summary_output_handler_output(
             (
                 "ready_for_handoff",
                 JsonValue::Bool(summary.ready_for_handoff()),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_mesh_release_readiness_checks_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let checks = integration_mesh_release_readiness_checks_for_query(&query);
+    let summary = IntegrationMeshReleaseReadinessCheckSummary::from_parts(
+        integration_mesh_readiness_handoff_summary_for_query(&query),
+        checks.iter(),
+    );
+    let count = checks.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "mesh_release_readiness_checks",
+            JsonValue::Array(
+                checks
+                    .iter()
+                    .map(mesh_release_readiness_check_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            mesh_release_readiness_check_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_mesh_release_readiness_checks"),
+            ),
+            ("checks", integer(count as i64)),
+            ("ready_checks", integer(summary.ready_checks as i64)),
+            ("blocked_checks", integer(summary.blocked_checks as i64)),
+            (
+                "release_packet_ready",
+                JsonValue::Bool(summary.release_packet_ready),
             ),
         ]),
     )
@@ -42885,6 +42973,214 @@ fn mesh_readiness_handoff_summary_json(
     ])
 }
 
+fn mesh_release_readiness_check_kind_json(
+    kind: IntegrationMeshReleaseReadinessCheckKind,
+) -> JsonValue {
+    string(kind.as_str())
+}
+
+fn mesh_release_readiness_status_json(status: IntegrationMeshReleaseReadinessStatus) -> JsonValue {
+    string(status.as_str())
+}
+
+fn mesh_release_readiness_check_json(check: &IntegrationMeshReleaseReadinessCheck) -> JsonValue {
+    object([
+        ("sequence", integer(check.sequence as i64)),
+        (
+            "check_kind",
+            mesh_release_readiness_check_kind_json(check.check_kind),
+        ),
+        ("status", mesh_release_readiness_status_json(check.status)),
+        (
+            "package_kind",
+            check
+                .package_kind
+                .map(mesh_readiness_handoff_kind_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "handoff_status",
+            check
+                .handoff_status
+                .map(mesh_readiness_handoff_status_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "queued_substrate_actions",
+            integer(check.queued_substrate_actions as i64),
+        ),
+        (
+            "queued_stage_count",
+            integer(check.queued_stage_count as i64),
+        ),
+        (
+            "queued_primitive_count",
+            integer(check.queued_primitive_count as i64),
+        ),
+        (
+            "remediation_item_count",
+            integer(check.remediation_item_count as i64),
+        ),
+        (
+            "review_required_packages",
+            integer(check.review_required_packages as i64),
+        ),
+        (
+            "operator_required_packages",
+            integer(check.operator_required_packages as i64),
+        ),
+        ("blocked_packages", integer(check.blocked_packages as i64)),
+        (
+            "packages_requiring_attention",
+            integer(check.packages_requiring_attention as i64),
+        ),
+        ("ready", JsonValue::Bool(check.ready())),
+        ("blocked", JsonValue::Bool(check.blocked())),
+        ("review_required", JsonValue::Bool(check.review_required())),
+        (
+            "operator_required",
+            JsonValue::Bool(check.operator_required()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(check.requires_attention()),
+        ),
+    ])
+}
+
+fn mesh_release_readiness_check_summary_json(
+    summary: &IntegrationMeshReleaseReadinessCheckSummary,
+) -> JsonValue {
+    object([
+        (
+            "handoff_summary",
+            mesh_readiness_handoff_summary_json(&summary.handoff_summary),
+        ),
+        ("total_checks", integer(summary.total_checks as i64)),
+        ("ready_checks", integer(summary.ready_checks as i64)),
+        ("blocked_checks", integer(summary.blocked_checks as i64)),
+        (
+            "review_required_checks",
+            integer(summary.review_required_checks as i64),
+        ),
+        (
+            "operator_required_checks",
+            integer(summary.operator_required_checks as i64),
+        ),
+        (
+            "checks_requiring_attention",
+            integer(summary.checks_requiring_attention as i64),
+        ),
+        (
+            "queued_substrate_actions",
+            integer(summary.queued_substrate_actions as i64),
+        ),
+        (
+            "queued_stage_count",
+            integer(summary.queued_stage_count as i64),
+        ),
+        (
+            "queued_primitive_count",
+            integer(summary.queued_primitive_count as i64),
+        ),
+        (
+            "remediation_item_count",
+            integer(summary.remediation_item_count as i64),
+        ),
+        (
+            "review_required_packages",
+            integer(summary.review_required_packages as i64),
+        ),
+        (
+            "operator_required_packages",
+            integer(summary.operator_required_packages as i64),
+        ),
+        ("blocked_packages", integer(summary.blocked_packages as i64)),
+        (
+            "packages_requiring_attention",
+            integer(summary.packages_requiring_attention as i64),
+        ),
+        (
+            "next_check_kind",
+            summary
+                .next_check_kind
+                .map(mesh_release_readiness_check_kind_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_check_status",
+            summary
+                .next_check_status
+                .map(mesh_release_readiness_status_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_check_sequence",
+            summary
+                .next_check_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_check_sequence",
+            summary
+                .first_blocked_check_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_check_sequence",
+            summary
+                .first_review_check_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_check_sequence",
+            summary
+                .first_operator_check_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_package_kind",
+            summary
+                .next_package_kind
+                .map(mesh_readiness_handoff_kind_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_handoff_status",
+            summary
+                .next_handoff_status
+                .map(mesh_readiness_handoff_status_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "substrate_actions_ready",
+            JsonValue::Bool(summary.substrate_actions_ready),
+        ),
+        ("release_ready", JsonValue::Bool(summary.release_ready)),
+        (
+            "ready_for_handoff",
+            JsonValue::Bool(summary.ready_for_handoff),
+        ),
+        (
+            "release_packet_ready",
+            JsonValue::Bool(summary.release_packet_ready),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn readiness_report_json(report: &IntegrationReadinessReport) -> JsonValue {
     object([
         (
@@ -49722,7 +50018,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 196);
+        assert_eq!(definitions.len(), 197);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -49929,6 +50225,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_MESH_READINESS_HANDOFF_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_MESH_RELEASE_READINESS_CHECKS_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -50287,7 +50586,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            188
+            189
         );
         assert_eq!(
             export
@@ -50376,6 +50675,10 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_MESH_READINESS_HANDOFF_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_MESH_RELEASE_READINESS_CHECKS_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -50991,11 +51294,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(196))
+            Some(&integer(197))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(188))
+            Some(&integer(189))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -53627,11 +53930,7 @@ mod tests {
             field(mesh_release_readiness_rollup, "release_ready"),
             Some(&JsonValue::Bool(false))
         );
-        assert!(field(
-            mesh_release_readiness_rollup,
-            "action_readiness_summary"
-        )
-        .is_some());
+        assert!(field(mesh_release_readiness_rollup, "action_readiness_summary").is_some());
 
         let list_mesh_readiness_handoffs_request = request(
             "call-list-integration-mesh-readiness-handoffs",
@@ -53759,6 +54058,81 @@ mod tests {
         assert_eq!(
             field(mesh_readiness_handoff_rollup, "has_blockers"),
             Some(&JsonValue::Bool(true))
+        );
+
+        let list_mesh_release_readiness_checks_request = request(
+            "call-list-integration-mesh-release-readiness-checks",
+            SMART_HOME_LIST_INTEGRATION_MESH_RELEASE_READINESS_CHECKS_TOOL_ID,
+            object([
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("usb"),
+                        string("serial_controller"),
+                        string("radio_802154"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("activation_ready", JsonValue::Bool(false)),
+            ]),
+            5_915,
+        );
+        let list_mesh_release_readiness_checks_trace =
+            tool_runtime.invoke_with_events(&list_mesh_release_readiness_checks_request);
+        assert!(list_mesh_release_readiness_checks_trace.result.ok);
+        assert_eq!(
+            list_mesh_release_readiness_checks_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_mesh_release_readiness_checks_output = list_mesh_release_readiness_checks_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        assert_eq!(
+            field(list_mesh_release_readiness_checks_output, "count"),
+            Some(&integer(5))
+        );
+        let mesh_release_readiness_summary =
+            field(list_mesh_release_readiness_checks_output, "summary").unwrap();
+        assert_eq!(
+            field(mesh_release_readiness_summary, "blocked_checks"),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(mesh_release_readiness_summary, "review_required_checks"),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(mesh_release_readiness_summary, "release_packet_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        let mesh_release_readiness_check = array_item(
+            field(
+                list_mesh_release_readiness_checks_output,
+                "mesh_release_readiness_checks",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(mesh_release_readiness_check, "check_kind"),
+            Some(&string("substrate_actions"))
+        );
+        assert_eq!(
+            field(mesh_release_readiness_check, "status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(mesh_release_readiness_check, "package_kind"),
+            Some(&string("substrate_action"))
         );
 
         let list_activation_dossiers_request = request(

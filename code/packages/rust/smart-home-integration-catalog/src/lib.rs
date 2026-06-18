@@ -1709,6 +1709,256 @@ impl IntegrationMeshReadinessHandoffSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshReleaseReadinessCheckKind {
+    SubstrateActions,
+    EvidenceRemediation,
+    HumanReview,
+    OperatorHandoff,
+    ReleasePacket,
+}
+
+impl IntegrationMeshReleaseReadinessCheckKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::SubstrateActions => "substrate_actions",
+            Self::EvidenceRemediation => "evidence_remediation",
+            Self::HumanReview => "human_review",
+            Self::OperatorHandoff => "operator_handoff",
+            Self::ReleasePacket => "release_packet",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshReleaseReadinessStatus {
+    Ready,
+    NeedsReview,
+    Blocked,
+}
+
+impl IntegrationMeshReleaseReadinessStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Ready => "ready",
+            Self::NeedsReview => "needs_review",
+            Self::Blocked => "blocked",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(self, Self::NeedsReview | Self::Blocked)
+    }
+
+    fn as_handoff_status(self) -> IntegrationMeshReadinessHandoffStatus {
+        match self {
+            Self::Ready => IntegrationMeshReadinessHandoffStatus::Ready,
+            Self::NeedsReview => IntegrationMeshReadinessHandoffStatus::NeedsReview,
+            Self::Blocked => IntegrationMeshReadinessHandoffStatus::Blocked,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseReadinessCheck {
+    pub sequence: usize,
+    pub check_kind: IntegrationMeshReleaseReadinessCheckKind,
+    pub status: IntegrationMeshReleaseReadinessStatus,
+    pub package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub queued_substrate_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub remediation_item_count: usize,
+    pub review_required_packages: usize,
+    pub operator_required_packages: usize,
+    pub blocked_packages: usize,
+    pub packages_requiring_attention: usize,
+    pub ready: bool,
+    pub blocked: bool,
+    pub review_required: bool,
+    pub operator_required: bool,
+    pub requires_attention: bool,
+}
+
+impl IntegrationMeshReleaseReadinessCheck {
+    fn from_summary(
+        sequence: usize,
+        check_kind: IntegrationMeshReleaseReadinessCheckKind,
+        status: IntegrationMeshReleaseReadinessStatus,
+        package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+        handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+        handoff_summary: &IntegrationMeshReadinessHandoffSummary,
+        operator_required: bool,
+    ) -> Self {
+        let ready = status == IntegrationMeshReleaseReadinessStatus::Ready;
+        let blocked = status == IntegrationMeshReleaseReadinessStatus::Blocked;
+        let review_required = status == IntegrationMeshReleaseReadinessStatus::NeedsReview;
+
+        Self {
+            sequence,
+            check_kind,
+            status,
+            package_kind,
+            handoff_status,
+            queued_substrate_actions: handoff_summary.queued_substrate_actions,
+            queued_stage_count: handoff_summary.queued_stage_count,
+            queued_primitive_count: handoff_summary.queued_primitive_count,
+            remediation_item_count: handoff_summary.remediation_item_count,
+            review_required_packages: handoff_summary.review_required_packages,
+            operator_required_packages: handoff_summary.operator_required_packages,
+            blocked_packages: handoff_summary.blocked_packages,
+            packages_requiring_attention: handoff_summary.packages_requiring_attention,
+            ready,
+            blocked,
+            review_required,
+            operator_required,
+            requires_attention: status.requires_attention() || operator_required,
+        }
+    }
+
+    pub fn ready(&self) -> bool {
+        self.ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn review_required(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn operator_required(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseReadinessCheckSummary {
+    pub handoff_summary: IntegrationMeshReadinessHandoffSummary,
+    pub total_checks: usize,
+    pub ready_checks: usize,
+    pub blocked_checks: usize,
+    pub review_required_checks: usize,
+    pub operator_required_checks: usize,
+    pub checks_requiring_attention: usize,
+    pub queued_substrate_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub remediation_item_count: usize,
+    pub review_required_packages: usize,
+    pub operator_required_packages: usize,
+    pub blocked_packages: usize,
+    pub packages_requiring_attention: usize,
+    pub next_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub next_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_check_sequence: Option<usize>,
+    pub first_blocked_check_sequence: Option<usize>,
+    pub first_review_check_sequence: Option<usize>,
+    pub first_operator_check_sequence: Option<usize>,
+    pub next_package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub next_handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub substrate_actions_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_handoff: bool,
+    pub release_packet_ready: bool,
+}
+
+impl IntegrationMeshReleaseReadinessCheckSummary {
+    pub fn from_parts<'a>(
+        handoff_summary: IntegrationMeshReadinessHandoffSummary,
+        checks: impl IntoIterator<Item = &'a IntegrationMeshReleaseReadinessCheck>,
+    ) -> Self {
+        let checks = checks.into_iter().collect::<Vec<_>>();
+        let ready_for_handoff = handoff_summary.ready_for_handoff();
+        let mut summary = Self {
+            queued_substrate_actions: handoff_summary.queued_substrate_actions,
+            queued_stage_count: handoff_summary.queued_stage_count,
+            queued_primitive_count: handoff_summary.queued_primitive_count,
+            remediation_item_count: handoff_summary.remediation_item_count,
+            review_required_packages: handoff_summary.review_required_packages,
+            operator_required_packages: handoff_summary.operator_required_packages,
+            blocked_packages: handoff_summary.blocked_packages,
+            packages_requiring_attention: handoff_summary.packages_requiring_attention,
+            next_package_kind: handoff_summary.next_package_kind,
+            next_handoff_status: handoff_summary.next_handoff_status,
+            substrate_actions_ready: handoff_summary.substrate_actions_ready,
+            release_ready: handoff_summary.release_ready,
+            ready_for_handoff,
+            release_packet_ready: ready_for_handoff,
+            handoff_summary,
+            total_checks: 0,
+            ready_checks: 0,
+            blocked_checks: 0,
+            review_required_checks: 0,
+            operator_required_checks: 0,
+            checks_requiring_attention: 0,
+            next_check_kind: None,
+            next_check_status: None,
+            next_check_sequence: None,
+            first_blocked_check_sequence: None,
+            first_review_check_sequence: None,
+            first_operator_check_sequence: None,
+        };
+
+        for check in checks {
+            summary.total_checks += 1;
+
+            if check.ready() {
+                summary.ready_checks += 1;
+            }
+            if check.blocked() {
+                summary.blocked_checks += 1;
+                summary.first_blocked_check_sequence = summary
+                    .first_blocked_check_sequence
+                    .or(Some(check.sequence));
+            }
+            if check.review_required() {
+                summary.review_required_checks += 1;
+                summary.first_review_check_sequence =
+                    summary.first_review_check_sequence.or(Some(check.sequence));
+            }
+            if check.operator_required() {
+                summary.operator_required_checks += 1;
+                summary.first_operator_check_sequence = summary
+                    .first_operator_check_sequence
+                    .or(Some(check.sequence));
+            }
+            if check.requires_attention() {
+                summary.checks_requiring_attention += 1;
+            }
+
+            if summary.next_check_sequence.is_none() && check.requires_attention() {
+                summary.next_check_kind = Some(check.check_kind);
+                summary.next_check_status = Some(check.status);
+                summary.next_check_sequence = Some(check.sequence);
+            }
+        }
+
+        summary
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_checks > 0 || self.handoff_summary.has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_checks > 0 || self.handoff_summary.has_review_work()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.checks_requiring_attention > 0
+            || self.has_blockers()
+            || self.has_review_work()
+            || !self.release_packet_ready
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
@@ -21947,6 +22197,161 @@ pub fn mesh_readiness_handoff_summary(
     )
 }
 
+fn mesh_release_packet_status(
+    summary: &IntegrationMeshReadinessHandoffSummary,
+) -> IntegrationMeshReleaseReadinessStatus {
+    if summary.ready_for_handoff() {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else if summary.has_blockers() {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    } else if summary.has_review_work() || summary.requires_attention() {
+        IntegrationMeshReleaseReadinessStatus::NeedsReview
+    } else {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    }
+}
+
+fn mesh_release_readiness_checks_from_summary(
+    summary: &IntegrationMeshReadinessHandoffSummary,
+) -> Vec<IntegrationMeshReleaseReadinessCheck> {
+    let substrate_status = if summary.substrate_actions_ready {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    };
+    let evidence_status = if summary.remediation_item_count == 0 {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else if summary.review_required_packages > 0 {
+        IntegrationMeshReleaseReadinessStatus::NeedsReview
+    } else {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    };
+    let human_review_status = if summary.review_required_packages == 0 {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else {
+        IntegrationMeshReleaseReadinessStatus::NeedsReview
+    };
+    let operator_status = if summary.operator_required_packages == 0 {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else if summary.blocked_packages > 0 {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    } else {
+        IntegrationMeshReleaseReadinessStatus::NeedsReview
+    };
+    let release_packet_status = mesh_release_packet_status(summary);
+
+    vec![
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            1,
+            IntegrationMeshReleaseReadinessCheckKind::SubstrateActions,
+            substrate_status,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction),
+            Some(substrate_status.as_handoff_status()),
+            summary,
+            !summary.substrate_actions_ready,
+        ),
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            2,
+            IntegrationMeshReleaseReadinessCheckKind::EvidenceRemediation,
+            evidence_status,
+            Some(IntegrationMeshReadinessHandoffKind::EvidenceRemediation),
+            Some(evidence_status.as_handoff_status()),
+            summary,
+            summary.remediation_item_count > 0,
+        ),
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            3,
+            IntegrationMeshReleaseReadinessCheckKind::HumanReview,
+            human_review_status,
+            Some(IntegrationMeshReadinessHandoffKind::EvidenceRemediation),
+            Some(human_review_status.as_handoff_status()),
+            summary,
+            false,
+        ),
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            4,
+            IntegrationMeshReleaseReadinessCheckKind::OperatorHandoff,
+            operator_status,
+            summary.next_package_kind,
+            summary
+                .next_handoff_status
+                .or(Some(operator_status.as_handoff_status())),
+            summary,
+            summary.operator_required_packages > 0,
+        ),
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            5,
+            IntegrationMeshReleaseReadinessCheckKind::ReleasePacket,
+            release_packet_status,
+            Some(IntegrationMeshReadinessHandoffKind::ReleaseReady),
+            Some(release_packet_status.as_handoff_status()),
+            summary,
+            !summary.ready_for_handoff() && summary.operator_required_packages > 0,
+        ),
+    ]
+}
+
+pub fn mesh_release_readiness_checks_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseReadinessCheck> {
+    let summary = mesh_readiness_handoff_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+
+    mesh_release_readiness_checks_from_summary(&summary)
+}
+
+pub fn mesh_release_readiness_checks(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseReadinessCheck> {
+    let catalog = first_party_catalog();
+    mesh_release_readiness_checks_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_readiness_check_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseReadinessCheckSummary {
+    let handoff_summary = mesh_readiness_handoff_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let checks = mesh_release_readiness_checks_from_summary(&handoff_summary);
+
+    IntegrationMeshReleaseReadinessCheckSummary::from_parts(handoff_summary, checks.iter())
+}
+
+pub fn mesh_release_readiness_check_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseReadinessCheckSummary {
+    let catalog = first_party_catalog();
+    mesh_release_readiness_check_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_protocol_catalog_entries(
     catalog: &[IntegrationCatalogEntry],
 ) -> Vec<IntegrationCatalogEntry> {
@@ -28927,6 +29332,165 @@ mod tests {
         );
         assert!(package.ready_for_handoff());
         assert!(!package.operator_required());
+    }
+
+    #[test]
+    fn mesh_release_readiness_checks_surface_blocked_release_gates() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let checks =
+            mesh_release_readiness_checks(&available_primitives, &allowed_capabilities, &[]);
+        let summary =
+            mesh_release_readiness_check_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(checks.len(), 5);
+        assert_eq!(summary.total_checks, 5);
+        assert_eq!(summary.ready_checks, 0);
+        assert_eq!(summary.blocked_checks, 3);
+        assert_eq!(summary.review_required_checks, 2);
+        assert_eq!(summary.operator_required_checks, 4);
+        assert_eq!(summary.checks_requiring_attention, 5);
+        assert_eq!(summary.next_check_sequence, Some(1));
+        assert_eq!(
+            summary.next_check_kind,
+            Some(IntegrationMeshReleaseReadinessCheckKind::SubstrateActions)
+        );
+        assert_eq!(
+            summary.next_check_status,
+            Some(IntegrationMeshReleaseReadinessStatus::Blocked)
+        );
+        assert_eq!(summary.first_blocked_check_sequence, Some(1));
+        assert_eq!(summary.first_review_check_sequence, Some(2));
+        assert_eq!(summary.first_operator_check_sequence, Some(1));
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction)
+        );
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Blocked)
+        );
+        assert_eq!(summary.queued_substrate_actions, 5);
+        assert_eq!(summary.remediation_item_count, 2);
+        assert!(!summary.substrate_actions_ready);
+        assert!(!summary.release_ready);
+        assert!(!summary.ready_for_handoff);
+        assert!(!summary.release_packet_ready);
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.requires_attention());
+
+        let substrate = &checks[0];
+        assert_eq!(
+            substrate.check_kind,
+            IntegrationMeshReleaseReadinessCheckKind::SubstrateActions
+        );
+        assert_eq!(
+            substrate.status,
+            IntegrationMeshReleaseReadinessStatus::Blocked
+        );
+        assert_eq!(
+            substrate.package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction)
+        );
+        assert_eq!(
+            substrate.handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Blocked)
+        );
+        assert!(substrate.blocked());
+        assert!(substrate.operator_required());
+        assert!(substrate.requires_attention());
+
+        let evidence = &checks[1];
+        assert_eq!(
+            evidence.check_kind,
+            IntegrationMeshReleaseReadinessCheckKind::EvidenceRemediation
+        );
+        assert_eq!(
+            evidence.status,
+            IntegrationMeshReleaseReadinessStatus::NeedsReview
+        );
+        assert!(evidence.review_required());
+        assert!(evidence.operator_required());
+
+        let release_packet = &checks[4];
+        assert_eq!(
+            release_packet.check_kind,
+            IntegrationMeshReleaseReadinessCheckKind::ReleasePacket
+        );
+        assert_eq!(
+            release_packet.status,
+            IntegrationMeshReleaseReadinessStatus::Blocked
+        );
+        assert_eq!(
+            release_packet.package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::ReleaseReady)
+        );
+    }
+
+    #[test]
+    fn mesh_release_readiness_checks_mark_release_packet_ready() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let checks = mesh_release_readiness_checks_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+        let summary = mesh_release_readiness_check_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(checks.len(), 5);
+        assert_eq!(summary.total_checks, 5);
+        assert_eq!(summary.ready_checks, 5);
+        assert_eq!(summary.blocked_checks, 0);
+        assert_eq!(summary.review_required_checks, 0);
+        assert_eq!(summary.operator_required_checks, 0);
+        assert_eq!(summary.checks_requiring_attention, 0);
+        assert_eq!(summary.next_check_kind, None);
+        assert_eq!(summary.first_blocked_check_sequence, None);
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::ReleaseReady)
+        );
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Ready)
+        );
+        assert_eq!(summary.queued_substrate_actions, 0);
+        assert_eq!(summary.remediation_item_count, 0);
+        assert!(summary.substrate_actions_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_handoff);
+        assert!(summary.release_packet_ready);
+        assert!(!summary.has_blockers());
+        assert!(!summary.has_review_work());
+        assert!(!summary.requires_attention());
+        assert!(checks
+            .iter()
+            .all(IntegrationMeshReleaseReadinessCheck::ready));
+        assert_eq!(
+            checks[4].check_kind,
+            IntegrationMeshReleaseReadinessCheckKind::ReleasePacket
+        );
+        assert_eq!(
+            checks[4].status,
+            IntegrationMeshReleaseReadinessStatus::Ready
+        );
     }
 
     #[test]

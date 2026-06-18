@@ -69,6 +69,10 @@ runtime and Chief of Staff tools a typed catalog for:
   substrate action queue and next concrete low-level action
 - mesh preflight repair readiness summaries that combine release readiness,
   substrate preflight gates, and protocol-scoped repair queues
+- mesh readiness handoff packages that project substrate actions, evidence
+  remediation, and release-ready state for reusable release coordination
+- mesh release-readiness checks that summarize substrate action, evidence,
+  human-review, operator handoff, and release packet gates
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and

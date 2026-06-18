@@ -60,6 +60,7 @@ Chief of Staff job/session/agent
   -> mesh readiness package, stage-release, action-readiness, and
      release-readiness reads for release go/no-go
   -> mesh readiness handoff list and summary reads for release coordination
+  -> mesh release-readiness check list and summary reads for final gate review
   -> activation-dossier list and summary reads for bundled decision evidence
   -> activation-dashboard list and summary reads for priority-wave status cards
   -> activation-timeline list and summary reads for ordered wave milestones
@@ -152,6 +153,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_mesh_release_readiness_summary`
 - `smart_home.list_integration_mesh_readiness_handoffs`
 - `smart_home.get_integration_mesh_readiness_handoff_summary`
+- `smart_home.list_integration_mesh_release_readiness_checks`
+- `smart_home.get_integration_mesh_release_readiness_summary`
 - `smart_home.list_integration_activation_dossiers`
 - `smart_home.get_integration_activation_dossier_summary`
 - `smart_home.list_integration_activation_readouts`
