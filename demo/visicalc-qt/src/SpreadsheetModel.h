@@ -129,6 +129,14 @@ public:
     Q_INVOKABLE void copy(const QString &start, const QString &end);
     Q_INVOKABLE void cut(const QString &start, const QString &end);
     Q_INVOKABLE bool paste(const QString &dstStart);
+    // Save / load: serialize() returns a self-contained JSON document of the
+    // workbook's SOURCE (formula text + typed literals) + per-cell formats — not
+    // the computed values, which recompute on load. deserialize() replaces the
+    // workbook from such a document: returns true on success, false for malformed
+    // / unsupported input (the workbook is left untouched), recomputes the grid,
+    // regrows the extent, and bumps `revision` so the visible rows re-fetch.
+    Q_INVOKABLE QString serialize() const;
+    Q_INVOKABLE bool deserialize(const QString &data);
 
 signals:
     // viewportRows changed (after a recompute) — QML rebinds the grid.

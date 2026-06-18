@@ -352,3 +352,29 @@ bool SpreadsheetModel::paste(const QString &dstStart) {
     }
     return applied;
 }
+
+// Save: serialize the whole workbook (source + formats) to a JSON document. The
+// host stores the returned string wherever it likes (a file, QSettings, …); the
+// engine owns no I/O. takeString frees the C string with the engine's allocator.
+QString SpreadsheetModel::serialize() const {
+    return takeString(sc_serialize(session_));
+}
+
+// Load: replace the workbook from a document produced by serialize(). Returns
+// false (workbook untouched) for malformed / unsupported input; on success the
+// formulas reload live, so we recompute the grid, regrow the extent, refresh the
+// formula bar, and bump `revision` so the visible rows re-fetch.
+bool SpreadsheetModel::deserialize(const QString &data) {
+    const QByteArray d = data.toUtf8();
+    const bool ok = sc_deserialize(session_, d.constData()) != 0;
+    if (ok) {
+        recompute();
+        computeExtent();
+        infFormula_ = rawAt(infAddress());
+        revision_++;
+        emit changed();
+        emit infSelectionChanged();
+        emit revisionChanged();
+    }
+    return ok;
+}
