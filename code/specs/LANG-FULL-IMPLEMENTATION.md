@@ -254,11 +254,18 @@ backend immediately) come before the enabler-dependent items.
   computation on it) and `,.,.` (echo two bytes: `"Hi"` → `"Hi"` — repeated reads advance
   the stream) run on all 7 backends. Harness-only (every backend already compiled
   `,`→`getchar`): the four subprocess columns pipe real process stdin (`output_with_stdin`),
-  WASM/VM/JIT drain a `program_stdin` byte buffer. lang-aot 0.90.0. **Known divergence,
-  deferred:** the `getchar`-EOF convention differs (JVM/VM/JIT → 0; libc/`Console.Read`/wasm
-  → -1 → cell wraps to 255), so the classic cat `,[.,]` would loop forever on the -1
-  backends; both new programs read exactly the supplied bytes (no EOF-gated loop) and so
-  sidestep it. Normalising EOF across backends is a separate item (B1-eof).
+  WASM/VM/JIT drain a `program_stdin` byte buffer. lang-aot 0.90.0. (These two programs read
+  exactly the supplied bytes, so they never hit EOF — the EOF convention is handled by B1-eof.)
+- ✅ **B1-eof** — **EOF normalised to 0 → the canonical cat `,[.,]` runs cross-backend**,
+  output-checked (input `"Hi"` → stdout `"Hi"`). The backends disagreed on `getchar`-EOF
+  (JVM/VM/JIT → 0; libc `getchar`/`Console.Read`/wasm host → -1 → the u8 cell wrapped to 255),
+  so cat looped forever on the -1 backends. `brainfuck-iir-compiler` 0.4.0 now normalises EOF
+  to 0 **in the shared IIR**: `,` reads `getchar` at i64, tests the bits above the low byte
+  (`v & ~0xFF` — non-zero ⟺ EOF, *sign- and width-agnostic*: a signed `<0` test is unportable
+  because the native path zero-extends the i32 `-1`), and branches to store `0` (EOF) or the
+  byte — each arm doing its OWN `store_mem` so nothing crosses the merge (Brainfuck keeps state
+  in the tape; the IIR has no phi nodes). Surfaced + handled two backend pitfalls: native's
+  non-sign-extended getchar, and the CIL int32 emitter (mask must be `-256`, not `0xFFFFFF00`).
 
 ### Dartmouth BASIC
 - ✅ **BA0** — BASIC control flow on the code-gen backends. The real bug wasn't wasm
