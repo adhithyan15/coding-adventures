@@ -73,6 +73,8 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_mesh_primitive_readiness_summary`,
   `smart_home.list_integration_mesh_substrate_stages`,
   `smart_home.get_integration_mesh_substrate_stage_summary`,
+  `smart_home.list_integration_mesh_substrate_actions`,
+  `smart_home.get_integration_mesh_substrate_action_summary`,
   `smart_home.get_integration_mesh_readiness_package_summary`, and
   `smart_home.get_integration_mesh_stage_release_summary` descriptors for
   read-only D23 mesh readiness release planning.
