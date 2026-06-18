@@ -108,6 +108,16 @@ fun InfiniteSheet() {
         rev++
     }
 
+    // Clipboard: copy/cut the selected cell, then paste at the selection. The
+    // engine shifts the pasted formula's relative refs by the destination's
+    // offset, pins absolute ($) refs, carries the format; a cut clears on paste.
+    fun copyCell() = model.copyCell()
+    fun cutCell() = model.cutCell()
+    fun pasteCell() {
+        model.pasteCell()
+        rev++
+    }
+
     Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
         // ── Formula bar: the selected cell's address + an editable source ──
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -148,6 +158,13 @@ fun InfiniteSheet() {
                     fontFamily = MONO,
                 )
             }
+            // Clipboard: copy/cut the selected cell, paste at the selection.
+            Spacer(Modifier.width(8.dp))
+            clipButton("Copy") { copyCell() }
+            Spacer(Modifier.width(8.dp))
+            clipButton("Cut") { cutCell() }
+            Spacer(Modifier.width(8.dp))
+            clipButton("Paste") { pasteCell() }
         }
 
         Spacer(Modifier.height(6.dp))
@@ -226,5 +243,20 @@ private fun chromeCell(w: androidx.compose.ui.unit.Dp, h: androidx.compose.ui.un
 private fun Text(text: String, color: Color, width: androidx.compose.ui.unit.Dp) {
     Box(modifier = Modifier.width(width)) {
         androidx.compose.material.Text(text, color = color, fontSize = 12.sp, fontFamily = MONO)
+    }
+}
+
+/// A compact outlined button for the clipboard controls, matching "Fill ↓ 10".
+@Composable
+private fun clipButton(label: String, onClick: () -> Unit) {
+    androidx.compose.material.OutlinedButton(
+        onClick = onClick,
+        colors = androidx.compose.material.ButtonDefaults.outlinedButtonColors(
+            backgroundColor = CHROME,
+            contentColor = INK,
+        ),
+        border = androidx.compose.foundation.BorderStroke(1.dp, BORDER),
+    ) {
+        androidx.compose.material.Text(label, fontSize = 12.sp, fontFamily = MONO)
     }
 }

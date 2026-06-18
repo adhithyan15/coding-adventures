@@ -88,6 +88,12 @@ regrows the extent). The **"Fill ↓ 10"** button next to the formula bar calls
 `InfiniteSheetModel.fillDown(10)` (over the C ABI's `sc_fill`) to replicate the
 selected cell into the 10 rows below it — the engine shifts each copy's relative
 references (`=A1`→`=A2`, …), pins absolute (`$`) refs, and carries the format.
+The **Copy / Cut / Paste** buttons drive the engine's clipboard
+(`InfiniteSheetModel.copyCell`/`cutCell`/`pasteCell` over the C ABI's
+`sc_copy`/`sc_cut`/`sc_paste`): copy the selected cell, then paste it elsewhere
+with its relative references shifted by the destination's offset (absolute `$`
+refs pinned, format carried); a cut clears the source on paste, and `pasteCell`
+returns `false` (a no-op) for an empty clipboard.
 `InfiniteSheetModel` (in `Engine.kt`) seeds far-flung
 sparse cells (`Z1000`, `BA50`, `BB50`) and derives the extent from `usedRange()`
 + a margin.
@@ -100,8 +106,10 @@ formula 1000 rows down (`Z1000` = 39) is reachable, the gaps are empty (sparse),
 column letters run AA/BA, and editing `A1` dirties the far dependent `Z1000` via
 `changedSince`. It also drives `InfiniteSheetModel` directly: `rowCells`
 one-read rows, `selectInf` clamping + source load, `commitInf` recompute
-(A2 `8`→`108` ⇒ E2 151, A5 139, E5 269), and `fillDown` (`I1 = =H1*10` filled
-down 10 rows ⇒ I2 = H2*10 = 30, I3 = H3*10 = 40, source I1 = 20 untouched).
+(A2 `8`→`108` ⇒ E2 151, A5 139, E5 269), `fillDown` (`I1 = =H1*10` filled
+down 10 rows ⇒ I2 = H2*10 = 30, I3 = H3*10 = 40, source I1 = 20 untouched), and
+the clipboard (`copyCell` I1 → `pasteCell` at I4 ⇒ I4 = H4*10 = 60; `cutCell` A1
+→ paste at C1 moves it, A1 clears, a second paste returns false).
 
 The Compose UI itself (`InfiniteSheet.kt` + the `Main.kt` toggle) is verified to
 compile against the real Compose Desktop APIs via `gradle compileKotlin`; the

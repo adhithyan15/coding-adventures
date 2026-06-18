@@ -50,6 +50,11 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     private val scSetFormat = handle("sc_set_format", FunctionDescriptor.ofVoid(ptr, ptr, ptr))
     // sc_fill(session, src, dst_start, dst_end) -> void (drag-fill; three A1 strings).
     private val scFill = handle("sc_fill", FunctionDescriptor.ofVoid(ptr, ptr, ptr, ptr))
+    // sc_copy / sc_cut(session, start, end) -> void (clipboard capture; two A1 strings).
+    private val scCopy = handle("sc_copy", FunctionDescriptor.ofVoid(ptr, ptr, ptr))
+    private val scCut = handle("sc_cut", FunctionDescriptor.ofVoid(ptr, ptr, ptr))
+    // sc_paste(session, dst_start) -> int (1 applied, 0 no-op).
+    private val scPaste = handle("sc_paste", FunctionDescriptor.of(i32, ptr, ptr))
     private val scUsedRange = handle("sc_used_range", FunctionDescriptor.of(ptr, ptr))
     private val scColumnLetters = handle("sc_column_letters", FunctionDescriptor.of(ptr, ptr, i32))
     private val scCurrentRevision = handle("sc_current_revision", FunctionDescriptor.of(i64, ptr))
@@ -129,6 +134,27 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
             a.allocateUtf8String(dstStart),
             a.allocateUtf8String(dstEnd),
         )
+    }
+
+    /// Copy the inclusive rectangle [start]..[end] into the clipboard — a
+    /// whole-block copy that pastes as a unit. The source is untouched; the
+    /// buffer survives any number of pastes.
+    fun copy(start: String, end: String): Unit = Arena.ofConfined().use { a ->
+        scCopy.invoke(session, a.allocateUtf8String(start), a.allocateUtf8String(end))
+    }
+
+    /// Cut the inclusive rectangle [start]..[end]. Like [copy] but a one-shot
+    /// move: the [paste] that places it clears the source it didn't overwrite.
+    fun cut(start: String, end: String): Unit = Arena.ofConfined().use { a ->
+        scCut.invoke(session, a.allocateUtf8String(start), a.allocateUtf8String(end))
+    }
+
+    /// Paste the clipboard so its top-left lands at [dstStart]. Returns `true`
+    /// when applied, `false` (a no-op) for an empty clipboard, malformed address,
+    /// or off-grid destination. The block's references shift by the destination's
+    /// offset; content and format ride along.
+    fun paste(dstStart: String): Boolean = Arena.ofConfined().use { a ->
+        (scPaste.invoke(session, a.allocateUtf8String(dstStart)) as Int) != 0
     }
 
     /// Dense display strings for the inclusive 1-based rectangle, row-major
@@ -384,6 +410,19 @@ class InfiniteSheetModel(
         val last = "$col${selRow + rows}"
         session.fill(infAddress(), first, last)
         computeExtent()
+    }
+
+    /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
+    /// engine shifts the pasted formula's relative references by the
+    /// destination's offset, pins absolute (`$`) refs, carries the format; a cut
+    /// clears the source on paste. [pasteCell] returns false (a no-op) when the
+    /// clipboard is empty, and regrows the extent on success.
+    fun copyCell() = session.copy(infAddress(), infAddress())
+    fun cutCell() = session.cut(infAddress(), infAddress())
+    fun pasteCell(): Boolean {
+        val ok = session.paste(infAddress())
+        if (ok) computeExtent()
+        return ok
     }
 
     override fun close() = session.close()
