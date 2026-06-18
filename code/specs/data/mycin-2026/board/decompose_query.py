@@ -24,16 +24,24 @@ WHAT GROUNDING DOES AND DOES NOT PROTECT (an honest limit)
 The model's output is CONSTRAINED: the relation must be one of the legal recall
 relations and the subject a canonical entity. This buys ONE guarantee — the engine
 never fabricates a medical fact: every answer it returns cites a real grounded edge,
-and an OFF-vocabulary query (a subject the graph doesn't know) finds no edge and
-ABSTAINS. But it does NOT make decomposition errors free. If the model mis-maps the
-prose to a DIFFERENT but valid entity — "Von Gierke disease" → subject `fabry` — the
-engine faithfully answers the wrong question and returns a confident WRONG answer
-(correct-for-the-wrong-query). Measured on the live demo (see OFFLINE-DEMO.md), a 4B
-local model decomposes ~74% of stems correctly and the ~5/27 it mis-maps become wrong,
-not abstentions. So: grounding kills FABRICATION, not MISDIRECTION. The real mitigation
-is a decomposition-faithfulness gate — require the chosen subject to be attested by the
-stem's own bytes (byte-provenance applied to the query), turning a mis-map into an
-abstention. That is the next slice; today the pipeline reports the honest number.
+and an OFF-vocabulary query finds no edge and ABSTAINS. But grounding alone does NOT
+make decomposition errors free: a mis-map to a DIFFERENT but valid query makes the
+engine faithfully answer the WRONG question (correct-for-the-wrong-query). Grounding
+kills FABRICATION, not MISDIRECTION. So the decomposition itself is gated against the
+stem's own bytes — a TWO-SIDED faithfulness check, byte-provenance applied to the query:
+
+  * SUBJECT gate (attested_in_stem): the chosen entity must be named by the stem.
+    Stops "Von Gierke disease" → subject `fabry`.
+  * RELATION gate (relation_attested_in_stem): the stem's interrogative must ASK for
+    what the relation answers. Stops a stem asking for the classic FINDING being
+    decomposed as has_mcv(...) — right subject, wrong question.
+
+Either gate failing rejects the query, so the engine ABSTAINS rather than answering the
+wrong question. Measured on the live demo (see OFFLINE-DEMO.md): a 4B local model
+decomposes ~74% of stems correctly; with both gates every mis-decomposition (wrong
+entity OR wrong question-type) becomes an abstention, so a weak local model is SAFE —
+its errors are honest UNKNOWNs, never confident wrong answers (0 wrong / 100%
+defensible on the recorded runs for both the 4B and the 0.5B model).
 
 The model is fully INJECTABLE: `decompose(stem, gen, vocab)` takes any
 `gen(prompt) -> str`. Pass `local_gen(model_path)` for a real MLX model, or a stub in
@@ -182,17 +190,58 @@ def attested_in_stem(subject: str, stem: str) -> bool:
     return all(t in stem_tokens for t in tokens)
 
 
+# Structural tokens in a relation name carry no interrogative meaning (prepositions,
+# the domain tag "coag", the auxiliary "has") — they are not cues for "what is asked".
+_CUE_STOPWORDS = {"in", "as", "by", "of", "the", "a", "coag", "has"}
+
+
+def _relation_cues() -> dict[str, set]:
+    """Derive each relation's interrogative cue tokens from the controlled vocabulary
+    ALREADY in REL_VAR — the relation NAME's own word-parts plus its conventional
+    VARIABLE name. No new medical knowledge is authored: a relation's cues are literally
+    the words it is spelled with (deficient_in + Enzyme → {deficient, enzyme};
+    has_mcv + Class → {mcv, class}). This keeps the relation gate symmetric with the
+    subject gate — both are byte-provenance against the question, both read only the
+    vocabulary the decomposer was already given."""
+    cues: dict[str, set] = {}
+    for rel, var in REL_VAR.items():
+        tokens = set(rel.split("_")) | {var.lower()}
+        cues[rel] = {t for t in tokens if t not in _CUE_STOPWORDS}
+    return cues
+
+
+RELATION_CUES = _relation_cues()
+
+
+def relation_attested_in_stem(relation: str, stem: str) -> bool:
+    """Relation-faithfulness check: does the stem's interrogative actually ASK for what
+    this relation answers? True iff at least one of the relation's cue tokens (see
+    _relation_cues) appears as a whole word in the stem. This is the relation-side
+    counterpart of attested_in_stem: it stops a right-subject / wrong-relation
+    mis-decomposition (e.g. a stem asking for the classic FINDING of hereditary
+    spherocytosis, decomposed as has_mcv(...)) from resolving to a real-but-wrong edge.
+    The chosen relation that the stem does not ask for is rejected → the engine
+    ABSTAINS rather than answering the wrong question. Whole-word (not substring)
+    matching is deliberate so a cue like `class` is not spuriously found inside
+    `classic`."""
+    stem_tokens = set(_norm_text(stem).split())
+    return bool(RELATION_CUES.get(relation, set()) & stem_tokens)
+
+
 def decompose(stem: str, gen, vocab: dict, faithful: bool = True) -> dict | None:
     """Decompose one prose stem into a recall query using an injected text generator
     `gen(prompt) -> str` (a local MLX model, or a test stub). Returns the parsed query,
     or None when the model's output can't be parsed into a legal query OR (with
-    faithful=True, the default) when the chosen subject is not attested by the stem —
-    the faithfulness gate that converts a mis-decomposition into an honest abstention
-    rather than a wrong answer (see attested_in_stem)."""
+    faithful=True, the default) when the chosen SUBJECT or RELATION is not attested by
+    the stem. The two-sided faithfulness gate — subject (attested_in_stem) AND relation
+    (relation_attested_in_stem) — converts both kinds of mis-decomposition (wrong
+    entity, wrong question-type) into an honest abstention rather than a confident wrong
+    answer. Grounding stops fabrication; this gate stops misdirection."""
     q = parse_query(gen(build_query_prompt(stem, vocab)))
     if q is None:
         return None
-    if faithful and not attested_in_stem(q["subject"], stem):
+    if faithful and not (attested_in_stem(q["subject"], stem)
+                         and relation_attested_in_stem(q["relation"], stem)):
         return None
     return q
 

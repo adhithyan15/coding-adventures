@@ -49,15 +49,24 @@ faithfully answers the wrong question and returns a confident **wrong** answer. 
 live 4B demo did exactly this on ~5/27 stems before the gate (grounding kills
 *fabrication*, not *misdirection*).
 
-The fix is a **decomposition-faithfulness gate** (`decompose_query.attested_in_stem`):
-the chosen subject must be attested by the **stem's own bytes** — byte-provenance
-applied to the query, the same principle the whole framework rests on. A subject the
-question never names is rejected, so a mis-decomposition becomes an **abstention**
-instead of a wrong answer. With the gate, a weak model's errors show up as *more
-abstention*, not wrong answers — which is exactly what lets a small on-device model
-(Qwen-0.5B, Gemma-1B/4B) drive the board safely: the floor is honest "UNKNOWN", not
-hallucination. The reasoning is in the framework; the model is a translator on a short,
-*checked* leash.
+The fix is a **two-sided decomposition-faithfulness gate** — byte-provenance applied to
+the query, the same principle the whole framework rests on:
+
+- **subject gate** (`decompose_query.attested_in_stem`): the chosen entity must be
+  named by the stem. Rejects "Von Gierke disease" → subject `fabry`.
+- **relation gate** (`decompose_query.relation_attested_in_stem`): the stem's
+  interrogative must ASK for what the relation answers (cues derived from the relation
+  name + its conventional variable — `has_mcv`+`Class` → `{mcv, class}` — no new
+  hand-authored knowledge, whole-word matched). Rejects a stem asking for the classic
+  *finding* decomposed as `has_mcv(...)` — right subject, wrong question.
+
+Either gate failing rejects the query, so a mis-decomposition (wrong entity OR wrong
+question-type) becomes an **abstention** instead of a wrong answer. With both gates, a
+weak model's errors show up as *more abstention*, not wrong answers — on the recorded
+live runs **both Gemma-3-4B and Qwen-0.5B reach 0 wrong / 100% defensibility** (see
+board/OFFLINE-DEMO.md). That is exactly what lets a small on-device model drive the
+board safely: the floor is honest "UNKNOWN", not hallucination. The reasoning is in the
+framework; the model is a translator on a short, *checked* leash.
 
 ## Proving "no online call" instead of promising it
 
