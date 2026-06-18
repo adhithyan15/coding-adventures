@@ -97,4 +97,27 @@ final class WindowedModelTests: XCTestCase {
         m.select(row: 1, col: 5)
         XCTAssertFalse(m.pasteCell())          // buffer consumed
     }
+
+    /// Save / load: serialize the workbook, mutate it, then restore the snapshot
+    /// and confirm the workbook comes back — and that a loaded formula stays LIVE
+    /// (the document stores source + formats, not computed values).
+    func testSaveLoadRoundTrips() {
+        let m = WindowedSheetModel()
+        // The default seed has A1=15, E1 = SUM(A1:D1) = 38 (format "#,##0.00").
+        let snapshot = m.saveBook()
+        XCTAssertFalse(snapshot.isEmpty, "serialize produced a JSON document")
+        // Mutate away from the saved state so a load has to visibly undo it.
+        m.setCell("A1", "500") // E1 → 500+3+12+8 = 523
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "523.00")
+        // Restore: A1 → 15, E1 recomputes through its format back to "38.00".
+        XCTAssertTrue(m.loadBook(snapshot))
+        XCTAssertEqual(m.window(rows: 1...1, cols: 1...1)[0][0], "15")
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "38.00")
+        // The loaded formula is live, not frozen: edit a precedent and E1 recomputes.
+        m.setCell("A1", "5") // 5+3+12+8 = 28
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "28.00")
+        // Garbage in is rejected (false), leaving the workbook intact.
+        XCTAssertFalse(m.loadBook("not a workbook"))
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "28.00")
+    }
 }
