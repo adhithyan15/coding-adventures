@@ -367,9 +367,16 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
     specialis derogat legi generali*) to `context-precedence-meta.adj` + `worked-lex-specialis-example.adj`
     (a specific wilderness-trail statute governs a general traffic statute despite the general's
     `mandatory` tier). Completes the three classical canons (lex superior / lex posterior / lex
-    specialis). Still to come: the lex-specialis-vs-lex-superior **tiebreaker** (§4.3) — when a
-    specific lower-authority rule and a general higher-authority rule point opposite ways the two
-    derived orders conflict; a further grounded meta-rule must decide, else `CONFLICT` (abstain).
+    specialis).
+  - **PR-B-6 §4.3 honest CONFLICT ✅ DONE (logic-engine 0.22).** When two canons point opposite
+    ways (lex superior `federal > state` vs lex specialis `state > federal`) the defeat is MUTUAL;
+    the resolver now uses **strict domination** (`j` defeats `i` only if `i` does not defeat back),
+    so neither is silently `Defeated` — the group abstains as `ConflictPeer` / `has_conflict`. This
+    closes the "else CONFLICT (abstain)" guarantee (previously the engine produced a misleading
+    "both defeated, no conflict flag"). `worked-canon-conflict-example.adj` +
+    `colliding_canons_abstain_with_an_honest_conflict`. Still to come (the RESOLVING tiebreaker):
+    a grounded meta-rule that turns a *chosen* collision into a cited decision — needs each derived
+    edge tagged with its canon + a grounded canon-ordering, so the engine picks with provenance.
 - **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
   annotations) + regen grammar.
 - **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).

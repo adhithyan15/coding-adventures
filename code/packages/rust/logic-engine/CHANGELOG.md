@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.22.0] - 2026-06-17 — mutual precedence is an honest CONFLICT, not silent double-defeat (ADJ73 §4.3)
+
+### Fixed
+
+- **Contradictory precedence between two competing answers now surfaces as `ConflictPeer`
+  (abstain), not a silent "both defeated, `has_conflict == false`".** When two canons point
+  opposite ways — e.g. lex superior derives `federal > state` while lex specialis derives
+  `state > federal` — each answer defeated the other, so the resolver marked BOTH `Defeated`,
+  crowned nothing, and reported no conflict (misleading). The defeat test in `enumerate_governing`
+  is now **strict domination**: `j` defeats `i` only if `j` defeats `i` AND `i` does not defeat
+  `j` back. A merely mutual defeat leaves both answers undefeated → the group resolves to
+  `ConflictPeer` / `has_conflict == true` — the honest "else CONFLICT (abstain)" the spec
+  (§4.3) promises. The caller is never silently handed an empty governing set with no conflict
+  signal.
+
+### Unchanged (no regression)
+
+- One-way precedence (the ordinary lex-superior / tier case) still cleanly governs: a strictly
+  dominating answer wins, the dominated one is `Defeated { by }`. Co-equal-tier and cyclic-order
+  cases already abstained and still do. The context order is a partial order + a total tier, so
+  only 2-cycles of mutual defeat arise (transitivity makes any longer cycle mutual everywhere) —
+  no strict Condorcet cycle can slip through. All prior `govern` tests pass unchanged.
+
 ## [0.21.0] - 2026-06-17 — context-precedence edges can be DERIVED by meta-rules (ADJ73 PR-B-4)
 
 ### Added

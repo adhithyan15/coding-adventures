@@ -13,6 +13,7 @@ own rulebook, with a citation on *why* one context outranks another (ADJ73 decis
 | [`worked-appeal-example.adj`](worked-appeal-example.adj) | A Supreme Court reversal flips a (now-reversed) Ninth Circuit reading at the **highest** tier — the precedence edge is **derived** by the appeal-status meta-rule from a grounded `reverses` fact, not asserted. |
 | [`worked-supersession-example.adj`](worked-supersession-example.adj) | Lex posterior (bridges to MYCIN): the 2024 guideline edition supersedes the 2004 one, so the current recommendation governs the legacy one — `idsa_2024 > idsa_2004` derived from a grounded `supersedes` fact. |
 | [`worked-lex-specialis-example.adj`](worked-lex-specialis-example.adj) | Lex specialis: a specific wilderness-trail statute governs a general traffic statute on the same matter — `trail_statute > traffic_statute` derived from a grounded `more_specific` fact, despite the general statute's higher tier. |
+| [`worked-canon-conflict-example.adj`](worked-canon-conflict-example.adj) | **§4.3 honest CONFLICT** — lex superior (`federal > state`) and lex specialis (`state > federal`) point opposite ways with no tiebreaker → the engine **abstains** (both `conflict_peer`, `has_conflict: true`), never silently crowning a canon. |
 | [`SOURCES.md`](SOURCES.md) | The provenance ledger — where each edge's verbatim quote came from. |
 
 ## Run it
@@ -47,7 +48,11 @@ This is the data/worked-example layer of the ADJ73 precedence arc:
   precedence from primitive grounded facts (`reverses`, `supersedes`, `more_specific`). The engine
   reads rule-derived `outranks_context` edges, so the recursion bottoms out at cited primitives —
   an edge that can be derived is derived.
-- **next** — the lex-specialis-vs-lex-superior **tiebreaker** (§4.3): when a specific rule from a
-  lower authority and a general rule from a higher authority point opposite ways, the two derived
-  orders conflict; a further grounded meta-rule must decide, else `CONFLICT` (abstain). See
-  [`SOURCES.md`](SOURCES.md) and the spec `code/specs/ADJ73-defeasible-rule-precedence.md` §4.3, §7.
+- **conflict handling** (logic-engine 0.22, §4.3) — when canons point opposite ways and no
+  tiebreaker exists, the engine **abstains** (`ConflictPeer` / `has_conflict`), never silently
+  crowning one or double-defeating both (`worked-canon-conflict-example.adj`). The "else CONFLICT".
+- **next** — a *grounded tiebreaker* meta-rule that RESOLVES a specific collision (e.g. "in this
+  jurisdiction lex specialis prevails over lex superior for statutory interpretation"), turning a
+  chosen abstention into a cited decision. Needs each derived edge tagged with the canon that
+  produced it + a grounded canon-ordering. See the spec
+  `code/specs/ADJ73-defeasible-rule-precedence.md` §4.3, §7.
