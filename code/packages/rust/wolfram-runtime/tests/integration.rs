@@ -311,3 +311,141 @@ fn w6_does_not_disturb_existing_forms() {
     assert_eq!(eval("Map[f, {1, 2}]\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
     assert_eq!(eval("Part[{a, b, c}, 2]\n").unwrap(), "Out[1]= b\n");
 }
+
+
+// ---------------------------------------------------------------------------
+// W-7 — iteration constructs (Table, Do, Sum, Product)
+// ---------------------------------------------------------------------------
+
+/// `Table` builds a list of the body evaluated with the index bound over a
+/// range — both the `{i, imax}` and `{i, imin, imax}` spec forms.
+#[test]
+fn w7_table_two_and_three_bound_forms() {
+    // Table[i^2, {i, 3}] → {1, 4, 9} (index ranges 1..=3).
+    assert_eq!(eval("Table[i^2, {i, 3}]\n").unwrap(), "Out[1]= {1, 4, 9}\n");
+    // Table[i, {i, 2, 4}] → {2, 3, 4} (explicit lower bound).
+    assert_eq!(eval("Table[i, {i, 2, 4}]\n").unwrap(), "Out[1]= {2, 3, 4}\n");
+    // Stepped: Table[i, {i, 1, 9, 2}] → {1, 3, 5, 7, 9}.
+    assert_eq!(
+        eval("Table[i, {i, 1, 9, 2}]\n").unwrap(),
+        "Out[1]= {1, 3, 5, 7, 9}\n"
+    );
+}
+
+/// The index is *local*: the body sees `i` bound to each value, and the symbol
+/// `i` does not leak into the session afterward (still a free symbol).
+#[test]
+fn w7_table_index_is_local() {
+    let mut s = WolframSession::new();
+    assert_eq!(s.feed("Table[i, {i, 3}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+    // After the Table, `i` is still unbound (free), not 3 — no env leak.
+    assert_eq!(s.feed("i\n").unwrap(), "Out[2]= i\n");
+}
+
+/// The iterator *bounds* are evaluated even though the head is held — a bound
+/// may be an expression (`{i, 1+1}`) or reference a session binding.
+#[test]
+fn w7_iterator_bounds_are_evaluated() {
+    // A computed bound: Table[i, {i, 1+1}] → {1, 2}.
+    assert_eq!(eval("Table[i, {i, 1+1}]\n").unwrap(), "Out[1]= {1, 2}\n");
+    // A bound that references a prior binding.
+    let mut s = WolframSession::new();
+    s.feed("n = 4\n").unwrap();
+    assert_eq!(s.feed("Table[i, {i, n}]\n").unwrap(), "Out[2]= {1, 2, 3, 4}\n");
+}
+
+/// `Sum` folds `+` over the range; `Product` folds `×`. The canonical
+/// acceptance values from the W-7 brief.
+#[test]
+fn w7_sum_and_product() {
+    assert_eq!(eval("Sum[i, {i, 1, 10}]\n").unwrap(), "Out[1]= 55\n");
+    assert_eq!(eval("Product[i, {i, 1, 4}]\n").unwrap(), "Out[1]= 24\n");
+    // A non-trivial body: Sum[i^2, {i, 1, 3}] = 1 + 4 + 9 = 14.
+    assert_eq!(eval("Sum[i^2, {i, 1, 3}]\n").unwrap(), "Out[1]= 14\n");
+}
+
+/// An empty range returns the fold identity: `Sum` → 0, `Product` → 1,
+/// `Table` → `{}`. (A wrong-way / degenerate range iterates zero times.)
+#[test]
+fn w7_empty_range_returns_identity() {
+    assert_eq!(eval("Sum[i, {i, 5, 1}]\n").unwrap(), "Out[1]= 0\n");
+    assert_eq!(eval("Product[i, {i, 5, 1}]\n").unwrap(), "Out[1]= 1\n");
+    assert_eq!(eval("Table[i, {i, 0}]\n").unwrap(), "Out[1]= {}\n");
+}
+
+/// `Do` evaluates the body once per index *for side effects* and returns
+/// `Null`. We prove the body ran the right number of times by observing the
+/// final value of a variable it assigns: after `Do[x = i, {i, 3}]`, `x` is 3.
+#[test]
+fn w7_do_runs_n_times_and_returns_null() {
+    let mut s = WolframSession::new();
+    assert_eq!(s.feed("Do[x = i, {i, 3}]\n").unwrap(), "Out[1]= Null\n");
+    // The body ran for i = 1, 2, 3 — the last assignment leaves x = 3.
+    assert_eq!(s.feed("x\n").unwrap(), "Out[2]= 3\n");
+}
+
+/// Nested `Table` — each level binds its own index cleanly, and the cap
+/// composes (the inner build is itself bounded). `i*j` requires explicit `*`.
+#[test]
+fn w7_nested_table() {
+    // i ∈ {1, 2}, j ∈ {1, 2}: rows are {i*1, i*2}.
+    assert_eq!(
+        eval("Table[Table[i*j, {j, 2}], {i, 2}]\n").unwrap(),
+        "Out[1]= {{1, 2}, {2, 4}}\n"
+    );
+}
+
+/// **DoS cap**: an over-large iterator is left unevaluated rather than hanging
+/// or exhausting memory — exactly the `Range` `MAX_RANGE_LENGTH` behaviour. The
+/// test returns promptly (no allocation of two-million elements).
+#[test]
+fn w7_oversize_iterator_is_capped_not_oom() {
+    // 2,000,000 > MAX_RANGE_LENGTH (1,000,000): stays unevaluated.
+    assert_eq!(
+        eval("Table[0, {i, 2000000}]\n").unwrap(),
+        "Out[1]= Table[0, {i, 2000000}]\n"
+    );
+    // `Do` is capped identically even though it allocates nothing — the cap
+    // bounds wall-clock work, so this also returns immediately.
+    assert_eq!(
+        eval("Do[0, {i, 2000000}]\n").unwrap(),
+        "Out[1]= Do[0, {i, 2000000}]\n"
+    );
+}
+
+/// A span too wide for `i64` but valid `i64` *bounds* must not overflow: the
+/// count is computed in `i128`, exceeds the cap, and the form stays
+/// unevaluated (no panic, no wrap).
+#[test]
+fn w7_extreme_span_does_not_overflow() {
+    let src = "Sum[1, {i, -9000000000000000000, 9000000000000000000}]\n";
+    assert_eq!(
+        eval(src).unwrap(),
+        "Out[1]= Sum[1, {i, -9000000000000000000, 9000000000000000000}]\n"
+    );
+}
+
+/// A malformed iterator spec leaves the whole form unevaluated (never a panic):
+/// a missing bound (`{i}`), a zero step, or a non-integer bound.
+#[test]
+fn w7_malformed_spec_stays_unevaluated() {
+    // No bound: {i} is not a valid iterator.
+    assert_eq!(eval("Table[i, {i}]\n").unwrap(), "Out[1]= Table[i, {i}]\n");
+    // Zero step never terminates — refused.
+    assert_eq!(
+        eval("Table[i, {i, 1, 5, 0}]\n").unwrap(),
+        "Out[1]= Table[i, {i, 1, 5, 0}]\n"
+    );
+    // A non-integer bound: this subset only iterates over integer ranges.
+    assert_eq!(
+        eval("Table[i, {i, 1.5}]\n").unwrap(),
+        "Out[1]= Table[i, {i, 1.5}]\n"
+    );
+}
+
+/// A negative / descending stepped range works (reuses the `Range` span logic).
+#[test]
+fn w7_negative_and_descending_ranges() {
+    assert_eq!(eval("Table[i, {i, -2, 2}]\n").unwrap(), "Out[1]= {-2, -1, 0, 1, 2}\n");
+    assert_eq!(eval("Table[i, {i, 5, 1, -2}]\n").unwrap(), "Out[1]= {5, 3, 1}\n");
+}
