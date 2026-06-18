@@ -19,14 +19,21 @@ adj-lang engine answers, over grounded edges, with a citation (see board_eval.py
                                               ▼
                               native adj-lang-cli ──▶ binding + citation  OR  abstain
 
-WHY THIS IS SAFE EVEN WITH A WEAK MODEL
----------------------------------------
-The model's output is CONSTRAINED and CHECKED: the relation must be one of the legal
-recall relations and the subject must be a canonical entity the graph knows. If the
-model emits something off-vocabulary, the query simply finds no edge and the engine
-ABSTAINS — it never fabricates a medical fact. So a decompose error degrades to an
-honest "UNKNOWN", never to a wrong answer. The model is a translator on a short
-leash, not an oracle.
+WHAT GROUNDING DOES AND DOES NOT PROTECT (an honest limit)
+----------------------------------------------------------
+The model's output is CONSTRAINED: the relation must be one of the legal recall
+relations and the subject a canonical entity. This buys ONE guarantee — the engine
+never fabricates a medical fact: every answer it returns cites a real grounded edge,
+and an OFF-vocabulary query (a subject the graph doesn't know) finds no edge and
+ABSTAINS. But it does NOT make decomposition errors free. If the model mis-maps the
+prose to a DIFFERENT but valid entity — "Von Gierke disease" → subject `fabry` — the
+engine faithfully answers the wrong question and returns a confident WRONG answer
+(correct-for-the-wrong-query). Measured on the live demo (see OFFLINE-DEMO.md), a 4B
+local model decomposes ~74% of stems correctly and the ~5/27 it mis-maps become wrong,
+not abstentions. So: grounding kills FABRICATION, not MISDIRECTION. The real mitigation
+is a decomposition-faithfulness gate — require the chosen subject to be attested by the
+stem's own bytes (byte-provenance applied to the query), turning a mis-map into an
+abstention. That is the next slice; today the pipeline reports the honest number.
 
 The model is fully INJECTABLE: `decompose(stem, gen, vocab)` takes any
 `gen(prompt) -> str`. Pass `local_gen(model_path)` for a real MLX model, or a stub in
@@ -143,11 +150,51 @@ def parse_query(raw: str) -> dict | None:
     return {"relation": rel, "subject": subject, "var": REL_VAR[rel]}
 
 
-def decompose(stem: str, gen, vocab: dict) -> dict | None:
+# Generic medical nouns carry no entity identity — they appear in many stems, so
+# they don't count as attestation of a SPECIFIC subject.
+_GENERIC_TOKENS = {
+    "disease", "deficiency", "anemia", "syndrome", "disorder", "the", "a", "of",
+    "and", "s", "type", "classic", "inherited",
+}
+
+
+def _norm_text(text: str) -> str:
+    """Lowercase and collapse to space-separated alphanumeric tokens for matching."""
+    return re.sub(r"[^a-z0-9]+", " ", (text or "").lower()).strip()
+
+
+def attested_in_stem(subject: str, stem: str) -> bool:
+    """Decomposition-faithfulness check: is the chosen canonical subject actually
+    grounded in the STEM's own bytes? This is byte-provenance applied to the query —
+    the model may only name an entity the question itself names. It is what stops a
+    mis-decomposition (e.g. "Von Gierke disease" → subject `fabry`) from becoming a
+    confident WRONG answer: an un-attested subject is rejected, so the engine ABSTAINS
+    instead of faithfully answering the wrong question. True iff the subject's canonical
+    phrase appears in the stem, or every NON-generic token of it does."""
+    ns = " " + _norm_text(stem) + " "
+    phrase = subject.replace("_", " ")
+    if f" {phrase} " in ns:
+        return True
+    tokens = [t for t in phrase.split() if t and t not in _GENERIC_TOKENS]
+    if not tokens:
+        return False
+    stem_tokens = set(ns.split())
+    return all(t in stem_tokens for t in tokens)
+
+
+def decompose(stem: str, gen, vocab: dict, faithful: bool = True) -> dict | None:
     """Decompose one prose stem into a recall query using an injected text generator
-    `gen(prompt) -> str` (a local MLX model, or a test stub). Returns the parsed query
-    or None when the model's output can't be parsed into a legal query."""
-    return parse_query(gen(build_query_prompt(stem, vocab)))
+    `gen(prompt) -> str` (a local MLX model, or a test stub). Returns the parsed query,
+    or None when the model's output can't be parsed into a legal query OR (with
+    faithful=True, the default) when the chosen subject is not attested by the stem —
+    the faithfulness gate that converts a mis-decomposition into an honest abstention
+    rather than a wrong answer (see attested_in_stem)."""
+    q = parse_query(gen(build_query_prompt(stem, vocab)))
+    if q is None:
+        return None
+    if faithful and not attested_in_stem(q["subject"], stem):
+        return None
+    return q
 
 
 def local_gen(model_path: str, adapter: str | None = None):

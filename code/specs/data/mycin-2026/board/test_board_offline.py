@@ -101,6 +101,27 @@ def test_build_vocab_lists_canonical_subjects() -> None:
     assert "hemophilia_a" in vocab["factor_deficiency"]
 
 
+def test_faithfulness_gate_attests_subject_in_stem() -> None:
+    # The chosen subject must be grounded in the stem's bytes (byte-provenance on the query).
+    assert dq.attested_in_stem("von_gierke", "Von Gierke disease is diagnosed. Which enzyme?")
+    assert dq.attested_in_stem("hereditary_spherocytosis", "...hereditary spherocytosis... finding?")
+    # A mis-map to a different (valid) entity is NOT attested → rejected → abstention,
+    # which is how the gate turns a confident wrong answer into an honest UNKNOWN.
+    assert not dq.attested_in_stem("fabry", "Von Gierke disease is diagnosed. Which enzyme?")
+
+
+def test_faithfulness_gate_turns_misdecomposition_into_abstention() -> None:
+    # A model that confidently emits a DIFFERENT valid subject than the stem names must
+    # NOT produce a wrong answer — the gate rejects the un-attested query → abstain.
+    stem = "An infant with Von Gierke disease. Which enzyme is deficient?"
+    vocab = dq.build_vocab()
+    mis = lambda _p: '{"relation": "deficient_in", "subject": "fabry", "var": "Enzyme"}'  # noqa: E731
+    assert dq.decompose(stem, mis, vocab, faithful=True) is None
+    # Without the gate, the (legal, valid) query would pass through.
+    assert dq.decompose(stem, mis, vocab, faithful=False) == {
+        "relation": "deficient_in", "subject": "fabry", "var": "Enzyme"}
+
+
 # ---- 3. end-to-end offline scoring --------------------------------------------
 
 def _items():
