@@ -84,12 +84,23 @@ chart-as-constraints vision needs (`../CHART-AS-CONSTRAINTS.md`, CC-7):
   provenance-bearing ChartFact; an unrecognized clinically-relevant one is a **discard with
   a reason** (no silent drops).
 
-Worked end-to-end (`samples/chart_with_phi_bundle.json`, 0 model calls): a PHI-laden chart
-of a complex patient (penicillin allergy + ESRD + tacrolimus) → **de-identify** (no name /
-MRN / SSN / phone / address / exact date survives) → **ChartFacts** → the **constraint
-optimizer**, which **abstains** (β-lactams excluded by the allergy *and* vancomycin
-undosable under renal failure + nephrotoxin) with the conflict named — escalate to a
-specialist, never a fabricated or unsafe regimen. Privacy-first, decision-support only.
+- **`run_chart_to_regimen.py`** — **CC-7, the full chart drive-through**: the single
+  end-to-end on-ramp that joins the three stages — `chart_to_regimen(cli, bundle, disease,
+  as_of_year)` runs *de-identify → to_chartfacts → chart_to_cop.derive* and returns the
+  treatment decision **plus the full audit trail** (the Safe-Harbor report of what PHI was
+  removed, the mapped ChartFacts, the per-resource discards, every grounded constraint, and the
+  wait-vs-treat / reimbursement decisions). `answer_time_model_calls == 0`. Run it:
+  `python3 run_chart_to_regimen.py samples/chart_feasible_adult_bundle.json`.
+
+Worked end-to-end (0 model calls), both proven by `test_run_chart_to_regimen.py`:
+- `samples/chart_feasible_adult_bundle.json` — a straightforward young adult (no allergy,
+  normal renal) → **de-identify** → **ChartFacts** (`age_band=adult`, weight) → the optimizer
+  returns the standard community regimen (**vancomycin + ceftriaxone**).
+- `samples/chart_with_phi_bundle.json` — a complex patient (penicillin allergy + ESRD +
+  tacrolimus) → **de-identify** (no name / MRN / SSN / phone / address / exact date survives) →
+  **ChartFacts** → the optimizer **abstains** (β-lactams excluded by the allergy *and*
+  vancomycin undosable under renal failure + nephrotoxin) with the conflict named — escalate to
+  a specialist, never a fabricated or unsafe regimen. Privacy-first, decision-support only.
 
 **De-identification scope (audited):** dates are generalized to the year *by value shape*
 (Period / `value[x]` / extension / timing dates can't slip a key allow-list); the

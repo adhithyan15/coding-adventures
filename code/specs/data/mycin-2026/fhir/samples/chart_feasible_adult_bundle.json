@@ -1,0 +1,55 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "_doc": "SYNTHETIC FHIR Bundle (no real patient) — a STRAIGHTFORWARD chart for the CC-7 full-chart drive-through: a healthy young adult with suspected meningitis, NO drug allergy, NORMAL renal function, on no interacting medications. Carries deliberate PHI (name, MRN, phone, address, narrative, exact dates) so deidentify.py has something to strip. Maps to age_band=adult + a body weight → the community empiric regimen is feasible (the optimizer returns vancomycin + ceftriaxone, the standard cover). The companion chart_with_phi_bundle.json is the INFEASIBLE counterpart (renal + nephrotoxin + penicillin allergy → abstain).",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p1",
+        "identifier": [{"system": "urn:mrn", "value": "MRN-7720145"}],
+        "name": [{"family": "Okafor", "given": ["Daniel"]}],
+        "telecom": [{"system": "phone", "value": "+1-312-555-0148"}],
+        "address": [{"line": ["19 Maple Court"], "city": "Chicago", "state": "IL",
+                     "postalCode": "60614"}],
+        "gender": "male",
+        "birthDate": "1992-09-30",
+        "text": {"status": "generated",
+                 "div": "<div>Daniel Okafor, 33yo M, MRN-7720145, ED visit 2026-06-15 for fever + neck stiffness</div>"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "c1",
+        "recordedDate": "2026-06-15",
+        "clinicalStatus": {"coding": [{"code": "active"}]},
+        "code": {"text": "Suspected bacterial meningitis",
+                 "coding": [{"system": "http://snomed.info/sct", "code": "58170007",
+                             "display": "Bacterial meningitis"}]}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "o1",
+        "status": "final",
+        "effectiveDateTime": "2026-06-15T21:10:00Z",
+        "code": {"coding": [{"system": "http://loinc.org", "code": "33914-3",
+                             "display": "Estimated GFR"}]},
+        "valueQuantity": {"value": 102, "unit": "mL/min/1.73m2"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "o2",
+        "status": "final",
+        "effectiveDateTime": "2026-06-15T21:10:00Z",
+        "code": {"coding": [{"system": "http://loinc.org", "code": "29463-7",
+                             "display": "Body weight"}]},
+        "valueQuantity": {"value": 78, "unit": "kg"}
+      }
+    }
+  ]
+}
