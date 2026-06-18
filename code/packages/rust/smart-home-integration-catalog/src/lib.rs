@@ -603,6 +603,36 @@ pub struct IntegrationActivationEvidenceBriefingSummary {
     pub evidence_briefing_ready: bool,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceScorecardSummary {
+    pub total_integrations: usize,
+    pub evidence_ready_integrations: usize,
+    pub blocked_integrations: usize,
+    pub total_required_evidence_lanes: usize,
+    pub total_passed_evidence_lanes: usize,
+    pub total_blocked_evidence_lanes: usize,
+    pub catalog_evidence_ready_integrations: usize,
+    pub activation_plan_evidence_ready_integrations: usize,
+    pub readiness_evidence_ready_integrations: usize,
+    pub policy_evidence_ready_integrations: usize,
+    pub local_boundary_evidence_ready_integrations: usize,
+    pub catalog_evidence_blockers: usize,
+    pub activation_plan_evidence_blockers: usize,
+    pub readiness_evidence_blockers: usize,
+    pub policy_evidence_blockers: usize,
+    pub local_boundary_evidence_blockers: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub human_review_integrations: usize,
+    pub first_blocked_priority: Option<u8>,
+    pub first_ready_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
 impl IntegrationActivationEvidenceBriefingSummary {
     pub fn from_entry(
         entry: &IntegrationCatalogEntry,
@@ -692,6 +722,130 @@ impl IntegrationActivationEvidenceBriefingSummary {
 
     pub fn needs_local_boundary_evidence(&self) -> bool {
         !self.local_boundary_evidence_ready
+    }
+}
+
+impl IntegrationActivationEvidenceScorecardSummary {
+    pub fn from_briefings<'a>(
+        briefings: impl IntoIterator<Item = &'a IntegrationActivationEvidenceBriefingSummary>,
+    ) -> Self {
+        let mut summary = Self {
+            total_integrations: 0,
+            evidence_ready_integrations: 0,
+            blocked_integrations: 0,
+            total_required_evidence_lanes: 0,
+            total_passed_evidence_lanes: 0,
+            total_blocked_evidence_lanes: 0,
+            catalog_evidence_ready_integrations: 0,
+            activation_plan_evidence_ready_integrations: 0,
+            readiness_evidence_ready_integrations: 0,
+            policy_evidence_ready_integrations: 0,
+            local_boundary_evidence_ready_integrations: 0,
+            catalog_evidence_blockers: 0,
+            activation_plan_evidence_blockers: 0,
+            readiness_evidence_blockers: 0,
+            policy_evidence_blockers: 0,
+            local_boundary_evidence_blockers: 0,
+            missing_prerequisite_count: 0,
+            missing_primitive_count: 0,
+            missing_capability_count: 0,
+            missing_dependency_count: 0,
+            local_only_integrations: 0,
+            cloud_required_integrations: 0,
+            human_review_integrations: 0,
+            first_blocked_priority: None,
+            first_ready_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for briefing in briefings {
+            let priority = briefing.activation_package.catalog_entry.priority;
+            summary.total_integrations += 1;
+            summary.total_required_evidence_lanes += briefing.required_evidence_lane_count;
+            summary.total_passed_evidence_lanes += briefing.passed_evidence_lane_count;
+            summary.total_blocked_evidence_lanes += briefing.blocked_evidence_lane_count;
+            summary.missing_prerequisite_count += briefing.missing_prerequisite_count;
+            summary.missing_primitive_count += briefing.missing_primitive_count;
+            summary.missing_capability_count += briefing.missing_capability_count;
+            summary.missing_dependency_count += briefing.missing_dependency_count;
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(briefing.readiness_package.highest_policy_tier);
+
+            if briefing.readiness_package.local_only {
+                summary.local_only_integrations += 1;
+            }
+            if briefing.readiness_package.cloud_required {
+                summary.cloud_required_integrations += 1;
+            }
+            if briefing.readiness_package.has_policy_review() {
+                summary.human_review_integrations += 1;
+            }
+
+            if briefing.evidence_briefing_ready {
+                summary.evidence_ready_integrations += 1;
+                summary.first_ready_priority = Some(
+                    summary
+                        .first_ready_priority
+                        .map_or(priority, |existing| existing.min(priority)),
+                );
+            } else {
+                summary.blocked_integrations += 1;
+                summary.first_blocked_priority = Some(
+                    summary
+                        .first_blocked_priority
+                        .map_or(priority, |existing| existing.min(priority)),
+                );
+            }
+
+            if briefing.catalog_evidence_ready {
+                summary.catalog_evidence_ready_integrations += 1;
+            } else {
+                summary.catalog_evidence_blockers += 1;
+            }
+            if briefing.activation_plan_evidence_ready {
+                summary.activation_plan_evidence_ready_integrations += 1;
+            } else {
+                summary.activation_plan_evidence_blockers += 1;
+            }
+            if briefing.readiness_evidence_ready {
+                summary.readiness_evidence_ready_integrations += 1;
+            } else {
+                summary.readiness_evidence_blockers += 1;
+            }
+            if briefing.policy_evidence_ready {
+                summary.policy_evidence_ready_integrations += 1;
+            } else {
+                summary.policy_evidence_blockers += 1;
+            }
+            if briefing.local_boundary_evidence_ready {
+                summary.local_boundary_evidence_ready_integrations += 1;
+            } else {
+                summary.local_boundary_evidence_blockers += 1;
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_integrations == 0
+    }
+
+    pub fn all_ready(&self) -> bool {
+        self.total_integrations > 0 && self.blocked_integrations == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_integrations > 0 || self.total_blocked_evidence_lanes > 0
+    }
+
+    pub fn has_missing_prerequisites(&self) -> bool {
+        self.missing_prerequisite_count > 0
+    }
+
+    pub fn has_readiness_gaps(&self) -> bool {
+        self.readiness_evidence_blockers > 0
     }
 }
 
@@ -15672,6 +15826,77 @@ pub fn hue_activation_evidence_briefing_summary(
     )
 }
 
+pub fn activation_evidence_briefings_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceBriefingSummary> {
+    catalog
+        .iter()
+        .map(|entry| {
+            IntegrationActivationEvidenceBriefingSummary::from_entry(
+                entry,
+                available_primitives,
+                allowed_capabilities,
+                enabled_integrations,
+            )
+        })
+        .collect()
+}
+
+pub fn activation_evidence_briefings_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceBriefingSummary> {
+    entries_at_or_before_priority(catalog, priority)
+        .into_iter()
+        .map(|entry| {
+            IntegrationActivationEvidenceBriefingSummary::from_entry(
+                entry,
+                available_primitives,
+                allowed_capabilities,
+                enabled_integrations,
+            )
+        })
+        .collect()
+}
+
+pub fn activation_evidence_scorecard_summary(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationActivationEvidenceScorecardSummary {
+    let briefings = activation_evidence_briefings_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    IntegrationActivationEvidenceScorecardSummary::from_briefings(briefings.iter())
+}
+
+pub fn activation_evidence_scorecard_summary_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationActivationEvidenceScorecardSummary {
+    let briefings = activation_evidence_briefings_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    IntegrationActivationEvidenceScorecardSummary::from_briefings(briefings.iter())
+}
+
 pub fn find_entry<'a>(
     catalog: &'a [IntegrationCatalogEntry],
     integration_id: &IntegrationId,
@@ -24793,6 +25018,124 @@ mod tests {
         assert!(!summary.needs_readiness_evidence());
         assert!(!summary.needs_policy_evidence());
         assert!(!summary.needs_local_boundary_evidence());
+    }
+
+    #[test]
+    fn activation_evidence_scorecard_rolls_up_priority_wave_briefings() {
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let briefings = activation_evidence_briefings_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let summary =
+            IntegrationActivationEvidenceScorecardSummary::from_briefings(briefings.iter());
+        let helper_summary = activation_evidence_scorecard_summary_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary, helper_summary);
+        assert_eq!(summary.total_integrations, briefings.len());
+        assert_eq!(
+            summary.total_integrations,
+            entries_at_or_before_priority(&catalog, 1).len()
+        );
+        assert_eq!(
+            summary.total_required_evidence_lanes,
+            briefings
+                .iter()
+                .map(|briefing| briefing.required_evidence_lane_count)
+                .sum::<usize>()
+        );
+        assert_eq!(
+            summary.total_passed_evidence_lanes + summary.total_blocked_evidence_lanes,
+            summary.total_required_evidence_lanes
+        );
+        assert_eq!(
+            summary.blocked_integrations,
+            briefings
+                .iter()
+                .filter(|briefing| briefing.has_blocked_evidence_lanes())
+                .count()
+        );
+        assert_eq!(
+            summary.readiness_evidence_blockers,
+            briefings
+                .iter()
+                .filter(|briefing| briefing.needs_readiness_evidence())
+                .count()
+        );
+        assert_eq!(
+            summary.missing_prerequisite_count,
+            briefings
+                .iter()
+                .map(|briefing| briefing.missing_prerequisite_count)
+                .sum::<usize>()
+        );
+        assert!(summary.has_blockers());
+        assert!(summary.has_missing_prerequisites());
+        assert!(summary.has_readiness_gaps());
+        assert!(summary.first_blocked_priority.unwrap() <= 1);
+        assert_eq!(summary.first_ready_priority, None);
+        assert!(!summary.all_ready());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn activation_evidence_scorecard_marks_ready_catalog_context() {
+        let catalog = vec![hue_entry()];
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = activation_evidence_scorecard_summary(
+            &catalog,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_integrations, 1);
+        assert_eq!(summary.evidence_ready_integrations, 1);
+        assert_eq!(summary.blocked_integrations, 0);
+        assert_eq!(summary.total_required_evidence_lanes, 5);
+        assert_eq!(summary.total_passed_evidence_lanes, 5);
+        assert_eq!(summary.total_blocked_evidence_lanes, 0);
+        assert_eq!(summary.catalog_evidence_ready_integrations, 1);
+        assert_eq!(summary.activation_plan_evidence_ready_integrations, 1);
+        assert_eq!(summary.readiness_evidence_ready_integrations, 1);
+        assert_eq!(summary.policy_evidence_ready_integrations, 1);
+        assert_eq!(summary.local_boundary_evidence_ready_integrations, 1);
+        assert_eq!(summary.missing_prerequisite_count, 0);
+        assert_eq!(summary.missing_primitive_count, 0);
+        assert_eq!(summary.missing_capability_count, 0);
+        assert_eq!(summary.missing_dependency_count, 0);
+        assert_eq!(summary.local_only_integrations, 1);
+        assert_eq!(summary.cloud_required_integrations, 0);
+        assert_eq!(summary.human_review_integrations, 1);
+        assert_eq!(summary.first_blocked_priority, None);
+        assert_eq!(summary.first_ready_priority, Some(0));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
+        assert!(summary.all_ready());
+        assert!(!summary.has_blockers());
+        assert!(!summary.has_missing_prerequisites());
+        assert!(!summary.has_readiness_gaps());
     }
 
     #[test]
