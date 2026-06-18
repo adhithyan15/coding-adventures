@@ -121,7 +121,12 @@ follows the body's horizontal pan and the row-number gutter (its own virtualized
 button calls `InfiniteSheetModel.fillDown(10)` (over the C ABI's `sc_fill`) to
 replicate the selected cell into the 10 rows below it — the engine shifts each
 copy's relative references (`=A1`→`=A2`, …), pins absolute (`$`) refs, and
-carries the format. `InfiniteSheetModel`
+carries the format. The **Copy / Cut / Paste** buttons drive the engine's
+clipboard (`InfiniteSheetModel.copyCell`/`cutCell`/`pasteCell` over the C ABI's
+`sc_copy`/`sc_cut`/`sc_paste`): copy the selected cell, then paste it elsewhere
+with its relative references shifted by the destination's offset (absolute `$`
+refs pinned, format carried); a cut clears the source on paste, and `pasteCell`
+returns `false` (a no-op) for an empty clipboard. `InfiniteSheetModel`
 (in `lib/engine.dart`) seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) so
 there's something to scroll to, and derives the extent from `usedRange()` + a
 margin.

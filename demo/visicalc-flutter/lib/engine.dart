@@ -73,6 +73,13 @@ typedef _FillC = Void Function(
 typedef _FillD = void Function(
     Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Pointer<Uint8>);
 
+// sc_copy / sc_cut(session, start, end) → void (clipboard capture; two A1 strings).
+typedef _ClipC = Void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
+typedef _ClipD = void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
+// sc_paste(session, dst_start) → int (1 applied, 0 no-op).
+typedef _PasteC = Int32 Function(Pointer<Void>, Pointer<Uint8>);
+typedef _PasteD = int Function(Pointer<Void>, Pointer<Uint8>);
+
 /// A single spreadsheet session, owning the opaque C handle.
 class SpreadsheetSession {
   final DynamicLibrary _lib;
@@ -86,6 +93,9 @@ class SpreadsheetSession {
   late final _WindowD _getDisplayWindow;
   late final _SetFormatD _setFormatFn;
   late final _FillD _fillFn;
+  late final _ClipD _copyFn;
+  late final _ClipD _cutFn;
+  late final _PasteD _pasteFn;
   late final _NoArgD _usedRangeFn;
   late final _ColLettersD _columnLettersFn;
   late final _CurrentRevD _currentRevisionFn;
@@ -106,6 +116,9 @@ class SpreadsheetSession {
     _getDisplayWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_display_window');
     _setFormatFn = _lib.lookupFunction<_SetFormatC, _SetFormatD>('sc_set_format');
     _fillFn = _lib.lookupFunction<_FillC, _FillD>('sc_fill');
+    _copyFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_copy');
+    _cutFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_cut');
+    _pasteFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_paste');
     _usedRangeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_used_range');
     _columnLettersFn = _lib.lookupFunction<_ColLettersC, _ColLettersD>('sc_column_letters');
     _currentRevisionFn = _lib.lookupFunction<_CurrentRevC, _CurrentRevD>('sc_current_revision');
@@ -268,6 +281,46 @@ class SpreadsheetSession {
       _freeCString(srcPtr);
       _freeCString(startPtr);
       _freeCString(endPtr);
+    }
+  }
+
+  /// Copy the inclusive rectangle [start]..[end] into the clipboard — a
+  /// whole-block copy that pastes as a unit. The source is untouched; the buffer
+  /// survives any number of pastes.
+  void copy(String start, String end) {
+    final startPtr = _toCString(start);
+    final endPtr = _toCString(end);
+    try {
+      _copyFn(_handle, startPtr, endPtr);
+    } finally {
+      _freeCString(startPtr);
+      _freeCString(endPtr);
+    }
+  }
+
+  /// Cut the inclusive rectangle [start]..[end]. Like [copy] but a one-shot
+  /// move: the [paste] that places it clears the source it didn't overwrite.
+  void cut(String start, String end) {
+    final startPtr = _toCString(start);
+    final endPtr = _toCString(end);
+    try {
+      _cutFn(_handle, startPtr, endPtr);
+    } finally {
+      _freeCString(startPtr);
+      _freeCString(endPtr);
+    }
+  }
+
+  /// Paste the clipboard so its top-left lands at [dstStart]. Returns `true`
+  /// when applied, `false` (a no-op) for an empty clipboard, malformed address,
+  /// or off-grid destination. The block's references shift by the destination's
+  /// offset; content and format ride along.
+  bool paste(String dstStart) {
+    final dstPtr = _toCString(dstStart);
+    try {
+      return _pasteFn(_handle, dstPtr) != 0;
+    } finally {
+      _freeCString(dstPtr);
     }
   }
 
@@ -502,5 +555,18 @@ class InfiniteSheetModel {
     final last = '$col${selRow + rows}';
     _session.fill(infAddress, first, last);
     computeExtent();
+  }
+
+  /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
+  /// engine shifts the pasted formula's relative references by the destination's
+  /// offset, pins absolute (`$`) refs, carries the format; a cut clears the
+  /// source on paste. [pasteCell] returns false (a no-op) when the clipboard is
+  /// empty, and regrows the extent on success.
+  void copyCell() => _session.copy(infAddress, infAddress);
+  void cutCell() => _session.cut(infAddress, infAddress);
+  bool pasteCell() {
+    final ok = _session.paste(infAddress);
+    if (ok) computeExtent();
+    return ok;
   }
 }
