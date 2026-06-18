@@ -699,6 +699,165 @@ impl IntegrationMeshProtocolSubstratePreflightSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshProtocolSubstratePreflightActionKind {
+    ProvisionController,
+    ProvisionRadio,
+    EnableDiscovery,
+    InstallNetworkKey,
+    EnableSupervision,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightActionKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ProvisionController => "provision_controller",
+            Self::ProvisionRadio => "provision_radio",
+            Self::EnableDiscovery => "enable_discovery",
+            Self::InstallNetworkKey => "install_network_key",
+            Self::EnableSupervision => "enable_supervision",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightAction {
+    pub sequence: usize,
+    pub protocol: ProtocolFamily,
+    pub primitive: PrimitiveFamily,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightAction {
+    pub fn from_check(
+        sequence: usize,
+        check: &IntegrationMeshProtocolSubstratePreflightCheck,
+    ) -> Option<Self> {
+        check.failed().then(|| Self {
+            sequence,
+            protocol: check.protocol.clone(),
+            primitive: check.primitive,
+            stage: check.stage,
+            action_kind: match check.stage {
+                IntegrationMeshProtocolSubstrateStage::Controller => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionController
+                }
+                IntegrationMeshProtocolSubstrateStage::Radio => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio
+                }
+                IntegrationMeshProtocolSubstrateStage::Discovery => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::EnableDiscovery
+                }
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::InstallNetworkKey
+                }
+                IntegrationMeshProtocolSubstrateStage::Supervision => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::EnableSupervision
+                }
+            },
+            blocking: check.blocks_preflight(),
+            operator_required: check.requires_operator(),
+        })
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightActionSummary {
+    pub total_actions: usize,
+    pub blocking_actions: usize,
+    pub operator_required_actions: usize,
+    pub unique_protocols: usize,
+    pub unique_primitives: usize,
+    pub controller_actions: usize,
+    pub radio_actions: usize,
+    pub discovery_actions: usize,
+    pub network_security_actions: usize,
+    pub supervision_actions: usize,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_primitive: Option<PrimitiveFamily>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub preflight_actions_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightActionSummary {
+    pub fn from_actions<'a>(
+        actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightAction>,
+    ) -> Self {
+        let actions = actions.into_iter().collect::<Vec<_>>();
+        let mut protocols = BTreeSet::new();
+        let mut primitives = BTreeSet::new();
+        let first_action = actions.iter().min_by_key(|action| action.sequence);
+
+        for action in &actions {
+            protocols.insert(protocol_sort_token(&action.protocol));
+            primitives.insert(action.primitive);
+        }
+
+        Self {
+            total_actions: actions.len(),
+            blocking_actions: actions
+                .iter()
+                .filter(|action| action.blocks_preflight())
+                .count(),
+            operator_required_actions: actions
+                .iter()
+                .filter(|action| action.requires_operator())
+                .count(),
+            unique_protocols: protocols.len(),
+            unique_primitives: primitives.len(),
+            controller_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_protocol: first_action.map(|action| action.protocol.clone()),
+            first_stage: first_action.map(|action| action.stage),
+            first_primitive: first_action.map(|action| action.primitive),
+            first_action_kind: first_action.map(|action| action.action_kind),
+            preflight_actions_ready: actions.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_actions == 0
+    }
+
+    pub fn has_actions(&self) -> bool {
+        self.total_actions > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_actions > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
@@ -21411,6 +21570,30 @@ pub fn mesh_protocol_substrate_preflight_summary(
     IntegrationMeshProtocolSubstratePreflightSummary::from_checks(checks.iter())
 }
 
+pub fn mesh_protocol_substrate_preflight_actions(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightAction> {
+    let checks = mesh_protocol_substrate_preflight_checks(available_primitives);
+    let mut actions = checks
+        .iter()
+        .filter_map(|check| IntegrationMeshProtocolSubstratePreflightAction::from_check(0, check))
+        .collect::<Vec<_>>();
+    actions.sort_by(compare_mesh_substrate_preflight_actions);
+
+    for (index, action) in actions.iter_mut().enumerate() {
+        action.sequence = index + 1;
+    }
+
+    actions
+}
+
+pub fn mesh_protocol_substrate_preflight_action_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightActionSummary {
+    let actions = mesh_protocol_substrate_preflight_actions(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightActionSummary::from_actions(actions.iter())
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -21771,6 +21954,32 @@ fn mesh_substrate_preflight_blockers<'a>(
     checks
         .into_iter()
         .filter(|check| check.stage == stage && check.blocks_preflight())
+        .count()
+}
+
+fn compare_mesh_substrate_preflight_actions(
+    left: &IntegrationMeshProtocolSubstratePreflightAction,
+    right: &IntegrationMeshProtocolSubstratePreflightAction,
+) -> Ordering {
+    (
+        left.stage,
+        mesh_protocol_sort_key(&left.protocol),
+        left.primitive,
+    )
+        .cmp(&(
+            right.stage,
+            mesh_protocol_sort_key(&right.protocol),
+            right.primitive,
+        ))
+}
+
+fn mesh_substrate_preflight_action_count<'a>(
+    actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightAction>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    actions
+        .into_iter()
+        .filter(|action| action.stage == stage)
         .count()
 }
 
@@ -28009,6 +28218,85 @@ mod tests {
         assert_eq!(summary.first_failed_primitive, None);
         assert!(summary.ready());
         assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_actions_order_failed_gates() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let actions = mesh_protocol_substrate_preflight_actions(&available_primitives);
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightActionSummary::from_actions(actions.iter());
+
+        assert_eq!(actions.len(), 5);
+        assert_eq!(summary.total_actions, 5);
+        assert_eq!(summary.blocking_actions, 5);
+        assert_eq!(summary.operator_required_actions, 4);
+        assert_eq!(summary.unique_protocols, 3);
+        assert_eq!(summary.unique_primitives, 3);
+        assert_eq!(summary.controller_actions, 0);
+        assert_eq!(summary.radio_actions, 1);
+        assert_eq!(summary.discovery_actions, 1);
+        assert_eq!(summary.network_security_actions, 3);
+        assert_eq!(summary.supervision_actions, 0);
+        assert_eq!(summary.first_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.preflight_actions_ready);
+        assert!(summary.has_actions());
+        assert!(summary.needs_operator());
+
+        assert_eq!(actions[0].sequence, 1);
+        assert_eq!(actions[0].protocol, ProtocolFamily::ZWave);
+        assert_eq!(
+            actions[0].action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio
+        );
+        assert!(actions[0].blocks_preflight());
+        assert!(actions[0].requires_operator());
+        assert_eq!(
+            actions[1].action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::EnableDiscovery
+        );
+        assert!(actions[2..].iter().all(|action| {
+            action.action_kind
+                == IntegrationMeshProtocolSubstratePreflightActionKind::InstallNetworkKey
+        }));
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_actions_empty_when_ready() {
+        let actions = mesh_protocol_substrate_preflight_actions(all_primitive_families());
+        let summary = mesh_protocol_substrate_preflight_action_summary(all_primitive_families());
+
+        assert!(actions.is_empty());
+        assert_eq!(summary.total_actions, 0);
+        assert_eq!(summary.blocking_actions, 0);
+        assert_eq!(summary.operator_required_actions, 0);
+        assert_eq!(summary.unique_protocols, 0);
+        assert_eq!(summary.unique_primitives, 0);
+        assert_eq!(summary.first_protocol, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_primitive, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.preflight_actions_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_actions());
         assert!(!summary.needs_operator());
     }
 

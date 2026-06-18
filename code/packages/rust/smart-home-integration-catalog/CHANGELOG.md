@@ -66,6 +66,9 @@ All notable changes to this package will be documented in this file.
   action queues.
 - `IntegrationMeshProtocolSubstratePreflightCheck` and summary helpers for
   package-independent Zigbee, Z-Wave, and Thread substrate preflight gates.
+- `IntegrationMeshProtocolSubstratePreflightAction` and summary helpers for
+  turning failed mesh substrate preflight gates into protocol-scoped repair
+  actions.
 - `IntegrationMeshStageReleaseSummary` and helpers for combining substrate
   stage blockers, primitive readiness blockers, and mesh-scoped remediation
   into a single release readiness rollup.
