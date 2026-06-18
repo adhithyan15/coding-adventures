@@ -120,6 +120,15 @@ public:
     // `dstStart`..`dstEnd` (relative refs shift, absolute pin, format carried);
     // resizes the extent and bumps `revision` so the visible rows re-fetch.
     Q_INVOKABLE void fill(const QString &src, const QString &dstStart, const QString &dstEnd);
+    // Clipboard: copy/cut capture the inclusive rectangle `start`..`end` (a
+    // whole-block copy that pastes as a unit); paste places the block so its
+    // top-left lands at `dstStart`, shifting the block's references by the
+    // destination's offset (a cut clears the source it didn't overwrite). paste
+    // returns true when applied, false for a no-op (empty clipboard / malformed
+    // address / off-grid). paste resizes the extent and bumps `revision`.
+    Q_INVOKABLE void copy(const QString &start, const QString &end);
+    Q_INVOKABLE void cut(const QString &start, const QString &end);
+    Q_INVOKABLE bool paste(const QString &dstStart);
 
 signals:
     // viewportRows changed (after a recompute) — QML rebinds the grid.

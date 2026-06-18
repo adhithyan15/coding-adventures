@@ -23,6 +23,7 @@ private slots:
     void extentColumnLettersAndChangedSince();
     void infiniteViewSelectEditAndRowCells();
     void fillReplicatesShiftingReferences();
+    void clipboardCopyCutPaste();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -155,6 +156,25 @@ void TstWindow::fillReplicatesShiftingReferences() {
     QCOMPARE(m.window(3, 9, 3, 9).at(0).toList().at(0).toString(), QStringLiteral("40"));
     // The source cell is untouched by its own fill.
     QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QStringLiteral("20"));
+}
+
+// Clipboard (the Copy/Cut/Paste controls drive model.copy/cut/paste): copy a
+// 1×2 block and paste it as a unit; cut a cell and move it.
+void TstWindow::clipboardCopyCutPaste() {
+    SpreadsheetModel m;
+    m.setCell("H1", "5");
+    m.setCell("I1", "=H1*2"); // 10 (col 8 = H, col 9 = I)
+    // Copy the block H1:I1 and paste at H2 — the block shifts down one row.
+    m.copy("H1", "I1");
+    QVERIFY(m.paste("H2")); // applied
+    QCOMPARE(m.window(2, 9, 2, 9).at(0).toList().at(0).toString(), QStringLiteral("10")); // I2 = H2*2
+    // Cut a cell, move it, confirm the source clears and a second paste is a no-op.
+    m.setCell("A1", "99");
+    m.cut("A1", "A1");
+    QVERIFY(m.paste("K1")); // col 11 = K
+    QCOMPARE(m.window(1, 11, 1, 11).at(0).toList().at(0).toString(), QStringLiteral("99"));
+    QCOMPARE(m.window(1, 1, 1, 1).at(0).toList().at(0).toString(), QString()); // A1 cleared
+    QVERIFY(!m.paste("M1")); // buffer consumed
 }
 
 QTEST_MAIN(TstWindow)

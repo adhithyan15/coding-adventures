@@ -320,3 +320,35 @@ void SpreadsheetModel::fill(const QString &src, const QString &dstStart, const Q
     emit changed();
     emit revisionChanged();
 }
+
+// Clipboard: copy/cut capture the inclusive rectangle into the engine's
+// clipboard; paste places it (the whole block's references shift by the
+// destination's offset). The QByteArray locals are NAMED so the UTF-8 buffers
+// outlive the C call — a `start.toUtf8().constData()` temporary would dangle.
+void SpreadsheetModel::copy(const QString &start, const QString &end) {
+    const QByteArray s = start.toUtf8();
+    const QByteArray e = end.toUtf8();
+    sc_copy(session_, s.constData(), e.constData());
+}
+
+void SpreadsheetModel::cut(const QString &start, const QString &end) {
+    const QByteArray s = start.toUtf8();
+    const QByteArray e = end.toUtf8();
+    sc_cut(session_, s.constData(), e.constData());
+}
+
+// Returns true when a paste was applied; false (no-op) for an empty clipboard,
+// a malformed address, or an off-grid destination. On success, recompute the
+// grid, regrow the extent, and bump `revision` so the visible rows re-fetch.
+bool SpreadsheetModel::paste(const QString &dstStart) {
+    const QByteArray d = dstStart.toUtf8();
+    const bool applied = sc_paste(session_, d.constData()) != 0;
+    if (applied) {
+        recompute();
+        computeExtent();
+        revision_++;
+        emit changed();
+        emit revisionChanged();
+    }
+    return applied;
+}
