@@ -26,7 +26,10 @@ it through a C ABI.)
 > while scrolling. The **"Fill ↓ 10"** button replicates the selected cell into
 > the 10 rows below it — the engine shifts each copy's relative references
 > (`=A1`→`=A2`, …), pins absolute (`$`) refs, and carries the format, in one
-> `workbook.fill` call.
+> `workbook.fill` call. The **Copy / Cut / Paste** buttons drive the engine's
+> clipboard (`workbook.copy`/`cut`/`paste`): copy the selected cell, then paste
+> it elsewhere with its relative references shifted by the destination's offset
+> (absolute `$` refs pinned, format carried); a cut clears the source on paste.
 > Headless proof: `node scripts/verify-infinite.mjs` replays the exact windowing
 > math against the committed WASM bundle and asserts the render stays bounded,
 > the formatted display strings are correct, a formula 1000 rows down is

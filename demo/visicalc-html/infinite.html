@@ -93,6 +93,9 @@
       <span class="addr" id="addr">A1</span>
       <input id="formula" placeholder="Enter a value or formula (e.g. =SUM(A1:A4)) and press Enter" />
       <button id="fillDown" title="Replicate the selected cell into the 10 rows below it (drag-fill)">Fill ↓ 10</button>
+      <button id="copyCell" title="Copy the selected cell to the clipboard">Copy</button>
+      <button id="cutCell" title="Cut the selected cell (cleared when you paste)">Cut</button>
+      <button id="pasteCell" title="Paste the clipboard at the selected cell, shifting relative references">Paste</button>
     </div>
 
     <div class="sheet" id="sheet">
@@ -242,6 +245,36 @@
         diff.changed.length + " cell(s) filled: " + diff.changed.slice(0, 8).join(", ");
       render();
       statusEl.innerHTML += " &nbsp;·&nbsp; filled " + esc(src) + " ↓ → " + esc(note);
+    });
+
+    // Clipboard: copy/cut the selected cell, then paste it at the selection. The
+    // engine shifts the pasted formula's relative references by the destination's
+    // offset (=A1 copied two rows down pastes as =A3), pins absolute ($) refs, and
+    // carries the format; a cut clears the source on paste. Single-cell here, but
+    // the engine handles whole rectangles.
+    document.getElementById("copyCell").addEventListener("click", function () {
+      var a = a1(selRow, selCol);
+      workbook.copy(a, a);
+      statusEl.innerHTML += " &nbsp;·&nbsp; copied " + esc(a);
+    });
+    document.getElementById("cutCell").addEventListener("click", function () {
+      var a = a1(selRow, selCol);
+      workbook.cut(a, a);
+      statusEl.innerHTML += " &nbsp;·&nbsp; cut " + esc(a) + " (clears on paste)";
+    });
+    document.getElementById("pasteCell").addEventListener("click", function () {
+      var dst = a1(selRow, selCol);
+      var rev = workbook.currentRevision();
+      var ok = workbook.paste(dst);
+      if (!ok) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; nothing to paste";
+        return;
+      }
+      var diff = workbook.changedSince(rev);
+      var note = diff.stale ? "(stale — full refresh)" :
+        diff.changed.length + " cell(s): " + diff.changed.slice(0, 8).join(", ");
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; pasted at " + esc(dst) + " → " + esc(note);
     });
 
     // The classic cross-footing budget, PLUS deliberately far-flung cells to
