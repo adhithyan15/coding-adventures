@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.147.0] - 2026-06-17
+
+### Changed (CLOC13.G — `inline` now inlines small functions at multiple sites)
+
+The `inline` pass (`coding-adventures-closure-pass-inline` `0.3.0 → 0.4.0`)
+no longer inlines only single-use functions. A small pure function is now
+substituted at **all** its call sites when every use is an inlinable call and
+the body fits the size budget (`expr_node_count(body) <= 2 + params.len()`):
+
+```js
+function sq(x) { return x * x; }
+a(sq(3));
+b(sq(4));
+//  closurec --compilation_level SIMPLE  ⇒  a(9); b(16);
+```
+
+(Both sites inlined → `sq` removed by treeshake → fixed-point `constant-fold`
+folds `3 * 3` / `4 * 4`.) A function with any value use (`g(f)`) or a
+non-inlinable call, or a multi-use body over the budget, is left alone.
+
+### Fixtures / tests
+
+- New `tests/diff/simple-inline-multiuse/` fixture + harness
+  (`a(sq(3)); b(sq(4));` → `a(9);b(16);`), plus a
+  `simple_inlines_small_function_at_multiple_sites` unit test.
+- Updated the `simple-rename`, `simple-treeshake`, `advanced-optimizes`
+  fixtures (and matching unit tests) to give their demonstration function a
+  *value use* (`sink(f)`) so the now-stronger inliner declines it — keeping
+  each focused on rename / treeshake / fold rather than on inlining. (The
+  previous "call it twice" guard no longer suffices now that multi-use small
+  bodies are inlined.)
+- Version bumped `0.146.0 → 0.147.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
 ## [0.146.0] - 2026-06-17
 
 ### Changed (CLOC13.F — SIMPLE/ADVANCED pipeline now runs to a fixed point)

@@ -69,8 +69,11 @@ this slice inlines only the subset where each hazard is
    `this`/`arguments`, recursion excluded for free.
 4. **`f`'s name is declared exactly once in the program** — no
    shadowing, so uses resolve to this function by name alone.
-5. **`f` is used exactly once, and that use is the call**, with
-   matching arity — the unambiguous single-use size win.
+5. **Every use of `f` is an inlinable call** with matching arity —
+   no value use (`g(f)`), no wrong-arity / side-effecting call. We
+   inline *all* the calls so `f` ends up unreferenced; if any use
+   isn't an inlinable call we decline the whole function (partial
+   inlining duplicates the body *and* keeps the declaration).
 6. **Every argument is side-effect-free** (literal or bare
    identifier) — substitution can neither drop nor duplicate a
    side effect.
@@ -78,6 +81,18 @@ this slice inlines only the subset where each hazard is
 Everything outside this subset is left untouched (`changed` stays
 `false`). The now-dead callee declaration is **not** removed here —
 the later `remove-unused-vars` / `treeshake` passes delete it.
+
+### Single-use vs. multi-use — the only "is it worth it?" knob
+
+Rules 1–6 are all about *soundness*. The remaining question — is it
+worth it? — splits on call-site count:
+
+- **One site** → always inline (a strict win).
+- **N > 1 sites** → inline only when the body fits the budget
+  `expr_node_count(body) <= 2 + params.len()`, so the substituted
+  body is no larger than the call it replaces and duplicating it
+  across the sites never grows the output. A larger body is left
+  alone.
 
 Substitution happens on the typed AST, so the precedence-aware
 `closure-emitter` adds any parentheses the new tree shape needs.

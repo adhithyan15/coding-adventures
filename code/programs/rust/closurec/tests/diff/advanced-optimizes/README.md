@@ -7,7 +7,7 @@ pipeline (CLOC12.161).
 |------|------|
 | `flags.txt` | `--compilation_level ADVANCED --js input/a.js` |
 | `input/a.js` | A program with a foldable expr, an unused var, and a renameable param |
-| `expected.stdout` | `function compute(a){return a + 1};report(compute(7));report(compute(8));` |
+| `expected.stdout` | `function compute(a){return a + 1};report(compute(7));sink(compute);` |
 
 ADVANCED used to be a **literal no-op** — it returned the source verbatim. It
 now runs the **same typed optimization pipeline as SIMPLE** (it is specified to
@@ -16,13 +16,13 @@ be at least as aggressive). So this input is:
 | Source | Fate |
 |--------|------|
 | `var dead = 1 + 2;` | `1 + 2` folds to `3`; the unused `dead` is then removed |
-| `function compute(longName) {…}` | kept (called twice, so the single-use inliner leaves it); param `longName` → `a` |
-| `report(compute(7)); report(compute(8));` | kept |
+| `function compute(longName) {…}` | kept — the value use `sink(compute)` makes the inliner decline it; param `longName` → `a` |
+| `report(compute(7)); sink(compute);` | kept |
 
-`compute` is called twice on purpose: the single-use inliner would otherwise
-substitute its body at the lone call site, so two calls keep this fixture's
-focus on fold + dead-code removal + rename. Inlining has its own pass-crate
-tests.
+`compute` carries a value use (`sink(compute)`) on purpose: without it the
+inliner would substitute the body at the call site, so the value use keeps
+this fixture's focus on fold + dead-code removal + rename. Inlining has its
+own pass-crate tests.
 
 ADVANCED and SIMPLE produce identical output today; advanced-only passes
 (aggressive property/global renaming, cross-module tree-shaking) layer on as
