@@ -54,6 +54,18 @@ char *sc_get_display(ScSession *s, const char *a1);               /* -> display 
    re-reads via sc_get_window / sc_get_display_window / sc_get_raw afterwards. */
 void  sc_fill(ScSession *s, const char *src, const char *dst_start, const char *dst_end);
 
+/* Clipboard — cut / copy / paste. copy/cut capture the inclusive rectangle
+   `start`..`end` (content + format + the typed source) as a whole-block copy
+   that pastes as a unit. A copy's buffer survives any number of pastes; a cut is
+   a one-shot move whose paste clears the source it didn't overwrite. paste
+   places the block so its top-left lands at `dst_start`, shifting the block's
+   references by the destination's offset; it returns 1 when applied, 0 for a
+   no-op (empty clipboard / malformed address / off-grid). The host re-reads via
+   sc_get_window / sc_get_display_window / sc_get_raw afterwards. */
+void  sc_copy(ScSession *s, const char *start, const char *end);
+void  sc_cut(ScSession *s, const char *start, const char *end);
+int   sc_paste(ScSession *s, const char *dst_start);
+
 /* Structural edits — insert/delete rows & columns. 1-based `at`, `count` lines.
    The engine relocates cells and rewrites formula references (a reference to a
    deleted line becomes #REF!); the formula echo stays in step. No return — the

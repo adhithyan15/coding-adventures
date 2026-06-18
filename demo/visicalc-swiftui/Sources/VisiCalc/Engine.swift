@@ -48,6 +48,27 @@ final class SpreadsheetSession {
         sc_fill(handle, src, dstStart, dstEnd)
     }
 
+    /// Copy the inclusive rectangle `start`..`end` into the clipboard — a
+    /// whole-block copy that pastes as a unit. The source is untouched; the
+    /// buffer survives any number of pastes. Reaches `sc_copy`.
+    func copy(_ start: String, _ end: String) {
+        sc_copy(handle, start, end)
+    }
+
+    /// Cut the inclusive rectangle `start`..`end`. Like `copy` but a one-shot
+    /// move: the `paste` that places it clears the source it didn't overwrite.
+    func cut(_ start: String, _ end: String) {
+        sc_cut(handle, start, end)
+    }
+
+    /// Paste the clipboard so its top-left lands at `dstStart`. Returns `true`
+    /// when applied, `false` (a no-op) for an empty clipboard, malformed address,
+    /// or off-grid destination. The block's references shift by the destination's
+    /// offset; content and format ride along.
+    func paste(_ dstStart: String) -> Bool {
+        sc_paste(handle, dstStart) != 0
+    }
+
     /// The computed value of a cell as the string a spreadsheet should show.
     /// Parses the engine's JSON (`{"kind":...}`) — the same shape the TS and
     /// WASM engines emit.

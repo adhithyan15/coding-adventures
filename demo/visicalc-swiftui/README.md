@@ -86,13 +86,21 @@ The **"Fill ↓ 10"** button next to the formula bar calls
 `WindowedSheetModel.fillDown(10)` (over the C ABI's `sc_fill`) to replicate the
 selected cell into the 10 rows below it — the engine shifts each copy's relative
 references (`=A1`→`=A2`, …), pins absolute (`$`) refs, and carries the format.
+The **Copy / Cut / Paste** buttons drive the engine's clipboard
+(`WindowedSheetModel.copyCell`/`cutCell`/`pasteCell` over the C ABI's
+`sc_copy`/`sc_cut`/`sc_paste`): copy the selected cell, then paste it elsewhere
+with its relative references shifted by the destination's offset (absolute `$`
+refs pinned, format carried); a cut clears the source on paste, and `pasteCell`
+returns `false` (a no-op) for an empty clipboard.
 
 Headless proof: `Tests/VisiCalcTests/WindowedModelTests.swift` asserts the
 window is engine-computed and dense, a formula 1000 rows down (`Z1000` = 39) is
 reachable, the gaps are empty (sparse), column letters run AA/BA/BB, editing
-`A1` dirties the far dependent `Z1000` via `changedSince`, and `fillDown`
+`A1` dirties the far dependent `Z1000` via `changedSince`, `fillDown`
 replicates a relative formula down a column (`I1 = =H1*10` filled down ⇒ I2 = 30,
-I3 = 40, source I1 = 20 untouched). Run with `swift test`.
+I3 = 40, source I1 = 20 untouched), and the clipboard (copy `I1 = =H1*2` → paste
+at I2 ⇒ I2 = H2*2 = 14; cut A1 → move to C1, A1 clears, a second paste is a
+no-op). Run with `swift test`.
 
 ## Notes
 

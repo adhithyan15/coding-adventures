@@ -74,4 +74,27 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertEqual(m.rowCells(3)[8], "40") // I3 = H3*10
         XCTAssertEqual(m.rowCells(1)[8], "20") // I1 source untouched
     }
+
+    /// Clipboard copy/cut/paste shifts a formula and moves a cut.
+    func testClipboardCopyCutPaste() {
+        let m = WindowedSheetModel()
+        // Seed H1=5, H2=7; I1 = H1*2 (col 8 = H, col 9 = I). Copy I1, paste at I2 —
+        // the relative ref shifts by the destination's offset, so I2 = H2*2.
+        m.setCell("H1", "5")
+        m.setCell("H2", "7")
+        m.setCell("I1", "=H1*2") // 10
+        m.select(row: 1, col: 9); m.copyCell() // copy I1
+        m.select(row: 2, col: 9)
+        XCTAssertTrue(m.pasteCell())           // paste at I2
+        XCTAssertEqual(m.rowCells(2)[8], "14") // I2 = H2*2 = 14
+        // Cut A1, move it to C1: source clears, a second paste is a no-op.
+        m.setCell("A1", "99")
+        m.select(row: 1, col: 1); m.cutCell()
+        m.select(row: 1, col: 3)
+        XCTAssertTrue(m.pasteCell())           // paste at C1
+        XCTAssertEqual(m.rowCells(1)[2], "99") // C1 moved
+        XCTAssertEqual(m.rowCells(1)[0], "")   // A1 cleared
+        m.select(row: 1, col: 5)
+        XCTAssertFalse(m.pasteCell())          // buffer consumed
+    }
 }
