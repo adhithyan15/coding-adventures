@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.21.0] - 2026-06-17 — context-precedence edges can be DERIVED by meta-rules (ADJ73 PR-B-4)
+
+### Added
+
+- **`outranks_context` edges may now be RULE-DERIVED, not just asserted.** When the KB contains
+  rules whose head is `outranks_context/2` (the grounded conflict-resolution **meta-rules** — lex
+  posterior / appeal status / lex specialis), `KnowledgeBase::context_adjacency` enumerates every
+  provable `outranks_context($A, $B)` (via `enumerate_all`, which subsumes the ground facts as
+  one-step proofs) and feeds those edges into the same `lex superior` resolution. So a meta-rule
+  `outranks_context($H, $L) :- reverses($H, $L)` (itself citing the overruling doctrine) turns a
+  primitive grounded `reverses(a, b)` fact into a precedence edge — the recursive structure ADJ73
+  §7 calls for: an edge that can be derived is derived (and cited), not duplicated as a bare fact.
+- New private `KnowledgeBase::derived_context_edges` — enumerates the provable `outranks_context`
+  ground edges. Pure read; not re-entrant with `enumerate_governing` (queries a different predicate
+  and never consults the context order itself).
+
+### Unchanged (back-compat / performance)
+
+- With **no** `outranks_context` rules (the common case), `context_adjacency` keeps the cheap
+  ground-fact + explicit-edge scan — no SLD enumeration cost. All PR-B / PR-B-2 behavior is
+  byte-identical; `context_outranks` / `context_order_has_cycle` now key on owned `String`s
+  (derived answer terms are built during enumeration), but the DFS / Kahn-cycle semantics are
+  unchanged. Cycle detection spans derived edges too (a contradictory `reverses` pair is caught).
+
 ## [0.20.0] - 2026-06-17 — context-precedence edges as grounded facts (ADJ73 PR-B-2)
 
 ### Added

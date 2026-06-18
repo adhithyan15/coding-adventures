@@ -536,20 +536,42 @@ impl KnowledgeBase {
     /// edges as a directed ADJACENCY MAP `higher → [lowers]` so a graph walk does a single O(1)
     /// neighbour lookup per node instead of re-scanning the whole edge list (the context order is
     /// meant to scale to large rule corpora — e.g. a jurisdiction graph over the US Code — so the
-    /// walks below stay O(V+E), not O(V·E)). Borrows from `&self`, so the `&str`s live as long as
-    /// the borrow.
-    fn context_adjacency(&self) -> HashMap<&str, Vec<&str>> {
-        let mut adj: HashMap<&str, Vec<&str>> = HashMap::new();
+    /// walks below stay O(V+E), not O(V·E)).
+    ///
+    /// ADJ73 PR-B-4 — DERIVED edges. When the KB contains RULES whose head is `outranks_context/2`
+    /// (the grounded conflict-resolution META-RULES: lex posterior / lex specialis / appeal status),
+    /// the precedence order is no longer just hand-asserted facts — it is *derived* from more
+    /// primitive grounded facts (`supersedes`, `reverses`, …) via those rules. In that case we
+    /// enumerate every provable `outranks_context($A, $B)` (which subsumes the ground facts, since a
+    /// fact is a one-step derivation) so a meta-rule edge participates in `lex superior` exactly like
+    /// an asserted one. With no such rules (the common case) we keep the cheap ground-fact scan.
+    /// Returns OWNED strings because a derived answer term is built during enumeration, not borrowed
+    /// from `self`.
+    fn context_adjacency(&self) -> HashMap<String, Vec<String>> {
+        let mut adj: HashMap<String, Vec<String>> = HashMap::new();
         // 1. Explicit edges (the bare `context_order { a > b }` surface form).
         for (hi, lo) in &self.context_order {
-            adj.entry(hi.as_str()).or_default().push(lo.as_str());
+            adj.entry(hi.clone()).or_default().push(lo.clone());
         }
-        // 2. Grounded edges — any ground `outranks_context(higher, lower)` fact (both args atoms).
-        for fact in self.facts.values().flatten() {
-            if let Term::Compound { functor, args } = &fact.term {
-                if functor == "outranks_context" && args.len() == 2 {
-                    if let (Term::Atom(hi), Term::Atom(lo)) = (&args[0], &args[1]) {
-                        adj.entry(hi.as_str()).or_default().push(lo.as_str());
+        // 2. Grounded + DERIVED edges from the `outranks_context/2` relation.
+        let outranks_idx = ClauseIndex {
+            functor: "outranks_context".to_string(),
+            arity: 2,
+        };
+        if self.rules.contains_key(&outranks_idx) {
+            // Meta-rules can DERIVE precedence → enumerate every provable edge (this already
+            // includes the ground facts, each a one-step proof).
+            for (hi, lo) in self.derived_context_edges() {
+                adj.entry(hi).or_default().push(lo);
+            }
+        } else {
+            // No meta-rules → the cheap path: ground `outranks_context(hi, lo)` facts (both atoms).
+            for fact in self.facts.values().flatten() {
+                if let Term::Compound { functor, args } = &fact.term {
+                    if functor == "outranks_context" && args.len() == 2 {
+                        if let (Term::Atom(hi), Term::Atom(lo)) = (&args[0], &args[1]) {
+                            adj.entry(hi.clone()).or_default().push(lo.clone());
+                        }
                     }
                 }
             }
@@ -557,8 +579,34 @@ impl KnowledgeBase {
         adj
     }
 
+    /// ADJ73 PR-B-4: enumerate every provable `outranks_context($A, $B)` answer whose two arguments
+    /// resolve to atoms, returning the `(higher, lower)` ground edges. This is what lets a grounded
+    /// META-RULE (`rule { head: outranks_context($H, $L) when: reverses($H, $L) }`, itself citing the
+    /// canon) contribute precedence edges derived from primitive grounded facts. Pure read over the
+    /// KB (no mutation); not re-entrant with `enumerate_governing` because it queries a *different*
+    /// predicate and never consults the context order itself.
+    fn derived_context_edges(&self) -> Vec<(String, String)> {
+        let a = LogicVar::fresh(Some("A"));
+        let b = LogicVar::fresh(Some("B"));
+        let query = Term::Compound {
+            functor: "outranks_context".to_string(),
+            args: vec![Term::Var(a.clone()), Term::Var(b.clone())],
+        };
+        let dag = enumerate::enumerate_all(&query, self);
+        let mut edges = Vec::new();
+        for proof in &dag.proofs {
+            if let (Term::Atom(hi), Term::Atom(lo)) = (
+                proof.bindings.walk(&Term::Var(a.clone())),
+                proof.bindings.walk(&Term::Var(b.clone())),
+            ) {
+                edges.push((hi, lo));
+            }
+        }
+        edges
+    }
+
     /// ADJ73 PR-B: does context `a` outrank context `b` (directly or transitively)? Cycle-safe
-    /// DFS over the effective context adjacency (explicit + grounded-fact edges, see
+    /// DFS over the effective context adjacency (explicit + grounded/derived edges, see
     /// [`Self::context_adjacency`]). `a == b` is `false` (a context does not outrank itself).
     /// Returns `false` when there is no directed path `a → … → b`.
     pub fn context_outranks(&self, a: &str, b: &str) -> bool {
@@ -566,38 +614,38 @@ impl KnowledgeBase {
             return false;
         }
         let adj = self.context_adjacency();
-        let mut stack = vec![a];
+        let mut stack: Vec<&str> = vec![a];
         let mut seen: HashSet<&str> = HashSet::new();
         while let Some(node) = stack.pop() {
             if !seen.insert(node) {
                 continue; // already visited — cycle-safe
             }
             if let Some(neighbours) = adj.get(node) {
-                for &lo in neighbours {
+                for lo in neighbours {
                     if lo == b {
                         return true;
                     }
-                    stack.push(lo);
+                    stack.push(lo.as_str());
                 }
             }
         }
         false
     }
 
-    /// ADJ73 PR-B: `true` iff the effective context order (explicit + grounded-fact edges, see
+    /// ADJ73 PR-B: `true` iff the effective context order (explicit + grounded/derived edges, see
     /// [`Self::context_adjacency`]) contains a cycle (e.g. `a > b`, `b > a`, or a self-loop). The
     /// surface/loader should reject such a rulebook; the resolver itself stays safe regardless.
-    /// Catches a cycle formed *across* the two edge sources too (an explicit `a > b` plus a
-    /// grounded `outranks_context(b, a)` fact). Single Kahn topological-sort pass: a directed
+    /// Catches a cycle formed *across* the edge sources too (an explicit `a > b` plus a grounded or
+    /// meta-rule-derived `outranks_context(b, a)`). Single Kahn topological-sort pass: a directed
     /// acyclic graph fully drains to zero in-degree, so any node left unremoved lies on a cycle.
     pub fn context_order_has_cycle(&self) -> bool {
         let adj = self.context_adjacency();
         // In-degree of every node that appears as a head or a tail.
         let mut in_degree: HashMap<&str, usize> = HashMap::new();
-        for (&hi, lowers) in &adj {
-            in_degree.entry(hi).or_insert(0);
-            for &lo in lowers {
-                *in_degree.entry(lo).or_insert(0) += 1;
+        for (hi, lowers) in &adj {
+            in_degree.entry(hi.as_str()).or_insert(0);
+            for lo in lowers {
+                *in_degree.entry(lo.as_str()).or_insert(0) += 1;
             }
         }
         // Kahn: repeatedly retire a zero-in-degree node, decrementing its successors.
@@ -610,11 +658,13 @@ impl KnowledgeBase {
         while let Some(node) = ready.pop() {
             retired += 1;
             if let Some(neighbours) = adj.get(node) {
-                for &lo in neighbours {
-                    let d = in_degree.get_mut(lo).expect("successor was counted above");
+                for lo in neighbours {
+                    let d = in_degree
+                        .get_mut(lo.as_str())
+                        .expect("successor was counted above");
                     *d -= 1;
                     if *d == 0 {
-                        ready.push(lo);
+                        ready.push(lo.as_str());
                     }
                 }
             }
@@ -1456,5 +1506,95 @@ mod tests {
         )));
         assert!(!kb.context_outranks("federal", "state"));
         assert!(!kb.context_order_has_cycle());
+    }
+
+    // -----------------------------------------------------------------------
+    // ADJ73 PR-B-4 — DERIVED context-precedence edges (grounded meta-rules).
+    //
+    // The precedence ORDER itself can be derived: a meta-rule
+    //   outranks_context(H, L) :- reverses(H, L).
+    // (the appeal-status canon) turns a primitive grounded fact `reverses(a, b)`
+    // into a precedence edge a > b. These tests prove a rule-derived edge drives
+    // `context_outranks` exactly like an asserted one — the recursive structure
+    // ADJ73 §7 calls for (an edge that can be derived is derived, not duplicated).
+    // -----------------------------------------------------------------------
+
+    /// Helper: the appeal-status meta-rule `outranks_context(H, L) :- reverses(H, L)`.
+    fn reverses_metarule() -> Rule {
+        let h = var("H");
+        let l = var("L");
+        Rule::certain(
+            compound(
+                "outranks_context",
+                vec![Term::Var(h.clone()), Term::Var(l.clone())],
+            ),
+            vec![BodyLiteral::Pos(compound(
+                "reverses",
+                vec![Term::Var(h), Term::Var(l)],
+            ))],
+        )
+    }
+
+    #[test]
+    fn metarule_derived_edge_drives_context_outranks() {
+        // No asserted outranks_context edge — only a primitive `reverses` fact + the meta-rule.
+        let mut kb = empty_kb();
+        kb.add_rule(reverses_metarule());
+        kb.add_fact(Fact::certain(compound(
+            "reverses",
+            vec![atom("scotus_2023"), atom("ninth_circuit_2019")],
+        )));
+        assert!(
+            kb.context_outranks("scotus_2023", "ninth_circuit_2019"),
+            "the meta-rule should DERIVE the precedence edge from the reverses fact"
+        );
+        assert!(!kb.context_outranks("ninth_circuit_2019", "scotus_2023"));
+        assert!(!kb.context_order_has_cycle());
+    }
+
+    #[test]
+    fn derived_and_explicit_edges_compose_transitively() {
+        // explicit federal > scotus_2023; derived scotus_2023 > ninth_circuit_2019 (via reverses).
+        // Transitive reach federal → ninth_circuit_2019 must hold across both kinds.
+        let mut kb = empty_kb();
+        kb.add_context_outranks("federal", "scotus_2023");
+        kb.add_rule(reverses_metarule());
+        kb.add_fact(Fact::certain(compound(
+            "reverses",
+            vec![atom("scotus_2023"), atom("ninth_circuit_2019")],
+        )));
+        assert!(kb.context_outranks("federal", "ninth_circuit_2019"));
+    }
+
+    #[test]
+    fn derived_edges_are_cycle_checked() {
+        // Two reverses facts forming a cycle (a reverses b, b reverses a) → detectable, never a
+        // wrong silent pick. (Degenerate, but the resolver must stay safe on contradictory input.)
+        let mut kb = empty_kb();
+        kb.add_rule(reverses_metarule());
+        kb.add_fact(Fact::certain(compound(
+            "reverses",
+            vec![atom("ruling_a"), atom("ruling_b")],
+        )));
+        kb.add_fact(Fact::certain(compound(
+            "reverses",
+            vec![atom("ruling_b"), atom("ruling_a")],
+        )));
+        assert!(kb.context_order_has_cycle());
+    }
+
+    #[test]
+    fn no_metarule_keeps_the_ground_fact_fast_path() {
+        // With no outranks_context RULES, only ground facts are edges (back-compat / cheap path).
+        // A `reverses` fact alone (no meta-rule) injects NO precedence.
+        let mut kb = empty_kb();
+        kb.add_fact(Fact::certain(compound(
+            "reverses",
+            vec![atom("a"), atom("b")],
+        )));
+        assert!(!kb.context_outranks("a", "b"));
+        // A ground outranks_context fact still works without any rule.
+        kb.add_fact(outranks_context_fact("a", "b"));
+        assert!(kb.context_outranks("a", "b"));
     }
 }
