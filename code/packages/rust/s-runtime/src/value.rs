@@ -118,7 +118,33 @@ pub enum SValue {
         names: Vec<Option<String>>,
         values: Box<SValue>,
     },
+
+    /// A value carrying **general attributes** — R's open key→value metadata map
+    /// (R-16). `attrs` is an insertion-ordered association list of
+    /// `(attribute name, attribute value)` pairs. The *special* attributes
+    /// `names`, `class`, and `dim` are **never** stored here — they keep their
+    /// dedicated representations ([`SValue::Named`], [`SValue::Classed`], and the
+    /// matrix `dim`), so `attr(x, "names")` and `names(x)` can never disagree.
+    ///
+    /// Like [`SValue::Named`] and [`SValue::Classed`], this is a **transparent
+    /// wrapper**: `length`, `type_name`, the coercions, arithmetic, comparison,
+    /// `class_of`, indexing, and printing all see straight through to `inner`.
+    /// Only the attribute builtins (`attr`/`attributes`/`structure`) observe the
+    /// map. The map is bounded by [`MAX_ATTRIBUTES`]; an empty map is never
+    /// constructed (the wrapper is dropped when its last entry is removed).
+    Attributed {
+        attrs: Vec<(String, SValue)>,
+        inner: Box<SValue>,
+    },
 }
+
+/// The largest number of *general* attributes a single value may carry. This
+/// caps memory against a crafted `attributes(x) <- list(...)` (or a tight
+/// `attr<-` loop) that would otherwise grow an unbounded association list. The
+/// special attributes (`names`/`class`/`dim`) are not counted — they live in
+/// their own wrappers — so this bounds only the open metadata map. 4096 is far
+/// beyond any realistic object.
+pub const MAX_ATTRIBUTES: usize = 4096;
 
 impl SValue {
     /// Build a list from `(optional name, value)` pairs.
@@ -173,6 +199,44 @@ impl SValue {
             other => other,
         }
     }
+
+    /// The value underneath a general-attributes wrapper (or the value itself).
+    /// Only peels one [`SValue::Attributed`] layer (constructors never nest one).
+    pub fn strip_attrs(&self) -> &SValue {
+        match self {
+            SValue::Attributed { inner, .. } => inner,
+            other => other,
+        }
+    }
+
+    /// The general (non-special) attributes carried by this value, if any.
+    pub fn general_attrs(&self) -> Option<&[(String, SValue)]> {
+        match self {
+            SValue::Attributed { attrs, .. } => Some(attrs),
+            _ => None,
+        }
+    }
+
+    /// Wrap `inner` with the general-attribute association list `attrs`, dropping
+    /// the wrapper entirely when `attrs` is empty (an empty `Attributed` is never
+    /// constructed). If `inner` is *already* an `Attributed`, the new `attrs`
+    /// replace the old ones (the wrapper never nests). The caller is responsible
+    /// for keeping `attrs` free of the special names (`names`/`class`/`dim`) and
+    /// within [`MAX_ATTRIBUTES`].
+    pub fn with_general_attrs(inner: SValue, attrs: Vec<(String, SValue)>) -> SValue {
+        let inner = match inner {
+            SValue::Attributed { inner, .. } => *inner,
+            other => other,
+        };
+        if attrs.is_empty() {
+            inner
+        } else {
+            SValue::Attributed {
+                attrs,
+                inner: Box::new(inner),
+            }
+        }
+    }
 }
 
 /// The S3 class vector of a value: the explicit class if one was set, otherwise
@@ -192,6 +256,9 @@ pub fn class_of(value: &SValue) -> Vec<String> {
         // A names attribute is transparent to `class()` — see through to the
         // underlying value's class (a named numeric is still `"numeric"`).
         SValue::Named { values, .. } => class_of(values),
+        // General attributes are transparent to `class()` too — the class lives
+        // in `Classed`, not the general map (R-16).
+        SValue::Attributed { inner, .. } => class_of(inner),
     }
 }
 
@@ -220,6 +287,10 @@ impl std::fmt::Debug for SValue {
             SValue::Named { names, values } => {
                 write!(f, "Named({:?}, {values:?})", names)
             }
+            SValue::Attributed { attrs, inner } => {
+                let keys: Vec<&str> = attrs.iter().map(|(k, _)| k.as_str()).collect();
+                write!(f, "Attributed({keys:?}, {inner:?})")
+            }
         }
     }
 }
@@ -232,6 +303,8 @@ fn type_rank(value: &SValue) -> u8 {
         SValue::Character(_) => 2,
         // A names attribute is transparent: rank by the underlying value.
         SValue::Named { values, .. } => type_rank(values),
+        // General attributes are transparent: rank by the underlying value.
+        SValue::Attributed { inner, .. } => type_rank(inner),
         _ => 3, // NULL / functions — not part of the atomic lattice
     }
 }
@@ -261,6 +334,7 @@ impl SValue {
             SValue::List { .. } => "list",
             SValue::Matrix { .. } => "double",
             SValue::Named { values, .. } => values.type_name(),
+            SValue::Attributed { inner, .. } => inner.type_name(),
         }
     }
 
@@ -279,6 +353,7 @@ impl SValue {
             SValue::List { items, .. } => items.len(),
             SValue::Matrix { data, .. } => data.len(),
             SValue::Named { values, .. } => values.length(),
+            SValue::Attributed { inner, .. } => inner.length(),
         }
     }
 
@@ -303,6 +378,7 @@ impl SValue {
             SValue::Null => Ok(Double::from_values(vec![])),
             SValue::Classed { inner, .. } => inner.as_double(),
             SValue::Named { values, .. } => values.as_double(),
+            SValue::Attributed { inner, .. } => inner.as_double(),
             SValue::Matrix { data, .. } => Ok(data.clone()),
             other => Err(SError::TypeError(format!(
                 "non-numeric argument (got {})",
@@ -323,6 +399,7 @@ impl SValue {
             SValue::Null => Ok(vec![]),
             SValue::Classed { inner, .. } => inner.as_logical(),
             SValue::Named { values, .. } => values.as_logical(),
+            SValue::Attributed { inner, .. } => inner.as_logical(),
             SValue::Matrix { data, .. } => Ok(data
                 .iter()
                 .map(|x| if is_na_real(x) { None } else { Some(x != 0.0) })
@@ -365,6 +442,7 @@ impl SValue {
             SValue::Factor { codes, levels } => SValue::factor_labels(codes, levels),
             SValue::Classed { inner, .. } => inner.as_character(),
             SValue::Named { values, .. } => values.as_character(),
+            SValue::Attributed { inner, .. } => inner.as_character(),
             SValue::Matrix { data, .. } => data
                 .iter()
                 .map(|x| {
@@ -399,6 +477,7 @@ impl SValue {
             },
             SValue::Classed { inner, .. } => inner.truthy(),
             SValue::Named { values, .. } => values.truthy(),
+            SValue::Attributed { inner, .. } => inner.truthy(),
             SValue::Matrix { data, .. } => SValue::Double(data.clone()).truthy(),
             other => Err(SError::TypeError(format!(
                 "argument is not interpretable as logical (got {})",
@@ -473,10 +552,11 @@ pub fn combine(args: &[Arg]) -> SValue {
             SValue::Character(out)
         }
         0 => {
-            // all logical: concatenate logical payloads (seeing through names).
+            // all logical: concatenate logical payloads (seeing through any
+            // names or general-attribute wrapper).
             let mut out = Vec::new();
             for (_, v) in &present {
-                if let SValue::Logical(l) = v.strip_names() {
+                if let SValue::Logical(l) = v.strip_names().strip_attrs() {
                     out.extend(l.iter().cloned());
                 }
             }
@@ -635,8 +715,12 @@ pub fn membership(lhs: &SValue, rhs: &SValue) -> SValue {
 /// compare numerically; if either side is character, both are compared as
 /// strings (S's coercion for relational operators).
 pub fn compare(op: &str, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
-    // See through any names attribute before deciding numeric vs string compare.
-    let (lhs, rhs) = (lhs.strip_names(), rhs.strip_names());
+    // See through any names / general-attribute wrapper before deciding numeric
+    // vs string compare.
+    let (lhs, rhs) = (
+        lhs.strip_names().strip_attrs(),
+        rhs.strip_names().strip_attrs(),
+    );
     let either_char = matches!(lhs, SValue::Character(_)) || matches!(rhs, SValue::Character(_));
 
     if either_char {
@@ -862,6 +946,13 @@ pub fn index(base: &SValue, idx: &SValue) -> SResult<SValue> {
         return index(&SValue::Double(data.clone()), idx);
     }
 
+    // A value carrying **general attributes**: `[` drops them in R, so index the
+    // underlying value directly (names/dim, living in their own wrappers, are
+    // handled by the arms above/below).
+    if let SValue::Attributed { inner, .. } = base {
+        return index(inner, idx);
+    }
+
     // A **named** vector: index the underlying value, then carry the selected
     // names along (R keeps names through `[`). Character indices resolve by name.
     if let SValue::Named { names, values } = base {
@@ -937,6 +1028,8 @@ pub fn index2d(value: &SValue, rows: Option<&SValue>, cols: Option<&SValue>) -> 
         SValue::Matrix { data, nrow, ncol } => index_matrix_2d(data, *nrow, *ncol, rows, cols),
         SValue::DataFrame { .. } => crate::dataframe::index2d(value, rows, cols),
         SValue::Classed { inner, .. } => index2d(inner, rows, cols),
+        SValue::Attributed { inner, .. } => index2d(inner, rows, cols),
+        SValue::Named { values, .. } => index2d(values, rows, cols),
         other => Err(SError::Index(format!(
             "incorrect number of dimensions for {}",
             other.type_name()
@@ -1057,6 +1150,12 @@ pub fn assign_index(base: &SValue, idx: Option<&SValue>, rhs: &SValue) -> SResul
         SValue::Classed { inner, class } => Ok(SValue::Classed {
             inner: Box::new(assign_index(inner, idx, rhs)?),
             class: class.clone(),
+        }),
+        // A value with general attributes: write through to the inner value and
+        // keep the attributes (R preserves them across `x[i] <- v`).
+        SValue::Attributed { attrs, inner } => Ok(SValue::Attributed {
+            attrs: attrs.clone(),
+            inner: Box::new(assign_index(inner, idx, rhs)?),
         }),
         // A named vector: write into the underlying value (resolving a character
         // subscript by name) and keep the names attribute. The selection length
@@ -1221,6 +1320,8 @@ pub fn format_value(value: &SValue) -> Vec<String> {
         SValue::List { names, items } => return format_list(names, items),
         SValue::Matrix { data, nrow, ncol } => return format_matrix(data, *nrow, *ncol),
         SValue::Named { names, values } => return format_named(names, values),
+        // General attributes are transparent to printing — show the inner value.
+        SValue::Attributed { inner, .. } => return format_value(inner),
     };
 
     format_vector(&elems)
@@ -1387,6 +1488,7 @@ pub fn element_string(value: &SValue, i: usize) -> String {
             .unwrap_or_else(|| "NA".into()),
         SValue::Classed { inner, .. } => element_string(inner, i),
         SValue::Named { values, .. } => element_string(values, i),
+        SValue::Attributed { inner, .. } => element_string(inner, i),
         _ => "NA".into(),
     }
 }
@@ -2008,5 +2110,87 @@ mod tests {
         // A wider value widens the name column too; an unset name prints <NA>.
         let v = SValue::with_names(SValue::doubles(vec![100.0, 2.0]), vec![name("x"), None]);
         assert_eq!(format_value(&v), vec!["  x <NA>", "100    2"]);
+    }
+
+    // --- R-16: general-attribute wrapper mechanics ----------------------
+
+    fn attributed(attrs: Vec<(&str, SValue)>, inner: SValue) -> SValue {
+        SValue::with_general_attrs(
+            inner,
+            attrs.into_iter().map(|(k, v)| (k.to_string(), v)).collect(),
+        )
+    }
+
+    #[test]
+    fn with_general_attrs_drops_empty_and_never_nests() {
+        // An empty attr list returns the bare value (no wrapper).
+        let bare = SValue::with_general_attrs(SValue::scalar(1.0), vec![]);
+        assert!(matches!(bare, SValue::Double(_)));
+        assert!(bare.general_attrs().is_none());
+        // A non-empty list wraps.
+        let v = attributed(vec![("foo", SValue::scalar(9.0))], SValue::scalar(1.0));
+        assert_eq!(v.general_attrs().map(|a| a.len()), Some(1));
+        // Re-wrapping replaces (never nests an Attributed in an Attributed).
+        let v2 = attributed(vec![("bar", SValue::scalar(2.0))], v);
+        if let SValue::Attributed { attrs, inner } = &v2 {
+            assert_eq!(attrs.len(), 1);
+            assert_eq!(attrs[0].0, "bar");
+            assert!(!matches!(**inner, SValue::Attributed { .. }));
+        } else {
+            panic!("expected Attributed");
+        }
+    }
+
+    #[test]
+    fn attributed_is_transparent_to_core_ops() {
+        let v = attributed(
+            vec![("foo", SValue::Character(vec![name("bar")]))],
+            SValue::doubles(vec![1.0, 2.0, 3.0]),
+        );
+        // length / type / class / coercions / truthy all see through.
+        assert_eq!(v.length(), 3);
+        assert_eq!(v.type_name(), "double");
+        assert_eq!(class_of(&v), vec!["numeric"]);
+        assert_eq!(v.as_double().unwrap().data(), &[1.0, 2.0, 3.0]);
+        assert_eq!(
+            v.strip_attrs().as_double().unwrap().data(),
+            &[1.0, 2.0, 3.0]
+        );
+        // Arithmetic sees through and drops the attribute.
+        let r = arithmetic("+", &v, &SValue::scalar(1.0)).unwrap();
+        assert_eq!(dbl(&r), vec![2.0, 3.0, 4.0]);
+        assert!(r.general_attrs().is_none());
+    }
+
+    #[test]
+    fn attributed_index_drops_attrs_but_assign_keeps_them() {
+        let v = attributed(
+            vec![("foo", SValue::scalar(7.0))],
+            SValue::doubles(vec![10.0, 20.0, 30.0]),
+        );
+        // `[` drops general attributes (as in R).
+        let got = index(&v, &SValue::scalar(2.0)).unwrap();
+        assert_eq!(dbl(&got), vec![20.0]);
+        assert!(got.general_attrs().is_none());
+        // `x[i] <- v` keeps them.
+        let assigned = assign_index(&v, Some(&SValue::scalar(1.0)), &SValue::scalar(99.0)).unwrap();
+        assert_eq!(
+            assigned.strip_attrs().as_double().unwrap().data(),
+            &[99.0, 20.0, 30.0]
+        );
+        assert_eq!(assigned.general_attrs().map(|a| a.len()), Some(1));
+    }
+
+    #[test]
+    fn attributed_format_and_compare_see_through() {
+        let v = attributed(
+            vec![("foo", SValue::scalar(1.0))],
+            SValue::Character(vec![name("a"), name("b")]),
+        );
+        // Printing shows the inner value, not the attribute.
+        assert_eq!(format_value(&v), vec!["[1] \"a\" \"b\""]);
+        // String comparison still works through the wrapper.
+        let r = compare("==", &v, &SValue::Character(vec![name("a")])).unwrap();
+        assert!(matches!(&r, SValue::Logical(l) if l[0] == Some(true)));
     }
 }

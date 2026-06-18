@@ -350,9 +350,20 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
     legal example that `import`s it and proves *lex superior* end-to-end through the CLI: the
     circuit's broad reading **governs** a district court's narrow reading **despite its higher
     `mandatory` tier**. Governing answers now carry their `context` in the JSON. Golden test
-    `adj-lang-cli/tests/context_precedence_e2e.rs`. Still to come: the recency / appeal-status /
-    lex-specialis **meta-rules** (PR-B-4) that *derive* precedence from grounded rule attributes
-    (e.g. `idsa_2024 > idsa_2004` as lex posterior) rather than asserting each edge bare.
+    `adj-lang-cli/tests/context_precedence_e2e.rs`.
+  - **PR-B-4 grounded meta-rules ✅ DONE (logic-engine 0.21).** `context_adjacency` now reads
+    **rule-derived** `outranks_context` edges (enumerated via `enumerate_all` when any
+    `outranks_context/2` rule exists; the cheap ground-fact scan is kept otherwise). So the
+    conflict-resolution canons are themselves grounded meta-rules in `context-precedence-meta.adj`:
+    `outranks_context($H,$L) :- reverses($H,$L)` (appeal status, citing the overruling doctrine)
+    and `… :- supersedes($New,$Old)` (lex posterior / recency, citing implied-repeal). Two worked
+    examples prove it end-to-end through the CLI — a Supreme Court reversal flips a `mandatory`-tier
+    reversed Ninth Circuit reading (`worked-appeal-example.adj`), and `idsa_2024 > idsa_2004` is
+    *derived* from a grounded `supersedes` fact (`worked-supersession-example.adj`). The recursion
+    bottoms out at cited primitive facts — an edge that can be derived is derived, not duplicated.
+    Golden test `adj-lang-cli/tests/context_metarules_e2e.rs`. Still to come: **lex specialis**
+    (needs a comparable specificity attribute on rules) + the lex-specialis-vs-lex-superior
+    tiebreaker meta-rule (§4.3).
 - **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
   annotations) + regen grammar.
 - **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).

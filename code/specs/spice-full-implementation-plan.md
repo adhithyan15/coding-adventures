@@ -40,7 +40,10 @@ downstream tools to compare.
      `set noaskquit` options plus ASCII rawfile-format `set filetype=ascii`
      options, rawfile vector-name/single-scale toggles (`set wr_vecnames`,
      `set wr_singlescale`), and rawfile append-write `set appendwrite` options
-     are accepted as no-op control markers; parsed
+     plus target-bearing rawfile `write <rawfile> [probes...]` markers and
+     ASCII data-write `wrdata <file> <probes...>` markers are accepted as
+     no-op control markers, and read-only `display` / `listing` inspection
+     commands are accepted as no-op control markers; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -600,10 +603,43 @@ downstream tools to compare.
       slice.
     - Python, Rust, and TypeScript now accept exact selected `.control` block
       `set appendwrite` rawfile append-write options as no-op control commands.
-    - Binary rawfile formats, actual rawfile file-writing commands, other `set`
+    - Binary rawfile formats, actual rawfile serialization, other `set`
       variables, and unrecognized non-comment commands inside `.control` blocks
       remain diagnostic-only so unsupported file I/O and script state are
       explicit.
+
+55. Selected `.control` rawfile write marker routing.
+    - Status: completed in this selected control rawfile-write marker routing
+      slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      `write <rawfile> [probes...]` rawfile-write markers as no-op control
+      commands when a target path token is present.
+    - Actual rawfile serialization, binary rawfile formats, other file-writing
+      commands, other `set` variables, and unrecognized non-comment commands
+      inside `.control` blocks remain diagnostic-only so unsupported file I/O
+      and script state are explicit.
+
+56. Selected `.control` WRDATA marker routing.
+    - Status: completed in this selected control WRDATA marker routing slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      `wrdata <file> <probes...>` ASCII data-write markers as no-op control
+      commands when both a target path token and at least one vector/probe token
+      are present.
+    - Actual ASCII data-file serialization, rawfile serialization, binary
+      rawfile formats, other file-writing commands, other `set` variables, and
+      unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported file I/O and script state are explicit.
+
+57. Selected `.control` inspection marker routing.
+    - Status: completed in this selected control inspection-marker routing
+      slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      read-only `display` and `listing` inspection commands as no-op control
+      commands.
+    - Actual console/listing output, mutating control-flow commands, other
+      `set` variables, and unrecognized non-comment commands inside `.control`
+      blocks remain diagnostic-only so unsupported UI output and script state
+      are explicit.
 
 ## Backlog
 

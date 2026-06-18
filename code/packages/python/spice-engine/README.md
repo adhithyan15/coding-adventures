@@ -165,7 +165,10 @@ dotted deck cards, while `run`, `reset`, `quit`, and the UI-only
 `set noaskquit` option plus the ASCII rawfile-format `set filetype=ascii`
 option, vector-name/single-scale rawfile output toggles (`set wr_vecnames`,
 `set wr_singlescale`), and the append-write rawfile option (`set appendwrite`)
-are accepted as no-op control markers. Other
+plus target-bearing rawfile-write markers (`write <rawfile> [probes...]`) and
+ASCII data-write markers (`wrdata <file> <probes...>`) are accepted as no-op
+control markers. Read-only control inspection commands (`display` and
+`listing`) are also accepted as no-op markers. Other
 unrecognized non-comment commands emit diagnostics until a broader executed
 control subset is in scope.
 `resolve_deck_sources()` is the first include/library resolution layer: callers

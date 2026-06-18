@@ -130,7 +130,11 @@ set wr_vecnames
 set wr_singlescale
 set appendwrite
 set filetype=binary
-write out.raw
+write out.raw V(out)
+wrdata out.dat V(out)
+wrdata empty.dat
+display all
+listing physical
 run
 quit
 .endc
@@ -159,7 +163,7 @@ quit
       [".lib", 3, "error"],
       [".control", 4, "error"],
       [".control", 19, "error"],
-      [".control", 20, "error"],
+      [".control", 22, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
@@ -250,6 +254,10 @@ four 2k V(b)
 .set wr_vecnames
 .set wr_singlescale
 .set appendwrite
+.write out.raw V(a)
+.wrdata out.dat V(a)
+.display all
+.listing deck
 run
 .quit
 .endc

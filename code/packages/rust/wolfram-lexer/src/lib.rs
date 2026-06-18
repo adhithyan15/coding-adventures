@@ -34,12 +34,22 @@ use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::{Token, TokenType};
 mod _grammar;
 
-/// Drop `NEWLINE` tokens that occur inside an open `(`, `[`, or `{`.
+/// Drop `NEWLINE` tokens that occur inside an open `(`, `[`, `{`, or `[[`.
 ///
 /// Wolfram has no required statement terminator — a newline at depth 0 ends a
-/// statement — but the contents of a group, an `f[…]` application, or a `{…}`
-/// list may legally span lines, so those interior newlines must not terminate
-/// the statement.
+/// statement — but the contents of a group, an `f[…]` application, a `{…}`
+/// list, or a `[[ … ]]` part expression may legally span lines, so those
+/// interior newlines must not terminate the statement.
+///
+/// The single-character brackets (`(`/`[`/`{`) carry dedicated `TokenType`
+/// enum variants, so they match by `type_`. The W-6 part-sugar opener `[[`
+/// (LDBRACKET) is a *custom* multi-char token with no enum variant — it falls
+/// back to a generic `type_`, so we recognise it by `effective_type_name()`.
+/// Crucially, `[[` is one *token* but two *levels* of bracket nesting (it is
+/// closed by two single `]` RBRACKETs — there is no `]]` token, see the grammar
+/// and `wolfram.tokens`), so it adds `2` to the depth and each closing `]` (an
+/// ordinary RBracket) subtracts `1`. That keeps the count balanced, so a `\n`
+/// inside `x[[\n i\n]]` is dropped just like one inside `f[\n a\n]`.
 fn drop_bracketed_newlines(tokens: Vec<Token>) -> Vec<Token> {
     let mut result = Vec::with_capacity(tokens.len());
     let mut depth: i32 = 0;
@@ -48,12 +58,16 @@ fn drop_bracketed_newlines(tokens: Vec<Token>) -> Vec<Token> {
         if tok.type_ == TokenType::Newline && depth > 0 {
             continue;
         }
-        match tok.type_ {
-            TokenType::LParen | TokenType::LBracket | TokenType::LBrace => depth += 1,
-            TokenType::RParen | TokenType::RBracket | TokenType::RBrace => {
-                depth = depth.saturating_sub(1)
+        if tok.effective_type_name() == "LDBRACKET" {
+            depth += 2; // `[[` opens two bracket levels (closes with `]` `]`).
+        } else {
+            match tok.type_ {
+                TokenType::LParen | TokenType::LBracket | TokenType::LBrace => depth += 1,
+                TokenType::RParen | TokenType::RBracket | TokenType::RBrace => {
+                    depth = depth.saturating_sub(1)
+                }
+                _ => {}
             }
-            _ => {}
         }
         result.push(tok);
     }
@@ -177,6 +191,51 @@ mod tests {
         // `/.` wins over a bare `/`, and `->` over `-`.
         assert!(types(&lex("a/.b\n")).contains(&"REPLACEALL"));
         assert!(!types(&lex("a/.b\n")).contains(&"SLASH"));
+    }
+
+    // --- W-6 operator sugar: /@, @@, [[ ]] are single (multi-char) tokens ---
+
+    #[test]
+    fn map_and_apply_sugar_are_single_tokens() {
+        // `/@` is MAP, distinct from `/.` (REPLACEALL) and a bare `/` (SLASH).
+        pair(&lex("f /@ x\n"), 1, "MAP", "/@");
+        // `@@` is APPLY.
+        pair(&lex("f @@ x\n"), 1, "APPLY", "@@");
+        // Longest-match: `/@` wins over `/`, and `@@` is not two unknown chars.
+        assert!(types(&lex("f/@x\n")).contains(&"MAP"));
+        assert!(!types(&lex("f/@x\n")).contains(&"SLASH"));
+        assert!(types(&lex("f@@x\n")).contains(&"APPLY"));
+    }
+
+    #[test]
+    fn double_bracket_opener_wins_over_single_but_closer_is_two_singles() {
+        // `x[[i]]` lexes the opener as one LDBRACKET (winning over `[`) but the
+        // closer as TWO ordinary RBRACKETs — there is no `]]` token, on purpose,
+        // so the tail of nested `f[g[x]]` cannot be mis-lexed (see grammar).
+        let p = lex("x[[2]]\n");
+        pair(&p, 0, "NAME", "x");
+        pair(&p, 1, "LDBRACKET", "[[");
+        pair(&p, 2, "NUMBER", "2");
+        pair(&p, 3, "RBRACKET", "]");
+        pair(&p, 4, "RBRACKET", "]");
+        assert!(!types(&lex("x[[2]]\n")).contains(&"LBRACKET"));
+        // A single `[`/`]` still lexes as LBRACKET/RBRACKET (f[x]).
+        assert!(types(&lex("f[x]\n")).contains(&"LBRACKET"));
+        // The regression guard: nested ordinary application keeps two singles.
+        assert_eq!(
+            types(&lex("f[g[x]]\n")),
+            vec!["NAME", "LBRACKET", "NAME", "LBRACKET", "NAME", "RBRACKET", "RBRACKET"]
+        );
+    }
+
+    #[test]
+    fn newline_inside_double_brackets_is_dropped() {
+        // The W-6 hook tracks `[[`/`]]` depth, so an interior newline is dropped.
+        let n = tokenize_wolfram("x[[\n 1\n]]\n")
+            .iter()
+            .filter(|t| t.type_ == TokenType::Newline)
+            .count();
+        assert_eq!(n, 1, "only the trailing top-level newline remains");
     }
 
     #[test]

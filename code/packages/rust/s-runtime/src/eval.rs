@@ -346,16 +346,19 @@ impl Interpreter {
         let fn_name = lvalue_name(primary)
             .map_err(|_| SError::TypeError("invalid replacement-function target".into()))?;
 
-        // The call must have exactly one argument, and it must be a bare-name
-        // variable (the object being modified): `names(x) <- v`.
+        // The call must have at least one argument; the *first* is the bare-name
+        // variable being modified (`names(x) <- v`, `attr(x, "foo") <- v`). Any
+        // further arguments (`attr`'s `which`, etc.) are passed through to the
+        // replacement function ahead of `value`, matching R's desugaring
+        // `x <- \`f<-\`(x, <extra args>, value = v)`.
         let arg_values = self.eval_args(call_suffix, env)?;
-        if arg_values.len() != 1 {
+        if arg_values.is_empty() {
             return Err(SError::BadArgs(format!(
-                "{fn_name}(...) <- value: the replacement target must take exactly one argument"
+                "{fn_name}(...) <- value: the replacement target must take at least one argument"
             )));
         }
 
-        // Recover the bare-name of that single argument from the parse tree (we
+        // Recover the bare-name of the *first* argument from the parse tree (we
         // need the *name* to rebind, not just its value).
         let arg_node = call_suffix
             .children
@@ -375,20 +378,23 @@ impl Interpreter {
         let current =
             lookup(env, &target_name).ok_or_else(|| SError::Undefined(target_name.clone()))?;
 
-        // Look up `\`f<-\`` and call it with (current, value = rhs).
+        // Look up `\`f<-\`` and call it with (current, <extra args…>, value = rhs):
+        // the first call arg is replaced by the variable's current value, the
+        // remaining call args (e.g. `which`) pass through unchanged, and the RHS
+        // is appended as the named `value` argument.
         let replacement_name = format!("{fn_name}<-");
         let func = lookup(env, &replacement_name)
             .ok_or_else(|| SError::Undefined(replacement_name.clone()))?;
-        let call_args = [
-            Arg {
-                name: None,
-                value: current,
-            },
-            Arg {
-                name: Some("value".to_string()),
-                value: rhs.clone(),
-            },
-        ];
+        let mut call_args: Vec<Arg> = Vec::with_capacity(arg_values.len() + 1);
+        call_args.push(Arg {
+            name: None,
+            value: current,
+        });
+        call_args.extend(arg_values.into_iter().skip(1));
+        call_args.push(Arg {
+            name: Some("value".to_string()),
+            value: rhs.clone(),
+        });
         let updated = self.call_value(func, &call_args)?;
         define(env, &target_name, updated);
         self.as_invisible(rhs)
@@ -569,6 +575,49 @@ impl Interpreter {
                 ))
             })?;
         let (a, b) = (ad.data(), bd.data());
+
+        // MXF-4 — the shared f64 substrate.
+        //
+        // The clean win is the **NA-free** case: R's `Matrix` is already a
+        // column-major `[nrow, ncol]` block of `f64`, which is exactly
+        // `array_runtime::Array`'s layout, so we hand the two operands to
+        // `array_runtime::execute(MatMul, …)`. That lowers to a `DType::F64`
+        // `matrix-ir` graph and runs on the *cost-selected* backend (CPU today,
+        // a GPU once one advertises `f64`), at full double precision (MXF-3's
+        // 8-byte codec). The result is **bit-identical** to the loop below.
+        //
+        // Why not always? R's NA is a *specific* NaN bit pattern
+        // (`r_vector::NA_REAL_BITS`). IEEE floating multiply/add on a NaN yields
+        // an *implementation-defined* NaN payload, so an NA pushed through the
+        // substrate would not reliably come back as R's NA — it would silently
+        // become a plain `NaN`. So when either operand carries an NA we keep the
+        // hand-written loop, which short-circuits any dotted column to
+        // `na_real()` exactly as before. (Empty inner dim `ak == 0` is also kept
+        // on the loop: that is a degenerate "sum of no terms" = 0 matrix, which
+        // the loop already produces and `execute` does not model.)
+        let has_na = a.iter().chain(b.iter()).any(|&x| is_na_real(x));
+        if !has_na && ak > 0 {
+            // Build column-major Arrays directly from R's column-major storage —
+            // no transpose, no semantic copy. `from_shape` validates that the
+            // data length matches `nrow*ncol`, which holds by construction here.
+            if let (Ok(am_arr), Ok(bm_arr)) = (
+                array_runtime::Array::from_shape(a.to_vec(), vec![am, ak]),
+                array_runtime::Array::from_shape(b.to_vec(), vec![bk, bn]),
+            ) {
+                if let Ok(prod) =
+                    array_runtime::execute(array_runtime::Kernel::MatMul, &am_arr, &bm_arr)
+                {
+                    return Ok(SValue::Matrix {
+                        data: Double::from_values(prod.data().to_vec()),
+                        nrow: am,
+                        ncol: bn,
+                    });
+                }
+                // Any substrate error (e.g. a future size cap) falls through to
+                // the loop, which already bounded `total` by `MAX_SEQ_LEN` above.
+            }
+        }
+
         let mut out = vec![0.0; total];
         for c in 0..bn {
             for r in 0..am {
@@ -1202,6 +1251,7 @@ pub(crate) fn nth_element(value: &SValue, i: usize) -> SValue {
         },
         SValue::Classed { inner, .. } => nth_element(inner, i),
         SValue::Named { values, .. } => nth_element(values, i),
+        SValue::Attributed { inner, .. } => nth_element(inner, i),
         SValue::List { items, .. } => items.get(i).cloned().unwrap_or(SValue::Null),
         _ => SValue::Null,
     }
