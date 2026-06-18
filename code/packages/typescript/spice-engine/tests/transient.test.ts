@@ -1451,6 +1451,7 @@ describe("transient", () => {
 .dc V1 0 1 1
 .ac dec 1 1k 1k
 .tran 1m 1m
+.tf V(mid) V1
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -1533,6 +1534,34 @@ describe("transient", () => {
     expect(tranExecution.runArtifactTable).toBe(
       "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
         `tran\t.tran\t${tranExecution.plan.lineNumber}\t1\t1\tV(mid)\t1\tmid_final\t0\t\n`,
+    );
+
+    const tfExecution = runDeckAnalysis(circuit, netlist, "tf");
+    expect(tfExecution.plan.outputNode).toBe("mid");
+    expect(tfExecution.plan.sourceName).toBe("V1");
+    const tfResult = tfExecution.result as {
+      readonly transferRatio: number;
+      readonly inputImpedanceOhms: number;
+      readonly outputImpedanceOhms: number;
+    };
+    expect(tfResult.transferRatio).toBeCloseTo(0.5, 9);
+    expect(tfResult.inputImpedanceOhms).toBeCloseTo(2_000.0, 9);
+    expect(tfResult.outputImpedanceOhms).toBeCloseTo(500.0, 9);
+    expect(tfExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(tfExecution.measurements).toEqual([]);
+    expect(tfExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
+    expect(tfExecution.table).toBe(
+      "TransferRatio\tInputImpedance\tOutputImpedance\n" +
+        "5.000000e-01\t2.000000e+03\t5.000000e+02\n",
+    );
+    expect(tfExecution.runArtifacts[0]?.analysis).toBe("tf");
+    expect(tfExecution.runArtifacts[0]?.resultRows).toBe(1);
+    expect(tfExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(tfExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(tfExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
+    expect(tfExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
+        `tf\t.tf\t${tfExecution.plan.lineNumber}\t1\t1\tV(mid)\t0\t\t0\t\n`,
     );
 
     const tranWindowExecution = runDeckAnalysis(

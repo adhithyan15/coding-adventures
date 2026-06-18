@@ -759,13 +759,22 @@ downstream tools to compare.
     - The stable run-artifact table now includes `FourierList`, so callers can
       inspect deck-owned Fourier provenance without reparsing Fourier tables.
 
+68. Deck run transfer-function routing.
+    - Status: completed in this deck run transfer-function routing slice.
+    - Python, Rust, and TypeScript selected deck executions now parse top-level
+      `.tf V(node) SOURCE` analysis cards into the shared deck-analysis plan
+      surface.
+    - Selected `.tf` deck executions route through the existing transfer-function
+      solver and stable transfer-function table while exposing a one-row deck-run
+      artifact for the transfer probe.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
      including richer deck-owned run artifacts beyond selected output,
-     measurement, and Fourier probe lists, plus output-plan integration beyond
-     stable table routing.
+     measurement, Fourier, and transfer-function probe lists, plus output-plan
+     integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
      selection toward full SPICE compatibility.

@@ -6778,6 +6778,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 .dc V1 0 1 1
 .ac dec 1 1k 1k
 .tran 1m 1m
+.tf V(mid) V1
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -6865,6 +6866,30 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tran_execution.run_artifact_table == (
         "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
         f"tran\t.tran\t{tran_execution.plan.line_number}\t2\t1\tV(mid)\t1\tmid_final\t0\t\n"
+    )
+
+    tf_execution = run_deck_analysis(circuit, netlist, "tf")
+    assert tf_execution.plan.output_node == "mid"
+    assert tf_execution.plan.source_name == "V1"
+    assert isinstance(tf_execution.result, TfResult)
+    assert tf_execution.result.transfer_ratio == pytest.approx(0.5)
+    assert tf_execution.result.input_impedance == pytest.approx(2000.0)
+    assert tf_execution.result.output_impedance == pytest.approx(500.0)
+    assert tf_execution.output_probes == ["V(mid)"]
+    assert tf_execution.measurements == []
+    assert tf_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert tf_execution.table == (
+        "TransferRatio\tInputImpedance\tOutputImpedance\n"
+        "5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+    )
+    assert tf_execution.run_artifacts[0].analysis == "tf"
+    assert tf_execution.run_artifacts[0].result_rows == 1
+    assert tf_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert tf_execution.run_artifacts[0].measurement_names == []
+    assert tf_execution.run_artifacts[0].fourier_probes == []
+    assert tf_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"tf\t.tf\t{tf_execution.plan.line_number}\t1\t1\tV(mid)\t0\t\t0\t\n"
     )
 
     tran_window_execution = run_deck_analysis(

@@ -307,6 +307,7 @@ class DeckAnalysisPlan:
     analysis: str
     line_number: int
     source_name: str | None = None
+    output_node: str | None = None
     start_value: float | None = None
     stop_value: float | None = None
     step_value: float | None = None
@@ -964,7 +965,7 @@ def resolve_deck_analyses(netlist: str) -> DeckAnalysisSummary:
         if directive == ".end":
             end_line_number = line_number
             break
-        if directive in {".op", ".dc", ".ac", ".tran"}:
+        if directive in {".op", ".dc", ".ac", ".tran", ".tf"}:
             _resolve_analysis_line(stripped, line_number, directive, state)
             continue
         active_lines.append(stripped)
@@ -2439,6 +2440,8 @@ def _resolve_analysis_line(
         _resolve_ac_analysis(tokens, line_number, state)
     elif directive == ".tran":
         _resolve_tran_analysis(tokens, line_number, state)
+    elif directive == ".tf":
+        _resolve_tf_analysis(tokens, line_number, state)
 
 
 def _resolve_op_analysis(
@@ -2672,6 +2675,53 @@ def _resolve_tran_analysis(
             start_time=start_time,
             max_step=max_step,
             use_initial_conditions=use_initial_conditions,
+        )
+    )
+
+
+def _resolve_tf_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) != 3:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".tf",
+            line_number=line_number,
+            message=".tf requires output voltage probe and input source tokens",
+        )
+        return
+    output_probe = _normalize_deck_output_probe(_unquote_token(tokens[1]))
+    if output_probe is None or not output_probe.startswith("V("):
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".tf",
+            line_number=line_number,
+            message=f".tf output must be a voltage probe V(node), got {tokens[1]!r}",
+            token=tokens[1],
+        )
+        return
+    input_source = _unquote_token(tokens[2]).strip()
+    if not input_source:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".tf",
+            line_number=line_number,
+            message=".tf input source name must not be empty",
+            token=tokens[2],
+        )
+        return
+    state.analyses.append(
+        DeckAnalysisPlan(
+            directive=".tf",
+            analysis="tf",
+            line_number=line_number,
+            source_name=input_source,
+            output_node=output_probe[2:-1],
         )
     )
 
@@ -3070,6 +3120,8 @@ def _normalize_deck_analysis_name(analysis: str) -> str | None:
         return "ac"
     if normalized in {"tran", "transient"}:
         return "tran"
+    if normalized in {"tf", "transfer-function", "transferfunction"}:
+        return "tf"
     return None
 
 
