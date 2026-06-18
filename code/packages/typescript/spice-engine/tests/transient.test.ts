@@ -1466,9 +1466,10 @@ describe("transient", () => {
     expect(opExecution.runArtifacts[0]?.resultRows).toBe(1);
     expect(opExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
     expect(opExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(opExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(opExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
-        `op\t.op\t${opExecution.plan.lineNumber}\t1\t1\tV(mid)\t0\t\t0\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
+        `op\t.op\t${opExecution.plan.lineNumber}\t1\t1\tV(mid)\t0\t\t0\t\n`,
     );
 
     const dcExecution = runDeckAnalysis(circuit, netlist, "dc");
@@ -1488,9 +1489,10 @@ describe("transient", () => {
     expect(dcExecution.runArtifacts[0]?.analysis).toBe("dc");
     expect(dcExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)", "I(V1)"]);
     expect(dcExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_avg"]);
+    expect(dcExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(dcExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
-        `dc\t.dc\t${dcExecution.plan.lineNumber}\t2\t2\tV(mid);I(V1)\t1\tmid_avg\t0\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
+        `dc\t.dc\t${dcExecution.plan.lineNumber}\t2\t2\tV(mid);I(V1)\t1\tmid_avg\t0\t\n`,
     );
 
     const acExecution = runDeckAnalysis(circuit, netlist, "ac");
@@ -1507,9 +1509,10 @@ describe("transient", () => {
     );
     expect(acExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
     expect(acExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_peak"]);
+    expect(acExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(acExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
-        `ac\t.ac\t${acExecution.plan.lineNumber}\t1\t1\tV(mid)\t1\tmid_peak\t0\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
+        `ac\t.ac\t${acExecution.plan.lineNumber}\t1\t1\tV(mid)\t1\tmid_peak\t0\t\n`,
     );
 
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
@@ -1526,9 +1529,10 @@ describe("transient", () => {
     );
     expect(tranExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
     expect(tranExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_final"]);
+    expect(tranExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(tranExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
-        `tran\t.tran\t${tranExecution.plan.lineNumber}\t1\t1\tV(mid)\t1\tmid_final\t0\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
+        `tran\t.tran\t${tranExecution.plan.lineNumber}\t1\t1\tV(mid)\t1\tmid_final\t0\t\n`,
     );
 
     const tranWindowExecution = runDeckAnalysis(
@@ -1607,9 +1611,10 @@ describe("transient", () => {
     expect(tranExecution.runArtifacts[0]?.fourierCount).toBe(1);
     expect(tranExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
     expect(tranExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(tranExecution.runArtifacts[0]?.fourierProbes).toEqual(["V(mid)"]);
     expect(tranExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\n" +
-        `tran\t.tran\t${tranExecution.plan.lineNumber}\t2\t1\tV(mid)\t0\t\t1\n`,
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
+        `tran\t.tran\t${tranExecution.plan.lineNumber}\t2\t1\tV(mid)\t0\t\t1\tV(mid)\n`,
     );
   });
 

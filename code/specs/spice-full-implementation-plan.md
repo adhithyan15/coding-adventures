@@ -87,7 +87,8 @@ downstream tools to compare.
      stable Fourier tables; selected deck executions now include structured
      run-artifact summaries plus stable row/count tables for result rows,
      output probes, measurements, and Fourier artifacts, with normalized
-     output-probe and measurement name lists included in the run artifacts.
+     output-probe, measurement, and Fourier probe name lists included in the
+     run artifacts.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -750,13 +751,21 @@ downstream tools to compare.
       can inspect deck-owned measurement provenance without reparsing
       measurement tables.
 
+67. Deck run Fourier artifact probes.
+    - Status: completed in this deck run Fourier artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now include the
+      selected Fourier probe names inside selected-run artifacts alongside the
+      existing Fourier result counts.
+    - The stable run-artifact table now includes `FourierList`, so callers can
+      inspect deck-owned Fourier provenance without reparsing Fourier tables.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts beyond selected output and
-     measurement lists, Fourier metadata, and run summaries, plus output-plan
-     integration beyond stable table routing.
+     including richer deck-owned run artifacts beyond selected output,
+     measurement, and Fourier probe lists, plus output-plan integration beyond
+     stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
      selection toward full SPICE compatibility.

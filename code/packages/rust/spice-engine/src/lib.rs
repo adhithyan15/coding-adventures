@@ -3409,6 +3409,7 @@ pub struct DeckRunArtifact {
     pub measurement_count: usize,
     pub measurement_names: Vec<String>,
     pub fourier_count: usize,
+    pub fourier_probes: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -9804,17 +9805,21 @@ fn deck_run_artifacts(
             .map(|measurement| measurement.name.clone())
             .collect(),
         fourier_count: fourier.len(),
+        fourier_probes: fourier
+            .iter()
+            .flat_map(|result| result.probes.iter().map(|probe| probe.probe.clone()))
+            .collect(),
     }]
 }
 
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList"
             .to_string(),
     ];
     for artifact in artifacts {
         rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             artifact.analysis,
             artifact.directive,
             artifact.line_number,
@@ -9823,7 +9828,8 @@ pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
             artifact.output_probes.join(";"),
             artifact.measurement_count,
             artifact.measurement_names.join(";"),
-            artifact.fourier_count
+            artifact.fourier_count,
+            artifact.fourier_probes.join(";")
         ));
     }
     format!("{}\n", rows.join("\n"))

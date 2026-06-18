@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected Fourier probe names to selected-run artifacts in
+  `runDeckAnalysis` and render them in a stable `FourierList` column from
+  `formatDeckRunArtifactTable`, matching Python and Rust.
 - Add selected measurement names to selected-run artifacts in
   `runDeckAnalysis` and render them in a stable `MeasurementList` column from
   `formatDeckRunArtifactTable`, matching Python and Rust.

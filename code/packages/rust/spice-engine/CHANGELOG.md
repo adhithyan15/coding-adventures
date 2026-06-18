@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected Fourier probe names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `FourierList` column from
+  `format_deck_run_artifact_table`, matching Python and TypeScript.
 - Add selected measurement names to selected-run artifacts in
   `run_deck_analysis` and render them in a stable `MeasurementList` column
   from `format_deck_run_artifact_table`, matching Python and TypeScript.

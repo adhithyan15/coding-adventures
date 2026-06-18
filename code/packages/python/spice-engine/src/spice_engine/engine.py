@@ -2306,6 +2306,7 @@ class DeckRunArtifact:
     measurement_count: int
     measurement_names: list[str]
     fourier_count: int
+    fourier_probes: list[str]
 
 
 @dataclass(frozen=True)
@@ -2381,6 +2382,9 @@ def _deck_run_artifacts(
             measurement_count=len(measurements),
             measurement_names=[measurement.name for measurement in measurements],
             fourier_count=len(fourier),
+            fourier_probes=[
+                probe.probe for result in fourier for probe in result.probes
+            ],
         )
     ]
 
@@ -2389,7 +2393,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
     rows = [
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList"
     ]
     for artifact in artifacts:
         rows.append(
@@ -2404,6 +2408,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
                     str(artifact.measurement_count),
                     ";".join(artifact.measurement_names),
                     str(artifact.fourier_count),
+                    ";".join(artifact.fourier_probes),
                 ]
             )
         )
