@@ -97,6 +97,45 @@ worth it? — splits on call-site count:
 Substitution happens on the typed AST, so the precedence-aware
 `closure-emitter` adds any parentheses the new tree shape needs.
 
+## Beyond the expression shape — void multi-statement helpers (CLOC15)
+
+A real helper is usually several statements, not a single `return`. A
+second, statement-level path (the first slice of
+[CLOC15](../../../specs/CLOC15-multi-statement-inlining.md)) splices a
+**single-use void multi-statement helper** at its call site:
+
+```js
+function track(n, v) { const e = n + v; metrics.push(e); }
+track(a, b);
+// SIMPLE  ⇒  const c = a + b; metrics.push(c);
+```
+
+Replacing one call statement with several body statements is a 1 → N
+splice the expression walker (which only swaps an expression in place)
+structurally cannot do. It is admitted only under a tight, sound subset
+— each condition a hard reject:
+
+1. **Single-use, single-declaration** — name declared once, used once.
+2. **The use is a discarded statement call** (`track(…);`), not a value
+   position (`x = track(…)`). No result to capture (capture is a later
+   slice).
+3. **Straight-line body, no `return`** — each statement is an expression
+   statement or a `let`/`const` declaration; nothing else.
+4. **No `this` / `arguments`** — frame-bound, would rebind on a splice.
+5. **Callee locals alpha-renamed to program-fresh names** before
+   splicing — a spliced `let e` can never collide with the call-site
+   scope.
+6. **Free identifiers must be true globals** — declared nowhere, so
+   unshadowable at the splice site (a conservative bootstrap; a later
+   slice widens it via `closure-scope-analyzer`).
+7. **Side-effect-free arguments** — the same `is_simple_arg` gate.
+
+An unbraced single-statement slot (`if (c) f();`) gets the spliced body
+wrapped in a block; a real statement list is spliced flat. Later slices
+(tail `return`, value capture, `var` locals, `if`, multi-use) build on
+this same walker. As with the expression path, the now-dead declaration
+is left for `remove-unused-vars` / `treeshake`.
+
 ## Where this pass sits
 
 CLOC06 §"Canonical pass set" pins:
