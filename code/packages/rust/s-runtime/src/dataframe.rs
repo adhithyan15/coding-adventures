@@ -26,6 +26,7 @@ pub fn column_by_name(value: &SValue, name: &str) -> SResult<SValue> {
             .map(|i| items[i].clone())
             .unwrap_or(SValue::Null)),
         SValue::Classed { inner, .. } => column_by_name(inner, name),
+        SValue::Attributed { inner, .. } => column_by_name(inner, name),
         other => Err(SError::TypeError(format!(
             "$ operator is invalid for {}",
             other.type_name()
@@ -75,6 +76,7 @@ pub fn extract(value: &SValue, key: &SValue) -> SResult<SValue> {
             }
         },
         SValue::Classed { inner, .. } => extract(inner, key),
+        SValue::Attributed { inner, .. } => extract(inner, key),
         other => {
             // `x[[i]]` on a plain vector is single-element extraction.
             let pos = scalar_index(key)?;

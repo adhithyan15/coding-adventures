@@ -27,7 +27,11 @@ and the typed-`NA` constants) is handled in the shared evaluator.
 Recent additions reach R unchanged through this reuse: **named vectors (R-15)** —
 `c(a = 1, b = 2)` attaches names, `names(x)` / `names(x) <- value` /
 `setNames(x, nm)` get and set them, `x["b"]` indexes by name, and a named vector
-prints names above values instead of the `[i]` prefix.
+prints names above values instead of the `[i]` prefix. **General attributes
+(R-16)** — `attr(x, which)` / `attr(x, which) <- value` (`NULL` removes),
+`attributes(x)` / `attributes(x) <- list(...)`, and `structure(x, ...)` — also
+reach R unchanged; the special attributes stay consistent (`attr(x, "names")` ==
+`names(x)`, `attr(x, "class")` == `class(x)`, `attr(x, "dim")` == `dim(x)`).
 
 ## Usage
 

@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2026-06-17
+
+### Added
+
+- **General attributes — `attr()`, `attributes()`, `structure()` (R-16)** — R's
+  open key→value metadata map. A new transparent wrapper
+  `SValue::Attributed { attrs, inner }` stores the *general* (non-special)
+  attributes as an insertion-ordered association list beside a boxed inner value.
+  Like `Named`/`Classed` it is *see-through*: `length`, `type_name`, `class_of`,
+  the coercions, `arithmetic`, `compare`, `truthy`, `index`, `assign_index`, and
+  printing all delegate to `inner`; only the attribute builtins observe the map.
+  - The three **special** attributes keep their dedicated representations and are
+    *never* duplicated into the general map: `names` → `SValue::Named` (R-15),
+    `class` → `SValue::Classed` (S v2), `dim` → `SValue::Matrix` (R-11). This
+    makes the consistency invariant structural — `attr(x, "names")` reads the same
+    field as `names(x)`, `attr(x, "class")` agrees with `class(x)`/`class_of`, and
+    `attr(x, "dim")` agrees with the matrix `dim`.
+  - `attr(x, which)` gets one attribute (or `NULL`); `attr(x, which) <- value`
+    sets/replaces it (`NULL` removes), wired through R-15's replacement-function
+    lvalue path, now **generalized** to thread extra call arguments through
+    (`attr(x, "foo") <- v` desugars to ``x <- `attr<-`(x, "foo", value = v)``).
+  - `attributes(x)` returns all attributes as a named list (special ones first in
+    R's canonical `names`/`dim`/general order, `class` last) or `NULL`;
+    `attributes(x) <- list(...)` replaces the whole set; `NULL` clears it.
+  - `structure(x, ...)` (previously `class`-only) now routes *every* named
+    argument through the same per-name logic, so `dim`, `names`, and arbitrary
+    attributes all attach in one call. `.Names`/`.Dim` aliases are honoured.
+  - `dim`/`nrow`/`ncol`/`levels` peel the new transparent wrappers (and `names`
+    peels class/general but stops at the names wrapper) so a classed or
+    generally-attributed matrix/factor still reports its shape/levels.
+
+### Safety
+
+- The general attribute map is bounded by `MAX_ATTRIBUTES` (4096) — `attr<-`,
+  `attributes<-`, and `structure` refuse runaway growth from crafted input. A
+  `"dim"` set validates the reshape with checked multiplication against
+  `MAX_SEQ_LEN` before allocating. No `unwrap`/panic is reachable from malformed
+  `attributes(x) <- …` input: a non-list `value`, an unnamed element, a too-long
+  `names`, a non-integer `dim` component, or a non-conforming `dim` product all
+  return a clean `SError`.
+
 ## [0.11.0] - 2026-06-17
 
 ### Added

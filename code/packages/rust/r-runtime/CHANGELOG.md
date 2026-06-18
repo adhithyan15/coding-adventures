@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-06-17
+
+### Added (via the shared `s-runtime`)
+
+- **R-16 — general attributes**: `attr(x, which)` gets a named attribute (`NULL`
+  if absent); `attr(x, which) <- value` sets/replaces it (`NULL` removes);
+  `attributes(x)` gets all attributes as a named list (`NULL` if none);
+  `attributes(x) <- list(...)` replaces them (`NULL` clears); `structure(x, ...)`
+  returns `x` with the `...` named args attached as attributes. The special
+  attributes stay consistent with their dedicated wrappers — `attr(x, "names")`
+  == `names(x)` (R-15), `attr(x, "class")` == `class(x)` (S3), `attr(x, "dim")`
+  == `dim(x)` (R-11) — even after layering a class on a matrix, and setting `dim`
+  via `attr<-` reshapes a vector into a matrix. `attr<-`/`attributes<-` slot into
+  R-15's replacement-function lvalue path (now generalized to thread the `which`
+  argument through). See `s-runtime` 0.12.0.
+
 ## [0.10.0] - 2026-06-17
 
 ### Added (via the shared `s-runtime`)
