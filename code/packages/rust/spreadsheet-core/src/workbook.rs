@@ -893,6 +893,149 @@ impl Workbook {
         self.clipboard.is_some()
     }
 
+    // ----------------------------------------------------------------
+    // Persistence — serialize / deserialize (save / load)
+    // ----------------------------------------------------------------
+
+    /// Serialize the whole workbook to a portable JSON string — the engine side
+    /// of save. Captures every sheet's **source** cells (a formula's text, or a
+    /// literal's typed value) plus its **formats** (including formats on
+    /// otherwise-empty cells, which outlive content). Computed values are *not*
+    /// stored — [`deserialize`] recomputes them, so the file stays small and can
+    /// never disagree with the engine.
+    ///
+    /// Shape (version 1), cells and formats sorted by (row, col) for stable
+    /// output:
+    /// ```json
+    /// {"version":1,"sheets":[{"name":"Sheet1",
+    ///   "cells":[{"a1":"A1","value":{"number":15.0}},
+    ///            {"a1":"E1","formula":"=SUM(A1:D1)"}],
+    ///   "formats":[{"a1":"E1","code":"#,##0.00"}]}]}
+    /// ```
+    /// No I/O happens here — the caller writes the returned string wherever it
+    /// likes. Round-trips through [`deserialize`].
+    ///
+    /// [`deserialize`]: Workbook::deserialize
+    pub fn serialize(&self) -> String {
+        use serde_json::{json, Value};
+
+        let sheets: Vec<Value> = self
+            .sheets
+            .iter()
+            .map(|s| {
+                let mut cells: Vec<(&CellAddress, &Cell)> = s.cells.iter().collect();
+                cells.sort_by_key(|(a, _)| (a.row, a.col));
+                let cells_json: Vec<Value> = cells
+                    .iter()
+                    .filter_map(|(addr, cell)| match &cell.content {
+                        CellContent::Empty => None,
+                        CellContent::Formula { text, .. } => {
+                            Some(json!({ "a1": addr.to_a1(), "formula": text }))
+                        }
+                        CellContent::Value(v) => value_to_json(v)
+                            .map(|vj| json!({ "a1": addr.to_a1(), "value": vj })),
+                    })
+                    .collect();
+
+                let mut fmts: Vec<(&CellAddress, &String)> = s.formats.iter().collect();
+                fmts.sort_by_key(|(a, _)| (a.row, a.col));
+                let fmts_json: Vec<Value> = fmts
+                    .iter()
+                    .map(|(addr, code)| json!({ "a1": addr.to_a1(), "code": code }))
+                    .collect();
+
+                json!({ "name": s.name, "cells": cells_json, "formats": fmts_json })
+            })
+            .collect();
+
+        json!({ "version": 1, "sheets": sheets }).to_string()
+    }
+
+    /// Replace the workbook's contents from a JSON string produced by
+    /// [`serialize`] — the engine side of load. Clears all sheets, the
+    /// dependency graph, and the clipboard, rebuilds the sheets in file order
+    /// (so a single-sheet host keeps `SheetId(0)`), then `recalc_all` repopulates
+    /// every cached value and the revision clock advances once.
+    ///
+    /// Returns `Err` on malformed JSON, an unsupported `version`, a missing
+    /// `sheets` array, or a bad cell address — the workbook is only mutated once
+    /// the structure validates (the reset happens after the parse + version
+    /// check). A stored formula that no longer parses is kept as its literal text
+    /// rather than dropped, so no user input is silently lost.
+    ///
+    /// No I/O — the caller supplies the bytes it read from wherever.
+    ///
+    /// [`serialize`]: Workbook::serialize
+    pub fn deserialize(&mut self, data: &str) -> Result<(), String> {
+        use serde_json::Value;
+
+        let root: Value =
+            serde_json::from_str(data).map_err(|e| format!("invalid JSON: {e}"))?;
+        match root.get("version").and_then(Value::as_u64) {
+            Some(1) => {}
+            other => return Err(format!("unsupported workbook version: {other:?}")),
+        }
+        let sheets = root
+            .get("sheets")
+            .and_then(Value::as_array)
+            .ok_or_else(|| "missing 'sheets' array".to_string())?;
+
+        // Structure validated enough to commit: reset, then rebuild.
+        self.sheets.clear();
+        self.sheet_by_name.clear();
+        self.graph = DependencyGraph::new();
+        self.clipboard = None;
+        self.changes.clear();
+
+        for sj in sheets {
+            let name = sj
+                .get("name")
+                .and_then(Value::as_str)
+                .ok_or_else(|| "sheet missing 'name'".to_string())?;
+            let sheet = self.add_sheet(name);
+
+            if let Some(cells) = sj.get("cells").and_then(Value::as_array) {
+                for c in cells {
+                    let a1 = c
+                        .get("a1")
+                        .and_then(Value::as_str)
+                        .ok_or_else(|| "cell missing 'a1'".to_string())?;
+                    let addr = CellAddress::parse(a1)
+                        .map_err(|e| format!("bad cell address {a1:?}: {}", e.display()))?;
+                    if let Some(f) = c.get("formula").and_then(Value::as_str) {
+                        // Keep the text as a literal if it no longer parses, so a
+                        // saved formula is never silently lost on load.
+                        if self.set_formula(sheet, addr, f).is_err() {
+                            self.set_value(sheet, addr, CellValue::Text(f.to_string()));
+                        }
+                    } else if let Some(vj) = c.get("value") {
+                        self.set_value(sheet, addr, json_to_value(vj));
+                    }
+                }
+            }
+
+            if let Some(fmts) = sj.get("formats").and_then(Value::as_array) {
+                for f in fmts {
+                    let a1 = f
+                        .get("a1")
+                        .and_then(Value::as_str)
+                        .ok_or_else(|| "format missing 'a1'".to_string())?;
+                    let code = f
+                        .get("code")
+                        .and_then(Value::as_str)
+                        .ok_or_else(|| "format missing 'code'".to_string())?;
+                    let addr = CellAddress::parse(a1)
+                        .map_err(|e| format!("bad format address {a1:?}: {}", e.display()))?;
+                    self.set_format(sheet, addr, code);
+                }
+            }
+        }
+
+        self.recalc_all();
+        self.revision = self.revision.wrapping_add(1);
+        Ok(())
+    }
+
     /// Rebuild the entire cross-sheet dependency graph from the current formula
     /// ASTs. Used after a structural edit relocates addresses en masse, which
     /// invalidates every existing edge.
@@ -1048,6 +1191,58 @@ fn display_value(value: &CellValue, format: Option<&str>) -> String {
         CellValue::Text(s) => s.clone(),
         CellValue::Error(e) => e.display().to_string(),
     }
+}
+
+/// Encode a literal [`CellValue`] for [`Workbook::serialize`]. `Empty` returns
+/// `None` (nothing to store). A non-finite number can't be represented in JSON,
+/// so it degrades to its `#NUM!` error sentinel — the same way the value would
+/// read in the grid.
+fn value_to_json(v: &CellValue) -> Option<serde_json::Value> {
+    use serde_json::json;
+    match v {
+        CellValue::Empty => None,
+        CellValue::Boolean(b) => Some(json!({ "bool": b })),
+        CellValue::Number(n) if n.is_finite() => Some(json!({ "number": n })),
+        CellValue::Number(_) => Some(json!({ "error": SpreadsheetError::Num.display() })),
+        CellValue::Text(s) => Some(json!({ "text": s })),
+        CellValue::Error(e) => Some(json!({ "error": e.display() })),
+    }
+}
+
+/// Decode a `value` object from [`Workbook::deserialize`] back into a
+/// [`CellValue`]. Unknown / malformed shapes fall back to `Empty` rather than
+/// failing the whole load — a single odd cell shouldn't lose the rest of the
+/// sheet.
+fn json_to_value(vj: &serde_json::Value) -> CellValue {
+    if let Some(b) = vj.get("bool").and_then(serde_json::Value::as_bool) {
+        CellValue::Boolean(b)
+    } else if let Some(n) = vj.get("number").and_then(serde_json::Value::as_f64) {
+        CellValue::Number(n)
+    } else if let Some(t) = vj.get("text").and_then(serde_json::Value::as_str) {
+        CellValue::Text(t.to_string())
+    } else if let Some(code) = vj.get("error").and_then(serde_json::Value::as_str) {
+        error_from_code(code).map_or_else(|| CellValue::Text(code.to_string()), CellValue::Error)
+    } else {
+        CellValue::Empty
+    }
+}
+
+/// Reverse of [`SpreadsheetError::display`] — map a sentinel string back to its
+/// variant. Returns `None` for an unrecognised code.
+fn error_from_code(code: &str) -> Option<SpreadsheetError> {
+    Some(match code {
+        "#REF!" => SpreadsheetError::Ref,
+        "#NAME?" => SpreadsheetError::Name,
+        "#DIV/0!" => SpreadsheetError::DivZero,
+        "#VALUE!" => SpreadsheetError::Value,
+        "#N/A" => SpreadsheetError::NotAvailable,
+        "#NUM!" => SpreadsheetError::Num,
+        "#NULL!" => SpreadsheetError::Null,
+        "#CALC!" => SpreadsheetError::Calc,
+        "#SPILL!" => SpreadsheetError::Spill,
+        "#GETTING_DATA" => SpreadsheetError::GettingData,
+        _ => return None,
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -1861,5 +2056,82 @@ mod tests {
         let mut wb = Workbook::new();
         wb.copy(SheetId(9), CellRange::new(cell(1, 1), cell(2, 2)));
         assert!(!wb.has_clipboard());
+    }
+
+    // ── Persistence: serialize / deserialize ─────────────────────────
+
+    #[test]
+    fn serialize_then_deserialize_round_trips_values_formulas_and_formats() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("Sheet1");
+        wb.set_value(s, cell(1, 1), CellValue::Number(15.0)); // A1
+        wb.set_value(s, cell(1, 2), CellValue::Text("hi".into())); // B1
+        wb.set_value(s, cell(1, 3), CellValue::Boolean(true)); // C1
+        wb.set_formula(s, cell(2, 1), "=A1*2").unwrap(); // A2 = 30
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+        wb.set_format(s, cell(9, 9), "0%"); // a format on an otherwise-empty cell
+
+        let saved = wb.serialize();
+
+        // Load into a fresh workbook and confirm every cell recomputed identically.
+        let mut loaded = Workbook::new();
+        loaded.deserialize(&saved).unwrap();
+        let s2 = loaded.sheet_id("Sheet1").unwrap();
+        assert_eq!(loaded.get_value(s2, cell(1, 1)), Some(CellValue::Number(15.0)));
+        assert_eq!(loaded.get_value(s2, cell(1, 2)), Some(CellValue::Text("hi".into())));
+        assert_eq!(loaded.get_value(s2, cell(1, 3)), Some(CellValue::Boolean(true)));
+        assert_eq!(loaded.get_value(s2, cell(2, 1)), Some(CellValue::Number(30.0))); // formula recomputed
+        assert_eq!(loaded.get_format(s2, cell(1, 1)), Some("#,##0.00"));
+        assert_eq!(loaded.get_format(s2, cell(9, 9)), Some("0%")); // empty-cell format survived
+        // The formula re-evaluates against the loaded inputs (not a frozen value).
+        loaded.set_value(s2, cell(1, 1), CellValue::Number(100.0));
+        assert_eq!(loaded.get_value(s2, cell(2, 1)), Some(CellValue::Number(200.0)));
+        // Serializing the loaded workbook yields byte-identical JSON (stable order).
+        assert_eq!(wb.serialize(), saved);
+    }
+
+    #[test]
+    fn deserialize_replaces_existing_contents() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("Sheet1");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        let saved = wb.serialize(); // a sheet with only A1=1
+
+        // Pre-fill a different workbook, then load over it.
+        let mut other = Workbook::new();
+        let os = other.add_sheet("Sheet1");
+        other.set_value(os, cell(5, 5), CellValue::Number(999.0)); // E5 — should vanish
+        other.deserialize(&saved).unwrap();
+        let s2 = other.sheet_id("Sheet1").unwrap();
+        assert_eq!(other.get_value(s2, cell(1, 1)), Some(CellValue::Number(1.0)));
+        assert_eq!(other.get_value(s2, cell(5, 5)), None); // replaced, not merged
+        assert_eq!(other.sheet_count(), 1);
+    }
+
+    #[test]
+    fn deserialize_rejects_bad_json_and_bad_version() {
+        let mut wb = Workbook::new();
+        wb.add_sheet("Sheet1");
+        assert!(wb.deserialize("not json").is_err());
+        assert!(wb.deserialize(r#"{"version":99,"sheets":[]}"#).is_err());
+        assert!(wb.deserialize(r#"{"version":1}"#).is_err()); // missing sheets
+        // A valid empty workbook loads fine (zero sheets).
+        assert!(wb.deserialize(r#"{"version":1,"sheets":[]}"#).is_ok());
+        assert_eq!(wb.sheet_count(), 0);
+    }
+
+    #[test]
+    fn deserialize_keeps_an_unparseable_formula_as_text() {
+        // A corrupt/old formula that no longer parses is preserved as literal
+        // text rather than silently dropped.
+        let mut wb = Workbook::new();
+        let json = r#"{"version":1,"sheets":[{"name":"Sheet1",
+            "cells":[{"a1":"A1","formula":"=THIS IS NOT A FORMULA"}],"formats":[]}]}"#;
+        wb.deserialize(json).unwrap();
+        let s = wb.sheet_id("Sheet1").unwrap();
+        assert_eq!(
+            wb.get_value(s, cell(1, 1)),
+            Some(CellValue::Text("=THIS IS NOT A FORMULA".into()))
+        );
     }
 }

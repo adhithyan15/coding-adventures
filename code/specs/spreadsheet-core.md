@@ -713,17 +713,39 @@ Without `enabled = true`, every cell in a cycle gets `Error(Ref)`.
 
 ## §16 Persistence
 
-Out of scope for this crate. Loading and saving XLSX files lives in a
-future `xlsx-io` crate. This crate exposes:
+The engine ships a small **portable JSON** save/load format — enough for a host
+to persist and reload a sheet without any file-format machinery. *No I/O happens
+in the crate*: `serialize` returns a `String`, `deserialize` takes a `&str`, and
+the host writes/reads the bytes wherever it likes (a file, `localStorage`, a
+text field).
 
 ```rust
-pub fn workbook_from_grid(rows: &[&[Cell]]) -> Workbook;
-pub fn workbook_to_grid(wb: &Workbook) -> Vec<Vec<Cell>>;
+pub fn serialize(&self) -> String;
+pub fn deserialize(&mut self, data: &str) -> Result<(), String>;
 ```
 
-— enough for in-memory construction and inspection. Round-tripping
-through XLSX (with all the file format's quirks) is the next layer
-up.
+What is stored is **source, not computed state**: per sheet, each cell as either
+a formula's text or a literal's typed value, plus the per-cell format codes
+(including formats on otherwise-empty cells). Computed values are recomputed by
+`deserialize` (via `recalc_all`), so the file is small and can never disagree
+with the engine. Cells and formats are emitted sorted by (row, col), so the
+output is stable — equal workbooks serialize byte-for-byte identically.
+
+```json
+{"version":1,"sheets":[{"name":"Sheet1",
+  "cells":[{"a1":"A1","value":{"number":15.0}},
+           {"a1":"E1","formula":"=SUM(A1:D1)"}],
+  "formats":[{"a1":"E1","code":"#,##0.00"}]}]}
+```
+
+A literal value is `{"number":n}` / `{"text":s}` / `{"bool":b}` /
+`{"error":"#REF!"}`; a non-finite number degrades to `#NUM!` (JSON has no
+NaN/∞). `deserialize` validates the JSON, `version`, and `sheets` array *before*
+mutating (a bad file leaves the workbook untouched), rebuilds sheets in file
+order (a single-sheet host keeps `SheetId(0)`), and keeps an unparseable stored
+formula as its literal text rather than dropping it. Loading and saving **XLSX**
+(with all the file format's quirks) remains out of scope — that's a future
+`xlsx-io` layer on top of this.
 
 ---
 
