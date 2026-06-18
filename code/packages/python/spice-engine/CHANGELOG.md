@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck control introspection marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `status`, `version`, and `help` UI introspection
+  commands as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript. Actual console/help output remains
+  out of scope for these markers.
+
 - **Deck control show marker routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
   `.control` block read-only `show` and `showmod` device/model inspection

@@ -137,6 +137,9 @@ display all
 listing physical
 show all
 showmod Q1
+status
+version
+help tran
 run
 quit
 .endc
@@ -262,6 +265,9 @@ four 2k V(b)
 .listing deck
 .show all
 .showmod Q1
+.status
+.version
+.help tran
 run
 .quit
 .endc

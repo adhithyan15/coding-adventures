@@ -142,7 +142,8 @@ option, vector-name/single-scale rawfile output toggles (`set wr_vecnames`,
 plus target-bearing rawfile-write markers (`write <rawfile> [probes...]`) and
 ASCII data-write markers (`wrdata <file> <probes...>`) are accepted as no-op
 control markers. Read-only control inspection commands (`display`, `listing`,
-`show`, and `showmod`) are also accepted as no-op markers. Other
+`show`, `showmod`, `status`, `version`, and `help`) are also accepted as no-op
+markers. Other
 unrecognized non-comment commands emit diagnostics until a broader executed
 control subset is in scope.
 `resolveDeckSources` is the first include/library resolution layer: callers
