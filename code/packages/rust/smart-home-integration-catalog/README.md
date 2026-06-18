@@ -51,6 +51,8 @@ runtime and Chief of Staff tools a typed catalog for:
   multi-platform primitive-backlog rows
 - ecosystem platform coverage rollups that show which surveyed platform
   lessons overlap a priority-bounded reusable primitive backlog
+- low-level Zigbee, Z-Wave, and Thread primitive-readiness rows and summaries
+  for checking radio substrate, controller, network-key, and supervision gaps
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and

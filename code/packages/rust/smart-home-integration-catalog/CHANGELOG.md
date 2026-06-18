@@ -160,6 +160,9 @@ All notable changes to this package will be documented in this file.
 - Integration readiness gap inventories that group missing primitive families,
   capability grants, and delegated integration dependencies by affected
   integrations.
+- Mesh protocol primitive readiness rows and summaries for checking Zigbee,
+  Z-Wave, and Thread controller, radio substrate, network-key, and supervision
+  gaps before low-level activation work.
 - Computed policy-surface helpers so Chief of Staff tools can identify camera,
   entry-access, climate, energy, cloud, credential, radio-network, and local
   actuation review boundaries before activating integrations.
