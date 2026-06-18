@@ -212,6 +212,20 @@ export function createEngine(wasmBytes) {
           return ok === 1;
         },
 
+        // ── Undo / redo (session history) ────────────────────────────
+        // Snapshot-based history: every mutating edit is undoable, and a
+        // restored formula stays live. Re-read via getWindow / getDisplayWindow
+        // / getRaw after an undo/redo that returns true.
+
+        /** Undo the most recent edit. Returns `true` if something was undone. */
+        undo: () => ex.undo() === 1,
+        /** Redo the most recently undone edit. Returns `true` if something was redone. */
+        redo: () => ex.redo() === 1,
+        /** `true` if there is an edit to undo (enable/disable an Undo control). */
+        canUndo: () => ex.can_undo() === 1,
+        /** `true` if there is an undone edit to redo. */
+        canRedo: () => ex.can_redo() === 1,
+
         // ── Viewport primitive (virtualized infinite sheet) ──────────
         // A scrolling host renders only the visible window of an unbounded
         // sheet: getWindow for the visible rectangle, usedRange for scrollbar
