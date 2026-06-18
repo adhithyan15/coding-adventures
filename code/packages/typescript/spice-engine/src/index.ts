@@ -660,6 +660,7 @@ export interface DeckRunArtifact {
   readonly lineNumber: number;
   readonly resultRows: number;
   readonly outputProbeCount: number;
+  readonly outputProbes: readonly string[];
   readonly measurementCount: number;
   readonly fourierCount: number;
 }
@@ -7621,6 +7622,7 @@ function deckRunArtifacts(
       lineNumber: plan.lineNumber,
       resultRows: deckResultRowCount(result),
       outputProbeCount: outputProbes.length,
+      outputProbes: [...outputProbes],
       measurementCount: measurements.length,
       fourierCount: fourier.length,
     },
@@ -7629,7 +7631,7 @@ function deckRunArtifacts(
 
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [
-    "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier",
+    "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier",
   ];
   for (const artifact of artifacts) {
     rows.push(
@@ -7639,6 +7641,7 @@ export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]
         String(artifact.lineNumber),
         String(artifact.resultRows),
         String(artifact.outputProbeCount),
+        artifact.outputProbes.join(";"),
         String(artifact.measurementCount),
         String(artifact.fourierCount),
       ].join("\t"),

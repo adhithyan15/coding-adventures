@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add normalized output-probe names to selected-run artifacts in
+  `runDeckAnalysis` and render them in a stable `OutputProbeList` column from
+  `formatDeckRunArtifactTable`, matching Python and Rust.
 - Emit explicit policy diagnostics for selected `.control` block
   variable/state mutation commands, including `let`, `alter`, `alterparam`,
   `set`, and `unset`, in `analyzeDeckControls` and `resolveDeckSources`,

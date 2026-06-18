@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck run output-probe artifact names** —
+  `run_deck_analysis()` selected-run artifacts now include the normalized
+  output-probe names alongside the output-probe count, and
+  `format_deck_run_artifact_table()` renders a stable `OutputProbeList`
+  column, matching Rust and TypeScript.
+
 - **Deck control variable policy diagnostics** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
   policy diagnostics for selected `.control` block variable/state mutation

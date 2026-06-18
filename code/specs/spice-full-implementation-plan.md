@@ -86,7 +86,8 @@ downstream tools to compare.
      travel with deck execution results as structured Fourier artifacts plus
      stable Fourier tables; selected deck executions now include structured
      run-artifact summaries plus stable row/count tables for result rows,
-     output probes, measurements, and Fourier artifacts.
+     output probes, measurements, and Fourier artifacts, with normalized
+     output-probe name lists included in the run artifacts.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -731,13 +732,22 @@ downstream tools to compare.
       non-comment commands inside `.control` blocks remain diagnostic-only so
       unsupported execution policy is explicit.
 
+65. Deck run output-probe artifact names.
+    - Status: completed in this deck run output-probe artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now include the
+      normalized output-probe names inside selected-run artifacts alongside
+      the existing output-probe counts.
+    - The stable run-artifact table now includes `OutputProbeList`, so callers
+      can inspect deck-owned probe provenance without reparsing solver output
+      tables.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts beyond selected output probes,
-     selected measurement artifacts, selected Fourier artifacts, and selected
-     run summaries, plus output-plan integration beyond stable table routing.
+     including richer deck-owned run artifacts beyond selected output,
+     measurement, Fourier, and run-summary metadata, plus output-plan
+     integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
      selection toward full SPICE compatibility.

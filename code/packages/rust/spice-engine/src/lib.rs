@@ -3405,6 +3405,7 @@ pub struct DeckRunArtifact {
     pub line_number: usize,
     pub result_rows: usize,
     pub output_probe_count: usize,
+    pub output_probes: Vec<String>,
     pub measurement_count: usize,
     pub fourier_count: usize,
 }
@@ -9795,6 +9796,7 @@ fn deck_run_artifacts(
         line_number: plan.line_number,
         result_rows,
         output_probe_count: output_probes.len(),
+        output_probes: output_probes.to_vec(),
         measurement_count: measurements.len(),
         fourier_count: fourier.len(),
     }]
@@ -9802,16 +9804,18 @@ fn deck_run_artifacts(
 
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier".to_string(),
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tFourier"
+            .to_string(),
     ];
     for artifact in artifacts {
         rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             artifact.analysis,
             artifact.directive,
             artifact.line_number,
             artifact.result_rows,
             artifact.output_probe_count,
+            artifact.output_probes.join(";"),
             artifact.measurement_count,
             artifact.fourier_count
         ));
