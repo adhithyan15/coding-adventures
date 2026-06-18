@@ -81,6 +81,9 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_mesh_substrate_actions` and
   `smart_home.get_integration_mesh_action_readiness_summary` descriptors for
   read-only D23 mesh substrate action and action-readiness planning.
+- `smart_home.get_integration_mesh_release_readiness_summary` descriptor for
+  read-only D23 mesh release-readiness rollups across package, stage, action,
+  and remediation blockers.
 - `smart_home.list_integration_mesh_readiness_handoffs` and
   `smart_home.get_integration_mesh_readiness_handoff_summary` descriptors for
   read-only D23 mesh readiness handoff planning.

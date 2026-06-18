@@ -1599,6 +1599,7 @@ pub enum SmartHomeTool {
     GetIntegrationMeshReadinessPackageSummary,
     GetIntegrationMeshStageReleaseSummary,
     GetIntegrationMeshActionReadinessSummary,
+    GetIntegrationMeshReleaseReadinessSummary,
     ListIntegrationMeshReadinessHandoffs,
     GetIntegrationMeshReadinessHandoffSummary,
     Discover,
@@ -2094,6 +2095,9 @@ impl SmartHomeTool {
             }
             Self::GetIntegrationMeshActionReadinessSummary => {
                 read_tool("smart_home.get_integration_mesh_action_readiness_summary")
+            }
+            Self::GetIntegrationMeshReleaseReadinessSummary => {
+                read_tool("smart_home.get_integration_mesh_release_readiness_summary")
             }
             Self::ListIntegrationMeshReadinessHandoffs => {
                 read_tool("smart_home.list_integration_mesh_readiness_handoffs")
@@ -2860,6 +2864,7 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetIntegrationMeshReadinessPackageSummary,
         SmartHomeTool::GetIntegrationMeshStageReleaseSummary,
         SmartHomeTool::GetIntegrationMeshActionReadinessSummary,
+        SmartHomeTool::GetIntegrationMeshReleaseReadinessSummary,
         SmartHomeTool::ListIntegrationMeshReadinessHandoffs,
         SmartHomeTool::GetIntegrationMeshReadinessHandoffSummary,
         SmartHomeTool::Discover,
@@ -3696,7 +3701,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 195);
+        assert_eq!(catalog.len(), 196);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_integrations"
@@ -3941,6 +3946,7 @@ mod tests {
             "smart_home.get_integration_mesh_readiness_package_summary",
             "smart_home.get_integration_mesh_stage_release_summary",
             "smart_home.get_integration_mesh_action_readiness_summary",
+            "smart_home.get_integration_mesh_release_readiness_summary",
             "smart_home.list_integration_mesh_readiness_handoffs",
             "smart_home.get_integration_mesh_readiness_handoff_summary",
         ] {
@@ -4463,15 +4469,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 195);
-        assert_eq!(summary.read_tools, 187);
+        assert_eq!(summary.total_tools, 196);
+        assert_eq!(summary.read_tools, 188);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 187);
+        assert_eq!(summary.read_only_tier_tools, 188);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 195);
+        assert_eq!(summary.total_required_capabilities, 196);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());

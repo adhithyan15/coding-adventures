@@ -57,8 +57,8 @@ Chief of Staff job/session/agent
      lane rollups
   -> mesh primitive-readiness, substrate-stage, and substrate-action reads for
      low-level protocol release blockers
-  -> mesh readiness package, stage-release, and action-readiness reads for
-     release go/no-go
+  -> mesh readiness package, stage-release, action-readiness, and
+     release-readiness reads for release go/no-go
   -> mesh readiness handoff list and summary reads for release coordination
   -> activation-dossier list and summary reads for bundled decision evidence
   -> activation-dashboard list and summary reads for priority-wave status cards
@@ -149,6 +149,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_mesh_readiness_package_summary`
 - `smart_home.get_integration_mesh_stage_release_summary`
 - `smart_home.get_integration_mesh_action_readiness_summary`
+- `smart_home.get_integration_mesh_release_readiness_summary`
 - `smart_home.list_integration_mesh_readiness_handoffs`
 - `smart_home.get_integration_mesh_readiness_handoff_summary`
 - `smart_home.list_integration_activation_dossiers`
