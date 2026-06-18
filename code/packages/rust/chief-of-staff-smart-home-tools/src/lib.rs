@@ -43,7 +43,9 @@ use smart_home_integration_catalog::{
     activation_delivery_manifests_from_release_packets, activation_dependency_graph_from_reports,
     activation_deployment_records_from_delivery_manifests, activation_dossiers_from_candidates,
     activation_escalation_cases_from_rollups, activation_evidence_from_candidates,
+    activation_evidence_lane_inventory_at_or_before_priority,
     activation_evidence_remediation_items_at_or_before_priority,
+    activation_evidence_scorecard_summary_at_or_before_priority,
     activation_execution_packets_from_handoff_packages,
     activation_forecasts_from_timeline_milestones, activation_guardrail_checks_from_rollups,
     activation_handoff_packages_from_runbook_entries, activation_health_from_candidates,
@@ -93,24 +95,26 @@ use smart_home_integration_catalog::{
     IntegrationActivationEscalationCase, IntegrationActivationEscalationCaseKind,
     IntegrationActivationEscalationSummary, IntegrationActivationEvidenceItem,
     IntegrationActivationEvidenceKind, IntegrationActivationEvidenceLane,
+    IntegrationActivationEvidenceLaneInventoryItem,
+    IntegrationActivationEvidenceLaneInventorySummary,
     IntegrationActivationEvidenceRemediationItem, IntegrationActivationEvidenceRemediationKind,
-    IntegrationActivationEvidenceRemediationSummary, IntegrationActivationEvidenceStatus,
-    IntegrationActivationEvidenceSummary, IntegrationActivationExecutionPacket,
-    IntegrationActivationExecutionStatus, IntegrationActivationExecutionSummary,
-    IntegrationActivationForecastAction, IntegrationActivationForecastItem,
-    IntegrationActivationForecastSummary, IntegrationActivationGuardrailCheck,
-    IntegrationActivationGuardrailKind, IntegrationActivationGuardrailSummary,
-    IntegrationActivationGuardrailVerdict, IntegrationActivationHandoffPackage,
-    IntegrationActivationHandoffStatus, IntegrationActivationHandoffSummary,
-    IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
-    IntegrationActivationHealthSummary, IntegrationActivationIncidentAction,
-    IntegrationActivationIncidentBrief, IntegrationActivationIncidentSeverity,
-    IntegrationActivationIncidentSummary, IntegrationActivationMaintenanceSummary,
-    IntegrationActivationMaintenanceWindow, IntegrationActivationObservabilityProbe,
-    IntegrationActivationObservabilityStatus, IntegrationActivationObservabilitySummary,
-    IntegrationActivationOperatorTask, IntegrationActivationOperatorTaskKind,
-    IntegrationActivationOperatorTaskSummary, IntegrationActivationPlan,
-    IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
+    IntegrationActivationEvidenceRemediationSummary, IntegrationActivationEvidenceScorecardSummary,
+    IntegrationActivationEvidenceStatus, IntegrationActivationEvidenceSummary,
+    IntegrationActivationExecutionPacket, IntegrationActivationExecutionStatus,
+    IntegrationActivationExecutionSummary, IntegrationActivationForecastAction,
+    IntegrationActivationForecastItem, IntegrationActivationForecastSummary,
+    IntegrationActivationGuardrailCheck, IntegrationActivationGuardrailKind,
+    IntegrationActivationGuardrailSummary, IntegrationActivationGuardrailVerdict,
+    IntegrationActivationHandoffPackage, IntegrationActivationHandoffStatus,
+    IntegrationActivationHandoffSummary, IntegrationActivationHealthStage,
+    IntegrationActivationHealthStatus, IntegrationActivationHealthSummary,
+    IntegrationActivationIncidentAction, IntegrationActivationIncidentBrief,
+    IntegrationActivationIncidentSeverity, IntegrationActivationIncidentSummary,
+    IntegrationActivationMaintenanceSummary, IntegrationActivationMaintenanceWindow,
+    IntegrationActivationObservabilityProbe, IntegrationActivationObservabilityStatus,
+    IntegrationActivationObservabilitySummary, IntegrationActivationOperatorTask,
+    IntegrationActivationOperatorTaskKind, IntegrationActivationOperatorTaskSummary,
+    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
     IntegrationActivationPlaybookSummary, IntegrationActivationPlaybookView,
     IntegrationActivationReadoutStage, IntegrationActivationReadoutSummary,
     IntegrationActivationReleasePacket, IntegrationActivationReleaseStatus,
@@ -297,6 +301,12 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_TOOL_ID: &
     "smart_home.list_integration_activation_evidence_remediation";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_evidence_remediation_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_TOOL_ID: &str =
+    "smart_home.list_integration_activation_evidence_lane_inventory";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_evidence_lane_inventory_summary";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SCORECARD_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_evidence_scorecard_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID: &str =
     "smart_home.list_integration_activation_dossiers";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID: &str =
@@ -730,6 +740,30 @@ impl SmartHomeToolBridge {
                     let query = integration_activation_evidence_remediation_query(&arguments)?;
                     Ok(
                         get_integration_activation_evidence_remediation_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_TOOL_ID => {
+                    let query = integration_activation_evidence_lane_inventory_query(&arguments)?;
+                    Ok(
+                        list_integration_activation_evidence_lane_inventory_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_evidence_lane_inventory_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_evidence_lane_inventory_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SCORECARD_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_candidate_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_evidence_scorecard_summary_output_handler_output(
                             query,
                         ),
                     )
@@ -2380,6 +2414,51 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation evidence remediation summary",
             "Return compact counts for D23A activation evidence remediation lanes, missing inputs, blocked integrations, and human-review pressure.",
             integration_activation_evidence_remediation_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_TOOL_ID,
+            "List smart-home integration activation evidence lane inventory",
+            "List D23A catalog-owned activation evidence blocker lanes grouped by evidence lane before Chief-specific remediation planning.",
+            integration_activation_evidence_lane_inventory_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_evidence_lane_inventory", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_evidence_lane_inventory",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation evidence lane inventory summary",
+            "Return compact counts for D23A activation evidence blocker lanes, missing inputs, and human-review pressure.",
+            integration_activation_evidence_lane_inventory_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SCORECARD_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation evidence scorecard summary",
+            "Return compact D23A scorecard counts for evidence-ready integrations, blocker lanes, missing inputs, and policy tier pressure.",
+            integration_activation_evidence_scorecard_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -6565,6 +6644,16 @@ struct IntegrationActivationEvidenceRemediationQuery {
     requires_human_review: Option<bool>,
     has_missing_inputs: Option<bool>,
     remediation_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationEvidenceLaneInventoryQuery {
+    candidates: IntegrationActivationCandidateQuery,
+    lane: Option<IntegrationActivationEvidenceLane>,
+    has_blockers: Option<bool>,
+    requires_human_review: Option<bool>,
+    has_missing_inputs: Option<bool>,
+    inventory_limit: Option<usize>,
 }
 
 #[derive(Debug, Clone)]
@@ -14353,6 +14442,43 @@ fn integration_activation_evidence_remediation_query(
     })
 }
 
+fn integration_activation_evidence_lane_inventory_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationEvidenceLaneInventoryQuery, ToolCallError> {
+    let lane = optional_string(arguments, "evidence_lane_inventory_lane")?
+        .or(optional_string(arguments, "lane")?)
+        .map(|label| parse_activation_evidence_lane(&label))
+        .transpose()?;
+    let inventory_limit = optional_u64(arguments, "evidence_lane_inventory_limit")?
+        .or(optional_u64(arguments, "lane_inventory_limit")?)
+        .or(optional_u64(arguments, "inventory_limit")?)
+        .map(|value| value as usize);
+
+    Ok(IntegrationActivationEvidenceLaneInventoryQuery {
+        candidates: integration_activation_candidate_query(arguments)?,
+        lane,
+        has_blockers: optional_bool(arguments, "evidence_lane_inventory_has_blockers")?
+            .or(optional_bool(arguments, "lane_inventory_has_blockers")?)
+            .or(optional_bool(arguments, "inventory_has_blockers")?),
+        requires_human_review: optional_bool(
+            arguments,
+            "evidence_lane_inventory_requires_human_review",
+        )?
+        .or(optional_bool(
+            arguments,
+            "lane_inventory_requires_human_review",
+        )?)
+        .or(optional_bool(arguments, "inventory_requires_human_review")?),
+        has_missing_inputs: optional_bool(arguments, "evidence_lane_inventory_has_missing_inputs")?
+            .or(optional_bool(
+                arguments,
+                "lane_inventory_has_missing_inputs",
+            )?)
+            .or(optional_bool(arguments, "inventory_has_missing_inputs")?),
+        inventory_limit,
+    })
+}
+
 fn integration_activation_dossier_query(
     arguments: &JsonValue,
 ) -> Result<IntegrationActivationDossierQuery, ToolCallError> {
@@ -16788,6 +16914,55 @@ fn integration_activation_evidence_remediation_items_for_query(
     }
 
     (remediations, catalog_count)
+}
+
+fn integration_activation_evidence_lane_inventory_for_query(
+    query: &IntegrationActivationEvidenceLaneInventoryQuery,
+) -> (Vec<IntegrationActivationEvidenceLaneInventoryItem>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let readiness = &query.candidates.readiness;
+    let mut inventory = activation_evidence_lane_inventory_at_or_before_priority(
+        &catalog,
+        readiness.priority_at_or_before,
+        &readiness.available_primitives,
+        &readiness.allowed_capabilities,
+        &readiness.enabled_integrations,
+    );
+
+    if let Some(lane) = query.lane {
+        inventory.retain(|item| item.lane == lane);
+    }
+    if let Some(has_blockers) = query.has_blockers {
+        inventory.retain(|item| item.has_blockers() == has_blockers);
+    }
+    if let Some(requires_human_review) = query.requires_human_review {
+        inventory.retain(|item| item.requires_human_review() == requires_human_review);
+    }
+    if let Some(has_missing_inputs) = query.has_missing_inputs {
+        inventory.retain(|item| {
+            activation_evidence_lane_inventory_item_has_missing_inputs(item) == has_missing_inputs
+        });
+    }
+    if let Some(limit) = query.inventory_limit {
+        inventory.truncate(limit);
+    }
+
+    (inventory, catalog_count)
+}
+
+fn integration_activation_evidence_scorecard_summary_for_query(
+    query: &IntegrationActivationCandidateQuery,
+) -> IntegrationActivationEvidenceScorecardSummary {
+    let catalog = first_party_catalog();
+    let readiness = &query.readiness;
+    activation_evidence_scorecard_summary_at_or_before_priority(
+        &catalog,
+        readiness.priority_at_or_before,
+        &readiness.available_primitives,
+        &readiness.allowed_capabilities,
+        &readiness.enabled_integrations,
+    )
 }
 
 fn integration_activation_dossiers_for_query(
@@ -20211,6 +20386,116 @@ fn get_integration_activation_evidence_remediation_summary_output_handler_output
                 "requires_human_review",
                 JsonValue::Bool(summary.requires_human_review()),
             ),
+        ]),
+    )
+}
+
+fn list_integration_activation_evidence_lane_inventory_output_handler_output(
+    query: IntegrationActivationEvidenceLaneInventoryQuery,
+) -> ToolHandlerOutput {
+    let (inventory, catalog_count) =
+        integration_activation_evidence_lane_inventory_for_query(&query);
+    let summary = IntegrationActivationEvidenceLaneInventorySummary::from_items(inventory.iter());
+    let count = inventory.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_evidence_lane_inventory",
+            JsonValue::Array(
+                inventory
+                    .iter()
+                    .map(activation_evidence_lane_inventory_item_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_evidence_lane_inventory_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_evidence_lane_inventory"),
+            ),
+            ("lanes", integer(count as i64)),
+            (
+                "blocked_integrations",
+                integer(summary.total_blocked_integrations as i64),
+            ),
+            (
+                "readiness_lane_blocked_integrations",
+                integer(summary.readiness_lane_blocked_integrations as i64),
+            ),
+            ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ]),
+    )
+}
+
+fn get_integration_activation_evidence_lane_inventory_summary_output_handler_output(
+    query: IntegrationActivationEvidenceLaneInventoryQuery,
+) -> ToolHandlerOutput {
+    let (inventory, _) = integration_activation_evidence_lane_inventory_for_query(&query);
+    let summary = IntegrationActivationEvidenceLaneInventorySummary::from_items(inventory.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_evidence_lane_inventory_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_evidence_lane_inventory_summary"),
+            ),
+            ("total_lanes", integer(summary.total_lanes as i64)),
+            (
+                "blocked_integrations",
+                integer(summary.total_blocked_integrations as i64),
+            ),
+            (
+                "readiness_lane_blocked_integrations",
+                integer(summary.readiness_lane_blocked_integrations as i64),
+            ),
+            ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ]),
+    )
+}
+
+fn get_integration_activation_evidence_scorecard_summary_output_handler_output(
+    query: IntegrationActivationCandidateQuery,
+) -> ToolHandlerOutput {
+    let summary = integration_activation_evidence_scorecard_summary_for_query(&query);
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_evidence_scorecard_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_evidence_scorecard_summary"),
+            ),
+            (
+                "total_integrations",
+                integer(summary.total_integrations as i64),
+            ),
+            (
+                "blocked_integrations",
+                integer(summary.blocked_integrations as i64),
+            ),
+            (
+                "total_blocked_evidence_lanes",
+                integer(summary.total_blocked_evidence_lanes as i64),
+            ),
+            ("has_blockers", JsonValue::Bool(summary.has_blockers())),
         ]),
     )
 }
@@ -28720,6 +29005,288 @@ fn integration_activation_evidence_remediation_summary_json(
         (
             "requires_human_review",
             JsonValue::Bool(summary.requires_human_review()),
+        ),
+    ])
+}
+
+fn activation_evidence_lane_inventory_item_has_missing_inputs(
+    item: &IntegrationActivationEvidenceLaneInventoryItem,
+) -> bool {
+    item.missing_prerequisite_count > 0
+        || item.missing_primitive_count > 0
+        || item.missing_capability_count > 0
+        || item.missing_dependency_count > 0
+}
+
+fn activation_evidence_lane_inventory_item_json(
+    item: &IntegrationActivationEvidenceLaneInventoryItem,
+) -> JsonValue {
+    object([
+        ("lane", string(item.lane.as_str())),
+        (
+            "first_blocked_priority",
+            integer(item.first_blocked_priority as i64),
+        ),
+        (
+            "blocked_integration_count",
+            integer(item.blocked_integration_count as i64),
+        ),
+        (
+            "missing_prerequisite_count",
+            integer(item.missing_prerequisite_count as i64),
+        ),
+        (
+            "missing_primitive_count",
+            integer(item.missing_primitive_count as i64),
+        ),
+        (
+            "missing_capability_count",
+            integer(item.missing_capability_count as i64),
+        ),
+        (
+            "missing_dependency_count",
+            integer(item.missing_dependency_count as i64),
+        ),
+        (
+            "local_only_integrations",
+            integer(item.local_only_integrations as i64),
+        ),
+        (
+            "cloud_required_integrations",
+            integer(item.cloud_required_integrations as i64),
+        ),
+        (
+            "human_review_integrations",
+            integer(item.human_review_integrations as i64),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(item.highest_policy_tier)),
+        ),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                item.integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        ("has_blockers", JsonValue::Bool(item.has_blockers())),
+        (
+            "requires_human_review",
+            JsonValue::Bool(item.requires_human_review()),
+        ),
+        (
+            "has_missing_inputs",
+            JsonValue::Bool(activation_evidence_lane_inventory_item_has_missing_inputs(
+                item,
+            )),
+        ),
+    ])
+}
+
+fn integration_activation_evidence_lane_inventory_summary_json(
+    summary: &IntegrationActivationEvidenceLaneInventorySummary,
+) -> JsonValue {
+    object([
+        ("total_lanes", integer(summary.total_lanes as i64)),
+        (
+            "total_blocked_integrations",
+            integer(summary.total_blocked_integrations as i64),
+        ),
+        (
+            "catalog_lane_blocked_integrations",
+            integer(summary.catalog_lane_blocked_integrations as i64),
+        ),
+        (
+            "activation_plan_lane_blocked_integrations",
+            integer(summary.activation_plan_lane_blocked_integrations as i64),
+        ),
+        (
+            "readiness_lane_blocked_integrations",
+            integer(summary.readiness_lane_blocked_integrations as i64),
+        ),
+        (
+            "policy_lane_blocked_integrations",
+            integer(summary.policy_lane_blocked_integrations as i64),
+        ),
+        (
+            "local_boundary_lane_blocked_integrations",
+            integer(summary.local_boundary_lane_blocked_integrations as i64),
+        ),
+        (
+            "missing_prerequisite_count",
+            integer(summary.missing_prerequisite_count as i64),
+        ),
+        (
+            "missing_primitive_count",
+            integer(summary.missing_primitive_count as i64),
+        ),
+        (
+            "missing_capability_count",
+            integer(summary.missing_capability_count as i64),
+        ),
+        (
+            "missing_dependency_count",
+            integer(summary.missing_dependency_count as i64),
+        ),
+        (
+            "local_only_integrations",
+            integer(summary.local_only_integrations as i64),
+        ),
+        (
+            "cloud_required_integrations",
+            integer(summary.cloud_required_integrations as i64),
+        ),
+        (
+            "human_review_integrations",
+            integer(summary.human_review_integrations as i64),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_readiness_lane",
+            JsonValue::Bool(summary.has_readiness_lane()),
+        ),
+    ])
+}
+
+fn integration_activation_evidence_scorecard_summary_json(
+    summary: &IntegrationActivationEvidenceScorecardSummary,
+) -> JsonValue {
+    object([
+        (
+            "total_integrations",
+            integer(summary.total_integrations as i64),
+        ),
+        (
+            "evidence_ready_integrations",
+            integer(summary.evidence_ready_integrations as i64),
+        ),
+        (
+            "blocked_integrations",
+            integer(summary.blocked_integrations as i64),
+        ),
+        (
+            "total_required_evidence_lanes",
+            integer(summary.total_required_evidence_lanes as i64),
+        ),
+        (
+            "total_passed_evidence_lanes",
+            integer(summary.total_passed_evidence_lanes as i64),
+        ),
+        (
+            "total_blocked_evidence_lanes",
+            integer(summary.total_blocked_evidence_lanes as i64),
+        ),
+        (
+            "catalog_evidence_ready_integrations",
+            integer(summary.catalog_evidence_ready_integrations as i64),
+        ),
+        (
+            "activation_plan_evidence_ready_integrations",
+            integer(summary.activation_plan_evidence_ready_integrations as i64),
+        ),
+        (
+            "readiness_evidence_ready_integrations",
+            integer(summary.readiness_evidence_ready_integrations as i64),
+        ),
+        (
+            "policy_evidence_ready_integrations",
+            integer(summary.policy_evidence_ready_integrations as i64),
+        ),
+        (
+            "local_boundary_evidence_ready_integrations",
+            integer(summary.local_boundary_evidence_ready_integrations as i64),
+        ),
+        (
+            "catalog_evidence_blockers",
+            integer(summary.catalog_evidence_blockers as i64),
+        ),
+        (
+            "activation_plan_evidence_blockers",
+            integer(summary.activation_plan_evidence_blockers as i64),
+        ),
+        (
+            "readiness_evidence_blockers",
+            integer(summary.readiness_evidence_blockers as i64),
+        ),
+        (
+            "policy_evidence_blockers",
+            integer(summary.policy_evidence_blockers as i64),
+        ),
+        (
+            "local_boundary_evidence_blockers",
+            integer(summary.local_boundary_evidence_blockers as i64),
+        ),
+        (
+            "missing_prerequisite_count",
+            integer(summary.missing_prerequisite_count as i64),
+        ),
+        (
+            "missing_primitive_count",
+            integer(summary.missing_primitive_count as i64),
+        ),
+        (
+            "missing_capability_count",
+            integer(summary.missing_capability_count as i64),
+        ),
+        (
+            "missing_dependency_count",
+            integer(summary.missing_dependency_count as i64),
+        ),
+        (
+            "local_only_integrations",
+            integer(summary.local_only_integrations as i64),
+        ),
+        (
+            "cloud_required_integrations",
+            integer(summary.cloud_required_integrations as i64),
+        ),
+        (
+            "human_review_integrations",
+            integer(summary.human_review_integrations as i64),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_priority",
+            summary
+                .first_ready_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("all_ready", JsonValue::Bool(summary.all_ready())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_missing_prerequisites",
+            JsonValue::Bool(summary.has_missing_prerequisites()),
+        ),
+        (
+            "has_readiness_gaps",
+            JsonValue::Bool(summary.has_readiness_gaps()),
         ),
     ])
 }
@@ -45071,6 +45638,74 @@ fn integration_activation_evidence_remediation_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_evidence_lane_inventory_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_candidate_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        if let Some(limit) = properties
+            .iter_mut()
+            .find(|property| property.name == "limit")
+        {
+            limit.name = "evidence_lane_inventory_limit".to_string();
+        }
+        properties.push(SchemaProperty::new(
+            "evidence_lane_inventory_lane",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new("lane", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "evidence_lane_inventory_has_blockers",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "lane_inventory_has_blockers",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "inventory_has_blockers",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "evidence_lane_inventory_requires_human_review",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "lane_inventory_requires_human_review",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "inventory_requires_human_review",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "evidence_lane_inventory_has_missing_inputs",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "lane_inventory_has_missing_inputs",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "inventory_has_missing_inputs",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "lane_inventory_limit",
+            JsonSchema::Integer,
+        ));
+        properties.push(SchemaProperty::new("inventory_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
+fn integration_activation_evidence_scorecard_query_schema() -> JsonSchema {
+    integration_activation_candidate_query_schema(false)
+}
+
 fn integration_activation_dossier_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -47479,7 +48114,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 181);
+        assert_eq!(definitions.len(), 184);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -47756,6 +48391,15 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_TOOL_ID));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_SUMMARY_TOOL_ID,
+        ));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SCORECARD_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -48002,7 +48646,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            173
+            176
         );
         assert_eq!(
             export
@@ -48035,6 +48679,18 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_REMEDIATION_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SCORECARD_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -48650,11 +49306,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(181))
+            Some(&integer(184))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(173))
+            Some(&integer(176))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -50485,6 +51141,214 @@ mod tests {
                 activation_evidence_remediation_rollup,
                 "has_readiness_remediation"
             ),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let list_activation_evidence_lane_inventory_request = request(
+            "call-list-integration-activation-evidence-lane-inventory",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("evidence_lane_inventory_lane", string("readiness")),
+                (
+                    "evidence_lane_inventory_requires_human_review",
+                    JsonValue::Bool(true),
+                ),
+                (
+                    "evidence_lane_inventory_has_missing_inputs",
+                    JsonValue::Bool(true),
+                ),
+                ("evidence_lane_inventory_limit", integer(2)),
+            ]),
+            5_902,
+        );
+        let list_activation_evidence_lane_inventory_trace =
+            tool_runtime.invoke_with_events(&list_activation_evidence_lane_inventory_request);
+        assert!(list_activation_evidence_lane_inventory_trace.result.ok);
+        assert_eq!(
+            list_activation_evidence_lane_inventory_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_evidence_lane_inventory_output =
+            list_activation_evidence_lane_inventory_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let activation_evidence_lane_inventory_count =
+            integer_value(field(list_activation_evidence_lane_inventory_output, "count").unwrap())
+                .unwrap();
+        assert!((1..=2).contains(&activation_evidence_lane_inventory_count));
+        let activation_evidence_lane_inventory_summary =
+            field(list_activation_evidence_lane_inventory_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_evidence_lane_inventory_summary, "total_lanes"),
+            Some(&integer(activation_evidence_lane_inventory_count))
+        );
+        assert_eq!(
+            field(
+                activation_evidence_lane_inventory_summary,
+                "has_readiness_lane"
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_evidence_lane_inventory_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_evidence_lane_inventory = array_item(
+            field(
+                list_activation_evidence_lane_inventory_output,
+                "activation_evidence_lane_inventory",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_evidence_lane_inventory, "lane"),
+            Some(&string("readiness"))
+        );
+        assert_eq!(
+            field(activation_evidence_lane_inventory, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_evidence_lane_inventory, "has_missing_inputs"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_evidence_lane_inventory, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_evidence_lane_inventory_summary_request = request(
+            "call-integration-activation-evidence-lane-inventory-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LANE_INVENTORY_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("evidence_lane_inventory_lane", string("readiness")),
+            ]),
+            5_903,
+        );
+        let activation_evidence_lane_inventory_summary_trace =
+            tool_runtime.invoke_with_events(&activation_evidence_lane_inventory_summary_request);
+        assert!(activation_evidence_lane_inventory_summary_trace.result.ok);
+        assert_eq!(
+            activation_evidence_lane_inventory_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_evidence_lane_inventory_summary_output =
+            activation_evidence_lane_inventory_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let activation_evidence_lane_inventory_rollup =
+            field(activation_evidence_lane_inventory_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(
+                field(
+                    activation_evidence_lane_inventory_rollup,
+                    "readiness_lane_blocked_integrations"
+                )
+                .unwrap()
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(
+                activation_evidence_lane_inventory_rollup,
+                "has_readiness_lane"
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_evidence_scorecard_summary_request = request(
+            "call-integration-activation-evidence-scorecard-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SCORECARD_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+            ]),
+            5_904,
+        );
+        let activation_evidence_scorecard_summary_trace =
+            tool_runtime.invoke_with_events(&activation_evidence_scorecard_summary_request);
+        assert!(activation_evidence_scorecard_summary_trace.result.ok);
+        assert_eq!(
+            activation_evidence_scorecard_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_evidence_scorecard_summary_output =
+            activation_evidence_scorecard_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let activation_evidence_scorecard_rollup =
+            field(activation_evidence_scorecard_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(
+                field(activation_evidence_scorecard_rollup, "blocked_integrations").unwrap()
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_evidence_scorecard_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_evidence_scorecard_rollup, "has_readiness_gaps"),
             Some(&JsonValue::Bool(true))
         );
 

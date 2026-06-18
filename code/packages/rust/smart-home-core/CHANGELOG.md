@@ -64,6 +64,11 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_activation_evidence_remediation` and
   `smart_home.get_integration_activation_evidence_remediation_summary` tool
   descriptors for read-only D23A evidence-lane remediation planning.
+- `smart_home.list_integration_activation_evidence_lane_inventory`,
+  `smart_home.get_integration_activation_evidence_lane_inventory_summary`, and
+  `smart_home.get_integration_activation_evidence_scorecard_summary` tool
+  descriptors for read-only D23A evidence-lane inventory and scorecard
+  planning.
 - `smart_home.list_integration_activation_dossiers` and
   `smart_home.get_integration_activation_dossier_summary` tool descriptors
   for read-only bundled activation decision and evidence planning.

@@ -106,6 +106,11 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A activation evidence remediation lanes:
   `smart_home.list_integration_activation_evidence_remediation` and
   `smart_home.get_integration_activation_evidence_remediation_summary`.
+- Added D18D handlers for D23A activation evidence lane inventory and
+  scorecard rollups:
+  `smart_home.list_integration_activation_evidence_lane_inventory`,
+  `smart_home.get_integration_activation_evidence_lane_inventory_summary`, and
+  `smart_home.get_integration_activation_evidence_scorecard_summary`.
 - Added D18D handlers for D23A activation remediation work orders:
   `smart_home.list_integration_activation_remediation` and
   `smart_home.get_integration_activation_remediation_summary`.
