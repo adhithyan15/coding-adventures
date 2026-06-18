@@ -49,6 +49,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationEvidenceRow` and activation evidence row helpers for
   turning each integration briefing into sorted ready/blocker rows with the
   next blocked evidence lane and missing-prerequisite counts.
+- `IntegrationActivationEvidenceLaneInventoryItem` and lane inventory helpers
+  for grouping blocked evidence rows by their first catalog, activation-plan,
+  readiness, policy, or local-boundary blocker lane.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
