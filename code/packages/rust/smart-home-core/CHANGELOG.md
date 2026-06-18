@@ -81,6 +81,9 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_mesh_substrate_actions` and
   `smart_home.get_integration_mesh_action_readiness_summary` descriptors for
   read-only D23 mesh substrate action and action-readiness planning.
+- `smart_home.list_integration_mesh_readiness_handoffs` and
+  `smart_home.get_integration_mesh_readiness_handoff_summary` descriptors for
+  read-only D23 mesh readiness handoff planning.
 - `smart_home.list_integration_activation_dossiers` and
   `smart_home.get_integration_activation_dossier_summary` tool descriptors
   for read-only bundled activation decision and evidence planning.
