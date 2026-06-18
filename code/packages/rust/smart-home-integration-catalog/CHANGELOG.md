@@ -46,6 +46,9 @@ All notable changes to this package will be documented in this file.
   evidence scorecard helpers for rolling briefing readiness, blocker lanes,
   missing prerequisites, local/cloud boundaries, and policy tiers into compact
   Chief planning counts.
+- `IntegrationActivationEvidenceRow` and activation evidence row helpers for
+  turning each integration briefing into sorted ready/blocker rows with the
+  next blocked evidence lane and missing-prerequisite counts.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
