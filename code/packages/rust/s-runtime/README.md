@@ -40,6 +40,14 @@ s-lexer → s-parser → GrammarASTNode → s-runtime (this crate) → s-repl
   `x["b"]` indexes by name, and a named vector prints names above values. Names
   are a transparent `SValue::Named` wrapper — they ride through indexing and drop
   through arithmetic, exactly as in R.
+- **General attributes** (R-16): `attr(x, which)` / `attr(x, which) <- value`
+  (assigning `NULL` removes), `attributes(x)` / `attributes(x) <- list(...)`, and
+  `structure(x, class = "myc", foo = "bar")`. General (non-special) attributes
+  live in a transparent `SValue::Attributed` wrapper; the *special* attributes
+  route to their dedicated representations, so `attr(x, "names")` agrees with
+  `names(x)`, `attr(x, "class")` with `class(x)`, and `attr(x, "dim")` with the
+  matrix `dim` by construction. The general map is bounded and malformed input
+  fails closed.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
