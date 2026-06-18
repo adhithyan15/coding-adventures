@@ -55,6 +55,8 @@ runtime and Chief of Staff tools a typed catalog for:
   for checking radio substrate, controller, network-key, and supervision gaps
 - low-level mesh substrate stage rows that classify required primitives into
   controller, radio, discovery, network-security, and supervision blockers
+- low-level mesh substrate action queues that order missing stage primitives
+  into concrete protocol-scoped substrate work
 - mesh readiness package summaries that combine Zigbee, Z-Wave, and Thread
   primitive substrate readiness with mesh-scoped activation evidence
   remediation rollups

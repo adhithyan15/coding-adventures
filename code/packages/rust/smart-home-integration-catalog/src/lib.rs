@@ -479,6 +479,96 @@ impl IntegrationMeshProtocolSubstrateStageSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstrateAction {
+    pub sequence: usize,
+    pub protocol: ProtocolFamily,
+    pub primitive: PrimitiveFamily,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+}
+
+impl IntegrationMeshProtocolSubstrateAction {
+    pub fn from_stage_row(
+        sequence: usize,
+        row: &IntegrationMeshProtocolSubstrateStageRow,
+    ) -> Option<Self> {
+        row.is_blocked().then(|| Self {
+            sequence,
+            protocol: row.protocol.clone(),
+            primitive: row.primitive,
+            stage: row.stage,
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstrateActionSummary {
+    pub total_actions: usize,
+    pub unique_protocols: usize,
+    pub unique_primitives: usize,
+    pub controller_actions: usize,
+    pub radio_actions: usize,
+    pub discovery_actions: usize,
+    pub network_security_actions: usize,
+    pub supervision_actions: usize,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_primitive: Option<PrimitiveFamily>,
+}
+
+impl IntegrationMeshProtocolSubstrateActionSummary {
+    pub fn from_actions<'a>(
+        actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstrateAction>,
+    ) -> Self {
+        let actions = actions.into_iter().collect::<Vec<_>>();
+        let mut protocols = BTreeSet::new();
+        let mut primitives = BTreeSet::new();
+        let first_action = actions.iter().min_by_key(|action| action.sequence);
+
+        for action in &actions {
+            protocols.insert(protocol_sort_token(&action.protocol));
+            primitives.insert(action.primitive);
+        }
+
+        Self {
+            total_actions: actions.len(),
+            unique_protocols: protocols.len(),
+            unique_primitives: primitives.len(),
+            controller_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_protocol: first_action.map(|action| action.protocol.clone()),
+            first_stage: first_action.map(|action| action.stage),
+            first_primitive: first_action.map(|action| action.primitive),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_actions == 0
+    }
+
+    pub fn has_actions(&self) -> bool {
+        self.total_actions > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
     pub required_primitives: Vec<PrimitiveFamily>,
@@ -20644,6 +20734,30 @@ pub fn mesh_protocol_substrate_stage_summary(
     IntegrationMeshProtocolSubstrateStageSummary::from_rows(rows.iter())
 }
 
+pub fn mesh_protocol_substrate_actions(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstrateAction> {
+    let rows = mesh_protocol_substrate_stage_rows(available_primitives);
+    let mut actions = rows
+        .iter()
+        .filter_map(|row| IntegrationMeshProtocolSubstrateAction::from_stage_row(0, row))
+        .collect::<Vec<_>>();
+    actions.sort_by(compare_mesh_substrate_actions);
+
+    for (index, action) in actions.iter_mut().enumerate() {
+        action.sequence = index + 1;
+    }
+
+    actions
+}
+
+pub fn mesh_protocol_substrate_action_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstrateActionSummary {
+    let actions = mesh_protocol_substrate_actions(available_primitives);
+    IntegrationMeshProtocolSubstrateActionSummary::from_actions(actions.iter())
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -20770,6 +20884,39 @@ fn mesh_substrate_stage_blockers<'a>(
     rows.into_iter()
         .filter(|row| row.stage == stage && row.is_blocked())
         .count()
+}
+
+fn compare_mesh_substrate_actions(
+    left: &IntegrationMeshProtocolSubstrateAction,
+    right: &IntegrationMeshProtocolSubstrateAction,
+) -> Ordering {
+    (
+        left.stage,
+        mesh_protocol_sort_key(&left.protocol),
+        left.primitive,
+    )
+        .cmp(&(
+            right.stage,
+            mesh_protocol_sort_key(&right.protocol),
+            right.primitive,
+        ))
+}
+
+fn mesh_substrate_action_count<'a>(
+    actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstrateAction>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    actions
+        .into_iter()
+        .filter(|action| action.stage == stage)
+        .count()
+}
+
+fn protocol_sort_token(protocol: &ProtocolFamily) -> String {
+    match protocol {
+        ProtocolFamily::Vendor(value) => format!("vendor:{value}"),
+        _ => format!("{protocol:?}"),
+    }
 }
 
 fn local_transport_primitives(
@@ -26841,6 +26988,70 @@ mod tests {
         assert!(summary.all_ready());
         assert!(!summary.has_blockers());
         assert!(!summary.needs_network_security());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_actions_order_stage_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let actions = mesh_protocol_substrate_actions(&available_primitives);
+        let summary = IntegrationMeshProtocolSubstrateActionSummary::from_actions(actions.iter());
+
+        assert_eq!(actions.len(), 5);
+        assert_eq!(summary.total_actions, 5);
+        assert_eq!(summary.unique_protocols, 3);
+        assert_eq!(summary.unique_primitives, 3);
+        assert_eq!(summary.controller_actions, 0);
+        assert_eq!(summary.radio_actions, 1);
+        assert_eq!(summary.discovery_actions, 1);
+        assert_eq!(summary.network_security_actions, 3);
+        assert_eq!(summary.supervision_actions, 0);
+        assert_eq!(summary.first_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(summary.has_actions());
+        assert!(!summary.is_empty());
+
+        assert_eq!(actions[0].sequence, 1);
+        assert_eq!(actions[0].protocol, ProtocolFamily::ZWave);
+        assert_eq!(actions[0].primitive, PrimitiveFamily::ZWaveSerialApi);
+        assert_eq!(
+            actions[0].stage,
+            IntegrationMeshProtocolSubstrateStage::Radio
+        );
+        assert_eq!(
+            actions[1].stage,
+            IntegrationMeshProtocolSubstrateStage::Discovery
+        );
+        assert!(actions[2..]
+            .iter()
+            .all(|action| action.stage == IntegrationMeshProtocolSubstrateStage::NetworkSecurity));
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_actions_empty_when_substrate_ready() {
+        let actions = mesh_protocol_substrate_actions(all_primitive_families());
+        let summary = mesh_protocol_substrate_action_summary(all_primitive_families());
+
+        assert!(actions.is_empty());
+        assert_eq!(summary.total_actions, 0);
+        assert_eq!(summary.unique_protocols, 0);
+        assert_eq!(summary.unique_primitives, 0);
+        assert_eq!(summary.first_protocol, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_primitive, None);
+        assert!(summary.is_empty());
+        assert!(!summary.has_actions());
     }
 
     #[test]
