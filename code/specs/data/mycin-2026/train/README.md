@@ -89,6 +89,15 @@ says to discard — the over-extraction failure the `NEAR_MISS_DISTRACTORS` trai
 scoring is deterministic and fully unit-tested (`test_decompose_score.py`), so a fine-tune's
 faithfulness is measurable without re-running the model.
 
+A held-out benchmark to score against: **`decompose_eval.jsonl`** — a small, HAND-CURATED set of
+prose vignettes + gold IR across both shapes and the hard cases (near-miss family-history /
+absence / efficacy / hedge, and honest abstain). `eval_decompose.py` scores a model's predictions
+against it (`--pred predictions.jsonl`) and reports the aggregate; `--self-check` scores the gold
+as the prediction (a perfect 1.0 / zero violations — the offline CI sanity check). The set is
+curated, not teacher-generated, so it stays a stable benchmark; `test_eval_decompose.py` pins that
+every gold span is verbatim, every chart-fact is COP-consumable, every near-miss is a discard, and
+the set + scorer compose to a perfect self-check.
+
 ## Result
 
 Training the framework-authored data took the base model from **0/4 → 4/4** on the
