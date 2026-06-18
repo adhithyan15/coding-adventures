@@ -6,7 +6,7 @@
 //! crate that backs the spreadsheet and (eventually) R frontends — so the math
 //! has a single authoritative home.
 
-use crate::env::{define, Env};
+use crate::env::{define, lookup, Env};
 use crate::error::{SError, SResult};
 use crate::eval::{nth_element, Interpreter};
 use crate::value::{
@@ -95,6 +95,10 @@ pub fn install(env: &Env) {
     define(env, "list", builtin("list", b_list));
     define(env, "lapply", builtin("lapply", b_lapply));
     define(env, "strsplit", builtin("strsplit", b_strsplit));
+
+    // Reflective call + list overlay (R-17).
+    define(env, "do.call", builtin("do.call", b_do_call));
+    define(env, "modifyList", builtin("modifyList", b_modify_list));
 
     // Higher-order functionals (R-10) — pair with the R-9 `\(x)` lambdas.
     define(env, "Map", builtin("Map", b_map));
@@ -2046,6 +2050,197 @@ fn b_strsplit(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         })
         .collect();
     let names = vec![None; items.len()];
+    Ok(SValue::List { names, items })
+}
+
+// ===========================================================================
+// Reflective call + list overlay (R-17)
+// ===========================================================================
+
+/// The largest number of arguments `do.call` will spread out of its `args`
+/// list, and the largest list `modifyList` will build. Without this cap a
+/// crafted `do.call(f, as.list(1:1e9))` (or a `modifyList` overlaying millions
+/// of new names) would build an unbounded call frame / list and exhaust the
+/// heap. A real R program never reaches anywhere near this — the most argument-
+/// hungry builtins (`paste`, `c`) handle dozens, not tens of thousands — so a
+/// generous 100k ceiling is invisible to legitimate use while fail-closing on
+/// abuse. We reuse the same ceiling for `modifyList`'s result for the same
+/// reason.
+const MAX_DOCALL_ARGS: usize = 100_000;
+
+/// View a value as a `(names, items)` list, seeing through the transparent
+/// wrappers (`Classed`/`Attributed`/`Named`) so a classed or attribute-carrying
+/// list still counts as a list. Returns `None` for anything that is not a list.
+///
+/// `NULL` is *not* a list here — callers that want to accept `NULL` as "the
+/// empty list" (R's `do.call(f, NULL)`) handle that case explicitly before
+/// calling this, so that a stray `NULL` argument elsewhere still errors.
+fn as_list(value: &SValue) -> Option<(&[Option<String>], &[SValue])> {
+    match value {
+        SValue::List { names, items } => Some((names, items)),
+        SValue::Classed { inner, .. } => as_list(inner),
+        SValue::Attributed { inner, .. } => as_list(inner),
+        SValue::Named { values, .. } => as_list(values),
+        _ => None,
+    }
+}
+
+/// `do.call(what, args)` — build and evaluate a call to `what` with the
+/// elements of the list `args` as its arguments. `what` is a callable value or
+/// a length-one string naming one (resolved in the global environment); each
+/// element of `args` becomes one argument — unnamed elements are positional and
+/// named elements are passed by name, in order. This reuses the interpreter's
+/// `call_value` machinery (the same path `lapply`/`Reduce` use), so default
+/// arguments, named/positional matching, and recycling all behave exactly as in
+/// a direct call: `do.call(paste, list("a", "b", sep = "-"))` is `paste("a",
+/// "b", sep = "-")` → `"a-b"`.
+fn b_do_call(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
+    let what = positional
+        .first()
+        .ok_or_else(|| SError::BadArgs("do.call: missing 'what' argument".into()))?;
+    let arglist = positional.get(1).copied();
+
+    // Resolve `what` to a callable: a callable value passes through; a length-one
+    // string is looked up by name in the global environment. Anything else is an
+    // error (never a panic).
+    let callee = resolve_callable(interp, what)?;
+
+    // `args` defaults to / accepts NULL as the empty argument list; otherwise it
+    // must be a list. A non-list, non-NULL `args` is an error, not a panic.
+    let call_args: Vec<Arg> = match arglist {
+        None | Some(SValue::Null) => Vec::new(),
+        Some(value) => {
+            let (names, items) = as_list(value).ok_or_else(|| {
+                SError::BadArgs(format!(
+                    "do.call: second argument must be a list, got {}",
+                    value.type_name()
+                ))
+            })?;
+            if items.len() > MAX_DOCALL_ARGS {
+                return Err(SError::BadArgs(format!(
+                    "do.call: too many arguments (limit {MAX_DOCALL_ARGS})"
+                )));
+            }
+            items
+                .iter()
+                .enumerate()
+                .map(|(i, value)| {
+                    // An empty-string name is treated as no name, matching R's
+                    // positional-element handling.
+                    let name = names
+                        .get(i)
+                        .and_then(|n| n.clone())
+                        .filter(|s| !s.is_empty());
+                    Arg {
+                        name,
+                        value: value.clone(),
+                    }
+                })
+                .collect()
+        }
+    };
+
+    interp.call_value(callee, &call_args)
+}
+
+/// Resolve `what` (for `do.call`) to a callable value: a callable passes
+/// through; a length-one character string is looked up by name in the global
+/// environment (an unknown or non-callable name is a clean error).
+fn resolve_callable(interp: &Interpreter, what: &SValue) -> SResult<SValue> {
+    let bare = what.strip_attrs().strip_names();
+    if bare.is_callable() {
+        return Ok(bare.clone());
+    }
+    if let SValue::Character(v) = bare {
+        let name = v
+            .first()
+            .and_then(|o| o.clone())
+            .ok_or_else(|| SError::BadArgs("do.call: 'what' name is NA".into()))?;
+        let found = lookup(interp.global(), &name)
+            .ok_or_else(|| SError::Undefined(name.clone()))?;
+        if !found.is_callable() {
+            return Err(SError::NotCallable(found.type_name().to_string()));
+        }
+        return Ok(found);
+    }
+    Err(SError::NotCallable(what.type_name().to_string()))
+}
+
+/// `modifyList(x, val)` — `x` with the elements of the list `val` overlaid by
+/// name. A name in both `x` and `val` is replaced (in place); a name only in
+/// `val` is appended; and a `val` element whose value is `NULL` removes that
+/// name from the result (R's documented deletion semantics). Element order
+/// follows `x` (with removals dropped) and then `val`'s new names in `val`
+/// order. Both arguments must be lists.
+fn b_modify_list(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&SValue> =
+        args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
+    let x = positional
+        .first()
+        .ok_or_else(|| SError::BadArgs("modifyList: missing 'x' argument".into()))?;
+    let val = positional
+        .get(1)
+        .ok_or_else(|| SError::BadArgs("modifyList: missing 'val' argument".into()))?;
+
+    let (x_names, x_items) = as_list(x)
+        .ok_or_else(|| SError::BadArgs(format!("modifyList: 'x' must be a list, got {}", x.type_name())))?;
+    let (v_names, v_items) = as_list(val)
+        .ok_or_else(|| SError::BadArgs(format!("modifyList: 'val' must be a list, got {}", val.type_name())))?;
+
+    // Every element of `val` must be named (R errors on an unnamed overlay
+    // element — there is no positional notion of "modify").
+    if v_names.iter().any(|n| n.as_deref().map(str::is_empty).unwrap_or(true)) {
+        return Err(SError::BadArgs(
+            "modifyList: elements of 'val' must all be named".into(),
+        ));
+    }
+
+    // Start from `x`. Walk `val` in order: replace an existing name in place,
+    // mark a name whose value is NULL for removal, and queue a genuinely new
+    // name for appending.
+    let mut names: Vec<Option<String>> = x_names.to_vec();
+    let mut items: Vec<SValue> = x_items.to_vec();
+    let mut to_remove: Vec<usize> = Vec::new();
+
+    for (i, vname) in v_names.iter().enumerate() {
+        let name = vname.as_deref().unwrap_or_default();
+        let new_value = &v_items[i];
+        let pos = names.iter().position(|n| n.as_deref() == Some(name));
+        match (pos, matches!(new_value, SValue::Null)) {
+            // Existing name, NULL value → remove (record the index).
+            (Some(p), true) => {
+                if !to_remove.contains(&p) {
+                    to_remove.push(p);
+                }
+            }
+            // Existing name, non-NULL value → replace in place.
+            (Some(p), false) => {
+                items[p] = new_value.clone();
+            }
+            // New name, NULL value → nothing to remove, nothing to add.
+            (None, true) => {}
+            // New name, non-NULL value → append.
+            (None, false) => {
+                if names.len() + 1 > MAX_DOCALL_ARGS {
+                    return Err(SError::BadArgs(format!(
+                        "modifyList: result too large (limit {MAX_DOCALL_ARGS})"
+                    )));
+                }
+                names.push(Some(name.to_string()));
+                items.push(new_value.clone());
+            }
+        }
+    }
+
+    // Drop removed indices (highest-first so earlier indices stay valid).
+    to_remove.sort_unstable();
+    to_remove.dedup();
+    for &idx in to_remove.iter().rev() {
+        names.remove(idx);
+        items.remove(idx);
+    }
+
     Ok(SValue::List { names, items })
 }
 
