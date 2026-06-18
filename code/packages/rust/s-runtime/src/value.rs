@@ -1028,6 +1028,8 @@ pub fn index2d(value: &SValue, rows: Option<&SValue>, cols: Option<&SValue>) -> 
         SValue::Matrix { data, nrow, ncol } => index_matrix_2d(data, *nrow, *ncol, rows, cols),
         SValue::DataFrame { .. } => crate::dataframe::index2d(value, rows, cols),
         SValue::Classed { inner, .. } => index2d(inner, rows, cols),
+        SValue::Attributed { inner, .. } => index2d(inner, rows, cols),
+        SValue::Named { values, .. } => index2d(values, rows, cols),
         other => Err(SError::Index(format!(
             "incorrect number of dimensions for {}",
             other.type_name()
@@ -2108,5 +2110,87 @@ mod tests {
         // A wider value widens the name column too; an unset name prints <NA>.
         let v = SValue::with_names(SValue::doubles(vec![100.0, 2.0]), vec![name("x"), None]);
         assert_eq!(format_value(&v), vec!["  x <NA>", "100    2"]);
+    }
+
+    // --- R-16: general-attribute wrapper mechanics ----------------------
+
+    fn attributed(attrs: Vec<(&str, SValue)>, inner: SValue) -> SValue {
+        SValue::with_general_attrs(
+            inner,
+            attrs.into_iter().map(|(k, v)| (k.to_string(), v)).collect(),
+        )
+    }
+
+    #[test]
+    fn with_general_attrs_drops_empty_and_never_nests() {
+        // An empty attr list returns the bare value (no wrapper).
+        let bare = SValue::with_general_attrs(SValue::scalar(1.0), vec![]);
+        assert!(matches!(bare, SValue::Double(_)));
+        assert!(bare.general_attrs().is_none());
+        // A non-empty list wraps.
+        let v = attributed(vec![("foo", SValue::scalar(9.0))], SValue::scalar(1.0));
+        assert_eq!(v.general_attrs().map(|a| a.len()), Some(1));
+        // Re-wrapping replaces (never nests an Attributed in an Attributed).
+        let v2 = attributed(vec![("bar", SValue::scalar(2.0))], v);
+        if let SValue::Attributed { attrs, inner } = &v2 {
+            assert_eq!(attrs.len(), 1);
+            assert_eq!(attrs[0].0, "bar");
+            assert!(!matches!(**inner, SValue::Attributed { .. }));
+        } else {
+            panic!("expected Attributed");
+        }
+    }
+
+    #[test]
+    fn attributed_is_transparent_to_core_ops() {
+        let v = attributed(
+            vec![("foo", SValue::Character(vec![name("bar")]))],
+            SValue::doubles(vec![1.0, 2.0, 3.0]),
+        );
+        // length / type / class / coercions / truthy all see through.
+        assert_eq!(v.length(), 3);
+        assert_eq!(v.type_name(), "double");
+        assert_eq!(class_of(&v), vec!["numeric"]);
+        assert_eq!(v.as_double().unwrap().data(), &[1.0, 2.0, 3.0]);
+        assert_eq!(
+            v.strip_attrs().as_double().unwrap().data(),
+            &[1.0, 2.0, 3.0]
+        );
+        // Arithmetic sees through and drops the attribute.
+        let r = arithmetic("+", &v, &SValue::scalar(1.0)).unwrap();
+        assert_eq!(dbl(&r), vec![2.0, 3.0, 4.0]);
+        assert!(r.general_attrs().is_none());
+    }
+
+    #[test]
+    fn attributed_index_drops_attrs_but_assign_keeps_them() {
+        let v = attributed(
+            vec![("foo", SValue::scalar(7.0))],
+            SValue::doubles(vec![10.0, 20.0, 30.0]),
+        );
+        // `[` drops general attributes (as in R).
+        let got = index(&v, &SValue::scalar(2.0)).unwrap();
+        assert_eq!(dbl(&got), vec![20.0]);
+        assert!(got.general_attrs().is_none());
+        // `x[i] <- v` keeps them.
+        let assigned = assign_index(&v, Some(&SValue::scalar(1.0)), &SValue::scalar(99.0)).unwrap();
+        assert_eq!(
+            assigned.strip_attrs().as_double().unwrap().data(),
+            &[99.0, 20.0, 30.0]
+        );
+        assert_eq!(assigned.general_attrs().map(|a| a.len()), Some(1));
+    }
+
+    #[test]
+    fn attributed_format_and_compare_see_through() {
+        let v = attributed(
+            vec![("foo", SValue::scalar(1.0))],
+            SValue::Character(vec![name("a"), name("b")]),
+        );
+        // Printing shows the inner value, not the attribute.
+        assert_eq!(format_value(&v), vec!["[1] \"a\" \"b\""]);
+        // String comparison still works through the wrapper.
+        let r = compare("==", &v, &SValue::Character(vec![name("a")])).unwrap();
+        assert!(matches!(&r, SValue::Logical(l) if l[0] == Some(true)));
     }
 }

@@ -846,4 +846,250 @@ mod tests {
             vec!["first", "second"]
         );
     }
+
+    // --- R-16: general attributes ---------------------------------------
+
+    #[test]
+    fn attr_get_absent_is_null() {
+        assert_eq!(show("x <- 1:3\nattr(x, \"foo\")\n"), "NULL");
+        assert_eq!(show("attr(c(1, 2, 3), \"bar\")\n"), "NULL");
+    }
+
+    #[test]
+    fn attr_set_get_and_replace_general() {
+        // Set then read back a general attribute.
+        assert_eq!(
+            show("x <- 1:3\nattr(x, \"foo\") <- \"bar\"\nattr(x, \"foo\")\n"),
+            "[1] \"bar\""
+        );
+        // Replacing an existing attribute overwrites it.
+        assert_eq!(
+            show("x <- 1:3\nattr(x, \"foo\") <- \"a\"\nattr(x, \"foo\") <- \"b\"\nattr(x, \"foo\")\n"),
+            "[1] \"b\""
+        );
+        // The underlying value is untouched and still usable.
+        assert_eq!(
+            nums("x <- c(10, 20, 30)\nattr(x, \"src\") <- \"sensor\"\nx + 1\n"),
+            vec![11.0, 21.0, 31.0]
+        );
+    }
+
+    #[test]
+    fn attr_assign_null_removes() {
+        assert_eq!(
+            show(
+                "x <- structure(1:3, foo = \"bar\")\nattr(x, \"foo\") <- NULL\nattr(x, \"foo\")\n"
+            ),
+            "NULL"
+        );
+        // Removing the last general attribute leaves the bare value (attributes → NULL).
+        assert_eq!(
+            show("x <- structure(1:3, foo = \"bar\")\nattr(x, \"foo\") <- NULL\nattributes(x)\n"),
+            "NULL"
+        );
+    }
+
+    #[test]
+    fn structure_attaches_multiple_attributes() {
+        // The value prints transparently; class and general attrs attach.
+        assert_eq!(
+            show("structure(1:3, class = \"myc\", foo = \"bar\")\n"),
+            "[1] 1 2 3"
+        );
+        assert_eq!(
+            show("x <- structure(1:3, class = \"myc\", foo = \"bar\")\nclass(x)\n"),
+            "[1] \"myc\""
+        );
+        assert_eq!(
+            show("x <- structure(1:3, class = \"myc\", foo = \"bar\")\nattr(x, \"foo\")\n"),
+            "[1] \"bar\""
+        );
+    }
+
+    // --- consistency of the three special attributes --------------------
+
+    #[test]
+    fn attr_names_agrees_with_names() {
+        // attr(x, "names") returns exactly what names(x) does (R-15).
+        assert_eq!(
+            names_of("attr(c(a = 1, b = 2), \"names\")\n"),
+            vec!["a", "b"]
+        );
+        // Setting names *via* attr<- is observable through names().
+        assert_eq!(
+            names_of("x <- 1:2\nattr(x, \"names\") <- c(\"p\", \"q\")\nnames(x)\n"),
+            vec!["p", "q"]
+        );
+        // ...and conversely, names set by c() are visible via attr().
+        assert_eq!(
+            names_of("x <- c(a = 1, b = 2, c = 3)\nattr(x, \"names\")\n"),
+            vec!["a", "b", "c"]
+        );
+        // Removing names via attr<- NULL clears them.
+        assert_eq!(
+            show("x <- c(a = 1, b = 2)\nattr(x, \"names\") <- NULL\nnames(x)\n"),
+            "NULL"
+        );
+    }
+
+    #[test]
+    fn attr_class_agrees_with_class() {
+        // attr(x, "class") matches class(x) for an explicitly classed value.
+        assert_eq!(
+            show("x <- structure(1, class = \"k\")\nattr(x, \"class\")\n"),
+            "[1] \"k\""
+        );
+        assert_eq!(
+            show("x <- structure(1, class = \"k\")\nclass(x)\n"),
+            "[1] \"k\""
+        );
+        // A bare vector has no explicit class attribute (implicit class is NOT one).
+        assert_eq!(show("attr(1, \"class\")\n"), "NULL");
+        // Setting class via attr<- is observable through class()/inherits().
+        assert_eq!(
+            show("x <- 1:3\nattr(x, \"class\") <- \"k\"\ninherits(x, \"k\")\n"),
+            "[1] TRUE"
+        );
+        // Removing it via NULL restores the implicit class.
+        assert_eq!(
+            show("x <- structure(1, class = \"k\")\nattr(x, \"class\") <- NULL\nclass(x)\n"),
+            "[1] \"numeric\""
+        );
+    }
+
+    #[test]
+    fn attr_dim_agrees_with_matrix_dim() {
+        // attr(m, "dim") matches dim(m) for a matrix (R-11).
+        assert_eq!(
+            nums("m <- matrix(1:6, nrow = 2)\nattr(m, \"dim\")\n"),
+            vec![2.0, 3.0]
+        );
+        // Setting dim via attr<- reshapes a vector into a matrix; dim() agrees.
+        assert_eq!(
+            nums("x <- 1:6\nattr(x, \"dim\") <- c(2, 3)\ndim(x)\n"),
+            vec![2.0, 3.0]
+        );
+        // The reshaped value indexes as a matrix (column-major).
+        assert_eq!(
+            nums("x <- 1:6\nattr(x, \"dim\") <- c(2, 3)\nx[2, 1]\n"),
+            vec![2.0]
+        );
+        // Clearing dim collapses back to a flat vector.
+        assert_eq!(
+            show("m <- matrix(1:6, nrow = 2)\nattr(m, \"dim\") <- NULL\ndim(m)\n"),
+            "NULL"
+        );
+    }
+
+    #[test]
+    fn attr_dim_rejects_nonconforming_length() {
+        // A dim whose product != element count is an error (no panic).
+        assert!(eval_r("x <- 1:5\nattr(x, \"dim\") <- c(2, 3)\nx\n").is_err());
+    }
+
+    // --- attributes() get/set -------------------------------------------
+
+    #[test]
+    fn attributes_get_returns_named_list_or_null() {
+        // No attributes → NULL.
+        assert_eq!(show("attributes(1:3)\n"), "NULL");
+        // A classed + general-attributed value lists both (class last).
+        let out = show("x <- structure(1:3, foo = \"bar\", class = \"k\")\nattributes(x)\n");
+        assert!(out.contains("$foo"), "got: {out}");
+        assert!(out.contains("$class"), "got: {out}");
+        assert!(out.contains("\"bar\""), "got: {out}");
+        // names appears first when present.
+        let out = show("x <- c(a = 1, b = 2)\nattributes(x)\n");
+        assert!(out.contains("$names"), "got: {out}");
+    }
+
+    #[test]
+    fn attributes_set_replaces_whole_set() {
+        // attributes(x) <- list(...) applies each named element.
+        assert_eq!(
+            show("x <- 1:3\nattributes(x) <- list(foo = \"z\")\nattr(x, \"foo\")\n"),
+            "[1] \"z\""
+        );
+        assert_eq!(
+            show("x <- 1:3\nattributes(x) <- list(class = \"k\")\nclass(x)\n"),
+            "[1] \"k\""
+        );
+        // A names element routes to the names wrapper.
+        assert_eq!(
+            names_of("x <- 1:2\nattributes(x) <- list(names = c(\"p\", \"q\"))\nnames(x)\n"),
+            vec!["p", "q"]
+        );
+        // Assigning NULL clears everything.
+        assert_eq!(
+            show("x <- structure(1:3, foo = \"b\", class = \"k\")\nattributes(x) <- NULL\nattributes(x)\n"),
+            "NULL"
+        );
+    }
+
+    #[test]
+    fn attributes_set_rejects_malformed_input() {
+        // An unnamed list element is an error.
+        assert!(eval_r("x <- 1:3\nattributes(x) <- list(\"unnamed\")\n").is_err());
+        // A non-list, non-NULL value is an error.
+        assert!(eval_r("x <- 1:3\nattributes(x) <- 5\n").is_err());
+    }
+
+    // --- regressions: R-15 / S3 / factors / data frames still work ------
+
+    #[test]
+    fn r15_named_vectors_unaffected() {
+        // Named construction, names(), character indexing all still work.
+        assert_eq!(
+            names_of("names(c(a = 1, b = 2, c = 3))\n"),
+            vec!["a", "b", "c"]
+        );
+        assert_eq!(nums("x <- c(a = 1, b = 2)\nx[\"b\"]\n"), vec![2.0]);
+        assert_eq!(
+            nums("x <- 1:3\nnames(x) <- c(\"a\", \"b\", \"c\")\nx[\"c\"]\n"),
+            vec![3.0]
+        );
+    }
+
+    #[test]
+    fn s3_class_and_factors_and_data_frames_unaffected() {
+        // S3 class via structure + inherits.
+        assert_eq!(
+            show("x <- structure(1, class = \"k\")\ninherits(x, \"k\")\n"),
+            "[1] TRUE"
+        );
+        // Factors: class is still "factor", levels intact.
+        assert_eq!(
+            show("class(factor(c(\"a\", \"b\", \"a\")))\n"),
+            "[1] \"factor\""
+        );
+        assert_eq!(
+            names_of("levels(factor(c(\"b\", \"a\", \"b\")))\n"),
+            vec!["a", "b"]
+        );
+        // Data frames: class, names, $ access.
+        assert_eq!(
+            show("class(data.frame(x = 1:2, y = c(10, 20)))\n"),
+            "[1] \"data.frame\""
+        );
+        assert_eq!(
+            nums("d <- data.frame(x = 1:2, y = c(10, 20))\nd$y\n"),
+            vec![10.0, 20.0]
+        );
+        assert_eq!(
+            names_of("names(data.frame(aa = 1:2, bb = 3:4))\n"),
+            vec!["aa", "bb"]
+        );
+    }
+
+    #[test]
+    fn attr_combines_class_names_and_general_together() {
+        // A value can carry all three layers at once and stay consistent.
+        let prog = "x <- 1:6\n\
+                    attr(x, \"dim\") <- c(2, 3)\n\
+                    attr(x, \"class\") <- \"grid\"\n\
+                    attr(x, \"label\") <- \"demo\"\n";
+        assert_eq!(nums(&format!("{prog}dim(x)\n")), vec![2.0, 3.0]);
+        assert_eq!(show(&format!("{prog}class(x)\n")), "[1] \"grid\"");
+        assert_eq!(show(&format!("{prog}attr(x, \"label\")\n")), "[1] \"demo\"");
+    }
 }

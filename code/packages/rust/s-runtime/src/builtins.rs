@@ -157,7 +157,11 @@ pub fn install(env: &Env) {
     define(env, "attr", builtin("attr", b_attr));
     define(env, "attr<-", builtin("attr<-", b_attr_replace));
     define(env, "attributes", builtin("attributes", b_attributes));
-    define(env, "attributes<-", builtin("attributes<-", b_attributes_replace));
+    define(
+        env,
+        "attributes<-",
+        builtin("attributes<-", b_attributes_replace),
+    );
 
     // v2 — factors.
     define(env, "factor", builtin("factor", b_factor));
@@ -240,7 +244,7 @@ fn b_data_frame(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 
 /// `nrow(df)` — the row count (the common column length).
 fn b_nrow(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    match first_positional(args)? {
+    match peel_structural(first_positional(args)?) {
         SValue::DataFrame { columns, .. } => Ok(SValue::scalar(
             columns.first().map(|c| c.length()).unwrap_or(0) as f64,
         )),
@@ -251,7 +255,7 @@ fn b_nrow(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 
 /// `ncol(df)` — the column count.
 fn b_ncol(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    match first_positional(args)? {
+    match peel_structural(first_positional(args)?) {
         SValue::DataFrame { columns, .. } => Ok(SValue::scalar(columns.len() as f64)),
         SValue::Matrix { ncol, .. } => Ok(SValue::scalar(*ncol as f64)),
         _ => Ok(SValue::Null),
@@ -262,7 +266,9 @@ fn b_ncol(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// column names; for a **named vector** (R-15) they are the element names (an
 /// unset name → `NA`). Anything without names is `NULL`.
 fn b_names(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    match first_positional(args)? {
+    // Peel class/general wrappers (but not the names wrapper itself) so a classed
+    // or generally-attributed named vector still reports its names.
+    match peel_to_named(first_positional(args)?) {
         SValue::DataFrame { names, .. } => {
             Ok(SValue::Character(names.iter().cloned().map(Some).collect()))
         }
@@ -330,7 +336,7 @@ fn b_set_names(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 
 /// `dim(df)` — `c(nrow, ncol)`.
 fn b_dim(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    match first_positional(args)? {
+    match peel_structural(first_positional(args)?) {
         SValue::DataFrame { columns, .. } => {
             let nrow = columns.first().map(|c| c.length()).unwrap_or(0) as f64;
             Ok(SValue::doubles(vec![nrow, columns.len() as f64]))
@@ -1104,7 +1110,7 @@ fn b_factor(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 
 /// `levels(f)` — the level labels of a factor (`NULL` otherwise).
 fn b_levels(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    match first_positional(args)? {
+    match peel_structural(first_positional(args)?) {
         SValue::Factor { levels, .. } => Ok(SValue::Character(
             levels.iter().cloned().map(Some).collect(),
         )),
@@ -1228,6 +1234,31 @@ fn b_unclass(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 // *is* `names(x)` — both read the same field — and likewise for class/dim. R
 // also accepts `.Names`/`.Dim` as aliases for `names`/`dim`, which we honour.
 
+/// Peel the transparent wrappers — `Attributed` (general attrs, R-16), `Classed`
+/// (S v2 class), and `Named` (names, R-15) — to reach the *structural* value
+/// underneath (a `Matrix`/`DataFrame`/`Factor`/atomic). Used by the
+/// structural-query builtins (`dim`/`nrow`/`ncol`) so a value that has had a
+/// class or general attribute layered on top still reports its shape — keeping
+/// `attr(x,"dim")` and `dim(x)` in agreement even after `attr(x,"class") <- …`.
+fn peel_structural(x: &SValue) -> &SValue {
+    match x {
+        SValue::Attributed { inner, .. } => peel_structural(inner),
+        SValue::Classed { inner, .. } => peel_structural(inner),
+        SValue::Named { values, .. } => peel_structural(values),
+        other => other,
+    }
+}
+
+/// Peel only the non-`Named` transparent wrappers (`Attributed`, `Classed`),
+/// stopping at a `Named` so a names lookup still finds it.
+fn peel_to_named(x: &SValue) -> &SValue {
+    match x {
+        SValue::Attributed { inner, .. } => peel_to_named(inner),
+        SValue::Classed { inner, .. } => peel_to_named(inner),
+        other => other,
+    }
+}
+
 /// `attr(x, which)` — the named attribute, or `NULL` if absent. Special names are
 /// synthesized from the dedicated wrappers; everything else is looked up in the
 /// general attribute map.
@@ -1247,7 +1278,7 @@ fn get_attr(x: &SValue, which: &str) -> SValue {
             // Only an *explicitly* set class is an attribute; the implicit class
             // of a bare vector is not (matching R's `attr(1, "class")` → NULL).
             SValue::Classed { class, .. } => {
-                SValue::Character(class.iter().cloned().map(|c| Some(c)).collect())
+                SValue::Character(class.iter().cloned().map(Some).collect())
             }
             // See through a general-attribute wrapper to find an inner class.
             SValue::Attributed { inner, .. } => get_attr(inner, "class"),
@@ -1391,7 +1422,9 @@ fn set_dim_attr(x: SValue, value: &SValue) -> SResult<SValue> {
 fn dim_component(x: Option<f64>) -> SResult<usize> {
     match x {
         Some(v) if v.is_finite() && v >= 0.0 && v.fract() == 0.0 => Ok(v as usize),
-        _ => Err(SError::BadArgs("dim<-: each dimension must be a non-negative integer".into())),
+        _ => Err(SError::BadArgs(
+            "dim<-: each dimension must be a non-negative integer".into(),
+        )),
     }
 }
 
@@ -1530,14 +1563,9 @@ fn b_attributes_replace(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> 
             }
             let mut out = bare;
             for (name, item) in names.iter().zip(items.iter()) {
-                let key = name
-                    .as_deref()
-                    .filter(|s| !s.is_empty())
-                    .ok_or_else(|| {
-                        SError::BadArgs(
-                            "attributes<-: all attributes in the list must be named".into(),
-                        )
-                    })?;
+                let key = name.as_deref().filter(|s| !s.is_empty()).ok_or_else(|| {
+                    SError::BadArgs("attributes<-: all attributes in the list must be named".into())
+                })?;
                 out = set_attr(out, key, item)?;
             }
             Ok(out)
