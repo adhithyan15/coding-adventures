@@ -670,6 +670,16 @@ fn canonical_head(head: IRNode) -> IRNode {
     head
 }
 
+/// Build a canonical application from a head and args — the W-5 runtime entry to
+/// the *same* bridge + associative-fold W-4 lowering uses (see
+/// [`build_application`]). The list/functional built-ins `Map`/`Apply` construct
+/// a fresh `f[…]` at evaluation time and route it through this so, e.g.,
+/// `Apply[Plus, {1, 2, 3}]` becomes the left-folded `Add(Add(1, 2), 3)` the VM
+/// then sums to `6`, identical to the infix `1 + 2 + 3`.
+pub(crate) fn build_canonical_application(head: IRNode, args: Vec<IRNode>) -> IRNode {
+    build_application(head, args)
+}
+
 /// The surface→IR head dictionary for the operators that have *both* an infix
 /// form and a long head name. Returning `None` means "not a renamed built-in" —
 /// the head (whether an already-canonical `Sin` or a user symbol) stays as typed.

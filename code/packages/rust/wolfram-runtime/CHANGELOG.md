@@ -4,6 +4,50 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] — 2026-06-17
+
+The **W-5** deliverable (MA04 §8): more built-ins & evaluation, layered onto the
+*same* symbolic substrate W-4 uses — no bespoke evaluator, and no edit to
+`symbolic-vm`'s shared handler table.
+
+### Added
+
+- **`WolframBackend`** (`backend` module) — a decorator over the shared
+  `SymbolicBackend`. It answers `handler_for` from a small W-5 built-in table and
+  delegates everything else (`lookup`/`bind`/`on_unresolved`/`on_unknown_head`/
+  `rules`/`hold_heads`, and every W-4 handler) to the inner backend. This keeps
+  the new surface local to the Wolfram lane while reusing the entire evaluation
+  engine, the `Plus`→`Add` bridge, user-defined functions, and `/.`.
+- **List/functional/control/numeric built-ins** (`builtins` module):
+  - `Length[{…}]` — element count (`0` for an atom; argument count for a non-list
+    head).
+  - `First` / `Last` — first/last element; **empty list left unevaluated** (no
+    panic).
+  - `Part[expr, i]` — **1-based** indexing; `i = 0` is the head; negative `i`
+    counts from the end; out-of-range / non-integer index left unevaluated.
+  - `Append[{…}, x]` — a new list with `x` appended (values are immutable).
+  - `Range[n]` / `Range[a, b]` / `Range[a, b, d]` — integer ranges, **DoS-capped**
+    at `MAX_RANGE_LENGTH` (1,000,000) elements *before* allocation, so a tiny
+    `Range[10^9]` is left unevaluated rather than exhausting memory.
+  - `Map[f, {…}]` and `Apply[f, {…}]` — re-evaluate the constructed `f[…]` through
+    the VM, routing the head through the same canonical bridge as W-4 lowering
+    (`build_canonical_application`), so `Apply[Plus, {1, 2, 3}]` folds to `6`.
+  - `N[expr]` — coerce exact `Integer`/`Rational` to `Float`, mapping over a list
+    element-wise; symbolic and already-float values pass through.
+- `MAX_RANGE_LENGTH` is re-exported.
+- **`If` and the comparison/logical heads** (`==`, `!=`, `<`, `>`, `<=`, `>=`,
+  `&&`, `||`, `!`) already evaluated through the shared backend in W-4; W-5 pins
+  them with end-to-end tests.
+
+### Notes
+
+- No grammar/lexer change: every W-5 head is a function-call form the existing
+  `head[args]` grammar already parses. The operator *sugar* (`/@` Map, `@@` Apply,
+  `[[ ]]` Part) is deferred to W-6 (MA04 §2/§4).
+- All new built-ins run inside the existing W-4 worker-thread `catch_unwind`, so
+  an unforeseen handler panic still becomes a clean `Err` and the session is
+  rebuilt.
+
 ## [0.1.0] — 2026-06-17
 
 Initial release — the **W-4** deliverable of the Wolfram-language lane (MA04 §7).
