@@ -58,6 +58,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReadinessPackageSummary` and mesh readiness package helpers
   for combining Zigbee, Z-Wave, and Thread primitive substrate readiness with
   mesh-scoped activation evidence remediation rollups.
+- `IntegrationMeshProtocolSubstrateStageRow` and summary helpers for
+  classifying low-level mesh primitive blockers into controller, radio,
+  discovery, network-security, and supervision stages.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
