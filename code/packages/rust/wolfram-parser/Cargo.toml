@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-wolfram-parser"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Parser for the Wolfram Language (Mathematica) M-expression subset"
 license = "MIT"

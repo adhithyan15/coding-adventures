@@ -29,7 +29,30 @@ escapes: none
 SETDELAYED  = ":="
 RULEDELAYED = ":>"
 RULE        = "->"
+
+# `/@` (Map sugar) and `/.` (ReplaceAll) both begin with `/`; both must precede
+# the bare `/` (SLASH) below. Their order relative to each other does not matter
+# (the second char differs: `@` vs `.`), but keep them grouped here so the
+# longest-match-first contract for the `/`-family is obvious at a glance.
+MAP         = "/@"
 REPLACEALL  = "/."
+
+# `@@` (Apply sugar). There is no bare `@` token in this subset, so `@@` is the
+# only `@`-form; it is listed here in SECTION 1 alongside the other multi-char
+# operators for consistency.
+APPLY       = "@@"
+
+# `[[` (Part sugar opener) must precede the single `[` (LBRACKET) in SECTION 2,
+# so `x[[i]]` lexes as LDBRACKET … rather than two LBRACKETs.
+#
+# There is deliberately NO `]]` token. A closing `]]` is lexed as TWO RBRACKET
+# tokens, and the grammar's `[[ … ]]` rule consumes `RBRACKET RBRACKET` to close.
+# This avoids a fatal longest-match ambiguity: `f[g[x]]` ends in two ordinary
+# single `]`, and a greedy `]]` token would mis-lex that tail as one RDBRACKET,
+# breaking every nested ordinary application. Openers are safe — `[[` only forms
+# where two `[` are genuinely adjacent (a part access), which a single `[` apply
+# never produces — so only the opener gets a dedicated token.
+LDBRACKET   = "[["
 
 EQUAL       = "=="
 UNEQUAL     = "!="

@@ -4,6 +4,26 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 Semantic Versioning.
 
+## [0.2.0] — 2026-06-17
+
+### Added (W-6 — operator sugar)
+
+- New tokens for the W-6 operator sugar (`code/grammars/wolfram.tokens`,
+  regenerated into `_grammar.rs`): `MAP` (`/@`), `APPLY` (`@@`), and the
+  part-sugar opener `LDBRACKET` (`[[`), all under the longest-match-first
+  convention (`/@` before `/.`/`/`).
+- `drop_bracketed_newlines` now accounts for `[[`: the opener is one token but
+  two bracket levels (it closes with two single `]`), so it adds `2` to the
+  depth, keeping the count balanced. A newline inside `x[[\n i\n]]` is dropped
+  like one inside `f[\n a\n]`.
+
+### Notes
+
+- There is **no** `]]` token — a closing `]]` lexes as two ordinary `RBRACKET`s,
+  on purpose: a greedy `]]` token would mis-lex the tail of nested ordinary
+  application `f[g[x]]` (two unrelated single `]`). Only the opener gets a
+  dedicated token. See `code/specs/MA04-wolfram-language.md` §9.
+
 ## [0.1.0] — 2026-06-16
 
 ### Added

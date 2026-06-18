@@ -8,7 +8,7 @@ M-expression AST from
 Macsyma/Maxima drive rather than writing a bespoke evaluator.
 
 See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfram-language.md)
-§7 (W-4 runtime) and §8 (W-5 built-ins).
+§7 (W-4 runtime), §8 (W-5 built-ins), and §9 (W-6 operator sugar).
 
 ## What it does
 
@@ -76,6 +76,11 @@ assert_eq!(eval("Part[{a, b, c}, 2]\n").unwrap(), "Out[1]= b\n");
 assert_eq!(eval("If[1 > 0, a, b]\n").unwrap(), "Out[1]= a\n");
 assert_eq!(eval("N[1/2]\n").unwrap(), "Out[1]= 0.5\n");
 
+// W-6 operator sugar — identical to the head forms above:
+assert_eq!(eval("f /@ {1, 2}\n").unwrap(), "Out[1]= {f[1], f[2]}\n"); // Map
+assert_eq!(eval("Plus @@ {1, 2, 3}\n").unwrap(), "Out[1]= 6\n");      // Apply
+assert_eq!(eval("{a, b, c}[[2]]\n").unwrap(), "Out[1]= b\n");          // Part
+
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
 s.feed("square[x_] := x^2;\n").unwrap();   // `;` suppresses display
@@ -108,7 +113,20 @@ whole engine:
 lowering, so `Apply[Plus, …]` sums. `First`/`Last`/`Part` on an empty list or an
 out-of-range index, and `Range` of an oversize span (capped at
 `MAX_RANGE_LENGTH = 1_000_000` *before* allocation), are left **unevaluated** —
-never a panic, never an OOM. The operator sugar `/@`, `@@`, `[[ ]]` is W-6.
+never a panic, never an OOM.
+
+**W-6** adds the operator *sugar* for three of these heads, desugared in lowering
+to the exact same head so the results are byte-identical:
+
+| Sugar | ≡ head form | Result |
+|-------|-------------|--------|
+| `f /@ x` | `Map[f, x]` | `{f[…], …}` |
+| `f @@ x` | `Apply[f, x]` | e.g. `Plus @@ {1,2,3}` = `6` |
+| `x[[i]]` | `Part[x, i]` | e.g. `{a,b,c}[[2]]` = `b` |
+
+`[[ ]]` chains and nests (`{{1,2},{3,4}}[[1]][[2]]` = `2`, `x[[i, j]]` =
+`Part[Part[x,i],j]`) and interleaves with `f[…]` application; `/@` and `@@` share
+one left-associative precedence level (parenthesise when mixing them).
 
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
@@ -130,9 +148,10 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   plus [`wolfram-repl`](../wolfram-repl) (the interactive `wolfram`/`math` binary).
 - **W-5** (this crate) — the list/functional/control/numeric built-ins above,
   added via the `WolframBackend` decorator.
-- **W-6** — the full `cas-*` function surface under Wolfram names
-  (`Simplify`, `Expand`, `Factor`, `Solve`, …) and the `/@`/`@@`/`[[ ]]` operator
-  sugar, a later item.
+- **W-6** (this crate) — the `/@`/`@@`/`[[ ]]` operator sugar (a lexer+grammar
+  change), each desugaring to the W-5 `Map`/`Apply`/`Part` head.
+- **Future** — the full `cas-*` function surface under Wolfram names
+  (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 
 ## Testing
 

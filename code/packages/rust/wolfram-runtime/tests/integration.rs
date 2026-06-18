@@ -231,3 +231,83 @@ fn w5_builtins_compose() {
     // Apply[Plus, Range[4]] = 1+2+3+4 = 10
     assert_eq!(eval("Apply[Plus, Range[4]]\n").unwrap(), "Out[1]= 10\n");
 }
+
+// ===========================================================================
+// W-6 — operator sugar /@, @@, [[ ]], end-to-end.
+// Each sugar form must evaluate IDENTICALLY to its W-5 head form (MA04 §9).
+// ===========================================================================
+
+/// `f /@ x` ≡ `Map[f, x]` — same output string, exactly.
+#[test]
+fn w6_map_sugar_equals_map_head() {
+    assert_eq!(
+        eval("f /@ {1, 2}\n").unwrap(),
+        eval("Map[f, {1, 2}]\n").unwrap()
+    );
+    assert_eq!(eval("f /@ {1, 2}\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
+    // A built-in folds through the sugar just as through the head form.
+    assert_eq!(eval("Sin /@ {0}\n").unwrap(), "Out[1]= {0}\n");
+}
+
+/// `f @@ x` ≡ `Apply[f, x]`; `Plus @@ {1, 2, 3}` is `6`.
+#[test]
+fn w6_apply_sugar_equals_apply_head() {
+    assert_eq!(
+        eval("Plus @@ {1, 2, 3}\n").unwrap(),
+        eval("Apply[Plus, {1, 2, 3}]\n").unwrap()
+    );
+    assert_eq!(eval("Plus @@ {1, 2, 3}\n").unwrap(), "Out[1]= 6\n");
+    assert_eq!(eval("Times @@ {2, 3, 4}\n").unwrap(), "Out[1]= 24\n");
+    // Unbound head stays symbolic as the application, like the head form.
+    assert_eq!(eval("g @@ {a, b}\n").unwrap(), "Out[1]= g[a, b]\n");
+}
+
+/// `x[[i]]` ≡ `Part[x, i]`; `{a, b, c}[[2]]` is `b`.
+#[test]
+fn w6_part_sugar_equals_part_head() {
+    assert_eq!(
+        eval("{a, b, c}[[2]]\n").unwrap(),
+        eval("Part[{a, b, c}, 2]\n").unwrap()
+    );
+    assert_eq!(eval("{a, b, c}[[2]]\n").unwrap(), "Out[1]= b\n");
+    // Negative indexing and out-of-range carry over from Part unchanged.
+    assert_eq!(eval("{a, b, c}[[-1]]\n").unwrap(), "Out[1]= c\n");
+    assert_eq!(
+        eval("{a, b, c}[[9]]\n").unwrap(),
+        "Out[1]= Part[{a, b, c}, 9]\n"
+    );
+}
+
+/// Nested / chained `[[ ]]` indexes a nested list: `{{1,2},{3,4}}[[1]][[2]]` = 2.
+#[test]
+fn w6_part_sugar_nests() {
+    assert_eq!(eval("{{1, 2}, {3, 4}}[[1]][[2]]\n").unwrap(), "Out[1]= 2\n");
+    // The multi-index spelling is identical: m[[1, 2]] == m[[1]][[2]].
+    assert_eq!(
+        eval("{{1, 2}, {3, 4}}[[1, 2]]\n").unwrap(),
+        eval("{{1, 2}, {3, 4}}[[1]][[2]]\n").unwrap()
+    );
+}
+
+/// Sugar interleaves with ordinary application without disturbing it.
+#[test]
+fn w6_sugar_interleaves_with_application() {
+    // First[{a, b}][[…]] is nonsense, but f[…][[…]] is fine:
+    // Range[3][[2]] = Part[{1,2,3}, 2] = 2.
+    assert_eq!(eval("Range[3][[2]]\n").unwrap(), "Out[1]= 2\n");
+    // Apply sugar feeding a head form: Plus @@ Range[4] = 10.
+    assert_eq!(eval("Plus @@ Range[4]\n").unwrap(), "Out[1]= 10\n");
+    // Map sugar then Part sugar: (f /@ {1,2})[[1]] = f[1].
+    assert_eq!(eval("(f /@ {1, 2})[[1]]\n").unwrap(), "Out[1]= f[1]\n");
+}
+
+/// W-4/W-5 behaviour is unchanged by the W-6 grammar growth — the existing
+/// forms still parse and evaluate exactly as before (regression guard).
+#[test]
+fn w6_does_not_disturb_existing_forms() {
+    assert_eq!(eval("1 + 2*3\n").unwrap(), "Out[1]= 7\n");
+    assert_eq!(eval("f[g[x]]\n").unwrap(), "Out[1]= f[g[x]]\n"); // nested apply
+    assert_eq!(eval("x /. x -> 9\n").unwrap(), "Out[1]= 9\n");
+    assert_eq!(eval("Map[f, {1, 2}]\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
+    assert_eq!(eval("Part[{a, b, c}, 2]\n").unwrap(), "Out[1]= b\n");
+}

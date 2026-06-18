@@ -58,10 +58,13 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   functional, control, and numeric built-ins lowered onto the *same* symbolic
   substrate (no bespoke evaluator): `Length`, `First`, `Last`, `Part`, `Append`,
   `Range`, `Map`, `Apply`, `If`, `N`, and the comparison/equality/logical heads.
-- **W-6 — the `cas-*` function surface under Wolfram names** (`Expand`,
-  `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing `cas-*` crates,
-  plus the operator sugar deferred from W-5 (`/@`, `@@`, `[[ ]]`, and the `&&`,
-  `||`, `<=`, `>=` *long-name* heads if any further grammar work is needed).
+- **W-6 — operator sugar `/@`, `@@`, `[[ ]]`.** *(implemented — see §9.)* The
+  Tier-2 surface forms deferred from W-5: `f /@ x` ≡ `Map[f, x]`, `f @@ x` ≡
+  `Apply[f, x]`, `x[[i]]` ≡ `Part[x, i]`. A grammar + lexer change (new tokens
+  `MAP`/`APPLY`/`LDBRACKET`/`RDBRACKET`) desugaring to the *same* W-5 Tier-1
+  heads, so each sugar form evaluates identically to its head form.
+- **Future — the `cas-*` function surface under Wolfram names** (`Expand`,
+  `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing `cas-*` crates.
 
 ## §3 The supported surface (the grammar)
 
@@ -74,6 +77,9 @@ to a `head[args]` form (shown in the right column) in W-4.
 | `"text"` | string literal | `Str` |
 | `Sin`, `x`, `foo` | symbol (case-sensitive; built-ins are Capitalized) | `Symbol` |
 | `f[a, b]` | function application (square brackets) | `f[a, b]` |
+| `x[[i]]` | part sugar (double brackets, postfix) | `Part[x, i]` (W-6) |
+| `f /@ x` | map sugar (infix) | `Map[f, x]` (W-6) |
+| `f @@ x` | apply sugar (infix) | `Apply[f, x]` (W-6) |
 | `{a, b, c}` | list | `List[a, b, c]` |
 | `a + b`, `a - b` | additive | `Plus` / `Subtract` |
 | `a b`* / `a * b` | multiply *(explicit `*` required — see below)* | `Times` |
@@ -92,10 +98,15 @@ to a `head[args]` form (shown in the right column) in W-4.
 
 **Precedence**, loosest → tightest (each binds tighter than the line above):
 `Set`/`SetDelayed` → `ReplaceAll` → `Rule`/`RuleDelayed` → `Or` → `And` → `Not`
-→ comparison → additive → multiplicative → unary minus → `Power` → application
-`f[…]` → atoms. This matches Wolfram's operator precedences for the subset (e.g.
-`x /. a -> b` is `ReplaceAll[x, Rule[a, b]]`; `a && b -> c` is
-`Rule[And[a, b], c]`; `-x^2` is `Times[-1, Power[x, 2]]`).
+→ comparison → additive → multiplicative → unary minus → `Power` → map/apply
+sugar (`/@`, `@@`) → application `f[…]` / part `[[…]]` → atoms. This matches
+Wolfram's operator precedences for the subset (e.g. `x /. a -> b` is
+`ReplaceAll[x, Rule[a, b]]`; `a && b -> c` is `Rule[And[a, b], c]`; `-x^2` is
+`Times[-1, Power[x, 2]]`). The `[[…]]` part sugar is a postfix that binds as
+tightly as `f[…]` application (so `x[[1]][[2]]` chains left-to-right); `/@` and
+`@@` are infix operators just below application (`f /@ {1, 2}` maps `f` over the
+whole list). Exact precedence of `/@`/`@@` against the arithmetic operators is
+not exercised by the subset's tests — write parentheses when mixing them.
 
 Comments are `(* … *)`. Newlines terminate a top-level statement; a `;`
 separates statements on one line and suppresses the preceding result's display
@@ -110,11 +121,11 @@ W-1 grammar deliberately omits, to be added later if warranted:
 - **Implicit multiplication by juxtaposition.** Real Wolfram reads `2 x` as
   `2*x`; that is genuinely hard in a context-free grammar, so this subset
   **requires an explicit `*`**. (`2 x` will not parse; write `2*x`.)
-- **The `[[ … ]]` `Part` *sugar*, `;;` `Span`**, `@`/`@@`/`/@`
-  (prefix/apply/map), `&` pure functions and `#`/`#1` slots, `~f~` infix, `|`
-  `Alternatives`, — the `Part[expr, i]`, `Map[f, list]`, and `Apply[f, list]`
-  *head* forms ship in W-5 (§8); only the operator sugar (`[[ ]]`, `/@`, `@@`)
-  is deferred to W-6.
+- **`;;` `Span`**, `@` (prefix application), `&` pure functions and `#`/`#1`
+  slots, `~f~` infix, `|` `Alternatives`. The `[[ … ]]` `Part` sugar, `/@` map
+  sugar, and `@@` apply sugar ship in W-6 (§9), desugaring to the W-5 `Part`,
+  `Map`, and `Apply` *head* forms (§8); prefix `@`, spans, and pure functions
+  remain out of scope.
   `..`/`...` repeated patterns, `/;` `Condition`, `:` `Optional`/`Pattern`
   binding, `'` `Derivative`, `%` `Out`, contexts/backtick symbols.
 - **`CompoundExpression` inside an expression** — `;` is supported only as a
@@ -276,6 +287,64 @@ input-size cap already bound). `Part`/`First`/`Last` reject out-of-range and
 empty-list access by leaving the expression unevaluated rather than indexing out
 of bounds. All of this runs inside the W-4 worker-thread `catch_unwind`, so even
 an unforeseen panic in a handler becomes a clean `Err` and the session is rebuilt.
+
+## §9 W-6 operator sugar `/@`, `@@`, `[[ ]]` (implemented)
+
+W-5 (§8) shipped the *head* forms `Map[f, x]`, `Apply[f, x]`, and `Part[x, i]`.
+W-6 adds the **operator-sugar surface forms** every real Wolfram session uses
+instead, each desugaring to its existing W-5 head — no new evaluation logic, no
+new handler, just three new ways to *spell* the same three calls.
+
+### §9.1 What W-6 adds
+
+| Surface form | Desugars to | Identical to |
+|--------------|-------------|--------------|
+| `f /@ x` | `Map[f, x]` | `Map[f, x]` head form |
+| `f @@ x` | `Apply[f, x]` | `Apply[f, x]` head form |
+| `x[[i]]` | `Part[x, i]` | `Part[x, i]` head form |
+
+So `Plus @@ {1, 2, 3}` is `6` (via the `Apply` → `Plus[1,2,3]` → `Add` fold),
+`f /@ {1, 2}` is `{f[1], f[2]}`, and `{a, b, c}[[2]]` is `b`. Because the sugar
+lowers to the exact same IR head the W-5 handler answers, every behaviour W-5
+documented (re-evaluation under `Map`, the `Apply`/`Plus` fold, 1-based and
+negative `Part` indexing, out-of-range left unevaluated) carries over unchanged.
+`[[ ]]` chains and nests like application: `{{1,2},{3,4}}[[1]][[2]]` is
+`Part[Part[{{1,2},{3,4}}, 1], 2]` = `2`.
+
+### §9.2 The grammar/lexer change
+
+Unlike W-5 (pure head built-ins, no grammar work), W-6 is a **lexer + grammar**
+change because the tokens `/@`, `@@`, `[[`, `]]` did not exist:
+
+- **Tokens** (`code/grammars/wolfram.tokens`): `MAP` (`/@`), `APPLY` (`@@`),
+  `LDBRACKET` (`[[`), `RDBRACKET` (`]]`), added under the longest-match-first
+  convention — `/@` is listed before `/.`/`/`, `@@` before any `@`, and
+  `[[`/`]]` before `[`/`]` — so the multi-char operator always wins.
+- **Grammar** (`code/grammars/wolfram.grammar`): `[[ … ]]` is folded into the
+  `postfix` rule alongside `f[…]` (a postfix that binds as tightly as
+  application); `/@` and `@@` get a new `mapapply` precedence level between
+  `power` and `postfix` (infix, left-associative).
+- **Regeneration**: the lexer/parser embed the compiled grammar as
+  `src/_grammar.rs`; both were regenerated with the Rust `grammar-tools` CLI
+  (`compile-tokens` / `compile-grammar`) — never hand-edited.
+
+### §9.3 Lowering
+
+`wolfram-runtime`'s `lower.rs` maps the new parser nodes onto the W-5 heads:
+`postfix`'s `[[ arglist ]]` segment builds `Part[base, idx]` (one `Part` per
+index when the bracket carries several), and the `mapapply` rule builds
+`Map[f, x]` / `Apply[f, x]`. These flow straight into the `WolframBackend`
+built-in table (§8.2), so `f /@ x` and `Map[f, x]` produce byte-identical IR.
+
+### §9.4 DoS surface
+
+W-6 adds no new allocation source: `/@`/`@@` desugar to `Map`/`Apply`, whose
+DoS profile (bounded by the already-materialised list) §8.3 covers, and `[[ ]]`
+to `Part`, which only ever *reads* one element. The one new shape is
+**arbitrarily nested `[[…]]`** (e.g. `x[[1]][[1]]…`); each level is one bounded
+postfix step parsed iteratively (not by grammar recursion) and one `Part` apply,
+so a deeply-chained part expression is linear in source length and bounded by the
+W-4 per-statement token cap — it cannot trigger unbounded parser recursion.
 
 ## §6 References
 

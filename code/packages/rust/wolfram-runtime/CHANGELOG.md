@@ -4,6 +4,40 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — 2026-06-17
+
+The **W-6** deliverable (MA04 §9): operator sugar for the W-5 Tier-1 heads. No
+new evaluation logic and no new handler — each sugar form desugars in lowering
+to the exact same head the W-5 built-in table already answers, so the sugar and
+its head form produce byte-identical IR.
+
+### Added (operator sugar)
+
+- **`f /@ x` ≡ `Map[f, x]`** — lowered by the new `lower_mapapply` over the
+  parser's `mapapply` rule.
+- **`f @@ x` ≡ `Apply[f, x]`** — same path; `/@` and `@@` share one
+  left-associative precedence level (`g @@ f /@ x` ⇒ `Map[Apply[g, f], x]` —
+  parenthesise when mixing).
+- **`x[[i]]` ≡ `Part[x, i]`** — `lower_postfix` gains an `LDBRACKET` arm that
+  emits `Part`; a multi-index `x[[i, j]]` folds into nested parts
+  `Part[Part[x, i], j]`, and `[[ ]]` chains/interleaves with `f[…]` application
+  (`x[[1]][[2]]`, `f[x][[1]]`, `Range[3][[2]]`).
+
+So `Plus @@ {1, 2, 3}` is `6`, `f /@ {1, 2}` is `{f[1], f[2]}`,
+`{a, b, c}[[2]]` is `b`, and `{{1,2},{3,4}}[[1]][[2]]` is `2`, each identical to
+its long head form. Negative/out-of-range `Part` and the `Map`/`Apply`
+re-evaluation behaviour carry over from W-5 unchanged.
+
+### Notes
+
+- `Map`/`Apply`/`Part` are **not** run through the `Plus`→`Add`-style
+  `canonical_head` bridge (they are not arithmetic heads), so they reach the
+  `WolframBackend` decorator handler table verbatim.
+- No new DoS surface: `/@`/`@@` inherit `Map`/`Apply`'s bounds (the
+  already-materialised list); `[[ ]]` only reads one element; deep `[[…]]`
+  chains are parsed iteratively (bounded by the W-4 per-statement token cap), not
+  by grammar recursion. See MA04 §9.4.
+
 ## [0.2.0] — 2026-06-17
 
 The **W-5** deliverable (MA04 §8): more built-ins & evaluation, layered onto the
