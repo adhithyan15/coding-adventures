@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+**Save / load (serialize).** New linear-memory exports `serialize() -> *u8` (a packed JSON document of the workbook's source + formats; read via the existing output convention) and `deserialize(data*, len) -> i32` (1 = loaded, 0 = malformed / unsupported version, leaving the workbook untouched). JS loader gains `serialize() -> string` and `deserialize(data) -> boolean`. Rebuilt `pkg/spreadsheet_engine.wasm`. `js/smoke.mjs` extended: serialize the workbook → load into a fresh session → confirm a moved cell and a live formula (edit F3 → G3 = F3*2 recomputes), and that garbage input is rejected.
+
 ## 0.7.0
 
 **Clipboard — cut / copy / paste.** New linear-memory exports `copy(start*, len, end*, len)`, `cut(...)` (void), and `paste(dst*, len) -> i32` (1/0). JS loader gains `copy(start, end)`, `cut(start, end)`, and `paste(dstStart) -> boolean`. Rebuilt `pkg/spreadsheet_engine.wasm`. `js/smoke.mjs` extended: copy F1:G1 → paste at F3 (G3 = F3*2, echo `=(F3*2)`), cut A1 → move to C1 (source clears, second paste returns false).

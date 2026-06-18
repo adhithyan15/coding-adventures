@@ -105,6 +105,17 @@ check("cut moved value", wb.getValue("C1"), { kind: "number", value: 7 });
 check("cut cleared source", wb.getValue("A1"), { kind: "empty" });
 check("cut buffer consumed", wb.paste("E1"), false);
 
+// Save / load: serialize the current workbook (source + formats), load it into a
+// fresh session, and confirm the formula is restored live (editing recomputes it).
+const saved = wb.serialize();
+check("serialize is a string", typeof saved, "string");
+const wb3 = engine.createSpreadsheet();
+check("deserialize returns true", wb3.deserialize(saved), true);
+check("loaded C1 value", wb3.getValue("C1"), { kind: "number", value: 7 }); // moved by cut
+wb3.setCell("F3", "100");
+check("loaded formula is live", wb3.getValue("G3"), { kind: "number", value: 200 }); // F3*2
+check("deserialize rejects garbage", wb3.deserialize("not json"), false);
+
 // Fresh workbook is empty.
 const wb2 = engine.createSpreadsheet();
 check("reset clears values", wb2.getValues(), {});

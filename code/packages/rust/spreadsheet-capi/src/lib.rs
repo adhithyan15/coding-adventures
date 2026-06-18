@@ -357,6 +357,44 @@ pub unsafe extern "C" fn sc_paste(s: *mut ScSession, dst_start: *const c_char) -
     }
 }
 
+/// `serialize()` → a self-contained JSON document capturing the workbook's
+/// source (formula text + typed literals) and per-cell formats — everything
+/// needed to reconstruct the sheet, but not the computed values (those recompute
+/// on load, so the file is small and can never disagree with itself). Hand the
+/// returned string to `sc_deserialize` to restore it. The caller owns the string
+/// and must release it with `sc_free_string`. See [`SpreadsheetSession::serialize`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_serialize(s: *mut ScSession) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.serialize())
+}
+
+/// `deserialize(data)` — replace the workbook with the contents of a document
+/// produced by `sc_serialize`. Returns `1` on success, `0` if `data` is malformed
+/// or carries an unsupported version (in which case the existing workbook is left
+/// untouched — the engine validates before it mutates). Formulas reload live and
+/// recompute. See [`SpreadsheetSession::deserialize`].
+///
+/// # Safety
+/// `s` must be a valid session; `data` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_deserialize(s: *mut ScSession, data: *const c_char) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    let data = read_cstr(data);
+    if (*s).inner.deserialize(&data) {
+        1
+    } else {
+        0
+    }
+}
+
 /// `get_display_window(row0, col0, row1, col1)` → display-window JSON (each cell
 /// is its value rendered through its format code). See
 /// [`SpreadsheetSession::get_display_window`]. Returns null only on a null `s`.
@@ -536,6 +574,39 @@ mod tests {
             sc_copy(ptr::null_mut(), bs.as_ptr(), ce.as_ptr());
             assert_eq!(sc_paste(ptr::null_mut(), b2.as_ptr()), 0);
             sc_session_free(s);
+        }
+    }
+
+    #[test]
+    fn c_abi_serialize_round_trips() {
+        unsafe {
+            let s = sc_session_new();
+            set(s, "A1", "12");
+            set(s, "B1", "=A1*3"); // 36
+            // Serialize, then load into a fresh session through the C ABI.
+            let saved_ptr = sc_serialize(s);
+            let saved = CStr::from_ptr(saved_ptr).to_string_lossy().into_owned();
+            sc_string_free(saved_ptr);
+
+            let t = sc_session_new();
+            let cdata = CString::new(saved).unwrap();
+            assert_eq!(sc_deserialize(t, cdata.as_ptr()), 1);
+            assert_eq!(value(t, "A1"), r#"{"kind":"number","value":12.0}"#);
+            assert_eq!(value(t, "B1"), r#"{"kind":"number","value":36.0}"#);
+            // The formula is live, not frozen: editing A1 recomputes B1.
+            set(t, "A1", "100");
+            assert_eq!(value(t, "B1"), r#"{"kind":"number","value":300.0}"#);
+
+            // Malformed input is rejected (0) and leaves the workbook untouched.
+            let bad = CString::new("nonsense").unwrap();
+            assert_eq!(sc_deserialize(t, bad.as_ptr()), 0);
+            assert_eq!(value(t, "A1"), r#"{"kind":"number","value":100.0}"#);
+
+            // Null session: serialize → null, deserialize → 0.
+            assert!(sc_serialize(ptr::null_mut()).is_null());
+            assert_eq!(sc_deserialize(ptr::null_mut(), cdata.as_ptr()), 0);
+            sc_session_free(s);
+            sc_session_free(t);
         }
     }
 

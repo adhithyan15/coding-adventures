@@ -402,6 +402,66 @@ impl SpreadsheetSession {
         self.clip.is_some()
     }
 
+    /// Serialize the workbook to a portable JSON string (save). Delegates to the
+    /// engine's [`Workbook::serialize`], which captures every source cell + format
+    /// per sheet; the JSON round-trips through [`deserialize`](Self::deserialize).
+    /// No I/O — the JS host stores the returned string wherever it likes.
+    pub fn serialize(&self) -> String {
+        self.wb.serialize()
+    }
+
+    /// Replace the workbook's contents from a JSON string produced by
+    /// [`serialize`](Self::serialize) (load). Returns `true` on success, `false`
+    /// for malformed JSON / unsupported version / bad structure (the engine
+    /// leaves itself untouched on a bad header). On success the facade's `raw`
+    /// echo map is rebuilt from the loaded JSON so the formula bar shows each
+    /// cell's source (a formula's text; a literal's canonical string), and the
+    /// pinned single sheet is re-bound (a zero-sheet file gets a fresh "Sheet1"
+    /// so the facade stays usable).
+    pub fn deserialize(&mut self, data: &str) -> bool {
+        if self.wb.deserialize(data).is_err() {
+            return false;
+        }
+        // Re-bind the pinned sheet: the engine rebuilt sheets in file order, so
+        // SheetId(0) is the first sheet — unless the file had none, in which case
+        // give the facade a fresh sheet rather than leaving it pointing at a hole.
+        self.sheet = if self.wb.sheet_count() == 0 {
+            self.wb.add_sheet("Sheet1")
+        } else {
+            SheetId(0)
+        };
+        // Rebuild the raw echo from the just-loaded JSON (the engine doesn't keep
+        // the user's typed text). Single-sheet facade → the first sheet's cells.
+        self.raw.clear();
+        if let Ok(root) = serde_json::from_str::<Value>(data) {
+            if let Some(cells) = root
+                .get("sheets")
+                .and_then(Value::as_array)
+                .and_then(|s| s.first())
+                .and_then(|s| s.get("cells"))
+                .and_then(Value::as_array)
+            {
+                for c in cells {
+                    let Some(a1) = c.get("a1").and_then(Value::as_str) else {
+                        continue;
+                    };
+                    let Ok(addr) = CellAddress::parse(a1) else {
+                        continue;
+                    };
+                    let raw = if let Some(f) = c.get("formula").and_then(Value::as_str) {
+                        f.to_string()
+                    } else if let Some(vj) = c.get("value") {
+                        raw_from_value_json(vj)
+                    } else {
+                        continue;
+                    };
+                    self.raw.insert(addr, raw);
+                }
+            }
+        }
+        true
+    }
+
     /// Get a cell's *computed* value as a JSON object (see [`value_to_json`] for
     /// the shape). A malformed address yields an `#REF!`-style error object
     /// rather than failing.
@@ -639,6 +699,30 @@ fn rewrite_raw_for_fill(raw: &str, d_row: i32, d_col: i32) -> String {
     }
 }
 
+/// Reconstruct a literal cell's `raw` echo from the engine's serialized `value`
+/// object (`{"number":n}` / `{"text":s}` / `{"bool":b}` / `{"error":code}`) — the
+/// string a user would type to re-enter it. Used by [`SpreadsheetSession::deserialize`]
+/// to repopulate the formula-bar source after a load (the engine stores typed
+/// values, not the original text). Integers render without a trailing `.0`,
+/// matching how the grid shows them.
+fn raw_from_value_json(vj: &Value) -> String {
+    if let Some(b) = vj.get("bool").and_then(Value::as_bool) {
+        if b { "TRUE".to_string() } else { "FALSE".to_string() }
+    } else if let Some(n) = vj.get("number").and_then(Value::as_f64) {
+        if n == n.trunc() && n.abs() < 1e15 {
+            (n as i64).to_string()
+        } else {
+            n.to_string()
+        }
+    } else if let Some(t) = vj.get("text").and_then(Value::as_str) {
+        t.to_string()
+    } else if let Some(code) = vj.get("error").and_then(Value::as_str) {
+        code.to_string()
+    } else {
+        String::new()
+    }
+}
+
 /// Encode a [`CellValue`] as the JSON the JS host expects. The shape matches
 /// the TypeScript engine's `CellValue` discriminated union exactly, so the
 /// demo glue is identical whichever engine backs it:
@@ -845,6 +929,39 @@ mod tests {
         let mut s = SpreadsheetSession::new();
         assert!(!s.has_clipboard());
         assert!(!s.paste("A1"));
+    }
+
+    #[test]
+    fn serialize_then_deserialize_round_trips_through_the_facade() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "15");
+        s.set_cell("B1", "hi");
+        s.set_cell("C1", "=A1*2"); // 30
+        s.set_format("A1", "#,##0.00");
+        let saved = s.serialize();
+
+        // Load into a fresh facade and confirm values, format, and raw echo.
+        let mut loaded = SpreadsheetSession::new();
+        assert!(loaded.deserialize(&saved));
+        assert_eq!(loaded.get_value("A1"), r#"{"kind":"number","value":15.0}"#);
+        assert_eq!(loaded.get_value("C1"), r#"{"kind":"number","value":30.0}"#);
+        assert_eq!(loaded.get_raw("A1"), "15"); // literal echo reconstructed
+        assert_eq!(loaded.get_raw("C1"), "=A1*2"); // formula echo exact
+        assert_eq!(loaded.get_display("A1"), "15.00"); // format survived
+        // The formula stays live, not frozen.
+        loaded.set_cell("A1", "100");
+        assert_eq!(loaded.get_value("C1"), r#"{"kind":"number","value":200.0}"#);
+    }
+
+    #[test]
+    fn deserialize_bad_json_returns_false() {
+        let mut s = SpreadsheetSession::new();
+        assert!(!s.deserialize("not json"));
+        assert!(!s.deserialize(r#"{"version":99,"sheets":[]}"#));
+        // A zero-sheet file loads (returns true) and leaves the facade usable.
+        assert!(s.deserialize(r#"{"version":1,"sheets":[]}"#));
+        s.set_cell("A1", "1"); // no panic — the pinned sheet was re-created
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":1.0}"#);
     }
 
     #[test]
