@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.8.0] - 2026-06-17 — governing answers carry their grounded `context` (ADJ73 PR-B-3)
+
+### Added
+
+- Each `governing` answer now carries a **`"context"`** field — the grounded context its
+  highest-standing deriving rule is in (`ninth_circuit`, `district_court`, `federal`, `state`, …),
+  omitted for a context-free derivation. The audit reader sees *which context governed*, not just
+  which term beat another — the lex-superior story made legible in the output.
+
+### Worked example (committed, runnable)
+
+- `code/specs/data/context-precedence/` — a grounded context-precedence rulebook
+  (`context-precedence.adj`: `outranks_context` edges, each byte-quoting its charter — the
+  Supremacy Clause for `federal > state`, vertical stare decisis for `ninth_circuit >
+  district_court`) + a worked legal example (`worked-legal-example.adj`) that `import`s it and
+  proves *lex superior* end-to-end: the Ninth Circuit's broad reading **governs** a district
+  court's narrow reading **despite the latter's higher `mandatory` tier**. `SOURCES.md` is the
+  provenance ledger. New golden test `tests/context_precedence_e2e.rs` runs the committed
+  artifacts through the built CLI and asserts the override + that the edge is recallable WITH its
+  charter. 0 answer-time model calls.
+
 ## [0.7.0] - 2026-06-16 — `governing` section: defeasible precedence output (ADJ73 PR-3)
 
 ### Added

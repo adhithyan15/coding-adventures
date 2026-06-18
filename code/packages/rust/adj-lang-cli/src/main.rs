@@ -624,12 +624,21 @@ fn governing_json(query: &Term, kb: &KnowledgeBase) -> String {
                 Standing::Asserted => "asserted".to_string(),
                 Standing::Rule(p) => format!("{p:?}").to_lowercase(),
             };
+            // ADJ73 PR-B: surface the grounded CONTEXT this answer is decided in (the context of
+            // its highest-standing deriving rule), so the audit reader sees *which* context
+            // governed (federal vs state, ninth_circuit vs district_court) — not just that one
+            // term beat another. Omitted for a context-free derivation.
+            let context = match &a.context {
+                Some(c) => format!(",\"context\":\"{}\"", esc(c)),
+                None => String::new(),
+            };
             format!(
-                "{{\"term\":\"{}\",\"bindings\":{{{}}},\"status\":\"{}\",\"standing\":\"{}\"{}}}",
+                "{{\"term\":\"{}\",\"bindings\":{{{}}},\"status\":\"{}\",\"standing\":\"{}\"{}{}}}",
                 esc(&format!("{}", a.term)),
                 binds.join(","),
                 status,
                 standing,
+                context,
                 defeated_by
             )
         })
