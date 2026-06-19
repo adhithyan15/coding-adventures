@@ -1514,6 +1514,200 @@ impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummar
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind {
+    ReleaseBlocker,
+    OperatorHandoff,
+    ReadyToExecute,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ReleaseBlocker => "release_blocker",
+            Self::OperatorHandoff => "operator_handoff",
+            Self::ReadyToExecute => "ready_to_execute",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrail {
+    pub sequence: usize,
+    pub work_order_sequence: usize,
+    pub work_order_key: String,
+    pub ticket_key: String,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub guardrail_kind:
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrail {
+    pub fn from_work_order(
+        sequence: usize,
+        work_order: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder,
+    ) -> Self {
+        let guardrail_kind = if work_order.requires_operator() {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::OperatorHandoff
+        } else if work_order.blocks_preflight() {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::ReleaseBlocker
+        } else {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::ReadyToExecute
+        };
+
+        Self {
+            sequence,
+            work_order_sequence: work_order.sequence,
+            work_order_key: work_order.work_order_key.clone(),
+            ticket_key: work_order.ticket_key.clone(),
+            stage: work_order.stage,
+            action_kind: work_order.action_kind,
+            guardrail_kind,
+            action_count: work_order.action_count,
+            protocol_count: work_order.protocol_count,
+            primitive_count: work_order.primitive_count,
+            release_blocking: work_order.blocks_preflight(),
+            operator_required: work_order.requires_operator(),
+        }
+    }
+
+    pub fn blocks_release(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn ready_to_execute(&self) -> bool {
+        self.guardrail_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::ReadyToExecute
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary {
+    pub total_guardrails: usize,
+    pub release_blocker_guardrails: usize,
+    pub operator_handoff_guardrails: usize,
+    pub ready_to_execute_guardrails: usize,
+    pub scheduled_actions: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_work_order_key: Option<String>,
+    pub first_release_blocker_work_order_key: Option<String>,
+    pub first_operator_handoff_work_order_key: Option<String>,
+    pub first_ready_to_execute_work_order_key: Option<String>,
+    pub first_guardrail_kind:
+        Option<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_work_order_guardrails_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary {
+    pub fn from_guardrails<'a>(
+        guardrails: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrail,
+        >,
+    ) -> Self {
+        let guardrails = guardrails.into_iter().collect::<Vec<_>>();
+        let first_guardrail = guardrails.iter().min_by_key(|guardrail| guardrail.sequence);
+        let first_release_blocker = guardrails
+            .iter()
+            .filter(|guardrail| {
+                guardrail.guardrail_kind
+                    == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::ReleaseBlocker
+            })
+            .min_by_key(|guardrail| guardrail.sequence);
+        let first_operator_handoff = guardrails
+            .iter()
+            .filter(|guardrail| {
+                guardrail.guardrail_kind
+                    == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::OperatorHandoff
+            })
+            .min_by_key(|guardrail| guardrail.sequence);
+        let first_ready_to_execute = guardrails
+            .iter()
+            .filter(|guardrail| guardrail.ready_to_execute())
+            .min_by_key(|guardrail| guardrail.sequence);
+
+        Self {
+            total_guardrails: guardrails.len(),
+            release_blocker_guardrails: guardrails
+                .iter()
+                .filter(|guardrail| {
+                    guardrail.guardrail_kind
+                        == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::ReleaseBlocker
+                })
+                .count(),
+            operator_handoff_guardrails: guardrails
+                .iter()
+                .filter(|guardrail| {
+                    guardrail.guardrail_kind
+                        == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::OperatorHandoff
+                })
+                .count(),
+            ready_to_execute_guardrails: guardrails
+                .iter()
+                .filter(|guardrail| guardrail.ready_to_execute())
+                .count(),
+            scheduled_actions: guardrails
+                .iter()
+                .map(|guardrail| guardrail.action_count)
+                .sum(),
+            protocol_mentions: guardrails
+                .iter()
+                .map(|guardrail| guardrail.protocol_count)
+                .sum(),
+            primitive_mentions: guardrails
+                .iter()
+                .map(|guardrail| guardrail.primitive_count)
+                .sum(),
+            first_work_order_key: first_guardrail
+                .map(|guardrail| guardrail.work_order_key.clone()),
+            first_release_blocker_work_order_key: first_release_blocker
+                .map(|guardrail| guardrail.work_order_key.clone()),
+            first_operator_handoff_work_order_key: first_operator_handoff
+                .map(|guardrail| guardrail.work_order_key.clone()),
+            first_ready_to_execute_work_order_key: first_ready_to_execute
+                .map(|guardrail| guardrail.work_order_key.clone()),
+            first_guardrail_kind: first_guardrail.map(|guardrail| guardrail.guardrail_kind),
+            first_stage: first_guardrail.map(|guardrail| guardrail.stage),
+            first_action_kind: first_guardrail.map(|guardrail| guardrail.action_kind),
+            execution_work_order_guardrails_ready: guardrails
+                .iter()
+                .all(|guardrail| guardrail.ready_to_execute()),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_guardrails == 0
+    }
+
+    pub fn has_guardrails(&self) -> bool {
+        self.total_guardrails > 0
+    }
+
+    pub fn has_release_blockers(&self) -> bool {
+        self.release_blocker_guardrails > 0 || self.operator_handoff_guardrails > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_handoff_guardrails > 0
+    }
+
+    pub fn has_ready_to_execute_work(&self) -> bool {
+        self.ready_to_execute_guardrails > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket {
     pub sequence: usize,
@@ -24111,6 +24305,21 @@ pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_s
     )
 }
 
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrails(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrail> {
+    mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, work_order)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrail::from_work_order(
+                index + 1,
+                work_order,
+            )
+        })
+        .collect()
+}
+
 pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions(
     available_primitives: &[PrimitiveFamily],
 ) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDisposition> {
@@ -24124,6 +24333,17 @@ pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_d
             )
         })
         .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary {
+    let guardrails = mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrails(
+        available_primitives,
+    );
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary::from_guardrails(
+        guardrails.iter(),
+    )
 }
 
 pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_summary(
@@ -32304,6 +32524,132 @@ mod tests {
         assert!(!summary.has_release_execution_actions());
         assert!(!summary.needs_review());
         assert!(summary.has_complete_lineage());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrails_classify_orders(
+    ) {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let guardrails =
+            mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrails(
+                &available_primitives,
+            );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary::from_guardrails(
+                guardrails.iter(),
+            );
+
+        assert_eq!(guardrails.len(), 3);
+        assert_eq!(summary.total_guardrails, 3);
+        assert_eq!(summary.release_blocker_guardrails, 1);
+        assert_eq!(summary.operator_handoff_guardrails, 2);
+        assert_eq!(summary.ready_to_execute_guardrails, 0);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_handoff_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_guardrail_kind,
+            Some(
+                IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::OperatorHandoff
+            )
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_work_order_guardrails_ready);
+        assert!(summary.has_guardrails());
+        assert!(summary.has_release_blockers());
+        assert!(summary.needs_operator());
+        assert!(!summary.has_ready_to_execute_work());
+
+        let first = &guardrails[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.work_order_sequence, 1);
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(
+            first.guardrail_kind,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::OperatorHandoff
+        );
+        assert!(first.blocks_release());
+        assert!(first.requires_operator());
+        assert!(!first.ready_to_execute());
+
+        let release_blocker = guardrails
+            .iter()
+            .find(|guardrail| {
+                guardrail.guardrail_kind
+                    == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailKind::ReleaseBlocker
+            })
+            .unwrap();
+        assert_eq!(
+            summary.first_release_blocker_work_order_key,
+            Some(release_blocker.work_order_key.clone())
+        );
+        assert_eq!(
+            release_blocker.stage,
+            IntegrationMeshProtocolSubstrateStage::Discovery
+        );
+        assert_eq!(
+            release_blocker.action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::EnableDiscovery
+        );
+        assert!(release_blocker.blocks_release());
+        assert!(!release_blocker.requires_operator());
+        assert!(!release_blocker.ready_to_execute());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrails_empty_when_ready(
+    ) {
+        let guardrails =
+            mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrails(
+                all_primitive_families(),
+            );
+        let summary =
+            mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_summary(
+                all_primitive_families(),
+            );
+
+        assert!(guardrails.is_empty());
+        assert_eq!(summary.total_guardrails, 0);
+        assert_eq!(summary.release_blocker_guardrails, 0);
+        assert_eq!(summary.operator_handoff_guardrails, 0);
+        assert_eq!(summary.ready_to_execute_guardrails, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_release_blocker_work_order_key, None);
+        assert_eq!(summary.first_operator_handoff_work_order_key, None);
+        assert_eq!(summary.first_ready_to_execute_work_order_key, None);
+        assert_eq!(summary.first_guardrail_kind, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_work_order_guardrails_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_guardrails());
+        assert!(!summary.has_release_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.has_ready_to_execute_work());
     }
 
     #[test]

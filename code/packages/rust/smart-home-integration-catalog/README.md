@@ -69,6 +69,8 @@ runtime and Chief of Staff tools a typed catalog for:
   slots into operator-ready execution work
 - low-level mesh preflight repair slot execution work orders that project
   execution tickets into deterministic release work
+- low-level mesh preflight repair slot execution work-order guardrails that
+  classify release blockers, operator handoffs, and ready-to-execute work
 - mesh readiness package summaries that combine Zigbee, Z-Wave, and Thread
   primitive substrate readiness with mesh-scoped activation evidence
   remediation rollups

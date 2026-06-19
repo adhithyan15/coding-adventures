@@ -662,6 +662,119 @@ mod tests {
         assert!(outcome.printed.contains("[[2]]"), "{:?}", outcome.printed);
     }
 
+    // --- do.call, named-list access, modifyList (R-17) ------------------
+
+    #[test]
+    fn do_call_spreads_positional_and_named_args() {
+        // The headline case: a named list element becomes a named argument.
+        assert_eq!(
+            show("do.call(paste, list(\"a\", \"b\", sep = \"-\"))\n"),
+            "[1] \"a-b\""
+        );
+        // Purely positional spread.
+        assert_eq!(nums("do.call(sum, list(1, 2, 3, 4))\n"), vec![10.0]);
+    }
+
+    #[test]
+    fn do_call_accepts_a_string_function_name() {
+        // `what` may be a string naming a function (resolved in the global env).
+        assert_eq!(nums("do.call(\"sum\", list(1, 2, 3))\n"), vec![6.0]);
+        assert_eq!(
+            show("do.call(\"paste\", list(\"x\", \"y\"))\n"),
+            "[1] \"x y\""
+        );
+    }
+
+    #[test]
+    fn do_call_invokes_a_user_closure_with_named_match() {
+        let setup = "f <- function(a, b) a - b\n";
+        // Named elements match parameters by name regardless of order.
+        assert_eq!(
+            nums(&format!("{setup}do.call(f, list(b = 1, a = 10))\n")),
+            vec![9.0]
+        );
+    }
+
+    #[test]
+    fn do_call_with_empty_or_null_args() {
+        assert_eq!(nums("do.call(function() 42, list())\n"), vec![42.0]);
+        assert_eq!(nums("do.call(function() 7, NULL)\n"), vec![7.0]);
+    }
+
+    #[test]
+    fn do_call_rejects_bad_inputs() {
+        // Non-list args is an error, not a panic.
+        assert!(eval_s("do.call(sum, 1)\n").is_err());
+        // A non-callable `what`.
+        assert!(eval_s("do.call(42, list(1))\n").is_err());
+        // An unknown function name.
+        assert!(eval_s("do.call(\"no_such_fn\", list(1))\n").is_err());
+        // A string that names a non-function.
+        assert!(eval_s("x <- 5\ndo.call(\"x\", list(1))\n").is_err());
+    }
+
+    #[test]
+    fn named_list_access_contract() {
+        // $name and [["name"]] return the element by name; [[i]] by position.
+        let setup = "lst <- list(a = 1, b = c(2, 3), 99)\n";
+        assert_eq!(nums(&format!("{setup}lst$a\n")), vec![1.0]);
+        assert_eq!(nums(&format!("{setup}lst[[\"b\"]]\n")), vec![2.0, 3.0]);
+        assert_eq!(nums(&format!("{setup}lst[[3]]\n")), vec![99.0]);
+        // A missing name → NULL for both $ and [[ ]] (not an error).
+        assert_eq!(show(&format!("{setup}lst$missing\n")), "NULL");
+        assert_eq!(show(&format!("{setup}lst[[\"missing\"]]\n")), "NULL");
+    }
+
+    #[test]
+    fn named_list_access_sees_through_wrappers() {
+        // A classed / attribute-carrying list still indexes by name.
+        assert_eq!(
+            nums("structure(list(a = 1, b = 2), class = \"myc\")$b\n"),
+            vec![2.0]
+        );
+        assert_eq!(
+            nums("structure(list(a = 1, b = 2), foo = \"x\")[[\"a\"]]\n"),
+            vec![1.0]
+        );
+    }
+
+    #[test]
+    fn modify_list_replaces_adds_and_removes() {
+        let setup = "x <- list(a = 1, b = 2, c = 3)\n";
+        // Replace an existing name, add a new one.
+        assert_eq!(
+            nums(&format!("{setup}modifyList(x, list(b = 20, d = 4))$b\n")),
+            vec![20.0]
+        );
+        assert_eq!(
+            nums(&format!("{setup}modifyList(x, list(b = 20, d = 4))$d\n")),
+            vec![4.0]
+        );
+        // A NULL value removes the name.
+        assert_eq!(
+            show(&format!("{setup}modifyList(x, list(b = NULL))$b\n")),
+            "NULL"
+        );
+        assert_eq!(
+            nums(&format!("{setup}length(modifyList(x, list(b = NULL)))\n")),
+            vec![2.0]
+        );
+        // Order: x's names first (in place), then new names appended.
+        assert_eq!(
+            nums(&format!("{setup}length(modifyList(x, list(b = 20, d = 4)))\n")),
+            vec![4.0]
+        );
+    }
+
+    #[test]
+    fn modify_list_rejects_bad_inputs() {
+        // Both arguments must be lists.
+        assert!(eval_s("modifyList(1, list(a = 1))\n").is_err());
+        assert!(eval_s("modifyList(list(a = 1), 2)\n").is_err());
+        // An unnamed `val` element is an error.
+        assert!(eval_s("modifyList(list(a = 1), list(2))\n").is_err());
+    }
+
     // --- Regular expressions (R-7) --------------------------------------
 
     #[test]

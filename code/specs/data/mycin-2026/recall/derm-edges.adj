@@ -1,0 +1,71 @@
+% ============================================================================
+% derm-edges — the dermatology morphology knowledge-graph (MYCIN-2026 DERM).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", #11 skin/derm):
+% the classic skin-lesion description and the diagnosis it points to. "A rash shows
+% target lesions — what is the diagnosis?" becomes the binding query
+%     ? skin_finding_in(target_lesions, $Disease).
+%
+% Direction note: the relation is finding -> disease (`skin_finding_in`), the board
+% direction — you SEE the lesion morphology and must name the diagnosis. The cited spans
+% read either way ("the typical lesion of the erythema multiforme is the target lesion";
+% "Psoriasis presents as ... plaques covered with silvery scales") — what matters for
+% grounding is that one self-contained span names BOTH the finding AND the disease. Each
+% finding here maps to one canonical diagnosis, so a query binds a single answer.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the eleventh ADJ-only recall domain; seventh Tier-2 organ-system
+% domain after RHEUM, ONCO, HISTO, CARDIO, NEURO, GI). Each fact is a `relate` clause
+% whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it appears
+%                character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see derm-recall.query.adj. Nothing here is asserted
+% "from memory": every edge is defended by a span a reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only morphologies whose page states the association in a clean self-
+% contained span (both finding AND disease named) are included. Deferred — impetigo
+% (its honey-colored-crust sentence is phrased without naming impetigo, e.g. only the
+% negative "Bullous impetigo does not form a honey-colored crust"); herpes zoster
+% (its dermatomal-distribution sentences do not name zoster alongside the finding).
+% The molluscum span names the disease by its on-page abbreviation "MC" (= molluscum
+% contagiosum, defined in that StatPearls article's title).
+% ============================================================================
+
+dictionary derm_vocab {
+    define finding : entity   surface "skin finding", "lesion morphology"
+    define disease : entity   surface "dermatologic diagnosis", "skin disease"
+
+    define skin_finding_in : relation from finding to disease  % the diagnosis a skin finding points to
+}
+
+rulebook derm_facts {
+    use derm_vocab
+
+    % --- target lesions -> erythema multiforme ---------------------------------
+    relate skin_finding_in(target_lesions, erythema_multiforme)
+        source "Clinically, the typical lesion of the erythema multiforme is the target lesion; however, they may not always be present."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470259/"
+        trust authoritative
+
+    % --- silvery scales (on erythematous plaques) -> psoriasis -----------------
+    relate skin_finding_in(silvery_scales, psoriasis)
+        source "Psoriasis presents as well-defined erythematous plaques covered with silvery scales commonly over the scalp, and extensors of extremity, particularly over knees, elbows, and lumbosacral"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448194/"
+        trust authoritative
+
+    % --- umbilicated papules -> molluscum contagiosum (MC) ---------------------
+    relate skin_finding_in(umbilicated_papules, molluscum_contagiosum)
+        source "MC is a clinical diagnosis, based on the appearance of characteristic flesh-colored, dome-shaped, umbilicated papules, and does not typically require laboratory confirmation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441898/"
+        trust authoritative
+
+    % --- herald patch -> pityriasis rosea --------------------------------------
+    relate skin_finding_in(herald_patch, pityriasis_rosea)
+        source "Pityriasis rosea (PR) can sometimes be difficult to manage because of factors including variations in the clinical manifestation of the condition and acknowledging instances where the typical herald patch may be absent."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448091/"
+        trust authoritative
+}

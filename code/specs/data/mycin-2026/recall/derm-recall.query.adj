@@ -1,0 +1,19 @@
+% ============================================================================
+% derm-recall.query.adj — a worked recall query over the dermatology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this lesion looks like X — what
+% is the diagnosis?" question: it states no derm fact — it only `import`s the grounded
+% library and asks binding queries. The native adj-lang engine resolves each `?` against
+% the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli derm-recall.query.adj
+% ============================================================================
+
+import "derm-edges.adj"
+
+? skin_finding_in(target_lesions, $Disease)       % expect erythema_multiforme
+? skin_finding_in(silvery_scales, $Disease)       % expect psoriasis
+? skin_finding_in(umbilicated_papules, $Disease)  % expect molluscum_contagiosum
+? skin_finding_in(herald_patch, $Disease)         % expect pityriasis_rosea

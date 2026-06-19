@@ -32,6 +32,12 @@ prints names above values instead of the `[i]` prefix. **General attributes
 `attributes(x)` / `attributes(x) <- list(...)`, and `structure(x, ...)` — also
 reach R unchanged; the special attributes stay consistent (`attr(x, "names")` ==
 `names(x)`, `attr(x, "class")` == `class(x)`, `attr(x, "dim")` == `dim(x)`).
+**`do.call` + named-list polish (R-17)** — `do.call(what, args)` calls `what` (a
+function, or a string naming one) with the elements of the list `args` spread as
+positional and named arguments (`do.call(paste, list("a", "b", sep = "-"))` →
+`"a-b"`); `modifyList(x, val)` overlays `val` onto `x` by name (replace / append
+/ `NULL` removes); and `lst$name` / `lst[["name"]]` / `lst[[i]]` index a list by
+name or position, with a missing name returning `NULL`.
 
 ## Usage
 

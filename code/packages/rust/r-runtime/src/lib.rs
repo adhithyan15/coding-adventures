@@ -1135,4 +1135,82 @@ mod tests {
         assert_eq!(show(&format!("{prog}class(x)\n")), "[1] \"grid\"");
         assert_eq!(show(&format!("{prog}attr(x, \"label\")\n")), "[1] \"demo\"");
     }
+
+    // --- do.call, named-list access, modifyList (R-17) ------------------
+
+    #[test]
+    fn do_call_with_positional_and_named_args_r_syntax() {
+        // The headline case: a named list element is passed by name.
+        assert_eq!(
+            show("do.call(paste, list(\"a\", \"b\", sep = \"-\"))\n"),
+            "[1] \"a-b\""
+        );
+        assert_eq!(nums("do.call(sum, list(1, 2, 3, 4))\n"), vec![10.0]);
+    }
+
+    #[test]
+    fn do_call_with_string_function_name_r_syntax() {
+        // `what` may name the function as a string.
+        assert_eq!(nums("do.call(\"sum\", list(1, 2, 3))\n"), vec![6.0]);
+        // And an R closure, matching named args by parameter name.
+        assert_eq!(
+            nums("f <- function(a, b) a - b\ndo.call(f, list(b = 1, a = 10))\n"),
+            vec![9.0]
+        );
+    }
+
+    #[test]
+    fn do_call_bad_inputs_error_r_syntax() {
+        assert!(eval_r("do.call(sum, 1)\n").is_err());
+        assert!(eval_r("do.call(42, list(1))\n").is_err());
+        assert!(eval_r("do.call(\"no_such_fn\", list(1))\n").is_err());
+    }
+
+    #[test]
+    fn named_list_access_r_syntax() {
+        // _ is a name char in R, so use a single identifier for the list var.
+        let setup = "lst <- list(a = 1, b = c(2, 3), 99)\n";
+        assert_eq!(nums(&format!("{setup}lst$a\n")), vec![1.0]);
+        assert_eq!(nums(&format!("{setup}lst[[\"b\"]]\n")), vec![2.0, 3.0]);
+        assert_eq!(nums(&format!("{setup}lst[[3]]\n")), vec![99.0]);
+        // A missing name is NULL, not an error (both $ and [[ ]]).
+        assert_eq!(show(&format!("{setup}lst$nope\n")), "NULL");
+        assert_eq!(show(&format!("{setup}lst[[\"nope\"]]\n")), "NULL");
+    }
+
+    #[test]
+    fn modify_list_add_replace_remove_r_syntax() {
+        let setup = "x <- list(a = 1, b = 2, c = 3)\n";
+        // Replace `b`, add `d`.
+        assert_eq!(
+            nums(&format!("{setup}modifyList(x, list(b = 20, d = 4))$b\n")),
+            vec![20.0]
+        );
+        assert_eq!(
+            nums(&format!("{setup}modifyList(x, list(b = 20, d = 4))$d\n")),
+            vec![4.0]
+        );
+        // A NULL value removes the name.
+        assert_eq!(
+            show(&format!("{setup}modifyList(x, list(b = NULL))$b\n")),
+            "NULL"
+        );
+        assert_eq!(
+            nums(&format!("{setup}length(modifyList(x, list(b = NULL)))\n")),
+            vec![2.0]
+        );
+    }
+
+    #[test]
+    fn r17_regressions_lists_named_vectors_attributes() {
+        // R-6: $ / [[ ]] still work after the access polish.
+        assert_eq!(nums("list(p = 10, q = 20)$q\n"), vec![20.0]);
+        // R-15: a named vector still indexes by name and stays numeric.
+        assert_eq!(nums("v <- c(x = 1, y = 2)\nv[\"y\"]\n"), vec![2.0]);
+        // R-16: a classed list still resolves $ by name (sees through wrapper).
+        assert_eq!(
+            nums("structure(list(a = 1, b = 2), class = \"myc\")$b\n"),
+            vec![2.0]
+        );
+    }
 }

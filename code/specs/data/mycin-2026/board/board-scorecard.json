@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 126,
-    "correct": 119,
+    "total": 130,
+    "correct": 123,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 113,
+        "correct": 117,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9912,
-    "grounded_correct": 112
+    "grounded_coverage": 0.9915,
+    "grounded_correct": 116
   },
   "results": [
     {
@@ -1032,6 +1032,38 @@
       "tactic": "recall",
       "gold": "eosinophilic_esophagitis",
       "answer": "eosinophilic_esophagitis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "derm_em_dx",
+      "tactic": "recall",
+      "gold": "erythema_multiforme",
+      "answer": "erythema_multiforme",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "derm_psoriasis_dx",
+      "tactic": "recall",
+      "gold": "psoriasis",
+      "answer": "psoriasis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "derm_mc_dx",
+      "tactic": "recall",
+      "gold": "molluscum_contagiosum",
+      "answer": "molluscum_contagiosum",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "derm_pr_dx",
+      "tactic": "recall",
+      "gold": "pityriasis_rosea",
+      "answer": "pityriasis_rosea",
       "outcome": "correct",
       "trust": "authoritative"
     }

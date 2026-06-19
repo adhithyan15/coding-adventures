@@ -8040,6 +8040,17 @@ function formatCsvCell(value: string): string {
   return value;
 }
 
+export function formatDeckTableCsv(table: string): string {
+  const rows = table.split(/\r?\n/u);
+  if (rows[rows.length - 1] === "") {
+    rows.pop();
+  }
+  if (rows.length === 0) {
+    return "";
+  }
+  return `${rows.map((row) => row.split("\t").map(formatCsvCell).join(",")).join("\n")}\n`;
+}
+
 export function formatDeckRunArtifactCsv(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [DECK_RUN_ARTIFACT_COLUMNS.join(",")];
   for (const artifact of artifacts) {

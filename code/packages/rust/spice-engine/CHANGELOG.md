@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `format_deck_table_csv` for stable tab-separated deck output tables with
+  the same deterministic CSV escaping as selected-run artifacts, matching
+  Python and TypeScript.
 - Add `format_deck_run_artifact_json` for selected-run artifacts with the same
   stable keys and normalized cell values as `format_deck_run_artifact_table`,
   matching Python and TypeScript.
