@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 130,
-    "correct": 123,
+    "total": 135,
+    "correct": 128,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 117,
+        "correct": 122,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9915,
-    "grounded_correct": 116
+    "grounded_coverage": 0.9918,
+    "grounded_correct": 121
   },
   "results": [
     {
@@ -1064,6 +1064,46 @@
       "tactic": "recall",
       "gold": "pityriasis_rosea",
       "answer": "pityriasis_rosea",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "resp_silica_dx",
+      "tactic": "recall",
+      "gold": "silicosis",
+      "answer": "silicosis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "resp_asbestos_dx",
+      "tactic": "recall",
+      "gold": "asbestosis",
+      "answer": "asbestosis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "resp_beryl_dx",
+      "tactic": "recall",
+      "gold": "berylliosis",
+      "answer": "berylliosis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "resp_cotton_dx",
+      "tactic": "recall",
+      "gold": "byssinosis",
+      "answer": "byssinosis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "resp_coal_dx",
+      "tactic": "recall",
+      "gold": "coal_workers_pneumoconiosis",
+      "answer": "coal_workers_pneumoconiosis",
       "outcome": "correct",
       "trust": "authoritative"
     }
