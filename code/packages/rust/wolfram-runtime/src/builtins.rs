@@ -1179,13 +1179,20 @@ fn mod_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if b == 0 {
         return unevaluated(expr); // Mod by zero is undefined.
     }
-    // rem_euclid gives a non-negative remainder for a positive divisor; for a
-    // negative divisor we shift into the divisor's sign to match Wolfram.
+    // Compute in i128 so a crafted `i64::MIN` divisor cannot overflow: `b.abs()`
+    // panics (debug) / wraps (release) for `b == i64::MIN`, so we must NOT take a
+    // signed abs at i64 width. `(a as i128).rem_euclid(|b|)` lands in `[0, |b|)`;
+    // for a negative divisor we shift into the divisor's sign to match Wolfram.
+    // The final remainder's magnitude is < |b| <= i64::MAX + 1, and after the
+    // negative-divisor shift it lies in `(b, 0]`, so it always fits back in i64.
+    let a = a as i128;
+    let b = b as i128;
     let mut r = a.rem_euclid(b.abs());
     if b < 0 && r != 0 {
         r -= b.abs();
     }
-    int(r)
+    // r is now in (-|b|, |b|) with the divisor's sign, hence within i64 range.
+    int(r as i64)
 }
 
 // ---------------------------------------------------------------------------
@@ -1994,6 +2001,18 @@ mod tests {
         // Negative divisor: result takes the divisor's sign.
         assert_eq!(run("Mod", vec![int(7), int(-3)]), int(-2));
         assert_eq!(run("Mod", vec![int(-7), int(-3)]), int(-1));
+    }
+
+    #[test]
+    fn mod_extreme_operands_do_not_overflow() {
+        // A crafted i64::MIN divisor must NOT panic on `b.abs()` (the i128 path
+        // avoids the signed-abs overflow). i64::MIN mod 2 = 0 (it is even).
+        assert_eq!(run("Mod", vec![int(i64::MIN), int(2)]), int(0));
+        // i64::MIN as the divisor: Mod[-1, i64::MIN] = -1 (divisor-signed).
+        assert_eq!(run("Mod", vec![int(-1), int(i64::MIN)]), int(-1));
+        // i64::MAX divisor, large dividend — stays in range.
+        assert_eq!(run("Mod", vec![int(i64::MAX), int(i64::MAX)]), int(0));
+        assert_eq!(run("Mod", vec![int(i64::MIN), int(i64::MAX)]), int(i64::MAX - 1));
     }
 
     #[test]
