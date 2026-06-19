@@ -184,6 +184,33 @@ final class WindowedSheetModel: ObservableObject {
         return ok
     }
 
+    /// Undo / redo: walk the engine's snapshot history. On success the extent
+    /// resizes, the formula bar refreshes, and `revision` bumps (which re-renders
+    /// the SwiftUI view, re-evaluating the canUndo/canRedo button gates); a
+    /// restored formula stays live.
+    func canUndo() -> Bool { session.canUndo() }
+    func canRedo() -> Bool { session.canRedo() }
+    @discardableResult
+    func undoEdit() -> Bool {
+        let ok = session.undo()
+        if ok {
+            resize()
+            formulaText = session.getRaw(address(selectedRow, selectedCol))
+            revision += 1
+        }
+        return ok
+    }
+    @discardableResult
+    func redoEdit() -> Bool {
+        let ok = session.redo()
+        if ok {
+            resize()
+            formulaText = session.getRaw(address(selectedRow, selectedCol))
+            revision += 1
+        }
+        return ok
+    }
+
     /// Write `raw` into an explicit A1 cell and return the cells it dirtied.
     /// (Kept for the headless `WindowedModelTests`.)
     @discardableResult
@@ -271,6 +298,17 @@ struct InfiniteGridView: View {
                 .font(.system(size: 11, design: .monospaced))
                 .disabled(savedSnapshot.isEmpty)
                 .help("Restore the workbook from the last save")
+            // Undo / redo: walk the engine's snapshot history. The buttons gate
+            // off canUndo/canRedo, re-evaluated whenever `revision` (a @Published)
+            // bumps after an edit.
+            Button("Undo") { model.undoEdit() }
+                .font(.system(size: 11, design: .monospaced))
+                .disabled(!model.canUndo())
+                .help("Undo the last edit")
+            Button("Redo") { model.redoEdit() }
+                .font(.system(size: 11, design: .monospaced))
+                .disabled(!model.canRedo())
+                .help("Redo the last undone edit")
         }
         .padding(.bottom, 8)
     }

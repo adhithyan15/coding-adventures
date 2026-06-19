@@ -86,6 +86,15 @@ final class SpreadsheetSession {
         sc_deserialize(handle, data) != 0
     }
 
+    /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
+    /// changed the document (the host then re-reads the viewport), `false` if
+    /// there was nothing to do. canUndo/canRedo gate a host's Undo/Redo controls.
+    /// Reach `sc_undo`/`sc_redo`/`sc_can_undo`/`sc_can_redo`.
+    func undo() -> Bool { sc_undo(handle) != 0 }
+    func redo() -> Bool { sc_redo(handle) != 0 }
+    func canUndo() -> Bool { sc_can_undo(handle) != 0 }
+    func canRedo() -> Bool { sc_can_redo(handle) != 0 }
+
     /// The computed value of a cell as the string a spreadsheet should show.
     /// Parses the engine's JSON (`{"kind":...}`) — the same shape the TS and
     /// WASM engines emit.

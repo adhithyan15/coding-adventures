@@ -84,6 +84,16 @@ int   sc_paste(ScSession *s, const char *dst_start);
 char *sc_serialize(ScSession *s);
 int   sc_deserialize(ScSession *s, const char *data);
 
+/* Undo / redo (session history). sc_undo() reverts the most recent edit, sc_redo()
+   replays the most recently undone one; each returns 1 if it changed the document, 0
+   if there was nothing to do (or s == NULL). The host re-reads via sc_get_window /
+   sc_get_display_window / sc_get_raw afterwards. sc_can_undo() / sc_can_redo() return
+   1/0 so a host can enable/disable its Undo/Redo controls. */
+int   sc_undo(ScSession *s);
+int   sc_redo(ScSession *s);
+int   sc_can_undo(ScSession *s);
+int   sc_can_redo(ScSession *s);
+
 /* Viewport primitive — read just the visible window of the unbounded sheet.
    Coordinates are 1-based and inclusive. Each char* result must be freed with
    sc_string_free(). */
