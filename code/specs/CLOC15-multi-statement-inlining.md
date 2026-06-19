@@ -338,6 +338,12 @@ Empirical behaviour of the merged slices, confirmed by running the real
    binding name declared in any scope enclosing the call statement and rejects
    if a free body identifier is in that set. Decide: bootstrap walk vs. wire the
    scope analyzer.
+   **Design pinned:** see [CLOC16](CLOC16-inline-free-identifier-widening.md),
+   which splits free-ident classification (definition-site) from the shadowing
+   check (splice-site), and stages it as Slice A (top-level splice site —
+   trivially sound, no scope walk) then Slice B (nested site — in-scope-binding
+   walk). The current "declared nowhere" rule is the safe baseline until A
+   ships.
 
 2. **Result capture in non-statement positions.** `a && f(x)`, `c ? f(x) : y`,
    `for (…; f(x); …)`, default-parameter and object-literal positions — hoisting
