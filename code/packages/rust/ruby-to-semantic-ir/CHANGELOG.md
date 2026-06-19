@@ -2,6 +2,44 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.91.0] - 2026-06-19
+
+### Added (Q9f — explicit block-param ABI, part 2: call-site normalization)
+
+- A new post-lowering pass in `compile()` threads the matching block
+  argument at every `DirectCall` to a method that gained a trailing
+  `__sir_block__` parameter in Q9e (tracked in `Lowerer::block_param_methods`).
+  Running after the *whole* program is lowered makes the pass
+  order-independent: call-before-def and mutual recursion both thread
+  correctly because the method registry is fully populated first.
+- For each such call, the trailing argument slot is normalized so call
+  arity matches the threaded def:
+  - trailing `MakeClosure` (`foo { … }` / `foo do … end`) — already the
+    block; left as-is.
+  - trailing `BuiltinCall("block_pass", [inner])` (`foo(&p)`) — unwrapped
+    to `inner` (the proc/block value).
+  - otherwise (`foo(1, 2)`) — append `NilLit` (no block passed; the
+    parameter binds nil).
+- New `Lowerer::normalize_block_call_args` + recursive
+  `normalize_calls_in_{stmt,stmts,expr}` walk every function body
+  (user functions + `main`), descending through control flow, nested
+  calls, and `MakeClosure` capture values.
+- New tests: `call_to_yielding_method_with_block_keeps_makeclosure`,
+  `call_to_yielding_method_without_block_appends_nil`,
+  `block_pass_to_yielding_method_unwraps_to_inner`,
+  `call_to_non_block_method_is_unchanged`, `call_before_def_is_threaded`.
+  Every threaded module re-validates.
+
+### Notes / v0 cut-lines
+
+- A **parenless, argless** call to a yielding method (`foo` with no `()`
+  and no block) lowers to a `VarRef`, not a `DirectCall`, so it is not
+  recognized as a call and is left un-threaded — a pre-existing
+  call-detection limitation, not introduced here.
+- A `yield` through a nil block (no block passed) raising the exact Ruby
+  `LocalJumpError` class is deferred; runtime `apply` on nil surfaces a
+  generic error.
+
 ## [0.90.0] - 2026-06-19
 
 ### Added (Q9e — explicit block-param ABI, part 1: def threading + yield rewrite)
