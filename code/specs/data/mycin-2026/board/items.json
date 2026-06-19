@@ -88,6 +88,16 @@
     {"id": "micro_pseud_gram",     "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "pseudomonas_aeruginosa",   "var": "Result",  "gold": "gram_negative"},
     {"id": "micro_pseud_shape",    "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "pseudomonas_aeruginosa",   "var": "Shape",   "gold": "bacilli"},
     {"id": "micro_spneumo_gram",   "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "streptococcus_pneumoniae", "var": "Result",  "gold": "gram_positive"},
-    {"id": "micro_spneumo_causes", "domain": "micro", "tactic": "recall", "relation": "causes",     "subject": "streptococcus_pneumoniae", "var": "Disease", "gold": "community_acquired_pneumonia"}
+    {"id": "micro_spneumo_causes", "domain": "micro", "tactic": "recall", "relation": "causes",     "subject": "streptococcus_pneumoniae", "var": "Disease", "gold": "community_acquired_pneumonia"},
+
+    {"id": "pharm_metformin_class",  "domain": "pharm", "tactic": "recall", "relation": "drug_class",     "subject": "metformin",              "var": "Class",    "gold": "biguanide"},
+    {"id": "pharm_lisinopril_class", "domain": "pharm", "tactic": "recall", "relation": "drug_class",     "subject": "lisinopril",             "var": "Class",    "gold": "ace_inhibitor"},
+    {"id": "pharm_naloxone_class",   "domain": "pharm", "tactic": "recall", "relation": "drug_class",     "subject": "naloxone",               "var": "Class",    "gold": "opioid_antagonist"},
+    {"id": "pharm_flumazenil_class", "domain": "pharm", "tactic": "recall", "relation": "drug_class",     "subject": "flumazenil",             "var": "Class",    "gold": "benzodiazepine_antagonist"},
+    {"id": "pharm_warfarin_moa",     "domain": "pharm", "tactic": "recall", "relation": "mechanism",      "subject": "warfarin",               "var": "MOA",      "gold": "inhibits_vitamin_k_dependent_clotting_factor_synthesis"},
+    {"id": "pharm_apap_adverse",     "domain": "pharm", "tactic": "recall", "relation": "adverse_effect", "subject": "acetaminophen",          "var": "Effect",   "gold": "hepatic_necrosis"},
+    {"id": "pharm_apap_antidote",    "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "acetaminophen_poisoning","var": "Antidote", "gold": "acetylcysteine"},
+    {"id": "pharm_opioid_antidote",  "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "opioid_toxicity",        "var": "Antidote", "gold": "naloxone"},
+    {"id": "pharm_benzo_antidote",   "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "benzodiazepine_overdose","var": "Antidote", "gold": "flumazenil"}
   ]
 }

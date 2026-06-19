@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 79,
-    "correct": 72,
+    "total": 88,
+    "correct": 81,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 66,
+        "correct": 75,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9848,
-    "grounded_correct": 65
+    "grounded_coverage": 0.9867,
+    "grounded_correct": 74
   },
   "results": [
     {
@@ -656,6 +656,78 @@
       "tactic": "recall",
       "gold": "community_acquired_pneumonia",
       "answer": "community_acquired_pneumonia",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_metformin_class",
+      "tactic": "recall",
+      "gold": "biguanide",
+      "answer": "biguanide",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_lisinopril_class",
+      "tactic": "recall",
+      "gold": "ace_inhibitor",
+      "answer": "ace_inhibitor",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_naloxone_class",
+      "tactic": "recall",
+      "gold": "opioid_antagonist",
+      "answer": "opioid_antagonist",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_flumazenil_class",
+      "tactic": "recall",
+      "gold": "benzodiazepine_antagonist",
+      "answer": "benzodiazepine_antagonist",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_warfarin_moa",
+      "tactic": "recall",
+      "gold": "inhibits_vitamin_k_dependent_clotting_factor_synthesis",
+      "answer": "inhibits_vitamin_k_dependent_clotting_factor_synthesis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_apap_adverse",
+      "tactic": "recall",
+      "gold": "hepatic_necrosis",
+      "answer": "hepatic_necrosis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_apap_antidote",
+      "tactic": "recall",
+      "gold": "acetylcysteine",
+      "answer": "acetylcysteine",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_opioid_antidote",
+      "tactic": "recall",
+      "gold": "naloxone",
+      "answer": "naloxone",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_benzo_antidote",
+      "tactic": "recall",
+      "gold": "flumazenil",
+      "answer": "flumazenil",
       "outcome": "correct",
       "trust": "authoritative"
     }
