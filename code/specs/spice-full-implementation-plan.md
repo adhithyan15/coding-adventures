@@ -833,6 +833,14 @@ downstream tools to compare.
       `StartTime`, `MaxStep`, and `UseInitialConditions`, with empty cells for
       non-transient analyses.
 
+76. Deck run result-column artifacts.
+    - Status: completed in this deck run result-column artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now copy stable
+      result table column names into deck-run artifacts alongside row counts.
+    - The stable run-artifact table now includes `ResultColumns` and
+      `ResultColumnList`, so downstream callers can inspect result shape
+      without reparsing solver output tables.
+
 ## Backlog
 
 1. Deck execution layer.

@@ -677,6 +677,8 @@ export interface DeckRunArtifact {
   readonly maxStep?: number;
   readonly useInitialConditions?: boolean;
   readonly resultRows: number;
+  readonly resultColumnCount: number;
+  readonly resultColumns: readonly string[];
   readonly outputProbeCount: number;
   readonly outputProbes: readonly string[];
   readonly outputDirectiveCount: number;
@@ -7879,6 +7881,7 @@ function deckResultRowCount(result: DeckAnalysisExecutionResult): number {
 function deckRunArtifacts(
   plan: DeckAnalysisPlan,
   result: DeckAnalysisExecutionResult,
+  resultColumns: readonly string[],
   outputProbes: readonly string[],
   outputDirectives: readonly string[],
   measurements: readonly ProbeMeasurement[],
@@ -7905,6 +7908,8 @@ function deckRunArtifacts(
       maxStep: isTransient ? plan.maxStep : undefined,
       useInitialConditions: isTransient ? plan.useInitialConditions : undefined,
       resultRows: deckResultRowCount(result),
+      resultColumnCount: resultColumns.length,
+      resultColumns: [...resultColumns],
       outputProbeCount: outputProbes.length,
       outputProbes: [...outputProbes],
       outputDirectiveCount: outputDirectives.length,
@@ -7925,9 +7930,14 @@ function formatDeckArtifactBoolean(value: boolean | undefined): string {
   return value === undefined ? "" : String(value);
 }
 
+function deckTableColumns(table: string): string[] {
+  const header = table.split("\n", 1)[0] ?? "";
+  return header.length === 0 ? [] : header.split("\t");
+}
+
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [
-    "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
+    "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
   ];
   for (const artifact of artifacts) {
     rows.push(
@@ -7950,6 +7960,8 @@ export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]
         formatDeckArtifactFloat(artifact.maxStep),
         formatDeckArtifactBoolean(artifact.useInitialConditions),
         String(artifact.resultRows),
+        String(artifact.resultColumnCount),
+        artifact.resultColumns.join(";"),
         String(artifact.outputProbeCount),
         artifact.outputProbes.join(";"),
         String(artifact.outputDirectiveCount),
@@ -8005,6 +8017,7 @@ export function runDeckAnalysis(
   const plan = selectDeckAnalysisPlan(netlist, analysis);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
+    const table = formatDeckOpTable(result, netlist);
     selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const measurements: ProbeMeasurement[] = [];
@@ -8014,6 +8027,7 @@ export function runDeckAnalysis(
     const runArtifacts = deckRunArtifacts(
       plan,
       result,
+      deckTableColumns(table),
       outputProbes,
       outputDirectives,
       measurements,
@@ -8022,7 +8036,7 @@ export function runDeckAnalysis(
     return {
       plan,
       result,
-      table: formatDeckOpTable(result, netlist),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
@@ -8038,6 +8052,7 @@ export function runDeckAnalysis(
     const stop = requireDeckPlanNumber(plan.stopValue, plan, "stopValue");
     const step = requireDeckPlanNumber(plan.stepValue, plan, "stepValue");
     const result = dcSweep(circuit, sourceName, start, stop, step);
+    const table = formatDeckDcSweepTable(sourceName, result, netlist);
     const measurements = measureDcSweepCards(
       result,
       selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
@@ -8049,6 +8064,7 @@ export function runDeckAnalysis(
     const runArtifacts = deckRunArtifacts(
       plan,
       result,
+      deckTableColumns(table),
       outputProbes,
       outputDirectives,
       measurements,
@@ -8057,7 +8073,7 @@ export function runDeckAnalysis(
     return {
       plan,
       result,
-      table: formatDeckDcSweepTable(sourceName, result, netlist),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
@@ -8084,6 +8100,7 @@ export function runDeckAnalysis(
       startFrequencyHz,
       stopFrequencyHz,
     );
+    const table = formatDeckAcTable(result, netlist);
     const measurements = measureAcSweepCards(
       result,
       selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
@@ -8095,6 +8112,7 @@ export function runDeckAnalysis(
     const runArtifacts = deckRunArtifacts(
       plan,
       result,
+      deckTableColumns(table),
       outputProbes,
       outputDirectives,
       measurements,
@@ -8103,7 +8121,7 @@ export function runDeckAnalysis(
     return {
       plan,
       result,
-      table: formatDeckAcTable(result, netlist),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
@@ -8127,6 +8145,7 @@ export function runDeckAnalysis(
       result,
       selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
     );
+    const table = formatDeckTransientTable(result, netlist);
     const fourier = fourierTransientCards(
       result,
       selectDeckFourierCardsForAnalysis(netlist, plan.analysis),
@@ -8136,6 +8155,7 @@ export function runDeckAnalysis(
     const runArtifacts = deckRunArtifacts(
       plan,
       result,
+      deckTableColumns(table),
       outputProbes,
       outputDirectives,
       measurements,
@@ -8144,7 +8164,7 @@ export function runDeckAnalysis(
     return {
       plan,
       result,
-      table: formatDeckTransientTable(result, netlist),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
@@ -8164,9 +8184,11 @@ export function runDeckAnalysis(
     const fourier: FourierResult[] = [];
     const outputProbes = [`V(${outputNode})`];
     const outputDirectives: string[] = [];
+    const table = formatDeckTfTable(result);
     const runArtifacts = deckRunArtifacts(
       plan,
       result,
+      deckTableColumns(table),
       outputProbes,
       outputDirectives,
       measurements,
@@ -8175,7 +8197,7 @@ export function runDeckAnalysis(
     return {
       plan,
       result,
-      table: formatDeckTfTable(result),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
@@ -8194,9 +8216,11 @@ export function runDeckAnalysis(
     const fourier: FourierResult[] = [];
     const outputProbes = [`V(${outputNode})`];
     const outputDirectives: string[] = [];
+    const table = formatDeckSensTable(result);
     const runArtifacts = deckRunArtifacts(
       plan,
       result,
+      deckTableColumns(table),
       outputProbes,
       outputDirectives,
       measurements,
@@ -8205,7 +8229,7 @@ export function runDeckAnalysis(
     return {
       plan,
       result,
-      table: formatDeckSensTable(result),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
@@ -8234,9 +8258,11 @@ export function runDeckAnalysis(
     const fourier: FourierResult[] = [];
     const outputProbes = [`V(${outputNode})`];
     const outputDirectives: string[] = [];
+    const table = formatDeckNoiseTable(result);
     const runArtifacts = deckRunArtifacts(
       plan,
       result,
+      deckTableColumns(table),
       outputProbes,
       outputDirectives,
       measurements,
@@ -8245,7 +8271,7 @@ export function runDeckAnalysis(
     return {
       plan,
       result,
-      table: formatDeckNoiseTable(result),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),

@@ -3422,6 +3422,8 @@ pub struct DeckRunArtifact {
     pub max_step: Option<f64>,
     pub use_initial_conditions: Option<bool>,
     pub result_rows: usize,
+    pub result_column_count: usize,
+    pub result_columns: Vec<String>,
     pub output_probe_count: usize,
     pub output_probes: Vec<String>,
     pub output_directive_count: usize,
@@ -10092,6 +10094,7 @@ pub fn format_deck_noise_table(result: &NoiseResult) -> String {
 fn deck_run_artifacts(
     plan: &DeckAnalysisPlan,
     result_rows: usize,
+    result_columns: &[String],
     output_probes: &[String],
     output_directives: &[String],
     measurements: &[ProbeMeasurement],
@@ -10117,6 +10120,8 @@ fn deck_run_artifacts(
         max_step: is_transient.then_some(plan.max_step).flatten(),
         use_initial_conditions: is_transient.then_some(plan.use_initial_conditions),
         result_rows,
+        result_column_count: result_columns.len(),
+        result_columns: result_columns.to_vec(),
         output_probe_count: output_probes.len(),
         output_probes: output_probes.to_vec(),
         output_directive_count: output_directives.len(),
@@ -10142,14 +10147,27 @@ fn format_deck_artifact_bool(value: Option<bool>) -> String {
     value.map(|value| value.to_string()).unwrap_or_default()
 }
 
+fn deck_table_columns(table: &str) -> Vec<String> {
+    table
+        .lines()
+        .next()
+        .map(|header| {
+            header
+                .split('\t')
+                .map(|column| column.to_string())
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
             .to_string(),
     ];
     for artifact in artifacts {
         rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             artifact.analysis,
             artifact.directive,
             artifact.line_number,
@@ -10171,6 +10189,8 @@ pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
             format_deck_artifact_float(artifact.max_step),
             format_deck_artifact_bool(artifact.use_initial_conditions),
             artifact.result_rows,
+            artifact.result_column_count,
+            artifact.result_columns.join(";"),
             artifact.output_probe_count,
             artifact.output_probes.join(";"),
             artifact.output_directive_count,
@@ -10244,6 +10264,7 @@ pub fn run_deck_analysis(
             let run_artifacts = deck_run_artifacts(
                 &plan,
                 1,
+                &deck_table_columns(&table),
                 &output_probes,
                 &output_directives,
                 &measurements,
@@ -10283,6 +10304,7 @@ pub fn run_deck_analysis(
             let run_artifacts = deck_run_artifacts(
                 &plan,
                 result.len(),
+                &deck_table_columns(&table),
                 &output_probes,
                 &output_directives,
                 &measurements,
@@ -10323,6 +10345,7 @@ pub fn run_deck_analysis(
             let run_artifacts = deck_run_artifacts(
                 &plan,
                 result.len(),
+                &deck_table_columns(&table),
                 &output_probes,
                 &output_directives,
                 &measurements,
@@ -10366,6 +10389,7 @@ pub fn run_deck_analysis(
             let run_artifacts = deck_run_artifacts(
                 &plan,
                 result.len(),
+                &deck_table_columns(&table),
                 &output_probes,
                 &output_directives,
                 &measurements,
@@ -10399,9 +10423,11 @@ pub fn run_deck_analysis(
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = vec![format!("V({output_node})")];
             let output_directives = Vec::new();
+            let table = format_deck_tf_table(&result);
             let run_artifacts = deck_run_artifacts(
                 &plan,
                 1,
+                &deck_table_columns(&table),
                 &output_probes,
                 &output_directives,
                 &measurements,
@@ -10411,7 +10437,7 @@ pub fn run_deck_analysis(
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Tf(result.clone()),
-                table: format_deck_tf_table(&result),
+                table,
                 output_probes,
                 measurements,
                 measurement_table,
@@ -10433,9 +10459,11 @@ pub fn run_deck_analysis(
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = vec![format!("V({output_node})")];
             let output_directives = Vec::new();
+            let table = format_deck_sens_table(&result);
             let run_artifacts = deck_run_artifacts(
                 &plan,
                 1,
+                &deck_table_columns(&table),
                 &output_probes,
                 &output_directives,
                 &measurements,
@@ -10445,7 +10473,7 @@ pub fn run_deck_analysis(
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Sens(result.clone()),
-                table: format_deck_sens_table(&result),
+                table,
                 output_probes,
                 measurements,
                 measurement_table,
@@ -10479,9 +10507,11 @@ pub fn run_deck_analysis(
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = vec![format!("V({output_node})")];
             let output_directives = Vec::new();
+            let table = format_deck_noise_table(&result);
             let run_artifacts = deck_run_artifacts(
                 &plan,
                 result.points.len(),
+                &deck_table_columns(&table),
                 &output_probes,
                 &output_directives,
                 &measurements,
@@ -10491,7 +10521,7 @@ pub fn run_deck_analysis(
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Noise(result.clone()),
-                table: format_deck_noise_table(&result),
+                table,
                 output_probes,
                 measurements,
                 measurement_table,

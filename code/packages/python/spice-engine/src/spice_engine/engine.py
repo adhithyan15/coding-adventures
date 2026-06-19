@@ -2334,6 +2334,8 @@ class DeckRunArtifact:
     max_step: float | None
     use_initial_conditions: bool | None
     result_rows: int
+    result_column_count: int
+    result_columns: list[str]
     output_probe_count: int
     output_probes: list[str]
     output_directive_count: int
@@ -2407,9 +2409,15 @@ def _format_deck_artifact_bool(value: bool | None) -> str:
     return "" if value is None else str(value).lower()
 
 
+def _deck_table_columns(table: str) -> list[str]:
+    header = table.splitlines()[0] if table else ""
+    return header.split("\t") if header else []
+
+
 def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
     result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
+    result_columns: list[str],
     output_probes: list[str],
     output_directives: list[str],
     measurements: list[ProbeMeasurement],
@@ -2438,6 +2446,8 @@ def _deck_run_artifacts(
                 plan.use_initial_conditions if is_transient else None
             ),
             result_rows=_deck_result_row_count(result),
+            result_column_count=len(result_columns),
+            result_columns=list(result_columns),
             output_probe_count=len(output_probes),
             output_probes=list(output_probes),
             output_directive_count=len(output_directives),
@@ -2456,7 +2466,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
     rows = [
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
     ]
     for artifact in artifacts:
         rows.append(
@@ -2480,6 +2490,8 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
                     _format_deck_artifact_float(artifact.max_step),
                     _format_deck_artifact_bool(artifact.use_initial_conditions),
                     str(artifact.result_rows),
+                    str(artifact.result_column_count),
+                    ";".join(artifact.result_columns),
                     str(artifact.output_probe_count),
                     ";".join(artifact.output_probes),
                     str(artifact.output_directive_count),
@@ -2504,6 +2516,7 @@ def run_deck_analysis(
     plan = select_deck_analysis_plan(netlist, analysis)
     if plan.analysis == "op":
         result = dc_op(circuit)
+        table = format_deck_op_table(result, netlist)
         _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
         fourier: list[FourierResult] = []
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
@@ -2511,12 +2524,18 @@ def run_deck_analysis(
         output_probes = select_deck_output_probes(netlist, plan.analysis)
         output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, output_directives, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_op_table(result, netlist),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
@@ -2531,6 +2550,7 @@ def run_deck_analysis(
         stop = _require_deck_plan_number(plan, "stop_value")
         step = _require_deck_plan_number(plan, "step_value")
         result = dc_sweep(circuit, source_name, start, stop, step)
+        table = format_deck_dc_sweep_table(result, netlist)
         measurements = measure_dc_sweep_cards(
             result,
             _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
@@ -2540,12 +2560,18 @@ def run_deck_analysis(
         output_probes = select_deck_output_probes(netlist, plan.analysis)
         output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, output_directives, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_dc_sweep_table(result, netlist),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
@@ -2562,6 +2588,7 @@ def run_deck_analysis(
         result = _run_deck_ac_sweep(
             circuit, plan, sweep_kind, point_count, start_frequency, stop_frequency
         )
+        table = format_deck_ac_table(result, netlist)
         measurements = measure_ac_sweep_cards(
             result,
             _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
@@ -2571,12 +2598,18 @@ def run_deck_analysis(
         output_probes = select_deck_output_probes(netlist, plan.analysis)
         output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, output_directives, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_ac_table(result, netlist),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
@@ -2601,6 +2634,7 @@ def run_deck_analysis(
             result,
             _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
         )
+        table = format_deck_transient_table(result, netlist)
         fourier = fourier_transient_cards(
             result,
             _select_deck_fourier_cards_for_analysis(netlist, plan.analysis),
@@ -2608,12 +2642,18 @@ def run_deck_analysis(
         output_probes = select_deck_output_probes(netlist, plan.analysis)
         output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, output_directives, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_transient_table(result, netlist),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
@@ -2632,13 +2672,20 @@ def run_deck_analysis(
         fourier = []
         output_probes = [f"V({output_node})"]
         output_directives: list[str] = []
+        table = format_deck_tf_table(result)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, output_directives, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_tf_table(result),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
@@ -2656,13 +2703,20 @@ def run_deck_analysis(
         fourier = []
         output_probes = [f"V({output_node})"]
         output_directives = []
+        table = format_deck_sens_table(result)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, output_directives, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_sens_table(result),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
@@ -2699,13 +2753,20 @@ def run_deck_analysis(
         fourier = []
         output_probes = [f"V({output_node})"]
         output_directives = []
+        table = format_deck_noise_table(result)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, output_directives, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_noise_table(result),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
