@@ -3416,6 +3416,11 @@ pub struct DeckRunArtifact {
     pub point_count: Option<usize>,
     pub start_frequency_hz: Option<f64>,
     pub stop_frequency_hz: Option<f64>,
+    pub step_time: Option<f64>,
+    pub stop_time: Option<f64>,
+    pub start_time: Option<f64>,
+    pub max_step: Option<f64>,
+    pub use_initial_conditions: Option<bool>,
     pub result_rows: usize,
     pub output_probe_count: usize,
     pub output_probes: Vec<String>,
@@ -10092,6 +10097,7 @@ fn deck_run_artifacts(
     measurements: &[ProbeMeasurement],
     fourier: &[FourierResult],
 ) -> Vec<DeckRunArtifact> {
+    let is_transient = plan.analysis == "tran";
     vec![DeckRunArtifact {
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
@@ -10105,6 +10111,11 @@ fn deck_run_artifacts(
         point_count: plan.point_count,
         start_frequency_hz: plan.start_frequency_hz,
         stop_frequency_hz: plan.stop_frequency_hz,
+        step_time: is_transient.then_some(plan.step_time).flatten(),
+        stop_time: is_transient.then_some(plan.stop_time).flatten(),
+        start_time: is_transient.then_some(plan.start_time).flatten(),
+        max_step: is_transient.then_some(plan.max_step).flatten(),
+        use_initial_conditions: is_transient.then_some(plan.use_initial_conditions),
         result_rows,
         output_probe_count: output_probes.len(),
         output_probes: output_probes.to_vec(),
@@ -10127,14 +10138,18 @@ fn format_deck_artifact_float(value: Option<f64>) -> String {
     value.map(format_table_number).unwrap_or_default()
 }
 
+fn format_deck_artifact_bool(value: Option<bool>) -> String {
+    value.map(|value| value.to_string()).unwrap_or_default()
+}
+
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
             .to_string(),
     ];
     for artifact in artifacts {
         rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             artifact.analysis,
             artifact.directive,
             artifact.line_number,
@@ -10150,6 +10165,11 @@ pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
                 .unwrap_or_default(),
             format_deck_artifact_float(artifact.start_frequency_hz),
             format_deck_artifact_float(artifact.stop_frequency_hz),
+            format_deck_artifact_float(artifact.step_time),
+            format_deck_artifact_float(artifact.stop_time),
+            format_deck_artifact_float(artifact.start_time),
+            format_deck_artifact_float(artifact.max_step),
+            format_deck_artifact_bool(artifact.use_initial_conditions),
             artifact.result_rows,
             artifact.output_probe_count,
             artifact.output_probes.join(";"),

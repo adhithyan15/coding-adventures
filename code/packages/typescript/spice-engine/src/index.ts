@@ -671,6 +671,11 @@ export interface DeckRunArtifact {
   readonly pointCount?: number;
   readonly startFrequencyHz?: number;
   readonly stopFrequencyHz?: number;
+  readonly stepTime?: number;
+  readonly stopTime?: number;
+  readonly startTime?: number;
+  readonly maxStep?: number;
+  readonly useInitialConditions?: boolean;
   readonly resultRows: number;
   readonly outputProbeCount: number;
   readonly outputProbes: readonly string[];
@@ -7879,6 +7884,7 @@ function deckRunArtifacts(
   measurements: readonly ProbeMeasurement[],
   fourier: readonly FourierResult[],
 ): DeckRunArtifact[] {
+  const isTransient = plan.analysis === "tran";
   return [
     {
       analysis: plan.analysis,
@@ -7893,6 +7899,11 @@ function deckRunArtifacts(
       pointCount: plan.pointCount,
       startFrequencyHz: plan.startFrequencyHz,
       stopFrequencyHz: plan.stopFrequencyHz,
+      stepTime: isTransient ? plan.stepTime : undefined,
+      stopTime: isTransient ? plan.stopTime : undefined,
+      startTime: isTransient ? plan.startTime : undefined,
+      maxStep: isTransient ? plan.maxStep : undefined,
+      useInitialConditions: isTransient ? plan.useInitialConditions : undefined,
       resultRows: deckResultRowCount(result),
       outputProbeCount: outputProbes.length,
       outputProbes: [...outputProbes],
@@ -7910,9 +7921,13 @@ function formatDeckArtifactFloat(value: number | undefined): string {
   return value === undefined ? "" : formatTableNumber(value);
 }
 
+function formatDeckArtifactBoolean(value: boolean | undefined): string {
+  return value === undefined ? "" : String(value);
+}
+
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [
-    "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
+    "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
   ];
   for (const artifact of artifacts) {
     rows.push(
@@ -7929,6 +7944,11 @@ export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]
         artifact.pointCount === undefined ? "" : String(artifact.pointCount),
         formatDeckArtifactFloat(artifact.startFrequencyHz),
         formatDeckArtifactFloat(artifact.stopFrequencyHz),
+        formatDeckArtifactFloat(artifact.stepTime),
+        formatDeckArtifactFloat(artifact.stopTime),
+        formatDeckArtifactFloat(artifact.startTime),
+        formatDeckArtifactFloat(artifact.maxStep),
+        formatDeckArtifactBoolean(artifact.useInitialConditions),
         String(artifact.resultRows),
         String(artifact.outputProbeCount),
         artifact.outputProbes.join(";"),

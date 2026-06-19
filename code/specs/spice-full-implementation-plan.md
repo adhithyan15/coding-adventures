@@ -824,6 +824,15 @@ downstream tools to compare.
     - The stable run-artifact table now includes `OutputNode`, with an empty
       cell for analysis cards that do not select a single output node.
 
+75. Deck run transient timing artifacts.
+    - Status: completed in this deck run transient timing artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now copy `.tran`
+      timing controls into deck-run artifacts, preserving print step, stop
+      time, optional start and max step, and UIC intent.
+    - The stable run-artifact table now includes `StepTime`, `StopTime`,
+      `StartTime`, `MaxStep`, and `UseInitialConditions`, with empty cells for
+      non-transient analyses.
+
 ## Backlog
 
 1. Deck execution layer.
