@@ -2925,7 +2925,9 @@ impl Lowerer {
     // -------------------------------------------------------------------
 
     /// Thread an explicit trailing block parameter through a freshly
-    /// lowered method `Function` *iff* its body `yield`s.
+    /// lowered method `Function` *iff* its body `yield`s **or** queries
+    /// `block_given?` (Q10b) — either is a use of the method's implicit
+    /// block and so requires the threaded `__sir_block__` parameter.
     ///
     /// ## Why
     ///
@@ -3152,9 +3154,41 @@ impl Lowerer {
                 }
                 found
             }
+            // Phase Q10b — `block_given?` reaches the lowerer as a bare
+            // `VarRef` named "block_given?" (it is parenless, so the
+            // method-call parser treats it as a name).  Inside a method
+            // it means "was a block passed?", which under the explicit
+            // block-param ABI is exactly "is __sir_block__ non-nil".
+            // Rewrite it to `not(null?(__sir_block__))` — both builtins
+            // are already supported (a native `not` arm + runtime-core
+            // `null?` dispatch) — and count it as a block reference so
+            // `thread_block_param` appends the parameter even when the
+            // method has no `yield`.
+            Expr::VarRef { name, span, .. } if name == "block_given?" => {
+                let span = span.clone();
+                let block_ref = Expr::VarRef {
+                    name: BLOCK_PARAM_NAME.to_string(),
+                    scope: Scope::Param,
+                    span: span.clone(),
+                };
+                let is_nil = Expr::BuiltinCall {
+                    name: "null?".to_string(),
+                    args: vec![block_ref],
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                };
+                *expr = Expr::BuiltinCall {
+                    name: "not".to_string(),
+                    args: vec![is_nil],
+                    effects: EffectSet::PURE,
+                    span,
+                };
+                true
+            }
             // MakeClosure is deliberately NOT descended (v0 cut-line:
             // yield inside a hoisted block belongs to the enclosing
-            // method).  Atomic literals and VarRef have no sub-exprs.
+            // method).  Atomic literals and other VarRefs have no
+            // sub-exprs to rewrite.
             Expr::MakeClosure { .. }
             | Expr::IntLit { .. }
             | Expr::BoolLit { .. }

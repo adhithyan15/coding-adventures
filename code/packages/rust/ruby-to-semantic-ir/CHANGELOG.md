@@ -2,6 +2,28 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.92.0] - 2026-06-19
+
+### Added (Q10b — `block_given?`)
+
+- `block_given?` (which reaches the lowerer as a bare `VarRef` named
+  `"block_given?"`, being parenless) is now rewritten, inside a method
+  body, to `not(null?(__sir_block__))` — i.e. "is the threaded block
+  parameter non-nil". Both builtins are already supported (a native
+  `not` arm + runtime-core `null?` dispatch), so it emits with no backend
+  change and validates.
+- The explicit-block-param detection (`thread_block_param`) now fires on
+  `block_given?` as well as `yield`, so a method that only queries
+  `block_given?` (and never yields) still gains the trailing
+  `__sir_block__` parameter and is registered in `block_param_methods`
+  (so Q9f threads the block at its call sites). The rewrite reuses the
+  existing control-flow-descending walk and still does not descend into
+  `MakeClosure`.
+- New tests: `block_given_in_yielding_method_becomes_nil_check`,
+  `block_given_alone_threads_block_param`,
+  `method_without_block_given_or_yield_is_unchanged`. Each threaded
+  module re-validates.
+
 ## [0.91.0] - 2026-06-19
 
 ### Added (Q9f — explicit block-param ABI, part 2: call-site normalization)
