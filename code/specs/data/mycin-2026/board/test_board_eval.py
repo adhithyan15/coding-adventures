@@ -41,13 +41,15 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["tay_sachs_enzyme"].answer == "hexosaminidase_a"
     # A correct recall answer carries the citing edge's trust tier (its proof).
     assert by_id["tay_sachs_enzyme"].trust is not None
-    # The bank spans EIGHT recall domains: 18 IEM + 8 vitamin + 8 anemia + 8 endocrine
+    # The bank spans NINE recall domains: 18 IEM + 8 vitamin + 8 anemia + 8 endocrine
     # + 11 coagulation (REL-13) + 13 microbiology (MICRO) + 9 pharmacology (PHARM) + 7
-    # immunology (IMMUNO) = 82 covered recall items, all over one merged store. MICRO,
-    # PHARM, and IMMUNO are ADJ-ONLY domains: their *-edges.adj are hand-authored
-    # libraries carrying byte-provenance inline (no Python gate / JSON / manifest).
+    # immunology (IMMUNO) + 7 genetics (GENETICS) = 89 covered recall items, all over one
+    # merged store. MICRO, PHARM, IMMUNO, and GENETICS are ADJ-ONLY domains: their
+    # *-edges.adj are hand-authored libraries carrying byte-provenance inline (no Python
+    # gate / JSON / manifest). GENETICS reuses the `gene_defect` relation from IMMUNO over
+    # disjoint disorders — the engine merges facts across the imported dictionaries.
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 82
+    assert len(recall_correct) == 89
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
@@ -64,6 +66,10 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["immuno_as_hla"].answer == "hla_b27"             # immunology (IMMUNO)
     assert by_id["immuno_type1_mediator"].answer == "ige"         # immuno — mediated_by relation
     assert by_id["immuno_as_hla"].trust == "authoritative"        # ADJ-only edge, grounded inline
+    assert by_id["genetics_hd_repeat"].answer == "cag"           # genetics (GENETICS)
+    assert by_id["genetics_pws_imprint"].answer == "paternal"    # genetics — imprinting relation
+    assert by_id["genetics_hd_gene"].answer == "htt"             # gene_defect shared w/ IMMUNO, disjoint subj
+    assert by_id["genetics_hd_repeat"].trust == "authoritative"   # ADJ-only edge, grounded inline
 
 
 def test_uncovered_items_abstain_not_fabricate() -> None:
@@ -97,16 +103,16 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
     # landed at direction_only. REL-14 found a stronger source whose verbatim span self-
     # contains the relation ("Factor VII deficiency is a bleeding disorder characterized
     # by a lack in the production of factor VII"), lifting it to authoritative. The ADJ-only
-    # domains MICRO (13 microbiology), PHARM (9 pharmacology), and IMMUNO (7 immunology)
-    # edges — all spider-grounded to NCBI StatPearls byte-stable spans — add 29 more
-    # authoritative recall answers. 81 of the 82 recall answers across all EIGHT domains
-    # now cite an authoritative edge: grounded-coverage 99%. ONE holdout stays consensus +
-    # FLAG (direction_only) — the adversarial verify could not pin it verbatim, so the
-    # framework declines to claim grounding it cannot defend, by design: cortisol_def
-    # (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame cortisol
-    # deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
-    assert s["grounded_coverage"] == round(81 / 82, 4)   # 0.9878
-    assert s["grounded_correct"] == 81
+    # domains MICRO (13 microbiology), PHARM (9 pharmacology), IMMUNO (7 immunology), and
+    # GENETICS (7 genetics) edges — all spider-grounded to NCBI StatPearls byte-stable
+    # spans — add 36 more authoritative recall answers. 88 of the 89 recall answers across
+    # all NINE domains now cite an authoritative edge: grounded-coverage 99%. ONE holdout
+    # stays consensus + FLAG (direction_only) — the adversarial verify could not pin it
+    # verbatim, so the framework declines to claim grounding it cannot defend, by design:
+    # cortisol_def (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame
+    # cortisol deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
+    assert s["grounded_coverage"] == round(88 / 89, 4)   # 0.9888
+    assert s["grounded_correct"] == 88
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia

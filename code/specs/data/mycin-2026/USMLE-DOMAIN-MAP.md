@@ -108,6 +108,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Microbiology | Microbiology | gram_stain, morphology, causes | 13 grounded (ADJ-only) | ✓ |
 | Pharmacology | Pharmacology | drug_class, mechanism, adverse_effect, antidote_for | 9 grounded (ADJ-only) | ✓ |
 | Immunology | Immunology | mediated_by, associated_hla, gene_defect, deficiency_of | 7 grounded (ADJ-only) | ✓ |
+| Genetics | Genetics | inheritance, gene_defect, trinucleotide_repeat, imprinting | 7 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
 faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
@@ -140,6 +141,13 @@ faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
    (celiac→DQ2, narcolepsy→DR2 — deferred, no clean self-contained span yet), cytokines.
 4. **Genetics** — inheritance patterns, trinucleotide repeats, imprinting, gene defects
    (extends the IEM substrate).
+   *Started (GENETICS):* `inheritance` (Huntington/Marfan→AD), `trinucleotide_repeat`
+   (Huntington→CAG, fragile X→CGG), `imprinting` (Prader-Willi→paternal), `gene_defect`
+   (Huntington→HTT, fragile X→FMR1) — 7 edges, all grounded to byte-stable NCBI StatPearls
+   spans, shipped as the fourth **ADJ-only** domain (`recall/genetics-edges.adj`; reuses
+   `gene_defect` from IMMUNO over disjoint disorders). Remaining: X-linked / AR patterns
+   (Duchenne, CF), more repeats (myotonic→CTG, Friedreich→GAA), Angelman→maternal,
+   Marfan→FBN1 (deferred — its page's FBN1 mentions are citation titles / negative clauses).
 
 **Tier 2 — organ-system pathology (Step 1/2 diagnosis):**
 5. Cardiovascular (murmurs→lesion, ECG→arrhythmia, drug→effect)
@@ -191,8 +199,10 @@ manifest). MICRO onward, the order is grounding-FIRST (never seed authored-debt)
 ## Coverage accounting (the watchable number)
 
 The north-star metric: **% of the USMLE content outline covered by grounded, scored
-domains.** Today: 8 recall domains + ID differential/management (a slice of Multisystem,
-Endocrine, Hematology, Biochemistry, Nutrition, Microbiology, Pharmacology, Immunology —
-81/82 board recall answers cite an authoritative grounded edge). Each merged domain PR moves this number;
+domains.** Today: 9 recall domains + ID differential/management (a slice of Multisystem,
+Endocrine, Hematology, Biochemistry, Nutrition, Microbiology, Pharmacology, Immunology,
+Genetics — 88/89 board recall answers cite an authoritative grounded edge). All four
+Tier-1 foundational-recall domains (microbiology, pharmacology, immunology, genetics) are
+now grounded & scored. Each merged domain PR moves this number;
 this map is the denominator. The campaign is done when every Tier-1/2/3 cell above has a
 grounded, scored domain and the board bank samples each.
