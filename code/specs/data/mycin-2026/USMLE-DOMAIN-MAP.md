@@ -113,6 +113,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Oncology (Tier-2) | Pathology/neoplasia | tumor_marker | 4 grounded (ADJ-only) | ✓ |
 | Histology buzzwords (Tier-2) | Pathology | seen_in (finding→condition) | 5 grounded (ADJ-only) | ✓ |
 | Cardiology murmurs (Tier-2) | Cardiology | murmur_indicates (murmur→lesion) | 5 grounded (ADJ-only) | ✓ |
+| Neurology localization (Tier-2) | Neurology | lesion_causes (site→deficit) | 5 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
 faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
@@ -169,6 +170,15 @@ faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
 7. Renal/urinary (acid-base, electrolyte, glomerular disease→finding)
 8. Gastrointestinal (LFT pattern→disease, biopsy→diagnosis)
 9. Neurology & special senses (lesion→deficit, tract→sign)
+    *Started (NEURO — fifth Tier-2 domain):* `lesion_causes` for Wernicke area→fluent
+    aphasia, Broca area→nonfluent aphasia, arcuate fasciculus→conduction aphasia (NBK559315),
+    substantia nigra→Parkinson disease (NBK470193), subthalamic nucleus→hemiballismus
+    (NBK559002) — 5 edges, all grounded to byte-stable NCBI StatPearls spans naming both the
+    lesion site and the deficit, shipped as the ninth **ADJ-only** domain
+    (`recall/neuro-edges.adj`). Remaining: spinal-cord tracts (Brown-Séquard, dorsal column,
+    corticospinal), cranial-nerve lesions, cerebellar→ataxia (deferred — its page names the
+    "cerebellar syndrome" and limb incoordination but not "ataxia" alongside the site in one
+    declarative); tract→sign and visual-pathway-defect subdomains.
 10. Musculoskeletal / rheumatology (autoantibody→disease)
     *Started (RHEUM — first Tier-2 domain):* `associated_autoantibody` for SLE (anti-dsDNA,
     anti-Sm, anti-ribosomal-P), GPA (PR3-ANCA), systemic sclerosis (anti-Scl-70,

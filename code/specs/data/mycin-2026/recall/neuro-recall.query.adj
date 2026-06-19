@@ -1,0 +1,20 @@
+% ============================================================================
+% neuro-recall.query.adj — a worked recall query over the localization library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "lesion here — which deficit?"
+% question: it states no neurology fact — it only `import`s the grounded library and asks
+% binding queries. The native adj-lang engine resolves each `?` against the imported
+% `relate` edges and returns the binding + the citing clause's source/locator/trust. All
+% knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli neuro-recall.query.adj
+% ============================================================================
+
+import "neuro-edges.adj"
+
+? lesion_causes(wernicke_area, $Deficit)        % expect fluent_aphasia
+? lesion_causes(broca_area, $Deficit)           % expect nonfluent_aphasia
+? lesion_causes(arcuate_fasciculus, $Deficit)   % expect conduction_aphasia
+? lesion_causes(substantia_nigra, $Deficit)     % expect parkinson_disease
+? lesion_causes(subthalamic_nucleus, $Deficit)  % expect hemiballismus

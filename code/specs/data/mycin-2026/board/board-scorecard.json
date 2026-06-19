@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 116,
-    "correct": 109,
+    "total": 121,
+    "correct": 114,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 103,
+        "correct": 108,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9903,
-    "grounded_correct": 102
+    "grounded_coverage": 0.9907,
+    "grounded_correct": 107
   },
   "results": [
     {
@@ -952,6 +952,46 @@
       "tactic": "recall",
       "gold": "aortic_regurgitation",
       "answer": "aortic_regurgitation",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "neuro_wernicke_def",
+      "tactic": "recall",
+      "gold": "fluent_aphasia",
+      "answer": "fluent_aphasia",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "neuro_broca_def",
+      "tactic": "recall",
+      "gold": "nonfluent_aphasia",
+      "answer": "nonfluent_aphasia",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "neuro_arcuate_def",
+      "tactic": "recall",
+      "gold": "conduction_aphasia",
+      "answer": "conduction_aphasia",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "neuro_nigra_def",
+      "tactic": "recall",
+      "gold": "parkinson_disease",
+      "answer": "parkinson_disease",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "neuro_stn_def",
+      "tactic": "recall",
+      "gold": "hemiballismus",
+      "answer": "hemiballismus",
       "outcome": "correct",
       "trust": "authoritative"
     }
