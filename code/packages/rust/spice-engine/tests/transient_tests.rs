@@ -1888,6 +1888,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
     assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(op_execution.run_artifacts[0].result_column_count, 2);
+    assert_eq!(
+        op_execution.run_artifacts[0].result_columns,
+        vec!["Index".to_string(), "V(mid)".to_string()]
+    );
     assert_eq!(op_execution.run_artifacts[0].source_name, None);
     assert_eq!(op_execution.run_artifacts[0].output_node, None);
     assert_eq!(op_execution.run_artifacts[0].sweep_kind, None);
@@ -1907,7 +1912,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nop\t.op\t{}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t1\tV(mid)\t1\t.save\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nop\t.op\t{}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t0\t\t0\t\n",
             op_execution.plan.line_number
         )
     );
@@ -1940,6 +1945,17 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(dc_execution.run_artifacts[0].start_value, Some(0.0));
     assert_eq!(dc_execution.run_artifacts[0].stop_value, Some(1.0));
     assert_eq!(dc_execution.run_artifacts[0].step_value, Some(1.0));
+    assert_eq!(dc_execution.run_artifacts[0].result_column_count, 5);
+    assert_eq!(
+        dc_execution.run_artifacts[0].result_columns,
+        vec![
+            "Index".to_string(),
+            "Source".to_string(),
+            "Value".to_string(),
+            "V(mid)".to_string(),
+            "I(V1)".to_string()
+        ]
+    );
     assert_eq!(dc_execution.run_artifacts[0].step_time, None);
     assert_eq!(dc_execution.run_artifacts[0].use_initial_conditions, None);
     assert_eq!(
@@ -1958,7 +1974,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         dc_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ndc\t.dc\t{}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ndc\t.dc\t{}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\n",
             dc_execution.plan.line_number
         )
     );
@@ -1994,6 +2010,19 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         Some(1.0e3)
     );
     assert_eq!(ac_execution.run_artifacts[0].stop_frequency_hz, Some(1.0e3));
+    assert_eq!(ac_execution.run_artifacts[0].result_column_count, 7);
+    assert_eq!(
+        ac_execution.run_artifacts[0].result_columns,
+        vec![
+            "Index".to_string(),
+            "Frequency".to_string(),
+            "Probe".to_string(),
+            "Real".to_string(),
+            "Imaginary".to_string(),
+            "Magnitude".to_string(),
+            "Phase".to_string()
+        ]
+    );
     assert_eq!(ac_execution.run_artifacts[0].step_time, None);
     assert_eq!(ac_execution.run_artifacts[0].use_initial_conditions, None);
     assert_eq!(
@@ -2008,7 +2037,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         ac_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nac\t.ac\t{}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nac\t.ac\t{}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\n",
             ac_execution.plan.line_number
         )
     );
@@ -2036,6 +2065,15 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(tran_execution.run_artifacts[0].output_node, None);
     assert_eq!(tran_execution.run_artifacts[0].step_time, Some(1.0e-3));
     assert_eq!(tran_execution.run_artifacts[0].stop_time, Some(1.0e-3));
+    assert_eq!(tran_execution.run_artifacts[0].result_column_count, 3);
+    assert_eq!(
+        tran_execution.run_artifacts[0].result_columns,
+        vec![
+            "Index".to_string(),
+            "Time".to_string(),
+            "V(mid)".to_string()
+        ]
+    );
     assert_eq!(tran_execution.run_artifacts[0].start_time, None);
     assert_eq!(tran_execution.run_artifacts[0].max_step, None);
     assert_eq!(
@@ -2054,7 +2092,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t\t1.000000e-03\t1.000000e-03\t\t\tfalse\t1\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t\t1.000000e-03\t1.000000e-03\t\t\tfalse\t1\t3\tIndex;Time;V(mid)\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\n",
             tran_execution.plan.line_number
         )
     );
@@ -2090,6 +2128,15 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         Some("mid")
     );
     assert_eq!(tf_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(tf_execution.run_artifacts[0].result_column_count, 3);
+    assert_eq!(
+        tf_execution.run_artifacts[0].result_columns,
+        vec![
+            "TransferRatio".to_string(),
+            "InputImpedance".to_string(),
+            "OutputImpedance".to_string()
+        ]
+    );
     assert_eq!(tf_execution.run_artifacts[0].step_time, None);
     assert_eq!(tf_execution.run_artifacts[0].use_initial_conditions, None);
     assert_eq!(
@@ -2102,7 +2149,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tf_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntf\t.tf\t{}\tV1\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntf\t.tf\t{}\tV1\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t3\tTransferRatio;InputImpedance;OutputImpedance\t1\tV(mid)\t0\t\t0\t\t0\t\n",
             tf_execution.plan.line_number
         )
     );
@@ -2133,6 +2180,19 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         Some("mid")
     );
     assert_eq!(sens_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(sens_execution.run_artifacts[0].result_column_count, 7);
+    assert_eq!(
+        sens_execution.run_artifacts[0].result_columns,
+        vec![
+            "OutputNode".to_string(),
+            "NominalVoltage".to_string(),
+            "Element".to_string(),
+            "Parameter".to_string(),
+            "NominalValue".to_string(),
+            "Sensitivity".to_string(),
+            "RelativeSensitivity".to_string()
+        ]
+    );
     assert_eq!(sens_execution.run_artifacts[0].step_time, None);
     assert_eq!(sens_execution.run_artifacts[0].use_initial_conditions, None);
     assert_eq!(
@@ -2145,7 +2205,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         sens_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nsens\t.sens\t{}\t\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nsens\t.sens\t{}\t\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t7\tOutputNode;NominalVoltage;Element;Parameter;NominalValue;Sensitivity;RelativeSensitivity\t1\tV(mid)\t0\t\t0\t\t0\t\n",
             sens_execution.plan.line_number
         )
     );
@@ -2198,6 +2258,22 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         Some(1.0e3)
     );
     assert_eq!(noise_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(noise_execution.run_artifacts[0].result_column_count, 10);
+    assert_eq!(
+        noise_execution.run_artifacts[0].result_columns,
+        vec![
+            "Index".to_string(),
+            "Frequency".to_string(),
+            "OutputNode".to_string(),
+            "InputSource".to_string(),
+            "OutputPSD".to_string(),
+            "InputReferredPSD".to_string(),
+            "Element".to_string(),
+            "Type".to_string(),
+            "SourcePSD".to_string(),
+            "ContributionPSD".to_string()
+        ]
+    );
     assert_eq!(noise_execution.run_artifacts[0].step_time, None);
     assert_eq!(
         noise_execution.run_artifacts[0].use_initial_conditions,
@@ -2217,7 +2293,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         noise_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nnoise\t.noise\t{}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nnoise\t.noise\t{}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t10\tIndex;Frequency;OutputNode;InputSource;OutputPSD;InputReferredPSD;Element;Type;SourcePSD;ContributionPSD\t1\tV(mid)\t0\t\t0\t\t0\t\n",
             noise_execution.plan.line_number
         )
     );
@@ -2252,6 +2328,18 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         Some(true)
     );
     assert_eq!(
+        tran_window_execution.run_artifacts[0].result_column_count,
+        3
+    );
+    assert_eq!(
+        tran_window_execution.run_artifacts[0].result_columns,
+        vec![
+            "Index".to_string(),
+            "Time".to_string(),
+            "V(mid)".to_string()
+        ]
+    );
+    assert_eq!(
         tran_window_execution.output_probes,
         vec!["V(mid)".to_string()]
     );
@@ -2272,7 +2360,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tran_window_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t\t2.000000e-03\t6.000000e-03\t2.000000e-03\t1.000000e-03\ttrue\t3\t1\tV(mid)\t1\t.save\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t\t2.000000e-03\t6.000000e-03\t2.000000e-03\t1.000000e-03\ttrue\t3\t3\tIndex;Time;V(mid)\t1\tV(mid)\t1\t.save\t0\t\t0\t\n",
             tran_window_execution.plan.line_number
         )
     );
@@ -2351,6 +2439,15 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     assert_eq!(tran_execution.run_artifacts[0].output_node, None);
     assert_eq!(tran_execution.run_artifacts[0].step_time, Some(5.0e-4));
     assert_eq!(tran_execution.run_artifacts[0].stop_time, Some(1.0e-3));
+    assert_eq!(tran_execution.run_artifacts[0].result_column_count, 3);
+    assert_eq!(
+        tran_execution.run_artifacts[0].result_columns,
+        vec![
+            "Index".to_string(),
+            "Time".to_string(),
+            "V(mid)".to_string()
+        ]
+    );
     assert_eq!(tran_execution.run_artifacts[0].start_time, None);
     assert_eq!(tran_execution.run_artifacts[0].max_step, None);
     assert_eq!(
@@ -2373,7 +2470,7 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t2\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t2\t3\tIndex;Time;V(mid)\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\n",
             tran_execution.plan.line_number
         )
     );
