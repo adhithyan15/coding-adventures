@@ -145,10 +145,29 @@ init(cfg);
 ```
 
 An unbraced single-statement slot (`if (c) f();`) gets the spliced body
-wrapped in a block; a real statement list is spliced flat. Later slices
-(value capture into a hoisted temp, `var` locals, `if`, multi-use) build on
-this same walker. As with the expression path, the now-dead declaration is
-left for `remove-unused-vars` / `treeshake`.
+wrapped in a block; a real statement list is spliced flat. As with the
+expression path, the now-dead declaration is left for `remove-unused-vars` /
+`treeshake`.
+
+### Result used — capture into a hoisted temp (CLOC15 PR-3)
+
+When the result *is* used, the body is hoisted before the enclosing
+statement and the tail-return value captured into a fresh temp:
+
+```js
+function compute(a) { const t = a + 1; return t * 2; }
+var x = compute(5);
+// SIMPLE  ⇒  var x = 12;   (hoist + capture, then fold + propagate + treeshake)
+```
+
+The soundness crux is **evaluation order**: hoisting the body before the
+statement runs it before anything else that statement evaluates, so the only
+airtight subset is when the call is the **entire initializer of a
+single-declarator** `var`/`let`/`const` — nothing is evaluated before it and
+an initializer is never short-circuited. `var x = a + f()` (reorders `a`),
+`var x = f(), y = …` (multi-declarator), `var x = h(f())` (not the top
+expression), and a body with no tail-return value are all declined. Broader
+value positions (assignment targets, `return` arguments) are later slices.
 
 ## Where this pass sits
 

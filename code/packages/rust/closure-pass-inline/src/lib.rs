@@ -126,8 +126,8 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     AssignmentTarget, BindingTarget, BlockStatement, CallExpression, Declaration, Expression,
-    ExpressionStatement, ForInit, FunctionDeclaration, FunctionParam, NullLiteral, Program,
-    ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
+    ExpressionStatement, ForInit, FunctionDeclaration, FunctionParam, Identifier, NullLiteral,
+    Program, ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration, VariableDeclarator,
 };
 
 /// `Pass::depends_on` value. Kept as a `const` so future tests and
@@ -300,6 +300,17 @@ fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
     // candidate set, and the declaration-count map stays valid (inlining
     // removes call sites, never declarations).
     changed |= inline_void_statement_helpers(program, &decl_counts, nodes_touched);
+
+    // Phase 5 — CLOC15 PR-3: inline a single-use multi-statement helper
+    // whose RESULT IS USED, by hoisting its body before the enclosing
+    // statement and capturing the tail-return value into a fresh temp. The
+    // sound subset is narrow (the call is the entire initializer of a
+    // single-declarator `var`/`let`/`const`), so hoisting the body before
+    // the declaration cannot reorder any other evaluation. See
+    // [`inline_valued_statement_helpers`]. Runs after Phase 4 because the
+    // void pass consumes the discarded-statement uses first, so this pass
+    // only ever sees the value-position use.
+    changed |= inline_valued_statement_helpers(program, &decl_counts, nodes_touched);
 
     changed
 }
@@ -1701,6 +1712,385 @@ fn is_drop_safe_return(e: &Expression, cand: &VoidStmtCandidate) -> bool {
     }
 }
 
+// =========================================================================
+// CLOC15 PR-3 — result-used helpers, captured into a hoisted temp
+// =========================================================================
+//
+// PR-1/PR-2 inline a helper only when its result is DISCARDED (the call is a
+// statement). When the result is USED, we cannot swap statements in place —
+// there is a value to thread back. The transform:
+//
+// ```js
+// function compute(a) { const t = a + 1; return t * 2; }
+// var x = compute(5);
+// // ⇒
+// const u = 5 + 1;     // body, locals alpha-renamed, params substituted
+// const v = u * 2;     // the tail-return value captured into a fresh temp
+// var x = v;           // the call replaced by the temp
+// ```
+//
+// i.e. the body is HOISTED to before the enclosing statement and the tail
+// `return E` becomes `const <temp> = E;`, then the call expression is
+// replaced by `<temp>`.
+//
+// # The soundness crux: hoisting must not reorder evaluation
+//
+// Hoisting the body to *before* the enclosing statement runs it before
+// anything else that statement evaluates. That is sound only when nothing
+// in the enclosing statement is evaluated before the call. The airtight
+// subset this slice admits — the call is the ENTIRE initializer of a
+// SINGLE-declarator `var`/`let`/`const`:
+//
+//   `var x = compute(5);`        ← admitted (the call is the whole init)
+//   `var x = a + compute(5);`    ← declined (`a` is evaluated first)
+//   `var x = f(), y = compute(5);`← declined (multi-declarator order)
+//   `x = compute(5);`            ← declined (assignment target; later slice)
+//   `return compute(5);`         ← declined (later slice)
+//   `a && compute(5)`            ← declined (conditional / short-circuit)
+//   `for (var x = compute(5);;)` ← declined (not a statement-list element)
+//
+// In the admitted shape the declaration's only job is to bind its name to
+// the init's value; there is no sibling sub-expression whose evaluation a
+// hoist could reorder, and a `var`/`let`/`const` initializer is always
+// evaluated (never short-circuited). All of PR-1/PR-2's guards still apply
+// (single-use, no `this`/`arguments`, locals alpha-renamed, free idents are
+// true globals, simple args); additionally the body MUST end in a tail
+// `return E` (the value to capture). Broader value positions (assignment
+// targets, `return` arguments, and reordering-safe operand positions) are
+// later slices on this same machinery.
+
+/// Find every result-used helper whose single call is a capturable
+/// single-declarator initializer, and inline it by hoisting its body and
+/// capturing the tail-return value into a fresh temp. Returns whether
+/// anything changed.
+fn inline_valued_statement_helpers(
+    program: &mut Program,
+    decl_counts: &HashMap<String, usize>,
+    nodes_touched: &mut u32,
+) -> bool {
+    // Candidates share PR-1/PR-2's body shape (straight-line + optional tail
+    // return), but here the tail `return E` MUST be present with an argument
+    // — that is the value we capture.
+    let mut candidates: Vec<VoidStmtCandidate> = Vec::new();
+    for item in &program.body {
+        if let ProgramItem::Declaration(Declaration::FunctionDeclaration(fd)) = item {
+            if let Some(c) = void_candidate_from_function(fd, decl_counts) {
+                if candidate_has_tail_return_value(&c) {
+                    candidates.push(c);
+                }
+            }
+        }
+    }
+    if candidates.is_empty() {
+        return false;
+    }
+
+    let mut avoid: HashSet<String> = decl_counts.keys().cloned().collect();
+    collect_used_idents_program(program, &mut avoid);
+
+    let mut changed = false;
+    for cand in &candidates {
+        let (uses, inlinable) = name_use_and_call_counts(program, &cand.name, cand.params.len());
+        if uses != 1 || inlinable != 1 {
+            continue;
+        }
+        if splice_valued_call_program(program, cand, &mut avoid, nodes_touched) {
+            changed = true;
+        }
+    }
+    changed
+}
+
+/// Does the candidate body end in a `return E` with an argument? (The value
+/// PR-3 captures.) A void body — no return, or a bare `return;` — is not a
+/// PR-3 candidate; it is PR-1/PR-2's job.
+fn candidate_has_tail_return_value(cand: &VoidStmtCandidate) -> bool {
+    matches!(
+        cand.body.last(),
+        Some(Statement::Tagged(TaggedStatement::ReturnStatement(rs))) if rs.argument.is_some()
+    )
+}
+
+/// Walk the program's statement structure and rewrite the single
+/// capturable initializer call. Handles top-level items (a top-level
+/// variable declaration may bridge as either a `ProgramItem::Declaration`
+/// or a `ProgramItem::Statement`) and recurses into nested statement lists.
+fn splice_valued_call_program(
+    program: &mut Program,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> bool {
+    let mut changed = false;
+    let mut new_items: Vec<ProgramItem> = Vec::with_capacity(program.body.len());
+    for item in std::mem::take(&mut program.body) {
+        match item {
+            ProgramItem::Statement(stmt) => {
+                if let Some(spliced) = try_capture_in_stmt(&stmt, cand, avoid, nodes_touched) {
+                    for s in spliced {
+                        new_items.push(ProgramItem::Statement(s));
+                    }
+                    changed = true;
+                } else {
+                    let mut stmt = stmt;
+                    changed |= splice_valued_in_stmt(&mut stmt, cand, avoid, nodes_touched);
+                    new_items.push(ProgramItem::Statement(stmt));
+                }
+            }
+            ProgramItem::Declaration(d) => {
+                if let Declaration::VariableDeclaration(vd) = &d {
+                    if let Some(spliced) =
+                        capture_splice_for_vardecl(vd, cand, avoid, nodes_touched)
+                    {
+                        for s in spliced {
+                            new_items.push(ProgramItem::Statement(s));
+                        }
+                        changed = true;
+                        continue;
+                    }
+                }
+                let mut d = d;
+                changed |= splice_valued_in_decl(&mut d, cand, avoid, nodes_touched);
+                new_items.push(ProgramItem::Declaration(d));
+            }
+        }
+    }
+    program.body = new_items;
+    changed
+}
+
+/// If `stmt` is a capturable single-declarator variable declaration whose
+/// initializer is exactly the target call, return its hoisted-and-captured
+/// replacement statements; else `None`.
+fn try_capture_in_stmt(
+    stmt: &Statement,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> Option<Vec<Statement>> {
+    if let Statement::Declaration(Declaration::VariableDeclaration(vd)) = stmt {
+        return capture_splice_for_vardecl(vd, cand, avoid, nodes_touched);
+    }
+    None
+}
+
+/// The capture core: a `VariableDeclaration` qualifies iff it has EXACTLY
+/// one declarator whose initializer is exactly `cand.name(args)` (matching
+/// arity, side-effect-free args). The replacement is the hoisted body (with
+/// the tail return captured into a fresh temp) followed by the original
+/// declaration with its initializer rewritten to that temp.
+fn capture_splice_for_vardecl(
+    vd: &VariableDeclaration,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> Option<Vec<Statement>> {
+    if vd.declarations.len() != 1 {
+        return None; // multi-declarator: later declarators' order would shift
+    }
+    let init = vd.declarations[0].init.as_ref()?;
+    let Expression::CallExpression(ce) = init else {
+        return None; // the call must be the ENTIRE initializer
+    };
+    if !is_void_target_call(ce, cand) {
+        return None;
+    }
+
+    // Mint the capture temp first (added to `avoid`), so the callee-local
+    // fresh names minted inside `build_captured_body` cannot collide with it.
+    let temp = {
+        let mut gen = FreshNames::new();
+        let t = gen.next(avoid);
+        avoid.insert(t.clone());
+        t
+    };
+
+    let mut out = build_captured_body(cand, &ce.arguments, &temp, avoid, nodes_touched);
+
+    // The original declaration, initializer rewritten to the temp.
+    let mut new_vd = vd.clone();
+    new_vd.declarations[0].init = Some(Expression::Identifier(Identifier {
+        cv: None,
+        name: temp,
+    }));
+    out.push(Statement::Declaration(Declaration::VariableDeclaration(
+        new_vd,
+    )));
+    Some(out)
+}
+
+/// Build the hoisted body for a captured call: the callee body with its
+/// tail `return E` removed, locals alpha-renamed, params substituted, and a
+/// trailing `const <temp> = E;` capturing the (renamed/substituted) return
+/// value.
+fn build_captured_body(
+    cand: &VoidStmtCandidate,
+    args: &[Expression],
+    temp: &str,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> Vec<Statement> {
+    let mut body = cand.body.clone();
+
+    // Pop the tail `return E` (guaranteed present by the candidate filter).
+    let mut return_value: Expression = match body.pop() {
+        Some(Statement::Tagged(TaggedStatement::ReturnStatement(rs))) => rs
+            .argument
+            .expect("PR-3 candidate has a tail return with an argument"),
+        Some(other) => {
+            body.push(other);
+            unreachable!("PR-3 candidate's last statement is a return with an argument")
+        }
+        None => unreachable!("PR-3 candidate body is non-empty"),
+    };
+
+    // (a) Alpha-rename callee locals → fresh, in the body AND the captured
+    // return expression.
+    let mut rename: HashMap<String, String> = HashMap::new();
+    if !cand.locals.is_empty() {
+        let mut gen = FreshNames::new();
+        for local in &cand.locals {
+            let fresh = gen.next(avoid);
+            avoid.insert(fresh.clone());
+            rename.insert(local.clone(), fresh);
+        }
+        for stmt in &mut body {
+            rename_in_stmt(stmt, &rename);
+        }
+        rename_in_expr(&mut return_value, &rename);
+    }
+
+    // (b) Substitute parameters → arguments, in the body AND the captured
+    // return expression.
+    if !cand.params.is_empty() {
+        let map: HashMap<String, Expression> = cand
+            .params
+            .iter()
+            .cloned()
+            .zip(args.iter().cloned())
+            .collect();
+        for stmt in &mut body {
+            substitute_in_stmt(stmt, &map);
+        }
+        substitute(&mut return_value, &map);
+    }
+
+    // Capture the return value into the fresh temp.
+    body.push(Statement::Declaration(Declaration::VariableDeclaration(
+        VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: temp.to_string(),
+                }),
+                init: Some(return_value),
+            }],
+        },
+    )));
+
+    *nodes_touched += body.len() as u32;
+    body
+}
+
+/// Recurse a statement, splicing a capturable initializer in any nested
+/// statement LIST (block / switch case / function body). A capturable
+/// declaration is always a list element — a lexical/`var` declaration is
+/// never the unbraced body of an `if`/loop — so single-statement slots are
+/// only recursed into (never spliced at).
+fn splice_valued_in_stmt(
+    stmt: &mut Statement,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> bool {
+    *nodes_touched += 1;
+    match stmt {
+        Statement::Declaration(d) => splice_valued_in_decl(d, cand, avoid, nodes_touched),
+        Statement::Tagged(t) => match t {
+            TaggedStatement::BlockStatement(b) => {
+                splice_valued_in_stmt_vec(&mut b.body, cand, avoid, nodes_touched)
+            }
+            TaggedStatement::IfStatement(is) => {
+                let mut changed =
+                    splice_valued_in_stmt(&mut is.consequent, cand, avoid, nodes_touched);
+                if let Some(alt) = &mut is.alternate {
+                    changed |= splice_valued_in_stmt(alt, cand, avoid, nodes_touched);
+                }
+                changed
+            }
+            TaggedStatement::WhileStatement(ws) => {
+                splice_valued_in_stmt(&mut ws.body, cand, avoid, nodes_touched)
+            }
+            TaggedStatement::ForStatement(fs) => {
+                splice_valued_in_stmt(&mut fs.body, cand, avoid, nodes_touched)
+            }
+            TaggedStatement::LabeledStatement(ls) => {
+                splice_valued_in_stmt(&mut ls.body, cand, avoid, nodes_touched)
+            }
+            TaggedStatement::SwitchStatement(ss) => {
+                let mut changed = false;
+                for c in &mut ss.cases {
+                    changed |=
+                        splice_valued_in_stmt_vec(&mut c.consequent, cand, avoid, nodes_touched);
+                }
+                changed
+            }
+            TaggedStatement::ExpressionStatement(_)
+            | TaggedStatement::ReturnStatement(_)
+            | TaggedStatement::ThrowStatement(_)
+            | TaggedStatement::BreakStatement(_)
+            | TaggedStatement::ContinueStatement(_)
+            | TaggedStatement::EmptyStatement(_) => false,
+        },
+    }
+}
+
+/// Splice within a `Vec<Statement>` (block body, switch case, function
+/// body): rebuild the list, expanding a matched capturable declaration into
+/// its hoisted body + rewritten declaration.
+fn splice_valued_in_stmt_vec(
+    list: &mut Vec<Statement>,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> bool {
+    let mut changed = false;
+    let mut out: Vec<Statement> = Vec::with_capacity(list.len());
+    for stmt in std::mem::take(list) {
+        if let Some(spliced) = try_capture_in_stmt(&stmt, cand, avoid, nodes_touched) {
+            out.extend(spliced);
+            changed = true;
+        } else {
+            let mut stmt = stmt;
+            changed |= splice_valued_in_stmt(&mut stmt, cand, avoid, nodes_touched);
+            out.push(stmt);
+        }
+    }
+    *list = out;
+    changed
+}
+
+fn splice_valued_in_decl(
+    decl: &mut Declaration,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> bool {
+    match decl {
+        Declaration::FunctionDeclaration(fd) => {
+            splice_valued_in_stmt_vec(&mut fd.body.body, cand, avoid, nodes_touched)
+        }
+        // A variable initializer is a value position; the call must be the
+        // ENTIRE init (handled at the list level by `try_capture_in_stmt` /
+        // `capture_splice_for_vardecl`), so there is nothing to descend into
+        // here (a call nested inside a larger init is declined).
+        Declaration::VariableDeclaration(_) => false,
+    }
+}
+
 // ---- statement-level rename (callee-local alpha-renaming) -----------------
 
 /// Rename binding identifiers in a body statement per `map` — both the
@@ -2574,6 +2964,88 @@ mod tests {
         assert_eq!(
             inline_source("function f(x) { if (x) f(x); } g(f);"),
             "function f(x){if(x)f(x);};g(f);"
+        );
+    }
+
+    // =====================================================================
+    // CLOC15 PR-3: result-used helper captured into a hoisted temp
+    // =====================================================================
+
+    #[test]
+    fn captures_result_used_helper_into_temp() {
+        // The signature case: a multi-statement helper whose result is used
+        // as a variable initializer. The body is hoisted (local `t`
+        // alpha-renamed, param `a` substituted by `5`), the tail return
+        // captured into a fresh temp, and the call replaced by that temp.
+        assert_eq!(
+            inline_source(
+                "function compute(a) { const t = a + 1; return t * 2; } var x = compute(5);"
+            ),
+            "function compute(a){const t=a + 1;return t * 2};\
+             const c=5 + 1;const b=c * 2;var x=b;"
+        );
+    }
+
+    #[test]
+    fn captures_with_free_global_side_effect() {
+        // A side-effecting body statement (a free global call) is hoisted
+        // and runs before the binding; the returned value is captured.
+        assert_eq!(
+            inline_source("function make(a) { setup(a); return build(a); } var r = make(x);"),
+            "function make(a){setup(a);return build(a)};setup(x);const b=build(x);var r=b;"
+        );
+    }
+
+    #[test]
+    fn captures_into_let_binding() {
+        // The captured-temp machinery works for a `let` binding too; the
+        // tail `return a` (a parameter) is captured after substitution.
+        assert_eq!(
+            inline_source("function f(a) { g(); return a; } let x = f(7);"),
+            "function f(a){g();return a};g();const b=7;let x=b;"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_when_call_is_not_the_whole_initializer() {
+        // The call is nested inside a larger initializer (`k + f(1)`), so
+        // hoisting its body before the statement would run it before `k` is
+        // read — declined.
+        assert_eq!(
+            inline_source("function f(p) { g(); return p; } var x = k + f(1);"),
+            "function f(p){g();return p};var x=k + f(1);"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_nested_call_argument_initializer() {
+        // `f(2)` is an argument to `h(...)`, not the whole initializer —
+        // declined (the call is not the initializer's top expression).
+        assert_eq!(
+            inline_source("function f(a) { g(); return a; } var x = h(f(2));"),
+            "function f(a){g();return a};var x=h(f(2));"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_multi_declarator() {
+        // A second declarator (`y = 2`) is evaluated after the first; a
+        // flat hoist of the body before the whole declaration would not
+        // preserve that ordering — declined.
+        assert_eq!(
+            inline_source("function f(a) { g(); return a; } var x = f(1), y = 2;"),
+            "function f(a){g();return a};var x=f(1),y=2;"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_void_body_used_as_value() {
+        // The helper has no tail-return value (a bare `return;`), so there
+        // is nothing to capture; using it as an initializer yields
+        // `undefined`, which this slice does not synthesize — declined.
+        assert_eq!(
+            inline_source("function f(a) { g(); return; } var x = f(1);"),
+            "function f(a){g();return};var x=f(1);"
         );
     }
 }
