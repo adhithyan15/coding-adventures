@@ -1164,12 +1164,19 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
 //   2. **The one use is a discarded statement call** — the call is the
 //      entire expression of an `ExpressionStatement` (`track(…);`), not a
 //      value (`x = track(…)`, `log(track(…))`). A discarded result means
-//      there is no return value to capture (that is PR-2/PR-3).
-//   3. **The body is straight-line, no `return`.** Each statement is an
-//      `ExpressionStatement` or a `let` / `const` `VariableDeclaration` —
-//      nothing else (no `return`, `if`, loops, `var`, nested blocks, …).
-//      No control construct means a flat splice cannot mis-scope control
-//      flow; no `var` means no function-scoped hoisting to reason about.
+//      there is no return value to *capture* (capturing a used result is
+//      PR-3); a discarded TAIL return, however, can be inlined (PR-2).
+//   3. **The body is straight-line to an optional tail `return`.** Each
+//      statement is an `ExpressionStatement` or a `let` / `const`
+//      `VariableDeclaration`, plus an OPTIONAL `return` as the FINAL
+//      statement — nothing else (no *early* `return`, no `if`, loops,
+//      `var`, nested blocks, …). No mid-body control construct means a
+//      flat splice cannot mis-scope control flow; no `var` means no
+//      function-scoped hoisting to reason about. Because the call site
+//      discards the result, a tail `return E` is normalized by
+//      [`normalize_tail_return`]: dropped when `E` is provably inert (a
+//      literal or a bare parameter/local read), else kept as `E;` for its
+//      side effects.
 //   4. **No `this` / `arguments`.** Their meaning is bound by the callee's
 //      own call frame; splicing into the caller would silently rebind
 //      them. Rejected explicitly.
@@ -1194,9 +1201,9 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
 //      locals an argument identifier could be captured by are all fresh.
 //
 // Everything outside this subset is left untouched. Broader shapes
-// (tail-`return` with a discarded or captured result, `var` locals, `if`,
-// non-simple arguments, multi-use under a budget) are the later CLOC15
-// slices on this same walker.
+// (a tail return whose result is *captured* into a hoisted temp, `var`
+// locals, `if`, non-simple arguments, multi-use under a budget) are the
+// later CLOC15 slices on this same walker.
 
 /// One inlinable void multi-statement helper: its name, parameter names in
 /// order, the body statements to splice, and the set of local binding
@@ -1291,12 +1298,22 @@ fn void_candidate_from_function(
         params.push(id.name.clone());
     }
 
-    // (3) Body shape: each statement is an `ExpressionStatement` or a
-    // `let`/`const` `VariableDeclaration`. No `return`, no control flow, no
-    // `var`, no nested blocks. We also collect the local binding names.
+    // (3) Body shape: each statement is an `ExpressionStatement`, a
+    // `let`/`const` `VariableDeclaration`, or — CLOC15 PR-2 — an optional
+    // `return` as the FINAL statement. No early return, no other control
+    // flow, no `var`, no nested blocks. We also collect the local binding
+    // names.
+    //
+    // A tail `return E` is sound here precisely because the call site
+    // discards the result (condition 2): the returned value is never read,
+    // so the splice can drop it (or keep `E;` for its side effects — see
+    // [`normalize_tail_return`]). A `return` anywhere but the last position
+    // would change control flow when spliced (the caller's following
+    // statements would still run), so it is rejected.
     let mut locals: Vec<String> = Vec::new();
     let mut local_set: HashSet<String> = HashSet::new();
-    for stmt in &fd.body.body {
+    let last_index = fd.body.body.len().wrapping_sub(1);
+    for (i, stmt) in fd.body.body.iter().enumerate() {
         match stmt {
             Statement::Tagged(TaggedStatement::ExpressionStatement(_)) => {}
             Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
@@ -1312,9 +1329,12 @@ fn void_candidate_from_function(
                     local_set.insert(id.name.clone());
                 }
             }
-            // Anything else (return, if, while, for, throw, break,
+            // A `return` is admitted ONLY in the final (tail) position;
+            // anywhere earlier it would alter control flow on splice.
+            Statement::Tagged(TaggedStatement::ReturnStatement(_)) if i == last_index => {}
+            // Anything else (early `return`, if, while, for, throw, break,
             // continue, switch, labeled, empty, nested block, a nested
-            // function declaration) is outside the first slice.
+            // function declaration) is outside this slice.
             _ => return None,
         }
     }
@@ -1566,7 +1586,8 @@ fn splice_void_in_decl(
 }
 
 /// Build the statement list to splice in for one call site: a clone of the
-/// body with (a) callee locals alpha-renamed to program-fresh names, then
+/// body with (0) the tail `return` normalized (the result is discarded),
+/// then (a) callee locals alpha-renamed to program-fresh names, then
 /// (b) parameters substituted by their (simple) arguments. Newly minted
 /// fresh names are added to `avoid` so a second splice cannot reuse them.
 fn build_spliced_body(
@@ -1576,6 +1597,13 @@ fn build_spliced_body(
     nodes_touched: &mut u32,
 ) -> Vec<Statement> {
     let mut body = cand.body.clone();
+
+    // (0) Normalize a tail `return E` for the discarded-result call site.
+    // Done first, while the names are still the callee's own, so the
+    // membership test in [`is_drop_safe_return`] sees the original param /
+    // local names; the resulting `E;` (if kept) is then renamed and
+    // substituted by steps (a)/(b) like any other expression statement.
+    normalize_tail_return(&mut body, cand);
 
     // (a) Alpha-rename callee locals → fresh. Renaming the binding *and*
     // every in-body use of it makes a spliced `let event` collision-proof
@@ -1611,6 +1639,66 @@ fn build_spliced_body(
 
     *nodes_touched += body.len() as u32;
     body
+}
+
+/// Normalize a tail `return` for a discarded-result splice (CLOC15 PR-2).
+/// The call site discards the value, so the returned expression is never
+/// read:
+///
+/// - `return;` (no argument) → dropped entirely (a no-op).
+/// - `return E;` where `E` is **provably inert** (a literal, or a bare read
+///   of a parameter / callee-local — a binding that always exists, so the
+///   read neither throws nor has a side effect) → dropped.
+/// - `return E;` otherwise → rewritten to `E;` (an `ExpressionStatement`),
+///   so `E` is still evaluated for its side effects and the value is
+///   discarded — exactly what the original function did before returning.
+///
+/// A bare *global* identifier is deliberately NOT dropped: reading an
+/// undeclared global throws `ReferenceError`, which we must preserve.
+fn normalize_tail_return(body: &mut Vec<Statement>, cand: &VoidStmtCandidate) {
+    let is_tail_return = matches!(
+        body.last(),
+        Some(Statement::Tagged(TaggedStatement::ReturnStatement(_)))
+    );
+    if !is_tail_return {
+        return;
+    }
+    // Pop the tail return; conditionally push back its argument as a plain
+    // expression statement (kept for side effects) unless it is droppable.
+    let Some(Statement::Tagged(TaggedStatement::ReturnStatement(rs))) = body.pop() else {
+        return;
+    };
+    match rs.argument {
+        None => {}                                     // bare return: drop
+        Some(e) if is_drop_safe_return(&e, cand) => {} // inert value: drop
+        Some(e) => body.push(Statement::Tagged(TaggedStatement::ExpressionStatement(
+            ExpressionStatement {
+                cv: None,
+                expression: e,
+            },
+        ))),
+    }
+}
+
+/// Is the discarded return value `e` provably inert — safe to drop rather
+/// than keep as `E;`? True for a literal (no side effect, never throws) or
+/// a bare read of a parameter / callee-local (the binding always exists, so
+/// the read neither throws a `ReferenceError` nor has a side effect). A free
+/// global identifier is NOT inert (an undeclared read throws), nor is any
+/// member access / call / operator (possible getter / throw / side effect).
+fn is_drop_safe_return(e: &Expression, cand: &VoidStmtCandidate) -> bool {
+    match e {
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::UndefinedLiteral(_) => true,
+        Expression::Identifier(id) => {
+            cand.params.contains(&id.name) || cand.locals.contains(&id.name)
+        }
+        _ => false,
+    }
 }
 
 // ---- statement-level rename (callee-local alpha-renaming) -----------------
@@ -2351,12 +2439,76 @@ mod tests {
         );
     }
 
+    // ----- CLOC15 PR-2: tail `return` with a discarded result -----
+
     #[test]
-    fn does_not_inline_void_helper_with_tail_return() {
-        // A trailing `return` is PR-2, not PR-1 — declined here.
+    fn inlines_tail_return_literal_dropped() {
+        // The call discards the result, so a tail `return <literal>` is
+        // provably inert and dropped entirely; the rest splices as usual.
         assert_eq!(
             inline_source("function f(x) { sink(x); return 1; } f(a);"),
-            "function f(x){sink(x);return 1};f(a);"
+            "function f(x){sink(x);return 1};sink(a);"
+        );
+    }
+
+    #[test]
+    fn inlines_tail_bare_return_dropped() {
+        // A bare `return;` is a no-op once the value is discarded — dropped.
+        assert_eq!(
+            inline_source("function f(x) { sink(x); return; } f(a);"),
+            "function f(x){sink(x);return};sink(a);"
+        );
+    }
+
+    #[test]
+    fn inlines_tail_return_param_identifier_dropped() {
+        // `return x` reads a parameter — a binding that always exists, so
+        // the read neither throws nor has a side effect; dropped.
+        assert_eq!(
+            inline_source("function f(x) { sink(x); return x; } f(a);"),
+            "function f(x){sink(x);return x};sink(a);"
+        );
+    }
+
+    #[test]
+    fn inlines_tail_return_effectful_kept_as_statement() {
+        // `return setup()` may have a side effect, so the value is dropped
+        // but the call is KEPT as a statement (`setup();`) for its effect.
+        assert_eq!(
+            inline_source("function f(x) { log(x); return setup(); } f(a);"),
+            "function f(x){log(x);return setup()};log(a);setup();"
+        );
+    }
+
+    #[test]
+    fn inlines_single_tail_return_with_free_global() {
+        // Body is a single tail `return g()` where `g` is a free global —
+        // the expression inliner (all-idents-must-be-params) cannot touch
+        // this, but the discarded-result statement splice can: `g();`.
+        assert_eq!(
+            inline_source("function f() { return setup(); } f();"),
+            "function f(){return setup()};setup();"
+        );
+    }
+
+    #[test]
+    fn inlines_tail_return_free_global_identifier_kept() {
+        // `return glob` reads a free global, which can throw `ReferenceError`
+        // if undeclared — so the read is preserved as `glob;`, not dropped.
+        assert_eq!(
+            inline_source("function f(x) { sink(x); return glob; } f(a);"),
+            "function f(x){sink(x);return glob};sink(a);glob;"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_void_helper_with_early_return() {
+        // A `return` that is NOT the final statement would change control
+        // flow on a flat splice (the following statements would still run),
+        // so the candidate is declined.
+        assert_eq!(
+            inline_source("function f(x) { return; sink(x); } f(a);"),
+            "function f(x){return;sink(x)};f(a);"
         );
     }
 

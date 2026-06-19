@@ -117,10 +117,11 @@ structurally cannot do. It is admitted only under a tight, sound subset
 
 1. **Single-use, single-declaration** — name declared once, used once.
 2. **The use is a discarded statement call** (`track(…);`), not a value
-   position (`x = track(…)`). No result to capture (capture is a later
-   slice).
-3. **Straight-line body, no `return`** — each statement is an expression
-   statement or a `let`/`const` declaration; nothing else.
+   position (`x = track(…)`). No result to capture (value capture is a
+   later slice).
+3. **Straight-line body to an optional tail `return`** — each statement is
+   an expression statement or a `let`/`const` declaration, plus an optional
+   `return` as the *final* statement; nothing else (no *early* return).
 4. **No `this` / `arguments`** — frame-bound, would rebind on a splice.
 5. **Callee locals alpha-renamed to program-fresh names** before
    splicing — a spliced `let e` can never collide with the call-site
@@ -130,11 +131,24 @@ structurally cannot do. It is admitted only under a tight, sound subset
    slice widens it via `closure-scope-analyzer`).
 7. **Side-effect-free arguments** — the same `is_simple_arg` gate.
 
+Since the call site discards the result (CLOC15 PR-2), a **tail `return E`**
+is normalized: dropped when `E` is provably inert (a literal or a bare
+parameter/local read), else kept as `E;` for its side effects. A bare
+*global* read is kept (it can throw `ReferenceError`). This also reaches a
+shape the expression inliner cannot — a single `return g()` with a free
+global `g` becomes `g();`.
+
+```js
+function init(n) { setup(n); return ready(); }
+init(cfg);
+// SIMPLE  ⇒  setup(cfg); ready();
+```
+
 An unbraced single-statement slot (`if (c) f();`) gets the spliced body
 wrapped in a block; a real statement list is spliced flat. Later slices
-(tail `return`, value capture, `var` locals, `if`, multi-use) build on
-this same walker. As with the expression path, the now-dead declaration
-is left for `remove-unused-vars` / `treeshake`.
+(value capture into a hoisted temp, `var` locals, `if`, multi-use) build on
+this same walker. As with the expression path, the now-dead declaration is
+left for `remove-unused-vars` / `treeshake`.
 
 ## Where this pass sits
 

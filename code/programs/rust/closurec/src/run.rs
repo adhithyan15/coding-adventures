@@ -5902,11 +5902,14 @@ mod tests {
         // `f` is called so treeshake (now last in the SIMPLE pipeline)
         // keeps the declaration; otherwise the unused function would be
         // removed wholesale and the dce-inside-the-body effect wouldn't
-        // be observable.
-        let out = transform_source("function f() { g(); return 1; dead(); } f();", &cfg)
+        // be observable. It is called TWICE so the single-use void
+        // statement-inliner (CLOC15) declines it — otherwise `f` would be
+        // spliced away entirely and the dce-after-return effect (the point
+        // of this test) would no longer be observable in the output.
+        let out = transform_source("function f() { g(); return 1; dead(); } f(); f();", &cfg)
             .expect("ok");
         assert_eq!(
-            out, "function f(){g();return 1};f();",
+            out, "function f(){g();return 1};f();f();",
             "dce must drop the statement after the return"
         );
     }
@@ -6196,11 +6199,13 @@ mod tests {
     #[test]
     fn advanced_renames_surviving_top_level_function() {
         // CLOC13.I: a top-level function that SURVIVES SIMPLE (multi-
-        // statement body, so `inline` leaves it; called, so `treeshake`
-        // keeps it) is shortened by ADVANCED's `rename-globals` pass —
-        // the first point where ADVANCED produces smaller output than
-        // SIMPLE. SIMPLE keeps the top-level name (it may be external).
-        let src = "function helper() { sideEffect(); return value; } helper();";
+        // statement body, and called MORE THAN ONCE so neither the
+        // expression inliner nor the single-use void statement-inliner
+        // (CLOC15) splices it away; `treeshake` keeps it) is shortened by
+        // ADVANCED's `rename-globals` pass — the first point where ADVANCED
+        // produces smaller output than SIMPLE. SIMPLE keeps the top-level
+        // name (it may be external).
+        let src = "function helper() { sideEffect(); return value; } helper(); helper();";
         let mk = |level| {
             transform_source(
                 src,
@@ -6218,9 +6223,12 @@ mod tests {
         let advanced = mk(crate::config::CompilationLevel::Advanced);
         assert_eq!(
             simple,
-            "function helper(){sideEffect();return value};helper();"
+            "function helper(){sideEffect();return value};helper();helper();"
         );
-        assert_eq!(advanced, "function a(){sideEffect();return value};a();");
+        assert_eq!(
+            advanced,
+            "function a(){sideEffect();return value};a();a();"
+        );
         assert!(
             advanced.len() < simple.len(),
             "ADVANCED must be smaller than SIMPLE here"

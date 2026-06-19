@@ -1,1 +1,1 @@
-function a(){sideEffect();return value};a();
+function a(){sideEffect();return value};a();a();
