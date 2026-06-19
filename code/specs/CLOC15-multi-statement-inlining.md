@@ -184,12 +184,112 @@ correct on their own; later stages only *widen* what is inlinable.
   evaluation order (e.g. inside `&&` / `?:` short-circuit, or a `for` header) —
   reject those positions.
 
-- **PR-4 — widen control flow / arguments.** Admit `if` without `return`
-  inside, non-simple arguments via per-argument temps, etc. Each behind its own
+- **PR-4 — widen control flow / arguments.** Split into two independent,
+  separately-shippable slices (4a and 4b below). Each is behind its own
   soundness proof and fixture.
 
 A SPEC note (this file) plus PR-1 is the first sound increment; do **not** ship
 statement splicing without PR-1's alpha-renaming and free-identifier guards.
+
+### PR-4a — non-simple arguments via per-argument temps
+
+**Status:** PR-1/PR-2/PR-3 are merged. They require every argument to be
+*simple* (a literal or a bare identifier, the `is_simple_arg` gate) so a
+parameter used 0/1/many times can be substituted in place without dropping or
+duplicating a side effect or reordering evaluation. PR-4a lifts that for the
+**statement-inlining paths** (the void/discard pass and the value-capture pass
+— NOT the expression inliner, which has no statement context to hoist into).
+
+**The transform.** When a call's arguments are not all simple, materialise
+**every** argument into a fresh `const` temp, in source order, *before* the
+spliced body, and substitute each parameter with its temp identifier:
+
+```js
+function f(p, q) { sink(p); use(p, q); }
+f(obj.x, compute());
+// ⇒
+const t0 = obj.x;     // every arg hoisted, left-to-right, once
+const t1 = compute();
+sink(t0); use(t0, t1);   // params → temps (the body, locals already renamed)
+```
+
+This is exactly JS call semantics: all arguments are evaluated left-to-right,
+once each, before the callee body runs; the temps capture those values so a
+parameter referenced N times in the body reads the captured value, never
+re-evaluating the argument.
+
+**Soundness conditions (each a hard reject):**
+
+1. *Uniform temping when any argument is non-simple.* If **all** arguments are
+   simple, keep PR-1..PR-3's direct substitution (no temps) — this preserves
+   the existing single-pass output, so no fixture churn. If **any** argument is
+   non-simple, temp **all** of them (including the simple ones) so left-to-right
+   order is preserved with no per-argument case analysis. The redundant temps on
+   simple args are removed downstream by `inline-variables` + `constant-fold`.
+2. *Temps are program-fresh.* Mint each arg temp from the same `avoid` set used
+   for callee-local renaming, adding each to `avoid` as minted, and mint the
+   arg temps **before** the callee-local fresh names so the two name spaces
+   cannot collide.
+3. *Order: arg temps, then body.* The temp declarations are prepended to the
+   spliced statement list (for the value-capture path they precede the body and
+   the capture temp). The substitution map sends `param_i → Identifier(temp_i)`.
+4. *No new argument-shape restriction needed.* Any argument **expression** is
+   admissible because temping captures its value once at the splice point — a
+   throwing argument still throws at the same point (before the body); a
+   side-effecting argument runs once. (Arguments the front-end cannot bridge —
+   e.g. assignment expressions, see *Implementation findings* — never reach the
+   inliner at all: the program falls back to whitespace-only minification, so
+   the pass simply never runs on them.)
+
+**Plumbing the gate.** The single-use gate currently calls
+`name_use_and_call_counts`, whose `inlinable` figure reuses the expression
+inliner's `is_inlinable_call` (which requires *simple* args). PR-4a must add a
+statement-path counter — uses of the name plus calls matching **name + arity**
+regardless of argument simplicity — and the splice-matching predicate
+(`is_void_target_call`) must likewise drop its `is_simple_arg` requirement
+(keeping name + arity). The expression inliner's `is_inlinable_call` is left
+unchanged.
+
+**Shared helper.** Factor a `materialize_args(cand, args, avoid) -> (Vec<Statement>
+prelude, HashMap<param, Expression> map)`: all-simple → `(vec![], direct map)`;
+any-non-simple → temp every arg into the prelude and map each param to its temp.
+Both `build_spliced_body` (void) and `build_captured_body` (value-capture) call
+it and prepend the prelude.
+
+### PR-4b — `if` without an early exit in the body
+
+Admit an `IfStatement` (and later other straight-line-preserving control) in
+the body **only** when neither branch contains `return` / `break` / `continue`
+(which would change control flow when spliced). This requires (i) recursing the
+callee-local collection and alpha-rename into the nested block(s) — a nested
+`let`/`const` is already block-scoped, so collision-freedom needs the same
+fresh-rename treatment — and (ii) extending the body-shape walk to accept the
+admitted control constructs while still rejecting early exits. Defer until 4a
+ships; it is independent.
+
+## Implementation findings (after PR-1..PR-3, verified against `closurec`)
+
+Empirical behaviour of the merged slices, confirmed by running the real
+`closurec --compilation_level SIMPLE` binary — these pin what PR-4 may rely on:
+
+- **Assignment expressions in a body are unreachable, not mishandled.** A body
+  containing an `AssignmentExpression` (e.g. `sink(p = 5)`, `q(r = 1)`) causes
+  the **typed bridge** (`grammar_to_program`) to bail, so the program falls
+  back to whitespace-only minification and the inline pass never runs on it.
+  This is why a body that reassigns a parameter is never inlined — it is
+  *declined upstream of the pass*, not by a candidate guard. Consequence: the
+  shared `substitute` helper's choice to leave a bare-identifier assignment
+  target unsubstituted is not currently a miscompilation risk, because such
+  bodies never reach it. **PR-4b must keep this property in view**: if the
+  bridge ever gains assignment-expression support, a body that reassigns a
+  parameter MUST be rejected explicitly (the substitution would write to the
+  caller's variable), so add that guard *before* relying on assignment bodies.
+- **Computed/member reads in a body inline fine.** `function f(p){ sink(p);
+  use(arr[p]); } f(y)` → `sink(y);use(arr[y]);` — non-assignment member and
+  computed-member expressions bridge and inline correctly today.
+- **Non-simple arguments are the live limiter.** `f(obj.x)` is declined purely
+  by the `is_simple_arg` gate (the call otherwise qualifies). This is the
+  single highest-leverage widening still open, hence PR-4a's priority.
 
 ## Open questions
 
@@ -220,10 +320,14 @@ statement splicing without PR-1's alpha-renaming and free-identifier guards.
    that inlining never oscillates with `remove-unused-vars` / `rename`.
 
 5. **Size budget.** Single-use statement inlining is a near-strict win (the
-   callee declaration is later removed by `remove-unused-vars`/treeshake), but a
-   body whose params are used many times with non-trivial (post-simple-arg)
-   substitutions could grow. Reuse / extend `multiuse_budget_ok`'s node-count
-   heuristic before admitting non-simple arguments (PR-4).
+   callee declaration is later removed by `remove-unused-vars`/treeshake). With
+   PR-4a's per-argument temps a non-simple argument is materialised **once**
+   into a temp regardless of how many times its parameter is used, so the
+   substituted body cannot duplicate a large argument expression — the temp
+   itself bounds growth. (A simple argument is still substituted directly, as
+   today.) The `multiuse_budget_ok` node-count heuristic therefore does not need
+   extending for PR-4a's single-use path; revisit only if statement splicing is
+   ever extended to multi-**use** callees (a separate non-goal).
 
 ## Non-goals
 
