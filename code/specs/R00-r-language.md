@@ -291,6 +291,45 @@ unchanged.
     `unwrap`/panic is reachable from malformed `attributes(x) <- …` input — a
     non-list `value`, an unnamed element, a too-long `names`, or a non-conforming
     `dim` all return a clean `SError`.
+- **R-17 — `do.call` + named-list access polish** *(this PR)*. The reflective
+  call primitive `do.call`, a small list-overlay helper `modifyList`, and a
+  hardening pass over the R-6 named-list access operators — all in the shared
+  `s-runtime` (R gets them through the same evaluator).
+  - **`do.call(what, args)`** constructs and evaluates a call to `what` with the
+    arguments supplied as the elements of the `list` `args`. `what` is either a
+    callable value (closure or built-in) *or a length-one character string naming
+    one*, in which case the name is resolved in the interpreter's global
+    environment (an unknown or non-callable name is a clean error). Each element
+    of `args` becomes one call argument: an **unnamed** element is positional and
+    a **named** element is passed by name, preserving order — so
+    `do.call(paste, list("a", "b", sep = "-"))` yields `"a-b"`, exactly as if
+    `paste("a", "b", sep = "-")` had been written. The call reuses the
+    interpreter's existing `call_value`/apply machinery (the same path
+    `lapply`/`Reduce`/`Map` use), so default arguments, named/positional matching,
+    and visibility all behave identically to a direct call. A `args` that is not
+    a list (or `NULL`, treated as the empty argument list) is an error rather than
+    a panic. The number of spread arguments is bounded by `MAX_DOCALL_ARGS` so a
+    crafted multi-million-element `args` cannot build an unbounded call frame.
+  - **Named-list access polish.** R-6 already routes `lst$name`,
+    `lst[["name"]]`, and `lst[[i]]` through `dataframe::column_by_name` /
+    `dataframe::extract`; R-17 pins the full contract with tests and closes any
+    gaps: `lst$name` and `lst[["name"]]` return the element bound to that name;
+    `lst[[i]]` returns the `i`-th element (1-based); a **missing** name
+    (`lst$absent`, `lst[["absent"]]`) returns `NULL` (not an error), matching R;
+    and these see through the `Classed`/`Attributed`/`Named` transparent wrappers
+    so an attribute-carrying or classed list still indexes by name. (`$`/`[[name]]`
+    on a *data frame* keep their stricter "undefined column" error — only the
+    `list` type returns `NULL` for an absent name, as in R.)
+  - **`modifyList(x, val)`** returns the list `x` with the elements of the list
+    `val` overlaid **by name**: a name present in `val` and in `x` replaces that
+    element; a name present only in `val` is appended; and a `val` element whose
+    value is `NULL` **removes** that name from `x` (R's documented deletion
+    semantics). Element order follows `x` (replacements in place, removals
+    dropped) with `val`'s new names appended in `val`'s order. Both arguments must
+    be lists (an unnamed `val` element, or a non-list argument, is an error); it
+    composes with the access operators above. The result size is bounded by the
+    same `MAX_DOCALL_ARGS`-class limit as `do.call`'s argument count so a crafted
+    `val` cannot blow the list up without bound.
 
 ## §4 Reuse strategy
 

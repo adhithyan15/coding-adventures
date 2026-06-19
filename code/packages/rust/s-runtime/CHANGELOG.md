@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-06-17
+
+### Added
+
+- **`do.call`, `modifyList`, named-list access polish (R-17)** — reflective call
+  + list-overlay builtins, both in the shared runtime so R and S get them.
+  - **`do.call(what, args)`** builds and evaluates a call to `what` with the
+    elements of the list `args` spread as arguments — unnamed elements positional,
+    named elements passed by name, in order. `what` is a callable value, or a
+    length-one character string naming one (resolved in the global environment).
+    Reuses `Interpreter::call_value` (the same path `lapply`/`Reduce`/`Map` use),
+    so default arguments, named/positional matching, recycling, and visibility are
+    identical to a direct call — `do.call(paste, list("a", "b", sep = "-"))` is
+    `paste("a", "b", sep = "-")` → `"a-b"`.
+  - **`modifyList(x, val)`** returns `x` with `val`'s elements overlaid by name:
+    a name in both is replaced in place, a name only in `val` is appended, and a
+    `val` element whose value is `NULL` removes that name (R's deletion
+    semantics). Order follows `x` (removals dropped), then `val`'s new names.
+  - **Named-list access polish.** A new wrapper-transparent `as_list` helper lets
+    `$` / `[[name]]` / `[[i]]` (and both new builtins) see through
+    `Classed`/`Attributed`/`Named` list wrappers, so a classed or
+    attribute-carrying list still indexes by name. The R-6 contract is pinned with
+    tests: `lst$name` / `lst[["name"]]` by name, `lst[[i]]` by position, a missing
+    name → `NULL` (not an error). Data frames keep their stricter
+    "undefined column" error — only the `list` type returns `NULL`.
+
+### Safety
+
+- `do.call`'s spread argument count and `modifyList`'s result size are both
+  bounded by `MAX_DOCALL_ARGS` (100 000) against a crafted multi-million-element
+  `args`/`val`. A non-list `args`/`val` (with `NULL` treated as the empty list for
+  `do.call`), a non-callable `what`, an unknown function name, and an unnamed
+  `val` element all return a clean `SError` — no `unwrap`/panic is reachable from
+  malformed input.
+
 ## [0.12.0] - 2026-06-17
 
 ### Added
