@@ -58,11 +58,11 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 RECALL = HERE.parent / "recall"
 EDGE_FILES = ["iem-edges.adj", "vitamin-edges.adj", "anemia-edges.adj",
-              "endocrine-edges.adj", "coag-edges.adj", "micro-edges.adj"]
+              "endocrine-edges.adj", "coag-edges.adj", "micro-edges.adj", "pharm-edges.adj"]
 
 # Each recall relation binds one conventional variable (the "what is being asked").
-# This is the controlled query vocabulary the model must choose from — 14 relations
-# across six organ systems. The engine ultimately validates the subject; this map
+# This is the controlled query vocabulary the model must choose from — 18 relations
+# across seven domains. The engine ultimately validates the subject; this map
 # pins the legal relation set and the variable name each relation answers.
 REL_VAR = {
     "deficient_in": "Enzyme",          # IEM: which enzyme is deficient
@@ -79,6 +79,10 @@ REL_VAR = {
     "gram_stain": "Result",            # microbiology: Gram reaction (positive / negative)
     "morphology": "Shape",             # microbiology: cell shape (cocci / bacilli / …)
     "causes": "Disease",               # microbiology: signature disease the organism causes
+    "drug_class": "Class",             # pharmacology: pharmacologic class of a drug
+    "mechanism": "MOA",                # pharmacology: mechanism of action
+    "adverse_effect": "Effect",        # pharmacology: a notable adverse effect
+    "antidote_for": "Antidote",        # pharmacology: what reverses a poisoning/overdose
 }
 
 _RELATE_RE = re.compile(r"^\s*relate\s+([a-z_][a-z0-9_]*)\s*\(([^)]*)\)\s*$")
