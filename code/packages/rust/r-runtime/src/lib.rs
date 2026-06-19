@@ -1229,6 +1229,42 @@ mod tests {
         assert_eq!(show("switch(\"z\", a = \"A\", b = \"B\")\n"), "NULL");
     }
 
+    // --- R-19: empty-arm switch() fall-through (R syntax) ---------------
+
+    #[test]
+    fn switch_empty_arm_falls_through_r_syntax() {
+        // R-19: `switch("a", a = , b = "hit")` → "hit". The empty arm `a = ,`
+        // now parses (grammar `arg = NAME EQ [expr]`) and falls through.
+        assert_eq!(show("switch(\"a\", a = , b = \"hit\")\n"), "[1] \"hit\"");
+    }
+
+    #[test]
+    fn switch_empty_arm_chains_r_syntax() {
+        // Multi fall-through: a = , b = , c = "z" → "z".
+        assert_eq!(
+            show("switch(\"a\", a = , b = , c = \"z\")\n"),
+            "[1] \"z\""
+        );
+        // Matching a middle empty arm chains forward to the next value.
+        assert_eq!(
+            show("switch(\"b\", a = \"A\", b = , c = \"z\")\n"),
+            "[1] \"z\""
+        );
+    }
+
+    #[test]
+    fn switch_last_arm_empty_yields_null_r_syntax() {
+        // Matched arm empty with nothing after → invisible NULL.
+        assert_eq!(show("switch(\"b\", a = \"A\", b = )\n"), "NULL");
+    }
+
+    #[test]
+    fn empty_named_arg_in_ordinary_call_errors_r_syntax() {
+        // The empty value is only meaningful in switch; in an ordinary call it
+        // is an eval-time error (no panic), matching R.
+        assert!(eval_r("c(x = )\n").is_err());
+    }
+
     #[test]
     fn switch_numeric_position_r_syntax() {
         assert_eq!(

@@ -143,6 +143,22 @@ mod tests {
     }
 
     #[test]
+    fn empty_named_argument_parses() {
+        // R-19: `arg = NAME EQ [expr]` — a named argument may omit its value.
+        // This is what `switch`'s empty-arm fall-through relies on.
+        assert!(parses("switch(\"a\", a = , b = \"hit\")\n"));
+        // An empty arm followed by `)` (last-arm-empty) parses too.
+        assert!(parses("switch(\"b\", a = \"A\", b = )\n"));
+        // Multiple consecutive empties.
+        assert!(parses("switch(\"a\", a = , b = , c = \"z\")\n"));
+        // The empty value is grammatically valid in any call (eval rejects it
+        // outside switch, but it must PARSE).
+        assert!(parses("f(x = )\n"));
+        // A normal named arg with a value still parses (no regression).
+        assert!(parses("f(x = 1, y = 2)\n"));
+    }
+
+    #[test]
     fn arithmetic_and_precedence_nodes() {
         let ast = parse_s("1 + 2 * 3 ^ 2\n");
         for rule in ["additive", "multiplicative", "power"] {

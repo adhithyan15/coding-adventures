@@ -156,6 +156,18 @@ mod tests {
     }
 
     #[test]
+    fn empty_named_argument_parses() {
+        // R-19: `arg = NAME EQ [expr]` — a named argument may omit its value,
+        // which `switch`'s empty-arm fall-through relies on.
+        assert!(parses("switch(\"a\", a = , b = \"hit\")\n"));
+        assert!(parses("switch(\"b\", a = \"A\", b = )\n"));
+        assert!(parses("switch(\"a\", a = , b = , c = \"z\")\n"));
+        // Empty value parses in any call (eval rejects it outside switch).
+        assert!(parses("f(x = )\n"));
+        assert!(parses("f(x = 1, y = 2)\n"));
+    }
+
+    #[test]
     fn typed_na_constants_parse() {
         for src in ["NA_integer_\n", "NA_real_\n", "NA_character_\n"] {
             assert!(parses(src), "should parse: {src:?}");
