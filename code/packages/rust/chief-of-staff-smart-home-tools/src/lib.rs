@@ -83,6 +83,8 @@ use smart_home_integration_catalog::{
     mesh_protocol_substrate_preflight_repair_slot_execution_evidence_summary,
     mesh_protocol_substrate_preflight_repair_slot_execution_ticket_summary,
     mesh_protocol_substrate_preflight_repair_slot_execution_tickets,
+    mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_summary,
+    mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrails,
     mesh_protocol_substrate_preflight_repair_slot_execution_work_order_summary,
     mesh_protocol_substrate_preflight_repair_slot_execution_work_orders,
     mesh_protocol_substrate_stage_rows, mesh_readiness_handoff_packages,
@@ -193,6 +195,7 @@ use smart_home_integration_catalog::{
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder,
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrail,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary,
     IntegrationMeshProtocolSubstratePreflightSummary, IntegrationMeshProtocolSubstrateStage,
@@ -412,6 +415,10 @@ pub const SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_
     &str = "smart_home.list_integration_mesh_preflight_repair_slot_execution_work_orders";
 pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_SUMMARY_TOOL_ID:
     &str = "smart_home.get_integration_mesh_preflight_repair_slot_execution_work_order_summary";
+pub const SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAILS_TOOL_ID:
+    &str = "smart_home.list_integration_mesh_preflight_repair_slot_execution_work_order_guardrails";
+pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID:
+    &str = "smart_home.get_integration_mesh_preflight_repair_slot_execution_work_order_guardrail_summary";
 pub const SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_TOOL_ID: &str =
     "smart_home.list_integration_mesh_preflight_repair_slot_execution_evidence";
 pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_SUMMARY_TOOL_ID:
@@ -1052,6 +1059,24 @@ impl SmartHomeToolBridge {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(
                         get_integration_mesh_preflight_repair_slot_execution_work_order_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAILS_TOOL_ID =>
+                {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(
+                        list_integration_mesh_preflight_repair_slot_execution_work_order_guardrails_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID =>
+                {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(
+                        get_integration_mesh_preflight_repair_slot_execution_work_order_guardrail_summary_output_handler_output(
                             query,
                         ),
                     )
@@ -3212,6 +3237,41 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_SUMMARY_TOOL_ID,
             "Get smart-home integration mesh preflight repair slot execution work order summary",
             "Return compact D23 mesh preflight repair slot execution work order counts.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAILS_TOOL_ID,
+            "List smart-home integration mesh preflight repair slot execution work-order guardrails",
+            "List D23 mesh preflight execution work-order guardrails that classify release blockers, operator handoff, and ready execution work.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "mesh_preflight_repair_slot_execution_work_order_guardrails",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                ],
+                vec![
+                    "mesh_preflight_repair_slot_execution_work_order_guardrails",
+                    "summary",
+                    "count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID,
+            "Get smart-home integration mesh preflight repair slot execution work-order guardrail summary",
+            "Return compact D23 mesh preflight execution work-order guardrail readiness counts.",
             integration_readiness_query_schema(true),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
@@ -17892,6 +17952,40 @@ fn integration_mesh_preflight_repair_slot_execution_work_order_summary_for_query
     }
 }
 
+fn integration_mesh_preflight_repair_slot_execution_work_order_guardrails_for_query(
+    query: &IntegrationReadinessQuery,
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrail> {
+    let mut guardrails =
+        mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrails(
+            &query.available_primitives,
+        );
+
+    if query.activation_ready == Some(true) {
+        guardrails.clear();
+    }
+    if let Some(limit) = query.limit {
+        guardrails.truncate(limit);
+    }
+
+    guardrails
+}
+
+fn integration_mesh_preflight_repair_slot_execution_work_order_guardrail_summary_for_query(
+    query: &IntegrationReadinessQuery,
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary {
+    if query.activation_ready.is_some() || query.limit.is_some() {
+        let guardrails =
+            integration_mesh_preflight_repair_slot_execution_work_order_guardrails_for_query(query);
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary::from_guardrails(
+            guardrails.iter(),
+        )
+    } else {
+        mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_summary(
+            &query.available_primitives,
+        )
+    }
+}
+
 fn integration_mesh_preflight_repair_slot_execution_evidence_packets_for_query(
     query: &IntegrationReadinessQuery,
 ) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket> {
@@ -22923,6 +23017,118 @@ fn get_integration_mesh_preflight_repair_slot_execution_work_order_summary_outpu
             (
                 "has_work_orders",
                 JsonValue::Bool(summary.has_work_orders()),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_mesh_preflight_repair_slot_execution_work_order_guardrails_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let guardrails =
+        integration_mesh_preflight_repair_slot_execution_work_order_guardrails_for_query(&query);
+    let summary =
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary::from_guardrails(
+            guardrails.iter(),
+        );
+    let count = guardrails.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "mesh_preflight_repair_slot_execution_work_order_guardrails",
+            JsonValue::Array(
+                guardrails
+                    .iter()
+                    .map(
+                        mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_json,
+                    )
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_summary_json(
+                &summary,
+            ),
+        ),
+        ("count", integer(count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string(
+                    "list_integration_mesh_preflight_repair_slot_execution_work_order_guardrails",
+                ),
+            ),
+            ("guardrails", integer(count as i64)),
+            (
+                "release_blocker_guardrails",
+                integer(summary.release_blocker_guardrails as i64),
+            ),
+            (
+                "operator_handoff_guardrails",
+                integer(summary.operator_handoff_guardrails as i64),
+            ),
+            (
+                "ready_to_execute_guardrails",
+                integer(summary.ready_to_execute_guardrails as i64),
+            ),
+            (
+                "execution_work_order_guardrails_ready",
+                JsonValue::Bool(summary.execution_work_order_guardrails_ready),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_mesh_preflight_repair_slot_execution_work_order_guardrail_summary_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let summary =
+        integration_mesh_preflight_repair_slot_execution_work_order_guardrail_summary_for_query(
+            &query,
+        );
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_summary_json(
+            &summary,
+        ),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string(
+                    "get_integration_mesh_preflight_repair_slot_execution_work_order_guardrail_summary",
+                ),
+            ),
+            (
+                "total_guardrails",
+                integer(summary.total_guardrails as i64),
+            ),
+            (
+                "release_blocker_guardrails",
+                integer(summary.release_blocker_guardrails as i64),
+            ),
+            (
+                "operator_handoff_guardrails",
+                integer(summary.operator_handoff_guardrails as i64),
+            ),
+            (
+                "ready_to_execute_guardrails",
+                integer(summary.ready_to_execute_guardrails as i64),
+            ),
+            (
+                "execution_work_order_guardrails_ready",
+                JsonValue::Bool(summary.execution_work_order_guardrails_ready),
+            ),
+            (
+                "has_guardrails",
+                JsonValue::Bool(summary.has_guardrails()),
             ),
         ]),
     )
@@ -46056,6 +46262,49 @@ fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_summary_js
     ])
 }
 
+fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_json(
+    guardrail: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrail,
+) -> JsonValue {
+    object([
+        ("sequence", integer(guardrail.sequence as i64)),
+        (
+            "work_order_sequence",
+            integer(guardrail.work_order_sequence as i64),
+        ),
+        ("work_order_key", string(&guardrail.work_order_key)),
+        ("ticket_key", string(&guardrail.ticket_key)),
+        ("stage", string(guardrail.stage.as_str())),
+        (
+            "action_kind",
+            mesh_substrate_preflight_action_kind_json(guardrail.action_kind),
+        ),
+        ("guardrail_kind", string(guardrail.guardrail_kind.as_str())),
+        ("action_count", integer(guardrail.action_count as i64)),
+        ("protocol_count", integer(guardrail.protocol_count as i64)),
+        ("primitive_count", integer(guardrail.primitive_count as i64)),
+        (
+            "release_blocking",
+            JsonValue::Bool(guardrail.release_blocking),
+        ),
+        (
+            "operator_required",
+            JsonValue::Bool(guardrail.operator_required),
+        ),
+        (
+            "blocks_release",
+            JsonValue::Bool(guardrail.blocks_release()),
+        ),
+        (
+            "requires_operator",
+            JsonValue::Bool(guardrail.requires_operator()),
+        ),
+        (
+            "ready_to_execute",
+            JsonValue::Bool(guardrail.ready_to_execute()),
+        ),
+    ])
+}
+
 fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packet_json(
     packet: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket,
 ) -> JsonValue {
@@ -55218,7 +55467,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 228);
+        assert_eq!(definitions.len(), 230);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -55457,6 +55706,12 @@ mod tests {
         ));
         assert!(export.tool_ids().contains(
             &SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_SUMMARY_TOOL_ID
+        ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAILS_TOOL_ID
+        ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID
         ));
         assert!(export.tool_ids().contains(
             &SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_TOOL_ID
@@ -55879,7 +56134,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            220
+            222
         );
         assert_eq!(
             export
@@ -56012,6 +56267,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAILS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -56711,11 +56974,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(228))
+            Some(&integer(230))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(220))
+            Some(&integer(222))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -59951,6 +60214,177 @@ mod tests {
                 "execution_work_orders_ready"
             ),
             Some(&JsonValue::Bool(false))
+        );
+
+        let list_mesh_preflight_repair_slot_execution_work_order_guardrails_request = request(
+            "call-list-integration-mesh-preflight-repair-slot-execution-work-order-guardrails",
+            SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAILS_TOOL_ID,
+            object([
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("usb"),
+                        string("serial_controller"),
+                        string("radio_802154"),
+                        string("supervision"),
+                    ]),
+                ),
+                ("activation_ready", JsonValue::Bool(false)),
+            ]),
+            5_929_010,
+        );
+        let list_mesh_preflight_repair_slot_execution_work_order_guardrails_trace = tool_runtime
+            .invoke_with_events(
+                &list_mesh_preflight_repair_slot_execution_work_order_guardrails_request,
+            );
+        assert!(
+            list_mesh_preflight_repair_slot_execution_work_order_guardrails_trace
+                .result
+                .ok
+        );
+        assert_eq!(
+            list_mesh_preflight_repair_slot_execution_work_order_guardrails_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_mesh_preflight_repair_slot_execution_work_order_guardrails_output =
+            list_mesh_preflight_repair_slot_execution_work_order_guardrails_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        assert_eq!(
+            field(
+                list_mesh_preflight_repair_slot_execution_work_order_guardrails_output,
+                "count"
+            ),
+            Some(&integer(3))
+        );
+        let mesh_preflight_repair_slot_execution_work_order_guardrail_summary = field(
+            list_mesh_preflight_repair_slot_execution_work_order_guardrails_output,
+            "summary",
+        )
+        .unwrap();
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail_summary,
+                "total_guardrails"
+            ),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail_summary,
+                "release_blocker_guardrails"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail_summary,
+                "operator_handoff_guardrails"
+            ),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail_summary,
+                "execution_work_order_guardrails_ready"
+            ),
+            Some(&JsonValue::Bool(false))
+        );
+        let mesh_preflight_repair_slot_execution_work_order_guardrail = array_item(
+            field(
+                list_mesh_preflight_repair_slot_execution_work_order_guardrails_output,
+                "mesh_preflight_repair_slot_execution_work_order_guardrails",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail,
+                "work_order_key"
+            ),
+            Some(&string("work-01-radio-provision_radio"))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail,
+                "guardrail_kind"
+            ),
+            Some(&string("operator_handoff"))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail,
+                "requires_operator"
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let mesh_preflight_repair_slot_execution_work_order_guardrail_summary_request = request(
+            "call-integration-mesh-preflight-repair-slot-execution-work-order-guardrail-summary",
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID,
+            object([(
+                "available_primitives",
+                JsonValue::Array(vec![
+                    string("usb"),
+                    string("serial_controller"),
+                    string("radio_802154"),
+                    string("supervision"),
+                ]),
+            )]),
+            5_929_020,
+        );
+        let mesh_preflight_repair_slot_execution_work_order_guardrail_summary_trace = tool_runtime
+            .invoke_with_events(
+                &mesh_preflight_repair_slot_execution_work_order_guardrail_summary_request,
+            );
+        assert!(
+            mesh_preflight_repair_slot_execution_work_order_guardrail_summary_trace
+                .result
+                .ok
+        );
+        assert_eq!(
+            mesh_preflight_repair_slot_execution_work_order_guardrail_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let mesh_preflight_repair_slot_execution_work_order_guardrail_summary_output =
+            mesh_preflight_repair_slot_execution_work_order_guardrail_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let mesh_preflight_repair_slot_execution_work_order_guardrail_rollup = field(
+            mesh_preflight_repair_slot_execution_work_order_guardrail_summary_output,
+            "summary",
+        )
+        .unwrap();
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail_rollup,
+                "total_guardrails"
+            ),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail_rollup,
+                "scheduled_actions"
+            ),
+            Some(&integer(5))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_work_order_guardrail_rollup,
+                "needs_operator"
+            ),
+            Some(&JsonValue::Bool(true))
         );
 
         let list_mesh_preflight_repair_slot_execution_evidence_request = request(
