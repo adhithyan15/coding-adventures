@@ -687,6 +687,8 @@ export interface DeckRunArtifact {
   readonly measurementNames: readonly string[];
   readonly fourierCount: number;
   readonly fourierProbes: readonly string[];
+  readonly diagnosticCount: number;
+  readonly diagnosticCodes: readonly string[];
 }
 
 export interface DeckAnalysisExecution {
@@ -7886,6 +7888,7 @@ function deckRunArtifacts(
   outputDirectives: readonly string[],
   measurements: readonly ProbeMeasurement[],
   fourier: readonly FourierResult[],
+  diagnosticCodes: readonly string[],
 ): DeckRunArtifact[] {
   const isTransient = plan.analysis === "tran";
   return [
@@ -7918,8 +7921,18 @@ function deckRunArtifacts(
       measurementNames: measurements.map((measurement) => measurement.name),
       fourierCount: fourier.length,
       fourierProbes: fourier.flatMap((result) => result.probes.map((probe) => probe.probe)),
+      diagnosticCount: diagnosticCodes.length,
+      diagnosticCodes: [...diagnosticCodes],
     },
   ];
+}
+
+function deckAnalysisDiagnosticCodes(netlist: string, plan: DeckAnalysisPlan): string[] {
+  return resolveDeckAnalyses(netlist).diagnostics
+    .filter((diagnostic) =>
+      diagnostic.lineNumber === plan.lineNumber && diagnostic.directive === plan.directive
+    )
+    .map((diagnostic) => diagnostic.code);
 }
 
 function formatDeckArtifactFloat(value: number | undefined): string {
@@ -7937,7 +7950,7 @@ function deckTableColumns(table: string): string[] {
 
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [
-    "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
+    "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList",
   ];
   for (const artifact of artifacts) {
     rows.push(
@@ -7970,6 +7983,8 @@ export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]
         artifact.measurementNames.join(";"),
         String(artifact.fourierCount),
         artifact.fourierProbes.join(";"),
+        String(artifact.diagnosticCount),
+        artifact.diagnosticCodes.join(";"),
       ].join("\t"),
     );
   }
@@ -8015,6 +8030,7 @@ export function runDeckAnalysis(
   analysis?: string,
 ): DeckAnalysisExecution {
   const plan = selectDeckAnalysisPlan(netlist, analysis);
+  const diagnosticCodes = deckAnalysisDiagnosticCodes(netlist, plan);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
     const table = formatDeckOpTable(result, netlist);
@@ -8032,6 +8048,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      diagnosticCodes,
     );
     return {
       plan,
@@ -8069,6 +8086,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      diagnosticCodes,
     );
     return {
       plan,
@@ -8117,6 +8135,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      diagnosticCodes,
     );
     return {
       plan,
@@ -8160,6 +8179,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      diagnosticCodes,
     );
     return {
       plan,
@@ -8193,6 +8213,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      diagnosticCodes,
     );
     return {
       plan,
@@ -8225,6 +8246,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      diagnosticCodes,
     );
     return {
       plan,
@@ -8267,6 +8289,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      diagnosticCodes,
     );
     return {
       plan,
