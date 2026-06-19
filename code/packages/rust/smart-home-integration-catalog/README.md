@@ -83,6 +83,8 @@ runtime and Chief of Staff tools a typed catalog for:
   readiness with deterministic repair execution slots
 - mesh preflight slot readiness summaries that combine schedule readiness with
   slot-audit blocker and operator handoff counts
+- mesh preflight execution readiness summaries that combine slot readiness
+  with operator-ready execution ticket counts
 - mesh readiness handoff packages that project substrate actions, evidence
   remediation, and release-ready state for reusable release coordination
 - mesh release-readiness checks that summarize substrate action, evidence,

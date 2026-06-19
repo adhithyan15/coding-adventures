@@ -98,6 +98,8 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshPreflightSlotReadinessSummary` and helpers for combining mesh
   preflight schedule readiness with repair-slot audit blockers and operator
   handoff counts.
+- `IntegrationMeshPreflightExecutionReadinessSummary` and helpers for combining
+  mesh preflight slot readiness with operator-ready execution ticket counts.
 - `IntegrationMeshReadinessHandoffPackage`, summary helpers, and D23 mesh
   readiness handoff projections for release coordination across substrate
   actions, evidence remediation, and release-ready state.
