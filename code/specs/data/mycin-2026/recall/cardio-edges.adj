@@ -1,0 +1,77 @@
+% ============================================================================
+% cardio-edges — the auscultation knowledge-graph (MYCIN-2026 CARDIO).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", #5 cardiovascular):
+% the characteristic heart murmur and the valvular lesion it points to. "You hear a
+% holosystolic murmur at the apex radiating to the axilla — which lesion?" becomes the
+% binding query  ? murmur_indicates(holosystolic_apical, $Lesion).
+%
+% Direction note: the relation is murmur -> lesion (`murmur_indicates`), the board
+% direction — you HEAR the murmur and must name the lesion. The cited spans read either
+% way ("Mitral valve regurgitation causes a holosystolic murmur ..."; "Aortic stenosis:
+% a mid-systolic, crescendo-decrescendo murmur ...") — what matters for grounding is that
+% one self-contained span names BOTH the murmur AND the lesion. Two lesions share the
+% "holosystolic" timing (mitral vs tricuspid regurgitation); the finding name carries the
+% disambiguating auscultation site (apex vs lower-left-sternal-border), exactly as a
+% clinician disambiguates them at the bedside.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the eighth ADJ-only recall domain; fourth Tier-2 organ-system domain
+% after RHEUM, ONCO, HISTO). Each fact is a `relate` clause whose byte-provenance lives
+% INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it appears
+%                character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see cardio-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only murmurs whose page states the association in a clean self-contained
+% span (both murmur AND lesion named) are included. Deferred — mitral stenosis: its page
+% describes the opening snap and the "low-pitched, middiastolic rumbling murmur" in
+% separate sentences, neither of which names "mitral stenosis" in the same span, so no
+% both-endpoints-named declarative defends a murmur_indicates edge yet.
+% ============================================================================
+
+dictionary cardio_vocab {
+    define murmur : entity   surface "heart murmur", "auscultation finding"
+    define lesion : entity   surface "valvular lesion", "valve disease"
+
+    define murmur_indicates : relation from murmur to lesion  % the lesion a murmur points to
+}
+
+rulebook cardio_facts {
+    use cardio_vocab
+
+    % --- holosystolic at the apex, radiating to the axilla -> mitral regurgitation ---
+    relate murmur_indicates(holosystolic_apical, mitral_regurgitation)
+        source "Mitral valve regurgitation causes a holosystolic murmur that is heard best at the apex of the heart, with the sound radiating to the left axilla"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553135/"
+        trust authoritative
+
+    % --- mid-systolic crescendo-decrescendo, radiating to the neck -> aortic stenosis ---
+    relate murmur_indicates(crescendo_decrescendo_systolic, aortic_stenosis)
+        source "Aortic stenosis: a mid-systolic, crescendo-decrescendo murmur with radiation toward the neck"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553135/"
+        trust authoritative
+
+    % --- late systolic murmur with a mid-systolic click -> mitral valve prolapse ------
+    relate murmur_indicates(late_systolic_click, mitral_valve_prolapse)
+        source "Mitral valve prolapse: a late systolic murmur heard best at the cardiac apex but with a mid-systolic click"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553135/"
+        trust authoritative
+
+    % --- holosystolic at the lower-left sternal border, louder on inspiration -> TR ----
+    relate murmur_indicates(holosystolic_left_lower_sternal, tricuspid_regurgitation)
+        source "Tricuspid regurgitation: a high-pitched, blowing, holosystolic murmur heard best at the lower left sternal border, with radiation to the right lower sternal border; increases with inspiration"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553135/"
+        trust authoritative
+
+    % --- high-frequency decrescendo diastolic at the left sternal border -> aortic regurg ---
+    relate murmur_indicates(decrescendo_diastolic, aortic_regurgitation)
+        source "Patients with chronic aortic insufficiency will have a widened pulse pressure, may likely have a laterally and inferiorly displaced apical impulse, a high-frequency decrescendo diastolic murmur best heard at the 3rd or 4th intercostal space at the left sternal border, Austin Flint murmur, diminished S1, soft S2."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557428/"
+        trust authoritative
+}
