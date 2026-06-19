@@ -166,8 +166,9 @@ airtight subset is when the call is the **entire initializer of a
 single-declarator** `var`/`let`/`const` — nothing is evaluated before it and
 an initializer is never short-circuited. `var x = a + f()` (reorders `a`),
 `var x = f(), y = …` (multi-declarator), `var x = h(f())` (not the top
-expression), and a body with no tail-return value are all declined. Broader
-value positions (assignment targets, `return` arguments) are later slices.
+expression), and a body with no tail-return value are all declined. The
+`return`-argument value position is admitted by PR-5 (below); assignment
+targets remain a later slice.
 
 ### Non-simple arguments — per-argument temps (CLOC15 PR-4a)
 
@@ -206,6 +207,27 @@ guard(value);
 
 The `if`'s test is unrestricted (its identifiers are vetted normally).
 Nested `if` / loops are kept for a later slice.
+
+### Result returned — `return f(x)` (CLOC15 PR-5)
+
+The other airtight value position is a call that is the **entire argument of a
+`return`** — the everyday "tail-call a helper" shape. Here no temp is needed:
+the helper's tail value becomes the **caller's own return value**, because
+`return` is a terminator (nothing after it on that path runs):
+
+```js
+function helper(p) { log(p); return p + 1; }
+function main()    { return helper(3); }
+main(); main();
+// SIMPLE  ⇒  function main(){ log(3); return 4 }   (helper declaration removed)
+```
+
+Replacing `return f(x)` with `body…; return E` runs the body's effects exactly
+as they ran inside the callee, then returns the same value. As with PR-3 the
+call must be the *whole* argument: `return cond && f(x)` (right operand of
+`&&`), `return c ? f(x) : y` (a conditional branch), and a void helper used as
+`return f(x)` (no value to return) are all declined. Composes with local
+alpha-renaming and PR-4a per-argument temps.
 
 ## Where this pass sits
 
