@@ -3408,6 +3408,13 @@ pub struct DeckRunArtifact {
     pub directive: String,
     pub line_number: usize,
     pub source_name: Option<String>,
+    pub sweep_kind: Option<String>,
+    pub start_value: Option<f64>,
+    pub stop_value: Option<f64>,
+    pub step_value: Option<f64>,
+    pub point_count: Option<usize>,
+    pub start_frequency_hz: Option<f64>,
+    pub stop_frequency_hz: Option<f64>,
     pub result_rows: usize,
     pub output_probe_count: usize,
     pub output_probes: Vec<String>,
@@ -10089,6 +10096,13 @@ fn deck_run_artifacts(
         directive: plan.directive.clone(),
         line_number: plan.line_number,
         source_name: plan.source_name.clone(),
+        sweep_kind: plan.sweep_kind.clone(),
+        start_value: plan.start_value,
+        stop_value: plan.stop_value,
+        step_value: plan.step_value,
+        point_count: plan.point_count,
+        start_frequency_hz: plan.start_frequency_hz,
+        stop_frequency_hz: plan.stop_frequency_hz,
         result_rows,
         output_probe_count: output_probes.len(),
         output_probes: output_probes.to_vec(),
@@ -10107,18 +10121,32 @@ fn deck_run_artifacts(
     }]
 }
 
+fn format_deck_artifact_float(value: Option<f64>) -> String {
+    value.map(format_table_number).unwrap_or_default()
+}
+
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![
-        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
             .to_string(),
     ];
     for artifact in artifacts {
         rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             artifact.analysis,
             artifact.directive,
             artifact.line_number,
             artifact.source_name.as_deref().unwrap_or(""),
+            artifact.sweep_kind.as_deref().unwrap_or(""),
+            format_deck_artifact_float(artifact.start_value),
+            format_deck_artifact_float(artifact.stop_value),
+            format_deck_artifact_float(artifact.step_value),
+            artifact
+                .point_count
+                .map(|value| value.to_string())
+                .unwrap_or_default(),
+            format_deck_artifact_float(artifact.start_frequency_hz),
+            format_deck_artifact_float(artifact.stop_frequency_hz),
             artifact.result_rows,
             artifact.output_probe_count,
             artifact.output_probes.join(";"),

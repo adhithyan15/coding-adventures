@@ -803,6 +803,17 @@ downstream tools to compare.
     - The stable run-artifact table now includes `SourceName`, with an empty
       cell for analysis cards that do not name a source.
 
+73. Deck run sweep artifacts.
+    - Status: completed in this deck run sweep artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now copy sweep-shape
+      metadata from selected analysis plans into deck-run artifacts, preserving
+      `.dc` source sweep bounds plus `.ac` and `.noise` sweep kind, point count,
+      and frequency bounds.
+    - The stable run-artifact table now includes `SweepKind`, `StartValue`,
+      `StopValue`, `StepValue`, `PointCount`, `StartFrequencyHz`, and
+      `StopFrequencyHz`, with empty cells for analysis cards without that
+      sweep metadata.
+
 ## Backlog
 
 1. Deck execution layer.
