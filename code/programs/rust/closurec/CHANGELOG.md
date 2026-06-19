@@ -2,6 +2,260 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.151.0] - 2026-06-19
+
+### Fixed (CLOC17 — assignment statements no longer force whitespace-only fallback)
+
+Picks up `javascript-parser` 0.9.0, which fixes the `assignment_expression`
+grammar-ordering bug. Before this, any program containing an assignment
+statement (`a = 1;`, `g = f(5);`, `obj.k = v;`, `count += 1;`) failed to parse
+and closurec emitted whitespace-only output for the *entire* program — no
+optimization at all. Now such programs parse and run through the full pipeline
+(e.g. `function f(p){log(p)} f(1); a=2;` → `log(1);a=2;` — `f` is inlined).
+
+### Changed — fail-closed externs test uses genuinely-malformed JS
+
+`run.rs`'s `BAD_EXTERNS` fixture (used by
+`advanced_with_unparseable_externs_disables_property_renaming` to prove
+property renaming fails closed when an `--externs` file can't be parsed) was
+`"node.innerHTML = 1;"`, which only failed to parse *because* of the CLOC17
+bug. With the bug fixed that string is now a valid externs file, so the fixture
+was repointed at a hard syntax error (`"function {{{"`) to keep exercising the
+fail-closed path independent of which expression forms parse.
+
+## [0.150.0] - 2026-06-18
+
+### Added (CLOC13.K — ADVANCED property renaming, gated on `--externs`)
+
+`--compilation_level ADVANCED` now also shortens program-private **property**
+names via the `rename-properties` pass
+(`coding-adventures-closure-pass-rename-properties` 0.2.0), appended after
+`rename-globals`. Properties live in their own namespace, so this is a second
+independent ADVANCED-over-SIMPLE size win on top of top-level renaming:
+
+```js
+read(obj.innerHTML); read(obj.secretField); read(obj.secretField);
+//  externs file: read(node.innerHTML);   // declares innerHTML external
+//  ADVANCED + --externs => read(obj.innerHTML);read(obj.a);read(obj.a);
+```
+
+**Safe-by-default — gated on `--externs`.** Property renaming runs ONLY when
+the user supplies at least one `--externs` file. The pass's bundled built-in
+list covers ECMAScript but NOT the DOM/host, so renaming properties
+unconditionally would rewrite `el.innerHTML` / `node.onload` and break browser
+code. Supplying `--externs` is the user opting into the externs contract AND
+declaring the external property boundary. Without it, ADVANCED leaves property
+names untouched (only `rename-globals` runs, exactly as in 0.149.0).
+
+- **New `collect_externs_property_names(config)`** — the property-namespace twin
+  of `externs_do_not_rename`. It walks every `--externs` file through the
+  rename-properties crate's new `collect_property_names`, unioning every
+  property name they mention (dotted, quoted, and object keys) into the pass's
+  do-not-rename set.
+- **Fail-closed, NOT degrade-safe.** Unlike `externs_do_not_rename` (whose
+  pass is sound with an empty keep-set), property renaming is sound only
+  *because* the user declared the boundary — so the boundary's contents are
+  what make it safe. If any externs source fails to resolve/read/parse/bridge,
+  `collect_externs_property_names` returns `None` and property renaming is
+  **disabled** for the run, rather than running against an empty/partial
+  boundary (which would rename an externally-observable property — a
+  miscompile, in exactly the case the user opted into safety). The CV `passes`
+  trace is driven off the *same* decision, so it can never claim
+  `rename-properties` ran when it didn't.
+- **`run_typed_pipeline` now takes `Option<AdvancedConfig>`** (was
+  `Option<HashSet<String>>`). `AdvancedConfig` carries both externs boundaries —
+  the value-namespace keep-set for `rename-globals` (always runs under ADVANCED)
+  and the optional property-namespace keep-set that gates `rename-properties`.
+  The now-redundant `run_simple_pipeline` wrapper was removed (the unified
+  caller passes `None` for SIMPLE directly).
+- The correlation-vector `passes` trace lists `rename-properties` for ADVANCED
+  only when `--externs` was supplied (the pass is conditional).
+- SIMPLE output is byte-for-byte unchanged; ADVANCED without `--externs` is
+  unchanged from 0.149.0.
+- 4 new integration tests pin the policy (SIMPLE / no-externs ADVANCED leave
+  properties alone; ADVANCED + externs renames a private property, keeps the
+  externs-declared one, and shrinks output; ADVANCED + an unparseable externs
+  file fails closed and renames nothing).
+
+## [0.149.0] - 2026-06-18
+
+### Added (CLOC13.I — ADVANCED diverges from SIMPLE: aggressive top-level renaming)
+
+`--compilation_level ADVANCED` now produces genuinely smaller output than
+SIMPLE for the first time. ADVANCED runs the SIMPLE pipeline PLUS the
+`rename-globals` pass (`coding-adventures-closure-pass-rename-globals`),
+appended after `rename`, which shortens program-private top-level names
+(`function` / `var` / `let` / `const`) that survive the structural passes:
+
+```js
+function helper() { sideEffect(); return value; }
+helper();
+//  SIMPLE   => function helper(){sideEffect();return value};helper();
+//  ADVANCED => function a(){sideEffect();return value};a();
+```
+
+- **`--externs` is now read** (it was parsed-then-discarded). Each externs file
+  is parsed and its top-level declared names collected into the **do-not-rename
+  set** — the external boundary ADVANCED must preserve. Degrade-safe: an
+  unreadable / unparseable / bridge-rejected externs file contributes no names
+  rather than failing the build. A `--externs` file declaring `helper` keeps it
+  under ADVANCED.
+- SIMPLE is unchanged (it never touches top-level names, since in a Script a
+  top-level name may be externally visible). The ADVANCED rename is sound only
+  under Closure's whole-program / externs contract — see the
+  `closure-pass-rename-globals` crate.
+- The `advanced_v1` CV trace's `passes` now lists `rename-globals`
+  (`ADVANCED_PASS_NAMES`); SIMPLE's `simple_v2` list is unchanged.
+
+### Fixtures / tests
+
+- New `tests/diff/advanced-rename-globals/` fixture + a dual-level harness that
+  runs BOTH levels and asserts ADVANCED renamed the top-level `helper` while
+  SIMPLE kept it (and ADVANCED is smaller), plus a
+  `advanced_renames_surviving_top_level_function` unit test.
+- Updated the `advanced-optimizes` fixture (ADVANCED now renames its surviving
+  `compute`) and the `advanced_matches_simple_output` test's comment (the two
+  levels match only when no top-level name survives).
+- Version bumped `0.148.0 -> 0.149.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
+## [0.148.0] - 2026-06-17
+
+### Added (CLOC13.H — `inline-variables` constant propagation in SIMPLE)
+
+The SIMPLE pipeline gains a new pass, `inline-variables`
+(`coding-adventures-closure-pass-inline-variables` `0.1.0`), registered
+between `inline` and `remove-unused-vars`. It propagates a top-level `const`
+bound to a **literal** to its use sites, so remove-unused-vars deletes the
+now-unreferenced binding and the fixed-point constant-fold sweep folds the
+result:
+
+```js
+const RATE = 2;
+total(base * RATE);
+margin(RATE + 1);
+//  closurec --compilation_level SIMPLE  ⇒  total(base * 2); margin(3);
+```
+
+Only `const` (never `let`/`var` — reassignable) bound to a literal (never an
+identifier/call/member — which could change or have getters) is propagated,
+and only when the name is declared exactly once in the whole program (no
+shadowing). Single use → always; multiple uses → only when the literal is
+short. `SIMPLE_PASS_NAMES` is now
+`constant-fold → fold-control-flow → dce → inline → inline-variables →
+remove-unused-vars → treeshake → rename`.
+
+### Fixtures / tests
+
+- New `tests/diff/simple-inline-variables/` fixture + harness
+  (`const RATE = 2; total(base * RATE); margin(RATE + 1);` →
+  `total(base * 2);margin(3);`), plus a
+  `simple_propagates_const_literal_and_removes_binding` unit test.
+- Updated the `simple_v2` CV trace's `passes` assertion to include
+  `inline-variables`.
+- Version bumped `0.147.0 → 0.148.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
+## [0.147.0] - 2026-06-17
+
+### Changed (CLOC13.G — `inline` now inlines small functions at multiple sites)
+
+The `inline` pass (`coding-adventures-closure-pass-inline` `0.3.0 → 0.4.0`)
+no longer inlines only single-use functions. A small pure function is now
+substituted at **all** its call sites when every use is an inlinable call and
+the body fits the size budget (`expr_node_count(body) <= 2 + params.len()`):
+
+```js
+function sq(x) { return x * x; }
+a(sq(3));
+b(sq(4));
+//  closurec --compilation_level SIMPLE  ⇒  a(9); b(16);
+```
+
+(Both sites inlined → `sq` removed by treeshake → fixed-point `constant-fold`
+folds `3 * 3` / `4 * 4`.) A function with any value use (`g(f)`) or a
+non-inlinable call, or a multi-use body over the budget, is left alone.
+
+### Fixtures / tests
+
+- New `tests/diff/simple-inline-multiuse/` fixture + harness
+  (`a(sq(3)); b(sq(4));` → `a(9);b(16);`), plus a
+  `simple_inlines_small_function_at_multiple_sites` unit test.
+- Updated the `simple-rename`, `simple-treeshake`, `advanced-optimizes`
+  fixtures (and matching unit tests) to give their demonstration function a
+  *value use* (`sink(f)`) so the now-stronger inliner declines it — keeping
+  each focused on rename / treeshake / fold rather than on inlining. (The
+  previous "call it twice" guard no longer suffices now that multi-use small
+  bodies are inlined.)
+- Version bumped `0.146.0 → 0.147.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
+## [0.146.0] - 2026-06-17
+
+### Changed (CLOC13.F — SIMPLE/ADVANCED pipeline now runs to a fixed point)
+
+The pass pipeline (`coding-adventures-closure-pass-pipeline` `0.2.0 → 0.3.0`)
+no longer runs each pass exactly once — it sweeps the pass order repeatedly
+while any `FixedPoint` pass still reports a change, so a transform one pass
+exposes is picked up by an earlier pass on the next sweep. This makes
+optimizations **cascade**:
+
+```js
+// in.js
+function double(x) { return x * 2; }
+log(double(7));
+//  closurec --compilation_level SIMPLE --js in.js
+//  before: log(7 * 2);   (inline ran after constant-fold, so 7*2 never folded)
+//  now:    log(14);       (sweep 2's constant-fold folds inline's output)
+```
+
+This applies to both SIMPLE and ADVANCED (which share the pipeline). No new
+passes were added — existing real passes (`constant-fold`, `inline`,
+`dce`, `treeshake`, …) simply compose to convergence now. Bounded by a
+generous per-run sweep cap as a backstop against a non-convergent pass.
+
+### Fixtures / tests
+
+- New `tests/diff/simple-fixpoint/` fixture + harness proving the two-sweep
+  `inline → constant-fold` cascade (`log(double(7))` → `log(14)`), plus a
+  `simple_pipeline_iterates_to_a_fixed_point` unit test.
+- Version bumped `0.145.0 → 0.146.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
+## [0.145.0] - 2026-06-17
+
+### Changed (CLOC13.B.1 — `inline` pass now does real work in SIMPLE/ADVANCED)
+
+The `inline` pass in the SIMPLE (and therefore ADVANCED) pipeline was an
+identity stub; it now performs real single-use function inlining
+(`coding-adventures-closure-pass-inline` `0.2.0 → 0.3.0`). A single-use
+top-level leaf function whose body is `{ return EXPR; }` (with no free
+identifiers) is substituted at its call site, and the now-dead declaration is
+removed by the downstream `remove-unused-vars` / `treeshake` passes:
+
+```js
+// in.js
+function double(x) { return x * 2; }
+log(double(7));
+//  closurec --compilation_level SIMPLE --js in.js  ⇒  log(7 * 2);
+```
+
+The inliner is deliberately conservative — see the `closure-pass-inline`
+crate for the full provably-safe slice (top-level plain function, pure
+`return` body, no free identifiers, declared once, used once, side-effect-free
+arguments). Multi-use callees, function expressions, and bodies with
+locals/branches are left untouched.
+
+### Fixtures / tests
+
+- Updated the `simple-rename`, `simple-treeshake`, and `advanced-optimizes`
+  diff fixtures (and the corresponding `run.rs` unit tests) to call their
+  demonstration function **twice**, so the single-use inliner leaves it in
+  place — keeping each fixture focused on the pass it is meant to exercise
+  (rename / treeshake / fold) rather than having the function inlined away.
+- Version bumped `0.144.0 → 0.145.0` (`Cargo.toml`, `cli.spec.json`,
+  help-markdown fixture).
+
 ## [0.144.0] - 2026-06-16
 
 ### Changed (CLOC12.161 — ADVANCED now optimizes instead of being a no-op)

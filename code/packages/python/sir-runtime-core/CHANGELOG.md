@@ -2,6 +2,20 @@
 
 All notable changes to `coding-adventures-sir-runtime-core` are documented here.
 
+## [0.1.3] - 2026-06-19
+
+### Added (Q10a — no-block-given `LocalJumpError`)
+
+- New `LocalJumpError` exception. `apply(None, args)` now raises it
+  ("no block given (yield)") instead of a generic `TypeError`. This is
+  the SIR analogue of Ruby's `LocalJumpError`: under the explicit
+  block-param ABI a method that `yield`s through a block parameter the
+  caller never supplied reaches `apply` with a `None` target, and that
+  failure is now distinct and recognisable (a genuine non-closure, e.g.
+  applying an int, still raises `TypeError`). Exported from the package
+  root. Ruby's exact class identity is not modelled — the analogue is
+  keyed to the error's shape, not Ruby's hierarchy.
+
 ## [0.1.2] - 2026-06-15
 
 ### Changed

@@ -10,18 +10,21 @@
 % a rule grounded in a higher-authority CONTEXT defeats a conflicting rule in
 % a lower context — BEFORE the priority tier is even consulted. This file is
 % the precedence order itself, and the whole point is that each edge is a
-% GROUNDED FACT carrying its charter:
+% GROUNDED FACT carrying its charter, TAGGED with the canon that asserts it
+% (here `lex_superior` — the authority hierarchy):
 %
-%     relate outranks_context(higher, lower)  source "…"  locator "…"  trust …
+%     relate outranks_context_by(higher, lower, lex_superior)  source "…" locator "…" trust …
 %
-% An `outranks_context(a, b)` fact means "context `a` outranks context `b`".
-% The logic-engine (>= 0.20) reads these facts as directed edges in the
-% context order (KnowledgeBase::context_adjacency), so `context_outranks`
-% walks them transitively and `enumerate_governing` applies lex superior.
-% Because the edge is an ordinary byte-provenanced Fact, it is queryable
-% (`? outranks_context(federal, $lower)`), auditable (its source rides on it),
-% and ONE CAS EDIT from correctable — exactly like every clinical/legal fact
-% in this framework. Nothing here is asserted bare in host code.
+% An `outranks_context_by(a, b, canon)` fact means "canon `canon` says context
+% `a` outranks context `b`". The shared resolution layer (context-precedence-resolve.adj,
+% imported below) turns these tagged edges into the engine's effective
+% `outranks_context/2` order — applying a jurisdiction's grounded `canon_outranks`
+% tiebreak when canons collide, else abstaining (ADJ73 §4.3). The logic-engine
+% (>= 0.21) reads the resolved `outranks_context/2` as the precedence graph, so
+% `enumerate_governing` applies lex superior. Because each edge is an ordinary
+% byte-provenanced Fact, it is queryable (`? outranks_context_by(federal, $lower, $canon)`),
+% auditable (its source rides on it), and ONE CAS EDIT from correctable — exactly
+% like every clinical/legal fact in this framework. Nothing is asserted bare in host code.
 %
 % WHY NOT JUST `context_order { federal > state }`?
 % -------------------------------------------------
@@ -56,7 +59,7 @@
 %    judges in every state shall be bound thereby, anything in the Constitution
 %    or laws of any State to the contrary notwithstanding."
 % ---------------------------------------------------------------------
-relate outranks_context(federal, state)
+relate outranks_context_by(federal, state, lex_superior)
   source "U.S. Const. art. VI, cl. 2 (Supremacy Clause): \"This Constitution, and the laws of the United States which shall be made in pursuance thereof; and all treaties made, or which shall be made, under the authority of the United States, shall be the supreme law of the land; and the judges in every state shall be bound thereby, anything in the Constitution or laws of any State to the contrary notwithstanding.\""
   locator "U.S. Const. art. VI, cl. 2"
   trust authoritative
@@ -75,7 +78,12 @@ relate outranks_context(federal, state)
 %   "a federal circuit decision is binding on all federal district courts
 %    within its circuit, but not federal courts in other circuits"
 % ---------------------------------------------------------------------
-relate outranks_context(ninth_circuit, district_court)
+relate outranks_context_by(ninth_circuit, district_court, lex_superior)
   source "Binding v. Persuasive Authority (American University, Washington College of Law, 1L Legal Research Primer): \"a federal circuit decision is binding on all federal district courts within its circuit, but not federal courts in other circuits.\""
   locator "WCL 1L Legal Research Primer — Binding v. Persuasive Authority"
   trust authoritative
+
+% The shared canon-resolution layer turns these tagged edges into the engine's
+% effective `outranks_context/2` order (applying any grounded `canon_outranks`
+% tiebreak, else abstaining on a collision). Imported idempotently.
+import "context-precedence-resolve.adj"

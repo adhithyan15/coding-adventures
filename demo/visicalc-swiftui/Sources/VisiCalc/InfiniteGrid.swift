@@ -141,6 +141,76 @@ final class WindowedSheetModel: ObservableObject {
         revision += 1
     }
 
+    /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
+    /// engine shifts the pasted formula's relative references by the
+    /// destination's offset, pins absolute (`$`) refs, carries the format; a cut
+    /// clears the source on paste. `pasteCell` returns `false` (a no-op) for an
+    /// empty clipboard, and resizes the extent + bumps `revision` on success.
+    func copyCell() {
+        let a = address(selectedRow, selectedCol)
+        session.copy(a, a)
+    }
+    func cutCell() {
+        let a = address(selectedRow, selectedCol)
+        session.cut(a, a)
+    }
+    @discardableResult
+    func pasteCell() -> Bool {
+        let ok = session.paste(address(selectedRow, selectedCol))
+        if ok {
+            resize()
+            revision += 1
+        }
+        return ok
+    }
+
+    /// Save / load: serialize the whole workbook to a JSON document, and restore
+    /// it. The document stores only the source + formats — computed values
+    /// recompute on load, so a loaded formula stays live. `loadBook` returns
+    /// `false` (workbook untouched) for malformed input; on success it resizes
+    /// the extent, refreshes the formula bar, and bumps `revision` so the view
+    /// re-reads.
+    func saveBook() -> String {
+        session.serialize()
+    }
+    @discardableResult
+    func loadBook(_ data: String) -> Bool {
+        let ok = session.deserialize(data)
+        if ok {
+            resize()
+            formulaText = session.getRaw(address(selectedRow, selectedCol))
+            revision += 1
+        }
+        return ok
+    }
+
+    /// Undo / redo: walk the engine's snapshot history. On success the extent
+    /// resizes, the formula bar refreshes, and `revision` bumps (which re-renders
+    /// the SwiftUI view, re-evaluating the canUndo/canRedo button gates); a
+    /// restored formula stays live.
+    func canUndo() -> Bool { session.canUndo() }
+    func canRedo() -> Bool { session.canRedo() }
+    @discardableResult
+    func undoEdit() -> Bool {
+        let ok = session.undo()
+        if ok {
+            resize()
+            formulaText = session.getRaw(address(selectedRow, selectedCol))
+            revision += 1
+        }
+        return ok
+    }
+    @discardableResult
+    func redoEdit() -> Bool {
+        let ok = session.redo()
+        if ok {
+            resize()
+            formulaText = session.getRaw(address(selectedRow, selectedCol))
+            revision += 1
+        }
+        return ok
+    }
+
     /// Write `raw` into an explicit A1 cell and return the cells it dirtied.
     /// (Kept for the headless `WindowedModelTests`.)
     @discardableResult
@@ -156,6 +226,11 @@ final class WindowedSheetModel: ObservableObject {
 /// The virtualized, editable grid view.
 struct InfiniteGridView: View {
     @ObservedObject var model: WindowedSheetModel
+
+    // In-memory "saved file" slot for the Save / Load buttons: Save stows the
+    // serialized workbook here, Load restores from it. (A real app would write it
+    // to a file; the demo keeps the round trip self-contained.)
+    @State private var savedSnapshot = ""
 
     static let rowH: CGFloat = 22
     static let colW: CGFloat = 80
@@ -204,6 +279,36 @@ struct InfiniteGridView: View {
             Button("Fill ↓ 10") { model.fillDown(10) }
                 .font(.system(size: 11, design: .monospaced))
                 .help("Replicate the selected cell into the 10 rows below it")
+            // Clipboard: copy/cut the selected cell, paste at the selection. The
+            // engine shifts the pasted formula's relative refs by the offset.
+            Button("Copy") { model.copyCell() }
+                .font(.system(size: 11, design: .monospaced))
+                .help("Copy the selected cell to the clipboard")
+            Button("Cut") { model.cutCell() }
+                .font(.system(size: 11, design: .monospaced))
+                .help("Cut the selected cell (cleared when you paste)")
+            Button("Paste") { model.pasteCell() }
+                .font(.system(size: 11, design: .monospaced))
+                .help("Paste the clipboard at the selected cell, shifting relative references")
+            // Save / load: serialize the whole workbook to memory, and restore it.
+            Button("Save") { savedSnapshot = model.saveBook() }
+                .font(.system(size: 11, design: .monospaced))
+                .help("Serialize the whole workbook to memory")
+            Button("Load") { if !savedSnapshot.isEmpty { model.loadBook(savedSnapshot) } }
+                .font(.system(size: 11, design: .monospaced))
+                .disabled(savedSnapshot.isEmpty)
+                .help("Restore the workbook from the last save")
+            // Undo / redo: walk the engine's snapshot history. The buttons gate
+            // off canUndo/canRedo, re-evaluated whenever `revision` (a @Published)
+            // bumps after an edit.
+            Button("Undo") { model.undoEdit() }
+                .font(.system(size: 11, design: .monospaced))
+                .disabled(!model.canUndo())
+                .help("Undo the last edit")
+            Button("Redo") { model.redoEdit() }
+                .font(.system(size: 11, design: .monospaced))
+                .disabled(!model.canRedo())
+                .help("Redo the last undone edit")
         }
         .padding(.bottom, 8)
     }

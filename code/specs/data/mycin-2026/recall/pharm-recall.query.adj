@@ -1,0 +1,22 @@
+% ============================================================================
+% pharm-recall.query.adj — a worked recall query over the pharmacology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a pharmacology recall
+% question: it states no drug fact — it only `import`s the grounded library and
+% asks binding queries. The native adj-lang engine resolves each `?` against the
+% imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli pharm-recall.query.adj
+% ============================================================================
+
+import "pharm-edges.adj"
+
+? drug_class(metformin, $Class)                  % expect biguanide
+? drug_class(lisinopril, $Class)                 % expect ace_inhibitor
+? drug_class(naloxone, $Class)                   % expect opioid_antagonist
+? mechanism(warfarin, $MOA)                      % expect inhibits_vitamin_k_dependent_clotting_factor_synthesis
+? adverse_effect(acetaminophen, $Effect)         % expect hepatic_necrosis
+? antidote_for(acetaminophen_poisoning, $Antidote)  % expect acetylcysteine
+? antidote_for(opioid_toxicity, $Antidote)       % expect naloxone

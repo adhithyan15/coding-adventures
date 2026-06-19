@@ -7,9 +7,13 @@
 // declaring a function has no side effect.
 //
 //   - `function dead()`  -- never called, so treeshake removes it.
-//   - `function live()`  -- called by `log(live())`, so it survives.
+//   - `function live()`  -- referenced, so it survives. The value use
+//     `sink(live)` (passing it without calling) makes the inliner
+//     decline `live`, keeping this fixture focused on treeshake removing
+//     the unreferenced `dead` rather than on inlining.
 //
 // Under WHITESPACE_ONLY both functions survive verbatim.
 function dead() { return 1; }
 function live() { return 2; }
 log(live());
+sink(live);

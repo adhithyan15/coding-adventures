@@ -77,6 +77,11 @@ Current scope:
   queue planning derived from approval packets
 - D18D integration activation-evidence descriptors for read-only evidence rows
   behind approval and blocker decisions
+- D18D integration mesh-release descriptors for read-only Zigbee, Z-Wave, and
+  Thread primitive, substrate, preflight repair schedule, preflight
+  repair slot audit, repair slot execution tickets/work orders,
+  batch/schedule/slot/execution readiness, handoff, and release-readiness gate
+  planning
 - D18D integration activation-dossier descriptors for read-only bundled
   decision and evidence planning
 - D18D integration activation-readout descriptors for priority-wave health,

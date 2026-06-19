@@ -1,0 +1,606 @@
+{
+  "summary": {
+    "model": "mlx-community/gemma-3-4b-it-bf16",
+    "tag": "gemma3-4b",
+    "total": 27,
+    "correct": 19,
+    "abstained": 8,
+    "wrong": 0,
+    "defensibility": 1.0,
+    "decompose_accuracy": 0.7407,
+    "faithful_rejected": 5,
+    "online_calls": 0
+  },
+  "records": [
+    {
+      "id": "ft_tay_sachs",
+      "domain": "iem",
+      "stem": "A 6-month-old infant of Ashkenazi Jewish descent has progressive developmental regression, an exaggerated startle response to sound, and a cherry-red spot on the macula. Tay-Sachs disease is diagnosed. Which enzyme is deficient?",
+      "model_raw": "```json\n{\"relation\": \"deficient_in\", \"subject\": \"tay_sachs\", \"var\": \"$Enzyme\"}\n```",
+      "model_query": {
+        "relation": "deficient_in",
+        "subject": "tay_sachs",
+        "var": "Enzyme"
+      },
+      "gold_query": {
+        "relation": "deficient_in",
+        "subject": "tay_sachs",
+        "var": "Enzyme"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "hexosaminidase_a",
+      "gold": "hexosaminidase_a",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_gaucher",
+      "domain": "iem",
+      "stem": "An adult presents with hepatosplenomegaly, bone pain, pancytopenia, and lipid-laden macrophages with a 'crumpled tissue paper' cytoplasm on marrow biopsy, consistent with Gaucher disease. Which enzyme is deficient?",
+      "model_raw": "```json\n{\"relation\": \"deficient_in\", \"subject\": \"gaucher\", \"var\": \"Enzyme\"}\n```",
+      "model_query": {
+        "relation": "deficient_in",
+        "subject": "gaucher",
+        "var": "Enzyme"
+      },
+      "gold_query": {
+        "relation": "deficient_in",
+        "subject": "gaucher",
+        "var": "Enzyme"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "glucocerebrosidase",
+      "gold": "glucocerebrosidase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_pku",
+      "domain": "iem",
+      "stem": "A neonate not on newborn screening develops intellectual disability, eczema, a musty body odor, and fair skin. Classic phenylketonuria is diagnosed. Which enzyme is deficient?",
+      "model_raw": "```json\n{\"relation\": \"deficient_in\", \"subject\": \"phenylketonuria\", \"var\": \"$Enzyme\"}\n```",
+      "model_query": {
+        "relation": "deficient_in",
+        "subject": "phenylketonuria",
+        "var": "Enzyme"
+      },
+      "gold_query": {
+        "relation": "deficient_in",
+        "subject": "phenylketonuria",
+        "var": "Enzyme"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "phenylalanine_hydroxylase",
+      "gold": "phenylalanine_hydroxylase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_pompe",
+      "domain": "iem",
+      "stem": "A floppy infant has marked hypotonia, a markedly enlarged heart, and macroglossia, with glycogen accumulation in lysosomes. Pompe disease is diagnosed. Which enzyme is deficient?",
+      "model_raw": "```json\n{\"relation\": \"deficient_in\", \"subject\": \"pompe\", \"var\": \"$Enzyme\"}\n```",
+      "model_query": {
+        "relation": "deficient_in",
+        "subject": "pompe",
+        "var": "Enzyme"
+      },
+      "gold_query": {
+        "relation": "deficient_in",
+        "subject": "pompe",
+        "var": "Enzyme"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "acid_alpha_glucosidase",
+      "gold": "acid_alpha_glucosidase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_von_gierke",
+      "domain": "iem",
+      "stem": "An infant has severe fasting hypoglycemia, a protuberant abdomen from massive hepatomegaly, lactic acidosis, and hyperuricemia. Von Gierke disease (glycogen storage disease type I) is diagnosed. Which enzyme is deficient?",
+      "model_raw": "```json\n{\"relation\": \"deficient_in\", \"subject\": \"fabry\", \"var\": \"enzyme\"}\n```",
+      "model_query": {
+        "relation": "deficient_in",
+        "subject": "fabry",
+        "var": "Enzyme"
+      },
+      "gold_query": {
+        "relation": "deficient_in",
+        "subject": "von_gierke",
+        "var": "Enzyme"
+      },
+      "decompose_ok": false,
+      "faithful_rejected": true,
+      "engine_answer": null,
+      "gold": "glucose_6_phosphatase",
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "ft_fabry",
+      "domain": "iem",
+      "stem": "A young man has episodic burning pain in the hands and feet, clusters of dark red angiokeratomas over the trunk, and proteinuria, with an X-linked family history. Fabry disease is diagnosed. Which enzyme is deficient?",
+      "model_raw": "```json\n{\"relation\": \"deficient_in\", \"subject\": \"fabry\", \"var\": \"$Enzyme\"}\n```",
+      "model_query": {
+        "relation": "deficient_in",
+        "subject": "fabry",
+        "var": "Enzyme"
+      },
+      "gold_query": {
+        "relation": "deficient_in",
+        "subject": "fabry",
+        "var": "Enzyme"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "alpha_galactosidase_a",
+      "gold": "alpha_galactosidase_a",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_tay_sachs_sub",
+      "domain": "iem",
+      "stem": "In Tay-Sachs disease, which substrate accumulates in neurons because the degradative enzyme is missing?",
+      "model_raw": "```json\n{\"relation\": \"accumulates\", \"subject\": \"tay_sachs\", \"var\": \"substrate\"}\n```",
+      "model_query": {
+        "relation": "accumulates",
+        "subject": "tay_sachs",
+        "var": "Substrate"
+      },
+      "gold_query": {
+        "relation": "accumulates",
+        "subject": "tay_sachs",
+        "var": "Substrate"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "gm2_ganglioside",
+      "gold": "gm2_ganglioside",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_lesch_nyhan_inh",
+      "domain": "iem",
+      "stem": "A boy has severe self-mutilating lip and finger biting, choreoathetosis, hyperuricemia, and gout, due to HGPRT deficiency (Lesch-Nyhan syndrome). What is its inheritance pattern?",
+      "model_raw": "```json\n{\"relation\": \"inherited_as\", \"subject\": \"lesch_nyhan\", \"var\": \"Pattern\"}\n```",
+      "model_query": {
+        "relation": "inherited_as",
+        "subject": "lesch_nyhan",
+        "var": "Pattern"
+      },
+      "gold_query": {
+        "relation": "inherited_as",
+        "subject": "lesch_nyhan",
+        "var": "Pattern"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "x_linked_recessive",
+      "gold": "x_linked_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_thiamine",
+      "domain": "vitamin",
+      "stem": "A patient with chronic alcohol use and poor intake develops high-output heart failure with peripheral edema and a sensorimotor polyneuropathy. Which disease does this thiamine (vitamin B1) deficiency cause?",
+      "model_raw": "```json\n{\"relation\": \"deficiency_syndrome\", \"subject\": \"thiamine\", \"var\": \"Syndrome\"}\n```",
+      "model_query": {
+        "relation": "deficiency_syndrome",
+        "subject": "thiamine",
+        "var": "Syndrome"
+      },
+      "gold_query": {
+        "relation": "deficiency_causes",
+        "subject": "thiamine",
+        "var": "Disease"
+      },
+      "decompose_ok": false,
+      "faithful_rejected": false,
+      "engine_answer": null,
+      "gold": "beriberi",
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "ft_niacin",
+      "domain": "vitamin",
+      "stem": "A patient on an isoniazid-heavy regimen with a corn-based diet develops a photosensitive dermatitis, diarrhea, and dementia. Which disease does this niacin (vitamin B3) deficiency cause?",
+      "model_raw": "```json\n{\"relation\": \"deficiency_causes\", \"subject\": \"niacin\", \"var\": \"Disease\"}\n```",
+      "model_query": {
+        "relation": "deficiency_causes",
+        "subject": "niacin",
+        "var": "Disease"
+      },
+      "gold_query": {
+        "relation": "deficiency_causes",
+        "subject": "niacin",
+        "var": "Disease"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "pellagra",
+      "gold": "pellagra",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_vitc",
+      "domain": "vitamin",
+      "stem": "A patient with a diet devoid of fresh fruits and vegetables develops perifollicular hemorrhages, corkscrew hairs, swollen bleeding gums, and poor wound healing. Which disease does this vitamin C deficiency cause?",
+      "model_raw": "```json\n{\"relation\": \"deficiency_causes\", \"subject\": \"vitamin_c\", \"var\": \"Disease\"}\n```",
+      "model_query": {
+        "relation": "deficiency_causes",
+        "subject": "vitamin_c",
+        "var": "Disease"
+      },
+      "gold_query": {
+        "relation": "deficiency_causes",
+        "subject": "vitamin_c",
+        "var": "Disease"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "scurvy",
+      "gold": "scurvy",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_vitd",
+      "domain": "vitamin",
+      "stem": "A toddler with little sun exposure has bowed legs, a rachitic rosary at the costochondral junctions, and delayed fontanelle closure. Which disease does this vitamin D deficiency cause?",
+      "model_raw": "```json\n{\"relation\": \"deficiency_causes(subject, $Disease)\", \"subject\": \"vitamin_a\", \"var\": \"Disease\"}\n```",
+      "model_query": null,
+      "gold_query": {
+        "relation": "deficiency_causes",
+        "subject": "vitamin_d",
+        "var": "Disease"
+      },
+      "decompose_ok": false,
+      "faithful_rejected": false,
+      "engine_answer": null,
+      "gold": "rickets",
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "ft_b12_finding",
+      "domain": "vitamin",
+      "stem": "A patient with pernicious anemia develops symmetric loss of vibration and proprioception with an ataxic gait from dorsal-column and lateral-corticospinal-tract degeneration. What is the classic neurologic finding of this cobalamin (vitamin B12) deficiency?",
+      "model_raw": "```json\n{\"relation\": \"classic_finding\", \"subject\": \"cobalamin\", \"var\": \"symmetric loss of vibration and proprioception with an ataxic gait\"}\n```",
+      "model_query": {
+        "relation": "classic_finding",
+        "subject": "cobalamin",
+        "var": "Finding"
+      },
+      "gold_query": {
+        "relation": "classic_finding",
+        "subject": "cobalamin",
+        "var": "Finding"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "subacute_combined_degeneration",
+      "gold": "subacute_combined_degeneration",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_ida_mcv",
+      "domain": "anemia",
+      "stem": "A menstruating woman has fatigue, pica, and koilonychia; labs show low ferritin and a low mean corpuscular volume. For iron deficiency anemia, what MCV class is this?",
+      "model_raw": "```json\n{\"relation\": \"has_mcv\", \"subject\": \"iron_deficiency_anemia\", \"var\": \"microcytic\"}\n```",
+      "model_query": {
+        "relation": "has_mcv",
+        "subject": "iron_deficiency_anemia",
+        "var": "Class"
+      },
+      "gold_query": {
+        "relation": "has_mcv",
+        "subject": "iron_deficiency_anemia",
+        "var": "Class"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "microcytic",
+      "gold": "microcytic",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_b12_anemia_mcv",
+      "domain": "anemia",
+      "stem": "An elderly vegan has fatigue and glossitis with hypersegmented neutrophils on smear. For this vitamin B12 deficiency anemia, what MCV class is expected?",
+      "model_raw": "```json\n{\"relation\": \"has_mcv\", \"subject\": \"b12_deficiency_anemia\", \"var\": \"Class\"}\n```",
+      "model_query": {
+        "relation": "has_mcv",
+        "subject": "b12_deficiency_anemia",
+        "var": "Class"
+      },
+      "gold_query": {
+        "relation": "has_mcv",
+        "subject": "b12_deficiency_anemia",
+        "var": "Class"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "macrocytic",
+      "gold": "macrocytic",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_hs_finding",
+      "domain": "anemia",
+      "stem": "A patient of Northern European descent has jaundice, splenomegaly, gallstones, and a positive osmotic fragility test from a red-cell membrane protein defect (hereditary spherocytosis). What is the classic peripheral-smear finding?",
+      "model_raw": "```json\n{\"relation\": \"classic_finding\", \"subject\": \"hereditary_spherocytosis\", \"var\": \"Finding\"}\n```",
+      "model_query": {
+        "relation": "classic_finding",
+        "subject": "hereditary_spherocytosis",
+        "var": "Finding"
+      },
+      "gold_query": {
+        "relation": "classic_finding",
+        "subject": "hereditary_spherocytosis",
+        "var": "Finding"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "spherocytes",
+      "gold": "spherocytes",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_g6pd_finding",
+      "domain": "anemia",
+      "stem": "A man develops acute hemolysis after eating fava beans or starting an oxidant drug, with Heinz bodies on supravital stain. For G6PD deficiency, what bite-removed cell is the classic smear finding?",
+      "model_raw": "```json\n{\"relation\": \"classic_finding\", \"subject\": \"g6pd_deficiency\", \"var\": \"Finding\"}\n```",
+      "model_query": {
+        "relation": "classic_finding",
+        "subject": "g6pd_deficiency",
+        "var": "Finding"
+      },
+      "gold_query": {
+        "relation": "classic_finding",
+        "subject": "g6pd_deficiency",
+        "var": "Finding"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "bite_cells",
+      "gold": "bite_cells",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_insulin_gland",
+      "domain": "endocrine",
+      "stem": "Insulin lowers blood glucose by promoting cellular uptake. Which gland/cells secrete it?",
+      "model_raw": "```json\n{\"relation\": \"secreted_by\", \"subject\": \"insulin\", \"var\": \"Gland\"}\n```",
+      "model_query": {
+        "relation": "secreted_by",
+        "subject": "insulin",
+        "var": "Gland"
+      },
+      "gold_query": {
+        "relation": "secreted_by",
+        "subject": "insulin",
+        "var": "Gland"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "pancreatic_beta_cells",
+      "gold": "pancreatic_beta_cells",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_cortisol_gland",
+      "domain": "endocrine",
+      "stem": "Cortisol is the principal glucocorticoid of the stress response. Which gland/tissue secretes it?",
+      "model_raw": "```json\n{\"relation\": \"secreted_by\", \"subject\": \"cortisol\", \"var\": \"Gland\"}\n```",
+      "model_query": {
+        "relation": "secreted_by",
+        "subject": "cortisol",
+        "var": "Gland"
+      },
+      "gold_query": {
+        "relation": "secreted_by",
+        "subject": "cortisol",
+        "var": "Gland"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "adrenal_cortex",
+      "gold": "adrenal_cortex",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_thyroxine_def",
+      "domain": "endocrine",
+      "stem": "A patient has fatigue, cold intolerance, weight gain, constipation, and delayed relaxation of reflexes from inadequate thyroxine. What is the named deficiency syndrome?",
+      "model_raw": "```json\n{\"relation\": \"deficiency_syndrome\", \"subject\": \"thyroxine\", \"var\": \"Syndrome\"}\n```",
+      "model_query": {
+        "relation": "deficiency_syndrome",
+        "subject": "thyroxine",
+        "var": "Syndrome"
+      },
+      "gold_query": {
+        "relation": "deficiency_syndrome",
+        "subject": "thyroxine",
+        "var": "Syndrome"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "hypothyroidism",
+      "gold": "hypothyroidism",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_adh_def",
+      "domain": "endocrine",
+      "stem": "After pituitary surgery a patient passes large volumes of dilute urine with rising serum sodium and intense thirst, from a deficiency of antidiuretic hormone (ADH). What is the named deficiency syndrome?",
+      "model_raw": "```json\n{\"relation\": \"deficiency_syndrome\", \"subject\": \"thyroxine\", \"var\": \"adh\"}\n```",
+      "model_query": {
+        "relation": "deficiency_syndrome",
+        "subject": "thyroxine",
+        "var": "Syndrome"
+      },
+      "gold_query": {
+        "relation": "deficiency_syndrome",
+        "subject": "adh",
+        "var": "Syndrome"
+      },
+      "decompose_ok": false,
+      "faithful_rejected": true,
+      "engine_answer": null,
+      "gold": "central_diabetes_insipidus",
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "ft_hemophilia_a_factor",
+      "domain": "coagulation",
+      "stem": "A boy has hemarthroses and deep-tissue bleeding with a prolonged aPTT that corrects on mixing, and an X-linked inheritance (hemophilia A). Which clotting factor is deficient?",
+      "model_raw": "```json\n{\"relation\": \"factor_deficiency\", \"subject\": \"factor_vii_deficiency\", \"var\": \"Factor\"}\n```",
+      "model_query": {
+        "relation": "factor_deficiency",
+        "subject": "factor_vii_deficiency",
+        "var": "Factor"
+      },
+      "gold_query": {
+        "relation": "factor_deficiency",
+        "subject": "hemophilia_a",
+        "var": "Factor"
+      },
+      "decompose_ok": false,
+      "faithful_rejected": true,
+      "engine_answer": null,
+      "gold": "factor_viii",
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "ft_vwd_factor",
+      "domain": "coagulation",
+      "stem": "A patient has easy mucocutaneous bruising, heavy menses, and a prolonged bleeding time with the most common inherited bleeding disorder, von Willebrand disease. Which factor/protein is deficient or defective?",
+      "model_raw": "```json\n{\"relation\": \"factor_deficiency\", \"subject\": \"von_willebrand_disease\", \"var\": \"Factor\"}\n```",
+      "model_query": {
+        "relation": "factor_deficiency",
+        "subject": "von_willebrand_disease",
+        "var": "Factor"
+      },
+      "gold_query": {
+        "relation": "factor_deficiency",
+        "subject": "von_willebrand_disease",
+        "var": "Factor"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "von_willebrand_factor",
+      "gold": "von_willebrand_factor",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_hemophilia_a_inh",
+      "domain": "coagulation",
+      "stem": "Hemophilia A predominantly affects males through carrier mothers. What is its inheritance pattern?",
+      "model_raw": "```json\n{\"relation\": \"coag_inheritance\", \"subject\": \"hemophilia_a\", \"var\": \"Pattern\"}\n```",
+      "model_query": {
+        "relation": "coag_inheritance",
+        "subject": "hemophilia_a",
+        "var": "Pattern"
+      },
+      "gold_query": {
+        "relation": "coag_inheritance",
+        "subject": "hemophilia_a",
+        "var": "Pattern"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": "x_linked_recessive",
+      "gold": "x_linked_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "ft_hemophilia_a_test",
+      "domain": "coagulation",
+      "stem": "In hemophilia A, which coagulation screening test is prolonged while the PT stays normal?",
+      "model_raw": "```json\n{\"relation\": \"prolonged_test\", \"subject\": \"factor_vii_deficiency\", \"var\": \"Test\"}\n```",
+      "model_query": {
+        "relation": "prolonged_test",
+        "subject": "factor_vii_deficiency",
+        "var": "Test"
+      },
+      "gold_query": {
+        "relation": "prolonged_test",
+        "subject": "hemophilia_a",
+        "var": "Test"
+      },
+      "decompose_ok": false,
+      "faithful_rejected": true,
+      "engine_answer": null,
+      "gold": "aptt",
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "ft_wilson_abstain",
+      "domain": "iem",
+      "stem": "A young adult has a movement disorder, Kayser-Fleischer rings, and hepatitis from copper accumulation (Wilson disease). Which enzyme is deficient?",
+      "model_raw": "```json\n{\"relation\": \"deficient_in\", \"subject\": \"Wilson disease\", \"var\": \"$Enzyme\"}\n```",
+      "model_query": {
+        "relation": "deficient_in",
+        "subject": "wilson_disease",
+        "var": "Enzyme"
+      },
+      "gold_query": {
+        "relation": "deficient_in",
+        "subject": "wilson_disease",
+        "var": "Enzyme"
+      },
+      "decompose_ok": true,
+      "faithful_rejected": false,
+      "engine_answer": null,
+      "gold": "ABSTAIN",
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "ft_glucagon_abstain",
+      "domain": "endocrine",
+      "stem": "Glucagon raises blood glucose during fasting. What is the named clinical syndrome of glucagon deficiency?",
+      "model_raw": "```json\n{\"relation\": \"deficiency_syndrome\", \"subject\": \"insulin\", \"var\": \"glucagon deficiency\"}\n```",
+      "model_query": {
+        "relation": "deficiency_syndrome",
+        "subject": "insulin",
+        "var": "Syndrome"
+      },
+      "gold_query": {
+        "relation": "deficiency_syndrome",
+        "subject": "glucagon",
+        "var": "Syndrome"
+      },
+      "decompose_ok": false,
+      "faithful_rejected": true,
+      "engine_answer": null,
+      "gold": "ABSTAIN",
+      "outcome": "abstained",
+      "trust": null
+    }
+  ]
+}

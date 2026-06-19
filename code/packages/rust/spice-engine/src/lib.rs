@@ -3357,6 +3357,7 @@ pub struct DeckAnalysisPlan {
     pub analysis: String,
     pub line_number: usize,
     pub source_name: Option<String>,
+    pub output_node: Option<String>,
     pub start_value: Option<f64>,
     pub stop_value: Option<f64>,
     pub step_value: Option<f64>,
@@ -3396,6 +3397,9 @@ pub enum DeckAnalysisExecutionResult {
     DcSweep(Vec<DcSweepPoint>),
     Ac(Vec<AcPoint>),
     Tran(Vec<TransientPoint>),
+    Tf(TfResult),
+    Sens(SensResult),
+    Noise(NoiseResult),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -3403,10 +3407,33 @@ pub struct DeckRunArtifact {
     pub analysis: String,
     pub directive: String,
     pub line_number: usize,
+    pub source_name: Option<String>,
+    pub output_node: Option<String>,
+    pub sweep_kind: Option<String>,
+    pub start_value: Option<f64>,
+    pub stop_value: Option<f64>,
+    pub step_value: Option<f64>,
+    pub point_count: Option<usize>,
+    pub start_frequency_hz: Option<f64>,
+    pub stop_frequency_hz: Option<f64>,
+    pub step_time: Option<f64>,
+    pub stop_time: Option<f64>,
+    pub start_time: Option<f64>,
+    pub max_step: Option<f64>,
+    pub use_initial_conditions: Option<bool>,
     pub result_rows: usize,
+    pub result_column_count: usize,
+    pub result_columns: Vec<String>,
     pub output_probe_count: usize,
+    pub output_probes: Vec<String>,
+    pub output_directive_count: usize,
+    pub output_directives: Vec<String>,
     pub measurement_count: usize,
+    pub measurement_names: Vec<String>,
     pub fourier_count: usize,
+    pub fourier_probes: Vec<String>,
+    pub diagnostic_count: usize,
+    pub diagnostic_codes: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -3569,6 +3596,46 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
                 continue;
             }
             if is_noop_control_block_command(stripped) {
+                continue;
+            }
+            if is_script_control_block_command(stripped) {
+                diagnostics.push(DeckControlDiagnostic {
+                    code: "SPICE_DECK_CONTROL_SCRIPT_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    line_number,
+                    message: control_block_script_policy_message(stripped),
+                    severity: "error".to_string(),
+                });
+                continue;
+            }
+            if is_workdir_control_block_command(stripped) {
+                diagnostics.push(DeckControlDiagnostic {
+                    code: "SPICE_DECK_CONTROL_WORKDIR_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    line_number,
+                    message: control_block_workdir_policy_message(stripped),
+                    severity: "error".to_string(),
+                });
+                continue;
+            }
+            if is_control_flow_control_block_command(stripped) {
+                diagnostics.push(DeckControlDiagnostic {
+                    code: "SPICE_DECK_CONTROL_FLOW_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    line_number,
+                    message: control_block_flow_policy_message(stripped),
+                    severity: "error".to_string(),
+                });
+                continue;
+            }
+            if is_variable_control_block_command(stripped) {
+                diagnostics.push(DeckControlDiagnostic {
+                    code: "SPICE_DECK_CONTROL_VARIABLE_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    line_number,
+                    message: control_block_variable_policy_message(stripped),
+                    severity: "error".to_string(),
+                });
                 continue;
             }
             diagnostics.push(DeckControlDiagnostic {
@@ -3889,6 +3956,32 @@ pub fn select_deck_output_probes(netlist: &str, analysis: &str) -> Result<Vec<St
     Ok(selected)
 }
 
+pub fn select_deck_output_directives(
+    netlist: &str,
+    analysis: &str,
+) -> Result<Vec<String>, SpiceError> {
+    let summary = resolve_deck_outputs(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "select_deck_output_directives",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    let mut selected = Vec::new();
+    let mut seen = HashSet::new();
+    for selection in summary.selections {
+        if !selection.analysis.as_deref().map_or(true, |requested| {
+            deck_output_analysis_matches(requested, analysis)
+        }) {
+            continue;
+        }
+        if seen.insert(selection.directive.clone()) {
+            selected.push(selection.directive);
+        }
+    }
+    Ok(selected)
+}
+
 pub fn resolve_deck_analyses(netlist: &str) -> DeckAnalysisSummary {
     let mut state = DeckAnalysisState::default();
     let mut active_lines = Vec::new();
@@ -3905,7 +3998,10 @@ pub fn resolve_deck_analyses(netlist: &str) -> DeckAnalysisSummary {
             end_line_number = Some(line_number);
             break;
         }
-        if matches!(directive.as_deref(), Some(".op" | ".dc" | ".ac" | ".tran")) {
+        if matches!(
+            directive.as_deref(),
+            Some(".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens" | ".noise")
+        ) {
             resolve_analysis_line(
                 stripped,
                 line_number,
@@ -4370,6 +4466,54 @@ fn resolve_deck_lines(
                 continue;
             }
             if is_noop_control_block_command(stripped) {
+                continue;
+            }
+            if is_script_control_block_command(stripped) {
+                state.diagnostics.push(DeckResolutionDiagnostic {
+                    code: "SPICE_DECK_CONTROL_SCRIPT_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    source: source.to_string(),
+                    line_number,
+                    message: control_block_script_policy_message(stripped),
+                    severity: "error".to_string(),
+                    target: None,
+                });
+                continue;
+            }
+            if is_workdir_control_block_command(stripped) {
+                state.diagnostics.push(DeckResolutionDiagnostic {
+                    code: "SPICE_DECK_CONTROL_WORKDIR_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    source: source.to_string(),
+                    line_number,
+                    message: control_block_workdir_policy_message(stripped),
+                    severity: "error".to_string(),
+                    target: None,
+                });
+                continue;
+            }
+            if is_control_flow_control_block_command(stripped) {
+                state.diagnostics.push(DeckResolutionDiagnostic {
+                    code: "SPICE_DECK_CONTROL_FLOW_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    source: source.to_string(),
+                    line_number,
+                    message: control_block_flow_policy_message(stripped),
+                    severity: "error".to_string(),
+                    target: None,
+                });
+                continue;
+            }
+            if is_variable_control_block_command(stripped) {
+                state.diagnostics.push(DeckResolutionDiagnostic {
+                    code: "SPICE_DECK_CONTROL_VARIABLE_COMMAND".to_string(),
+                    directive: ".control".to_string(),
+                    source: source.to_string(),
+                    line_number,
+                    message: control_block_variable_policy_message(stripped),
+                    severity: "error".to_string(),
+                    target: None,
+                });
                 continue;
             }
             state.diagnostics.push(DeckResolutionDiagnostic {
@@ -5287,6 +5431,9 @@ fn resolve_analysis_line(
         ".dc" => resolve_dc_analysis(&tokens, line_number, state),
         ".ac" => resolve_ac_analysis(&tokens, line_number, state),
         ".tran" => resolve_tran_analysis(&tokens, line_number, state),
+        ".tf" => resolve_tf_analysis(&tokens, line_number, state),
+        ".sens" => resolve_sens_analysis(&tokens, line_number, state),
+        ".noise" => resolve_noise_analysis(&tokens, line_number, state),
         _ => {}
     }
 }
@@ -5308,6 +5455,7 @@ fn resolve_op_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         analysis: "op".to_string(),
         line_number,
         source_name: None,
+        output_node: None,
         start_value: None,
         stop_value: None,
         step_value: None,
@@ -5384,6 +5532,7 @@ fn resolve_dc_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         analysis: "dc".to_string(),
         line_number,
         source_name: Some(source_name),
+        output_node: None,
         start_value: Some(start_value),
         stop_value: Some(stop_value),
         step_value: Some(step_value),
@@ -5463,6 +5612,7 @@ fn resolve_ac_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         analysis: "ac".to_string(),
         line_number,
         source_name: None,
+        output_node: None,
         start_value: None,
         stop_value: None,
         step_value: None,
@@ -5566,6 +5716,7 @@ fn resolve_tran_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
         analysis: "tran".to_string(),
         line_number,
         source_name: None,
+        output_node: None,
         start_value: None,
         stop_value: None,
         step_value: None,
@@ -5578,6 +5729,238 @@ fn resolve_tran_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
         start_time,
         max_step,
         use_initial_conditions,
+    });
+}
+
+fn resolve_tf_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
+    if tokens.len() != 3 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".tf",
+            line_number,
+            ".tf requires output voltage probe and input source tokens",
+            None,
+        );
+        return;
+    }
+    let output_probe = normalize_deck_output_probe(&unquote_token(tokens[1]));
+    let Some(output_probe) = output_probe.filter(|probe| probe.starts_with("V(")) else {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".tf",
+            line_number,
+            &format!(
+                ".tf output must be a voltage probe V(node), got {:?}",
+                tokens[1]
+            ),
+            Some(tokens[1].to_string()),
+        );
+        return;
+    };
+    let input_source = unquote_token(tokens[2]).trim().to_string();
+    if input_source.is_empty() {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".tf",
+            line_number,
+            ".tf input source name must not be empty",
+            Some(tokens[2].to_string()),
+        );
+        return;
+    }
+    state.analyses.push(DeckAnalysisPlan {
+        directive: ".tf".to_string(),
+        analysis: "tf".to_string(),
+        line_number,
+        source_name: Some(input_source),
+        output_node: Some(output_probe[2..output_probe.len() - 1].to_string()),
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind: None,
+        point_count: None,
+        start_frequency_hz: None,
+        stop_frequency_hz: None,
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
+    });
+}
+
+fn resolve_sens_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
+    if tokens.len() != 2 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".sens",
+            line_number,
+            ".sens requires one output voltage probe token",
+            None,
+        );
+        return;
+    }
+    let output_probe = normalize_deck_output_probe(&unquote_token(tokens[1]));
+    let Some(output_probe) = output_probe.filter(|probe| probe.starts_with("V(")) else {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".sens",
+            line_number,
+            &format!(
+                ".sens output must be a voltage probe V(node), got {:?}",
+                tokens[1]
+            ),
+            Some(tokens[1].to_string()),
+        );
+        return;
+    };
+    state.analyses.push(DeckAnalysisPlan {
+        directive: ".sens".to_string(),
+        analysis: "sens".to_string(),
+        line_number,
+        source_name: None,
+        output_node: Some(output_probe[2..output_probe.len() - 1].to_string()),
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind: None,
+        point_count: None,
+        start_frequency_hz: None,
+        stop_frequency_hz: None,
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
+    });
+}
+
+fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
+    if !matches!(tokens.len(), 3 | 7) {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".noise",
+            line_number,
+            ".noise requires output voltage probe, input source, and optional sweep kind, point count, start frequency, and stop frequency tokens",
+            None,
+        );
+        return;
+    }
+    let output_probe = normalize_deck_output_probe(&unquote_token(tokens[1]));
+    let Some(output_probe) = output_probe.filter(|probe| probe.starts_with("V(")) else {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".noise",
+            line_number,
+            &format!(
+                ".noise output must be a voltage probe V(node), got {:?}",
+                tokens[1]
+            ),
+            Some(tokens[1].to_string()),
+        );
+        return;
+    };
+    let input_source = unquote_token(tokens[2]).trim().to_string();
+    if input_source.is_empty() {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".noise",
+            line_number,
+            ".noise input source name must not be empty",
+            Some(tokens[2].to_string()),
+        );
+        return;
+    }
+
+    let mut sweep_kind = None;
+    let mut point_count = None;
+    let mut start_frequency_hz = None;
+    let mut stop_frequency_hz = None;
+    if tokens.len() == 7 {
+        let Some(parsed_sweep_kind) = normalize_ac_sweep_kind(tokens[3]) else {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_MODE",
+                ".noise",
+                line_number,
+                &format!(
+                    ".noise sweep kind must be LIN, DEC, or OCT, got {:?}",
+                    tokens[3]
+                ),
+                Some(tokens[3].to_string()),
+            );
+            return;
+        };
+        let parsed_point_count =
+            parse_deck_analysis_integer(tokens[4], ".noise", line_number, state);
+        let parsed_start_frequency =
+            parse_deck_analysis_value(tokens[5], ".noise", line_number, state);
+        let parsed_stop_frequency =
+            parse_deck_analysis_value(tokens[6], ".noise", line_number, state);
+        let (Some(parsed_point_count), Some(parsed_start_frequency), Some(parsed_stop_frequency)) = (
+            parsed_point_count,
+            parsed_start_frequency,
+            parsed_stop_frequency,
+        ) else {
+            return;
+        };
+        if parsed_point_count < 1 {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_SWEEP",
+                ".noise",
+                line_number,
+                ".noise point count must be a positive integer",
+                Some(tokens[4].to_string()),
+            );
+            return;
+        }
+        if parsed_start_frequency <= 0.0
+            || parsed_stop_frequency <= 0.0
+            || parsed_stop_frequency < parsed_start_frequency
+        {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_SWEEP",
+                ".noise",
+                line_number,
+                ".noise frequencies must be positive and stop must be >= start",
+                None,
+            );
+            return;
+        }
+        sweep_kind = Some(parsed_sweep_kind.to_string());
+        point_count = Some(parsed_point_count);
+        start_frequency_hz = Some(parsed_start_frequency);
+        stop_frequency_hz = Some(parsed_stop_frequency);
+    }
+
+    state.analyses.push(DeckAnalysisPlan {
+        directive: ".noise".to_string(),
+        analysis: "noise".to_string(),
+        line_number,
+        source_name: Some(input_source),
+        output_node: Some(output_probe[2..output_probe.len() - 1].to_string()),
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind,
+        point_count,
+        start_frequency_hz,
+        stop_frequency_hz,
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
     });
 }
 
@@ -6674,6 +7057,9 @@ fn normalize_deck_analysis_name(analysis: &str) -> Option<&'static str> {
         "dc" | "dc-sweep" | "dcsweep" => Some("dc"),
         "ac" | "ac-sweep" | "acsweep" => Some("ac"),
         "tran" | "transient" => Some("tran"),
+        "tf" | "transfer-function" | "transferfunction" => Some("tf"),
+        "sens" | "sensitivity" => Some("sens"),
+        "noise" | "ac-noise" | "noise-ac" => Some("noise"),
         _ => None,
     }
 }
@@ -6684,6 +7070,7 @@ fn implicit_deck_op_analysis_plan() -> DeckAnalysisPlan {
         analysis: "op".to_string(),
         line_number: 0,
         source_name: None,
+        output_node: None,
         start_value: None,
         stop_value: None,
         step_value: None,
@@ -6909,18 +7296,145 @@ fn is_noop_control_block_command(line: &str) -> bool {
     };
     if matches!(
         command.as_str(),
-        "run" | ".run" | "reset" | ".reset" | "quit" | ".quit"
+        "display"
+            | ".display"
+            | "listing"
+            | ".listing"
+            | "show"
+            | ".show"
+            | "showmod"
+            | ".showmod"
+            | "status"
+            | ".status"
+            | "version"
+            | ".version"
+            | "help"
+            | ".help"
+            | "echo"
+            | ".echo"
+            | "rusage"
+            | ".rusage"
+            | "where"
+            | ".where"
+            | "run"
+            | ".run"
+            | "reset"
+            | ".reset"
+            | "quit"
+            | ".quit"
     ) {
         return true;
     }
     if matches!(command.as_str(), "write" | ".write") {
         return parts.next().is_some();
     }
+    if matches!(command.as_str(), "wrdata" | ".wrdata") {
+        return parts.nth(1).is_some();
+    }
     if !matches!(command.as_str(), "set" | ".set") {
         return false;
     }
     matches!(parts.next().map(|option| option.to_ascii_lowercase()), Some(option) if matches!(option.as_str(), "noaskquit" | "filetype=ascii" | "wr_vecnames" | "wr_singlescale" | "appendwrite"))
         && parts.next().is_none()
+}
+
+fn is_script_control_block_command(line: &str) -> bool {
+    let Some(command) = line
+        .split_whitespace()
+        .next()
+        .map(|command| command.to_ascii_lowercase())
+    else {
+        return false;
+    };
+    matches!(command.as_str(), "source" | ".source" | "shell" | ".shell")
+}
+
+fn is_workdir_control_block_command(line: &str) -> bool {
+    let Some(command) = line
+        .split_whitespace()
+        .next()
+        .map(|command| command.to_ascii_lowercase())
+    else {
+        return false;
+    };
+    matches!(command.as_str(), "cd" | ".cd")
+}
+
+fn is_control_flow_control_block_command(line: &str) -> bool {
+    let Some(command) = line
+        .split_whitespace()
+        .next()
+        .map(|command| command.to_ascii_lowercase())
+    else {
+        return false;
+    };
+    matches!(
+        command.as_str(),
+        "if" | ".if"
+            | "else"
+            | ".else"
+            | "end"
+            | ".end"
+            | "while"
+            | ".while"
+            | "foreach"
+            | ".foreach"
+            | "repeat"
+            | ".repeat"
+            | "dowhile"
+            | ".dowhile"
+            | "break"
+            | ".break"
+            | "continue"
+            | ".continue"
+    )
+}
+
+fn is_variable_control_block_command(line: &str) -> bool {
+    let Some(command) = line
+        .split_whitespace()
+        .next()
+        .map(|command| command.to_ascii_lowercase())
+    else {
+        return false;
+    };
+    matches!(
+        command.as_str(),
+        "let"
+            | ".let"
+            | "alter"
+            | ".alter"
+            | "alterparam"
+            | ".alterparam"
+            | "set"
+            | ".set"
+            | "unset"
+            | ".unset"
+    )
+}
+
+fn control_block_script_policy_message(line: &str) -> String {
+    format!(
+        "{line:?} inside .control is not executed because external script and shell commands are disabled by the deck execution policy"
+    )
+}
+
+fn control_block_workdir_policy_message(line: &str) -> String {
+    format!(
+        "{line:?} inside .control is not executed because working-directory mutation is disabled by the deck execution policy"
+    )
+}
+
+fn control_block_flow_policy_message(line: &str) -> String {
+    format!(
+        "{line:?} inside .control is not executed because control-flow commands are disabled by the deck execution policy"
+    )
+}
+
+fn control_block_variable_policy_message(line: &str) -> String {
+    format!(
+        "{line:?} inside .control is not executed because control variables and circuit mutation commands are disabled by the deck execution policy"
+    )
 }
 
 fn is_unsupported_deck_control_directive(directive: &str) -> bool {
@@ -9567,41 +10081,247 @@ pub fn format_deck_transient_table(
     format_transient_table(points, &probe_refs)
 }
 
+pub fn format_deck_tf_table(result: &TfResult) -> String {
+    format_tf_table(result)
+}
+
+pub fn format_deck_sens_table(result: &SensResult) -> String {
+    format_sens_table(result)
+}
+
+pub fn format_deck_noise_table(result: &NoiseResult) -> String {
+    format_noise_table(result)
+}
+
 fn deck_run_artifacts(
     plan: &DeckAnalysisPlan,
     result_rows: usize,
+    result_columns: &[String],
     output_probes: &[String],
+    output_directives: &[String],
     measurements: &[ProbeMeasurement],
     fourier: &[FourierResult],
+    diagnostic_codes: &[String],
 ) -> Vec<DeckRunArtifact> {
+    let is_transient = plan.analysis == "tran";
     vec![DeckRunArtifact {
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
         line_number: plan.line_number,
+        source_name: plan.source_name.clone(),
+        output_node: plan.output_node.clone(),
+        sweep_kind: plan.sweep_kind.clone(),
+        start_value: plan.start_value,
+        stop_value: plan.stop_value,
+        step_value: plan.step_value,
+        point_count: plan.point_count,
+        start_frequency_hz: plan.start_frequency_hz,
+        stop_frequency_hz: plan.stop_frequency_hz,
+        step_time: is_transient.then_some(plan.step_time).flatten(),
+        stop_time: is_transient.then_some(plan.stop_time).flatten(),
+        start_time: is_transient.then_some(plan.start_time).flatten(),
+        max_step: is_transient.then_some(plan.max_step).flatten(),
+        use_initial_conditions: is_transient.then_some(plan.use_initial_conditions),
         result_rows,
+        result_column_count: result_columns.len(),
+        result_columns: result_columns.to_vec(),
         output_probe_count: output_probes.len(),
+        output_probes: output_probes.to_vec(),
+        output_directive_count: output_directives.len(),
+        output_directives: output_directives.to_vec(),
         measurement_count: measurements.len(),
+        measurement_names: measurements
+            .iter()
+            .map(|measurement| measurement.name.clone())
+            .collect(),
         fourier_count: fourier.len(),
+        fourier_probes: fourier
+            .iter()
+            .flat_map(|result| result.probes.iter().map(|probe| probe.probe.clone()))
+            .collect(),
+        diagnostic_count: diagnostic_codes.len(),
+        diagnostic_codes: diagnostic_codes.to_vec(),
     }]
 }
 
+fn deck_analysis_diagnostic_codes(netlist: &str, plan: &DeckAnalysisPlan) -> Vec<String> {
+    resolve_deck_analyses(netlist)
+        .diagnostics
+        .into_iter()
+        .filter(|diagnostic| {
+            diagnostic.line_number == plan.line_number && diagnostic.directive == plan.directive
+        })
+        .map(|diagnostic| diagnostic.code)
+        .collect()
+}
+
+fn format_deck_artifact_float(value: Option<f64>) -> String {
+    value.map(format_table_number).unwrap_or_default()
+}
+
+fn format_deck_artifact_bool(value: Option<bool>) -> String {
+    value.map(|value| value.to_string()).unwrap_or_default()
+}
+
+const DECK_RUN_ARTIFACT_COLUMNS: &[&str] = &[
+    "Analysis",
+    "Directive",
+    "Line",
+    "SourceName",
+    "OutputNode",
+    "SweepKind",
+    "StartValue",
+    "StopValue",
+    "StepValue",
+    "PointCount",
+    "StartFrequencyHz",
+    "StopFrequencyHz",
+    "StepTime",
+    "StopTime",
+    "StartTime",
+    "MaxStep",
+    "UseInitialConditions",
+    "ResultRows",
+    "ResultColumns",
+    "ResultColumnList",
+    "OutputProbes",
+    "OutputProbeList",
+    "OutputDirectives",
+    "OutputDirectiveList",
+    "Measurements",
+    "MeasurementList",
+    "Fourier",
+    "FourierList",
+    "Diagnostics",
+    "DiagnosticCodeList",
+];
+
+fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
+    vec![
+        artifact.analysis.clone(),
+        artifact.directive.clone(),
+        artifact.line_number.to_string(),
+        artifact.source_name.clone().unwrap_or_default(),
+        artifact.output_node.clone().unwrap_or_default(),
+        artifact.sweep_kind.clone().unwrap_or_default(),
+        format_deck_artifact_float(artifact.start_value),
+        format_deck_artifact_float(artifact.stop_value),
+        format_deck_artifact_float(artifact.step_value),
+        artifact
+            .point_count
+            .map(|value| value.to_string())
+            .unwrap_or_default(),
+        format_deck_artifact_float(artifact.start_frequency_hz),
+        format_deck_artifact_float(artifact.stop_frequency_hz),
+        format_deck_artifact_float(artifact.step_time),
+        format_deck_artifact_float(artifact.stop_time),
+        format_deck_artifact_float(artifact.start_time),
+        format_deck_artifact_float(artifact.max_step),
+        format_deck_artifact_bool(artifact.use_initial_conditions),
+        artifact.result_rows.to_string(),
+        artifact.result_column_count.to_string(),
+        artifact.result_columns.join(";"),
+        artifact.output_probe_count.to_string(),
+        artifact.output_probes.join(";"),
+        artifact.output_directive_count.to_string(),
+        artifact.output_directives.join(";"),
+        artifact.measurement_count.to_string(),
+        artifact.measurement_names.join(";"),
+        artifact.fourier_count.to_string(),
+        artifact.fourier_probes.join(";"),
+        artifact.diagnostic_count.to_string(),
+        artifact.diagnostic_codes.join(";"),
+    ]
+}
+
+fn deck_run_artifact_record(artifact: &DeckRunArtifact) -> Vec<(&'static str, String)> {
+    DECK_RUN_ARTIFACT_COLUMNS
+        .iter()
+        .copied()
+        .zip(deck_run_artifact_cells(artifact))
+        .collect()
+}
+
+fn deck_table_columns(table: &str) -> Vec<String> {
+    table
+        .lines()
+        .next()
+        .map(|header| {
+            header
+                .split('\t')
+                .map(|column| column.to_string())
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
-    let mut rows = vec![
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier".to_string(),
-    ];
+    let mut rows = vec![DECK_RUN_ARTIFACT_COLUMNS.join("\t")];
     for artifact in artifacts {
-        rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
-            artifact.analysis,
-            artifact.directive,
-            artifact.line_number,
-            artifact.result_rows,
-            artifact.output_probe_count,
-            artifact.measurement_count,
-            artifact.fourier_count
-        ));
+        rows.push(deck_run_artifact_cells(artifact).join("\t"));
     }
     format!("{}\n", rows.join("\n"))
+}
+
+fn format_csv_cell(value: &str) -> String {
+    if value.contains(',') || value.contains('"') || value.contains('\n') || value.contains('\r') {
+        format!("\"{}\"", value.replace('"', "\"\""))
+    } else {
+        value.to_string()
+    }
+}
+
+pub fn format_deck_run_artifact_csv(artifacts: &[DeckRunArtifact]) -> String {
+    let mut rows = vec![DECK_RUN_ARTIFACT_COLUMNS.join(",")];
+    for artifact in artifacts {
+        rows.push(
+            deck_run_artifact_cells(artifact)
+                .iter()
+                .map(|cell| format_csv_cell(cell))
+                .collect::<Vec<_>>()
+                .join(","),
+        );
+    }
+    format!("{}\n", rows.join("\n"))
+}
+
+fn format_json_string(value: &str) -> String {
+    let mut output = String::from("\"");
+    for character in value.chars() {
+        match character {
+            '"' => output.push_str("\\\""),
+            '\\' => output.push_str("\\\\"),
+            '\u{08}' => output.push_str("\\b"),
+            '\u{0c}' => output.push_str("\\f"),
+            '\n' => output.push_str("\\n"),
+            '\r' => output.push_str("\\r"),
+            '\t' => output.push_str("\\t"),
+            character if (character as u32) < 0x20 => {
+                output.push_str(&format!("\\u{:04x}", character as u32));
+            }
+            character => output.push(character),
+        }
+    }
+    output.push('"');
+    output
+}
+
+pub fn format_deck_run_artifact_json(artifacts: &[DeckRunArtifact]) -> String {
+    let records = artifacts
+        .iter()
+        .map(|artifact| {
+            let fields = deck_run_artifact_record(artifact)
+                .into_iter()
+                .map(|(key, value)| {
+                    format!("{}:{}", format_json_string(key), format_json_string(&value))
+                })
+                .collect::<Vec<_>>()
+                .join(",");
+            format!("{{{}}}", fields)
+        })
+        .collect::<Vec<_>>()
+        .join(",");
+    format!("[{}]\n", records)
 }
 
 fn select_deck_measurement_cards_for_analysis(
@@ -9649,6 +10369,7 @@ pub fn run_deck_analysis(
     analysis: Option<&str>,
 ) -> Result<DeckAnalysisExecution, SpiceError> {
     let plan = select_deck_analysis_plan(netlist, analysis)?;
+    let diagnostic_codes = deck_analysis_diagnostic_codes(netlist, &plan);
     match plan.analysis.as_str() {
         "op" => {
             let result = dc_op(circuit)?;
@@ -9660,8 +10381,17 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "op")?;
-            let run_artifacts =
-                deck_run_artifacts(&plan, 1, &output_probes, &measurements, &fourier);
+            let output_directives = select_deck_output_directives(netlist, "op")?;
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                1,
+                &deck_table_columns(&table),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+                &diagnostic_codes,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -9692,8 +10422,17 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "dc")?;
-            let run_artifacts =
-                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let output_directives = select_deck_output_directives(netlist, "dc")?;
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                result.len(),
+                &deck_table_columns(&table),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+                &diagnostic_codes,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -9725,8 +10464,17 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "ac")?;
-            let run_artifacts =
-                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let output_directives = select_deck_output_directives(netlist, "ac")?;
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                result.len(),
+                &deck_table_columns(&table),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+                &diagnostic_codes,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -9761,12 +10509,146 @@ pub fn run_deck_analysis(
             let fourier = fourier_transient_cards(&result, &fourier_cards)?;
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "tran")?;
-            let run_artifacts =
-                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let output_directives = select_deck_output_directives(netlist, "tran")?;
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                result.len(),
+                &deck_table_columns(&table),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+                &diagnostic_codes,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Tran(result),
+                table,
+                output_probes,
+                measurements,
+                measurement_table,
+                fourier,
+                fourier_table,
+                run_artifacts,
+                run_artifact_table,
+            })
+        }
+        "tf" => {
+            let output_node =
+                require_deck_plan_string(plan.output_node.as_deref(), &plan, "output_node")?;
+            let input_source =
+                require_deck_plan_string(plan.source_name.as_deref(), &plan, "source_name")?;
+            let result = tf(circuit, output_node, input_source)?;
+            select_deck_measurement_cards_for_analysis(netlist, "tf")?;
+            let measurements = Vec::new();
+            let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "tf")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = vec![format!("V({output_node})")];
+            let output_directives = Vec::new();
+            let table = format_deck_tf_table(&result);
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                1,
+                &deck_table_columns(&table),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+                &diagnostic_codes,
+            );
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Tf(result.clone()),
+                table,
+                output_probes,
+                measurements,
+                measurement_table,
+                fourier,
+                fourier_table,
+                run_artifacts,
+                run_artifact_table,
+            })
+        }
+        "sens" => {
+            let output_node =
+                require_deck_plan_string(plan.output_node.as_deref(), &plan, "output_node")?;
+            let result = sens_dc(circuit, output_node)?;
+            select_deck_measurement_cards_for_analysis(netlist, "sens")?;
+            let measurements = Vec::new();
+            let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "sens")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = vec![format!("V({output_node})")];
+            let output_directives = Vec::new();
+            let table = format_deck_sens_table(&result);
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                1,
+                &deck_table_columns(&table),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+                &diagnostic_codes,
+            );
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Sens(result.clone()),
+                table,
+                output_probes,
+                measurements,
+                measurement_table,
+                fourier,
+                fourier_table,
+                run_artifacts,
+                run_artifact_table,
+            })
+        }
+        "noise" => {
+            let output_node =
+                require_deck_plan_string(plan.output_node.as_deref(), &plan, "output_node")?;
+            let input_source =
+                require_deck_plan_string(plan.source_name.as_deref(), &plan, "source_name")?;
+            let frequencies = if let Some(sweep_kind) = plan.sweep_kind.as_deref() {
+                let point_count = require_deck_plan_usize(plan.point_count, &plan, "point_count")?;
+                let start =
+                    require_deck_plan_number(plan.start_frequency_hz, &plan, "start_frequency_hz")?;
+                let stop =
+                    require_deck_plan_number(plan.stop_frequency_hz, &plan, "stop_frequency_hz")?;
+                deck_ac_frequencies(&plan, sweep_kind, point_count, start, stop)?
+            } else {
+                Vec::new()
+            };
+            let result = noise_ac(circuit, output_node, input_source, &frequencies, 300.0)?;
+            select_deck_measurement_cards_for_analysis(netlist, "noise")?;
+            let measurements = Vec::new();
+            let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "noise")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = vec![format!("V({output_node})")];
+            let output_directives = Vec::new();
+            let table = format_deck_noise_table(&result);
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                result.points.len(),
+                &deck_table_columns(&table),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+                &diagnostic_codes,
+            );
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Noise(result.clone()),
                 table,
                 output_probes,
                 measurements,

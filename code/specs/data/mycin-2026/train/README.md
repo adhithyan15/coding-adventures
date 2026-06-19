@@ -39,10 +39,16 @@ prompt asks for, derived **deterministically from the teacher's prose** by
 - **inference justification** — each finding gets an `ENTAILED` verdict when its
   span was found verbatim, or `LEAP` when it was not (which `ir_to_adj` then drops —
   the safe behavior: the model is taught to mark, not fabricate, unstated findings).
-- **discard** — a third of vignettes carry an injected non-diagnostic **distractor**
-  (a vital sign, social-history detail, symptomatic med). When it lands in the
-  prose, the gold records it as a `discard` `{span, reason}`, teaching the model to
-  set a red herring aside *with a justification* rather than coin a finding from it.
+- **discard** — vignettes carry injected **distractors** the gold must set aside with a
+  reason. Two pools: generic non-diagnostic details (a vital sign, social history, a
+  symptomatic med) AND hard **near-miss look-alikes** (`NEAR_MISS_DISTRACTORS`) that read
+  like a finding but map to none — the wrong **subject** ("his father had meningitis"), a
+  **hedge** ("concern for meningitis", "cannot exclude pleocytosis"), a **process not a
+  result** ("CSF sent for culture", "cultures pending"), or a **reference** ("guidelines note
+  CSF lactate aids diagnosis"). (A *negated* finding — "no fever" — is NOT a discard; it is a
+  real finding with `polarity:denied`.) When a distractor lands in the prose the gold records
+  it as a `discard` `{span, reason}` — teaching the model the discrimination boundary, the #1
+  over-extraction failure mode of a fine-tuned decomposer.
 
 So the model learns the discipline the framework demands of itself: extract only
 what the bytes support, cite the span, and justify both what it keeps and what it
@@ -69,6 +75,38 @@ engine's diagnosis vs gold — identical scoring to `../bench/bench_models.py`, 
 base-vs-specialist is apples-to-apples. The model never diagnoses; it only
 decomposes.
 
+### Decompose fidelity, scored directly (`decompose_score.py`)
+
+The diagnosis outcome above is a coarse, end-to-end proxy. `decompose_score.py` scores the
+decomposer's fidelity **directly and model-free** — a pure `score_decompose(predicted_ir,
+gold_ir, note)` over either IR shape (findings or chart-facts) returning: fact
+precision/recall/F1 (by identity key — for findings the key includes `polarity`, so a flipped
+negation does not match), **span_faithfulness** (every cited span must be a verbatim substring of
+the note — the byte-provenance discipline measured directly), discard precision/recall, and two
+integer counts that should be 0 — **near_miss_violations** (a fact coined from a span the gold
+says to discard — the over-extraction failure the `NEAR_MISS_DISTRACTORS` train against) and
+**false_positive_facts**. The model run that produces `predicted_ir` is the caller's step; the
+scoring is deterministic and fully unit-tested (`test_decompose_score.py`), so a fine-tune's
+faithfulness is measurable without re-running the model.
+
+A held-out benchmark to score against: **`decompose_eval.jsonl`** — a small, HAND-CURATED set of
+prose vignettes + gold IR across both shapes and the hard cases (near-miss family-history /
+absence / efficacy / hedge, and honest abstain). `eval_decompose.py` scores a model three ways:
+`--model <path> [--adapter ...]` runs an MLX model (base or base+LoRA) as the decomposer over the
+eval notes — using the SAME prompts the training data was generated under (so train and eval
+match) — parses its JSON, and reports the fidelity aggregate; `--pred predictions.jsonl` scores
+pre-computed predictions; `--self-check` scores the gold as the prediction (a perfect 1.0 / zero
+violations — the offline CI sanity check). The set is curated, not teacher-generated, so it stays
+a stable benchmark. `test_eval_decompose.py` pins that every gold span is verbatim, every
+chart-fact is COP-consumable, every near-miss is a discard, the set + scorer compose to a perfect
+self-check, AND the `--model` wiring (prompt → generate → parse → score) is correct end-to-end via
+an injected stub generator — so the whole path is verified without needing MLX in CI.
+
+```sh
+# score a fine-tune's decompose FIDELITY directly (facts/spans/discards/near-misses):
+python3 eval_decompose.py --model mlx-community/gemma-3-1b-it-4bit --adapter adapters
+```
+
 ## Result
 
 Training the framework-authored data took the base model from **0/4 → 4/4** on the
@@ -89,12 +127,23 @@ counterpart** — the messy-input front door to the constraint solver (the CC-7 
 
 Same backward-generation + byte-provenance discipline: sample a chart-fact set from the
 **closed** vocabulary (exactly what `compile_cop` maps), a teacher writes a chart note
-stating them (+ a non-charting distractor), and the gold IR is derived from the note with
-verbatim spans + a justified `discard` list. The headline guarantee
+stating them (+ distractors), and the gold IR is derived from the note with verbatim spans
++ a justified `discard` list. The headline guarantee
 (`test_gen_chart_data.py`) is the **F3→F2 consumability contract**: every `(kind, value)`
 the generator can sample is fed through `compile_cop` and asserted *not discarded* — so the
 decomposer's gold can never contain a chart fact the COP would silently drop (closed-vocab
 adherence proven against the actual downstream consumer, not just a schema).
+
+**Discard hardening — near-miss look-alikes.** Beyond generic non-charting noise, the
+generator injects `NEAR_MISS_DISTRACTORS`: phrases that *superficially resemble* a controlled
+kind but must be rejected — the wrong **subject** ("his father has CKD" ≠ the patient's
+`renal_status`), an **absence** ("no known drug allergies" / a negative β-hCG — never coin a
+fact from a negation), the wrong **relation** ("penicillin cleared her last UTI" is efficacy,
+not an `allergy`), or the wrong **quantity** ("weight loss of 10 kg" ≠ a dosing body weight).
+False-positive extraction on these is the #1 failure mode of a fine-tuned small decomposer, so
+each lands in the gold `discard` with a reason naming the trap. Tests pin that a near-miss is
+discarded, never coined, and that a real fact + its look-alike in one note yields exactly one
+fact (the discrimination boundary, not just "not a chart fact").
 
 ```sh
 python3 gen_chart_data.py --n 200 --teacher llama3.1:8b   # → data/chart_{train,valid}.jsonl

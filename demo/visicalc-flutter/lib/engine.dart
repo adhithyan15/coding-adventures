@@ -73,6 +73,16 @@ typedef _FillC = Void Function(
 typedef _FillD = void Function(
     Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Pointer<Uint8>);
 
+// sc_copy / sc_cut(session, start, end) → void (clipboard capture; two A1 strings).
+typedef _ClipC = Void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
+typedef _ClipD = void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
+// sc_paste(session, dst_start) → int (1 applied, 0 no-op).
+typedef _PasteC = Int32 Function(Pointer<Void>, Pointer<Uint8>);
+typedef _PasteD = int Function(Pointer<Void>, Pointer<Uint8>);
+// sc_undo / sc_redo / sc_can_undo / sc_can_redo(session) → int (1/0).
+typedef _FlagC = Int32 Function(Pointer<Void>);
+typedef _FlagD = int Function(Pointer<Void>);
+
 /// A single spreadsheet session, owning the opaque C handle.
 class SpreadsheetSession {
   final DynamicLibrary _lib;
@@ -86,6 +96,18 @@ class SpreadsheetSession {
   late final _WindowD _getDisplayWindow;
   late final _SetFormatD _setFormatFn;
   late final _FillD _fillFn;
+  late final _ClipD _copyFn;
+  late final _ClipD _cutFn;
+  late final _PasteD _pasteFn;
+  // Save / load: sc_serialize(session) → char* (same shape as the no-arg reads);
+  // sc_deserialize(session, data) → int (same shape as sc_paste: session + one
+  // string → 1/0).
+  late final _NoArgD _serializeFn;
+  late final _PasteD _deserializeFn;
+  late final _FlagD _undoFn;
+  late final _FlagD _redoFn;
+  late final _FlagD _canUndoFn;
+  late final _FlagD _canRedoFn;
   late final _NoArgD _usedRangeFn;
   late final _ColLettersD _columnLettersFn;
   late final _CurrentRevD _currentRevisionFn;
@@ -106,6 +128,15 @@ class SpreadsheetSession {
     _getDisplayWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_display_window');
     _setFormatFn = _lib.lookupFunction<_SetFormatC, _SetFormatD>('sc_set_format');
     _fillFn = _lib.lookupFunction<_FillC, _FillD>('sc_fill');
+    _copyFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_copy');
+    _cutFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_cut');
+    _pasteFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_paste');
+    _serializeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_serialize');
+    _deserializeFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_deserialize');
+    _undoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_undo');
+    _redoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_redo');
+    _canUndoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_can_undo');
+    _canRedoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_can_redo');
     _usedRangeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_used_range');
     _columnLettersFn = _lib.lookupFunction<_ColLettersC, _ColLettersD>('sc_column_letters');
     _currentRevisionFn = _lib.lookupFunction<_CurrentRevC, _CurrentRevD>('sc_current_revision');
@@ -270,6 +301,73 @@ class SpreadsheetSession {
       _freeCString(endPtr);
     }
   }
+
+  /// Copy the inclusive rectangle [start]..[end] into the clipboard — a
+  /// whole-block copy that pastes as a unit. The source is untouched; the buffer
+  /// survives any number of pastes.
+  void copy(String start, String end) {
+    final startPtr = _toCString(start);
+    final endPtr = _toCString(end);
+    try {
+      _copyFn(_handle, startPtr, endPtr);
+    } finally {
+      _freeCString(startPtr);
+      _freeCString(endPtr);
+    }
+  }
+
+  /// Cut the inclusive rectangle [start]..[end]. Like [copy] but a one-shot
+  /// move: the [paste] that places it clears the source it didn't overwrite.
+  void cut(String start, String end) {
+    final startPtr = _toCString(start);
+    final endPtr = _toCString(end);
+    try {
+      _cutFn(_handle, startPtr, endPtr);
+    } finally {
+      _freeCString(startPtr);
+      _freeCString(endPtr);
+    }
+  }
+
+  /// Paste the clipboard so its top-left lands at [dstStart]. Returns `true`
+  /// when applied, `false` (a no-op) for an empty clipboard, malformed address,
+  /// or off-grid destination. The block's references shift by the destination's
+  /// offset; content and format ride along.
+  bool paste(String dstStart) {
+    final dstPtr = _toCString(dstStart);
+    try {
+      return _pasteFn(_handle, dstPtr) != 0;
+    } finally {
+      _freeCString(dstPtr);
+    }
+  }
+
+  /// Serialize the whole workbook to a self-contained JSON document — the
+  /// SOURCE (formula text + typed literals) + per-cell formats, not the computed
+  /// values (those recompute on load, so the document is small and can't disagree
+  /// with itself). The engine owns no I/O; the host persists the returned string
+  /// wherever it likes. (`_takeString` frees the engine's char* allocation.)
+  String serialize() => _takeString(_serializeFn(_handle));
+
+  /// Replace the workbook from a document produced by [serialize]. Returns `true`
+  /// on success, `false` for malformed / unsupported input (the workbook is left
+  /// untouched — the engine validates before it mutates). Formulas reload live.
+  bool deserialize(String data) {
+    final dataPtr = _toCString(data);
+    try {
+      return _deserializeFn(_handle, dataPtr) != 0;
+    } finally {
+      _freeCString(dataPtr);
+    }
+  }
+
+  /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
+  /// changed the document (the host then re-reads the viewport), `false` if there
+  /// was nothing to do. canUndo/canRedo gate a host's Undo/Redo controls.
+  bool undo() => _undoFn(_handle) != 0;
+  bool redo() => _redoFn(_handle) != 0;
+  bool canUndo() => _canUndoFn(_handle) != 0;
+  bool canRedo() => _canRedoFn(_handle) != 0;
 
   /// Dense display strings for the inclusive 1-based rectangle, row-major
   /// (empty cells become ''). Empty list on a bad/oversized request.
@@ -502,5 +600,55 @@ class InfiniteSheetModel {
     final last = '$col${selRow + rows}';
     _session.fill(infAddress, first, last);
     computeExtent();
+  }
+
+  /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
+  /// engine shifts the pasted formula's relative references by the destination's
+  /// offset, pins absolute (`$`) refs, carries the format; a cut clears the
+  /// source on paste. [pasteCell] returns false (a no-op) when the clipboard is
+  /// empty, and regrows the extent on success.
+  void copyCell() => _session.copy(infAddress, infAddress);
+  void cutCell() => _session.cut(infAddress, infAddress);
+  bool pasteCell() {
+    final ok = _session.paste(infAddress);
+    if (ok) computeExtent();
+    return ok;
+  }
+
+  /// Save / load: serialize the whole workbook to a JSON document, and restore
+  /// it. The document stores only the source + formats — computed values
+  /// recompute on load, so a loaded formula stays live. [loadBook] returns false
+  /// (workbook untouched) for malformed input; on success it regrows the extent
+  /// and refreshes the formula bar so the view re-reads.
+  String saveBook() => _session.serialize();
+  bool loadBook(String data) {
+    final ok = _session.deserialize(data);
+    if (ok) {
+      computeExtent();
+      formula = _session.getRaw(infAddress);
+    }
+    return ok;
+  }
+
+  /// Undo / redo: walk the engine's snapshot history. On success the extent
+  /// regrows and the formula bar refreshes (any cell could have changed); a
+  /// restored formula stays live. canUndo/canRedo gate the buttons.
+  bool get canUndo => _session.canUndo();
+  bool get canRedo => _session.canRedo();
+  bool undoEdit() {
+    final ok = _session.undo();
+    if (ok) {
+      computeExtent();
+      formula = _session.getRaw(infAddress);
+    }
+    return ok;
+  }
+  bool redoEdit() {
+    final ok = _session.redo();
+    if (ok) {
+      computeExtent();
+      formula = _session.getRaw(infAddress);
+    }
+    return ok;
   }
 }

@@ -348,6 +348,3314 @@ impl EcosystemPrimitiveCoverage {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshProtocolSubstrateStage {
+    Controller,
+    Radio,
+    Discovery,
+    NetworkSecurity,
+    Supervision,
+}
+
+impl IntegrationMeshProtocolSubstrateStage {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Controller => "controller",
+            Self::Radio => "radio",
+            Self::Discovery => "discovery",
+            Self::NetworkSecurity => "network_security",
+            Self::Supervision => "supervision",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstrateStageRow {
+    pub protocol: ProtocolFamily,
+    pub primitive: PrimitiveFamily,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub available: bool,
+}
+
+impl IntegrationMeshProtocolSubstrateStageRow {
+    pub fn is_ready(&self) -> bool {
+        self.available
+    }
+
+    pub fn is_blocked(&self) -> bool {
+        !self.available
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstrateStageSummary {
+    pub total_rows: usize,
+    pub ready_rows: usize,
+    pub blocked_rows: usize,
+    pub unique_required_stages: Vec<IntegrationMeshProtocolSubstrateStage>,
+    pub unique_blocked_stages: Vec<IntegrationMeshProtocolSubstrateStage>,
+    pub controller_blockers: usize,
+    pub radio_blockers: usize,
+    pub discovery_blockers: usize,
+    pub network_security_blockers: usize,
+    pub supervision_blockers: usize,
+    pub first_blocked_protocol: Option<ProtocolFamily>,
+    pub first_blocked_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+}
+
+impl IntegrationMeshProtocolSubstrateStageSummary {
+    pub fn from_rows<'a>(
+        rows: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstrateStageRow>,
+    ) -> Self {
+        let rows = rows.into_iter().collect::<Vec<_>>();
+        let unique_required_stages = rows
+            .iter()
+            .map(|row| row.stage)
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let unique_blocked_stages = rows
+            .iter()
+            .filter(|row| row.is_blocked())
+            .map(|row| row.stage)
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let ready_rows = rows.iter().filter(|row| row.is_ready()).count();
+        let blocked_rows = rows.len().saturating_sub(ready_rows);
+        let first_blocked = rows
+            .iter()
+            .filter(|row| row.is_blocked())
+            .min_by_key(|row| {
+                (
+                    mesh_protocol_sort_key(&row.protocol),
+                    row.stage,
+                    row.primitive,
+                )
+            });
+
+        Self {
+            total_rows: rows.len(),
+            ready_rows,
+            blocked_rows,
+            unique_required_stages,
+            unique_blocked_stages,
+            controller_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_blockers: mesh_substrate_stage_blockers(
+                rows.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_blocked_protocol: first_blocked.map(|row| row.protocol.clone()),
+            first_blocked_stage: first_blocked.map(|row| row.stage),
+        }
+    }
+
+    pub fn all_ready(&self) -> bool {
+        self.total_rows > 0 && self.blocked_rows == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+
+    pub fn needs_network_security(&self) -> bool {
+        self.network_security_blockers > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstrateAction {
+    pub sequence: usize,
+    pub protocol: ProtocolFamily,
+    pub primitive: PrimitiveFamily,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+}
+
+impl IntegrationMeshProtocolSubstrateAction {
+    pub fn from_stage_row(
+        sequence: usize,
+        row: &IntegrationMeshProtocolSubstrateStageRow,
+    ) -> Option<Self> {
+        row.is_blocked().then(|| Self {
+            sequence,
+            protocol: row.protocol.clone(),
+            primitive: row.primitive,
+            stage: row.stage,
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstrateActionSummary {
+    pub total_actions: usize,
+    pub unique_protocols: usize,
+    pub unique_primitives: usize,
+    pub controller_actions: usize,
+    pub radio_actions: usize,
+    pub discovery_actions: usize,
+    pub network_security_actions: usize,
+    pub supervision_actions: usize,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_primitive: Option<PrimitiveFamily>,
+}
+
+impl IntegrationMeshProtocolSubstrateActionSummary {
+    pub fn from_actions<'a>(
+        actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstrateAction>,
+    ) -> Self {
+        let actions = actions.into_iter().collect::<Vec<_>>();
+        let mut protocols = BTreeSet::new();
+        let mut primitives = BTreeSet::new();
+        let first_action = actions.iter().min_by_key(|action| action.sequence);
+
+        for action in &actions {
+            protocols.insert(protocol_sort_token(&action.protocol));
+            primitives.insert(action.primitive);
+        }
+
+        Self {
+            total_actions: actions.len(),
+            unique_protocols: protocols.len(),
+            unique_primitives: primitives.len(),
+            controller_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_actions: mesh_substrate_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_protocol: first_action.map(|action| action.protocol.clone()),
+            first_stage: first_action.map(|action| action.stage),
+            first_primitive: first_action.map(|action| action.primitive),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_actions == 0
+    }
+
+    pub fn has_actions(&self) -> bool {
+        self.total_actions > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightCheck {
+    pub sequence: usize,
+    pub protocol: ProtocolFamily,
+    pub primitive: PrimitiveFamily,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub required: bool,
+    pub passed: bool,
+    pub blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightCheck {
+    pub fn from_stage_row(sequence: usize, row: &IntegrationMeshProtocolSubstrateStageRow) -> Self {
+        let operator_required = matches!(
+            row.stage,
+            IntegrationMeshProtocolSubstrateStage::Radio
+                | IntegrationMeshProtocolSubstrateStage::NetworkSecurity
+        );
+
+        Self {
+            sequence,
+            protocol: row.protocol.clone(),
+            primitive: row.primitive,
+            stage: row.stage,
+            required: true,
+            passed: row.is_ready(),
+            blocking: row.is_blocked(),
+            operator_required: operator_required && row.is_blocked(),
+        }
+    }
+
+    pub fn passed(&self) -> bool {
+        self.passed
+    }
+
+    pub fn failed(&self) -> bool {
+        !self.passed
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightSummary {
+    pub total_checks: usize,
+    pub passed_checks: usize,
+    pub failed_checks: usize,
+    pub blocking_checks: usize,
+    pub operator_required_checks: usize,
+    pub controller_blockers: usize,
+    pub radio_blockers: usize,
+    pub discovery_blockers: usize,
+    pub network_security_blockers: usize,
+    pub supervision_blockers: usize,
+    pub first_failed_protocol: Option<ProtocolFamily>,
+    pub first_failed_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_failed_primitive: Option<PrimitiveFamily>,
+    pub preflight_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightSummary {
+    pub fn from_checks<'a>(
+        checks: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightCheck>,
+    ) -> Self {
+        let checks = checks.into_iter().collect::<Vec<_>>();
+        let passed_checks = checks.iter().filter(|check| check.passed()).count();
+        let failed_checks = checks.len().saturating_sub(passed_checks);
+        let first_failed = checks
+            .iter()
+            .filter(|check| check.failed())
+            .min_by_key(|check| check.sequence);
+
+        Self {
+            total_checks: checks.len(),
+            passed_checks,
+            failed_checks,
+            blocking_checks: checks
+                .iter()
+                .filter(|check| check.blocks_preflight())
+                .count(),
+            operator_required_checks: checks
+                .iter()
+                .filter(|check| check.requires_operator())
+                .count(),
+            controller_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_blockers: mesh_substrate_preflight_blockers(
+                checks.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_failed_protocol: first_failed.map(|check| check.protocol.clone()),
+            first_failed_stage: first_failed.map(|check| check.stage),
+            first_failed_primitive: first_failed.map(|check| check.primitive),
+            preflight_ready: !checks.is_empty() && failed_checks == 0,
+        }
+    }
+
+    pub fn ready(&self) -> bool {
+        self.preflight_ready
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_checks > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_checks > 0
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshProtocolSubstratePreflightActionKind {
+    ProvisionController,
+    ProvisionRadio,
+    EnableDiscovery,
+    InstallNetworkKey,
+    EnableSupervision,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightActionKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ProvisionController => "provision_controller",
+            Self::ProvisionRadio => "provision_radio",
+            Self::EnableDiscovery => "enable_discovery",
+            Self::InstallNetworkKey => "install_network_key",
+            Self::EnableSupervision => "enable_supervision",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightAction {
+    pub sequence: usize,
+    pub protocol: ProtocolFamily,
+    pub primitive: PrimitiveFamily,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightAction {
+    pub fn from_check(
+        sequence: usize,
+        check: &IntegrationMeshProtocolSubstratePreflightCheck,
+    ) -> Option<Self> {
+        check.failed().then(|| Self {
+            sequence,
+            protocol: check.protocol.clone(),
+            primitive: check.primitive,
+            stage: check.stage,
+            action_kind: match check.stage {
+                IntegrationMeshProtocolSubstrateStage::Controller => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionController
+                }
+                IntegrationMeshProtocolSubstrateStage::Radio => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio
+                }
+                IntegrationMeshProtocolSubstrateStage::Discovery => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::EnableDiscovery
+                }
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::InstallNetworkKey
+                }
+                IntegrationMeshProtocolSubstrateStage::Supervision => {
+                    IntegrationMeshProtocolSubstratePreflightActionKind::EnableSupervision
+                }
+            },
+            blocking: check.blocks_preflight(),
+            operator_required: check.requires_operator(),
+        })
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightActionSummary {
+    pub total_actions: usize,
+    pub blocking_actions: usize,
+    pub operator_required_actions: usize,
+    pub unique_protocols: usize,
+    pub unique_primitives: usize,
+    pub controller_actions: usize,
+    pub radio_actions: usize,
+    pub discovery_actions: usize,
+    pub network_security_actions: usize,
+    pub supervision_actions: usize,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_primitive: Option<PrimitiveFamily>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub preflight_actions_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightActionSummary {
+    pub fn from_actions<'a>(
+        actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightAction>,
+    ) -> Self {
+        let actions = actions.into_iter().collect::<Vec<_>>();
+        let mut protocols = BTreeSet::new();
+        let mut primitives = BTreeSet::new();
+        let first_action = actions.iter().min_by_key(|action| action.sequence);
+
+        for action in &actions {
+            protocols.insert(protocol_sort_token(&action.protocol));
+            primitives.insert(action.primitive);
+        }
+
+        Self {
+            total_actions: actions.len(),
+            blocking_actions: actions
+                .iter()
+                .filter(|action| action.blocks_preflight())
+                .count(),
+            operator_required_actions: actions
+                .iter()
+                .filter(|action| action.requires_operator())
+                .count(),
+            unique_protocols: protocols.len(),
+            unique_primitives: primitives.len(),
+            controller_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_actions: mesh_substrate_preflight_action_count(
+                actions.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_protocol: first_action.map(|action| action.protocol.clone()),
+            first_stage: first_action.map(|action| action.stage),
+            first_primitive: first_action.map(|action| action.primitive),
+            first_action_kind: first_action.map(|action| action.action_kind),
+            preflight_actions_ready: actions.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_actions == 0
+    }
+
+    pub fn has_actions(&self) -> bool {
+        self.total_actions > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_actions > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairBatch {
+    pub sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub action_count: usize,
+    pub blocking_actions: usize,
+    pub operator_required_actions: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_primitive: Option<PrimitiveFamily>,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairBatch {
+    pub fn from_actions<'a>(
+        sequence: usize,
+        stage: IntegrationMeshProtocolSubstrateStage,
+        action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+        actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightAction>,
+    ) -> Self {
+        let mut actions = actions.into_iter().collect::<Vec<_>>();
+        actions.sort_by_key(|action| action.sequence);
+        let first_action = actions.first();
+        let mut protocols = Vec::new();
+        let mut primitives = Vec::new();
+
+        for action in &actions {
+            if !protocols.contains(&action.protocol) {
+                protocols.push(action.protocol.clone());
+            }
+            if !primitives.contains(&action.primitive) {
+                primitives.push(action.primitive);
+            }
+        }
+
+        Self {
+            sequence,
+            stage,
+            action_kind,
+            action_count: actions.len(),
+            blocking_actions: actions
+                .iter()
+                .filter(|action| action.blocks_preflight())
+                .count(),
+            operator_required_actions: actions
+                .iter()
+                .filter(|action| action.requires_operator())
+                .count(),
+            protocols,
+            primitives,
+            first_protocol: first_action.map(|action| action.protocol.clone()),
+            first_primitive: first_action.map(|action| action.primitive),
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.blocking_actions > 0
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required_actions > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairBatchSummary {
+    pub total_batches: usize,
+    pub total_actions: usize,
+    pub blocking_batches: usize,
+    pub operator_required_batches: usize,
+    pub controller_batches: usize,
+    pub radio_batches: usize,
+    pub discovery_batches: usize,
+    pub network_security_batches: usize,
+    pub supervision_batches: usize,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_primitive: Option<PrimitiveFamily>,
+    pub repair_batches_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairBatchSummary {
+    pub fn from_batches<'a>(
+        batches: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightRepairBatch>,
+    ) -> Self {
+        let batches = batches.into_iter().collect::<Vec<_>>();
+        let first_batch = batches.iter().min_by_key(|batch| batch.sequence);
+
+        Self {
+            total_batches: batches.len(),
+            total_actions: batches.iter().map(|batch| batch.action_count).sum(),
+            blocking_batches: batches
+                .iter()
+                .filter(|batch| batch.blocks_preflight())
+                .count(),
+            operator_required_batches: batches
+                .iter()
+                .filter(|batch| batch.requires_operator())
+                .count(),
+            controller_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_stage: first_batch.map(|batch| batch.stage),
+            first_action_kind: first_batch.map(|batch| batch.action_kind),
+            first_protocol: first_batch.and_then(|batch| batch.first_protocol.clone()),
+            first_primitive: first_batch.and_then(|batch| batch.first_primitive),
+            repair_batches_ready: batches.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_batches == 0
+    }
+
+    pub fn has_batches(&self) -> bool {
+        self.total_batches > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_batches > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairScheduleSlot {
+    pub sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub action_count: usize,
+    pub blocking_actions: usize,
+    pub operator_required_actions: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_primitive: Option<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairScheduleSlot {
+    pub fn from_batch(
+        sequence: usize,
+        batch: &IntegrationMeshProtocolSubstratePreflightRepairBatch,
+    ) -> Self {
+        Self {
+            sequence,
+            batch_sequence: batch.sequence,
+            stage: batch.stage,
+            action_kind: batch.action_kind,
+            action_count: batch.action_count,
+            blocking_actions: batch.blocking_actions,
+            operator_required_actions: batch.operator_required_actions,
+            protocols: batch.protocols.clone(),
+            primitives: batch.primitives.clone(),
+            first_protocol: batch.first_protocol.clone(),
+            first_primitive: batch.first_primitive,
+            release_blocking: batch.blocks_preflight(),
+            operator_required: batch.requires_operator(),
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary {
+    pub total_slots: usize,
+    pub total_actions: usize,
+    pub blocking_slots: usize,
+    pub operator_required_slots: usize,
+    pub controller_slots: usize,
+    pub radio_slots: usize,
+    pub discovery_slots: usize,
+    pub network_security_slots: usize,
+    pub supervision_slots: usize,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_primitive: Option<PrimitiveFamily>,
+    pub repair_schedule_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary {
+    pub fn from_slots<'a>(
+        slots: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightRepairScheduleSlot>,
+    ) -> Self {
+        let slots = slots.into_iter().collect::<Vec<_>>();
+        let first_slot = slots.iter().min_by_key(|slot| slot.sequence);
+
+        Self {
+            total_slots: slots.len(),
+            total_actions: slots.iter().map(|slot| slot.action_count).sum(),
+            blocking_slots: slots.iter().filter(|slot| slot.blocks_preflight()).count(),
+            operator_required_slots: slots.iter().filter(|slot| slot.requires_operator()).count(),
+            controller_slots: mesh_substrate_preflight_repair_schedule_slot_count(
+                slots.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_slots: mesh_substrate_preflight_repair_schedule_slot_count(
+                slots.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_slots: mesh_substrate_preflight_repair_schedule_slot_count(
+                slots.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_slots: mesh_substrate_preflight_repair_schedule_slot_count(
+                slots.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_slots: mesh_substrate_preflight_repair_schedule_slot_count(
+                slots.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_stage: first_slot.map(|slot| slot.stage),
+            first_action_kind: first_slot.map(|slot| slot.action_kind),
+            first_protocol: first_slot.and_then(|slot| slot.first_protocol.clone()),
+            first_primitive: first_slot.and_then(|slot| slot.first_primitive),
+            repair_schedule_ready: slots.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_slots == 0
+    }
+
+    pub fn has_slots(&self) -> bool {
+        self.total_slots > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_slots > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow {
+    pub sequence: usize,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow {
+    pub fn from_slot(
+        sequence: usize,
+        slot: &IntegrationMeshProtocolSubstratePreflightRepairScheduleSlot,
+    ) -> Self {
+        Self {
+            sequence,
+            slot_sequence: slot.sequence,
+            batch_sequence: slot.batch_sequence,
+            stage: slot.stage,
+            action_kind: slot.action_kind,
+            action_count: slot.action_count,
+            protocol_count: slot.protocols.len(),
+            primitive_count: slot.primitives.len(),
+            protocols: slot.protocols.clone(),
+            primitives: slot.primitives.clone(),
+            release_blocking: slot.blocks_preflight(),
+            operator_required: slot.requires_operator(),
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary {
+    pub total_rows: usize,
+    pub scheduled_actions: usize,
+    pub blocking_rows: usize,
+    pub operator_required_rows: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_blocking_sequence: Option<usize>,
+    pub first_operator_required_sequence: Option<usize>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub repair_slot_audit_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary {
+    pub fn from_rows<'a>(
+        rows: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow>,
+    ) -> Self {
+        let rows = rows.into_iter().collect::<Vec<_>>();
+        let first_row = rows.iter().min_by_key(|row| row.sequence);
+        let first_blocking_sequence = rows
+            .iter()
+            .filter(|row| row.blocks_preflight())
+            .map(|row| row.sequence)
+            .min();
+        let first_operator_required_sequence = rows
+            .iter()
+            .filter(|row| row.requires_operator())
+            .map(|row| row.sequence)
+            .min();
+
+        Self {
+            total_rows: rows.len(),
+            scheduled_actions: rows.iter().map(|row| row.action_count).sum(),
+            blocking_rows: rows.iter().filter(|row| row.blocks_preflight()).count(),
+            operator_required_rows: rows.iter().filter(|row| row.requires_operator()).count(),
+            protocol_mentions: rows.iter().map(|row| row.protocol_count).sum(),
+            primitive_mentions: rows.iter().map(|row| row.primitive_count).sum(),
+            first_blocking_sequence,
+            first_operator_required_sequence,
+            first_stage: first_row.map(|row| row.stage),
+            first_action_kind: first_row.map(|row| row.action_kind),
+            repair_slot_audit_ready: rows.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_rows == 0
+    }
+
+    pub fn has_rows(&self) -> bool {
+        self.total_rows > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_rows > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_rows > 0
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus {
+    Blocked,
+    OperatorHandoff,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocked => "blocked",
+            Self::OperatorHandoff => "operator_handoff",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket {
+    pub sequence: usize,
+    pub ticket_key: String,
+    pub audit_sequence: usize,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket {
+    pub fn from_audit_row(
+        sequence: usize,
+        row: &IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow,
+    ) -> Self {
+        let status = if row.requires_operator() {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::OperatorHandoff
+        } else {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::Blocked
+        };
+
+        Self {
+            sequence,
+            ticket_key: format!(
+                "slot-{sequence:02}-{}-{}",
+                row.stage.as_str(),
+                row.action_kind.as_str()
+            ),
+            audit_sequence: row.sequence,
+            slot_sequence: row.slot_sequence,
+            batch_sequence: row.batch_sequence,
+            stage: row.stage,
+            action_kind: row.action_kind,
+            status,
+            action_count: row.action_count,
+            protocol_count: row.protocol_count,
+            primitive_count: row.primitive_count,
+            protocols: row.protocols.clone(),
+            primitives: row.primitives.clone(),
+            release_blocking: row.blocks_preflight(),
+            operator_required: row.requires_operator(),
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary {
+    pub total_tickets: usize,
+    pub scheduled_actions: usize,
+    pub blocking_tickets: usize,
+    pub operator_required_tickets: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_ticket_key: Option<String>,
+    pub first_blocking_ticket_key: Option<String>,
+    pub first_operator_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_tickets_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary {
+    pub fn from_tickets<'a>(
+        tickets: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket,
+        >,
+    ) -> Self {
+        let tickets = tickets.into_iter().collect::<Vec<_>>();
+        let first_ticket = tickets.iter().min_by_key(|ticket| ticket.sequence);
+        let first_blocking_ticket = tickets
+            .iter()
+            .filter(|ticket| ticket.blocks_preflight())
+            .min_by_key(|ticket| ticket.sequence);
+        let first_operator_ticket = tickets
+            .iter()
+            .filter(|ticket| ticket.requires_operator())
+            .min_by_key(|ticket| ticket.sequence);
+
+        Self {
+            total_tickets: tickets.len(),
+            scheduled_actions: tickets.iter().map(|ticket| ticket.action_count).sum(),
+            blocking_tickets: tickets
+                .iter()
+                .filter(|ticket| ticket.blocks_preflight())
+                .count(),
+            operator_required_tickets: tickets
+                .iter()
+                .filter(|ticket| ticket.requires_operator())
+                .count(),
+            protocol_mentions: tickets.iter().map(|ticket| ticket.protocol_count).sum(),
+            primitive_mentions: tickets.iter().map(|ticket| ticket.primitive_count).sum(),
+            first_ticket_key: first_ticket.map(|ticket| ticket.ticket_key.clone()),
+            first_blocking_ticket_key: first_blocking_ticket
+                .map(|ticket| ticket.ticket_key.clone()),
+            first_operator_ticket_key: first_operator_ticket
+                .map(|ticket| ticket.ticket_key.clone()),
+            first_stage: first_ticket.map(|ticket| ticket.stage),
+            first_action_kind: first_ticket.map(|ticket| ticket.action_kind),
+            execution_tickets_ready: tickets.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_tickets == 0
+    }
+
+    pub fn has_tickets(&self) -> bool {
+        self.total_tickets > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_tickets > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_tickets > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder {
+    pub sequence: usize,
+    pub work_order_key: String,
+    pub ticket_sequence: usize,
+    pub ticket_key: String,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder {
+    pub fn from_ticket(
+        sequence: usize,
+        ticket: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket,
+    ) -> Self {
+        Self {
+            sequence,
+            work_order_key: format!(
+                "work-{sequence:02}-{}-{}",
+                ticket.stage.as_str(),
+                ticket.action_kind.as_str()
+            ),
+            ticket_sequence: ticket.sequence,
+            ticket_key: ticket.ticket_key.clone(),
+            slot_sequence: ticket.slot_sequence,
+            batch_sequence: ticket.batch_sequence,
+            stage: ticket.stage,
+            action_kind: ticket.action_kind,
+            status: ticket.status,
+            action_count: ticket.action_count,
+            protocol_count: ticket.protocol_count,
+            primitive_count: ticket.primitive_count,
+            protocols: ticket.protocols.clone(),
+            primitives: ticket.primitives.clone(),
+            release_blocking: ticket.blocks_preflight(),
+            operator_required: ticket.requires_operator(),
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary {
+    pub total_work_orders: usize,
+    pub scheduled_actions: usize,
+    pub blocking_work_orders: usize,
+    pub operator_required_work_orders: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_work_order_key: Option<String>,
+    pub first_blocking_work_order_key: Option<String>,
+    pub first_operator_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_work_orders_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary {
+    pub fn from_work_orders<'a>(
+        work_orders: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder,
+        >,
+    ) -> Self {
+        let work_orders = work_orders.into_iter().collect::<Vec<_>>();
+        let first_work_order = work_orders.iter().min_by_key(|order| order.sequence);
+        let first_blocking_work_order = work_orders
+            .iter()
+            .filter(|order| order.blocks_preflight())
+            .min_by_key(|order| order.sequence);
+        let first_operator_work_order = work_orders
+            .iter()
+            .filter(|order| order.requires_operator())
+            .min_by_key(|order| order.sequence);
+
+        Self {
+            total_work_orders: work_orders.len(),
+            scheduled_actions: work_orders.iter().map(|order| order.action_count).sum(),
+            blocking_work_orders: work_orders
+                .iter()
+                .filter(|order| order.blocks_preflight())
+                .count(),
+            operator_required_work_orders: work_orders
+                .iter()
+                .filter(|order| order.requires_operator())
+                .count(),
+            protocol_mentions: work_orders.iter().map(|order| order.protocol_count).sum(),
+            primitive_mentions: work_orders.iter().map(|order| order.primitive_count).sum(),
+            first_work_order_key: first_work_order.map(|order| order.work_order_key.clone()),
+            first_blocking_work_order_key: first_blocking_work_order
+                .map(|order| order.work_order_key.clone()),
+            first_operator_work_order_key: first_operator_work_order
+                .map(|order| order.work_order_key.clone()),
+            first_ticket_key: first_work_order.map(|order| order.ticket_key.clone()),
+            first_stage: first_work_order.map(|order| order.stage),
+            first_action_kind: first_work_order.map(|order| order.action_kind),
+            execution_work_orders_ready: work_orders.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_work_orders == 0
+    }
+
+    pub fn has_work_orders(&self) -> bool {
+        self.total_work_orders > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_work_orders > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_work_orders > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket {
+    pub sequence: usize,
+    pub evidence_key: String,
+    pub work_order_sequence: usize,
+    pub work_order_key: String,
+    pub ticket_sequence: usize,
+    pub ticket_key: String,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub lineage_complete: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket {
+    pub fn from_work_order(
+        sequence: usize,
+        work_order: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder,
+    ) -> Self {
+        let lineage_complete = !work_order.work_order_key.is_empty()
+            && work_order.ticket_sequence > 0
+            && !work_order.ticket_key.is_empty()
+            && work_order.slot_sequence > 0
+            && work_order.batch_sequence > 0;
+
+        Self {
+            sequence,
+            evidence_key: format!(
+                "evidence-{sequence:02}-{}-{}",
+                work_order.stage.as_str(),
+                work_order.action_kind.as_str()
+            ),
+            work_order_sequence: work_order.sequence,
+            work_order_key: work_order.work_order_key.clone(),
+            ticket_sequence: work_order.ticket_sequence,
+            ticket_key: work_order.ticket_key.clone(),
+            slot_sequence: work_order.slot_sequence,
+            batch_sequence: work_order.batch_sequence,
+            stage: work_order.stage,
+            action_kind: work_order.action_kind,
+            status: work_order.status,
+            action_count: work_order.action_count,
+            protocol_count: work_order.protocol_count,
+            primitive_count: work_order.primitive_count,
+            protocols: work_order.protocols.clone(),
+            primitives: work_order.primitives.clone(),
+            release_blocking: work_order.blocks_preflight(),
+            operator_required: work_order.requires_operator(),
+            lineage_complete,
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.lineage_complete
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary {
+    pub total_packets: usize,
+    pub scheduled_actions: usize,
+    pub blocking_packets: usize,
+    pub operator_required_packets: usize,
+    pub lineage_complete_packets: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_evidence_key: Option<String>,
+    pub first_blocking_evidence_key: Option<String>,
+    pub first_operator_evidence_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_evidence_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary {
+    pub fn from_packets<'a>(
+        packets: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket,
+        >,
+    ) -> Self {
+        let packets = packets.into_iter().collect::<Vec<_>>();
+        let first_packet = packets.iter().min_by_key(|packet| packet.sequence);
+        let first_blocking_packet = packets
+            .iter()
+            .filter(|packet| packet.blocks_preflight())
+            .min_by_key(|packet| packet.sequence);
+        let first_operator_packet = packets
+            .iter()
+            .filter(|packet| packet.requires_operator())
+            .min_by_key(|packet| packet.sequence);
+
+        Self {
+            total_packets: packets.len(),
+            scheduled_actions: packets.iter().map(|packet| packet.action_count).sum(),
+            blocking_packets: packets
+                .iter()
+                .filter(|packet| packet.blocks_preflight())
+                .count(),
+            operator_required_packets: packets
+                .iter()
+                .filter(|packet| packet.requires_operator())
+                .count(),
+            lineage_complete_packets: packets.iter().filter(|packet| packet.has_lineage()).count(),
+            protocol_mentions: packets.iter().map(|packet| packet.protocol_count).sum(),
+            primitive_mentions: packets.iter().map(|packet| packet.primitive_count).sum(),
+            first_evidence_key: first_packet.map(|packet| packet.evidence_key.clone()),
+            first_blocking_evidence_key: first_blocking_packet
+                .map(|packet| packet.evidence_key.clone()),
+            first_operator_evidence_key: first_operator_packet
+                .map(|packet| packet.evidence_key.clone()),
+            first_work_order_key: first_packet.map(|packet| packet.work_order_key.clone()),
+            first_ticket_key: first_packet.map(|packet| packet.ticket_key.clone()),
+            first_stage: first_packet.map(|packet| packet.stage),
+            first_action_kind: first_packet.map(|packet| packet.action_kind),
+            execution_evidence_ready: packets.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_packets == 0
+    }
+
+    pub fn has_packets(&self) -> bool {
+        self.total_packets > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_packets > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_packets > 0
+    }
+
+    pub fn has_complete_lineage(&self) -> bool {
+        self.lineage_complete_packets == self.total_packets
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview {
+    pub sequence: usize,
+    pub review_key: String,
+    pub evidence_sequence: usize,
+    pub evidence_key: String,
+    pub work_order_sequence: usize,
+    pub work_order_key: String,
+    pub ticket_sequence: usize,
+    pub ticket_key: String,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub lineage_complete: bool,
+    pub review_required: bool,
+    pub ready_for_execution: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview {
+    pub fn from_packet(
+        sequence: usize,
+        packet: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket,
+    ) -> Self {
+        let review_required =
+            packet.blocks_preflight() || packet.requires_operator() || !packet.has_lineage();
+        let ready_for_execution =
+            !packet.blocks_preflight() && !packet.requires_operator() && packet.has_lineage();
+
+        Self {
+            sequence,
+            review_key: format!(
+                "review-{sequence:02}-{}-{}",
+                packet.stage.as_str(),
+                packet.action_kind.as_str()
+            ),
+            evidence_sequence: packet.sequence,
+            evidence_key: packet.evidence_key.clone(),
+            work_order_sequence: packet.work_order_sequence,
+            work_order_key: packet.work_order_key.clone(),
+            ticket_sequence: packet.ticket_sequence,
+            ticket_key: packet.ticket_key.clone(),
+            slot_sequence: packet.slot_sequence,
+            batch_sequence: packet.batch_sequence,
+            stage: packet.stage,
+            action_kind: packet.action_kind,
+            status: packet.status,
+            action_count: packet.action_count,
+            protocol_count: packet.protocol_count,
+            primitive_count: packet.primitive_count,
+            protocols: packet.protocols.clone(),
+            primitives: packet.primitives.clone(),
+            release_blocking: packet.blocks_preflight(),
+            operator_required: packet.requires_operator(),
+            lineage_complete: packet.has_lineage(),
+            review_required,
+            ready_for_execution,
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.lineage_complete
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn is_ready_for_execution(&self) -> bool {
+        self.ready_for_execution
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary {
+    pub total_reviews: usize,
+    pub scheduled_actions: usize,
+    pub blocking_reviews: usize,
+    pub operator_required_reviews: usize,
+    pub lineage_complete_reviews: usize,
+    pub review_required_reviews: usize,
+    pub execution_ready_reviews: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_review_key: Option<String>,
+    pub first_blocking_review_key: Option<String>,
+    pub first_operator_review_key: Option<String>,
+    pub first_evidence_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_evidence_reviews_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary {
+    pub fn from_reviews<'a>(
+        reviews: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview,
+        >,
+    ) -> Self {
+        let reviews = reviews.into_iter().collect::<Vec<_>>();
+        let first_review = reviews.iter().min_by_key(|review| review.sequence);
+        let first_blocking_review = reviews
+            .iter()
+            .filter(|review| review.blocks_preflight())
+            .min_by_key(|review| review.sequence);
+        let first_operator_review = reviews
+            .iter()
+            .filter(|review| review.requires_operator())
+            .min_by_key(|review| review.sequence);
+
+        Self {
+            total_reviews: reviews.len(),
+            scheduled_actions: reviews.iter().map(|review| review.action_count).sum(),
+            blocking_reviews: reviews
+                .iter()
+                .filter(|review| review.blocks_preflight())
+                .count(),
+            operator_required_reviews: reviews
+                .iter()
+                .filter(|review| review.requires_operator())
+                .count(),
+            lineage_complete_reviews: reviews.iter().filter(|review| review.has_lineage()).count(),
+            review_required_reviews: reviews
+                .iter()
+                .filter(|review| review.needs_review())
+                .count(),
+            execution_ready_reviews: reviews
+                .iter()
+                .filter(|review| review.is_ready_for_execution())
+                .count(),
+            protocol_mentions: reviews.iter().map(|review| review.protocol_count).sum(),
+            primitive_mentions: reviews.iter().map(|review| review.primitive_count).sum(),
+            first_review_key: first_review.map(|review| review.review_key.clone()),
+            first_blocking_review_key: first_blocking_review
+                .map(|review| review.review_key.clone()),
+            first_operator_review_key: first_operator_review
+                .map(|review| review.review_key.clone()),
+            first_evidence_key: first_review.map(|review| review.evidence_key.clone()),
+            first_work_order_key: first_review.map(|review| review.work_order_key.clone()),
+            first_ticket_key: first_review.map(|review| review.ticket_key.clone()),
+            first_stage: first_review.map(|review| review.stage),
+            first_action_kind: first_review.map(|review| review.action_kind),
+            execution_evidence_reviews_ready: reviews.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_reviews == 0
+    }
+
+    pub fn has_reviews(&self) -> bool {
+        self.total_reviews > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_reviews > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_reviews > 0
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required_reviews > 0
+    }
+
+    pub fn has_complete_lineage(&self) -> bool {
+        self.lineage_complete_reviews == self.total_reviews
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind {
+    OperatorHandoff,
+    RepairRequired,
+    LineageGap,
+    ReadyForExecution,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::OperatorHandoff => "operator_handoff",
+            Self::RepairRequired => "repair_required",
+            Self::LineageGap => "lineage_gap",
+            Self::ReadyForExecution => "ready_for_execution",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDisposition {
+    pub sequence: usize,
+    pub disposition_key: String,
+    pub review_sequence: usize,
+    pub review_key: String,
+    pub evidence_sequence: usize,
+    pub evidence_key: String,
+    pub work_order_sequence: usize,
+    pub work_order_key: String,
+    pub ticket_sequence: usize,
+    pub ticket_key: String,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub disposition_kind:
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub lineage_complete: bool,
+    pub review_required: bool,
+    pub ready_for_execution: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDisposition {
+    pub fn from_review(
+        sequence: usize,
+        review: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview,
+    ) -> Self {
+        let disposition_kind = if !review.has_lineage() {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::LineageGap
+        } else if review.requires_operator() {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::OperatorHandoff
+        } else if review.blocks_preflight() || review.needs_review() {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::RepairRequired
+        } else {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::ReadyForExecution
+        };
+
+        Self {
+            sequence,
+            disposition_key: format!(
+                "disposition-{sequence:02}-{}-{}",
+                review.stage.as_str(),
+                review.action_kind.as_str()
+            ),
+            review_sequence: review.sequence,
+            review_key: review.review_key.clone(),
+            evidence_sequence: review.evidence_sequence,
+            evidence_key: review.evidence_key.clone(),
+            work_order_sequence: review.work_order_sequence,
+            work_order_key: review.work_order_key.clone(),
+            ticket_sequence: review.ticket_sequence,
+            ticket_key: review.ticket_key.clone(),
+            slot_sequence: review.slot_sequence,
+            batch_sequence: review.batch_sequence,
+            stage: review.stage,
+            action_kind: review.action_kind,
+            status: review.status,
+            disposition_kind,
+            action_count: review.action_count,
+            protocol_count: review.protocol_count,
+            primitive_count: review.primitive_count,
+            protocols: review.protocols.clone(),
+            primitives: review.primitives.clone(),
+            release_blocking: review.blocks_preflight(),
+            operator_required: review.requires_operator(),
+            lineage_complete: review.has_lineage(),
+            review_required: review.needs_review(),
+            ready_for_execution: review.is_ready_for_execution(),
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.lineage_complete
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn is_ready_for_execution(&self) -> bool {
+        self.ready_for_execution
+    }
+
+    pub fn is_operator_handoff(&self) -> bool {
+        self.disposition_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::OperatorHandoff
+    }
+
+    pub fn is_repair_required(&self) -> bool {
+        self.disposition_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::RepairRequired
+    }
+
+    pub fn is_lineage_gap(&self) -> bool {
+        self.disposition_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::LineageGap
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionSummary
+{
+    pub total_dispositions: usize,
+    pub scheduled_actions: usize,
+    pub blocking_dispositions: usize,
+    pub operator_handoff_dispositions: usize,
+    pub repair_required_dispositions: usize,
+    pub lineage_gap_dispositions: usize,
+    pub review_required_dispositions: usize,
+    pub execution_ready_dispositions: usize,
+    pub lineage_complete_dispositions: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_disposition_key: Option<String>,
+    pub first_operator_handoff_disposition_key: Option<String>,
+    pub first_repair_required_disposition_key: Option<String>,
+    pub first_lineage_gap_disposition_key: Option<String>,
+    pub first_review_key: Option<String>,
+    pub first_evidence_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_evidence_review_dispositions_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionSummary {
+    pub fn from_dispositions<'a>(
+        dispositions: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDisposition,
+        >,
+    ) -> Self {
+        let dispositions = dispositions.into_iter().collect::<Vec<_>>();
+        let first_disposition = dispositions
+            .iter()
+            .min_by_key(|disposition| disposition.sequence);
+        let first_operator_handoff_disposition = dispositions
+            .iter()
+            .filter(|disposition| disposition.is_operator_handoff())
+            .min_by_key(|disposition| disposition.sequence);
+        let first_repair_required_disposition = dispositions
+            .iter()
+            .filter(|disposition| disposition.is_repair_required())
+            .min_by_key(|disposition| disposition.sequence);
+        let first_lineage_gap_disposition = dispositions
+            .iter()
+            .filter(|disposition| disposition.is_lineage_gap())
+            .min_by_key(|disposition| disposition.sequence);
+
+        Self {
+            total_dispositions: dispositions.len(),
+            scheduled_actions: dispositions
+                .iter()
+                .map(|disposition| disposition.action_count)
+                .sum(),
+            blocking_dispositions: dispositions
+                .iter()
+                .filter(|disposition| disposition.blocks_preflight())
+                .count(),
+            operator_handoff_dispositions: dispositions
+                .iter()
+                .filter(|disposition| disposition.is_operator_handoff())
+                .count(),
+            repair_required_dispositions: dispositions
+                .iter()
+                .filter(|disposition| disposition.is_repair_required())
+                .count(),
+            lineage_gap_dispositions: dispositions
+                .iter()
+                .filter(|disposition| disposition.is_lineage_gap())
+                .count(),
+            review_required_dispositions: dispositions
+                .iter()
+                .filter(|disposition| disposition.needs_review())
+                .count(),
+            execution_ready_dispositions: dispositions
+                .iter()
+                .filter(|disposition| disposition.is_ready_for_execution())
+                .count(),
+            lineage_complete_dispositions: dispositions
+                .iter()
+                .filter(|disposition| disposition.has_lineage())
+                .count(),
+            protocol_mentions: dispositions
+                .iter()
+                .map(|disposition| disposition.protocol_count)
+                .sum(),
+            primitive_mentions: dispositions
+                .iter()
+                .map(|disposition| disposition.primitive_count)
+                .sum(),
+            first_disposition_key: first_disposition
+                .map(|disposition| disposition.disposition_key.clone()),
+            first_operator_handoff_disposition_key: first_operator_handoff_disposition
+                .map(|disposition| disposition.disposition_key.clone()),
+            first_repair_required_disposition_key: first_repair_required_disposition
+                .map(|disposition| disposition.disposition_key.clone()),
+            first_lineage_gap_disposition_key: first_lineage_gap_disposition
+                .map(|disposition| disposition.disposition_key.clone()),
+            first_review_key: first_disposition.map(|disposition| disposition.review_key.clone()),
+            first_evidence_key: first_disposition
+                .map(|disposition| disposition.evidence_key.clone()),
+            first_work_order_key: first_disposition
+                .map(|disposition| disposition.work_order_key.clone()),
+            first_ticket_key: first_disposition.map(|disposition| disposition.ticket_key.clone()),
+            first_stage: first_disposition.map(|disposition| disposition.stage),
+            first_action_kind: first_disposition.map(|disposition| disposition.action_kind),
+            execution_evidence_review_dispositions_ready: dispositions.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_dispositions == 0
+    }
+
+    pub fn has_dispositions(&self) -> bool {
+        self.total_dispositions > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_dispositions > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_handoff_dispositions > 0
+    }
+
+    pub fn needs_repair(&self) -> bool {
+        self.repair_required_dispositions > 0
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required_dispositions > 0
+    }
+
+    pub fn has_lineage_gaps(&self) -> bool {
+        self.lineage_gap_dispositions > 0
+    }
+
+    pub fn has_complete_lineage(&self) -> bool {
+        self.lineage_complete_dispositions == self.total_dispositions
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
+    pub protocol: ProtocolFamily,
+    pub required_primitives: Vec<PrimitiveFamily>,
+    pub available_primitives: Vec<PrimitiveFamily>,
+    pub missing_primitives: Vec<PrimitiveFamily>,
+    pub required_primitive_count: usize,
+    pub available_primitive_count: usize,
+    pub missing_primitive_count: usize,
+    pub ready: bool,
+    pub radio_network_key_ready: bool,
+    pub supervision_ready: bool,
+}
+
+impl IntegrationMeshProtocolPrimitiveReadinessRow {
+    pub fn from_protocol(
+        protocol: ProtocolFamily,
+        available_primitives: &[PrimitiveFamily],
+    ) -> Option<Self> {
+        if !is_low_level_mesh_protocol(&protocol) {
+            return None;
+        }
+
+        let required_primitives = protocol_primitives(&protocol).to_vec();
+        let available_set: BTreeSet<PrimitiveFamily> =
+            available_primitives.iter().copied().collect();
+        let available_primitives = required_primitives
+            .iter()
+            .copied()
+            .filter(|primitive| available_set.contains(primitive))
+            .collect::<Vec<_>>();
+        let missing_primitives = required_primitives
+            .iter()
+            .copied()
+            .filter(|primitive| !available_set.contains(primitive))
+            .collect::<Vec<_>>();
+        let required_primitive_count = required_primitives.len();
+        let available_primitive_count = available_primitives.len();
+        let missing_primitive_count = missing_primitives.len();
+        let radio_network_key_ready = !required_primitives
+            .contains(&PrimitiveFamily::RadioNetworkKey)
+            || available_primitives.contains(&PrimitiveFamily::RadioNetworkKey);
+        let supervision_ready = !required_primitives.contains(&PrimitiveFamily::Supervision)
+            || available_primitives.contains(&PrimitiveFamily::Supervision);
+
+        Some(Self {
+            protocol,
+            required_primitives,
+            available_primitives,
+            missing_primitives,
+            required_primitive_count,
+            available_primitive_count,
+            missing_primitive_count,
+            ready: missing_primitive_count == 0,
+            radio_network_key_ready,
+            supervision_ready,
+        })
+    }
+
+    pub fn is_ready(&self) -> bool {
+        self.ready
+    }
+
+    pub fn has_missing_primitives(&self) -> bool {
+        self.missing_primitive_count > 0
+    }
+
+    pub fn missing_radio_network_key(&self) -> bool {
+        self.missing_primitives
+            .contains(&PrimitiveFamily::RadioNetworkKey)
+    }
+
+    pub fn missing_supervision(&self) -> bool {
+        self.missing_primitives
+            .contains(&PrimitiveFamily::Supervision)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolPrimitiveReadinessSummary {
+    pub total_protocols: usize,
+    pub ready_protocols: usize,
+    pub blocked_protocols: usize,
+    pub unique_required_primitives: Vec<PrimitiveFamily>,
+    pub unique_missing_primitives: Vec<PrimitiveFamily>,
+    pub required_primitive_count: usize,
+    pub missing_primitive_count: usize,
+    pub radio_network_key_blockers: usize,
+    pub supervision_blockers: usize,
+    pub first_blocked_protocol: Option<ProtocolFamily>,
+}
+
+impl IntegrationMeshProtocolPrimitiveReadinessSummary {
+    pub fn from_rows<'a>(
+        rows: impl IntoIterator<Item = &'a IntegrationMeshProtocolPrimitiveReadinessRow>,
+    ) -> Self {
+        let rows = rows.into_iter().collect::<Vec<_>>();
+        let unique_required_primitives = rows
+            .iter()
+            .flat_map(|row| row.required_primitives.iter().copied())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let unique_missing_primitives = rows
+            .iter()
+            .flat_map(|row| row.missing_primitives.iter().copied())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let ready_protocols = rows.iter().filter(|row| row.ready).count();
+        let blocked_protocols = rows.len().saturating_sub(ready_protocols);
+        let first_blocked_protocol = rows
+            .iter()
+            .filter(|row| row.has_missing_primitives())
+            .min_by_key(|row| mesh_protocol_sort_key(&row.protocol))
+            .map(|row| row.protocol.clone());
+
+        Self {
+            total_protocols: rows.len(),
+            ready_protocols,
+            blocked_protocols,
+            required_primitive_count: unique_required_primitives.len(),
+            missing_primitive_count: unique_missing_primitives.len(),
+            unique_required_primitives,
+            unique_missing_primitives,
+            radio_network_key_blockers: rows
+                .iter()
+                .filter(|row| row.missing_radio_network_key())
+                .count(),
+            supervision_blockers: rows.iter().filter(|row| row.missing_supervision()).count(),
+            first_blocked_protocol,
+        }
+    }
+
+    pub fn all_ready(&self) -> bool {
+        self.total_protocols > 0 && self.blocked_protocols == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_protocols > 0
+    }
+
+    pub fn needs_radio_network_key(&self) -> bool {
+        self.radio_network_key_blockers > 0
+    }
+
+    pub fn needs_supervision(&self) -> bool {
+        self.supervision_blockers > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReadinessPackageSummary {
+    pub mesh_primitive_summary: IntegrationMeshProtocolPrimitiveReadinessSummary,
+    pub remediation_summary: IntegrationActivationEvidenceRemediationSummary,
+    pub total_protocols: usize,
+    pub ready_protocols: usize,
+    pub blocked_protocols: usize,
+    pub missing_primitive_count: usize,
+    pub radio_network_key_blockers: usize,
+    pub supervision_blockers: usize,
+    pub remediation_item_count: usize,
+    pub blocked_integration_count: usize,
+    pub readiness_remediation_items: usize,
+    pub requires_human_review: bool,
+    pub primitive_substrate_ready: bool,
+    pub release_ready: bool,
+    pub first_blocked_protocol: Option<ProtocolFamily>,
+    pub next_remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+}
+
+impl IntegrationMeshReadinessPackageSummary {
+    pub fn from_parts(
+        mesh_primitive_summary: IntegrationMeshProtocolPrimitiveReadinessSummary,
+        remediation_summary: IntegrationActivationEvidenceRemediationSummary,
+    ) -> Self {
+        let primitive_substrate_ready = mesh_primitive_summary.all_ready();
+        let release_ready = primitive_substrate_ready && remediation_summary.is_empty();
+
+        Self {
+            total_protocols: mesh_primitive_summary.total_protocols,
+            ready_protocols: mesh_primitive_summary.ready_protocols,
+            blocked_protocols: mesh_primitive_summary.blocked_protocols,
+            missing_primitive_count: mesh_primitive_summary.missing_primitive_count,
+            radio_network_key_blockers: mesh_primitive_summary.radio_network_key_blockers,
+            supervision_blockers: mesh_primitive_summary.supervision_blockers,
+            remediation_item_count: remediation_summary.total_remediation_items,
+            blocked_integration_count: remediation_summary.total_blocked_integrations,
+            readiness_remediation_items: remediation_summary.readiness_remediation_items,
+            requires_human_review: remediation_summary.requires_human_review(),
+            first_blocked_protocol: mesh_primitive_summary.first_blocked_protocol.clone(),
+            next_remediation_kind: remediation_summary.next_remediation_kind,
+            mesh_primitive_summary,
+            remediation_summary,
+            primitive_substrate_ready,
+            release_ready,
+        }
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.release_ready
+    }
+
+    pub fn has_remediations(&self) -> bool {
+        self.remediation_summary.has_remediations()
+    }
+
+    pub fn needs_radio_network_key(&self) -> bool {
+        self.radio_network_key_blockers > 0
+    }
+
+    pub fn needs_supervision(&self) -> bool {
+        self.supervision_blockers > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshStageReleaseSummary {
+    pub package_summary: IntegrationMeshReadinessPackageSummary,
+    pub substrate_stage_summary: IntegrationMeshProtocolSubstrateStageSummary,
+    pub total_protocols: usize,
+    pub stage_blocker_count: usize,
+    pub primitive_blocker_count: usize,
+    pub remediation_item_count: usize,
+    pub controller_blockers: usize,
+    pub radio_blockers: usize,
+    pub discovery_blockers: usize,
+    pub network_security_blockers: usize,
+    pub supervision_blockers: usize,
+    pub first_blocked_protocol: Option<ProtocolFamily>,
+    pub first_blocked_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub next_remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    pub substrate_ready: bool,
+    pub package_ready: bool,
+    pub release_ready: bool,
+}
+
+impl IntegrationMeshStageReleaseSummary {
+    pub fn from_parts(
+        package_summary: IntegrationMeshReadinessPackageSummary,
+        substrate_stage_summary: IntegrationMeshProtocolSubstrateStageSummary,
+    ) -> Self {
+        let substrate_ready = substrate_stage_summary.all_ready();
+        let package_ready = package_summary.release_ready;
+        let release_ready = substrate_ready && package_ready;
+
+        Self {
+            total_protocols: package_summary.total_protocols,
+            stage_blocker_count: substrate_stage_summary.blocked_rows,
+            primitive_blocker_count: package_summary.missing_primitive_count,
+            remediation_item_count: package_summary.remediation_item_count,
+            controller_blockers: substrate_stage_summary.controller_blockers,
+            radio_blockers: substrate_stage_summary.radio_blockers,
+            discovery_blockers: substrate_stage_summary.discovery_blockers,
+            network_security_blockers: substrate_stage_summary.network_security_blockers,
+            supervision_blockers: substrate_stage_summary.supervision_blockers,
+            first_blocked_protocol: substrate_stage_summary
+                .first_blocked_protocol
+                .clone()
+                .or_else(|| package_summary.first_blocked_protocol.clone()),
+            first_blocked_stage: substrate_stage_summary.first_blocked_stage,
+            next_remediation_kind: package_summary.next_remediation_kind,
+            package_summary,
+            substrate_stage_summary,
+            substrate_ready,
+            package_ready,
+            release_ready,
+        }
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.release_ready
+    }
+
+    pub fn has_stage_blockers(&self) -> bool {
+        self.stage_blocker_count > 0
+    }
+
+    pub fn has_remediations(&self) -> bool {
+        self.remediation_item_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshActionReadinessSummary {
+    pub release_summary: IntegrationMeshStageReleaseSummary,
+    pub action_summary: IntegrationMeshProtocolSubstrateActionSummary,
+    pub total_protocols: usize,
+    pub queued_substrate_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub remediation_item_count: usize,
+    pub first_action_protocol: Option<ProtocolFamily>,
+    pub first_action_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_primitive: Option<PrimitiveFamily>,
+    pub substrate_actions_ready: bool,
+    pub release_ready: bool,
+}
+
+impl IntegrationMeshActionReadinessSummary {
+    pub fn from_parts(
+        release_summary: IntegrationMeshStageReleaseSummary,
+        action_summary: IntegrationMeshProtocolSubstrateActionSummary,
+    ) -> Self {
+        let substrate_actions_ready = action_summary.is_empty();
+        let release_ready = release_summary.release_ready && substrate_actions_ready;
+
+        Self {
+            total_protocols: release_summary.total_protocols,
+            queued_substrate_actions: action_summary.total_actions,
+            queued_stage_count: mesh_substrate_action_stage_count(&action_summary),
+            queued_primitive_count: action_summary.unique_primitives,
+            remediation_item_count: release_summary.remediation_item_count,
+            first_action_protocol: action_summary.first_protocol.clone(),
+            first_action_stage: action_summary.first_stage,
+            first_action_primitive: action_summary.first_primitive,
+            release_summary,
+            action_summary,
+            substrate_actions_ready,
+            release_ready,
+        }
+    }
+
+    pub fn has_substrate_actions(&self) -> bool {
+        self.queued_substrate_actions > 0
+    }
+
+    pub fn has_remediations(&self) -> bool {
+        self.remediation_item_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseReadinessSummary {
+    pub action_readiness_summary: IntegrationMeshActionReadinessSummary,
+    pub total_protocols: usize,
+    pub release_blocker_count: usize,
+    pub stage_blocker_count: usize,
+    pub primitive_blocker_count: usize,
+    pub remediation_item_count: usize,
+    pub queued_substrate_actions: usize,
+    pub first_blocked_protocol: Option<ProtocolFamily>,
+    pub first_blocked_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_protocol: Option<ProtocolFamily>,
+    pub first_action_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub next_remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    pub package_ready: bool,
+    pub substrate_ready: bool,
+    pub substrate_actions_ready: bool,
+    pub release_ready: bool,
+}
+
+impl IntegrationMeshReleaseReadinessSummary {
+    pub fn from_action_readiness_summary(
+        action_readiness_summary: IntegrationMeshActionReadinessSummary,
+    ) -> Self {
+        let stage_summary = &action_readiness_summary.release_summary;
+        let release_blocker_count = stage_summary.stage_blocker_count
+            + stage_summary.primitive_blocker_count
+            + stage_summary.remediation_item_count
+            + action_readiness_summary.queued_substrate_actions;
+
+        Self {
+            total_protocols: action_readiness_summary.total_protocols,
+            release_blocker_count,
+            stage_blocker_count: stage_summary.stage_blocker_count,
+            primitive_blocker_count: stage_summary.primitive_blocker_count,
+            remediation_item_count: stage_summary.remediation_item_count,
+            queued_substrate_actions: action_readiness_summary.queued_substrate_actions,
+            first_blocked_protocol: stage_summary.first_blocked_protocol.clone(),
+            first_blocked_stage: stage_summary.first_blocked_stage,
+            first_action_protocol: action_readiness_summary.first_action_protocol.clone(),
+            first_action_stage: action_readiness_summary.first_action_stage,
+            next_remediation_kind: stage_summary.next_remediation_kind,
+            package_ready: stage_summary.package_ready,
+            substrate_ready: stage_summary.substrate_ready,
+            substrate_actions_ready: action_readiness_summary.substrate_actions_ready,
+            release_ready: action_readiness_summary.release_ready,
+            action_readiness_summary,
+        }
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.release_ready
+    }
+
+    pub fn has_queued_actions(&self) -> bool {
+        self.queued_substrate_actions > 0
+    }
+
+    pub fn has_remediations(&self) -> bool {
+        self.remediation_item_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightReadinessSummary {
+    pub release_readiness_summary: IntegrationMeshReleaseReadinessSummary,
+    pub preflight_summary: IntegrationMeshProtocolSubstratePreflightSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub total_blocker_count: usize,
+    pub operator_required_checks: usize,
+    pub first_failed_protocol: Option<ProtocolFamily>,
+    pub first_failed_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_failed_primitive: Option<PrimitiveFamily>,
+    pub next_remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    pub preflight_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightReadinessSummary {
+    pub fn from_parts(
+        release_readiness_summary: IntegrationMeshReleaseReadinessSummary,
+        preflight_summary: IntegrationMeshProtocolSubstratePreflightSummary,
+    ) -> Self {
+        let total_blocker_count =
+            release_readiness_summary.release_blocker_count + preflight_summary.blocking_checks;
+
+        Self {
+            total_protocols: release_readiness_summary.total_protocols,
+            total_preflight_checks: preflight_summary.total_checks,
+            preflight_blocker_count: preflight_summary.blocking_checks,
+            release_blocker_count: release_readiness_summary.release_blocker_count,
+            total_blocker_count,
+            operator_required_checks: preflight_summary.operator_required_checks,
+            first_failed_protocol: preflight_summary.first_failed_protocol.clone(),
+            first_failed_stage: preflight_summary.first_failed_stage,
+            first_failed_primitive: preflight_summary.first_failed_primitive,
+            next_remediation_kind: release_readiness_summary.next_remediation_kind,
+            preflight_ready: preflight_summary.ready(),
+            release_ready: release_readiness_summary.release_ready,
+            ready_for_release: preflight_summary.ready() && release_readiness_summary.release_ready,
+            release_readiness_summary,
+            preflight_summary,
+        }
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.total_blocker_count > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_checks > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightRepairReadinessSummary {
+    pub preflight_readiness_summary: IntegrationMeshPreflightReadinessSummary,
+    pub preflight_action_summary: IntegrationMeshProtocolSubstratePreflightActionSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub queued_preflight_actions: usize,
+    pub blocking_preflight_actions: usize,
+    pub operator_required_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub first_repair_protocol: Option<ProtocolFamily>,
+    pub first_repair_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_repair_primitive: Option<PrimitiveFamily>,
+    pub first_repair_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub preflight_ready: bool,
+    pub preflight_actions_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightRepairReadinessSummary {
+    pub fn from_parts(
+        preflight_readiness_summary: IntegrationMeshPreflightReadinessSummary,
+        preflight_action_summary: IntegrationMeshProtocolSubstratePreflightActionSummary,
+    ) -> Self {
+        let preflight_actions_ready = preflight_action_summary.preflight_actions_ready;
+        let ready_for_release =
+            preflight_readiness_summary.ready_for_release && preflight_actions_ready;
+
+        Self {
+            total_protocols: preflight_readiness_summary.total_protocols,
+            total_preflight_checks: preflight_readiness_summary.total_preflight_checks,
+            preflight_blocker_count: preflight_readiness_summary.preflight_blocker_count,
+            release_blocker_count: preflight_readiness_summary.release_blocker_count,
+            queued_preflight_actions: preflight_action_summary.total_actions,
+            blocking_preflight_actions: preflight_action_summary.blocking_actions,
+            operator_required_actions: preflight_action_summary.operator_required_actions,
+            queued_stage_count: mesh_substrate_preflight_action_stage_count(
+                &preflight_action_summary,
+            ),
+            queued_primitive_count: preflight_action_summary.unique_primitives,
+            first_repair_protocol: preflight_action_summary.first_protocol.clone(),
+            first_repair_stage: preflight_action_summary.first_stage,
+            first_repair_primitive: preflight_action_summary.first_primitive,
+            first_repair_action_kind: preflight_action_summary.first_action_kind,
+            preflight_ready: preflight_readiness_summary.preflight_ready,
+            release_ready: preflight_readiness_summary.release_ready,
+            preflight_readiness_summary,
+            preflight_action_summary,
+            preflight_actions_ready,
+            ready_for_release,
+        }
+    }
+
+    pub fn has_repair_actions(&self) -> bool {
+        self.queued_preflight_actions > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.ready_for_release
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_actions > 0 || self.preflight_readiness_summary.needs_operator()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightBatchReadinessSummary {
+    pub repair_readiness_summary: IntegrationMeshPreflightRepairReadinessSummary,
+    pub repair_batch_summary: IntegrationMeshProtocolSubstratePreflightRepairBatchSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub queued_preflight_actions: usize,
+    pub repair_batch_count: usize,
+    pub batched_preflight_actions: usize,
+    pub blocking_repair_batches: usize,
+    pub operator_required_batches: usize,
+    pub first_batch_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_batch_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub first_batch_protocol: Option<ProtocolFamily>,
+    pub first_batch_primitive: Option<PrimitiveFamily>,
+    pub preflight_ready: bool,
+    pub repair_actions_ready: bool,
+    pub repair_batches_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightBatchReadinessSummary {
+    pub fn from_parts(
+        repair_readiness_summary: IntegrationMeshPreflightRepairReadinessSummary,
+        repair_batch_summary: IntegrationMeshProtocolSubstratePreflightRepairBatchSummary,
+    ) -> Self {
+        let repair_batches_ready = repair_batch_summary.repair_batches_ready;
+        let ready_for_release = repair_readiness_summary.ready_for_release && repair_batches_ready;
+
+        Self {
+            total_protocols: repair_readiness_summary.total_protocols,
+            total_preflight_checks: repair_readiness_summary.total_preflight_checks,
+            preflight_blocker_count: repair_readiness_summary.preflight_blocker_count,
+            release_blocker_count: repair_readiness_summary.release_blocker_count,
+            queued_preflight_actions: repair_readiness_summary.queued_preflight_actions,
+            repair_batch_count: repair_batch_summary.total_batches,
+            batched_preflight_actions: repair_batch_summary.total_actions,
+            blocking_repair_batches: repair_batch_summary.blocking_batches,
+            operator_required_batches: repair_batch_summary.operator_required_batches,
+            first_batch_stage: repair_batch_summary.first_stage,
+            first_batch_action_kind: repair_batch_summary.first_action_kind,
+            first_batch_protocol: repair_batch_summary.first_protocol.clone(),
+            first_batch_primitive: repair_batch_summary.first_primitive,
+            preflight_ready: repair_readiness_summary.preflight_ready,
+            repair_actions_ready: repair_readiness_summary.preflight_actions_ready,
+            release_ready: repair_readiness_summary.release_ready,
+            repair_readiness_summary,
+            repair_batch_summary,
+            repair_batches_ready,
+            ready_for_release,
+        }
+    }
+
+    pub fn has_repair_batches(&self) -> bool {
+        self.repair_batch_count > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.ready_for_release
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_batches > 0 || self.repair_readiness_summary.needs_operator()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightScheduleReadinessSummary {
+    pub batch_readiness_summary: IntegrationMeshPreflightBatchReadinessSummary,
+    pub repair_schedule_summary: IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub queued_preflight_actions: usize,
+    pub repair_batch_count: usize,
+    pub repair_slot_count: usize,
+    pub scheduled_preflight_actions: usize,
+    pub blocking_repair_slots: usize,
+    pub operator_required_slots: usize,
+    pub first_schedule_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_schedule_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub first_schedule_protocol: Option<ProtocolFamily>,
+    pub first_schedule_primitive: Option<PrimitiveFamily>,
+    pub preflight_ready: bool,
+    pub repair_actions_ready: bool,
+    pub repair_batches_ready: bool,
+    pub repair_schedule_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightScheduleReadinessSummary {
+    pub fn from_parts(
+        batch_readiness_summary: IntegrationMeshPreflightBatchReadinessSummary,
+        repair_schedule_summary: IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary,
+    ) -> Self {
+        let repair_schedule_ready = repair_schedule_summary.repair_schedule_ready;
+        let ready_for_release = batch_readiness_summary.ready_for_release && repair_schedule_ready;
+
+        Self {
+            total_protocols: batch_readiness_summary.total_protocols,
+            total_preflight_checks: batch_readiness_summary.total_preflight_checks,
+            preflight_blocker_count: batch_readiness_summary.preflight_blocker_count,
+            release_blocker_count: batch_readiness_summary.release_blocker_count,
+            queued_preflight_actions: batch_readiness_summary.queued_preflight_actions,
+            repair_batch_count: batch_readiness_summary.repair_batch_count,
+            repair_slot_count: repair_schedule_summary.total_slots,
+            scheduled_preflight_actions: repair_schedule_summary.total_actions,
+            blocking_repair_slots: repair_schedule_summary.blocking_slots,
+            operator_required_slots: repair_schedule_summary.operator_required_slots,
+            first_schedule_stage: repair_schedule_summary.first_stage,
+            first_schedule_action_kind: repair_schedule_summary.first_action_kind,
+            first_schedule_protocol: repair_schedule_summary.first_protocol.clone(),
+            first_schedule_primitive: repair_schedule_summary.first_primitive,
+            preflight_ready: batch_readiness_summary.preflight_ready,
+            repair_actions_ready: batch_readiness_summary.repair_actions_ready,
+            repair_batches_ready: batch_readiness_summary.repair_batches_ready,
+            release_ready: batch_readiness_summary.release_ready,
+            batch_readiness_summary,
+            repair_schedule_summary,
+            repair_schedule_ready,
+            ready_for_release,
+        }
+    }
+
+    pub fn has_repair_schedule(&self) -> bool {
+        self.repair_slot_count > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.ready_for_release
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_slots > 0 || self.batch_readiness_summary.needs_operator()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightSlotReadinessSummary {
+    pub schedule_readiness_summary: IntegrationMeshPreflightScheduleReadinessSummary,
+    pub slot_audit_summary: IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub queued_preflight_actions: usize,
+    pub repair_batch_count: usize,
+    pub repair_slot_count: usize,
+    pub scheduled_preflight_actions: usize,
+    pub slot_audit_rows: usize,
+    pub audited_preflight_actions: usize,
+    pub blocking_slot_audit_rows: usize,
+    pub operator_required_slot_audit_rows: usize,
+    pub first_blocking_slot_sequence: Option<usize>,
+    pub first_operator_slot_sequence: Option<usize>,
+    pub first_slot_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_slot_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub preflight_ready: bool,
+    pub repair_actions_ready: bool,
+    pub repair_batches_ready: bool,
+    pub repair_schedule_ready: bool,
+    pub repair_slot_audit_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightSlotReadinessSummary {
+    pub fn from_parts(
+        schedule_readiness_summary: IntegrationMeshPreflightScheduleReadinessSummary,
+        slot_audit_summary: IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary,
+    ) -> Self {
+        let repair_slot_audit_ready = slot_audit_summary.repair_slot_audit_ready;
+        let ready_for_release =
+            schedule_readiness_summary.ready_for_release && repair_slot_audit_ready;
+
+        Self {
+            total_protocols: schedule_readiness_summary.total_protocols,
+            total_preflight_checks: schedule_readiness_summary.total_preflight_checks,
+            preflight_blocker_count: schedule_readiness_summary.preflight_blocker_count,
+            release_blocker_count: schedule_readiness_summary.release_blocker_count,
+            queued_preflight_actions: schedule_readiness_summary.queued_preflight_actions,
+            repair_batch_count: schedule_readiness_summary.repair_batch_count,
+            repair_slot_count: schedule_readiness_summary.repair_slot_count,
+            scheduled_preflight_actions: schedule_readiness_summary.scheduled_preflight_actions,
+            slot_audit_rows: slot_audit_summary.total_rows,
+            audited_preflight_actions: slot_audit_summary.scheduled_actions,
+            blocking_slot_audit_rows: slot_audit_summary.blocking_rows,
+            operator_required_slot_audit_rows: slot_audit_summary.operator_required_rows,
+            first_blocking_slot_sequence: slot_audit_summary.first_blocking_sequence,
+            first_operator_slot_sequence: slot_audit_summary.first_operator_required_sequence,
+            first_slot_stage: slot_audit_summary.first_stage,
+            first_slot_action_kind: slot_audit_summary.first_action_kind,
+            preflight_ready: schedule_readiness_summary.preflight_ready,
+            repair_actions_ready: schedule_readiness_summary.repair_actions_ready,
+            repair_batches_ready: schedule_readiness_summary.repair_batches_ready,
+            repair_schedule_ready: schedule_readiness_summary.repair_schedule_ready,
+            release_ready: schedule_readiness_summary.release_ready,
+            schedule_readiness_summary,
+            slot_audit_summary,
+            repair_slot_audit_ready,
+            ready_for_release,
+        }
+    }
+
+    pub fn has_slot_audit_rows(&self) -> bool {
+        self.slot_audit_rows > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.ready_for_release
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_slot_audit_rows > 0
+            || self.schedule_readiness_summary.needs_operator()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightExecutionReadinessSummary {
+    pub slot_readiness_summary: IntegrationMeshPreflightSlotReadinessSummary,
+    pub execution_ticket_summary:
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub queued_preflight_actions: usize,
+    pub repair_batch_count: usize,
+    pub repair_slot_count: usize,
+    pub scheduled_preflight_actions: usize,
+    pub slot_audit_rows: usize,
+    pub execution_ticket_count: usize,
+    pub ticketed_preflight_actions: usize,
+    pub blocking_execution_tickets: usize,
+    pub operator_required_execution_tickets: usize,
+    pub first_execution_ticket_key: Option<String>,
+    pub first_blocking_execution_ticket_key: Option<String>,
+    pub first_operator_execution_ticket_key: Option<String>,
+    pub first_execution_ticket_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_execution_ticket_action_kind:
+        Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub preflight_ready: bool,
+    pub repair_actions_ready: bool,
+    pub repair_batches_ready: bool,
+    pub repair_schedule_ready: bool,
+    pub repair_slot_audit_ready: bool,
+    pub execution_tickets_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightExecutionReadinessSummary {
+    pub fn from_parts(
+        slot_readiness_summary: IntegrationMeshPreflightSlotReadinessSummary,
+        execution_ticket_summary: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary,
+    ) -> Self {
+        let execution_tickets_ready = execution_ticket_summary.execution_tickets_ready;
+        let ready_for_release = slot_readiness_summary.ready_for_release && execution_tickets_ready;
+
+        Self {
+            total_protocols: slot_readiness_summary.total_protocols,
+            total_preflight_checks: slot_readiness_summary.total_preflight_checks,
+            preflight_blocker_count: slot_readiness_summary.preflight_blocker_count,
+            release_blocker_count: slot_readiness_summary.release_blocker_count,
+            queued_preflight_actions: slot_readiness_summary.queued_preflight_actions,
+            repair_batch_count: slot_readiness_summary.repair_batch_count,
+            repair_slot_count: slot_readiness_summary.repair_slot_count,
+            scheduled_preflight_actions: slot_readiness_summary.scheduled_preflight_actions,
+            slot_audit_rows: slot_readiness_summary.slot_audit_rows,
+            execution_ticket_count: execution_ticket_summary.total_tickets,
+            ticketed_preflight_actions: execution_ticket_summary.scheduled_actions,
+            blocking_execution_tickets: execution_ticket_summary.blocking_tickets,
+            operator_required_execution_tickets: execution_ticket_summary.operator_required_tickets,
+            first_execution_ticket_key: execution_ticket_summary.first_ticket_key.clone(),
+            first_blocking_execution_ticket_key: execution_ticket_summary
+                .first_blocking_ticket_key
+                .clone(),
+            first_operator_execution_ticket_key: execution_ticket_summary
+                .first_operator_ticket_key
+                .clone(),
+            first_execution_ticket_stage: execution_ticket_summary.first_stage,
+            first_execution_ticket_action_kind: execution_ticket_summary.first_action_kind,
+            preflight_ready: slot_readiness_summary.preflight_ready,
+            repair_actions_ready: slot_readiness_summary.repair_actions_ready,
+            repair_batches_ready: slot_readiness_summary.repair_batches_ready,
+            repair_schedule_ready: slot_readiness_summary.repair_schedule_ready,
+            repair_slot_audit_ready: slot_readiness_summary.repair_slot_audit_ready,
+            release_ready: slot_readiness_summary.release_ready,
+            slot_readiness_summary,
+            execution_ticket_summary,
+            execution_tickets_ready,
+            ready_for_release,
+        }
+    }
+
+    pub fn has_execution_tickets(&self) -> bool {
+        self.execution_ticket_count > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.ready_for_release
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_execution_tickets > 0 || self.slot_readiness_summary.needs_operator()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightWorkOrderReadinessSummary {
+    pub execution_readiness_summary: IntegrationMeshPreflightExecutionReadinessSummary,
+    pub execution_work_order_summary:
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub queued_preflight_actions: usize,
+    pub repair_batch_count: usize,
+    pub repair_slot_count: usize,
+    pub scheduled_preflight_actions: usize,
+    pub execution_ticket_count: usize,
+    pub execution_work_order_count: usize,
+    pub ordered_preflight_actions: usize,
+    pub blocking_execution_work_orders: usize,
+    pub operator_required_execution_work_orders: usize,
+    pub first_execution_work_order_key: Option<String>,
+    pub first_blocking_execution_work_order_key: Option<String>,
+    pub first_operator_execution_work_order_key: Option<String>,
+    pub first_execution_ticket_key: Option<String>,
+    pub first_execution_work_order_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_execution_work_order_action_kind:
+        Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub preflight_ready: bool,
+    pub repair_actions_ready: bool,
+    pub repair_batches_ready: bool,
+    pub repair_schedule_ready: bool,
+    pub repair_slot_audit_ready: bool,
+    pub execution_tickets_ready: bool,
+    pub execution_work_orders_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightWorkOrderReadinessSummary {
+    pub fn from_parts(
+        execution_readiness_summary: IntegrationMeshPreflightExecutionReadinessSummary,
+        execution_work_order_summary: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary,
+    ) -> Self {
+        let execution_work_orders_ready = execution_work_order_summary.execution_work_orders_ready;
+        let ready_for_release =
+            execution_readiness_summary.ready_for_release && execution_work_orders_ready;
+
+        Self {
+            total_protocols: execution_readiness_summary.total_protocols,
+            total_preflight_checks: execution_readiness_summary.total_preflight_checks,
+            preflight_blocker_count: execution_readiness_summary.preflight_blocker_count,
+            release_blocker_count: execution_readiness_summary.release_blocker_count,
+            queued_preflight_actions: execution_readiness_summary.queued_preflight_actions,
+            repair_batch_count: execution_readiness_summary.repair_batch_count,
+            repair_slot_count: execution_readiness_summary.repair_slot_count,
+            scheduled_preflight_actions: execution_readiness_summary.scheduled_preflight_actions,
+            execution_ticket_count: execution_readiness_summary.execution_ticket_count,
+            execution_work_order_count: execution_work_order_summary.total_work_orders,
+            ordered_preflight_actions: execution_work_order_summary.scheduled_actions,
+            blocking_execution_work_orders: execution_work_order_summary.blocking_work_orders,
+            operator_required_execution_work_orders: execution_work_order_summary
+                .operator_required_work_orders,
+            first_execution_work_order_key: execution_work_order_summary
+                .first_work_order_key
+                .clone(),
+            first_blocking_execution_work_order_key: execution_work_order_summary
+                .first_blocking_work_order_key
+                .clone(),
+            first_operator_execution_work_order_key: execution_work_order_summary
+                .first_operator_work_order_key
+                .clone(),
+            first_execution_ticket_key: execution_work_order_summary.first_ticket_key.clone(),
+            first_execution_work_order_stage: execution_work_order_summary.first_stage,
+            first_execution_work_order_action_kind: execution_work_order_summary.first_action_kind,
+            preflight_ready: execution_readiness_summary.preflight_ready,
+            repair_actions_ready: execution_readiness_summary.repair_actions_ready,
+            repair_batches_ready: execution_readiness_summary.repair_batches_ready,
+            repair_schedule_ready: execution_readiness_summary.repair_schedule_ready,
+            repair_slot_audit_ready: execution_readiness_summary.repair_slot_audit_ready,
+            execution_tickets_ready: execution_readiness_summary.execution_tickets_ready,
+            release_ready: execution_readiness_summary.release_ready,
+            execution_readiness_summary,
+            execution_work_order_summary,
+            execution_work_orders_ready,
+            ready_for_release,
+        }
+    }
+
+    pub fn has_execution_work_orders(&self) -> bool {
+        self.execution_work_order_count > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.ready_for_release
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_execution_work_orders > 0
+            || self.execution_readiness_summary.needs_operator()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshReadinessHandoffKind {
+    SubstrateAction,
+    EvidenceRemediation,
+    ReleaseReady,
+}
+
+impl IntegrationMeshReadinessHandoffKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::SubstrateAction => "substrate_action",
+            Self::EvidenceRemediation => "evidence_remediation",
+            Self::ReleaseReady => "release_ready",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshReadinessHandoffStatus {
+    Ready,
+    NeedsReview,
+    Blocked,
+}
+
+impl IntegrationMeshReadinessHandoffStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Ready => "ready",
+            Self::NeedsReview => "needs_review",
+            Self::Blocked => "blocked",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(self, Self::NeedsReview | Self::Blocked)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReadinessHandoffPackage {
+    pub sequence: usize,
+    pub package_kind: IntegrationMeshReadinessHandoffKind,
+    pub handoff_status: IntegrationMeshReadinessHandoffStatus,
+    pub action_sequence: Option<usize>,
+    pub protocol: Option<ProtocolFamily>,
+    pub stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub primitive: Option<PrimitiveFamily>,
+    pub remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    pub queued_substrate_actions: usize,
+    pub remediation_item_count: usize,
+    pub stage_blocker_count: usize,
+    pub primitive_blocker_count: usize,
+    pub substrate_actions_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_handoff: bool,
+    pub blocked: bool,
+    pub review_required: bool,
+    pub operator_required: bool,
+    pub requires_attention: bool,
+}
+
+impl IntegrationMeshReadinessHandoffPackage {
+    fn from_substrate_action(
+        action: &IntegrationMeshProtocolSubstrateAction,
+        summary: &IntegrationMeshActionReadinessSummary,
+    ) -> Self {
+        Self {
+            sequence: 0,
+            package_kind: IntegrationMeshReadinessHandoffKind::SubstrateAction,
+            handoff_status: IntegrationMeshReadinessHandoffStatus::Blocked,
+            action_sequence: Some(action.sequence),
+            protocol: Some(action.protocol.clone()),
+            stage: Some(action.stage),
+            primitive: Some(action.primitive),
+            remediation_kind: None,
+            queued_substrate_actions: summary.queued_substrate_actions,
+            remediation_item_count: summary.remediation_item_count,
+            stage_blocker_count: summary.release_summary.stage_blocker_count,
+            primitive_blocker_count: summary.release_summary.primitive_blocker_count,
+            substrate_actions_ready: false,
+            release_ready: false,
+            ready_for_handoff: false,
+            blocked: true,
+            review_required: false,
+            operator_required: true,
+            requires_attention: true,
+        }
+    }
+
+    fn evidence_remediation(summary: &IntegrationMeshActionReadinessSummary) -> Option<Self> {
+        summary.has_remediations().then(|| {
+            let review_required = summary
+                .release_summary
+                .package_summary
+                .requires_human_review;
+            let handoff_status = if review_required {
+                IntegrationMeshReadinessHandoffStatus::NeedsReview
+            } else {
+                IntegrationMeshReadinessHandoffStatus::Blocked
+            };
+
+            Self {
+                sequence: 0,
+                package_kind: IntegrationMeshReadinessHandoffKind::EvidenceRemediation,
+                handoff_status,
+                action_sequence: None,
+                protocol: None,
+                stage: None,
+                primitive: None,
+                remediation_kind: summary.release_summary.next_remediation_kind,
+                queued_substrate_actions: summary.queued_substrate_actions,
+                remediation_item_count: summary.remediation_item_count,
+                stage_blocker_count: summary.release_summary.stage_blocker_count,
+                primitive_blocker_count: summary.release_summary.primitive_blocker_count,
+                substrate_actions_ready: summary.substrate_actions_ready,
+                release_ready: false,
+                ready_for_handoff: false,
+                blocked: handoff_status == IntegrationMeshReadinessHandoffStatus::Blocked,
+                review_required,
+                operator_required: true,
+                requires_attention: true,
+            }
+        })
+    }
+
+    fn release_ready(summary: &IntegrationMeshActionReadinessSummary) -> Option<Self> {
+        summary.release_ready.then(|| Self {
+            sequence: 0,
+            package_kind: IntegrationMeshReadinessHandoffKind::ReleaseReady,
+            handoff_status: IntegrationMeshReadinessHandoffStatus::Ready,
+            action_sequence: None,
+            protocol: None,
+            stage: None,
+            primitive: None,
+            remediation_kind: None,
+            queued_substrate_actions: 0,
+            remediation_item_count: 0,
+            stage_blocker_count: 0,
+            primitive_blocker_count: 0,
+            substrate_actions_ready: true,
+            release_ready: true,
+            ready_for_handoff: true,
+            blocked: false,
+            review_required: false,
+            operator_required: false,
+            requires_attention: false,
+        })
+    }
+
+    pub fn ready_for_handoff(&self) -> bool {
+        self.ready_for_handoff
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn review_required(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn operator_required(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention || self.handoff_status.requires_attention()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReadinessHandoffSummary {
+    pub action_readiness_summary: IntegrationMeshActionReadinessSummary,
+    pub total_packages: usize,
+    pub action_packages: usize,
+    pub remediation_packages: usize,
+    pub ready_packages: usize,
+    pub review_required_packages: usize,
+    pub blocked_packages: usize,
+    pub operator_required_packages: usize,
+    pub packages_requiring_attention: usize,
+    pub queued_substrate_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub remediation_item_count: usize,
+    pub stage_blocker_count: usize,
+    pub primitive_blocker_count: usize,
+    pub next_handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub next_package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub next_package_sequence: Option<usize>,
+    pub first_action_sequence: Option<usize>,
+    pub first_remediation_sequence: Option<usize>,
+    pub first_ready_sequence: Option<usize>,
+    pub first_blocked_sequence: Option<usize>,
+    pub first_review_sequence: Option<usize>,
+    pub first_action_protocol: Option<ProtocolFamily>,
+    pub first_action_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_primitive: Option<PrimitiveFamily>,
+    pub next_remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    pub substrate_actions_ready: bool,
+    pub release_ready: bool,
+}
+
+impl IntegrationMeshReadinessHandoffSummary {
+    pub fn from_parts<'a>(
+        action_readiness_summary: IntegrationMeshActionReadinessSummary,
+        packages: impl IntoIterator<Item = &'a IntegrationMeshReadinessHandoffPackage>,
+    ) -> Self {
+        let packages = packages.into_iter().collect::<Vec<_>>();
+        let mut summary = Self {
+            queued_substrate_actions: action_readiness_summary.queued_substrate_actions,
+            queued_stage_count: action_readiness_summary.queued_stage_count,
+            queued_primitive_count: action_readiness_summary.queued_primitive_count,
+            remediation_item_count: action_readiness_summary.remediation_item_count,
+            stage_blocker_count: action_readiness_summary.release_summary.stage_blocker_count,
+            primitive_blocker_count: action_readiness_summary
+                .release_summary
+                .primitive_blocker_count,
+            next_remediation_kind: action_readiness_summary
+                .release_summary
+                .next_remediation_kind,
+            substrate_actions_ready: action_readiness_summary.substrate_actions_ready,
+            release_ready: action_readiness_summary.release_ready,
+            action_readiness_summary,
+            total_packages: 0,
+            action_packages: 0,
+            remediation_packages: 0,
+            ready_packages: 0,
+            review_required_packages: 0,
+            blocked_packages: 0,
+            operator_required_packages: 0,
+            packages_requiring_attention: 0,
+            next_handoff_status: None,
+            next_package_kind: None,
+            next_package_sequence: None,
+            first_action_sequence: None,
+            first_remediation_sequence: None,
+            first_ready_sequence: None,
+            first_blocked_sequence: None,
+            first_review_sequence: None,
+            first_action_protocol: None,
+            first_action_stage: None,
+            first_action_primitive: None,
+        };
+
+        for package in packages {
+            summary.total_packages += 1;
+
+            if summary.next_handoff_status.is_none() {
+                summary.next_handoff_status = Some(package.handoff_status);
+                summary.next_package_kind = Some(package.package_kind);
+                summary.next_package_sequence = Some(package.sequence);
+            }
+
+            match package.package_kind {
+                IntegrationMeshReadinessHandoffKind::SubstrateAction => {
+                    summary.action_packages += 1;
+                    summary.first_action_sequence =
+                        summary.first_action_sequence.or(Some(package.sequence));
+                    summary.first_action_protocol = summary
+                        .first_action_protocol
+                        .clone()
+                        .or_else(|| package.protocol.clone());
+                    summary.first_action_stage = summary.first_action_stage.or(package.stage);
+                    summary.first_action_primitive =
+                        summary.first_action_primitive.or(package.primitive);
+                }
+                IntegrationMeshReadinessHandoffKind::EvidenceRemediation => {
+                    summary.remediation_packages += 1;
+                    summary.first_remediation_sequence = summary
+                        .first_remediation_sequence
+                        .or(Some(package.sequence));
+                }
+                IntegrationMeshReadinessHandoffKind::ReleaseReady => {
+                    summary.ready_packages += 1;
+                    summary.first_ready_sequence =
+                        summary.first_ready_sequence.or(Some(package.sequence));
+                }
+            }
+
+            if package.ready_for_handoff() {
+                if package.package_kind != IntegrationMeshReadinessHandoffKind::ReleaseReady {
+                    summary.ready_packages += 1;
+                }
+                summary.first_ready_sequence =
+                    summary.first_ready_sequence.or(Some(package.sequence));
+            }
+            if package.blocked() {
+                summary.blocked_packages += 1;
+                summary.first_blocked_sequence =
+                    summary.first_blocked_sequence.or(Some(package.sequence));
+            }
+            if package.review_required() {
+                summary.review_required_packages += 1;
+                summary.first_review_sequence =
+                    summary.first_review_sequence.or(Some(package.sequence));
+            }
+            if package.operator_required() {
+                summary.operator_required_packages += 1;
+            }
+            if package.requires_attention() {
+                summary.packages_requiring_attention += 1;
+            }
+        }
+
+        summary
+    }
+
+    pub fn ready_for_handoff(&self) -> bool {
+        self.release_ready
+            && self.ready_packages > 0
+            && !self.has_blockers()
+            && !self.has_review_work()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_packages > 0
+            || self.queued_substrate_actions > 0
+            || self.stage_blocker_count > 0
+            || self.primitive_blocker_count > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_packages > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.packages_requiring_attention > 0 || self.has_blockers() || self.has_review_work()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshReleaseReadinessCheckKind {
+    SubstrateActions,
+    EvidenceRemediation,
+    HumanReview,
+    OperatorHandoff,
+    ReleasePacket,
+}
+
+impl IntegrationMeshReleaseReadinessCheckKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::SubstrateActions => "substrate_actions",
+            Self::EvidenceRemediation => "evidence_remediation",
+            Self::HumanReview => "human_review",
+            Self::OperatorHandoff => "operator_handoff",
+            Self::ReleasePacket => "release_packet",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshReleaseReadinessStatus {
+    Ready,
+    NeedsReview,
+    Blocked,
+}
+
+impl IntegrationMeshReleaseReadinessStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Ready => "ready",
+            Self::NeedsReview => "needs_review",
+            Self::Blocked => "blocked",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(self, Self::NeedsReview | Self::Blocked)
+    }
+
+    fn as_handoff_status(self) -> IntegrationMeshReadinessHandoffStatus {
+        match self {
+            Self::Ready => IntegrationMeshReadinessHandoffStatus::Ready,
+            Self::NeedsReview => IntegrationMeshReadinessHandoffStatus::NeedsReview,
+            Self::Blocked => IntegrationMeshReadinessHandoffStatus::Blocked,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseReadinessCheck {
+    pub sequence: usize,
+    pub check_kind: IntegrationMeshReleaseReadinessCheckKind,
+    pub status: IntegrationMeshReleaseReadinessStatus,
+    pub package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub queued_substrate_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub remediation_item_count: usize,
+    pub review_required_packages: usize,
+    pub operator_required_packages: usize,
+    pub blocked_packages: usize,
+    pub packages_requiring_attention: usize,
+    pub ready: bool,
+    pub blocked: bool,
+    pub review_required: bool,
+    pub operator_required: bool,
+    pub requires_attention: bool,
+}
+
+impl IntegrationMeshReleaseReadinessCheck {
+    fn from_summary(
+        sequence: usize,
+        check_kind: IntegrationMeshReleaseReadinessCheckKind,
+        status: IntegrationMeshReleaseReadinessStatus,
+        package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+        handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+        handoff_summary: &IntegrationMeshReadinessHandoffSummary,
+        operator_required: bool,
+    ) -> Self {
+        let ready = status == IntegrationMeshReleaseReadinessStatus::Ready;
+        let blocked = status == IntegrationMeshReleaseReadinessStatus::Blocked;
+        let review_required = status == IntegrationMeshReleaseReadinessStatus::NeedsReview;
+
+        Self {
+            sequence,
+            check_kind,
+            status,
+            package_kind,
+            handoff_status,
+            queued_substrate_actions: handoff_summary.queued_substrate_actions,
+            queued_stage_count: handoff_summary.queued_stage_count,
+            queued_primitive_count: handoff_summary.queued_primitive_count,
+            remediation_item_count: handoff_summary.remediation_item_count,
+            review_required_packages: handoff_summary.review_required_packages,
+            operator_required_packages: handoff_summary.operator_required_packages,
+            blocked_packages: handoff_summary.blocked_packages,
+            packages_requiring_attention: handoff_summary.packages_requiring_attention,
+            ready,
+            blocked,
+            review_required,
+            operator_required,
+            requires_attention: status.requires_attention() || operator_required,
+        }
+    }
+
+    pub fn ready(&self) -> bool {
+        self.ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn review_required(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn operator_required(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseReadinessCheckSummary {
+    pub handoff_summary: IntegrationMeshReadinessHandoffSummary,
+    pub total_checks: usize,
+    pub ready_checks: usize,
+    pub blocked_checks: usize,
+    pub review_required_checks: usize,
+    pub operator_required_checks: usize,
+    pub checks_requiring_attention: usize,
+    pub queued_substrate_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub remediation_item_count: usize,
+    pub review_required_packages: usize,
+    pub operator_required_packages: usize,
+    pub blocked_packages: usize,
+    pub packages_requiring_attention: usize,
+    pub next_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub next_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_check_sequence: Option<usize>,
+    pub first_blocked_check_sequence: Option<usize>,
+    pub first_review_check_sequence: Option<usize>,
+    pub first_operator_check_sequence: Option<usize>,
+    pub next_package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub next_handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub substrate_actions_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_handoff: bool,
+    pub release_packet_ready: bool,
+}
+
+impl IntegrationMeshReleaseReadinessCheckSummary {
+    pub fn from_parts<'a>(
+        handoff_summary: IntegrationMeshReadinessHandoffSummary,
+        checks: impl IntoIterator<Item = &'a IntegrationMeshReleaseReadinessCheck>,
+    ) -> Self {
+        let checks = checks.into_iter().collect::<Vec<_>>();
+        let ready_for_handoff = handoff_summary.ready_for_handoff();
+        let mut summary = Self {
+            queued_substrate_actions: handoff_summary.queued_substrate_actions,
+            queued_stage_count: handoff_summary.queued_stage_count,
+            queued_primitive_count: handoff_summary.queued_primitive_count,
+            remediation_item_count: handoff_summary.remediation_item_count,
+            review_required_packages: handoff_summary.review_required_packages,
+            operator_required_packages: handoff_summary.operator_required_packages,
+            blocked_packages: handoff_summary.blocked_packages,
+            packages_requiring_attention: handoff_summary.packages_requiring_attention,
+            next_package_kind: handoff_summary.next_package_kind,
+            next_handoff_status: handoff_summary.next_handoff_status,
+            substrate_actions_ready: handoff_summary.substrate_actions_ready,
+            release_ready: handoff_summary.release_ready,
+            ready_for_handoff,
+            release_packet_ready: ready_for_handoff,
+            handoff_summary,
+            total_checks: 0,
+            ready_checks: 0,
+            blocked_checks: 0,
+            review_required_checks: 0,
+            operator_required_checks: 0,
+            checks_requiring_attention: 0,
+            next_check_kind: None,
+            next_check_status: None,
+            next_check_sequence: None,
+            first_blocked_check_sequence: None,
+            first_review_check_sequence: None,
+            first_operator_check_sequence: None,
+        };
+
+        for check in checks {
+            summary.total_checks += 1;
+
+            if check.ready() {
+                summary.ready_checks += 1;
+            }
+            if check.blocked() {
+                summary.blocked_checks += 1;
+                summary.first_blocked_check_sequence = summary
+                    .first_blocked_check_sequence
+                    .or(Some(check.sequence));
+            }
+            if check.review_required() {
+                summary.review_required_checks += 1;
+                summary.first_review_check_sequence =
+                    summary.first_review_check_sequence.or(Some(check.sequence));
+            }
+            if check.operator_required() {
+                summary.operator_required_checks += 1;
+                summary.first_operator_check_sequence = summary
+                    .first_operator_check_sequence
+                    .or(Some(check.sequence));
+            }
+            if check.requires_attention() {
+                summary.checks_requiring_attention += 1;
+            }
+
+            if summary.next_check_sequence.is_none() && check.requires_attention() {
+                summary.next_check_kind = Some(check.check_kind);
+                summary.next_check_status = Some(check.status);
+                summary.next_check_sequence = Some(check.sequence);
+            }
+        }
+
+        summary
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_checks > 0 || self.handoff_summary.has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_checks > 0 || self.handoff_summary.has_review_work()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.checks_requiring_attention > 0
+            || self.has_blockers()
+            || self.has_review_work()
+            || !self.release_packet_ready
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
@@ -581,6 +3889,720 @@ impl IntegrationReadinessPackageSummary {
 
     pub fn has_policy_review(&self) -> bool {
         self.requires_human_review || self.activation_package.has_policy_review()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceBriefingSummary {
+    pub activation_package: IntegrationActivationPackageSummary,
+    pub readiness_package: IntegrationReadinessPackageSummary,
+    pub required_evidence_lane_count: usize,
+    pub passed_evidence_lane_count: usize,
+    pub blocked_evidence_lane_count: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub catalog_evidence_ready: bool,
+    pub activation_plan_evidence_ready: bool,
+    pub readiness_evidence_ready: bool,
+    pub policy_evidence_ready: bool,
+    pub local_boundary_evidence_ready: bool,
+    pub evidence_briefing_ready: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceScorecardSummary {
+    pub total_integrations: usize,
+    pub evidence_ready_integrations: usize,
+    pub blocked_integrations: usize,
+    pub total_required_evidence_lanes: usize,
+    pub total_passed_evidence_lanes: usize,
+    pub total_blocked_evidence_lanes: usize,
+    pub catalog_evidence_ready_integrations: usize,
+    pub activation_plan_evidence_ready_integrations: usize,
+    pub readiness_evidence_ready_integrations: usize,
+    pub policy_evidence_ready_integrations: usize,
+    pub local_boundary_evidence_ready_integrations: usize,
+    pub catalog_evidence_blockers: usize,
+    pub activation_plan_evidence_blockers: usize,
+    pub readiness_evidence_blockers: usize,
+    pub policy_evidence_blockers: usize,
+    pub local_boundary_evidence_blockers: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub human_review_integrations: usize,
+    pub first_blocked_priority: Option<u8>,
+    pub first_ready_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationEvidenceLane {
+    Catalog,
+    ActivationPlan,
+    Readiness,
+    Policy,
+    LocalBoundary,
+}
+
+impl IntegrationActivationEvidenceLane {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Catalog => "catalog",
+            Self::ActivationPlan => "activation_plan",
+            Self::Readiness => "readiness",
+            Self::Policy => "policy",
+            Self::LocalBoundary => "local_boundary",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceRow {
+    pub integration_id: IntegrationId,
+    pub display_name: String,
+    pub priority: u8,
+    pub evidence_briefing_ready: bool,
+    pub required_evidence_lane_count: usize,
+    pub passed_evidence_lane_count: usize,
+    pub blocked_evidence_lane_count: usize,
+    pub next_blocked_lane: Option<IntegrationActivationEvidenceLane>,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub local_only: bool,
+    pub cloud_required: bool,
+    pub requires_human_review: bool,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceLaneInventoryItem {
+    pub lane: IntegrationActivationEvidenceLane,
+    pub first_blocked_priority: u8,
+    pub blocked_integration_count: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub human_review_integrations: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub integration_ids: Vec<IntegrationId>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceLaneInventorySummary {
+    pub total_lanes: usize,
+    pub total_blocked_integrations: usize,
+    pub catalog_lane_blocked_integrations: usize,
+    pub activation_plan_lane_blocked_integrations: usize,
+    pub readiness_lane_blocked_integrations: usize,
+    pub policy_lane_blocked_integrations: usize,
+    pub local_boundary_lane_blocked_integrations: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub human_review_integrations: usize,
+    pub first_blocked_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationEvidenceRemediationKind {
+    CompleteCatalogEvidence,
+    CompleteActivationPlan,
+    SupplyReadinessInputs,
+    CompletePolicyReview,
+    ResolveLocalBoundary,
+}
+
+impl IntegrationActivationEvidenceRemediationKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::CompleteCatalogEvidence => "complete_catalog_evidence",
+            Self::CompleteActivationPlan => "complete_activation_plan",
+            Self::SupplyReadinessInputs => "supply_readiness_inputs",
+            Self::CompletePolicyReview => "complete_policy_review",
+            Self::ResolveLocalBoundary => "resolve_local_boundary",
+        }
+    }
+
+    pub fn from_lane(lane: IntegrationActivationEvidenceLane) -> Self {
+        match lane {
+            IntegrationActivationEvidenceLane::Catalog => Self::CompleteCatalogEvidence,
+            IntegrationActivationEvidenceLane::ActivationPlan => Self::CompleteActivationPlan,
+            IntegrationActivationEvidenceLane::Readiness => Self::SupplyReadinessInputs,
+            IntegrationActivationEvidenceLane::Policy => Self::CompletePolicyReview,
+            IntegrationActivationEvidenceLane::LocalBoundary => Self::ResolveLocalBoundary,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceRemediationItem {
+    pub sequence: usize,
+    pub remediation_kind: IntegrationActivationEvidenceRemediationKind,
+    pub lane: IntegrationActivationEvidenceLane,
+    pub priority: u8,
+    pub blocked_integration_count: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub human_review_integrations: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub integration_ids: Vec<IntegrationId>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceRemediationSummary {
+    pub total_remediation_items: usize,
+    pub unique_integrations: usize,
+    pub total_blocked_integrations: usize,
+    pub catalog_remediation_items: usize,
+    pub activation_plan_remediation_items: usize,
+    pub readiness_remediation_items: usize,
+    pub policy_remediation_items: usize,
+    pub local_boundary_remediation_items: usize,
+    pub missing_prerequisite_count: usize,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub human_review_integrations: usize,
+    pub first_remediation_priority: Option<u8>,
+    pub next_remediation_kind: Option<IntegrationActivationEvidenceRemediationKind>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+impl IntegrationActivationEvidenceBriefingSummary {
+    pub fn from_entry(
+        entry: &IntegrationCatalogEntry,
+        available_primitives: &[PrimitiveFamily],
+        allowed_capabilities: &[CapabilityId],
+        enabled_integrations: &[IntegrationId],
+    ) -> Self {
+        let activation_package = IntegrationActivationPackageSummary::from_entry(entry);
+        let readiness_package = IntegrationReadinessPackageSummary::from_entry(
+            entry,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+        Self::from_packages(activation_package, readiness_package)
+    }
+
+    pub fn from_packages(
+        activation_package: IntegrationActivationPackageSummary,
+        readiness_package: IntegrationReadinessPackageSummary,
+    ) -> Self {
+        let catalog_evidence_ready = activation_package.catalog_entry.has_catalog_metadata();
+        let activation_plan_evidence_ready =
+            activation_package.direct_activation && activation_package.has_prerequisites();
+        let readiness_evidence_ready = readiness_package.activation_ready;
+        let policy_evidence_ready = readiness_package.has_policy_review();
+        let local_boundary_evidence_ready =
+            readiness_package.local_only && !readiness_package.cloud_required;
+        let lanes = [
+            catalog_evidence_ready,
+            activation_plan_evidence_ready,
+            readiness_evidence_ready,
+            policy_evidence_ready,
+            local_boundary_evidence_ready,
+        ];
+        let passed_evidence_lane_count = lanes.iter().filter(|ready| **ready).count();
+        let required_evidence_lane_count = lanes.len();
+        let blocked_evidence_lane_count = required_evidence_lane_count - passed_evidence_lane_count;
+        let evidence_briefing_ready = blocked_evidence_lane_count == 0;
+        let missing_prerequisite_count = readiness_package.missing_prerequisite_count;
+        let missing_primitive_count = readiness_package.missing_primitive_count;
+        let missing_capability_count = readiness_package.missing_capability_count;
+        let missing_dependency_count = readiness_package.missing_dependency_count;
+
+        Self {
+            activation_package,
+            readiness_package,
+            required_evidence_lane_count,
+            passed_evidence_lane_count,
+            blocked_evidence_lane_count,
+            missing_prerequisite_count,
+            missing_primitive_count,
+            missing_capability_count,
+            missing_dependency_count,
+            catalog_evidence_ready,
+            activation_plan_evidence_ready,
+            readiness_evidence_ready,
+            policy_evidence_ready,
+            local_boundary_evidence_ready,
+            evidence_briefing_ready,
+        }
+    }
+
+    pub fn is_evidence_briefing_ready(&self) -> bool {
+        self.evidence_briefing_ready
+    }
+
+    pub fn has_blocked_evidence_lanes(&self) -> bool {
+        self.blocked_evidence_lane_count > 0
+    }
+
+    pub fn needs_catalog_evidence(&self) -> bool {
+        !self.catalog_evidence_ready
+    }
+
+    pub fn needs_activation_plan_evidence(&self) -> bool {
+        !self.activation_plan_evidence_ready
+    }
+
+    pub fn needs_readiness_evidence(&self) -> bool {
+        !self.readiness_evidence_ready
+    }
+
+    pub fn needs_policy_evidence(&self) -> bool {
+        !self.policy_evidence_ready
+    }
+
+    pub fn needs_local_boundary_evidence(&self) -> bool {
+        !self.local_boundary_evidence_ready
+    }
+}
+
+impl IntegrationActivationEvidenceRow {
+    pub fn from_briefing(briefing: &IntegrationActivationEvidenceBriefingSummary) -> Self {
+        let catalog_entry = &briefing.activation_package.catalog_entry;
+        Self {
+            integration_id: catalog_entry.integration_id.clone(),
+            display_name: catalog_entry.display_name.clone(),
+            priority: catalog_entry.priority,
+            evidence_briefing_ready: briefing.evidence_briefing_ready,
+            required_evidence_lane_count: briefing.required_evidence_lane_count,
+            passed_evidence_lane_count: briefing.passed_evidence_lane_count,
+            blocked_evidence_lane_count: briefing.blocked_evidence_lane_count,
+            next_blocked_lane: next_blocked_evidence_lane(briefing),
+            missing_prerequisite_count: briefing.missing_prerequisite_count,
+            missing_primitive_count: briefing.missing_primitive_count,
+            missing_capability_count: briefing.missing_capability_count,
+            missing_dependency_count: briefing.missing_dependency_count,
+            local_only: briefing.readiness_package.local_only,
+            cloud_required: briefing.readiness_package.cloud_required,
+            requires_human_review: briefing.readiness_package.has_policy_review(),
+            highest_policy_tier: briefing.readiness_package.highest_policy_tier,
+        }
+    }
+
+    pub fn is_ready(&self) -> bool {
+        self.evidence_briefing_ready
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_evidence_lane_count > 0
+    }
+
+    pub fn blocks_on(&self, lane: IntegrationActivationEvidenceLane) -> bool {
+        self.next_blocked_lane == Some(lane)
+    }
+}
+
+impl IntegrationActivationEvidenceLaneInventoryItem {
+    fn new(
+        lane: IntegrationActivationEvidenceLane,
+        row: &IntegrationActivationEvidenceRow,
+    ) -> Self {
+        Self {
+            lane,
+            first_blocked_priority: row.priority,
+            blocked_integration_count: 0,
+            missing_prerequisite_count: 0,
+            missing_primitive_count: 0,
+            missing_capability_count: 0,
+            missing_dependency_count: 0,
+            local_only_integrations: 0,
+            cloud_required_integrations: 0,
+            human_review_integrations: 0,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            integration_ids: Vec::new(),
+        }
+    }
+
+    fn add_row(&mut self, row: &IntegrationActivationEvidenceRow) {
+        self.first_blocked_priority = self.first_blocked_priority.min(row.priority);
+        self.blocked_integration_count += 1;
+        self.missing_prerequisite_count += row.missing_prerequisite_count;
+        self.missing_primitive_count += row.missing_primitive_count;
+        self.missing_capability_count += row.missing_capability_count;
+        self.missing_dependency_count += row.missing_dependency_count;
+        self.highest_policy_tier = self.highest_policy_tier.max(row.highest_policy_tier);
+        if row.local_only {
+            self.local_only_integrations += 1;
+        }
+        if row.cloud_required {
+            self.cloud_required_integrations += 1;
+        }
+        if row.requires_human_review {
+            self.human_review_integrations += 1;
+        }
+        self.integration_ids.push(row.integration_id.clone());
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_integration_count > 0
+    }
+
+    pub fn includes_integration(&self, integration_id: &IntegrationId) -> bool {
+        self.integration_ids.contains(integration_id)
+    }
+
+    pub fn requires_human_review(&self) -> bool {
+        self.human_review_integrations > 0
+    }
+}
+
+impl IntegrationActivationEvidenceLaneInventorySummary {
+    pub fn from_items<'a>(
+        items: impl IntoIterator<Item = &'a IntegrationActivationEvidenceLaneInventoryItem>,
+    ) -> Self {
+        let mut summary = Self {
+            total_lanes: 0,
+            total_blocked_integrations: 0,
+            catalog_lane_blocked_integrations: 0,
+            activation_plan_lane_blocked_integrations: 0,
+            readiness_lane_blocked_integrations: 0,
+            policy_lane_blocked_integrations: 0,
+            local_boundary_lane_blocked_integrations: 0,
+            missing_prerequisite_count: 0,
+            missing_primitive_count: 0,
+            missing_capability_count: 0,
+            missing_dependency_count: 0,
+            local_only_integrations: 0,
+            cloud_required_integrations: 0,
+            human_review_integrations: 0,
+            first_blocked_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for item in items {
+            summary.total_lanes += 1;
+            summary.total_blocked_integrations += item.blocked_integration_count;
+            summary.missing_prerequisite_count += item.missing_prerequisite_count;
+            summary.missing_primitive_count += item.missing_primitive_count;
+            summary.missing_capability_count += item.missing_capability_count;
+            summary.missing_dependency_count += item.missing_dependency_count;
+            summary.local_only_integrations += item.local_only_integrations;
+            summary.cloud_required_integrations += item.cloud_required_integrations;
+            summary.human_review_integrations += item.human_review_integrations;
+            summary.highest_policy_tier = summary.highest_policy_tier.max(item.highest_policy_tier);
+            summary.first_blocked_priority = Some(
+                summary
+                    .first_blocked_priority
+                    .map_or(item.first_blocked_priority, |existing| {
+                        existing.min(item.first_blocked_priority)
+                    }),
+            );
+
+            match item.lane {
+                IntegrationActivationEvidenceLane::Catalog => {
+                    summary.catalog_lane_blocked_integrations += item.blocked_integration_count;
+                }
+                IntegrationActivationEvidenceLane::ActivationPlan => {
+                    summary.activation_plan_lane_blocked_integrations +=
+                        item.blocked_integration_count;
+                }
+                IntegrationActivationEvidenceLane::Readiness => {
+                    summary.readiness_lane_blocked_integrations += item.blocked_integration_count;
+                }
+                IntegrationActivationEvidenceLane::Policy => {
+                    summary.policy_lane_blocked_integrations += item.blocked_integration_count;
+                }
+                IntegrationActivationEvidenceLane::LocalBoundary => {
+                    summary.local_boundary_lane_blocked_integrations +=
+                        item.blocked_integration_count;
+                }
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_lanes == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.total_blocked_integrations > 0
+    }
+
+    pub fn has_readiness_lane(&self) -> bool {
+        self.readiness_lane_blocked_integrations > 0
+    }
+}
+
+impl IntegrationActivationEvidenceRemediationItem {
+    pub fn from_lane_inventory_item(
+        sequence: usize,
+        item: &IntegrationActivationEvidenceLaneInventoryItem,
+    ) -> Self {
+        Self {
+            sequence,
+            remediation_kind: IntegrationActivationEvidenceRemediationKind::from_lane(item.lane),
+            lane: item.lane,
+            priority: item.first_blocked_priority,
+            blocked_integration_count: item.blocked_integration_count,
+            missing_prerequisite_count: item.missing_prerequisite_count,
+            missing_primitive_count: item.missing_primitive_count,
+            missing_capability_count: item.missing_capability_count,
+            missing_dependency_count: item.missing_dependency_count,
+            local_only_integrations: item.local_only_integrations,
+            cloud_required_integrations: item.cloud_required_integrations,
+            human_review_integrations: item.human_review_integrations,
+            highest_policy_tier: item.highest_policy_tier,
+            integration_ids: item.integration_ids.clone(),
+        }
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_integration_count > 0
+    }
+
+    pub fn includes_integration(&self, integration_id: &IntegrationId) -> bool {
+        self.integration_ids.contains(integration_id)
+    }
+
+    pub fn requires_human_review(&self) -> bool {
+        self.human_review_integrations > 0
+    }
+
+    pub fn has_missing_inputs(&self) -> bool {
+        self.missing_prerequisite_count > 0
+            || self.missing_primitive_count > 0
+            || self.missing_capability_count > 0
+            || self.missing_dependency_count > 0
+    }
+}
+
+impl IntegrationActivationEvidenceRemediationSummary {
+    pub fn from_items<'a>(
+        items: impl IntoIterator<Item = &'a IntegrationActivationEvidenceRemediationItem>,
+    ) -> Self {
+        let mut summary = Self {
+            total_remediation_items: 0,
+            unique_integrations: 0,
+            total_blocked_integrations: 0,
+            catalog_remediation_items: 0,
+            activation_plan_remediation_items: 0,
+            readiness_remediation_items: 0,
+            policy_remediation_items: 0,
+            local_boundary_remediation_items: 0,
+            missing_prerequisite_count: 0,
+            missing_primitive_count: 0,
+            missing_capability_count: 0,
+            missing_dependency_count: 0,
+            local_only_integrations: 0,
+            cloud_required_integrations: 0,
+            human_review_integrations: 0,
+            first_remediation_priority: None,
+            next_remediation_kind: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for item in items {
+            summary.total_remediation_items += 1;
+            summary.total_blocked_integrations += item.blocked_integration_count;
+            summary.missing_prerequisite_count += item.missing_prerequisite_count;
+            summary.missing_primitive_count += item.missing_primitive_count;
+            summary.missing_capability_count += item.missing_capability_count;
+            summary.missing_dependency_count += item.missing_dependency_count;
+            summary.local_only_integrations += item.local_only_integrations;
+            summary.cloud_required_integrations += item.cloud_required_integrations;
+            summary.human_review_integrations += item.human_review_integrations;
+            summary.highest_policy_tier = summary.highest_policy_tier.max(item.highest_policy_tier);
+
+            if summary.next_remediation_kind.is_none() {
+                summary.next_remediation_kind = Some(item.remediation_kind);
+            }
+            summary.first_remediation_priority = Some(
+                summary
+                    .first_remediation_priority
+                    .map_or(item.priority, |existing| existing.min(item.priority)),
+            );
+
+            match item.remediation_kind {
+                IntegrationActivationEvidenceRemediationKind::CompleteCatalogEvidence => {
+                    summary.catalog_remediation_items += 1;
+                }
+                IntegrationActivationEvidenceRemediationKind::CompleteActivationPlan => {
+                    summary.activation_plan_remediation_items += 1;
+                }
+                IntegrationActivationEvidenceRemediationKind::SupplyReadinessInputs => {
+                    summary.readiness_remediation_items += 1;
+                }
+                IntegrationActivationEvidenceRemediationKind::CompletePolicyReview => {
+                    summary.policy_remediation_items += 1;
+                }
+                IntegrationActivationEvidenceRemediationKind::ResolveLocalBoundary => {
+                    summary.local_boundary_remediation_items += 1;
+                }
+            }
+
+            integration_ids.extend(item.integration_ids.iter().cloned());
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_remediation_items == 0
+    }
+
+    pub fn has_remediations(&self) -> bool {
+        self.total_remediation_items > 0
+    }
+
+    pub fn has_readiness_remediation(&self) -> bool {
+        self.readiness_remediation_items > 0
+    }
+
+    pub fn requires_human_review(&self) -> bool {
+        self.human_review_integrations > 0
+    }
+}
+
+impl IntegrationActivationEvidenceScorecardSummary {
+    pub fn from_briefings<'a>(
+        briefings: impl IntoIterator<Item = &'a IntegrationActivationEvidenceBriefingSummary>,
+    ) -> Self {
+        let mut summary = Self {
+            total_integrations: 0,
+            evidence_ready_integrations: 0,
+            blocked_integrations: 0,
+            total_required_evidence_lanes: 0,
+            total_passed_evidence_lanes: 0,
+            total_blocked_evidence_lanes: 0,
+            catalog_evidence_ready_integrations: 0,
+            activation_plan_evidence_ready_integrations: 0,
+            readiness_evidence_ready_integrations: 0,
+            policy_evidence_ready_integrations: 0,
+            local_boundary_evidence_ready_integrations: 0,
+            catalog_evidence_blockers: 0,
+            activation_plan_evidence_blockers: 0,
+            readiness_evidence_blockers: 0,
+            policy_evidence_blockers: 0,
+            local_boundary_evidence_blockers: 0,
+            missing_prerequisite_count: 0,
+            missing_primitive_count: 0,
+            missing_capability_count: 0,
+            missing_dependency_count: 0,
+            local_only_integrations: 0,
+            cloud_required_integrations: 0,
+            human_review_integrations: 0,
+            first_blocked_priority: None,
+            first_ready_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for briefing in briefings {
+            let priority = briefing.activation_package.catalog_entry.priority;
+            summary.total_integrations += 1;
+            summary.total_required_evidence_lanes += briefing.required_evidence_lane_count;
+            summary.total_passed_evidence_lanes += briefing.passed_evidence_lane_count;
+            summary.total_blocked_evidence_lanes += briefing.blocked_evidence_lane_count;
+            summary.missing_prerequisite_count += briefing.missing_prerequisite_count;
+            summary.missing_primitive_count += briefing.missing_primitive_count;
+            summary.missing_capability_count += briefing.missing_capability_count;
+            summary.missing_dependency_count += briefing.missing_dependency_count;
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(briefing.readiness_package.highest_policy_tier);
+
+            if briefing.readiness_package.local_only {
+                summary.local_only_integrations += 1;
+            }
+            if briefing.readiness_package.cloud_required {
+                summary.cloud_required_integrations += 1;
+            }
+            if briefing.readiness_package.has_policy_review() {
+                summary.human_review_integrations += 1;
+            }
+
+            if briefing.evidence_briefing_ready {
+                summary.evidence_ready_integrations += 1;
+                summary.first_ready_priority = Some(
+                    summary
+                        .first_ready_priority
+                        .map_or(priority, |existing| existing.min(priority)),
+                );
+            } else {
+                summary.blocked_integrations += 1;
+                summary.first_blocked_priority = Some(
+                    summary
+                        .first_blocked_priority
+                        .map_or(priority, |existing| existing.min(priority)),
+                );
+            }
+
+            if briefing.catalog_evidence_ready {
+                summary.catalog_evidence_ready_integrations += 1;
+            } else {
+                summary.catalog_evidence_blockers += 1;
+            }
+            if briefing.activation_plan_evidence_ready {
+                summary.activation_plan_evidence_ready_integrations += 1;
+            } else {
+                summary.activation_plan_evidence_blockers += 1;
+            }
+            if briefing.readiness_evidence_ready {
+                summary.readiness_evidence_ready_integrations += 1;
+            } else {
+                summary.readiness_evidence_blockers += 1;
+            }
+            if briefing.policy_evidence_ready {
+                summary.policy_evidence_ready_integrations += 1;
+            } else {
+                summary.policy_evidence_blockers += 1;
+            }
+            if briefing.local_boundary_evidence_ready {
+                summary.local_boundary_evidence_ready_integrations += 1;
+            } else {
+                summary.local_boundary_evidence_blockers += 1;
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_integrations == 0
+    }
+
+    pub fn all_ready(&self) -> bool {
+        self.total_integrations > 0 && self.blocked_integrations == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_integrations > 0 || self.total_blocked_evidence_lanes > 0
+    }
+
+    pub fn has_missing_prerequisites(&self) -> bool {
+        self.missing_prerequisite_count > 0
+    }
+
+    pub fn has_readiness_gaps(&self) -> bool {
+        self.readiness_evidence_blockers > 0
     }
 }
 
@@ -15548,6 +19570,313 @@ pub fn hue_readiness_package_summary(
     )
 }
 
+pub fn hue_activation_evidence_briefing_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationActivationEvidenceBriefingSummary {
+    IntegrationActivationEvidenceBriefingSummary::from_entry(
+        &hue_entry(),
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn activation_evidence_briefings_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceBriefingSummary> {
+    catalog
+        .iter()
+        .map(|entry| {
+            IntegrationActivationEvidenceBriefingSummary::from_entry(
+                entry,
+                available_primitives,
+                allowed_capabilities,
+                enabled_integrations,
+            )
+        })
+        .collect()
+}
+
+pub fn activation_evidence_briefings_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceBriefingSummary> {
+    entries_at_or_before_priority(catalog, priority)
+        .into_iter()
+        .map(|entry| {
+            IntegrationActivationEvidenceBriefingSummary::from_entry(
+                entry,
+                available_primitives,
+                allowed_capabilities,
+                enabled_integrations,
+            )
+        })
+        .collect()
+}
+
+pub fn activation_evidence_rows_from_briefings<'a>(
+    briefings: impl IntoIterator<Item = &'a IntegrationActivationEvidenceBriefingSummary>,
+) -> Vec<IntegrationActivationEvidenceRow> {
+    let mut rows = briefings
+        .into_iter()
+        .map(IntegrationActivationEvidenceRow::from_briefing)
+        .collect::<Vec<_>>();
+    rows.sort_by(compare_activation_evidence_rows);
+    rows
+}
+
+pub fn activation_evidence_rows_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceRow> {
+    let briefings = activation_evidence_briefings_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_evidence_rows_from_briefings(briefings.iter())
+}
+
+pub fn activation_evidence_rows_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceRow> {
+    let briefings = activation_evidence_briefings_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_evidence_rows_from_briefings(briefings.iter())
+}
+
+pub fn activation_evidence_lane_inventory_from_rows<'a>(
+    rows: impl IntoIterator<Item = &'a IntegrationActivationEvidenceRow>,
+) -> Vec<IntegrationActivationEvidenceLaneInventoryItem> {
+    let mut items_by_lane = BTreeMap::new();
+
+    for row in rows {
+        let Some(lane) = row.next_blocked_lane else {
+            continue;
+        };
+        items_by_lane
+            .entry(lane)
+            .or_insert_with(|| IntegrationActivationEvidenceLaneInventoryItem::new(lane, row))
+            .add_row(row);
+    }
+
+    let mut items = items_by_lane.into_values().collect::<Vec<_>>();
+    for item in &mut items {
+        item.integration_ids.sort();
+    }
+    items.sort_by(compare_activation_evidence_lane_inventory_items);
+    items
+}
+
+pub fn activation_evidence_lane_inventory_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceLaneInventoryItem> {
+    let rows = activation_evidence_rows_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_evidence_lane_inventory_from_rows(rows.iter())
+}
+
+pub fn activation_evidence_lane_inventory_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceLaneInventoryItem> {
+    let rows = activation_evidence_rows_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_evidence_lane_inventory_from_rows(rows.iter())
+}
+
+pub fn activation_evidence_remediation_items_from_inventory<'a>(
+    inventory: impl IntoIterator<Item = &'a IntegrationActivationEvidenceLaneInventoryItem>,
+) -> Vec<IntegrationActivationEvidenceRemediationItem> {
+    let mut items = inventory
+        .into_iter()
+        .map(|item| IntegrationActivationEvidenceRemediationItem::from_lane_inventory_item(0, item))
+        .collect::<Vec<_>>();
+    items.sort_by(compare_activation_evidence_remediation_items);
+    for (index, item) in items.iter_mut().enumerate() {
+        item.sequence = index + 1;
+    }
+    items
+}
+
+pub fn activation_evidence_remediation_items_from_rows<'a>(
+    rows: impl IntoIterator<Item = &'a IntegrationActivationEvidenceRow>,
+) -> Vec<IntegrationActivationEvidenceRemediationItem> {
+    let inventory = activation_evidence_lane_inventory_from_rows(rows);
+    activation_evidence_remediation_items_from_inventory(inventory.iter())
+}
+
+pub fn activation_evidence_remediation_items_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceRemediationItem> {
+    let inventory = activation_evidence_lane_inventory_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_evidence_remediation_items_from_inventory(inventory.iter())
+}
+
+pub fn activation_evidence_remediation_items_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceRemediationItem> {
+    let inventory = activation_evidence_lane_inventory_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_evidence_remediation_items_from_inventory(inventory.iter())
+}
+
+pub fn activation_evidence_scorecard_summary(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationActivationEvidenceScorecardSummary {
+    let briefings = activation_evidence_briefings_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    IntegrationActivationEvidenceScorecardSummary::from_briefings(briefings.iter())
+}
+
+pub fn activation_evidence_scorecard_summary_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationActivationEvidenceScorecardSummary {
+    let briefings = activation_evidence_briefings_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    IntegrationActivationEvidenceScorecardSummary::from_briefings(briefings.iter())
+}
+
+fn next_blocked_evidence_lane(
+    briefing: &IntegrationActivationEvidenceBriefingSummary,
+) -> Option<IntegrationActivationEvidenceLane> {
+    [
+        (
+            briefing.catalog_evidence_ready,
+            IntegrationActivationEvidenceLane::Catalog,
+        ),
+        (
+            briefing.activation_plan_evidence_ready,
+            IntegrationActivationEvidenceLane::ActivationPlan,
+        ),
+        (
+            briefing.readiness_evidence_ready,
+            IntegrationActivationEvidenceLane::Readiness,
+        ),
+        (
+            briefing.policy_evidence_ready,
+            IntegrationActivationEvidenceLane::Policy,
+        ),
+        (
+            briefing.local_boundary_evidence_ready,
+            IntegrationActivationEvidenceLane::LocalBoundary,
+        ),
+    ]
+    .into_iter()
+    .find_map(|(ready, lane)| (!ready).then_some(lane))
+}
+
+fn compare_activation_evidence_rows(
+    left: &IntegrationActivationEvidenceRow,
+    right: &IntegrationActivationEvidenceRow,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| {
+            right
+                .blocked_evidence_lane_count
+                .cmp(&left.blocked_evidence_lane_count)
+        })
+        .then_with(|| left.integration_id.cmp(&right.integration_id))
+}
+
+fn compare_activation_evidence_lane_inventory_items(
+    left: &IntegrationActivationEvidenceLaneInventoryItem,
+    right: &IntegrationActivationEvidenceLaneInventoryItem,
+) -> Ordering {
+    left.first_blocked_priority
+        .cmp(&right.first_blocked_priority)
+        .then_with(|| {
+            right
+                .blocked_integration_count
+                .cmp(&left.blocked_integration_count)
+        })
+        .then_with(|| left.lane.cmp(&right.lane))
+}
+
+fn compare_activation_evidence_remediation_items(
+    left: &IntegrationActivationEvidenceRemediationItem,
+    right: &IntegrationActivationEvidenceRemediationItem,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| {
+            right
+                .blocked_integration_count
+                .cmp(&left.blocked_integration_count)
+        })
+        .then_with(|| left.remediation_kind.cmp(&right.remediation_kind))
+        .then_with(|| left.lane.cmp(&right.lane))
+}
+
 pub fn find_entry<'a>(
     catalog: &'a [IntegrationCatalogEntry],
     integration_id: &IntegrationId,
@@ -19147,6 +23476,1174 @@ fn protocol_primitives(protocol: &ProtocolFamily) -> &'static [PrimitiveFamily] 
         ],
         ProtocolFamily::Vendor(_) => &[PrimitiveFamily::LocalHttp, PrimitiveFamily::CommandMapping],
     }
+}
+
+pub fn low_level_mesh_protocols() -> Vec<ProtocolFamily> {
+    vec![
+        ProtocolFamily::Zigbee,
+        ProtocolFamily::ZWave,
+        ProtocolFamily::Thread,
+    ]
+}
+
+pub fn mesh_protocol_primitive_readiness_rows(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolPrimitiveReadinessRow> {
+    low_level_mesh_protocols()
+        .into_iter()
+        .filter_map(|protocol| {
+            IntegrationMeshProtocolPrimitiveReadinessRow::from_protocol(
+                protocol,
+                available_primitives,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_primitive_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolPrimitiveReadinessSummary {
+    let rows = mesh_protocol_primitive_readiness_rows(available_primitives);
+    IntegrationMeshProtocolPrimitiveReadinessSummary::from_rows(rows.iter())
+}
+
+pub fn mesh_protocol_substrate_stage_rows(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstrateStageRow> {
+    let available_set = available_primitives
+        .iter()
+        .copied()
+        .collect::<BTreeSet<_>>();
+    let mut rows = Vec::new();
+
+    for protocol in low_level_mesh_protocols() {
+        for primitive in protocol_primitives(&protocol).iter().copied() {
+            if let Some(stage) = mesh_protocol_substrate_stage(primitive) {
+                rows.push(IntegrationMeshProtocolSubstrateStageRow {
+                    protocol: protocol.clone(),
+                    primitive,
+                    stage,
+                    available: available_set.contains(&primitive),
+                });
+            }
+        }
+    }
+
+    rows
+}
+
+pub fn mesh_protocol_substrate_stage_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstrateStageSummary {
+    let rows = mesh_protocol_substrate_stage_rows(available_primitives);
+    IntegrationMeshProtocolSubstrateStageSummary::from_rows(rows.iter())
+}
+
+pub fn mesh_protocol_substrate_actions(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstrateAction> {
+    let rows = mesh_protocol_substrate_stage_rows(available_primitives);
+    let mut actions = rows
+        .iter()
+        .filter_map(|row| IntegrationMeshProtocolSubstrateAction::from_stage_row(0, row))
+        .collect::<Vec<_>>();
+    actions.sort_by(compare_mesh_substrate_actions);
+
+    for (index, action) in actions.iter_mut().enumerate() {
+        action.sequence = index + 1;
+    }
+
+    actions
+}
+
+pub fn mesh_protocol_substrate_action_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstrateActionSummary {
+    let actions = mesh_protocol_substrate_actions(available_primitives);
+    IntegrationMeshProtocolSubstrateActionSummary::from_actions(actions.iter())
+}
+
+pub fn mesh_protocol_substrate_preflight_checks(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightCheck> {
+    let rows = mesh_protocol_substrate_stage_rows(available_primitives);
+    let mut checks = rows
+        .iter()
+        .map(|row| IntegrationMeshProtocolSubstratePreflightCheck::from_stage_row(0, row))
+        .collect::<Vec<_>>();
+    checks.sort_by(compare_mesh_substrate_preflight_checks);
+
+    for (index, check) in checks.iter_mut().enumerate() {
+        check.sequence = index + 1;
+    }
+
+    checks
+}
+
+pub fn mesh_protocol_substrate_preflight_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightSummary {
+    let checks = mesh_protocol_substrate_preflight_checks(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightSummary::from_checks(checks.iter())
+}
+
+pub fn mesh_protocol_substrate_preflight_actions(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightAction> {
+    let checks = mesh_protocol_substrate_preflight_checks(available_primitives);
+    let mut actions = checks
+        .iter()
+        .filter_map(|check| IntegrationMeshProtocolSubstratePreflightAction::from_check(0, check))
+        .collect::<Vec<_>>();
+    actions.sort_by(compare_mesh_substrate_preflight_actions);
+
+    for (index, action) in actions.iter_mut().enumerate() {
+        action.sequence = index + 1;
+    }
+
+    actions
+}
+
+pub fn mesh_protocol_substrate_preflight_action_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightActionSummary {
+    let actions = mesh_protocol_substrate_preflight_actions(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightActionSummary::from_actions(actions.iter())
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_batches(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairBatch> {
+    let actions = mesh_protocol_substrate_preflight_actions(available_primitives);
+    let mut grouped = BTreeMap::<
+        (
+            IntegrationMeshProtocolSubstrateStage,
+            IntegrationMeshProtocolSubstratePreflightActionKind,
+        ),
+        Vec<&IntegrationMeshProtocolSubstratePreflightAction>,
+    >::new();
+
+    for action in &actions {
+        grouped
+            .entry((action.stage, action.action_kind))
+            .or_default()
+            .push(action);
+    }
+
+    let mut batches = grouped
+        .into_iter()
+        .map(|((stage, action_kind), actions)| {
+            IntegrationMeshProtocolSubstratePreflightRepairBatch::from_actions(
+                0,
+                stage,
+                action_kind,
+                actions,
+            )
+        })
+        .collect::<Vec<_>>();
+    batches.sort_by(compare_mesh_substrate_preflight_repair_batches);
+
+    for (index, batch) in batches.iter_mut().enumerate() {
+        batch.sequence = index + 1;
+    }
+
+    batches
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_batch_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairBatchSummary {
+    let batches = mesh_protocol_substrate_preflight_repair_batches(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightRepairBatchSummary::from_batches(batches.iter())
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_schedule(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairScheduleSlot> {
+    mesh_protocol_substrate_preflight_repair_batches(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, batch)| {
+            IntegrationMeshProtocolSubstratePreflightRepairScheduleSlot::from_batch(
+                index + 1,
+                batch,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_schedule_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary {
+    let slots = mesh_protocol_substrate_preflight_repair_schedule(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary::from_slots(slots.iter())
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_audit_rows(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow> {
+    mesh_protocol_substrate_preflight_repair_schedule(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, slot)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow::from_slot(index + 1, slot)
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_audit_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary {
+    let rows = mesh_protocol_substrate_preflight_repair_slot_audit_rows(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary::from_rows(rows.iter())
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_tickets(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket> {
+    mesh_protocol_substrate_preflight_repair_slot_audit_rows(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, row)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket::from_audit_row(
+                index + 1,
+                row,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_ticket_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary {
+    let tickets =
+        mesh_protocol_substrate_preflight_repair_slot_execution_tickets(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary::from_tickets(
+        tickets.iter(),
+    )
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder> {
+    mesh_protocol_substrate_preflight_repair_slot_execution_tickets(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, ticket)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder::from_ticket(
+                index + 1,
+                ticket,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary {
+    let work_orders =
+        mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary::from_work_orders(
+        work_orders.iter(),
+    )
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket> {
+    mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, work_order)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket::from_work_order(
+                index + 1,
+                work_order,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary {
+    let packets = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(
+        available_primitives,
+    );
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary::from_packets(
+        packets.iter(),
+    )
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview> {
+    mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, packet)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview::from_packet(
+                index + 1,
+                packet,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary {
+    let reviews = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews(
+        available_primitives,
+    );
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary::from_reviews(
+        reviews.iter(),
+    )
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDisposition> {
+    mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, review)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDisposition::from_review(
+                index + 1,
+                review,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionSummary {
+    let dispositions =
+        mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions(
+            available_primitives,
+        );
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionSummary::from_dispositions(
+        dispositions.iter(),
+    )
+}
+
+pub fn mesh_readiness_package_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReadinessPackageSummary {
+    let mesh_catalog = mesh_protocol_catalog_entries(catalog);
+    let mesh_primitive_summary = mesh_protocol_primitive_readiness_summary(available_primitives);
+    let remediation_items = activation_evidence_remediation_items_for_catalog(
+        &mesh_catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let remediation_summary =
+        IntegrationActivationEvidenceRemediationSummary::from_items(remediation_items.iter());
+
+    IntegrationMeshReadinessPackageSummary::from_parts(mesh_primitive_summary, remediation_summary)
+}
+
+pub fn mesh_readiness_package_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReadinessPackageSummary {
+    let catalog = first_party_catalog();
+    mesh_readiness_package_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_stage_release_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshStageReleaseSummary {
+    let package_summary = mesh_readiness_package_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let substrate_stage_summary = mesh_protocol_substrate_stage_summary(available_primitives);
+
+    IntegrationMeshStageReleaseSummary::from_parts(package_summary, substrate_stage_summary)
+}
+
+pub fn mesh_stage_release_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshStageReleaseSummary {
+    let catalog = first_party_catalog();
+    mesh_stage_release_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_action_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshActionReadinessSummary {
+    let release_summary = mesh_stage_release_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let action_summary = mesh_protocol_substrate_action_summary(available_primitives);
+
+    IntegrationMeshActionReadinessSummary::from_parts(release_summary, action_summary)
+}
+
+pub fn mesh_action_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshActionReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_action_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseReadinessSummary {
+    let action_readiness_summary = mesh_action_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+
+    IntegrationMeshReleaseReadinessSummary::from_action_readiness_summary(action_readiness_summary)
+}
+
+pub fn mesh_release_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_release_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_preflight_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightReadinessSummary {
+    let release_readiness_summary = mesh_release_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let preflight_summary = mesh_protocol_substrate_preflight_summary(available_primitives);
+
+    IntegrationMeshPreflightReadinessSummary::from_parts(
+        release_readiness_summary,
+        preflight_summary,
+    )
+}
+
+pub fn mesh_preflight_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_preflight_repair_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightRepairReadinessSummary {
+    let preflight_readiness_summary = mesh_preflight_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let preflight_action_summary =
+        mesh_protocol_substrate_preflight_action_summary(available_primitives);
+
+    IntegrationMeshPreflightRepairReadinessSummary::from_parts(
+        preflight_readiness_summary,
+        preflight_action_summary,
+    )
+}
+
+pub fn mesh_preflight_repair_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightRepairReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_repair_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_preflight_batch_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightBatchReadinessSummary {
+    let repair_readiness_summary = mesh_preflight_repair_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let repair_batch_summary =
+        mesh_protocol_substrate_preflight_repair_batch_summary(available_primitives);
+
+    IntegrationMeshPreflightBatchReadinessSummary::from_parts(
+        repair_readiness_summary,
+        repair_batch_summary,
+    )
+}
+
+pub fn mesh_preflight_batch_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightBatchReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_batch_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_preflight_schedule_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightScheduleReadinessSummary {
+    let batch_readiness_summary = mesh_preflight_batch_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let repair_schedule_summary =
+        mesh_protocol_substrate_preflight_repair_schedule_summary(available_primitives);
+
+    IntegrationMeshPreflightScheduleReadinessSummary::from_parts(
+        batch_readiness_summary,
+        repair_schedule_summary,
+    )
+}
+
+pub fn mesh_preflight_schedule_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightScheduleReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_schedule_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_preflight_slot_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightSlotReadinessSummary {
+    let schedule_readiness_summary = mesh_preflight_schedule_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let slot_audit_summary =
+        mesh_protocol_substrate_preflight_repair_slot_audit_summary(available_primitives);
+
+    IntegrationMeshPreflightSlotReadinessSummary::from_parts(
+        schedule_readiness_summary,
+        slot_audit_summary,
+    )
+}
+
+pub fn mesh_preflight_slot_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightSlotReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_slot_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_preflight_execution_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightExecutionReadinessSummary {
+    let slot_readiness_summary = mesh_preflight_slot_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let execution_ticket_summary =
+        mesh_protocol_substrate_preflight_repair_slot_execution_ticket_summary(
+            available_primitives,
+        );
+
+    IntegrationMeshPreflightExecutionReadinessSummary::from_parts(
+        slot_readiness_summary,
+        execution_ticket_summary,
+    )
+}
+
+pub fn mesh_preflight_execution_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightExecutionReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_execution_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_preflight_work_order_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightWorkOrderReadinessSummary {
+    let execution_readiness_summary = mesh_preflight_execution_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let execution_work_order_summary =
+        mesh_protocol_substrate_preflight_repair_slot_execution_work_order_summary(
+            available_primitives,
+        );
+
+    IntegrationMeshPreflightWorkOrderReadinessSummary::from_parts(
+        execution_readiness_summary,
+        execution_work_order_summary,
+    )
+}
+
+pub fn mesh_preflight_work_order_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightWorkOrderReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_work_order_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+fn mesh_readiness_handoff_packages_from_summary(
+    summary: &IntegrationMeshActionReadinessSummary,
+    actions: &[IntegrationMeshProtocolSubstrateAction],
+) -> Vec<IntegrationMeshReadinessHandoffPackage> {
+    let mut packages = actions
+        .iter()
+        .map(|action| {
+            IntegrationMeshReadinessHandoffPackage::from_substrate_action(action, summary)
+        })
+        .collect::<Vec<_>>();
+
+    if let Some(package) = IntegrationMeshReadinessHandoffPackage::evidence_remediation(summary) {
+        packages.push(package);
+    }
+    if let Some(package) = IntegrationMeshReadinessHandoffPackage::release_ready(summary) {
+        packages.push(package);
+    }
+
+    for (index, package) in packages.iter_mut().enumerate() {
+        package.sequence = index + 1;
+    }
+
+    packages
+}
+
+pub fn mesh_readiness_handoff_packages_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReadinessHandoffPackage> {
+    let summary = mesh_action_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let actions = mesh_protocol_substrate_actions(available_primitives);
+
+    mesh_readiness_handoff_packages_from_summary(&summary, &actions)
+}
+
+pub fn mesh_readiness_handoff_packages(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReadinessHandoffPackage> {
+    let catalog = first_party_catalog();
+    mesh_readiness_handoff_packages_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_readiness_handoff_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReadinessHandoffSummary {
+    let summary = mesh_action_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let actions = mesh_protocol_substrate_actions(available_primitives);
+    let packages = mesh_readiness_handoff_packages_from_summary(&summary, &actions);
+
+    IntegrationMeshReadinessHandoffSummary::from_parts(summary, packages.iter())
+}
+
+pub fn mesh_readiness_handoff_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReadinessHandoffSummary {
+    let catalog = first_party_catalog();
+    mesh_readiness_handoff_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+fn mesh_release_packet_status(
+    summary: &IntegrationMeshReadinessHandoffSummary,
+) -> IntegrationMeshReleaseReadinessStatus {
+    if summary.ready_for_handoff() {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else if summary.has_blockers() {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    } else if summary.has_review_work() || summary.requires_attention() {
+        IntegrationMeshReleaseReadinessStatus::NeedsReview
+    } else {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    }
+}
+
+fn mesh_release_readiness_checks_from_summary(
+    summary: &IntegrationMeshReadinessHandoffSummary,
+) -> Vec<IntegrationMeshReleaseReadinessCheck> {
+    let substrate_status = if summary.substrate_actions_ready {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    };
+    let evidence_status = if summary.remediation_item_count == 0 {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else if summary.review_required_packages > 0 {
+        IntegrationMeshReleaseReadinessStatus::NeedsReview
+    } else {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    };
+    let human_review_status = if summary.review_required_packages == 0 {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else {
+        IntegrationMeshReleaseReadinessStatus::NeedsReview
+    };
+    let operator_status = if summary.operator_required_packages == 0 {
+        IntegrationMeshReleaseReadinessStatus::Ready
+    } else if summary.blocked_packages > 0 {
+        IntegrationMeshReleaseReadinessStatus::Blocked
+    } else {
+        IntegrationMeshReleaseReadinessStatus::NeedsReview
+    };
+    let release_packet_status = mesh_release_packet_status(summary);
+
+    vec![
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            1,
+            IntegrationMeshReleaseReadinessCheckKind::SubstrateActions,
+            substrate_status,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction),
+            Some(substrate_status.as_handoff_status()),
+            summary,
+            !summary.substrate_actions_ready,
+        ),
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            2,
+            IntegrationMeshReleaseReadinessCheckKind::EvidenceRemediation,
+            evidence_status,
+            Some(IntegrationMeshReadinessHandoffKind::EvidenceRemediation),
+            Some(evidence_status.as_handoff_status()),
+            summary,
+            summary.remediation_item_count > 0,
+        ),
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            3,
+            IntegrationMeshReleaseReadinessCheckKind::HumanReview,
+            human_review_status,
+            Some(IntegrationMeshReadinessHandoffKind::EvidenceRemediation),
+            Some(human_review_status.as_handoff_status()),
+            summary,
+            false,
+        ),
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            4,
+            IntegrationMeshReleaseReadinessCheckKind::OperatorHandoff,
+            operator_status,
+            summary.next_package_kind,
+            summary
+                .next_handoff_status
+                .or(Some(operator_status.as_handoff_status())),
+            summary,
+            summary.operator_required_packages > 0,
+        ),
+        IntegrationMeshReleaseReadinessCheck::from_summary(
+            5,
+            IntegrationMeshReleaseReadinessCheckKind::ReleasePacket,
+            release_packet_status,
+            Some(IntegrationMeshReadinessHandoffKind::ReleaseReady),
+            Some(release_packet_status.as_handoff_status()),
+            summary,
+            !summary.ready_for_handoff() && summary.operator_required_packages > 0,
+        ),
+    ]
+}
+
+pub fn mesh_release_readiness_checks_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseReadinessCheck> {
+    let summary = mesh_readiness_handoff_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+
+    mesh_release_readiness_checks_from_summary(&summary)
+}
+
+pub fn mesh_release_readiness_checks(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseReadinessCheck> {
+    let catalog = first_party_catalog();
+    mesh_release_readiness_checks_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_readiness_check_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseReadinessCheckSummary {
+    let handoff_summary = mesh_readiness_handoff_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let checks = mesh_release_readiness_checks_from_summary(&handoff_summary);
+
+    IntegrationMeshReleaseReadinessCheckSummary::from_parts(handoff_summary, checks.iter())
+}
+
+pub fn mesh_release_readiness_check_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseReadinessCheckSummary {
+    let catalog = first_party_catalog();
+    mesh_release_readiness_check_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+fn mesh_protocol_catalog_entries(
+    catalog: &[IntegrationCatalogEntry],
+) -> Vec<IntegrationCatalogEntry> {
+    catalog
+        .iter()
+        .filter(|entry| {
+            entry
+                .supported_protocols
+                .iter()
+                .any(is_low_level_mesh_protocol)
+                || entry
+                    .virtual_iot_standards
+                    .iter()
+                    .any(is_low_level_mesh_protocol)
+        })
+        .cloned()
+        .collect()
+}
+
+fn is_low_level_mesh_protocol(protocol: &ProtocolFamily) -> bool {
+    matches!(
+        protocol,
+        ProtocolFamily::Zigbee | ProtocolFamily::ZWave | ProtocolFamily::Thread
+    )
+}
+
+fn mesh_protocol_sort_key(protocol: &ProtocolFamily) -> u8 {
+    match protocol {
+        ProtocolFamily::Zigbee => 0,
+        ProtocolFamily::ZWave => 1,
+        ProtocolFamily::Thread => 2,
+        _ => u8::MAX,
+    }
+}
+
+fn mesh_protocol_substrate_stage(
+    primitive: PrimitiveFamily,
+) -> Option<IntegrationMeshProtocolSubstrateStage> {
+    match primitive {
+        PrimitiveFamily::Usb | PrimitiveFamily::SerialController => {
+            Some(IntegrationMeshProtocolSubstrateStage::Controller)
+        }
+        PrimitiveFamily::Radio802154 | PrimitiveFamily::ZWaveSerialApi => {
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        }
+        PrimitiveFamily::Mdns => Some(IntegrationMeshProtocolSubstrateStage::Discovery),
+        PrimitiveFamily::RadioNetworkKey => {
+            Some(IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+        }
+        PrimitiveFamily::Supervision => Some(IntegrationMeshProtocolSubstrateStage::Supervision),
+        _ => None,
+    }
+}
+
+fn mesh_substrate_stage_blockers<'a>(
+    rows: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstrateStageRow>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    rows.into_iter()
+        .filter(|row| row.stage == stage && row.is_blocked())
+        .count()
+}
+
+fn compare_mesh_substrate_actions(
+    left: &IntegrationMeshProtocolSubstrateAction,
+    right: &IntegrationMeshProtocolSubstrateAction,
+) -> Ordering {
+    (
+        left.stage,
+        mesh_protocol_sort_key(&left.protocol),
+        left.primitive,
+    )
+        .cmp(&(
+            right.stage,
+            mesh_protocol_sort_key(&right.protocol),
+            right.primitive,
+        ))
+}
+
+fn mesh_substrate_action_count<'a>(
+    actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstrateAction>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    actions
+        .into_iter()
+        .filter(|action| action.stage == stage)
+        .count()
+}
+
+fn compare_mesh_substrate_preflight_checks(
+    left: &IntegrationMeshProtocolSubstratePreflightCheck,
+    right: &IntegrationMeshProtocolSubstratePreflightCheck,
+) -> Ordering {
+    (
+        left.stage,
+        mesh_protocol_sort_key(&left.protocol),
+        left.primitive,
+    )
+        .cmp(&(
+            right.stage,
+            mesh_protocol_sort_key(&right.protocol),
+            right.primitive,
+        ))
+}
+
+fn mesh_substrate_preflight_blockers<'a>(
+    checks: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightCheck>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    checks
+        .into_iter()
+        .filter(|check| check.stage == stage && check.blocks_preflight())
+        .count()
+}
+
+fn compare_mesh_substrate_preflight_actions(
+    left: &IntegrationMeshProtocolSubstratePreflightAction,
+    right: &IntegrationMeshProtocolSubstratePreflightAction,
+) -> Ordering {
+    (
+        left.stage,
+        mesh_protocol_sort_key(&left.protocol),
+        left.primitive,
+    )
+        .cmp(&(
+            right.stage,
+            mesh_protocol_sort_key(&right.protocol),
+            right.primitive,
+        ))
+}
+
+fn mesh_substrate_preflight_action_count<'a>(
+    actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightAction>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    actions
+        .into_iter()
+        .filter(|action| action.stage == stage)
+        .count()
+}
+
+fn compare_mesh_substrate_preflight_repair_batches(
+    left: &IntegrationMeshProtocolSubstratePreflightRepairBatch,
+    right: &IntegrationMeshProtocolSubstratePreflightRepairBatch,
+) -> Ordering {
+    (left.stage, left.action_kind).cmp(&(right.stage, right.action_kind))
+}
+
+fn mesh_substrate_preflight_repair_batch_count<'a>(
+    batches: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightRepairBatch>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    batches
+        .into_iter()
+        .filter(|batch| batch.stage == stage)
+        .count()
+}
+
+fn mesh_substrate_preflight_repair_schedule_slot_count<'a>(
+    slots: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightRepairScheduleSlot>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    slots.into_iter().filter(|slot| slot.stage == stage).count()
+}
+
+fn protocol_sort_token(protocol: &ProtocolFamily) -> String {
+    match protocol {
+        ProtocolFamily::Vendor(value) => format!("vendor:{value}"),
+        _ => format!("{protocol:?}"),
+    }
+}
+
+fn mesh_substrate_action_stage_count(
+    summary: &IntegrationMeshProtocolSubstrateActionSummary,
+) -> usize {
+    [
+        summary.controller_actions,
+        summary.radio_actions,
+        summary.discovery_actions,
+        summary.network_security_actions,
+        summary.supervision_actions,
+    ]
+    .into_iter()
+    .filter(|count| *count > 0)
+    .count()
+}
+
+fn mesh_substrate_preflight_action_stage_count(
+    summary: &IntegrationMeshProtocolSubstratePreflightActionSummary,
+) -> usize {
+    [
+        summary.controller_actions,
+        summary.radio_actions,
+        summary.discovery_actions,
+        summary.network_security_actions,
+        summary.supervision_actions,
+    ]
+    .into_iter()
+    .filter(|count| *count > 0)
+    .count()
 }
 
 fn local_transport_primitives(
@@ -24568,6 +30065,8 @@ mod tests {
         let allowed_capabilities = vec![
             CapabilityId::trusted("smart_home.read"),
             CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
             CapabilityId::trusted("smart_home.pair"),
         ];
         let summary =
@@ -24587,6 +30086,2856 @@ mod tests {
         assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
         assert!(summary.local_only);
         assert!(!summary.cloud_required);
+    }
+
+    #[test]
+    fn hue_activation_evidence_briefing_summary_routes_missing_rollout_inputs() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let available_primitives = vec![
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = hue_activation_evidence_briefing_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(
+            summary.activation_package,
+            IntegrationActivationPackageSummary::from_entry(hue)
+        );
+        assert_eq!(
+            summary.readiness_package,
+            hue_readiness_package_summary(&available_primitives, &allowed_capabilities, &[])
+        );
+        assert_eq!(summary.required_evidence_lane_count, 5);
+        assert_eq!(summary.passed_evidence_lane_count, 4);
+        assert_eq!(summary.blocked_evidence_lane_count, 1);
+        assert_eq!(summary.missing_prerequisite_count, 11);
+        assert_eq!(summary.missing_primitive_count, 9);
+        assert_eq!(summary.missing_capability_count, 2);
+        assert_eq!(summary.missing_dependency_count, 0);
+        assert!(summary.catalog_evidence_ready);
+        assert!(summary.activation_plan_evidence_ready);
+        assert!(!summary.readiness_evidence_ready);
+        assert!(summary.policy_evidence_ready);
+        assert!(summary.local_boundary_evidence_ready);
+        assert!(!summary.evidence_briefing_ready);
+        assert!(!summary.is_evidence_briefing_ready());
+        assert!(summary.has_blocked_evidence_lanes());
+        assert!(!summary.needs_catalog_evidence());
+        assert!(!summary.needs_activation_plan_evidence());
+        assert!(summary.needs_readiness_evidence());
+        assert!(!summary.needs_policy_evidence());
+        assert!(!summary.needs_local_boundary_evidence());
+    }
+
+    #[test]
+    fn hue_activation_evidence_briefing_summary_marks_ready_rollout_evidence() {
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = hue_activation_evidence_briefing_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.required_evidence_lane_count, 5);
+        assert_eq!(summary.passed_evidence_lane_count, 5);
+        assert_eq!(summary.blocked_evidence_lane_count, 0);
+        assert_eq!(summary.missing_prerequisite_count, 0);
+        assert_eq!(summary.missing_primitive_count, 0);
+        assert_eq!(summary.missing_capability_count, 0);
+        assert_eq!(summary.missing_dependency_count, 0);
+        assert!(summary.catalog_evidence_ready);
+        assert!(summary.activation_plan_evidence_ready);
+        assert!(summary.readiness_evidence_ready);
+        assert!(summary.policy_evidence_ready);
+        assert!(summary.local_boundary_evidence_ready);
+        assert!(summary.evidence_briefing_ready);
+        assert!(summary.is_evidence_briefing_ready());
+        assert!(!summary.has_blocked_evidence_lanes());
+        assert!(!summary.needs_catalog_evidence());
+        assert!(!summary.needs_activation_plan_evidence());
+        assert!(!summary.needs_readiness_evidence());
+        assert!(!summary.needs_policy_evidence());
+        assert!(!summary.needs_local_boundary_evidence());
+    }
+
+    #[test]
+    fn activation_evidence_scorecard_rolls_up_priority_wave_briefings() {
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let briefings = activation_evidence_briefings_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let summary =
+            IntegrationActivationEvidenceScorecardSummary::from_briefings(briefings.iter());
+        let helper_summary = activation_evidence_scorecard_summary_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary, helper_summary);
+        assert_eq!(summary.total_integrations, briefings.len());
+        assert_eq!(
+            summary.total_integrations,
+            entries_at_or_before_priority(&catalog, 1).len()
+        );
+        assert_eq!(
+            summary.total_required_evidence_lanes,
+            briefings
+                .iter()
+                .map(|briefing| briefing.required_evidence_lane_count)
+                .sum::<usize>()
+        );
+        assert_eq!(
+            summary.total_passed_evidence_lanes + summary.total_blocked_evidence_lanes,
+            summary.total_required_evidence_lanes
+        );
+        assert_eq!(
+            summary.blocked_integrations,
+            briefings
+                .iter()
+                .filter(|briefing| briefing.has_blocked_evidence_lanes())
+                .count()
+        );
+        assert_eq!(
+            summary.readiness_evidence_blockers,
+            briefings
+                .iter()
+                .filter(|briefing| briefing.needs_readiness_evidence())
+                .count()
+        );
+        assert_eq!(
+            summary.missing_prerequisite_count,
+            briefings
+                .iter()
+                .map(|briefing| briefing.missing_prerequisite_count)
+                .sum::<usize>()
+        );
+        assert!(summary.has_blockers());
+        assert!(summary.has_missing_prerequisites());
+        assert!(summary.has_readiness_gaps());
+        assert!(summary.first_blocked_priority.unwrap() <= 1);
+        assert_eq!(summary.first_ready_priority, None);
+        assert!(!summary.all_ready());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn activation_evidence_scorecard_marks_ready_catalog_context() {
+        let catalog = vec![hue_entry()];
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = activation_evidence_scorecard_summary(
+            &catalog,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_integrations, 1);
+        assert_eq!(summary.evidence_ready_integrations, 1);
+        assert_eq!(summary.blocked_integrations, 0);
+        assert_eq!(summary.total_required_evidence_lanes, 5);
+        assert_eq!(summary.total_passed_evidence_lanes, 5);
+        assert_eq!(summary.total_blocked_evidence_lanes, 0);
+        assert_eq!(summary.catalog_evidence_ready_integrations, 1);
+        assert_eq!(summary.activation_plan_evidence_ready_integrations, 1);
+        assert_eq!(summary.readiness_evidence_ready_integrations, 1);
+        assert_eq!(summary.policy_evidence_ready_integrations, 1);
+        assert_eq!(summary.local_boundary_evidence_ready_integrations, 1);
+        assert_eq!(summary.missing_prerequisite_count, 0);
+        assert_eq!(summary.missing_primitive_count, 0);
+        assert_eq!(summary.missing_capability_count, 0);
+        assert_eq!(summary.missing_dependency_count, 0);
+        assert_eq!(summary.local_only_integrations, 1);
+        assert_eq!(summary.cloud_required_integrations, 0);
+        assert_eq!(summary.human_review_integrations, 1);
+        assert_eq!(summary.first_blocked_priority, None);
+        assert_eq!(summary.first_ready_priority, Some(0));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
+        assert!(summary.all_ready());
+        assert!(!summary.has_blockers());
+        assert!(!summary.has_missing_prerequisites());
+        assert!(!summary.has_readiness_gaps());
+    }
+
+    #[test]
+    fn activation_evidence_rows_rank_priority_wave_blockers() {
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let rows = activation_evidence_rows_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let briefings = activation_evidence_briefings_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(rows.len(), briefings.len());
+        assert!(rows.windows(2).all(|window| {
+            window[0].priority < window[1].priority
+                || (window[0].priority == window[1].priority
+                    && window[0].blocked_evidence_lane_count
+                        >= window[1].blocked_evidence_lane_count)
+        }));
+        assert!(rows
+            .iter()
+            .any(IntegrationActivationEvidenceRow::has_blockers));
+        assert!(rows
+            .iter()
+            .any(|row| row.blocks_on(IntegrationActivationEvidenceLane::Readiness)));
+        assert!(rows.iter().any(|row| row.missing_prerequisite_count > 0));
+
+        let hue = rows
+            .iter()
+            .find(|row| row.integration_id == IntegrationId::trusted("hue"))
+            .unwrap();
+        assert_eq!(hue.priority, 0);
+        assert_eq!(
+            hue.next_blocked_lane,
+            Some(IntegrationActivationEvidenceLane::Readiness)
+        );
+        assert_eq!(hue.next_blocked_lane.unwrap().as_str(), "readiness");
+        assert!(!hue.is_ready());
+        assert!(hue.local_only);
+        assert!(!hue.cloud_required);
+        assert!(hue.requires_human_review);
+    }
+
+    #[test]
+    fn activation_evidence_rows_mark_ready_catalog_context() {
+        let catalog = vec![hue_entry()];
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let rows = activation_evidence_rows_for_catalog(
+            &catalog,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(rows.len(), 1);
+        let hue = rows.first().unwrap();
+        assert_eq!(hue.integration_id, IntegrationId::trusted("hue"));
+        assert!(hue.is_ready());
+        assert!(!hue.has_blockers());
+        assert_eq!(hue.next_blocked_lane, None);
+        assert_eq!(hue.required_evidence_lane_count, 5);
+        assert_eq!(hue.passed_evidence_lane_count, 5);
+        assert_eq!(hue.blocked_evidence_lane_count, 0);
+        assert_eq!(hue.missing_prerequisite_count, 0);
+        assert_eq!(hue.missing_primitive_count, 0);
+        assert_eq!(hue.missing_capability_count, 0);
+        assert_eq!(hue.missing_dependency_count, 0);
+        assert!(hue.local_only);
+        assert!(!hue.cloud_required);
+        assert!(hue.requires_human_review);
+        assert_eq!(hue.highest_policy_tier, PrivilegeTier::HumanApproval);
+    }
+
+    #[test]
+    fn activation_evidence_lane_inventory_groups_priority_wave_blockers() {
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let rows = activation_evidence_rows_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let inventory = activation_evidence_lane_inventory_from_rows(rows.iter());
+        let summary =
+            IntegrationActivationEvidenceLaneInventorySummary::from_items(inventory.iter());
+        let blocked_row_count = rows.iter().filter(|row| row.has_blockers()).count();
+
+        assert!(!inventory.is_empty());
+        assert!(inventory.windows(2).all(|window| {
+            window[0].first_blocked_priority < window[1].first_blocked_priority
+                || (window[0].first_blocked_priority == window[1].first_blocked_priority
+                    && window[0].blocked_integration_count >= window[1].blocked_integration_count)
+        }));
+        assert!(inventory
+            .iter()
+            .all(IntegrationActivationEvidenceLaneInventoryItem::has_blockers));
+
+        let readiness = inventory
+            .iter()
+            .find(|item| item.lane == IntegrationActivationEvidenceLane::Readiness)
+            .unwrap();
+        assert!(readiness.includes_integration(&IntegrationId::trusted("hue")));
+        assert!(readiness.requires_human_review());
+        assert!(readiness.missing_prerequisite_count > 0);
+        assert!(readiness.missing_capability_count > 0);
+        assert_eq!(readiness.first_blocked_priority, 0);
+        assert_eq!(readiness.highest_policy_tier, PrivilegeTier::HighRisk);
+
+        assert_eq!(summary.total_lanes, inventory.len());
+        assert_eq!(summary.total_blocked_integrations, blocked_row_count);
+        assert_eq!(
+            summary.total_blocked_integrations,
+            inventory
+                .iter()
+                .map(|item| item.blocked_integration_count)
+                .sum::<usize>()
+        );
+        assert!(summary.has_blockers());
+        assert!(summary.has_readiness_lane());
+        assert_eq!(
+            summary.readiness_lane_blocked_integrations,
+            readiness.blocked_integration_count
+        );
+        assert_eq!(summary.first_blocked_priority, Some(0));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+    }
+
+    #[test]
+    fn activation_evidence_lane_inventory_marks_ready_catalog_context() {
+        let catalog = vec![hue_entry()];
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let inventory = activation_evidence_lane_inventory_for_catalog(
+            &catalog,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let summary =
+            IntegrationActivationEvidenceLaneInventorySummary::from_items(inventory.iter());
+
+        assert!(inventory.is_empty());
+        assert!(summary.is_empty());
+        assert!(!summary.has_blockers());
+        assert!(!summary.has_readiness_lane());
+        assert_eq!(summary.total_blocked_integrations, 0);
+        assert_eq!(summary.first_blocked_priority, None);
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::ReadOnly);
+    }
+
+    #[test]
+    fn activation_evidence_remediation_items_plan_priority_wave_work() {
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let rows = activation_evidence_rows_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let inventory = activation_evidence_lane_inventory_from_rows(rows.iter());
+        let from_inventory = activation_evidence_remediation_items_from_inventory(inventory.iter());
+        let from_rows = activation_evidence_remediation_items_from_rows(rows.iter());
+        let summary = IntegrationActivationEvidenceRemediationSummary::from_items(from_rows.iter());
+
+        assert_eq!(from_rows, from_inventory);
+        assert!(!from_rows.is_empty());
+        assert!(from_rows
+            .iter()
+            .enumerate()
+            .all(|(index, item)| { item.sequence == index + 1 && item.has_blockers() }));
+        assert!(from_rows.windows(2).all(|window| {
+            window[0].priority < window[1].priority
+                || (window[0].priority == window[1].priority
+                    && window[0].blocked_integration_count >= window[1].blocked_integration_count)
+        }));
+
+        let readiness = from_rows
+            .iter()
+            .find(|item| {
+                item.remediation_kind
+                    == IntegrationActivationEvidenceRemediationKind::SupplyReadinessInputs
+            })
+            .unwrap();
+        assert_eq!(readiness.lane, IntegrationActivationEvidenceLane::Readiness);
+        assert_eq!(
+            readiness.remediation_kind.as_str(),
+            "supply_readiness_inputs"
+        );
+        assert!(readiness.includes_integration(&IntegrationId::trusted("hue")));
+        assert!(readiness.requires_human_review());
+        assert!(readiness.has_missing_inputs());
+        assert!(readiness.missing_prerequisite_count > 0);
+        assert!(readiness.missing_capability_count > 0);
+        assert_eq!(readiness.priority, 0);
+        assert_eq!(readiness.highest_policy_tier, PrivilegeTier::HighRisk);
+
+        assert_eq!(summary.total_remediation_items, from_rows.len());
+        assert_eq!(
+            summary.unique_integrations,
+            rows.iter().filter(|row| row.has_blockers()).count()
+        );
+        assert_eq!(
+            summary.total_blocked_integrations,
+            from_rows
+                .iter()
+                .map(|item| item.blocked_integration_count)
+                .sum::<usize>()
+        );
+        assert!(summary.has_remediations());
+        assert!(summary.has_readiness_remediation());
+        assert!(summary.requires_human_review());
+        assert_eq!(summary.first_remediation_priority, Some(0));
+        assert_eq!(
+            summary.next_remediation_kind,
+            Some(IntegrationActivationEvidenceRemediationKind::SupplyReadinessInputs)
+        );
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+    }
+
+    #[test]
+    fn activation_evidence_remediation_items_mark_ready_catalog_context() {
+        let catalog = vec![hue_entry()];
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let items = activation_evidence_remediation_items_for_catalog(
+            &catalog,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let summary = IntegrationActivationEvidenceRemediationSummary::from_items(items.iter());
+
+        assert!(items.is_empty());
+        assert!(summary.is_empty());
+        assert!(!summary.has_remediations());
+        assert!(!summary.has_readiness_remediation());
+        assert!(!summary.requires_human_review());
+        assert_eq!(summary.total_blocked_integrations, 0);
+        assert_eq!(summary.first_remediation_priority, None);
+        assert_eq!(summary.next_remediation_kind, None);
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::ReadOnly);
+    }
+
+    #[test]
+    fn mesh_protocol_primitive_readiness_groups_radio_substrate_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let rows = mesh_protocol_primitive_readiness_rows(&available_primitives);
+        let summary = IntegrationMeshProtocolPrimitiveReadinessSummary::from_rows(rows.iter());
+
+        assert_eq!(rows.len(), 3);
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.ready_protocols, 0);
+        assert_eq!(summary.blocked_protocols, 3);
+        assert_eq!(summary.required_primitive_count, 7);
+        assert_eq!(summary.missing_primitive_count, 3);
+        assert_eq!(summary.radio_network_key_blockers, 3);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, Some(ProtocolFamily::Zigbee));
+        assert!(summary.has_blockers());
+        assert!(summary.needs_radio_network_key());
+        assert!(!summary.needs_supervision());
+        assert!(!summary.all_ready());
+        assert!(summary
+            .unique_missing_primitives
+            .contains(&PrimitiveFamily::RadioNetworkKey));
+        assert!(summary
+            .unique_missing_primitives
+            .contains(&PrimitiveFamily::ZWaveSerialApi));
+        assert!(summary
+            .unique_missing_primitives
+            .contains(&PrimitiveFamily::Mdns));
+
+        let zigbee = rows
+            .iter()
+            .find(|row| row.protocol == ProtocolFamily::Zigbee)
+            .unwrap();
+        assert_eq!(zigbee.required_primitive_count, 5);
+        assert_eq!(zigbee.available_primitive_count, 4);
+        assert_eq!(zigbee.missing_primitive_count, 1);
+        assert!(zigbee.missing_radio_network_key());
+        assert!(!zigbee.missing_supervision());
+    }
+
+    #[test]
+    fn mesh_protocol_primitive_readiness_marks_full_substrate_ready() {
+        let rows = mesh_protocol_primitive_readiness_rows(all_primitive_families());
+        let summary = mesh_protocol_primitive_readiness_summary(all_primitive_families());
+
+        assert_eq!(rows.len(), 3);
+        assert!(rows
+            .iter()
+            .all(IntegrationMeshProtocolPrimitiveReadinessRow::is_ready));
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.ready_protocols, 3);
+        assert_eq!(summary.blocked_protocols, 0);
+        assert_eq!(summary.missing_primitive_count, 0);
+        assert_eq!(summary.radio_network_key_blockers, 0);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, None);
+        assert!(summary.all_ready());
+        assert!(!summary.has_blockers());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_stage_readiness_groups_low_level_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let rows = mesh_protocol_substrate_stage_rows(&available_primitives);
+        let summary = IntegrationMeshProtocolSubstrateStageSummary::from_rows(rows.iter());
+
+        assert_eq!(rows.len(), 16);
+        assert_eq!(summary.total_rows, 16);
+        assert_eq!(summary.ready_rows, 11);
+        assert_eq!(summary.blocked_rows, 5);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 1);
+        assert_eq!(summary.discovery_blockers, 1);
+        assert_eq!(summary.network_security_blockers, 3);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, Some(ProtocolFamily::Zigbee));
+        assert_eq!(
+            summary.first_blocked_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+        );
+        assert!(summary.has_blockers());
+        assert!(summary.needs_network_security());
+        assert!(!summary.all_ready());
+        assert!(summary
+            .unique_blocked_stages
+            .contains(&IntegrationMeshProtocolSubstrateStage::Radio));
+        assert!(summary
+            .unique_blocked_stages
+            .contains(&IntegrationMeshProtocolSubstrateStage::Discovery));
+        assert!(summary
+            .unique_blocked_stages
+            .contains(&IntegrationMeshProtocolSubstrateStage::NetworkSecurity));
+
+        let zwave_radio = rows
+            .iter()
+            .find(|row| {
+                row.protocol == ProtocolFamily::ZWave
+                    && row.primitive == PrimitiveFamily::ZWaveSerialApi
+            })
+            .unwrap();
+        assert_eq!(
+            zwave_radio.stage,
+            IntegrationMeshProtocolSubstrateStage::Radio
+        );
+        assert!(zwave_radio.is_blocked());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_stage_readiness_marks_full_substrate_ready() {
+        let rows = mesh_protocol_substrate_stage_rows(all_primitive_families());
+        let summary = mesh_protocol_substrate_stage_summary(all_primitive_families());
+
+        assert_eq!(rows.len(), 16);
+        assert!(rows
+            .iter()
+            .all(IntegrationMeshProtocolSubstrateStageRow::is_ready));
+        assert_eq!(summary.total_rows, 16);
+        assert_eq!(summary.ready_rows, 16);
+        assert_eq!(summary.blocked_rows, 0);
+        assert_eq!(summary.unique_required_stages.len(), 5);
+        assert_eq!(summary.unique_blocked_stages.len(), 0);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 0);
+        assert_eq!(summary.discovery_blockers, 0);
+        assert_eq!(summary.network_security_blockers, 0);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, None);
+        assert_eq!(summary.first_blocked_stage, None);
+        assert!(summary.all_ready());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_network_security());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_actions_order_stage_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let actions = mesh_protocol_substrate_actions(&available_primitives);
+        let summary = IntegrationMeshProtocolSubstrateActionSummary::from_actions(actions.iter());
+
+        assert_eq!(actions.len(), 5);
+        assert_eq!(summary.total_actions, 5);
+        assert_eq!(summary.unique_protocols, 3);
+        assert_eq!(summary.unique_primitives, 3);
+        assert_eq!(summary.controller_actions, 0);
+        assert_eq!(summary.radio_actions, 1);
+        assert_eq!(summary.discovery_actions, 1);
+        assert_eq!(summary.network_security_actions, 3);
+        assert_eq!(summary.supervision_actions, 0);
+        assert_eq!(summary.first_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(summary.has_actions());
+        assert!(!summary.is_empty());
+
+        assert_eq!(actions[0].sequence, 1);
+        assert_eq!(actions[0].protocol, ProtocolFamily::ZWave);
+        assert_eq!(actions[0].primitive, PrimitiveFamily::ZWaveSerialApi);
+        assert_eq!(
+            actions[0].stage,
+            IntegrationMeshProtocolSubstrateStage::Radio
+        );
+        assert_eq!(
+            actions[1].stage,
+            IntegrationMeshProtocolSubstrateStage::Discovery
+        );
+        assert!(actions[2..]
+            .iter()
+            .all(|action| action.stage == IntegrationMeshProtocolSubstrateStage::NetworkSecurity));
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_actions_empty_when_substrate_ready() {
+        let actions = mesh_protocol_substrate_actions(all_primitive_families());
+        let summary = mesh_protocol_substrate_action_summary(all_primitive_families());
+
+        assert!(actions.is_empty());
+        assert_eq!(summary.total_actions, 0);
+        assert_eq!(summary.unique_protocols, 0);
+        assert_eq!(summary.unique_primitives, 0);
+        assert_eq!(summary.first_protocol, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_primitive, None);
+        assert!(summary.is_empty());
+        assert!(!summary.has_actions());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_checks_surface_operator_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let checks = mesh_protocol_substrate_preflight_checks(&available_primitives);
+        let summary = IntegrationMeshProtocolSubstratePreflightSummary::from_checks(checks.iter());
+
+        assert_eq!(checks.len(), 16);
+        assert_eq!(summary.total_checks, 16);
+        assert_eq!(summary.passed_checks, 11);
+        assert_eq!(summary.failed_checks, 5);
+        assert_eq!(summary.blocking_checks, 5);
+        assert_eq!(summary.operator_required_checks, 4);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 1);
+        assert_eq!(summary.discovery_blockers, 1);
+        assert_eq!(summary.network_security_blockers, 3);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_failed_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_failed_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_failed_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.ready());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+
+        let first = &checks[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.protocol, ProtocolFamily::Zigbee);
+        assert_eq!(
+            first.stage,
+            IntegrationMeshProtocolSubstrateStage::Controller
+        );
+        assert!(first.passed());
+        assert!(!first.requires_operator());
+
+        let first_failed = checks.iter().find(|check| check.failed()).unwrap();
+        assert_eq!(first_failed.protocol, ProtocolFamily::ZWave);
+        assert_eq!(
+            first_failed.stage,
+            IntegrationMeshProtocolSubstrateStage::Radio
+        );
+        assert!(first_failed.blocks_preflight());
+        assert!(first_failed.requires_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_checks_mark_ready_substrate() {
+        let checks = mesh_protocol_substrate_preflight_checks(all_primitive_families());
+        let summary = mesh_protocol_substrate_preflight_summary(all_primitive_families());
+
+        assert_eq!(checks.len(), 16);
+        assert!(checks
+            .iter()
+            .all(IntegrationMeshProtocolSubstratePreflightCheck::passed));
+        assert_eq!(summary.total_checks, 16);
+        assert_eq!(summary.passed_checks, 16);
+        assert_eq!(summary.failed_checks, 0);
+        assert_eq!(summary.blocking_checks, 0);
+        assert_eq!(summary.operator_required_checks, 0);
+        assert_eq!(summary.first_failed_protocol, None);
+        assert_eq!(summary.first_failed_stage, None);
+        assert_eq!(summary.first_failed_primitive, None);
+        assert!(summary.ready());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_actions_order_failed_gates() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let actions = mesh_protocol_substrate_preflight_actions(&available_primitives);
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightActionSummary::from_actions(actions.iter());
+
+        assert_eq!(actions.len(), 5);
+        assert_eq!(summary.total_actions, 5);
+        assert_eq!(summary.blocking_actions, 5);
+        assert_eq!(summary.operator_required_actions, 4);
+        assert_eq!(summary.unique_protocols, 3);
+        assert_eq!(summary.unique_primitives, 3);
+        assert_eq!(summary.controller_actions, 0);
+        assert_eq!(summary.radio_actions, 1);
+        assert_eq!(summary.discovery_actions, 1);
+        assert_eq!(summary.network_security_actions, 3);
+        assert_eq!(summary.supervision_actions, 0);
+        assert_eq!(summary.first_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.preflight_actions_ready);
+        assert!(summary.has_actions());
+        assert!(summary.needs_operator());
+
+        assert_eq!(actions[0].sequence, 1);
+        assert_eq!(actions[0].protocol, ProtocolFamily::ZWave);
+        assert_eq!(
+            actions[0].action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio
+        );
+        assert!(actions[0].blocks_preflight());
+        assert!(actions[0].requires_operator());
+        assert_eq!(
+            actions[1].action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::EnableDiscovery
+        );
+        assert!(actions[2..].iter().all(|action| {
+            action.action_kind
+                == IntegrationMeshProtocolSubstratePreflightActionKind::InstallNetworkKey
+        }));
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_actions_empty_when_ready() {
+        let actions = mesh_protocol_substrate_preflight_actions(all_primitive_families());
+        let summary = mesh_protocol_substrate_preflight_action_summary(all_primitive_families());
+
+        assert!(actions.is_empty());
+        assert_eq!(summary.total_actions, 0);
+        assert_eq!(summary.blocking_actions, 0);
+        assert_eq!(summary.operator_required_actions, 0);
+        assert_eq!(summary.unique_protocols, 0);
+        assert_eq!(summary.unique_primitives, 0);
+        assert_eq!(summary.first_protocol, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_primitive, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.preflight_actions_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_actions());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_batches_group_actions_by_stage() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let batches = mesh_protocol_substrate_preflight_repair_batches(&available_primitives);
+        let summary = IntegrationMeshProtocolSubstratePreflightRepairBatchSummary::from_batches(
+            batches.iter(),
+        );
+
+        assert_eq!(batches.len(), 3);
+        assert_eq!(summary.total_batches, 3);
+        assert_eq!(summary.total_actions, 5);
+        assert_eq!(summary.blocking_batches, 3);
+        assert_eq!(summary.operator_required_batches, 2);
+        assert_eq!(summary.radio_batches, 1);
+        assert_eq!(summary.discovery_batches, 1);
+        assert_eq!(summary.network_security_batches, 1);
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert_eq!(summary.first_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.repair_batches_ready);
+        assert!(summary.has_batches());
+        assert!(summary.needs_operator());
+
+        let network_security = batches
+            .iter()
+            .find(|batch| batch.stage == IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+            .unwrap();
+        assert_eq!(network_security.action_count, 3);
+        assert_eq!(network_security.operator_required_actions, 3);
+        assert_eq!(
+            network_security.action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::InstallNetworkKey
+        );
+        assert_eq!(
+            network_security.primitives,
+            vec![PrimitiveFamily::RadioNetworkKey]
+        );
+        assert_eq!(
+            network_security.protocols,
+            vec![
+                ProtocolFamily::Zigbee,
+                ProtocolFamily::ZWave,
+                ProtocolFamily::Thread
+            ]
+        );
+        assert!(network_security.blocks_preflight());
+        assert!(network_security.requires_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_batches_empty_when_ready() {
+        let batches = mesh_protocol_substrate_preflight_repair_batches(all_primitive_families());
+        let summary =
+            mesh_protocol_substrate_preflight_repair_batch_summary(all_primitive_families());
+
+        assert!(batches.is_empty());
+        assert_eq!(summary.total_batches, 0);
+        assert_eq!(summary.total_actions, 0);
+        assert_eq!(summary.blocking_batches, 0);
+        assert_eq!(summary.operator_required_batches, 0);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert_eq!(summary.first_protocol, None);
+        assert_eq!(summary.first_primitive, None);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_batches());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_schedule_orders_repair_slots() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let slots = mesh_protocol_substrate_preflight_repair_schedule(&available_primitives);
+        let summary = IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary::from_slots(
+            slots.iter(),
+        );
+
+        assert_eq!(slots.len(), 3);
+        assert_eq!(summary.total_slots, 3);
+        assert_eq!(summary.total_actions, 5);
+        assert_eq!(summary.blocking_slots, 3);
+        assert_eq!(summary.operator_required_slots, 2);
+        assert_eq!(summary.radio_slots, 1);
+        assert_eq!(summary.discovery_slots, 1);
+        assert_eq!(summary.network_security_slots, 1);
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert_eq!(summary.first_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.repair_schedule_ready);
+        assert!(summary.has_slots());
+        assert!(summary.needs_operator());
+
+        let first = &slots[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.blocking_actions, 1);
+        assert_eq!(first.operator_required_actions, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+
+        let network_security = slots
+            .iter()
+            .find(|slot| slot.stage == IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+            .unwrap();
+        assert_eq!(network_security.sequence, 3);
+        assert_eq!(network_security.action_count, 3);
+        assert_eq!(network_security.operator_required_actions, 3);
+        assert_eq!(
+            network_security.action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::InstallNetworkKey
+        );
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_schedule_empty_when_ready() {
+        let slots = mesh_protocol_substrate_preflight_repair_schedule(all_primitive_families());
+        let summary =
+            mesh_protocol_substrate_preflight_repair_schedule_summary(all_primitive_families());
+
+        assert!(slots.is_empty());
+        assert_eq!(summary.total_slots, 0);
+        assert_eq!(summary.total_actions, 0);
+        assert_eq!(summary.blocking_slots, 0);
+        assert_eq!(summary.operator_required_slots, 0);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert_eq!(summary.first_protocol, None);
+        assert_eq!(summary.first_primitive, None);
+        assert!(summary.repair_schedule_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_slots());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_audit_rows_surface_schedule_risk() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let rows = mesh_protocol_substrate_preflight_repair_slot_audit_rows(&available_primitives);
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary::from_rows(rows.iter());
+
+        assert_eq!(rows.len(), 3);
+        assert_eq!(summary.total_rows, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_rows, 3);
+        assert_eq!(summary.operator_required_rows, 2);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(summary.first_blocking_sequence, Some(1));
+        assert_eq!(summary.first_operator_required_sequence, Some(1));
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.repair_slot_audit_ready);
+        assert!(summary.has_rows());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+
+        let first = &rows[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.slot_sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.protocol_count, 1);
+        assert_eq!(first.primitive_count, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+
+        let network_security = rows
+            .iter()
+            .find(|row| row.stage == IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+            .unwrap();
+        assert_eq!(network_security.sequence, 3);
+        assert_eq!(network_security.action_count, 3);
+        assert_eq!(network_security.protocol_count, 3);
+        assert_eq!(network_security.primitive_count, 1);
+        assert_eq!(
+            network_security.action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::InstallNetworkKey
+        );
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_audit_empty_when_ready() {
+        let rows =
+            mesh_protocol_substrate_preflight_repair_slot_audit_rows(all_primitive_families());
+        let summary =
+            mesh_protocol_substrate_preflight_repair_slot_audit_summary(all_primitive_families());
+
+        assert!(rows.is_empty());
+        assert_eq!(summary.total_rows, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_rows, 0);
+        assert_eq!(summary.operator_required_rows, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_blocking_sequence, None);
+        assert_eq!(summary.first_operator_required_sequence, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.repair_slot_audit_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_rows());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_tickets_surface_slot_work() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let tickets =
+            mesh_protocol_substrate_preflight_repair_slot_execution_tickets(&available_primitives);
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary::from_tickets(
+                tickets.iter(),
+            );
+
+        assert_eq!(tickets.len(), 3);
+        assert_eq!(summary.total_tickets, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_tickets, 3);
+        assert_eq!(summary.operator_required_tickets, 2);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_blocking_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_tickets_ready);
+        assert!(summary.has_tickets());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+
+        let first = &tickets[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.audit_sequence, 1);
+        assert_eq!(first.slot_sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(
+            first.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::OperatorHandoff
+        );
+        assert_eq!(first.status.as_str(), "operator_handoff");
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+
+        let discovery = tickets
+            .iter()
+            .find(|ticket| ticket.stage == IntegrationMeshProtocolSubstrateStage::Discovery)
+            .unwrap();
+        assert_eq!(
+            discovery.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::Blocked
+        );
+        assert_eq!(discovery.status.as_str(), "blocked");
+        assert!(discovery.blocks_preflight());
+        assert!(!discovery.requires_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_tickets_empty_when_ready() {
+        let tickets = mesh_protocol_substrate_preflight_repair_slot_execution_tickets(
+            all_primitive_families(),
+        );
+        let summary = mesh_protocol_substrate_preflight_repair_slot_execution_ticket_summary(
+            all_primitive_families(),
+        );
+
+        assert!(tickets.is_empty());
+        assert_eq!(summary.total_tickets, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_tickets, 0);
+        assert_eq!(summary.operator_required_tickets, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_blocking_ticket_key, None);
+        assert_eq!(summary.first_operator_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_tickets_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_tickets());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_work_orders_surface_ticket_work() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let work_orders = mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(
+            &available_primitives,
+        );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary::from_work_orders(
+                work_orders.iter(),
+            );
+
+        assert_eq!(work_orders.len(), 3);
+        assert_eq!(summary.total_work_orders, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_work_orders, 3);
+        assert_eq!(summary.operator_required_work_orders, 2);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_blocking_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_work_orders_ready);
+        assert!(summary.has_work_orders());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+
+        let first = &work_orders[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.ticket_sequence, 1);
+        assert_eq!(first.slot_sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(
+            first.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::OperatorHandoff
+        );
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+
+        let discovery = work_orders
+            .iter()
+            .find(|order| order.stage == IntegrationMeshProtocolSubstrateStage::Discovery)
+            .unwrap();
+        assert_eq!(
+            discovery.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::Blocked
+        );
+        assert!(discovery.blocks_preflight());
+        assert!(!discovery.requires_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_work_orders_empty_when_ready() {
+        let work_orders = mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(
+            all_primitive_families(),
+        );
+        let summary = mesh_protocol_substrate_preflight_repair_slot_execution_work_order_summary(
+            all_primitive_families(),
+        );
+
+        assert!(work_orders.is_empty());
+        assert_eq!(summary.total_work_orders, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_work_orders, 0);
+        assert_eq!(summary.operator_required_work_orders, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_blocking_work_order_key, None);
+        assert_eq!(summary.first_operator_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_work_orders_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_work_orders());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_surfaces_lineage() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let packets = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(
+            &available_primitives,
+        );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary::from_packets(
+                packets.iter(),
+            );
+
+        assert_eq!(packets.len(), 3);
+        assert_eq!(summary.total_packets, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_packets, 3);
+        assert_eq!(summary.operator_required_packets, 2);
+        assert_eq!(summary.lineage_complete_packets, 3);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_blocking_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_evidence_ready);
+        assert!(summary.has_packets());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.has_complete_lineage());
+
+        let first = &packets[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.evidence_key, "evidence-01-radio-provision_radio");
+        assert_eq!(first.work_order_sequence, 1);
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_sequence, 1);
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(first.slot_sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(
+            first.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::OperatorHandoff
+        );
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+        assert!(first.has_lineage());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_empty_when_ready() {
+        let packets = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(
+            all_primitive_families(),
+        );
+        let summary = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_summary(
+            all_primitive_families(),
+        );
+
+        assert!(packets.is_empty());
+        assert_eq!(summary.total_packets, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_packets, 0);
+        assert_eq!(summary.operator_required_packets, 0);
+        assert_eq!(summary.lineage_complete_packets, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_evidence_key, None);
+        assert_eq!(summary.first_blocking_evidence_key, None);
+        assert_eq!(summary.first_operator_evidence_key, None);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_evidence_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_packets());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(summary.has_complete_lineage());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews_track_readiness() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let reviews = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews(
+            &available_primitives,
+        );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary::from_reviews(
+                reviews.iter(),
+            );
+
+        assert_eq!(reviews.len(), 3);
+        assert_eq!(summary.total_reviews, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_reviews, 3);
+        assert_eq!(summary.operator_required_reviews, 2);
+        assert_eq!(summary.lineage_complete_reviews, 3);
+        assert_eq!(summary.review_required_reviews, 3);
+        assert_eq!(summary.execution_ready_reviews, 0);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_review_key,
+            Some("review-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_blocking_review_key,
+            Some("review-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_review_key,
+            Some("review-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_evidence_reviews_ready);
+        assert!(summary.has_reviews());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.needs_review());
+        assert!(summary.has_complete_lineage());
+
+        let first = &reviews[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.review_key, "review-01-radio-provision_radio");
+        assert_eq!(first.evidence_sequence, 1);
+        assert_eq!(first.evidence_key, "evidence-01-radio-provision_radio");
+        assert_eq!(first.work_order_sequence, 1);
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_sequence, 1);
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(first.slot_sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(
+            first.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::OperatorHandoff
+        );
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+        assert!(first.has_lineage());
+        assert!(first.needs_review());
+        assert!(!first.is_ready_for_execution());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews_empty_when_ready() {
+        let reviews = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews(
+            all_primitive_families(),
+        );
+        let summary =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_summary(
+                all_primitive_families(),
+            );
+
+        assert!(reviews.is_empty());
+        assert_eq!(summary.total_reviews, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_reviews, 0);
+        assert_eq!(summary.operator_required_reviews, 0);
+        assert_eq!(summary.lineage_complete_reviews, 0);
+        assert_eq!(summary.review_required_reviews, 0);
+        assert_eq!(summary.execution_ready_reviews, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_review_key, None);
+        assert_eq!(summary.first_blocking_review_key, None);
+        assert_eq!(summary.first_operator_review_key, None);
+        assert_eq!(summary.first_evidence_key, None);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_evidence_reviews_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_reviews());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.needs_review());
+        assert!(summary.has_complete_lineage());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions_classify_work(
+    ) {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let dispositions =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions(
+                &available_primitives,
+            );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionSummary::from_dispositions(
+                dispositions.iter(),
+            );
+
+        assert_eq!(dispositions.len(), 3);
+        assert_eq!(summary.total_dispositions, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_dispositions, 3);
+        assert_eq!(summary.operator_handoff_dispositions, 2);
+        assert_eq!(summary.repair_required_dispositions, 1);
+        assert_eq!(summary.lineage_gap_dispositions, 0);
+        assert_eq!(summary.review_required_dispositions, 3);
+        assert_eq!(summary.execution_ready_dispositions, 0);
+        assert_eq!(summary.lineage_complete_dispositions, 3);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_disposition_key,
+            Some("disposition-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_handoff_disposition_key,
+            Some("disposition-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(summary.first_lineage_gap_disposition_key, None);
+        assert_eq!(
+            summary.first_review_key,
+            Some("review-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_evidence_review_dispositions_ready);
+        assert!(summary.has_dispositions());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.needs_repair());
+        assert!(summary.needs_review());
+        assert!(!summary.has_lineage_gaps());
+        assert!(summary.has_complete_lineage());
+
+        let first = &dispositions[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(
+            first.disposition_key,
+            "disposition-01-radio-provision_radio"
+        );
+        assert_eq!(first.review_sequence, 1);
+        assert_eq!(first.review_key, "review-01-radio-provision_radio");
+        assert_eq!(first.evidence_sequence, 1);
+        assert_eq!(first.evidence_key, "evidence-01-radio-provision_radio");
+        assert_eq!(first.work_order_sequence, 1);
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_sequence, 1);
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(
+            first.disposition_kind,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::OperatorHandoff
+        );
+        assert_eq!(first.disposition_kind.as_str(), "operator_handoff");
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+        assert!(first.has_lineage());
+        assert!(first.needs_review());
+        assert!(first.is_operator_handoff());
+        assert!(!first.is_repair_required());
+        assert!(!first.is_lineage_gap());
+        assert!(!first.is_ready_for_execution());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions_empty_when_ready(
+    ) {
+        let dispositions =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions(
+                all_primitive_families(),
+            );
+        let summary =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_summary(
+                all_primitive_families(),
+            );
+
+        assert!(dispositions.is_empty());
+        assert_eq!(summary.total_dispositions, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_dispositions, 0);
+        assert_eq!(summary.operator_handoff_dispositions, 0);
+        assert_eq!(summary.repair_required_dispositions, 0);
+        assert_eq!(summary.lineage_gap_dispositions, 0);
+        assert_eq!(summary.review_required_dispositions, 0);
+        assert_eq!(summary.execution_ready_dispositions, 0);
+        assert_eq!(summary.lineage_complete_dispositions, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_disposition_key, None);
+        assert_eq!(summary.first_operator_handoff_disposition_key, None);
+        assert_eq!(summary.first_repair_required_disposition_key, None);
+        assert_eq!(summary.first_lineage_gap_disposition_key, None);
+        assert_eq!(summary.first_review_key, None);
+        assert_eq!(summary.first_evidence_key, None);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_evidence_review_dispositions_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_dispositions());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.needs_repair());
+        assert!(!summary.needs_review());
+        assert!(!summary.has_lineage_gaps());
+        assert!(summary.has_complete_lineage());
+    }
+
+    #[test]
+    fn mesh_readiness_package_summary_combines_substrate_and_remediation() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary =
+            mesh_readiness_package_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.ready_protocols, 0);
+        assert_eq!(summary.blocked_protocols, 3);
+        assert_eq!(summary.missing_primitive_count, 3);
+        assert_eq!(summary.radio_network_key_blockers, 3);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, Some(ProtocolFamily::Zigbee));
+        assert!(!summary.primitive_substrate_ready);
+        assert!(!summary.release_ready);
+        assert!(summary.has_blockers());
+        assert!(summary.has_remediations());
+        assert!(summary.needs_radio_network_key());
+        assert!(!summary.needs_supervision());
+        assert!(summary.remediation_item_count > 0);
+        assert!(summary.blocked_integration_count > 0);
+        assert!(summary.readiness_remediation_items > 0);
+        assert!(summary.next_remediation_kind.is_some());
+    }
+
+    #[test]
+    fn mesh_readiness_package_summary_marks_full_substrate_ready() {
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
+        ];
+        let summary =
+            mesh_readiness_package_summary(all_primitive_families(), &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.ready_protocols, 3);
+        assert_eq!(summary.blocked_protocols, 0);
+        assert_eq!(summary.missing_primitive_count, 0);
+        assert_eq!(summary.radio_network_key_blockers, 0);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, None);
+        assert!(summary.primitive_substrate_ready);
+        assert!(!summary.needs_radio_network_key());
+        assert!(!summary.needs_supervision());
+        assert_eq!(summary.mesh_primitive_summary.missing_primitive_count, 0);
+    }
+
+    #[test]
+    fn mesh_stage_release_summary_combines_stage_and_package_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_stage_release_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.stage_blocker_count, 5);
+        assert_eq!(summary.primitive_blocker_count, 3);
+        assert!(summary.remediation_item_count > 0);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 1);
+        assert_eq!(summary.discovery_blockers, 1);
+        assert_eq!(summary.network_security_blockers, 3);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, Some(ProtocolFamily::Zigbee));
+        assert_eq!(
+            summary.first_blocked_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+        );
+        assert!(!summary.substrate_ready);
+        assert!(!summary.package_ready);
+        assert!(!summary.release_ready);
+        assert!(summary.has_blockers());
+        assert!(summary.has_stage_blockers());
+        assert!(summary.has_remediations());
+        assert_eq!(summary.substrate_stage_summary.blocked_rows, 5);
+        assert_eq!(summary.package_summary.missing_primitive_count, 3);
+    }
+
+    #[test]
+    fn mesh_stage_release_summary_marks_full_substrate_ready() {
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
+        ];
+        let summary =
+            mesh_stage_release_summary(all_primitive_families(), &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.stage_blocker_count, 0);
+        assert_eq!(summary.primitive_blocker_count, 0);
+        assert_eq!(summary.controller_blockers, 0);
+        assert_eq!(summary.radio_blockers, 0);
+        assert_eq!(summary.discovery_blockers, 0);
+        assert_eq!(summary.network_security_blockers, 0);
+        assert_eq!(summary.supervision_blockers, 0);
+        assert_eq!(summary.first_blocked_protocol, None);
+        assert_eq!(summary.first_blocked_stage, None);
+        assert!(summary.substrate_ready);
+        assert!(summary.substrate_stage_summary.all_ready());
+        assert!(summary.package_summary.primitive_substrate_ready);
+        assert!(!summary.has_stage_blockers());
+    }
+
+    #[test]
+    fn mesh_action_readiness_summary_surfaces_next_substrate_action() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary =
+            mesh_action_readiness_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.queued_substrate_actions, 5);
+        assert_eq!(summary.queued_stage_count, 3);
+        assert_eq!(summary.queued_primitive_count, 3);
+        assert!(summary.remediation_item_count > 0);
+        assert_eq!(summary.first_action_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_action_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.substrate_actions_ready);
+        assert!(!summary.release_ready);
+        assert!(summary.has_substrate_actions());
+        assert!(summary.has_remediations());
+        assert_eq!(summary.action_summary.total_actions, 5);
+        assert_eq!(summary.release_summary.stage_blocker_count, 5);
+    }
+
+    #[test]
+    fn mesh_action_readiness_summary_marks_clear_substrate_actions() {
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
+        ];
+        let summary =
+            mesh_action_readiness_summary(all_primitive_families(), &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.queued_substrate_actions, 0);
+        assert_eq!(summary.queued_stage_count, 0);
+        assert_eq!(summary.queued_primitive_count, 0);
+        assert_eq!(summary.first_action_protocol, None);
+        assert_eq!(summary.first_action_stage, None);
+        assert_eq!(summary.first_action_primitive, None);
+        assert!(summary.substrate_actions_ready);
+        assert!(!summary.has_substrate_actions());
+        assert_eq!(summary.action_summary.total_actions, 0);
+        assert_eq!(summary.release_summary.stage_blocker_count, 0);
+    }
+
+    #[test]
+    fn mesh_release_readiness_summary_surfaces_package_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary =
+            mesh_release_readiness_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.queued_substrate_actions, 5);
+        assert_eq!(summary.stage_blocker_count, 5);
+        assert!(summary.release_blocker_count >= summary.queued_substrate_actions);
+        assert_eq!(summary.first_action_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_action_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert!(!summary.package_ready);
+        assert!(!summary.substrate_ready);
+        assert!(!summary.substrate_actions_ready);
+        assert!(!summary.release_ready);
+        assert!(summary.has_blockers());
+        assert!(summary.has_queued_actions());
+        assert!(summary.has_remediations());
+    }
+
+    #[test]
+    fn mesh_release_readiness_summary_marks_clear_substrate_actions() {
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
+        ];
+        let summary =
+            mesh_release_readiness_summary(all_primitive_families(), &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.queued_substrate_actions, 0);
+        assert_eq!(summary.stage_blocker_count, 0);
+        assert_eq!(summary.primitive_blocker_count, 0);
+        assert_eq!(summary.first_action_protocol, None);
+        assert_eq!(summary.first_action_stage, None);
+        assert!(summary.substrate_ready);
+        assert!(summary.substrate_actions_ready);
+        assert!(!summary.has_queued_actions());
+        assert_eq!(
+            summary
+                .action_readiness_summary
+                .action_summary
+                .total_actions,
+            0
+        );
+    }
+
+    #[test]
+    fn mesh_preflight_readiness_summary_combines_preflight_and_release_blockers() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary =
+            mesh_preflight_readiness_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.operator_required_checks, 4);
+        assert_eq!(summary.first_failed_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_failed_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_failed_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(summary.release_blocker_count >= 5);
+        assert_eq!(
+            summary.total_blocker_count,
+            summary.release_blocker_count + summary.preflight_blocker_count
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(summary.preflight_summary.failed_checks, 5);
+        assert_eq!(
+            summary.release_readiness_summary.queued_substrate_actions,
+            5
+        );
+    }
+
+    #[test]
+    fn mesh_preflight_readiness_summary_marks_preflight_clear_state() {
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.command.lock"),
+            CapabilityId::trusted("smart_home.manage_network"),
+        ];
+        let summary =
+            mesh_preflight_readiness_summary(all_primitive_families(), &allowed_capabilities, &[]);
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.operator_required_checks, 0);
+        assert_eq!(summary.first_failed_protocol, None);
+        assert_eq!(summary.first_failed_stage, None);
+        assert_eq!(summary.first_failed_primitive, None);
+        assert_eq!(summary.preflight_summary.passed_checks, 16);
+        assert!(summary.preflight_ready);
+        assert_eq!(summary.total_blocker_count, summary.release_blocker_count);
+        assert_eq!(summary.ready_for_release, summary.release_ready);
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_preflight_repair_readiness_summary_surfaces_repair_queue() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_preflight_repair_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.queued_preflight_actions, 5);
+        assert_eq!(summary.blocking_preflight_actions, 5);
+        assert_eq!(summary.operator_required_actions, 4);
+        assert_eq!(summary.queued_stage_count, 3);
+        assert_eq!(summary.queued_primitive_count, 3);
+        assert_eq!(summary.first_repair_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_repair_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_repair_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert_eq!(
+            summary.first_repair_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.preflight_actions_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_repair_actions());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(summary.preflight_action_summary.network_security_actions, 3);
+    }
+
+    #[test]
+    fn mesh_preflight_repair_readiness_summary_marks_ready_release() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_preflight_repair_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.release_blocker_count, 0);
+        assert_eq!(summary.queued_preflight_actions, 0);
+        assert_eq!(summary.operator_required_actions, 0);
+        assert_eq!(summary.queued_stage_count, 0);
+        assert_eq!(summary.queued_primitive_count, 0);
+        assert_eq!(summary.first_repair_protocol, None);
+        assert_eq!(summary.first_repair_stage, None);
+        assert_eq!(summary.first_repair_primitive, None);
+        assert_eq!(summary.first_repair_action_kind, None);
+        assert!(summary.preflight_ready);
+        assert!(summary.preflight_actions_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_release);
+        assert!(!summary.has_repair_actions());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_preflight_batch_readiness_summary_surfaces_batched_repairs() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_preflight_batch_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.queued_preflight_actions, 5);
+        assert_eq!(summary.repair_batch_count, 3);
+        assert_eq!(summary.batched_preflight_actions, 5);
+        assert_eq!(summary.blocking_repair_batches, 3);
+        assert_eq!(summary.operator_required_batches, 2);
+        assert_eq!(
+            summary.first_batch_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_batch_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert_eq!(summary.first_batch_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_batch_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.repair_actions_ready);
+        assert!(!summary.repair_batches_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_repair_batches());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(summary.repair_batch_summary.network_security_batches, 1);
+    }
+
+    #[test]
+    fn mesh_preflight_batch_readiness_summary_marks_ready_release() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_preflight_batch_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.release_blocker_count, 0);
+        assert_eq!(summary.queued_preflight_actions, 0);
+        assert_eq!(summary.repair_batch_count, 0);
+        assert_eq!(summary.batched_preflight_actions, 0);
+        assert_eq!(summary.blocking_repair_batches, 0);
+        assert_eq!(summary.operator_required_batches, 0);
+        assert_eq!(summary.first_batch_stage, None);
+        assert_eq!(summary.first_batch_action_kind, None);
+        assert_eq!(summary.first_batch_protocol, None);
+        assert_eq!(summary.first_batch_primitive, None);
+        assert!(summary.preflight_ready);
+        assert!(summary.repair_actions_ready);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_release);
+        assert!(!summary.has_repair_batches());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_preflight_schedule_readiness_summary_surfaces_scheduled_repairs() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_preflight_schedule_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.queued_preflight_actions, 5);
+        assert_eq!(summary.repair_batch_count, 3);
+        assert_eq!(summary.repair_slot_count, 3);
+        assert_eq!(summary.scheduled_preflight_actions, 5);
+        assert_eq!(summary.blocking_repair_slots, 3);
+        assert_eq!(summary.operator_required_slots, 2);
+        assert_eq!(
+            summary.first_schedule_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_schedule_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert_eq!(summary.first_schedule_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_schedule_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.repair_actions_ready);
+        assert!(!summary.repair_batches_ready);
+        assert!(!summary.repair_schedule_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_repair_schedule());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(summary.repair_schedule_summary.network_security_slots, 1);
+    }
+
+    #[test]
+    fn mesh_preflight_schedule_readiness_summary_marks_ready_release() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_preflight_schedule_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.release_blocker_count, 0);
+        assert_eq!(summary.queued_preflight_actions, 0);
+        assert_eq!(summary.repair_batch_count, 0);
+        assert_eq!(summary.repair_slot_count, 0);
+        assert_eq!(summary.scheduled_preflight_actions, 0);
+        assert_eq!(summary.blocking_repair_slots, 0);
+        assert_eq!(summary.operator_required_slots, 0);
+        assert_eq!(summary.first_schedule_stage, None);
+        assert_eq!(summary.first_schedule_action_kind, None);
+        assert_eq!(summary.first_schedule_protocol, None);
+        assert_eq!(summary.first_schedule_primitive, None);
+        assert!(summary.preflight_ready);
+        assert!(summary.repair_actions_ready);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.repair_schedule_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_release);
+        assert!(!summary.has_repair_schedule());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_preflight_slot_readiness_summary_surfaces_slot_audit() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_preflight_slot_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.queued_preflight_actions, 5);
+        assert_eq!(summary.repair_slot_count, 3);
+        assert_eq!(summary.scheduled_preflight_actions, 5);
+        assert_eq!(summary.slot_audit_rows, 3);
+        assert_eq!(summary.audited_preflight_actions, 5);
+        assert_eq!(summary.blocking_slot_audit_rows, 3);
+        assert_eq!(summary.operator_required_slot_audit_rows, 2);
+        assert_eq!(summary.first_blocking_slot_sequence, Some(1));
+        assert_eq!(summary.first_operator_slot_sequence, Some(1));
+        assert_eq!(
+            summary.first_slot_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_slot_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.repair_actions_ready);
+        assert!(!summary.repair_batches_ready);
+        assert!(!summary.repair_schedule_ready);
+        assert!(!summary.repair_slot_audit_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_slot_audit_rows());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(summary.slot_audit_summary.protocol_mentions, 5);
+    }
+
+    #[test]
+    fn mesh_preflight_slot_readiness_summary_marks_ready_release() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_preflight_slot_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.release_blocker_count, 0);
+        assert_eq!(summary.queued_preflight_actions, 0);
+        assert_eq!(summary.repair_slot_count, 0);
+        assert_eq!(summary.scheduled_preflight_actions, 0);
+        assert_eq!(summary.slot_audit_rows, 0);
+        assert_eq!(summary.audited_preflight_actions, 0);
+        assert_eq!(summary.blocking_slot_audit_rows, 0);
+        assert_eq!(summary.operator_required_slot_audit_rows, 0);
+        assert_eq!(summary.first_blocking_slot_sequence, None);
+        assert_eq!(summary.first_operator_slot_sequence, None);
+        assert_eq!(summary.first_slot_stage, None);
+        assert_eq!(summary.first_slot_action_kind, None);
+        assert!(summary.preflight_ready);
+        assert!(summary.repair_actions_ready);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.repair_schedule_ready);
+        assert!(summary.repair_slot_audit_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_release);
+        assert!(!summary.has_slot_audit_rows());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_preflight_execution_readiness_summary_surfaces_execution_tickets() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_preflight_execution_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.queued_preflight_actions, 5);
+        assert_eq!(summary.repair_slot_count, 3);
+        assert_eq!(summary.scheduled_preflight_actions, 5);
+        assert_eq!(summary.slot_audit_rows, 3);
+        assert_eq!(summary.execution_ticket_count, 3);
+        assert_eq!(summary.ticketed_preflight_actions, 5);
+        assert_eq!(summary.blocking_execution_tickets, 3);
+        assert_eq!(summary.operator_required_execution_tickets, 2);
+        assert_eq!(
+            summary.first_execution_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_blocking_execution_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_execution_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_execution_ticket_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_execution_ticket_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.repair_actions_ready);
+        assert!(!summary.repair_batches_ready);
+        assert!(!summary.repair_schedule_ready);
+        assert!(!summary.repair_slot_audit_ready);
+        assert!(!summary.execution_tickets_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_execution_tickets());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(
+            summary.execution_ticket_summary.first_ticket_key,
+            summary.first_execution_ticket_key
+        );
+    }
+
+    #[test]
+    fn mesh_preflight_execution_readiness_summary_marks_ready_release() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_preflight_execution_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.release_blocker_count, 0);
+        assert_eq!(summary.queued_preflight_actions, 0);
+        assert_eq!(summary.repair_slot_count, 0);
+        assert_eq!(summary.scheduled_preflight_actions, 0);
+        assert_eq!(summary.slot_audit_rows, 0);
+        assert_eq!(summary.execution_ticket_count, 0);
+        assert_eq!(summary.ticketed_preflight_actions, 0);
+        assert_eq!(summary.blocking_execution_tickets, 0);
+        assert_eq!(summary.operator_required_execution_tickets, 0);
+        assert_eq!(summary.first_execution_ticket_key, None);
+        assert_eq!(summary.first_blocking_execution_ticket_key, None);
+        assert_eq!(summary.first_operator_execution_ticket_key, None);
+        assert_eq!(summary.first_execution_ticket_stage, None);
+        assert_eq!(summary.first_execution_ticket_action_kind, None);
+        assert!(summary.preflight_ready);
+        assert!(summary.repair_actions_ready);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.repair_schedule_ready);
+        assert!(summary.repair_slot_audit_ready);
+        assert!(summary.execution_tickets_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_release);
+        assert!(!summary.has_execution_tickets());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_preflight_work_order_readiness_summary_surfaces_execution_work_orders() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_preflight_work_order_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.queued_preflight_actions, 5);
+        assert_eq!(summary.repair_slot_count, 3);
+        assert_eq!(summary.scheduled_preflight_actions, 5);
+        assert_eq!(summary.execution_ticket_count, 3);
+        assert_eq!(summary.execution_work_order_count, 3);
+        assert_eq!(summary.ordered_preflight_actions, 5);
+        assert_eq!(summary.blocking_execution_work_orders, 3);
+        assert_eq!(summary.operator_required_execution_work_orders, 2);
+        assert_eq!(
+            summary.first_execution_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_blocking_execution_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_execution_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_execution_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_execution_work_order_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_execution_work_order_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.repair_actions_ready);
+        assert!(!summary.repair_batches_ready);
+        assert!(!summary.repair_schedule_ready);
+        assert!(!summary.repair_slot_audit_ready);
+        assert!(!summary.execution_tickets_ready);
+        assert!(!summary.execution_work_orders_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_execution_work_orders());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(
+            summary.execution_work_order_summary.first_ticket_key,
+            summary.first_execution_ticket_key
+        );
+    }
+
+    #[test]
+    fn mesh_preflight_work_order_readiness_summary_marks_ready_release() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_preflight_work_order_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.release_blocker_count, 0);
+        assert_eq!(summary.queued_preflight_actions, 0);
+        assert_eq!(summary.repair_slot_count, 0);
+        assert_eq!(summary.scheduled_preflight_actions, 0);
+        assert_eq!(summary.execution_ticket_count, 0);
+        assert_eq!(summary.execution_work_order_count, 0);
+        assert_eq!(summary.ordered_preflight_actions, 0);
+        assert_eq!(summary.blocking_execution_work_orders, 0);
+        assert_eq!(summary.operator_required_execution_work_orders, 0);
+        assert_eq!(summary.first_execution_work_order_key, None);
+        assert_eq!(summary.first_blocking_execution_work_order_key, None);
+        assert_eq!(summary.first_operator_execution_work_order_key, None);
+        assert_eq!(summary.first_execution_ticket_key, None);
+        assert_eq!(summary.first_execution_work_order_stage, None);
+        assert_eq!(summary.first_execution_work_order_action_kind, None);
+        assert!(summary.preflight_ready);
+        assert!(summary.repair_actions_ready);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.repair_schedule_ready);
+        assert!(summary.repair_slot_audit_ready);
+        assert!(summary.execution_tickets_ready);
+        assert!(summary.execution_work_orders_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_release);
+        assert!(!summary.has_execution_work_orders());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_readiness_handoff_packages_bundle_actions_and_remediation() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let packages =
+            mesh_readiness_handoff_packages(&available_primitives, &allowed_capabilities, &[]);
+        let summary =
+            mesh_readiness_handoff_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(packages.len(), 6);
+        assert_eq!(summary.total_packages, 6);
+        assert_eq!(summary.action_packages, 5);
+        assert_eq!(summary.remediation_packages, 1);
+        assert_eq!(summary.ready_packages, 0);
+        assert_eq!(summary.blocked_packages, 5);
+        assert_eq!(summary.review_required_packages, 1);
+        assert_eq!(summary.queued_substrate_actions, 5);
+        assert_eq!(summary.queued_stage_count, 3);
+        assert_eq!(summary.queued_primitive_count, 3);
+        assert!(summary.remediation_item_count > 0);
+        assert_eq!(summary.stage_blocker_count, 5);
+        assert_eq!(summary.primitive_blocker_count, 3);
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Blocked)
+        );
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction)
+        );
+        assert_eq!(summary.first_action_sequence, Some(1));
+        assert_eq!(summary.first_remediation_sequence, Some(6));
+        assert_eq!(summary.first_blocked_sequence, Some(1));
+        assert_eq!(summary.first_action_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_action_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.substrate_actions_ready);
+        assert!(!summary.release_ready);
+        assert!(!summary.ready_for_handoff());
+        assert!(summary.has_blockers());
+        assert!(summary.requires_attention());
+
+        let first = &packages[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(
+            first.package_kind,
+            IntegrationMeshReadinessHandoffKind::SubstrateAction
+        );
+        assert_eq!(
+            first.handoff_status,
+            IntegrationMeshReadinessHandoffStatus::Blocked
+        );
+        assert_eq!(first.action_sequence, Some(1));
+        assert_eq!(
+            first.stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(first.primitive, Some(PrimitiveFamily::ZWaveSerialApi));
+        assert!(first.blocked());
+        assert!(first.operator_required());
+
+        let remediation = packages.last().unwrap();
+        assert_eq!(
+            remediation.package_kind,
+            IntegrationMeshReadinessHandoffKind::EvidenceRemediation
+        );
+        assert!(remediation.remediation_kind.is_some());
+        assert!(remediation.requires_attention());
+    }
+
+    #[test]
+    fn mesh_readiness_handoff_packages_mark_release_ready() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let packages = mesh_readiness_handoff_packages_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+        let summary = mesh_readiness_handoff_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(packages.len(), 1);
+        assert_eq!(summary.total_packages, 1);
+        assert_eq!(summary.action_packages, 0);
+        assert_eq!(summary.remediation_packages, 0);
+        assert_eq!(summary.ready_packages, 1);
+        assert_eq!(summary.blocked_packages, 0);
+        assert_eq!(summary.queued_substrate_actions, 0);
+        assert_eq!(summary.stage_blocker_count, 0);
+        assert!(summary.substrate_actions_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_handoff());
+        assert!(!summary.has_blockers());
+        assert!(!summary.requires_attention());
+
+        let package = &packages[0];
+        assert_eq!(
+            package.package_kind,
+            IntegrationMeshReadinessHandoffKind::ReleaseReady
+        );
+        assert_eq!(
+            package.handoff_status,
+            IntegrationMeshReadinessHandoffStatus::Ready
+        );
+        assert!(package.ready_for_handoff());
+        assert!(!package.operator_required());
+    }
+
+    #[test]
+    fn mesh_release_readiness_checks_surface_blocked_release_gates() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let checks =
+            mesh_release_readiness_checks(&available_primitives, &allowed_capabilities, &[]);
+        let summary =
+            mesh_release_readiness_check_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(checks.len(), 5);
+        assert_eq!(summary.total_checks, 5);
+        assert_eq!(summary.ready_checks, 0);
+        assert_eq!(summary.blocked_checks, 3);
+        assert_eq!(summary.review_required_checks, 2);
+        assert_eq!(summary.operator_required_checks, 4);
+        assert_eq!(summary.checks_requiring_attention, 5);
+        assert_eq!(summary.next_check_sequence, Some(1));
+        assert_eq!(
+            summary.next_check_kind,
+            Some(IntegrationMeshReleaseReadinessCheckKind::SubstrateActions)
+        );
+        assert_eq!(
+            summary.next_check_status,
+            Some(IntegrationMeshReleaseReadinessStatus::Blocked)
+        );
+        assert_eq!(summary.first_blocked_check_sequence, Some(1));
+        assert_eq!(summary.first_review_check_sequence, Some(2));
+        assert_eq!(summary.first_operator_check_sequence, Some(1));
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction)
+        );
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Blocked)
+        );
+        assert_eq!(summary.queued_substrate_actions, 5);
+        assert_eq!(summary.remediation_item_count, 2);
+        assert!(!summary.substrate_actions_ready);
+        assert!(!summary.release_ready);
+        assert!(!summary.ready_for_handoff);
+        assert!(!summary.release_packet_ready);
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.requires_attention());
+
+        let substrate = &checks[0];
+        assert_eq!(
+            substrate.check_kind,
+            IntegrationMeshReleaseReadinessCheckKind::SubstrateActions
+        );
+        assert_eq!(
+            substrate.status,
+            IntegrationMeshReleaseReadinessStatus::Blocked
+        );
+        assert_eq!(
+            substrate.package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction)
+        );
+        assert_eq!(
+            substrate.handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Blocked)
+        );
+        assert!(substrate.blocked());
+        assert!(substrate.operator_required());
+        assert!(substrate.requires_attention());
+
+        let evidence = &checks[1];
+        assert_eq!(
+            evidence.check_kind,
+            IntegrationMeshReleaseReadinessCheckKind::EvidenceRemediation
+        );
+        assert_eq!(
+            evidence.status,
+            IntegrationMeshReleaseReadinessStatus::NeedsReview
+        );
+        assert!(evidence.review_required());
+        assert!(evidence.operator_required());
+
+        let release_packet = &checks[4];
+        assert_eq!(
+            release_packet.check_kind,
+            IntegrationMeshReleaseReadinessCheckKind::ReleasePacket
+        );
+        assert_eq!(
+            release_packet.status,
+            IntegrationMeshReleaseReadinessStatus::Blocked
+        );
+        assert_eq!(
+            release_packet.package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::ReleaseReady)
+        );
+    }
+
+    #[test]
+    fn mesh_release_readiness_checks_mark_release_packet_ready() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let checks = mesh_release_readiness_checks_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+        let summary = mesh_release_readiness_check_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(checks.len(), 5);
+        assert_eq!(summary.total_checks, 5);
+        assert_eq!(summary.ready_checks, 5);
+        assert_eq!(summary.blocked_checks, 0);
+        assert_eq!(summary.review_required_checks, 0);
+        assert_eq!(summary.operator_required_checks, 0);
+        assert_eq!(summary.checks_requiring_attention, 0);
+        assert_eq!(summary.next_check_kind, None);
+        assert_eq!(summary.first_blocked_check_sequence, None);
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::ReleaseReady)
+        );
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Ready)
+        );
+        assert_eq!(summary.queued_substrate_actions, 0);
+        assert_eq!(summary.remediation_item_count, 0);
+        assert!(summary.substrate_actions_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_handoff);
+        assert!(summary.release_packet_ready);
+        assert!(!summary.has_blockers());
+        assert!(!summary.has_review_work());
+        assert!(!summary.requires_attention());
+        assert!(checks
+            .iter()
+            .all(IntegrationMeshReleaseReadinessCheck::ready));
+        assert_eq!(
+            checks[4].check_kind,
+            IntegrationMeshReleaseReadinessCheckKind::ReleasePacket
+        );
+        assert_eq!(
+            checks[4].status,
+            IntegrationMeshReleaseReadinessStatus::Ready
+        );
     }
 
     #[test]

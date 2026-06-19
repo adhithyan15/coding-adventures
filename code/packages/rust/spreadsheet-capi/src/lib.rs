@@ -37,7 +37,7 @@
 //! an unwind across the FFI boundary. Reads are panic-free by construction.
 
 use std::ffi::{CStr, CString};
-use std::os::raw::c_char;
+use std::os::raw::{c_char, c_int};
 use std::ptr;
 
 use spreadsheet_core_wasm::SpreadsheetSession;
@@ -301,6 +301,173 @@ pub unsafe extern "C" fn sc_fill(
     (*s).inner.fill(&src, &dst_start, &dst_end);
 }
 
+/// `copy(start, end)` — copy the inclusive rectangle `start`..`end` into the
+/// clipboard (a whole-block copy that pastes as a unit). The source is left
+/// untouched and the buffer survives any number of pastes. Malformed addresses
+/// or an oversized rectangle are a no-op. See [`SpreadsheetSession::copy`].
+///
+/// # Safety
+/// `s` must be a valid session; the A1 args must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn sc_copy(s: *mut ScSession, start: *const c_char, end: *const c_char) {
+    if s.is_null() {
+        return;
+    }
+    let start = read_cstr(start);
+    let end = read_cstr(end);
+    (*s).inner.copy(&start, &end);
+}
+
+/// `cut(start, end)` — like [`sc_copy`] but a one-shot move: the paste that
+/// places it clears the source cells it didn't overwrite and consumes the
+/// buffer. The source is not cleared until paste. See
+/// [`SpreadsheetSession::cut`].
+///
+/// # Safety
+/// `s` must be a valid session; the A1 args must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn sc_cut(s: *mut ScSession, start: *const c_char, end: *const c_char) {
+    if s.is_null() {
+        return;
+    }
+    let start = read_cstr(start);
+    let end = read_cstr(end);
+    (*s).inner.cut(&start, &end);
+}
+
+/// `paste(dst_start)` — paste the clipboard so its top-left lands at
+/// `dst_start`. Returns `1` when a paste was applied, `0` for a no-op (empty
+/// clipboard, malformed address, or a destination past the grid edge). The
+/// block's references shift by the destination's offset from the source anchor;
+/// content, format, and the source echo ride along. See
+/// [`SpreadsheetSession::paste`].
+///
+/// # Safety
+/// `s` must be a valid session; `dst_start` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_paste(s: *mut ScSession, dst_start: *const c_char) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    let dst_start = read_cstr(dst_start);
+    if (*s).inner.paste(&dst_start) {
+        1
+    } else {
+        0
+    }
+}
+
+/// `serialize()` → a self-contained JSON document capturing the workbook's
+/// source (formula text + typed literals) and per-cell formats — everything
+/// needed to reconstruct the sheet, but not the computed values (those recompute
+/// on load, so the file is small and can never disagree with itself). Hand the
+/// returned string to `sc_deserialize` to restore it. The caller owns the string
+/// and must release it with `sc_free_string`. See [`SpreadsheetSession::serialize`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_serialize(s: *mut ScSession) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.serialize())
+}
+
+/// `deserialize(data)` — replace the workbook with the contents of a document
+/// produced by `sc_serialize`. Returns `1` on success, `0` if `data` is malformed
+/// or carries an unsupported version (in which case the existing workbook is left
+/// untouched — the engine validates before it mutates). Formulas reload live and
+/// recompute. See [`SpreadsheetSession::deserialize`].
+///
+/// # Safety
+/// `s` must be a valid session; `data` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_deserialize(s: *mut ScSession, data: *const c_char) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    let data = read_cstr(data);
+    if (*s).inner.deserialize(&data) {
+        1
+    } else {
+        0
+    }
+}
+
+/// `undo()` — revert the most recent edit, restoring the document to its state
+/// before that edit. Returns `1` if an edit was undone, `0` if there was nothing
+/// to undo (or `s` is null). The host re-reads via `sc_get_window` /
+/// `sc_get_display_window` / `sc_get_raw` afterwards. See
+/// [`SpreadsheetSession::undo`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_undo(s: *mut ScSession) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    if (*s).inner.undo() {
+        1
+    } else {
+        0
+    }
+}
+
+/// `redo()` — replay the most recently undone edit. Returns `1` if an edit was
+/// redone, `0` if there was nothing to redo (or `s` is null). See
+/// [`SpreadsheetSession::redo`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_redo(s: *mut ScSession) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    if (*s).inner.redo() {
+        1
+    } else {
+        0
+    }
+}
+
+/// `can_undo()` → `1` if there is an edit to undo, else `0` (and `0` on a null
+/// `s`). Lets a host enable/disable an Undo control. See
+/// [`SpreadsheetSession::can_undo`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_can_undo(s: *mut ScSession) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    if (*s).inner.can_undo() {
+        1
+    } else {
+        0
+    }
+}
+
+/// `can_redo()` → `1` if there is an undone edit to redo, else `0` (and `0` on a
+/// null `s`). See [`SpreadsheetSession::can_redo`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_can_redo(s: *mut ScSession) -> c_int {
+    if s.is_null() {
+        return 0;
+    }
+    if (*s).inner.can_redo() {
+        1
+    } else {
+        0
+    }
+}
+
 /// `get_display_window(row0, col0, row1, col1)` → display-window JSON (each cell
 /// is its value rendered through its format code). See
 /// [`SpreadsheetSession::get_display_window`]. Returns null only on a null `s`.
@@ -447,6 +614,108 @@ mod tests {
             assert_eq!(value(s, "B2"), r#"{"kind":"number","value":40.0}"#); // A2*2
             // Null session is a safe no-op (no return value to check).
             sc_fill(ptr::null_mut(), src.as_ptr(), ds.as_ptr(), de.as_ptr());
+            sc_session_free(s);
+        }
+    }
+
+    #[test]
+    fn c_abi_copy_cut_paste() {
+        unsafe {
+            let s = sc_session_new();
+            set(s, "B1", "5");
+            set(s, "C1", "=B1*2"); // 10
+            // Copy the 1×2 block B1:C1 and paste at B2.
+            let bs = CString::new("B1").unwrap();
+            let ce = CString::new("C1").unwrap();
+            sc_copy(s, bs.as_ptr(), ce.as_ptr());
+            let b2 = CString::new("B2").unwrap();
+            assert_eq!(sc_paste(s, b2.as_ptr()), 1); // applied
+            assert_eq!(value(s, "C2"), r#"{"kind":"number","value":10.0}"#); // B2*2
+
+            // Cut A-col cell and move it; paste returns 1, a second paste 0.
+            set(s, "A1", "7");
+            let a1 = CString::new("A1").unwrap();
+            sc_cut(s, a1.as_ptr(), a1.as_ptr());
+            let e1 = CString::new("E1").unwrap();
+            assert_eq!(sc_paste(s, e1.as_ptr()), 1);
+            assert_eq!(value(s, "E1"), r#"{"kind":"number","value":7.0}"#);
+            assert_eq!(value(s, "A1"), r#"{"kind":"empty"}"#); // source cleared
+            let g1 = CString::new("G1").unwrap();
+            assert_eq!(sc_paste(s, g1.as_ptr()), 0); // buffer consumed
+
+            // Null session: copy/cut no-op, paste returns 0 (never a crash).
+            sc_copy(ptr::null_mut(), bs.as_ptr(), ce.as_ptr());
+            assert_eq!(sc_paste(ptr::null_mut(), b2.as_ptr()), 0);
+            sc_session_free(s);
+        }
+    }
+
+    #[test]
+    fn c_abi_serialize_round_trips() {
+        unsafe {
+            let s = sc_session_new();
+            set(s, "A1", "12");
+            set(s, "B1", "=A1*3"); // 36
+            // Serialize, then load into a fresh session through the C ABI.
+            let saved_ptr = sc_serialize(s);
+            let saved = CStr::from_ptr(saved_ptr).to_string_lossy().into_owned();
+            sc_string_free(saved_ptr);
+
+            let t = sc_session_new();
+            let cdata = CString::new(saved).unwrap();
+            assert_eq!(sc_deserialize(t, cdata.as_ptr()), 1);
+            assert_eq!(value(t, "A1"), r#"{"kind":"number","value":12.0}"#);
+            assert_eq!(value(t, "B1"), r#"{"kind":"number","value":36.0}"#);
+            // The formula is live, not frozen: editing A1 recomputes B1.
+            set(t, "A1", "100");
+            assert_eq!(value(t, "B1"), r#"{"kind":"number","value":300.0}"#);
+
+            // Malformed input is rejected (0) and leaves the workbook untouched.
+            let bad = CString::new("nonsense").unwrap();
+            assert_eq!(sc_deserialize(t, bad.as_ptr()), 0);
+            assert_eq!(value(t, "A1"), r#"{"kind":"number","value":100.0}"#);
+
+            // Null session: serialize → null, deserialize → 0.
+            assert!(sc_serialize(ptr::null_mut()).is_null());
+            assert_eq!(sc_deserialize(ptr::null_mut(), cdata.as_ptr()), 0);
+            sc_session_free(s);
+            sc_session_free(t);
+        }
+    }
+
+    #[test]
+    fn c_abi_undo_redo() {
+        unsafe {
+            let s = sc_session_new();
+            // Fresh session: nothing to undo or redo.
+            assert_eq!(sc_can_undo(s), 0);
+            assert_eq!(sc_can_redo(s), 0);
+
+            set(s, "A1", "1");
+            set(s, "B1", "=A1*10"); // 10
+            assert_eq!(value(s, "B1"), r#"{"kind":"number","value":10.0}"#);
+            assert_eq!(sc_can_undo(s), 1);
+
+            // Undo the formula, then the literal.
+            assert_eq!(sc_undo(s), 1);
+            assert_eq!(value(s, "B1"), r#"{"kind":"empty"}"#);
+            assert_eq!(sc_undo(s), 1);
+            assert_eq!(value(s, "A1"), r#"{"kind":"empty"}"#);
+            assert_eq!(sc_can_undo(s), 0);
+
+            // Redo both: B1 recomputes live (10).
+            assert_eq!(sc_redo(s), 1);
+            assert_eq!(value(s, "A1"), r#"{"kind":"number","value":1.0}"#);
+            assert_eq!(sc_redo(s), 1);
+            assert_eq!(value(s, "B1"), r#"{"kind":"number","value":10.0}"#);
+            assert_eq!(sc_can_redo(s), 0);
+            assert_eq!(sc_redo(s), 0); // nothing left to redo
+
+            // Null session: every call is a safe 0.
+            assert_eq!(sc_undo(ptr::null_mut()), 0);
+            assert_eq!(sc_redo(ptr::null_mut()), 0);
+            assert_eq!(sc_can_undo(ptr::null_mut()), 0);
+            assert_eq!(sc_can_redo(ptr::null_mut()), 0);
             sc_session_free(s);
         }
     }

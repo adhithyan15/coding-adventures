@@ -18,14 +18,44 @@ import type { ClosureLike, Val } from "./values.js";
 
 // --- Closures --------------------------------------------------------------
 
+/**
+ * Raised when a closure-shaped call has no closure to invoke.
+ *
+ * SIR's explicit-block-param ABI threads a method's block as an ordinary
+ * trailing parameter and lowers `yield` to an `IndirectCall` through it.
+ * When the caller passed **no** block, that parameter is `nil` (`null`), so
+ * the `IndirectCall` reaches {@link apply} with a `null` target. Ruby raises
+ * `LocalJumpError` ("no block given (yield)") in exactly this situation; we
+ * mirror that with a dedicated error so the failure is recognisable rather
+ * than a generic `TypeError` about an internal "non-closure". The exact Ruby
+ * class identity is not modelled — this is the SIR analogue, keyed to the
+ * *shape* of the error, not Ruby's class hierarchy.
+ */
+export class LocalJumpError extends Error {
+  constructor(message = "no block given (yield)") {
+    super(message);
+    this.name = "LocalJumpError";
+  }
+}
+
 /** A callable handle wrapping a function. */
 export class Closure implements ClosureLike {
   readonly __sirClosure = true as const;
   constructor(public readonly fn: (...args: Val[]) => Val) {}
 }
 
-/** Invoke a closure handle with `args`. Throws on a non-closure. */
+/**
+ * Invoke a closure handle with `args`.
+ *
+ * A `null`/`undefined` target is the no-block-given case (see
+ * {@link LocalJumpError}): a `yield` reached through a nil block parameter.
+ * It is reported distinctly from other non-closures (a genuine type error)
+ * so the two failures don't read alike.
+ */
 export function apply(c: Val, args: Val[]): Val {
+  if (c === null || c === undefined) {
+    throw new LocalJumpError();
+  }
   if (!(c instanceof Closure)) {
     throw new TypeError("apply on non-closure");
   }

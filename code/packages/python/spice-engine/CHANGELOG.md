@@ -4,6 +4,98 @@
 
 ### Added
 
+- **Deck run artifact JSON format** —
+  `format_deck_run_artifact_json()` now renders selected-run artifacts as
+  compact JSON records with the same stable keys and normalized cell values as
+  `format_deck_run_artifact_table()`, matching Rust and TypeScript.
+
+- **Deck run artifact CSV format** —
+  `format_deck_run_artifact_csv()` now renders selected-run artifacts with the
+  same stable columns as `format_deck_run_artifact_table()`, using deterministic
+  CSV escaping for browser and spreadsheet consumers, matching Rust and
+  TypeScript.
+
+- **Deck run Fourier artifact probes** —
+  `run_deck_analysis()` selected-run artifacts now include selected Fourier
+  probe names alongside the Fourier result count, and
+  `format_deck_run_artifact_table()` renders a stable `FourierList` column,
+  matching Rust and TypeScript.
+
+- **Deck run measurement artifact names** —
+  `run_deck_analysis()` selected-run artifacts now include selected
+  measurement names alongside the measurement count, and
+  `format_deck_run_artifact_table()` renders a stable `MeasurementList`
+  column, matching Rust and TypeScript.
+
+- **Deck run output-probe artifact names** —
+  `run_deck_analysis()` selected-run artifacts now include the normalized
+  output-probe names alongside the output-probe count, and
+  `format_deck_run_artifact_table()` renders a stable `OutputProbeList`
+  column, matching Rust and TypeScript.
+
+- **Deck control variable policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block variable/state mutation
+  commands, including `let`, `alter`, `alterparam`, `set`, and `unset`,
+  instead of generic unsupported-command diagnostics, matching Rust and
+  TypeScript. Accepted no-op `set` options still route as no-op markers.
+
+- **Deck control-flow policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block control-flow commands,
+  including `if`, `while`, `foreach`, and `repeat`, instead of generic
+  unsupported-command diagnostics, matching Rust and TypeScript. Control-flow
+  execution remains disabled by the deck execution policy.
+
+- **Deck control working-directory policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block `cd` working-directory
+  mutation commands instead of generic unsupported-command diagnostics,
+  matching Rust and TypeScript. Working-directory mutation remains disabled by
+  the deck execution policy.
+
+- **Deck control script policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block `source` and `shell`
+  external script/shell commands instead of generic unsupported-command
+  diagnostics, matching Rust and TypeScript. External script execution and
+  shelling out remain disabled by the deck execution policy.
+
+- **Deck control console marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `echo`, `rusage`, and `where` console/debug
+  commands as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript. Actual console/debug output
+  remains out of scope for these markers.
+
+- **Deck control introspection marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `status`, `version`, and `help` UI introspection
+  commands as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript. Actual console/help output remains
+  out of scope for these markers.
+
+- **Deck control show marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `show` and `showmod` device/model inspection
+  commands as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript. Actual console/model inspection
+  output remains out of scope for these markers.
+
+- **Deck control inspection marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `display` and `listing` inspection commands as
+  no-op control commands instead of reporting unsupported-command diagnostics,
+  matching Rust and TypeScript. Actual console/listing output remains out of
+  scope for these markers.
+
+- **Deck control WRDATA marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `wrdata <file> <probes...>` ASCII data-write markers as
+  no-op control commands instead of reporting unsupported-command diagnostics,
+  matching Rust and TypeScript. Actual data-file serialization remains out of
+  scope for this marker.
+
 - **Deck control rawfile write marker routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
   `.control` block `write <rawfile> [probes...]` rawfile-write markers as

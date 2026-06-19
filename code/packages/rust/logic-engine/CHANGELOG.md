@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.22.0] - 2026-06-17 — mutual precedence is an honest CONFLICT, not silent double-defeat (ADJ73 §4.3)
+
+### Fixed
+
+- **Contradictory precedence between two competing answers now surfaces as `ConflictPeer`
+  (abstain), not a silent "both defeated, `has_conflict == false`".** When two canons point
+  opposite ways — e.g. lex superior derives `federal > state` while lex specialis derives
+  `state > federal` — each answer defeated the other, so the resolver marked BOTH `Defeated`,
+  crowned nothing, and reported no conflict (misleading). The defeat test in `enumerate_governing`
+  is now **strict domination**: `j` defeats `i` only if `j` defeats `i` AND `i` does not defeat
+  `j` back. A merely mutual defeat leaves both answers undefeated → the group resolves to
+  `ConflictPeer` / `has_conflict == true` — the honest "else CONFLICT (abstain)" the spec
+  (§4.3) promises. The caller is never silently handed an empty governing set with no conflict
+  signal.
+
+### Unchanged (no regression)
+
+- One-way precedence (the ordinary lex-superior / tier case) still cleanly governs: a strictly
+  dominating answer wins, the dominated one is `Defeated { by }`. Co-equal-tier and cyclic-order
+  cases already abstained and still do. The context order is a partial order + a total tier, so
+  only 2-cycles of mutual defeat arise (transitivity makes any longer cycle mutual everywhere) —
+  no strict Condorcet cycle can slip through. All prior `govern` tests pass unchanged.
+
+## [0.21.0] - 2026-06-17 — context-precedence edges can be DERIVED by meta-rules (ADJ73 PR-B-4)
+
+### Added
+
+- **`outranks_context` edges may now be RULE-DERIVED, not just asserted.** When the KB contains
+  rules whose head is `outranks_context/2` (the grounded conflict-resolution **meta-rules** — lex
+  posterior / appeal status / lex specialis), `KnowledgeBase::context_adjacency` enumerates every
+  provable `outranks_context($A, $B)` (via `enumerate_all`, which subsumes the ground facts as
+  one-step proofs) and feeds those edges into the same `lex superior` resolution. So a meta-rule
+  `outranks_context($H, $L) :- reverses($H, $L)` (itself citing the overruling doctrine) turns a
+  primitive grounded `reverses(a, b)` fact into a precedence edge — the recursive structure ADJ73
+  §7 calls for: an edge that can be derived is derived (and cited), not duplicated as a bare fact.
+- New private `KnowledgeBase::derived_context_edges` — enumerates the provable `outranks_context`
+  ground edges. Pure read; not re-entrant with `enumerate_governing` (queries a different predicate
+  and never consults the context order itself).
+
+### Unchanged (back-compat / performance)
+
+- With **no** `outranks_context` rules (the common case), `context_adjacency` keeps the cheap
+  ground-fact + explicit-edge scan — no SLD enumeration cost. All PR-B / PR-B-2 behavior is
+  byte-identical; `context_outranks` / `context_order_has_cycle` now key on owned `String`s
+  (derived answer terms are built during enumeration), but the DFS / Kahn-cycle semantics are
+  unchanged. Cycle detection spans derived edges too (a contradictory `reverses` pair is caught).
+
 ## [0.20.0] - 2026-06-17 — context-precedence edges as grounded facts (ADJ73 PR-B-2)
 
 ### Added

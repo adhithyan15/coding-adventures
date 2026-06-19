@@ -6,11 +6,14 @@
 // referenced externally, so it is kept; only its parameters
 // `horizontal` and `vertical` are renamed (to `a` and `b`).
 //
-// `distance(3, 4)` calls it, so treeshake keeps the declaration; an
-// uncalled function would be removed before rename ever saw it.
+// `distance(...)` calls it, so treeshake keeps the declaration; an
+// uncalled function would be removed before rename ever saw it. It is
+// called TWICE so the single-use inliner leaves it in place — keeping
+// this fixture's focus on rename rather than inlining.
 //
 // Under WHITESPACE_ONLY nothing is renamed.
 function distance(horizontal, vertical) {
   return horizontal * horizontal + vertical * vertical;
 }
 distance(3, 4);
+distance(5, 12);

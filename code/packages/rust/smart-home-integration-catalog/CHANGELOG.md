@@ -38,6 +38,79 @@ All notable changes to this package will be documented in this file.
   and policy-review shape.
 - `IntegrationReadinessPackageSummary` and `hue_readiness_package_summary` for
   joining Hue activation-package shape with host-specific readiness blockers.
+- `IntegrationActivationEvidenceBriefingSummary` and
+  `hue_activation_evidence_briefing_summary` for compact catalog,
+  activation-plan, readiness, policy, and local-boundary release evidence
+  briefs.
+- `IntegrationActivationEvidenceScorecardSummary` and catalog-wide activation
+  evidence scorecard helpers for rolling briefing readiness, blocker lanes,
+  missing prerequisites, local/cloud boundaries, and policy tiers into compact
+  Chief planning counts.
+- `IntegrationActivationEvidenceRow` and activation evidence row helpers for
+  turning each integration briefing into sorted ready/blocker rows with the
+  next blocked evidence lane and missing-prerequisite counts.
+- `IntegrationActivationEvidenceLaneInventoryItem` and lane inventory helpers
+  for grouping blocked evidence rows by their first catalog, activation-plan,
+  readiness, policy, or local-boundary blocker lane.
+- `IntegrationActivationEvidenceRemediationItem` and remediation helpers for
+  turning evidence lane inventories into sorted catalog-owned remediation
+  plans before Chief-specific escalation tooling consumes them.
+- `IntegrationMeshReadinessPackageSummary` and mesh readiness package helpers
+  for combining Zigbee, Z-Wave, and Thread primitive substrate readiness with
+  mesh-scoped activation evidence remediation rollups.
+- `IntegrationMeshProtocolSubstrateStageRow` and summary helpers for
+  classifying low-level mesh primitive blockers into controller, radio,
+  discovery, network-security, and supervision stages.
+- `IntegrationMeshProtocolSubstrateAction` and summary helpers for ordering
+  missing Zigbee, Z-Wave, and Thread substrate primitives into protocol-scoped
+  action queues.
+- `IntegrationMeshProtocolSubstratePreflightCheck` and summary helpers for
+  package-independent Zigbee, Z-Wave, and Thread substrate preflight gates.
+- `IntegrationMeshProtocolSubstratePreflightAction` and summary helpers for
+  turning failed mesh substrate preflight gates into protocol-scoped repair
+  actions.
+- `IntegrationMeshProtocolSubstratePreflightRepairBatch` and summary helpers
+  for grouping failed mesh substrate preflight repairs by stage and action kind.
+- `IntegrationMeshProtocolSubstratePreflightRepairScheduleSlot` and summary
+  helpers for ordering mesh preflight repair batches into execution slots.
+- `IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow` and summary
+  helpers for auditing scheduled repair-slot blockers and operator handoffs.
+- `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket` and
+  summary helpers for turning audited repair slots into operator-ready
+  execution tickets.
+- `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder` and
+  summary helpers for projecting execution tickets into deterministic release
+  work orders.
+- `IntegrationMeshStageReleaseSummary` and helpers for combining substrate
+  stage blockers, primitive readiness blockers, and mesh-scoped remediation
+  into a single release readiness rollup.
+- `IntegrationMeshActionReadinessSummary` and helpers for combining mesh
+  release readiness with the substrate action queue and next concrete low-level
+  action.
+- `IntegrationMeshReleaseReadinessSummary` and helpers for package-facing mesh
+  release readiness across package, substrate-stage, queued-action, and
+  remediation blockers.
+- `IntegrationMeshPreflightReadinessSummary` and helpers for combining mesh
+  release readiness with substrate preflight gates.
+- `IntegrationMeshPreflightRepairReadinessSummary` and helpers for combining
+  mesh preflight readiness with protocol-scoped repair actions.
+- `IntegrationMeshPreflightBatchReadinessSummary` and helpers for combining
+  mesh preflight repair readiness with stage/action-kind repair batches.
+- `IntegrationMeshPreflightScheduleReadinessSummary` and helpers for combining
+  mesh preflight batch readiness with deterministic repair execution slots.
+- `IntegrationMeshPreflightSlotReadinessSummary` and helpers for combining mesh
+  preflight schedule readiness with repair-slot audit blockers and operator
+  handoff counts.
+- `IntegrationMeshPreflightExecutionReadinessSummary` and helpers for combining
+  mesh preflight slot readiness with operator-ready execution ticket counts.
+- `IntegrationMeshPreflightWorkOrderReadinessSummary` and helpers for combining
+  mesh preflight execution readiness with release work-order counts.
+- `IntegrationMeshReadinessHandoffPackage`, summary helpers, and D23 mesh
+  readiness handoff projections for release coordination across substrate
+  actions, evidence remediation, and release-ready state.
+- `IntegrationMeshReleaseReadinessCheck`, summary helpers, and D23 mesh
+  release-readiness gate projections for substrate actions, evidence
+  remediation, human review, operator handoff, and release packet state.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
@@ -143,6 +216,9 @@ All notable changes to this package will be documented in this file.
 - Integration readiness gap inventories that group missing primitive families,
   capability grants, and delegated integration dependencies by affected
   integrations.
+- Mesh protocol primitive readiness rows and summaries for checking Zigbee,
+  Z-Wave, and Thread controller, radio substrate, network-key, and supervision
+  gaps before low-level activation work.
 - Computed policy-surface helpers so Chief of Staff tools can identify camera,
   entry-access, climate, energy, cloud, credential, radio-network, and local
   actuation review boundaries before activating integrations.

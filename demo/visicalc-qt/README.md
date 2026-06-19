@@ -106,7 +106,22 @@ extent, and bumps `model.revision` so the visible rows re-fetch. The **"Fill ↓
 10"** button next to the formula bar calls `model.fill(src, dstStart, dstEnd)`
 (over the C ABI's `sc_fill`) to replicate the selected cell into the 10 rows
 below it — the engine shifts each copy's relative references (`=A1`→`=A2`, …),
-pins absolute (`$`) refs, and carries the format.
+pins absolute (`$`) refs, and carries the format. The **Copy / Cut / Paste**
+buttons drive the engine's clipboard (`model.copy`/`cut`/`paste` over the C ABI's
+`sc_copy`/`sc_cut`/`sc_paste`): copy the selected cell, then paste it elsewhere
+with its relative references shifted by the destination's offset (absolute `$`
+refs pinned, format carried); a cut clears the source on paste. `paste` returns a
+`bool` — false (a no-op) for an empty clipboard, malformed address, or off-grid.
+The **Save / Load** buttons serialize the whole workbook (`model.serialize` over
+the C ABI's `sc_serialize`) to a JSON document held in memory and restore it
+(`model.deserialize` / `sc_deserialize`): the document captures only the source
+(formula text + typed literals) and per-cell formats — not the computed values,
+which the engine recomputes on load, so a loaded formula stays live.
+The **Undo / Redo** buttons walk the engine's snapshot history (`model.undo`/
+`redo` over the C ABI's `sc_undo`/`sc_redo`); they enable off the `canUndo`/
+`canRedo` Q_PROPERTYs (which notify on `revisionChanged`, so they re-evaluate
+after every edit). Every edit is reversible and a restored formula recomputes
+live.
 
 The model seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) on top of the
 budget so there's something to scroll to; the extent (`totalRows`/`totalCols`)
@@ -120,7 +135,11 @@ reachable, the gaps are empty (sparse), column letters run AA/BA, and editing
 `A1` dirties the far dependent `Z1000` via `changedSince`. A fourth case drives
 the infinite-view binding layer directly: `rowCells` returns one engine-read
 row, `selectInf` selects + clamps and loads the source, and `commitInf` edits
-`A2` 8 → 108 with every dependent recomputing (E2 → 151, A5 → 139, E5 → 269):
+`A2` 8 → 108 with every dependent recomputing (E2 → 151, A5 → 139, E5 → 269).
+Further cases cover drag-fill, clipboard copy/cut/paste, a save/load round
+trip (serialize → mutate → restore, with the loaded formula staying live and
+malformed input rejected), and an undo/redo walk (two edits → undo both → redo
+both with the formula recomputing live → a fresh edit forks history):
 
 ```bash
 cd test && qmake tst_window.pro && make && ./tst_window

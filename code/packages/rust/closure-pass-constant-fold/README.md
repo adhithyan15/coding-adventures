@@ -34,6 +34,8 @@ pass set.
 Once `javascript-ast` grows `Statement` / `Expression` variants:
 
 - Number folding: `2 + 3 → 5`, `10 * 4 → 40`, `7 - 9 → -2`.
+- Bitwise / shift folding (CLOC15.D): `0xFF & 0x3C → 60`, `1 << 4 | 2 → 18`,
+  `8 >>> 1 → 4` — ES `ToInt32`/`ToUint32` 32-bit semantics (`>>>` is unsigned).
 - String concatenation: `"foo" + "bar" → "foobar"`.
 - Boolean short-circuit: `true && x → x`, `false || y → y`.
 - `typeof` of literals: `typeof "s" → "string"`, `typeof 0 → "number"`.

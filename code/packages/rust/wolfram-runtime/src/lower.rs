@@ -72,6 +72,15 @@ use symbolic_ir::{
 /// never hand it to the VM, so it needs no entry in the handler/held tables.
 pub const REPLACE_ALL: &str = "ReplaceAll";
 
+/// The W-5 head names the W-6 operator sugar desugars to. `f /@ x` lowers to
+/// `Map[f, x]`, `f @@ x` to `Apply[f, x]`, and `x[[i]]` to `Part[x, i]` — the
+/// *exact same* heads the [`WolframBackend`](crate::backend) built-in table
+/// answers (keyed on these surface names), so a sugar form and its long form
+/// produce byte-identical IR and therefore evaluate identically.
+const MAP_HEAD: &str = "Map";
+const APPLY_HEAD: &str = "Apply";
+const PART_HEAD: &str = "Part";
+
 /// A failure while lowering the surface tree to IR. These are *structural*
 /// errors — a node shape the lowering did not expect — not user syntax errors
 /// (those are caught earlier by the parser). In practice they should never fire
@@ -154,6 +163,7 @@ fn lower_node(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
             "additive" | "multiplicative" => lower_binary_chain(node),
             "unary" => lower_unary(node),
             "power" => lower_power(node),
+            "mapapply" => lower_mapapply(node),
             "postfix" => lower_postfix(node),
             "atom" => lower_atom(node),
             "list" => lower_list(node),
@@ -478,13 +488,58 @@ fn lower_power(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
     }
 }
 
-/// `postfix = atom { LBRACKET [ arglist ] RBRACKET }` — function application,
-/// left-associative and chainable (`f[x][y]` is `(f[x])[y]`).
+/// `mapapply = postfix { ( MAP | APPLY ) postfix }` — the W-6 `/@` / `@@`
+/// operator sugar, infix and left-associative.
 ///
-/// The head is the lowered base; the args are the lowered `arglist`. Crucially
+/// `f /@ x` lowers to `Map[f, x]` and `f @@ x` to `Apply[f, x]` — the same
+/// W-5 heads (`Map`/`Apply`) the long forms produce, so `f /@ {1, 2}` is IR-
+/// identical to `Map[f, {1, 2}]` (MA04 §9). `/@` and `@@` share one
+/// left-associative precedence level, so a mixed chain folds strictly left:
+/// `g @@ f /@ x` ⇒ `(g @@ f) /@ x` ⇒ `Map[Apply[g, f], x]` (parenthesise when
+/// mixing — the subset does not give `@@` Wolfram's higher precedence). When no
+/// operator is present the rule is a transparent single-child wrapper, handled
+/// by the fast path.
+fn lower_mapapply(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
+    // Fast path: no `/@`/`@@` present — a transparent wrapper over one operand.
+    if node.children.len() == 1 {
+        return lower_child(&node.children[0]);
+    }
+    let mut children = node.children.iter();
+    let first = children
+        .next()
+        .ok_or_else(|| LowerError::new("empty mapapply node"))?;
+    let mut result = lower_child(first)?;
+    while let Some(op_child) = children.next() {
+        let head = match as_token(op_child).map(token_type) {
+            Some("MAP") => MAP_HEAD,
+            Some("APPLY") => APPLY_HEAD,
+            _ => return Err(LowerError::new("expected a `/@` or `@@` operator")),
+        };
+        let rhs = children
+            .next()
+            .ok_or_else(|| LowerError::new("`/@`/`@@` with no right operand"))?;
+        // Map[f, x] / Apply[f, x] — the W-5 built-in heads, NOT bridged through
+        // `canonical_head` (they are not arithmetic), so they reach the
+        // WolframBackend handler table verbatim.
+        result = apply(sym(head), vec![result, lower_child(rhs)?]);
+    }
+    Ok(result)
+}
+
+/// `postfix = atom { LBRACKET [ arglist ] RBRACKET | LDBRACKET arglist RBRACKET RBRACKET }`
+/// — function application *and* the W-6 `[[ … ]]` part sugar, both postfix,
+/// left-associative and chainable (`f[x][y]` is `(f[x])[y]`,
+/// `x[[1]][[2]]` is `Part[Part[x, 1], 2]`).
+///
+/// For `f[…]` the head is the lowered base and the args the lowered `arglist`;
 /// we run the head through [`canonical_head`] so a built-in surface head like
 /// `Plus[…]` or `Sin[…]` becomes the IR head (`Add`, `Sin`) the VM dispatches —
 /// the *same* head the infix `+` lowers to (MA04 §7.1).
+///
+/// For `x[[i]]` we emit `Part[x, i]` — the W-5 `Part` head (MA04 §9). A
+/// multi-index `x[[i, j]]` is folded into nested parts `Part[Part[x, i], j]`
+/// (Wolfram's `Part[x, i, j]` semantics), one `Part` per index, so it reuses the
+/// single-index `Part` handler unchanged.
 fn lower_postfix(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
     let mut result = lower_child(
         node.children
@@ -498,20 +553,37 @@ fn lower_postfix(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
             i += 1;
             continue;
         };
-        if token_type(token) != "LBRACKET" {
-            i += 1;
-            continue;
+        match token_type(token) {
+            "LBRACKET" => {
+                // The next child is the optional `arglist` node (absent for `f[]`).
+                let args = node
+                    .children
+                    .get(i + 1)
+                    .and_then(as_node)
+                    .filter(|n| n.rule_name == "arglist")
+                    .map(lower_arglist)
+                    .transpose()?
+                    .unwrap_or_default();
+                result = build_application(result, args);
+            }
+            "LDBRACKET" => {
+                // `[[ arglist ]]` — the grammar guarantees a non-empty `arglist`
+                // (a bare `x[[]]` does not parse). Fold each index into a nested
+                // `Part`, so `x[[i, j]]` becomes `Part[Part[x, i], j]`.
+                let indices = node
+                    .children
+                    .get(i + 1)
+                    .and_then(as_node)
+                    .filter(|n| n.rule_name == "arglist")
+                    .map(lower_arglist)
+                    .transpose()?
+                    .unwrap_or_default();
+                for index in indices {
+                    result = apply(sym(PART_HEAD), vec![result, index]);
+                }
+            }
+            _ => {}
         }
-        // The next child is the optional `arglist` node (absent for `f[]`).
-        let args = node
-            .children
-            .get(i + 1)
-            .and_then(as_node)
-            .filter(|n| n.rule_name == "arglist")
-            .map(lower_arglist)
-            .transpose()?
-            .unwrap_or_default();
-        result = build_application(result, args);
         i += 1;
     }
     Ok(result)
@@ -991,6 +1063,103 @@ mod tests {
             apply(
                 sym(DEFINE),
                 vec![sym("f"), apply(sym(LIST), vec![sym("x")]), sym("x")]
+            )
+        );
+    }
+
+    #[test]
+    fn map_sugar_lowers_to_map_head() {
+        // f /@ x  ->  Map[f, x]  — IR-identical to the long form Map[f, x].
+        assert_eq!(
+            lower_one("f /@ x\n"),
+            apply(sym(MAP_HEAD), vec![sym("f"), sym("x")])
+        );
+        assert_eq!(lower_one("f /@ x\n"), lower_one("Map[f, x]\n"));
+        // Over a list literal.
+        assert_eq!(lower_one("f /@ {1, 2}\n"), lower_one("Map[f, {1, 2}]\n"));
+    }
+
+    #[test]
+    fn apply_sugar_lowers_to_apply_head() {
+        // f @@ x  ->  Apply[f, x]  — IR-identical to Apply[f, x].
+        assert_eq!(
+            lower_one("f @@ x\n"),
+            apply(sym(APPLY_HEAD), vec![sym("f"), sym("x")])
+        );
+        assert_eq!(
+            lower_one("Plus @@ {1, 2, 3}\n"),
+            lower_one("Apply[Plus, {1, 2, 3}]\n")
+        );
+    }
+
+    #[test]
+    fn mapapply_chain_folds_left() {
+        // `/@` and `@@` share one left-associative precedence level, so a mixed
+        // chain folds strictly left: `g @@ f /@ x` is `(g @@ f) /@ x` =
+        // Map[Apply[g, f], x]. (Real Wolfram gives `@@` higher precedence; the
+        // subset does not, per MA04 §9 — parenthesise when mixing.)
+        assert_eq!(
+            lower_one("g @@ f /@ x\n"),
+            apply(
+                sym(MAP_HEAD),
+                vec![apply(sym(APPLY_HEAD), vec![sym("g"), sym("f")]), sym("x")]
+            )
+        );
+        // A same-operator chain is unambiguously left: `f /@ g /@ x` =
+        // Map[Map[f, g], x].
+        assert_eq!(
+            lower_one("f /@ g /@ x\n"),
+            apply(
+                sym(MAP_HEAD),
+                vec![apply(sym(MAP_HEAD), vec![sym("f"), sym("g")]), sym("x")]
+            )
+        );
+    }
+
+    #[test]
+    fn double_bracket_sugar_lowers_to_part_head() {
+        // x[[i]]  ->  Part[x, i]  — IR-identical to Part[x, i].
+        assert_eq!(
+            lower_one("x[[2]]\n"),
+            apply(sym(PART_HEAD), vec![sym("x"), int(2)])
+        );
+        assert_eq!(lower_one("x[[2]]\n"), lower_one("Part[x, 2]\n"));
+        assert_eq!(
+            lower_one("{a, b, c}[[2]]\n"),
+            lower_one("Part[{a, b, c}, 2]\n")
+        );
+    }
+
+    #[test]
+    fn chained_and_multi_index_part_nest() {
+        // m[[1]][[2]]  ->  Part[Part[m, 1], 2]
+        assert_eq!(
+            lower_one("m[[1]][[2]]\n"),
+            apply(
+                sym(PART_HEAD),
+                vec![apply(sym(PART_HEAD), vec![sym("m"), int(1)]), int(2)]
+            )
+        );
+        // Multi-index m[[1, 2]] folds the same way: Part[Part[m, 1], 2].
+        assert_eq!(lower_one("m[[1, 2]]\n"), lower_one("m[[1]][[2]]\n"));
+    }
+
+    #[test]
+    fn part_sugar_interleaves_with_application() {
+        // f[x][[1]]  ->  Part[f[x], 1]
+        assert_eq!(
+            lower_one("f[x][[1]]\n"),
+            apply(
+                sym(PART_HEAD),
+                vec![apply(sym("f"), vec![sym("x")]), int(1)]
+            )
+        );
+        // x[[1]][y]  ->  (Part[x, 1])[y]
+        assert_eq!(
+            lower_one("x[[1]][y]\n"),
+            apply(
+                apply(sym(PART_HEAD), vec![sym("x"), int(1)]),
+                vec![sym("y")]
             )
         );
     }

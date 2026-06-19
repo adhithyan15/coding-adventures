@@ -115,6 +115,14 @@ describe("closures, globals, dispatch", () => {
     expect(() => sir.apply(42, [])).toThrow(TypeError);
   });
 
+  it("apply on a nil target raises LocalJumpError (no block given)", () => {
+    // No-block-given case: a `yield` reached through a nil block parameter.
+    expect(() => sir.apply(null, [1, 2])).toThrow(sir.LocalJumpError);
+    expect(() => sir.apply(null, [])).toThrow(/no block given/);
+    // Distinct from the non-closure TypeError so the two stay separable.
+    expect(new sir.LocalJumpError()).not.toBeInstanceOf(TypeError);
+  });
+
   it("global store roundtrip", () => {
     sir.globalSet("g1", 99);
     expect(sir.globalGet("g1")).toBe(99);

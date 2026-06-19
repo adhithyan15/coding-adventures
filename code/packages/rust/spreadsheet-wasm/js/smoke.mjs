@@ -91,6 +91,48 @@ wb.fill("G1", "G2", "G2");
 check("fill G2 = F2*2", wb.getValue("G2"), { kind: "number", value: 40 });
 check("fill G2 raw shifted", wb.getRaw("G2"), "=(F2*2)");
 
+// Clipboard: copy the block F1:G1 (G1 = F1*2) and paste at F3 — the relative ref
+// shifts as a unit, so G3 = F3*2 and the echo shows the shifted source.
+check("copy/paste applied", wb.copy("F1", "G1"), undefined); // copy returns nothing
+check("paste returns true", wb.paste("F3"), true);
+check("paste G3 = F3*2", wb.getValue("G3"), { kind: "number", value: 20 }); // F3=10*2
+check("paste G3 raw shifted", wb.getRaw("G3"), "=(F3*2)");
+// Cut a cell, move it, and confirm the source clears + a 2nd paste is a no-op.
+wb.setCell("A1", "7");
+wb.cut("A1", "A1");
+check("cut paste returns true", wb.paste("C1"), true);
+check("cut moved value", wb.getValue("C1"), { kind: "number", value: 7 });
+check("cut cleared source", wb.getValue("A1"), { kind: "empty" });
+check("cut buffer consumed", wb.paste("E1"), false);
+
+// Save / load: serialize the current workbook (source + formats), load it into a
+// fresh session, and confirm the formula is restored live (editing recomputes it).
+const saved = wb.serialize();
+check("serialize is a string", typeof saved, "string");
+const wb3 = engine.createSpreadsheet();
+check("deserialize returns true", wb3.deserialize(saved), true);
+check("loaded C1 value", wb3.getValue("C1"), { kind: "number", value: 7 }); // moved by cut
+wb3.setCell("F3", "100");
+check("loaded formula is live", wb3.getValue("G3"), { kind: "number", value: 200 }); // F3*2
+check("deserialize rejects garbage", wb3.deserialize("not json"), false);
+
+// Undo / redo: a fresh workbook on which we make two edits, then walk history.
+const wb4 = engine.createSpreadsheet();
+check("fresh canUndo false", wb4.canUndo(), false);
+wb4.setCell("A1", "1");
+wb4.setCell("B1", "=A1*10"); // 10
+check("after edits canUndo true", wb4.canUndo(), true);
+check("undo formula", wb4.undo(), true);
+check("B1 gone after undo", wb4.getValue("B1"), { kind: "empty" });
+check("undo literal", wb4.undo(), true);
+check("A1 gone after undo", wb4.getValue("A1"), { kind: "empty" });
+check("canUndo false at bottom", wb4.canUndo(), false);
+check("redo literal", wb4.redo(), true);
+check("redo formula", wb4.redo(), true);
+check("B1 live after redo", wb4.getValue("B1"), { kind: "number", value: 10 });
+check("canRedo false at top", wb4.canRedo(), false);
+check("redo at top is noop", wb4.redo(), false);
+
 // Fresh workbook is empty.
 const wb2 = engine.createSpreadsheet();
 check("reset clears values", wb2.getValues(), {});

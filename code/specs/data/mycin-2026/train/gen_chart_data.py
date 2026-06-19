@@ -14,7 +14,7 @@ teacher's fallible extraction):
 
   1. sample a chart-fact set from the CLOSED chart-fact vocabulary — this IS the gold IR;
   2. a teacher writes a natural chart note stating exactly those facts (+ a non-charting
-     distractor or two);
+     distractor or two, including HARD near-miss look-alikes — see NEAR_MISS_DISTRACTORS);
   3. the gold IR is derived from the note with BYTE PROVENANCE — each fact's supporting
      span located verbatim (reusing gen_data.find_span); a distractor that lands in the
      prose is recorded as a justified `discard`.
@@ -129,6 +129,43 @@ DISTRACTORS = [
     ("prefers to be seen by the morning team", "preference, not a chart fact"),
 ]
 
+# NEAR-MISS distractors — the HARD discards. Each phrase superficially resembles a controlled
+# chart-fact kind but must NOT become one: it is the wrong SUBJECT (a relative, not the patient),
+# the wrong RELATION (efficacy/diagnosis/recommendation, not the constraint), an ABSENCE (a
+# negated fact must never be coined as present), or the wrong QUANTITY (a non-dosing weight).
+# False-positive extraction on these look-alikes is the #1 failure mode of a fine-tuned small
+# decomposer, so the gold IR records each (when it lands in the note) as a justified `discard` —
+# teaching the discrimination boundary, not just "this isn't a chart fact". The `reason` names
+# the trap (and the look-alike kind) so the signal is explicit.
+NEAR_MISS_DISTRACTORS = [
+    # wrong SUBJECT — a family member's condition is not the patient's chart fact.
+    ("his father has chronic kidney disease",
+     "family history (renal), NOT the patient's renal_status — wrong subject"),
+    ("her sister is 12 weeks pregnant",
+     "family member's pregnancy, NOT the patient's pregnancy — wrong subject"),
+    ("a brother with a documented penicillin allergy",
+     "family history of allergy, NOT the patient's allergy — wrong subject"),
+    # ABSENCE — a negated/normal finding must never be coined as a positive fact.
+    ("no known drug allergies (NKDA)",
+     "explicit ABSENCE of an allergy — do not coin an allergy fact from a negative"),
+    ("renal function is normal with a creatinine of 0.9",
+     "NORMAL renal function — neither renal_severe nor renal_moderate; do not coin a renal_status"),
+    ("not currently pregnant per a negative beta-hCG",
+     "explicitly NOT pregnant — do not coin pregnancy=present from a negative"),
+    # wrong RELATION — efficacy / diagnosis / recommendation is not the constraint relation.
+    ("penicillin cleared her last urinary infection",
+     "drug EFFICACY history, NOT an allergy — wrong relation"),
+    ("the pharmacist recommended starting cefepime",
+     "a treatment RECOMMENDATION, not prior_failed/step_therapy — wrong relation"),
+    ("seasonal allergic rhinitis to pollen",
+     "an environmental allergy, NOT a drug allergy the COP excludes on — wrong relation"),
+    # wrong QUANTITY — a weight that is not the patient's current dosing body weight.
+    ("reports an unintentional weight loss of 10 kg",
+     "a weight CHANGE, NOT the current body weight used for mg/kg dosing — wrong quantity"),
+    ("the neonate weighed 3.2 kg at birth",
+     "birth weight of another person, NOT the patient's dosing weight — wrong subject/quantity"),
+]
+
 
 def sample_chart(rng: random.Random) -> list[dict]:
     """Sample a realistic chart-fact set: an age band, plus 1-4 other facts. Returns
@@ -219,7 +256,11 @@ def main() -> int:
     records = []
     for i in range(args.n):
         facts = sample_chart(rng)
-        distractors = rng.sample(DISTRACTORS, rng.choice([0, 0, 1, 1, 2]))
+        # A mix of generic non-charting noise AND the hard near-miss look-alikes, so the model
+        # learns both "this isn't a chart fact" and the sharper discrimination boundary (a
+        # near-miss must be discarded, never coined into the kind it resembles).
+        distractors = (rng.sample(DISTRACTORS, rng.choice([0, 0, 1, 1, 2]))
+                       + rng.sample(NEAR_MISS_DISTRACTORS, rng.choice([0, 1, 1, 2])))
         try:
             note = teacher_chart_note(args.teacher, facts, distractors)
         except Exception as e:  # noqa: BLE001

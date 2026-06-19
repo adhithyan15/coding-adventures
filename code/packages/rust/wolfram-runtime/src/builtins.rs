@@ -37,10 +37,13 @@
 
 use std::collections::HashMap;
 
+use std::collections::HashMap as StdHashMap;
+
 use symbolic_vm::backend::{handler_fn, Handler};
+use symbolic_vm::vm::substitute;
 use symbolic_vm::VM;
 
-use symbolic_ir::{apply, flt, int, sym, IRApply, IRNode, LIST};
+use symbolic_ir::{apply, flt, int, sym, IRApply, IRNode, ADD, ASSIGN, LIST, MUL};
 
 use crate::lower::build_canonical_application;
 
@@ -54,6 +57,20 @@ use crate::lower::build_canonical_application;
 /// size-preserving (`Map`, `N`) or grow by one (`Append`), bounded by their
 /// already-materialised input, which the W-4 input-size / token caps bound.
 pub const MAX_RANGE_LENGTH: usize = 1_000_000;
+
+/// Maximum number of elements a W-9 list-*growing* built-in (`Join`, `Flatten`)
+/// may materialise into its result.
+///
+/// `Join` and `Flatten` are the two W-9 heads whose output can be *larger* than
+/// any single input — `Join` sums its argument lengths, `Flatten` splices nested
+/// sub-lists into one flat list. Both inputs are themselves bounded by the W-4
+/// input/token caps, so this guard is defensive (a deeply/widely nested literal
+/// or a long chain of `Join`s could still aim for a large allocation); a result
+/// that would exceed this bound is left unevaluated rather than allocated. The
+/// other W-9 heads (`Sort`, `Reverse`, `Select`, `Count`, `Total`) are
+/// size-non-increasing and need no separate cap. Shares `MAX_RANGE_LENGTH`'s
+/// value (1,000,000) — already far beyond any interactive list.
+pub const MAX_LIST_LENGTH: usize = MAX_RANGE_LENGTH;
 
 /// Build the W-5 Wolfram built-in handler table.
 ///
@@ -73,8 +90,62 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("Map".to_string(), handler_fn(map_handler));
     m.insert("Apply".to_string(), handler_fn(apply_handler));
     m.insert("N".to_string(), handler_fn(n_handler));
+    // W-7 iteration constructs. These are *held* heads (see
+    // [`ITERATION_HEADS`] and the `WolframBackend` held set) — their body and
+    // iterator spec arrive unevaluated so the local index can be bound per step.
+    m.insert("Table".to_string(), handler_fn(table_handler));
+    m.insert("Do".to_string(), handler_fn(do_handler));
+    m.insert("Sum".to_string(), handler_fn(sum_handler));
+    m.insert("Product".to_string(), handler_fn(product_handler));
+    // W-8 local-scoping constructs. These are *held* heads (see [`SCOPING_HEADS`]
+    // and the `WolframBackend` held set) — their declaration list and body arrive
+    // unevaluated so the locals can be bound into the body before it evaluates.
+    m.insert("With".to_string(), handler_fn(with_handler));
+    m.insert("Module".to_string(), handler_fn(module_handler));
+    m.insert("Block".to_string(), handler_fn(block_handler));
+    // W-9 list-manipulation constructs. All are *eager* (non-held) heads — their
+    // arguments are evaluated before the handler runs, exactly like the W-5 list
+    // built-ins — so they are *not* added to the `WolframBackend` held set.
+    m.insert("Sort".to_string(), handler_fn(sort_handler));
+    m.insert("Reverse".to_string(), handler_fn(reverse_handler));
+    m.insert("Join".to_string(), handler_fn(join_handler));
+    m.insert("Flatten".to_string(), handler_fn(flatten_handler));
+    m.insert("Select".to_string(), handler_fn(select_handler));
+    m.insert("Count".to_string(), handler_fn(count_handler));
+    m.insert("Total".to_string(), handler_fn(total_handler));
+    // W-9 parity predicates — the minimal predicate primitives that make
+    // `Select`/`Count` testable (the W-5/W-6 surface had no predicate head).
+    m.insert("EvenQ".to_string(), handler_fn(even_q_handler));
+    m.insert("OddQ".to_string(), handler_fn(odd_q_handler));
     m
 }
+
+/// The W-7 iteration heads, which must be **held** (args not pre-evaluated) so
+/// that the iterator index `i` can be bound into the body before each
+/// evaluation. The [`WolframBackend`](crate::backend::WolframBackend) folds
+/// these into its `hold_heads` set (union with the inner backend's held set).
+///
+/// Why held? `Table[i^2, {i, 3}]` must *not* evaluate `i^2` up front — `i` is a
+/// local binder, and an eager eval would resolve it to a free symbol with
+/// nothing left to substitute. Holding keeps both the body (`i^2`) and the
+/// spec (`{i, 3}`) literal; the handler then evaluates the spec *bounds* itself
+/// (they may be expressions like `{i, n}`) while substituting `i` into the body
+/// per iteration.
+pub const ITERATION_HEADS: [&str; 4] = ["Table", "Do", "Sum", "Product"];
+
+/// The W-8 local-scoping heads, which must be **held** (args not pre-evaluated)
+/// so that the declaration list and body arrive unevaluated — the locals are
+/// bound *into* the body via `substitute` before the body is evaluated. The
+/// [`WolframBackend`](crate::backend::WolframBackend) folds these into its
+/// `hold_heads` set (union with the inner held set and [`ITERATION_HEADS`]).
+///
+/// Why held? `With[{x = 3}, x^2]` must *not* evaluate `x^2` up front — `x` is a
+/// local binder, and an eager eval would resolve it to a free symbol (or a
+/// stale global) with nothing left to substitute. Holding keeps both the decl
+/// list (`{x = 3}`, lowered to `List(Assign(x, 3))`) and the body (`x^2`)
+/// literal; the handler then evaluates each declaration's RHS itself and
+/// substitutes the locals into the body per scope entry.
+pub const SCOPING_HEADS: [&str; 3] = ["With", "Module", "Block"];
 
 // ---------------------------------------------------------------------------
 // List inspection — Length / First / Last / Part
@@ -260,6 +331,356 @@ fn apply_handler(vm: &mut VM, expr: IRApply) -> IRNode {
 }
 
 // ---------------------------------------------------------------------------
+// Iteration — Table / Do / Sum / Product (W-7)
+// ---------------------------------------------------------------------------
+//
+// All four share one shape: a held body `expr` and a held iterator spec
+// `{i, …}`. The handler evaluates the spec bounds (they may be expressions),
+// builds the bounded sequence of index values (capped at `MAX_RANGE_LENGTH`
+// like `Range`), then for each value `v` substitutes `i → v` into the body and
+// re-evaluates it through the VM. They differ only in what they do with the
+// per-iteration results: collect (`Table`), discard (`Do`), fold-`+` (`Sum`),
+// fold-`×` (`Product`).
+
+/// A parsed, validated iterator specification: the binder name and the concrete
+/// integer values the index takes, in order.
+struct IteratorPlan {
+    /// The local index symbol (the `i` in `{i, …}`).
+    index: String,
+    /// The materialised sequence of index values (already DoS-capped).
+    values: Vec<i64>,
+}
+
+/// Parse and evaluate an iterator spec `{i, imax}` / `{i, imin, imax}` /
+/// `{i, imin, imax, di}` into an [`IteratorPlan`].
+///
+/// Returns `None` (→ the caller leaves the whole form unevaluated) when:
+/// - the spec is not a `List`, or its first element is not a bare symbol;
+/// - it has the wrong arity (`{i}` with no bound, `{}`, or 5+ elements);
+/// - a bound does not evaluate to an exact integer;
+/// - the resulting count would exceed [`MAX_RANGE_LENGTH`] (the DoS cap).
+///
+/// The bound sub-expressions are evaluated through `vm` (the head is held, so
+/// they arrive unevaluated — `{i, n}` with `n` a bound variable must be
+/// resolved here). All arithmetic is `i128` so a crafted `i64::MIN`/`i64::MAX`
+/// bound cannot overflow; an out-of-range count simply yields `None`.
+fn plan_iterator(vm: &mut VM, spec: &IRNode) -> Option<IteratorPlan> {
+    let elems = list_elements(spec)?;
+    // {index, bound...} — at least the binder and one bound.
+    if elems.len() < 2 || elems.len() > 4 {
+        return None;
+    }
+    let index = match &elems[0] {
+        IRNode::Symbol(s) => s.clone(),
+        _ => return None,
+    };
+
+    // Evaluate each bound expression, then read it as an exact integer.
+    let bound = |vm: &mut VM, node: &IRNode| -> Option<i64> {
+        let evaled = vm.eval(node.clone());
+        as_i64(&evaled)
+    };
+
+    let (start, end, step) = match &elems[1..] {
+        // {i, imax} → i ranges 1..=imax.
+        [imax] => (1i64, bound(vm, imax)?, 1i64),
+        // {i, imin, imax} → i ranges imin..=imax.
+        [imin, imax] => (bound(vm, imin)?, bound(vm, imax)?, 1i64),
+        // {i, imin, imax, di} → stepped.
+        [imin, imax, di] => (bound(vm, imin)?, bound(vm, imax)?, bound(vm, di)?),
+        _ => return None,
+    };
+
+    let values = range_values(start, end, step)?;
+    Some(IteratorPlan { index, values })
+}
+
+/// Materialise the integer sequence `start, start+step, …` up to `end`,
+/// **DoS-capped** at [`MAX_RANGE_LENGTH`]. Mirrors the `Range` span logic
+/// exactly (zero step refused, wrong-way step → empty, count computed in `i128`
+/// before allocating). Returns `None` for a zero step or an oversize count so
+/// the caller leaves the iteration form unevaluated; an empty range is `Some`
+/// of an empty vector (a valid, if degenerate, iteration: `Sum` → 0, etc.).
+fn range_values(start: i64, end: i64, step: i64) -> Option<Vec<i64>> {
+    // A zero step never terminates — refuse it (form left unevaluated).
+    if step == 0 {
+        return None;
+    }
+    // A step pointing away from `end` is an empty iteration.
+    if (step > 0 && start > end) || (step < 0 && start < end) {
+        return Some(Vec::new());
+    }
+    // Count before allocating so an oversize span is rejected, never built.
+    let span = (end as i128) - (start as i128);
+    let count = (span / (step as i128)) + 1; // span and step share sign here
+    if count <= 0 {
+        return Some(Vec::new());
+    }
+    if count as u128 > MAX_RANGE_LENGTH as u128 {
+        return None; // DoS cap — caller leaves the form unevaluated.
+    }
+    let mut values = Vec::with_capacity(count as usize);
+    let mut value = start as i128;
+    for _ in 0..count {
+        values.push(value as i64);
+        value += step as i128;
+    }
+    Some(values)
+}
+
+/// Bind `index → value` into `body` (a fresh copy via the VM's `substitute`,
+/// the same primitive that binds user-function parameters) and evaluate it.
+///
+/// Using `substitute` rather than mutating the backend environment keeps the
+/// index *local*: it never leaks into the session, and a nested `Table` binds
+/// its own index over a body whose outer index was already replaced.
+fn eval_body_at(vm: &mut VM, body: &IRNode, index: &str, value: i64) -> IRNode {
+    let mut mapping: StdHashMap<String, IRNode> = StdHashMap::new();
+    mapping.insert(index.to_string(), int(value));
+    let bound = substitute(body.clone(), &mapping);
+    vm.eval(bound)
+}
+
+/// `Table[expr, {i, …}]` → the list of `expr` evaluated with `i` bound to each
+/// value of the range. A malformed spec (or oversize range) leaves the whole
+/// `Table` unevaluated.
+fn table_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(plan) = plan_iterator(vm, &expr.args[1]) else {
+        return unevaluated(expr);
+    };
+    let body = expr.args[0].clone();
+    let elems: Vec<IRNode> = plan
+        .values
+        .iter()
+        .map(|&v| eval_body_at(vm, &body, &plan.index, v))
+        .collect();
+    apply(sym(LIST), elems)
+}
+
+/// `Do[expr, {i, n}]` → evaluate `expr` once per index value **for side
+/// effects**, discarding each result, and return `Null` (a bare symbol, exactly
+/// how Wolfram prints it). A malformed/oversize spec leaves `Do` unevaluated.
+fn do_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(plan) = plan_iterator(vm, &expr.args[1]) else {
+        return unevaluated(expr);
+    };
+    let body = expr.args[0].clone();
+    for &v in &plan.values {
+        // Evaluated purely for effect (e.g. a `Set` inside the body).
+        let _ = eval_body_at(vm, &body, &plan.index, v);
+    }
+    sym("Null")
+}
+
+/// `Sum[expr, {i, imin, imax}]` → the sum of `expr` over the range, folded onto
+/// the shared `Add` head (so symbolic terms combine via the same engine as
+/// `1 + 2`). An empty range sums to `0`. A malformed/oversize spec leaves `Sum`
+/// unevaluated.
+fn sum_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    fold_iteration(vm, expr, ADD, int(0))
+}
+
+/// `Product[expr, {i, imin, imax}]` → the product of `expr` over the range,
+/// folded onto the shared `Mul` head. An empty range is `1`. A malformed/
+/// oversize spec leaves `Product` unevaluated.
+fn product_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    fold_iteration(vm, expr, MUL, int(1))
+}
+
+/// Shared core of `Sum`/`Product`: evaluate the body at each index and fold the
+/// results with a binary `op` (`Add`/`Mul`), seeded with `identity` (`0`/`1`)
+/// so an empty range returns the identity. The fold is left-associative —
+/// `op(op(op(identity, t1), t2), t3)` — and each step is re-evaluated through
+/// the VM so numeric terms collapse as they accumulate (rather than building a
+/// giant unevaluated tree).
+fn fold_iteration(vm: &mut VM, expr: IRApply, op: &str, identity: IRNode) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(plan) = plan_iterator(vm, &expr.args[1]) else {
+        return unevaluated(expr);
+    };
+    let body = expr.args[0].clone();
+    let mut acc = identity;
+    for &v in &plan.values {
+        let term = eval_body_at(vm, &body, &plan.index, v);
+        acc = vm.eval(apply(sym(op), vec![acc, term]));
+    }
+    acc
+}
+
+// ---------------------------------------------------------------------------
+// Local scoping — With / Module / Block (W-8)
+// ---------------------------------------------------------------------------
+//
+// All three share one shape: a held declaration list `{x = e, …}` (lowered to
+// `List(Assign(x, e), …)`) and a held body. The handler parses the decls,
+// evaluates each RHS through the VM, builds an `index → value` mapping, and then
+// substitutes that mapping into the body before evaluating it — the **same**
+// `substitute` primitive W-7's iteration index and user-function parameters use.
+//
+// Substituting into a *copy* of the held body (rather than mutating the session
+// environment) is what makes the locals genuinely local: nothing is ever written
+// to the global env, so a local can neither leak past the body nor clobber a
+// same-named global. After `With[{x = 3}, x]`, a bare `x` is still the free
+// symbol `x`. (MA04 §11.2–§11.3.)
+//
+// The three heads differ only in how a declaration is allowed to look:
+//   * `With`  — every decl MUST be `name = value`; the value is evaluated.
+//   * `Module`— a decl may be `name = value` (evaluated) OR a bare `name`
+//               (uninitialised). An uninitialised local is **α-renamed** to a
+//               fresh gensym (`name$nnn`, mirroring real Wolfram) so it can never
+//               resolve to — and is never captured by — a same-named *global*.
+//   * `Block` — same decl grammar as `With` here. Its dynamic-vs-lexical scope
+//               difference is unobservable for the substitution-based subset
+//               (MA04 §11.3); a self-contained body behaves identically.
+//
+// Why gensym for uninitialised Module locals specifically? Mapping `u → u` (the
+// identity) would *not* shadow a global: `substitute` would leave the body's `u`
+// as the symbol `u`, which `vm.eval` then resolves against the session env to
+// any `u = 42` binding — a capture leak. Renaming `u → u$nnn` produces a symbol
+// the env has never bound, so it stays free (undefined) exactly as a fresh local
+// should. Initialised locals (`y = e`) don't need this: their `y` is replaced by
+// the *value* `eval(e)`, so no `y` symbol survives in the body to be captured.
+
+use std::sync::atomic::{AtomicU64, Ordering};
+
+/// Monotonic counter for `Module`'s gensym renaming of uninitialised locals.
+///
+/// Each uninitialised `Module` local `x` is renamed to `x$<n>` for a unique `n`,
+/// so it cannot collide with a global, a sibling local, or an outer scope's
+/// local of the same name. `Relaxed` ordering is sufficient — we only need each
+/// fetched value to be distinct, not ordered relative to other memory.
+static MODULE_GENSYM_COUNTER: AtomicU64 = AtomicU64::new(0);
+
+/// Allocate a fresh, never-before-used local name for `base` (e.g. `x` → `x$7`).
+fn fresh_local_name(base: &str) -> String {
+    let n = MODULE_GENSYM_COUNTER.fetch_add(1, Ordering::Relaxed);
+    format!("{base}${n}")
+}
+
+/// `With[{x = e, …}, body]` — bind each local to its evaluated RHS, substitute
+/// into the body, and evaluate. Lexical, immediate (the RHS is evaluated against
+/// the surrounding scope, so a decl may reference an outer binding). Every decl
+/// must be an initialised `name = value`; a bare-symbol decl (no value) or any
+/// other malformed decl/arity/non-list leaves the whole `With` unevaluated.
+fn with_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    scope_handler(vm, expr, /* allow_uninitialised = */ false)
+}
+
+/// `Block[{x = e}, body]` — temporarily binds `x` for the duration of `body`.
+/// In real Wolfram this is *dynamic* scope (it shadows a global `x`); for the
+/// substitution-based subset shipped here a self-contained body is observably
+/// identical to `With` (MA04 §11.3), so it shares the same decl grammar
+/// (every local must be initialised) and the same substitution mechanism.
+fn block_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    scope_handler(vm, expr, /* allow_uninitialised = */ false)
+}
+
+/// `Module[{x, y = e}, body]` — lexically-scoped locals. An initialised decl
+/// (`y = e`) is evaluated like `With`; an *uninitialised* decl (`x`) is α-renamed
+/// to a fresh gensym (`x$nnn`) so the body sees an undefined symbol that can
+/// never resolve to — or be captured by — a same-named global. This is the one
+/// head that accepts a bare-symbol declaration.
+fn module_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    scope_handler(vm, expr, /* allow_uninitialised = */ true)
+}
+
+/// Shared core of `With`/`Module`/`Block`: parse `{decls}`, evaluate each
+/// declaration's RHS, build the local mapping, substitute it into the body, and
+/// evaluate. `allow_uninitialised` controls whether a bare-symbol decl (no `=`)
+/// is permitted (`Module`) or rejected (`With`/`Block`).
+///
+/// Returns the form **unevaluated** (never a panic) on any malformed input:
+/// wrong arity, a non-`List` first argument, or a declaration that is neither a
+/// bare symbol nor a `name = value` assignment (or a bare symbol where a value
+/// is required). This mirrors the W-5/W-7 "I can't reduce this" convention.
+fn scope_handler(vm: &mut VM, expr: IRApply, allow_uninitialised: bool) -> IRNode {
+    // Head[{decls}, body] — exactly two arguments.
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    // The first argument must be a literal `List` of declarations.
+    let Some(decls) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+
+    // Parse + evaluate every declaration into a (name, value) pair. A single
+    // malformed declaration aborts the whole form (left unevaluated) — we do not
+    // partially bind.
+    let mut mapping: StdHashMap<String, IRNode> = StdHashMap::new();
+    for decl in &decls {
+        let Some((name, value)) = eval_decl(vm, decl, allow_uninitialised) else {
+            return unevaluated(expr);
+        };
+        // A later decl with the same name shadows an earlier one (last wins),
+        // matching how a repeated local would behave; harmless for valid input.
+        mapping.insert(name, value);
+    }
+
+    // Bind the locals into a *copy* of the held body and evaluate. Because this
+    // never touches the session environment, the locals do not leak (MA04 §11.2).
+    let body = substitute(expr.args[1].clone(), &mapping);
+    vm.eval(body)
+}
+
+/// Parse one declaration node into `(name, replacement)` — the symbol the body
+/// binds and the IR node every free occurrence of it is replaced with.
+///
+/// Accepts two shapes:
+/// - `Assign(name, rhs)` (the lowering of `name = value`): `name` must be a bare
+///   symbol; `rhs` is **evaluated** through the VM (so `With[{x = 1 + 1}, …]`
+///   binds `x → 2`, and an RHS referring to an outer binding resolves). The
+///   replacement is the evaluated *value*.
+/// - a bare `Symbol(name)` — only when `allow_uninitialised` (i.e. `Module`): the
+///   local is α-renamed to a fresh gensym `name$nnn`. The replacement is that
+///   fresh symbol, so the body sees an undefined local that cannot resolve to a
+///   global (see the module-scoping note above).
+///
+/// Returns `None` (→ the caller leaves the whole scoping form unevaluated) for a
+/// non-symbol assignment target (`f[x] = 1`, `1 = 2`), a bare symbol where a
+/// value is required (`With`/`Block`), or any other node shape.
+fn eval_decl(
+    vm: &mut VM,
+    decl: &IRNode,
+    allow_uninitialised: bool,
+) -> Option<(String, IRNode)> {
+    match decl {
+        // `name = value` → Assign(name, value).
+        IRNode::Apply(app) if is_assign(&app.head) && app.args.len() == 2 => {
+            let name = match &app.args[0] {
+                IRNode::Symbol(s) => s.clone(),
+                // A non-symbol assignment target (`f[x] = 1`, `1 = 2`) is not a
+                // valid local declaration.
+                _ => return None,
+            };
+            let value = vm.eval(app.args[1].clone());
+            Some((name, value))
+        }
+        // A bare symbol `x` — an uninitialised local (Module only). It is renamed
+        // to a fresh gensym so the body sees an undefined local, never a global.
+        IRNode::Symbol(name) if allow_uninitialised => {
+            Some((name.clone(), sym(fresh_local_name(name))))
+        }
+        // Anything else (a bare symbol where a value is required, a literal, a
+        // non-Assign application) is malformed.
+        _ => None,
+    }
+}
+
+/// True if `head` is the `Assign` symbol (the IR head a surface `x = e`
+/// declaration lowers to).
+fn is_assign(head: &IRNode) -> bool {
+    matches!(head, IRNode::Symbol(s) if s == ASSIGN)
+}
+
+// ---------------------------------------------------------------------------
 // Numeric — N
 // ---------------------------------------------------------------------------
 
@@ -293,6 +714,275 @@ fn numericise(node: &IRNode) -> IRNode {
         }
         // A free symbol or any other head: leave as-is.
         other => other.clone(),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// List manipulation — Sort / Reverse / Join / Flatten (W-9)
+// ---------------------------------------------------------------------------
+
+/// `Sort[{c, a, b}]` → `{a, b, c}` — ascending in the subset's canonical order
+/// ([`canonical_cmp`]). For a pure-numeric list this is numeric order
+/// (`Sort[{3, 1, 2}]` → `{1, 2, 3}`); for mixed/symbolic lists it is the
+/// documented total order (numbers < symbols < strings < compound, then by
+/// value/name/structure). `Sort` of a non-list is left unevaluated.
+///
+/// The sort is *stable* (`sort_by`, not `sort_unstable_by`) so equal-key
+/// elements keep their input order — deterministic across runs.
+fn sort_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(mut elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    elems.sort_by(canonical_cmp);
+    apply(sym(LIST), elems)
+}
+
+/// `Reverse[{1, 2, 3}]` → `{3, 2, 1}`. `Reverse` of a non-list is left
+/// unevaluated. Size-preserving — no new DoS surface.
+fn reverse_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(mut elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    elems.reverse();
+    apply(sym(LIST), elems)
+}
+
+/// `Join[a, b, …]` → the lists concatenated, in order. Two or more list
+/// arguments are required; if *any* argument is not a list the whole form is left
+/// unevaluated (Wolfram's `Join` requires every argument to share the same head).
+///
+/// **DoS-capped**: the combined length is bounded by [`MAX_LIST_LENGTH`] — an
+/// over-cap join is left unevaluated rather than allocated. The total length is
+/// accumulated in `usize` with `checked_add` so a crafted chain cannot overflow
+/// the running count.
+fn join_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() < 2 {
+        return unevaluated(expr);
+    }
+    // First pass: every argument must be a list, and the *combined* length must
+    // not exceed the cap — checked before any allocation so an over-cap join is
+    // never built.
+    let mut lists: Vec<Vec<IRNode>> = Vec::with_capacity(expr.args.len());
+    let mut total: usize = 0;
+    for arg in &expr.args {
+        let Some(elems) = list_elements(arg) else {
+            return unevaluated(expr);
+        };
+        total = match total.checked_add(elems.len()) {
+            Some(t) if t <= MAX_LIST_LENGTH => t,
+            // Over the cap (or a usize overflow) — refuse, leave unevaluated.
+            _ => return unevaluated(expr),
+        };
+        lists.push(elems);
+    }
+    let mut out = Vec::with_capacity(total);
+    for elems in lists {
+        out.extend(elems);
+    }
+    apply(sym(LIST), out)
+}
+
+/// `Flatten[list]` → every nested sub-list spliced in at **all** levels;
+/// `Flatten[list, n]` → only the top `n` levels are flattened (a deeper sub-list
+/// is left intact).
+///
+/// `Flatten[{{1, 2}, {3}}]` → `{1, 2, 3}`; `Flatten[{1, {2, {3}}}]` →
+/// `{1, 2, 3}`; `Flatten[{1, {2, {3}}}, 1]` → `{1, 2, {3}}` (one level only).
+///
+/// **DoS-bounded** on two axes: the recursion depth is bounded (the full-flatten
+/// recurses on structure, itself bounded by the token-capped input nesting; the
+/// `n`-form additionally stops after `n` levels), and the output length is capped
+/// at [`MAX_LIST_LENGTH`] — once the accumulator reaches the cap the whole form
+/// is left unevaluated rather than grown without bound. A non-list first
+/// argument, or a negative/non-integer depth, leaves the form unevaluated.
+fn flatten_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    // Resolve the optional depth: absent → flatten all levels (i64::MAX as a
+    // sentinel "unbounded"); present → an exact non-negative integer.
+    let depth: i64 = match expr.args.as_slice() {
+        [_] => i64::MAX,
+        [_, d] => match as_i64(d) {
+            Some(n) if n >= 0 => n,
+            // A negative or non-integer depth is malformed.
+            _ => return unevaluated(expr),
+        },
+        _ => return unevaluated(expr),
+    };
+    let Some(top_elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    // The *top* list is always the result container — unwrapping it does not cost
+    // a level. `depth` counts how many levels of *nested sub-lists* to splice, so
+    // `Flatten[list, 1]` splices the sub-lists that are direct elements of `list`.
+    // Each top element is flattened with the full `depth`.
+    let mut out: Vec<IRNode> = Vec::new();
+    for elem in &top_elems {
+        // `flatten_into` returns `false` if the cap was hit mid-flatten; in that
+        // case leave the whole form unevaluated rather than return a truncated list.
+        if !flatten_into(elem, depth, &mut out) {
+            return unevaluated(expr);
+        }
+    }
+    apply(sym(LIST), out)
+}
+
+/// Splice `node` into `out`: if `node` is a sub-list and `depth > 0`, recurse
+/// into each of its elements with one less level remaining; otherwise push `node`
+/// verbatim. `i64::MAX` for `depth` means "unbounded — descend through every
+/// nested list". Returns `false` if appending would exceed [`MAX_LIST_LENGTH`]
+/// (the DoS cap), so the caller can reject the whole `Flatten`.
+///
+/// Each recursive step decrements `depth`, so the `n`-form splices exactly `n`
+/// levels of nested sub-lists; the unbounded form saturates at `i64::MAX - 1` and
+/// keeps descending, but real recursion depth is bounded by the (token-capped)
+/// input nesting, so it always terminates.
+fn flatten_into(node: &IRNode, depth: i64, out: &mut Vec<IRNode>) -> bool {
+    match list_elements(node) {
+        // A sub-list, and we still have levels to splice: descend into each element.
+        Some(elems) if depth > 0 => {
+            for elem in &elems {
+                if !flatten_into(elem, depth.saturating_sub(1), out) {
+                    return false;
+                }
+            }
+            true
+        }
+        // A non-list element, or depth exhausted: push the element verbatim
+        // (capping the output length first).
+        _ => {
+            if out.len() >= MAX_LIST_LENGTH {
+                return false;
+            }
+            out.push(node.clone());
+            true
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Filtering / counting — Select / Count (W-9)
+// ---------------------------------------------------------------------------
+
+/// `Select[{1, 2, 3, 4}, EvenQ]` → `{2, 4}` — keep each element for which
+/// `pred[e]` evaluates to the `True` symbol. The predicate is applied through the
+/// **same** path as `Map`/`Apply`: `build_canonical_application(pred, [e])` then
+/// `vm.eval`, so any callable (a built-in `EvenQ`, a user `f[x_] := …`, a bridged
+/// head) works. A non-list second argument, or wrong arity, leaves the form
+/// unevaluated. The output is at most as long as the input — no new DoS surface.
+fn select_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    let pred = expr.args[1].clone();
+    let kept: Vec<IRNode> = elems
+        .into_iter()
+        .filter(|e| predicate_is_true(vm, &pred, e))
+        .collect();
+    apply(sym(LIST), kept)
+}
+
+/// `Count[{1, 2, 3, 4}, EvenQ]` → `2` — the number of elements for which
+/// `pred[e]` evaluates to `True`. Shares the predicate-application path with
+/// [`select_handler`]. This is the **documented simplification** versus full
+/// Wolfram pattern-matching `Count` (where the second argument may be a pattern):
+/// W-9 supports a *function* predicate, the common introductory case (MA04 §12.3).
+/// A non-list first argument, or wrong arity, leaves the form unevaluated.
+fn count_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    let pred = expr.args[1].clone();
+    let n = elems
+        .iter()
+        .filter(|e| predicate_is_true(vm, &pred, e))
+        .count();
+    int(n as i64)
+}
+
+/// Apply `pred` to `element` and report whether the result is the literal `True`
+/// symbol. Builds `pred[element]` via the canonical application path (the same
+/// one `Map`/`Apply` use, so the `Plus`→`Add`-style bridges and user functions
+/// all resolve) and re-evaluates it through the VM. Any result other than the
+/// `True` symbol — `False`, an unevaluated `pred[element]`, a number — counts as
+/// *not* selected; this never panics on a non-callable predicate (an unbound head
+/// just leaves `pred[element]` unevaluated, which is not `True`).
+fn predicate_is_true(vm: &mut VM, pred: &IRNode, element: &IRNode) -> bool {
+    let applied = build_canonical_application(pred.clone(), vec![element.clone()]);
+    matches!(vm.eval(applied), IRNode::Symbol(s) if s == "True")
+}
+
+// ---------------------------------------------------------------------------
+// Summation — Total (W-9)
+// ---------------------------------------------------------------------------
+
+/// `Total[{1, 2, 3}]` → `6` — the sum of the list's elements, folded onto the
+/// shared `Add` head (so symbolic terms combine via the same engine as `1 + 2`,
+/// consistent with W-7 `Sum` over a range). An empty list totals to `0`. `Total`
+/// of a non-list is left unevaluated.
+///
+/// The fold is left-associative and each step is re-evaluated through the VM, so
+/// numeric terms collapse as they accumulate rather than building a giant
+/// unevaluated tree — identical in shape to W-7's `fold_iteration`.
+fn total_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    let mut acc = int(0);
+    for elem in elems {
+        acc = vm.eval(apply(sym(ADD), vec![acc, elem]));
+    }
+    acc
+}
+
+// ---------------------------------------------------------------------------
+// Parity predicates — EvenQ / OddQ (W-9)
+// ---------------------------------------------------------------------------
+
+/// `EvenQ[n]` → `True` if `n` is an even integer, else `False`. A non-integer
+/// argument (a rational, float, symbol, or list) is `False`, matching Wolfram
+/// (`EvenQ[x]` is `False`, not unevaluated). Wrong arity stays unevaluated.
+///
+/// Even-ness uses `rem_euclid(2)` so a *negative* `n` is classified correctly
+/// (`EvenQ[-4]` → `True`), unlike the truncating `%` which would still be fine
+/// for `== 0` but `rem_euclid` makes the intent explicit.
+fn even_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    parity_q(expr, /* want_even = */ true)
+}
+
+/// `OddQ[n]` → `True` if `n` is an odd integer, else `False`. See [`even_q_handler`].
+fn odd_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    parity_q(expr, /* want_even = */ false)
+}
+
+/// Shared core of `EvenQ`/`OddQ`: `True`/`False` on integer parity, `False` for a
+/// non-integer, unevaluated for the wrong arity.
+fn parity_q(expr: IRApply, want_even: bool) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let is_even = match &expr.args[0] {
+        IRNode::Integer(n) => n.rem_euclid(2) == 0,
+        // A non-integer is neither EvenQ nor OddQ → False.
+        _ => return sym("False"),
+    };
+    if is_even == want_even {
+        sym("True")
+    } else {
+        sym("False")
     }
 }
 
@@ -345,6 +1035,98 @@ fn unevaluated(expr: IRApply) -> IRNode {
     IRNode::Apply(Box::new(expr))
 }
 
+/// The subset's **canonical total order** over `IRNode`, used by `Sort` (MA04
+/// §12.2). A *documented simplification* of Wolfram's full canonical order: it
+/// agrees with Wolfram for the common cases (pure-numeric lists sort numerically,
+/// symbols/strings lexicographically) and is otherwise a deterministic, total,
+/// stable order so `Sort` never panics and is reproducible across runs.
+///
+/// The ordering is, in tiers:
+///
+/// 1. **all numbers** (Integer/Rational/Float) — compared by their `f64`
+///    magnitude, so `2`, `1/2`, `1.5` interleave sensibly; ties (equal magnitude,
+///    e.g. `2` vs `2.0`) fall through to the type tag so the order stays total and
+///    stable.
+/// 2. **symbols** — lexicographic by name.
+/// 3. **strings** — lexicographic.
+/// 4. **compound `Apply`** — by head first (recursively), then argument count,
+///    then arguments left-to-right (recursively).
+///
+/// Across tiers, the *tier index* decides (numbers < symbols < strings <
+/// compound). `f64` comparison uses `total_cmp`, which is a true total order even
+/// for `NaN`, so the comparator is panic-free.
+fn canonical_cmp(a: &IRNode, b: &IRNode) -> std::cmp::Ordering {
+    use std::cmp::Ordering;
+    // Numbers form one tier, compared by magnitude regardless of exact subtype.
+    let a_num = numeric_magnitude(a);
+    let b_num = numeric_magnitude(b);
+    match (a_num, b_num) {
+        (Some(x), Some(y)) => x
+            .total_cmp(&y)
+            // Equal magnitude (`2` vs `2.0`): break by the type tag so the order
+            // is total and stable (numbers stay grouped, ordering is fixed).
+            .then_with(|| type_tag(a).cmp(&type_tag(b))),
+        // A number sorts before any non-number.
+        (Some(_), None) => Ordering::Less,
+        (None, Some(_)) => Ordering::Greater,
+        // Neither is a number: order by tier tag, then within-tier.
+        (None, None) => type_tag(a)
+            .cmp(&type_tag(b))
+            .then_with(|| within_tier_cmp(a, b)),
+    }
+}
+
+/// The `f64` magnitude of a numeric node (Integer/Rational/Float), or `None` for
+/// a non-number. Used to put every number in one comparison tier in
+/// [`canonical_cmp`]. Lossy for huge integers, but only the *ordering* matters
+/// and equal-magnitude ties fall back to the type tag, so the order stays total.
+fn numeric_magnitude(node: &IRNode) -> Option<f64> {
+    match node {
+        IRNode::Integer(n) => Some(*n as f64),
+        IRNode::Rational(num, den) => Some(*num as f64 / *den as f64),
+        IRNode::Float(f) => Some(*f),
+        _ => None,
+    }
+}
+
+/// A stable tier tag fixing the cross-type order: numbers (0) < symbols (1) <
+/// strings (2) < compound (3). Within the number tier the three subtypes get
+/// distinct tags (0/1/2 offset into the number band) only as an equal-magnitude
+/// tie-break, which keeps the order total without disturbing magnitude order.
+fn type_tag(node: &IRNode) -> u8 {
+    match node {
+        IRNode::Integer(_) => 0,
+        IRNode::Rational(..) => 1,
+        IRNode::Float(_) => 2,
+        IRNode::Symbol(_) => 3,
+        IRNode::Str(_) => 4,
+        IRNode::Apply(_) => 5,
+    }
+}
+
+/// Order two *same-tier* non-numeric nodes: symbols and strings lexicographically,
+/// compound expressions by head then arity then arguments (recursively). Mixed
+/// tiers never reach here (the caller orders those by [`type_tag`]); a defensive
+/// `Equal` is returned for any residual mismatch so the comparator stays total.
+fn within_tier_cmp(a: &IRNode, b: &IRNode) -> std::cmp::Ordering {
+    use std::cmp::Ordering;
+    match (a, b) {
+        (IRNode::Symbol(x), IRNode::Symbol(y)) => x.cmp(y),
+        (IRNode::Str(x), IRNode::Str(y)) => x.cmp(y),
+        (IRNode::Apply(x), IRNode::Apply(y)) => canonical_cmp(&x.head, &y.head)
+            .then_with(|| x.args.len().cmp(&y.args.len()))
+            .then_with(|| {
+                x.args
+                    .iter()
+                    .zip(y.args.iter())
+                    .map(|(ax, bx)| canonical_cmp(ax, bx))
+                    .find(|o| *o != Ordering::Equal)
+                    .unwrap_or(Ordering::Equal)
+            }),
+        _ => Ordering::Equal,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -357,6 +1139,18 @@ mod tests {
         let table = build_wolfram_builtins();
         let handler = table.get(head).expect("no such builtin").clone();
         let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+        handler(&mut vm, IRApply { head: sym(head), args })
+    }
+
+    /// Like [`run`], but over a real [`WolframBackend`] so a handler that
+    /// re-evaluates a *Wolfram* head through the VM (e.g. `Select`/`Count`
+    /// applying the `EvenQ` predicate) can resolve it. The plain `run` helper uses
+    /// a bare `SymbolicBackend`, which does not know the W-9 predicate heads.
+    fn run_wolfram(head: &str, args: Vec<IRNode>) -> IRNode {
+        use crate::backend::WolframBackend;
+        let table = build_wolfram_builtins();
+        let handler = table.get(head).expect("no such builtin").clone();
+        let mut vm = VM::new(Box::new(WolframBackend::new()));
         handler(&mut vm, IRApply { head: sym(head), args })
     }
 
@@ -520,6 +1314,580 @@ mod tests {
         assert_eq!(
             run("Part", vec![list(vec![int(1)])]),
             apply(sym("Part"), vec![list(vec![int(1)])])
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-7 iteration handlers (unit level — handlers run over a real VM so the
+    // per-iteration substitute + re-eval, and the Add/Mul folds, exercise the
+    // shared SymbolicBackend handler table).
+    // -----------------------------------------------------------------------
+
+    /// `{i, bounds…}` spec helper.
+    fn spec(parts: Vec<IRNode>) -> IRNode {
+        list(parts)
+    }
+
+    #[test]
+    fn table_builds_the_indexed_list() {
+        // Table[i, {i, 3}] → {1, 2, 3} (body is the bare index).
+        assert_eq!(
+            run("Table", vec![sym("i"), spec(vec![sym("i"), int(3)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Table[Add(i, 10), {i, 2, 4}] → {12, 13, 14} — the body re-evaluates
+        // through the Add handler with i substituted.
+        assert_eq!(
+            run(
+                "Table",
+                vec![
+                    apply(sym("Add"), vec![sym("i"), int(10)]),
+                    spec(vec![sym("i"), int(2), int(4)])
+                ]
+            ),
+            list(vec![int(12), int(13), int(14)])
+        );
+    }
+
+    #[test]
+    fn sum_and_product_fold_over_the_range() {
+        // Sum[i, {i, 1, 10}] → 55.
+        assert_eq!(
+            run("Sum", vec![sym("i"), spec(vec![sym("i"), int(1), int(10)])]),
+            int(55)
+        );
+        // Product[i, {i, 1, 4}] → 24.
+        assert_eq!(
+            run("Product", vec![sym("i"), spec(vec![sym("i"), int(1), int(4)])]),
+            int(24)
+        );
+    }
+
+    #[test]
+    fn sum_and_product_of_empty_range_are_identities() {
+        // A wrong-way range iterates zero times → fold identity (0 / 1).
+        assert_eq!(
+            run("Sum", vec![sym("i"), spec(vec![sym("i"), int(5), int(1)])]),
+            int(0)
+        );
+        assert_eq!(
+            run("Product", vec![sym("i"), spec(vec![sym("i"), int(5), int(1)])]),
+            int(1)
+        );
+        // Table over an empty range is the empty list.
+        assert_eq!(
+            run("Table", vec![sym("i"), spec(vec![sym("i"), int(0)])]),
+            list(vec![])
+        );
+    }
+
+    #[test]
+    fn do_returns_null() {
+        // Do[i, {i, 3}] → Null (the body is pure here, so there is nothing to
+        // observe besides the Null return and the absence of a panic).
+        assert_eq!(
+            run("Do", vec![sym("i"), spec(vec![sym("i"), int(3)])]),
+            sym("Null")
+        );
+    }
+
+    #[test]
+    fn iteration_with_oversize_range_stays_unevaluated() {
+        // A count beyond MAX_RANGE_LENGTH leaves the whole form unevaluated —
+        // never allocated, never looped.
+        let big = (MAX_RANGE_LENGTH as i64) + 5;
+        let s = spec(vec![sym("i"), int(big)]);
+        assert_eq!(
+            run("Table", vec![sym("i"), s.clone()]),
+            apply(sym("Table"), vec![sym("i"), s.clone()])
+        );
+        assert_eq!(
+            run("Do", vec![sym("i"), s.clone()]),
+            apply(sym("Do"), vec![sym("i"), s])
+        );
+    }
+
+    #[test]
+    fn iteration_with_malformed_spec_stays_unevaluated() {
+        // {i} — no bound.
+        let no_bound = spec(vec![sym("i")]);
+        assert_eq!(
+            run("Table", vec![sym("i"), no_bound.clone()]),
+            apply(sym("Table"), vec![sym("i"), no_bound])
+        );
+        // Zero step.
+        let zero_step = spec(vec![sym("i"), int(1), int(5), int(0)]);
+        assert_eq!(
+            run("Table", vec![sym("i"), zero_step.clone()]),
+            apply(sym("Table"), vec![sym("i"), zero_step])
+        );
+        // Non-symbol binder.
+        let bad_binder = spec(vec![int(7), int(3)]);
+        assert_eq!(
+            run("Sum", vec![sym("i"), bad_binder.clone()]),
+            apply(sym("Sum"), vec![sym("i"), bad_binder])
+        );
+        // Spec is not a list at all.
+        assert_eq!(
+            run("Table", vec![sym("i"), int(3)]),
+            apply(sym("Table"), vec![sym("i"), int(3)])
+        );
+    }
+
+    #[test]
+    fn iteration_extreme_bounds_do_not_overflow() {
+        // A span wider than i64 but with valid i64 bounds: the i128 count
+        // exceeds the cap and the form stays unevaluated — no overflow panic.
+        let s = spec(vec![sym("i"), int(-9_000_000_000_000_000_000), int(9_000_000_000_000_000_000)]);
+        assert_eq!(
+            run("Sum", vec![int(1), s.clone()]),
+            apply(sym("Sum"), vec![int(1), s])
+        );
+    }
+
+    #[test]
+    fn iteration_wrong_arity_stays_unevaluated() {
+        // Only the 2-arg (body, spec) form is valid.
+        assert_eq!(run("Table", vec![sym("i")]), apply(sym("Table"), vec![sym("i")]));
+        assert_eq!(run("Sum", vec![]), apply(sym("Sum"), vec![]));
+    }
+
+    // -----------------------------------------------------------------------
+    // W-8 local-scoping handlers (unit level — handlers run over a real VM so
+    // the decl-RHS eval, the substitute into the held body, and the body re-eval
+    // all exercise the shared SymbolicBackend handler table).
+    // -----------------------------------------------------------------------
+
+    /// `name = value` declaration helper (the lowering of an in-`{…}` `Set`).
+    fn decl(name: &str, value: IRNode) -> IRNode {
+        apply(sym(ASSIGN), vec![sym(name), value])
+    }
+
+    #[test]
+    fn with_binds_a_single_local_and_evaluates_the_body() {
+        // With[{x = 3}, x^2] → 9 (Pow is an inner-backend head).
+        assert_eq!(
+            run(
+                "With",
+                vec![
+                    list(vec![decl("x", int(3))]),
+                    apply(sym("Pow"), vec![sym("x"), int(2)])
+                ]
+            ),
+            int(9)
+        );
+    }
+
+    #[test]
+    fn with_binds_multiple_locals_in_parallel() {
+        // With[{a = 1, b = 2}, a + b] → 3.
+        assert_eq!(
+            run(
+                "With",
+                vec![
+                    list(vec![decl("a", int(1)), decl("b", int(2))]),
+                    apply(sym("Add"), vec![sym("a"), sym("b")])
+                ]
+            ),
+            int(3)
+        );
+    }
+
+    #[test]
+    fn with_evaluates_the_decl_rhs() {
+        // With[{x = 1 + 1}, x] → 2 — the RHS is evaluated before substitution.
+        assert_eq!(
+            run(
+                "With",
+                vec![
+                    list(vec![decl("x", apply(sym("Add"), vec![int(1), int(1)]))]),
+                    sym("x")
+                ]
+            ),
+            int(2)
+        );
+    }
+
+    #[test]
+    fn module_with_initialised_locals_behaves_like_with() {
+        // Module[{a = 1, b = 2}, a + b] → 3.
+        assert_eq!(
+            run(
+                "Module",
+                vec![
+                    list(vec![decl("a", int(1)), decl("b", int(2))]),
+                    apply(sym("Add"), vec![sym("a"), sym("b")])
+                ]
+            ),
+            int(3)
+        );
+    }
+
+    #[test]
+    fn module_uninitialised_local_stays_symbolic() {
+        // Module[{x}, x] → x$nnn — an uninitialised local is α-renamed to a fresh
+        // gensym, so the body sees an undefined symbol (never a global). We assert
+        // the *shape* (a free symbol whose name starts with the base) rather than
+        // the exact gensym number, which is non-deterministic across the suite.
+        match run("Module", vec![list(vec![sym("x")]), sym("x")]) {
+            IRNode::Symbol(s) => assert!(
+                s == "x" || s.starts_with("x$"),
+                "expected a fresh `x` local, got {s:?}"
+            ),
+            other => panic!("expected a symbol, got {other}"),
+        }
+        // A mix: Module[{x, y = 2}, y] → 2 (uninitialised x is harmless).
+        assert_eq!(
+            run(
+                "Module",
+                vec![list(vec![sym("x"), decl("y", int(2))]), sym("y")]
+            ),
+            int(2)
+        );
+    }
+
+    #[test]
+    fn module_uninitialised_local_does_not_resolve_to_a_global() {
+        // With a global `u = 42` bound in the backend, Module[{u}, u] must NOT
+        // return 42 — the gensym rename gives the local a name the env never
+        // bound, so it stays free. This is the capture-leak guard.
+        use symbolic_vm::backend::Backend;
+        let table = build_wolfram_builtins();
+        let handler = table.get("Module").expect("no Module builtin").clone();
+        let mut backend = SymbolicBackend::new();
+        backend.bind("u", int(42));
+        let mut vm = VM::new(Box::new(backend));
+        let out = handler(
+            &mut vm,
+            IRApply {
+                head: sym("Module"),
+                args: vec![list(vec![sym("u")]), sym("u")],
+            },
+        );
+        match out {
+            IRNode::Symbol(s) => assert!(
+                s.starts_with("u$"),
+                "uninitialised local must be a fresh gensym, got {s:?}"
+            ),
+            other => panic!("expected a fresh symbol, not the global 42: {other}"),
+        }
+    }
+
+    #[test]
+    fn block_binds_like_with_for_self_contained_bodies() {
+        // Block[{x = 5}, x + 1] → 6.
+        assert_eq!(
+            run(
+                "Block",
+                vec![
+                    list(vec![decl("x", int(5))]),
+                    apply(sym("Add"), vec![sym("x"), int(1)])
+                ]
+            ),
+            int(6)
+        );
+    }
+
+    #[test]
+    fn with_uninitialised_local_is_rejected() {
+        // With requires every local to be initialised; a bare `x` leaves the
+        // whole form unevaluated (Block too).
+        let form = vec![list(vec![sym("x")]), sym("x")];
+        assert_eq!(
+            run("With", form.clone()),
+            apply(sym("With"), form.clone())
+        );
+        assert_eq!(run("Block", form.clone()), apply(sym("Block"), form));
+    }
+
+    #[test]
+    fn scoping_with_malformed_decls_stays_unevaluated() {
+        // First argument not a list.
+        assert_eq!(
+            run("With", vec![sym("x"), sym("x")]),
+            apply(sym("With"), vec![sym("x"), sym("x")])
+        );
+        // A decl that is a literal, not a symbol or assignment.
+        let lit = vec![list(vec![int(7)]), int(1)];
+        assert_eq!(run("With", lit.clone()), apply(sym("With"), lit));
+        // A non-symbol assignment target: f[x] = 1.
+        let bad_target = vec![
+            list(vec![apply(
+                sym(ASSIGN),
+                vec![apply(sym("f"), vec![sym("x")]), int(1)],
+            )]),
+            int(1),
+        ];
+        assert_eq!(
+            run("With", bad_target.clone()),
+            apply(sym("With"), bad_target)
+        );
+    }
+
+    #[test]
+    fn scoping_wrong_arity_stays_unevaluated() {
+        // Only the 2-arg (decls, body) form is valid.
+        assert_eq!(
+            run("With", vec![list(vec![decl("x", int(1))])]),
+            apply(sym("With"), vec![list(vec![decl("x", int(1))])])
+        );
+        assert_eq!(run("Module", vec![]), apply(sym("Module"), vec![]));
+        assert_eq!(
+            run(
+                "Block",
+                vec![list(vec![decl("x", int(1))]), int(1), int(2)]
+            ),
+            apply(
+                sym("Block"),
+                vec![list(vec![decl("x", int(1))]), int(1), int(2)]
+            )
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-9 list-manipulation handlers (unit level — Select/Count/Total run over a
+    // real VM so the predicate-application path and the Add fold exercise the
+    // shared SymbolicBackend handler table).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn sort_orders_a_numeric_list_ascending() {
+        assert_eq!(
+            run("Sort", vec![list(vec![int(3), int(1), int(2)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Mixed magnitudes (int / rational / float) interleave by value.
+        assert_eq!(
+            run(
+                "Sort",
+                vec![list(vec![int(2), IRNode::rational(1, 2), flt(1.5)])]
+            ),
+            list(vec![IRNode::rational(1, 2), flt(1.5), int(2)])
+        );
+        // Empty and singleton lists are fixed points.
+        assert_eq!(run("Sort", vec![list(vec![])]), list(vec![]));
+        assert_eq!(run("Sort", vec![list(vec![int(7)])]), list(vec![int(7)]));
+    }
+
+    #[test]
+    fn sort_orders_symbols_and_mixed_types_canonically() {
+        // Symbols sort lexicographically, and numbers sort before symbols.
+        assert_eq!(
+            run(
+                "Sort",
+                vec![list(vec![sym("c"), int(2), sym("a"), int(1)])]
+            ),
+            list(vec![int(1), int(2), sym("a"), sym("c")])
+        );
+    }
+
+    #[test]
+    fn sort_of_a_non_list_stays_unevaluated() {
+        assert_eq!(run("Sort", vec![sym("x")]), apply(sym("Sort"), vec![sym("x")]));
+        // Wrong arity too.
+        assert_eq!(run("Sort", vec![]), apply(sym("Sort"), vec![]));
+    }
+
+    #[test]
+    fn reverse_reverses_a_list() {
+        assert_eq!(
+            run("Reverse", vec![list(vec![int(1), int(2), int(3)])]),
+            list(vec![int(3), int(2), int(1)])
+        );
+        assert_eq!(run("Reverse", vec![list(vec![])]), list(vec![]));
+        // Non-list stays unevaluated.
+        assert_eq!(
+            run("Reverse", vec![int(5)]),
+            apply(sym("Reverse"), vec![int(5)])
+        );
+    }
+
+    #[test]
+    fn join_concatenates_two_or_more_lists() {
+        assert_eq!(
+            run("Join", vec![list(vec![int(1)]), list(vec![int(2), int(3)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Three-argument form.
+        assert_eq!(
+            run(
+                "Join",
+                vec![list(vec![int(1)]), list(vec![int(2)]), list(vec![int(3)])]
+            ),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Joining with an empty list is the identity.
+        assert_eq!(
+            run("Join", vec![list(vec![int(1)]), list(vec![])]),
+            list(vec![int(1)])
+        );
+    }
+
+    #[test]
+    fn join_with_a_non_list_or_too_few_args_stays_unevaluated() {
+        // A non-list argument aborts the whole join.
+        assert_eq!(
+            run("Join", vec![list(vec![int(1)]), int(2)]),
+            apply(sym("Join"), vec![list(vec![int(1)]), int(2)])
+        );
+        // Fewer than two arguments is malformed.
+        assert_eq!(
+            run("Join", vec![list(vec![int(1)])]),
+            apply(sym("Join"), vec![list(vec![int(1)])])
+        );
+    }
+
+    #[test]
+    fn flatten_full_flattens_all_levels() {
+        // One level.
+        assert_eq!(
+            run("Flatten", vec![list(vec![list(vec![int(1), int(2)]), list(vec![int(3)])])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Deep nesting, all levels.
+        assert_eq!(
+            run(
+                "Flatten",
+                vec![list(vec![int(1), list(vec![int(2), list(vec![int(3)])])])]
+            ),
+            list(vec![int(1), int(2), int(3)])
+        );
+        // Already flat is a fixed point.
+        assert_eq!(
+            run("Flatten", vec![list(vec![int(1), int(2)])]),
+            list(vec![int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn flatten_with_explicit_depth_stops_after_n_levels() {
+        // Depth 1: only the top level is spliced; the inner {3} survives.
+        assert_eq!(
+            run(
+                "Flatten",
+                vec![
+                    list(vec![int(1), list(vec![int(2), list(vec![int(3)])])]),
+                    int(1)
+                ]
+            ),
+            list(vec![int(1), int(2), list(vec![int(3)])])
+        );
+        // Depth 0: nothing is descended — the list is returned element-wise as-is.
+        assert_eq!(
+            run(
+                "Flatten",
+                vec![list(vec![int(1), list(vec![int(2)])]), int(0)]
+            ),
+            list(vec![int(1), list(vec![int(2)])])
+        );
+    }
+
+    #[test]
+    fn flatten_malformed_stays_unevaluated() {
+        // Non-list first argument.
+        assert_eq!(
+            run("Flatten", vec![int(5)]),
+            apply(sym("Flatten"), vec![int(5)])
+        );
+        // Negative depth.
+        assert_eq!(
+            run("Flatten", vec![list(vec![int(1)]), int(-1)]),
+            apply(sym("Flatten"), vec![list(vec![int(1)]), int(-1)])
+        );
+        // Non-integer depth.
+        assert_eq!(
+            run("Flatten", vec![list(vec![int(1)]), sym("x")]),
+            apply(sym("Flatten"), vec![list(vec![int(1)]), sym("x")])
+        );
+    }
+
+    #[test]
+    fn even_q_and_odd_q_classify_integers() {
+        assert_eq!(run("EvenQ", vec![int(4)]), sym("True"));
+        assert_eq!(run("EvenQ", vec![int(3)]), sym("False"));
+        assert_eq!(run("OddQ", vec![int(3)]), sym("True"));
+        assert_eq!(run("OddQ", vec![int(4)]), sym("False"));
+        // Negative integers are classified correctly (rem_euclid).
+        assert_eq!(run("EvenQ", vec![int(-4)]), sym("True"));
+        assert_eq!(run("OddQ", vec![int(-3)]), sym("True"));
+        // Zero is even.
+        assert_eq!(run("EvenQ", vec![int(0)]), sym("True"));
+        // A non-integer is neither even nor odd → False.
+        assert_eq!(run("EvenQ", vec![sym("x")]), sym("False"));
+        assert_eq!(run("OddQ", vec![flt(2.0)]), sym("False"));
+        // Wrong arity stays unevaluated.
+        assert_eq!(run("EvenQ", vec![]), apply(sym("EvenQ"), vec![]));
+    }
+
+    #[test]
+    fn select_keeps_elements_passing_the_predicate() {
+        // Select[{1, 2, 3, 4}, EvenQ] → {2, 4}.
+        assert_eq!(
+            run_wolfram(
+                "Select",
+                vec![list(vec![int(1), int(2), int(3), int(4)]), sym("EvenQ")]
+            ),
+            list(vec![int(2), int(4)])
+        );
+        // A predicate that never fires gives the empty list.
+        assert_eq!(
+            run_wolfram("Select", vec![list(vec![int(1), int(3)]), sym("EvenQ")]),
+            list(vec![])
+        );
+    }
+
+    #[test]
+    fn select_with_an_unbound_predicate_selects_nothing() {
+        // `f[e]` stays unevaluated (f unbound) — never the True symbol — so no
+        // element is selected and nothing panics.
+        assert_eq!(
+            run("Select", vec![list(vec![int(1), int(2)]), sym("f")]),
+            list(vec![])
+        );
+        // Non-list / wrong arity stay unevaluated.
+        assert_eq!(
+            run("Select", vec![int(1), sym("EvenQ")]),
+            apply(sym("Select"), vec![int(1), sym("EvenQ")])
+        );
+    }
+
+    #[test]
+    fn count_tallies_elements_passing_the_predicate() {
+        // Count[{1, 2, 3, 4}, EvenQ] → 2.
+        assert_eq!(
+            run_wolfram(
+                "Count",
+                vec![list(vec![int(1), int(2), int(3), int(4)]), sym("EvenQ")]
+            ),
+            int(2)
+        );
+        assert_eq!(
+            run_wolfram("Count", vec![list(vec![int(1), int(3), int(5)]), sym("EvenQ")]),
+            int(0)
+        );
+        // Non-list stays unevaluated.
+        assert_eq!(
+            run("Count", vec![sym("x"), sym("EvenQ")]),
+            apply(sym("Count"), vec![sym("x"), sym("EvenQ")])
+        );
+    }
+
+    #[test]
+    fn total_sums_a_list_onto_add() {
+        assert_eq!(run("Total", vec![list(vec![int(1), int(2), int(3)])]), int(6));
+        // An empty list totals to 0.
+        assert_eq!(run("Total", vec![list(vec![])]), int(0));
+        // Symbolic terms combine via the Add engine: Total[{x, x}] → 2 x ... but
+        // at minimum x + 1 + 2 collapses the numbers; assert the all-symbol case
+        // stays as a sum (handled by the shared Add handler).
+        assert_eq!(
+            run("Total", vec![list(vec![int(10), int(20)])]),
+            int(30)
+        );
+        // Non-list stays unevaluated.
+        assert_eq!(
+            run("Total", vec![sym("x")]),
+            apply(sym("Total"), vec![sym("x")])
         );
     }
 }

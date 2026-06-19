@@ -4,6 +4,206 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] — 2026-06-17
+
+The **W-9** deliverable (MA04 §12): list-manipulation builtins — the reordering,
+concatenating, flattening, filtering, counting, and summing heads every
+list-processing session reaches for. Lowered onto the *same* substrate as W-5
+(the `list_elements` accessor, the `Map`/`Apply` predicate-application path, and
+the canonical `Add` fold). All are plain `Head[args]` applications — **no grammar
+change** — and all are eager (non-held), so the `WolframBackend` held set is
+untouched.
+
+### Added (list-manipulation heads)
+
+- **`Sort[list]`** → ascending in the subset's documented total canonical order
+  (`canonical_cmp`): numbers (by `f64` magnitude) < symbols < strings < compound
+  expressions; total and stable, so it never panics and is reproducible across
+  runs. Pure-numeric lists sort numerically (`Sort[{3, 1, 2}]` → `{1, 2, 3}`).
+- **`Reverse[list]`** → the list reversed.
+- **`Join[a, b, …]`** → two or more lists concatenated. The combined length is
+  capped at `MAX_LIST_LENGTH` (checked with `checked_add` before allocating); a
+  non-list argument leaves the form unevaluated.
+- **`Flatten[list]`** → every nested sub-list spliced in at **all** levels;
+  **`Flatten[list, n]`** → only the top `n` levels of nested sub-lists. Output
+  length capped at `MAX_LIST_LENGTH`, recursion bounded by the (token-capped)
+  input nesting. A negative/non-integer depth, or a non-list, stays unevaluated.
+- **`Select[list, pred]`** / **`Count[list, pred]`** → keep / tally elements where
+  `pred[e]` evaluates to the `True` symbol. The predicate is applied through the
+  **same** path as `Map`/`Apply` (`build_canonical_application` + `vm.eval`), so a
+  built-in predicate, a user `SetDelayed` function, or a bridged head all work.
+  Function-predicate `Count` is the documented simplification versus full Wolfram
+  pattern-matching `Count` (MA04 §12.3).
+- **`Total[list]`** → the sum of the elements, folded onto the canonical `Add`
+  head (consistent with W-7 `Sum` over a range); an empty list totals to `0`.
+
+### Added (parity predicates)
+
+- **`EvenQ[n]`** / **`OddQ[n]`** → `True`/`False` on integer parity (so
+  `Select`/`Count` are testable; the W-5/W-6 surface had no predicate head).
+  `rem_euclid(2)` classifies negatives correctly; a non-integer argument is
+  `False` (matching Wolfram), wrong arity stays unevaluated.
+
+### Safety / DoS (MA04 §12.4)
+
+- `Join`/`Flatten` outputs are bounded by `MAX_LIST_LENGTH` (= `MAX_RANGE_LENGTH`,
+  1,000,000), checked before allocation; `Flatten` recursion is depth-bounded.
+- The size-non-increasing heads (`Sort`, `Reverse`, `Select`, `Count`, `Total`)
+  add no new allocation source — their output is at most the source-bounded input.
+- Every malformed form (non-list arg, non-callable predicate, bad depth, wrong
+  arity) is **left unevaluated** — echoed back, never a panic — per the W-5
+  convention.
+
+### Tests
+
+- Unit tests for each head over a real VM, plus the malformed/edge cases
+  (oversize/negative depth, non-list, unbound predicate, extreme parity).
+  `Select`/`Count` predicate tests run over a real `WolframBackend` so `EvenQ`
+  resolves.
+- End-to-end integration tests through `eval`/`WolframSession` for every
+  acceptance example in the brief, a user-defined predicate, and a regression
+  guard that W-4..W-8 behaviour is unchanged.
+
+## [0.5.0] — 2026-06-17
+
+The **W-8** deliverable (MA04 §11): local scoping — the three Wolfram heads that
+bind named locals over a body. `With`, `Module`, and `Block` are lowered onto the
+*same* substrate as W-7's iteration index: held heads + the `vm.rs::substitute`
+primitive. No new evaluator, no opcode, no grammar change.
+
+### Added (local-scoping heads)
+
+- **`With[{x = e, …}, body]`** → `body` with each local bound to its **evaluated**
+  RHS, substituted in and re-evaluated. Lexical and immediate, parallel binding
+  (each RHS sees the surrounding scope, so a decl may reference an outer binding).
+  So `With[{x = 3}, x^2]` is `9` and `With[{a = 1, b = 2}, a + b]` is `3`.
+- **`Module[{x, y = e}, body]`** → lexically-scoped locals. An initialised decl
+  (`y = e`) binds like `With`; an **uninitialised** decl (`x`) is α-renamed to a
+  fresh gensym `x$nnn` (mirroring real Wolfram) so it stays undefined and cannot
+  resolve to — or be captured by — a same-named global. `Module[{a = 1, b = 2},
+  a + b]` is `3`.
+- **`Block[{x = e}, body]`** → temporarily binds `x` over `body`. For the
+  substitution-based subset a self-contained body is observably identical to
+  `With`; `Block[{x = 5}, x + 1]` is `6`. (See §11.3 for the dynamic-scope
+  simplification.)
+
+### Binding mechanism (MA04 §11.2–§11.3)
+
+- The three heads are **held** (added to the `WolframBackend` decorator's
+  `hold_heads` set, union with the inner held set and W-7's iteration heads) so
+  the declaration list and body arrive unevaluated.
+- Each decl's RHS is evaluated through `vm.eval`; the collected `name → value`
+  mapping is applied to a **copy** of the held body via the same `substitute`
+  used for user-function parameters and the W-7 index, then the result is
+  evaluated. Because the session environment is never mutated, **locals do not
+  leak** (`x` is still free after `With[{x = 3}, x]`) and never clobber a global.
+- Uninitialised `Module` locals are gensym-renamed (a monotonic `AtomicU64`
+  counter) — the documented capture-avoidance simplification in place of full
+  α-renaming of every local.
+
+### Robustness (MA04 §11.4)
+
+- Malformed forms are left **unevaluated**, never a panic: a non-`List` first
+  argument (`With[x, body]`), a `With`/`Block` local with no value
+  (`With[{x}, body]`), a non-symbol assignment target (`f[x] = 1`), or the wrong
+  arity. No new allocation source — the body is substituted once per scope entry,
+  bounded by the W-4 input/token caps; nested scopes recurse over strictly
+  smaller bodies.
+
+### Tests
+
+- W-8 acceptance values; no-leak and no-clobber guards; nested scoping; a decl
+  referring to an outer binding; the gensym shadow of a global by an
+  uninitialised `Module` local; and the malformed-form / wrong-arity guards.
+
+## [0.4.0] — 2026-06-17
+
+The **W-7** deliverable (MA04 §10): iteration constructs — the first Wolfram-lane
+forms that introduce a *scoped local index*. `Table`, `Do`, `Sum`, and `Product`
+bind a fresh variable `i` to each value of a range and evaluate a body once per
+value, lowered onto the *same* `symbolic-vm` substrate (no bespoke loop opcode,
+no new evaluator).
+
+### Added (iteration heads)
+
+- **`Table[expr, {i, imax}]`** / **`{i, imin, imax}`** / **`{i, imin, imax, di}`**
+  → the list of `expr` evaluated with `i` bound over the range. So
+  `Table[i^2, {i, 3}]` is `{1, 4, 9}` and `Table[i, {i, 2, 4}]` is `{2, 3, 4}`.
+- **`Do[expr, {i, n}]`** → evaluate `expr` `n` times for side effects (e.g. a
+  `Set` in the body), returning `Null`.
+- **`Sum[expr, {i, imin, imax}]`** → fold `+` over the range
+  (`Sum[i, {i, 1, 10}]` is `55`); an empty range sums to `0`.
+- **`Product[expr, {i, imin, imax}]`** → fold `×`
+  (`Product[i, {i, 1, 4}]` is `24`); an empty range is `1`.
+
+### How the index binds
+
+- The four heads are **held** — `WolframBackend::hold_heads` now returns the
+  union of the inner `SymbolicBackend` held set (`If`, `Assign`, `Define`, …) and
+  `{Table, Do, Sum, Product}`, so the body and iterator spec arrive unevaluated.
+- Each iteration binds `i → value` with the **same `vm.rs::substitute`** that
+  binds user-function parameters, then re-evaluates the body through the VM. The
+  index stays *local* (it never leaks into the session), and nested `Table`s each
+  bind their own index cleanly.
+- The iterator-spec *bounds* are evaluated by the handler (the head is held, so
+  `{i, 1+1}` and `{i, n}`-with-`n`-bound resolve correctly), while the body
+  stays held until substitution.
+
+### DoS surface
+
+- The per-iteration count is **capped at `MAX_RANGE_LENGTH`** (the same bound
+  `Range` uses), computed in `i128` *before* any allocation or looping — an
+  oversize or extreme-span iterator (e.g. `Table[0, {i, 2000000}]`) is left
+  unevaluated rather than hanging or exhausting memory. `Do` is capped
+  identically (the cap bounds wall-clock work, not just memory), and the cap
+  composes for nested `Table`. A malformed spec (`{i}` with no bound, a zero
+  step, a non-integer/non-symbol binder, or a non-list spec) stays unevaluated —
+  never a panic. See MA04 §10.3.
+
+### Notes
+
+- No grammar/lexer change: `Table[…]`/`Do[…]`/`Sum[…]`/`Product[…]` are ordinary
+  `Head[args]` applications over list-literal specs the W-1 grammar already
+  parses. W-7 touches only `wolfram-runtime` (`builtins.rs` + `backend.rs`).
+- `Sum`/`Product` fold onto the canonical `Add`/`Mul` IR heads, so symbolic terms
+  combine through the same engine as `1 + 2` (a symbolic body like
+  `Sum[x, {i, 1, 3}]` yields `x + x + x`, the engine doing no further `3x`
+  normalisation — consistent with W-4 behaviour).
+
+## [0.3.0] — 2026-06-17
+
+The **W-6** deliverable (MA04 §9): operator sugar for the W-5 Tier-1 heads. No
+new evaluation logic and no new handler — each sugar form desugars in lowering
+to the exact same head the W-5 built-in table already answers, so the sugar and
+its head form produce byte-identical IR.
+
+### Added (operator sugar)
+
+- **`f /@ x` ≡ `Map[f, x]`** — lowered by the new `lower_mapapply` over the
+  parser's `mapapply` rule.
+- **`f @@ x` ≡ `Apply[f, x]`** — same path; `/@` and `@@` share one
+  left-associative precedence level (`g @@ f /@ x` ⇒ `Map[Apply[g, f], x]` —
+  parenthesise when mixing).
+- **`x[[i]]` ≡ `Part[x, i]`** — `lower_postfix` gains an `LDBRACKET` arm that
+  emits `Part`; a multi-index `x[[i, j]]` folds into nested parts
+  `Part[Part[x, i], j]`, and `[[ ]]` chains/interleaves with `f[…]` application
+  (`x[[1]][[2]]`, `f[x][[1]]`, `Range[3][[2]]`).
+
+So `Plus @@ {1, 2, 3}` is `6`, `f /@ {1, 2}` is `{f[1], f[2]}`,
+`{a, b, c}[[2]]` is `b`, and `{{1,2},{3,4}}[[1]][[2]]` is `2`, each identical to
+its long head form. Negative/out-of-range `Part` and the `Map`/`Apply`
+re-evaluation behaviour carry over from W-5 unchanged.
+
+### Notes
+
+- `Map`/`Apply`/`Part` are **not** run through the `Plus`→`Add`-style
+  `canonical_head` bridge (they are not arithmetic heads), so they reach the
+  `WolframBackend` decorator handler table verbatim.
+- No new DoS surface: `/@`/`@@` inherit `Map`/`Apply`'s bounds (the
+  already-materialised list); `[[ ]]` only reads one element; deep `[[…]]`
+  chains are parsed iteratively (bounded by the W-4 per-statement token cap), not
+  by grammar recursion. See MA04 §9.4.
+
 ## [0.2.0] — 2026-06-17
 
 The **W-5** deliverable (MA04 §8): more built-ins & evaluation, layered onto the

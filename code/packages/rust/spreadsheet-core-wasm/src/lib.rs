@@ -71,6 +71,43 @@ pub struct SpreadsheetSession {
     /// What was literally typed into each cell — the source of truth for
     /// [`get_raw`](Self::get_raw), independent of the engine's internals.
     raw: HashMap<CellAddress, String>,
+    /// A facade-side mirror of the engine's clipboard, holding the *raw* (typed)
+    /// source of each copied/cut cell so [`paste`](Self::paste) can keep the
+    /// `raw` echo map in step — the engine stores parsed content, not the
+    /// user's text. Its lifecycle tracks the engine's: kept on a copy, dropped
+    /// on the paste that consumes a cut, untouched on a rejected paste.
+    clip: Option<RawClip>,
+    /// Undo history: serialized full-document snapshots of the state *before*
+    /// each mutating edit, newest at the back. [`undo`](Self::undo) pops one and
+    /// restores it; [`redo`](Self::redo) replays from `redo_stack`. We snapshot
+    /// the whole document (source + formats, via [`serialize`](Self::serialize))
+    /// rather than per-op inverses, so undo/redo is automatically correct for
+    /// *every* edit — set, fill, clipboard, structural, format, load — and any
+    /// future one, with no per-op bookkeeping. The clipboard buffer is a
+    /// transient editing aid, not document state, so it is deliberately *not*
+    /// captured (undo restores cells, not what's on the clipboard).
+    undo_stack: Vec<String>,
+    /// Redo history: snapshots of states undone away, newest at the back. Any new
+    /// edit clears this (you can't redo past a fresh divergence) — the standard
+    /// linear undo model.
+    redo_stack: Vec<String>,
+}
+
+/// How many undo snapshots to retain. Old entries past this are dropped from the
+/// front, so history is bounded regardless of session length (the oldest edits
+/// become un-undoable, exactly like a real editor's finite history).
+const MAX_HISTORY: usize = 100;
+
+/// The facade's raw-text snapshot of a copied/cut rectangle, paired 1:1 with the
+/// engine's clipboard. Offsets are from the source range's top-left anchor.
+struct RawClip {
+    anchor: CellAddress,
+    source: CellRange,
+    rows: u32,
+    cols: u32,
+    is_cut: bool,
+    /// `(d_row, d_col) → raw text` for the non-blank source cells.
+    cells: HashMap<(u32, u32), String>,
 }
 
 impl SpreadsheetSession {
@@ -82,7 +119,74 @@ impl SpreadsheetSession {
             wb,
             sheet,
             raw: HashMap::new(),
+            clip: None,
+            undo_stack: Vec::new(),
+            redo_stack: Vec::new(),
         }
+    }
+
+    // ── Undo / redo ─────────────────────────────────────────────────
+    //
+    // History is snapshot-based: every mutating edit is run through [`mutate`],
+    // which captures the document (serialize) before the edit and, *only if the
+    // edit actually changed something*, pushes that pre-state onto `undo_stack`
+    // and clears `redo_stack`. So a no-op (a failed `set_cell`, a `copy` that
+    // only touches the clipboard, an off-grid `fill`) leaves history untouched —
+    // the user never has to press undo twice for one visible change. `undo`/
+    // `redo` swap snapshots between the two stacks and restore via the same
+    // machinery `deserialize` uses, so they correctly rebuild the formula-bar
+    // echo and recompute every dependent.
+
+    /// Run a mutating edit, recording an undo checkpoint iff it changed the
+    /// document. `before`/`after` are full serializations; comparing them gates
+    /// out no-ops so history stays meaningful (a sparse demo sheet serializes to
+    /// a few hundred bytes, so the double-serialize is cheap).
+    fn mutate<T>(&mut self, f: impl FnOnce(&mut Self) -> T) -> T {
+        let before = self.wb.serialize();
+        let result = f(self);
+        if self.wb.serialize() != before {
+            self.undo_stack.push(before);
+            // Bound the history: drop the oldest snapshot once we exceed the cap.
+            if self.undo_stack.len() > MAX_HISTORY {
+                self.undo_stack.remove(0);
+            }
+            self.redo_stack.clear();
+        }
+        result
+    }
+
+    /// `true` if there is an edit to undo.
+    pub fn can_undo(&self) -> bool {
+        !self.undo_stack.is_empty()
+    }
+
+    /// `true` if there is an undone edit to redo.
+    pub fn can_redo(&self) -> bool {
+        !self.redo_stack.is_empty()
+    }
+
+    /// Undo the most recent edit: restore the document to its state before that
+    /// edit, pushing the current state onto the redo stack. Returns `false`
+    /// (nothing happened) when there is nothing to undo.
+    pub fn undo(&mut self) -> bool {
+        let Some(prev) = self.undo_stack.pop() else {
+            return false;
+        };
+        self.redo_stack.push(self.wb.serialize());
+        self.load_snapshot(&prev);
+        true
+    }
+
+    /// Redo the most recently undone edit: restore the state that was undone
+    /// away, pushing the current state back onto the undo stack. Returns `false`
+    /// when there is nothing to redo.
+    pub fn redo(&mut self) -> bool {
+        let Some(next) = self.redo_stack.pop() else {
+            return false;
+        };
+        self.undo_stack.push(self.wb.serialize());
+        self.load_snapshot(&next);
+        true
     }
 
     /// Set a cell from a raw, user-typed string and recompute dependents.
@@ -100,11 +204,13 @@ impl SpreadsheetSession {
     /// and keeps the typed text (so the formula bar can still show it), exactly
     /// as a spreadsheet would.
     pub fn set_cell(&mut self, a1: &str, raw: &str) -> String {
-        match catch_unwind(AssertUnwindSafe(|| self.set_cell_inner(a1, raw))) {
-            Ok(Ok(())) => json!({ "ok": true }).to_string(),
-            Ok(Err(msg)) => json!({ "ok": false, "error": msg }).to_string(),
-            Err(_) => json!({ "ok": false, "error": "internal error" }).to_string(),
-        }
+        self.mutate(|s| {
+            match catch_unwind(AssertUnwindSafe(|| s.set_cell_inner(a1, raw))) {
+                Ok(Ok(())) => json!({ "ok": true }).to_string(),
+                Ok(Err(msg)) => json!({ "ok": false, "error": msg }).to_string(),
+                Err(_) => json!({ "ok": false, "error": "internal error" }).to_string(),
+            }
+        })
     }
 
     fn set_cell_inner(&mut self, a1: &str, raw: &str) -> Result<(), String> {
@@ -163,6 +269,10 @@ impl SpreadsheetSession {
     }
 
     fn structural_edit(&mut self, edit: StructuralEdit) {
+        self.mutate(|s| s.structural_edit_inner(edit));
+    }
+
+    fn structural_edit_inner(&mut self, edit: StructuralEdit) {
         // Mirror the engine's guard: an insert that would push a non-empty cell
         // off the u32 grid edge is rejected wholesale (the saturating shift would
         // otherwise collide raw entries onto the same address). Both sides apply
@@ -210,6 +320,10 @@ impl SpreadsheetSession {
     /// echo map honest — each target's stored source is the source's source with
     /// its references shifted (so the formula bar shows the filled formula).
     pub fn fill(&mut self, src_a1: &str, dst_start_a1: &str, dst_end_a1: &str) {
+        self.mutate(|s| s.fill_inner(src_a1, dst_start_a1, dst_end_a1));
+    }
+
+    fn fill_inner(&mut self, src_a1: &str, dst_start_a1: &str, dst_end_a1: &str) {
         let (Ok(src), Ok(ds), Ok(de)) = (
             CellAddress::parse(src_a1),
             CellAddress::parse(dst_start_a1),
@@ -253,6 +367,212 @@ impl SpreadsheetSession {
         }
     }
 
+    /// Copy the inclusive rectangle `start_a1`..`end_a1` into the clipboard — a
+    /// whole-block copy that pastes as a unit (the sibling of [`fill`](Self::fill),
+    /// which replicates one cell). Content + format are captured by the engine;
+    /// this facade also snapshots each cell's raw source so [`paste`](Self::paste)
+    /// can keep the formula-bar echo in step. The source is left untouched; the
+    /// buffer survives any number of pastes. Malformed addresses or a rectangle
+    /// over `MAX_RANGE_CELLS` are a no-op.
+    pub fn copy(&mut self, start_a1: &str, end_a1: &str) {
+        self.snapshot(start_a1, end_a1, false);
+    }
+
+    /// Cut the inclusive rectangle `start_a1`..`end_a1` into the clipboard. Like
+    /// [`copy`](Self::copy) but a one-shot move: the [`paste`](Self::paste) that
+    /// places it clears the source cells it didn't overwrite and consumes the
+    /// buffer. The source is not cleared until paste.
+    pub fn cut(&mut self, start_a1: &str, end_a1: &str) {
+        self.snapshot(start_a1, end_a1, true);
+    }
+
+    /// Shared capture for [`copy`]/[`cut`]: drive the engine's clipboard and
+    /// mirror the raw echo into a [`RawClip`].
+    fn snapshot(&mut self, start_a1: &str, end_a1: &str, is_cut: bool) {
+        let (Ok(start), Ok(end)) = (CellAddress::parse(start_a1), CellAddress::parse(end_a1)) else {
+            return;
+        };
+        let range = CellRange::new(start, end);
+        // Mirror the engine's DoS guard so the raw-snapshot loop stays bounded.
+        if range.cell_count() > MAX_RANGE_CELLS {
+            return;
+        }
+
+        if is_cut {
+            self.wb.cut(self.sheet, range);
+        } else {
+            self.wb.copy(self.sheet, range);
+        }
+
+        let anchor = range.start;
+        let mut cells = HashMap::new();
+        for row in range.start.row..=range.end.row {
+            for col in range.start.col..=range.end.col {
+                if let Some(raw) = self.raw.get(&CellAddress::new(row, col)) {
+                    cells.insert((row - anchor.row, col - anchor.col), raw.clone());
+                }
+            }
+        }
+        self.clip = Some(RawClip {
+            anchor,
+            source: range,
+            rows: range.end.row - range.start.row + 1,
+            cols: range.end.col - range.start.col + 1,
+            is_cut,
+            cells,
+        });
+    }
+
+    /// Paste the clipboard so its top-left lands at `dst_start_a1`. Returns `true`
+    /// when applied, `false` (a no-op) for an empty clipboard, a malformed
+    /// address, or a destination that would run past the grid edge — exactly
+    /// tracking the engine's `paste`. The whole block's references shift by the
+    /// destination's offset from the source anchor; content, format, and the raw
+    /// echo all ride along, and source blanks erase their targets. A cut then
+    /// clears the source echo it didn't overwrite and consumes the buffer.
+    pub fn paste(&mut self, dst_start_a1: &str) -> bool {
+        self.mutate(|s| s.paste_inner(dst_start_a1))
+    }
+
+    fn paste_inner(&mut self, dst_start_a1: &str) -> bool {
+        let Some(clip) = self.clip.take() else {
+            return false;
+        };
+        let Ok(dst) = CellAddress::parse(dst_start_a1) else {
+            self.clip = Some(clip); // bad address — keep the buffer
+            return false;
+        };
+
+        // Drive the engine; it enforces every guard (off-grid, sheet, bounds) and
+        // reports whether a paste happened. If it declined, leave the raw echo
+        // and the facade buffer exactly as they were.
+        if !self.wb.paste(self.sheet, dst) {
+            self.clip = Some(clip);
+            return false;
+        }
+
+        // Engine pasted: rewrite the raw echo for the destination rectangle. The
+        // whole block shifts by the same delta (dst − anchor), i64-clamped into
+        // the i32 contract like fill, so a high-coordinate paste can't overflow.
+        let d_row =
+            (dst.row as i64 - clip.anchor.row as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+        let d_col =
+            (dst.col as i64 - clip.anchor.col as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+        for dr in 0..clip.rows {
+            for dc in 0..clip.cols {
+                let target = CellAddress::new(dst.row + dr, dst.col + dc);
+                match clip.cells.get(&(dr, dc)) {
+                    Some(raw) => {
+                        self.raw.insert(target, rewrite_raw_for_fill(raw, d_row, d_col));
+                    }
+                    None => {
+                        self.raw.remove(&target); // source blank → erase target echo
+                    }
+                }
+            }
+        }
+
+        // A cut moves: clear the source echo the paste didn't overwrite.
+        if clip.is_cut {
+            let dst_end_row = dst.row + clip.rows - 1;
+            let dst_end_col = dst.col + clip.cols - 1;
+            for row in clip.source.start.row..=clip.source.end.row {
+                for col in clip.source.start.col..=clip.source.end.col {
+                    let covered = row >= dst.row
+                        && row <= dst_end_row
+                        && col >= dst.col
+                        && col <= dst_end_col;
+                    if !covered {
+                        self.raw.remove(&CellAddress::new(row, col));
+                    }
+                }
+            }
+        }
+
+        // Copy's buffer survives for reuse; a cut's is consumed (matching engine).
+        if !clip.is_cut {
+            self.clip = Some(clip);
+        }
+        true
+    }
+
+    /// Whether the clipboard currently holds a copied/cut block.
+    pub fn has_clipboard(&self) -> bool {
+        self.clip.is_some()
+    }
+
+    /// Serialize the workbook to a portable JSON string (save). Delegates to the
+    /// engine's [`Workbook::serialize`], which captures every source cell + format
+    /// per sheet; the JSON round-trips through [`deserialize`](Self::deserialize).
+    /// No I/O — the JS host stores the returned string wherever it likes.
+    pub fn serialize(&self) -> String {
+        self.wb.serialize()
+    }
+
+    /// Replace the workbook's contents from a JSON string produced by
+    /// [`serialize`](Self::serialize) (load). Returns `true` on success, `false`
+    /// for malformed JSON / unsupported version / bad structure (the engine
+    /// leaves itself untouched on a bad header). On success the facade's `raw`
+    /// echo map is rebuilt from the loaded JSON so the formula bar shows each
+    /// cell's source (a formula's text; a literal's canonical string), and the
+    /// pinned single sheet is re-bound (a zero-sheet file gets a fresh "Sheet1"
+    /// so the facade stays usable).
+    pub fn deserialize(&mut self, data: &str) -> bool {
+        // A file-load is an undoable edit, so route it through `mutate` (which
+        // checkpoints iff the document actually changed). undo/redo restore via
+        // `load_snapshot` directly, bypassing history.
+        self.mutate(|s| s.load_snapshot(data))
+    }
+
+    /// Restore the document from a JSON snapshot, *without* touching history.
+    /// Shared by the public [`deserialize`](Self::deserialize) (a user load) and
+    /// by [`undo`](Self::undo)/[`redo`](Self::redo). Returns `true` on success,
+    /// `false` for malformed JSON / unsupported version / bad structure (the
+    /// engine leaves itself untouched on a bad header).
+    fn load_snapshot(&mut self, data: &str) -> bool {
+        if self.wb.deserialize(data).is_err() {
+            return false;
+        }
+        // Re-bind the pinned sheet: the engine rebuilt sheets in file order, so
+        // SheetId(0) is the first sheet — unless the file had none, in which case
+        // give the facade a fresh sheet rather than leaving it pointing at a hole.
+        self.sheet = if self.wb.sheet_count() == 0 {
+            self.wb.add_sheet("Sheet1")
+        } else {
+            SheetId(0)
+        };
+        // Rebuild the raw echo from the just-loaded JSON (the engine doesn't keep
+        // the user's typed text). Single-sheet facade → the first sheet's cells.
+        self.raw.clear();
+        if let Ok(root) = serde_json::from_str::<Value>(data) {
+            if let Some(cells) = root
+                .get("sheets")
+                .and_then(Value::as_array)
+                .and_then(|s| s.first())
+                .and_then(|s| s.get("cells"))
+                .and_then(Value::as_array)
+            {
+                for c in cells {
+                    let Some(a1) = c.get("a1").and_then(Value::as_str) else {
+                        continue;
+                    };
+                    let Ok(addr) = CellAddress::parse(a1) else {
+                        continue;
+                    };
+                    let raw = if let Some(f) = c.get("formula").and_then(Value::as_str) {
+                        f.to_string()
+                    } else if let Some(vj) = c.get("value") {
+                        raw_from_value_json(vj)
+                    } else {
+                        continue;
+                    };
+                    self.raw.insert(addr, raw);
+                }
+            }
+        }
+        true
+    }
+
     /// Get a cell's *computed* value as a JSON object (see [`value_to_json`] for
     /// the shape). A malformed address yields an `#REF!`-style error object
     /// rather than failing.
@@ -286,9 +606,12 @@ impl SpreadsheetSession {
     /// Set a cell's display format code. An empty code clears it (the cell falls
     /// back to `General`). A malformed address is a no-op.
     pub fn set_format(&mut self, a1: &str, code: &str) {
-        if let Ok(addr) = CellAddress::parse(a1) {
-            self.wb.set_format(self.sheet, addr, code);
-        }
+        self.mutate(|s| {
+            if let Ok(addr) = CellAddress::parse(a1) {
+                let sheet = s.sheet;
+                s.wb.set_format(sheet, addr, code);
+            }
+        });
     }
 
     /// A cell's display format code, or `""` if it uses the default (`General`).
@@ -490,6 +813,30 @@ fn rewrite_raw_for_fill(raw: &str, d_row: i32, d_col: i32) -> String {
     }
 }
 
+/// Reconstruct a literal cell's `raw` echo from the engine's serialized `value`
+/// object (`{"number":n}` / `{"text":s}` / `{"bool":b}` / `{"error":code}`) — the
+/// string a user would type to re-enter it. Used by [`SpreadsheetSession::deserialize`]
+/// to repopulate the formula-bar source after a load (the engine stores typed
+/// values, not the original text). Integers render without a trailing `.0`,
+/// matching how the grid shows them.
+fn raw_from_value_json(vj: &Value) -> String {
+    if let Some(b) = vj.get("bool").and_then(Value::as_bool) {
+        if b { "TRUE".to_string() } else { "FALSE".to_string() }
+    } else if let Some(n) = vj.get("number").and_then(Value::as_f64) {
+        if n == n.trunc() && n.abs() < 1e15 {
+            (n as i64).to_string()
+        } else {
+            n.to_string()
+        }
+    } else if let Some(t) = vj.get("text").and_then(Value::as_str) {
+        t.to_string()
+    } else if let Some(code) = vj.get("error").and_then(Value::as_str) {
+        code.to_string()
+    } else {
+        String::new()
+    }
+}
+
 /// Encode a [`CellValue`] as the JSON the JS host expects. The shape matches
 /// the TypeScript engine's `CellValue` discriminated union exactly, so the
 /// demo glue is identical whichever engine backs it:
@@ -656,6 +1003,154 @@ mod tests {
         s.set_cell("A1", "1");
         s.fill("not-an-addr", "B1", "B2"); // no panic, nothing filled
         assert_eq!(s.get_value("B1"), r#"{"kind":"empty"}"#);
+    }
+
+    #[test]
+    fn copy_paste_shifts_block_and_echoes_shifted_source() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("B1", "5");
+        s.set_cell("C1", "=B1*2"); // 10
+        s.copy("B1", "C1"); // copy the 1×2 block
+        assert!(s.has_clipboard());
+        assert!(s.paste("B2")); // paste at B2
+
+        assert_eq!(s.get_value("B2"), r#"{"kind":"number","value":5.0}"#);
+        assert_eq!(s.get_value("C2"), r#"{"kind":"number","value":10.0}"#); // B2*2
+        // The echo shows the shifted source (binary op parenthesised).
+        assert_eq!(s.get_raw("C2"), "=(B2*2)");
+        // A copy survives for another paste; the source is untouched.
+        assert!(s.has_clipboard());
+        assert_eq!(s.get_raw("C1"), "=B1*2");
+    }
+
+    #[test]
+    fn cut_paste_moves_and_clears_source_echo() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "7");
+        s.cut("A1", "A1");
+        assert!(s.paste("C1"));
+        assert_eq!(s.get_value("C1"), r#"{"kind":"number","value":7.0}"#);
+        assert_eq!(s.get_raw("C1"), "7");
+        assert_eq!(s.get_value("A1"), r#"{"kind":"empty"}"#); // source value cleared
+        assert_eq!(s.get_raw("A1"), ""); // source echo cleared
+        // Buffer consumed: a second paste is a no-op.
+        assert!(!s.has_clipboard());
+        assert!(!s.paste("E1"));
+    }
+
+    #[test]
+    fn paste_without_copy_is_noop() {
+        let mut s = SpreadsheetSession::new();
+        assert!(!s.has_clipboard());
+        assert!(!s.paste("A1"));
+    }
+
+    #[test]
+    fn serialize_then_deserialize_round_trips_through_the_facade() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "15");
+        s.set_cell("B1", "hi");
+        s.set_cell("C1", "=A1*2"); // 30
+        s.set_format("A1", "#,##0.00");
+        let saved = s.serialize();
+
+        // Load into a fresh facade and confirm values, format, and raw echo.
+        let mut loaded = SpreadsheetSession::new();
+        assert!(loaded.deserialize(&saved));
+        assert_eq!(loaded.get_value("A1"), r#"{"kind":"number","value":15.0}"#);
+        assert_eq!(loaded.get_value("C1"), r#"{"kind":"number","value":30.0}"#);
+        assert_eq!(loaded.get_raw("A1"), "15"); // literal echo reconstructed
+        assert_eq!(loaded.get_raw("C1"), "=A1*2"); // formula echo exact
+        assert_eq!(loaded.get_display("A1"), "15.00"); // format survived
+        // The formula stays live, not frozen.
+        loaded.set_cell("A1", "100");
+        assert_eq!(loaded.get_value("C1"), r#"{"kind":"number","value":200.0}"#);
+    }
+
+    #[test]
+    fn deserialize_bad_json_returns_false() {
+        let mut s = SpreadsheetSession::new();
+        assert!(!s.deserialize("not json"));
+        assert!(!s.deserialize(r#"{"version":99,"sheets":[]}"#));
+        // A zero-sheet file loads (returns true) and leaves the facade usable.
+        assert!(s.deserialize(r#"{"version":1,"sheets":[]}"#));
+        s.set_cell("A1", "1"); // no panic — the pinned sheet was re-created
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":1.0}"#);
+    }
+
+    #[test]
+    fn undo_redo_walks_the_edit_history() {
+        let mut s = SpreadsheetSession::new();
+        assert!(!s.can_undo()); // fresh session: nothing to undo
+        assert!(!s.can_redo());
+
+        s.set_cell("A1", "1");
+        s.set_cell("A1", "2");
+        s.set_cell("B1", "=A1*10"); // 20
+        assert_eq!(s.get_value("B1"), r#"{"kind":"number","value":20.0}"#);
+        assert!(s.can_undo());
+
+        // Undo the formula: B1 is gone, A1 still 2.
+        assert!(s.undo());
+        assert_eq!(s.get_raw("B1"), "");
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":2.0}"#);
+        // Undo A1=2 → back to A1=1.
+        assert!(s.undo());
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":1.0}"#);
+
+        // Redo replays A1=2, then the formula (which recomputes live: 20).
+        assert!(s.redo());
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":2.0}"#);
+        assert!(s.redo());
+        assert_eq!(s.get_raw("B1"), "=A1*10");
+        assert_eq!(s.get_value("B1"), r#"{"kind":"number","value":20.0}"#);
+        assert!(!s.can_redo());
+
+        // Undo back one, then a NEW edit clears the redo branch.
+        assert!(s.undo()); // remove B1 again
+        assert!(s.can_redo());
+        s.set_cell("C1", "9");
+        assert!(!s.can_redo(), "a fresh edit forks history, dropping redo");
+
+        // A loaded formula stays live after undo: A1 still feeds nothing now, but
+        // editing a precedent of a *restored* formula recomputes it.
+        assert!(s.undo()); // undo C1
+        assert!(s.undo()); // undo A1=2 → A1=1 (B1 already gone)
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":1.0}"#);
+    }
+
+    #[test]
+    fn no_op_edits_do_not_pollute_history() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "5");
+        assert!(s.can_undo());
+        let depth_before = s.undo_stack.len();
+
+        // A failed set (bad address), a copy (clipboard only — no cell change),
+        // and a fill from an empty source into an empty target all leave the
+        // document unchanged → no new undo checkpoint.
+        s.set_cell("not-an-address", "1");
+        s.copy("A1", "A1");
+        s.fill("X1", "X2", "X2"); // empty → empty: a true no-op
+        // Re-set A1 to the SAME value: still a no-op for the document.
+        s.set_cell("A1", "5");
+        assert_eq!(s.undo_stack.len(), depth_before, "no-ops added no history");
+
+        // One real edit adds exactly one checkpoint.
+        s.set_cell("A1", "6");
+        assert_eq!(s.undo_stack.len(), depth_before + 1);
+        assert!(s.undo());
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":5.0}"#);
+    }
+
+    #[test]
+    fn undo_redo_on_empty_history_is_a_safe_noop() {
+        let mut s = SpreadsheetSession::new();
+        assert!(!s.undo());
+        assert!(!s.redo());
+        // History survives reads; still nothing to do.
+        let _ = s.get_value("A1");
+        assert!(!s.undo());
     }
 
     #[test]

@@ -1,0 +1,68 @@
+% ============================================================================
+% rheum-edges — the rheumatology autoantibody knowledge-graph (MYCIN-2026 RHEUM).
+% ============================================================================
+% The first Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2"): the
+% autoantibody → disease associations that anchor the rheumatology/immunology board
+% questions. "Which autoantibody is associated with systemic lupus erythematosus?"
+% becomes the binding query  ? associated_autoantibody(systemic_lupus_erythematosus, $Ab).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the fifth ADJ-only recall domain). Each fact is a `relate` clause
+% whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see rheum-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only edges whose cited span states the autoantibody↔disease association
+% AND names both endpoints are included. Declined here (the pages discuss these antibodies
+% in risk-factor / diagnostic-accuracy / citation-title context, not a self-contained
+% "antibody X marks disease Y" declarative): rheumatoid arthritis → anti-CCP, and primary
+% biliary cholangitis → anti-mitochondrial (the AMA "85% of cases" sentence does not name
+% PBC in-span). They deserve a span that names both endpoints, not an over-reach.
+% ============================================================================
+
+dictionary rheum_vocab {
+    define disease   : entity   surface "autoimmune disease", "rheumatologic disease"
+    define antibody  : entity   surface "autoantibody", "serologic marker"
+
+    define associated_autoantibody : relation from disease to antibody  % the serologic marker of a disease
+}
+
+rulebook rheum_facts {
+    use rheum_vocab
+
+    % --- Systemic lupus erythematosus (anti-dsDNA, anti-Sm, anti-ribosomal P) ---
+    relate associated_autoantibody(systemic_lupus_erythematosus, anti_dsdna)
+        source "Anti-dsDNA antibodies have more than 95% specificity for SLE but are found in only about 40% to 80% of patients with SLE."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535405/"
+        trust authoritative
+    relate associated_autoantibody(systemic_lupus_erythematosus, anti_smith)
+        source "Anti-Sm antibodies are seen in 10% to 55% of patients with SLE but have 99% specificity for SLE."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535405/"
+        trust authoritative
+    relate associated_autoantibody(systemic_lupus_erythematosus, anti_ribosomal_p)
+        source "Anti-ribosomal P antibodies are highly specific for SLE, although their prevalence in SLE is less than 5%, and they may correlate with neuropsychiatric manifestations of SLE."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535405/"
+        trust authoritative
+
+    % --- Granulomatosis with polyangiitis (PR3-ANCA / c-ANCA) ------------
+    relate associated_autoantibody(granulomatosis_with_polyangiitis, pr3)
+        source "ANCA in GPA typically reacts with PR3, a serine proteinase prevalent in neutrophil granulocytes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557827/"
+        trust authoritative
+
+    % --- Systemic sclerosis (anti-Scl-70 and anti-centromere; one span names both) ---
+    relate associated_autoantibody(systemic_sclerosis, anti_scl70)
+        source "Antinuclear antibodies may be present in more than 90% of cases of systemic sclerosis, and up to 70% of cases exhibit at least one of the more specific autoantibodies (anti-centromere, anti-Scl-70, and anti-RNA polymerase III)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430875/"
+        trust authoritative
+    relate associated_autoantibody(systemic_sclerosis, anti_centromere)
+        source "Antinuclear antibodies may be present in more than 90% of cases of systemic sclerosis, and up to 70% of cases exhibit at least one of the more specific autoantibodies (anti-centromere, anti-Scl-70, and anti-RNA polymerase III)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430875/"
+        trust authoritative
+}

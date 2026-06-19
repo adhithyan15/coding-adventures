@@ -144,6 +144,34 @@ set wr_singlescale
 set appendwrite
 set filetype=binary
 write out.raw V(out)
+wrdata out.dat V(out)
+wrdata empty.dat
+display all
+listing physical
+show all
+showmod Q1
+status
+version
+help tran
+echo running selected deck
+rusage all
+where
+source nested-control.cir
+.source dotted-control.cir
+shell echo nope
+.shell echo dotted
+cd models
+.cd /tmp
+if $&run_monte
+.while $&again
+foreach dev M1 M2
+.repeat 2
+let gain = 2
+.let bias = v(out)
+alter R1=2k
+.alterparam gain=3
+set temp=27
+.unset temp
 run
 quit
 .endc
@@ -184,7 +212,24 @@ quit
             (".include", 2, "error"),
             (".lib", 3, "error"),
             (".control", 4, "error"),
-            (".control", 19, "error")
+            (".control", 19, "error"),
+            (".control", 22, "error"),
+            (".control", 33, "error"),
+            (".control", 34, "error"),
+            (".control", 35, "error"),
+            (".control", 36, "error"),
+            (".control", 37, "error"),
+            (".control", 38, "error"),
+            (".control", 39, "error"),
+            (".control", 40, "error"),
+            (".control", 41, "error"),
+            (".control", 42, "error"),
+            (".control", 43, "error"),
+            (".control", 44, "error"),
+            (".control", 45, "error"),
+            (".control", 46, "error"),
+            (".control", 47, "error"),
+            (".control", 48, "error")
         ]
     );
     assert_eq!(
@@ -197,7 +242,24 @@ quit
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-            "SPICE_DECK_CONTROL_COMMAND"
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND"
         ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
@@ -334,6 +396,32 @@ four 2k V(b)
 .set wr_singlescale
 .set appendwrite
 .write out.raw V(a)
+.wrdata out.dat V(a)
+.display all
+.listing deck
+.show all
+.showmod Q1
+.status
+.version
+.help tran
+.echo running selected deck
+.rusage all
+.where
+.source nested-control.cir
+source plain-control.cir
+.shell echo nope
+shell echo plain
+.cd nested
+cd /tmp
+.if $&run_monte
+while $&again
+.foreach dev M1 M2
+repeat 2
+.let gain = 2
+alter R1=2k
+.alterparam gain=3
+set temp=27
+.unset temp
 run
 .quit
 .endc
@@ -368,7 +456,22 @@ run
             "SPICE_DECK_INCLUDE_NOT_FOUND",
             "SPICE_DECK_INCLUDE_CYCLE",
             "SPICE_DECK_LIB_SECTION_NOT_FOUND",
-            "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+            "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_FLOW_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+            "SPICE_DECK_CONTROL_VARIABLE_COMMAND"
         ]
     );
     assert_eq!(
@@ -378,7 +481,24 @@ run
             .skip(3)
             .map(|diagnostic| (diagnostic.directive.as_str(), diagnostic.line_number))
             .collect::<Vec<_>>(),
-        vec![(".control", 5)]
+        vec![
+            (".control", 5),
+            (".control", 32),
+            (".control", 33),
+            (".control", 34),
+            (".control", 35),
+            (".control", 36),
+            (".control", 37),
+            (".control", 38),
+            (".control", 39),
+            (".control", 40),
+            (".control", 41),
+            (".control", 42),
+            (".control", 43),
+            (".control", 44),
+            (".control", 45),
+            (".control", 46)
+        ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
     let measurement_summary = resolve_deck_measurements(&measurement_deck);
@@ -989,6 +1109,9 @@ R1 in out 1k
 .dc V1 0 5 1
 .ac dec 10 1k 1Meg
 .tran 1u 2m 0 10u uic
+.tf V(out) V1
+.sens V(out)
+.noise V(out) V1 dec 1 1k 1k
 .end
 .tran 1u 1m
 ",
@@ -999,7 +1122,7 @@ R1 in out 1k
         vec!["V1 in 0 DC 0".to_string(), "R1 in out 1k".to_string()]
     );
     assert!(summary.terminated);
-    assert_eq!(summary.end_line_number, Some(8));
+    assert_eq!(summary.end_line_number, Some(11));
     assert!(summary.diagnostics.is_empty());
     assert_eq!(
         summary
@@ -1007,7 +1130,7 @@ R1 in out 1k
             .iter()
             .map(|analysis| analysis.analysis.as_str())
             .collect::<Vec<_>>(),
-        vec!["op", "dc", "ac", "tran"]
+        vec!["op", "dc", "ac", "tran", "tf", "sens", "noise"]
     );
 
     let dc = &summary.analyses[1];
@@ -1031,6 +1154,25 @@ R1 in out 1k
     assert!((tran.start_time.unwrap() - 0.0).abs() < 1.0e-12);
     assert!((tran.max_step.unwrap() - 1.0e-5).abs() < 1.0e-12);
     assert!(tran.use_initial_conditions);
+
+    let tf = &summary.analyses[4];
+    assert_eq!(tf.directive, ".tf");
+    assert_eq!(tf.output_node.as_deref(), Some("out"));
+    assert_eq!(tf.source_name.as_deref(), Some("V1"));
+
+    let sens = &summary.analyses[5];
+    assert_eq!(sens.directive, ".sens");
+    assert_eq!(sens.output_node.as_deref(), Some("out"));
+    assert_eq!(sens.source_name, None);
+
+    let noise = &summary.analyses[6];
+    assert_eq!(noise.directive, ".noise");
+    assert_eq!(noise.output_node.as_deref(), Some("out"));
+    assert_eq!(noise.source_name.as_deref(), Some("V1"));
+    assert_eq!(noise.sweep_kind.as_deref(), Some("dec"));
+    assert_eq!(noise.point_count, Some(1));
+    assert!((noise.start_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
+    assert!((noise.stop_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
 }
 
 #[test]
@@ -1044,6 +1186,8 @@ fn resolve_deck_analyses_reports_invalid_cards() {
 .ac lin 0 1 10
 .tran 0 1m
 .tran 1u 2m 0 1u extra
+.sens I(R1)
+.noise I(R1) V1
 .end
 ",
     );
@@ -1058,6 +1202,8 @@ fn resolve_deck_analyses_reports_invalid_cards() {
     assert_eq!(
         codes,
         vec![
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
             "SPICE_DECK_ANALYSIS_ARGUMENT",
             "SPICE_DECK_ANALYSIS_ARGUMENT",
             "SPICE_DECK_ANALYSIS_INTERVAL",
@@ -1098,6 +1244,55 @@ V1 in 0 DC 0
     assert_eq!(selected.analysis, "tran");
     assert_eq!(selected.line_number, 4);
     assert!((selected.stop_time.unwrap() - 2.0e-3).abs() < 1.0e-12);
+
+    let tf = select_deck_analysis_plan(
+        "
+V1 in 0 DC 1
+R1 in out 1k
+.tf V(out) V1
+.end
+",
+        Some("transfer-function"),
+    )
+    .unwrap();
+    assert_eq!(tf.directive, ".tf");
+    assert_eq!(tf.analysis, "tf");
+    assert_eq!(tf.output_node.as_deref(), Some("out"));
+    assert_eq!(tf.source_name.as_deref(), Some("V1"));
+
+    let sens = select_deck_analysis_plan(
+        "
+V1 in 0 DC 1
+R1 in out 1k
+.sens V(out)
+.end
+",
+        Some("sensitivity"),
+    )
+    .unwrap();
+    assert_eq!(sens.directive, ".sens");
+    assert_eq!(sens.analysis, "sens");
+    assert_eq!(sens.output_node.as_deref(), Some("out"));
+    assert_eq!(sens.source_name, None);
+
+    let noise = select_deck_analysis_plan(
+        "
+V1 in 0 DC 1
+R1 in out 1k
+.noise V(out) V1 lin 1 1k 1k
+.end
+",
+        Some("noise"),
+    )
+    .unwrap();
+    assert_eq!(noise.directive, ".noise");
+    assert_eq!(noise.analysis, "noise");
+    assert_eq!(noise.output_node.as_deref(), Some("out"));
+    assert_eq!(noise.source_name.as_deref(), Some("V1"));
+    assert_eq!(noise.sweep_kind.as_deref(), Some("lin"));
+    assert_eq!(noise.point_count, Some(1));
+    assert!((noise.start_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
+    assert!((noise.stop_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
 }
 
 #[test]
@@ -1126,7 +1321,7 @@ fn select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() {
     .to_string();
     assert!(error.contains("multiple .tran analysis cards"));
 
-    let error = select_deck_analysis_plan(".op\n.end\n", Some("noise"))
+    let error = select_deck_analysis_plan(".op\n.end\n", Some("pz"))
         .unwrap_err()
         .to_string();
     assert!(error.contains("unsupported analysis"));

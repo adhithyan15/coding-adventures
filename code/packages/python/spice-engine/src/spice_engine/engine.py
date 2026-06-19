@@ -54,6 +54,7 @@ from __future__ import annotations
 
 import ast
 import cmath
+import json
 import math
 import random
 import re
@@ -70,9 +71,11 @@ from spice_engine.compatibility import (
     DeckInitialConditionSummary,
     DeckMeasurementCard,
     DeckNodeCondition,
+    resolve_deck_analyses,
     resolve_deck_fourier,
     resolve_deck_measurements,
     select_deck_analysis_plan,
+    select_deck_output_directives,
     select_deck_output_probes,
 )
 from spice_engine.elements import (
@@ -2293,6 +2296,24 @@ def format_deck_transient_table(
     )
 
 
+def format_deck_tf_table(result: TfResult) -> str:
+    """Format a deck-selected transfer-function result."""
+
+    return format_tf_table(result)
+
+
+def format_deck_sens_table(result: SensResult) -> str:
+    """Format a deck-selected sensitivity result."""
+
+    return format_sens_table(result)
+
+
+def format_deck_noise_table(result: NoiseResult) -> str:
+    """Format a deck-selected AC noise result."""
+
+    return format_noise_table(result)
+
+
 @dataclass(frozen=True)
 class DeckRunArtifact:
     """Stable metadata for one selected deck analysis execution."""
@@ -2300,10 +2321,33 @@ class DeckRunArtifact:
     analysis: str
     directive: str
     line_number: int
+    source_name: str | None
+    output_node: str | None
+    sweep_kind: str | None
+    start_value: float | None
+    stop_value: float | None
+    step_value: float | None
+    point_count: int | None
+    start_frequency_hz: float | None
+    stop_frequency_hz: float | None
+    step_time: float | None
+    stop_time: float | None
+    start_time: float | None
+    max_step: float | None
+    use_initial_conditions: bool | None
     result_rows: int
+    result_column_count: int
+    result_columns: list[str]
     output_probe_count: int
+    output_probes: list[str]
+    output_directive_count: int
+    output_directives: list[str]
     measurement_count: int
+    measurement_names: list[str]
     fourier_count: int
+    fourier_probes: list[str]
+    diagnostic_count: int
+    diagnostic_codes: list[str]
 
 
 @dataclass(frozen=True)
@@ -2311,7 +2355,7 @@ class DeckAnalysisExecution:
     """A selected deck analysis plan plus its executed solver output."""
 
     plan: DeckAnalysisPlan
-    result: DcResult | DcSweepResult | AcResult | TransientResult
+    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult
     table: str
     output_probes: list[str]
     measurements: list[ProbeMeasurement]
@@ -2354,54 +2398,200 @@ def _select_deck_fourier_cards_for_analysis(
 
 
 def _deck_result_row_count(
-    result: DcResult | DcSweepResult | AcResult | TransientResult,
+    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
 ) -> int:
-    if isinstance(result, DcResult):
+    if isinstance(result, (DcResult, TfResult, SensResult)):
         return 1
     return len(result.points)
 
 
+def _format_deck_artifact_float(value: float | None) -> str:
+    return "" if value is None else f"{value:.6e}"
+
+
+def _format_deck_artifact_bool(value: bool | None) -> str:
+    return "" if value is None else str(value).lower()
+
+
+_DECK_RUN_ARTIFACT_COLUMNS = [
+    "Analysis",
+    "Directive",
+    "Line",
+    "SourceName",
+    "OutputNode",
+    "SweepKind",
+    "StartValue",
+    "StopValue",
+    "StepValue",
+    "PointCount",
+    "StartFrequencyHz",
+    "StopFrequencyHz",
+    "StepTime",
+    "StopTime",
+    "StartTime",
+    "MaxStep",
+    "UseInitialConditions",
+    "ResultRows",
+    "ResultColumns",
+    "ResultColumnList",
+    "OutputProbes",
+    "OutputProbeList",
+    "OutputDirectives",
+    "OutputDirectiveList",
+    "Measurements",
+    "MeasurementList",
+    "Fourier",
+    "FourierList",
+    "Diagnostics",
+    "DiagnosticCodeList",
+]
+
+
+def _deck_table_columns(table: str) -> list[str]:
+    header = table.splitlines()[0] if table else ""
+    return header.split("\t") if header else []
+
+
 def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
-    result: DcResult | DcSweepResult | AcResult | TransientResult,
+    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
+    result_columns: list[str],
     output_probes: list[str],
+    output_directives: list[str],
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
+    diagnostic_codes: list[str],
 ) -> list[DeckRunArtifact]:
+    is_transient = plan.analysis == "tran"
     return [
         DeckRunArtifact(
             analysis=plan.analysis,
             directive=plan.directive,
             line_number=plan.line_number,
+            source_name=plan.source_name,
+            output_node=plan.output_node,
+            sweep_kind=plan.sweep_kind,
+            start_value=plan.start_value,
+            stop_value=plan.stop_value,
+            step_value=plan.step_value,
+            point_count=plan.point_count,
+            start_frequency_hz=plan.start_frequency,
+            stop_frequency_hz=plan.stop_frequency,
+            step_time=plan.step_time if is_transient else None,
+            stop_time=plan.stop_time if is_transient else None,
+            start_time=plan.start_time if is_transient else None,
+            max_step=plan.max_step if is_transient else None,
+            use_initial_conditions=(
+                plan.use_initial_conditions if is_transient else None
+            ),
             result_rows=_deck_result_row_count(result),
+            result_column_count=len(result_columns),
+            result_columns=list(result_columns),
             output_probe_count=len(output_probes),
+            output_probes=list(output_probes),
+            output_directive_count=len(output_directives),
+            output_directives=list(output_directives),
             measurement_count=len(measurements),
+            measurement_names=[measurement.name for measurement in measurements],
             fourier_count=len(fourier),
+            fourier_probes=[
+                probe.probe for result in fourier for probe in result.probes
+            ],
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
         )
+    ]
+
+
+def _deck_analysis_diagnostic_codes(
+    netlist: str,
+    plan: DeckAnalysisPlan,
+) -> list[str]:
+    summary = resolve_deck_analyses(netlist)
+    return [
+        diagnostic.code
+        for diagnostic in summary.diagnostics
+        if diagnostic.line_number == plan.line_number
+        and diagnostic.directive == plan.directive
     ]
 
 
 def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
-    """Format selected deck-run artifacts as a stable count summary table."""
+    """Format selected deck-run artifacts as a stable summary table."""
 
-    rows = [
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier"
+    rows = ["\t".join(_DECK_RUN_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append("\t".join(_deck_run_artifact_cells(artifact)))
+    return "\n".join(rows) + "\n"
+
+
+def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
+    return [
+        artifact.analysis,
+        artifact.directive,
+        str(artifact.line_number),
+        artifact.source_name or "",
+        artifact.output_node or "",
+        artifact.sweep_kind or "",
+        _format_deck_artifact_float(artifact.start_value),
+        _format_deck_artifact_float(artifact.stop_value),
+        _format_deck_artifact_float(artifact.step_value),
+        "" if artifact.point_count is None else str(artifact.point_count),
+        _format_deck_artifact_float(artifact.start_frequency_hz),
+        _format_deck_artifact_float(artifact.stop_frequency_hz),
+        _format_deck_artifact_float(artifact.step_time),
+        _format_deck_artifact_float(artifact.stop_time),
+        _format_deck_artifact_float(artifact.start_time),
+        _format_deck_artifact_float(artifact.max_step),
+        _format_deck_artifact_bool(artifact.use_initial_conditions),
+        str(artifact.result_rows),
+        str(artifact.result_column_count),
+        ";".join(artifact.result_columns),
+        str(artifact.output_probe_count),
+        ";".join(artifact.output_probes),
+        str(artifact.output_directive_count),
+        ";".join(artifact.output_directives),
+        str(artifact.measurement_count),
+        ";".join(artifact.measurement_names),
+        str(artifact.fourier_count),
+        ";".join(artifact.fourier_probes),
+        str(artifact.diagnostic_count),
+        ";".join(artifact.diagnostic_codes),
     ]
+
+
+def _deck_run_artifact_record(artifact: DeckRunArtifact) -> dict[str, str]:
+    return dict(
+        zip(
+            _DECK_RUN_ARTIFACT_COLUMNS,
+            _deck_run_artifact_cells(artifact),
+            strict=True,
+        )
+    )
+
+
+def _format_csv_cell(value: str) -> str:
+    if any(character in value for character in [",", '"', "\n", "\r"]):
+        return '"' + value.replace('"', '""') + '"'
+    return value
+
+
+def format_deck_run_artifact_csv(artifacts: Iterable[DeckRunArtifact]) -> str:
+    """Format selected deck-run artifacts as stable RFC 4180-style CSV."""
+
+    rows = [",".join(_DECK_RUN_ARTIFACT_COLUMNS)]
     for artifact in artifacts:
         rows.append(
-            "\t".join(
-                [
-                    artifact.analysis,
-                    artifact.directive,
-                    str(artifact.line_number),
-                    str(artifact.result_rows),
-                    str(artifact.output_probe_count),
-                    str(artifact.measurement_count),
-                    str(artifact.fourier_count),
-                ]
-            )
+            ",".join(_format_csv_cell(cell) for cell in _deck_run_artifact_cells(artifact))
         )
     return "\n".join(rows) + "\n"
+
+
+def format_deck_run_artifact_json(artifacts: Iterable[DeckRunArtifact]) -> str:
+    """Format selected deck-run artifacts as stable compact JSON records."""
+
+    records = [_deck_run_artifact_record(artifact) for artifact in artifacts]
+    return json.dumps(records, separators=(",", ":")) + "\n"
 
 
 def run_deck_analysis(
@@ -2412,20 +2602,30 @@ def run_deck_analysis(
     """Select one deck analysis card, execute it, and format deck-selected output."""
 
     plan = select_deck_analysis_plan(netlist, analysis)
+    diagnostic_codes = _deck_analysis_diagnostic_codes(netlist, plan)
     if plan.analysis == "op":
         result = dc_op(circuit)
+        table = format_deck_op_table(result, netlist)
         _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
         fourier: list[FourierResult] = []
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         measurements: list[ProbeMeasurement] = []
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_op_table(result, netlist),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
@@ -2440,6 +2640,7 @@ def run_deck_analysis(
         stop = _require_deck_plan_number(plan, "stop_value")
         step = _require_deck_plan_number(plan, "step_value")
         result = dc_sweep(circuit, source_name, start, stop, step)
+        table = format_deck_dc_sweep_table(result, netlist)
         measurements = measure_dc_sweep_cards(
             result,
             _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
@@ -2447,13 +2648,21 @@ def run_deck_analysis(
         fourier = []
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_dc_sweep_table(result, netlist),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
@@ -2470,6 +2679,7 @@ def run_deck_analysis(
         result = _run_deck_ac_sweep(
             circuit, plan, sweep_kind, point_count, start_frequency, stop_frequency
         )
+        table = format_deck_ac_table(result, netlist)
         measurements = measure_ac_sweep_cards(
             result,
             _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
@@ -2477,13 +2687,21 @@ def run_deck_analysis(
         fourier = []
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_ac_table(result, netlist),
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
@@ -2508,18 +2726,143 @@ def run_deck_analysis(
             result,
             _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
         )
+        table = format_deck_transient_table(result, netlist)
         fourier = fourier_transient_cards(
             result,
             _select_deck_fourier_cards_for_analysis(netlist, plan.analysis),
         )
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
-            table=format_deck_transient_table(result, netlist),
+            table=table,
+            output_probes=output_probes,
+            measurements=measurements,
+            measurement_table=format_measurement_table(measurements),
+            fourier=fourier,
+            fourier_table=format_deck_fourier_table(fourier),
+            run_artifacts=run_artifacts,
+            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+        )
+    if plan.analysis == "tf":
+        output_node = _require_deck_plan_string(plan, "output_node")
+        input_source = _require_deck_plan_string(plan, "source_name")
+        result = tf(circuit, output_node=output_node, input_source=input_source)
+        _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
+        measurements = []
+        _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
+        fourier = []
+        output_probes = [f"V({output_node})"]
+        output_directives: list[str] = []
+        table = format_deck_tf_table(result)
+        run_artifacts = _deck_run_artifacts(
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
+            diagnostic_codes,
+        )
+        return DeckAnalysisExecution(
+            plan=plan,
+            result=result,
+            table=table,
+            output_probes=output_probes,
+            measurements=measurements,
+            measurement_table=format_measurement_table(measurements),
+            fourier=fourier,
+            fourier_table=format_deck_fourier_table(fourier),
+            run_artifacts=run_artifacts,
+            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+        )
+    if plan.analysis == "sens":
+        output_node = _require_deck_plan_string(plan, "output_node")
+        result = sens_dc(circuit, output_node=output_node)
+        _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
+        measurements = []
+        _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
+        fourier = []
+        output_probes = [f"V({output_node})"]
+        output_directives = []
+        table = format_deck_sens_table(result)
+        run_artifacts = _deck_run_artifacts(
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
+            diagnostic_codes,
+        )
+        return DeckAnalysisExecution(
+            plan=plan,
+            result=result,
+            table=table,
+            output_probes=output_probes,
+            measurements=measurements,
+            measurement_table=format_measurement_table(measurements),
+            fourier=fourier,
+            fourier_table=format_deck_fourier_table(fourier),
+            run_artifacts=run_artifacts,
+            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+        )
+    if plan.analysis == "noise":
+        output_node = _require_deck_plan_string(plan, "output_node")
+        input_source = _require_deck_plan_string(plan, "source_name")
+        frequencies: list[float] | None = None
+        if plan.sweep_kind is not None:
+            sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
+            point_count = _require_deck_plan_int(plan, "point_count")
+            start_frequency = _require_deck_plan_number(plan, "start_frequency")
+            stop_frequency = _require_deck_plan_number(plan, "stop_frequency")
+            frequencies = _deck_ac_frequencies(
+                plan,
+                sweep_kind,
+                point_count,
+                start_frequency,
+                stop_frequency,
+            )
+        result = noise_ac(
+            circuit,
+            output_node=output_node,
+            input_source=input_source,
+            freqs=frequencies,
+        )
+        _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
+        measurements = []
+        _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
+        fourier = []
+        output_probes = [f"V({output_node})"]
+        output_directives = []
+        table = format_deck_noise_table(result)
+        run_artifacts = _deck_run_artifacts(
+            plan,
+            result,
+            _deck_table_columns(table),
+            output_probes,
+            output_directives,
+            measurements,
+            fourier,
+            diagnostic_codes,
+        )
+        return DeckAnalysisExecution(
+            plan=plan,
+            result=result,
+            table=table,
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),

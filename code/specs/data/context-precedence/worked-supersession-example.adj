@@ -1,0 +1,52 @@
+% =====================================================================
+% worked-supersession-example.adj — lex posterior, DERIVED (ADJ73 PR-B-4).
+%
+% THE CASE (medical, bridges to MYCIN).  A treatment recommendation for a
+% condition reads one way in the 2004 guideline edition and another in the 2024
+% edition. They CONFLICT. Which governs?
+%
+% The case supplies one primitive grounded fact — `supersedes(idsa_2024,
+% idsa_2004)` (the 2024 edition states it replaces the 2004 one) — and the
+% LEX-POSTERIOR meta-rule (context-precedence-meta.adj, canon 2) DERIVES the
+% precedence edge `idsa_2024 > idsa_2004`. The newer edition's recommendation
+% governs:
+%
+%   recommendation(empiric_regimen, current)   status governing   context idsa_2024
+%   recommendation(empiric_regimen, legacy)    status defeated     context idsa_2004
+%
+% This is the guideline-edition precedence ADJ73 §2.3 named explicitly. It is
+% NOT hand-asserted as an edge — it is derived from the (grounded) supersession
+% fact by the (grounded) recency canon. Replacing 2024 with a yet-newer edition
+% is one `relate supersedes(...)` fact, no engine or rulebook change.
+% 0 answer-time model calls.
+% =====================================================================
+
+import "context-precedence-meta.adj"
+
+functional recommendation(topic, choice)
+
+% PRIMITIVE grounded fact: the 2024 edition supersedes the 2004 edition.
+relate supersedes(idsa_2024, idsa_2004)
+  source "The 2024 guideline edition states that it replaces and supersedes the 2004 edition for this recommendation."
+  locator "guideline front-matter — supersession statement"
+  trust authoritative
+
+% Legacy (2004) recommendation — asserted at the highest tier, yet superseded.
+rule {
+  head: recommendation(empiric_regimen, legacy)
+  when: legacy_text
+  priority: mandatory
+  context: idsa_2004
+}
+
+% Current (2024) recommendation — default tier, governs on derived recency.
+rule {
+  head: recommendation(empiric_regimen, current)
+  when: current_text
+  context: idsa_2024
+}
+
+observe legacy_text
+observe current_text
+
+? recommendation(empiric_regimen, $choice)

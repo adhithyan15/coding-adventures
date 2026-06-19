@@ -23,8 +23,8 @@
 %                                    defeated_by means(navigable_waters, broad)
 %
 % 0 answer-time model calls — pure SLD + a precedence post-pass over the
-% grounded graph. The precedence is auditable: `? outranks_context(ninth_circuit,
-% $lower)` recalls the edge WITH its charter (the WCL stare-decisis quote).
+% grounded graph. The precedence is auditable: `? outranks_context_by(ninth_circuit,
+% $lower, $canon)` recalls the tagged edge WITH its charter (the WCL stare-decisis quote).
 % =====================================================================
 
 % The grounded precedence order (federal>state, ninth_circuit>district_court),

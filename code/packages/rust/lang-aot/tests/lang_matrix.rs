@@ -597,6 +597,22 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("Hi"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Brainfuck — the canonical `cat` (LANG-FULL B1-eof). `,[.,]` reads a byte and, while
+    // it is non-zero, prints it and reads the next — echoing stdin until end-of-input. The
+    // loop terminates ONLY when `,` returns 0, which is what `getchar` must yield at EOF.
+    // The `,+.`/`,.,.` programs above read exactly their input and never hit EOF; this one
+    // reads PAST the input, so it exercises the EOF convention directly. It was the deferred
+    // half of B1-stdin: backends disagreed on EOF (JVM/VM/JIT → 0, libc/Console/wasm → -1 →
+    // cell 255), so cat looped forever on the -1 backends. `brainfuck-iir-compiler` now
+    // clamps a negative `,` result to 0 in the shared IIR (`getchar` read at i64, `cmp_lt
+    // 0` + branch), so EOF is 0 on EVERY backend and cat echoes "Hi" then halts.
+    Prog {
+        lang: Language::Brainfuck,
+        ext: "bf",
+        src: ",[.,]",
+        expect: Expect::Stdout("Hi"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
     // and the harness compares stdout (LM-L BASIC). On WASM the same `PRINT` lowers to
@@ -713,6 +729,7 @@ fn program_stdin(p: &Prog) -> &'static [u8] {
     match (p.lang, p.src) {
         (Language::Brainfuck, ",+.") => b"A",   // read 'A' (65), `+` → 66, print 'B'
         (Language::Brainfuck, ",.,.") => b"Hi", // read a byte and echo it, twice → "Hi"
+        (Language::Brainfuck, ",[.,]") => b"Hi", // cat: echo until EOF (EOF → 0 halts) → "Hi"
         _ => b"",
     }
 }

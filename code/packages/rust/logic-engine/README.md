@@ -127,8 +127,23 @@ kb.add_fact(
 
 `context_adjacency()` unions the explicit and grounded edges into one directed graph, so the
 cycle check (a single Kahn pass) and `context_outranks` (a cycle-safe DFS) span both sources.
-The grounded `context-precedence` *rulebook* (a `.adj` library of such edges, each byte-quoting
-its charter) + a worked legal example through the CLI `governing` section land in PR-B-3
+
+**Derived precedence — meta-rules (v0.21).** Most precedence is not a standing hierarchy but is
+*derived* from a primitive fact about the two authorities (which came later, which reversed which).
+So `context_adjacency` also reads **rule-derived** `outranks_context` edges: when the KB has any
+`outranks_context/2` rule, it enumerates every provable edge (subsuming the ground facts). A
+grounded meta-rule then turns a primitive into precedence — `outranks_context($H, $L) :-
+reverses($H, $L)` (citing the overruling doctrine) makes a `reverses(a, b)` fact an edge `a > b`:
+
+```rust
+kb.add_rule(/* outranks_context(H, L) :- reverses(H, L) */);   // the appeal-status canon
+kb.add_fact(/* reverses(scotus_2023, ninth_circuit_2019) */);   // a primitive grounded fact
+assert!(kb.context_outranks("scotus_2023", "ninth_circuit_2019")); // edge DERIVED, not asserted
+```
+
+The recursion bottoms out at the primitive grounded facts, each byte-provenanced — an edge that can
+be derived is derived (and cited), not duplicated. The grounded `context-precedence` rulebook + its
+meta-rules + worked legal/medical examples live in `code/specs/data/context-precedence/`
 (`code/specs/ADJ73-defeasible-rule-precedence.md` §2.3, §7).
 
 ## Why Probability From Day One

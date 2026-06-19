@@ -21,10 +21,14 @@ It also reports **grounding coverage**: of the correct answers, how many cite an
 is the live number every grounding PR moves — today the IEM edges are consensus
 (authored-debt), so grounded-coverage is 0%; after the REL-4 spider runs it climbs.
 
-Recall is scored against the same grounded graph the native engine uses, via the
-REL-1 `RelationStore` (pure Python, deterministic, 0 model calls) — so the
-scoreboard runs anywhere without a build. (Differential items slot into the same
-schema once the harness drives the native CLI for ranked hypotheses.)
+Every tactic — recall, differential, management — is answered by the ONE native
+adj-lang engine (the CPU reasoner), deterministically and with zero answer-time
+*online* model calls. Recall used to be a Python `RelationStore` shortcut; it now
+runs as a native binding query (`? relation(subject, $Var)`) over the imported
+grounded edge rulebooks, so the board exercises the real engine, not a parallel
+Python re-implementation. With the CLI absent (a Python-only job that didn't build
+the Rust workspace) every engine-backed item abstains — honestly — rather than
+falling back to a second resolver.
 
 Usage:  python3 board_eval.py            # score the item bank, print + emit scorecard
         python3 board_eval.py --quiet    # scorecard JSON only
@@ -41,34 +45,104 @@ HERE = Path(__file__).resolve().parent
 RECALL = HERE.parent / "recall"
 ITEMS = HERE / "items.json"
 SCORECARD = HERE / "board-scorecard.json"
-sys.path.insert(0, str(RECALL))
-import recall  # noqa: E402  (the REL-1 RelationStore + parse_edges)
 
 # The recall knowledge graph spans one *-edges.adj file per domain (IEM diseases,
 # vitamin deficiencies, …). They share the relational substrate, so the board
-# merges them into one store — a recall item resolves against whichever domain
-# holds its relation. Adding a domain = drop in its edge file + its board items.
+# imports ALL of them into ONE adj-lang program and resolves each recall item as a
+# native binding query. Adding a domain = drop in its edge file + its board items.
+#
+# THE DESIGN CORRECTION THAT MATTERS (the whole point of this harness): recall is
+# answered by the NATIVE adj-lang engine — the SAME CPU reasoner that runs the
+# differential and the constraint solver — NOT by a Python resolver. The REL-1
+# `recall.py` RelationStore was a proof-of-semantics prototype; it is DEPRECATED and
+# no longer on the answer path. A board recall question IS an ADJ program:
+#
+#     import "<domain>-edges.adj"   …   ? relation(subject, $Var)
+#
+# which the engine resolves to the variable binding + the citing edge's
+# provenance/trust, or an honest abstention (empty answers). One engine for every
+# board tactic — recall, differential, management — with zero answer-time *online*
+# model calls. (A local in-memory model may generate the ADJ program from prose; see
+# board_offline.py. The engine that ANSWERS is always the native CPU reasoner.)
 EDGE_FILES = ["iem-edges.adj", "vitamin-edges.adj", "anemia-edges.adj", "endocrine-edges.adj",
-              "coag-edges.adj"]
+              "coag-edges.adj", "micro-edges.adj", "pharm-edges.adj", "immuno-edges.adj",
+              "genetics-edges.adj", "rheum-edges.adj", "onco-edges.adj", "histo-edges.adj",
+              "cardio-edges.adj", "neuro-edges.adj", "gi-edges.adj"]
 
-
-def load_store() -> "recall.RelationStore":
-    store = recall.RelationStore()
-    for name in EDGE_FILES:
-        store.edges.extend(recall.parse_edges(RECALL / name).edges)
-    return store
-
-# The native adj-lang CLI binary — for the DIFFERENTIAL tactic, the board runs a
-# case .adj (rulebook + observations + ? hypotheses) and reads the ranked
-# differential decision. Recall stays pure-Python; only differential needs the
-# engine. If the binary is absent (e.g. a Python-only CI job that didn't build the
-# Rust workspace), differential items abstain and the run logs how many were
-# skipped — no silent caps, no fabricated answers.
+# The native adj-lang CLI binary — the ONE engine behind every tactic (recall,
+# differential, management). If the binary is absent (e.g. a Python-only CI job that
+# didn't build the Rust workspace), every engine-backed item abstains and the run
+# logs how many were skipped — no silent caps, no fabricated answers, and no Python
+# fallback resolver (recall is the engine's job now).
 _CLI = HERE.parents[3] / "packages" / "rust" / "target" / "debug" / "adj-lang-cli"
 
 
 def cli_available() -> bool:
     return _CLI.exists()
+
+
+def _recall_program(recall_items: list[dict]) -> str:
+    """Render a batch of recall items as ONE adj-lang program: import every domain's
+    grounded edge rulebook, then one binding query `? relation(subject, $Var)` per
+    item. Imports are written as the bare filenames because the engine resolves them
+    relative to the PROGRAM FILE's directory — so the program must live in RECALL/."""
+    lines = [f'import "{name}"' for name in EDGE_FILES]
+    lines += [f'? {it["relation"]}({it["subject"]}, ${it["var"]})' for it in recall_items]
+    return "\n".join(lines) + "\n"
+
+
+def resolve_recall(recall_items: list[dict]) -> dict[str, dict]:
+    """Answer every recall item through the NATIVE adj-lang engine in one CLI call.
+
+    Returns {item_id: {"answer", "trust", "abstained"}}. answer is the variable's
+    binding (or None on abstention); trust is the citing edge's tier (the grounding
+    signal); abstained is True when the engine found no grounded edge — the honest
+    UNKNOWN, never a fabricated guess. If the CLI is unavailable the map is empty and
+    every recall item abstains (there is no Python fallback — recall is the engine's
+    job)."""
+    if not recall_items or not cli_available():
+        return {}
+    import os
+    import subprocess
+    import tempfile
+
+    program = _recall_program(recall_items)
+    # The program must sit in RECALL/ so its relative `import` lines resolve.
+    fd, path = tempfile.mkstemp(suffix=".adj", prefix=".board_recall_", dir=RECALL)
+    try:
+        os.write(fd, program.encode("utf-8"))
+        os.close(fd)
+        out = subprocess.run([str(_CLI), path], capture_output=True, text=True)
+        doc = json.loads(out.stdout)
+        entries = doc.get("recall", []) if isinstance(doc, dict) else []
+    except (json.JSONDecodeError, ValueError, OSError):
+        return {}
+    finally:
+        try:
+            os.unlink(path)
+        except OSError:
+            pass
+
+    # Match each item to its engine answer by the query echo the CLI emits
+    # ("relation(subject, Var)" — variable rendered without the `$` sigil), so the
+    # mapping is robust to any reordering rather than relying on array position.
+    by_query = {e.get("query"): e for e in entries if isinstance(e, dict)}
+    resolved: dict[str, dict] = {}
+    for it in recall_items:
+        echo = f'{it["relation"]}({it["subject"]}, {it["var"]})'
+        entry = by_query.get(echo)
+        answers = (entry or {}).get("answers") or []
+        if not entry or entry.get("abstained") or not answers:
+            resolved[it["id"]] = {"answer": None, "trust": None, "abstained": True}
+            continue
+        top = answers[0]
+        citations = top.get("citations") or []
+        resolved[it["id"]] = {
+            "answer": top.get("bindings", {}).get(it["var"]),
+            "trust": citations[0].get("trust") if citations else None,
+            "abstained": False,
+        }
+    return resolved
 
 
 def run_differential(program: Path) -> dict | None:
@@ -203,8 +277,11 @@ class Scorecard:
         return {o: sum(1 for r in rs if r.outcome == o) for o in ("correct", "abstained", "wrong")}
 
 
-def score(items: list[dict], store: "recall.RelationStore") -> Scorecard:
+def score(items: list[dict]) -> Scorecard:
     card = Scorecard()
+    # Resolve every recall item up front in ONE native-engine call (the CPU reasoner,
+    # not a Python store). Differential/management still run per-item below.
+    recalled = resolve_recall([it for it in items if it.get("tactic") == "recall"])
     for it in items:
         tactic = it.get("tactic")
         if tactic == "differential":
@@ -230,33 +307,32 @@ def score(items: list[dict], store: "recall.RelationStore") -> Scorecard:
             card.results.append(Result(it["id"], tactic or "?", it.get("gold", ""),
                                        None, "abstained", None))
             continue
-        var = "$" + it["var"]
-        hits = store.query(it["relation"], [it["subject"], var])
+        # Recall is answered by the native engine (resolved above). An entry is
+        # missing only if the CLI was unavailable → treat as abstention.
+        r = recalled.get(it["id"])
         gold = it["gold"]
         if gold == "ABSTAIN":
-            if not hits:
+            if not r or r["abstained"]:
                 card.results.append(Result(it["id"], "recall", gold, None, "abstained", None))
             else:
                 # Produced an answer for a disease that should be uncovered: fabrication.
-                ans = hits[0].bindings.get(var)
-                card.results.append(Result(it["id"], "recall", gold, ans, "wrong", hits[0].proof.trust))
+                card.results.append(Result(it["id"], "recall", gold, r["answer"], "wrong", r["trust"]))
             continue
-        if not hits:
+        if not r or r["abstained"]:
             # No grounded edge → honest abstention even though an answer exists in
             # the world; counts as defensible, not as a wrong answer.
             card.results.append(Result(it["id"], "recall", gold, None, "abstained", None))
             continue
-        ans = hits[0].bindings.get(var)
+        ans = r["answer"]
         outcome = "correct" if ans == gold else "wrong"
-        card.results.append(Result(it["id"], "recall", gold, ans, outcome, hits[0].proof.trust))
+        card.results.append(Result(it["id"], "recall", gold, ans, outcome, r["trust"]))
     return card
 
 
 def main(argv: list[str]) -> int:
     quiet = "--quiet" in argv
     items = json.loads(ITEMS.read_text())["items"]
-    store = load_store()
-    card = score(items, store)
+    card = score(items)
     summary = card.summary()
 
     scorecard = {

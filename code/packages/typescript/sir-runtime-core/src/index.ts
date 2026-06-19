@@ -24,6 +24,7 @@ export type { Val, ClosureLike } from "./values.js";
 export { add, sub, mul, div, lt, gt } from "./arithmetic.js";
 export {
   Closure,
+  LocalJumpError,
   apply,
   makeClosure,
   globalSet,

@@ -15,7 +15,11 @@
 //
 // `f()` is called so treeshake (the last SIMPLE pass) keeps the
 // function; otherwise the whole unused declaration would be removed and
-// the dce-inside-the-body effect wouldn't be observable.
+// the dce-inside-the-body effect wouldn't be observable. It is called
+// TWICE so the single-use void statement-inliner (CLOC15) declines it:
+// once dce reduces the body to `{ keep(); return 1; }`, a single call
+// site would otherwise be spliced away entirely (`keep();`), hiding the
+// dce-inside-the-body effect this fixture is meant to show.
 //
 // Under WHITESPACE_ONLY none of this happens -- every statement survives.
 function f() {
@@ -24,4 +28,5 @@ function f() {
   return 1;
   alsoDead();
 }
+f();
 f();

@@ -426,7 +426,7 @@
         "id": "deficiency_causes__vitamin_k",
         "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK536983/",
         "source_title": "Vitamin K Deficiency in Neonates and Adults — StatPearls, NCBI Bookshelf",
-        "byte_quote": "Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy. ... Vitamin K deficiency is an underrecognized condition affecting newborns and adults that can result in impaired coagulation and bleeding complications ranging from mild laboratory abnormalities to life-threatening hemorrhage.",
+        "byte_quote": "Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy",
         "direction_correct": true,
         "verdict": "grounded",
         "discards": [
@@ -436,15 +436,15 @@
           "ncbi.nlm.nih.gov/medgen/439355 (Vitamin K Deficiency Bleeding — MedGen) — discarded; a concept/ontology stub, not a narrative primary source with an explanatory quote.",
           "pubmed.ncbi.nlm.nih.gov/12688565/ (cholestyramine-induced deficiency bleeding) — discarded; narrow case report, less authoritative than the StatPearls reference for the general relation."
         ],
-        "note": "ENTAILED. The fact asserts vitamin_k deficiency → coagulopathy (bleeding diathesis). The fetched StatPearls page states verbatim \"Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy\" and that the deficiency \"can result in impaired coagulation and bleeding complications ranging from mild laboratory abnormalities to life-threatening hemorrhage.\" These directly name the deficiency as the subject and coagulopathy/bleeding as the effect, with the correct direction. No inferential leap is required — the quote uses the word \"coagulopathy\" and explicitly attributes the bleeding to the deficiency."
+        "note": "ENTAILED, self-contained. The fact asserts deficiency_causes(vitamin_k -> coagulopathy). The chosen span is a single verbatim sentence from the StatPearls (NIH) deficiency chapter: \"Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy.\" It names the deficiency as the subject and bleeding/coagulopathy as the manifestation, in the correct direction, using the word \"coagulopathy\" itself — no inferential leap and no cross-sentence stitching. The earlier byte_quote was rejected at verification because it concatenated this sentence with a second, partially paraphrased sentence (\"underrecognized condition affecting newborns and adults...\") that did not match the page verbatim (\"often overlooked condition that affects both adults and newborns ... primarily due to impaired coagulation\"); restricting the quote to the single verbatim sentence resolves the byte-stability failure while still fully grounding the relation."
       },
       "verify": {
         "id": "deficiency_causes__vitamin_k",
-        "byte_stable": false,
-        "refute_attempt": "Strongest refutation: the byte_quote is presented as a single verbatim span but is actually stitched from two sentences. Sentence 1 (\"Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy.\") appears verbatim. Sentence 2 partly diverges: the page reads \"Vitamin K deficiency is an often overlooked condition that affects both adults and newborns and can lead to significant morbidity, primarily due to impaired coagulation,\" not \"underrecognized condition affecting newborns and adults.\" Only the tail clause \"can result in impaired coagulation and bleeding complications ranging from mild laboratory abnormalities to life-threatening hemorrhage\" matches verbatim. So the quote is NOT fully byte-stable. However, the refutation of the RELATION fails: whether the wording is \"underrecognized\"/\"often overlooked\" is immaterial — the page unambiguously and causally states vitamin K deficiency leads to impaired coagulation and presents with bleeding/coagulopathy (\"primarily due to impaired coagulation\"). The deficiency_causes edge to bleeding diathesis/coagulopathy is explicitly stated, not merely correlational.",
+        "byte_stable": true,
+        "refute_attempt": "Byte-stable: the span \"Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy\" appears verbatim on the live StatPearls page (immediately followed by citation [19]). The prior verdict (byte_stable=false) was caused by the byte_quote being stitched from two sentences, the second only partially matching; that defect is removed by quoting the single sentence. Refutation of the relation: does the span alone carry deficiency_causes(vitamin_k -> coagulopathy)? Yes — it attributes coagulopathy/bleeding directly to vitamin K deficiency in one clause; no other sentence is needed. The refutation fails; grounded.",
         "final_verdict": "grounded"
       },
-      "spider_status": "direction_only"
+      "spider_status": "grounded"
     },
     {
       "id": "classic_finding__vitamin_k",

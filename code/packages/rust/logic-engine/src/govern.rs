@@ -218,11 +218,19 @@ pub fn enumerate_governing(query: &Term, kb: &KnowledgeBase) -> GovernedResult {
     let keys: Vec<Option<(String, Vec<Term>)>> =
         answers.iter().map(|a| conflict_key(&a.term, kb)).collect();
 
-    let undefeated = |idx: usize, group: &[usize]| -> bool {
-        !group
-            .iter()
-            .any(|&j| j != idx && defeats(&answers[j], &answers[idx], kb))
+    // STRICT domination (ADJ73 §4.3): `j` defeats `i` AND `i` does not defeat `j` back. A merely
+    // *mutual* defeat — each context outranks the other, e.g. lex superior says federal > state
+    // while lex specialis says state > federal — is NOT a clean defeat of either: it is a genuine
+    // collision of canons. Resolving it as "both defeated" would silently crown nothing while
+    // reporting no conflict; instead a mutually-defeated answer stays UNDEFEATED here, so the group
+    // surfaces as `ConflictPeer` (abstain) — the honest "else CONFLICT" the spec promises. (The
+    // context order is a partial order + a total tier, so only 2-cycles of mutual defeat arise, not
+    // strict Condorcet cycles — transitivity makes any longer cycle mutual everywhere.)
+    let dominates = |j: usize, i: usize| -> bool {
+        j != i && defeats(&answers[j], &answers[i], kb) && !defeats(&answers[i], &answers[j], kb)
     };
+    let undefeated =
+        |idx: usize, group: &[usize]| -> bool { !group.iter().any(|&j| dominates(j, idx)) };
 
     let mut verdicts: Vec<GovernStatus> = vec![GovernStatus::Governing; answers.len()];
     for (i, key_i) in keys.iter().enumerate() {
@@ -238,10 +246,11 @@ pub fn enumerate_governing(query: &Term, kb: &KnowledgeBase) -> GovernedResult {
             continue; // singleton → no contest
         }
         verdicts[i] = if !undefeated(i, &group) {
-            // Defeated — cite a defeating witness (one of the answers that defeats i).
+            // Defeated — cite a witness that STRICTLY dominates i (defeats it and isn't defeated
+            // back). A merely mutual defeat does not land here; it leaves i undefeated → conflict.
             let by = group
                 .iter()
-                .find(|&&j| j != i && defeats(&answers[j], &answers[i], kb))
+                .find(|&&j| dominates(j, i))
                 .map(|&j| answers[j].term.clone())
                 .unwrap();
             GovernStatus::Defeated { by }
@@ -577,5 +586,60 @@ mod tests {
             edge.provenance.source,
             "U.S. Const. art. VI, cl. 2 (Supremacy Clause)"
         );
+    }
+
+    /// ADJ73 §4.3 — when two canons point OPPOSITE ways (each context outranks the other: lex
+    /// superior says federal > state, lex specialis says state > federal), the defeat is MUTUAL.
+    /// Neither answer is strictly dominated, so the group is an unresolved CONFLICT (abstain) —
+    /// NOT a silent "both defeated, nothing flagged". This is the honest "else CONFLICT" branch.
+    #[test]
+    fn mutually_outranking_contexts_yield_conflict_not_silent_double_defeat() {
+        let mut kb = KnowledgeBase::new();
+        kb.declare_functional("rule_on", 1);
+        // Contradictory context order: federal outranks state AND state outranks federal.
+        kb.add_context_outranks("federal", "state");
+        kb.add_context_outranks("state", "federal");
+        kb.add_rule(
+            Rule::certain(comp("rule_on", vec![atom("permitted")]), vec![]).with_context("federal"),
+        );
+        kb.add_rule(
+            Rule::certain(comp("rule_on", vec![atom("prohibited")]), vec![]).with_context("state"),
+        );
+        let res = enumerate_governing(&comp("rule_on", vec![var("X")]), &kb);
+        assert!(
+            res.has_conflict(),
+            "mutual outranking is an honest CONFLICT, not a silent pick"
+        );
+        assert_eq!(
+            res.governing().count(),
+            0,
+            "nothing governs under contradictory precedence — the caller must abstain"
+        );
+        // Both are surfaced as peers (neither silently 'defeated').
+        assert!(res
+            .answers
+            .iter()
+            .all(|a| a.status == GovernStatus::ConflictPeer));
+    }
+
+    /// Guard the common path is unchanged: a ONE-WAY context edge still cleanly defeats (the
+    /// strict-domination refinement must not regress the ordinary lex-superior case).
+    #[test]
+    fn one_way_context_edge_still_cleanly_governs() {
+        let mut kb = KnowledgeBase::new();
+        kb.declare_functional("rule_on", 1);
+        kb.add_context_outranks("federal", "state"); // one direction only
+        kb.add_rule(
+            Rule::certain(comp("rule_on", vec![atom("permitted")]), vec![]).with_context("federal"),
+        );
+        kb.add_rule(
+            Rule::certain(comp("rule_on", vec![atom("forbidden")]), vec![])
+                .with_context("state")
+                .with_priority(Priority::Mandatory),
+        );
+        let res = enumerate_governing(&comp("rule_on", vec![var("X")]), &kb);
+        let gov: Vec<&Term> = res.governing().map(|a| &a.term).collect();
+        assert_eq!(gov, vec![&comp("rule_on", vec![atom("permitted")])]);
+        assert!(!res.has_conflict());
     }
 }

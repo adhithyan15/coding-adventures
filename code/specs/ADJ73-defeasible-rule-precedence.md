@@ -350,9 +350,53 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
     legal example that `import`s it and proves *lex superior* end-to-end through the CLI: the
     circuit's broad reading **governs** a district court's narrow reading **despite its higher
     `mandatory` tier**. Governing answers now carry their `context` in the JSON. Golden test
-    `adj-lang-cli/tests/context_precedence_e2e.rs`. Still to come: the recency / appeal-status /
-    lex-specialis **meta-rules** (PR-B-4) that *derive* precedence from grounded rule attributes
-    (e.g. `idsa_2024 > idsa_2004` as lex posterior) rather than asserting each edge bare.
+    `adj-lang-cli/tests/context_precedence_e2e.rs`.
+  - **PR-B-4 grounded meta-rules ✅ DONE (logic-engine 0.21).** `context_adjacency` now reads
+    **rule-derived** `outranks_context` edges (enumerated via `enumerate_all` when any
+    `outranks_context/2` rule exists; the cheap ground-fact scan is kept otherwise). So the
+    conflict-resolution canons are themselves grounded meta-rules in `context-precedence-meta.adj`:
+    `outranks_context($H,$L) :- reverses($H,$L)` (appeal status, citing the overruling doctrine)
+    and `… :- supersedes($New,$Old)` (lex posterior / recency, citing implied-repeal). Two worked
+    examples prove it end-to-end through the CLI — a Supreme Court reversal flips a `mandatory`-tier
+    reversed Ninth Circuit reading (`worked-appeal-example.adj`), and `idsa_2024 > idsa_2004` is
+    *derived* from a grounded `supersedes` fact (`worked-supersession-example.adj`). The recursion
+    bottoms out at cited primitive facts — an edge that can be derived is derived, not duplicated.
+    Golden test `adj-lang-cli/tests/context_metarules_e2e.rs`.
+  - **PR-B-5 lex specialis ✅ DONE (no engine change — pure grounded meta-rule on the PR-B-4
+    machinery).** Added canon 3 `outranks_context($S,$G) :- more_specific($S,$G)` (citing *lex
+    specialis derogat legi generali*) to `context-precedence-meta.adj` + `worked-lex-specialis-example.adj`
+    (a specific wilderness-trail statute governs a general traffic statute despite the general's
+    `mandatory` tier). Completes the three classical canons (lex superior / lex posterior / lex
+    specialis).
+  - **PR-B-6 §4.3 honest CONFLICT ✅ DONE (logic-engine 0.22).** When two canons point opposite
+    ways (lex superior `federal > state` vs lex specialis `state > federal`) the defeat is MUTUAL;
+    the resolver now uses **strict domination** (`j` defeats `i` only if `i` does not defeat back),
+    so neither is silently `Defeated` — the group abstains as `ConflictPeer` / `has_conflict`. This
+    closes the "else CONFLICT (abstain)" guarantee (previously the engine produced a misleading
+    "both defeated, no conflict flag"). `worked-canon-conflict-example.adj` +
+    `colliding_canons_abstain_with_an_honest_conflict`.
+  - **PR-B-7 resolving tiebreaker ✅ DONE (no engine change — pure in-language pattern).** A
+    chosen collision RESOLVES to a cited decision via: (a) canon-TAGGED edges
+    `outranks_context_by(Higher, Lower, Canon)`, (b) a grounded `canon_outranks(C2, C1)` ordering,
+    and (c) a negation-as-failure resolution rule — `outranks_context(H,L) :-
+    outranks_context_by(H,L,C), not canon_defeated(H,L,C)` with `canon_defeated(H,L,C) :-
+    outranks_context_by(L,H,C2), canon_outranks(C2,C)`. The engine's existing NAF + derived-edge
+    machinery (PR-B-4) does the rest — `context_adjacency` reads the resolved `outranks_context/2`.
+    `worked-canon-tiebreaker-example.adj` (lex specialis prevails over lex superior here → the
+    specific state reading governs) + `a_grounded_canon_ordering_resolves_the_collision`. The
+    canon-ordering is itself a grounded fact, so the recursion stays grounded; remove it and the
+    rulebook falls back to §4.3 abstention.
+  - **PR-B-8 shared-rulebook migration ✅ DONE (data only — no engine change).** The proven
+    pattern is now the SUBSTRATE: every grounded source emits a canon-TAGGED edge
+    `outranks_context_by(Higher, Lower, Canon)` — the lex-superior edges in `context-precedence.adj`
+    (canon `lex_superior`) and the three canon meta-rules in `context-precedence-meta.adj`
+    (`appeal_status` / `lex_posterior` / `lex_specialis`). A shared `context-precedence-resolve.adj`
+    module (imported idempotently by both) holds the NAF resolution. So ANY jurisdiction's grounded
+    `canon_outranks` ordering now applies uniformly across all canons; absent one, a collision
+    abstains (§4.3). All worked examples + golden tests pass unchanged (the audit query now recalls
+    the tagged `outranks_context_by` fact, which carries the charter). This completes the ADJ73
+    defeasible-precedence arc: lex superior → posterior → specialis → honest CONFLICT → resolving
+    tiebreaker → uniform grounded substrate.
 - **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
   annotations) + regen grammar.
 - **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).

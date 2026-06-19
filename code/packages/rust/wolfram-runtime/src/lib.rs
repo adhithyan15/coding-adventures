@@ -73,7 +73,7 @@ mod lower;
 mod printer;
 
 pub use backend::WolframBackend;
-pub use builtins::MAX_RANGE_LENGTH;
+pub use builtins::{MAX_LIST_LENGTH, MAX_RANGE_LENGTH};
 pub use lower::{LowerError, REPLACE_ALL};
 pub use printer::print_wolfram;
 

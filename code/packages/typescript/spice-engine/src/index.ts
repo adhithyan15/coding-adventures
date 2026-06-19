@@ -613,10 +613,11 @@ export interface DeckOutputSummary {
 }
 
 export interface DeckAnalysisPlan {
-  readonly directive: ".op" | ".dc" | ".ac" | ".tran";
-  readonly analysis: "op" | "dc" | "ac" | "tran";
+  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens" | ".noise";
+  readonly analysis: "op" | "dc" | "ac" | "tran" | "tf" | "sens" | "noise";
   readonly lineNumber: number;
   readonly sourceName?: string;
+  readonly outputNode?: string;
   readonly startValue?: number;
   readonly stopValue?: number;
   readonly stepValue?: number;
@@ -633,7 +634,7 @@ export interface DeckAnalysisPlan {
 
 export interface DeckAnalysisDiagnostic {
   readonly code: string;
-  readonly directive: ".op" | ".dc" | ".ac" | ".tran";
+  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens" | ".noise";
   readonly lineNumber: number;
   readonly message: string;
   readonly severity: "error" | "warning";
@@ -652,16 +653,42 @@ export type DeckAnalysisExecutionResult =
   | DcResult
   | readonly DcSweepPoint[]
   | readonly AcPoint[]
-  | readonly TransientPoint[];
+  | readonly TransientPoint[]
+  | TfResult
+  | SensResult
+  | NoiseResult;
 
 export interface DeckRunArtifact {
   readonly analysis: DeckAnalysisPlan["analysis"];
   readonly directive: DeckAnalysisPlan["directive"];
   readonly lineNumber: number;
+  readonly sourceName?: string;
+  readonly outputNode?: string;
+  readonly sweepKind?: DeckAnalysisPlan["sweepKind"];
+  readonly startValue?: number;
+  readonly stopValue?: number;
+  readonly stepValue?: number;
+  readonly pointCount?: number;
+  readonly startFrequencyHz?: number;
+  readonly stopFrequencyHz?: number;
+  readonly stepTime?: number;
+  readonly stopTime?: number;
+  readonly startTime?: number;
+  readonly maxStep?: number;
+  readonly useInitialConditions?: boolean;
   readonly resultRows: number;
+  readonly resultColumnCount: number;
+  readonly resultColumns: readonly string[];
   readonly outputProbeCount: number;
+  readonly outputProbes: readonly string[];
+  readonly outputDirectiveCount: number;
+  readonly outputDirectives: readonly string[];
   readonly measurementCount: number;
+  readonly measurementNames: readonly string[];
   readonly fourierCount: number;
+  readonly fourierProbes: readonly string[];
+  readonly diagnosticCount: number;
+  readonly diagnosticCodes: readonly string[];
 }
 
 export interface DeckAnalysisExecution {
@@ -2854,14 +2881,76 @@ const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
   "plot",
   ".plot",
 ]);
-const NOOP_CONTROL_BLOCK_COMMANDS = new Set(["run", ".run", "reset", ".reset", "quit", ".quit"]);
+const NOOP_CONTROL_BLOCK_COMMANDS = new Set([
+  "display",
+  ".display",
+  "listing",
+  ".listing",
+  "show",
+  ".show",
+  "showmod",
+  ".showmod",
+  "status",
+  ".status",
+  "version",
+  ".version",
+  "help",
+  ".help",
+  "echo",
+  ".echo",
+  "rusage",
+  ".rusage",
+  "where",
+  ".where",
+  "run",
+  ".run",
+  "reset",
+  ".reset",
+  "quit",
+  ".quit",
+]);
 const NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS = new Set(["write", ".write"]);
+const NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS = new Set(["wrdata", ".wrdata"]);
 const NOOP_CONTROL_BLOCK_SET_OPTIONS = new Set([
   "noaskquit",
   "filetype=ascii",
   "wr_vecnames",
   "wr_singlescale",
   "appendwrite",
+]);
+const SCRIPT_CONTROL_BLOCK_COMMANDS = new Set(["source", ".source", "shell", ".shell"]);
+const WORKDIR_CONTROL_BLOCK_COMMANDS = new Set(["cd", ".cd"]);
+const CONTROL_FLOW_CONTROL_BLOCK_COMMANDS = new Set([
+  "if",
+  ".if",
+  "else",
+  ".else",
+  "end",
+  ".end",
+  "while",
+  ".while",
+  "foreach",
+  ".foreach",
+  "repeat",
+  ".repeat",
+  "dowhile",
+  ".dowhile",
+  "break",
+  ".break",
+  "continue",
+  ".continue",
+]);
+const VARIABLE_CONTROL_BLOCK_COMMANDS = new Set([
+  "let",
+  ".let",
+  "alter",
+  ".alter",
+  "alterparam",
+  ".alterparam",
+  "set",
+  ".set",
+  "unset",
+  ".unset",
 ]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
@@ -2893,6 +2982,46 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
         continue;
       }
       if (isNoopControlBlockCommand(stripped)) {
+        continue;
+      }
+      if (isScriptControlBlockCommand(stripped)) {
+        diagnostics.push({
+          code: "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+          directive: ".control",
+          lineNumber,
+          message: controlBlockScriptPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isWorkdirControlBlockCommand(stripped)) {
+        diagnostics.push({
+          code: "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+          directive: ".control",
+          lineNumber,
+          message: controlBlockWorkdirPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isControlFlowControlBlockCommand(stripped)) {
+        diagnostics.push({
+          code: "SPICE_DECK_CONTROL_FLOW_COMMAND",
+          directive: ".control",
+          lineNumber,
+          message: controlBlockFlowPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isVariableControlBlockCommand(stripped)) {
+        diagnostics.push({
+          code: "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+          directive: ".control",
+          lineNumber,
+          message: controlBlockVariablePolicyMessage(stripped),
+          severity: "error",
+        });
         continue;
       }
       diagnostics.push({
@@ -3193,6 +3322,30 @@ export function selectDeckOutputProbes(netlist: string, analysis: string): strin
   return selected;
 }
 
+export function selectDeckOutputDirectives(netlist: string, analysis: string): string[] {
+  const summary = resolveDeckOutputs(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0];
+    throw invalidElement(
+      "selectDeckOutputDirectives",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  const selected: string[] = [];
+  const seen = new Set<string>();
+  for (const selection of summary.selections) {
+    if (selection.analysis !== undefined && !deckOutputAnalysisMatches(selection.analysis, analysis)) {
+      continue;
+    }
+    if (seen.has(selection.directive)) {
+      continue;
+    }
+    seen.add(selection.directive);
+    selected.push(selection.directive);
+  }
+  return selected;
+}
+
 export function resolveDeckAnalyses(netlist: string): DeckAnalysisSummary {
   const state = new DeckAnalysisState();
   const activeLines: string[] = [];
@@ -3210,7 +3363,15 @@ export function resolveDeckAnalyses(netlist: string): DeckAnalysisSummary {
       endLineNumber = lineNumber;
       break;
     }
-    if (directive === ".op" || directive === ".dc" || directive === ".ac" || directive === ".tran") {
+    if (
+      directive === ".op" ||
+      directive === ".dc" ||
+      directive === ".ac" ||
+      directive === ".tran" ||
+      directive === ".tf" ||
+      directive === ".sens" ||
+      directive === ".noise"
+    ) {
       resolveAnalysisLine(stripped, lineNumber, directive, state);
       continue;
     }
@@ -3456,6 +3617,50 @@ function resolveDeckLines(
         continue;
       }
       if (isNoopControlBlockCommand(stripped)) {
+        continue;
+      }
+      if (isScriptControlBlockCommand(stripped)) {
+        state.diagnostics.push({
+          code: "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+          directive: ".control",
+          source,
+          lineNumber,
+          message: controlBlockScriptPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isWorkdirControlBlockCommand(stripped)) {
+        state.diagnostics.push({
+          code: "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+          directive: ".control",
+          source,
+          lineNumber,
+          message: controlBlockWorkdirPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isControlFlowControlBlockCommand(stripped)) {
+        state.diagnostics.push({
+          code: "SPICE_DECK_CONTROL_FLOW_COMMAND",
+          directive: ".control",
+          source,
+          lineNumber,
+          message: controlBlockFlowPolicyMessage(stripped),
+          severity: "error",
+        });
+        continue;
+      }
+      if (isVariableControlBlockCommand(stripped)) {
+        state.diagnostics.push({
+          code: "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+          directive: ".control",
+          source,
+          lineNumber,
+          message: controlBlockVariablePolicyMessage(stripped),
+          severity: "error",
+        });
         continue;
       }
       state.diagnostics.push({
@@ -4415,7 +4620,7 @@ function resolveOutputLine(
 function resolveAnalysisLine(
   line: string,
   lineNumber: number,
-  directive: ".op" | ".dc" | ".ac" | ".tran",
+  directive: DeckAnalysisDiagnostic["directive"],
   state: DeckAnalysisState,
 ): void {
   const tokens = directiveTokens(line);
@@ -4431,6 +4636,15 @@ function resolveAnalysisLine(
       break;
     case ".tran":
       resolveTranAnalysis(tokens, lineNumber, state);
+      break;
+    case ".tf":
+      resolveTfAnalysis(tokens, lineNumber, state);
+      break;
+    case ".sens":
+      resolveSensAnalysis(tokens, lineNumber, state);
+      break;
+    case ".noise":
+      resolveNoiseAnalysis(tokens, lineNumber, state);
       break;
   }
 }
@@ -4661,6 +4875,184 @@ function resolveTranAnalysis(
     startTime,
     maxStep,
     useInitialConditions,
+  });
+}
+
+function resolveTfAnalysis(
+  tokens: readonly string[],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): void {
+  if (tokens.length !== 3) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".tf",
+      lineNumber,
+      message: ".tf requires output voltage probe and input source tokens",
+    });
+    return;
+  }
+  const outputProbe = normalizeDeckOutputProbe(unquoteToken(tokens[1]));
+  if (outputProbe === undefined || !outputProbe.startsWith("V(")) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".tf",
+      lineNumber,
+      message: `.tf output must be a voltage probe V(node), got ${JSON.stringify(tokens[1])}`,
+      token: tokens[1],
+    });
+    return;
+  }
+  const inputSource = unquoteToken(tokens[2]).trim();
+  if (inputSource.length === 0) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".tf",
+      lineNumber,
+      message: ".tf input source name must not be empty",
+      token: tokens[2],
+    });
+    return;
+  }
+  state.analyses.push({
+    directive: ".tf",
+    analysis: "tf",
+    lineNumber,
+    sourceName: inputSource,
+    outputNode: outputProbe.slice(2, -1),
+    useInitialConditions: false,
+  });
+}
+
+function resolveSensAnalysis(
+  tokens: readonly string[],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): void {
+  if (tokens.length !== 2) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".sens",
+      lineNumber,
+      message: ".sens requires one output voltage probe token",
+    });
+    return;
+  }
+  const outputProbe = normalizeDeckOutputProbe(unquoteToken(tokens[1]));
+  if (outputProbe === undefined || !outputProbe.startsWith("V(")) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".sens",
+      lineNumber,
+      message: `.sens output must be a voltage probe V(node), got ${JSON.stringify(tokens[1])}`,
+      token: tokens[1],
+    });
+    return;
+  }
+  state.analyses.push({
+    directive: ".sens",
+    analysis: "sens",
+    lineNumber,
+    outputNode: outputProbe.slice(2, -1),
+    useInitialConditions: false,
+  });
+}
+
+function resolveNoiseAnalysis(
+  tokens: readonly string[],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): void {
+  if (tokens.length !== 3 && tokens.length !== 7) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".noise",
+      lineNumber,
+      message: ".noise requires output voltage probe, input source, and optional sweep kind, point count, start frequency, and stop frequency tokens",
+    });
+    return;
+  }
+  const outputProbe = normalizeDeckOutputProbe(unquoteToken(tokens[1]));
+  if (outputProbe === undefined || !outputProbe.startsWith("V(")) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".noise",
+      lineNumber,
+      message: `.noise output must be a voltage probe V(node), got ${JSON.stringify(tokens[1])}`,
+      token: tokens[1],
+    });
+    return;
+  }
+  const inputSource = unquoteToken(tokens[2]).trim();
+  if (inputSource.length === 0) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".noise",
+      lineNumber,
+      message: ".noise input source name must not be empty",
+      token: tokens[2],
+    });
+    return;
+  }
+
+  let sweepKind: DeckAnalysisPlan["sweepKind"];
+  let pointCount: number | undefined;
+  let startFrequencyHz: number | undefined;
+  let stopFrequencyHz: number | undefined;
+  if (tokens.length === 7) {
+    sweepKind = normalizeAcSweepKind(tokens[3]);
+    if (sweepKind === undefined) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_MODE",
+        directive: ".noise",
+        lineNumber,
+        message: `.noise sweep kind must be LIN, DEC, or OCT, got ${JSON.stringify(tokens[3])}`,
+        token: tokens[3],
+      });
+      return;
+    }
+    pointCount = parseDeckAnalysisInteger(tokens[4], ".noise", lineNumber, state);
+    startFrequencyHz = parseDeckAnalysisValue(tokens[5], ".noise", lineNumber, state);
+    stopFrequencyHz = parseDeckAnalysisValue(tokens[6], ".noise", lineNumber, state);
+    if (
+      pointCount === undefined ||
+      startFrequencyHz === undefined ||
+      stopFrequencyHz === undefined
+    ) {
+      return;
+    }
+    if (pointCount < 1) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_SWEEP",
+        directive: ".noise",
+        lineNumber,
+        message: ".noise point count must be a positive integer",
+        token: tokens[4],
+      });
+      return;
+    }
+    if (startFrequencyHz <= 0.0 || stopFrequencyHz <= 0.0 || stopFrequencyHz < startFrequencyHz) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_SWEEP",
+        directive: ".noise",
+        lineNumber,
+        message: ".noise frequencies must be positive and stop must be >= start",
+      });
+      return;
+    }
+  }
+
+  state.analyses.push({
+    directive: ".noise",
+    analysis: "noise",
+    lineNumber,
+    sourceName: inputSource,
+    outputNode: outputProbe.slice(2, -1),
+    sweepKind,
+    pointCount,
+    startFrequencyHz,
+    stopFrequencyHz,
+    useInitialConditions: false,
   });
 }
 
@@ -5532,6 +5924,17 @@ function normalizeDeckAnalysisName(analysis: string): DeckAnalysisPlan["analysis
     case "tran":
     case "transient":
       return "tran";
+    case "tf":
+    case "transfer-function":
+    case "transferfunction":
+      return "tf";
+    case "sens":
+    case "sensitivity":
+      return "sens";
+    case "noise":
+    case "ac-noise":
+    case "noise-ac":
+      return "noise";
     default:
       return undefined;
   }
@@ -5731,11 +6134,50 @@ function isNoopControlBlockCommand(line: string): boolean {
   if (NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS.has(command)) {
     return parts.length >= 2;
   }
+  if (NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS.has(command)) {
+    return parts.length >= 3;
+  }
   return (
     (command === "set" || command === ".set") &&
     parts.length === 2 &&
     NOOP_CONTROL_BLOCK_SET_OPTIONS.has(parts[1]?.toLowerCase() ?? "")
   );
+}
+
+function isScriptControlBlockCommand(line: string): boolean {
+  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
+  return command !== undefined && SCRIPT_CONTROL_BLOCK_COMMANDS.has(command);
+}
+
+function isWorkdirControlBlockCommand(line: string): boolean {
+  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
+  return command !== undefined && WORKDIR_CONTROL_BLOCK_COMMANDS.has(command);
+}
+
+function isControlFlowControlBlockCommand(line: string): boolean {
+  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
+  return command !== undefined && CONTROL_FLOW_CONTROL_BLOCK_COMMANDS.has(command);
+}
+
+function isVariableControlBlockCommand(line: string): boolean {
+  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
+  return command !== undefined && VARIABLE_CONTROL_BLOCK_COMMANDS.has(command);
+}
+
+function controlBlockScriptPolicyMessage(line: string): string {
+  return `${JSON.stringify(line)} inside .control is not executed because external script and shell commands are disabled by the deck execution policy`;
+}
+
+function controlBlockWorkdirPolicyMessage(line: string): string {
+  return `${JSON.stringify(line)} inside .control is not executed because working-directory mutation is disabled by the deck execution policy`;
+}
+
+function controlBlockFlowPolicyMessage(line: string): string {
+  return `${JSON.stringify(line)} inside .control is not executed because control-flow commands are disabled by the deck execution policy`;
+}
+
+function controlBlockVariablePolicyMessage(line: string): string {
+  return `${JSON.stringify(line)} inside .control is not executed because control variables and circuit mutation commands are disabled by the deck execution policy`;
 }
 
 export function subcircuitDefinition(
@@ -7418,48 +7860,196 @@ export function formatDeckTransientTable(
   return probes.length === 0 ? formatTransientTable(points) : formatTransientTable(points, probes);
 }
 
+export function formatDeckTfTable(result: TfResult): string {
+  return formatTfTable(result);
+}
+
+export function formatDeckSensTable(result: SensResult): string {
+  return formatSensTable(result);
+}
+
+export function formatDeckNoiseTable(result: NoiseResult): string {
+  return formatNoiseTable(result);
+}
+
 function deckResultRowCount(result: DeckAnalysisExecutionResult): number {
-  return Array.isArray(result) ? result.length : 1;
+  return Array.isArray(result)
+    ? result.length
+    : "points" in result && Array.isArray(result.points)
+      ? result.points.length
+      : 1;
 }
 
 function deckRunArtifacts(
   plan: DeckAnalysisPlan,
   result: DeckAnalysisExecutionResult,
+  resultColumns: readonly string[],
   outputProbes: readonly string[],
+  outputDirectives: readonly string[],
   measurements: readonly ProbeMeasurement[],
   fourier: readonly FourierResult[],
+  diagnosticCodes: readonly string[],
 ): DeckRunArtifact[] {
+  const isTransient = plan.analysis === "tran";
   return [
     {
       analysis: plan.analysis,
       directive: plan.directive,
       lineNumber: plan.lineNumber,
+      sourceName: plan.sourceName,
+      outputNode: plan.outputNode,
+      sweepKind: plan.sweepKind,
+      startValue: plan.startValue,
+      stopValue: plan.stopValue,
+      stepValue: plan.stepValue,
+      pointCount: plan.pointCount,
+      startFrequencyHz: plan.startFrequencyHz,
+      stopFrequencyHz: plan.stopFrequencyHz,
+      stepTime: isTransient ? plan.stepTime : undefined,
+      stopTime: isTransient ? plan.stopTime : undefined,
+      startTime: isTransient ? plan.startTime : undefined,
+      maxStep: isTransient ? plan.maxStep : undefined,
+      useInitialConditions: isTransient ? plan.useInitialConditions : undefined,
       resultRows: deckResultRowCount(result),
+      resultColumnCount: resultColumns.length,
+      resultColumns: [...resultColumns],
       outputProbeCount: outputProbes.length,
+      outputProbes: [...outputProbes],
+      outputDirectiveCount: outputDirectives.length,
+      outputDirectives: [...outputDirectives],
       measurementCount: measurements.length,
+      measurementNames: measurements.map((measurement) => measurement.name),
       fourierCount: fourier.length,
+      fourierProbes: fourier.flatMap((result) => result.probes.map((probe) => probe.probe)),
+      diagnosticCount: diagnosticCodes.length,
+      diagnosticCodes: [...diagnosticCodes],
     },
   ];
 }
 
-export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
-  const rows = [
-    "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier",
+function deckAnalysisDiagnosticCodes(netlist: string, plan: DeckAnalysisPlan): string[] {
+  return resolveDeckAnalyses(netlist).diagnostics
+    .filter((diagnostic) =>
+      diagnostic.lineNumber === plan.lineNumber && diagnostic.directive === plan.directive
+    )
+    .map((diagnostic) => diagnostic.code);
+}
+
+function formatDeckArtifactFloat(value: number | undefined): string {
+  return value === undefined ? "" : formatTableNumber(value);
+}
+
+function formatDeckArtifactBoolean(value: boolean | undefined): string {
+  return value === undefined ? "" : String(value);
+}
+
+const DECK_RUN_ARTIFACT_COLUMNS = [
+  "Analysis",
+  "Directive",
+  "Line",
+  "SourceName",
+  "OutputNode",
+  "SweepKind",
+  "StartValue",
+  "StopValue",
+  "StepValue",
+  "PointCount",
+  "StartFrequencyHz",
+  "StopFrequencyHz",
+  "StepTime",
+  "StopTime",
+  "StartTime",
+  "MaxStep",
+  "UseInitialConditions",
+  "ResultRows",
+  "ResultColumns",
+  "ResultColumnList",
+  "OutputProbes",
+  "OutputProbeList",
+  "OutputDirectives",
+  "OutputDirectiveList",
+  "Measurements",
+  "MeasurementList",
+  "Fourier",
+  "FourierList",
+  "Diagnostics",
+  "DiagnosticCodeList",
+] as const;
+
+function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
+  return [
+    artifact.analysis,
+    artifact.directive,
+    String(artifact.lineNumber),
+    artifact.sourceName ?? "",
+    artifact.outputNode ?? "",
+    artifact.sweepKind ?? "",
+    formatDeckArtifactFloat(artifact.startValue),
+    formatDeckArtifactFloat(artifact.stopValue),
+    formatDeckArtifactFloat(artifact.stepValue),
+    artifact.pointCount === undefined ? "" : String(artifact.pointCount),
+    formatDeckArtifactFloat(artifact.startFrequencyHz),
+    formatDeckArtifactFloat(artifact.stopFrequencyHz),
+    formatDeckArtifactFloat(artifact.stepTime),
+    formatDeckArtifactFloat(artifact.stopTime),
+    formatDeckArtifactFloat(artifact.startTime),
+    formatDeckArtifactFloat(artifact.maxStep),
+    formatDeckArtifactBoolean(artifact.useInitialConditions),
+    String(artifact.resultRows),
+    String(artifact.resultColumnCount),
+    artifact.resultColumns.join(";"),
+    String(artifact.outputProbeCount),
+    artifact.outputProbes.join(";"),
+    String(artifact.outputDirectiveCount),
+    artifact.outputDirectives.join(";"),
+    String(artifact.measurementCount),
+    artifact.measurementNames.join(";"),
+    String(artifact.fourierCount),
+    artifact.fourierProbes.join(";"),
+    String(artifact.diagnosticCount),
+    artifact.diagnosticCodes.join(";"),
   ];
+}
+
+type DeckRunArtifactRecord = Record<(typeof DECK_RUN_ARTIFACT_COLUMNS)[number], string>;
+
+function deckRunArtifactRecord(artifact: DeckRunArtifact): DeckRunArtifactRecord {
+  const cells = deckRunArtifactCells(artifact);
+  return Object.fromEntries(
+    DECK_RUN_ARTIFACT_COLUMNS.map((column, index) => [column, cells[index] ?? ""]),
+  ) as DeckRunArtifactRecord;
+}
+
+function deckTableColumns(table: string): string[] {
+  const header = table.split("\n", 1)[0] ?? "";
+  return header.length === 0 ? [] : header.split("\t");
+}
+
+export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
+  const rows = [DECK_RUN_ARTIFACT_COLUMNS.join("\t")];
   for (const artifact of artifacts) {
-    rows.push(
-      [
-        artifact.analysis,
-        artifact.directive,
-        String(artifact.lineNumber),
-        String(artifact.resultRows),
-        String(artifact.outputProbeCount),
-        String(artifact.measurementCount),
-        String(artifact.fourierCount),
-      ].join("\t"),
-    );
+    rows.push(deckRunArtifactCells(artifact).join("\t"));
   }
   return `${rows.join("\n")}\n`;
+}
+
+function formatCsvCell(value: string): string {
+  if (/[",\n\r]/u.test(value)) {
+    return `"${value.replace(/"/gu, '""')}"`;
+  }
+  return value;
+}
+
+export function formatDeckRunArtifactCsv(artifacts: readonly DeckRunArtifact[]): string {
+  const rows = [DECK_RUN_ARTIFACT_COLUMNS.join(",")];
+  for (const artifact of artifacts) {
+    rows.push(deckRunArtifactCells(artifact).map(formatCsvCell).join(","));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckRunArtifactJson(artifacts: readonly DeckRunArtifact[]): string {
+  return `${JSON.stringify(artifacts.map(deckRunArtifactRecord))}\n`;
 }
 
 function selectDeckMeasurementCardsForAnalysis(
@@ -7501,18 +8091,30 @@ export function runDeckAnalysis(
   analysis?: string,
 ): DeckAnalysisExecution {
   const plan = selectDeckAnalysisPlan(netlist, analysis);
+  const diagnosticCodes = deckAnalysisDiagnosticCodes(netlist, plan);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
+    const table = formatDeckOpTable(result, netlist);
     selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      deckTableColumns(table),
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+      diagnosticCodes,
+    );
     return {
       plan,
       result,
-      table: formatDeckOpTable(result, netlist),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
@@ -7528,6 +8130,7 @@ export function runDeckAnalysis(
     const stop = requireDeckPlanNumber(plan.stopValue, plan, "stopValue");
     const step = requireDeckPlanNumber(plan.stepValue, plan, "stepValue");
     const result = dcSweep(circuit, sourceName, start, stop, step);
+    const table = formatDeckDcSweepTable(sourceName, result, netlist);
     const measurements = measureDcSweepCards(
       result,
       selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
@@ -7535,11 +8138,21 @@ export function runDeckAnalysis(
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      deckTableColumns(table),
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+      diagnosticCodes,
+    );
     return {
       plan,
       result,
-      table: formatDeckDcSweepTable(sourceName, result, netlist),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
@@ -7566,6 +8179,7 @@ export function runDeckAnalysis(
       startFrequencyHz,
       stopFrequencyHz,
     );
+    const table = formatDeckAcTable(result, netlist);
     const measurements = measureAcSweepCards(
       result,
       selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
@@ -7573,11 +8187,21 @@ export function runDeckAnalysis(
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      deckTableColumns(table),
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+      diagnosticCodes,
+    );
     return {
       plan,
       result,
-      table: formatDeckAcTable(result, netlist),
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
@@ -7601,16 +8225,137 @@ export function runDeckAnalysis(
       result,
       selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
     );
+    const table = formatDeckTransientTable(result, netlist);
     const fourier = fourierTransientCards(
       result,
       selectDeckFourierCardsForAnalysis(netlist, plan.analysis),
     );
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      deckTableColumns(table),
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+      diagnosticCodes,
+    );
     return {
       plan,
       result,
-      table: formatDeckTransientTable(result, netlist),
+      table,
+      outputProbes,
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
+      runArtifacts,
+      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    };
+  }
+  if (plan.analysis === "tf") {
+    const outputNode = requireDeckPlanString(plan.outputNode, plan, "outputNode");
+    const inputSource = requireDeckPlanString(plan.sourceName, plan, "sourceName");
+    const result = tf(circuit, outputNode, inputSource);
+    selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const measurements: ProbeMeasurement[] = [];
+    const fourier: FourierResult[] = [];
+    const outputProbes = [`V(${outputNode})`];
+    const outputDirectives: string[] = [];
+    const table = formatDeckTfTable(result);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      deckTableColumns(table),
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+      diagnosticCodes,
+    );
+    return {
+      plan,
+      result,
+      table,
+      outputProbes,
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
+      runArtifacts,
+      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    };
+  }
+  if (plan.analysis === "sens") {
+    const outputNode = requireDeckPlanString(plan.outputNode, plan, "outputNode");
+    const result = sensDc(circuit, outputNode);
+    selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const measurements: ProbeMeasurement[] = [];
+    const fourier: FourierResult[] = [];
+    const outputProbes = [`V(${outputNode})`];
+    const outputDirectives: string[] = [];
+    const table = formatDeckSensTable(result);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      deckTableColumns(table),
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+      diagnosticCodes,
+    );
+    return {
+      plan,
+      result,
+      table,
+      outputProbes,
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
+      runArtifacts,
+      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    };
+  }
+  if (plan.analysis === "noise") {
+    const outputNode = requireDeckPlanString(plan.outputNode, plan, "outputNode");
+    const inputSource = requireDeckPlanString(plan.sourceName, plan, "sourceName");
+    const frequenciesHz = plan.sweepKind === undefined
+      ? undefined
+      : deckAcFrequencies(
+          plan,
+          plan.sweepKind,
+          requireDeckPlanInteger(plan.pointCount, plan, "pointCount"),
+          requireDeckPlanNumber(plan.startFrequencyHz, plan, "startFrequencyHz"),
+          requireDeckPlanNumber(plan.stopFrequencyHz, plan, "stopFrequencyHz"),
+        );
+    const result = noiseAc(circuit, outputNode, inputSource, frequenciesHz);
+    selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const measurements: ProbeMeasurement[] = [];
+    const fourier: FourierResult[] = [];
+    const outputProbes = [`V(${outputNode})`];
+    const outputDirectives: string[] = [];
+    const table = formatDeckNoiseTable(result);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      deckTableColumns(table),
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+      diagnosticCodes,
+    );
+    return {
+      plan,
+      result,
+      table,
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),

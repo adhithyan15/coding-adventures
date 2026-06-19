@@ -272,8 +272,15 @@ risks Y") — decision support, not a hidden choice.
   step is satisfied"; the precedence reasoning lives in the language. The same `requires… ∧
   not done…` shape is reusable across any rule corpus (a filing gated on a precondition, a
   benefit gated on a prior step).
-- **CC-7 — full chart drive-through:** wire CH (chart→IR + de-identification) into the COP so
-  a whole de-identified FHIR chart produces a regimen with the full audit trail.
+- **CC-7 — full chart drive-through. ✅ DONE.** `fhir/run_chart_to_regimen.py` joins the three
+  stages into one call — `chart_to_regimen(cli, bundle, disease, as_of_year)` runs
+  *deidentify → to_chartfacts → chart_to_cop.derive* and returns the treatment decision PLUS the
+  full audit trail (Safe-Harbor de-id report, mapped ChartFacts, per-resource discards, grounded
+  constraints, wait-vs-treat + reimbursement). `answer_time_model_calls == 0` — a whole
+  de-identified FHIR chart → a regimen (or honest INFEASIBLE + conflict) entirely on the CPU.
+  Two committed fixtures + `fhir/test_run_chart_to_regimen.py`: a straightforward adult →
+  vancomycin + ceftriaxone, and the complex PHI chart → de-identified → abstention. This closes
+  CC-2..7; the chart-as-constraints arc is end-to-end.
 
 Each CC-n: spec note → grounded rules (no authoring) → deterministic compiler/solver wiring
 → tests (incl. an infeasibility/abstention test) → security review → PR → babysit.
