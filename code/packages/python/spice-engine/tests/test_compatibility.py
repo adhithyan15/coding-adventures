@@ -798,6 +798,7 @@ R1 in out 1k
 .ac dec 10 1k 1Meg
 .tran 1u 2m 0 10u uic
 .tf V(out) V1
+.sens V(out)
 .end
 .tran 1u 1m
 """
@@ -805,7 +806,7 @@ R1 in out 1k
 
     assert summary.active_lines == ("V1 in 0 DC 0", "R1 in out 1k")
     assert summary.terminated is True
-    assert summary.end_line_number == 9
+    assert summary.end_line_number == 10
     assert summary.diagnostics == ()
     assert [analysis.analysis for analysis in summary.analyses] == [
         "op",
@@ -813,6 +814,7 @@ R1 in out 1k
         "ac",
         "tran",
         "tf",
+        "sens",
     ]
 
     dc = summary.analyses[1]
@@ -842,6 +844,11 @@ R1 in out 1k
     assert tf.output_node == "out"
     assert tf.source_name == "V1"
 
+    sens = summary.analyses[5]
+    assert sens.directive == ".sens"
+    assert sens.output_node == "out"
+    assert sens.source_name is None
+
 
 def test_resolve_deck_analyses_reports_invalid_cards() -> None:
     summary = resolve_deck_analyses(
@@ -853,12 +860,14 @@ def test_resolve_deck_analyses_reports_invalid_cards() -> None:
 .ac lin 0 1 10
 .tran 0 1m
 .tran 1u 2m 0 1u extra
+.sens I(R1)
 .end
 """
     )
 
     assert summary.analyses == ()
     assert sorted(diagnostic.code for diagnostic in summary.diagnostics) == [
+        "SPICE_DECK_ANALYSIS_ARGUMENT",
         "SPICE_DECK_ANALYSIS_ARGUMENT",
         "SPICE_DECK_ANALYSIS_ARGUMENT",
         "SPICE_DECK_ANALYSIS_INTERVAL",
@@ -908,6 +917,20 @@ R1 in out 1k
     assert tf.analysis == "tf"
     assert tf.output_node == "out"
     assert tf.source_name == "V1"
+
+    sens = select_deck_analysis_plan(
+        """
+V1 in 0 DC 1
+R1 in out 1k
+.sens V(out)
+.end
+""",
+        "sensitivity",
+    )
+    assert sens.directive == ".sens"
+    assert sens.analysis == "sens"
+    assert sens.output_node == "out"
+    assert sens.source_name is None
 
 
 def test_select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() -> None:

@@ -861,13 +861,14 @@ R1 in out 1k
 .ac dec 10 1k 1Meg
 .tran 1u 2m 0 10u uic
 .tf V(out) V1
+.sens V(out)
 .end
 .tran 1u 1m
 `);
 
     expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 0", "R1 in out 1k"]);
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(9);
+    expect(summary.endLineNumber).toBe(10);
     expect(summary.diagnostics).toStrictEqual([]);
     expect(summary.analyses.map((analysis) => analysis.analysis)).toStrictEqual([
       "op",
@@ -875,6 +876,7 @@ R1 in out 1k
       "ac",
       "tran",
       "tf",
+      "sens",
     ]);
 
     const dc = summary.analyses[1];
@@ -903,6 +905,11 @@ R1 in out 1k
     expect(tf.directive).toBe(".tf");
     expect(tf.outputNode).toBe("out");
     expect(tf.sourceName).toBe("V1");
+
+    const sens = summary.analyses[5];
+    expect(sens.directive).toBe(".sens");
+    expect(sens.outputNode).toBe("out");
+    expect(sens.sourceName).toBeUndefined();
   });
 
   it("reports invalid deck analysis cards", () => {
@@ -914,11 +921,13 @@ R1 in out 1k
 .ac lin 0 1 10
 .tran 0 1m
 .tran 1u 2m 0 1u extra
+.sens I(R1)
 .end
 `);
 
     expect(summary.analyses).toStrictEqual([]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code).sort()).toStrictEqual([
+      "SPICE_DECK_ANALYSIS_ARGUMENT",
       "SPICE_DECK_ANALYSIS_ARGUMENT",
       "SPICE_DECK_ANALYSIS_ARGUMENT",
       "SPICE_DECK_ANALYSIS_INTERVAL",
@@ -966,6 +975,20 @@ R1 in out 1k
     expect(tf.analysis).toBe("tf");
     expect(tf.outputNode).toBe("out");
     expect(tf.sourceName).toBe("V1");
+
+    const sens = selectDeckAnalysisPlan(
+      `
+V1 in 0 DC 1
+R1 in out 1k
+.sens V(out)
+.end
+`,
+      "sensitivity",
+    );
+    expect(sens.directive).toBe(".sens");
+    expect(sens.analysis).toBe("sens");
+    expect(sens.outputNode).toBe("out");
+    expect(sens.sourceName).toBeUndefined();
   });
 
   it("reports ambiguous or invalid deck analysis plan selection", () => {

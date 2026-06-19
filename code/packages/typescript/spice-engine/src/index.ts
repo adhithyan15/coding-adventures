@@ -613,8 +613,8 @@ export interface DeckOutputSummary {
 }
 
 export interface DeckAnalysisPlan {
-  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf";
-  readonly analysis: "op" | "dc" | "ac" | "tran" | "tf";
+  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens";
+  readonly analysis: "op" | "dc" | "ac" | "tran" | "tf" | "sens";
   readonly lineNumber: number;
   readonly sourceName?: string;
   readonly outputNode?: string;
@@ -634,7 +634,7 @@ export interface DeckAnalysisPlan {
 
 export interface DeckAnalysisDiagnostic {
   readonly code: string;
-  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf";
+  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens";
   readonly lineNumber: number;
   readonly message: string;
   readonly severity: "error" | "warning";
@@ -654,7 +654,8 @@ export type DeckAnalysisExecutionResult =
   | readonly DcSweepPoint[]
   | readonly AcPoint[]
   | readonly TransientPoint[]
-  | TfResult;
+  | TfResult
+  | SensResult;
 
 export interface DeckRunArtifact {
   readonly analysis: DeckAnalysisPlan["analysis"];
@@ -3322,7 +3323,8 @@ export function resolveDeckAnalyses(netlist: string): DeckAnalysisSummary {
       directive === ".dc" ||
       directive === ".ac" ||
       directive === ".tran" ||
-      directive === ".tf"
+      directive === ".tf" ||
+      directive === ".sens"
     ) {
       resolveAnalysisLine(stripped, lineNumber, directive, state);
       continue;
@@ -4592,6 +4594,9 @@ function resolveAnalysisLine(
     case ".tf":
       resolveTfAnalysis(tokens, lineNumber, state);
       break;
+    case ".sens":
+      resolveSensAnalysis(tokens, lineNumber, state);
+      break;
   }
 }
 
@@ -4865,6 +4870,40 @@ function resolveTfAnalysis(
     analysis: "tf",
     lineNumber,
     sourceName: inputSource,
+    outputNode: outputProbe.slice(2, -1),
+    useInitialConditions: false,
+  });
+}
+
+function resolveSensAnalysis(
+  tokens: readonly string[],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): void {
+  if (tokens.length !== 2) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".sens",
+      lineNumber,
+      message: ".sens requires one output voltage probe token",
+    });
+    return;
+  }
+  const outputProbe = normalizeDeckOutputProbe(unquoteToken(tokens[1]));
+  if (outputProbe === undefined || !outputProbe.startsWith("V(")) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".sens",
+      lineNumber,
+      message: `.sens output must be a voltage probe V(node), got ${JSON.stringify(tokens[1])}`,
+      token: tokens[1],
+    });
+    return;
+  }
+  state.analyses.push({
+    directive: ".sens",
+    analysis: "sens",
+    lineNumber,
     outputNode: outputProbe.slice(2, -1),
     useInitialConditions: false,
   });
@@ -5742,6 +5781,9 @@ function normalizeDeckAnalysisName(analysis: string): DeckAnalysisPlan["analysis
     case "transfer-function":
     case "transferfunction":
       return "tf";
+    case "sens":
+    case "sensitivity":
+      return "sens";
     default:
       return undefined;
   }
@@ -7671,6 +7713,10 @@ export function formatDeckTfTable(result: TfResult): string {
   return formatTfTable(result);
 }
 
+export function formatDeckSensTable(result: SensResult): string {
+  return formatSensTable(result);
+}
+
 function deckResultRowCount(result: DeckAnalysisExecutionResult): number {
   return Array.isArray(result) ? result.length : 1;
 }
@@ -7893,6 +7939,28 @@ export function runDeckAnalysis(
       plan,
       result,
       table: formatDeckTfTable(result),
+      outputProbes,
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
+      runArtifacts,
+      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    };
+  }
+  if (plan.analysis === "sens") {
+    const outputNode = requireDeckPlanString(plan.outputNode, plan, "outputNode");
+    const result = sensDc(circuit, outputNode);
+    selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const measurements: ProbeMeasurement[] = [];
+    const fourier: FourierResult[] = [];
+    const outputProbes = [`V(${outputNode})`];
+    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    return {
+      plan,
+      result,
+      table: formatDeckSensTable(result),
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),

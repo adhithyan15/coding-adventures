@@ -965,7 +965,7 @@ def resolve_deck_analyses(netlist: str) -> DeckAnalysisSummary:
         if directive == ".end":
             end_line_number = line_number
             break
-        if directive in {".op", ".dc", ".ac", ".tran", ".tf"}:
+        if directive in {".op", ".dc", ".ac", ".tran", ".tf", ".sens"}:
             _resolve_analysis_line(stripped, line_number, directive, state)
             continue
         active_lines.append(stripped)
@@ -2442,6 +2442,8 @@ def _resolve_analysis_line(
         _resolve_tran_analysis(tokens, line_number, state)
     elif directive == ".tf":
         _resolve_tf_analysis(tokens, line_number, state)
+    elif directive == ".sens":
+        _resolve_sens_analysis(tokens, line_number, state)
 
 
 def _resolve_op_analysis(
@@ -2721,6 +2723,41 @@ def _resolve_tf_analysis(
             analysis="tf",
             line_number=line_number,
             source_name=input_source,
+            output_node=output_probe[2:-1],
+        )
+    )
+
+
+def _resolve_sens_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) != 2:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".sens",
+            line_number=line_number,
+            message=".sens requires one output voltage probe token",
+        )
+        return
+    output_probe = _normalize_deck_output_probe(_unquote_token(tokens[1]))
+    if output_probe is None or not output_probe.startswith("V("):
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".sens",
+            line_number=line_number,
+            message=f".sens output must be a voltage probe V(node), got {tokens[1]!r}",
+            token=tokens[1],
+        )
+        return
+    state.analyses.append(
+        DeckAnalysisPlan(
+            directive=".sens",
+            analysis="sens",
+            line_number=line_number,
             output_node=output_probe[2:-1],
         )
     )
@@ -3122,6 +3159,8 @@ def _normalize_deck_analysis_name(analysis: str) -> str | None:
         return "tran"
     if normalized in {"tf", "transfer-function", "transferfunction"}:
         return "tf"
+    if normalized in {"sens", "sensitivity"}:
+        return "sens"
     return None
 
 

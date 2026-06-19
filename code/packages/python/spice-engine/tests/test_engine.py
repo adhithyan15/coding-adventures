@@ -6779,6 +6779,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 .ac dec 1 1k 1k
 .tran 1m 1m
 .tf V(mid) V1
+.sens V(mid)
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -6890,6 +6891,28 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tf_execution.run_artifact_table == (
         "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
         f"tf\t.tf\t{tf_execution.plan.line_number}\t1\t1\tV(mid)\t0\t\t0\t\n"
+    )
+
+    sens_execution = run_deck_analysis(circuit, netlist, "sens")
+    assert sens_execution.plan.output_node == "mid"
+    assert sens_execution.plan.source_name is None
+    assert isinstance(sens_execution.result, SensResult)
+    assert sens_execution.result.output_node == "mid"
+    assert len(sens_execution.result.entries) == 3
+    assert sens_execution.output_probes == ["V(mid)"]
+    assert sens_execution.measurements == []
+    assert sens_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert sens_execution.table.startswith(
+        "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity\n"
+    )
+    assert sens_execution.run_artifacts[0].analysis == "sens"
+    assert sens_execution.run_artifacts[0].result_rows == 1
+    assert sens_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert sens_execution.run_artifacts[0].measurement_names == []
+    assert sens_execution.run_artifacts[0].fourier_probes == []
+    assert sens_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"sens\t.sens\t{sens_execution.plan.line_number}\t1\t1\tV(mid)\t0\t\t0\t\n"
     )
 
     tran_window_execution = run_deck_analysis(
