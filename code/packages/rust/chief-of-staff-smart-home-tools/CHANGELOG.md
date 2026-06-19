@@ -140,7 +140,8 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_mesh_preflight_readiness_summary`,
   `smart_home.get_integration_mesh_preflight_repair_readiness_summary`,
   `smart_home.get_integration_mesh_preflight_batch_readiness_summary`, and
-  `smart_home.get_integration_mesh_preflight_schedule_readiness_summary`.
+  `smart_home.get_integration_mesh_preflight_schedule_readiness_summary`, and
+  `smart_home.get_integration_mesh_preflight_slot_readiness_summary`.
 - Added the D23 mesh release-readiness summary handler:
   `smart_home.get_integration_mesh_release_readiness_summary`.
 - Added D18D handlers for D23 mesh readiness handoff packages:
