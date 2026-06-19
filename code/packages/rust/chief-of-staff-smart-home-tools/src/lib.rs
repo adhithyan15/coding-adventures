@@ -64,8 +64,9 @@ use smart_home_integration_catalog::{
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
     entries_requiring_primitive, find_entry, first_party_catalog, mesh_action_readiness_summary,
     mesh_preflight_batch_readiness_summary, mesh_preflight_execution_readiness_summary,
-    mesh_preflight_readiness_summary, mesh_preflight_repair_readiness_summary,
-    mesh_preflight_schedule_readiness_summary, mesh_preflight_slot_readiness_summary,
+    mesh_preflight_guardrail_readiness_summary, mesh_preflight_readiness_summary,
+    mesh_preflight_repair_readiness_summary, mesh_preflight_schedule_readiness_summary,
+    mesh_preflight_slot_readiness_summary, mesh_preflight_work_order_readiness_summary,
     mesh_protocol_primitive_readiness_rows, mesh_protocol_substrate_actions,
     mesh_protocol_substrate_preflight_actions, mesh_protocol_substrate_preflight_checks,
     mesh_protocol_substrate_preflight_repair_batches,
@@ -164,9 +165,11 @@ use smart_home_integration_catalog::{
     IntegrationActivationWatchtowerSummary, IntegrationCatalogEntry, IntegrationCatalogQuery,
     IntegrationCatalogSort, IntegrationCategory, IntegrationMeshActionReadinessSummary,
     IntegrationMeshPreflightBatchReadinessSummary,
-    IntegrationMeshPreflightExecutionReadinessSummary, IntegrationMeshPreflightReadinessSummary,
+    IntegrationMeshPreflightExecutionReadinessSummary,
+    IntegrationMeshPreflightGuardrailReadinessSummary, IntegrationMeshPreflightReadinessSummary,
     IntegrationMeshPreflightRepairReadinessSummary,
     IntegrationMeshPreflightScheduleReadinessSummary, IntegrationMeshPreflightSlotReadinessSummary,
+    IntegrationMeshPreflightWorkOrderReadinessSummary,
     IntegrationMeshProtocolPrimitiveReadinessRow, IntegrationMeshProtocolPrimitiveReadinessSummary,
     IntegrationMeshProtocolSubstrateAction, IntegrationMeshProtocolSubstrateActionSummary,
     IntegrationMeshProtocolSubstratePreflightAction,
@@ -190,6 +193,7 @@ use smart_home_integration_catalog::{
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder,
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary,
     IntegrationMeshProtocolSubstratePreflightSummary, IntegrationMeshProtocolSubstrateStage,
     IntegrationMeshProtocolSubstrateStageRow, IntegrationMeshProtocolSubstrateStageSummary,
@@ -436,6 +440,10 @@ pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_SLOT_READINESS_SUMMARY_TOOL_
     "smart_home.get_integration_mesh_preflight_slot_readiness_summary";
 pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_EXECUTION_READINESS_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_preflight_execution_readiness_summary";
+pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_WORK_ORDER_READINESS_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_mesh_preflight_work_order_readiness_summary";
+pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_GUARDRAIL_READINESS_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_mesh_preflight_guardrail_readiness_summary";
 pub const SMART_HOME_GET_INTEGRATION_MESH_READINESS_PACKAGE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_readiness_package_summary";
 pub const SMART_HOME_GET_INTEGRATION_MESH_STAGE_RELEASE_SUMMARY_TOOL_ID: &str =
@@ -1164,6 +1172,22 @@ impl SmartHomeToolBridge {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(
                         get_integration_mesh_preflight_execution_readiness_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_WORK_ORDER_READINESS_SUMMARY_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(
+                        get_integration_mesh_preflight_work_order_readiness_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_GUARDRAIL_READINESS_SUMMARY_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(
+                        get_integration_mesh_preflight_guardrail_readiness_summary_output_handler_output(
                             query,
                         ),
                     )
@@ -3394,6 +3418,28 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_EXECUTION_READINESS_SUMMARY_TOOL_ID,
             "Get smart-home integration mesh preflight execution readiness summary",
             "Return D23 mesh preflight execution readiness counts combined with slot readiness and ticket readiness.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_WORK_ORDER_READINESS_SUMMARY_TOOL_ID,
+            "Get smart-home integration mesh preflight work-order readiness summary",
+            "Return D23 mesh preflight work-order readiness counts combined with execution ticket readiness.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_GUARDRAIL_READINESS_SUMMARY_TOOL_ID,
+            "Get smart-home integration mesh preflight guardrail readiness summary",
+            "Return D23 mesh preflight guardrail readiness counts combined with work-order and evidence disposition readiness.",
             integration_readiness_query_schema(true),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
@@ -18046,6 +18092,26 @@ fn integration_mesh_preflight_execution_readiness_summary_for_query(
     )
 }
 
+fn integration_mesh_preflight_work_order_readiness_summary_for_query(
+    query: &IntegrationReadinessQuery,
+) -> IntegrationMeshPreflightWorkOrderReadinessSummary {
+    mesh_preflight_work_order_readiness_summary(
+        &query.available_primitives,
+        &query.allowed_capabilities,
+        &query.enabled_integrations,
+    )
+}
+
+fn integration_mesh_preflight_guardrail_readiness_summary_for_query(
+    query: &IntegrationReadinessQuery,
+) -> IntegrationMeshPreflightGuardrailReadinessSummary {
+    mesh_preflight_guardrail_readiness_summary(
+        &query.available_primitives,
+        &query.allowed_capabilities,
+        &query.enabled_integrations,
+    )
+}
+
 fn integration_mesh_readiness_package_summary_for_query(
     query: &IntegrationReadinessQuery,
 ) -> IntegrationMeshReadinessPackageSummary {
@@ -23466,6 +23532,86 @@ fn get_integration_mesh_preflight_execution_readiness_summary_output_handler_out
             (
                 "operator_required_execution_tickets",
                 integer(summary.operator_required_execution_tickets as i64),
+            ),
+            (
+                "ready_for_release",
+                JsonValue::Bool(summary.ready_for_release),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_mesh_preflight_work_order_readiness_summary_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let summary = integration_mesh_preflight_work_order_readiness_summary_for_query(&query);
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        mesh_preflight_work_order_readiness_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_mesh_preflight_work_order_readiness_summary"),
+            ),
+            (
+                "queued_preflight_actions",
+                integer(summary.queued_preflight_actions as i64),
+            ),
+            (
+                "execution_work_order_count",
+                integer(summary.execution_work_order_count as i64),
+            ),
+            (
+                "blocking_execution_work_orders",
+                integer(summary.blocking_execution_work_orders as i64),
+            ),
+            (
+                "operator_required_execution_work_orders",
+                integer(summary.operator_required_execution_work_orders as i64),
+            ),
+            (
+                "ready_for_release",
+                JsonValue::Bool(summary.ready_for_release),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_mesh_preflight_guardrail_readiness_summary_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let summary = integration_mesh_preflight_guardrail_readiness_summary_for_query(&query);
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        mesh_preflight_guardrail_readiness_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_mesh_preflight_guardrail_readiness_summary"),
+            ),
+            (
+                "work_order_guardrail_count",
+                integer(summary.work_order_guardrail_count as i64),
+            ),
+            (
+                "release_blocker_guardrails",
+                integer(summary.release_blocker_guardrails as i64),
+            ),
+            (
+                "evidence_review_dispositions",
+                integer(summary.evidence_review_dispositions as i64),
+            ),
+            (
+                "blocking_dispositions",
+                integer(summary.blocking_dispositions as i64),
             ),
             (
                 "ready_for_release",
@@ -46980,6 +47126,479 @@ fn mesh_preflight_execution_readiness_summary_json(
     ])
 }
 
+fn mesh_preflight_work_order_readiness_summary_json(
+    summary: &IntegrationMeshPreflightWorkOrderReadinessSummary,
+) -> JsonValue {
+    object([
+        (
+            "execution_readiness_summary",
+            mesh_preflight_execution_readiness_summary_json(&summary.execution_readiness_summary),
+        ),
+        (
+            "execution_work_order_summary",
+            mesh_protocol_substrate_preflight_repair_slot_execution_work_order_summary_json(
+                &summary.execution_work_order_summary,
+            ),
+        ),
+        ("total_protocols", integer(summary.total_protocols as i64)),
+        (
+            "total_preflight_checks",
+            integer(summary.total_preflight_checks as i64),
+        ),
+        (
+            "preflight_blocker_count",
+            integer(summary.preflight_blocker_count as i64),
+        ),
+        (
+            "release_blocker_count",
+            integer(summary.release_blocker_count as i64),
+        ),
+        (
+            "queued_preflight_actions",
+            integer(summary.queued_preflight_actions as i64),
+        ),
+        (
+            "repair_batch_count",
+            integer(summary.repair_batch_count as i64),
+        ),
+        (
+            "repair_slot_count",
+            integer(summary.repair_slot_count as i64),
+        ),
+        (
+            "scheduled_preflight_actions",
+            integer(summary.scheduled_preflight_actions as i64),
+        ),
+        (
+            "execution_ticket_count",
+            integer(summary.execution_ticket_count as i64),
+        ),
+        (
+            "execution_work_order_count",
+            integer(summary.execution_work_order_count as i64),
+        ),
+        (
+            "ordered_preflight_actions",
+            integer(summary.ordered_preflight_actions as i64),
+        ),
+        (
+            "blocking_execution_work_orders",
+            integer(summary.blocking_execution_work_orders as i64),
+        ),
+        (
+            "operator_required_execution_work_orders",
+            integer(summary.operator_required_execution_work_orders as i64),
+        ),
+        (
+            "first_execution_work_order_key",
+            summary
+                .first_execution_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocking_execution_work_order_key",
+            summary
+                .first_blocking_execution_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_execution_work_order_key",
+            summary
+                .first_operator_execution_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_execution_ticket_key",
+            summary
+                .first_execution_ticket_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_execution_work_order_stage",
+            summary
+                .first_execution_work_order_stage
+                .map(|stage| string(stage.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_execution_work_order_action_kind",
+            summary
+                .first_execution_work_order_action_kind
+                .map(mesh_substrate_preflight_action_kind_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("preflight_ready", JsonValue::Bool(summary.preflight_ready)),
+        (
+            "repair_actions_ready",
+            JsonValue::Bool(summary.repair_actions_ready),
+        ),
+        (
+            "repair_batches_ready",
+            JsonValue::Bool(summary.repair_batches_ready),
+        ),
+        (
+            "repair_schedule_ready",
+            JsonValue::Bool(summary.repair_schedule_ready),
+        ),
+        (
+            "repair_slot_audit_ready",
+            JsonValue::Bool(summary.repair_slot_audit_ready),
+        ),
+        (
+            "execution_tickets_ready",
+            JsonValue::Bool(summary.execution_tickets_ready),
+        ),
+        (
+            "execution_work_orders_ready",
+            JsonValue::Bool(summary.execution_work_orders_ready),
+        ),
+        ("release_ready", JsonValue::Bool(summary.release_ready)),
+        (
+            "ready_for_release",
+            JsonValue::Bool(summary.ready_for_release),
+        ),
+        (
+            "has_execution_work_orders",
+            JsonValue::Bool(summary.has_execution_work_orders()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("needs_operator", JsonValue::Bool(summary.needs_operator())),
+    ])
+}
+
+fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_summary_json(
+    summary: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrailSummary,
+) -> JsonValue {
+    object([
+        ("total_guardrails", integer(summary.total_guardrails as i64)),
+        (
+            "release_blocker_guardrails",
+            integer(summary.release_blocker_guardrails as i64),
+        ),
+        (
+            "operator_handoff_guardrails",
+            integer(summary.operator_handoff_guardrails as i64),
+        ),
+        (
+            "ready_to_execute_guardrails",
+            integer(summary.ready_to_execute_guardrails as i64),
+        ),
+        (
+            "scheduled_actions",
+            integer(summary.scheduled_actions as i64),
+        ),
+        (
+            "protocol_mentions",
+            integer(summary.protocol_mentions as i64),
+        ),
+        (
+            "primitive_mentions",
+            integer(summary.primitive_mentions as i64),
+        ),
+        (
+            "first_work_order_key",
+            summary
+                .first_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_release_blocker_work_order_key",
+            summary
+                .first_release_blocker_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_handoff_work_order_key",
+            summary
+                .first_operator_handoff_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_to_execute_work_order_key",
+            summary
+                .first_ready_to_execute_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_guardrail_kind",
+            summary
+                .first_guardrail_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_stage",
+            summary
+                .first_stage
+                .map(|stage| string(stage.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_kind",
+            summary
+                .first_action_kind
+                .map(mesh_substrate_preflight_action_kind_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "execution_work_order_guardrails_ready",
+            JsonValue::Bool(summary.execution_work_order_guardrails_ready),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_guardrails", JsonValue::Bool(summary.has_guardrails())),
+        (
+            "has_release_blockers",
+            JsonValue::Bool(summary.has_release_blockers()),
+        ),
+        ("needs_operator", JsonValue::Bool(summary.needs_operator())),
+        (
+            "has_ready_to_execute_work",
+            JsonValue::Bool(summary.has_ready_to_execute_work()),
+        ),
+    ])
+}
+
+fn mesh_preflight_guardrail_readiness_summary_json(
+    summary: &IntegrationMeshPreflightGuardrailReadinessSummary,
+) -> JsonValue {
+    object([
+        (
+            "work_order_readiness_summary",
+            mesh_preflight_work_order_readiness_summary_json(&summary.work_order_readiness_summary),
+        ),
+        (
+            "work_order_guardrail_summary",
+            mesh_protocol_substrate_preflight_repair_slot_execution_work_order_guardrail_summary_json(
+                &summary.work_order_guardrail_summary,
+            ),
+        ),
+        (
+            "evidence_review_disposition_summary",
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_summary_json(
+                &summary.evidence_review_disposition_summary,
+            ),
+        ),
+        ("total_protocols", integer(summary.total_protocols as i64)),
+        (
+            "total_preflight_checks",
+            integer(summary.total_preflight_checks as i64),
+        ),
+        (
+            "preflight_blocker_count",
+            integer(summary.preflight_blocker_count as i64),
+        ),
+        (
+            "release_blocker_count",
+            integer(summary.release_blocker_count as i64),
+        ),
+        (
+            "queued_preflight_actions",
+            integer(summary.queued_preflight_actions as i64),
+        ),
+        (
+            "repair_batch_count",
+            integer(summary.repair_batch_count as i64),
+        ),
+        (
+            "repair_slot_count",
+            integer(summary.repair_slot_count as i64),
+        ),
+        (
+            "scheduled_preflight_actions",
+            integer(summary.scheduled_preflight_actions as i64),
+        ),
+        (
+            "execution_ticket_count",
+            integer(summary.execution_ticket_count as i64),
+        ),
+        (
+            "execution_work_order_count",
+            integer(summary.execution_work_order_count as i64),
+        ),
+        (
+            "ordered_preflight_actions",
+            integer(summary.ordered_preflight_actions as i64),
+        ),
+        (
+            "work_order_guardrail_count",
+            integer(summary.work_order_guardrail_count as i64),
+        ),
+        (
+            "release_blocker_guardrails",
+            integer(summary.release_blocker_guardrails as i64),
+        ),
+        (
+            "operator_handoff_guardrails",
+            integer(summary.operator_handoff_guardrails as i64),
+        ),
+        (
+            "ready_to_execute_guardrails",
+            integer(summary.ready_to_execute_guardrails as i64),
+        ),
+        (
+            "evidence_review_dispositions",
+            integer(summary.evidence_review_dispositions as i64),
+        ),
+        (
+            "blocking_dispositions",
+            integer(summary.blocking_dispositions as i64),
+        ),
+        (
+            "operator_handoff_dispositions",
+            integer(summary.operator_handoff_dispositions as i64),
+        ),
+        (
+            "repair_required_dispositions",
+            integer(summary.repair_required_dispositions as i64),
+        ),
+        (
+            "lineage_gap_dispositions",
+            integer(summary.lineage_gap_dispositions as i64),
+        ),
+        (
+            "review_required_dispositions",
+            integer(summary.review_required_dispositions as i64),
+        ),
+        (
+            "first_guardrail_work_order_key",
+            summary
+                .first_guardrail_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_release_blocker_work_order_key",
+            summary
+                .first_release_blocker_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_handoff_work_order_key",
+            summary
+                .first_operator_handoff_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_disposition_key",
+            summary
+                .first_disposition_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_handoff_disposition_key",
+            summary
+                .first_operator_handoff_disposition_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_repair_required_disposition_key",
+            summary
+                .first_repair_required_disposition_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_lineage_gap_disposition_key",
+            summary
+                .first_lineage_gap_disposition_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_guardrail_stage",
+            summary
+                .first_guardrail_stage
+                .map(|stage| string(stage.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_guardrail_action_kind",
+            summary
+                .first_guardrail_action_kind
+                .map(mesh_substrate_preflight_action_kind_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("preflight_ready", JsonValue::Bool(summary.preflight_ready)),
+        (
+            "repair_actions_ready",
+            JsonValue::Bool(summary.repair_actions_ready),
+        ),
+        (
+            "repair_batches_ready",
+            JsonValue::Bool(summary.repair_batches_ready),
+        ),
+        (
+            "repair_schedule_ready",
+            JsonValue::Bool(summary.repair_schedule_ready),
+        ),
+        (
+            "repair_slot_audit_ready",
+            JsonValue::Bool(summary.repair_slot_audit_ready),
+        ),
+        (
+            "execution_tickets_ready",
+            JsonValue::Bool(summary.execution_tickets_ready),
+        ),
+        (
+            "execution_work_orders_ready",
+            JsonValue::Bool(summary.execution_work_orders_ready),
+        ),
+        (
+            "execution_work_order_guardrails_ready",
+            JsonValue::Bool(summary.execution_work_order_guardrails_ready),
+        ),
+        (
+            "execution_evidence_review_dispositions_ready",
+            JsonValue::Bool(summary.execution_evidence_review_dispositions_ready),
+        ),
+        ("release_ready", JsonValue::Bool(summary.release_ready)),
+        (
+            "ready_for_release",
+            JsonValue::Bool(summary.ready_for_release),
+        ),
+        ("has_guardrails", JsonValue::Bool(summary.has_guardrails())),
+        (
+            "has_dispositions",
+            JsonValue::Bool(summary.has_dispositions()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("needs_operator", JsonValue::Bool(summary.needs_operator())),
+        ("needs_review", JsonValue::Bool(summary.needs_review())),
+        ("needs_repair", JsonValue::Bool(summary.needs_repair())),
+        (
+            "has_lineage_gaps",
+            JsonValue::Bool(summary.has_lineage_gaps()),
+        ),
+    ])
+}
+
 fn mesh_readiness_package_summary_json(
     summary: &IntegrationMeshReadinessPackageSummary,
 ) -> JsonValue {
@@ -54599,7 +55218,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 226);
+        assert_eq!(definitions.len(), 228);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -54880,6 +55499,12 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_SLOT_READINESS_SUMMARY_TOOL_ID));
         assert!(export.tool_ids().contains(
             &SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_EXECUTION_READINESS_SUMMARY_TOOL_ID
+        ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_WORK_ORDER_READINESS_SUMMARY_TOOL_ID
+        ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_GUARDRAIL_READINESS_SUMMARY_TOOL_ID
         ));
         assert!(export
             .tool_ids()
@@ -55254,7 +55879,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            218
+            220
         );
         assert_eq!(
             export
@@ -55443,6 +56068,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_EXECUTION_READINESS_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_WORK_ORDER_READINESS_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_GUARDRAIL_READINESS_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -56078,11 +56711,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(226))
+            Some(&integer(228))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(218))
+            Some(&integer(220))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -60466,6 +61099,250 @@ mod tests {
         assert!(field(
             mesh_preflight_execution_readiness_rollup,
             "execution_ticket_summary"
+        )
+        .is_some());
+
+        let mesh_preflight_work_order_readiness_summary_request = request(
+            "call-integration-mesh-preflight-work-order-readiness-summary",
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_WORK_ORDER_READINESS_SUMMARY_TOOL_ID,
+            object([
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("usb"),
+                        string("serial_controller"),
+                        string("radio_802154"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+            ]),
+            5_931,
+        );
+        let mesh_preflight_work_order_readiness_summary_trace =
+            tool_runtime.invoke_with_events(&mesh_preflight_work_order_readiness_summary_request);
+        assert!(mesh_preflight_work_order_readiness_summary_trace.result.ok);
+        assert_eq!(
+            mesh_preflight_work_order_readiness_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let mesh_preflight_work_order_readiness_summary_output =
+            mesh_preflight_work_order_readiness_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let mesh_preflight_work_order_readiness_rollup = field(
+            mesh_preflight_work_order_readiness_summary_output,
+            "summary",
+        )
+        .unwrap();
+        assert_eq!(
+            field(
+                mesh_preflight_work_order_readiness_rollup,
+                "queued_preflight_actions"
+            ),
+            Some(&integer(5))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_work_order_readiness_rollup,
+                "execution_work_order_count"
+            ),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_work_order_readiness_rollup,
+                "blocking_execution_work_orders"
+            ),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_work_order_readiness_rollup,
+                "operator_required_execution_work_orders"
+            ),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_work_order_readiness_rollup,
+                "first_execution_work_order_key"
+            ),
+            Some(&string("work-01-radio-provision_radio"))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_work_order_readiness_rollup,
+                "execution_work_orders_ready"
+            ),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_work_order_readiness_rollup,
+                "ready_for_release"
+            ),
+            Some(&JsonValue::Bool(false))
+        );
+        assert!(field(
+            mesh_preflight_work_order_readiness_rollup,
+            "execution_readiness_summary"
+        )
+        .is_some());
+        assert!(field(
+            mesh_preflight_work_order_readiness_rollup,
+            "execution_work_order_summary"
+        )
+        .is_some());
+
+        let mesh_preflight_guardrail_readiness_summary_request = request(
+            "call-integration-mesh-preflight-guardrail-readiness-summary",
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_GUARDRAIL_READINESS_SUMMARY_TOOL_ID,
+            object([
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("usb"),
+                        string("serial_controller"),
+                        string("radio_802154"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+            ]),
+            5_932,
+        );
+        let mesh_preflight_guardrail_readiness_summary_trace =
+            tool_runtime.invoke_with_events(&mesh_preflight_guardrail_readiness_summary_request);
+        assert!(mesh_preflight_guardrail_readiness_summary_trace.result.ok);
+        assert_eq!(
+            mesh_preflight_guardrail_readiness_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let mesh_preflight_guardrail_readiness_summary_output =
+            mesh_preflight_guardrail_readiness_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let mesh_preflight_guardrail_readiness_rollup =
+            field(mesh_preflight_guardrail_readiness_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "work_order_guardrail_count"
+            ),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "release_blocker_guardrails"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "operator_handoff_guardrails"
+            ),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "evidence_review_dispositions"
+            ),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "blocking_dispositions"
+            ),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "operator_handoff_dispositions"
+            ),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "repair_required_dispositions"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "lineage_gap_dispositions"
+            ),
+            Some(&integer(0))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "first_guardrail_work_order_key"
+            ),
+            Some(&string("work-01-radio-provision_radio"))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "first_disposition_key"
+            ),
+            Some(&string("disposition-01-radio-provision_radio"))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "execution_work_order_guardrails_ready"
+            ),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "execution_evidence_review_dispositions_ready"
+            ),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_guardrail_readiness_rollup,
+                "ready_for_release"
+            ),
+            Some(&JsonValue::Bool(false))
+        );
+        assert!(field(
+            mesh_preflight_guardrail_readiness_rollup,
+            "work_order_readiness_summary"
+        )
+        .is_some());
+        assert!(field(
+            mesh_preflight_guardrail_readiness_rollup,
+            "work_order_guardrail_summary"
+        )
+        .is_some());
+        assert!(field(
+            mesh_preflight_guardrail_readiness_rollup,
+            "evidence_review_disposition_summary"
         )
         .is_some());
 
