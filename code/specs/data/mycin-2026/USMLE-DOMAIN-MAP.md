@@ -115,6 +115,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Cardiology murmurs (Tier-2) | Cardiology | murmur_indicates (murmur→lesion) | 5 grounded (ADJ-only) | ✓ |
 | Neurology localization (Tier-2) | Neurology | lesion_causes (site→deficit) | 5 grounded (ADJ-only) | ✓ |
 | GI biopsy (Tier-2) | Gastroenterology | biopsy_finding_in (finding→dx) | 5 grounded (ADJ-only) | ✓ |
+| Dermatology (Tier-2) | Dermatology | skin_finding_in (lesion→dx) | 4 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
 faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
@@ -196,6 +197,15 @@ faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
     PBC→anti-mitochondrial, Sjögren→anti-Ro/La, polymyositis→anti-Jo1 (deferred — pages
     discuss these in risk-factor/criteria context, no clean both-endpoints-named span yet).
 11. Skin/derm (lesion→diagnosis)
+    *Started (DERM — seventh Tier-2 domain):* `skin_finding_in` for target lesions→erythema
+    multiforme (NBK470259), silvery scales→psoriasis (NBK448194), umbilicated papules→
+    molluscum contagiosum (NBK441898), herald patch→pityriasis rosea (NBK448091) — 4 edges,
+    all grounded to byte-stable NCBI StatPearls spans naming both finding and diagnosis,
+    shipped as the eleventh **ADJ-only** domain (`recall/derm-edges.adj`). Deferred — impetigo
+    (its honey-colored-crust sentence does not name impetigo; only a negative "Bullous
+    impetigo does not form a honey-colored crust") and herpes zoster (dermatomal-distribution
+    sentences omit the disease name). Spans favor the disease-named declarative; the molluscum
+    span uses the page's defined abbreviation "MC".
 12. Reproductive (ob/gyn + male), Breast
 
 **Tier 3 — clinical reasoning (Step 2/3):**
