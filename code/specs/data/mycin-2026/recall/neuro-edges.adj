@@ -1,0 +1,75 @@
+% ============================================================================
+% neuro-edges — the neuroanatomical-localization knowledge-graph (MYCIN-2026 NEURO).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", #9 neurology):
+% the classic "lesion HERE -> this deficit" localizations. "A lesion of the subthalamic
+% nucleus — what movement disorder results?" becomes the binding query
+%     ? lesion_causes(subthalamic_nucleus, $Deficit).
+%
+% Direction note: the relation is structure -> deficit (`lesion_causes`), the board
+% direction — you are told the lesion site and must name the deficit/syndrome. The cited
+% spans read either way ("a lesion involving the Wernicke area results in fluent aphasia";
+% "Parkinson disease ... characterized by the degeneration of dopaminergic neurons in the
+% substantia nigra") — what matters for grounding is that one self-contained span names
+% BOTH the lesion site AND the resulting deficit. Each structure here maps to one
+% canonical syndrome, so a query binds a single answer with its citation.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the ninth ADJ-only recall domain; fifth Tier-2 organ-system domain
+% after RHEUM, ONCO, HISTO, CARDIO). Each fact is a `relate` clause whose byte-provenance
+% lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it appears
+%                character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see neuro-recall.query.adj. Nothing here is asserted
+% "from memory": every edge is defended by a span a reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only localizations whose page states the association in a clean self-
+% contained span (both lesion site AND deficit named) are included. Deferred — cerebellar
+% hemisphere -> ataxia: its page describes the "cerebellar syndrome" and limb incoordination
+% in sentences that do not name "ataxia" alongside the lesion site in one declarative.
+% ============================================================================
+
+dictionary neuro_vocab {
+    define structure : entity   surface "brain structure", "lesion site", "nucleus", "cortical area"
+    define deficit   : entity   surface "neurological deficit", "syndrome", "movement disorder"
+
+    define lesion_causes : relation from structure to deficit  % the deficit a lesion site produces
+}
+
+rulebook neuro_facts {
+    use neuro_vocab
+
+    % --- Wernicke area lesion -> fluent (receptive) aphasia --------------------
+    relate lesion_causes(wernicke_area, fluent_aphasia)
+        source "A posterior lesion involving the Wernicke area results in fluent aphasia, characterized by impaired comprehension and severe paraphasia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559315/"
+        trust authoritative
+
+    % --- Broca area lesion -> nonfluent (expressive) aphasia -------------------
+    relate lesion_causes(broca_area, nonfluent_aphasia)
+        source "In contrast, an anterior lesion affecting the Broca area leads to nonfluent aphasia, in which patients have normal comprehension but produce speech that is telegraphic, effortful, and dysprosodic, without paraphasic errors."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559315/"
+        trust authoritative
+
+    % --- arcuate fasciculus lesion -> conduction aphasia ----------------------
+    relate lesion_causes(arcuate_fasciculus, conduction_aphasia)
+        source "A lesion in the arcuate fasciculus or the white matter tract connecting the Wernicke and Broca areas results in conduction aphasia, characterized by impaired repetition and phonemic paraphasia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559315/"
+        trust authoritative
+
+    % --- substantia nigra degeneration -> Parkinson disease -------------------
+    relate lesion_causes(substantia_nigra, parkinson_disease)
+        source "Parkinson disease (PD) is a progressive neurodegenerative disorder characterized by the degeneration of dopaminergic neurons in the substantia nigra and the accumulation of alpha-synuclein within Lewy bodies."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470193/"
+        trust authoritative
+
+    % --- subthalamic nucleus lesion -> hemiballismus --------------------------
+    relate lesion_causes(subthalamic_nucleus, hemiballismus)
+        source "Damage to the subthalamic nucleus can result in a disorder of movement called hemiballismus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559002/"
+        trust authoritative
+}
