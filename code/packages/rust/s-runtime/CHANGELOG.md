@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.15.0] - 2026-06-19
+
+### Added
+
+- **Empty-arm `switch()` fall-through (R-19)** — `switch("a", a = , b = "hit")`
+  now returns `"hit"`. R-18 already implemented the fall-through in `eval_switch`
+  (an empty arm has `arm_body() == None`, so the loop over `arms[pos..]` skips to
+  the next non-empty value), but it was inert because the shared S/R grammar's
+  `arg = NAME EQ expr` rejected an empty value. R-19 extends the grammar to
+  `arg = NAME EQ [expr] | expr` (see `s-parser`/`r-parser` 0.3.0) and regenerates
+  both compiled `_grammar.rs`, so `a = ,` finally parses. The fall-through chains
+  across several empty arms (`a = , b = , c = "z"` → `"z"`); a matched empty arm
+  with nothing non-empty after it yields invisible `NULL`.
+
+### Note
+
+- The empty named-argument value parses everywhere an arg list appears, but is
+  only **meaningful** in `switch`. In an ordinary call (`c(x = )`) it surfaces as
+  an eval-time parse-style error via `eval_arg`'s `only_node` (no panic),
+  matching R's "argument is missing" behaviour.
+
 ## [0.14.0] - 2026-06-19
 
 ### Added

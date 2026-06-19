@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2026-06-19
+
+### Added (via the shared `s-runtime`)
+
+- **R-19 — empty-arm `switch()` fall-through**: `switch("a", a = , b = "hit")`
+  now returns `"hit"` in R syntax too. R-18 deferred this because the shared S/R
+  grammar had no empty named-argument production; R-19 extends `r.grammar`'s `arg`
+  rule to `arg = NAME EQ [expr] | expr` (mirroring the S change) and regenerates
+  `r-parser`'s embedded `_grammar.rs`. Fall-through chains across several empty
+  arms (`a = , b = , c = "z"` → `"z"`); a matched empty arm with nothing
+  non-empty after it yields `NULL`. An empty arg in an ordinary call is an
+  eval-time error, matching R. See `s-runtime` 0.15.0.
+
 ## [0.13.0] - 2026-06-19
 
 ### Added (via the shared `s-runtime`)
