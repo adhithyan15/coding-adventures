@@ -10288,6 +10288,29 @@ pub fn format_deck_table_csv(table: &str) -> String {
     }
 }
 
+pub fn deck_table_records(table: &str) -> Vec<BTreeMap<String, String>> {
+    let mut lines = table.lines();
+    let Some(header) = lines.next() else {
+        return Vec::new();
+    };
+    let columns = header.split('\t').collect::<Vec<_>>();
+    lines
+        .map(|row| {
+            let cells = row.split('\t').collect::<Vec<_>>();
+            columns
+                .iter()
+                .enumerate()
+                .map(|(index, column)| {
+                    (
+                        (*column).to_string(),
+                        cells.get(index).copied().unwrap_or("").to_string(),
+                    )
+                })
+                .collect()
+        })
+        .collect()
+}
+
 pub fn format_deck_run_artifact_csv(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![DECK_RUN_ARTIFACT_COLUMNS.join(",")];
     for artifact in artifacts {

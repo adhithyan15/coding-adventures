@@ -186,8 +186,9 @@ artifact summaries plus `format_deck_run_artifact_table` and
 `format_deck_run_artifact_csv` / `format_deck_run_artifact_json` output for
 stable result-row, output-probe, measurement, Fourier, and diagnostic
 count/name lists. `format_deck_table_csv` also converts any stable
-tab-separated deck table to CSV, while `format_deck_table_json` converts the
-same tables to compact JSON records using the header row as stable keys.
+tab-separated deck table to CSV, `format_deck_table_json` converts the same
+tables to compact JSON records, and `deck_table_records` returns header-keyed
+native records for host integrations.
 `resolve_deck_fourier`, `fourier_transient_cards`,
 `fourier_transient_deck`, and `format_deck_fourier_table` extract parsed
 `.four` / `.FOUR` cards before `.end` and route transient samples into the

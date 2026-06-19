@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck table records** —
+  `deck_table_records()` now parses stable tab-separated deck output tables into
+  header-keyed records for browser and host integrations, matching Rust and
+  TypeScript.
+
 - **Deck table JSON format** —
   `format_deck_table_json()` now converts stable tab-separated deck output
   tables into compact JSON records keyed by the header row, matching Rust and
