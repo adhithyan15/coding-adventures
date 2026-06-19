@@ -109,6 +109,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Pharmacology | Pharmacology | drug_class, mechanism, adverse_effect, antidote_for | 9 grounded (ADJ-only) | ✓ |
 | Immunology | Immunology | mediated_by, associated_hla, gene_defect, deficiency_of | 7 grounded (ADJ-only) | ✓ |
 | Genetics | Genetics | inheritance, gene_defect, trinucleotide_repeat, imprinting | 7 grounded (ADJ-only) | ✓ |
+| Rheumatology (Tier-2) | Path/Immuno | associated_autoantibody | 6 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
 faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
@@ -156,6 +157,12 @@ faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
 8. Gastrointestinal (LFT pattern→disease, biopsy→diagnosis)
 9. Neurology & special senses (lesion→deficit, tract→sign)
 10. Musculoskeletal / rheumatology (autoantibody→disease)
+    *Started (RHEUM — first Tier-2 domain):* `associated_autoantibody` for SLE (anti-dsDNA,
+    anti-Sm, anti-ribosomal-P), GPA (PR3-ANCA), systemic sclerosis (anti-Scl-70,
+    anti-centromere) — 6 edges, all grounded to byte-stable NCBI StatPearls spans, shipped
+    as the fifth **ADJ-only** domain (`recall/rheum-edges.adj`). Remaining: RA→anti-CCP,
+    PBC→anti-mitochondrial, Sjögren→anti-Ro/La, polymyositis→anti-Jo1 (deferred — pages
+    discuss these in risk-factor/criteria context, no clean both-endpoints-named span yet).
 11. Skin/derm (lesion→diagnosis)
 12. Reproductive (ob/gyn + male), Breast
 
@@ -199,10 +206,10 @@ manifest). MICRO onward, the order is grounding-FIRST (never seed authored-debt)
 ## Coverage accounting (the watchable number)
 
 The north-star metric: **% of the USMLE content outline covered by grounded, scored
-domains.** Today: 9 recall domains + ID differential/management (a slice of Multisystem,
+domains.** Today: 10 recall domains + ID differential/management (a slice of Multisystem,
 Endocrine, Hematology, Biochemistry, Nutrition, Microbiology, Pharmacology, Immunology,
-Genetics — 88/89 board recall answers cite an authoritative grounded edge). All four
-Tier-1 foundational-recall domains (microbiology, pharmacology, immunology, genetics) are
-now grounded & scored. Each merged domain PR moves this number;
+Genetics, Rheumatology — 91/92 board recall answers cite an authoritative grounded edge).
+All four Tier-1 foundational-recall domains (microbiology, pharmacology, immunology,
+genetics) are grounded & scored; RHEUM is the first Tier-2 organ-system pathology domain. Each merged domain PR moves this number;
 this map is the denominator. The campaign is done when every Tier-1/2/3 cell above has a
 grounded, scored domain and the board bank samples each.

@@ -114,6 +114,10 @@
     {"id": "genetics_marfan_inh",   "domain": "genetics", "tactic": "recall", "relation": "inheritance",          "subject": "marfan_syndrome",      "var": "Pattern", "gold": "autosomal_dominant"},
     {"id": "genetics_fragx_repeat", "domain": "genetics", "tactic": "recall", "relation": "trinucleotide_repeat", "subject": "fragile_x_syndrome",   "var": "Repeat",  "gold": "cgg"},
     {"id": "genetics_fragx_gene",   "domain": "genetics", "tactic": "recall", "relation": "gene_defect",          "subject": "fragile_x_syndrome",   "var": "Gene",    "gold": "fmr1"},
-    {"id": "genetics_pws_imprint",  "domain": "genetics", "tactic": "recall", "relation": "imprinting",           "subject": "prader_willi_syndrome","var": "Parent",  "gold": "paternal"}
+    {"id": "genetics_pws_imprint",  "domain": "genetics", "tactic": "recall", "relation": "imprinting",           "subject": "prader_willi_syndrome","var": "Parent",  "gold": "paternal"},
+
+    {"id": "rheum_sle_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "systemic_lupus_erythematosus",   "var": "Antibody", "gold": "anti_dsdna"},
+    {"id": "rheum_gpa_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "granulomatosis_with_polyangiitis","var": "Antibody", "gold": "pr3"},
+    {"id": "rheum_ssc_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "systemic_sclerosis",            "var": "Antibody", "gold": "anti_scl70"}
   ]
 }
