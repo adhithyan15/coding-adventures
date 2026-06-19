@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-19
+
+### Fixed — assignment-expression statements failed to parse (CLOC17)
+
+**Any** JavaScript program containing an assignment-expression statement
+(`a = 1;`, `g = f(5);`, `obj.k = v;`, `count += 1;`) failed to parse, which
+forced closurec into whitespace-only fallback for the *whole* program — no
+inlining, folding, renaming, or DCE. Since real-world JS is saturated with
+assignments, this was closurec's single highest-impact coverage gap.
+
+The cause was PEG alternative **ordering**, not the typed bridge (which already
+handled the 3-node `lhs assignment_operator rhs` shape). The
+`assignment_expression` rule listed `conditional_expression` *before* the
+`left_hand_side_expression assignment_operator assignment_expression`
+alternative. `GrammarParser`'s `Alternation` is ordered-choice (first match
+wins): a bare identifier `a` is itself a valid `conditional_expression`, so the
+parser committed to it, consumed only `a`, and left the `=` unconsumed — the
+assign-target alternative was never reached.
+
+The fix reorders the `assignment_expression` rule in all 14
+`code/grammars/ecmascript/es*.grammar` files so the assign-target alternative
+is tried first (the function-like alternatives `arrow_function`,
+`async_arrow_function`, `yield_expression` stay ahead of it, and
+`conditional_expression` moves last), then regenerates this crate's
+`src/_grammar.rs` via `grammar-tools generate-rust-compiled-grammars
+javascript`. When no assignment operator follows the left-hand side, the
+sequence fails fast and falls through to `conditional_expression` exactly as
+before — so the change is purely additive: every non-assignment form (bare
+identifier, member, call, binary, ternary, arrow, yield, `var` initializer)
+still parses unchanged.
+
+Added CLOC17 regression tests sweeping `EsVersion::ALL`: assignment / compound
+/ member-target / right-associative-chain / ternary-RHS forms parse on every
+version; every non-assignment form still parses; arrow/yield are unaffected on
+es2015+; and `a = 1;` bridges to a typed `AssignmentExpression` (proving the
+downstream optimization pipeline is unblocked, not merely the parser).
+
+**Scope:** this PR regenerates the Rust parser only (closurec's parser). The
+13 sibling-language `javascript-parser` packages embed their own generated
+artifacts from the same `es*.grammar` sources and still carry the old ordering;
+regenerating them is a tracked follow-up (no CI parity gate enforces it today).
+
 ## [0.8.0] - 2026-06-15
 
 ### Fixed — member-expression suffix chains were silently truncated

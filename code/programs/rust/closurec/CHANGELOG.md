@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.151.0] - 2026-06-19
+
+### Fixed (CLOC17 — assignment statements no longer force whitespace-only fallback)
+
+Picks up `javascript-parser` 0.9.0, which fixes the `assignment_expression`
+grammar-ordering bug. Before this, any program containing an assignment
+statement (`a = 1;`, `g = f(5);`, `obj.k = v;`, `count += 1;`) failed to parse
+and closurec emitted whitespace-only output for the *entire* program — no
+optimization at all. Now such programs parse and run through the full pipeline
+(e.g. `function f(p){log(p)} f(1); a=2;` → `log(1);a=2;` — `f` is inlined).
+
+### Changed — fail-closed externs test uses genuinely-malformed JS
+
+`run.rs`'s `BAD_EXTERNS` fixture (used by
+`advanced_with_unparseable_externs_disables_property_renaming` to prove
+property renaming fails closed when an `--externs` file can't be parsed) was
+`"node.innerHTML = 1;"`, which only failed to parse *because* of the CLOC17
+bug. With the bug fixed that string is now a valid externs file, so the fixture
+was repointed at a hard syntax error (`"function {{{"`) to keep exercising the
+fail-closed path independent of which expression forms parse.
+
 ## [0.150.0] - 2026-06-18
 
 ### Added (CLOC13.K — ADVANCED property renaming, gated on `--externs`)

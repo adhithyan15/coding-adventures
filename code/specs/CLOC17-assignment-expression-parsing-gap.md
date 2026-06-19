@@ -1,8 +1,12 @@
 # CLOC17 — assignment-expression parsing gap (the whitespace-only-fallback bug)
 
-**Status:** SPEC + root-cause pinned (implementation deferred to a focused
-follow-up — this touches shared parser infrastructure and must be regression-
-tested across all ECMAScript versions, so it is specced before the change).
+**Status:** IMPLEMENTED for the Rust parser (`javascript-parser` 0.9.0). The
+14 `es*.grammar` `assignment_expression` rules were reordered and
+`javascript-parser/src/_grammar.rs` regenerated; CLOC17 regression tests added;
+closurec now optimizes assignment-containing programs. The 13 sibling-language
+`javascript-parser` packages still carry the old ordering — regenerating them
+is a tracked follow-up (no CI parity gate enforces it). Original spec +
+root-cause analysis preserved below.
 
 ## TL;DR
 

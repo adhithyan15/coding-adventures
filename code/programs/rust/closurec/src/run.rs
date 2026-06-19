@@ -6258,10 +6258,20 @@ mod tests {
     /// An externs file declaring `innerHTML` as part of the external
     /// surface (and nothing about `secretField`).
     const PROP_EXTERNS: &str = "var node;\nread(node.innerHTML);\n";
-    /// An externs file the Phase-1 bridge REJECTS (member-assignment
-    /// statement). Loading it fails, so the property boundary cannot be
-    /// established — property renaming must fail closed (stay OFF).
-    const BAD_EXTERNS: &str = "node.innerHTML = 1;\n";
+    /// An externs file that fails to PARSE (a `function` keyword with no
+    /// name, parameter list, or body — a hard syntax error). Loading it
+    /// fails, so the property boundary cannot be established — property
+    /// renaming must fail closed (stay OFF).
+    ///
+    /// NOTE: this used to be `"node.innerHTML = 1;"`, which was "unparseable"
+    /// only because of the CLOC17 assignment-expression grammar gap. Once
+    /// that gap was fixed (the `assignment_expression` PEG alternatives were
+    /// reordered so a member-assignment statement parses), that string became
+    /// a *valid* externs file — `innerHTML` is then a legitimate boundary
+    /// property and the fail-closed path was no longer exercised. We now use a
+    /// genuinely malformed snippet so the fail-closed safety property is still
+    /// tested independent of which expression forms parse.
+    const BAD_EXTERNS: &str = "function {{{\n";
 
     /// Compile `PROP_INPUT` at `level`, optionally with an externs file
     /// whose body is `externs`, and return stdout. Writes real temp files

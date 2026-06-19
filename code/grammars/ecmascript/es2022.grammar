@@ -359,11 +359,11 @@ debugger_statement = "debugger" SEMICOLON ;
 
 expression = assignment_expression { COMMA assignment_expression } ;
 
-assignment_expression = conditional_expression
-                      | arrow_function
+assignment_expression = arrow_function
                       | async_arrow_function
                       | yield_expression
-                      | left_hand_side_expression assignment_operator assignment_expression ;
+                      | left_hand_side_expression assignment_operator assignment_expression
+                      | conditional_expression ;
 
 assignment_operator = EQUALS | PLUS_EQUALS | MINUS_EQUALS | STAR_STAR_EQUALS
                     | STAR_EQUALS | SLASH_EQUALS | PERCENT_EQUALS
