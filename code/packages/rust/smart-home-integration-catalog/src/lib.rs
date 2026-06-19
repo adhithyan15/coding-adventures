@@ -1381,6 +1381,140 @@ impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicketSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder {
+    pub sequence: usize,
+    pub work_order_key: String,
+    pub ticket_sequence: usize,
+    pub ticket_key: String,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder {
+    pub fn from_ticket(
+        sequence: usize,
+        ticket: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket,
+    ) -> Self {
+        Self {
+            sequence,
+            work_order_key: format!(
+                "work-{sequence:02}-{}-{}",
+                ticket.stage.as_str(),
+                ticket.action_kind.as_str()
+            ),
+            ticket_sequence: ticket.sequence,
+            ticket_key: ticket.ticket_key.clone(),
+            slot_sequence: ticket.slot_sequence,
+            batch_sequence: ticket.batch_sequence,
+            stage: ticket.stage,
+            action_kind: ticket.action_kind,
+            status: ticket.status,
+            action_count: ticket.action_count,
+            protocol_count: ticket.protocol_count,
+            primitive_count: ticket.primitive_count,
+            protocols: ticket.protocols.clone(),
+            primitives: ticket.primitives.clone(),
+            release_blocking: ticket.blocks_preflight(),
+            operator_required: ticket.requires_operator(),
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary {
+    pub total_work_orders: usize,
+    pub scheduled_actions: usize,
+    pub blocking_work_orders: usize,
+    pub operator_required_work_orders: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_work_order_key: Option<String>,
+    pub first_blocking_work_order_key: Option<String>,
+    pub first_operator_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_work_orders_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary {
+    pub fn from_work_orders<'a>(
+        work_orders: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder,
+        >,
+    ) -> Self {
+        let work_orders = work_orders.into_iter().collect::<Vec<_>>();
+        let first_work_order = work_orders.iter().min_by_key(|order| order.sequence);
+        let first_blocking_work_order = work_orders
+            .iter()
+            .filter(|order| order.blocks_preflight())
+            .min_by_key(|order| order.sequence);
+        let first_operator_work_order = work_orders
+            .iter()
+            .filter(|order| order.requires_operator())
+            .min_by_key(|order| order.sequence);
+
+        Self {
+            total_work_orders: work_orders.len(),
+            scheduled_actions: work_orders.iter().map(|order| order.action_count).sum(),
+            blocking_work_orders: work_orders
+                .iter()
+                .filter(|order| order.blocks_preflight())
+                .count(),
+            operator_required_work_orders: work_orders
+                .iter()
+                .filter(|order| order.requires_operator())
+                .count(),
+            protocol_mentions: work_orders.iter().map(|order| order.protocol_count).sum(),
+            primitive_mentions: work_orders.iter().map(|order| order.primitive_count).sum(),
+            first_work_order_key: first_work_order.map(|order| order.work_order_key.clone()),
+            first_blocking_work_order_key: first_blocking_work_order
+                .map(|order| order.work_order_key.clone()),
+            first_operator_work_order_key: first_operator_work_order
+                .map(|order| order.work_order_key.clone()),
+            first_ticket_key: first_work_order.map(|order| order.ticket_key.clone()),
+            first_stage: first_work_order.map(|order| order.stage),
+            first_action_kind: first_work_order.map(|order| order.action_kind),
+            execution_work_orders_ready: work_orders.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_work_orders == 0
+    }
+
+    pub fn has_work_orders(&self) -> bool {
+        self.total_work_orders > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_work_orders > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_work_orders > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
     pub required_primitives: Vec<PrimitiveFamily>,
@@ -22862,6 +22996,31 @@ pub fn mesh_protocol_substrate_preflight_repair_slot_execution_ticket_summary(
     )
 }
 
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder> {
+    mesh_protocol_substrate_preflight_repair_slot_execution_tickets(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, ticket)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder::from_ticket(
+                index + 1,
+                ticket,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary {
+    let work_orders =
+        mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary::from_work_orders(
+        work_orders.iter(),
+    )
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -30293,6 +30452,116 @@ mod tests {
         assert!(summary.execution_tickets_ready);
         assert!(summary.is_empty());
         assert!(!summary.has_tickets());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_work_orders_surface_ticket_work() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let work_orders = mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(
+            &available_primitives,
+        );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummary::from_work_orders(
+                work_orders.iter(),
+            );
+
+        assert_eq!(work_orders.len(), 3);
+        assert_eq!(summary.total_work_orders, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_work_orders, 3);
+        assert_eq!(summary.operator_required_work_orders, 2);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_blocking_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_work_orders_ready);
+        assert!(summary.has_work_orders());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+
+        let first = &work_orders[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.ticket_sequence, 1);
+        assert_eq!(first.slot_sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(
+            first.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::OperatorHandoff
+        );
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+
+        let discovery = work_orders
+            .iter()
+            .find(|order| order.stage == IntegrationMeshProtocolSubstrateStage::Discovery)
+            .unwrap();
+        assert_eq!(
+            discovery.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::Blocked
+        );
+        assert!(discovery.blocks_preflight());
+        assert!(!discovery.requires_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_work_orders_empty_when_ready() {
+        let work_orders = mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(
+            all_primitive_families(),
+        );
+        let summary = mesh_protocol_substrate_preflight_repair_slot_execution_work_order_summary(
+            all_primitive_families(),
+        );
+
+        assert!(work_orders.is_empty());
+        assert_eq!(summary.total_work_orders, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_work_orders, 0);
+        assert_eq!(summary.operator_required_work_orders, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_blocking_work_order_key, None);
+        assert_eq!(summary.first_operator_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_work_orders_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_work_orders());
         assert!(!summary.has_blockers());
         assert!(!summary.needs_operator());
     }

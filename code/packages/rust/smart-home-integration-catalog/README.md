@@ -67,6 +67,8 @@ runtime and Chief of Staff tools a typed catalog for:
   operator handoff risk
 - low-level mesh preflight repair slot execution tickets that turn audited
   slots into operator-ready execution work
+- low-level mesh preflight repair slot execution work orders that project
+  execution tickets into deterministic release work
 - mesh readiness package summaries that combine Zigbee, Z-Wave, and Thread
   primitive substrate readiness with mesh-scoped activation evidence
   remediation rollups
