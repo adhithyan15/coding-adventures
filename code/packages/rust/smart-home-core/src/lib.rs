@@ -1608,11 +1608,14 @@ pub enum SmartHomeTool {
     GetIntegrationMeshPreflightRepairSlotAuditSummary,
     ListIntegrationMeshPreflightRepairSlotExecutionTickets,
     GetIntegrationMeshPreflightRepairSlotExecutionTicketSummary,
+    ListIntegrationMeshPreflightRepairSlotExecutionWorkOrders,
+    GetIntegrationMeshPreflightRepairSlotExecutionWorkOrderSummary,
     GetIntegrationMeshPreflightReadinessSummary,
     GetIntegrationMeshPreflightRepairReadinessSummary,
     GetIntegrationMeshPreflightBatchReadinessSummary,
     GetIntegrationMeshPreflightScheduleReadinessSummary,
     GetIntegrationMeshPreflightSlotReadinessSummary,
+    GetIntegrationMeshPreflightExecutionReadinessSummary,
     GetIntegrationMeshReadinessPackageSummary,
     GetIntegrationMeshStageReleaseSummary,
     GetIntegrationMeshActionReadinessSummary,
@@ -2142,6 +2145,12 @@ impl SmartHomeTool {
             Self::GetIntegrationMeshPreflightRepairSlotExecutionTicketSummary => read_tool(
                 "smart_home.get_integration_mesh_preflight_repair_slot_execution_ticket_summary",
             ),
+            Self::ListIntegrationMeshPreflightRepairSlotExecutionWorkOrders => read_tool(
+                "smart_home.list_integration_mesh_preflight_repair_slot_execution_work_orders",
+            ),
+            Self::GetIntegrationMeshPreflightRepairSlotExecutionWorkOrderSummary => read_tool(
+                "smart_home.get_integration_mesh_preflight_repair_slot_execution_work_order_summary",
+            ),
             Self::GetIntegrationMeshPreflightReadinessSummary => {
                 read_tool("smart_home.get_integration_mesh_preflight_readiness_summary")
             }
@@ -2156,6 +2165,9 @@ impl SmartHomeTool {
             }
             Self::GetIntegrationMeshPreflightSlotReadinessSummary => {
                 read_tool("smart_home.get_integration_mesh_preflight_slot_readiness_summary")
+            }
+            Self::GetIntegrationMeshPreflightExecutionReadinessSummary => {
+                read_tool("smart_home.get_integration_mesh_preflight_execution_readiness_summary")
             }
             Self::GetIntegrationMeshReadinessPackageSummary => {
                 read_tool("smart_home.get_integration_mesh_readiness_package_summary")
@@ -2949,11 +2961,14 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetIntegrationMeshPreflightRepairSlotAuditSummary,
         SmartHomeTool::ListIntegrationMeshPreflightRepairSlotExecutionTickets,
         SmartHomeTool::GetIntegrationMeshPreflightRepairSlotExecutionTicketSummary,
+        SmartHomeTool::ListIntegrationMeshPreflightRepairSlotExecutionWorkOrders,
+        SmartHomeTool::GetIntegrationMeshPreflightRepairSlotExecutionWorkOrderSummary,
         SmartHomeTool::GetIntegrationMeshPreflightReadinessSummary,
         SmartHomeTool::GetIntegrationMeshPreflightRepairReadinessSummary,
         SmartHomeTool::GetIntegrationMeshPreflightBatchReadinessSummary,
         SmartHomeTool::GetIntegrationMeshPreflightScheduleReadinessSummary,
         SmartHomeTool::GetIntegrationMeshPreflightSlotReadinessSummary,
+        SmartHomeTool::GetIntegrationMeshPreflightExecutionReadinessSummary,
         SmartHomeTool::GetIntegrationMeshReadinessPackageSummary,
         SmartHomeTool::GetIntegrationMeshStageReleaseSummary,
         SmartHomeTool::GetIntegrationMeshActionReadinessSummary,
@@ -3796,7 +3811,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 215);
+        assert_eq!(catalog.len(), 218);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_integrations"
@@ -4609,6 +4624,14 @@ mod tests {
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_mesh_preflight_repair_slot_execution_work_orders"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_mesh_preflight_repair_slot_execution_work_order_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
             == "smart_home.get_integration_mesh_preflight_readiness_summary"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
@@ -4628,6 +4651,10 @@ mod tests {
             == "smart_home.get_integration_mesh_preflight_slot_readiness_summary"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_mesh_preflight_execution_readiness_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
     }
 
     #[test]
@@ -4635,15 +4662,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 215);
-        assert_eq!(summary.read_tools, 207);
+        assert_eq!(summary.total_tools, 218);
+        assert_eq!(summary.read_tools, 210);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 207);
+        assert_eq!(summary.read_only_tier_tools, 210);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 215);
+        assert_eq!(summary.total_required_capabilities, 218);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());

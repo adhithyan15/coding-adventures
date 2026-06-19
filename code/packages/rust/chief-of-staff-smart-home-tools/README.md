@@ -165,10 +165,13 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_mesh_preflight_repair_slot_audit_summary`
 - `smart_home.list_integration_mesh_preflight_repair_slot_execution_tickets`
 - `smart_home.get_integration_mesh_preflight_repair_slot_execution_ticket_summary`
+- `smart_home.list_integration_mesh_preflight_repair_slot_execution_work_orders`
+- `smart_home.get_integration_mesh_preflight_repair_slot_execution_work_order_summary`
 - `smart_home.get_integration_mesh_preflight_readiness_summary`
 - `smart_home.get_integration_mesh_preflight_repair_readiness_summary`
 - `smart_home.get_integration_mesh_preflight_batch_readiness_summary`
 - `smart_home.get_integration_mesh_preflight_schedule_readiness_summary`
+- `smart_home.get_integration_mesh_preflight_execution_readiness_summary`
 - `smart_home.get_integration_mesh_release_readiness_summary`
 - `smart_home.list_integration_mesh_readiness_handoffs`
 - `smart_home.get_integration_mesh_readiness_handoff_summary`
