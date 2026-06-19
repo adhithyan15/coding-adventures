@@ -1511,12 +1511,20 @@ fn void_candidate_from_function(
         match stmt {
             Statement::Tagged(TaggedStatement::ExpressionStatement(_)) => {}
             Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
-                // (3) `var` is function-scoped and would hoist into the
-                // caller on a flat splice — out of this slice; let/const
-                // are block-scoped, so a fresh-renamed binding is inert.
-                if vd.kind == VarKind::Var {
-                    return None;
-                }
+                // (3) `var` / `let` / `const` locals are all admitted (CLOC15
+                // Open Q3). Each declared name is collected so the splice
+                // alpha-renames it to a program-fresh name (condition 5). A
+                // `var` is function-scoped and hoists to the top of the
+                // *caller's* function on a flat splice, whereas `let`/`const`
+                // stay block-scoped — but once the binding is renamed to a name
+                // that appears nowhere else in the program (it is not in
+                // `avoid`), the hoist is observationally inert: nothing reads or
+                // writes the fresh name except the spliced body, in source
+                // order. (The bridge desugars `var t = E` into `var t; t = E`,
+                // so an admitted `var`-local body contains an assignment to that
+                // local — sound under renaming, and not flagged by the
+                // parameter-mutation guard below since the target is a local,
+                // not a parameter.)
                 for d in &vd.declarations {
                     let BindingTarget::Identifier(id) = &d.id;
                     locals.push(id.name.clone());
@@ -3402,12 +3410,14 @@ mod tests {
     }
 
     #[test]
-    fn does_not_inline_void_helper_with_var_local() {
-        // `var` is function-scoped and would hoist into the caller on a
-        // flat splice — outside the first slice (let/const only).
+    fn inlines_void_helper_with_var_local() {
+        // CLOC15 Open Q3: a `var` local is now admitted. The bridge desugars
+        // `var t = x` into `var t; t = x`, and the local `t` is alpha-renamed
+        // to a program-fresh name (`b`) — so the hoisted `var b` is inert
+        // (nothing else references `b`). Previously this slice declined `var`.
         assert_eq!(
             inline_source("function f(x) { var t = x; sink(t); } f(a);"),
-            "function f(x){var t=x;sink(t)};f(a);"
+            "function f(x){var t=x;sink(t)};var b=a;sink(b);"
         );
     }
 
@@ -4087,6 +4097,44 @@ mod tests {
         assert_eq!(
             inline_source("function f(x) { glob = x; return x; } var g = f(7);"),
             "function f(x){glob=x;return x};glob=7;const a=7;var g=a;"
+        );
+    }
+
+    // ===== CLOC15 Open Q3 — `var` locals admitted (alpha-renamed) =====
+
+    #[test]
+    fn inlines_helper_with_var_local_value_capture() {
+        // A `var` local in a valued helper. The bridge desugars `var t = x + 1`
+        // into `var t; t = x + 1`; the local `t` is alpha-renamed to a fresh
+        // `b`, params substituted, and the tail captured into the temp `a`. The
+        // hoisted `var b` is inert because `b` appears nowhere else.
+        assert_eq!(
+            inline_source("function f(x) { var t = x + 1; return t * 2; } var g = f(7);"),
+            "function f(x){var t=x + 1;return t * 2};var b=7 + 1;const a=b * 2;var g=a;"
+        );
+    }
+
+    #[test]
+    fn inlines_helper_that_reassigns_a_var_local() {
+        // Reassigning a *local* (not a parameter) is sound — the local is
+        // renamed, so both the declaration and the `t = t + 1` assignment
+        // target become the fresh name. (Contrast the parameter-reassignment
+        // guard above, which declines mutating a *parameter*.)
+        assert_eq!(
+            inline_source("function f(x) { var t = x; t = t + 1; return t; } var g = f(7);"),
+            "function f(x){var t=x;t=t + 1;return t};var b=7;b=b + 1;const a=b;var g=a;"
+        );
+    }
+
+    #[test]
+    fn var_local_is_renamed_away_from_a_colliding_caller_binding() {
+        // The soundness crux: the caller has its OWN `t`. The helper's `var t`
+        // must be renamed to a fresh name so the splice cannot capture or
+        // clobber the caller's `t`. Here `f`'s `t` becomes `b`; the caller's
+        // `t` (declared `var t = 9` → kept as `var t=9`) is untouched.
+        assert_eq!(
+            inline_source("var t = 9; function f(x) { var t = x; return t; } var g = f(5);"),
+            "var t=9;function f(x){var t=x;return t};var b=5;const a=b;var g=a;"
         );
     }
 }

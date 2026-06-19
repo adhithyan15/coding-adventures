@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.14.0] - 2026-06-19
+
+### Added (CLOC15 Open Q3 — `var` locals admitted)
+
+Helper bodies with a `var` local are now inlinable (previously the candidate
+filter declined any `var` declaration, admitting only `let`/`const`). Example
+(SIMPLE):
+
+```js
+function f(x){ var t = x + 1; return t * 2; } var g = f(7); use(g);
+// after:  var g = 16; use(g);   (var local hoisted-and-renamed, then folded)
+```
+
+**Soundness.** A `var` is function-scoped and hoists to the top of the
+*caller's* function on a flat splice, whereas `let`/`const` stay block-scoped.
+That difference is **observationally inert here** because every callee local —
+`var` included — is alpha-renamed to a program-fresh name (one that appears in
+no declaration or use anywhere in the program, per the existing condition-5
+`avoid` set). Nothing reads or writes the fresh name except the spliced body,
+in source order, so where the declaration hoists to cannot matter. The
+collision case is the crux and is tested: a caller binding `var t = 9` is left
+untouched while the helper's `var t` is renamed to a fresh `b`.
+
+The bridge desugars `var t = E` into `var t; t = E`, so an admitted `var`-local
+body contains an assignment to that local. That is sound under renaming (the
+`rename` walk rewrites both the declaration id and the assignment target) and is
+**not** flagged by the 0.13.1 parameter-mutation guard, which only declines
+assignment to a *parameter* — a local is fine.
+
+Four tests: one void-helper positive (flipped from the old decline test), one
+value-capture positive, one local-reassignment positive, and the
+caller-collision case. No closurec fixture churn.
+
 ## [0.13.1] - 2026-06-19
 
 ### Fixed (soundness) — decline helpers that reassign a parameter
