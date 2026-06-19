@@ -86,6 +86,11 @@ internal static class ScNative
     [DllImport("spreadsheet_capi")]
     internal static extern int sc_deserialize(IntPtr s,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string data);
+    // sc_undo / sc_redo / sc_can_undo / sc_can_redo(session) → int (1/0).
+    [DllImport("spreadsheet_capi")] internal static extern int sc_undo(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_redo(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_can_undo(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_can_redo(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_used_range(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_column_letters(IntPtr s, uint index);
     [DllImport("spreadsheet_capi")] internal static extern ulong sc_current_revision(IntPtr s);
@@ -179,6 +184,14 @@ public sealed class SpreadsheetSession : IDisposable
     /// workbook is left untouched — the engine validates before it mutates).
     /// Formulas reload live.
     public bool Deserialize(string data) => ScNative.sc_deserialize(_handle, data) != 0;
+
+    /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
+    /// changed the document (the host then re-reads the viewport), `false` if
+    /// there was nothing to do. CanUndo/CanRedo gate a host's Undo/Redo controls.
+    public bool Undo() => ScNative.sc_undo(_handle) != 0;
+    public bool Redo() => ScNative.sc_redo(_handle) != 0;
+    public bool CanUndo() => ScNative.sc_can_undo(_handle) != 0;
+    public bool CanRedo() => ScNative.sc_can_redo(_handle) != 0;
 
     /// The display string for a cell — what a spreadsheet should show. Parses
     /// the engine's JSON (the fixed shape every backend's engine emits).
@@ -536,6 +549,32 @@ public sealed class InfiniteSheetModel : IDisposable
     public bool LoadBook(string data)
     {
         bool ok = _session.Deserialize(data);
+        if (ok)
+        {
+            ComputeExtent();
+            Formula = _session.GetRaw(InfAddress);
+        }
+        return ok;
+    }
+
+    /// Undo / redo: walk the engine's snapshot history. On success the extent
+    /// regrows and the formula bar refreshes (any cell could have changed); a
+    /// restored formula stays live. CanUndo/CanRedo gate the buttons.
+    public bool CanUndo => _session.CanUndo();
+    public bool CanRedo => _session.CanRedo();
+    public bool UndoEdit()
+    {
+        bool ok = _session.Undo();
+        if (ok)
+        {
+            ComputeExtent();
+            Formula = _session.GetRaw(InfAddress);
+        }
+        return ok;
+    }
+    public bool RedoEdit()
+    {
+        bool ok = _session.Redo();
         if (ok)
         {
             ComputeExtent();

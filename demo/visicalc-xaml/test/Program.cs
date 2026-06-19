@@ -172,5 +172,31 @@ using (var sl = new InfiniteSheetModel())
     Check("workbook intact after reject", sl.RowCells(1)[4], "28.00");
 }
 
+// Undo / redo (the Undo / Redo buttons drive UndoEdit/RedoEdit): a fresh,
+// unseeded session so the initial history is empty. Two edits, walk back and
+// forward, and confirm a restored formula recomputes live.
+using (var ur = new SpreadsheetSession())
+{
+    Check("fresh canUndo false", ur.CanUndo().ToString(), "False");
+    ur.SetCell("A1", "1");
+    ur.SetCell("B1", "=A1*10"); // 10
+    Check("after edits canUndo true", ur.CanUndo().ToString(), "True");
+    Check("undo formula", ur.Undo().ToString(), "True");
+    Check("B1 cleared by undo", ur.Window(1, 2, 1, 2)[0][0], "");
+    Check("undo literal", ur.Undo().ToString(), "True");
+    Check("A1 cleared by undo", ur.Window(1, 1, 1, 1)[0][0], "");
+    Check("canUndo false at bottom", ur.CanUndo().ToString(), "False");
+    Check("undo at bottom is noop", ur.Undo().ToString(), "False");
+    Check("redo literal", ur.Redo().ToString(), "True");
+    Check("redo formula", ur.Redo().ToString(), "True");
+    Check("B1 live after redo", ur.Window(1, 2, 1, 2)[0][0], "10");
+    Check("canRedo false at top", ur.CanRedo().ToString(), "False");
+    // A fresh edit forks history (drops the redo branch).
+    ur.Undo(); // back: B1 gone
+    Check("canRedo true before fork", ur.CanRedo().ToString(), "True");
+    ur.SetCell("C1", "9");
+    Check("fresh edit clears redo", ur.CanRedo().ToString(), "False");
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;

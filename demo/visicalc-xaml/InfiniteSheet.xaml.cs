@@ -214,10 +214,41 @@ public sealed partial class InfiniteSheet : UserControl
         }
     }
 
+    /// Undo / redo: walk the engine's snapshot history. On success the formula
+    /// bar re-reads and the realized rows repaint (any cell could have changed);
+    /// the buttons enable/disable off CanUndo/CanRedo via RefreshHistoryButtons.
+    private void UndoButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_model.UndoEdit())
+        {
+            RefreshFormulaBar();
+            RepaintRealizedRows();
+        }
+    }
+
+    private void RedoButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_model.RedoEdit())
+        {
+            RefreshFormulaBar();
+            RepaintRealizedRows();
+        }
+    }
+
+    /// Keep the Undo/Redo buttons' enabled state in step with the engine's
+    /// history ends. Called from RefreshFormulaBar (so every edit/select/load
+    /// refreshes it) and RepaintRealizedRows (so fill/paste do too).
+    private void RefreshHistoryButtons()
+    {
+        UndoButton.IsEnabled = _model.CanUndo;
+        RedoButton.IsEnabled = _model.CanRedo;
+    }
+
     private void RefreshFormulaBar()
     {
         AddressText.Text = _model.InfAddress;
         FormulaBox.Text = _model.Formula;
+        RefreshHistoryButtons();
     }
 
     /// Rebuild only the currently-realized body rows so selection highlight and
@@ -230,6 +261,7 @@ public sealed partial class InfiniteSheet : UserControl
             if (BodyList.ContainerFromItem(rowNum) is ListViewItem { Content: StackPanel } item)
                 item.Content = BuildRow(rowNum);
         }
+        RefreshHistoryButtons(); // fill/paste mutate the doc → re-gate Undo/Redo
     }
 
     // ── Scroll sync ──────────────────────────────────────────────────
