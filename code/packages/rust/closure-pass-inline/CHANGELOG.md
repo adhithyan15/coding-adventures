@@ -2,6 +2,49 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-19
+
+### Added (CLOC15 PR-4b — `if` without an early exit in the body)
+
+The statement-inlining body shape now admits an `IfStatement`, so a helper
+with conditional logic inlines:
+
+```js
+function guard(x) { if (x > 0) accept(x); else reject(x); }
+guard(value);
+// SIMPLE  ⇒  value > 0 ? accept(value) : reject(value);
+//   (inlined, then fold-control-flow turns the if/else into a ternary and
+//    treeshake removes the dead declaration)
+```
+
+Admitted **only** when the `if` is control-flow-inert and declaration-free —
+each branch is an `ExpressionStatement` or a block of `ExpressionStatement`s
+(`is_inlinable_if`). That excludes:
+
+- `return` / `break` / `continue` inside a branch — an early exit a flat
+  splice would mis-scope (the caller's following statements would still run);
+- nested `let` / `const` / `var` declarations — block-scoped locals the
+  name-based alpha-renamer cannot shadow-correctly;
+- nested `if` / loops / other control constructs (kept for a later slice).
+
+So an admitted `if` introduces no new local and no early exit: splicing it
+into the straight-line body is observationally inert. The test expression is
+unrestricted; its identifiers are vetted by the normal free-identifier walk
+(param / callee-local / true-global), and the `rename`/`substitute` passes
+now recurse into the `if` (test + branches) and its blocks. Composes with
+PR-2 (an `if` may precede the tail return), PR-3 (value capture), and PR-4a
+(non-simple arguments).
+
+- 8 new tests: unbraced-branch `if`, block-branch `if`, an `if` whose test
+  reads a renamed local, an `if` with a non-simple argument, three decline
+  cases (early `return` in a branch, a nested declaration, a nested `if`),
+  and a **dangling-else soundness guard** — a helper whose body ends in an
+  else-less `if`, called from a braceless `if`-consequent that has a caller
+  `else`: the single-statement-slot splice block-wraps the body
+  (`if(c){if(v)a(v);}else other();`) so the `else` binds to the outer `if`,
+  never the inner one. 65 pass-crate tests; full closurec suite + both
+  downstream consumers green, no fixture churn.
+
 ## [0.8.0] - 2026-06-19
 
 ### Added (CLOC15 PR-4a — non-simple arguments via per-argument temps)
