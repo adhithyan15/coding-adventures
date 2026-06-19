@@ -841,6 +841,14 @@ downstream tools to compare.
       `ResultColumnList`, so downstream callers can inspect result shape
       without reparsing solver output tables.
 
+77. Deck run diagnostic artifacts.
+    - Status: completed in this deck run diagnostic artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now carry selected
+      analysis diagnostic counts and code lists in deck-run artifacts.
+    - The stable run-artifact table now includes `Diagnostics` and
+      `DiagnosticCodeList`, preserving parser diagnostic provenance beside the
+      selected analysis/output/measurement/Fourier metadata surface.
+
 ## Backlog
 
 1. Deck execution layer.
