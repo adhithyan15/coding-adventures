@@ -1,0 +1,20 @@
+% ============================================================================
+% resp-recall.query.adj — a worked recall query over the occupational-lung library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this exposure causes which
+% occupational lung disease?" question: it states no respiratory fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine resolves each
+% `?` against the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli resp-recall.query.adj
+% ============================================================================
+
+import "resp-edges.adj"
+
+? inhalation_causes(silica, $Disease)       % expect silicosis
+? inhalation_causes(asbestos, $Disease)     % expect asbestosis
+? inhalation_causes(beryllium, $Disease)    % expect berylliosis
+? inhalation_causes(cotton_dust, $Disease)  % expect byssinosis
+? inhalation_causes(coal_dust, $Disease)    % expect coal_workers_pneumoconiosis

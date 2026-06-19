@@ -1,0 +1,80 @@
+% ============================================================================
+% resp-edges — the occupational-lung-disease knowledge-graph (MYCIN-2026 RESP).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", #6 respiratory):
+% the inhaled occupational exposure and the pneumoconiosis it causes. "A sandblaster
+% develops progressive dyspnea — what occupational lung disease?" reduces to the exposure
+% the history names, then the binding query
+%     ? inhalation_causes(silica, $Disease).
+%
+% Direction note: the relation is exposure -> disease (`inhalation_causes`), the board
+% direction — the history gives the dust/fiber exposure and you must name the
+% pneumoconiosis. The cited spans are written disease-first ("Silicosis is occupational
+% pneumoconiosis caused by inhalation of crystalline silicon dioxide"; "Berylliosis ...
+% is a granulomatous disease caused by exposure to beryllium") — what matters for
+% grounding is that one self-contained span names BOTH the exposure AND the disease. Each
+% exposure here maps to one canonical pneumoconiosis, so a query binds a single answer.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the twelfth ADJ-only recall domain; eighth Tier-2 organ-system
+% domain after RHEUM, ONCO, HISTO, CARDIO, NEURO, GI, DERM). Each fact is a `relate`
+% clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it appears
+%                character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see resp-recall.query.adj. Nothing here is asserted
+% "from memory": every edge is defended by a span a reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Sourcing: every exposure->disease edge is defended by a primary, citable authority that
+% names BOTH the exposure AND the disease in one byte-stable span. Where the StatPearls
+% disease page writes the association finding-first (dropping the disease name), we ground
+% from the primary federal authority on occupational lung disease instead — the CDC/NIOSH
+% pneumoconioses program — rather than declining the edge. (This is the primary-source-
+% first, zero-deferral policy: an association is grounded to a primary source, never
+% omitted for phrasing.) The silica span names the exposure by its chemical form
+% "crystalline silicon dioxide" (= silica).
+% ============================================================================
+
+dictionary resp_vocab {
+    define exposure : entity   surface "occupational exposure", "inhaled dust or fiber"
+    define disease  : entity   surface "pneumoconiosis", "occupational lung disease"
+
+    define inhalation_causes : relation from exposure to disease  % the pneumoconiosis an exposure causes
+}
+
+rulebook resp_facts {
+    use resp_vocab
+
+    % --- silica (crystalline silicon dioxide) -> silicosis ---------------------
+    relate inhalation_causes(silica, silicosis)
+        source "Silicosis is occupational pneumoconiosis caused by inhalation of crystalline silicon dioxide."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537341/"
+        trust authoritative
+
+    % --- asbestos fibers -> asbestosis -----------------------------------------
+    relate inhalation_causes(asbestos, asbestosis)
+        source "Asbestosis is a chronic, progressive interstitial lung disease caused by inhaling asbestos fibers"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555985/"
+        trust authoritative
+
+    % --- beryllium -> berylliosis (chronic beryllium disease) ------------------
+    relate inhalation_causes(beryllium, berylliosis)
+        source "Berylliosis, also known as chronic beryllium disease (CBD), is a granulomatous disease caused by exposure to beryllium."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470364/"
+        trust authoritative
+
+    % --- cotton dust -> byssinosis ---------------------------------------------
+    relate inhalation_causes(cotton_dust, byssinosis)
+        source "Classically, exposure to cotton dust during the spinning and manufacturing process causes byssinosis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519549/"
+        trust authoritative
+
+    % --- coal mine dust -> coal workers' pneumoconiosis (CDC/NIOSH primary source) ---
+    relate inhalation_causes(coal_dust, coal_workers_pneumoconiosis)
+        source "Coal workers' pneumoconiosis or black lung is caused by inhaling coal mine dust and can be severe."
+        locator "https://www.cdc.gov/niosh/cwhsp/about/index.html"
+        trust authoritative
+}

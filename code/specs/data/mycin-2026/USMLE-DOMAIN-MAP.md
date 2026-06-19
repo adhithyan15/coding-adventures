@@ -116,6 +116,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Neurology localization (Tier-2) | Neurology | lesion_causes (site→deficit) | 5 grounded (ADJ-only) | ✓ |
 | GI biopsy (Tier-2) | Gastroenterology | biopsy_finding_in (finding→dx) | 5 grounded (ADJ-only) | ✓ |
 | Dermatology (Tier-2) | Dermatology | skin_finding_in (lesion→dx) | 4 grounded (ADJ-only) | ✓ |
+| Respiratory occupational (Tier-2) | Pulmonology | inhalation_causes (exposure→dz) | 5 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
 faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
@@ -169,6 +170,16 @@ faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
     and diastolic rumble described in separate sentences, no both-endpoints-named span yet);
     ECG→arrhythmia and drug→effect subdomains.
 6. Respiratory (PFT pattern→disease, ABG→disorder)
+    *Started (RESP — eighth Tier-2 domain):* `inhalation_causes` for silica→silicosis
+    (NBK537341), asbestos→asbestosis (NBK555985), beryllium→berylliosis (NBK470364),
+    cotton dust→byssinosis (NBK519549), and **coal dust→coal workers' pneumoconiosis
+    grounded from the CDC/NIOSH primary federal authority** (cdc.gov/niosh/cwhsp) rather
+    than declined — 5 edges, all grounded to byte-stable spans naming both the occupational
+    exposure and the pneumoconiosis, shipped as the twelfth **ADJ-only** domain
+    (`recall/resp-edges.adj`). This is the first edge sourced outside StatPearls: under the
+    **primary-source-first, zero-deferral policy**, an association is grounded to whatever
+    primary authority carries the clean both-endpoints span, never omitted for phrasing.
+    Remaining: PFT-pattern→disease (obstructive/restrictive) and ABG→acid-base-disorder.
 7. Renal/urinary (acid-base, electrolyte, glomerular disease→finding)
 8. Gastrointestinal (LFT pattern→disease, biopsy→diagnosis)
     *Started (GI — sixth Tier-2 domain):* `biopsy_finding_in` for villous atrophy→celiac
