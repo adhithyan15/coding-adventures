@@ -965,7 +965,7 @@ def resolve_deck_analyses(netlist: str) -> DeckAnalysisSummary:
         if directive == ".end":
             end_line_number = line_number
             break
-        if directive in {".op", ".dc", ".ac", ".tran", ".tf", ".sens"}:
+        if directive in {".op", ".dc", ".ac", ".tran", ".tf", ".sens", ".noise"}:
             _resolve_analysis_line(stripped, line_number, directive, state)
             continue
         active_lines.append(stripped)
@@ -2444,6 +2444,8 @@ def _resolve_analysis_line(
         _resolve_tf_analysis(tokens, line_number, state)
     elif directive == ".sens":
         _resolve_sens_analysis(tokens, line_number, state)
+    elif directive == ".noise":
+        _resolve_noise_analysis(tokens, line_number, state)
 
 
 def _resolve_op_analysis(
@@ -2759,6 +2761,100 @@ def _resolve_sens_analysis(
             analysis="sens",
             line_number=line_number,
             output_node=output_probe[2:-1],
+        )
+    )
+
+
+def _resolve_noise_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) not in {3, 7}:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".noise",
+            line_number=line_number,
+            message=(
+                ".noise requires output voltage probe, input source, and optional "
+                "sweep kind, point count, start frequency, and stop frequency tokens"
+            ),
+        )
+        return
+    output_probe = _normalize_deck_output_probe(_unquote_token(tokens[1]))
+    if output_probe is None or not output_probe.startswith("V("):
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".noise",
+            line_number=line_number,
+            message=f".noise output must be a voltage probe V(node), got {tokens[1]!r}",
+            token=tokens[1],
+        )
+        return
+    input_source = _unquote_token(tokens[2]).strip()
+    if not input_source:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".noise",
+            line_number=line_number,
+            message=".noise input source name must not be empty",
+            token=tokens[2],
+        )
+        return
+    sweep_kind: str | None = None
+    point_count: int | None = None
+    start_frequency: float | None = None
+    stop_frequency: float | None = None
+    if len(tokens) == 7:
+        sweep_kind = _normalize_ac_sweep_kind(tokens[3])
+        if sweep_kind is None:
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_MODE",
+                directive=".noise",
+                line_number=line_number,
+                message=f".noise sweep kind must be LIN, DEC, or OCT, got {tokens[3]!r}",
+                token=tokens[3],
+            )
+            return
+        point_count = _parse_deck_analysis_integer(tokens[4], ".noise", line_number, state)
+        start_frequency = _parse_deck_analysis_value(tokens[5], ".noise", line_number, state)
+        stop_frequency = _parse_deck_analysis_value(tokens[6], ".noise", line_number, state)
+        if point_count is None or start_frequency is None or stop_frequency is None:
+            return
+        if point_count < 1:
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_SWEEP",
+                directive=".noise",
+                line_number=line_number,
+                message=".noise point count must be a positive integer",
+                token=tokens[4],
+            )
+            return
+        if start_frequency <= 0.0 or stop_frequency <= 0.0 or stop_frequency < start_frequency:
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_SWEEP",
+                directive=".noise",
+                line_number=line_number,
+                message=".noise frequencies must be positive and stop must be >= start",
+            )
+            return
+    state.analyses.append(
+        DeckAnalysisPlan(
+            directive=".noise",
+            analysis="noise",
+            line_number=line_number,
+            source_name=input_source,
+            output_node=output_probe[2:-1],
+            sweep_kind=sweep_kind,
+            point_count=point_count,
+            start_frequency=start_frequency,
+            stop_frequency=stop_frequency,
         )
     )
 
@@ -3161,6 +3257,8 @@ def _normalize_deck_analysis_name(analysis: str) -> str | None:
         return "tf"
     if normalized in {"sens", "sensitivity"}:
         return "sens"
+    if normalized in {"noise", "ac-noise", "noise-ac"}:
+        return "noise"
     return None
 
 

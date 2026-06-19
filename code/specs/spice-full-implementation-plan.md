@@ -776,6 +776,15 @@ downstream tools to compare.
       solver and stable sensitivity table while exposing a one-row deck-run
       artifact for the sensitivity probe.
 
+70. Deck run noise routing.
+    - Status: completed in this deck run noise routing slice.
+    - Python, Rust, and TypeScript selected deck executions now parse top-level
+      `.noise V(node) SOURCE` analysis cards into the shared deck-analysis plan
+      surface, including optional LIN/DEC/OCT frequency sweep controls.
+    - Selected `.noise` deck executions route through the existing AC noise
+      solver and stable noise table while exposing deck-run artifacts for the
+      noise output probe and selected frequency rows.
+
 ## Backlog
 
 1. Deck execution layer.

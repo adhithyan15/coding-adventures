@@ -1111,6 +1111,7 @@ R1 in out 1k
 .tran 1u 2m 0 10u uic
 .tf V(out) V1
 .sens V(out)
+.noise V(out) V1 dec 1 1k 1k
 .end
 .tran 1u 1m
 ",
@@ -1121,7 +1122,7 @@ R1 in out 1k
         vec!["V1 in 0 DC 0".to_string(), "R1 in out 1k".to_string()]
     );
     assert!(summary.terminated);
-    assert_eq!(summary.end_line_number, Some(10));
+    assert_eq!(summary.end_line_number, Some(11));
     assert!(summary.diagnostics.is_empty());
     assert_eq!(
         summary
@@ -1129,7 +1130,7 @@ R1 in out 1k
             .iter()
             .map(|analysis| analysis.analysis.as_str())
             .collect::<Vec<_>>(),
-        vec!["op", "dc", "ac", "tran", "tf", "sens"]
+        vec!["op", "dc", "ac", "tran", "tf", "sens", "noise"]
     );
 
     let dc = &summary.analyses[1];
@@ -1163,6 +1164,15 @@ R1 in out 1k
     assert_eq!(sens.directive, ".sens");
     assert_eq!(sens.output_node.as_deref(), Some("out"));
     assert_eq!(sens.source_name, None);
+
+    let noise = &summary.analyses[6];
+    assert_eq!(noise.directive, ".noise");
+    assert_eq!(noise.output_node.as_deref(), Some("out"));
+    assert_eq!(noise.source_name.as_deref(), Some("V1"));
+    assert_eq!(noise.sweep_kind.as_deref(), Some("dec"));
+    assert_eq!(noise.point_count, Some(1));
+    assert!((noise.start_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
+    assert!((noise.stop_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
 }
 
 #[test]
@@ -1177,6 +1187,7 @@ fn resolve_deck_analyses_reports_invalid_cards() {
 .tran 0 1m
 .tran 1u 2m 0 1u extra
 .sens I(R1)
+.noise I(R1) V1
 .end
 ",
     );
@@ -1191,6 +1202,7 @@ fn resolve_deck_analyses_reports_invalid_cards() {
     assert_eq!(
         codes,
         vec![
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
             "SPICE_DECK_ANALYSIS_ARGUMENT",
             "SPICE_DECK_ANALYSIS_ARGUMENT",
             "SPICE_DECK_ANALYSIS_ARGUMENT",
@@ -1262,6 +1274,25 @@ R1 in out 1k
     assert_eq!(sens.analysis, "sens");
     assert_eq!(sens.output_node.as_deref(), Some("out"));
     assert_eq!(sens.source_name, None);
+
+    let noise = select_deck_analysis_plan(
+        "
+V1 in 0 DC 1
+R1 in out 1k
+.noise V(out) V1 lin 1 1k 1k
+.end
+",
+        Some("noise"),
+    )
+    .unwrap();
+    assert_eq!(noise.directive, ".noise");
+    assert_eq!(noise.analysis, "noise");
+    assert_eq!(noise.output_node.as_deref(), Some("out"));
+    assert_eq!(noise.source_name.as_deref(), Some("V1"));
+    assert_eq!(noise.sweep_kind.as_deref(), Some("lin"));
+    assert_eq!(noise.point_count, Some(1));
+    assert!((noise.start_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
+    assert!((noise.stop_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
 }
 
 #[test]
@@ -1290,7 +1321,7 @@ fn select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() {
     .to_string();
     assert!(error.contains("multiple .tran analysis cards"));
 
-    let error = select_deck_analysis_plan(".op\n.end\n", Some("noise"))
+    let error = select_deck_analysis_plan(".op\n.end\n", Some("pz"))
         .unwrap_err()
         .to_string();
     assert!(error.contains("unsupported analysis"));
