@@ -41,16 +41,17 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["tay_sachs_enzyme"].answer == "hexosaminidase_a"
     # A correct recall answer carries the citing edge's trust tier (its proof).
     assert by_id["tay_sachs_enzyme"].trust is not None
-    # The bank spans TEN recall domains: 18 IEM + 8 vitamin + 8 anemia + 8 endocrine
+    # The bank spans ELEVEN recall domains: 18 IEM + 8 vitamin + 8 anemia + 8 endocrine
     # + 11 coagulation (REL-13) + 13 microbiology (MICRO) + 9 pharmacology (PHARM) + 7
-    # immunology (IMMUNO) + 7 genetics (GENETICS) + 3 rheumatology (RHEUM) = 92 covered
-    # recall items, all over one merged store. MICRO/PHARM/IMMUNO/GENETICS/RHEUM are
-    # ADJ-ONLY domains: their *-edges.adj are hand-authored libraries carrying byte-
-    # provenance inline (no Python gate / JSON / manifest). RHEUM is the first Tier-2
-    # organ-system domain; a disease binds several autoantibodies, so the board scores the
-    # top binding per disease (the library + test_rheum_recall cover all six edges).
+    # immunology (IMMUNO) + 7 genetics (GENETICS) + 3 rheumatology (RHEUM) + 3 oncology
+    # (ONCO) = 95 covered recall items, all over one merged store.
+    # MICRO/PHARM/IMMUNO/GENETICS/RHEUM/ONCO are ADJ-ONLY domains: their *-edges.adj are
+    # hand-authored libraries carrying byte-provenance inline (no Python gate/JSON/manifest).
+    # RHEUM and ONCO are Tier-2 organ-system domains where a disease binds several markers,
+    # so the board scores the top binding per disease (the libraries + their tests cover
+    # all edges).
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 92
+    assert len(recall_correct) == 95
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
@@ -74,6 +75,9 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["rheum_sle_ab"].answer == "anti_dsdna"          # rheumatology (RHEUM, Tier-2)
     assert by_id["rheum_gpa_ab"].answer == "pr3"                 # rheum — autoantibody association
     assert by_id["rheum_sle_ab"].trust == "authoritative"        # ADJ-only edge, grounded inline
+    assert by_id["onco_ovarian_marker"].answer == "ca_125"       # oncology (ONCO, Tier-2)
+    assert by_id["onco_hcc_marker"].answer == "alpha_fetoprotein"  # onco — tumor_marker relation
+    assert by_id["onco_ovarian_marker"].trust == "authoritative"  # ADJ-only edge, grounded inline
 
 
 def test_uncovered_items_abstain_not_fabricate() -> None:
@@ -108,16 +112,16 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
     # contains the relation ("Factor VII deficiency is a bleeding disorder characterized
     # by a lack in the production of factor VII"), lifting it to authoritative. The ADJ-only
     # domains MICRO (13 microbiology), PHARM (9 pharmacology), IMMUNO (7 immunology),
-    # GENETICS (7 genetics), and RHEUM (3 scored rheumatology) edges — all spider-grounded
-    # to NCBI StatPearls byte-stable spans — add 39 more authoritative recall answers. 91 of
-    # the 92 recall answers across all TEN domains now cite an authoritative edge:
-    # grounded-coverage 99%. ONE holdout stays consensus + FLAG (direction_only) — the
-    # adversarial verify could not pin it verbatim, so the framework declines to claim
-    # grounding it cannot defend, by design: cortisol_def (endocrine,
-    # deficiency_syndrome__cortisol — the only verbatim spans frame cortisol deficiency as a
-    # consequence/feature of Addison disease, not the named-syndrome identity).
-    assert s["grounded_coverage"] == round(91 / 92, 4)   # 0.9891
-    assert s["grounded_correct"] == 91
+    # GENETICS (7 genetics), RHEUM (3 scored rheumatology), and ONCO (3 scored oncology)
+    # edges — all spider-grounded to NCBI StatPearls byte-stable spans — add 42 more
+    # authoritative recall answers. 94 of the 95 recall answers across all ELEVEN domains
+    # now cite an authoritative edge: grounded-coverage 99%. ONE holdout stays consensus +
+    # FLAG (direction_only) — the adversarial verify could not pin it verbatim, so the
+    # framework declines to claim grounding it cannot defend, by design: cortisol_def
+    # (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame cortisol
+    # deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
+    assert s["grounded_coverage"] == round(94 / 95, 4)   # 0.9895
+    assert s["grounded_correct"] == 94
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia

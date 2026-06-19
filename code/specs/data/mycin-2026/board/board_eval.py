@@ -66,7 +66,7 @@ SCORECARD = HERE / "board-scorecard.json"
 # board_offline.py. The engine that ANSWERS is always the native CPU reasoner.)
 EDGE_FILES = ["iem-edges.adj", "vitamin-edges.adj", "anemia-edges.adj", "endocrine-edges.adj",
               "coag-edges.adj", "micro-edges.adj", "pharm-edges.adj", "immuno-edges.adj",
-              "genetics-edges.adj", "rheum-edges.adj"]
+              "genetics-edges.adj", "rheum-edges.adj", "onco-edges.adj"]
 
 # The native adj-lang CLI binary — the ONE engine behind every tactic (recall,
 # differential, management). If the binary is absent (e.g. a Python-only CI job that
