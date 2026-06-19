@@ -355,12 +355,23 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
 - **`switch(EXPR, ...)`** — choose one arm by the value of `EXPR`.
   - **Character `EXPR`** matches against the *names* of the arms. An **unnamed
     final arm** is the **default**, used when no name matches. With no match and
-    no default the result is an **invisible `NULL`**. *(Deferred to R-19:* the
-    **empty-arm fall-through** `switch("a", a = , b = "hit")` → `"hit"`. The
-    shared S/R grammar's `arg = NAME EQ expr` has no empty-value production, so
-    `a = ,` is a parse error today. The evaluator's `eval_switch` already
-    implements the fall-through; it activates once the grammar admits empty
-    args.)*
+    no default the result is an **invisible `NULL`**. An **empty arm**
+    (`a = ,` — a named arm with no value expression) **falls through** to the
+    next non-empty arm's value: `switch("a", a = , b = "hit")` → `"hit"`, and the
+    fall-through chains across several empties: `switch("a", a = , b = , c = "z")`
+    → `"z"`. If only empty arms follow the match (the last matched arm is empty
+    with nothing after it), the result is an invisible `NULL`. *(Implemented in
+    R-19.* The shared S/R grammar previously had only `arg = NAME EQ expr`, with
+    no empty-value production, so `a = ,` was a parse error. R-19 extends the
+    grammar to `arg = NAME EQ [expr] | expr` — a named argument may omit its
+    value — so an empty arm now parses as an `arg` node with a `NAME` and `=`
+    token but no `expr` child. The evaluator's `eval_switch` already consumed
+    such empty arms via `arm_body() == None`; the grammar change activates it.
+    An empty value is accepted **generally** by the grammar but is only
+    *meaningful* in `switch`: an empty arg in an ordinary call (e.g. `f(x = )`)
+    is rejected at **eval time** with a parse-style error — `eval_arg`'s
+    `only_node` requires a value node — matching R, which treats a missing
+    argument value outside `switch`/indexing as an error.)*
   - **Numeric `EXPR`** selects the `n`-th arm by **position** (1-based), ignoring
     names; out of range (or `NA`/`< 1`) → `NULL`. Only the chosen arm is
     evaluated.
