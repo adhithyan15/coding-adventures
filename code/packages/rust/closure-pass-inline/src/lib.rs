@@ -1259,6 +1259,14 @@ struct VoidStmtCandidate {
     /// obligation (every free ident is a true global or there are none), and
     /// the candidate splices anywhere exactly as before.
     free_top_level: HashSet<String>,
+    /// Parameters the body **reassigns** (`x = …`, `x += …`, or nested). Such
+    /// a parameter cannot be substituted by its argument expression (you
+    /// cannot reassign a literal, and a captured value would read the
+    /// pre-assignment argument). CLOC18 instead **materialises** each into a
+    /// fresh mutable local seeded from the argument (`let <fresh> = <arg>;`)
+    /// and routes the parameter through the rename map. Empty ⇒ all parameters
+    /// are pure values, substituted directly as before.
+    mutated_params: HashSet<String>,
 }
 
 /// Find every qualifying void statement-helper and splice its single call.
@@ -1351,85 +1359,115 @@ fn collect_top_level_decl_names(program: &Program) -> HashSet<String> {
     out
 }
 
-/// Does any statement in `body` reassign one of `params`? Used to decline a
-/// candidate whose parameter is mutated — see the soundness note at the call
-/// site (parameter substitution assumes parameters are immutable). Walks every
-/// expression position, so a nested assignment (`y = (x = 5)`, `f(x = 5)`,
-/// `c ? (x = 5) : 0`) is caught too. Only `AssignmentTarget::Identifier`
-/// matters: a member-target whose *base* is a parameter (`x.k = 5`) mutates a
-/// property of the argument, not the parameter binding, and is sound under
-/// substitution.
-fn body_assigns_to_param(body: &[Statement], params: &HashSet<String>) -> bool {
-    body.iter().any(|s| stmt_assigns_to_param(s, params))
+/// Collect the subset of `params` that `body` **reassigns** (`x = …`,
+/// `x += …`, or nested forms like `y = (x = 5)`, `f(x = 5)`, `c ? (x = 5) :
+/// 0`). Walks every expression position. Only `AssignmentTarget::Identifier`
+/// counts: a member-target whose *base* is a parameter (`x.k = 5`) mutates a
+/// property of the argument, not the parameter binding, and stays substitutable
+/// — so it is NOT collected. CLOC18 materialises each collected parameter into
+/// a fresh mutable local; the result is empty for the common all-pure-params
+/// case (the fast substitution path).
+fn collect_mutated_params(body: &[Statement], params: &HashSet<String>) -> HashSet<String> {
+    let mut out = HashSet::new();
+    for s in body {
+        stmt_collect_mutated_params(s, params, &mut out);
+    }
+    out
 }
 
-fn stmt_assigns_to_param(stmt: &Statement, params: &HashSet<String>) -> bool {
+fn stmt_collect_mutated_params(
+    stmt: &Statement,
+    params: &HashSet<String>,
+    out: &mut HashSet<String>,
+) {
     match stmt {
-        Statement::Declaration(Declaration::VariableDeclaration(vd)) => vd
-            .declarations
-            .iter()
-            .filter_map(|d| d.init.as_ref())
-            .any(|e| expr_assigns_to_param(e, params)),
-        Statement::Declaration(_) => false,
+        Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
+            for d in &vd.declarations {
+                if let Some(e) = &d.init {
+                    expr_collect_mutated_params(e, params, out);
+                }
+            }
+        }
+        Statement::Declaration(_) => {}
         Statement::Tagged(t) => match t {
             TaggedStatement::ExpressionStatement(es) => {
-                expr_assigns_to_param(&es.expression, params)
+                expr_collect_mutated_params(&es.expression, params, out)
             }
-            TaggedStatement::ReturnStatement(rs) => rs
-                .argument
-                .as_ref()
-                .is_some_and(|a| expr_assigns_to_param(a, params)),
+            TaggedStatement::ReturnStatement(rs) => {
+                if let Some(a) = &rs.argument {
+                    expr_collect_mutated_params(a, params, out);
+                }
+            }
             TaggedStatement::IfStatement(is) => {
-                expr_assigns_to_param(&is.test, params)
-                    || stmt_assigns_to_param(&is.consequent, params)
-                    || is
-                        .alternate
-                        .as_ref()
-                        .is_some_and(|a| stmt_assigns_to_param(a, params))
+                expr_collect_mutated_params(&is.test, params, out);
+                stmt_collect_mutated_params(&is.consequent, params, out);
+                if let Some(a) = &is.alternate {
+                    stmt_collect_mutated_params(a, params, out);
+                }
             }
-            TaggedStatement::BlockStatement(b) => body_assigns_to_param(&b.body, params),
-            TaggedStatement::ThrowStatement(ts) => expr_assigns_to_param(&ts.argument, params),
+            TaggedStatement::BlockStatement(b) => {
+                for s in &b.body {
+                    stmt_collect_mutated_params(s, params, out);
+                }
+            }
+            TaggedStatement::ThrowStatement(ts) => {
+                expr_collect_mutated_params(&ts.argument, params, out)
+            }
             // The remaining forms never appear in an admitted candidate body
             // (the shape filter rejects loops/switch/labeled/break/continue
-            // before this check). Treat them as non-mutating; if the shape
-            // filter ever widens, this must widen with it.
-            _ => false,
+            // before this runs). If the shape filter ever widens, this must
+            // widen with it.
+            _ => {}
         },
     }
 }
 
-fn expr_assigns_to_param(expr: &Expression, params: &HashSet<String>) -> bool {
+fn expr_collect_mutated_params(
+    expr: &Expression,
+    params: &HashSet<String>,
+    out: &mut HashSet<String>,
+) {
     match expr {
         Expression::AssignmentExpression(ae) => {
-            let target_is_param = matches!(
-                &ae.left,
-                AssignmentTarget::Identifier(id) if params.contains(&id.name)
-            );
-            target_is_param
-                || matches!(&ae.left,
-                    AssignmentTarget::MemberExpression(m) if expr_assigns_to_param(&m.object, params)
-                        || (m.computed && expr_assigns_to_param(&m.property, params)))
-                || expr_assigns_to_param(&ae.right, params)
+            match &ae.left {
+                AssignmentTarget::Identifier(id) if params.contains(&id.name) => {
+                    out.insert(id.name.clone());
+                }
+                AssignmentTarget::MemberExpression(m) => {
+                    expr_collect_mutated_params(&m.object, params, out);
+                    if m.computed {
+                        expr_collect_mutated_params(&m.property, params, out);
+                    }
+                }
+                AssignmentTarget::Identifier(_) => {}
+            }
+            expr_collect_mutated_params(&ae.right, params, out);
         }
         Expression::BinaryExpression(be) => {
-            expr_assigns_to_param(&be.left, params) || expr_assigns_to_param(&be.right, params)
+            expr_collect_mutated_params(&be.left, params, out);
+            expr_collect_mutated_params(&be.right, params, out);
         }
         Expression::LogicalExpression(le) => {
-            expr_assigns_to_param(&le.left, params) || expr_assigns_to_param(&le.right, params)
+            expr_collect_mutated_params(&le.left, params, out);
+            expr_collect_mutated_params(&le.right, params, out);
         }
-        Expression::UnaryExpression(ue) => expr_assigns_to_param(&ue.argument, params),
+        Expression::UnaryExpression(ue) => expr_collect_mutated_params(&ue.argument, params, out),
         Expression::ConditionalExpression(ce) => {
-            expr_assigns_to_param(&ce.test, params)
-                || expr_assigns_to_param(&ce.consequent, params)
-                || expr_assigns_to_param(&ce.alternate, params)
+            expr_collect_mutated_params(&ce.test, params, out);
+            expr_collect_mutated_params(&ce.consequent, params, out);
+            expr_collect_mutated_params(&ce.alternate, params, out);
         }
         Expression::CallExpression(ce) => {
-            expr_assigns_to_param(&ce.callee, params)
-                || ce.arguments.iter().any(|a| expr_assigns_to_param(a, params))
+            expr_collect_mutated_params(&ce.callee, params, out);
+            for a in &ce.arguments {
+                expr_collect_mutated_params(a, params, out);
+            }
         }
         Expression::MemberExpression(m) => {
-            expr_assigns_to_param(&m.object, params)
-                || (m.computed && expr_assigns_to_param(&m.property, params))
+            expr_collect_mutated_params(&m.object, params, out);
+            if m.computed {
+                expr_collect_mutated_params(&m.property, params, out);
+            }
         }
         // Array/object literals: recurse every contained expression. The typed
         // AST has no spread element (`[...e]` / `{...e}` are Phase 2) and no
@@ -1438,23 +1476,28 @@ fn expr_assigns_to_param(expr: &Expression, params: &HashSet<String>) -> bool {
         // plain sub-expression, and an unrepresentable form makes the whole
         // program bridge as unsupported (never reaching the inliner). If either
         // becomes representable, add a recursion arm here.
-        Expression::ArrayExpression(ae) => ae
-            .elements
-            .iter()
-            .flatten()
-            .any(|el| expr_assigns_to_param(el, params)),
-        Expression::ObjectExpression(oe) => oe.properties.iter().any(|prop| {
-            (prop.computed
-                && matches!(&prop.key, PropertyKey::Expression(e) if expr_assigns_to_param(e, params)))
-                || expr_assigns_to_param(&prop.value, params)
-        }),
+        Expression::ArrayExpression(ae) => {
+            for el in ae.elements.iter().flatten() {
+                expr_collect_mutated_params(el, params, out);
+            }
+        }
+        Expression::ObjectExpression(oe) => {
+            for prop in &oe.properties {
+                if prop.computed {
+                    if let PropertyKey::Expression(e) = &prop.key {
+                        expr_collect_mutated_params(e, params, out);
+                    }
+                }
+                expr_collect_mutated_params(&prop.value, params, out);
+            }
+        }
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
         | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
-        | Expression::UndefinedLiteral(_) => false,
+        | Expression::UndefinedLiteral(_) => {}
     }
 }
 
@@ -1561,24 +1604,18 @@ fn void_candidate_from_function(
         return None;
     }
 
-    // (4b) A reassigned PARAMETER is unsound to inline. Inlining substitutes
-    // each parameter occurrence with its ARGUMENT EXPRESSION, treating the
-    // parameter as an immutable value. If the body reassigns the parameter
-    // (`x = …`, `x += …`), that model breaks two ways: (1) when the argument
-    // is a non-lvalue (`f(7)` → the assignment target becomes the literal
-    // `7`), and (2) the captured tail value is read from the substituted
-    // argument, not the post-assignment parameter — so `function f(x){ x = x+1;
-    // return x; }` inlined at `g = f(7)` yields `g = 7` instead of `8`, a
-    // miscompile. (This only became reachable once assignment-expression
-    // statements parsed, CLOC17 — before that such a helper made the whole
-    // program fall back to whitespace-only.) Correctly inlining a mutated
-    // parameter would require materialising it into a fresh local seeded from
-    // the argument; until that slice lands, decline. (Declining is never a
-    // miscompile. Parameter reassignment via `++`/`--` is not reachable: the
-    // typed AST has no `UpdateExpression` yet.)
-    if body_assigns_to_param(&fd.body.body, &param_set) {
-        return None;
-    }
+    // (4b) Parameters the body REASSIGNS (`x = …`, `x += …`) cannot be
+    // substituted by their argument expression — substituting a non-lvalue
+    // argument would target a literal, and a captured value would read the
+    // pre-assignment argument (the `function f(x){ x = x+1; return x; }` ⇒
+    // `g = 7` instead of `8` miscompile). CLOC18 admits them anyway by
+    // MATERIALISING each into a fresh mutable local seeded from the argument
+    // (`let <fresh> = <arg>;`) and routing the parameter through the rename map
+    // — exactly a real call's binding semantics. We record the set here; the
+    // materialisation happens in `materialize_args` + the splice builders.
+    // (Reachable only since assignment statements parse, CLOC17. Mutation via
+    // `++`/`--` is not reachable: the typed AST has no `UpdateExpression`.)
+    let mutated_params = collect_mutated_params(&fd.body.body, &param_set);
 
     // (4) + (6) Walk every body expression's binding-use identifiers. Each
     // must be a parameter, a callee-local, a true global (never declared
@@ -1636,6 +1673,7 @@ fn void_candidate_from_function(
         body: fd.body.body.clone(),
         locals,
         free_top_level,
+        mutated_params,
     })
 }
 
@@ -1921,26 +1959,31 @@ fn build_spliced_body(
     // map sends each parameter to its temp — so a non-simple argument is
     // evaluated exactly once regardless of how often its parameter is used.
     // Done BEFORE local renaming so the arg temps occupy `avoid` first.
-    let (prelude, param_map) = materialize_args(cand, args, avoid, nodes_touched);
+    let (prelude, param_map, mutated_rename) = materialize_args(cand, args, avoid, nodes_touched);
 
-    // (a) Alpha-rename callee locals → fresh. Renaming the binding *and*
-    // every in-body use of it makes a spliced `let event` collision-proof
-    // against the call-site scope (and against the arg temps already in
-    // `avoid`).
+    // (a) Alpha-rename callee locals → fresh, AND route each materialised
+    // mutated parameter (CLOC18) through the same rename so both its reads and
+    // its assignment targets become the fresh `let` temp (the target-aware
+    // `rename` walk does this; `substitute` deliberately does not). Renaming a
+    // binding and every in-body use of it makes a spliced `let event`
+    // collision-proof against the call-site scope (and against the temps
+    // already in `avoid`).
+    let mut rename: HashMap<String, String> = mutated_rename;
     if !cand.locals.is_empty() {
         let mut gen = FreshNames::new();
-        let mut rename: HashMap<String, String> = HashMap::new();
         for local in &cand.locals {
             let fresh = gen.next(avoid);
             avoid.insert(fresh.clone());
             rename.insert(local.clone(), fresh);
         }
+    }
+    if !rename.is_empty() {
         for stmt in &mut body {
             rename_in_stmt(stmt, &rename);
         }
     }
 
-    // (b) Substitute parameters → arguments (or their temps). Because the
+    // (b) Substitute pure parameters → arguments (or their temps). Because the
     // locals are now fresh, an identifier argument can never be captured by
     // a callee local.
     if !param_map.is_empty() {
@@ -1981,27 +2024,52 @@ fn materialize_args(
     args: &[Expression],
     avoid: &mut HashSet<String>,
     nodes_touched: &mut u32,
-) -> (Vec<Statement>, HashMap<String, Expression>) {
-    if args.iter().all(is_simple_arg) {
+) -> (
+    Vec<Statement>,
+    HashMap<String, Expression>,
+    HashMap<String, String>,
+) {
+    // Fast path: every argument is simple AND no parameter is reassigned. Then
+    // each parameter substitutes directly by its argument — the previous
+    // behaviour, byte-for-byte (no prelude, no rename). A mutated parameter
+    // disqualifies this path even with a simple argument: you cannot reassign a
+    // substituted literal or a caller-scope identifier (CLOC18).
+    if cand.mutated_params.is_empty() && args.iter().all(is_simple_arg) {
         let map: HashMap<String, Expression> = cand
             .params
             .iter()
             .cloned()
             .zip(args.iter().cloned())
             .collect();
-        return (Vec::new(), map);
+        return (Vec::new(), map, HashMap::new());
     }
 
+    // Otherwise materialise EVERY argument into a fresh temp, in source order,
+    // so the arguments evaluate left-to-right exactly once before the body.
+    // - A **mutated** parameter (CLOC18) becomes a `let <fresh> = <arg>;`
+    //   (reassignable) and is routed through `mutated_rename` — the
+    //   target-aware `rename` walk rewrites both its reads and its assignment
+    //   targets, which `substitute` deliberately does not.
+    // - A **pure** parameter becomes a `const <fresh> = <arg>;` and substitutes
+    //   by its temp identifier, as before.
     let mut prelude: Vec<Statement> = Vec::with_capacity(args.len());
-    let mut map: HashMap<String, Expression> = HashMap::with_capacity(args.len());
+    let mut subst_map: HashMap<String, Expression> = HashMap::new();
+    let mut mutated_rename: HashMap<String, String> = HashMap::new();
     let mut gen = FreshNames::new();
     for (param, arg) in cand.params.iter().zip(args.iter()) {
         let temp = gen.next(avoid);
         avoid.insert(temp.clone());
+        let is_mutated = cand.mutated_params.contains(param);
         prelude.push(Statement::Declaration(Declaration::VariableDeclaration(
             VariableDeclaration {
                 cv: None,
-                kind: VarKind::Const,
+                // `let` for a mutated param (it gets reassigned in the body),
+                // `const` for a pure one.
+                kind: if is_mutated {
+                    VarKind::Let
+                } else {
+                    VarKind::Const
+                },
                 declarations: vec![VariableDeclarator {
                     cv: None,
                     id: BindingTarget::Identifier(Identifier {
@@ -2012,16 +2080,20 @@ fn materialize_args(
                 }],
             },
         )));
-        map.insert(
-            param.clone(),
-            Expression::Identifier(Identifier {
-                cv: None,
-                name: temp,
-            }),
-        );
+        if is_mutated {
+            mutated_rename.insert(param.clone(), temp);
+        } else {
+            subst_map.insert(
+                param.clone(),
+                Expression::Identifier(Identifier {
+                    cv: None,
+                    name: temp,
+                }),
+            );
+        }
     }
     *nodes_touched += prelude.len() as u32;
-    (prelude, map)
+    (prelude, subst_map, mutated_rename)
 }
 
 /// Normalize a tail `return` for a discarded-result splice (CLOC15 PR-2).
@@ -2471,11 +2543,14 @@ fn build_captured_body(
     // parameter to its argument (or temp). Minted BEFORE local renaming so
     // the arg temps occupy `avoid` first. The capture temp (`temp`) was
     // already minted by the caller and is in `avoid`, so it cannot collide.
-    let (prelude, param_map) = materialize_args(cand, args, avoid, nodes_touched);
+    let (prelude, param_map, mutated_rename) = materialize_args(cand, args, avoid, nodes_touched);
 
-    // (a) Alpha-rename callee locals → fresh, in the body AND the captured
-    // return expression.
-    let mut rename: HashMap<String, String> = HashMap::new();
+    // (a) Alpha-rename callee locals → fresh, AND route each materialised
+    // mutated parameter (CLOC18) through the same rename — applied to the body
+    // AND the captured return expression (so `return x` for a mutated `x`
+    // captures the post-assignment `<fresh>`, the fix the materialisation
+    // exists for).
+    let mut rename: HashMap<String, String> = mutated_rename;
     if !cand.locals.is_empty() {
         let mut gen = FreshNames::new();
         for local in &cand.locals {
@@ -2483,14 +2558,16 @@ fn build_captured_body(
             avoid.insert(fresh.clone());
             rename.insert(local.clone(), fresh);
         }
+    }
+    if !rename.is_empty() {
         for stmt in &mut body {
             rename_in_stmt(stmt, &rename);
         }
         rename_in_expr(&mut return_value, &rename);
     }
 
-    // (b) Substitute parameters → arguments (or their temps), in the body AND
-    // the captured return expression.
+    // (b) Substitute pure parameters → arguments (or their temps), in the body
+    // AND the captured return expression.
     if !param_map.is_empty() {
         for stmt in &mut body {
             substitute_in_stmt(stmt, &param_map);
@@ -4047,41 +4124,72 @@ mod tests {
         );
     }
 
-    // ===== Parameter-reassignment soundness guard =====
-    // Inlining substitutes each parameter with its ARGUMENT EXPRESSION, so a
-    // helper that REASSIGNS a parameter cannot be inlined: substituting a
-    // non-lvalue argument would target a literal, and the captured value would
-    // read the pre-assignment argument. (Reachable only since CLOC17 made
-    // assignment statements parse.) These pin that such helpers are declined.
+    // ===== CLOC18 — parameter-mutation materialization =====
+    // A helper that REASSIGNS a parameter cannot substitute the parameter by
+    // its argument expression. CLOC18 materialises each mutated parameter into
+    // a fresh mutable local seeded from the argument (`let <fresh> = <arg>`) and
+    // routes it through the rename map — exactly a real call's binding. These
+    // were decline tests in 0.13.1 (#6272); they now inline correctly.
 
     #[test]
-    fn does_not_inline_helper_that_reassigns_param() {
-        // `function f(x){ x = x + 1; return x; }` returns 8 for `f(7)`.
-        // Substituting `x -> 7` would yield `7 = 7 + 1` / a `g = 7` capture —
-        // a miscompile — so the helper is left intact.
+    fn materializes_reassigned_param() {
+        // `function f(x){ x = x + 1; return x; }` returns 8 for `f(7)`. The
+        // parameter `x` is materialised as `let b = 7`; `x = x + 1` becomes
+        // `b = b + 1` (b == 8), captured into the temp `a`, so `var g = 8`.
+        // (This was the #6272 miscompile `g = 7`; now correct.)
+        // (The `function f` declaration is kept by the inline pass alone;
+        // `remove-unused-vars` deletes it in the full SIMPLE pipeline, leaving
+        // just `var g = 8;`.)
         assert_eq!(
             inline_source("function f(x) { x = x + 1; return x; } var g = f(7);"),
-            "function f(x){x=x + 1;return x};var g=f(7);"
+            "function f(x){x=x + 1;return x};let b=7;b=b + 1;const a=b;var g=a;"
         );
     }
 
     #[test]
-    fn does_not_inline_helper_with_compound_param_assignment() {
-        // Compound assignment (`x += 1`) is a parameter mutation too.
+    fn materializes_compound_reassigned_param() {
+        // Compound assignment (`x += 1`) mutates the parameter too; same
+        // materialisation, with the compound operator preserved.
         assert_eq!(
             inline_source("function f(x) { x += 1; return x; } var g = f(7);"),
-            "function f(x){x+=1;return x};var g=f(7);"
+            "function f(x){x+=1;return x};let b=7;b+=1;const a=b;var g=a;"
         );
     }
 
     #[test]
-    fn does_not_inline_helper_with_nested_param_assignment() {
+    fn materializes_nested_param_assignment() {
         // The mutation need not be a top-level statement: `y = (x = 5)` mutates
-        // `x` inside a larger expression. The walker recurses every expression
-        // position, so this is caught and the helper declined.
+        // `x` inside a larger expression. The collector recurses every
+        // expression position, so `x` is materialised (`let b = 7`) and the
+        // nested `x = 5` becomes `b = 5`. (`y` is a callee local renamed to
+        // `c`.) `f(7)` returns 5, so `var g = 5`.
         assert_eq!(
             inline_source("function f(x) { var y; y = (x = 5); return y; } var g = f(7);"),
-            "function f(x){var y;y=x=5;return y};var g=f(7);"
+            "function f(x){var y;y=x=5;return y};let b=7;var c;c=b=5;const a=c;var g=a;"
+        );
+    }
+
+    #[test]
+    fn materializes_only_the_mutated_param_in_a_mixed_helper() {
+        // Two parameters, only `y` reassigned. A non-simple argument is present,
+        // so both args materialise in source order: pure `x` into a `const`
+        // (substituted), mutated `y` into a `let` (renamed). The capture temp
+        // `a` is minted first, then arg temps `b` (x), `c` (y); `y = y + x`
+        // becomes `c = c + b`. `f(p(), 1)` ⇒ `g = 1 + p()`.
+        assert_eq!(
+            inline_source("function f(x, y) { y = y + x; return y; } var g = f(p(), 1);"),
+            "function f(x,y){y=y + x;return y};const b=p();let c=1;c=c + b;const a=c;var g=a;"
+        );
+    }
+
+    #[test]
+    fn materializes_param_with_side_effecting_argument_once() {
+        // A side-effecting argument to a mutated parameter is evaluated exactly
+        // once, into the `let`. `side()` must not be duplicated across the two
+        // reads of `x` in `x + x`.
+        assert_eq!(
+            inline_source("function f(x) { x = x + 1; return x + x; } var g = f(side());"),
+            "function f(x){x=x + 1;return x + x};let b=side();b=b + 1;const a=b + b;var g=a;"
         );
     }
 

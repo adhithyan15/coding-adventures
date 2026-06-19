@@ -146,11 +146,15 @@ structurally cannot do. It is admitted only under a tight, sound subset
    (Slice B2 will widen the multiply-declared nested case via an
    in-scope-binding walk / `closure-scope-analyzer`.)
 7. **Side-effect-free arguments** — the same `is_simple_arg` gate.
-8. **No parameter reassignment** — a parameter is substituted by its argument
-   expression, so a body that assigns to a parameter (`x = …`, `x += …`) is
-   declined; substituting a non-lvalue argument or reading the pre-assignment
-   value would miscompile. (A *local* reassignment is fine — the local is
-   renamed.) Reachable only since assignment statements parse (CLOC17).
+8. **Reassigned parameters are materialized** (CLOC18) — a parameter the body
+   assigns to (`x = …`, `x += …`) cannot be substituted by its argument
+   expression (you cannot reassign a literal; a captured value would read the
+   pre-assignment argument). Such a parameter is instead **materialised** into a
+   fresh mutable local seeded from the argument (`let <fresh> = <arg>;`) and
+   routed through the rename map — exactly a real call's binding semantics. A
+   *member-target* write through a parameter (`x.k = …`) mutates a property of
+   the argument, not the binding, so it stays substituted. (Reachable only since
+   assignment statements parse, CLOC17.)
 
 Since the call site discards the result (CLOC15 PR-2), a **tail `return E`**
 is normalized: dropped when `E` is provably inert (a literal or a bare

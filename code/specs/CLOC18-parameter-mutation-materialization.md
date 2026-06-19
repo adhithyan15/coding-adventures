@@ -1,12 +1,11 @@
 # CLOC18 — parameter-mutation materialization in `inline`
 
-**Status:** SPEC (design complete, no open questions). Implementation deferred
-to a focused follow-up because this **reverses the 0.13.1 soundness guard**
-(`closure-pass-inline` PR #6272, which *declines* helpers that reassign a
-parameter) and replaces it with a *sound transform*. Reversing a safety guard
-is categorically riskier than the additive inline slices around it (value
-capture, `var` locals), so it is specced before the change per the repo's
-specs-first standard.
+**Status:** IMPLEMENTED in `closure-pass-inline` 0.15.0. The design below was
+specced first (it **reverses the 0.13.1 soundness guard**, PR #6272) and then
+implemented exactly as written: `materialize_args` returns the 3-tuple,
+mutated parameters route through the rename map at both splice sites, and the
+three #6272 decline tests were flipped to materialisation-positive. Verified
+end-to-end that the #6272 miscompile now inlines correctly (`g === 8`).
 
 ## Motivation
 
