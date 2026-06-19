@@ -3432,6 +3432,8 @@ pub struct DeckRunArtifact {
     pub measurement_names: Vec<String>,
     pub fourier_count: usize,
     pub fourier_probes: Vec<String>,
+    pub diagnostic_count: usize,
+    pub diagnostic_codes: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -10099,6 +10101,7 @@ fn deck_run_artifacts(
     output_directives: &[String],
     measurements: &[ProbeMeasurement],
     fourier: &[FourierResult],
+    diagnostic_codes: &[String],
 ) -> Vec<DeckRunArtifact> {
     let is_transient = plan.analysis == "tran";
     vec![DeckRunArtifact {
@@ -10136,7 +10139,20 @@ fn deck_run_artifacts(
             .iter()
             .flat_map(|result| result.probes.iter().map(|probe| probe.probe.clone()))
             .collect(),
+        diagnostic_count: diagnostic_codes.len(),
+        diagnostic_codes: diagnostic_codes.to_vec(),
     }]
+}
+
+fn deck_analysis_diagnostic_codes(netlist: &str, plan: &DeckAnalysisPlan) -> Vec<String> {
+    resolve_deck_analyses(netlist)
+        .diagnostics
+        .into_iter()
+        .filter(|diagnostic| {
+            diagnostic.line_number == plan.line_number && diagnostic.directive == plan.directive
+        })
+        .map(|diagnostic| diagnostic.code)
+        .collect()
 }
 
 fn format_deck_artifact_float(value: Option<f64>) -> String {
@@ -10162,12 +10178,12 @@ fn deck_table_columns(table: &str) -> Vec<String> {
 
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList"
             .to_string(),
     ];
     for artifact in artifacts {
         rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             artifact.analysis,
             artifact.directive,
             artifact.line_number,
@@ -10198,7 +10214,9 @@ pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
             artifact.measurement_count,
             artifact.measurement_names.join(";"),
             artifact.fourier_count,
-            artifact.fourier_probes.join(";")
+            artifact.fourier_probes.join(";"),
+            artifact.diagnostic_count,
+            artifact.diagnostic_codes.join(";")
         ));
     }
     format!("{}\n", rows.join("\n"))
@@ -10249,6 +10267,7 @@ pub fn run_deck_analysis(
     analysis: Option<&str>,
 ) -> Result<DeckAnalysisExecution, SpiceError> {
     let plan = select_deck_analysis_plan(netlist, analysis)?;
+    let diagnostic_codes = deck_analysis_diagnostic_codes(netlist, &plan);
     match plan.analysis.as_str() {
         "op" => {
             let result = dc_op(circuit)?;
@@ -10269,6 +10288,7 @@ pub fn run_deck_analysis(
                 &output_directives,
                 &measurements,
                 &fourier,
+                &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
@@ -10309,6 +10329,7 @@ pub fn run_deck_analysis(
                 &output_directives,
                 &measurements,
                 &fourier,
+                &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
@@ -10350,6 +10371,7 @@ pub fn run_deck_analysis(
                 &output_directives,
                 &measurements,
                 &fourier,
+                &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
@@ -10394,6 +10416,7 @@ pub fn run_deck_analysis(
                 &output_directives,
                 &measurements,
                 &fourier,
+                &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
@@ -10432,6 +10455,7 @@ pub fn run_deck_analysis(
                 &output_directives,
                 &measurements,
                 &fourier,
+                &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
@@ -10468,6 +10492,7 @@ pub fn run_deck_analysis(
                 &output_directives,
                 &measurements,
                 &fourier,
+                &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
@@ -10516,6 +10541,7 @@ pub fn run_deck_analysis(
                 &output_directives,
                 &measurements,
                 &fourier,
+                &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {

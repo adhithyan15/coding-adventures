@@ -126,6 +126,12 @@
 
     {"id": "histo_rs_cond",    "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "reed_sternberg_cells", "var": "Condition", "gold": "hodgkin_lymphoma"},
     {"id": "histo_hj_cond",    "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "howell_jolly_bodies",  "var": "Condition", "gold": "asplenia"},
-    {"id": "histo_heinz_cond", "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "heinz_bodies",        "var": "Condition", "gold": "g6pd_deficiency"}
+    {"id": "histo_heinz_cond", "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "heinz_bodies",        "var": "Condition", "gold": "g6pd_deficiency"},
+
+    {"id": "cardio_mr_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "holosystolic_apical",             "var": "Lesion", "gold": "mitral_regurgitation"},
+    {"id": "cardio_as_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "crescendo_decrescendo_systolic",  "var": "Lesion", "gold": "aortic_stenosis"},
+    {"id": "cardio_mvp_lesion", "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "late_systolic_click",            "var": "Lesion", "gold": "mitral_valve_prolapse"},
+    {"id": "cardio_tr_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "holosystolic_left_lower_sternal", "var": "Lesion", "gold": "tricuspid_regurgitation"},
+    {"id": "cardio_ar_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "decrescendo_diastolic",          "var": "Lesion", "gold": "aortic_regurgitation"}
   ]
 }

@@ -70,6 +70,7 @@ from spice_engine.compatibility import (
     DeckInitialConditionSummary,
     DeckMeasurementCard,
     DeckNodeCondition,
+    resolve_deck_analyses,
     resolve_deck_fourier,
     resolve_deck_measurements,
     select_deck_analysis_plan,
@@ -2344,6 +2345,8 @@ class DeckRunArtifact:
     measurement_names: list[str]
     fourier_count: int
     fourier_probes: list[str]
+    diagnostic_count: int
+    diagnostic_codes: list[str]
 
 
 @dataclass(frozen=True)
@@ -2422,6 +2425,7 @@ def _deck_run_artifacts(
     output_directives: list[str],
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
+    diagnostic_codes: list[str],
 ) -> list[DeckRunArtifact]:
     is_transient = plan.analysis == "tran"
     return [
@@ -2458,7 +2462,22 @@ def _deck_run_artifacts(
             fourier_probes=[
                 probe.probe for result in fourier for probe in result.probes
             ],
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
         )
+    ]
+
+
+def _deck_analysis_diagnostic_codes(
+    netlist: str,
+    plan: DeckAnalysisPlan,
+) -> list[str]:
+    summary = resolve_deck_analyses(netlist)
+    return [
+        diagnostic.code
+        for diagnostic in summary.diagnostics
+        if diagnostic.line_number == plan.line_number
+        and diagnostic.directive == plan.directive
     ]
 
 
@@ -2466,7 +2485,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
     rows = [
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList"
     ]
     for artifact in artifacts:
         rows.append(
@@ -2500,6 +2519,8 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
                     ";".join(artifact.measurement_names),
                     str(artifact.fourier_count),
                     ";".join(artifact.fourier_probes),
+                    str(artifact.diagnostic_count),
+                    ";".join(artifact.diagnostic_codes),
                 ]
             )
         )
@@ -2514,6 +2535,7 @@ def run_deck_analysis(
     """Select one deck analysis card, execute it, and format deck-selected output."""
 
     plan = select_deck_analysis_plan(netlist, analysis)
+    diagnostic_codes = _deck_analysis_diagnostic_codes(netlist, plan)
     if plan.analysis == "op":
         result = dc_op(circuit)
         table = format_deck_op_table(result, netlist)
@@ -2531,6 +2553,7 @@ def run_deck_analysis(
             output_directives,
             measurements,
             fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2567,6 +2590,7 @@ def run_deck_analysis(
             output_directives,
             measurements,
             fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2605,6 +2629,7 @@ def run_deck_analysis(
             output_directives,
             measurements,
             fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2649,6 +2674,7 @@ def run_deck_analysis(
             output_directives,
             measurements,
             fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2681,6 +2707,7 @@ def run_deck_analysis(
             output_directives,
             measurements,
             fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2712,6 +2739,7 @@ def run_deck_analysis(
             output_directives,
             measurements,
             fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2762,6 +2790,7 @@ def run_deck_analysis(
             output_directives,
             measurements,
             fourier,
+            diagnostic_codes,
         )
         return DeckAnalysisExecution(
             plan=plan,
