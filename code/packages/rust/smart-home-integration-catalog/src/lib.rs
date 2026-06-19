@@ -1520,6 +1520,75 @@ impl IntegrationMeshPreflightRepairReadinessSummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightBatchReadinessSummary {
+    pub repair_readiness_summary: IntegrationMeshPreflightRepairReadinessSummary,
+    pub repair_batch_summary: IntegrationMeshProtocolSubstratePreflightRepairBatchSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub queued_preflight_actions: usize,
+    pub repair_batch_count: usize,
+    pub batched_preflight_actions: usize,
+    pub blocking_repair_batches: usize,
+    pub operator_required_batches: usize,
+    pub first_batch_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_batch_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub first_batch_protocol: Option<ProtocolFamily>,
+    pub first_batch_primitive: Option<PrimitiveFamily>,
+    pub preflight_ready: bool,
+    pub repair_actions_ready: bool,
+    pub repair_batches_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightBatchReadinessSummary {
+    pub fn from_parts(
+        repair_readiness_summary: IntegrationMeshPreflightRepairReadinessSummary,
+        repair_batch_summary: IntegrationMeshProtocolSubstratePreflightRepairBatchSummary,
+    ) -> Self {
+        let repair_batches_ready = repair_batch_summary.repair_batches_ready;
+        let ready_for_release = repair_readiness_summary.ready_for_release && repair_batches_ready;
+
+        Self {
+            total_protocols: repair_readiness_summary.total_protocols,
+            total_preflight_checks: repair_readiness_summary.total_preflight_checks,
+            preflight_blocker_count: repair_readiness_summary.preflight_blocker_count,
+            release_blocker_count: repair_readiness_summary.release_blocker_count,
+            queued_preflight_actions: repair_readiness_summary.queued_preflight_actions,
+            repair_batch_count: repair_batch_summary.total_batches,
+            batched_preflight_actions: repair_batch_summary.total_actions,
+            blocking_repair_batches: repair_batch_summary.blocking_batches,
+            operator_required_batches: repair_batch_summary.operator_required_batches,
+            first_batch_stage: repair_batch_summary.first_stage,
+            first_batch_action_kind: repair_batch_summary.first_action_kind,
+            first_batch_protocol: repair_batch_summary.first_protocol.clone(),
+            first_batch_primitive: repair_batch_summary.first_primitive,
+            preflight_ready: repair_readiness_summary.preflight_ready,
+            repair_actions_ready: repair_readiness_summary.preflight_actions_ready,
+            release_ready: repair_readiness_summary.release_ready,
+            repair_readiness_summary,
+            repair_batch_summary,
+            repair_batches_ready,
+            ready_for_release,
+        }
+    }
+
+    pub fn has_repair_batches(&self) -> bool {
+        self.repair_batch_count > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.ready_for_release
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_batches > 0 || self.repair_readiness_summary.needs_operator()
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationMeshReadinessHandoffKind {
     SubstrateAction,
@@ -22297,6 +22366,41 @@ pub fn mesh_preflight_repair_readiness_summary(
     )
 }
 
+pub fn mesh_preflight_batch_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightBatchReadinessSummary {
+    let repair_readiness_summary = mesh_preflight_repair_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let repair_batch_summary =
+        mesh_protocol_substrate_preflight_repair_batch_summary(available_primitives);
+
+    IntegrationMeshPreflightBatchReadinessSummary::from_parts(
+        repair_readiness_summary,
+        repair_batch_summary,
+    )
+}
+
+pub fn mesh_preflight_batch_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightBatchReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_batch_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_readiness_handoff_packages_from_summary(
     summary: &IntegrationMeshActionReadinessSummary,
     actions: &[IntegrationMeshProtocolSubstrateAction],
@@ -29491,6 +29595,89 @@ mod tests {
         assert!(summary.release_ready);
         assert!(summary.ready_for_release);
         assert!(!summary.has_repair_actions());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_preflight_batch_readiness_summary_surfaces_batched_repairs() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_preflight_batch_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.queued_preflight_actions, 5);
+        assert_eq!(summary.repair_batch_count, 3);
+        assert_eq!(summary.batched_preflight_actions, 5);
+        assert_eq!(summary.blocking_repair_batches, 3);
+        assert_eq!(summary.operator_required_batches, 2);
+        assert_eq!(
+            summary.first_batch_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_batch_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert_eq!(summary.first_batch_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_batch_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.repair_actions_ready);
+        assert!(!summary.repair_batches_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_repair_batches());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(summary.repair_batch_summary.network_security_batches, 1);
+    }
+
+    #[test]
+    fn mesh_preflight_batch_readiness_summary_marks_ready_release() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_preflight_batch_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.release_blocker_count, 0);
+        assert_eq!(summary.queued_preflight_actions, 0);
+        assert_eq!(summary.repair_batch_count, 0);
+        assert_eq!(summary.batched_preflight_actions, 0);
+        assert_eq!(summary.blocking_repair_batches, 0);
+        assert_eq!(summary.operator_required_batches, 0);
+        assert_eq!(summary.first_batch_stage, None);
+        assert_eq!(summary.first_batch_action_kind, None);
+        assert_eq!(summary.first_batch_protocol, None);
+        assert_eq!(summary.first_batch_primitive, None);
+        assert!(summary.preflight_ready);
+        assert!(summary.repair_actions_ready);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_release);
+        assert!(!summary.has_repair_batches());
         assert!(!summary.has_blockers());
         assert!(!summary.needs_operator());
     }
