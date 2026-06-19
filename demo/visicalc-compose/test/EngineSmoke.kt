@@ -138,7 +138,63 @@ fun main() {
     check("inf fillDown I2", inf.rowCells(2)[8], "30") // I2 = H2*10
     check("inf fillDown I3", inf.rowCells(3)[8], "40") // I3 = H3*10
     check("inf fillDown I1 source", inf.rowCells(1)[8], "20") // I1 untouched
+
+    // Clipboard: copy I1 (= H1*10) and paste at I4 — the relative ref shifts by
+    // the destination's offset, so I4 = H4*10. (H4 unset → 0, so seed it.)
+    inf.selectInf(4, 8); inf.commitInf("6")        // H4 = 6
+    inf.selectInf(1, 9); inf.copyCell()            // copy I1
+    inf.selectInf(4, 9); check("inf pasteCell applied", inf.pasteCell().toString(), "true")
+    check("inf paste I4 = H4*10", inf.rowCells(4)[8], "60") // I4 = H4*10 = 60
+    // Cut A1 and move it to C1: source clears, a second paste is a no-op.
+    inf.selectInf(1, 1); inf.commitInf("99")       // A1
+    inf.selectInf(1, 1); inf.cutCell()
+    inf.selectInf(1, 3); check("inf cut paste applied", inf.pasteCell().toString(), "true")
+    check("inf cut moved C1", inf.rowCells(1)[2], "99") // C1 (col 3, index 2)
+    check("inf cut cleared A1", inf.rowCells(1)[0], "") // A1 cleared
+    inf.selectInf(1, 5); check("inf cut buffer consumed", inf.pasteCell().toString(), "false")
     inf.close()
+
+    // Save / load (the Save / Load buttons drive saveBook/loadBook): serialize a
+    // fresh seeded workbook, mutate it, restore the snapshot, and confirm the
+    // loaded formula stays LIVE (the document stores source + formats, not values).
+    val sl = InfiniteSheetModel()
+    val snapshot = sl.saveBook()
+    check("serialize non-empty", snapshot.isNotEmpty().toString(), "true")
+    sl.selectInf(1, 1); sl.commitInf("500")              // E1 → 500+3+12+8 = 523
+    check("mutated E1", sl.rowCells(1)[4], "523.00")
+    check("loadBook ok", sl.loadBook(snapshot).toString(), "true")
+    check("loaded A1", sl.rowCells(1)[0], "15")          // restored
+    check("loaded E1 formatted", sl.rowCells(1)[4], "38.00") // recomputed through format
+    sl.selectInf(1, 1); sl.commitInf("5")                // live: 5+3+12+8 = 28
+    check("loaded formula live", sl.rowCells(1)[4], "28.00")
+    check("loadBook rejects garbage", sl.loadBook("not a workbook").toString(), "false")
+    check("workbook intact after reject", sl.rowCells(1)[4], "28.00")
+    sl.close()
+
+    // Undo / redo (the Undo / Redo buttons drive undoEdit/redoEdit): a fresh,
+    // unseeded session so the initial history is empty. Two edits, walk back and
+    // forward, and confirm a restored formula recomputes live.
+    val ur = SpreadsheetSession()
+    check("fresh canUndo false", ur.canUndo().toString(), "false")
+    ur.setCell("A1", "1")
+    ur.setCell("B1", "=A1*10") // 10
+    check("after edits canUndo true", ur.canUndo().toString(), "true")
+    check("undo formula", ur.undo().toString(), "true")
+    check("B1 cleared by undo", ur.window(1, 2, 1, 2)[0][0], "")
+    check("undo literal", ur.undo().toString(), "true")
+    check("A1 cleared by undo", ur.window(1, 1, 1, 1)[0][0], "")
+    check("canUndo false at bottom", ur.canUndo().toString(), "false")
+    check("undo at bottom is noop", ur.undo().toString(), "false")
+    check("redo literal", ur.redo().toString(), "true")
+    check("redo formula", ur.redo().toString(), "true")
+    check("B1 live after redo", ur.window(1, 2, 1, 2)[0][0], "10")
+    check("canRedo false at top", ur.canRedo().toString(), "false")
+    // A fresh edit forks history (drops the redo branch).
+    ur.undo() // back: B1 gone
+    check("canRedo true before fork", ur.canRedo().toString(), "true")
+    ur.setCell("C1", "9")
+    check("fresh edit clears redo", ur.canRedo().toString(), "false")
+    ur.close()
 
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)

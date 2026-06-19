@@ -713,17 +713,83 @@ Without `enabled = true`, every cell in a cycle gets `Error(Ref)`.
 
 ## §16 Persistence
 
-Out of scope for this crate. Loading and saving XLSX files lives in a
-future `xlsx-io` crate. This crate exposes:
+The engine ships a small **portable JSON** save/load format — enough for a host
+to persist and reload a sheet without any file-format machinery. *No I/O happens
+in the crate*: `serialize` returns a `String`, `deserialize` takes a `&str`, and
+the host writes/reads the bytes wherever it likes (a file, `localStorage`, a
+text field).
 
 ```rust
-pub fn workbook_from_grid(rows: &[&[Cell]]) -> Workbook;
-pub fn workbook_to_grid(wb: &Workbook) -> Vec<Vec<Cell>>;
+pub fn serialize(&self) -> String;
+pub fn deserialize(&mut self, data: &str) -> Result<(), String>;
 ```
 
-— enough for in-memory construction and inspection. Round-tripping
-through XLSX (with all the file format's quirks) is the next layer
-up.
+What is stored is **source, not computed state**: per sheet, each cell as either
+a formula's text or a literal's typed value, plus the per-cell format codes
+(including formats on otherwise-empty cells). Computed values are recomputed by
+`deserialize` (via `recalc_all`), so the file is small and can never disagree
+with the engine. Cells and formats are emitted sorted by (row, col), so the
+output is stable — equal workbooks serialize byte-for-byte identically.
+
+```json
+{"version":1,"sheets":[{"name":"Sheet1",
+  "cells":[{"a1":"A1","value":{"number":15.0}},
+           {"a1":"E1","formula":"=SUM(A1:D1)"}],
+  "formats":[{"a1":"E1","code":"#,##0.00"}]}]}
+```
+
+A literal value is `{"number":n}` / `{"text":s}` / `{"bool":b}` /
+`{"error":"#REF!"}`; a non-finite number degrades to `#NUM!` (JSON has no
+NaN/∞). `deserialize` validates the JSON, `version`, and `sheets` array *before*
+mutating (a bad file leaves the workbook untouched), rebuilds sheets in file
+order (a single-sheet host keeps `SheetId(0)`), and keeps an unparseable stored
+formula as its literal text rather than dropping it. Loading and saving **XLSX**
+(with all the file format's quirks) remains out of scope — that's a future
+`xlsx-io` layer on top of this.
+
+### §16.1 Undo / Redo (session history)
+
+Undo/redo is a **session-layer** feature built directly on §16's serialize/
+deserialize, and lives in the host-facing session facade (`spreadsheet-core-wasm`
+`SpreadsheetSession`), not the pure-calc `Workbook`. The session exposes:
+
+```rust
+pub fn undo(&mut self) -> bool;      // restore the state before the last edit
+pub fn redo(&mut self) -> bool;      // replay the most recently undone edit
+pub fn can_undo(&self) -> bool;
+pub fn can_redo(&self) -> bool;
+```
+
+The model is **snapshot-based, not per-op inverse**. Every mutating session
+method (set-cell, set-format, fill, clipboard paste, structural insert/delete,
+load) runs through one internal `mutate` gate that:
+
+1. serializes the document *before* the edit;
+2. runs the edit;
+3. serializes again and, **only if the two differ**, pushes the pre-edit
+   snapshot onto an undo stack and clears the redo stack.
+
+Consequences, all intentional:
+
+- **Correct for every edit, present and future.** Because the unit of history is
+  a whole-document snapshot (the §16 source-only JSON), undo/redo needs no
+  knowledge of *what* an edit did — a new mutating op gets undo for free just by
+  going through `mutate`. This trades a per-edit double-serialize (cheap on the
+  sparse sheets the engine targets — a few hundred bytes) for zero per-op inverse
+  logic, which is the bug-prone part of command-stack undo.
+- **No-ops never enter history.** A failed edit (bad address), a `copy` (which
+  only touches the transient clipboard), an empty→empty `fill`, or a re-set to
+  the identical value all leave the serialization unchanged, so the user never
+  presses undo twice for one visible change.
+- **Restored formulas stay live.** `undo`/`redo` restore via the same
+  `deserialize` path (`recalc_all`), so a brought-back formula recomputes against
+  the restored precedents and keeps recalculating on later edits.
+- **Linear history.** A fresh edit after an undo clears the redo stack (you can't
+  redo across a divergence). History is bounded to `MAX_HISTORY` (100) snapshots,
+  oldest dropped — finite memory regardless of session length.
+- **The clipboard is not history.** The copy/cut buffer is transient editing
+  state, not document state, so it is deliberately excluded from snapshots; undo
+  restores cells, not what is on the clipboard.
 
 ---
 

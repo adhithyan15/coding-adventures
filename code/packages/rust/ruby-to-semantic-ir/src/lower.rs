@@ -72,6 +72,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         block_counter: 0,
         multi_assign_counter: 0,
         interp_depth: 0,
+        block_param_methods: HashSet::new(),
     };
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
@@ -96,6 +97,33 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
     // forward declarations will still see `main` exported.
     let mut functions = std::mem::take(&mut lw.user_functions);
     functions.push(main);
+
+    // Phase Q9f (FC) — explicit block-param ABI, part 2: call-site
+    // normalization.  Now that every `def` has been lowered,
+    // `lw.block_param_methods` holds the full set of methods that gained
+    // a trailing `__sir_block__` parameter (Q9e).  Walk *all* function
+    // bodies (user functions + `main`) and thread the matching block
+    // argument at every `DirectCall` to one of those methods, so call
+    // arity matches the threaded def regardless of call-before-def or
+    // mutual recursion.  Running here — after the whole program is
+    // lowered — is what makes the pass order-independent.
+    if !lw.block_param_methods.is_empty() {
+        for f in &mut functions {
+            // Phase Q10c — names bound as a param/local *within this
+            // function*.  A bare reference to one of these is a variable,
+            // not a parenless call, so it must be excluded from the
+            // call-rewrite below (a local can legitimately shadow a
+            // method name).
+            let mut bound: HashSet<String> =
+                f.params.iter().map(|p| p.name.clone()).collect();
+            Lowerer::collect_bound_names_block(&f.body, &mut bound);
+            let ctx = BlockNormCtx {
+                methods: &lw.block_param_methods,
+                bound: &bound,
+            };
+            Lowerer::normalize_block_call_args(&mut f.body, &ctx);
+        }
+    }
 
     // SIR's validator requires the manifest to *exactly* match
     // usage (declared-but-unused is a warning, used-but-undeclared
@@ -591,6 +619,34 @@ struct Lowerer {
     /// stop recursing at `MAX_INTERP_DEPTH` and fall back to the safe
     /// `__interp__` marker, which preserves correctness.
     interp_depth: usize,
+    /// Phase Q9e (FC) — names of methods whose body contains a direct
+    /// `yield`, discovered while lowering each `def`.  The
+    /// explicit-block-param ABI threads a trailing reserved block
+    /// parameter (`__sir_block__`) through these methods and rewrites
+    /// each in-body `yield` to an `IndirectCall` through that param.
+    /// Recording the name here lets a later call-site normalization pass
+    /// (Q9f) thread the matching block argument at every call to such a
+    /// method.  See [`Lowerer::thread_block_param`].
+    block_param_methods: HashSet<String>,
+}
+
+/// Phase Q9e (FC) — the reserved name of the synthesized trailing block
+/// parameter threaded through every method that `yield`s.  Chosen with a
+/// `__sir_`-prefix so it cannot collide with a user-written Ruby local
+/// (those never begin with a double underscore in idiomatic code, and
+/// the lowerer never mints another name with this exact spelling).
+const BLOCK_PARAM_NAME: &str = "__sir_block__";
+
+/// Phase Q9f/Q10c — context for the call-site block-threading walk over a
+/// single function body.
+struct BlockNormCtx<'a> {
+    /// Methods that gained a trailing `__sir_block__` parameter (Q9e),
+    /// i.e. whose calls must have a block argument threaded.
+    methods: &'a std::collections::HashSet<String>,
+    /// Names bound as a param/local *within the current function*.  A bare
+    /// reference to one of these is a variable, not a parenless call, so
+    /// Q10c must not rewrite it into a `DirectCall`.
+    bound: &'a std::collections::HashSet<String>,
 }
 
 /// Phase 20a (FC): hard ceiling on nested string-interpolation
@@ -2888,6 +2944,630 @@ impl Lowerer {
         })
     }
 
+    // -------------------------------------------------------------------
+    // Phase Q9e (FC) — explicit-block-param ABI, part 1
+    // -------------------------------------------------------------------
+
+    /// Thread an explicit trailing block parameter through a freshly
+    /// lowered method `Function` *iff* its body `yield`s **or** queries
+    /// `block_given?` (Q10b) — either is a use of the method's implicit
+    /// block and so requires the threaded `__sir_block__` parameter.
+    ///
+    /// ## Why
+    ///
+    /// Ruby's `yield` invokes the block passed implicitly at the call
+    /// site — a side channel the narrow-waist SIR has no node for.  The
+    /// chosen ABI (see the TRANCHE-2 plan) makes that channel explicit
+    /// in the frontend: a method that `yield`s gains a reserved trailing
+    /// parameter ([`BLOCK_PARAM_NAME`]) holding the block as an ordinary
+    /// closure value, and every `yield` becomes an
+    /// [`Expr::IndirectCall`] through that parameter.  Backends already
+    /// emit `IndirectCall` (as runtime-core `apply`) and ordinary
+    /// `Param`s natively, so **no backend change is needed** — the whole
+    /// feature lives in this rewrite plus the Q9f call-site pass that
+    /// threads the matching block argument.
+    ///
+    /// ## What counts as an in-body `yield`
+    ///
+    /// The walk descends through control-flow and ordinary
+    /// expression/call children (so `yield` inside an `if`, a loop, a
+    /// `begin/rescue`, or a call argument is rewritten) but deliberately
+    /// **stops at [`Expr::MakeClosure`]**: a `yield` lexically inside a
+    /// block literal belongs to *that block's* enclosing method, not to
+    /// the method we are lowering, so rewriting it here would be wrong.
+    /// Handling yield-inside-a-hoisted-block is a documented v0 cut-line.
+    /// Nested `def`s never appear as body expressions (the lowerer
+    /// hoists them to their own top-level `Function`s), so they need no
+    /// special guard.
+    ///
+    /// Returns the function unchanged when its body contains no direct
+    /// `yield` (the common case), so non-yielding methods keep their
+    /// original arity and shape exactly.
+    fn thread_block_param(&mut self, mut func: Function) -> Function {
+        let found = Self::rewrite_yields_in_block(&mut func.body);
+        if found {
+            let span = func.span.clone();
+            func.params.push(Param {
+                name: BLOCK_PARAM_NAME.to_string(),
+                sir_type: None,
+                span,
+            });
+            // The synthesized parameter is untyped (`sir_type: None`),
+            // and the rewritten `yield`s introduce `IndirectCall`s; both
+            // must be reflected in the feature manifest, which the SIR
+            // validator requires to exactly match observed usage.
+            self.features_used.insert(Feature::DynamicTyping);
+            self.features_used.insert(Feature::Closures);
+            self.block_param_methods.insert(func.name.clone());
+        }
+        func
+    }
+
+    /// Rewrite every direct-in-body `yield` within a [`Block`], returning
+    /// whether at least one was found.  Recurses through the block's
+    /// statements and its trailing value expression.
+    fn rewrite_yields_in_block(block: &mut Block) -> bool {
+        let mut found = false;
+        for s in &mut block.stmts {
+            found |= Self::rewrite_yields_in_stmt(s);
+        }
+        found |= Self::rewrite_yields_in_expr(&mut block.value);
+        found
+    }
+
+    /// Rewrite a bare statement list (used by `Stmt::TryCatch` bodies and
+    /// rescue/ensure clause bodies, which carry `Vec<Stmt>` with no
+    /// trailing value slot).
+    fn rewrite_yields_in_stmts(stmts: &mut [Stmt]) -> bool {
+        let mut found = false;
+        for s in stmts {
+            found |= Self::rewrite_yields_in_stmt(s);
+        }
+        found
+    }
+
+    /// Rewrite every direct-in-body `yield` reachable from a single
+    /// statement.  Descends into loop/`while` bodies and `try/catch`
+    /// regions, but NOT into class/module/singleton declaration bodies
+    /// (whose `def`s — and any `yield`s therein — belong to their own
+    /// methods, hoisted separately).
+    fn rewrite_yields_in_stmt(stmt: &mut Stmt) -> bool {
+        match stmt {
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::Assign { value, .. }
+            | Stmt::ExprStmt { expr: value, .. } => Self::rewrite_yields_in_expr(value),
+            Stmt::While { cond, body, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(cond);
+                found |= Self::rewrite_yields_in_block(body);
+                found
+            }
+            Stmt::ForRange { start, stop, step, body, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(start);
+                found |= Self::rewrite_yields_in_expr(stop);
+                found |= Self::rewrite_yields_in_expr(step);
+                found |= Self::rewrite_yields_in_block(body);
+                found
+            }
+            Stmt::ForEach { iter, body, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(iter);
+                found |= Self::rewrite_yields_in_block(body);
+                found
+            }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(seq);
+                found |= Self::rewrite_yields_in_expr(index);
+                found |= Self::rewrite_yields_in_expr(value);
+                found
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(map);
+                found |= Self::rewrite_yields_in_expr(key);
+                found |= Self::rewrite_yields_in_expr(value);
+                found
+            }
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                let mut found = Self::rewrite_yields_in_stmts(body);
+                for r in rescues {
+                    found |= Self::rewrite_yields_in_stmts(&mut r.body);
+                }
+                if let Some(eb) = ensure_body {
+                    found |= Self::rewrite_yields_in_stmts(eb);
+                }
+                found
+            }
+            // Class/module/singleton declaration bodies are NOT descended:
+            // their method `def`s are hoisted to their own top-level
+            // Functions, where any `yield` is rewritten in its own right.
+            Stmt::ClassDef { .. }
+            | Stmt::ModuleDef { .. }
+            | Stmt::SingletonClassDef { .. } => false,
+        }
+    }
+
+    /// Rewrite every direct-in-body `yield` reachable from a single
+    /// expression.  A `BuiltinCall("yield", args)` is replaced in place
+    /// with an `IndirectCall` through the reserved block parameter (after
+    /// first rewriting any `yield`s nested in its own `args`).  All other
+    /// expression variants recurse into their children — except
+    /// [`Expr::MakeClosure`], which is intentionally NOT descended (a
+    /// `yield` inside a block literal belongs to the enclosing method).
+    fn rewrite_yields_in_expr(expr: &mut Expr) -> bool {
+        match expr {
+            Expr::BuiltinCall { name, args, effects, span } if name == "yield" => {
+                // Rewrite any yields nested within this yield's own
+                // arguments first (e.g. `yield(yield x)`), then replace
+                // the whole node with the indirect call.
+                let mut found = false;
+                for a in args.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(a);
+                }
+                let _ = found; // a nested rewrite still counts as "found"
+                let span = span.clone();
+                let target = Box::new(Expr::VarRef {
+                    name: BLOCK_PARAM_NAME.to_string(),
+                    scope: Scope::Param,
+                    span: span.clone(),
+                });
+                *expr = Expr::IndirectCall {
+                    target,
+                    args: std::mem::take(args),
+                    effects: *effects,
+                    span,
+                };
+                true
+            }
+            Expr::BuiltinCall { args, .. }
+            | Expr::DirectCall { args, .. }
+            | Expr::Intrinsic { args, .. } => {
+                let mut found = false;
+                for a in args.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(a);
+                }
+                found
+            }
+            Expr::IndirectCall { target, args, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(target);
+                for a in args.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(a);
+                }
+                found
+            }
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(cond);
+                found |= Self::rewrite_yields_in_block(then_branch);
+                found |= Self::rewrite_yields_in_block(else_branch);
+                found
+            }
+            Expr::Block(b) => Self::rewrite_yields_in_block(b),
+            Expr::SeqLit { items, .. } => {
+                let mut found = false;
+                for i in items.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(i);
+                }
+                found
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(seq);
+                found |= Self::rewrite_yields_in_expr(index);
+                found
+            }
+            Expr::SeqLen { seq, .. } => Self::rewrite_yields_in_expr(seq),
+            Expr::MapLit { entries, .. } => {
+                let mut found = false;
+                for e in entries.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(&mut e.key);
+                    found |= Self::rewrite_yields_in_expr(&mut e.value);
+                }
+                found
+            }
+            Expr::MapGet { map, key, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(map);
+                found |= Self::rewrite_yields_in_expr(key);
+                found
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs);
+                found |= Self::rewrite_yields_in_expr(rhs);
+                found
+            }
+            Expr::StrConcat { parts, .. } => {
+                let mut found = false;
+                for p in parts.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(p);
+                }
+                found
+            }
+            // Phase Q10b — `block_given?` reaches the lowerer as a bare
+            // `VarRef` named "block_given?" (it is parenless, so the
+            // method-call parser treats it as a name).  Inside a method
+            // it means "was a block passed?", which under the explicit
+            // block-param ABI is exactly "is __sir_block__ non-nil".
+            // Rewrite it to `not(null?(__sir_block__))` — both builtins
+            // are already supported (a native `not` arm + runtime-core
+            // `null?` dispatch) — and count it as a block reference so
+            // `thread_block_param` appends the parameter even when the
+            // method has no `yield`.
+            Expr::VarRef { name, span, .. } if name == "block_given?" => {
+                let span = span.clone();
+                let block_ref = Expr::VarRef {
+                    name: BLOCK_PARAM_NAME.to_string(),
+                    scope: Scope::Param,
+                    span: span.clone(),
+                };
+                let is_nil = Expr::BuiltinCall {
+                    name: "null?".to_string(),
+                    args: vec![block_ref],
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                };
+                *expr = Expr::BuiltinCall {
+                    name: "not".to_string(),
+                    args: vec![is_nil],
+                    effects: EffectSet::PURE,
+                    span,
+                };
+                true
+            }
+            // MakeClosure is deliberately NOT descended (v0 cut-line:
+            // yield inside a hoisted block belongs to the enclosing
+            // method).  Atomic literals and other VarRefs have no
+            // sub-exprs to rewrite.
+            Expr::MakeClosure { .. }
+            | Expr::IntLit { .. }
+            | Expr::BoolLit { .. }
+            | Expr::NilLit { .. }
+            | Expr::SymLit { .. }
+            | Expr::StrLit { .. }
+            | Expr::FloatLit { .. }
+            | Expr::VarRef { .. } => false,
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // Phase Q9f (FC) — explicit block-param ABI, part 2: call-site
+    // normalization
+    // -------------------------------------------------------------------
+
+    /// Thread the matching block argument at every `DirectCall` to a
+    /// method that gained a trailing `__sir_block__` parameter (recorded
+    /// in `blk` by Q9e's [`Lowerer::thread_block_param`]).
+    ///
+    /// For each such call, the trailing argument slot is normalized so
+    /// the call's arity matches the threaded def's (one extra trailing
+    /// block parameter):
+    ///
+    /// - trailing arg is a `MakeClosure` (`foo { … }` / `foo do … end`) —
+    ///   already the block; **left as-is**.
+    /// - trailing arg is `BuiltinCall("block_pass", [inner])` (`foo(&p)`)
+    ///   — **unwrapped** to `inner`, the proc/block value itself.
+    /// - otherwise (`foo`, `foo(1, 2)`) — **append `NilLit`**: no block
+    ///   was passed, so the parameter binds nil (and a later `yield`
+    ///   through a nil block is the documented v0 LocalJumpError analogue).
+    ///
+    /// The walk descends through every statement, expression, and nested
+    /// call (including `MakeClosure` capture values) so calls anywhere in
+    /// the program are threaded. It is idempotent in practice because it
+    /// runs exactly once, after the whole program is lowered.
+    fn normalize_block_call_args(block: &mut Block, ctx: &BlockNormCtx) {
+        for s in &mut block.stmts {
+            Self::normalize_calls_in_stmt(s, ctx);
+        }
+        Self::normalize_calls_in_expr(&mut block.value, ctx);
+    }
+
+    fn normalize_calls_in_stmts(stmts: &mut [Stmt], ctx: &BlockNormCtx) {
+        for s in stmts {
+            Self::normalize_calls_in_stmt(s, ctx);
+        }
+    }
+
+    fn normalize_calls_in_stmt(stmt: &mut Stmt, ctx: &BlockNormCtx) {
+        match stmt {
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::Assign { value, .. }
+            | Stmt::ExprStmt { expr: value, .. } => Self::normalize_calls_in_expr(value, ctx),
+            Stmt::While { cond, body, .. } => {
+                Self::normalize_calls_in_expr(cond, ctx);
+                Self::normalize_block_call_args(body, ctx);
+            }
+            Stmt::ForRange { start, stop, step, body, .. } => {
+                Self::normalize_calls_in_expr(start, ctx);
+                Self::normalize_calls_in_expr(stop, ctx);
+                Self::normalize_calls_in_expr(step, ctx);
+                Self::normalize_block_call_args(body, ctx);
+            }
+            Stmt::ForEach { iter, body, .. } => {
+                Self::normalize_calls_in_expr(iter, ctx);
+                Self::normalize_block_call_args(body, ctx);
+            }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                Self::normalize_calls_in_expr(seq, ctx);
+                Self::normalize_calls_in_expr(index, ctx);
+                Self::normalize_calls_in_expr(value, ctx);
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                Self::normalize_calls_in_expr(map, ctx);
+                Self::normalize_calls_in_expr(key, ctx);
+                Self::normalize_calls_in_expr(value, ctx);
+            }
+            // Class/module/singleton bodies carry non-`def` statements
+            // (their `def`s are hoisted to top-level functions, which the
+            // outer loop over `functions` already visits) — descend so a
+            // call inside e.g. a constant initializer is threaded too.
+            Stmt::ClassDef { body, .. }
+            | Stmt::ModuleDef { body, .. }
+            | Stmt::SingletonClassDef { body, .. } => Self::normalize_calls_in_stmts(body, ctx),
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                Self::normalize_calls_in_stmts(body, ctx);
+                for r in rescues {
+                    Self::normalize_calls_in_stmts(&mut r.body, ctx);
+                }
+                if let Some(eb) = ensure_body {
+                    Self::normalize_calls_in_stmts(eb, ctx);
+                }
+            }
+        }
+    }
+
+    fn normalize_calls_in_expr(expr: &mut Expr, ctx: &BlockNormCtx) {
+        match expr {
+            // Phase Q10c — a bare, parenless reference to a known
+            // block-taking method (`foo` with no `()`/args) reaches the
+            // lowerer as `VarRef { scope: Local }` (the method-call parser
+            // can't tell a zero-arg call from a variable).  When the name
+            // is a block-param method AND is not shadowed by a real
+            // local/param in this function, it is actually a call: rewrite
+            // it to a `DirectCall` with a threaded nil block so its arity
+            // matches the def's trailing `__sir_block__` parameter.  The
+            // synthesized call already carries its block slot, so it is
+            // not re-walked (no double-padding).
+            Expr::VarRef { name, scope: Scope::Local, span }
+                if ctx.methods.contains(name) && !ctx.bound.contains(name) =>
+            {
+                let span = span.clone();
+                *expr = Expr::DirectCall {
+                    fn_name: name.clone(),
+                    args: vec![Expr::NilLit { span: span.clone() }],
+                    effects: EffectSet::PURE,
+                    span,
+                };
+            }
+            Expr::DirectCall { fn_name, args, span, .. } => {
+                // Normalize nested calls in the arguments first (so an
+                // unwrapped `block_pass` inner / a closure capture value
+                // is itself threaded), then fix this call's trailing slot.
+                for a in args.iter_mut() {
+                    Self::normalize_calls_in_expr(a, ctx);
+                }
+                if ctx.methods.contains(fn_name) {
+                    let n = args.len();
+                    let trailing_is_closure =
+                        n > 0 && matches!(args[n - 1], Expr::MakeClosure { .. });
+                    let trailing_is_block_pass = n > 0
+                        && matches!(&args[n - 1],
+                            Expr::BuiltinCall { name, .. } if name == "block_pass");
+                    if trailing_is_block_pass {
+                        // Unwrap `block_pass(inner)` → `inner` (the proc
+                        // value passed as the block). A malformed envelope
+                        // (not exactly one operand) is left untouched.
+                        if let Expr::BuiltinCall { args: inner, .. } = &mut args[n - 1] {
+                            if inner.len() == 1 {
+                                let v = inner.remove(0);
+                                args[n - 1] = v;
+                            }
+                        }
+                    } else if !trailing_is_closure {
+                        // No block syntactically passed: bind nil.
+                        args.push(Expr::NilLit { span: span.clone() });
+                    }
+                }
+            }
+            Expr::BuiltinCall { args, .. } | Expr::Intrinsic { args, .. } => {
+                for a in args.iter_mut() {
+                    Self::normalize_calls_in_expr(a, ctx);
+                }
+            }
+            Expr::IndirectCall { target, args, .. } => {
+                Self::normalize_calls_in_expr(target, ctx);
+                for a in args.iter_mut() {
+                    Self::normalize_calls_in_expr(a, ctx);
+                }
+            }
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                Self::normalize_calls_in_expr(cond, ctx);
+                Self::normalize_block_call_args(then_branch, ctx);
+                Self::normalize_block_call_args(else_branch, ctx);
+            }
+            Expr::Block(b) => Self::normalize_block_call_args(b, ctx),
+            Expr::MakeClosure { captures, .. } => {
+                for c in captures.iter_mut() {
+                    Self::normalize_calls_in_expr(&mut c.value, ctx);
+                }
+            }
+            Expr::SeqLit { items, .. } => {
+                for i in items.iter_mut() {
+                    Self::normalize_calls_in_expr(i, ctx);
+                }
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                Self::normalize_calls_in_expr(seq, ctx);
+                Self::normalize_calls_in_expr(index, ctx);
+            }
+            Expr::SeqLen { seq, .. } => Self::normalize_calls_in_expr(seq, ctx),
+            Expr::MapLit { entries, .. } => {
+                for e in entries.iter_mut() {
+                    Self::normalize_calls_in_expr(&mut e.key, ctx);
+                    Self::normalize_calls_in_expr(&mut e.value, ctx);
+                }
+            }
+            Expr::MapGet { map, key, .. } => {
+                Self::normalize_calls_in_expr(map, ctx);
+                Self::normalize_calls_in_expr(key, ctx);
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
+            }
+            Expr::StrConcat { parts, .. } => {
+                for p in parts.iter_mut() {
+                    Self::normalize_calls_in_expr(p, ctx);
+                }
+            }
+            // Atomic literals and a non-rewritten VarRef carry no
+            // sub-expressions.
+            Expr::IntLit { .. }
+            | Expr::BoolLit { .. }
+            | Expr::NilLit { .. }
+            | Expr::SymLit { .. }
+            | Expr::StrLit { .. }
+            | Expr::FloatLit { .. }
+            | Expr::VarRef { .. } => {}
+        }
+    }
+
+    /// Phase Q10c — collect every name bound by a `let`/`let*`/`Assign`
+    /// anywhere in a function body (descending into control-flow and
+    /// nested blocks), so the call-site rewrite can tell a parenless
+    /// method call from a reference to a same-named local.  Conservative:
+    /// a name bound *anywhere* in the function shadows the method name for
+    /// the whole function (we do not model block-scoped shadowing), which
+    /// only ever *suppresses* a rewrite — never produces a wrong one.
+    fn collect_bound_names_block(block: &Block, out: &mut HashSet<String>) {
+        for s in &block.stmts {
+            Self::collect_bound_names_stmt(s, out);
+        }
+        Self::collect_bound_names_expr(&block.value, out);
+    }
+
+    fn collect_bound_names_stmts(stmts: &[Stmt], out: &mut HashSet<String>) {
+        for s in stmts {
+            Self::collect_bound_names_stmt(s, out);
+        }
+    }
+
+    fn collect_bound_names_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
+        match stmt {
+            Stmt::LetBinding { name, value, .. }
+            | Stmt::LetStarBinding { name, value, .. } => {
+                out.insert(name.clone());
+                Self::collect_bound_names_expr(value, out);
+            }
+            Stmt::Assign { name, value, .. } => {
+                out.insert(name.clone());
+                Self::collect_bound_names_expr(value, out);
+            }
+            Stmt::ExprStmt { expr, .. } => Self::collect_bound_names_expr(expr, out),
+            Stmt::While { cond, body, .. } => {
+                Self::collect_bound_names_expr(cond, out);
+                Self::collect_bound_names_block(body, out);
+            }
+            Stmt::ForRange { var, start, stop, step, body, .. } => {
+                out.insert(var.clone());
+                Self::collect_bound_names_expr(start, out);
+                Self::collect_bound_names_expr(stop, out);
+                Self::collect_bound_names_expr(step, out);
+                Self::collect_bound_names_block(body, out);
+            }
+            Stmt::ForEach { var, iter, body, .. } => {
+                out.insert(var.clone());
+                Self::collect_bound_names_expr(iter, out);
+                Self::collect_bound_names_block(body, out);
+            }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                Self::collect_bound_names_expr(seq, out);
+                Self::collect_bound_names_expr(index, out);
+                Self::collect_bound_names_expr(value, out);
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                Self::collect_bound_names_expr(map, out);
+                Self::collect_bound_names_expr(key, out);
+                Self::collect_bound_names_expr(value, out);
+            }
+            Stmt::ClassDef { body, .. }
+            | Stmt::ModuleDef { body, .. }
+            | Stmt::SingletonClassDef { body, .. } => Self::collect_bound_names_stmts(body, out),
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                Self::collect_bound_names_stmts(body, out);
+                for r in rescues {
+                    if let Some(b) = &r.binding {
+                        out.insert(b.clone());
+                    }
+                    Self::collect_bound_names_stmts(&r.body, out);
+                }
+                if let Some(eb) = ensure_body {
+                    Self::collect_bound_names_stmts(eb, out);
+                }
+            }
+        }
+    }
+
+    fn collect_bound_names_expr(expr: &Expr, out: &mut HashSet<String>) {
+        match expr {
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                Self::collect_bound_names_expr(cond, out);
+                Self::collect_bound_names_block(then_branch, out);
+                Self::collect_bound_names_block(else_branch, out);
+            }
+            Expr::Block(b) => Self::collect_bound_names_block(b, out),
+            Expr::DirectCall { args, .. }
+            | Expr::BuiltinCall { args, .. }
+            | Expr::Intrinsic { args, .. } => {
+                for a in args {
+                    Self::collect_bound_names_expr(a, out);
+                }
+            }
+            Expr::IndirectCall { target, args, .. } => {
+                Self::collect_bound_names_expr(target, out);
+                for a in args {
+                    Self::collect_bound_names_expr(a, out);
+                }
+            }
+            Expr::MakeClosure { captures, .. } => {
+                for c in captures {
+                    Self::collect_bound_names_expr(&c.value, out);
+                }
+            }
+            Expr::SeqLit { items, .. } => {
+                for i in items {
+                    Self::collect_bound_names_expr(i, out);
+                }
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                Self::collect_bound_names_expr(seq, out);
+                Self::collect_bound_names_expr(index, out);
+            }
+            Expr::SeqLen { seq, .. } => Self::collect_bound_names_expr(seq, out),
+            Expr::MapLit { entries, .. } => {
+                for e in entries {
+                    Self::collect_bound_names_expr(&e.key, out);
+                    Self::collect_bound_names_expr(&e.value, out);
+                }
+            }
+            Expr::MapGet { map, key, .. } => {
+                Self::collect_bound_names_expr(map, out);
+                Self::collect_bound_names_expr(key, out);
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
+            }
+            Expr::StrConcat { parts, .. } => {
+                for p in parts {
+                    Self::collect_bound_names_expr(p, out);
+                }
+            }
+            Expr::IntLit { .. }
+            | Expr::BoolLit { .. }
+            | Expr::NilLit { .. }
+            | Expr::SymLit { .. }
+            | Expr::StrLit { .. }
+            | Expr::FloatLit { .. }
+            | Expr::VarRef { .. } => {}
+        }
+    }
+
     /// Phase 7c — lower an endless method definition `def foo = expr`
     /// (or `def foo(x, y) = expr`) into a top-level `Function`.
     ///
@@ -2999,7 +3679,9 @@ impl Lowerer {
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
 
-        Ok(Function {
+        // Phase Q9e — an endless def may also `yield` (`def t = yield`);
+        // thread the explicit block param if so.
+        let func = Function {
             name,
             params,
             return_type: None,
@@ -3012,7 +3694,8 @@ impl Lowerer {
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: self.span_of(node),
-        })
+        };
+        Ok(self.thread_block_param(func))
     }
 
     fn lower_def_statement(
@@ -3201,7 +3884,11 @@ impl Lowerer {
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
 
-        Ok(Function {
+        // Phase Q9e — if the method body `yield`s, thread the explicit
+        // trailing block parameter and rewrite each `yield` into an
+        // `IndirectCall` through it.  Non-yielding methods are returned
+        // unchanged.
+        let func = Function {
             name,
             params,
             return_type: None,
@@ -3214,7 +3901,8 @@ impl Lowerer {
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: self.span_of(node),
-        })
+        };
+        Ok(self.thread_block_param(func))
     }
 
     // -------------------------------------------------------------------

@@ -5130,6 +5130,420 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase Q9e — explicit block-param ABI, part 1: a method that
+    // `yield`s gains a trailing reserved `__sir_block__` parameter and
+    // every in-body `yield` is rewritten to an `IndirectCall` through it.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn def_with_yield_threads_block_param_and_rewrites_yield() {
+        let m = lower("def t\n  yield 5\nend\n");
+        let t = func(&m, "t");
+        // Trailing reserved block parameter appended.
+        assert_eq!(
+            t.params.last().map(|p| p.name.as_str()),
+            Some("__sir_block__"),
+            "yielding method must gain a trailing __sir_block__ param"
+        );
+        // The in-body `yield 5` is now an IndirectCall through that
+        // param — NOT a BuiltinCall("yield").
+        match &t.body.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::IndirectCall { target, args, .. }, .. } => {
+                match target.as_ref() {
+                    Expr::VarRef { name, scope, .. } => {
+                        assert_eq!(name, "__sir_block__");
+                        assert_eq!(*scope, Scope::Param);
+                    }
+                    other => panic!("expected VarRef(__sir_block__, param), got {:?}", other),
+                }
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::IntLit { value: 5, .. }));
+            }
+            other => panic!("expected ExprStmt(IndirectCall(...)), got {:?}", other),
+        }
+        // And no BuiltinCall("yield") survives anywhere in the body.
+        assert!(
+            !matches!(
+                &t.body.stmts[0],
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "yield"
+            ),
+            "no BuiltinCall(\"yield\") may remain after threading"
+        );
+        // The rewritten module still validates (param resolves, the
+        // Closures/DynamicTyping features are declared).
+        assert!(semantic_ir::validate(&m).is_ok(), "threaded module validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn def_without_yield_is_unchanged() {
+        // A non-yielding method keeps its exact arity — no spurious
+        // __sir_block__ param is appended.
+        let m = lower("def t\n  5\nend\n");
+        let t = func(&m, "t");
+        assert!(
+            t.params.is_empty(),
+            "non-yielding method must not gain a block param, got {:?}",
+            t.params
+        );
+        assert!(matches!(t.body.value, Expr::IntLit { value: 5, .. }));
+    }
+
+    #[test]
+    fn yield_inside_if_in_def_is_rewritten() {
+        // The rewrite descends into control flow: a `yield` guarded by an
+        // `if` inside the method body is still threaded.
+        let m = lower("def t(x)\n  if x\n    yield 1\n  end\nend\n");
+        let t = func(&m, "t");
+        // Params: the original `x`, then the trailing block param.
+        assert_eq!(t.params.len(), 2);
+        assert_eq!(t.params[0].name, "x");
+        assert_eq!(t.params[1].name, "__sir_block__");
+        // The `yield 1` lives in the `if`'s then-branch and is now an
+        // IndirectCall.  Locate the If and inspect its then-branch.
+        let if_expr = t
+            .body
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt { expr: e @ Expr::If { .. }, .. } => Some(e),
+                _ => None,
+            })
+            .or_else(|| match &t.body.value {
+                e @ Expr::If { .. } => Some(e),
+                _ => None,
+            })
+            .expect("if-expression present in method body");
+        if let Expr::If { then_branch, .. } = if_expr {
+            let found_indirect = then_branch.stmts.iter().any(|s| {
+                matches!(s, Stmt::ExprStmt { expr: Expr::IndirectCall { .. }, .. })
+            }) || matches!(then_branch.value, Expr::IndirectCall { .. });
+            assert!(found_indirect, "yield inside if must become IndirectCall");
+        }
+        assert!(semantic_ir::validate(&m).is_ok(), "threaded module validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    // (A `yield` lexically inside a block literal — the documented v0
+    // cut-line where the rewrite must NOT descend into a `MakeClosure` —
+    // cannot be expressed in the current grammar: `yield` is a
+    // statement, not an expression, so it never appears inside a `{ … }`
+    // brace block.  The guard in `rewrite_yields_in_expr` is therefore
+    // defensive; no source-level test can exercise it today.)
+
+    // -----------------------------------------------------------------------
+    // Phase Q9f — explicit block-param ABI, part 2: call-site
+    // normalization.  Calls to a yielding method get the matching block
+    // argument threaded into the trailing slot so arity matches the def.
+    // -----------------------------------------------------------------------
+
+    /// Recursively locate the first `DirectCall` to `name` reachable from
+    /// a block's statements / value (one finder shared by the Q9f tests).
+    fn find_direct_call<'a>(b: &'a semantic_ir::Block, name: &str) -> Option<&'a Expr> {
+        fn in_expr<'a>(e: &'a Expr, name: &str) -> Option<&'a Expr> {
+            match e {
+                Expr::DirectCall { fn_name, args, .. } => {
+                    if fn_name == name {
+                        return Some(e);
+                    }
+                    args.iter().find_map(|a| in_expr(a, name))
+                }
+                Expr::BuiltinCall { args, .. } | Expr::Intrinsic { args, .. } => {
+                    args.iter().find_map(|a| in_expr(a, name))
+                }
+                Expr::IndirectCall { target, args, .. } => in_expr(target, name)
+                    .or_else(|| args.iter().find_map(|a| in_expr(a, name))),
+                Expr::If { cond, then_branch, else_branch, .. } => in_expr(cond, name)
+                    .or_else(|| in_block(then_branch, name))
+                    .or_else(|| in_block(else_branch, name)),
+                Expr::Block(b) => in_block(b, name),
+                Expr::SeqLit { items, .. } => items.iter().find_map(|i| in_expr(i, name)),
+                _ => None,
+            }
+        }
+        fn in_stmt<'a>(s: &'a Stmt, name: &str) -> Option<&'a Expr> {
+            match s {
+                Stmt::LetBinding { value, .. }
+                | Stmt::LetStarBinding { value, .. }
+                | Stmt::Assign { value, .. }
+                | Stmt::ExprStmt { expr: value, .. } => in_expr(value, name),
+                _ => None,
+            }
+        }
+        fn in_block<'a>(b: &'a semantic_ir::Block, name: &str) -> Option<&'a Expr> {
+            b.stmts
+                .iter()
+                .find_map(|s| in_stmt(s, name))
+                .or_else(|| in_expr(&b.value, name))
+        }
+        in_block(b, name)
+    }
+
+    #[test]
+    fn call_to_yielding_method_with_block_keeps_makeclosure() {
+        let m = lower("def t\n  yield 5\nend\nt { |x| puts x }\n");
+        let call = find_direct_call(main_body(&m), "t").expect("DirectCall to t");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1, "block arg occupies the single trailing slot");
+            assert!(
+                matches!(args.last(), Some(Expr::MakeClosure { .. })),
+                "explicit block stays a MakeClosure, got {:?}",
+                args.last()
+            );
+        }
+        // Arity matches the threaded def (1 param: __sir_block__).
+        let t = func(&m, "t");
+        assert_eq!(t.params.len(), 1);
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn call_to_yielding_method_without_block_appends_nil() {
+        // `t(1)` passes no block, so a trailing nil is appended to match
+        // the def's threaded arity (params: `a`, `__sir_block__`).
+        let m = lower("def t(a)\n  yield a\nend\nt(1)\n");
+        let call = find_direct_call(main_body(&m), "t").expect("DirectCall to t");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 2, "positional arg + appended nil block slot");
+            assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+            assert!(
+                matches!(args.last(), Some(Expr::NilLit { .. })),
+                "no-block call binds nil, got {:?}",
+                args.last()
+            );
+        }
+        // Arity matches the threaded def (params: a, __sir_block__).
+        assert_eq!(func(&m, "t").params.len(), 2);
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn block_pass_to_yielding_method_unwraps_to_inner() {
+        // `foo(&p)` — the block_pass envelope is unwrapped to the proc
+        // value `p` itself in the trailing slot.
+        let m = lower("def foo\n  yield 5\nend\np = 1\nfoo(&p)\n");
+        let call = find_direct_call(main_body(&m), "foo").expect("DirectCall to foo");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1);
+            match args.last() {
+                Some(Expr::VarRef { name, .. }) => assert_eq!(name, "p"),
+                other => panic!("expected unwrapped VarRef(p), got {:?}", other),
+            }
+            // The block_pass envelope must NOT survive.
+            assert!(
+                !matches!(args.last(), Some(Expr::BuiltinCall { name, .. }) if name == "block_pass"),
+                "block_pass envelope must be unwrapped"
+            );
+        }
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn call_to_non_block_method_is_unchanged() {
+        // `g` does not yield, so its call site keeps its exact args — no
+        // spurious trailing nil.
+        let m = lower("def g(x)\n  x + 1\nend\ng(1)\n");
+        let call = find_direct_call(main_body(&m), "g").expect("DirectCall to g");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1, "non-yielding call keeps its arity");
+            assert!(matches!(args.last(), Some(Expr::IntLit { value: 1, .. })));
+        }
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn call_before_def_is_threaded() {
+        // The pass runs after the whole program is lowered, so a call
+        // appearing before the `def` is still threaded (order-independent).
+        let m = lower("t { |x| puts x }\ndef t\n  yield 5\nend\n");
+        let call = find_direct_call(main_body(&m), "t").expect("DirectCall to t");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1);
+            assert!(matches!(args.last(), Some(Expr::MakeClosure { .. })));
+        }
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase Q10c — parenless/argless call to a yielding method → DirectCall
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn parenless_call_to_yielding_method_becomes_direct_call_with_nil_block() {
+        // Bare `t` (no parens/args) referencing a yielding method is a
+        // zero-arg call: it must become DirectCall t [NilLit], not a VarRef.
+        let m = lower("def t\n  yield 5\nend\nt\n");
+        let call = find_direct_call(main_body(&m), "t")
+            .expect("bare `t` should lower to a DirectCall");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1, "nil block slot threaded");
+            assert!(matches!(args.last(), Some(Expr::NilLit { .. })));
+        }
+        // And no bare VarRef named `t` survives in main.
+        assert!(
+            !body_mentions_varref(main_body(&m), "t"),
+            "parenless call must not remain a VarRef"
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn local_shadowing_a_method_name_stays_a_varref() {
+        // `t = 1` binds a local; the later bare `t` is that variable, NOT a
+        // call — it must remain a VarRef even though a method `t` exists.
+        let m = lower("def t\n  yield 5\nend\nt = 1\nt\n");
+        assert!(
+            find_direct_call(main_body(&m), "t").is_none(),
+            "a shadowed name must not be rewritten into a DirectCall"
+        );
+        assert!(
+            matches!(&main_body(&m).value, Expr::VarRef { name, .. } if name == "t"),
+            "the tail `t` stays a local VarRef, got {:?}",
+            main_body(&m).value
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn parenless_reference_to_non_block_method_is_left_alone() {
+        // `g` does not take a block, so a bare `g` is not rewritten (it
+        // stays whatever the lowerer produced — a VarRef — and no spurious
+        // DirectCall is synthesized).
+        let m = lower("def g(x)\n  x + 1\nend\ng\n");
+        assert!(
+            find_direct_call(main_body(&m), "g").is_none(),
+            "non-block method's bare ref must not be threaded"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Phase Q10b — block_given? → not(null?(__sir_block__))
+    // -----------------------------------------------------------------------
+
+    /// Whether a `block_given?`-shaped nil-check —
+    /// `not(null?(VarRef __sir_block__))` — appears anywhere in a block.
+    fn finds_block_given_check(b: &semantic_ir::Block) -> bool {
+        fn is_check(e: &Expr) -> bool {
+            if let Expr::BuiltinCall { name, args, .. } = e {
+                if name == "not" && args.len() == 1 {
+                    if let Expr::BuiltinCall { name: inner, args: ia, .. } = &args[0] {
+                        if inner == "null?" && ia.len() == 1 {
+                            return matches!(&ia[0],
+                                Expr::VarRef { name, scope, .. }
+                                    if name == "__sir_block__" && *scope == Scope::Param);
+                        }
+                    }
+                }
+            }
+            false
+        }
+        fn in_expr(e: &Expr) -> bool {
+            if is_check(e) {
+                return true;
+            }
+            match e {
+                Expr::DirectCall { args, .. }
+                | Expr::BuiltinCall { args, .. }
+                | Expr::Intrinsic { args, .. } => args.iter().any(in_expr),
+                Expr::IndirectCall { target, args, .. } => {
+                    in_expr(target) || args.iter().any(in_expr)
+                }
+                Expr::If { cond, then_branch, else_branch, .. } => {
+                    in_expr(cond) || in_blk(then_branch) || in_blk(else_branch)
+                }
+                Expr::Block(b) => in_blk(b),
+                Expr::SeqLit { items, .. } => items.iter().any(in_expr),
+                Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                    in_expr(lhs) || in_expr(rhs)
+                }
+                _ => false,
+            }
+        }
+        fn in_blk(b: &semantic_ir::Block) -> bool {
+            b.stmts.iter().any(|s| match s {
+                Stmt::LetBinding { value, .. }
+                | Stmt::LetStarBinding { value, .. }
+                | Stmt::Assign { value, .. }
+                | Stmt::ExprStmt { expr: value, .. } => in_expr(value),
+                _ => false,
+            }) || in_expr(&b.value)
+        }
+        in_blk(b)
+    }
+
+    /// Whether a `VarRef` named `name` appears anywhere in a block (used to
+    /// assert the raw `block_given?` ref was fully rewritten away).
+    fn body_mentions_varref(b: &semantic_ir::Block, name: &str) -> bool {
+        fn in_expr(e: &Expr, name: &str) -> bool {
+            match e {
+                Expr::VarRef { name: n, .. } => n == name,
+                Expr::DirectCall { args, .. }
+                | Expr::BuiltinCall { args, .. }
+                | Expr::Intrinsic { args, .. } => args.iter().any(|a| in_expr(a, name)),
+                Expr::IndirectCall { target, args, .. } => {
+                    in_expr(target, name) || args.iter().any(|a| in_expr(a, name))
+                }
+                Expr::If { cond, then_branch, else_branch, .. } => {
+                    in_expr(cond, name) || in_blk(then_branch, name) || in_blk(else_branch, name)
+                }
+                Expr::Block(b) => in_blk(b, name),
+                Expr::SeqLit { items, .. } => items.iter().any(|i| in_expr(i, name)),
+                Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                    in_expr(lhs, name) || in_expr(rhs, name)
+                }
+                _ => false,
+            }
+        }
+        fn in_blk(b: &semantic_ir::Block, name: &str) -> bool {
+            b.stmts.iter().any(|s| match s {
+                Stmt::LetBinding { value, .. }
+                | Stmt::LetStarBinding { value, .. }
+                | Stmt::Assign { value, .. }
+                | Stmt::ExprStmt { expr: value, .. } => in_expr(value, name),
+                _ => false,
+            }) || in_expr(&b.value, name)
+        }
+        in_blk(b, name)
+    }
+
+    #[test]
+    fn block_given_in_yielding_method_becomes_nil_check() {
+        let m = lower("def t\n  if block_given?\n    yield 5\n  end\nend\n");
+        let t = func(&m, "t");
+        assert_eq!(t.params.last().map(|p| p.name.as_str()), Some("__sir_block__"));
+        assert!(
+            finds_block_given_check(&t.body),
+            "block_given? must become not(null?(__sir_block__))"
+        );
+        assert!(
+            !body_mentions_varref(&t.body, "block_given?"),
+            "no raw block_given? VarRef may remain"
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn block_given_alone_threads_block_param() {
+        // A method that queries block_given? but never yields must STILL be
+        // threaded (detection fires on block_given?, not only yield).
+        let m = lower("def t\n  if block_given?\n    1\n  else\n    2\n  end\nend\n");
+        let t = func(&m, "t");
+        assert_eq!(
+            t.params.last().map(|p| p.name.as_str()),
+            Some("__sir_block__"),
+            "block_given?-only method must still gain __sir_block__"
+        );
+        assert!(finds_block_given_check(&t.body));
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn method_without_block_given_or_yield_is_unchanged() {
+        let m = lower("def g(x)\n  x + 1\nend\n");
+        let g = func(&m, "g");
+        assert_eq!(g.params.len(), 1, "non-block method keeps its arity");
+        assert!(!finds_block_given_check(&g.body));
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 22d — `super` keyword lowering
     //
     //   super        → ExprStmt(BuiltinCall("zsuper", []))   (forward ALL)
@@ -7428,3 +7842,6 @@ b = "y"
         );
     }
 }
+
+
+

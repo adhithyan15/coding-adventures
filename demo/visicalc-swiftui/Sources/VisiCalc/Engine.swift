@@ -48,6 +48,53 @@ final class SpreadsheetSession {
         sc_fill(handle, src, dstStart, dstEnd)
     }
 
+    /// Copy the inclusive rectangle `start`..`end` into the clipboard — a
+    /// whole-block copy that pastes as a unit. The source is untouched; the
+    /// buffer survives any number of pastes. Reaches `sc_copy`.
+    func copy(_ start: String, _ end: String) {
+        sc_copy(handle, start, end)
+    }
+
+    /// Cut the inclusive rectangle `start`..`end`. Like `copy` but a one-shot
+    /// move: the `paste` that places it clears the source it didn't overwrite.
+    func cut(_ start: String, _ end: String) {
+        sc_cut(handle, start, end)
+    }
+
+    /// Paste the clipboard so its top-left lands at `dstStart`. Returns `true`
+    /// when applied, `false` (a no-op) for an empty clipboard, malformed address,
+    /// or off-grid destination. The block's references shift by the destination's
+    /// offset; content and format ride along.
+    func paste(_ dstStart: String) -> Bool {
+        sc_paste(handle, dstStart) != 0
+    }
+
+    /// Serialize the whole workbook to a self-contained JSON document — the
+    /// SOURCE (formula text + typed literals) + per-cell formats, not the
+    /// computed values (those recompute on load, so the document is small and
+    /// can't disagree with itself). `take` frees the engine's `char*`; the host
+    /// persists the returned string wherever it likes. Reaches `sc_serialize`.
+    func serialize() -> String {
+        take(sc_serialize(handle))
+    }
+
+    /// Replace the workbook from a document produced by `serialize`. Returns
+    /// `true` on success, `false` for malformed / unsupported input (the workbook
+    /// is left untouched — the engine validates before it mutates). Formulas
+    /// reload live. Reaches `sc_deserialize`.
+    func deserialize(_ data: String) -> Bool {
+        sc_deserialize(handle, data) != 0
+    }
+
+    /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
+    /// changed the document (the host then re-reads the viewport), `false` if
+    /// there was nothing to do. canUndo/canRedo gate a host's Undo/Redo controls.
+    /// Reach `sc_undo`/`sc_redo`/`sc_can_undo`/`sc_can_redo`.
+    func undo() -> Bool { sc_undo(handle) != 0 }
+    func redo() -> Bool { sc_redo(handle) != 0 }
+    func canUndo() -> Bool { sc_can_undo(handle) != 0 }
+    func canRedo() -> Bool { sc_can_redo(handle) != 0 }
+
     /// The computed value of a cell as the string a spreadsheet should show.
     /// Parses the engine's JSON (`{"kind":...}`) — the same shape the TS and
     /// WASM engines emit.

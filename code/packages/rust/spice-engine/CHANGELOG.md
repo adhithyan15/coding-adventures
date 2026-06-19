@@ -2,6 +2,44 @@
 
 ## Unreleased
 
+- Add `format_deck_run_artifact_json` for selected-run artifacts with the same
+  stable keys and normalized cell values as `format_deck_run_artifact_table`,
+  matching Python and TypeScript.
+- Add `format_deck_run_artifact_csv` for selected-run artifacts with the same
+  stable columns as `format_deck_run_artifact_table` plus deterministic CSV
+  escaping for browser and spreadsheet consumers, matching Python and
+  TypeScript.
+- Add selected Fourier probe names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `FourierList` column from
+  `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Add selected measurement names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `MeasurementList` column
+  from `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Add normalized output-probe names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `OutputProbeList` column
+  from `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Emit explicit policy diagnostics for selected `.control` block
+  variable/state mutation commands, including `let`, `alter`, `alterparam`,
+  `set`, and `unset`, in `analyze_deck_controls` and `resolve_deck_sources`,
+  matching Python and TypeScript. Accepted no-op `set` options still route as
+  no-op markers.
+- Emit explicit policy diagnostics for selected `.control` block control-flow
+  commands, including `if`, `while`, `foreach`, and `repeat`, in
+  `analyze_deck_controls` and `resolve_deck_sources`, matching Python and
+  TypeScript. Control-flow execution remains disabled by the deck execution
+  policy.
+- Emit explicit policy diagnostics for selected `.control` block `cd`
+  working-directory mutation commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Working-directory
+  mutation remains disabled by the deck execution policy.
+- Emit explicit policy diagnostics for selected `.control` block `source` and
+  `shell` external script/shell commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. External script
+  execution and shelling out remain disabled by the deck execution policy.
+- Accept selected `.control` block read-only `echo`, `rusage`, and `where`
+  console/debug commands as no-op control commands in `analyze_deck_controls`
+  and `resolve_deck_sources`, matching Python and TypeScript. Actual
+  console/debug output remains out of scope for these markers.
 - Accept selected `.control` block read-only `status`, `version`, and `help`
   UI introspection commands as no-op control commands in
   `analyze_deck_controls` and `resolve_deck_sources`, matching Python and

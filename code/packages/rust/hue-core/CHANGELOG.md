@@ -119,6 +119,8 @@ All notable changes to this package will be documented in this file.
   readiness with release archive evidence ledger checks.
 - Hue package release evidence index summaries that group readiness, archive,
   closeout, and operations evidence into a compact release evidence index.
+- Hue package release archive notarization summaries that turn release evidence
+  index readiness into final archive notarization checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`

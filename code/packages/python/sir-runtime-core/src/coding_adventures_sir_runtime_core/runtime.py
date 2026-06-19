@@ -25,6 +25,22 @@ from .symbols import Symbol
 # --- Closures --------------------------------------------------------------
 
 
+class LocalJumpError(Exception):
+    """Raised when a closure-shaped call has no closure to invoke.
+
+    SIR's explicit-block-param ABI threads a method's block as an ordinary
+    trailing parameter and lowers ``yield`` to an ``IndirectCall`` through
+    it.  When the caller passed **no** block, that parameter is ``nil``
+    (Python ``None``), so the ``IndirectCall`` reaches :func:`apply` with a
+    ``None`` target.  Ruby raises ``LocalJumpError`` ("no block given
+    (yield)") in exactly this situation; we mirror that with a dedicated
+    exception so the failure is recognisable rather than a generic
+    ``TypeError`` about an internal "non-closure".  The exact Ruby class
+    identity is not modelled — this is the SIR analogue, keyed to the
+    *shape* of the error, not Ruby's class hierarchy.
+    """
+
+
 class Closure:
     """A callable handle wrapping a Python function."""
 
@@ -35,7 +51,15 @@ class Closure:
 
 
 def apply(c: Any, args: list[Any]) -> Any:
-    """Invoke a closure handle with ``args``.  Errors on a non-closure."""
+    """Invoke a closure handle with ``args``.
+
+    A ``None`` target is the no-block-given case (see
+    :class:`LocalJumpError`): a ``yield`` reached through a nil block
+    parameter.  It is reported distinctly from other non-closures (a
+    genuine type error) so the two failures don't read alike.
+    """
+    if c is None:
+        raise LocalJumpError("no block given (yield)")
     if not isinstance(c, Closure):
         raise TypeError("apply on non-closure")
     return c.fn(*args)

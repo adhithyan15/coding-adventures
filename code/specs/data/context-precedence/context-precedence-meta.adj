@@ -37,7 +37,7 @@
 %    erroneous in law or overtaken by new legislation or developments"
 % ---------------------------------------------------------------------
 rule {
-  head: outranks_context($Higher, $Lower)
+  head: outranks_context_by($Higher, $Lower, appeal_status)
   when: reverses($Higher, $Lower)
   source "Overruling/reversal strips precedential force — Precedent (Wikipedia), on a holding being \"overruled, if the same or higher courts on appeal or determination of subsequent cases found the principles underpinning the previous decision erroneous in law or overtaken by new legislation or developments.\" The reversing court's holding controls; the reversed one is no longer binding."
   locator "Wikipedia, \"Precedent\" — Overruling"
@@ -60,7 +60,7 @@ rule {
 %    inoperable."
 % ---------------------------------------------------------------------
 rule {
-  head: outranks_context($New, $Old)
+  head: outranks_context_by($New, $Old, lex_posterior)
   when: supersedes($New, $Old)
   source "Lex posterior derogat priori (implied repeal) — Implied repeal (Wikipedia): \"The doctrine of implied repeal is a concept in constitutional theory which states that where an act of Parliament or an act of Congress (or of some other legislature) conflicts with an earlier one, the later Act takes precedence and the conflicting parts of the earlier Act become legally inoperable.\" A later edition/enactment outranks the earlier conflicting one."
   locator "Wikipedia, \"Implied repeal\" — leges posteriores priores contrarias abrogant"
@@ -89,9 +89,14 @@ rule {
 % grounded tiebreaker meta-rule is added. That tiebreaker is the next slice.
 % ---------------------------------------------------------------------
 rule {
-  head: outranks_context($Specific, $General)
+  head: outranks_context_by($Specific, $General, lex_specialis)
   when: more_specific($Specific, $General)
   source "Lex specialis derogat legi generali — Lex specialis (Wikipedia): \"The lex specialis doctrine, also referred to as generalia specialibus non derogant (\\\"the general does not [derogate] from the specific\\\"), states that if two laws govern the same factual situation, a law governing a specific subject matter (lex specialis) overrides a law governing only general matters (lex generalis).\""
   locator "Wikipedia, \"Lex specialis\" — generalia specialibus non derogant"
   trust authoritative
 }
+
+% Turn the canon-tagged edges above into the engine's effective `outranks_context/2`
+% order, applying any grounded `canon_outranks` tiebreak (else abstaining on a collision).
+% Imported idempotently — safe to also import context-precedence.adj alongside this file.
+import "context-precedence-resolve.adj"

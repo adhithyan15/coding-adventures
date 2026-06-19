@@ -1,0 +1,68 @@
+% ============================================================================
+% histo-edges — the smear/histology-finding knowledge-graph (MYCIN-2026 HISTO).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", pathology): the
+% pathognomonic peripheral-smear / histology findings and the conditions they point to.
+% "A blood smear shows Howell-Jolly bodies — what does that suggest?" becomes the
+% binding query  ? seen_in(howell_jolly_bodies, $Condition).
+%
+% Direction note: the relation is finding -> condition (`seen_in`), which is both how
+% the cited spans read ("Reed-Sternberg cells are the hallmark of Hodgkin lymphoma";
+% "Heinz bodies ... in G6PD deficiency") AND how the board question is posed (you SEE
+% the finding and must name the condition). A finding may point to several conditions,
+% so a query binds the full set — each with its own citation.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the seventh ADJ-only recall domain). Each fact is a `relate` clause
+% whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see histo-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only findings whose dedicated page states the association in a clean
+% self-contained span (both finding AND condition named) are included. Deferred (the
+% disease pages bury the buzzword in context, not a both-endpoints-named declarative):
+% Auer rods → AML/APL, psammoma bodies → papillary thyroid carcinoma.
+% ============================================================================
+
+dictionary histo_vocab {
+    define finding   : entity   surface "histology finding", "smear finding", "inclusion"
+    define condition : entity   surface "condition", "disease"
+
+    define seen_in : relation from finding to condition  % the condition a finding points to
+}
+
+rulebook histo_facts {
+    use histo_vocab
+
+    % --- Reed-Sternberg cells -> Hodgkin lymphoma ------------------------
+    relate seen_in(reed_sternberg_cells, hodgkin_lymphoma)
+        source "Reed-Sternberg cells are the hallmark tumor cells of Hodgkin lymphoma."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542333/"
+        trust authoritative
+
+    % --- Howell-Jolly bodies -> asplenia / megaloblastic anemia (one span names both) ---
+    relate seen_in(howell_jolly_bodies, asplenia)
+        source "Howell-Jolly bodies are observed in patients with asplenia or splenic dysfunctions and in conditions with ineffective erythropoiesis, such as megaloblastic anemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557489/"
+        trust authoritative
+    relate seen_in(howell_jolly_bodies, megaloblastic_anemia)
+        source "Howell-Jolly bodies are observed in patients with asplenia or splenic dysfunctions and in conditions with ineffective erythropoiesis, such as megaloblastic anemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557489/"
+        trust authoritative
+
+    % --- Heinz bodies -> G6PD deficiency / methemoglobinemia (one span names both) ---
+    relate seen_in(heinz_bodies, g6pd_deficiency)
+        source "Heinz bodies may be present in patients with glucose-6-phosphate dehydrogenase (G6PD) deficiency and those with methemoglobinemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551622/"
+        trust authoritative
+    relate seen_in(heinz_bodies, methemoglobinemia)
+        source "Heinz bodies may be present in patients with glucose-6-phosphate dehydrogenase (G6PD) deficiency and those with methemoglobinemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551622/"
+        trust authoritative
+}

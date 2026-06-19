@@ -346,6 +346,83 @@ pub unsafe extern "C" fn paste(dst_start_ptr: *const u8, dst_start_len: usize) -
     }
 }
 
+// ── Save / load (serialize) ──────────────────────────────────────────
+
+/// `serialize()` → a packed JSON document holding the workbook's SOURCE (formula
+/// text + typed literals) and per-cell formats — not the computed values, which
+/// recompute on load. The host reads it via [`read_output`] and must release it
+/// with [`dealloc`], like any packed string. See [`SpreadsheetSession::serialize`].
+#[no_mangle]
+pub extern "C" fn serialize() -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().serialize()))
+}
+
+/// `deserialize(data)` — replace the workbook with a document produced by
+/// [`serialize`]. Returns `1` on success, `0` if the data is malformed or an
+/// unsupported version (the existing workbook is left untouched on failure).
+/// Returns the flag directly — no pointer to free. See
+/// [`SpreadsheetSession::deserialize`].
+///
+/// # Safety
+/// The `(ptr, len)` pair must describe a readable byte range (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn deserialize(data_ptr: *const u8, data_len: usize) -> i32 {
+    let data = read_input(data_ptr, data_len);
+    if SESSION.with(|s| s.borrow_mut().deserialize(&data)) {
+        1
+    } else {
+        0
+    }
+}
+
+// ── Undo / redo (session history) ────────────────────────────────────
+// All four take no arguments and return a flag directly (no string marshalling).
+
+/// `undo()` — revert the most recent edit. Returns `1` if an edit was undone,
+/// `0` if there was nothing to undo. The host re-reads the viewport afterwards.
+/// See [`SpreadsheetSession::undo`].
+#[no_mangle]
+pub extern "C" fn undo() -> i32 {
+    if SESSION.with(|s| s.borrow_mut().undo()) {
+        1
+    } else {
+        0
+    }
+}
+
+/// `redo()` — replay the most recently undone edit. Returns `1`/`0`. See
+/// [`SpreadsheetSession::redo`].
+#[no_mangle]
+pub extern "C" fn redo() -> i32 {
+    if SESSION.with(|s| s.borrow_mut().redo()) {
+        1
+    } else {
+        0
+    }
+}
+
+/// `can_undo()` → `1` if there is an edit to undo, else `0`. See
+/// [`SpreadsheetSession::can_undo`].
+#[no_mangle]
+pub extern "C" fn can_undo() -> i32 {
+    if SESSION.with(|s| s.borrow().can_undo()) {
+        1
+    } else {
+        0
+    }
+}
+
+/// `can_redo()` → `1` if there is an undone edit to redo, else `0`. See
+/// [`SpreadsheetSession::can_redo`].
+#[no_mangle]
+pub extern "C" fn can_redo() -> i32 {
+    if SESSION.with(|s| s.borrow().can_redo()) {
+        1
+    } else {
+        0
+    }
+}
+
 // ── Viewport primitive (virtualized infinite sheet) ──────────────────
 // These take integer coordinates directly (no pointer marshalling), so a
 // scrolling JS host can fetch just the visible window of an unbounded sheet.

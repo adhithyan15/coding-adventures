@@ -105,6 +105,34 @@ check("cut moved value", wb.getValue("C1"), { kind: "number", value: 7 });
 check("cut cleared source", wb.getValue("A1"), { kind: "empty" });
 check("cut buffer consumed", wb.paste("E1"), false);
 
+// Save / load: serialize the current workbook (source + formats), load it into a
+// fresh session, and confirm the formula is restored live (editing recomputes it).
+const saved = wb.serialize();
+check("serialize is a string", typeof saved, "string");
+const wb3 = engine.createSpreadsheet();
+check("deserialize returns true", wb3.deserialize(saved), true);
+check("loaded C1 value", wb3.getValue("C1"), { kind: "number", value: 7 }); // moved by cut
+wb3.setCell("F3", "100");
+check("loaded formula is live", wb3.getValue("G3"), { kind: "number", value: 200 }); // F3*2
+check("deserialize rejects garbage", wb3.deserialize("not json"), false);
+
+// Undo / redo: a fresh workbook on which we make two edits, then walk history.
+const wb4 = engine.createSpreadsheet();
+check("fresh canUndo false", wb4.canUndo(), false);
+wb4.setCell("A1", "1");
+wb4.setCell("B1", "=A1*10"); // 10
+check("after edits canUndo true", wb4.canUndo(), true);
+check("undo formula", wb4.undo(), true);
+check("B1 gone after undo", wb4.getValue("B1"), { kind: "empty" });
+check("undo literal", wb4.undo(), true);
+check("A1 gone after undo", wb4.getValue("A1"), { kind: "empty" });
+check("canUndo false at bottom", wb4.canUndo(), false);
+check("redo literal", wb4.redo(), true);
+check("redo formula", wb4.redo(), true);
+check("B1 live after redo", wb4.getValue("B1"), { kind: "number", value: 10 });
+check("canRedo false at top", wb4.canRedo(), false);
+check("redo at top is noop", wb4.redo(), false);
+
 // Fresh workbook is empty.
 const wb2 = engine.createSpreadsheet();
 check("reset clears values", wb2.getValues(), {});

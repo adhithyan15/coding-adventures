@@ -148,6 +148,25 @@
             return ok === 1;
           },
 
+          // Save / load: serialize the workbook's SOURCE (formula text + typed
+          // literals) + formats to a JSON string, and restore from one. Computed
+          // values recompute on load, so a loaded formula stays live.
+          serialize: () => call0("serialize"),
+          deserialize: (data) => {
+            const [dp, dl] = writeStr(String(data));
+            const ok = ex.deserialize(dp, dl);
+            freeInput(dp, dl);
+            return ok === 1;
+          },
+
+          // Undo / redo: snapshot-based history. Each undo/redo returns true if it
+          // changed the document; canUndo/canRedo gate the buttons. Re-read via
+          // getWindow / getDisplayWindow / getRaw after a true undo/redo.
+          undo: () => ex.undo() === 1,
+          redo: () => ex.redo() === 1,
+          canUndo: () => ex.can_undo() === 1,
+          canRedo: () => ex.can_redo() === 1,
+
           // Viewport primitive — render only the visible window of an unbounded
           // sheet. 1-based inclusive coords.
           getWindow: (row0, col0, row1, col1) =>

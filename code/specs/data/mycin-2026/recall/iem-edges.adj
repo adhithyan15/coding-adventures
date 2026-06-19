@@ -103,8 +103,9 @@ rulebook iem_facts {
         locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC5859325/"
         trust authoritative
     relate accumulates(von_gierke, glycogen)
-        source "Glycogen accumulates in liver and kidney in von Gierke disease."
-        trust consensus   % [FLAG: direction_only]
+        source "GSD I results from mutations affecting glucose-6-phosphatase (G6Pase) activity, leading to excessive glycogen accumulation in the liver and kidneys"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534196/"
+        trust authoritative
     relate inherited_as(von_gierke, autosomal_recessive)
         source "Glycogen storage disease type I (GSD I) is inherited in an autosomal recessive manner."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK1312/"

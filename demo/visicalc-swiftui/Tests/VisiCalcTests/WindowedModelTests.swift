@@ -74,4 +74,83 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertEqual(m.rowCells(3)[8], "40") // I3 = H3*10
         XCTAssertEqual(m.rowCells(1)[8], "20") // I1 source untouched
     }
+
+    /// Clipboard copy/cut/paste shifts a formula and moves a cut.
+    func testClipboardCopyCutPaste() {
+        let m = WindowedSheetModel()
+        // Seed H1=5, H2=7; I1 = H1*2 (col 8 = H, col 9 = I). Copy I1, paste at I2 —
+        // the relative ref shifts by the destination's offset, so I2 = H2*2.
+        m.setCell("H1", "5")
+        m.setCell("H2", "7")
+        m.setCell("I1", "=H1*2") // 10
+        m.select(row: 1, col: 9); m.copyCell() // copy I1
+        m.select(row: 2, col: 9)
+        XCTAssertTrue(m.pasteCell())           // paste at I2
+        XCTAssertEqual(m.rowCells(2)[8], "14") // I2 = H2*2 = 14
+        // Cut A1, move it to C1: source clears, a second paste is a no-op.
+        m.setCell("A1", "99")
+        m.select(row: 1, col: 1); m.cutCell()
+        m.select(row: 1, col: 3)
+        XCTAssertTrue(m.pasteCell())           // paste at C1
+        XCTAssertEqual(m.rowCells(1)[2], "99") // C1 moved
+        XCTAssertEqual(m.rowCells(1)[0], "")   // A1 cleared
+        m.select(row: 1, col: 5)
+        XCTAssertFalse(m.pasteCell())          // buffer consumed
+    }
+
+    /// Save / load: serialize the workbook, mutate it, then restore the snapshot
+    /// and confirm the workbook comes back — and that a loaded formula stays LIVE
+    /// (the document stores source + formats, not computed values).
+    func testSaveLoadRoundTrips() {
+        let m = WindowedSheetModel()
+        // The default seed has A1=15, E1 = SUM(A1:D1) = 38 (format "#,##0.00").
+        let snapshot = m.saveBook()
+        XCTAssertFalse(snapshot.isEmpty, "serialize produced a JSON document")
+        // Mutate away from the saved state so a load has to visibly undo it.
+        m.setCell("A1", "500") // E1 → 500+3+12+8 = 523
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "523.00")
+        // Restore: A1 → 15, E1 recomputes through its format back to "38.00".
+        XCTAssertTrue(m.loadBook(snapshot))
+        XCTAssertEqual(m.window(rows: 1...1, cols: 1...1)[0][0], "15")
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "38.00")
+        // The loaded formula is live, not frozen: edit a precedent and E1 recomputes.
+        m.setCell("A1", "5") // 5+3+12+8 = 28
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "28.00")
+        // Garbage in is rejected (false), leaving the workbook intact.
+        XCTAssertFalse(m.loadBook("not a workbook"))
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "28.00")
+    }
+
+    /// Undo / redo: make two edits, walk history back and forward, and confirm a
+    /// restored formula recomputes live. (The model seeds its budget via setCell,
+    /// so history is non-empty from construction — undoing into the seed is
+    /// expected; this test only asserts the round trip of its own two edits.)
+    func testUndoRedoWalksHistory() {
+        let m = WindowedSheetModel()
+        // Two fresh edits on a clear column: H1 = 2 (col 8), I1 = H1*5 = 10 (col 9).
+        m.setCell("H1", "2")
+        m.setCell("I1", "=H1*5")
+        XCTAssertEqual(m.window(rows: 1...1, cols: 9...9)[0][0], "10")
+        XCTAssertTrue(m.canUndo())
+
+        // Undo the formula, then the literal.
+        XCTAssertTrue(m.undoEdit())
+        XCTAssertEqual(m.window(rows: 1...1, cols: 9...9)[0][0], "") // I1 gone
+        XCTAssertTrue(m.undoEdit())
+        XCTAssertEqual(m.window(rows: 1...1, cols: 8...8)[0][0], "") // H1 gone
+
+        // Redo both: I1 recomputes live (10).
+        XCTAssertTrue(m.canRedo())
+        XCTAssertTrue(m.redoEdit())
+        XCTAssertTrue(m.redoEdit())
+        XCTAssertEqual(m.window(rows: 1...1, cols: 9...9)[0][0], "10")
+        XCTAssertFalse(m.canRedo())
+        XCTAssertFalse(m.redoEdit()) // nothing left to redo
+
+        // A fresh edit forks history (drops the redo branch).
+        XCTAssertTrue(m.undoEdit()) // back: I1 gone
+        XCTAssertTrue(m.canRedo())
+        m.setCell("A1", "7")
+        XCTAssertFalse(m.canRedo())
+    }
 }

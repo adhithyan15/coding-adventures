@@ -170,3 +170,33 @@ fn colliding_canons_abstain_with_an_honest_conflict() {
         "both contexts are present in the unresolved set: {s}"
     );
 }
+
+#[test]
+fn a_grounded_canon_ordering_resolves_the_collision() {
+    // ADJ73 §4.3 (resolving tiebreaker): the SAME federal-vs-state collision as the abstention
+    // example, but the jurisdiction supplies one more grounded fact —
+    // `canon_outranks(lex_specialis, lex_superior)` — and a NAF resolution rule keeps the
+    // lex-specialis edge (state > federal) while canon-defeating the lex-superior edge. So the
+    // SPECIFIC state reading GOVERNS — a cited decision, not an abstention. No engine change: the
+    // tiebreaker is expressed entirely in the language (canon-tagged edges + negation-as-failure).
+    let (ok, s) = run("worked-canon-tiebreaker-example.adj");
+    assert!(ok, "cli should succeed: {s}");
+    // Resolved, not abstained.
+    assert!(
+        s.contains("\"has_conflict\":false"),
+        "the grounded canon-ordering resolves the collision: {s}"
+    );
+    // The specific state reading governs; the general federal one is defeated.
+    assert!(
+        s.contains("rule_on(matter, prohibited)") && s.contains("\"status\":\"governing\""),
+        "the specific (state) reading governs by the canon-ordering: {s}"
+    );
+    assert!(
+        s.contains("\"context\":\"state\""),
+        "governed in the specific (state) context: {s}"
+    );
+    assert!(
+        s.contains("\"defeated_by\":\"rule_on(matter, prohibited)\""),
+        "the general federal reading is canon-defeated by the specific one: {s}"
+    );
+}

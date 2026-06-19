@@ -2,6 +2,129 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.93.0] - 2026-06-19
+
+### Added (Q10c — parenless/argless call to a yielding method)
+
+- A bare, parenless reference to a known block-taking method (`foo` with
+  no `()`/args) reaches the lowerer as `VarRef { scope: Local }` — the
+  method-call parser can't distinguish a zero-arg call from a variable.
+  The Q9f call-site pass now rewrites such a `VarRef`, when its name is in
+  `block_param_methods`, into `DirectCall { fn_name, args: [NilLit] }`,
+  threading a nil block so the call's arity matches the def's trailing
+  `__sir_block__` parameter. Previously these calls were left as `VarRef`
+  and never threaded.
+- **Shadow-safe.** The rewrite fires only when the name is *not* bound as
+  a param/local anywhere in the enclosing function. A new
+  `collect_bound_names_*` pre-pass gathers each function's param + `let`/
+  `let*`/`Assign`/loop-var/rescue-binding names; the normalization walk
+  (now carrying a `BlockNormCtx { methods, bound }`) skips any bound name.
+  Conservative: a name bound anywhere in the function suppresses the
+  rewrite for the whole function — this can only *miss* a rewrite, never
+  produce a wrong one (so `t = 1; t` keeps `t` a local `VarRef`).
+- New tests:
+  `parenless_call_to_yielding_method_becomes_direct_call_with_nil_block`,
+  `local_shadowing_a_method_name_stays_a_varref`,
+  `parenless_reference_to_non_block_method_is_left_alone`. Each validates.
+
+## [0.92.0] - 2026-06-19
+
+### Added (Q10b — `block_given?`)
+
+- `block_given?` (which reaches the lowerer as a bare `VarRef` named
+  `"block_given?"`, being parenless) is now rewritten, inside a method
+  body, to `not(null?(__sir_block__))` — i.e. "is the threaded block
+  parameter non-nil". Both builtins are already supported (a native
+  `not` arm + runtime-core `null?` dispatch), so it emits with no backend
+  change and validates.
+- The explicit-block-param detection (`thread_block_param`) now fires on
+  `block_given?` as well as `yield`, so a method that only queries
+  `block_given?` (and never yields) still gains the trailing
+  `__sir_block__` parameter and is registered in `block_param_methods`
+  (so Q9f threads the block at its call sites). The rewrite reuses the
+  existing control-flow-descending walk and still does not descend into
+  `MakeClosure`.
+- New tests: `block_given_in_yielding_method_becomes_nil_check`,
+  `block_given_alone_threads_block_param`,
+  `method_without_block_given_or_yield_is_unchanged`. Each threaded
+  module re-validates.
+
+## [0.91.0] - 2026-06-19
+
+### Added (Q9f — explicit block-param ABI, part 2: call-site normalization)
+
+- A new post-lowering pass in `compile()` threads the matching block
+  argument at every `DirectCall` to a method that gained a trailing
+  `__sir_block__` parameter in Q9e (tracked in `Lowerer::block_param_methods`).
+  Running after the *whole* program is lowered makes the pass
+  order-independent: call-before-def and mutual recursion both thread
+  correctly because the method registry is fully populated first.
+- For each such call, the trailing argument slot is normalized so call
+  arity matches the threaded def:
+  - trailing `MakeClosure` (`foo { … }` / `foo do … end`) — already the
+    block; left as-is.
+  - trailing `BuiltinCall("block_pass", [inner])` (`foo(&p)`) — unwrapped
+    to `inner` (the proc/block value).
+  - otherwise (`foo(1, 2)`) — append `NilLit` (no block passed; the
+    parameter binds nil).
+- New `Lowerer::normalize_block_call_args` + recursive
+  `normalize_calls_in_{stmt,stmts,expr}` walk every function body
+  (user functions + `main`), descending through control flow, nested
+  calls, and `MakeClosure` capture values.
+- New tests: `call_to_yielding_method_with_block_keeps_makeclosure`,
+  `call_to_yielding_method_without_block_appends_nil`,
+  `block_pass_to_yielding_method_unwraps_to_inner`,
+  `call_to_non_block_method_is_unchanged`, `call_before_def_is_threaded`.
+  Every threaded module re-validates.
+
+### Notes / v0 cut-lines
+
+- A **parenless, argless** call to a yielding method (`foo` with no `()`
+  and no block) lowers to a `VarRef`, not a `DirectCall`, so it is not
+  recognized as a call and is left un-threaded — a pre-existing
+  call-detection limitation, not introduced here.
+- A `yield` through a nil block (no block passed) raising the exact Ruby
+  `LocalJumpError` class is deferred; runtime `apply` on nil surfaces a
+  generic error.
+
+## [0.90.0] - 2026-06-19
+
+### Added (Q9e — explicit block-param ABI, part 1: def threading + yield rewrite)
+
+- A method whose body contains a direct `yield` now gains a trailing
+  reserved parameter `__sir_block__` (an ordinary untyped `Param`), and
+  each in-body `yield` is rewritten from `BuiltinCall("yield", args)` to
+  `IndirectCall { target: VarRef("__sir_block__", Scope::Param), args }`.
+  This makes Ruby's implicit block channel explicit in the SIR so the
+  Python/TS backends can emit it natively (`IndirectCall` already lowers
+  to runtime-core `apply`, and ordinary params emit directly) — **no
+  backend or `semantic-ir` core change required**.
+- New `Lowerer::thread_block_param` runs at the return of both
+  `lower_def_statement` and `lower_endless_def_statement`. The recursive
+  rewrite (`rewrite_yields_in_{block,stmts,stmt,expr}`) descends through
+  control flow (`If`/`While`/`ForRange`/`ForEach`/`TryCatch`/`Block`) and
+  ordinary call/expression children, but deliberately **stops at
+  `Expr::MakeClosure`** (a `yield` inside a hoisted block belongs to its
+  own enclosing method — a documented v0 cut-line) and does not descend
+  into class/module/singleton declaration bodies (their `def`s are
+  hoisted and threaded in their own right).
+- Threading a method records its name in the new
+  `Lowerer::block_param_methods` set and requests `Feature::Closures` +
+  `Feature::DynamicTyping`, keeping the manifest in sync with the
+  introduced `IndirectCall` and untyped param.
+- New tests: `def_with_yield_threads_block_param_and_rewrites_yield`,
+  `def_without_yield_is_unchanged`, `yield_inside_if_in_def_is_rewritten`.
+
+### Notes / v0 cut-lines
+
+- **Call-site threading is NOT in this release.** Until Q9f wires the
+  matching block argument at every call to a `block_param_methods`
+  method, a direct call to such a method is arity-short by one. `yield`
+  used directly at the top level (`main`) is unaffected and still lowers
+  to `BuiltinCall("yield", …)` (it is not a `def` body).
+- `yield` inside a block literal, `block_given?`, proc-vs-lambda arity,
+  and non-local `return`/`break` from blocks remain deferred.
+
 ## [0.89.0] - 2026-06-03
 
 ### Added (FC — array splat pattern lowering)

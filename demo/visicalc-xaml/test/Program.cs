@@ -138,6 +138,64 @@ using (var inf = new InfiniteSheetModel())
     Check("inf fillDown I2", inf.RowCells(2)[8], "30"); // I2 = H2*10
     Check("inf fillDown I3", inf.RowCells(3)[8], "40"); // I3 = H3*10
     Check("inf fillDown I1 source", inf.RowCells(1)[8], "20"); // I1 untouched
+
+    // Clipboard: copy I1 (= H1*10) and paste at I4 — the relative ref shifts by
+    // the destination's offset, so I4 = H4*10. (Seed H4 first.)
+    inf.SelectInf(4, 8); inf.CommitInf("6");        // H4 = 6
+    inf.SelectInf(1, 9); inf.CopyCell();            // copy I1
+    inf.SelectInf(4, 9); Check("inf pasteCell applied", inf.PasteCell().ToString(), "True");
+    Check("inf paste I4 = H4*10", inf.RowCells(4)[8], "60"); // I4 = H4*10 = 60
+    // Cut A1 and move it to C1: source clears, a second paste is a no-op.
+    inf.SelectInf(1, 1); inf.CommitInf("99");       // A1
+    inf.SelectInf(1, 1); inf.CutCell();
+    inf.SelectInf(1, 3); Check("inf cut paste applied", inf.PasteCell().ToString(), "True");
+    Check("inf cut moved C1", inf.RowCells(1)[2], "99"); // C1 (col 3, index 2)
+    Check("inf cut cleared A1", inf.RowCells(1)[0], ""); // A1 cleared
+    inf.SelectInf(1, 5); Check("inf cut buffer consumed", inf.PasteCell().ToString(), "False");
+}
+
+// Save / load (the Save / Load buttons drive SaveBook/LoadBook): serialize a
+// fresh seeded workbook, mutate it, restore the snapshot, and confirm the
+// loaded formula stays LIVE (the document stores source + formats, not values).
+using (var sl = new InfiniteSheetModel())
+{
+    string snapshot = sl.SaveBook();
+    Check("serialize non-empty", (snapshot.Length > 0).ToString(), "True");
+    sl.SelectInf(1, 1); sl.CommitInf("500");                 // E1 → 500+3+12+8 = 523
+    Check("mutated E1", sl.RowCells(1)[4], "523.00");
+    Check("loadBook ok", sl.LoadBook(snapshot).ToString(), "True");
+    Check("loaded A1", sl.RowCells(1)[0], "15");             // restored
+    Check("loaded E1 formatted", sl.RowCells(1)[4], "38.00"); // recomputed through format
+    sl.SelectInf(1, 1); sl.CommitInf("5");                   // live: 5+3+12+8 = 28
+    Check("loaded formula live", sl.RowCells(1)[4], "28.00");
+    Check("loadBook rejects garbage", sl.LoadBook("not a workbook").ToString(), "False");
+    Check("workbook intact after reject", sl.RowCells(1)[4], "28.00");
+}
+
+// Undo / redo (the Undo / Redo buttons drive UndoEdit/RedoEdit): a fresh,
+// unseeded session so the initial history is empty. Two edits, walk back and
+// forward, and confirm a restored formula recomputes live.
+using (var ur = new SpreadsheetSession())
+{
+    Check("fresh canUndo false", ur.CanUndo().ToString(), "False");
+    ur.SetCell("A1", "1");
+    ur.SetCell("B1", "=A1*10"); // 10
+    Check("after edits canUndo true", ur.CanUndo().ToString(), "True");
+    Check("undo formula", ur.Undo().ToString(), "True");
+    Check("B1 cleared by undo", ur.Window(1, 2, 1, 2)[0][0], "");
+    Check("undo literal", ur.Undo().ToString(), "True");
+    Check("A1 cleared by undo", ur.Window(1, 1, 1, 1)[0][0], "");
+    Check("canUndo false at bottom", ur.CanUndo().ToString(), "False");
+    Check("undo at bottom is noop", ur.Undo().ToString(), "False");
+    Check("redo literal", ur.Redo().ToString(), "True");
+    Check("redo formula", ur.Redo().ToString(), "True");
+    Check("B1 live after redo", ur.Window(1, 2, 1, 2)[0][0], "10");
+    Check("canRedo false at top", ur.CanRedo().ToString(), "False");
+    // A fresh edit forks history (drops the redo branch).
+    ur.Undo(); // back: B1 gone
+    Check("canRedo true before fork", ur.CanRedo().ToString(), "True");
+    ur.SetCell("C1", "9");
+    Check("fresh edit clears redo", ur.CanRedo().ToString(), "False");
 }
 
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");

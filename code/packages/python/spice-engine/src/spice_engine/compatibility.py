@@ -307,6 +307,7 @@ class DeckAnalysisPlan:
     analysis: str
     line_number: int
     source_name: str | None = None
+    output_node: str | None = None
     start_value: float | None = None
     stop_value: float | None = None
     step_value: float | None = None
@@ -531,6 +532,12 @@ _NOOP_CONTROL_BLOCK_COMMANDS = frozenset(
         ".version",
         "help",
         ".help",
+        "echo",
+        ".echo",
+        "rusage",
+        ".rusage",
+        "where",
+        ".where",
         "run",
         ".run",
         "reset",
@@ -543,6 +550,44 @@ _NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS = frozenset({"write", ".write"})
 _NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS = frozenset({"wrdata", ".wrdata"})
 _NOOP_CONTROL_BLOCK_SET_OPTIONS = frozenset(
     {"noaskquit", "filetype=ascii", "wr_vecnames", "wr_singlescale", "appendwrite"}
+)
+_SCRIPT_CONTROL_BLOCK_COMMANDS = frozenset({"source", ".source", "shell", ".shell"})
+_WORKDIR_CONTROL_BLOCK_COMMANDS = frozenset({"cd", ".cd"})
+_CONTROL_FLOW_CONTROL_BLOCK_COMMANDS = frozenset(
+    {
+        "if",
+        ".if",
+        "else",
+        ".else",
+        "end",
+        ".end",
+        "while",
+        ".while",
+        "foreach",
+        ".foreach",
+        "repeat",
+        ".repeat",
+        "dowhile",
+        ".dowhile",
+        "break",
+        ".break",
+        "continue",
+        ".continue",
+    }
+)
+_VARIABLE_CONTROL_BLOCK_COMMANDS = frozenset(
+    {
+        "let",
+        ".let",
+        "alter",
+        ".alter",
+        "alterparam",
+        ".alterparam",
+        "set",
+        ".set",
+        "unset",
+        ".unset",
+    }
 )
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
@@ -580,6 +625,50 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
                 active_lines.append(control_line)
                 continue
             if _is_noop_control_block_command(stripped):
+                continue
+            if _is_script_control_block_command(stripped):
+                diagnostics.append(
+                    DeckControlDiagnostic(
+                        code="SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+                        directive=".control",
+                        line_number=line_number,
+                        message=_control_block_script_policy_message(stripped),
+                        severity="error",
+                    )
+                )
+                continue
+            if _is_workdir_control_block_command(stripped):
+                diagnostics.append(
+                    DeckControlDiagnostic(
+                        code="SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+                        directive=".control",
+                        line_number=line_number,
+                        message=_control_block_workdir_policy_message(stripped),
+                        severity="error",
+                    )
+                )
+                continue
+            if _is_control_flow_control_block_command(stripped):
+                diagnostics.append(
+                    DeckControlDiagnostic(
+                        code="SPICE_DECK_CONTROL_FLOW_COMMAND",
+                        directive=".control",
+                        line_number=line_number,
+                        message=_control_block_flow_policy_message(stripped),
+                        severity="error",
+                    )
+                )
+                continue
+            if _is_variable_control_block_command(stripped):
+                diagnostics.append(
+                    DeckControlDiagnostic(
+                        code="SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+                        directive=".control",
+                        line_number=line_number,
+                        message=_control_block_variable_policy_message(stripped),
+                        severity="error",
+                    )
+                )
                 continue
             diagnostics.append(
                 DeckControlDiagnostic(
@@ -861,6 +950,30 @@ def select_deck_output_probes(netlist: str, analysis: str) -> list[str]:
     return selected
 
 
+def select_deck_output_directives(netlist: str, analysis: str) -> list[str]:
+    """Return deduplicated output directive kinds selected for an analysis."""
+
+    summary = resolve_deck_outputs(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"select_deck_output_directives: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    selected: list[str] = []
+    seen: set[str] = set()
+    for selection in summary.selections:
+        if selection.analysis is not None and not _deck_output_analysis_matches(
+            selection.analysis,
+            analysis,
+        ):
+            continue
+        if selection.directive in seen:
+            continue
+        seen.add(selection.directive)
+        selected.append(selection.directive)
+    return selected
+
+
 def resolve_deck_analyses(netlist: str) -> DeckAnalysisSummary:
     """Extract supported top-level analysis directives before ``.end``."""
 
@@ -876,7 +989,7 @@ def resolve_deck_analyses(netlist: str) -> DeckAnalysisSummary:
         if directive == ".end":
             end_line_number = line_number
             break
-        if directive in {".op", ".dc", ".ac", ".tran"}:
+        if directive in {".op", ".dc", ".ac", ".tran", ".tf", ".sens", ".noise"}:
             _resolve_analysis_line(stripped, line_number, directive, state)
             continue
         active_lines.append(stripped)
@@ -2351,6 +2464,12 @@ def _resolve_analysis_line(
         _resolve_ac_analysis(tokens, line_number, state)
     elif directive == ".tran":
         _resolve_tran_analysis(tokens, line_number, state)
+    elif directive == ".tf":
+        _resolve_tf_analysis(tokens, line_number, state)
+    elif directive == ".sens":
+        _resolve_sens_analysis(tokens, line_number, state)
+    elif directive == ".noise":
+        _resolve_noise_analysis(tokens, line_number, state)
 
 
 def _resolve_op_analysis(
@@ -2584,6 +2703,182 @@ def _resolve_tran_analysis(
             start_time=start_time,
             max_step=max_step,
             use_initial_conditions=use_initial_conditions,
+        )
+    )
+
+
+def _resolve_tf_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) != 3:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".tf",
+            line_number=line_number,
+            message=".tf requires output voltage probe and input source tokens",
+        )
+        return
+    output_probe = _normalize_deck_output_probe(_unquote_token(tokens[1]))
+    if output_probe is None or not output_probe.startswith("V("):
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".tf",
+            line_number=line_number,
+            message=f".tf output must be a voltage probe V(node), got {tokens[1]!r}",
+            token=tokens[1],
+        )
+        return
+    input_source = _unquote_token(tokens[2]).strip()
+    if not input_source:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".tf",
+            line_number=line_number,
+            message=".tf input source name must not be empty",
+            token=tokens[2],
+        )
+        return
+    state.analyses.append(
+        DeckAnalysisPlan(
+            directive=".tf",
+            analysis="tf",
+            line_number=line_number,
+            source_name=input_source,
+            output_node=output_probe[2:-1],
+        )
+    )
+
+
+def _resolve_sens_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) != 2:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".sens",
+            line_number=line_number,
+            message=".sens requires one output voltage probe token",
+        )
+        return
+    output_probe = _normalize_deck_output_probe(_unquote_token(tokens[1]))
+    if output_probe is None or not output_probe.startswith("V("):
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".sens",
+            line_number=line_number,
+            message=f".sens output must be a voltage probe V(node), got {tokens[1]!r}",
+            token=tokens[1],
+        )
+        return
+    state.analyses.append(
+        DeckAnalysisPlan(
+            directive=".sens",
+            analysis="sens",
+            line_number=line_number,
+            output_node=output_probe[2:-1],
+        )
+    )
+
+
+def _resolve_noise_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) not in {3, 7}:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".noise",
+            line_number=line_number,
+            message=(
+                ".noise requires output voltage probe, input source, and optional "
+                "sweep kind, point count, start frequency, and stop frequency tokens"
+            ),
+        )
+        return
+    output_probe = _normalize_deck_output_probe(_unquote_token(tokens[1]))
+    if output_probe is None or not output_probe.startswith("V("):
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".noise",
+            line_number=line_number,
+            message=f".noise output must be a voltage probe V(node), got {tokens[1]!r}",
+            token=tokens[1],
+        )
+        return
+    input_source = _unquote_token(tokens[2]).strip()
+    if not input_source:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".noise",
+            line_number=line_number,
+            message=".noise input source name must not be empty",
+            token=tokens[2],
+        )
+        return
+    sweep_kind: str | None = None
+    point_count: int | None = None
+    start_frequency: float | None = None
+    stop_frequency: float | None = None
+    if len(tokens) == 7:
+        sweep_kind = _normalize_ac_sweep_kind(tokens[3])
+        if sweep_kind is None:
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_MODE",
+                directive=".noise",
+                line_number=line_number,
+                message=f".noise sweep kind must be LIN, DEC, or OCT, got {tokens[3]!r}",
+                token=tokens[3],
+            )
+            return
+        point_count = _parse_deck_analysis_integer(tokens[4], ".noise", line_number, state)
+        start_frequency = _parse_deck_analysis_value(tokens[5], ".noise", line_number, state)
+        stop_frequency = _parse_deck_analysis_value(tokens[6], ".noise", line_number, state)
+        if point_count is None or start_frequency is None or stop_frequency is None:
+            return
+        if point_count < 1:
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_SWEEP",
+                directive=".noise",
+                line_number=line_number,
+                message=".noise point count must be a positive integer",
+                token=tokens[4],
+            )
+            return
+        if start_frequency <= 0.0 or stop_frequency <= 0.0 or stop_frequency < start_frequency:
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_SWEEP",
+                directive=".noise",
+                line_number=line_number,
+                message=".noise frequencies must be positive and stop must be >= start",
+            )
+            return
+    state.analyses.append(
+        DeckAnalysisPlan(
+            directive=".noise",
+            analysis="noise",
+            line_number=line_number,
+            source_name=input_source,
+            output_node=output_probe[2:-1],
+            sweep_kind=sweep_kind,
+            point_count=point_count,
+            start_frequency=start_frequency,
+            stop_frequency=stop_frequency,
         )
     )
 
@@ -2982,6 +3277,12 @@ def _normalize_deck_analysis_name(analysis: str) -> str | None:
         return "ac"
     if normalized in {"tran", "transient"}:
         return "tran"
+    if normalized in {"tf", "transfer-function", "transferfunction"}:
+        return "tf"
+    if normalized in {"sens", "sensitivity"}:
+        return "sens"
+    if normalized in {"noise", "ac-noise", "noise-ac"}:
+        return "noise"
     return None
 
 
@@ -3064,6 +3365,58 @@ def _resolve_deck_lines(
                 active_lines.append(control_line)
                 continue
             if _is_noop_control_block_command(stripped):
+                continue
+            if _is_script_control_block_command(stripped):
+                state.diagnostics.append(
+                    DeckResolutionDiagnostic(
+                        code="SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+                        directive=".control",
+                        source=source,
+                        line_number=line_number,
+                        message=_control_block_script_policy_message(stripped),
+                        severity="error",
+                        target=None,
+                    )
+                )
+                continue
+            if _is_workdir_control_block_command(stripped):
+                state.diagnostics.append(
+                    DeckResolutionDiagnostic(
+                        code="SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+                        directive=".control",
+                        source=source,
+                        line_number=line_number,
+                        message=_control_block_workdir_policy_message(stripped),
+                        severity="error",
+                        target=None,
+                    )
+                )
+                continue
+            if _is_control_flow_control_block_command(stripped):
+                state.diagnostics.append(
+                    DeckResolutionDiagnostic(
+                        code="SPICE_DECK_CONTROL_FLOW_COMMAND",
+                        directive=".control",
+                        source=source,
+                        line_number=line_number,
+                        message=_control_block_flow_policy_message(stripped),
+                        severity="error",
+                        target=None,
+                    )
+                )
+                continue
+            if _is_variable_control_block_command(stripped):
+                state.diagnostics.append(
+                    DeckResolutionDiagnostic(
+                        code="SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+                        directive=".control",
+                        source=source,
+                        line_number=line_number,
+                        message=_control_block_variable_policy_message(stripped),
+                        severity="error",
+                        target=None,
+                    )
+                )
                 continue
             state.diagnostics.append(
                 DeckResolutionDiagnostic(
@@ -3382,4 +3735,52 @@ def _is_noop_control_block_command(line: str) -> bool:
         command in {"set", ".set"}
         and len(parts) == 2
         and parts[1].lower() in _NOOP_CONTROL_BLOCK_SET_OPTIONS
+    )
+
+
+def _is_script_control_block_command(line: str) -> bool:
+    parts = line.split(maxsplit=1)
+    return bool(parts) and parts[0].lower() in _SCRIPT_CONTROL_BLOCK_COMMANDS
+
+
+def _is_workdir_control_block_command(line: str) -> bool:
+    parts = line.split(maxsplit=1)
+    return bool(parts) and parts[0].lower() in _WORKDIR_CONTROL_BLOCK_COMMANDS
+
+
+def _is_control_flow_control_block_command(line: str) -> bool:
+    parts = line.split(maxsplit=1)
+    return bool(parts) and parts[0].lower() in _CONTROL_FLOW_CONTROL_BLOCK_COMMANDS
+
+
+def _is_variable_control_block_command(line: str) -> bool:
+    parts = line.split(maxsplit=1)
+    return bool(parts) and parts[0].lower() in _VARIABLE_CONTROL_BLOCK_COMMANDS
+
+
+def _control_block_script_policy_message(line: str) -> str:
+    return (
+        f"{line!r} inside .control is not executed because external script "
+        "and shell commands are disabled by the deck execution policy"
+    )
+
+
+def _control_block_workdir_policy_message(line: str) -> str:
+    return (
+        f"{line!r} inside .control is not executed because working-directory "
+        "mutation is disabled by the deck execution policy"
+    )
+
+
+def _control_block_flow_policy_message(line: str) -> str:
+    return (
+        f"{line!r} inside .control is not executed because control-flow "
+        "commands are disabled by the deck execution policy"
+    )
+
+
+def _control_block_variable_policy_message(line: str) -> str:
+    return (
+        f"{line!r} inside .control is not executed because control variables "
+        "and circuit mutation commands are disabled by the deck execution policy"
     )

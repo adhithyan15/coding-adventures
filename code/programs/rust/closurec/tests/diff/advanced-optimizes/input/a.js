@@ -9,9 +9,10 @@
 //   - the unused `var dead` is removed;
 //   - `compute`'s parameter `longName` is shortened to `a`.
 //
-// `compute` is called TWICE so the single-use inliner leaves it in place
-// — that keeps this fixture's demonstration on fold + dead-code removal +
-// rename rather than inlining (which has its own pass-crate tests).
+// The value use `sink(compute)` (passing it without calling) makes the
+// inliner decline `compute`, keeping this fixture's demonstration on
+// fold + dead-code removal + rename rather than inlining (which has its
+// own pass-crate tests).
 //
 // Advanced-only passes (aggressive property/global renaming, cross-module
 // tree-shaking) layer on as they are implemented.
@@ -20,4 +21,4 @@ function compute(longName) {
   return longName + 1;
 }
 report(compute(7));
-report(compute(8));
+sink(compute);

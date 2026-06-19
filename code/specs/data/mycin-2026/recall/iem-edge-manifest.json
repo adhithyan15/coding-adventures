@@ -165,11 +165,11 @@
       "relation": "accumulates",
       "subject": "von_gierke",
       "object": "glycogen",
-      "status": "direction_only",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Glycogen accumulates in liver and kidney in von Gierke disease.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "GSD I results from mutations affecting glucose-6-phosphatase (G6Pase) activity, leading to excessive glycogen accumulation in the liver and kidneys",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK534196/"
     },
     "inherited_as__von_gierke": {
       "relation": "inherited_as",
@@ -362,5 +362,5 @@
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK1518/"
     }
   },
-  "hash": "7c1e999a364a40d5"
+  "hash": "9a604f2a718165aa"
 }

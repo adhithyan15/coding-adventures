@@ -87,6 +87,10 @@ fun InfiniteSheet() {
     var selCol by remember { mutableStateOf(model.selCol) }
     var formula by remember { mutableStateOf(model.formula) }
     var rev by remember { mutableStateOf(0) }
+    // In-memory "saved file" slot for the Save / Load buttons: Save stows the
+    // serialized workbook here, Load restores from it. (A real app would write
+    // it to a file; the demo keeps the round trip self-contained.)
+    var savedSnapshot by remember { mutableStateOf("") }
 
     fun select(row: Int, col: Int) {
         model.selectInf(row, col)
@@ -105,6 +109,43 @@ fun InfiniteSheet() {
     // shifts each copy's relative refs, pins absolute ($) refs, carries the format.
     fun fillDown() {
         model.fillDown(10)
+        rev++
+    }
+
+    // Clipboard: copy/cut the selected cell, then paste at the selection. The
+    // engine shifts the pasted formula's relative refs by the destination's
+    // offset, pins absolute ($) refs, carries the format; a cut clears on paste.
+    fun copyCell() = model.copyCell()
+    fun cutCell() = model.cutCell()
+    fun pasteCell() {
+        model.pasteCell()
+        rev++
+    }
+
+    // Save / load: serialize the whole workbook (formulas + formats) to a JSON
+    // document held in memory, and restore it. Computed values recompute on load,
+    // so a loaded formula stays live; the formula bar re-reads after a load.
+    fun saveBook() {
+        savedSnapshot = model.saveBook()
+    }
+    fun loadBook() {
+        if (savedSnapshot.isEmpty()) return
+        model.loadBook(savedSnapshot)
+        formula = model.formula
+        rev++
+    }
+
+    // Undo / redo: walk the engine's snapshot history. On success the grid
+    // re-reads (rev++) and the formula bar re-syncs; the buttons gate off the
+    // model's canUndo/canRedo (re-evaluated because rev is read in the layout).
+    fun undo() {
+        if (!model.undoEdit()) return
+        formula = model.formula
+        rev++
+    }
+    fun redo() {
+        if (!model.redoEdit()) return
+        formula = model.formula
         rev++
     }
 
@@ -148,6 +189,24 @@ fun InfiniteSheet() {
                     fontFamily = MONO,
                 )
             }
+            // Clipboard: copy/cut the selected cell, paste at the selection.
+            Spacer(Modifier.width(8.dp))
+            clipButton("Copy") { copyCell() }
+            Spacer(Modifier.width(8.dp))
+            clipButton("Cut") { cutCell() }
+            Spacer(Modifier.width(8.dp))
+            clipButton("Paste") { pasteCell() }
+            // Save / load: serialize the whole workbook to memory, and restore it.
+            Spacer(Modifier.width(8.dp))
+            clipButton("Save") { saveBook() }
+            Spacer(Modifier.width(8.dp))
+            clipButton("Load") { loadBook() }
+            // Undo / redo: walk the engine's snapshot history. Reading `rev` here
+            // re-evaluates canUndo/canRedo on every edit so the buttons gate live.
+            Spacer(Modifier.width(8.dp))
+            gatedButton("Undo", enabled = rev.let { model.canUndo() }) { undo() }
+            Spacer(Modifier.width(8.dp))
+            gatedButton("Redo", enabled = rev.let { model.canRedo() }) { redo() }
         }
 
         Spacer(Modifier.height(6.dp))
@@ -226,5 +285,27 @@ private fun chromeCell(w: androidx.compose.ui.unit.Dp, h: androidx.compose.ui.un
 private fun Text(text: String, color: Color, width: androidx.compose.ui.unit.Dp) {
     Box(modifier = Modifier.width(width)) {
         androidx.compose.material.Text(text, color = color, fontSize = 12.sp, fontFamily = MONO)
+    }
+}
+
+/// A compact outlined button for the clipboard controls, matching "Fill ↓ 10".
+@Composable
+private fun clipButton(label: String, onClick: () -> Unit) {
+    gatedButton(label, enabled = true, onClick = onClick)
+}
+
+/// A clipboard-style button that disables when `enabled` is false (Undo/Redo).
+@Composable
+private fun gatedButton(label: String, enabled: Boolean, onClick: () -> Unit) {
+    androidx.compose.material.OutlinedButton(
+        onClick = onClick,
+        enabled = enabled,
+        colors = androidx.compose.material.ButtonDefaults.outlinedButtonColors(
+            backgroundColor = CHROME,
+            contentColor = INK,
+        ),
+        border = androidx.compose.foundation.BorderStroke(1.dp, BORDER),
+    ) {
+        androidx.compose.material.Text(label, fontSize = 12.sp, fontFamily = MONO)
     }
 }

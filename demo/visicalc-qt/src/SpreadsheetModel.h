@@ -99,6 +99,10 @@ public:
     Q_PROPERTY(QString infAddress READ infAddress NOTIFY infSelectionChanged)
     Q_PROPERTY(QString infFormula READ infFormula NOTIFY infSelectionChanged)
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
+    // Undo/redo availability — bound to revisionChanged, which every mutating op
+    // (incl. undo/redo themselves) emits, so the QML buttons enable/disable live.
+    Q_PROPERTY(bool canUndo READ canUndo NOTIFY revisionChanged)
+    Q_PROPERTY(bool canRedo READ canRedo NOTIFY revisionChanged)
 
     int totalRows() const { return totalRows_; }
     int totalCols() const { return totalCols_; }
@@ -107,6 +111,8 @@ public:
     QString infAddress() const;
     QString infFormula() const { return infFormula_; }
     int revision() const { return revision_; }
+    bool canUndo() const;
+    bool canRedo() const;
 
     // One row's display strings (a QVariantList of QString, columns 1..totalCols)
     // — what a windowed ListView delegate renders. One engine read per row.
@@ -129,6 +135,20 @@ public:
     Q_INVOKABLE void copy(const QString &start, const QString &end);
     Q_INVOKABLE void cut(const QString &start, const QString &end);
     Q_INVOKABLE bool paste(const QString &dstStart);
+    // Save / load: serialize() returns a self-contained JSON document of the
+    // workbook's SOURCE (formula text + typed literals) + per-cell formats — not
+    // the computed values, which recompute on load. deserialize() replaces the
+    // workbook from such a document: returns true on success, false for malformed
+    // / unsupported input (the workbook is left untouched), recomputes the grid,
+    // regrows the extent, and bumps `revision` so the visible rows re-fetch.
+    Q_INVOKABLE QString serialize() const;
+    Q_INVOKABLE bool deserialize(const QString &data);
+    // Undo / redo: walk the engine's snapshot history. Each returns true if it
+    // changed the document; on success the grid recomputes, the extent regrows,
+    // the formula bar refreshes, and `revision` bumps (which re-evaluates the
+    // canUndo/canRedo bindings).
+    Q_INVOKABLE bool undo();
+    Q_INVOKABLE bool redo();
 
 signals:
     // viewportRows changed (after a recompute) — QML rebinds the grid.

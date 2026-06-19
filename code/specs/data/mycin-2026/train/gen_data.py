@@ -157,6 +157,41 @@ DISTRACTORS = [
     ("last ate breakfast around 8 a.m.", "incidental history, not a diagnostic finding"),
 ]
 
+# NEAR-MISS distractors — the HARD discards. Each phrase superficially reads like a controlled
+# FINDING but maps to none: it is the wrong SUBJECT (a relative's illness), a HEDGE (a clinician's
+# suspicion/query, not an affirmed result), a PROCESS not a RESULT (a test ordered/sent/pending,
+# with no value), or a REFERENCE (a teaching statement, not THIS patient's datum). Coining a
+# finding from these is the #1 over-extraction failure of a fine-tuned decomposer, so the gold
+# records each (when it lands in the prose) as a justified `discard`. NOTE: a NEGATED finding
+# ("no fever", "afebrile") is NOT here — that is a real finding with polarity:denied (the sampler
+# handles it), never a discard. These are phrases that map to NO finding in either polarity.
+NEAR_MISS_DISTRACTORS = [
+    # wrong SUBJECT — someone else's finding is not the patient's.
+    ("his father had bacterial meningitis as a child",
+     "family history, NOT the patient's finding — wrong subject"),
+    ("a sibling with a history of recurrent seizures",
+     "family history of seizures, NOT this patient's seizure finding — wrong subject"),
+    # HEDGE / suspicion — a query or concern is not an affirmed result.
+    ("there is clinical concern for possible meningitis",
+     "a clinician's suspicion/hedge, not an affirmed finding — do not coin a result"),
+    ("cannot exclude early CSF pleocytosis on these numbers",
+     "an explicit uncertainty (cannot exclude), not a confirmed pleocytosis finding"),
+    ("query a CNS infection, to be confirmed",
+     "a differential question, not a confirmed finding"),
+    # PROCESS not RESULT — an order/pending test carries no value to extract.
+    ("CSF was sent for Gram stain and culture",
+     "a test ORDERED, not a result — no value to coin a finding from"),
+    ("blood cultures were drawn and are pending",
+     "a pending test, not a resulted finding"),
+    ("a lumbar puncture is planned for this afternoon",
+     "a planned procedure, not a finding"),
+    # REFERENCE / teaching — a general statement is not this patient's datum.
+    ("guidelines note that CSF lactate can aid the diagnosis",
+     "a reference/teaching statement, not a measured value for this patient"),
+    ("textbooks list neck stiffness as a classic meningismus sign",
+     "a general teaching point, not an observation of this patient"),
+]
+
 
 def _norm(s: str) -> str:
     """Lowercase + collapse whitespace — for substring matching prose against a phrase
@@ -243,9 +278,12 @@ def main() -> int:
     records = []
     for i in range(args.n):
         findings = sample_findings(rng)
-        # Inject 0-2 non-diagnostic distractors so a third of vignettes carry a red
-        # herring the gold must DISCARD (with a reason) rather than turn into a finding.
-        distractors = rng.sample(DISTRACTORS, rng.choice([0, 0, 1, 1, 2]))
+        # Inject 0-2 generic distractors AND 0-2 HARD near-miss look-alikes, so a vignette
+        # carries red herrings the gold must DISCARD (with a reason) rather than turn into a
+        # finding — teaching both "not a finding" and the sharper boundary (a suspicion / a
+        # relative's illness / an ordered test / a teaching point is not THIS patient's result).
+        distractors = (rng.sample(DISTRACTORS, rng.choice([0, 0, 1, 1, 2]))
+                       + rng.sample(NEAR_MISS_DISTRACTORS, rng.choice([0, 1, 1, 2])))
         try:
             vignette = teacher_vignette(args.teacher, findings, surfaces, distractors)
         except Exception as e:  # noqa: BLE001

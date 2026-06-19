@@ -7,6 +7,7 @@ import {
   DigitalThresholds,
   ExpWaveform,
   type FourierResult,
+  type NoiseResult,
   type PoleZeroResult,
   type TransientPoint,
   PulseWaveform,
@@ -38,7 +39,11 @@ import {
   formatCornerPssTable,
   formatCornerTransientTable,
   formatDcTable,
+  formatDeckNoiseTable,
   formatDeckOpTable,
+  formatDeckRunArtifactCsv,
+  formatDeckRunArtifactJson,
+  formatDeckRunArtifactTable,
   formatDeckTransientTable,
   formatDigitalBridgeScheduleTable,
   formatDigitalEventStreamTable,
@@ -1451,6 +1456,9 @@ describe("transient", () => {
 .dc V1 0 1 1
 .ac dec 1 1k 1k
 .tran 1m 1m
+.tf V(mid) V1
+.sens V(mid)
+.noise V(mid) V1 lin 1 1k 1k
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -1464,10 +1472,121 @@ describe("transient", () => {
     expect(opExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
     expect(opExecution.runArtifacts[0]?.resultRows).toBe(1);
+    expect(opExecution.runArtifacts[0]?.resultColumnCount).toBe(2);
+    expect(opExecution.runArtifacts[0]?.resultColumns).toEqual(["Index", "V(mid)"]);
+    expect(opExecution.runArtifacts[0]?.sourceName).toBeUndefined();
+    expect(opExecution.runArtifacts[0]?.outputNode).toBeUndefined();
+    expect(opExecution.runArtifacts[0]?.sweepKind).toBeUndefined();
+    expect(opExecution.runArtifacts[0]?.pointCount).toBeUndefined();
+    expect(opExecution.runArtifacts[0]?.stepTime).toBeUndefined();
+    expect(opExecution.runArtifacts[0]?.useInitialConditions).toBeUndefined();
+    expect(opExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(opExecution.runArtifacts[0]?.outputDirectives).toEqual([".save"]);
+    expect(opExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(opExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
+    expect(opExecution.runArtifacts[0]?.diagnosticCount).toBe(0);
+    expect(opExecution.runArtifacts[0]?.diagnosticCodes).toEqual([]);
     expect(opExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
-        `op\t.op\t${opExecution.plan.lineNumber}\t1\t1\t0\t0\n`,
+      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
+        `op\t.op\t${opExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\n`,
     );
+    expect(formatDeckRunArtifactCsv(opExecution.runArtifacts)).toBe(
+      "Analysis,Directive,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\n" +
+        `op,.op,${opExecution.plan.lineNumber},,,,,,,,,,,,,,,1,2,Index;V(mid),1,V(mid),1,.save,0,,0,,0,\n`,
+    );
+    const artifactJson = formatDeckRunArtifactJson(opExecution.runArtifacts);
+    const artifactRecords = JSON.parse(artifactJson) as Array<Record<string, string>>;
+    expect(Object.keys(artifactRecords[0]!)).toEqual([
+      "Analysis",
+      "Directive",
+      "Line",
+      "SourceName",
+      "OutputNode",
+      "SweepKind",
+      "StartValue",
+      "StopValue",
+      "StepValue",
+      "PointCount",
+      "StartFrequencyHz",
+      "StopFrequencyHz",
+      "StepTime",
+      "StopTime",
+      "StartTime",
+      "MaxStep",
+      "UseInitialConditions",
+      "ResultRows",
+      "ResultColumns",
+      "ResultColumnList",
+      "OutputProbes",
+      "OutputProbeList",
+      "OutputDirectives",
+      "OutputDirectiveList",
+      "Measurements",
+      "MeasurementList",
+      "Fourier",
+      "FourierList",
+      "Diagnostics",
+      "DiagnosticCodeList",
+    ]);
+    expect(artifactRecords).toEqual([
+      {
+        Analysis: "op",
+        Directive: ".op",
+        Line: String(opExecution.plan.lineNumber),
+        SourceName: "",
+        OutputNode: "",
+        SweepKind: "",
+        StartValue: "",
+        StopValue: "",
+        StepValue: "",
+        PointCount: "",
+        StartFrequencyHz: "",
+        StopFrequencyHz: "",
+        StepTime: "",
+        StopTime: "",
+        StartTime: "",
+        MaxStep: "",
+        UseInitialConditions: "",
+        ResultRows: "1",
+        ResultColumns: "2",
+        ResultColumnList: "Index;V(mid)",
+        OutputProbes: "1",
+        OutputProbeList: "V(mid)",
+        OutputDirectives: "1",
+        OutputDirectiveList: ".save",
+        Measurements: "0",
+        MeasurementList: "",
+        Fourier: "0",
+        FourierList: "",
+        Diagnostics: "0",
+        DiagnosticCodeList: "",
+      },
+    ]);
+    const diagnosticArtifact = {
+      ...opExecution.runArtifacts[0]!,
+      diagnosticCount: 2,
+      diagnosticCodes: ["SPICE_DECK_ANALYSIS_TOKEN", "SPICE_DECK_ANALYSIS_RANGE"],
+    };
+    const diagnosticRow = formatDeckRunArtifactTable([diagnosticArtifact])
+      .split("\n")[1]
+      ?.split("\t") ?? [];
+    expect(diagnosticRow.slice(-2)).toEqual([
+      "2",
+      "SPICE_DECK_ANALYSIS_TOKEN;SPICE_DECK_ANALYSIS_RANGE",
+    ]);
+    const quotedDiagnosticArtifact = {
+      ...opExecution.runArtifacts[0]!,
+      diagnosticCount: 2,
+      diagnosticCodes: ["SPICE_DECK_ANALYSIS_TOKEN", 'SPICE,"QUOTED"'],
+    };
+    expect(formatDeckRunArtifactCsv([quotedDiagnosticArtifact])).toMatch(
+      /,2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED"""\n$/u,
+    );
+    expect(
+      (JSON.parse(formatDeckRunArtifactJson([quotedDiagnosticArtifact])) as Array<Record<string, string>>)[0]?.[
+        "DiagnosticCodeList"
+      ],
+    ).toBe('SPICE_DECK_ANALYSIS_TOKEN;SPICE,"QUOTED"');
 
     const dcExecution = runDeckAnalysis(circuit, netlist, "dc");
     expect(dcExecution.plan.sourceName).toBe("V1");
@@ -1484,9 +1603,28 @@ describe("transient", () => {
         "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n",
     );
     expect(dcExecution.runArtifacts[0]?.analysis).toBe("dc");
+    expect(dcExecution.runArtifacts[0]?.sourceName).toBe("V1");
+    expect(dcExecution.runArtifacts[0]?.outputNode).toBeUndefined();
+    expect(dcExecution.runArtifacts[0]?.startValue).toBeCloseTo(0.0, 12);
+    expect(dcExecution.runArtifacts[0]?.stopValue).toBeCloseTo(1.0, 12);
+    expect(dcExecution.runArtifacts[0]?.stepValue).toBeCloseTo(1.0, 12);
+    expect(dcExecution.runArtifacts[0]?.resultColumnCount).toBe(5);
+    expect(dcExecution.runArtifacts[0]?.resultColumns).toEqual([
+      "Index",
+      "Source",
+      "Value",
+      "V(mid)",
+      "I(V1)",
+    ]);
+    expect(dcExecution.runArtifacts[0]?.stepTime).toBeUndefined();
+    expect(dcExecution.runArtifacts[0]?.useInitialConditions).toBeUndefined();
+    expect(dcExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)", "I(V1)"]);
+    expect(dcExecution.runArtifacts[0]?.outputDirectives).toEqual([".save", ".probe"]);
+    expect(dcExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_avg"]);
+    expect(dcExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(dcExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
-        `dc\t.dc\t${dcExecution.plan.lineNumber}\t2\t2\t1\t0\n`,
+      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
+        `dc\t.dc\t${dcExecution.plan.lineNumber}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\t0\t\n`,
     );
 
     const acExecution = runDeckAnalysis(circuit, netlist, "ac");
@@ -1501,9 +1639,31 @@ describe("transient", () => {
       "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
         "0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n",
     );
+    expect(acExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(acExecution.runArtifacts[0]?.sourceName).toBeUndefined();
+    expect(acExecution.runArtifacts[0]?.outputNode).toBeUndefined();
+    expect(acExecution.runArtifacts[0]?.sweepKind).toBe("dec");
+    expect(acExecution.runArtifacts[0]?.pointCount).toBe(1);
+    expect(acExecution.runArtifacts[0]?.startFrequencyHz).toBeCloseTo(1.0e3, 9);
+    expect(acExecution.runArtifacts[0]?.stopFrequencyHz).toBeCloseTo(1.0e3, 9);
+    expect(acExecution.runArtifacts[0]?.resultColumnCount).toBe(7);
+    expect(acExecution.runArtifacts[0]?.resultColumns).toEqual([
+      "Index",
+      "Frequency",
+      "Probe",
+      "Real",
+      "Imaginary",
+      "Magnitude",
+      "Phase",
+    ]);
+    expect(acExecution.runArtifacts[0]?.stepTime).toBeUndefined();
+    expect(acExecution.runArtifacts[0]?.useInitialConditions).toBeUndefined();
+    expect(acExecution.runArtifacts[0]?.outputDirectives).toEqual([".save"]);
+    expect(acExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_peak"]);
+    expect(acExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(acExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
-        `ac\t.ac\t${acExecution.plan.lineNumber}\t1\t1\t1\t0\n`,
+      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
+        `ac\t.ac\t${acExecution.plan.lineNumber}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\t0\t\n`,
     );
 
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
@@ -1518,9 +1678,153 @@ describe("transient", () => {
       "Index\tTime\tV(mid)\n" +
         "0\t1.000000e-03\t5.000000e-01\n",
     );
+    expect(tranExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(tranExecution.runArtifacts[0]?.sourceName).toBeUndefined();
+    expect(tranExecution.runArtifacts[0]?.outputNode).toBeUndefined();
+    expect(tranExecution.runArtifacts[0]?.stepTime).toBeCloseTo(1.0e-3, 12);
+    expect(tranExecution.runArtifacts[0]?.stopTime).toBeCloseTo(1.0e-3, 12);
+    expect(tranExecution.runArtifacts[0]?.resultColumnCount).toBe(3);
+    expect(tranExecution.runArtifacts[0]?.resultColumns).toEqual(["Index", "Time", "V(mid)"]);
+    expect(tranExecution.runArtifacts[0]?.startTime).toBeUndefined();
+    expect(tranExecution.runArtifacts[0]?.maxStep).toBeUndefined();
+    expect(tranExecution.runArtifacts[0]?.useInitialConditions).toBe(false);
+    expect(tranExecution.runArtifacts[0]?.outputDirectives).toEqual([".save"]);
+    expect(tranExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_final"]);
+    expect(tranExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
+    expect(tranExecution.runArtifacts[0]?.diagnosticCount).toBe(0);
+    expect(tranExecution.runArtifacts[0]?.diagnosticCodes).toEqual([]);
     expect(tranExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
-        `tran\t.tran\t${tranExecution.plan.lineNumber}\t1\t1\t1\t0\n`,
+      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
+        `tran\t.tran\t${tranExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t1.000000e-03\t1.000000e-03\t\t\tfalse\t1\t3\tIndex;Time;V(mid)\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\t0\t\n`,
+    );
+
+    const tfExecution = runDeckAnalysis(circuit, netlist, "tf");
+    expect(tfExecution.plan.outputNode).toBe("mid");
+    expect(tfExecution.plan.sourceName).toBe("V1");
+    const tfResult = tfExecution.result as {
+      readonly transferRatio: number;
+      readonly inputImpedanceOhms: number;
+      readonly outputImpedanceOhms: number;
+    };
+    expect(tfResult.transferRatio).toBeCloseTo(0.5, 9);
+    expect(tfResult.inputImpedanceOhms).toBeCloseTo(2_000.0, 9);
+    expect(tfResult.outputImpedanceOhms).toBeCloseTo(500.0, 9);
+    expect(tfExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(tfExecution.measurements).toEqual([]);
+    expect(tfExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
+    expect(tfExecution.table).toBe(
+      "TransferRatio\tInputImpedance\tOutputImpedance\n" +
+        "5.000000e-01\t2.000000e+03\t5.000000e+02\n",
+    );
+    expect(tfExecution.runArtifacts[0]?.analysis).toBe("tf");
+    expect(tfExecution.runArtifacts[0]?.sourceName).toBe("V1");
+    expect(tfExecution.runArtifacts[0]?.outputNode).toBe("mid");
+    expect(tfExecution.runArtifacts[0]?.resultRows).toBe(1);
+    expect(tfExecution.runArtifacts[0]?.resultColumnCount).toBe(3);
+    expect(tfExecution.runArtifacts[0]?.resultColumns).toEqual([
+      "TransferRatio",
+      "InputImpedance",
+      "OutputImpedance",
+    ]);
+    expect(tfExecution.runArtifacts[0]?.stepTime).toBeUndefined();
+    expect(tfExecution.runArtifacts[0]?.useInitialConditions).toBeUndefined();
+    expect(tfExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(tfExecution.runArtifacts[0]?.outputDirectives).toEqual([]);
+    expect(tfExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(tfExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
+    expect(tfExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
+        `tf\t.tf\t${tfExecution.plan.lineNumber}\tV1\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t3\tTransferRatio;InputImpedance;OutputImpedance\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\n`,
+    );
+
+    const sensExecution = runDeckAnalysis(circuit, netlist, "sens");
+    expect(sensExecution.plan.outputNode).toBe("mid");
+    expect(sensExecution.plan.sourceName).toBeUndefined();
+    const sensResult = sensExecution.result as {
+      readonly outputNode: string;
+      readonly entries: readonly unknown[];
+    };
+    expect(sensResult.outputNode).toBe("mid");
+    expect(sensResult.entries).toHaveLength(3);
+    expect(sensExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(sensExecution.measurements).toEqual([]);
+    expect(sensExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
+    expect(sensExecution.table.startsWith(
+      "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity\n",
+    )).toBe(true);
+    expect(sensExecution.runArtifacts[0]?.analysis).toBe("sens");
+    expect(sensExecution.runArtifacts[0]?.sourceName).toBeUndefined();
+    expect(sensExecution.runArtifacts[0]?.outputNode).toBe("mid");
+    expect(sensExecution.runArtifacts[0]?.resultRows).toBe(1);
+    expect(sensExecution.runArtifacts[0]?.resultColumnCount).toBe(7);
+    expect(sensExecution.runArtifacts[0]?.resultColumns).toEqual([
+      "OutputNode",
+      "NominalVoltage",
+      "Element",
+      "Parameter",
+      "NominalValue",
+      "Sensitivity",
+      "RelativeSensitivity",
+    ]);
+    expect(sensExecution.runArtifacts[0]?.stepTime).toBeUndefined();
+    expect(sensExecution.runArtifacts[0]?.useInitialConditions).toBeUndefined();
+    expect(sensExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(sensExecution.runArtifacts[0]?.outputDirectives).toEqual([]);
+    expect(sensExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(sensExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
+    expect(sensExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
+        `sens\t.sens\t${sensExecution.plan.lineNumber}\t\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t7\tOutputNode;NominalVoltage;Element;Parameter;NominalValue;Sensitivity;RelativeSensitivity\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\n`,
+    );
+
+    const noiseExecution = runDeckAnalysis(circuit, netlist, "noise");
+    expect(noiseExecution.plan.outputNode).toBe("mid");
+    expect(noiseExecution.plan.sourceName).toBe("V1");
+    expect(noiseExecution.plan.sweepKind).toBe("lin");
+    expect(noiseExecution.plan.pointCount).toBe(1);
+    expect(noiseExecution.plan.startFrequencyHz).toBeCloseTo(1.0e3, 9);
+    expect(noiseExecution.plan.stopFrequencyHz).toBeCloseTo(1.0e3, 9);
+    const noiseResult = noiseExecution.result as NoiseResult;
+    expect(noiseResult.outputNode).toBe("mid");
+    expect(noiseResult.inputSource).toBe("V1");
+    expect(noiseResult.points).toHaveLength(1);
+    expect(noiseExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(noiseExecution.measurements).toEqual([]);
+    expect(noiseExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
+    expect(noiseExecution.table).toBe(formatDeckNoiseTable(noiseResult));
+    expect(noiseExecution.table.startsWith(
+      "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD\n",
+    )).toBe(true);
+    expect(noiseExecution.runArtifacts[0]?.analysis).toBe("noise");
+    expect(noiseExecution.runArtifacts[0]?.sourceName).toBe("V1");
+    expect(noiseExecution.runArtifacts[0]?.outputNode).toBe("mid");
+    expect(noiseExecution.runArtifacts[0]?.sweepKind).toBe("lin");
+    expect(noiseExecution.runArtifacts[0]?.pointCount).toBe(1);
+    expect(noiseExecution.runArtifacts[0]?.startFrequencyHz).toBeCloseTo(1.0e3, 9);
+    expect(noiseExecution.runArtifacts[0]?.stopFrequencyHz).toBeCloseTo(1.0e3, 9);
+    expect(noiseExecution.runArtifacts[0]?.resultRows).toBe(1);
+    expect(noiseExecution.runArtifacts[0]?.resultColumnCount).toBe(10);
+    expect(noiseExecution.runArtifacts[0]?.resultColumns).toEqual([
+      "Index",
+      "Frequency",
+      "OutputNode",
+      "InputSource",
+      "OutputPSD",
+      "InputReferredPSD",
+      "Element",
+      "Type",
+      "SourcePSD",
+      "ContributionPSD",
+    ]);
+    expect(noiseExecution.runArtifacts[0]?.stepTime).toBeUndefined();
+    expect(noiseExecution.runArtifacts[0]?.useInitialConditions).toBeUndefined();
+    expect(noiseExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(noiseExecution.runArtifacts[0]?.outputDirectives).toEqual([]);
+    expect(noiseExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(noiseExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
+    expect(noiseExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
+        `noise\t.noise\t${noiseExecution.plan.lineNumber}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t10\tIndex;Frequency;OutputNode;InputSource;OutputPSD;InputReferredPSD;Element;Type;SourcePSD;ContributionPSD\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\n`,
     );
 
     const tranWindowExecution = runDeckAnalysis(
@@ -1530,6 +1834,13 @@ describe("transient", () => {
     expect(tranWindowExecution.plan.startTime).toBeCloseTo(2.0e-3, 12);
     expect(tranWindowExecution.plan.maxStep).toBeCloseTo(1.0e-3, 12);
     expect(tranWindowExecution.plan.useInitialConditions).toBe(true);
+    expect(tranWindowExecution.runArtifacts[0]?.stepTime).toBeCloseTo(2.0e-3, 12);
+    expect(tranWindowExecution.runArtifacts[0]?.stopTime).toBeCloseTo(6.0e-3, 12);
+    expect(tranWindowExecution.runArtifacts[0]?.startTime).toBeCloseTo(2.0e-3, 12);
+    expect(tranWindowExecution.runArtifacts[0]?.maxStep).toBeCloseTo(1.0e-3, 12);
+    expect(tranWindowExecution.runArtifacts[0]?.useInitialConditions).toBe(true);
+    expect(tranWindowExecution.runArtifacts[0]?.resultColumnCount).toBe(3);
+    expect(tranWindowExecution.runArtifacts[0]?.resultColumns).toEqual(["Index", "Time", "V(mid)"]);
     expect(tranWindowExecution.outputProbes).toEqual(["V(mid)"]);
     const tranWindowPoints = tranWindowExecution.result as { time: number }[];
     expect(tranWindowPoints).toHaveLength(3);
@@ -1545,6 +1856,10 @@ describe("transient", () => {
         "0\t2.000000e-03\t5.000000e-01\n" +
         "1\t4.000000e-03\t5.000000e-01\n" +
         "2\t6.000000e-03\t5.000000e-01\n",
+    );
+    expect(tranWindowExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
+        `tran\t.tran\t${tranWindowExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t2.000000e-03\t6.000000e-03\t2.000000e-03\t1.000000e-03\ttrue\t3\t3\tIndex;Time;V(mid)\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\n`,
     );
 
     expect(() => runDeckAnalysis(circuit, netlist)).toThrow(/multiple analysis cards/);
@@ -1597,9 +1912,22 @@ describe("transient", () => {
     expect(result.probes[0]?.harmonics).toHaveLength(1);
     expect(tranExecution.fourierTable).toBe(formatFourierTable(result));
     expect(tranExecution.runArtifacts[0]?.fourierCount).toBe(1);
+    expect(tranExecution.runArtifacts[0]?.sourceName).toBeUndefined();
+    expect(tranExecution.runArtifacts[0]?.outputNode).toBeUndefined();
+    expect(tranExecution.runArtifacts[0]?.stepTime).toBeCloseTo(5.0e-4, 12);
+    expect(tranExecution.runArtifacts[0]?.stopTime).toBeCloseTo(1.0e-3, 12);
+    expect(tranExecution.runArtifacts[0]?.resultColumnCount).toBe(3);
+    expect(tranExecution.runArtifacts[0]?.resultColumns).toEqual(["Index", "Time", "V(mid)"]);
+    expect(tranExecution.runArtifacts[0]?.startTime).toBeUndefined();
+    expect(tranExecution.runArtifacts[0]?.maxStep).toBeUndefined();
+    expect(tranExecution.runArtifacts[0]?.useInitialConditions).toBe(false);
+    expect(tranExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(tranExecution.runArtifacts[0]?.outputDirectives).toEqual([".save"]);
+    expect(tranExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(tranExecution.runArtifacts[0]?.fourierProbes).toEqual(["V(mid)"]);
     expect(tranExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n" +
-        `tran\t.tran\t${tranExecution.plan.lineNumber}\t2\t1\t0\t1\n`,
+      "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
+        `tran\t.tran\t${tranExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t2\t3\tIndex;Time;V(mid)\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\n`,
     );
   });
 

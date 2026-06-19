@@ -159,6 +159,8 @@ packages a typed surface for:
   readiness with release archive evidence ledger checks
 - Hue package release evidence index summaries that group readiness, archive,
   closeout, and operations evidence into a compact release evidence index
+- Hue package release archive notarization summaries that turn release evidence
+  index readiness into final archive notarization checks
 
 ## Dependencies
 

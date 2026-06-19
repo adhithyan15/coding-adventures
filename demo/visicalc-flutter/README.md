@@ -126,7 +126,16 @@ clipboard (`InfiniteSheetModel.copyCell`/`cutCell`/`pasteCell` over the C ABI's
 `sc_copy`/`sc_cut`/`sc_paste`): copy the selected cell, then paste it elsewhere
 with its relative references shifted by the destination's offset (absolute `$`
 refs pinned, format carried); a cut clears the source on paste, and `pasteCell`
-returns `false` (a no-op) for an empty clipboard. `InfiniteSheetModel`
+returns `false` (a no-op) for an empty clipboard. The **Save / Load** buttons
+serialize the whole workbook (`InfiniteSheetModel.saveBook` over the C ABI's
+`sc_serialize`) to a JSON document held in memory and restore it
+(`loadBook` / `sc_deserialize`): the document captures only the source (formula
+text + typed literals) and per-cell formats — not the computed values, which the
+engine recomputes on load, so a loaded formula stays live. The **Undo / Redo**
+buttons walk the engine's snapshot history (`InfiniteSheetModel.undoEdit`/
+`redoEdit` over the C ABI's `sc_undo`/`sc_redo`); they disable at the history
+ends via `canUndo`/`canRedo`. Every edit is reversible and a restored formula
+recomputes live. `InfiniteSheetModel`
 (in `lib/engine.dart`) seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) so
 there's something to scroll to, and derives the extent from `usedRange()` + a
 margin.
@@ -138,7 +147,11 @@ engine-computed + dense (A1=15, E1=38, E5=169), a formula 1000 rows down
 (`Z1000` = 39) is reachable, the gaps are empty (sparse), column letters run
 AA/BA, and editing `A1` dirties the far dependent `Z1000` via `changedSince`. It
 also covers `InfiniteSheetModel` directly (`rowCells` one-read rows, `selectInf`
-clamping + source load, `commitInf` recompute).
+clamping + source load, `commitInf` recompute, drag-fill, clipboard copy/cut/
+paste, a save/load round trip — serialize → mutate → restore, with the loaded
+formula staying live and malformed input rejected — and an undo/redo walk on a
+fresh session (two edits → undo both → redo both with the formula recomputing
+live → a fresh edit forks history)).
 
 `test/infinite_grid_test.dart` is a **widget test** that pumps the real
 `InfiniteGrid` tree on the live engine, taps the A1 cell, edits `15`→`115` in the

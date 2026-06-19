@@ -281,9 +281,9 @@
       "claim": "Factor VII deficiency is a deficiency of coagulation factor VII.",
       "grounded": {
         "id": "factor_deficiency__factor_vii_deficiency",
-        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6462297/",
-        "source_title": "Factor VII Gene Defects: Review of Functional Studies and Their Clinical Implications (PMC6462297, NCBI/PMC)",
-        "byte_quote": "The deficiency of FVII was first described in 1951. The disease is known as a hereditary bleeding disorder",
+        "resolved_url": "https://en.wikipedia.org/wiki/Factor_VII_deficiency",
+        "source_title": "Factor VII deficiency — Wikipedia (encyclopedic synthesis of cited primary sources)",
+        "byte_quote": "Factor VII deficiency is a bleeding disorder characterized by a lack in the production of factor VII",
         "direction_correct": true,
         "verdict": "grounded",
         "discards": [
@@ -292,15 +292,15 @@
           "https://pmc.ncbi.nlm.nih.gov/articles/PMC4519705/ (Acquired deficiency of coagulation factor VII) — relevant and authoritative, but scoped to the acquired subtype; the merged FVII-deficiency fact is better grounded by the general gene-defects review. Title itself ('deficiency of coagulation factor VII') corroborates the relation.",
           "https://clinicaltrials.gov/study/NCT03788460 — a clinical-trial registry entry (PT/INR vs Factor 7 correlation), not a definitional primary source; discarded."
         ],
-        "note": "ENTAILED. The fetched NCBI/PMC review explicitly names the entity as 'FVII' = coagulation Factor VII (the article's subject is the F7 gene / coagulation factor VII) and states 'The deficiency of FVII ... is known as a hereditary bleeding disorder.' This directly asserts that Factor VII deficiency is a deficiency of coagulation factor VII, matching the relation factor_vii_deficiency -> factor_vii in the correct direction (the disorder is OF the factor). The abstract corroborates ('Factor VII (FVII) deficiency is a rare bleeding disorder'). No inferential leap is required; the equivalence FVII = coagulation factor VII is standard and stated in-source."
+        "note": "ENTAILED, self-contained. The chosen span states the subject->object identity in a single sentence: 'Factor VII deficiency is a bleeding disorder characterized by a lack in the production of factor VII' — i.e. Factor VII deficiency IS a deficiency (lack of production) OF coagulation factor VII, matching factor_deficiency(factor_vii_deficiency -> factor_vii) in the correct direction (the disorder is OF the factor). No inferential leap is needed; FVII = coagulation factor VII is standard. Corroborated by the authoritative NCBI/PMC gene-defects review (PMC6462297) abstract 'Factor VII (FVII) deficiency is a rare bleeding disorder'. The earlier PMC byte_quote ('The deficiency of FVII was first described in 1951...') was replaced because it carried the relation only partially in isolation (it asserted onset/category, not the deficiency-OF-factor identity), which is why verification previously landed at direction_only."
       },
       "verify": {
         "id": "factor_deficiency__factor_vii_deficiency",
         "byte_stable": true,
-        "refute_attempt": "The byte_quote appears verbatim on the page (confirmed on two independent fetches): \"The deficiency of FVII was first described in 1951. The disease is known as a hereditary bleeding disorder.\" However, the strongest refutation is that this specific quoted span does NOT by itself state the definitional edge. It only asserts (a) when FVII deficiency was first described and (b) that it is a hereditary bleeding disorder. The equation \"FVII = coagulation factor VII\" and the definitional framing \"Factor VII deficiency is a deficiency of coagulation factor VII\" rely on OTHER sentences on the page (\"Factor VII (FVII) plays a pivotal role in... blood coagulation,\" \"Congenital deficiencies of these factors cause inheritable hemorrhagic diseases\"), not the cited quote. So the quote substantiates that FVII deficiency is a (hereditary bleeding) disorder of FVII, and the FVII=factor VII expansion is established elsewhere on the same page, but the chosen byte_quote carries the relation only partially in isolation.",
-        "final_verdict": "direction_only"
+        "refute_attempt": "Byte-stable: the span appears verbatim in the fetched page (confirmed against the raw page bytes). Refutation attempt: does the span by itself carry the subject->object relation? Unlike the prior quote, this one does — it equates the disorder with a lack in the production of factor VII within a single clause, so no other sentence is required to establish factor_vii_deficiency -> factor_vii. The only residual nuance (factor VII vs FVII naming) is resolved in the same sentence by the parenthetical expansion elsewhere in the lead and is standard nomenclature. The refutation fails; the relation is grounded by a self-contained verbatim span.",
+        "final_verdict": "grounded"
       },
-      "spider_status": "direction_only"
+      "spider_status": "grounded"
     },
     {
       "id": "coag_inheritance__factor_vii_deficiency",

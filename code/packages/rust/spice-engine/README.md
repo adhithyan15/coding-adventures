@@ -135,10 +135,16 @@ option, vector-name/single-scale rawfile output toggles (`set wr_vecnames`,
 plus target-bearing rawfile-write markers (`write <rawfile> [probes...]`) and
 ASCII data-write markers (`wrdata <file> <probes...>`) are accepted as no-op
 control markers. Read-only control inspection commands (`display`, `listing`,
-`show`, `showmod`, `status`, `version`, and `help`) are also accepted as no-op
-markers. Other
-unrecognized non-comment commands emit diagnostics until a broader executed
-control subset is in scope.
+`show`, `showmod`, `status`, `version`, `help`, `echo`, `rusage`, and `where`)
+are also accepted as no-op markers. External script and shell commands
+(`source` and `shell`) emit explicit policy diagnostics and are not executed.
+Working-directory mutation commands (`cd`) also emit explicit policy
+diagnostics and are not executed. Control-flow commands (`if`, `while`,
+`foreach`, and `repeat`) emit explicit policy diagnostics as well.
+Variable/state mutation commands (`let`, `alter`, `alterparam`, `set`, and
+`unset`) emit explicit policy diagnostics unless they are one of the accepted
+no-op `set` options. Other unrecognized non-comment commands emit diagnostics
+until a broader executed control subset is in scope.
 `resolve_deck_sources` is the first include/library resolution layer: callers
 provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable
@@ -176,8 +182,10 @@ table for `.dc`, `.ac`, and `.tran` executions. Selected `.tran` plans route
 an internal fixed-step cap, and `UIC` initial-condition intent through that
 stable transient table surface. They also return selected `.four` harmonic
 results and a stable Fourier table. Executions also include selected-run
-artifact summaries plus `format_deck_run_artifact_table` output for stable
-result-row, output-probe, measurement, and Fourier counts.
+artifact summaries plus `format_deck_run_artifact_table` and
+`format_deck_run_artifact_csv` / `format_deck_run_artifact_json` output for
+stable result-row, output-probe, measurement, Fourier, and diagnostic
+count/name lists.
 `resolve_deck_fourier`, `fourier_transient_cards`,
 `fourier_transient_deck`, and `format_deck_fourier_table` extract parsed
 `.four` / `.FOUR` cards before `.end` and route transient samples into the
@@ -222,5 +230,6 @@ downstream deck execution helpers.
 `run_deck_analysis` routes that selected plan into the matching solver and
 stable deck-selected table output with normalized output-probe artifacts,
 selected measurement artifacts, selected transient Fourier artifacts,
-selected-run artifact summaries, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency
-grids, and `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
+selected-run artifact summaries with output-probe, measurement, and Fourier
+probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and `.tran`
+`START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.

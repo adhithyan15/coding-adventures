@@ -75,6 +75,25 @@ void  sc_copy(ScSession *s, const char *start, const char *end);
 void  sc_cut(ScSession *s, const char *start, const char *end);
 int   sc_paste(ScSession *s, const char *dst_start);
 
+/* Save / load. sc_serialize() returns a self-contained JSON document holding the
+   workbook's SOURCE (formula text + typed literals) and per-cell formats — not the
+   computed values, which recompute on load (small file, can't disagree with itself).
+   Free the returned string with sc_string_free(). sc_deserialize() replaces the
+   workbook with such a document: returns 1 on success, 0 if the data is malformed or
+   an unsupported version (the existing workbook is left untouched on failure). */
+char *sc_serialize(ScSession *s);
+int   sc_deserialize(ScSession *s, const char *data);
+
+/* Undo / redo (session history). sc_undo() reverts the most recent edit, sc_redo()
+   replays the most recently undone one; each returns 1 if it changed the document, 0
+   if there was nothing to do (or s == NULL). The host re-reads via sc_get_window /
+   sc_get_display_window / sc_get_raw afterwards. sc_can_undo() / sc_can_redo() return
+   1/0 so a host can enable/disable its Undo/Redo controls. */
+int   sc_undo(ScSession *s);
+int   sc_redo(ScSession *s);
+int   sc_can_undo(ScSession *s);
+int   sc_can_redo(ScSession *s);
+
 /* Viewport primitive — read just the visible window of the unbounded sheet.
    Coordinates are 1-based and inclusive. Each char* result must be freed with
    sc_string_free(). */

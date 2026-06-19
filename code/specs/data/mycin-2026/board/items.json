@@ -74,6 +74,76 @@
     {"id": "mgmt_older_adult",       "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "older_adult", "aged 72"]],                                                        "gold": ["ampicillin", "ceftriaxone", "vancomycin"]},
     {"id": "mgmt_neurosurgical",     "domain": "meningitis_tx", "tactic": "management", "chart": [["setting", "post_neurosurgical", "POD#3 craniotomy"]],                                         "gold": ["cefepime", "vancomycin"]},
     {"id": "mgmt_pregnant_adult",    "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "28-year-old"], ["pregnancy", "present", "G2P1 at 24 weeks"]],            "gold": ["ceftriaxone", "vancomycin"]},
-    {"id": "mgmt_betalactam_allergic","domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "adult"], ["allergy", "penicillin", "anaphylaxis to penicillin"]],       "gold": "INFEASIBLE"}
+    {"id": "mgmt_betalactam_allergic","domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "adult"], ["allergy", "betalactam", "anaphylaxis to multiple beta-lactams (whole-class)"]],       "gold": "INFEASIBLE"},
+
+    {"id": "micro_saureus_gram",   "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "staphylococcus_aureus",    "var": "Result",  "gold": "gram_positive"},
+    {"id": "micro_saureus_shape",  "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "staphylococcus_aureus",    "var": "Shape",   "gold": "cocci"},
+    {"id": "micro_nmen_gram",      "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "neisseria_meningitidis",   "var": "Result",  "gold": "gram_negative"},
+    {"id": "micro_nmen_shape",     "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "neisseria_meningitidis",   "var": "Shape",   "gold": "diplococci"},
+    {"id": "micro_vibrio_gram",    "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "vibrio_cholerae",          "var": "Result",  "gold": "gram_negative"},
+    {"id": "micro_vibrio_shape",   "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "vibrio_cholerae",          "var": "Shape",   "gold": "comma_shaped"},
+    {"id": "micro_vibrio_causes",  "domain": "micro", "tactic": "recall", "relation": "causes",     "subject": "vibrio_cholerae",          "var": "Disease", "gold": "cholera"},
+    {"id": "micro_ecoli_gram",     "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "escherichia_coli",         "var": "Result",  "gold": "gram_negative"},
+    {"id": "micro_ecoli_shape",    "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "escherichia_coli",         "var": "Shape",   "gold": "bacilli"},
+    {"id": "micro_pseud_gram",     "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "pseudomonas_aeruginosa",   "var": "Result",  "gold": "gram_negative"},
+    {"id": "micro_pseud_shape",    "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "pseudomonas_aeruginosa",   "var": "Shape",   "gold": "bacilli"},
+    {"id": "micro_spneumo_gram",   "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "streptococcus_pneumoniae", "var": "Result",  "gold": "gram_positive"},
+    {"id": "micro_spneumo_causes", "domain": "micro", "tactic": "recall", "relation": "causes",     "subject": "streptococcus_pneumoniae", "var": "Disease", "gold": "community_acquired_pneumonia"},
+
+    {"id": "pharm_metformin_class",  "domain": "pharm", "tactic": "recall", "relation": "drug_class",     "subject": "metformin",              "var": "Class",    "gold": "biguanide"},
+    {"id": "pharm_lisinopril_class", "domain": "pharm", "tactic": "recall", "relation": "drug_class",     "subject": "lisinopril",             "var": "Class",    "gold": "ace_inhibitor"},
+    {"id": "pharm_naloxone_class",   "domain": "pharm", "tactic": "recall", "relation": "drug_class",     "subject": "naloxone",               "var": "Class",    "gold": "opioid_antagonist"},
+    {"id": "pharm_flumazenil_class", "domain": "pharm", "tactic": "recall", "relation": "drug_class",     "subject": "flumazenil",             "var": "Class",    "gold": "benzodiazepine_antagonist"},
+    {"id": "pharm_warfarin_moa",     "domain": "pharm", "tactic": "recall", "relation": "mechanism",      "subject": "warfarin",               "var": "MOA",      "gold": "inhibits_vitamin_k_dependent_clotting_factor_synthesis"},
+    {"id": "pharm_apap_adverse",     "domain": "pharm", "tactic": "recall", "relation": "adverse_effect", "subject": "acetaminophen",          "var": "Effect",   "gold": "hepatic_necrosis"},
+    {"id": "pharm_apap_antidote",    "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "acetaminophen_poisoning","var": "Antidote", "gold": "acetylcysteine"},
+    {"id": "pharm_opioid_antidote",  "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "opioid_toxicity",        "var": "Antidote", "gold": "naloxone"},
+    {"id": "pharm_benzo_antidote",   "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "benzodiazepine_overdose","var": "Antidote", "gold": "flumazenil"},
+
+    {"id": "immuno_type1_mediator", "domain": "immuno", "tactic": "recall", "relation": "mediated_by",    "subject": "type_i_hypersensitivity",       "var": "Mediator",  "gold": "ige"},
+    {"id": "immuno_type4_mediator", "domain": "immuno", "tactic": "recall", "relation": "mediated_by",    "subject": "type_iv_hypersensitivity",      "var": "Mediator",  "gold": "t_cells"},
+    {"id": "immuno_as_hla",         "domain": "immuno", "tactic": "recall", "relation": "associated_hla", "subject": "ankylosing_spondylitis",        "var": "HLA",       "gold": "hla_b27"},
+    {"id": "immuno_xla_gene",       "domain": "immuno", "tactic": "recall", "relation": "gene_defect",    "subject": "x_linked_agammaglobulinemia",   "var": "Gene",      "gold": "btk"},
+    {"id": "immuno_cgd_deficiency", "domain": "immuno", "tactic": "recall", "relation": "deficiency_of",  "subject": "chronic_granulomatous_disease", "var": "Component", "gold": "nadph_oxidase"},
+    {"id": "immuno_digeorge_def",   "domain": "immuno", "tactic": "recall", "relation": "deficiency_of",  "subject": "digeorge_syndrome",             "var": "Component", "gold": "t_cells"},
+    {"id": "immuno_digeorge_gene",  "domain": "immuno", "tactic": "recall", "relation": "gene_defect",    "subject": "digeorge_syndrome",             "var": "Gene",      "gold": "chromosome_22q11_2_deletion"},
+
+    {"id": "genetics_hd_inherit",   "domain": "genetics", "tactic": "recall", "relation": "inheritance",          "subject": "huntington_disease",   "var": "Pattern", "gold": "autosomal_dominant"},
+    {"id": "genetics_hd_gene",      "domain": "genetics", "tactic": "recall", "relation": "gene_defect",          "subject": "huntington_disease",   "var": "Gene",    "gold": "htt"},
+    {"id": "genetics_hd_repeat",    "domain": "genetics", "tactic": "recall", "relation": "trinucleotide_repeat", "subject": "huntington_disease",   "var": "Repeat",  "gold": "cag"},
+    {"id": "genetics_marfan_inh",   "domain": "genetics", "tactic": "recall", "relation": "inheritance",          "subject": "marfan_syndrome",      "var": "Pattern", "gold": "autosomal_dominant"},
+    {"id": "genetics_fragx_repeat", "domain": "genetics", "tactic": "recall", "relation": "trinucleotide_repeat", "subject": "fragile_x_syndrome",   "var": "Repeat",  "gold": "cgg"},
+    {"id": "genetics_fragx_gene",   "domain": "genetics", "tactic": "recall", "relation": "gene_defect",          "subject": "fragile_x_syndrome",   "var": "Gene",    "gold": "fmr1"},
+    {"id": "genetics_pws_imprint",  "domain": "genetics", "tactic": "recall", "relation": "imprinting",           "subject": "prader_willi_syndrome","var": "Parent",  "gold": "paternal"},
+
+    {"id": "rheum_sle_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "systemic_lupus_erythematosus",   "var": "Antibody", "gold": "anti_dsdna"},
+    {"id": "rheum_gpa_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "granulomatosis_with_polyangiitis","var": "Antibody", "gold": "pr3"},
+    {"id": "rheum_ssc_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "systemic_sclerosis",            "var": "Antibody", "gold": "anti_scl70"},
+
+    {"id": "onco_ovarian_marker", "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "ovarian_cancer",               "var": "Marker", "gold": "ca_125"},
+    {"id": "onco_mtc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "medullary_thyroid_carcinoma",   "var": "Marker", "gold": "calcitonin"},
+    {"id": "onco_hcc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "hepatocellular_carcinoma",      "var": "Marker", "gold": "alpha_fetoprotein"},
+
+    {"id": "histo_rs_cond",    "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "reed_sternberg_cells", "var": "Condition", "gold": "hodgkin_lymphoma"},
+    {"id": "histo_hj_cond",    "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "howell_jolly_bodies",  "var": "Condition", "gold": "asplenia"},
+    {"id": "histo_heinz_cond", "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "heinz_bodies",        "var": "Condition", "gold": "g6pd_deficiency"},
+
+    {"id": "cardio_mr_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "holosystolic_apical",             "var": "Lesion", "gold": "mitral_regurgitation"},
+    {"id": "cardio_as_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "crescendo_decrescendo_systolic",  "var": "Lesion", "gold": "aortic_stenosis"},
+    {"id": "cardio_mvp_lesion", "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "late_systolic_click",            "var": "Lesion", "gold": "mitral_valve_prolapse"},
+    {"id": "cardio_tr_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "holosystolic_left_lower_sternal", "var": "Lesion", "gold": "tricuspid_regurgitation"},
+    {"id": "cardio_ar_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "decrescendo_diastolic",          "var": "Lesion", "gold": "aortic_regurgitation"},
+
+    {"id": "neuro_wernicke_def", "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "wernicke_area",       "var": "Deficit", "gold": "fluent_aphasia"},
+    {"id": "neuro_broca_def",    "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "broca_area",          "var": "Deficit", "gold": "nonfluent_aphasia"},
+    {"id": "neuro_arcuate_def",  "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "arcuate_fasciculus",  "var": "Deficit", "gold": "conduction_aphasia"},
+    {"id": "neuro_nigra_def",    "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "substantia_nigra",    "var": "Deficit", "gold": "parkinson_disease"},
+    {"id": "neuro_stn_def",      "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "subthalamic_nucleus", "var": "Deficit", "gold": "hemiballismus"},
+
+    {"id": "gi_celiac_dx",   "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "villous_atrophy",           "var": "Disease", "gold": "celiac_disease"},
+    {"id": "gi_crohn_dx",    "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "transmural_inflammation",    "var": "Disease", "gold": "crohn_disease"},
+    {"id": "gi_barrett_dx",  "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "goblet_cells",              "var": "Disease", "gold": "barrett_esophagus"},
+    {"id": "gi_hirsch_dx",   "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "absence_of_ganglion_cells", "var": "Disease", "gold": "hirschsprung_disease"},
+    {"id": "gi_eoe_dx",      "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "eosinophils_15_per_hpf",     "var": "Disease", "gold": "eosinophilic_esophagitis"}
   ]
 }
