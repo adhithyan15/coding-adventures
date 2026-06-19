@@ -2319,6 +2319,7 @@ class DeckRunArtifact:
     analysis: str
     directive: str
     line_number: int
+    source_name: str | None
     result_rows: int
     output_probe_count: int
     output_probes: list[str]
@@ -2398,6 +2399,7 @@ def _deck_run_artifacts(
             analysis=plan.analysis,
             directive=plan.directive,
             line_number=plan.line_number,
+            source_name=plan.source_name,
             result_rows=_deck_result_row_count(result),
             output_probe_count=len(output_probes),
             output_probes=list(output_probes),
@@ -2417,7 +2419,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
     rows = [
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
     ]
     for artifact in artifacts:
         rows.append(
@@ -2426,6 +2428,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
                     artifact.analysis,
                     artifact.directive,
                     str(artifact.line_number),
+                    artifact.source_name or "",
                     str(artifact.result_rows),
                     str(artifact.output_probe_count),
                     ";".join(artifact.output_probes),

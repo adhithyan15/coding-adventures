@@ -3407,6 +3407,7 @@ pub struct DeckRunArtifact {
     pub analysis: String,
     pub directive: String,
     pub line_number: usize,
+    pub source_name: Option<String>,
     pub result_rows: usize,
     pub output_probe_count: usize,
     pub output_probes: Vec<String>,
@@ -10087,6 +10088,7 @@ fn deck_run_artifacts(
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
         line_number: plan.line_number,
+        source_name: plan.source_name.clone(),
         result_rows,
         output_probe_count: output_probes.len(),
         output_probes: output_probes.to_vec(),
@@ -10107,15 +10109,16 @@ fn deck_run_artifacts(
 
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
             .to_string(),
     ];
     for artifact in artifacts {
         rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             artifact.analysis,
             artifact.directive,
             artifact.line_number,
+            artifact.source_name.as_deref().unwrap_or(""),
             artifact.result_rows,
             artifact.output_probe_count,
             artifact.output_probes.join(";"),
