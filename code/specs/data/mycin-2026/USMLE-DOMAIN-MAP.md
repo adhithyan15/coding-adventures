@@ -114,6 +114,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Histology buzzwords (Tier-2) | Pathology | seen_in (finding→condition) | 5 grounded (ADJ-only) | ✓ |
 | Cardiology murmurs (Tier-2) | Cardiology | murmur_indicates (murmur→lesion) | 5 grounded (ADJ-only) | ✓ |
 | Neurology localization (Tier-2) | Neurology | lesion_causes (site→deficit) | 5 grounded (ADJ-only) | ✓ |
+| GI biopsy (Tier-2) | Gastroenterology | biopsy_finding_in (finding→dx) | 5 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
 faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
@@ -169,6 +170,14 @@ faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
 6. Respiratory (PFT pattern→disease, ABG→disorder)
 7. Renal/urinary (acid-base, electrolyte, glomerular disease→finding)
 8. Gastrointestinal (LFT pattern→disease, biopsy→diagnosis)
+    *Started (GI — sixth Tier-2 domain):* `biopsy_finding_in` for villous atrophy→celiac
+    (NBK441900), transmural inflammation→Crohn (NBK436021), goblet cells / intestinal
+    metaplasia→Barrett esophagus (NBK430979), absence of ganglion cells→Hirschsprung
+    (NBK562142), ≥15 eosinophils/HPF→eosinophilic esophagitis (NBK459297) — 5 edges, all
+    grounded to byte-stable NCBI StatPearls spans naming both finding and diagnosis, shipped
+    as the tenth **ADJ-only** domain (`recall/gi-edges.adj`). Deferred — ulcerative colitis
+    (crypt distortion sentence omits the disease name) and Whipple (PAS-foamy-macrophage
+    criterion omits the disease name in the same span); LFT-pattern→disease subdomain.
 9. Neurology & special senses (lesion→deficit, tract→sign)
     *Started (NEURO — fifth Tier-2 domain):* `lesion_causes` for Wernicke area→fluent
     aphasia, Broca area→nonfluent aphasia, arcuate fasciculus→conduction aphasia (NBK559315),
