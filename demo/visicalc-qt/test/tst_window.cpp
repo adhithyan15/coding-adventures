@@ -25,6 +25,7 @@ private slots:
     void fillReplicatesShiftingReferences();
     void clipboardCopyCutPaste();
     void saveLoadRoundTrips();
+    void undoRedoWalksHistory();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -201,6 +202,39 @@ void TstWindow::saveLoadRoundTrips() {
     // Garbage in is rejected (false), leaving the workbook intact.
     QVERIFY(!m.deserialize(QStringLiteral("not a workbook")));
     QCOMPARE(m.window(1, 5, 1, 5).at(0).toList().at(0).toString(), QStringLiteral("28.00"));
+}
+
+// Undo / redo (the Undo / Redo controls drive model.undo/redo): make two edits,
+// walk history back and forward, and confirm a restored formula recomputes live.
+void TstWindow::undoRedoWalksHistory() {
+    SpreadsheetModel m;
+    // (The model seeds its budget through set_cell, so those seed edits are
+    // themselves undoable — history is non-empty from construction.)
+    // Two fresh edits on a clear column: H1 = 2, I1 = H1*5 = 10 (col 8/9).
+    m.setCell("H1", "2");
+    m.setCell("I1", "=H1*5");
+    QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QStringLiteral("10"));
+    QVERIFY(m.canUndo());
+
+    // Undo the formula, then the literal.
+    QVERIFY(m.undo());
+    QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QString()); // I1 gone
+    QVERIFY(m.undo());
+    QCOMPARE(m.window(1, 8, 1, 8).at(0).toList().at(0).toString(), QString()); // H1 gone
+
+    // Redo both: I1 recomputes live (10).
+    QVERIFY(m.canRedo());
+    QVERIFY(m.redo());
+    QVERIFY(m.redo());
+    QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QStringLiteral("10"));
+    QVERIFY(!m.canRedo());
+    QVERIFY(!m.redo()); // nothing left to redo
+
+    // A fresh edit forks history (drops the redo branch).
+    QVERIFY(m.undo()); // back: I1 gone
+    QVERIFY(m.canRedo());
+    m.setCell("A1", "7");
+    QVERIFY(!m.canRedo());
 }
 
 QTEST_MAIN(TstWindow)

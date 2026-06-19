@@ -378,3 +378,41 @@ bool SpreadsheetModel::deserialize(const QString &data) {
     }
     return ok;
 }
+
+// Undo / redo availability — thin reads of the engine's history stacks; the
+// canUndo/canRedo Q_PROPERTYs are bound to revisionChanged so the QML buttons
+// re-evaluate these after every edit (and after undo/redo themselves).
+bool SpreadsheetModel::canUndo() const { return sc_can_undo(session_) != 0; }
+bool SpreadsheetModel::canRedo() const { return sc_can_redo(session_) != 0; }
+
+// Undo / redo: revert / replay the most recent edit. On success (returned true)
+// any cell could have changed, so we recompute the grid, regrow the extent,
+// refresh the formula bar, and bump `revision` — which also re-evaluates the
+// canUndo/canRedo bindings. Shared body for both directions.
+bool SpreadsheetModel::undo() {
+    const bool ok = sc_undo(session_) != 0;
+    if (ok) {
+        recompute();
+        computeExtent();
+        infFormula_ = rawAt(infAddress());
+        revision_++;
+        emit changed();
+        emit infSelectionChanged();
+        emit revisionChanged();
+    }
+    return ok;
+}
+
+bool SpreadsheetModel::redo() {
+    const bool ok = sc_redo(session_) != 0;
+    if (ok) {
+        recompute();
+        computeExtent();
+        infFormula_ = rawAt(infAddress());
+        revision_++;
+        emit changed();
+        emit infSelectionChanged();
+        emit revisionChanged();
+    }
+    return ok;
+}
