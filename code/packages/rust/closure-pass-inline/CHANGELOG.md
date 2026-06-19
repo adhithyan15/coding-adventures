@@ -2,6 +2,51 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.10.0] - 2026-06-19
+
+### Added (CLOC15 PR-5 — value capture in `return`-argument position)
+
+The value-capture path now admits the call appearing as the **entire argument
+of a `return` statement** (`return f(x)`), the ubiquitous "tail-call a helper"
+shape. PR-3 already handled `const r = f(x)` / `let r = f(x)`; this slice adds
+the return position, where the helper's tail value becomes the **caller's own
+return value** — with no temp, because the value flows straight out:
+
+```js
+function helper(p) { log(p); return p + 1; }
+function main()    { return helper(3); }
+main(); main();
+// SIMPLE  ⇒  function main(){ log(3); return 4 }  (helper declaration removed)
+```
+
+Soundness: `return` is a terminator, so the single `return f(x)` is the last
+reachable statement on its path. Replacing it with `body…; return E` runs the
+body's effects exactly as they ran inside the callee before its own return,
+then returns the same value; any statement textually after `return f(x)` was
+dead before and remains dead after.
+
+Declined positions (the call is not the *entire* return argument, so hoisting
+the body would change evaluation order):
+
+- `return cond && f(x)` — the call is the right operand of `&&`
+  (a `LogicalExpression`, not a bare call);
+- `return c ? f(x) : y` — the call is a branch of a `ConditionalExpression`;
+- `return f(x)` where `f` has no tail-return *value* (a bare `return;`) — a
+  void candidate, not a valued one, so nothing is synthesized.
+
+Composes with the existing machinery: callee locals are alpha-renamed
+program-fresh and non-simple arguments are materialised once into per-argument
+temps (PR-4a) before the spliced body, exactly as in the `const`-init path.
+
+**Implementation.** `build_captured_body` now takes a `CaptureTail` —
+`IntoTemp(&temp)` (the PR-3 `const <temp> = E;` tail) or `AsReturn` (the new
+`return E;` tail) — so the rename / substitute / arg-materialisation logic is
+shared and only the final statement differs. `try_capture_in_stmt` matches a
+`ReturnStatement` whose argument is exactly the target call via the new
+`capture_splice_for_return`. 5 new tests (70 total).
+
+This resolves CLOC15 spec **Open question 2**'s return-argument case.
+
 ## [0.9.0] - 2026-06-19
 
 ### Added (CLOC15 PR-4b — `if` without an early exit in the body)

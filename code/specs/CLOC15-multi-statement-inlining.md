@@ -267,6 +267,43 @@ fresh-rename treatment — and (ii) extending the body-shape walk to accept the
 admitted control constructs while still rejecting early exits. Defer until 4a
 ships; it is independent.
 
+### PR-5 — value capture in `return`-argument position (**merged**)
+
+**Status:** merged. PR-3 captured a used result only when the call was the
+entire initializer of a single-declarator `var`/`let`/`const`. PR-5 admits the
+other airtight value position from *Open question 2*: a call that is the
+**entire argument of a `return`** (`return f(x)`), the everyday "tail-call a
+helper" shape.
+
+**The transform.** Replace `return f(args);` with the hoisted body followed by
+the callee's tail return re-emitted as **this** function's return — *no temp*,
+because the value flows straight out:
+
+```js
+function helper(p) { log(p); return p + 1; }
+function main()    { return helper(3); }
+// ⇒
+function main()    { log(3); return 4; }   // (after fold; helper decl removed)
+```
+
+**Soundness.** `return` is a terminator: the single `return f(x)` is the last
+reachable statement on its path, so splicing `body…; return E` in its place
+runs the body's effects exactly as they ran inside the callee before its own
+return, then returns the same value. Any statement textually after
+`return f(x)` was dead before and remains dead after. The call must be the
+*entire* return argument — `return cond && f(x)` (a `LogicalExpression`),
+`return c ? f(x) : y` (a `ConditionalExpression`), and a void helper used as
+`return f(x)` (no tail-return value to surface) are declined. Local
+alpha-renaming and PR-4a per-argument temps compose unchanged.
+
+**Implementation.** `build_captured_body` gained a `CaptureTail` parameter —
+`IntoTemp(&temp)` (PR-3's `const <temp> = E;`) or `AsReturn` (PR-5's
+`return E;`) — so the rename / substitute / arg-materialisation logic is shared
+and only the final statement varies. `try_capture_in_stmt` matches a
+`ReturnStatement` whose argument is exactly the target call
+(`capture_splice_for_return`); because that helper is invoked from
+`splice_valued_in_stmt_vec`, it fires inside any nested function body.
+
 ## Implementation findings (after PR-1..PR-3, verified against `closurec`)
 
 Empirical behaviour of the merged slices, confirmed by running the real
@@ -309,6 +346,11 @@ Empirical behaviour of the merged slices, confirmed by running the real
    call when its enclosing statement is a plain `ExpressionStatement`,
    `VariableDeclaration` init, or `return` argument, and the call is not under a
    short-circuit/conditional operator."
+   **Resolved:** PR-3 implemented the `VariableDeclaration`-init position and
+   PR-5 the `return`-argument position (see the staged plan above); both reject
+   the short-circuit/conditional sub-positions. Assignment-target capture
+   remains unbuilt (and is moot until the typed bridge supports assignment
+   expressions — see *Implementation findings*).
 
 3. **`var` hoisting vs. let/const.** First slice should restrict callee locals
    to `let`/`const` to sidestep hoisting reasoning, then admit `var` once the

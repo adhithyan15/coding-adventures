@@ -123,7 +123,7 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
-use coding_adventures_javascript_ast::statement::TaggedStatement;
+use coding_adventures_javascript_ast::statement::{ReturnStatement, TaggedStatement};
 use coding_adventures_javascript_ast::{
     AssignmentTarget, BindingTarget, BlockStatement, CallExpression, Declaration, Expression,
     ExpressionStatement, ForInit, FunctionDeclaration, FunctionParam, Identifier, IfStatement,
@@ -302,15 +302,20 @@ fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
     // removes call sites, never declarations).
     changed |= inline_void_statement_helpers(program, &decl_counts, nodes_touched);
 
-    // Phase 5 — CLOC15 PR-3: inline a single-use multi-statement helper
+    // Phase 5 — CLOC15 PR-3/PR-5: inline a single-use multi-statement helper
     // whose RESULT IS USED, by hoisting its body before the enclosing
-    // statement and capturing the tail-return value into a fresh temp. The
-    // sound subset is narrow (the call is the entire initializer of a
-    // single-declarator `var`/`let`/`const`), so hoisting the body before
-    // the declaration cannot reorder any other evaluation. See
-    // [`inline_valued_statement_helpers`]. Runs after Phase 4 because the
-    // void pass consumes the discarded-statement uses first, so this pass
-    // only ever sees the value-position use.
+    // statement and consuming the tail-return value at the call site. The
+    // sound value positions are:
+    //   - PR-3: the call is the entire initializer of a single-declarator
+    //     `var`/`let`/`const` (`const r = f(x)`), captured into a fresh temp;
+    //   - PR-5: the call is the entire argument of a `return` (`return f(x)`),
+    //     re-emitted as the caller's own `return E` — no temp, since the
+    //     value flows straight out and `return` is a terminator.
+    // Both reject the call appearing under a short-circuit / conditional
+    // operator (`a && f(x)`, `c ? f(x) : y`), where hoisting would change
+    // evaluation. See [`inline_valued_statement_helpers`]. Runs after Phase 4
+    // because the void pass consumes the discarded-statement uses first, so
+    // this pass only ever sees the value-position use.
     changed |= inline_valued_statement_helpers(program, &decl_counts, nodes_touched);
 
     changed
@@ -2005,10 +2010,53 @@ fn try_capture_in_stmt(
     avoid: &mut HashSet<String>,
     nodes_touched: &mut u32,
 ) -> Option<Vec<Statement>> {
-    if let Statement::Declaration(Declaration::VariableDeclaration(vd)) = stmt {
-        return capture_splice_for_vardecl(vd, cand, avoid, nodes_touched);
+    match stmt {
+        // `const r = f(x);` / `let r = f(x);` — PR-3 value capture into the
+        // declared binding via a hoisted temp.
+        Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
+            capture_splice_for_vardecl(vd, cand, avoid, nodes_touched)
+        }
+        // `return f(x);` — PR-5 value capture in return-argument position.
+        Statement::Tagged(TaggedStatement::ReturnStatement(rs)) => {
+            capture_splice_for_return(rs, cand, avoid, nodes_touched)
+        }
+        _ => None,
     }
-    None
+}
+
+/// The return-position capture core (CLOC15 PR-5): a `return` statement
+/// qualifies iff its argument is **exactly** `cand.name(args)` (matching
+/// arity, the call is the entire argument — not `return a + f(x)` nor
+/// `return c ? f(x) : y`, which are not `CallExpression`s and so are
+/// declined). The replacement is the hoisted body with the callee's tail
+/// `return E` re-emitted as *this* function's `return E` — no temp, because
+/// the value flows straight out.
+///
+/// Soundness: `return` is a terminator, so the single `return f(x)` statement
+/// is the last reachable statement on its path; replacing it with
+/// `body…; return E` runs the body's effects (exactly as they ran inside the
+/// callee before its own return) and then returns the same value. Anything
+/// textually after `return f(x)` was dead before and remains dead after.
+fn capture_splice_for_return(
+    rs: &ReturnStatement,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> Option<Vec<Statement>> {
+    let arg = rs.argument.as_ref()?;
+    let Expression::CallExpression(ce) = arg else {
+        return None; // the call must be the ENTIRE return argument
+    };
+    if !is_void_target_call(ce, cand) {
+        return None;
+    }
+    Some(build_captured_body(
+        cand,
+        &ce.arguments,
+        CaptureTail::AsReturn,
+        avoid,
+        nodes_touched,
+    ))
 }
 
 /// The capture core: a `VariableDeclaration` qualifies iff it has EXACTLY
@@ -2042,7 +2090,13 @@ fn capture_splice_for_vardecl(
         t
     };
 
-    let mut out = build_captured_body(cand, &ce.arguments, &temp, avoid, nodes_touched);
+    let mut out = build_captured_body(
+        cand,
+        &ce.arguments,
+        CaptureTail::IntoTemp(&temp),
+        avoid,
+        nodes_touched,
+    );
 
     // The original declaration, initializer rewritten to the temp.
     let mut new_vd = vd.clone();
@@ -2056,14 +2110,34 @@ fn capture_splice_for_vardecl(
     Some(out)
 }
 
+/// How a captured tail-return value is consumed at the splice site. The
+/// rename/substitute/arg-materialisation work is identical; only the final
+/// statement differs, so the two value-capture paths share
+/// [`build_captured_body`] and vary only this tail.
+enum CaptureTail<'a> {
+    /// Bind the value into a fresh `const <temp>;`. Used when the call was a
+    /// variable initializer (`const r = f(x)`) or expression-statement result:
+    /// a later statement reads the value through `<temp>` (CLOC15 PR-3).
+    IntoTemp(&'a str),
+    /// The call was itself the argument of a `return` statement
+    /// (`return f(x)`). Emit `return <value>;` directly — no temp is needed
+    /// because the value flows straight out as the enclosing function's return
+    /// value. Sound because `return` is a terminator: nothing in the caller's
+    /// statement list runs after it, so splicing `body; return E` in place of
+    /// `return f(x)` preserves both the effects and the returned value
+    /// (CLOC15 PR-5).
+    AsReturn,
+}
+
 /// Build the hoisted body for a captured call: the callee body with its
 /// tail `return E` removed, locals alpha-renamed, params substituted, and a
-/// trailing `const <temp> = E;` capturing the (renamed/substituted) return
-/// value.
+/// trailing statement consuming the (renamed/substituted) return value per
+/// `tail` — either `const <temp> = E;` ([`CaptureTail::IntoTemp`]) or
+/// `return E;` ([`CaptureTail::AsReturn`]).
 fn build_captured_body(
     cand: &VoidStmtCandidate,
     args: &[Expression],
-    temp: &str,
+    tail: CaptureTail<'_>,
     avoid: &mut HashSet<String>,
     nodes_touched: &mut u32,
 ) -> Vec<Statement> {
@@ -2113,21 +2187,35 @@ fn build_captured_body(
         substitute(&mut return_value, &param_map);
     }
 
-    // Capture the return value into the fresh temp.
-    body.push(Statement::Declaration(Declaration::VariableDeclaration(
-        VariableDeclaration {
-            cv: None,
-            kind: VarKind::Const,
-            declarations: vec![VariableDeclarator {
-                cv: None,
-                id: BindingTarget::Identifier(Identifier {
+    // Consume the (renamed/substituted) return value per the requested tail.
+    match tail {
+        // `const <temp> = E;` — a later statement reads it through `<temp>`.
+        CaptureTail::IntoTemp(temp) => {
+            body.push(Statement::Declaration(Declaration::VariableDeclaration(
+                VariableDeclaration {
                     cv: None,
-                    name: temp.to_string(),
-                }),
-                init: Some(return_value),
-            }],
-        },
-    )));
+                    kind: VarKind::Const,
+                    declarations: vec![VariableDeclarator {
+                        cv: None,
+                        id: BindingTarget::Identifier(Identifier {
+                            cv: None,
+                            name: temp.to_string(),
+                        }),
+                        init: Some(return_value),
+                    }],
+                },
+            )));
+        }
+        // `return E;` — the value flows straight out (no temp).
+        CaptureTail::AsReturn => {
+            body.push(Statement::Tagged(TaggedStatement::ReturnStatement(
+                ReturnStatement {
+                    cv: None,
+                    argument: Some(return_value),
+                },
+            )));
+        }
+    }
 
     *nodes_touched += body.len() as u32;
 
@@ -3346,6 +3434,77 @@ mod tests {
         assert_eq!(
             inline_source("function f(a) { g(); return; } var x = f(1);"),
             "function f(a){g();return};var x=f(1);"
+        );
+    }
+
+    // ---- CLOC15 PR-5: value capture in `return`-argument position --------
+
+    #[test]
+    fn captures_helper_in_return_position() {
+        // The signature PR-5 case: `return f(x)` where `f` is a single-use
+        // multi-statement helper. The body is hoisted into the caller and the
+        // callee's tail `return a` (param substituted by `7`) becomes the
+        // caller's own `return 7` — no temp, the value flows straight out.
+        assert_eq!(
+            inline_source("function f(a) { g(); return a; } function main() { return f(7); }"),
+            "function f(a){g();return a};function main(){g();return 7};"
+        );
+    }
+
+    #[test]
+    fn captures_return_position_with_local_and_nonsimple_arg() {
+        // Return-position capture composes with local alpha-renaming AND the
+        // PR-4a per-argument temp: the non-simple argument `compute()` is
+        // materialised once into a fresh temp before the body, the callee
+        // local `t` is renamed program-fresh, and the tail expression becomes
+        // the caller's return value.
+        assert_eq!(
+            inline_source(
+                "function f(p) { const t = p + 1; return t; } \
+                 function main() { return f(compute()); }"
+            ),
+            "function f(p){const t=p + 1;return t};\
+             function main(){const a=compute();const b=a + 1;return b};"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_return_under_short_circuit() {
+        // `return cond && f(x)` — the call is not the *entire* return argument
+        // (it is the right operand of `&&`), so hoisting the body before the
+        // `return` would run it unconditionally, changing semantics. The
+        // argument is a `LogicalExpression`, not a `CallExpression`, so it is
+        // declined.
+        assert_eq!(
+            inline_source(
+                "function f(a) { g(); return a; } function main() { return cond && f(7); }"
+            ),
+            "function f(a){g();return a};function main(){return cond && f(7)};"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_return_conditional() {
+        // `return c ? f(x) : y` — same reasoning: the return argument is a
+        // `ConditionalExpression`, not a bare call, so the body must not be
+        // hoisted out of the conditional. Declined.
+        assert_eq!(
+            inline_source(
+                "function f(a) { g(); return a; } function main() { return c ? f(7) : 0; }"
+            ),
+            "function f(a){g();return a};function main(){return c?f(7):0};"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_void_helper_in_return_position() {
+        // A helper with no tail-return *value* (bare `return;`) is a void
+        // candidate, not a valued one; `return f(x)` would return its
+        // `undefined`, which the valued path does not synthesize — so the
+        // call is left intact rather than mis-spliced.
+        assert_eq!(
+            inline_source("function f(a) { g(); return; } function main() { return f(1); }"),
+            "function f(a){g();return};function main(){return f(1)};"
         );
     }
 }
