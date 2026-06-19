@@ -80,6 +80,8 @@ All notable changes to this package will be documented in this file.
   remediation blockers.
 - `IntegrationMeshPreflightReadinessSummary` and helpers for combining mesh
   release readiness with substrate preflight gates.
+- `IntegrationMeshPreflightRepairReadinessSummary` and helpers for combining
+  mesh preflight readiness with protocol-scoped repair actions.
 - `IntegrationMeshReadinessHandoffPackage`, summary helpers, and D23 mesh
   readiness handoff projections for release coordination across substrate
   actions, evidence remediation, and release-ready state.

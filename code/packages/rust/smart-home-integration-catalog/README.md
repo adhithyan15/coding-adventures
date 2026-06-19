@@ -67,6 +67,8 @@ runtime and Chief of Staff tools a typed catalog for:
   readiness rollup
 - mesh action readiness summaries that combine release readiness with the
   substrate action queue and next concrete low-level action
+- mesh preflight repair readiness summaries that combine release readiness,
+  substrate preflight gates, and protocol-scoped repair queues
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and
