@@ -1463,17 +1463,27 @@ fn void_candidate_from_function(
         if param_set.contains(name) || local_set.contains(name) {
             continue; // a parameter or a callee-local — handled by splicing
         }
-        // (6) a free identifier. Three sound cases; anything else is rejected.
+        // (6) a free identifier. Sound cases below; anything else is rejected.
         if top_level_decls.contains(name) {
-            // CLOC16 Slice A: resolves to a top-level declaration. Sound to
-            // splice ONLY at a direct `program.body` site (where program scope
-            // guarantees the same resolution, unshadowed). The splice walker
-            // enforces that; here we just record the obligation. Note this
-            // holds regardless of `decl_counts[name]`: even if the name is
-            // ALSO bound in some nested scope elsewhere, a top-level splice
-            // site sees only program scope, so the reference still resolves to
-            // the top-level binding.
-            free_top_level.insert(name.clone());
+            // Resolves to a top-level declaration. Two sub-cases by how many
+            // times the name is declared **program-wide** (`count_decl_names_*`
+            // counts every binding at every depth, so the count is exact):
+            if decl_counts.get(name).copied().unwrap_or(0) == 1 {
+                // CLOC16 Slice B (uniqueness gate): declared EXACTLY ONCE, and
+                // that declaration is the top-level one. No other binding of
+                // the name exists anywhere in the program, so NO scope — at
+                // any splice site, nested or not — can shadow it. It therefore
+                // behaves like a true global for splice-location purposes: no
+                // obligation, splices everywhere. (A scope walk would be
+                // needed only to admit the multiply-declared case below.)
+            } else {
+                // CLOC16 Slice A: the name is ALSO declared elsewhere (a local
+                // in some other scope could shadow it). Sound to splice ONLY at
+                // a direct `program.body` site, where program scope guarantees
+                // the same resolution. Record the obligation; the splice walker
+                // enforces the top-level-only restriction.
+                free_top_level.insert(name.clone());
+            }
         } else if decl_counts.get(name).copied().unwrap_or(0) == 0 {
             // A true global — declared nowhere, so unshadowable everywhere.
             // No obligation (unchanged behaviour).
@@ -3309,29 +3319,92 @@ mod tests {
         );
     }
 
+    // ----- CLOC16 Slice B: nested sites for UNIQUELY-declared top-level refs
+
     #[test]
-    fn does_not_inline_free_top_level_when_call_is_nested() {
-        // The SAME helper, but its single call sits inside another function.
-        // That is a NESTED splice site where a local could shadow `K`, so
-        // Slice A declines it (the call is left intact). `main` is multi-use
-        // so it is not itself inlined, keeping the call nested.
+    fn inlines_unique_top_level_ref_at_nested_site() {
+        // CLOC16 Slice B (uniqueness gate): `K` is a top-level `const`
+        // declared EXACTLY ONCE program-wide, so no other binding of `K`
+        // exists anywhere — it cannot be shadowed at any site. The helper `f`
+        // therefore carries no top-level-only obligation and inlines even at a
+        // NESTED call site (inside `main`). (`main` is multi-use, so it is not
+        // itself inlined — the call stays nested.) Previously declined by
+        // Slice A's blanket top-level-only rule; admitting it is the intended
+        // Slice B behaviour change.
         assert_eq!(
             inline_source(
                 "const K = 5; function f() { sink(K); } \
                  function main() { f(); } main(); main();"
             ),
-            "const K=5;function f(){sink(K)};function main(){f()};main();main();"
+            "const K=5;function f(){sink(K)};function main(){sink(K)};main();main();"
         );
     }
 
     #[test]
-    fn does_not_inline_free_top_level_when_call_in_top_level_block() {
-        // A call inside a top-level BLOCK is not a direct `program.body`
-        // member — a block-scoped `let K` there could shadow the top-level
-        // `K`, so Slice A declines it.
+    fn inlines_unique_top_level_ref_in_block() {
+        // Likewise inside a top-level block: `K` declared once ⇒ unshadowable,
+        // so the splice is sound there too.
         assert_eq!(
             inline_source("const K = 5; function f() { sink(K); } { f(); }"),
-            "const K=5;function f(){sink(K)};{f()}"
+            "const K=5;function f(){sink(K)};{sink(K)}"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_multiply_declared_top_level_ref_at_nested_site() {
+        // The name is declared TWICE — top-level `function dep` AND a local
+        // `let dep` in `g`. `decl_counts[dep] == 2`, so the uniqueness gate
+        // does NOT apply and `f` keeps the Slice A top-level-only obligation.
+        // Its single call sits inside `g` (a nested site that DOES shadow
+        // `dep`), so the splice is declined — preventing the miscompile where
+        // `use(dep)` would read `g`'s local. `dep` is multi-use+multi-statement
+        // so it is not itself inlined; `g` is multi-use so it stays.
+        assert_eq!(
+            inline_source(
+                "function dep() { keep(); return 1; } dep(); \
+                 function f() { log(0); use(dep); } \
+                 function g() { let dep = 99; f(); } g(); g();"
+            ),
+            "function dep(){keep();return 1};dep();\
+             function f(){log(0);use(dep)};function g(){let dep=99;f()};g();g();"
+        );
+    }
+
+    #[test]
+    fn inlines_multiply_declared_top_level_ref_at_top_level_site() {
+        // The SAME multiply-declared `dep`, but `f`'s single call is at the
+        // top level — a direct `program.body` site where program scope cannot
+        // shadow `dep` (the other `dep` is a local in `other`, out of scope
+        // here). Slice A admits it. This keeps the Slice A top-level path
+        // exercised now that the uniqueness gate handles the single-decl case.
+        assert_eq!(
+            inline_source(
+                "function dep() { keep(); return 1; } dep(); \
+                 function f() { log(0); use(dep); } f(); \
+                 function other() { let dep = 5; return dep; } other(); other();"
+            ),
+            "function dep(){keep();return 1};dep();function f(){log(0);use(dep)};\
+             log(0);use(dep);function other(){let dep=5;return dep};other();other();"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_when_nested_function_shadows_top_level_ref() {
+        // The soundness linchpin for the uniqueness gate: `count_decl_names_*`
+        // counts NESTED function-declaration names too, so the top-level
+        // `function dep` plus the nested `function dep` inside `g` make
+        // `decl_counts[dep] == 2`. `f` therefore keeps the top-level-only
+        // obligation, and its single (nested) call inside `g` is declined —
+        // preventing the miscompile where the spliced `use(dep)` would capture
+        // `g`'s nested `dep` (99) instead of the top-level one.
+        assert_eq!(
+            inline_source(
+                "function dep() { return 1; } dep(); \
+                 function f() { log(0); use(dep); } \
+                 function g() { function dep() { return 99; } f(); dep(); } g(); g();"
+            ),
+            "function dep(){return 1};dep();function f(){log(0);use(dep)};\
+             function g(){function dep(){return 99};f();dep()};g();g();"
         );
     }
 

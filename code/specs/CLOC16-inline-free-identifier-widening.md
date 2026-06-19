@@ -1,6 +1,7 @@
 # CLOC16 — inline free-identifier widening (top-level declarations)
 
-**Status:** Slice A **implemented** (`closure-pass-inline` 0.11.0); Slice B
+**Status:** Slice A **implemented** (`closure-pass-inline` 0.11.0); Slice B1
+(global-uniqueness gate) **implemented** (0.12.0); Slice B2 (scope walk)
 deferred. Resolves [CLOC15](CLOC15-multi-statement-inlining.md) **Open
 question 1**.
 
@@ -117,18 +118,37 @@ sound enforcement levels:
   > declines it — correctly, since a block-scoped `let`/`const` there could
   > shadow.
 
-- **Slice B (nested splice site — needs an in-scope-binding set).** Thread the
-  set of **binding names in scope at the splice point** through the splice
-  walkers: on entering a function body add its params, its hoisted `var`s, its
-  nested `function` declaration names, and the function's own name; on entering
-  a block add that block's `let`/`const`/`function` names; etc. Before
-  splicing a `free_top_level` candidate, reject (decline, leave the call) if
-  **any** `free_top_level` name is in the current in-scope set. This admits the
-  much larger population of helpers called *inside* other functions, gated by a
-  real (if bootstrap) shadowing analysis. CLOC13's `closure-scope-analyzer`
-  already computes per-node scope information; Slice B may either consume it
-  (preferred long-term) or use a self-contained enclosing-binding walk (simpler
-  bootstrap, matching CLOC15 OQ1's suggestion).
+- **Slice B1 (nested splice site — global-uniqueness gate, IMPLEMENTED).** A
+  much simpler sound mechanism than a scope walk handles the *common* nested
+  case. `count_decl_names_*` counts **every** binding declaration at every
+  depth program-wide (its catch-all arm is deliberately exhaustive), so
+  `decl_counts[name]` is exact. If a top-level free ident has
+  `decl_counts[name] == 1`, it is declared **exactly once** in the whole
+  program — **no other binding of the name exists anywhere**, so it cannot be
+  shadowed at *any* splice site. Such a name carries **no** top-level-only
+  obligation (it is treated like a true global for splice-location): the
+  candidate inlines even at nested sites, with no scope walk. A top-level name
+  with `decl_counts > 1` keeps the Slice A top-level-only obligation. This is
+  sound on the pass's own terms — the gate reads `decl_counts` of the program
+  the pass actually receives, so `== 1` genuinely means unshadowable there.
+  Implemented in `void_candidate_from_function` as a single classification
+  branch; the splice-site guards are unchanged.
+
+- **Slice B2 (nested splice site — in-scope-binding set, FUTURE).** The
+  remaining case is a top-level name that is *also* declared elsewhere
+  (`decl_counts > 1`) but is **not actually shadowed at the specific call
+  site** (the other declaration is in an unrelated scope). Admitting it needs a
+  real shadowing check: thread the set of **binding names in scope at the
+  splice point** through the splice walkers — on entering a function body add
+  its params, its hoisted `var`s, its nested `function` declaration names, and
+  the function's own name; on entering a block add that block's
+  `let`/`const`/`function` names; etc. Before splicing a `free_top_level`
+  candidate, reject if **any** `free_top_level` name is in the current in-scope
+  set. CLOC13's `closure-scope-analyzer` already computes per-node scope
+  information; Slice B2 may consume it (preferred long-term) or use a
+  self-contained enclosing-binding walk (simpler bootstrap, matching CLOC15
+  OQ1's suggestion). Lower priority than B1 since the multiply-declared name is
+  the rarer case and B1 already covers the bulk.
 
 ### 3. Both inline paths share the gate
 
