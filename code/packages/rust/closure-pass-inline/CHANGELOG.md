@@ -2,6 +2,71 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.11.0] - 2026-06-19
+
+### Added (CLOC16 Slice A — free idents resolving to top-level declarations)
+
+The statement inliner previously admitted a free identifier in a helper body
+**only if it was declared nowhere in the program** (a true global like
+`Math`/`console`). That rejected the common case where a helper references
+another **top-level declaration** — a sibling `function`, a top-level
+`const`/`let`/`var`. Slice A of [CLOC16](../../../specs/CLOC16-inline-free-identifier-widening.md)
+admits those references, gated by a **sound, location-restricted** rule:
+
+```js
+function dep(x) { trace(x); return x * 2; } dep(0);
+function f(p)   { log(p); use(dep(p)); }
+f(5);
+// SIMPLE ⇒ …; log(5); use(dep(5));   (f spliced at top level, declaration removed)
+```
+
+**The soundness rule.** A free ident that resolves to a top-level declaration
+is recorded on the candidate (`free_top_level`). Such a candidate is spliced
+**only when its single call is a direct `program.body` member** — at program
+scope no intervening binding can shadow a top-level name, so the reference
+resolves identically in the helper and at the splice site. At any **nested**
+call site (inside a function, a block, an `if`/loop) the splice is **declined**
+(the call is left intact — declining is never a miscompile), because a local of
+the same name could capture the reference:
+
+```js
+function dep() { return 1; } dep(); dep();
+function f()   { log(0); use(dep); }
+function g()   { let dep = 99; f(); }   // f's only call — NESTED, under a local `dep`
+g(); g();
+// f is NOT inlined into g (would misread the local `dep`); it is left intact.
+```
+
+A free ident declared **only inside some other function** (never at program
+scope) is still rejected outright — its resolution at an arbitrary splice site
+can't be proven.
+
+**Zero regression.** A candidate with no top-level free idents has an empty
+`free_top_level` and splices everywhere exactly as before — the full existing
+suite is unchanged and there is **no closurec fixture churn**. Both inline
+paths (void and the valued PR-3/PR-5 capture) share the candidate gate, so the
+top-level-only obligation is enforced at every program-level splice entry
+point; a `return f(x)` capture is never at program scope, so it is simply
+unreachable for `free_top_level` candidates (sound — no value there until
+Slice B).
+
+**Implementation.** New `collect_top_level_decl_names` (program-scope decl
+names, direct `program.body` members only); `void_candidate_from_function`
+classifies each free ident (param/local → splice; top-level decl →
+`free_top_level`; true global → unchanged; otherwise reject);
+`splice_void_call_program` and `splice_valued_call_program` skip their
+nested-recursion calls when `free_top_level` is non-empty. 5 new/repurposed
+tests (74 total) — including the nested-decline, top-level-block-decline, and
+declared-only-in-other-function cases. Resolves CLOC16 Slice A; **Slice B**
+(nested splice sites via an in-scope-binding walk) remains future work.
+
+> The previously-named `does_not_inline_void_helper_with_free_declared_name`
+> test asserted the *old* declined behaviour for `const K = 5; function f() {
+> sink(K); } f();`. That is a Slice A **positive** case (top-level const,
+> top-level call), so it has been repurposed to
+> `inlines_top_level_helper_referencing_top_level_const` asserting the new
+> inlined output — an intended behaviour change, flagged in CLOC16.
+
 ## [0.10.0] - 2026-06-19
 
 ### Added (CLOC15 PR-5 — value capture in `return`-argument position)

@@ -1,8 +1,8 @@
 # CLOC16 — inline free-identifier widening (top-level declarations)
 
-**Status:** SPEC (implementation deferred — this note pins a sound design
-before any code, per the repo's specs-first rule). Resolves
-[CLOC15](CLOC15-multi-statement-inlining.md) **Open question 1**.
+**Status:** Slice A **implemented** (`closure-pass-inline` 0.11.0); Slice B
+deferred. Resolves [CLOC15](CLOC15-multi-statement-inlining.md) **Open
+question 1**.
 
 ## The limiter
 
