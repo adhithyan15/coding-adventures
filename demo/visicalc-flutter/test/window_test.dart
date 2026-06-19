@@ -67,6 +67,36 @@ void main() {
       expect(diff.changed, contains('Z1000')); // far dependent recomputed
       expect(s.window(1000, 26, 1000, 26)[0][0], '139'); // 115+8+12+4
     });
+
+    test('undo / redo walks the snapshot history with live recompute', () {
+      // A fresh, unseeded session so the initial history is empty.
+      final s = SpreadsheetSession();
+      addTearDown(s.dispose);
+      expect(s.canUndo(), isFalse);
+      s.setCell('A1', '1');
+      s.setCell('B1', '=A1*10'); // 10
+      expect(s.canUndo(), isTrue);
+
+      // Undo the formula, then the literal.
+      expect(s.undo(), isTrue);
+      expect(s.window(1, 2, 1, 2)[0][0], ''); // B1 cleared
+      expect(s.undo(), isTrue);
+      expect(s.window(1, 1, 1, 1)[0][0], ''); // A1 cleared
+      expect(s.canUndo(), isFalse);
+      expect(s.undo(), isFalse); // nothing left to undo
+
+      // Redo both: B1 recomputes live (10).
+      expect(s.redo(), isTrue);
+      expect(s.redo(), isTrue);
+      expect(s.window(1, 2, 1, 2)[0][0], '10');
+      expect(s.canRedo(), isFalse);
+
+      // A fresh edit forks history (drops the redo branch).
+      s.undo(); // back: B1 gone
+      expect(s.canRedo(), isTrue);
+      s.setCell('C1', '9');
+      expect(s.canRedo(), isFalse);
+    });
   });
 
   // The infinite-view binding layer (InfiniteGrid drives these): one engine read
@@ -174,6 +204,22 @@ void main() {
       // Garbage in is rejected (false), leaving the workbook intact.
       expect(m.loadBook('not a workbook'), isFalse);
       expect(m.rowCells(1)[4], '28.00');
+    });
+
+    test('undoEdit/redoEdit reverse and replay a model edit', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // (The model seeds its budget via commitInf, so history is non-empty from
+      // construction — undoing into the seed is expected.) Make one fresh edit.
+      m.selectInf(1, 8); m.commitInf('=A1+1'); // H1 = 15+1 = 16
+      expect(m.rowCells(1)[7], '16');
+      expect(m.canUndo, isTrue);
+      // Undo it: H1 goes away; redo brings it back, recomputed live.
+      expect(m.undoEdit(), isTrue);
+      expect(m.rowCells(1)[7], '');
+      expect(m.canRedo, isTrue);
+      expect(m.redoEdit(), isTrue);
+      expect(m.rowCells(1)[7], '16');
     });
   });
 }

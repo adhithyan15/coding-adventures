@@ -79,6 +79,9 @@ typedef _ClipD = void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
 // sc_paste(session, dst_start) → int (1 applied, 0 no-op).
 typedef _PasteC = Int32 Function(Pointer<Void>, Pointer<Uint8>);
 typedef _PasteD = int Function(Pointer<Void>, Pointer<Uint8>);
+// sc_undo / sc_redo / sc_can_undo / sc_can_redo(session) → int (1/0).
+typedef _FlagC = Int32 Function(Pointer<Void>);
+typedef _FlagD = int Function(Pointer<Void>);
 
 /// A single spreadsheet session, owning the opaque C handle.
 class SpreadsheetSession {
@@ -101,6 +104,10 @@ class SpreadsheetSession {
   // string → 1/0).
   late final _NoArgD _serializeFn;
   late final _PasteD _deserializeFn;
+  late final _FlagD _undoFn;
+  late final _FlagD _redoFn;
+  late final _FlagD _canUndoFn;
+  late final _FlagD _canRedoFn;
   late final _NoArgD _usedRangeFn;
   late final _ColLettersD _columnLettersFn;
   late final _CurrentRevD _currentRevisionFn;
@@ -126,6 +133,10 @@ class SpreadsheetSession {
     _pasteFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_paste');
     _serializeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_serialize');
     _deserializeFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_deserialize');
+    _undoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_undo');
+    _redoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_redo');
+    _canUndoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_can_undo');
+    _canRedoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_can_redo');
     _usedRangeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_used_range');
     _columnLettersFn = _lib.lookupFunction<_ColLettersC, _ColLettersD>('sc_column_letters');
     _currentRevisionFn = _lib.lookupFunction<_CurrentRevC, _CurrentRevD>('sc_current_revision');
@@ -349,6 +360,14 @@ class SpreadsheetSession {
       _freeCString(dataPtr);
     }
   }
+
+  /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
+  /// changed the document (the host then re-reads the viewport), `false` if there
+  /// was nothing to do. canUndo/canRedo gate a host's Undo/Redo controls.
+  bool undo() => _undoFn(_handle) != 0;
+  bool redo() => _redoFn(_handle) != 0;
+  bool canUndo() => _canUndoFn(_handle) != 0;
+  bool canRedo() => _canRedoFn(_handle) != 0;
 
   /// Dense display strings for the inclusive 1-based rectangle, row-major
   /// (empty cells become ''). Empty list on a bad/oversized request.
@@ -604,6 +623,28 @@ class InfiniteSheetModel {
   String saveBook() => _session.serialize();
   bool loadBook(String data) {
     final ok = _session.deserialize(data);
+    if (ok) {
+      computeExtent();
+      formula = _session.getRaw(infAddress);
+    }
+    return ok;
+  }
+
+  /// Undo / redo: walk the engine's snapshot history. On success the extent
+  /// regrows and the formula bar refreshes (any cell could have changed); a
+  /// restored formula stays live. canUndo/canRedo gate the buttons.
+  bool get canUndo => _session.canUndo();
+  bool get canRedo => _session.canRedo();
+  bool undoEdit() {
+    final ok = _session.undo();
+    if (ok) {
+      computeExtent();
+      formula = _session.getRaw(infAddress);
+    }
+    return ok;
+  }
+  bool redoEdit() {
+    final ok = _session.redo();
     if (ok) {
       computeExtent();
       formula = _session.getRaw(infAddress);

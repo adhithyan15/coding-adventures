@@ -138,6 +138,34 @@ class _InfiniteGridState extends State<InfiniteGrid> {
     });
   }
 
+  // Undo / redo: walk the engine's snapshot history. On success the whole grid
+  // re-reads and the formula bar re-syncs; the buttons disable at the history
+  // ends via the model's canUndo/canRedo.
+  void _undo() {
+    if (!_model.undoEdit()) return;
+    setState(() => _formulaCtrl.text = _model.formula);
+  }
+  void _redo() {
+    if (!_model.redoEdit()) return;
+    setState(() => _formulaCtrl.text = _model.formula);
+  }
+
+  // A clipboard-style button that disables when `enabled` is false (Undo/Redo).
+  Widget _gatedButton(String label, String tip, bool enabled, VoidCallback onPressed) {
+    return Tooltip(
+      message: tip,
+      child: OutlinedButton(
+        onPressed: enabled ? onPressed : null,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: _ink,
+          side: const BorderSide(color: _border),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        ),
+        child: Text(label, style: const TextStyle(fontFamily: _mono, fontSize: 12)),
+      ),
+    );
+  }
+
   // A compact outlined button for the clipboard controls, matching "Fill ↓ 10".
   Widget _clipButton(String label, String tip, VoidCallback onPressed) {
     return Tooltip(
@@ -223,6 +251,11 @@ class _InfiniteGridState extends State<InfiniteGrid> {
           _clipButton('Save', 'Serialize the whole workbook to memory', _save),
           const SizedBox(width: 8),
           _clipButton('Load', 'Restore the workbook from the last save', _load),
+          const SizedBox(width: 8),
+          // Undo / redo: walk the engine's snapshot history.
+          _gatedButton('Undo', 'Undo the last edit', _model.canUndo, _undo),
+          const SizedBox(width: 8),
+          _gatedButton('Redo', 'Redo the last undone edit', _model.canRedo, _redo),
         ],
       ),
     );
