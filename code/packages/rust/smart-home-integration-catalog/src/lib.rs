@@ -3740,6 +3740,156 @@ impl IntegrationMeshPreflightGuardrailReadinessSummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightDispositionActionReadinessSummary {
+    pub guardrail_readiness_summary: IntegrationMeshPreflightGuardrailReadinessSummary,
+    pub disposition_action_summary:
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub queued_preflight_actions: usize,
+    pub repair_batch_count: usize,
+    pub repair_slot_count: usize,
+    pub scheduled_preflight_actions: usize,
+    pub execution_ticket_count: usize,
+    pub execution_work_order_count: usize,
+    pub work_order_guardrail_count: usize,
+    pub evidence_review_dispositions: usize,
+    pub disposition_action_count: usize,
+    pub required_disposition_actions: usize,
+    pub blocking_disposition_actions: usize,
+    pub operator_handoff_actions: usize,
+    pub repair_actions: usize,
+    pub lineage_gap_actions: usize,
+    pub release_execution_actions: usize,
+    pub review_required_actions: usize,
+    pub lineage_complete_actions: usize,
+    pub first_disposition_action_key: Option<String>,
+    pub first_required_disposition_action_key: Option<String>,
+    pub first_operator_handoff_action_key: Option<String>,
+    pub first_repair_action_key: Option<String>,
+    pub first_lineage_gap_action_key: Option<String>,
+    pub first_release_execution_action_key: Option<String>,
+    pub first_disposition_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_action_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub preflight_ready: bool,
+    pub repair_actions_ready: bool,
+    pub repair_batches_ready: bool,
+    pub repair_schedule_ready: bool,
+    pub repair_slot_audit_ready: bool,
+    pub execution_tickets_ready: bool,
+    pub execution_work_orders_ready: bool,
+    pub execution_work_order_guardrails_ready: bool,
+    pub execution_evidence_review_dispositions_ready: bool,
+    pub execution_evidence_review_disposition_actions_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightDispositionActionReadinessSummary {
+    pub fn from_parts(
+        guardrail_readiness_summary: IntegrationMeshPreflightGuardrailReadinessSummary,
+        disposition_action_summary: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary,
+    ) -> Self {
+        let execution_evidence_review_disposition_actions_ready =
+            disposition_action_summary.execution_evidence_review_disposition_actions_ready;
+        let ready_for_release = guardrail_readiness_summary.ready_for_release
+            && execution_evidence_review_disposition_actions_ready;
+
+        Self {
+            total_protocols: guardrail_readiness_summary.total_protocols,
+            total_preflight_checks: guardrail_readiness_summary.total_preflight_checks,
+            preflight_blocker_count: guardrail_readiness_summary.preflight_blocker_count,
+            release_blocker_count: guardrail_readiness_summary.release_blocker_count,
+            queued_preflight_actions: guardrail_readiness_summary.queued_preflight_actions,
+            repair_batch_count: guardrail_readiness_summary.repair_batch_count,
+            repair_slot_count: guardrail_readiness_summary.repair_slot_count,
+            scheduled_preflight_actions: guardrail_readiness_summary.scheduled_preflight_actions,
+            execution_ticket_count: guardrail_readiness_summary.execution_ticket_count,
+            execution_work_order_count: guardrail_readiness_summary.execution_work_order_count,
+            work_order_guardrail_count: guardrail_readiness_summary.work_order_guardrail_count,
+            evidence_review_dispositions: guardrail_readiness_summary.evidence_review_dispositions,
+            disposition_action_count: disposition_action_summary.total_actions,
+            required_disposition_actions: disposition_action_summary.required_actions,
+            blocking_disposition_actions: disposition_action_summary.blocking_actions,
+            operator_handoff_actions: disposition_action_summary.operator_handoff_actions,
+            repair_actions: disposition_action_summary.repair_actions,
+            lineage_gap_actions: disposition_action_summary.lineage_gap_actions,
+            release_execution_actions: disposition_action_summary.release_execution_actions,
+            review_required_actions: disposition_action_summary.review_required_actions,
+            lineage_complete_actions: disposition_action_summary.lineage_complete_actions,
+            first_disposition_action_key: disposition_action_summary.first_action_key.clone(),
+            first_required_disposition_action_key: disposition_action_summary
+                .first_required_action_key
+                .clone(),
+            first_operator_handoff_action_key: disposition_action_summary
+                .first_operator_handoff_action_key
+                .clone(),
+            first_repair_action_key: disposition_action_summary.first_repair_action_key.clone(),
+            first_lineage_gap_action_key: disposition_action_summary
+                .first_lineage_gap_action_key
+                .clone(),
+            first_release_execution_action_key: disposition_action_summary
+                .first_release_execution_action_key
+                .clone(),
+            first_disposition_key: disposition_action_summary.first_disposition_key.clone(),
+            first_work_order_key: disposition_action_summary.first_work_order_key.clone(),
+            first_ticket_key: disposition_action_summary.first_ticket_key.clone(),
+            first_action_stage: disposition_action_summary.first_stage,
+            first_action_kind: disposition_action_summary.first_action_kind,
+            preflight_ready: guardrail_readiness_summary.preflight_ready,
+            repair_actions_ready: guardrail_readiness_summary.repair_actions_ready,
+            repair_batches_ready: guardrail_readiness_summary.repair_batches_ready,
+            repair_schedule_ready: guardrail_readiness_summary.repair_schedule_ready,
+            repair_slot_audit_ready: guardrail_readiness_summary.repair_slot_audit_ready,
+            execution_tickets_ready: guardrail_readiness_summary.execution_tickets_ready,
+            execution_work_orders_ready: guardrail_readiness_summary.execution_work_orders_ready,
+            execution_work_order_guardrails_ready: guardrail_readiness_summary
+                .execution_work_order_guardrails_ready,
+            execution_evidence_review_dispositions_ready: guardrail_readiness_summary
+                .execution_evidence_review_dispositions_ready,
+            release_ready: guardrail_readiness_summary.release_ready,
+            guardrail_readiness_summary,
+            disposition_action_summary,
+            execution_evidence_review_disposition_actions_ready,
+            ready_for_release,
+        }
+    }
+
+    pub fn has_disposition_actions(&self) -> bool {
+        self.disposition_action_count > 0
+    }
+
+    pub fn has_required_actions(&self) -> bool {
+        self.required_disposition_actions > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.ready_for_release
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_handoff_actions > 0 || self.guardrail_readiness_summary.needs_operator()
+    }
+
+    pub fn needs_repair(&self) -> bool {
+        self.repair_actions > 0 || self.guardrail_readiness_summary.needs_repair()
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required_actions > 0 || self.guardrail_readiness_summary.needs_review()
+    }
+
+    pub fn has_lineage_gaps(&self) -> bool {
+        self.lineage_gap_actions > 0 || self.guardrail_readiness_summary.has_lineage_gaps()
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationMeshReadinessHandoffKind {
     SubstrateAction,
@@ -24965,6 +25115,43 @@ pub fn mesh_preflight_guardrail_readiness_summary(
     )
 }
 
+pub fn mesh_preflight_disposition_action_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightDispositionActionReadinessSummary {
+    let guardrail_readiness_summary = mesh_preflight_guardrail_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let disposition_action_summary =
+        mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_summary(
+            available_primitives,
+        );
+
+    IntegrationMeshPreflightDispositionActionReadinessSummary::from_parts(
+        guardrail_readiness_summary,
+        disposition_action_summary,
+    )
+}
+
+pub fn mesh_preflight_disposition_action_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightDispositionActionReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_disposition_action_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_readiness_handoff_packages_from_summary(
     summary: &IntegrationMeshActionReadinessSummary,
     actions: &[IntegrationMeshProtocolSubstrateAction],
@@ -33851,6 +34038,162 @@ mod tests {
         assert!(summary.ready_for_release);
         assert!(!summary.has_guardrails());
         assert!(!summary.has_dispositions());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.needs_review());
+        assert!(!summary.needs_repair());
+        assert!(!summary.has_lineage_gaps());
+    }
+
+    #[test]
+    fn mesh_preflight_disposition_action_readiness_summary_surfaces_action_queue() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_preflight_disposition_action_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.queued_preflight_actions, 5);
+        assert_eq!(summary.repair_slot_count, 3);
+        assert_eq!(summary.execution_ticket_count, 3);
+        assert_eq!(summary.execution_work_order_count, 3);
+        assert_eq!(summary.work_order_guardrail_count, 3);
+        assert_eq!(summary.evidence_review_dispositions, 3);
+        assert_eq!(summary.disposition_action_count, 3);
+        assert_eq!(summary.required_disposition_actions, 3);
+        assert_eq!(summary.blocking_disposition_actions, 3);
+        assert_eq!(summary.operator_handoff_actions, 2);
+        assert_eq!(summary.repair_actions, 1);
+        assert_eq!(summary.lineage_gap_actions, 0);
+        assert_eq!(summary.release_execution_actions, 0);
+        assert_eq!(summary.review_required_actions, 3);
+        assert_eq!(summary.lineage_complete_actions, 3);
+        assert_eq!(
+            summary.first_disposition_action_key,
+            Some("disposition-action-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_required_disposition_action_key,
+            Some("disposition-action-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_handoff_action_key,
+            Some("disposition-action-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_repair_action_key,
+            Some("disposition-action-02-discovery-enable_discovery".to_string())
+        );
+        assert_eq!(summary.first_lineage_gap_action_key, None);
+        assert_eq!(summary.first_release_execution_action_key, None);
+        assert_eq!(
+            summary.first_disposition_key,
+            Some("disposition-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_action_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.repair_actions_ready);
+        assert!(!summary.repair_batches_ready);
+        assert!(!summary.repair_schedule_ready);
+        assert!(!summary.repair_slot_audit_ready);
+        assert!(!summary.execution_tickets_ready);
+        assert!(!summary.execution_work_orders_ready);
+        assert!(!summary.execution_work_order_guardrails_ready);
+        assert!(!summary.execution_evidence_review_dispositions_ready);
+        assert!(!summary.execution_evidence_review_disposition_actions_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_disposition_actions());
+        assert!(summary.has_required_actions());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.needs_review());
+        assert!(summary.needs_repair());
+        assert!(!summary.has_lineage_gaps());
+    }
+
+    #[test]
+    fn mesh_preflight_disposition_action_readiness_summary_marks_ready_release() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_preflight_disposition_action_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.release_blocker_count, 0);
+        assert_eq!(summary.queued_preflight_actions, 0);
+        assert_eq!(summary.repair_slot_count, 0);
+        assert_eq!(summary.execution_ticket_count, 0);
+        assert_eq!(summary.execution_work_order_count, 0);
+        assert_eq!(summary.work_order_guardrail_count, 0);
+        assert_eq!(summary.evidence_review_dispositions, 0);
+        assert_eq!(summary.disposition_action_count, 0);
+        assert_eq!(summary.required_disposition_actions, 0);
+        assert_eq!(summary.blocking_disposition_actions, 0);
+        assert_eq!(summary.operator_handoff_actions, 0);
+        assert_eq!(summary.repair_actions, 0);
+        assert_eq!(summary.lineage_gap_actions, 0);
+        assert_eq!(summary.release_execution_actions, 0);
+        assert_eq!(summary.review_required_actions, 0);
+        assert_eq!(summary.lineage_complete_actions, 0);
+        assert_eq!(summary.first_disposition_action_key, None);
+        assert_eq!(summary.first_required_disposition_action_key, None);
+        assert_eq!(summary.first_operator_handoff_action_key, None);
+        assert_eq!(summary.first_repair_action_key, None);
+        assert_eq!(summary.first_lineage_gap_action_key, None);
+        assert_eq!(summary.first_release_execution_action_key, None);
+        assert_eq!(summary.first_disposition_key, None);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_action_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.preflight_ready);
+        assert!(summary.repair_actions_ready);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.repair_schedule_ready);
+        assert!(summary.repair_slot_audit_ready);
+        assert!(summary.execution_tickets_ready);
+        assert!(summary.execution_work_orders_ready);
+        assert!(summary.execution_work_order_guardrails_ready);
+        assert!(summary.execution_evidence_review_dispositions_ready);
+        assert!(summary.execution_evidence_review_disposition_actions_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_release);
+        assert!(!summary.has_disposition_actions());
+        assert!(!summary.has_required_actions());
         assert!(!summary.has_blockers());
         assert!(!summary.needs_operator());
         assert!(!summary.needs_review());
