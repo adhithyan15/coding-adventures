@@ -1,0 +1,19 @@
+% ============================================================================
+% histo-recall.query.adj — a worked recall query over the histology-finding library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "what does this smear/histology
+% finding suggest?" question: it states no pathology fact — it only `import`s the grounded
+% library and asks binding queries. The native adj-lang engine resolves each `?` against
+% the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here. (A finding that
+% points to several conditions binds multiple answers — each with its own citation.)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli histo-recall.query.adj
+% ============================================================================
+
+import "histo-edges.adj"
+
+? seen_in(reed_sternberg_cells, $Condition)   % expect hodgkin_lymphoma
+? seen_in(howell_jolly_bodies, $Condition)    % expect asplenia / megaloblastic_anemia
+? seen_in(heinz_bodies, $Condition)           % expect g6pd_deficiency / methemoglobinemia
