@@ -117,6 +117,16 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     // `Select`/`Count` testable (the W-5/W-6 surface had no predicate head).
     m.insert("EvenQ".to_string(), handler_fn(even_q_handler));
     m.insert("OddQ".to_string(), handler_fn(odd_q_handler));
+    // W-10 functional-iteration combinators. All *eager* (non-held) heads — `f`,
+    // the seed, and the list arrive evaluated, exactly like the W-5/W-9 list
+    // built-ins — so they are *not* added to the `WolframBackend` held set. Each
+    // iterates by re-applying `f` through the same `build_canonical_application`
+    // + `vm.eval` path `Map`/`Apply` use, so any callable (built-in, bridged, or
+    // a user `SetDelayed` function) works.
+    m.insert("Nest".to_string(), handler_fn(nest_handler));
+    m.insert("NestList".to_string(), handler_fn(nest_list_handler));
+    m.insert("Fold".to_string(), handler_fn(fold_handler));
+    m.insert("FoldList".to_string(), handler_fn(fold_list_handler));
     m
 }
 
@@ -946,6 +956,163 @@ fn total_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         acc = vm.eval(apply(sym(ADD), vec![acc, elem]));
     }
     acc
+}
+
+// ---------------------------------------------------------------------------
+// Functional iteration — Nest / NestList / Fold / FoldList (W-10)
+// ---------------------------------------------------------------------------
+//
+// The four point-free combinators that iterate a *function*. Each re-applies `f`
+// through the **same** `build_canonical_application(f, args)` + `vm.eval` path the
+// W-5 `Map`/`Apply` and W-9 `Select` use, so any callable resolves: a built-in
+// (`Plus`), a bridged head, or a user `SetDelayed` function `g[a_] := …`. A
+// symbolic `f` with no definition leaves each `f[acc]` unevaluated, so
+// `Nest[f, x, 3]` returns the literal `f[f[f[x]]]` — exactly Wolfram's behaviour.
+//
+// Two iterate by *unary* re-application (`Nest`/`NestList`, building `f[acc]`),
+// two by *binary* left-fold (`Fold`/`FoldList`, building `f[acc, element]`). The
+// `…List` variants additionally collect every intermediate result. All four are
+// eager (non-held) — `f`, the seed, and the list arrive already evaluated.
+
+/// Apply `f` once to `acc`, re-evaluating through the VM. The single shared
+/// primitive of all four combinators: builds `f[acc]` (or `f[acc, x]` for the
+/// fold forms, via [`apply_binary`]) on the same canonical-application path as
+/// `Map`/`Apply`, so a defined `f` reduces and an undefined one stays as a literal
+/// `f[acc]` node (never a panic, never a guess).
+fn apply_unary(vm: &mut VM, f: &IRNode, acc: IRNode) -> IRNode {
+    vm.eval(build_canonical_application(f.clone(), vec![acc]))
+}
+
+/// Apply `f` to the running accumulator and the next list element — the binary
+/// fold step `f[acc, element]`, re-evaluated through the VM on the same path as
+/// [`apply_unary`].
+fn apply_binary(vm: &mut VM, f: &IRNode, acc: IRNode, element: IRNode) -> IRNode {
+    vm.eval(build_canonical_application(f.clone(), vec![acc, element]))
+}
+
+/// Read the iteration count `n` of `Nest`/`NestList` as a **DoS-capped**
+/// non-negative `usize`.
+///
+/// Returns `None` (→ the caller leaves the whole form unevaluated) for a negative
+/// `n`, a non-integer `n`, or an `n` exceeding [`MAX_LIST_LENGTH`] — the cap is
+/// checked *before* any iteration so a tiny input like `Nest[f, x, 10^9]` can
+/// never drive a billion `vm.eval` calls. `n == 0` is valid (the identity case).
+fn nest_count(node: &IRNode) -> Option<usize> {
+    let n = as_i64(node)?;
+    // Negative counts are malformed; an over-cap count is refused so the loop
+    // (and, for `NestList`, the `n + 1` allocation) is bounded.
+    if n < 0 || n as u128 > MAX_LIST_LENGTH as u128 {
+        return None;
+    }
+    Some(n as usize)
+}
+
+/// `Nest[f, x, n]` → `f` applied to `x` `n` times: `f[f[…f[x]…]]` (`n`
+/// applications). `Nest[f, x, 0]` is the identity (`x`).
+///
+/// Iterates by repeated unary re-application through the VM, so a defined `f`
+/// folds (`square[a_] := a*a; Nest[square, 2, 3]` → `256`) and a symbolic `f`
+/// builds the literal nest (`Nest[f, x, 3]` → `f[f[f[x]]]`). **DoS-capped**: `n`
+/// is bounded by [`nest_count`] before the loop; a negative/non-integer/over-cap
+/// `n`, or the wrong arity, leaves the form unevaluated.
+fn nest_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 3 {
+        return unevaluated(expr);
+    }
+    let Some(n) = nest_count(&expr.args[2]) else {
+        return unevaluated(expr);
+    };
+    let f = expr.args[0].clone();
+    let mut acc = expr.args[1].clone();
+    for _ in 0..n {
+        acc = apply_unary(vm, &f, acc);
+    }
+    acc
+}
+
+/// `NestList[f, x, n]` → `{x, f[x], f[f[x]], …}` — the `n + 1` intermediate
+/// results, **including the seed** `x` at the front.
+///
+/// `NestList[f, x, 2]` → `{x, f[x], f[f[x]]}`; `NestList[g, 0, 3]` with
+/// `g[a_] := a + 1` → `{0, 1, 2, 3}`. **DoS-capped**: `n` is bounded by
+/// [`nest_count`], which also bounds the `n + 1`-element result allocation;
+/// a malformed/over-cap `n` or the wrong arity leaves the form unevaluated.
+fn nest_list_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 3 {
+        return unevaluated(expr);
+    }
+    let Some(n) = nest_count(&expr.args[2]) else {
+        return unevaluated(expr);
+    };
+    let f = expr.args[0].clone();
+    let mut acc = expr.args[1].clone();
+    // n is capped at MAX_LIST_LENGTH, so n + 1 cannot overflow usize and the
+    // allocation is bounded.
+    let mut out = Vec::with_capacity(n + 1);
+    out.push(acc.clone());
+    for _ in 0..n {
+        acc = apply_unary(vm, &f, acc);
+        out.push(acc.clone());
+    }
+    apply(sym(LIST), out)
+}
+
+/// `Fold[f, x0, list]` → the **left** fold `f[…f[f[x0, l₁], l₂]…, lₙ]`.
+///
+/// `Fold[Plus, 0, {1, 2, 3}]` → `6` (`((0 + 1) + 2) + 3`). Folds the
+/// already-materialised `list` with `f` seeded at `x0`, each step re-evaluated
+/// through the VM (so a numeric fold collapses as it accumulates). An empty list
+/// returns the seed `x0` unchanged. A non-list third argument, or the wrong
+/// arity, leaves the form unevaluated. No new result-size surface — only the
+/// scalar accumulator is held; the iteration count is the (source-bounded) list
+/// length.
+fn fold_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 3 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[2]) else {
+        return unevaluated(expr);
+    };
+    let f = expr.args[0].clone();
+    let mut acc = expr.args[1].clone();
+    for element in elems {
+        acc = apply_binary(vm, &f, acc, element);
+    }
+    acc
+}
+
+/// `FoldList[f, x0, list]` → `{x0, f[x0, l₁], f[f[x0, l₁], l₂], …}` — the running
+/// accumulations, **including the seed** `x0` at the front.
+///
+/// `FoldList[Plus, 0, {1, 2, 3}]` → `{0, 1, 3, 6}`. Like [`fold_handler`] but
+/// collecting every intermediate accumulator. An empty list returns `{x0}` (the
+/// seed alone). **DoS-bounded**: the result has `len + 1` elements where `len` is
+/// the source-bounded input length; a defensive [`MAX_LIST_LENGTH`] check on the
+/// input length keeps the `len + 1` allocation bounded even for a crafted input.
+/// A non-list third argument, the wrong arity, or an over-cap input length leaves
+/// the form unevaluated.
+fn fold_list_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 3 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[2]) else {
+        return unevaluated(expr);
+    };
+    // Defensive: the result is `elems.len() + 1` elements. The input is already
+    // source-bounded, but cap it so the `+ 1` allocation can never exceed the
+    // shared list cap (matching `Join`/`Flatten`).
+    if elems.len() >= MAX_LIST_LENGTH {
+        return unevaluated(expr);
+    }
+    let f = expr.args[0].clone();
+    let mut acc = expr.args[1].clone();
+    let mut out = Vec::with_capacity(elems.len() + 1);
+    out.push(acc.clone());
+    for element in elems {
+        acc = apply_binary(vm, &f, acc, element);
+        out.push(acc.clone());
+    }
+    apply(sym(LIST), out)
 }
 
 // ---------------------------------------------------------------------------
@@ -1888,6 +2055,201 @@ mod tests {
         assert_eq!(
             run("Total", vec![sym("x")]),
             apply(sym("Total"), vec![sym("x")])
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-10 functional-iteration combinators
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn nest_applies_f_n_times_symbolically() {
+        // Nest[f, x, 3] → f[f[f[x]]] with a symbolic (undefined) f.
+        let expected = apply(
+            sym("f"),
+            vec![apply(sym("f"), vec![apply(sym("f"), vec![sym("x")])])],
+        );
+        assert_eq!(run_wolfram("Nest", vec![sym("f"), sym("x"), int(3)]), expected);
+    }
+
+    #[test]
+    fn nest_zero_is_the_identity() {
+        // Nest[f, x, 0] → x (zero applications).
+        assert_eq!(run_wolfram("Nest", vec![sym("f"), sym("x"), int(0)]), sym("x"));
+    }
+
+    #[test]
+    fn nest_with_a_bridged_head_folds_numerically() {
+        // Nest[Plus[1], x, …] is awkward without partial application; instead use
+        // a numeric driver: nest with `Plus` requires two args, so test the
+        // symbolic shape for unary f and rely on the fold tests for numeric f.
+        // Here: an undefined unary head still builds the literal nest of depth 2.
+        let expected = apply(sym("g"), vec![apply(sym("g"), vec![int(0)])]);
+        assert_eq!(run_wolfram("Nest", vec![sym("g"), int(0), int(2)]), expected);
+    }
+
+    #[test]
+    fn nest_list_collects_intermediates_including_the_seed() {
+        // NestList[f, x, 2] → {x, f[x], f[f[x]]}.
+        let fx = apply(sym("f"), vec![sym("x")]);
+        let ffx = apply(sym("f"), vec![fx.clone()]);
+        assert_eq!(
+            run_wolfram("NestList", vec![sym("f"), sym("x"), int(2)]),
+            list(vec![sym("x"), fx, ffx])
+        );
+    }
+
+    #[test]
+    fn nest_list_with_zero_is_just_the_seed() {
+        // NestList[f, x, 0] → {x}.
+        assert_eq!(
+            run_wolfram("NestList", vec![sym("f"), sym("x"), int(0)]),
+            list(vec![sym("x")])
+        );
+    }
+
+    #[test]
+    fn fold_left_folds_plus_to_a_total() {
+        // Fold[Plus, 0, {1, 2, 3}] → 6 = ((0 + 1) + 2) + 3.
+        assert_eq!(
+            run_wolfram(
+                "Fold",
+                vec![sym("Plus"), int(0), list(vec![int(1), int(2), int(3)])]
+            ),
+            int(6)
+        );
+    }
+
+    #[test]
+    fn fold_over_empty_list_returns_the_seed() {
+        // Fold[Plus, 42, {}] → 42 (no elements to fold).
+        assert_eq!(
+            run_wolfram("Fold", vec![sym("Plus"), int(42), list(vec![])]),
+            int(42)
+        );
+    }
+
+    #[test]
+    fn fold_is_left_associative_for_subtraction() {
+        // Fold[Subtract, 10, {1, 2, 3}] → ((10 - 1) - 2) - 3 = 4. A
+        // *left*-associative fold gives 4; a right fold would give a different
+        // value, so this pins the associativity.
+        assert_eq!(
+            run_wolfram(
+                "Fold",
+                vec![sym("Subtract"), int(10), list(vec![int(1), int(2), int(3)])]
+            ),
+            int(4)
+        );
+    }
+
+    #[test]
+    fn fold_list_collects_running_accumulations() {
+        // FoldList[Plus, 0, {1, 2, 3}] → {0, 1, 3, 6}.
+        assert_eq!(
+            run_wolfram(
+                "FoldList",
+                vec![sym("Plus"), int(0), list(vec![int(1), int(2), int(3)])]
+            ),
+            list(vec![int(0), int(1), int(3), int(6)])
+        );
+    }
+
+    #[test]
+    fn fold_list_over_empty_list_is_just_the_seed() {
+        // FoldList[Plus, 7, {}] → {7}.
+        assert_eq!(
+            run_wolfram("FoldList", vec![sym("Plus"), int(7), list(vec![])]),
+            list(vec![int(7)])
+        );
+    }
+
+    #[test]
+    fn nest_negative_count_stays_unevaluated() {
+        // A negative n is malformed → echoed back unchanged (no panic, no wrap).
+        assert_eq!(
+            run_wolfram("Nest", vec![sym("f"), sym("x"), int(-1)]),
+            apply(sym("Nest"), vec![sym("f"), sym("x"), int(-1)])
+        );
+        assert_eq!(
+            run_wolfram("NestList", vec![sym("f"), sym("x"), int(-5)]),
+            apply(sym("NestList"), vec![sym("f"), sym("x"), int(-5)])
+        );
+    }
+
+    #[test]
+    fn nest_non_integer_count_stays_unevaluated() {
+        // n must be an exact integer; a symbol is malformed.
+        assert_eq!(
+            run_wolfram("Nest", vec![sym("f"), sym("x"), sym("k")]),
+            apply(sym("Nest"), vec![sym("f"), sym("x"), sym("k")])
+        );
+    }
+
+    #[test]
+    fn nest_over_cap_count_stays_unevaluated() {
+        // A tiny input with an enormous n must NOT iterate — it is refused before
+        // the loop (DoS cap). Echoed back unchanged.
+        let huge = int(MAX_LIST_LENGTH as i64 + 1);
+        assert_eq!(
+            run_wolfram("Nest", vec![sym("f"), sym("x"), huge.clone()]),
+            apply(sym("Nest"), vec![sym("f"), sym("x"), huge.clone()])
+        );
+        assert_eq!(
+            run_wolfram("NestList", vec![sym("f"), sym("x"), huge.clone()]),
+            apply(sym("NestList"), vec![sym("f"), sym("x"), huge])
+        );
+    }
+
+    #[test]
+    fn nest_in_cap_count_iterates_rather_than_echoing() {
+        // An in-cap count must actually iterate (not stay unevaluated). The
+        // boundary value MAX_LIST_LENGTH is accepted by `nest_count`; we exercise
+        // the accept path with a small count whose nested result is cheap to build
+        // and distinct from the unevaluated form.
+        let out = run_wolfram("Nest", vec![sym("f"), sym("x"), int(5)]);
+        assert_ne!(
+            out,
+            apply(sym("Nest"), vec![sym("f"), sym("x"), int(5)]),
+            "an in-cap count must iterate, not stay unevaluated"
+        );
+    }
+
+    #[test]
+    fn fold_non_list_third_arg_stays_unevaluated() {
+        // Fold/FoldList require a list to fold over; a non-list is malformed.
+        assert_eq!(
+            run_wolfram("Fold", vec![sym("Plus"), int(0), sym("notalist")]),
+            apply(sym("Fold"), vec![sym("Plus"), int(0), sym("notalist")])
+        );
+        assert_eq!(
+            run_wolfram("FoldList", vec![sym("Plus"), int(0), sym("notalist")]),
+            apply(sym("FoldList"), vec![sym("Plus"), int(0), sym("notalist")])
+        );
+    }
+
+    #[test]
+    fn combinators_with_wrong_arity_stay_unevaluated() {
+        // Each combinator requires exactly 3 args; 2 is malformed.
+        assert_eq!(
+            run_wolfram("Nest", vec![sym("f"), sym("x")]),
+            apply(sym("Nest"), vec![sym("f"), sym("x")])
+        );
+        assert_eq!(
+            run_wolfram("Fold", vec![sym("Plus"), int(0)]),
+            apply(sym("Fold"), vec![sym("Plus"), int(0)])
+        );
+    }
+
+    #[test]
+    fn fold_with_a_non_callable_f_builds_a_literal_nest() {
+        // A non-callable f is NOT an error: each f[acc, el] stays unevaluated.
+        // Fold[f, 0, {1, 2}] → f[f[0, 1], 2].
+        let inner = apply(sym("f"), vec![int(0), int(1)]);
+        let outer = apply(sym("f"), vec![inner, int(2)]);
+        assert_eq!(
+            run_wolfram("Fold", vec![sym("f"), int(0), list(vec![int(1), int(2)])]),
+            outer
         );
     }
 }

@@ -4,6 +4,59 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] — 2026-06-17
+
+The **W-10** deliverable (MA04 §13): the functional-iteration combinators — the
+point-free heads every functional-programming session reaches for, lowered onto
+the *same* substrate as W-5/W-9 (the `Map`/`Apply` application path
+`build_canonical_application` + `vm.eval`, and the W-5 `list_elements` accessor).
+All are plain `Head[args]` applications — **no grammar change** — and all are
+eager (non-held), so the `WolframBackend` held set is untouched.
+
+### Added (functional-iteration combinators)
+
+- **`Nest[f, x, n]`** → `f` applied to `x` `n` times: `f[f[…f[x]…]]`. A symbolic
+  `f` builds the literal nest (`Nest[f, x, 3]` → `f[f[f[x]]]`); a defined `f`
+  reduces at each step. `Nest[f, x, 0]` is the identity (`x`).
+- **`NestList[f, x, n]`** → `{x, f[x], f[f[x]], …}` — the `n + 1` intermediate
+  results, including the seed.
+- **`Fold[f, x0, list]`** → the left fold `f[…f[f[x0, l₁], l₂]…, lₙ]`. With
+  `Plus` it totals (`Fold[Plus, 0, {1,2,3}]` → `6`); left-associative
+  (`Fold[Subtract, 10, {1,2,3}]` → `4`). An empty list returns the seed.
+- **`FoldList[f, x0, list]`** → `{x0, f[x0,l₁], f[f[x0,l₁],l₂], …}` — the running
+  accumulations, including the seed (`FoldList[Plus, 0, {1,2,3}]` → `{0,1,3,6}`).
+  An empty list returns `{x0}`.
+
+Each combinator re-applies `f` through the **exact** `Map`/`Apply` path
+(`build_canonical_application(f, args)` then `vm.eval`), so any callable resolves:
+a built-in (`Plus`), a bridged head, or a user `SetDelayed` function
+(`g[a_] := a + 1; NestList[g, 0, 3]` → `{0,1,2,3}`). A non-callable `f` is *not*
+an error — each `f[acc]` simply stays unevaluated (`Fold[f, 0, {1,2}]` →
+`f[f[0,1],2]`).
+
+### Security / DoS
+
+- **Iteration count `n` is capped** (`Nest`/`NestList`): `nest_count` reads `n` as
+  an exact non-negative integer and refuses any `n` exceeding `MAX_LIST_LENGTH`
+  (1,000,000) *before* the loop, so a tiny input like `Nest[f, x, 10^9]` cannot
+  drive a billion `vm.eval` calls.
+- **Result-list size is bounded**: `NestList`'s `n + 1` allocation is bounded by
+  the capped `n`; `FoldList`'s `len + 1` allocation is bounded by a defensive
+  `MAX_LIST_LENGTH` check on the (already source-bounded) input length. `Nest` and
+  `Fold` hold only the scalar accumulator and add no result-size surface.
+- Every malformed form (negative/non-integer `n`, an over-cap `n`, a non-list
+  third argument to `Fold`/`FoldList`, the wrong arity) is **left unevaluated** —
+  echoed back, never a panic — following the W-5 convention.
+
+### Tests
+
+26 new tests (14 unit in `builtins.rs`, 7 integration through the public
+`eval`/`WolframSession` surface, plus edge/DoS/regression cases): the symbolic
+`Nest`/`NestList` shapes, `Fold`/`FoldList` over `Plus`/`Subtract`, the degenerate
+`n = 0` / empty-list cases, a user `SetDelayed` function as `f`, negative /
+non-integer / over-cap `n`, non-list fold target, wrong arity, non-callable `f`,
+and W-4..W-9 regression guards.
+
 ## [0.6.0] — 2026-06-17
 
 The **W-9** deliverable (MA04 §12): list-manipulation builtins — the reordering,

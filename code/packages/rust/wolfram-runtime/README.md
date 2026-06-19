@@ -9,8 +9,8 @@ Macsyma/Maxima drive rather than writing a bespoke evaluator.
 
 See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfram-language.md)
 §7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), §10 (W-7
-iteration constructs), §11 (W-8 local scoping), and §12 (W-9 list-manipulation
-builtins).
+iteration constructs), §11 (W-8 local scoping), §12 (W-9 list-manipulation
+builtins), and §13 (W-10 functional-iteration combinators).
 
 ## What it does
 
@@ -103,6 +103,12 @@ assert_eq!(eval("Flatten[{{1, 2}, {3}}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
 assert_eq!(eval("Select[{1, 2, 3, 4}, EvenQ]\n").unwrap(), "Out[1]= {2, 4}\n");
 assert_eq!(eval("Count[{1, 2, 3, 4}, EvenQ]\n").unwrap(), "Out[1]= 2\n");
 assert_eq!(eval("Total[{1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
+
+// W-10 functional-iteration combinators — iterate a function:
+assert_eq!(eval("Nest[f, x, 3]\n").unwrap(), "Out[1]= f[f[f[x]]]\n");
+assert_eq!(eval("NestList[f, x, 2]\n").unwrap(), "Out[1]= {x, f[x], f[f[x]]}\n");
+assert_eq!(eval("Fold[Plus, 0, {1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
+assert_eq!(eval("FoldList[Plus, 0, {1, 2, 3}]\n").unwrap(), "Out[1]= {0, 1, 3, 6}\n");
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -231,6 +237,31 @@ to flattening **all** levels; `Flatten[list, n]` flattens only the top `n` level
 are testable. Every malformed form (non-list, non-callable predicate, bad depth,
 wrong arity) is left unevaluated rather than panicking.
 
+**W-10** adds the functional-iteration combinators — the point-free heads that
+iterate a *function*, lowered onto the same `Map`/`Apply` application path
+(`build_canonical_application` + `vm.eval`) and the W-5 list accessor. All are
+eager `Head[args]` forms (no grammar change, nothing held):
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Nest` | `Nest[f, x, 3]` | `f[f[f[x]]]` |
+| `Nest` | `Nest[f, x, 0]` | `x` |
+| `NestList` | `NestList[f, x, 2]` | `{x, f[x], f[f[x]]}` |
+| `Fold` | `Fold[Plus, 0, {1, 2, 3}]` | `6` |
+| `FoldList` | `FoldList[Plus, 0, {1, 2, 3}]` | `{0, 1, 3, 6}` |
+
+`Nest[f, x, n]` applies `f` `n` times; `NestList` collects the `n + 1`
+intermediates (seed first); `Fold` is a left fold seeded at `x0`; `FoldList`
+collects the running accumulations (seed first). Each re-applies `f` through the
+**same** path as `Map`/`Apply`, so a built-in (`Plus`), a bridged head, or a user
+`SetDelayed` function (`g[a_] := a + 1; NestList[g, 0, 3]` → `{0, 1, 2, 3}`) all
+work; a symbolic `f` builds the literal nest, and a non-callable `f` is *not* an
+error (`Fold[f, 0, {1, 2}]` → `f[f[0, 1], 2]`). The iteration count `n` is
+DoS-capped at `MAX_LIST_LENGTH` *before* iterating (so `Nest[f, x, 10^9]` cannot
+drive a billion evals), and the `NestList`/`FoldList` result allocations are
+bounded by that cap. Every malformed form (negative/non-integer/over-cap `n`,
+non-list fold target, wrong arity) is left unevaluated rather than panicking.
+
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
@@ -263,6 +294,10 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   `Total` list-manipulation heads (plus `EvenQ`/`OddQ` predicates), lowered onto
   the W-5 list/`Map`/`Apply`/`Add` substrate, DoS-capped on `Join`/`Flatten`
   output. No grammar change.
+- **W-10** (this crate) — the `Nest`/`NestList`/`Fold`/`FoldList` functional-
+  iteration combinators, iterating a function through the W-5 `Map`/`Apply`
+  application path, DoS-capped on the iteration count and result-list size. No
+  grammar change.
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 
