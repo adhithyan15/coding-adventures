@@ -61,6 +61,8 @@ runtime and Chief of Staff tools a typed catalog for:
   gates into concrete protocol-scoped remediation work
 - low-level mesh preflight repair batches that group failed substrate gates by
   stage and action kind
+- low-level mesh preflight repair schedules that order repair batches into
+  deterministic execution slots
 - mesh readiness package summaries that combine Zigbee, Z-Wave, and Thread
   primitive substrate readiness with mesh-scoped activation evidence
   remediation rollups
