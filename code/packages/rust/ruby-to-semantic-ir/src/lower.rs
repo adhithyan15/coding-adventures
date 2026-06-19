@@ -109,7 +109,19 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
     // lowered — is what makes the pass order-independent.
     if !lw.block_param_methods.is_empty() {
         for f in &mut functions {
-            Lowerer::normalize_block_call_args(&mut f.body, &lw.block_param_methods);
+            // Phase Q10c — names bound as a param/local *within this
+            // function*.  A bare reference to one of these is a variable,
+            // not a parenless call, so it must be excluded from the
+            // call-rewrite below (a local can legitimately shadow a
+            // method name).
+            let mut bound: HashSet<String> =
+                f.params.iter().map(|p| p.name.clone()).collect();
+            Lowerer::collect_bound_names_block(&f.body, &mut bound);
+            let ctx = BlockNormCtx {
+                methods: &lw.block_param_methods,
+                bound: &bound,
+            };
+            Lowerer::normalize_block_call_args(&mut f.body, &ctx);
         }
     }
 
@@ -624,6 +636,18 @@ struct Lowerer {
 /// (those never begin with a double underscore in idiomatic code, and
 /// the lowerer never mints another name with this exact spelling).
 const BLOCK_PARAM_NAME: &str = "__sir_block__";
+
+/// Phase Q9f/Q10c — context for the call-site block-threading walk over a
+/// single function body.
+struct BlockNormCtx<'a> {
+    /// Methods that gained a trailing `__sir_block__` parameter (Q9e),
+    /// i.e. whose calls must have a block argument threaded.
+    methods: &'a std::collections::HashSet<String>,
+    /// Names bound as a param/local *within the current function*.  A bare
+    /// reference to one of these is a variable, not a parenless call, so
+    /// Q10c must not rewrite it into a `DirectCall`.
+    bound: &'a std::collections::HashSet<String>,
+}
 
 /// Phase 20a (FC): hard ceiling on nested string-interpolation
 /// re-parsing depth.  Real Ruby almost never nests interpolation more
@@ -3225,48 +3249,48 @@ impl Lowerer {
     /// call (including `MakeClosure` capture values) so calls anywhere in
     /// the program are threaded. It is idempotent in practice because it
     /// runs exactly once, after the whole program is lowered.
-    fn normalize_block_call_args(block: &mut Block, blk: &HashSet<String>) {
+    fn normalize_block_call_args(block: &mut Block, ctx: &BlockNormCtx) {
         for s in &mut block.stmts {
-            Self::normalize_calls_in_stmt(s, blk);
+            Self::normalize_calls_in_stmt(s, ctx);
         }
-        Self::normalize_calls_in_expr(&mut block.value, blk);
+        Self::normalize_calls_in_expr(&mut block.value, ctx);
     }
 
-    fn normalize_calls_in_stmts(stmts: &mut [Stmt], blk: &HashSet<String>) {
+    fn normalize_calls_in_stmts(stmts: &mut [Stmt], ctx: &BlockNormCtx) {
         for s in stmts {
-            Self::normalize_calls_in_stmt(s, blk);
+            Self::normalize_calls_in_stmt(s, ctx);
         }
     }
 
-    fn normalize_calls_in_stmt(stmt: &mut Stmt, blk: &HashSet<String>) {
+    fn normalize_calls_in_stmt(stmt: &mut Stmt, ctx: &BlockNormCtx) {
         match stmt {
             Stmt::LetBinding { value, .. }
             | Stmt::LetStarBinding { value, .. }
             | Stmt::Assign { value, .. }
-            | Stmt::ExprStmt { expr: value, .. } => Self::normalize_calls_in_expr(value, blk),
+            | Stmt::ExprStmt { expr: value, .. } => Self::normalize_calls_in_expr(value, ctx),
             Stmt::While { cond, body, .. } => {
-                Self::normalize_calls_in_expr(cond, blk);
-                Self::normalize_block_call_args(body, blk);
+                Self::normalize_calls_in_expr(cond, ctx);
+                Self::normalize_block_call_args(body, ctx);
             }
             Stmt::ForRange { start, stop, step, body, .. } => {
-                Self::normalize_calls_in_expr(start, blk);
-                Self::normalize_calls_in_expr(stop, blk);
-                Self::normalize_calls_in_expr(step, blk);
-                Self::normalize_block_call_args(body, blk);
+                Self::normalize_calls_in_expr(start, ctx);
+                Self::normalize_calls_in_expr(stop, ctx);
+                Self::normalize_calls_in_expr(step, ctx);
+                Self::normalize_block_call_args(body, ctx);
             }
             Stmt::ForEach { iter, body, .. } => {
-                Self::normalize_calls_in_expr(iter, blk);
-                Self::normalize_block_call_args(body, blk);
+                Self::normalize_calls_in_expr(iter, ctx);
+                Self::normalize_block_call_args(body, ctx);
             }
             Stmt::SeqSet { seq, index, value, .. } => {
-                Self::normalize_calls_in_expr(seq, blk);
-                Self::normalize_calls_in_expr(index, blk);
-                Self::normalize_calls_in_expr(value, blk);
+                Self::normalize_calls_in_expr(seq, ctx);
+                Self::normalize_calls_in_expr(index, ctx);
+                Self::normalize_calls_in_expr(value, ctx);
             }
             Stmt::MapSet { map, key, value, .. } => {
-                Self::normalize_calls_in_expr(map, blk);
-                Self::normalize_calls_in_expr(key, blk);
-                Self::normalize_calls_in_expr(value, blk);
+                Self::normalize_calls_in_expr(map, ctx);
+                Self::normalize_calls_in_expr(key, ctx);
+                Self::normalize_calls_in_expr(value, ctx);
             }
             // Class/module/singleton bodies carry non-`def` statements
             // (their `def`s are hoisted to top-level functions, which the
@@ -3274,29 +3298,50 @@ impl Lowerer {
             // call inside e.g. a constant initializer is threaded too.
             Stmt::ClassDef { body, .. }
             | Stmt::ModuleDef { body, .. }
-            | Stmt::SingletonClassDef { body, .. } => Self::normalize_calls_in_stmts(body, blk),
+            | Stmt::SingletonClassDef { body, .. } => Self::normalize_calls_in_stmts(body, ctx),
             Stmt::TryCatch { body, rescues, ensure_body, .. } => {
-                Self::normalize_calls_in_stmts(body, blk);
+                Self::normalize_calls_in_stmts(body, ctx);
                 for r in rescues {
-                    Self::normalize_calls_in_stmts(&mut r.body, blk);
+                    Self::normalize_calls_in_stmts(&mut r.body, ctx);
                 }
                 if let Some(eb) = ensure_body {
-                    Self::normalize_calls_in_stmts(eb, blk);
+                    Self::normalize_calls_in_stmts(eb, ctx);
                 }
             }
         }
     }
 
-    fn normalize_calls_in_expr(expr: &mut Expr, blk: &HashSet<String>) {
+    fn normalize_calls_in_expr(expr: &mut Expr, ctx: &BlockNormCtx) {
         match expr {
+            // Phase Q10c — a bare, parenless reference to a known
+            // block-taking method (`foo` with no `()`/args) reaches the
+            // lowerer as `VarRef { scope: Local }` (the method-call parser
+            // can't tell a zero-arg call from a variable).  When the name
+            // is a block-param method AND is not shadowed by a real
+            // local/param in this function, it is actually a call: rewrite
+            // it to a `DirectCall` with a threaded nil block so its arity
+            // matches the def's trailing `__sir_block__` parameter.  The
+            // synthesized call already carries its block slot, so it is
+            // not re-walked (no double-padding).
+            Expr::VarRef { name, scope: Scope::Local, span }
+                if ctx.methods.contains(name) && !ctx.bound.contains(name) =>
+            {
+                let span = span.clone();
+                *expr = Expr::DirectCall {
+                    fn_name: name.clone(),
+                    args: vec![Expr::NilLit { span: span.clone() }],
+                    effects: EffectSet::PURE,
+                    span,
+                };
+            }
             Expr::DirectCall { fn_name, args, span, .. } => {
                 // Normalize nested calls in the arguments first (so an
                 // unwrapped `block_pass` inner / a closure capture value
                 // is itself threaded), then fix this call's trailing slot.
                 for a in args.iter_mut() {
-                    Self::normalize_calls_in_expr(a, blk);
+                    Self::normalize_calls_in_expr(a, ctx);
                 }
-                if blk.contains(fn_name) {
+                if ctx.methods.contains(fn_name) {
                     let n = args.len();
                     let trailing_is_closure =
                         n > 0 && matches!(args[n - 1], Expr::MakeClosure { .. });
@@ -3321,56 +3366,198 @@ impl Lowerer {
             }
             Expr::BuiltinCall { args, .. } | Expr::Intrinsic { args, .. } => {
                 for a in args.iter_mut() {
-                    Self::normalize_calls_in_expr(a, blk);
+                    Self::normalize_calls_in_expr(a, ctx);
                 }
             }
             Expr::IndirectCall { target, args, .. } => {
-                Self::normalize_calls_in_expr(target, blk);
+                Self::normalize_calls_in_expr(target, ctx);
                 for a in args.iter_mut() {
-                    Self::normalize_calls_in_expr(a, blk);
+                    Self::normalize_calls_in_expr(a, ctx);
                 }
             }
             Expr::If { cond, then_branch, else_branch, .. } => {
-                Self::normalize_calls_in_expr(cond, blk);
-                Self::normalize_block_call_args(then_branch, blk);
-                Self::normalize_block_call_args(else_branch, blk);
+                Self::normalize_calls_in_expr(cond, ctx);
+                Self::normalize_block_call_args(then_branch, ctx);
+                Self::normalize_block_call_args(else_branch, ctx);
             }
-            Expr::Block(b) => Self::normalize_block_call_args(b, blk),
+            Expr::Block(b) => Self::normalize_block_call_args(b, ctx),
             Expr::MakeClosure { captures, .. } => {
                 for c in captures.iter_mut() {
-                    Self::normalize_calls_in_expr(&mut c.value, blk);
+                    Self::normalize_calls_in_expr(&mut c.value, ctx);
                 }
             }
             Expr::SeqLit { items, .. } => {
                 for i in items.iter_mut() {
-                    Self::normalize_calls_in_expr(i, blk);
+                    Self::normalize_calls_in_expr(i, ctx);
                 }
             }
             Expr::SeqIndex { seq, index, .. } => {
-                Self::normalize_calls_in_expr(seq, blk);
-                Self::normalize_calls_in_expr(index, blk);
+                Self::normalize_calls_in_expr(seq, ctx);
+                Self::normalize_calls_in_expr(index, ctx);
             }
-            Expr::SeqLen { seq, .. } => Self::normalize_calls_in_expr(seq, blk),
+            Expr::SeqLen { seq, .. } => Self::normalize_calls_in_expr(seq, ctx),
             Expr::MapLit { entries, .. } => {
                 for e in entries.iter_mut() {
-                    Self::normalize_calls_in_expr(&mut e.key, blk);
-                    Self::normalize_calls_in_expr(&mut e.value, blk);
+                    Self::normalize_calls_in_expr(&mut e.key, ctx);
+                    Self::normalize_calls_in_expr(&mut e.value, ctx);
                 }
             }
             Expr::MapGet { map, key, .. } => {
-                Self::normalize_calls_in_expr(map, blk);
-                Self::normalize_calls_in_expr(key, blk);
+                Self::normalize_calls_in_expr(map, ctx);
+                Self::normalize_calls_in_expr(key, ctx);
             }
             Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
-                Self::normalize_calls_in_expr(lhs, blk);
-                Self::normalize_calls_in_expr(rhs, blk);
+                Self::normalize_calls_in_expr(lhs, ctx);
+                Self::normalize_calls_in_expr(rhs, ctx);
             }
             Expr::StrConcat { parts, .. } => {
                 for p in parts.iter_mut() {
-                    Self::normalize_calls_in_expr(p, blk);
+                    Self::normalize_calls_in_expr(p, ctx);
                 }
             }
-            // Atomic literals and VarRef carry no sub-expressions.
+            // Atomic literals and a non-rewritten VarRef carry no
+            // sub-expressions.
+            Expr::IntLit { .. }
+            | Expr::BoolLit { .. }
+            | Expr::NilLit { .. }
+            | Expr::SymLit { .. }
+            | Expr::StrLit { .. }
+            | Expr::FloatLit { .. }
+            | Expr::VarRef { .. } => {}
+        }
+    }
+
+    /// Phase Q10c — collect every name bound by a `let`/`let*`/`Assign`
+    /// anywhere in a function body (descending into control-flow and
+    /// nested blocks), so the call-site rewrite can tell a parenless
+    /// method call from a reference to a same-named local.  Conservative:
+    /// a name bound *anywhere* in the function shadows the method name for
+    /// the whole function (we do not model block-scoped shadowing), which
+    /// only ever *suppresses* a rewrite — never produces a wrong one.
+    fn collect_bound_names_block(block: &Block, out: &mut HashSet<String>) {
+        for s in &block.stmts {
+            Self::collect_bound_names_stmt(s, out);
+        }
+        Self::collect_bound_names_expr(&block.value, out);
+    }
+
+    fn collect_bound_names_stmts(stmts: &[Stmt], out: &mut HashSet<String>) {
+        for s in stmts {
+            Self::collect_bound_names_stmt(s, out);
+        }
+    }
+
+    fn collect_bound_names_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
+        match stmt {
+            Stmt::LetBinding { name, value, .. }
+            | Stmt::LetStarBinding { name, value, .. } => {
+                out.insert(name.clone());
+                Self::collect_bound_names_expr(value, out);
+            }
+            Stmt::Assign { name, value, .. } => {
+                out.insert(name.clone());
+                Self::collect_bound_names_expr(value, out);
+            }
+            Stmt::ExprStmt { expr, .. } => Self::collect_bound_names_expr(expr, out),
+            Stmt::While { cond, body, .. } => {
+                Self::collect_bound_names_expr(cond, out);
+                Self::collect_bound_names_block(body, out);
+            }
+            Stmt::ForRange { var, start, stop, step, body, .. } => {
+                out.insert(var.clone());
+                Self::collect_bound_names_expr(start, out);
+                Self::collect_bound_names_expr(stop, out);
+                Self::collect_bound_names_expr(step, out);
+                Self::collect_bound_names_block(body, out);
+            }
+            Stmt::ForEach { var, iter, body, .. } => {
+                out.insert(var.clone());
+                Self::collect_bound_names_expr(iter, out);
+                Self::collect_bound_names_block(body, out);
+            }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                Self::collect_bound_names_expr(seq, out);
+                Self::collect_bound_names_expr(index, out);
+                Self::collect_bound_names_expr(value, out);
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                Self::collect_bound_names_expr(map, out);
+                Self::collect_bound_names_expr(key, out);
+                Self::collect_bound_names_expr(value, out);
+            }
+            Stmt::ClassDef { body, .. }
+            | Stmt::ModuleDef { body, .. }
+            | Stmt::SingletonClassDef { body, .. } => Self::collect_bound_names_stmts(body, out),
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                Self::collect_bound_names_stmts(body, out);
+                for r in rescues {
+                    if let Some(b) = &r.binding {
+                        out.insert(b.clone());
+                    }
+                    Self::collect_bound_names_stmts(&r.body, out);
+                }
+                if let Some(eb) = ensure_body {
+                    Self::collect_bound_names_stmts(eb, out);
+                }
+            }
+        }
+    }
+
+    fn collect_bound_names_expr(expr: &Expr, out: &mut HashSet<String>) {
+        match expr {
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                Self::collect_bound_names_expr(cond, out);
+                Self::collect_bound_names_block(then_branch, out);
+                Self::collect_bound_names_block(else_branch, out);
+            }
+            Expr::Block(b) => Self::collect_bound_names_block(b, out),
+            Expr::DirectCall { args, .. }
+            | Expr::BuiltinCall { args, .. }
+            | Expr::Intrinsic { args, .. } => {
+                for a in args {
+                    Self::collect_bound_names_expr(a, out);
+                }
+            }
+            Expr::IndirectCall { target, args, .. } => {
+                Self::collect_bound_names_expr(target, out);
+                for a in args {
+                    Self::collect_bound_names_expr(a, out);
+                }
+            }
+            Expr::MakeClosure { captures, .. } => {
+                for c in captures {
+                    Self::collect_bound_names_expr(&c.value, out);
+                }
+            }
+            Expr::SeqLit { items, .. } => {
+                for i in items {
+                    Self::collect_bound_names_expr(i, out);
+                }
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                Self::collect_bound_names_expr(seq, out);
+                Self::collect_bound_names_expr(index, out);
+            }
+            Expr::SeqLen { seq, .. } => Self::collect_bound_names_expr(seq, out),
+            Expr::MapLit { entries, .. } => {
+                for e in entries {
+                    Self::collect_bound_names_expr(&e.key, out);
+                    Self::collect_bound_names_expr(&e.value, out);
+                }
+            }
+            Expr::MapGet { map, key, .. } => {
+                Self::collect_bound_names_expr(map, out);
+                Self::collect_bound_names_expr(key, out);
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                Self::collect_bound_names_expr(lhs, out);
+                Self::collect_bound_names_expr(rhs, out);
+            }
+            Expr::StrConcat { parts, .. } => {
+                for p in parts {
+                    Self::collect_bound_names_expr(p, out);
+                }
+            }
             Expr::IntLit { .. }
             | Expr::BoolLit { .. }
             | Expr::NilLit { .. }

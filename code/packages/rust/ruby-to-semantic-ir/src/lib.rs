@@ -5363,6 +5363,58 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase Q10c — parenless/argless call to a yielding method → DirectCall
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn parenless_call_to_yielding_method_becomes_direct_call_with_nil_block() {
+        // Bare `t` (no parens/args) referencing a yielding method is a
+        // zero-arg call: it must become DirectCall t [NilLit], not a VarRef.
+        let m = lower("def t\n  yield 5\nend\nt\n");
+        let call = find_direct_call(main_body(&m), "t")
+            .expect("bare `t` should lower to a DirectCall");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1, "nil block slot threaded");
+            assert!(matches!(args.last(), Some(Expr::NilLit { .. })));
+        }
+        // And no bare VarRef named `t` survives in main.
+        assert!(
+            !body_mentions_varref(main_body(&m), "t"),
+            "parenless call must not remain a VarRef"
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn local_shadowing_a_method_name_stays_a_varref() {
+        // `t = 1` binds a local; the later bare `t` is that variable, NOT a
+        // call — it must remain a VarRef even though a method `t` exists.
+        let m = lower("def t\n  yield 5\nend\nt = 1\nt\n");
+        assert!(
+            find_direct_call(main_body(&m), "t").is_none(),
+            "a shadowed name must not be rewritten into a DirectCall"
+        );
+        assert!(
+            matches!(&main_body(&m).value, Expr::VarRef { name, .. } if name == "t"),
+            "the tail `t` stays a local VarRef, got {:?}",
+            main_body(&m).value
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn parenless_reference_to_non_block_method_is_left_alone() {
+        // `g` does not take a block, so a bare `g` is not rewritten (it
+        // stays whatever the lowerer produced — a VarRef — and no spurious
+        // DirectCall is synthesized).
+        let m = lower("def g(x)\n  x + 1\nend\ng\n");
+        assert!(
+            find_direct_call(main_body(&m), "g").is_none(),
+            "non-block method's bare ref must not be threaded"
+        );
+    }
+
+    // -----------------------------------------------------------------------
     // Phase Q10b — block_given? → not(null?(__sir_block__))
     // -----------------------------------------------------------------------
 
@@ -7790,5 +7842,6 @@ b = "y"
         );
     }
 }
+
 
 
