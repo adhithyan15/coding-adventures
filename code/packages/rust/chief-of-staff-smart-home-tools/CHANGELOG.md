@@ -130,6 +130,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23 mesh readiness handoff packages:
   `smart_home.list_integration_mesh_readiness_handoffs` and
   `smart_home.get_integration_mesh_readiness_handoff_summary`.
+- Added D18D handlers for D23 mesh release-readiness gate checks:
+  `smart_home.list_integration_mesh_release_readiness_checks` and
+  `smart_home.get_integration_mesh_release_readiness_summary`.
 - Added D18D handlers for D23A activation remediation work orders:
   `smart_home.list_integration_activation_remediation` and
   `smart_home.get_integration_activation_remediation_summary`.
