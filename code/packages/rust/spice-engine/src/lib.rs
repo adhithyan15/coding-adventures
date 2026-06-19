@@ -3410,6 +3410,8 @@ pub struct DeckRunArtifact {
     pub result_rows: usize,
     pub output_probe_count: usize,
     pub output_probes: Vec<String>,
+    pub output_directive_count: usize,
+    pub output_directives: Vec<String>,
     pub measurement_count: usize,
     pub measurement_names: Vec<String>,
     pub fourier_count: usize,
@@ -3931,6 +3933,32 @@ pub fn select_deck_output_probes(netlist: &str, analysis: &str) -> Result<Vec<St
             if seen.insert(key) {
                 selected.push(probe);
             }
+        }
+    }
+    Ok(selected)
+}
+
+pub fn select_deck_output_directives(
+    netlist: &str,
+    analysis: &str,
+) -> Result<Vec<String>, SpiceError> {
+    let summary = resolve_deck_outputs(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "select_deck_output_directives",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    let mut selected = Vec::new();
+    let mut seen = HashSet::new();
+    for selection in summary.selections {
+        if !selection.analysis.as_deref().map_or(true, |requested| {
+            deck_output_analysis_matches(requested, analysis)
+        }) {
+            continue;
+        }
+        if seen.insert(selection.directive.clone()) {
+            selected.push(selection.directive);
         }
     }
     Ok(selected)
@@ -10051,6 +10079,7 @@ fn deck_run_artifacts(
     plan: &DeckAnalysisPlan,
     result_rows: usize,
     output_probes: &[String],
+    output_directives: &[String],
     measurements: &[ProbeMeasurement],
     fourier: &[FourierResult],
 ) -> Vec<DeckRunArtifact> {
@@ -10061,6 +10090,8 @@ fn deck_run_artifacts(
         result_rows,
         output_probe_count: output_probes.len(),
         output_probes: output_probes.to_vec(),
+        output_directive_count: output_directives.len(),
+        output_directives: output_directives.to_vec(),
         measurement_count: measurements.len(),
         measurement_names: measurements
             .iter()
@@ -10076,18 +10107,20 @@ fn deck_run_artifacts(
 
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
             .to_string(),
     ];
     for artifact in artifacts {
         rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             artifact.analysis,
             artifact.directive,
             artifact.line_number,
             artifact.result_rows,
             artifact.output_probe_count,
             artifact.output_probes.join(";"),
+            artifact.output_directive_count,
+            artifact.output_directives.join(";"),
             artifact.measurement_count,
             artifact.measurement_names.join(";"),
             artifact.fourier_count,
@@ -10153,8 +10186,15 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "op")?;
-            let run_artifacts =
-                deck_run_artifacts(&plan, 1, &output_probes, &measurements, &fourier);
+            let output_directives = select_deck_output_directives(netlist, "op")?;
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                1,
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10185,8 +10225,15 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "dc")?;
-            let run_artifacts =
-                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let output_directives = select_deck_output_directives(netlist, "dc")?;
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                result.len(),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10218,8 +10265,15 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "ac")?;
-            let run_artifacts =
-                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let output_directives = select_deck_output_directives(netlist, "ac")?;
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                result.len(),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10254,8 +10308,15 @@ pub fn run_deck_analysis(
             let fourier = fourier_transient_cards(&result, &fourier_cards)?;
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = select_deck_output_probes(netlist, "tran")?;
-            let run_artifacts =
-                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let output_directives = select_deck_output_directives(netlist, "tran")?;
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                result.len(),
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10283,8 +10344,15 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = vec![format!("V({output_node})")];
-            let run_artifacts =
-                deck_run_artifacts(&plan, 1, &output_probes, &measurements, &fourier);
+            let output_directives = Vec::new();
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                1,
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10310,8 +10378,15 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = vec![format!("V({output_node})")];
-            let run_artifacts =
-                deck_run_artifacts(&plan, 1, &output_probes, &measurements, &fourier);
+            let output_directives = Vec::new();
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                1,
+                &output_probes,
+                &output_directives,
+                &measurements,
+                &fourier,
+            );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10349,10 +10424,12 @@ pub fn run_deck_analysis(
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
             let output_probes = vec![format!("V({output_node})")];
+            let output_directives = Vec::new();
             let run_artifacts = deck_run_artifacts(
                 &plan,
                 result.points.len(),
                 &output_probes,
+                &output_directives,
                 &measurements,
                 &fourier,
             );
