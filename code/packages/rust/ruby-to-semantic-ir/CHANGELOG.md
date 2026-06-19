@@ -2,6 +2,31 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.93.0] - 2026-06-19
+
+### Added (Q10c — parenless/argless call to a yielding method)
+
+- A bare, parenless reference to a known block-taking method (`foo` with
+  no `()`/args) reaches the lowerer as `VarRef { scope: Local }` — the
+  method-call parser can't distinguish a zero-arg call from a variable.
+  The Q9f call-site pass now rewrites such a `VarRef`, when its name is in
+  `block_param_methods`, into `DirectCall { fn_name, args: [NilLit] }`,
+  threading a nil block so the call's arity matches the def's trailing
+  `__sir_block__` parameter. Previously these calls were left as `VarRef`
+  and never threaded.
+- **Shadow-safe.** The rewrite fires only when the name is *not* bound as
+  a param/local anywhere in the enclosing function. A new
+  `collect_bound_names_*` pre-pass gathers each function's param + `let`/
+  `let*`/`Assign`/loop-var/rescue-binding names; the normalization walk
+  (now carrying a `BlockNormCtx { methods, bound }`) skips any bound name.
+  Conservative: a name bound anywhere in the function suppresses the
+  rewrite for the whole function — this can only *miss* a rewrite, never
+  produce a wrong one (so `t = 1; t` keeps `t` a local `VarRef`).
+- New tests:
+  `parenless_call_to_yielding_method_becomes_direct_call_with_nil_block`,
+  `local_shadowing_a_method_name_stays_a_varref`,
+  `parenless_reference_to_non_block_method_is_left_alone`. Each validates.
+
 ## [0.92.0] - 2026-06-19
 
 ### Added (Q10b — `block_given?`)
