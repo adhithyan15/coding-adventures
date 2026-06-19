@@ -169,6 +169,26 @@ an initializer is never short-circuited. `var x = a + f()` (reorders `a`),
 expression), and a body with no tail-return value are all declined. Broader
 value positions (assignment targets, `return` arguments) are later slices.
 
+### Non-simple arguments — per-argument temps (CLOC15 PR-4a)
+
+The statement-inlining paths no longer require arguments to be simple. When
+any argument is non-simple, every argument is hoisted into a fresh `const`
+temp, in source order, before the spliced body, and each parameter is
+substituted by its temp:
+
+```js
+function log2(x) { trace(x); record(x); }
+log2(compute());
+// SIMPLE  ⇒  const a = compute(); trace(a); record(a);
+```
+
+This is exact JS call semantics — all arguments evaluated left-to-right,
+once each, before the body — so a side-effecting argument runs once even
+when its parameter is used many times (never duplicated to
+`trace(compute()); record(compute())`). When **all** arguments are simple the
+old direct-substitution path is kept (no temps), so existing output is
+unchanged. Composes with PR-3 for value-position calls.
+
 ## Where this pass sits
 
 CLOC06 §"Canonical pass set" pins:

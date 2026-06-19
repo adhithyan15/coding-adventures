@@ -2,6 +2,62 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-19
+
+### Added (CLOC15 PR-4a — non-simple arguments via per-argument temps)
+
+PR-1..PR-3 required every argument of an inlined statement-helper call to be
+*simple* (a literal or bare identifier), so `f(obj.x)`, `f(a + 1)`, `f(g())`
+were all declined. PR-4a lifts that for the statement-inlining paths (the
+void/discard pass and the value-capture pass) by **materialising arguments
+into temps**:
+
+```js
+function log2(x) { trace(x); record(x); }
+log2(compute());
+// SIMPLE  ⇒  const a = compute(); trace(a); record(a);
+//   (compute() is evaluated ONCE, captured, and read twice — never
+//    duplicated to trace(compute()); record(compute()))
+```
+
+`materialize_args`:
+
+- **All arguments simple** → unchanged: direct substitution, no temps. This
+  preserves the existing single-pass output byte-for-byte, so there is **no
+  fixture churn**.
+- **Any argument non-simple** → hoist EVERY argument into a fresh `const`
+  temp, in source order, before the spliced body, and substitute each
+  parameter with its temp. This evaluates all arguments left-to-right exactly
+  once (JS call semantics) and captures their values, so a parameter used N
+  times reads the captured value rather than re-evaluating the argument. The
+  redundant temps on the simple arguments are removed downstream by
+  `inline-variables` + `constant-fold`.
+
+Composes with PR-3: a result-used helper called with a non-simple argument
+hoists the arg temp before the captured body
+(`var x = f(obj.y)` ⇒ `const b = obj.y; …; const a = …; var x = a;`).
+
+**Soundness.** Any argument expression is admissible because the temp
+captures its value once at the splice point — a throwing argument still
+throws at the same point (before the body); a side-effecting argument runs
+once. Arg temps are program-fresh, minted from the same `avoid` set as the
+callee-local renames and **before** them, so the two name spaces are
+disjoint. (Arguments the front-end cannot bridge — e.g. assignment
+expressions — never reach the pass: the program falls back to whitespace-only
+minification.)
+
+**Plumbing.** The statement-path gate now counts name+arity matches
+(`Tally::arity_calls`, via `name_use_and_arity_calls`) rather than the
+expression inliner's simple-arg `inlinable` count, and `is_void_target_call`
+drops its `is_simple_arg` requirement (name + arity only). The expression
+inliner's `is_inlinable_call` is unchanged.
+
+- 5 new / changed tests (side-effecting arg via temp — the former
+  `does_not_inline_…_side_effecting_argument` now inlines; member arg used
+  twice; left-to-right temping of mixed args; non-simple arg in value
+  position; the all-simple no-temp no-churn guarantee). 57 pass-crate tests;
+  full closurec suite + both downstream consumers green, no fixture churn.
+
 ## [0.7.0] - 2026-06-19
 
 ### Added (CLOC15 PR-3 — result-used helpers captured into a hoisted temp)
