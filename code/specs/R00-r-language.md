@@ -330,6 +330,27 @@ unchanged.
     composes with the access operators above. The result size is bounded by the
     same `MAX_DOCALL_ARGS`-class limit as `do.call`'s argument count so a crafted
     `val` cannot blow the list up without bound.
+- **R-18 — `switch()` + error handling** *(this PR)*. R's value-returning
+  multi-way branch and its condition-based error handling, all in the shared
+  `s-runtime` (R inherits them through the same evaluator). The defining property
+  is **lazy evaluation**: `switch` and `tryCatch` are **special forms** — the
+  call dispatcher intercepts them and evaluates only the selected arm / protected
+  expression / chosen handler, never all arms eagerly. See S00 §V2.9 for the full
+  semantics. In brief:
+  - **`switch(EXPR, ...)`** — character `EXPR` matches arm *names* (an **empty
+    arm falls through** to the next non-empty value; an **unnamed final arm** is
+    the default; no match and no default → invisible `NULL`); numeric `EXPR`
+    selects the n-th arm by position (out of range → `NULL`). Only the chosen arm
+    evaluates, so `switch("a", a = stop("x"), b = "ok")` does not raise.
+  - **`stop(...)`** raises an error (concatenated message → `SError::User`);
+    **`warning(...)`** emits a warning and returns invisibly without aborting;
+    **`tryCatch(expr, error = fn, finally = cleanup)`** runs `expr`, routing any
+    error to `error` (called with a minimal condition object —
+    `list(message, call)` classed `c("simpleError","error","condition")`, so
+    `conditionMessage(e)` and `e$message` give the message), and always running
+    `finally`. **`conditionMessage(e)`** reads the condition's message. Full R
+    condition machinery (custom condition classes, calling handlers, restarts) is
+    out of scope.
 
 ## §4 Reuse strategy
 

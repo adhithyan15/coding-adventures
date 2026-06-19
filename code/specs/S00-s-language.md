@@ -341,6 +341,48 @@ general map is bounded (`MAX_ATTRIBUTES`) and a `"dim"` reshape is length-checke
 against `MAX_SEQ_LEN`, so attacker-controlled attribute input cannot exhaust
 memory or panic.
 
+### V2.9 `switch()` and error handling (`stop`/`warning`/`tryCatch`)
+
+V2.9 adds R's value-returning multi-way branch and its condition-based error
+handling. The headline implementation note is **laziness**: `switch` and
+`tryCatch` are **special forms**, not ordinary (eager) builtins. The evaluator's
+call dispatcher (`eval_postfix`) intercepts a bare-name call to `switch` or
+`tryCatch` and hands it the *unevaluated* argument expressions, evaluating only
+the selected arm / the protected expression / the chosen handler. This is
+essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
+`tryCatch` handler must not run unless its expression actually errors.
+
+- **`switch(EXPR, ...)`** — choose one arm by the value of `EXPR`.
+  - **Character `EXPR`** matches against the *names* of the arms. An **empty
+    arm falls through** to the next non-empty arm's value
+    (`switch("a", a = , b = "hit")` → `"hit"`). An **unnamed final arm** is the
+    **default**, used when no name matches. With no match and no default the
+    result is an **invisible `NULL`**.
+  - **Numeric `EXPR`** selects the `n`-th arm by **position** (1-based), ignoring
+    names; out of range (or `NA`/`< 1`) → `NULL`. Only the chosen arm is
+    evaluated.
+- **`stop(...)`** raises an error whose message is the concatenation of its
+  arguments (coerced to character, like `cat`/`paste0`). It surfaces as a new
+  typed error variant `SError::User(String)` so a `stop()` is distinguishable
+  from an internal type/index error — but both are catchable by `tryCatch`.
+- **`warning(...)`** emits a warning (message concatenated as for `stop`) into a
+  session-held buffer and prints it as `Warning message:\n<msg>`; it does **not**
+  abort and returns an **invisible `NULL`**.
+- **`tryCatch(expr, error = handler, finally = cleanup)`** evaluates `expr`; if it
+  raises *any* error, the `error` handler is called with a **condition object**
+  and its value becomes the result; otherwise the value of `expr` is the result.
+  The `finally` expression, if present, is evaluated for its side effects **after**
+  `expr`/handler regardless of success or failure. The condition object is a
+  minimal `list(message = <chr>, call = NULL)` with S3 class
+  `c("simpleError", "error", "condition")`, so `conditionMessage(e)` and
+  `e$message` both yield the message (full R condition machinery —
+  `simpleCondition`, custom classes, `withCallingHandlers`, restarts — is out of
+  scope). The internal `break`/`next` control signals are **not** caught (they are
+  not user errors). Handler re-entry is bounded by the evaluator's existing
+  `MAX_EVAL_DEPTH`, so a handler that re-raises cannot overflow the stack.
+- **`conditionMessage(e)`** returns the `message` element of a condition object
+  (the character message), for parity with R's accessor.
+
 ## §9 Divergences from ST00 (spec-sync)
 
 1. **S before R.** ST00 specs R first; we implement historical S first. The two
