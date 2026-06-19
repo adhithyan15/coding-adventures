@@ -75,6 +75,9 @@ All notable changes to this package will be documented in this file.
   helpers for ordering mesh preflight repair batches into execution slots.
 - `IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow` and summary
   helpers for auditing scheduled repair-slot blockers and operator handoffs.
+- `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket` and
+  summary helpers for turning audited repair slots into operator-ready
+  execution tickets.
 - `IntegrationMeshStageReleaseSummary` and helpers for combining substrate
   stage blockers, primitive readiness blockers, and mesh-scoped remediation
   into a single release readiness rollup.
