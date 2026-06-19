@@ -86,9 +86,22 @@ unary = ( MINUS | PLUS ) unary | amp ;
 # Function[Power[Slot[1], 2]] — NOT Power[Slot[1], Function[2]]. The `&` binds
 # LOOSER than `^` (so it captures the whole `#^2`) but tighter than the prefix
 # unary / arithmetic above it; this is the key precedence the W-11 tests pin
-# down. A double `& &` wraps twice. The runtime lowers each trailing `&` to a
-# slot-based `Function[body]`.
-amp = power { AMP } ;
+# down. A double `& &` wraps twice.
+#
+# After the `&` run, the pure function may be *applied immediately*: `(#^2)&[5]`
+# is `(#^2 &)[5]` — the `[5]` (and any chained `[…]` / `[[…]]`) applies to the
+# new Function, not to the body. That suffix is the same postfix forms `postfix`
+# uses, but it can only appear when at least one `&` is present (so the no-`&`
+# case falls straight through to `power`, where ordinary application already
+# lives — no double-application ambiguity). The runtime lowers each trailing `&`
+# to a slot-based `Function[body]` and folds each suffix into an application.
+amp = power AMP { AMP } { amp_apply }
+    | power ;
+
+# The application suffix usable after a pure-function `&` (mirrors `postfix`):
+# `f & [args]` ordinary application, `f & [[i]]` Part sugar.
+amp_apply = LBRACKET [ arglist ] RBRACKET
+          | LDBRACKET arglist RBRACKET RBRACKET ;
 
 # Power — right-associative: `a^b^c` is Power[a, Power[b, c]]. Unchanged by
 # W-11; `power` still calls `mapapply`, and the `&` postfix sits one level
