@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `formatDeckRunArtifactCsv` for selected-run artifacts with the same
+  stable columns as `formatDeckRunArtifactTable` plus deterministic CSV
+  escaping for browser and spreadsheet consumers, matching Python and Rust.
 - Add selected Fourier probe names to selected-run artifacts in
   `runDeckAnalysis` and render them in a stable `FourierList` column from
   `formatDeckRunArtifactTable`, matching Python and Rust.
