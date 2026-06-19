@@ -126,7 +126,7 @@ All notable changes to this package will be documented in this file.
   rollups: `smart_home.list_integration_mesh_substrate_actions` and
   `smart_home.get_integration_mesh_action_readiness_summary`.
 - Added D18D handlers for D23 mesh substrate preflight checks, repair actions,
-  repair batches, repair schedules, and preflight readiness rollups:
+  repair batches, repair schedules, and preflight repair readiness rollups:
   `smart_home.list_integration_mesh_substrate_preflight_checks`,
   `smart_home.get_integration_mesh_substrate_preflight_summary`,
   `smart_home.list_integration_mesh_preflight_repair_actions`,
@@ -135,8 +135,10 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_mesh_preflight_repair_batch_summary`,
   `smart_home.list_integration_mesh_preflight_repair_schedule`,
   `smart_home.get_integration_mesh_preflight_repair_schedule_summary`,
-  `smart_home.get_integration_mesh_preflight_readiness_summary`, and
-  `smart_home.get_integration_mesh_preflight_repair_readiness_summary`.
+  `smart_home.get_integration_mesh_preflight_readiness_summary`,
+  `smart_home.get_integration_mesh_preflight_repair_readiness_summary`,
+  `smart_home.get_integration_mesh_preflight_batch_readiness_summary`, and
+  `smart_home.get_integration_mesh_preflight_schedule_readiness_summary`.
 - Added the D23 mesh release-readiness summary handler:
   `smart_home.get_integration_mesh_release_readiness_summary`.
 - Added D18D handlers for D23 mesh readiness handoff packages:
