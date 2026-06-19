@@ -171,6 +171,31 @@ fun main() {
     check("workbook intact after reject", sl.rowCells(1)[4], "28.00")
     sl.close()
 
+    // Undo / redo (the Undo / Redo buttons drive undoEdit/redoEdit): a fresh,
+    // unseeded session so the initial history is empty. Two edits, walk back and
+    // forward, and confirm a restored formula recomputes live.
+    val ur = SpreadsheetSession()
+    check("fresh canUndo false", ur.canUndo().toString(), "false")
+    ur.setCell("A1", "1")
+    ur.setCell("B1", "=A1*10") // 10
+    check("after edits canUndo true", ur.canUndo().toString(), "true")
+    check("undo formula", ur.undo().toString(), "true")
+    check("B1 cleared by undo", ur.window(1, 2, 1, 2)[0][0], "")
+    check("undo literal", ur.undo().toString(), "true")
+    check("A1 cleared by undo", ur.window(1, 1, 1, 1)[0][0], "")
+    check("canUndo false at bottom", ur.canUndo().toString(), "false")
+    check("undo at bottom is noop", ur.undo().toString(), "false")
+    check("redo literal", ur.redo().toString(), "true")
+    check("redo formula", ur.redo().toString(), "true")
+    check("B1 live after redo", ur.window(1, 2, 1, 2)[0][0], "10")
+    check("canRedo false at top", ur.canRedo().toString(), "false")
+    // A fresh edit forks history (drops the redo branch).
+    ur.undo() // back: B1 gone
+    check("canRedo true before fork", ur.canRedo().toString(), "true")
+    ur.setCell("C1", "9")
+    check("fresh edit clears redo", ur.canRedo().toString(), "false")
+    ur.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }

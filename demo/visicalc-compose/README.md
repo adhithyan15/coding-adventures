@@ -100,6 +100,10 @@ document held in memory and restore it (`loadBook` / `sc_deserialize`): the
 document captures only the source (formula text + typed literals) and per-cell
 formats — not the computed values, which the engine recomputes on load, so a
 loaded formula stays live.
+The **Undo / Redo** buttons walk the engine's snapshot history
+(`InfiniteSheetModel.undoEdit`/`redoEdit` over the C ABI's `sc_undo`/`sc_redo`);
+they disable at the history ends via `canUndo`/`canRedo`. Every edit is
+reversible and a restored formula recomputes live.
 `InfiniteSheetModel` (in `Engine.kt`) seeds far-flung
 sparse cells (`Z1000`, `BA50`, `BB50`) and derives the extent from `usedRange()`
 + a margin.
@@ -118,7 +122,9 @@ the clipboard (`copyCell` I1 → `pasteCell` at I4 ⇒ I4 = H4*10 = 60; `cutCell
 → paste at C1 moves it, A1 clears, a second paste returns false), and a
 save/load round trip (`saveBook` → mutate A1 ⇒ E1 523.00 → `loadBook` restores
 A1 15 / E1 38.00, the loaded formula stays live with A1=5 ⇒ E1 28.00, and
-malformed input is rejected).
+malformed input is rejected), and an undo/redo walk on a fresh session (two
+edits → undo both → redo both with the formula recomputing live → a fresh edit
+forks history).
 
 The Compose UI itself (`InfiniteSheet.kt` + the `Main.kt` toggle) is verified to
 compile against the real Compose Desktop APIs via `gradle compileKotlin`; the
