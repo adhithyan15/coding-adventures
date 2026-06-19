@@ -262,11 +262,24 @@ col_def           = NAME col_type { col_constraint } ;
 # (VARCHAR(8), DECIMAL(10,2)) — the length/precision arguments are parsed
 # but ignored; the engine uses SQLite's type-affinity rules internally.
 col_type          = NAME [ "(" NUMBER { "," NUMBER } ")" ] ;
-col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" [ "AUTOINCREMENT" ] )
-                  | "UNIQUE" | ( "DEFAULT" primary )
+col_constraint    = ( "NOT" "NULL" [ col_conflict_clause ] ) | "NULL"
+                  | ( "PRIMARY" "KEY" [ "AUTOINCREMENT" ] [ col_conflict_clause ] )
+                  | ( "UNIQUE" [ col_conflict_clause ] )
+                  | ( "DEFAULT" primary )
                   | ( "CHECK" "(" expr ")" )
                   | ( "COLLATE" NAME )
                   | ( "REFERENCES" NAME [ "(" NAME ")" ] ) ;
+# Column-level conflict clause — parsed and accepted but not enforced.
+# SQLite allows each constraint to carry its own conflict-resolution policy:
+#   x INT NOT NULL ON CONFLICT REPLACE
+#   x INT UNIQUE ON CONFLICT IGNORE
+# Mini-sqlite always uses ABORT semantics; these clauses are silently ignored.
+# col_conflict_clause is a nested sub-rule so its keyword tokens do NOT
+# appear as direct children of col_constraint — the adapter's kw_seq logic
+# sees only the constraint-type keywords (NOT NULL, PRIMARY KEY, UNIQUE) and
+# is unaffected.
+col_conflict_clause = "ON" "CONFLICT"
+                      ( "ROLLBACK" | "ABORT" | "FAIL" | "IGNORE" | "REPLACE" ) ;
 # AUTOINCREMENT (SQLite-only): only valid immediately after PRIMARY KEY on
 # an INTEGER column.  The engine recognises the keyword and sets
 # ``ColumnDef.autoincrement = True``; behaviour is "rowids monotonically
