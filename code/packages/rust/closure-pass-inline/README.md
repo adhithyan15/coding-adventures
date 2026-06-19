@@ -120,12 +120,15 @@ structurally cannot do. It is admitted only under a tight, sound subset
    position (`x = track(…)`). No result to capture (value capture is a
    later slice).
 3. **Straight-line body to an optional tail `return`** — each statement is
-   an expression statement or a `let`/`const` declaration, plus an optional
-   `return` as the *final* statement; nothing else (no *early* return).
+   an expression statement or a `var` / `let` / `const` declaration, plus an
+   optional `return` as the *final* statement; nothing else (no *early*
+   return).
 4. **No `this` / `arguments`** — frame-bound, would rebind on a splice.
 5. **Callee locals alpha-renamed to program-fresh names** before
-   splicing — a spliced `let e` can never collide with the call-site
-   scope.
+   splicing — a spliced `let e` can never collide with the call-site scope.
+   This is what makes admitting a `var` local sound (CLOC15 Open Q3): a `var`
+   hoists to the caller-function top on a flat splice, but a name that appears
+   nowhere else in the program is observationally inert wherever it hoists.
 6. **Free identifiers must be true globals, uniquely-declared top-level
    names, or top-level names spliced only at a top-level site.** A free ident
    declared *nowhere* is a true global — unshadowable everywhere, spliceable
@@ -143,6 +146,11 @@ structurally cannot do. It is admitted only under a tight, sound subset
    (Slice B2 will widen the multiply-declared nested case via an
    in-scope-binding walk / `closure-scope-analyzer`.)
 7. **Side-effect-free arguments** — the same `is_simple_arg` gate.
+8. **No parameter reassignment** — a parameter is substituted by its argument
+   expression, so a body that assigns to a parameter (`x = …`, `x += …`) is
+   declined; substituting a non-lvalue argument or reading the pre-assignment
+   value would miscompile. (A *local* reassignment is fine — the local is
+   renamed.) Reachable only since assignment statements parse (CLOC17).
 
 Since the call site discards the result (CLOC15 PR-2), a **tail `return E`**
 is normalized: dropped when `E` is provably inert (a literal or a bare

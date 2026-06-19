@@ -377,6 +377,12 @@ Empirical behaviour of the merged slices, confirmed by running the real
 3. **`var` hoisting vs. let/const.** First slice should restrict callee locals
    to `let`/`const` to sidestep hoisting reasoning, then admit `var` once the
    fresh-rename argument (condition 5) is reviewed as sufficient.
+   **Resolved:** `var` locals are now admitted. The fresh-rename argument *is*
+   sufficient: condition 5 renames every callee local — `var` included — to a
+   name that appears in no declaration or use program-wide, so wherever the
+   `var` hoists to (the caller-function top) is unobservable; nothing but the
+   spliced body, in source order, touches the name. The collision case (a
+   caller binding of the same spelling) is the crux and is covered by a test.
 
 4. **Interaction with the fixed-point pipeline.** Statement inlining can expose
    new single-use candidates and new constant-folding opportunities; confirm the
