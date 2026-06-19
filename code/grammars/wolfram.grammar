@@ -38,9 +38,10 @@
 #   multiplicative  * /
 #   unary           - +  (prefix)
 #   power           ^                     (right-associative)
+#   amp             expr &                (postfix, pure function)    (W-11)
 #   mapapply        /@ @@                 (infix, left-associative)   (W-6)
 #   application     f[...]  x[[...]]      (postfix)                   (W-6: [[]])
-#   atom            literals, symbols, patterns, {...}, ( ... )
+#   atom            literals, symbols, patterns, slots, {...}, ( ... )  (W-11: # ## #n)
 # =============================================================================
 
 program = { statement_line } ;
@@ -75,10 +76,23 @@ comparison = additive [ ( EQUAL | UNEQUAL | LESS | GREATER | LE | GE ) additive 
 additive       = multiplicative { ( PLUS | MINUS ) multiplicative } ;
 multiplicative = unary { ( TIMES | SLASH ) unary } ;
 
-# Prefix minus/plus. Binds looser than Power, so `-x^2` is -(x^2).
-unary = ( MINUS | PLUS ) unary | power ;
+# Prefix minus/plus. Binds looser than Power and than the `&` postfix, so
+# `-x^2` is -(x^2). Calls `amp` (the pure-function postfix) which in turn calls
+# `power`, so `-#^2 &` is -((#^2)&).
+unary = ( MINUS | PLUS ) unary | amp ;
 
-# Power — right-associative: `a^b^c` is Power[a, Power[b, c]].
+# Pure-function `&` postfix (W-11). A trailing run of `&` turns the preceding
+# `power` expression into an anonymous `Function`: `#^2 &` is `(#^2)&`, i.e.
+# Function[Power[Slot[1], 2]] — NOT Power[Slot[1], Function[2]]. The `&` binds
+# LOOSER than `^` (so it captures the whole `#^2`) but tighter than the prefix
+# unary / arithmetic above it; this is the key precedence the W-11 tests pin
+# down. A double `& &` wraps twice. The runtime lowers each trailing `&` to a
+# slot-based `Function[body]`.
+amp = power { AMP } ;
+
+# Power — right-associative: `a^b^c` is Power[a, Power[b, c]]. Unchanged by
+# W-11; `power` still calls `mapapply`, and the `&` postfix sits one level
+# *above* it (in `amp`).
 power = mapapply [ POWER unary ] ;
 
 # Map / Apply sugar (W-6), infix and left-associative, binding just above
@@ -105,16 +119,31 @@ postfix = atom { LBRACKET [ arglist ] RBRACKET | LDBRACKET arglist RBRACKET RBRA
 
 arglist = expr { COMMA expr } ;
 
-# Atoms, including the pattern blank forms:
+# Atoms, including the pattern blank forms and the W-11 slots:
 #   NAME                a symbol
 #   NAME BLANK [NAME]   x_  or  x_h   (Pattern[x, Blank[]] / Pattern[x, Blank[h]])
 #   BLANK [NAME]        _   or  _h    (Blank[] / Blank[h])
-atom = NUMBER
+#   slot                #  #n  ##     (Slot / SlotSequence — W-11 pure functions)
+# `slot` is listed first: HASH/SLOTSEQ are disjoint token types from NUMBER/
+# STRING/NAME/BLANK, so order is not required for correctness, but putting the
+# new arm up front keeps the pure-function additions visually grouped.
+atom = slot
+     | NUMBER
      | STRING
      | NAME [ BLANK [ NAME ] ]
      | BLANK [ NAME ]
      | list
      | group ;
+
+# A pure-function argument slot (W-11):
+#   #     ≡  #1      the first argument            (HASH, no number)
+#   #n              the n-th argument              (HASH NUMBER)
+#   ##              SlotSequence — all arguments    (SLOTSEQ)
+# `#n` is HASH followed by the ordinary NUMBER token (there is no dedicated
+# slot-number token — the lexer is unchanged), so the parser reads the optional
+# number here; the runtime turns `#`/`#n` into Slot[n] and `##` into
+# SlotSequence[1].
+slot = HASH [ NUMBER ] | SLOTSEQ ;
 
 list  = LBRACE [ arglist ] RBRACE ;
 group = LPAREN expr RPAREN ;
