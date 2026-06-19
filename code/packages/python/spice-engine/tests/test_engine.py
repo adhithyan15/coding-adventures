@@ -72,6 +72,7 @@ Test organisation
 """
 
 import cmath
+import json
 import math
 from dataclasses import replace
 from math import exp, isclose
@@ -212,6 +213,7 @@ from spice_engine import (
     format_deck_noise_table,
     format_deck_op_table,
     format_deck_run_artifact_csv,
+    format_deck_run_artifact_json,
     format_deck_run_artifact_table,
     format_deck_transient_table,
     format_digital_bridge_schedule_table,
@@ -6820,6 +6822,74 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "Analysis,Directive,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\n"
         f"op,.op,{op_execution.plan.line_number},,,,,,,,,,,,,,,1,2,Index;V(mid),1,V(mid),1,.save,0,,0,,0,\n"
     )
+    artifact_json = format_deck_run_artifact_json(op_execution.run_artifacts)
+    artifact_records = json.loads(artifact_json)
+    assert list(artifact_records[0]) == [
+        "Analysis",
+        "Directive",
+        "Line",
+        "SourceName",
+        "OutputNode",
+        "SweepKind",
+        "StartValue",
+        "StopValue",
+        "StepValue",
+        "PointCount",
+        "StartFrequencyHz",
+        "StopFrequencyHz",
+        "StepTime",
+        "StopTime",
+        "StartTime",
+        "MaxStep",
+        "UseInitialConditions",
+        "ResultRows",
+        "ResultColumns",
+        "ResultColumnList",
+        "OutputProbes",
+        "OutputProbeList",
+        "OutputDirectives",
+        "OutputDirectiveList",
+        "Measurements",
+        "MeasurementList",
+        "Fourier",
+        "FourierList",
+        "Diagnostics",
+        "DiagnosticCodeList",
+    ]
+    assert artifact_records == [
+        {
+            "Analysis": "op",
+            "Directive": ".op",
+            "Line": str(op_execution.plan.line_number),
+            "SourceName": "",
+            "OutputNode": "",
+            "SweepKind": "",
+            "StartValue": "",
+            "StopValue": "",
+            "StepValue": "",
+            "PointCount": "",
+            "StartFrequencyHz": "",
+            "StopFrequencyHz": "",
+            "StepTime": "",
+            "StopTime": "",
+            "StartTime": "",
+            "MaxStep": "",
+            "UseInitialConditions": "",
+            "ResultRows": "1",
+            "ResultColumns": "2",
+            "ResultColumnList": "Index;V(mid)",
+            "OutputProbes": "1",
+            "OutputProbeList": "V(mid)",
+            "OutputDirectives": "1",
+            "OutputDirectiveList": ".save",
+            "Measurements": "0",
+            "MeasurementList": "",
+            "Fourier": "0",
+            "FourierList": "",
+            "Diagnostics": "0",
+            "DiagnosticCodeList": "",
+        }
+    ]
     diagnostic_artifact = replace(
         op_execution.run_artifacts[0],
         diagnostic_count=2,
@@ -6840,6 +6910,9 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert format_deck_run_artifact_csv([quoted_diagnostic_artifact]).endswith(
         ',2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED"""\n'
     )
+    assert json.loads(format_deck_run_artifact_json([quoted_diagnostic_artifact]))[
+        0
+    ]["DiagnosticCodeList"] == 'SPICE_DECK_ANALYSIS_TOKEN;SPICE,"QUOTED"'
 
     dc_execution = run_deck_analysis(circuit, netlist, "dc")
     assert dc_execution.plan.source_name == "V1"

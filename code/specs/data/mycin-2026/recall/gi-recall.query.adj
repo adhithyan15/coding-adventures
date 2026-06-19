@@ -1,0 +1,20 @@
+% ============================================================================
+% gi-recall.query.adj — a worked recall query over the GI biopsy library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this biopsy shows X — what is the
+% diagnosis?" question: it states no GI fact — it only `import`s the grounded library and
+% asks binding queries. The native adj-lang engine resolves each `?` against the imported
+% `relate` edges and returns the binding + the citing clause's source/locator/trust. All
+% knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli gi-recall.query.adj
+% ============================================================================
+
+import "gi-edges.adj"
+
+? biopsy_finding_in(villous_atrophy, $Disease)            % expect celiac_disease
+? biopsy_finding_in(transmural_inflammation, $Disease)    % expect crohn_disease
+? biopsy_finding_in(goblet_cells, $Disease)               % expect barrett_esophagus
+? biopsy_finding_in(absence_of_ganglion_cells, $Disease)  % expect hirschsprung_disease
+? biopsy_finding_in(eosinophils_15_per_hpf, $Disease)     % expect eosinophilic_esophagitis

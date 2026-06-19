@@ -180,8 +180,8 @@ single-declarator** `var`/`let`/`const` — nothing is evaluated before it and
 an initializer is never short-circuited. `var x = a + f()` (reorders `a`),
 `var x = f(), y = …` (multi-declarator), `var x = h(f())` (not the top
 expression), and a body with no tail-return value are all declined. The
-`return`-argument value position is admitted by PR-5 (below); assignment
-targets remain a later slice.
+`return`-argument value position is admitted by PR-5, and the
+assignment-target position (`g = f(x)`) by PR-6 (both below).
 
 ### Non-simple arguments — per-argument temps (CLOC15 PR-4a)
 
@@ -241,6 +241,30 @@ call must be the *whole* argument: `return cond && f(x)` (right operand of
 `&&`), `return c ? f(x) : y` (a conditional branch), and a void helper used as
 `return f(x)` (no value to return) are all declined. Composes with local
 alpha-renaming and PR-4a per-argument temps.
+
+### Result assigned — `g = f(x)` (CLOC15 PR-6)
+
+The third airtight value position is a call that is the **entire right-hand
+side of a simple assignment to a bare identifier** — the everyday "store a
+helper's result" shape. As with PR-5 no temp is needed: the helper's tail value
+becomes the **assignment's right-hand side**:
+
+```js
+function f(x) { side(); return x * 2; }
+var g; g = f(7); use(g);
+// SIMPLE  ⇒  var g; side(); g = 14; use(g);
+```
+
+`g = f(x)` evaluates the (trivial) reference to the bare target `g`, then the
+call, then assigns — so splicing `body…; g = E` preserves that order exactly,
+and the assignment statement's result value is discarded anyway. The gate is
+deliberately narrow: **compound** assignment (`g += f(x)`, which reads the old
+`g` *before* the call), a **member** target (`o.k = f(x)`, whose base `o` is
+evaluated *before* the call), a call that is not the whole RHS (`g = f(x) + 1`),
+and a void helper (no value) are all declined — each would reorder an
+observable effect. Reachable only since the CLOC17 grammar fix made
+assignment-expression statements parse. Composes with local alpha-renaming and
+PR-4a per-argument temps.
 
 ## Where this pass sits
 

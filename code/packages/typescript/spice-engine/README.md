@@ -99,8 +99,9 @@ an internal fixed-step cap, and `UIC` initial-condition intent through that
 stable transient table surface. They also return selected `.four` harmonic
 results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `formatDeckRunArtifactTable` and
-`formatDeckRunArtifactCsv` output for stable result-row, output-probe,
-measurement, Fourier, and diagnostic count/name lists.
+`formatDeckRunArtifactCsv` / `formatDeckRunArtifactJson` output for stable
+result-row, output-probe, measurement, Fourier, and diagnostic count/name
+lists.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save`, scoped or
 global `.probe`, scoped `.print <analysis> ...`, and scoped
 `.plot <analysis> ...` cards before `.end`, normalize and deduplicate output

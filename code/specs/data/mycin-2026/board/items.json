@@ -138,6 +138,12 @@
     {"id": "neuro_broca_def",    "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "broca_area",          "var": "Deficit", "gold": "nonfluent_aphasia"},
     {"id": "neuro_arcuate_def",  "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "arcuate_fasciculus",  "var": "Deficit", "gold": "conduction_aphasia"},
     {"id": "neuro_nigra_def",    "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "substantia_nigra",    "var": "Deficit", "gold": "parkinson_disease"},
-    {"id": "neuro_stn_def",      "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "subthalamic_nucleus", "var": "Deficit", "gold": "hemiballismus"}
+    {"id": "neuro_stn_def",      "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "subthalamic_nucleus", "var": "Deficit", "gold": "hemiballismus"},
+
+    {"id": "gi_celiac_dx",   "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "villous_atrophy",           "var": "Disease", "gold": "celiac_disease"},
+    {"id": "gi_crohn_dx",    "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "transmural_inflammation",    "var": "Disease", "gold": "crohn_disease"},
+    {"id": "gi_barrett_dx",  "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "goblet_cells",              "var": "Disease", "gold": "barrett_esophagus"},
+    {"id": "gi_hirsch_dx",   "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "absence_of_ganglion_cells", "var": "Disease", "gold": "hirschsprung_disease"},
+    {"id": "gi_eoe_dx",      "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "eosinophils_15_per_hpf",     "var": "Disease", "gold": "eosinophilic_esophagitis"}
   ]
 }
