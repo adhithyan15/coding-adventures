@@ -794,6 +794,15 @@ downstream tools to compare.
       callers can distinguish `.save`, `.probe`, `.print`, and `.plot`
       provenance without reparsing deck output cards.
 
+72. Deck run analysis-source artifacts.
+    - Status: completed in this deck run analysis-source artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now copy each
+      selected analysis plan's source name into deck-run artifacts, preserving
+      `.dc`, `.tf`, and `.noise` input-source provenance beside the existing
+      output, measurement, Fourier, and directive lists.
+    - The stable run-artifact table now includes `SourceName`, with an empty
+      cell for analysis cards that do not name a source.
+
 ## Backlog
 
 1. Deck execution layer.

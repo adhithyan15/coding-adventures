@@ -662,6 +662,7 @@ export interface DeckRunArtifact {
   readonly analysis: DeckAnalysisPlan["analysis"];
   readonly directive: DeckAnalysisPlan["directive"];
   readonly lineNumber: number;
+  readonly sourceName?: string;
   readonly resultRows: number;
   readonly outputProbeCount: number;
   readonly outputProbes: readonly string[];
@@ -7875,6 +7876,7 @@ function deckRunArtifacts(
       analysis: plan.analysis,
       directive: plan.directive,
       lineNumber: plan.lineNumber,
+      sourceName: plan.sourceName,
       resultRows: deckResultRowCount(result),
       outputProbeCount: outputProbes.length,
       outputProbes: [...outputProbes],
@@ -7890,7 +7892,7 @@ function deckRunArtifacts(
 
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [
-    "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
+    "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
   ];
   for (const artifact of artifacts) {
     rows.push(
@@ -7898,6 +7900,7 @@ export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]
         artifact.analysis,
         artifact.directive,
         String(artifact.lineNumber),
+        artifact.sourceName ?? "",
         String(artifact.resultRows),
         String(artifact.outputProbeCount),
         artifact.outputProbes.join(";"),
