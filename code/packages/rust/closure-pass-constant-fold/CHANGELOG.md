@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.11.0] - 2026-06-19
+
+### Added — CLOC15.D: fold bitwise & shift operators on numeric literals
+
+`try_fold_binary_op` now folds the six integer operators on two numeric
+literals, matching ECMAScript's 32-bit semantics exactly:
+
+```js
+0xFF & 0x3C   // ⇒ 60
+1 << 4 | 2    // ⇒ 18
+8 >>> 1       // ⇒ 4
+```
+
+- `&` / `|` / `^` — both operands coerced via **`ToInt32`**, result is a
+  signed 32-bit integer.
+- `<<` / `>>` — left operand `ToInt32`; the shift COUNT is `ToUint32(rhs) &
+  31` (the low 5 bits). `>>` is arithmetic (sign-propagating).
+- `>>>` — left operand **`ToUint32`**, logical (zero-fill) shift; the result
+  is an **unsigned** 32-bit value, so it can exceed `i32::MAX`
+  (`-1 >>> 0 ⇒ 4294967295`).
+
+New `to_int32` / `to_uint32` helpers implement the spec coercions (non-finite
+and `±0` → 0; otherwise truncate toward zero and reduce modulo 2³²). Because
+the operands are already numeric literals, the coercions are exact and the
+fold can never diverge from the runtime value — deterministic and sound.
+
+`FoldedLiteral` gained `#[derive(Debug)]` (for test diagnostics only).
+
+- 3 new tests: `to_int32`/`to_uint32` spec-vectors, the six operators against
+  exact JS reference values (incl. fractional-operand coercion, the
+  `>= 2³¹ → negative` wrap, 5-bit shift-count masking, arithmetic `>>`, and
+  unsigned `>>>`), and an end-to-end pass run confirming the emitter renders a
+  `> i32::MAX` result. Full closurec suite + all constant-fold consumers green,
+  no fixture churn.
+
 ## [0.10.1] - 2026-06-04
 
 ### Added — CLOC12.23: gap-006 unary plus / minus on identifier bookkeeping

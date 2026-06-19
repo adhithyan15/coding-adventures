@@ -41,9 +41,10 @@
 //!   Phase 1.x.
 //! - `void` — produces ES `undefined`, same gap as above.
 //! - `delete` — has observable side effects.
-//! - Bitwise (`&`, `|`, `^`, `<<`, `>>`, `>>>`) — requires int32 coercion
-//!   semantics; safe-but-non-trivial; queued for Phase 1.x once we have
-//!   real test fixtures driving demand.
+//! - Bitwise (`&`, `|`, `^`, `<<`, `>>`, `>>>`) — NOW FOLDED on two numeric
+//!   literals (CLOC15.D) via ES `ToInt32`/`ToUint32` 32-bit semantics. See
+//!   [`to_int32`] / [`to_uint32`]; `>>>` yields an unsigned result that can
+//!   exceed `i32::MAX`.
 //! - Equality between non-matching literal types (`1 == "1"` is `true`
 //!   but `1 === "1"` is `false`). The pass folds equality only when
 //!   both literals are the *same* JS type; mixed-type comparisons are
@@ -84,10 +85,10 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
     Declaration, Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration,
-    IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral,
-    NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
-    ReturnStatement, Statement, StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral,
-    VariableDeclaration, VariableDeclarator, WhileStatement,
+    IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
+    ObjectExpression, Program, ProgramItem, Property, PropertyKey, ReturnStatement, Statement,
+    StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, VariableDeclaration,
+    VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
 
@@ -167,12 +168,7 @@ impl FoldState<'_> {
     /// When `parent` is `None` (tracing disabled on the input), no new
     /// CvId is allocated and no contribution is emitted — the
     /// replacement node will also carry `cv: None`.
-    fn fork_cv(
-        &mut self,
-        parent: &Option<String>,
-        before: &str,
-        after: &str,
-    ) -> Option<String> {
+    fn fork_cv(&mut self, parent: &Option<String>, before: &str, after: &str) -> Option<String> {
         match parent {
             Some(parent_cv) => {
                 let new_cv = self.cv.derive(parent_cv, None);
@@ -253,17 +249,18 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
                 expression: fold_expression(&s.expression, st),
             })
         }
-        TaggedStatement::BlockStatement(s) => {
-            TaggedStatement::BlockStatement(BlockStatement {
-                cv: s.cv.clone(),
-                body: s.body.iter().map(|x| fold_statement(x, st)).collect(),
-            })
-        }
+        TaggedStatement::BlockStatement(s) => TaggedStatement::BlockStatement(BlockStatement {
+            cv: s.cv.clone(),
+            body: s.body.iter().map(|x| fold_statement(x, st)).collect(),
+        }),
         TaggedStatement::IfStatement(s) => TaggedStatement::IfStatement(IfStatement {
             cv: s.cv.clone(),
             test: fold_expression(&s.test, st),
             consequent: Box::new(fold_statement(&s.consequent, st)),
-            alternate: s.alternate.as_ref().map(|a| Box::new(fold_statement(a, st))),
+            alternate: s
+                .alternate
+                .as_ref()
+                .map(|a| Box::new(fold_statement(a, st))),
         }),
         TaggedStatement::WhileStatement(s) => TaggedStatement::WhileStatement(WhileStatement {
             cv: s.cv.clone(),
@@ -282,12 +279,10 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
             update: s.update.as_ref().map(|e| fold_expression(e, st)),
             body: Box::new(fold_statement(&s.body, st)),
         }),
-        TaggedStatement::ReturnStatement(s) => {
-            TaggedStatement::ReturnStatement(ReturnStatement {
-                cv: s.cv.clone(),
-                argument: s.argument.as_ref().map(|e| fold_expression(e, st)),
-            })
-        }
+        TaggedStatement::ReturnStatement(s) => TaggedStatement::ReturnStatement(ReturnStatement {
+            cv: s.cv.clone(),
+            argument: s.argument.as_ref().map(|e| fold_expression(e, st)),
+        }),
         TaggedStatement::LabeledStatement(s) => {
             // The label is just a name; folding only touches the body.
             // We don't recursively label-rename, so the label survives
@@ -322,11 +317,7 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
                     .map(|c| coding_adventures_javascript_ast::SwitchCase {
                         cv: c.cv.clone(),
                         test: c.test.as_ref().map(|e| fold_expression(e, st)),
-                        consequent: c
-                            .consequent
-                            .iter()
-                            .map(|s| fold_statement(s, st))
-                            .collect(),
+                        consequent: c.consequent.iter().map(|s| fold_statement(s, st)).collect(),
                     })
                     .collect(),
             })
@@ -354,12 +345,7 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
                 params: f.params.clone(),
                 body: BlockStatement {
                     cv: f.body.cv.clone(),
-                    body: f
-                        .body
-                        .body
-                        .iter()
-                        .map(|s| fold_statement(s, st))
-                        .collect(),
+                    body: f.body.body.iter().map(|s| fold_statement(s, st)).collect(),
                 },
                 generator: f.generator,
                 is_async: f.is_async,
@@ -368,10 +354,7 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
     }
 }
 
-fn fold_variable_declaration(
-    v: &VariableDeclaration,
-    st: &mut FoldState,
-) -> VariableDeclaration {
+fn fold_variable_declaration(v: &VariableDeclaration, st: &mut FoldState) -> VariableDeclaration {
     VariableDeclaration {
         cv: v.cv.clone(),
         kind: v.kind,
@@ -450,12 +433,8 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                     key: match &p.key {
                         // Identifier / literal keys: pass through.
                         PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
-                        PropertyKey::StringLiteral(s) => {
-                            PropertyKey::StringLiteral(s.clone())
-                        }
-                        PropertyKey::NumericLiteral(n) => {
-                            PropertyKey::NumericLiteral(n.clone())
-                        }
+                        PropertyKey::StringLiteral(s) => PropertyKey::StringLiteral(s.clone()),
+                        PropertyKey::NumericLiteral(n) => PropertyKey::NumericLiteral(n.clone()),
                         PropertyKey::Expression(e) => {
                             PropertyKey::Expression(Box::new(fold_expression(e, st)))
                         }
@@ -485,7 +464,12 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
     // (possibly folded) children.
     if let Some(value) = try_fold_binary_op(b.operator, &left, &right) {
         let parent = b.cv.clone();
-        let before = format!("({}) {} ({})", lit_label(&left), op_label(b.operator), lit_label(&right));
+        let before = format!(
+            "({}) {} ({})",
+            lit_label(&left),
+            op_label(b.operator),
+            lit_label(&right)
+        );
         let after = literal_label(&value);
         let new_cv = st.fork_cv(&parent, &before, &after);
         return stamp_literal_cv(value, new_cv);
@@ -497,6 +481,39 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
         left: Box::new(left),
         right: Box::new(right),
     })
+}
+
+/// JS `ToInt32` (ECMAScript §7.1.6): coerce a Number to a signed 32-bit
+/// integer. Non-finite values and `±0` map to `0`; otherwise truncate
+/// toward zero, reduce modulo 2³², and reinterpret the low 32 bits as a
+/// signed integer.
+///
+/// ```text
+///   to_int32(5.9)        = 5
+///   to_int32(-1.0)       = -1
+///   to_int32(4294967296) = 0          // 2³² wraps to 0
+///   to_int32(3000000000) = -1294967296 // ≥ 2³¹ becomes negative
+///   to_int32(NaN/±Inf)   = 0
+/// ```
+fn to_int32(x: f64) -> i32 {
+    // `to_uint32` already gives the low-32-bit value as an unsigned int;
+    // reinterpreting that bit pattern as `i32` yields the signed result.
+    to_uint32(x) as i32
+}
+
+/// JS `ToUint32` (ECMAScript §7.1.7): coerce a Number to an unsigned
+/// 32-bit integer. Non-finite values and `±0` map to `0`; otherwise
+/// truncate toward zero and reduce modulo 2³² into `[0, 2³²)`.
+fn to_uint32(x: f64) -> u32 {
+    if !x.is_finite() || x == 0.0 {
+        return 0;
+    }
+    // Truncate toward zero (ES `ToIntegerOrInfinity` for a finite value),
+    // then take the non-negative residue modulo 2³². `rem_euclid` keeps the
+    // result in `[0, 2³²)` for negative inputs too (e.g. -1 → 2³²-1), and an
+    // integer-valued f64 in that range casts to `u32` exactly.
+    const TWO_POW_32: f64 = 4_294_967_296.0;
+    x.trunc().rem_euclid(TWO_POW_32) as u32
 }
 
 /// Pure fold logic — given two operand expressions and an operator,
@@ -511,7 +528,9 @@ fn try_fold_binary_op(
     use BinaryOperator::*;
 
     let (ln, rn) = match (left, right) {
-        (Expression::NumericLiteral(a), Expression::NumericLiteral(b)) => (Some(a.value), Some(b.value)),
+        (Expression::NumericLiteral(a), Expression::NumericLiteral(b)) => {
+            (Some(a.value), Some(b.value))
+        }
         _ => (None, None),
     };
 
@@ -530,6 +549,31 @@ fn try_fold_binary_op(
             LtEq => Some(FoldedLiteral::Boolean(a <= b)),
             Gt => Some(FoldedLiteral::Boolean(a > b)),
             GtEq => Some(FoldedLiteral::Boolean(a >= b)),
+            // Bitwise / shift on numeric literals (CLOC15.D). JS evaluates
+            // these on 32-bit integers: both operands are coerced via
+            // `ToInt32` (or `ToUint32` for the left side of `>>>` and the
+            // result of `>>>`), the operation runs on those 32-bit values,
+            // and the shift COUNT is `ToUint32(rhs) & 31`. The operands here
+            // are already numeric literals, so the coercions are exact and
+            // deterministic — folding cannot diverge from the runtime value.
+            BitAnd => Some(FoldedLiteral::Number((to_int32(a) & to_int32(b)) as f64)),
+            BitOr => Some(FoldedLiteral::Number((to_int32(a) | to_int32(b)) as f64)),
+            BitXor => Some(FoldedLiteral::Number((to_int32(a) ^ to_int32(b)) as f64)),
+            // `<<` / `>>`: left is ToInt32 (signed). `wrapping_shl`/`shr`
+            // shift by `rhs % 32`, which equals JS's `ToUint32(rhs) & 31`.
+            // `i32 >>` is arithmetic (sign-propagating), matching `>>`.
+            LeftShift => Some(FoldedLiteral::Number(
+                to_int32(a).wrapping_shl(to_uint32(b)) as f64,
+            )),
+            RightShift => Some(FoldedLiteral::Number(
+                to_int32(a).wrapping_shr(to_uint32(b)) as f64,
+            )),
+            // `>>>`: left is ToUint32 and the shift is logical (zero-fill);
+            // the result is an UNSIGNED 32-bit value, so it can exceed
+            // `i32::MAX` and is rendered as a non-negative `Number`.
+            UnsignedRightShift => Some(FoldedLiteral::Number(
+                to_uint32(a).wrapping_shr(to_uint32(b)) as f64,
+            )),
             _ => None,
         };
     }
@@ -541,7 +585,9 @@ fn try_fold_binary_op(
         // Per ES: if EITHER operand is a string, `+` is concatenation
         // and the non-string is coerced. We only fold when both can
         // be statically rendered as strings.
-        if matches!(left, Expression::StringLiteral(_)) || matches!(right, Expression::StringLiteral(_)) {
+        if matches!(left, Expression::StringLiteral(_))
+            || matches!(right, Expression::StringLiteral(_))
+        {
             if let (Some(a), Some(b)) = (lstr, rstr) {
                 return Some(FoldedLiteral::String(format!("{}{}", a, b)));
             }
@@ -800,9 +846,7 @@ fn try_fold_binary_op(
     // arm adds is the identifier case.
     if matches!(op, StrictEq | StrictNotEq) {
         if let (Expression::UnaryExpression(lu), Expression::UnaryExpression(ru)) = (left, right) {
-            if lu.operator == UnaryOperator::TypeOf
-                && ru.operator == UnaryOperator::TypeOf
-            {
+            if lu.operator == UnaryOperator::TypeOf && ru.operator == UnaryOperator::TypeOf {
                 if let (Expression::Identifier(la), Expression::Identifier(ra)) =
                     (lu.argument.as_ref(), ru.argument.as_ref())
                 {
@@ -920,10 +964,15 @@ fn js_string_to_number_strict(s: &str) -> Option<f64> {
         return None;
     }
     // Disallow lone sign / lone dot / lone exponent marker.
-    if matches!(t, "+" | "-" | "." | "e" | "E" | "+e" | "-e" | "+." | "-." | ".e" | ".E") {
+    if matches!(
+        t,
+        "+" | "-" | "." | "e" | "E" | "+e" | "-e" | "+." | "-." | ".e" | ".E"
+    ) {
         return None;
     }
-    t.parse::<f64>().ok().filter(|f| f.is_finite() || t.contains(['e', 'E']))
+    t.parse::<f64>()
+        .ok()
+        .filter(|f| f.is_finite() || t.contains(['e', 'E']))
 }
 
 /// Best-effort static string rendering of a literal expression. Used
@@ -933,7 +982,11 @@ fn literal_to_string(expr: &Expression) -> Option<String> {
     match expr {
         Expression::StringLiteral(s) => Some(s.value.clone()),
         Expression::NumericLiteral(n) => Some(format_js_number(n.value)),
-        Expression::BooleanLiteral(b) => Some(if b.value { "true".to_string() } else { "false".to_string() }),
+        Expression::BooleanLiteral(b) => Some(if b.value {
+            "true".to_string()
+        } else {
+            "false".to_string()
+        }),
         Expression::NullLiteral(_) => Some("null".to_string()),
         _ => None,
     }
@@ -947,7 +1000,11 @@ fn format_js_number(n: f64) -> String {
         return "NaN".to_string();
     }
     if n.is_infinite() {
-        return if n > 0.0 { "Infinity".to_string() } else { "-Infinity".to_string() };
+        return if n > 0.0 {
+            "Infinity".to_string()
+        } else {
+            "-Infinity".to_string()
+        };
     }
     if n == 0.0 {
         return "0".to_string();
@@ -995,7 +1052,11 @@ fn fold_logical(l: &LogicalExpression, st: &mut FoldState) -> Expression {
             Side::Right => right,
         };
         let parent = l.cv.clone();
-        let before = format!("({}) {} (...)", lit_label(&chosen), logical_op_label(l.operator));
+        let before = format!(
+            "({}) {} (...)",
+            lit_label(&chosen),
+            logical_op_label(l.operator)
+        );
         let after = literal_label_for_expr(&chosen);
         // We mark `changed = true` regardless of tracing, but only
         // emit a contribution + derive a new cv when tracing is on.
@@ -1201,6 +1262,7 @@ fn literal_nullish(expr: &Expression) -> Option<bool> {
 /// A folded value, kept separate from the AST node enum so the fold
 /// logic can produce a value first and only later attach a fresh
 /// CvId. Converted to an [`Expression`] via [`stamp_literal_cv`].
+#[derive(Debug)]
 enum FoldedLiteral {
     Number(f64),
     String(String),
@@ -1258,12 +1320,28 @@ fn literal_label_for_expr(expr: &Expression) -> String {
 fn op_label(op: BinaryOperator) -> &'static str {
     use BinaryOperator::*;
     match op {
-        Eq => "==", NotEq => "!=", StrictEq => "===", StrictNotEq => "!==",
-        Lt => "<", LtEq => "<=", Gt => ">", GtEq => ">=",
-        LeftShift => "<<", RightShift => ">>", UnsignedRightShift => ">>>",
-        Add => "+", Sub => "-", Mul => "*", Div => "/", Mod => "%", Exp => "**",
-        BitOr => "|", BitXor => "^", BitAnd => "&",
-        In => "in", InstanceOf => "instanceof",
+        Eq => "==",
+        NotEq => "!=",
+        StrictEq => "===",
+        StrictNotEq => "!==",
+        Lt => "<",
+        LtEq => "<=",
+        Gt => ">",
+        GtEq => ">=",
+        LeftShift => "<<",
+        RightShift => ">>",
+        UnsignedRightShift => ">>>",
+        Add => "+",
+        Sub => "-",
+        Mul => "*",
+        Div => "/",
+        Mod => "%",
+        Exp => "**",
+        BitOr => "|",
+        BitXor => "^",
+        BitAnd => "&",
+        In => "in",
+        InstanceOf => "instanceof",
     }
 }
 
@@ -1291,9 +1369,7 @@ fn unary_op_label(op: UnaryOperator) -> &'static str {
 mod tests {
     use super::*;
     use coding_adventures_closure_pass_pipeline::{PassPipeline, PipelineOutput};
-    use coding_adventures_javascript_ast::{
-        statement::TaggedStatement, Identifier, SourceType,
-    };
+    use coding_adventures_javascript_ast::{statement::TaggedStatement, Identifier, SourceType};
     use coding_adventures_javascript_tokens::EsVersion;
     use coding_adventures_type_sidecar::Sidecar;
 
@@ -1347,7 +1423,12 @@ mod tests {
             cv: &mut cv,
         };
         let out = pass.run(ctx).expect("pass should succeed");
-        (out.program, out.contributions, out.changed, out.stats.nodes_touched)
+        (
+            out.program,
+            out.contributions,
+            out.changed,
+            out.stats.nodes_touched,
+        )
     }
 
     /// Build a Program whose body is a single ExpressionStatement
@@ -1358,21 +1439,24 @@ mod tests {
         } else {
             untraced_program()
         };
-        p.with_body(vec![ProgramItem::Statement(Statement::expression_statement(
-            ExpressionStatement {
-                cv: if traced { Some("es.1".to_string()) } else { None },
+        p.with_body(vec![ProgramItem::Statement(
+            Statement::expression_statement(ExpressionStatement {
+                cv: if traced {
+                    Some("es.1".to_string())
+                } else {
+                    None
+                },
                 expression: expr,
-            },
-        ))])
+            }),
+        )])
     }
 
     /// Extract the (folded) expression from a Program whose body is a
     /// single ExpressionStatement — for assertion convenience.
     fn extract_expr(prog: &Program) -> &Expression {
         let item = &prog.body[0];
-        let ProgramItem::Statement(Statement::Tagged(
-            TaggedStatement::ExpressionStatement(es),
-        )) = item
+        let ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(es))) =
+            item
         else {
             panic!("expected a single expression statement, got {:?}", item);
         };
@@ -1455,7 +1539,8 @@ mod tests {
                 BinaryOperator::Mod => (3.0, 2.0),
                 _ => (3.0, 2.0),
             };
-            let _ = a; let _ = b;
+            let _ = a;
+            let _ = b;
             // 3 op 2 = expected
             let expr = Expression::BinaryExpression(BinaryExpression {
                 cv: Some("bin.1".to_string()),
@@ -1526,6 +1611,84 @@ mod tests {
         }
     }
 
+    // ------------------- Bitwise / shift on numeric literals (CLOC15.D) -----
+
+    #[test]
+    fn to_int32_and_to_uint32_match_es_semantics() {
+        // ToInt32: truncate, mod 2^32, reinterpret signed.
+        assert_eq!(to_int32(5.9), 5);
+        assert_eq!(to_int32(-1.0), -1);
+        assert_eq!(to_int32(4_294_967_296.0), 0); // 2^32 wraps to 0
+        assert_eq!(to_int32(3_000_000_000.0), -1_294_967_296); // >= 2^31 → negative
+        assert_eq!(to_int32(f64::NAN), 0);
+        assert_eq!(to_int32(f64::INFINITY), 0);
+        assert_eq!(to_int32(-0.0), 0);
+        // ToUint32: same but unsigned residue.
+        assert_eq!(to_uint32(-1.0), 4_294_967_295);
+        assert_eq!(to_uint32(3_000_000_000.0), 3_000_000_000);
+        assert_eq!(to_uint32(f64::NEG_INFINITY), 0);
+    }
+
+    #[test]
+    fn fold_bitwise_and_shift_on_numeric_literals() {
+        // (op, a, b, expected) — `expected` is the exact JS runtime value.
+        for (op, a, b, expected) in [
+            (BinaryOperator::BitAnd, 5.0, 3.0, 1.0),
+            (BinaryOperator::BitOr, 5.0, 2.0, 7.0),
+            (BinaryOperator::BitXor, 5.0, 1.0, 4.0),
+            // ToInt32 coercion of a fractional operand: 5 & ToInt32(2.5)=2 → 0.
+            (BinaryOperator::BitAnd, 5.0, 2.5, 0.0),
+            // ToInt32 wraps a value >= 2^31 to negative: 3e9 | 0 = -1294967296.
+            (
+                BinaryOperator::BitOr,
+                3_000_000_000.0,
+                0.0,
+                -1_294_967_296.0,
+            ),
+            (BinaryOperator::LeftShift, 1.0, 4.0, 16.0),
+            // Shift count is masked to 5 bits: 1 << 32 == 1 << 0 == 1.
+            (BinaryOperator::LeftShift, 1.0, 32.0, 1.0),
+            (BinaryOperator::LeftShift, 1.0, 33.0, 2.0),
+            // `>>` is arithmetic (sign-propagating): -8 >> 1 = -4.
+            (BinaryOperator::RightShift, -8.0, 1.0, -4.0),
+            // `>>>` is logical and unsigned: -1 >>> 0 = 2^32 - 1.
+            (
+                BinaryOperator::UnsignedRightShift,
+                -1.0,
+                0.0,
+                4_294_967_295.0,
+            ),
+            (BinaryOperator::UnsignedRightShift, 256.0, 4.0, 16.0),
+        ] {
+            match try_fold_binary_op(op, &num(a, None), &num(b, None)) {
+                Some(FoldedLiteral::Number(got)) => {
+                    assert_eq!(got, expected, "op {:?} a={} b={}", op, a, b)
+                }
+                other => panic!(
+                    "op {:?} a={} b={}: expected Number({}); got {:?}",
+                    op, a, b, expected, other
+                ),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_bitwise_end_to_end_renders_unsigned_result() {
+        // Full pass: `-1 >>> 0` must emit the unsigned value `4294967295`,
+        // not `-1`. Confirms the emitter renders a > i32::MAX Number too.
+        let expr = Expression::BinaryExpression(BinaryExpression {
+            cv: Some("bin.1".to_string()),
+            operator: BinaryOperator::UnsignedRightShift,
+            left: Box::new(num(-1.0, None)),
+            right: Box::new(num(0.0, None)),
+        });
+        let (out, _, _, _) = run_pass(program_with_expr(expr, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(nl) => assert_eq!(nl.value, 4_294_967_295.0),
+            other => panic!("expected NumericLiteral; got {:?}", other),
+        }
+    }
+
     // ------------------- Number/String cross-type (gap-004) ----------
     //
     // These tests pin the gap-004 behaviour: §IsLooselyEqual and
@@ -1554,7 +1717,10 @@ mod tests {
     fn gap004_jstr2num_explicit_infinity() {
         assert_eq!(js_string_to_number_strict("Infinity"), Some(f64::INFINITY));
         assert_eq!(js_string_to_number_strict("+Infinity"), Some(f64::INFINITY));
-        assert_eq!(js_string_to_number_strict("-Infinity"), Some(f64::NEG_INFINITY));
+        assert_eq!(
+            js_string_to_number_strict("-Infinity"),
+            Some(f64::NEG_INFINITY)
+        );
         // JS is case-sensitive — these must NOT match Infinity.
         assert_eq!(js_string_to_number_strict("infinity"), None);
         assert_eq!(js_string_to_number_strict("INFINITY"), None);
@@ -1584,12 +1750,20 @@ mod tests {
     fn gap004_number_string_equality_upstream_cases() {
         // Direct pin of upstream's test_number_string_comparison lines.
         assert_eq!(
-            run_and_extract_bool(binary_with(BinaryOperator::Lt, num(1.0, None), string("2", None))),
+            run_and_extract_bool(binary_with(
+                BinaryOperator::Lt,
+                num(1.0, None),
+                string("2", None)
+            )),
             Some(true),
             "1 < '2' should fold to true"
         );
         assert_eq!(
-            run_and_extract_bool(binary_with(BinaryOperator::Eq, num(1.0, None), string("2", None))),
+            run_and_extract_bool(binary_with(
+                BinaryOperator::Eq,
+                num(1.0, None),
+                string("2", None)
+            )),
             Some(false),
             "1 == '2' should fold to false"
         );
@@ -1600,17 +1774,29 @@ mod tests {
         // String-on-left must yield the correct ordering: '2' < 1 is false
         // (2 < 1), not true (the left-side coercion preserves operand order).
         assert_eq!(
-            run_and_extract_bool(binary_with(BinaryOperator::Lt, string("2", None), num(1.0, None))),
+            run_and_extract_bool(binary_with(
+                BinaryOperator::Lt,
+                string("2", None),
+                num(1.0, None)
+            )),
             Some(false),
             "'2' < 1 must fold to false (NOT swap to 1 < 2)"
         );
         assert_eq!(
-            run_and_extract_bool(binary_with(BinaryOperator::Gt, string("2", None), num(1.0, None))),
+            run_and_extract_bool(binary_with(
+                BinaryOperator::Gt,
+                string("2", None),
+                num(1.0, None)
+            )),
             Some(true),
             "'2' > 1 must fold to true"
         );
         assert_eq!(
-            run_and_extract_bool(binary_with(BinaryOperator::Eq, string("1", None), num(1.0, None))),
+            run_and_extract_bool(binary_with(
+                BinaryOperator::Eq,
+                string("1", None),
+                num(1.0, None)
+            )),
             Some(true),
             "'1' == 1 must fold to true (loose equality coerces)"
         );
@@ -1734,12 +1920,14 @@ mod tests {
             boolean(true, None),
             boolean(false, None),
         ] {
-            let folded = run_and_extract_bool(binary_with(
-                BinaryOperator::Eq,
-                null(None),
-                partner.clone(),
-            ));
-            assert_eq!(folded, Some(false), "null == {:?} should fold to false", partner);
+            let folded =
+                run_and_extract_bool(binary_with(BinaryOperator::Eq, null(None), partner.clone()));
+            assert_eq!(
+                folded,
+                Some(false),
+                "null == {:?} should fold to false",
+                partner
+            );
         }
     }
 
@@ -1747,12 +1935,14 @@ mod tests {
     fn gap003_null_loose_eq_other_primitives_is_symmetric() {
         // Same as above but with `null` on the right — fold must still fire.
         for partner in [num(0.0, None), string("hi", None), boolean(true, None)] {
-            let folded = run_and_extract_bool(binary_with(
-                BinaryOperator::Eq,
-                partner.clone(),
-                null(None),
-            ));
-            assert_eq!(folded, Some(false), "{:?} == null should fold to false", partner);
+            let folded =
+                run_and_extract_bool(binary_with(BinaryOperator::Eq, partner.clone(), null(None)));
+            assert_eq!(
+                folded,
+                Some(false),
+                "{:?} == null should fold to false",
+                partner
+            );
         }
     }
 
@@ -1765,7 +1955,12 @@ mod tests {
                 null(None),
                 partner.clone(),
             ));
-            assert_eq!(folded, Some(true), "null != {:?} should fold to true", partner);
+            assert_eq!(
+                folded,
+                Some(true),
+                "null != {:?} should fold to true",
+                partner
+            );
         }
     }
 
@@ -1823,14 +2018,22 @@ mod tests {
             null(None),
             num(0.0, None),
         ));
-        assert_eq!(folded, Some(false), "null === 0 (gap-008) must still fold to false");
+        assert_eq!(
+            folded,
+            Some(false),
+            "null === 0 (gap-008) must still fold to false"
+        );
 
         let folded = run_and_extract_bool(binary_with(
             BinaryOperator::StrictNotEq,
             null(None),
             num(0.0, None),
         ));
-        assert_eq!(folded, Some(true), "null !== 0 (gap-008) must still fold to true");
+        assert_eq!(
+            folded,
+            Some(true),
+            "null !== 0 (gap-008) must still fold to true"
+        );
     }
 
     // ------------------- string ops ----------------------------------
@@ -2081,7 +2284,10 @@ mod tests {
         let (out, contribs, changed, _) = run_pass(program_with_expr(expr, true));
         assert!(!changed, "no fold should happen");
         assert!(contribs.is_empty());
-        assert!(matches!(extract_expr(&out), Expression::BinaryExpression(_)));
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::BinaryExpression(_)
+        ));
     }
 
     #[test]
@@ -2105,7 +2311,10 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
         assert!(!changed);
-        assert!(matches!(extract_expr(&out), Expression::BinaryExpression(_)));
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::BinaryExpression(_)
+        ));
     }
 
     // ------------------- untraced (cv = None) mode -------------------
@@ -2131,7 +2340,11 @@ mod tests {
         match extract_expr(&out) {
             Expression::NumericLiteral(n) => {
                 assert_eq!(n.value, 5.0);
-                assert!(n.cv.is_none(), "untraced fold produces cv: None; got {:?}", n.cv);
+                assert!(
+                    n.cv.is_none(),
+                    "untraced fold produces cv: None; got {:?}",
+                    n.cv
+                );
             }
             other => panic!("expected NumericLiteral(5); got {:?}", other),
         }
@@ -2148,12 +2361,10 @@ mod tests {
                 kind: coding_adventures_javascript_ast::VarKind::Const,
                 declarations: vec![VariableDeclarator {
                     cv: Some("vdr.1".to_string()),
-                    id: coding_adventures_javascript_ast::BindingTarget::Identifier(
-                        Identifier {
-                            cv: None,
-                            name: "x".to_string(),
-                        },
-                    ),
+                    id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                        cv: None,
+                        name: "x".to_string(),
+                    }),
                     init: Some(Expression::BinaryExpression(BinaryExpression {
                         cv: Some("bin.1".to_string()),
                         operator: BinaryOperator::Add,
@@ -2166,8 +2377,7 @@ mod tests {
         let (out, contribs, changed, _) = run_pass(prog);
         assert!(changed);
         assert_eq!(contribs.len(), 1);
-        let ProgramItem::Declaration(Declaration::VariableDeclaration(v)) = &out.body[0]
-        else {
+        let ProgramItem::Declaration(Declaration::VariableDeclaration(v)) = &out.body[0] else {
             panic!("expected VariableDeclaration");
         };
         match &v.declarations[0].init {
