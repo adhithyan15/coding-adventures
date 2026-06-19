@@ -73,6 +73,8 @@ use smart_home_integration_catalog::{
     mesh_protocol_substrate_preflight_repair_slot_audit_rows,
     mesh_protocol_substrate_preflight_repair_slot_audit_summary,
     mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets,
+    mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_summary,
+    mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_actions,
     mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_summary,
     mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions,
     mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_summary,
@@ -180,6 +182,8 @@ use smart_home_integration_catalog::{
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDisposition,
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionAction,
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionSummary,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary,
     IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary,
@@ -416,6 +420,10 @@ pub const SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDE
     &str = "smart_home.list_integration_mesh_preflight_repair_slot_execution_evidence_review_dispositions";
 pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_SUMMARY_TOOL_ID:
     &str = "smart_home.get_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_summary";
+pub const SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTIONS_TOOL_ID:
+    &str = "smart_home.list_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions";
+pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTION_SUMMARY_TOOL_ID:
+    &str = "smart_home.get_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary";
 pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_READINESS_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_mesh_preflight_readiness_summary";
 pub const SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_READINESS_SUMMARY_TOOL_ID: &str =
@@ -1090,6 +1098,24 @@ impl SmartHomeToolBridge {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(
                         get_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTIONS_TOOL_ID =>
+                {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(
+                        list_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTION_SUMMARY_TOOL_ID =>
+                {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(
+                        get_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_output_handler_output(
                             query,
                         ),
                     )
@@ -3267,6 +3293,41 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_SUMMARY_TOOL_ID,
             "Get smart-home integration mesh preflight repair slot execution evidence review disposition summary",
             "Return compact D23 mesh preflight repair slot execution evidence review disposition counts.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTIONS_TOOL_ID,
+            "List smart-home integration mesh preflight repair slot execution evidence review disposition actions",
+            "List D23 mesh preflight repair slot execution evidence review disposition action items derived from disposition work.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "mesh_preflight_repair_slot_execution_evidence_review_disposition_actions",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                ],
+                vec![
+                    "mesh_preflight_repair_slot_execution_evidence_review_disposition_actions",
+                    "summary",
+                    "count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTION_SUMMARY_TOOL_ID,
+            "Get smart-home integration mesh preflight repair slot execution evidence review disposition action summary",
+            "Return compact D23 mesh preflight repair slot execution evidence review disposition action counts.",
             integration_readiness_query_schema(true),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
@@ -17887,6 +17948,44 @@ fn integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_
     }
 }
 
+fn integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_for_query(
+    query: &IntegrationReadinessQuery,
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionAction>
+{
+    let mut actions =
+        mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_actions(
+            &query.available_primitives,
+        );
+
+    if query.activation_ready == Some(true) {
+        actions.clear();
+    }
+    if let Some(limit) = query.limit {
+        actions.truncate(limit);
+    }
+
+    actions
+}
+
+fn integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_for_query(
+    query: &IntegrationReadinessQuery,
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary
+{
+    if query.activation_ready.is_some() || query.limit.is_some() {
+        let actions =
+            integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_for_query(
+                query,
+            );
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary::from_actions(
+            actions.iter(),
+        )
+    } else {
+        mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_summary(
+            &query.available_primitives,
+        )
+    }
+}
+
 fn integration_mesh_preflight_readiness_summary_for_query(
     query: &IntegrationReadinessQuery,
 ) -> IntegrationMeshPreflightReadinessSummary {
@@ -23047,6 +23146,94 @@ fn get_integration_mesh_preflight_repair_slot_execution_evidence_review_disposit
                 "has_dispositions",
                 JsonValue::Bool(summary.has_dispositions()),
             ),
+        ]),
+    )
+}
+
+fn list_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let actions =
+        integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_for_query(
+            &query,
+        );
+    let summary =
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary::from_actions(
+            actions.iter(),
+        );
+    let count = actions.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "mesh_preflight_repair_slot_execution_evidence_review_disposition_actions",
+            JsonValue::Array(
+                actions
+                    .iter()
+                    .map(mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_summary_json(
+                &summary,
+            ),
+        ),
+        ("count", integer(count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string(
+                    "list_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions",
+                ),
+            ),
+            ("evidence_review_disposition_actions", integer(count as i64)),
+            ("required_actions", integer(summary.required_actions as i64)),
+            (
+                "operator_handoff_actions",
+                integer(summary.operator_handoff_actions as i64),
+            ),
+            ("repair_actions", integer(summary.repair_actions as i64)),
+            (
+                "execution_evidence_review_disposition_actions_ready",
+                JsonValue::Bool(summary.execution_evidence_review_disposition_actions_ready),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let summary =
+        integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_for_query(&query);
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_summary_json(
+            &summary,
+        ),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string(
+                    "get_integration_mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary",
+                ),
+            ),
+            ("total_actions", integer(summary.total_actions as i64)),
+            ("required_actions", integer(summary.required_actions as i64)),
+            (
+                "operator_handoff_actions",
+                integer(summary.operator_handoff_actions as i64),
+            ),
+            ("repair_actions", integer(summary.repair_actions as i64)),
+            ("has_actions", JsonValue::Bool(summary.has_actions())),
         ]),
     )
 }
@@ -46290,6 +46477,261 @@ fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispo
     ])
 }
 
+fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_json(
+    action: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionAction,
+) -> JsonValue {
+    object([
+        ("sequence", integer(action.sequence as i64)),
+        ("action_key", string(&action.action_key)),
+        (
+            "disposition_sequence",
+            integer(action.disposition_sequence as i64),
+        ),
+        ("disposition_key", string(&action.disposition_key)),
+        ("review_sequence", integer(action.review_sequence as i64)),
+        ("review_key", string(&action.review_key)),
+        (
+            "evidence_sequence",
+            integer(action.evidence_sequence as i64),
+        ),
+        ("evidence_key", string(&action.evidence_key)),
+        (
+            "work_order_sequence",
+            integer(action.work_order_sequence as i64),
+        ),
+        ("work_order_key", string(&action.work_order_key)),
+        ("ticket_sequence", integer(action.ticket_sequence as i64)),
+        ("ticket_key", string(&action.ticket_key)),
+        ("slot_sequence", integer(action.slot_sequence as i64)),
+        ("batch_sequence", integer(action.batch_sequence as i64)),
+        ("stage", string(action.stage.as_str())),
+        (
+            "action_kind",
+            mesh_substrate_preflight_action_kind_json(action.action_kind),
+        ),
+        ("status", string(action.status.as_str())),
+        ("disposition_kind", string(action.disposition_kind.as_str())),
+        (
+            "disposition_action_kind",
+            string(action.disposition_action_kind.as_str()),
+        ),
+        ("action_count", integer(action.action_count as i64)),
+        ("protocol_count", integer(action.protocol_count as i64)),
+        ("primitive_count", integer(action.primitive_count as i64)),
+        ("protocols", protocol_family_array_json(&action.protocols)),
+        (
+            "primitives",
+            primitive_family_array_json(&action.primitives),
+        ),
+        ("release_blocking", JsonValue::Bool(action.release_blocking)),
+        (
+            "operator_required",
+            JsonValue::Bool(action.operator_required),
+        ),
+        ("lineage_complete", JsonValue::Bool(action.lineage_complete)),
+        ("review_required", JsonValue::Bool(action.review_required)),
+        (
+            "ready_for_execution",
+            JsonValue::Bool(action.ready_for_execution),
+        ),
+        ("action_required", JsonValue::Bool(action.action_required)),
+        ("requires_action", JsonValue::Bool(action.requires_action())),
+        (
+            "blocks_preflight",
+            JsonValue::Bool(action.blocks_preflight()),
+        ),
+        (
+            "requires_operator",
+            JsonValue::Bool(action.requires_operator()),
+        ),
+        ("has_lineage", JsonValue::Bool(action.has_lineage())),
+        ("needs_review", JsonValue::Bool(action.needs_review())),
+        (
+            "is_operator_handoff",
+            JsonValue::Bool(action.is_operator_handoff()),
+        ),
+        (
+            "is_repair_action",
+            JsonValue::Bool(action.is_repair_action()),
+        ),
+        (
+            "is_lineage_action",
+            JsonValue::Bool(action.is_lineage_action()),
+        ),
+        (
+            "is_release_execution_action",
+            JsonValue::Bool(action.is_release_execution_action()),
+        ),
+    ])
+}
+
+fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_summary_json(
+    summary: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary,
+) -> JsonValue {
+    object([
+        ("total_actions", integer(summary.total_actions as i64)),
+        ("required_actions", integer(summary.required_actions as i64)),
+        ("blocking_actions", integer(summary.blocking_actions as i64)),
+        (
+            "operator_handoff_actions",
+            integer(summary.operator_handoff_actions as i64),
+        ),
+        ("repair_actions", integer(summary.repair_actions as i64)),
+        (
+            "lineage_gap_actions",
+            integer(summary.lineage_gap_actions as i64),
+        ),
+        (
+            "release_execution_actions",
+            integer(summary.release_execution_actions as i64),
+        ),
+        (
+            "review_required_actions",
+            integer(summary.review_required_actions as i64),
+        ),
+        (
+            "lineage_complete_actions",
+            integer(summary.lineage_complete_actions as i64),
+        ),
+        (
+            "protocol_mentions",
+            integer(summary.protocol_mentions as i64),
+        ),
+        (
+            "primitive_mentions",
+            integer(summary.primitive_mentions as i64),
+        ),
+        (
+            "first_action_key",
+            summary
+                .first_action_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_required_action_key",
+            summary
+                .first_required_action_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_handoff_action_key",
+            summary
+                .first_operator_handoff_action_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_repair_action_key",
+            summary
+                .first_repair_action_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_lineage_gap_action_key",
+            summary
+                .first_lineage_gap_action_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_release_execution_action_key",
+            summary
+                .first_release_execution_action_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_disposition_key",
+            summary
+                .first_disposition_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_key",
+            summary
+                .first_review_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_evidence_key",
+            summary
+                .first_evidence_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_work_order_key",
+            summary
+                .first_work_order_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ticket_key",
+            summary
+                .first_ticket_key
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_stage",
+            summary
+                .first_stage
+                .map(|stage| string(stage.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_kind",
+            summary
+                .first_action_kind
+                .map(mesh_substrate_preflight_action_kind_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "execution_evidence_review_disposition_actions_ready",
+            JsonValue::Bool(summary.execution_evidence_review_disposition_actions_ready),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_actions", JsonValue::Bool(summary.has_actions())),
+        (
+            "has_required_actions",
+            JsonValue::Bool(summary.has_required_actions()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("needs_operator", JsonValue::Bool(summary.needs_operator())),
+        ("needs_repair", JsonValue::Bool(summary.needs_repair())),
+        (
+            "has_lineage_gaps",
+            JsonValue::Bool(summary.has_lineage_gaps()),
+        ),
+        (
+            "has_release_execution_actions",
+            JsonValue::Bool(summary.has_release_execution_actions()),
+        ),
+        ("needs_review", JsonValue::Bool(summary.needs_review())),
+        (
+            "has_complete_lineage",
+            JsonValue::Bool(summary.has_complete_lineage()),
+        ),
+    ])
+}
+
 fn mesh_preflight_slot_readiness_summary_json(
     summary: &IntegrationMeshPreflightSlotReadinessSummary,
 ) -> JsonValue {
@@ -54157,7 +54599,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 224);
+        assert_eq!(definitions.len(), 226);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -54414,6 +54856,12 @@ mod tests {
         ));
         assert!(export.tool_ids().contains(
             &SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_SUMMARY_TOOL_ID
+        ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTIONS_TOOL_ID
+        ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTION_SUMMARY_TOOL_ID
         ));
         assert!(export
             .tool_ids()
@@ -54806,7 +55254,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            216
+            218
         );
         assert_eq!(
             export
@@ -54963,6 +55411,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTIONS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTION_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -55622,11 +56078,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(224))
+            Some(&integer(226))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(216))
+            Some(&integer(218))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -59350,6 +59806,180 @@ mod tests {
             field(
                 mesh_preflight_repair_slot_execution_evidence_review_disposition_rollup,
                 "execution_evidence_review_dispositions_ready"
+            ),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_request =
+            request(
+                "call-list-integration-mesh-preflight-repair-slot-execution-evidence-review-disposition-actions",
+                SMART_HOME_LIST_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTIONS_TOOL_ID,
+                object([
+                    (
+                        "available_primitives",
+                        JsonValue::Array(vec![
+                            string("usb"),
+                            string("serial_controller"),
+                            string("radio_802154"),
+                            string("supervision"),
+                        ]),
+                    ),
+                    ("activation_ready", JsonValue::Bool(false)),
+                ]),
+                5_929_106,
+            );
+        let list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_trace =
+            tool_runtime.invoke_with_events(
+                &list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_request,
+            );
+        assert!(
+            list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_trace
+                .result
+                .ok
+        );
+        assert_eq!(
+            list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_output =
+            list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        assert_eq!(
+            field(
+                list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_output,
+                "count"
+            ),
+            Some(&integer(3))
+        );
+        let mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary =
+            field(
+                list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_output,
+                "summary",
+            )
+            .unwrap();
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary,
+                "required_actions"
+            ),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary,
+                "operator_handoff_actions"
+            ),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary,
+                "repair_actions"
+            ),
+            Some(&integer(1))
+        );
+        let mesh_preflight_repair_slot_execution_evidence_review_disposition_action = array_item(
+            field(
+                list_mesh_preflight_repair_slot_execution_evidence_review_disposition_actions_output,
+                "mesh_preflight_repair_slot_execution_evidence_review_disposition_actions",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action,
+                "action_key"
+            ),
+            Some(&string("disposition-action-01-radio-provision_radio"))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action,
+                "disposition_key"
+            ),
+            Some(&string("disposition-01-radio-provision_radio"))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action,
+                "disposition_action_kind"
+            ),
+            Some(&string("coordinate_operator_handoff"))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action,
+                "requires_action"
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_request =
+            request(
+                "call-integration-mesh-preflight-repair-slot-execution-evidence-review-disposition-action-summary",
+                SMART_HOME_GET_INTEGRATION_MESH_PREFLIGHT_REPAIR_SLOT_EXECUTION_EVIDENCE_REVIEW_DISPOSITION_ACTION_SUMMARY_TOOL_ID,
+                object([(
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("usb"),
+                        string("serial_controller"),
+                        string("radio_802154"),
+                        string("supervision"),
+                    ]),
+                )]),
+                5_929_107,
+            );
+        let mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_trace =
+            tool_runtime.invoke_with_events(
+                &mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_request,
+            );
+        assert!(
+            mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_trace
+                .result
+                .ok
+        );
+        assert_eq!(
+            mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_output =
+            mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let mesh_preflight_repair_slot_execution_evidence_review_disposition_action_rollup = field(
+            mesh_preflight_repair_slot_execution_evidence_review_disposition_action_summary_output,
+            "summary",
+        )
+        .unwrap();
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action_rollup,
+                "total_actions"
+            ),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action_rollup,
+                "lineage_gap_actions"
+            ),
+            Some(&integer(0))
+        );
+        assert_eq!(
+            field(
+                mesh_preflight_repair_slot_execution_evidence_review_disposition_action_rollup,
+                "execution_evidence_review_disposition_actions_ready"
             ),
             Some(&JsonValue::Bool(false))
         );

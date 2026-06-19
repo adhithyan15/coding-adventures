@@ -2141,6 +2141,317 @@ impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewD
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind
+{
+    CoordinateOperatorHandoff,
+    ScheduleRepairWork,
+    RestoreEvidenceLineage,
+    ReleaseExecution,
+}
+
+impl
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind
+{
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::CoordinateOperatorHandoff => "coordinate_operator_handoff",
+            Self::ScheduleRepairWork => "schedule_repair_work",
+            Self::RestoreEvidenceLineage => "restore_evidence_lineage",
+            Self::ReleaseExecution => "release_execution",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionAction {
+    pub sequence: usize,
+    pub action_key: String,
+    pub disposition_sequence: usize,
+    pub disposition_key: String,
+    pub review_sequence: usize,
+    pub review_key: String,
+    pub evidence_sequence: usize,
+    pub evidence_key: String,
+    pub work_order_sequence: usize,
+    pub work_order_key: String,
+    pub ticket_sequence: usize,
+    pub ticket_key: String,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub disposition_kind:
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind,
+    pub disposition_action_kind:
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub lineage_complete: bool,
+    pub review_required: bool,
+    pub ready_for_execution: bool,
+    pub action_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionAction {
+    pub fn from_disposition(
+        sequence: usize,
+        disposition: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDisposition,
+    ) -> Self {
+        let disposition_action_kind = match disposition.disposition_kind {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::OperatorHandoff => {
+                IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind::CoordinateOperatorHandoff
+            }
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::RepairRequired => {
+                IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind::ScheduleRepairWork
+            }
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::LineageGap => {
+                IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind::RestoreEvidenceLineage
+            }
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::ReadyForExecution => {
+                IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind::ReleaseExecution
+            }
+        };
+
+        Self {
+            sequence,
+            action_key: format!(
+                "disposition-action-{sequence:02}-{}-{}",
+                disposition.stage.as_str(),
+                disposition.action_kind.as_str()
+            ),
+            disposition_sequence: disposition.sequence,
+            disposition_key: disposition.disposition_key.clone(),
+            review_sequence: disposition.review_sequence,
+            review_key: disposition.review_key.clone(),
+            evidence_sequence: disposition.evidence_sequence,
+            evidence_key: disposition.evidence_key.clone(),
+            work_order_sequence: disposition.work_order_sequence,
+            work_order_key: disposition.work_order_key.clone(),
+            ticket_sequence: disposition.ticket_sequence,
+            ticket_key: disposition.ticket_key.clone(),
+            slot_sequence: disposition.slot_sequence,
+            batch_sequence: disposition.batch_sequence,
+            stage: disposition.stage,
+            action_kind: disposition.action_kind,
+            status: disposition.status,
+            disposition_kind: disposition.disposition_kind,
+            disposition_action_kind,
+            action_count: disposition.action_count,
+            protocol_count: disposition.protocol_count,
+            primitive_count: disposition.primitive_count,
+            protocols: disposition.protocols.clone(),
+            primitives: disposition.primitives.clone(),
+            release_blocking: disposition.blocks_preflight(),
+            operator_required: disposition.requires_operator(),
+            lineage_complete: disposition.has_lineage(),
+            review_required: disposition.needs_review(),
+            ready_for_execution: disposition.is_ready_for_execution(),
+            action_required: !disposition.is_ready_for_execution(),
+        }
+    }
+
+    pub fn requires_action(&self) -> bool {
+        self.action_required
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.lineage_complete
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn is_operator_handoff(&self) -> bool {
+        self.disposition_action_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind::CoordinateOperatorHandoff
+    }
+
+    pub fn is_repair_action(&self) -> bool {
+        self.disposition_action_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind::ScheduleRepairWork
+    }
+
+    pub fn is_lineage_action(&self) -> bool {
+        self.disposition_action_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind::RestoreEvidenceLineage
+    }
+
+    pub fn is_release_execution_action(&self) -> bool {
+        self.disposition_action_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind::ReleaseExecution
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary
+{
+    pub total_actions: usize,
+    pub required_actions: usize,
+    pub blocking_actions: usize,
+    pub operator_handoff_actions: usize,
+    pub repair_actions: usize,
+    pub lineage_gap_actions: usize,
+    pub release_execution_actions: usize,
+    pub review_required_actions: usize,
+    pub lineage_complete_actions: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_action_key: Option<String>,
+    pub first_required_action_key: Option<String>,
+    pub first_operator_handoff_action_key: Option<String>,
+    pub first_repair_action_key: Option<String>,
+    pub first_lineage_gap_action_key: Option<String>,
+    pub first_release_execution_action_key: Option<String>,
+    pub first_disposition_key: Option<String>,
+    pub first_review_key: Option<String>,
+    pub first_evidence_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_evidence_review_disposition_actions_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary {
+    pub fn from_actions<'a>(
+        actions: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionAction,
+        >,
+    ) -> Self {
+        let actions = actions.into_iter().collect::<Vec<_>>();
+        let first_action = actions.iter().min_by_key(|action| action.sequence);
+        let first_required_action = actions
+            .iter()
+            .filter(|action| action.requires_action())
+            .min_by_key(|action| action.sequence);
+        let first_operator_handoff_action = actions
+            .iter()
+            .filter(|action| action.is_operator_handoff())
+            .min_by_key(|action| action.sequence);
+        let first_repair_action = actions
+            .iter()
+            .filter(|action| action.is_repair_action())
+            .min_by_key(|action| action.sequence);
+        let first_lineage_gap_action = actions
+            .iter()
+            .filter(|action| action.is_lineage_action())
+            .min_by_key(|action| action.sequence);
+        let first_release_execution_action = actions
+            .iter()
+            .filter(|action| action.is_release_execution_action())
+            .min_by_key(|action| action.sequence);
+
+        Self {
+            total_actions: actions.len(),
+            required_actions: actions
+                .iter()
+                .filter(|action| action.requires_action())
+                .count(),
+            blocking_actions: actions
+                .iter()
+                .filter(|action| action.blocks_preflight())
+                .count(),
+            operator_handoff_actions: actions
+                .iter()
+                .filter(|action| action.is_operator_handoff())
+                .count(),
+            repair_actions: actions
+                .iter()
+                .filter(|action| action.is_repair_action())
+                .count(),
+            lineage_gap_actions: actions
+                .iter()
+                .filter(|action| action.is_lineage_action())
+                .count(),
+            release_execution_actions: actions
+                .iter()
+                .filter(|action| action.is_release_execution_action())
+                .count(),
+            review_required_actions: actions
+                .iter()
+                .filter(|action| action.needs_review())
+                .count(),
+            lineage_complete_actions: actions.iter().filter(|action| action.has_lineage()).count(),
+            protocol_mentions: actions.iter().map(|action| action.protocol_count).sum(),
+            primitive_mentions: actions.iter().map(|action| action.primitive_count).sum(),
+            first_action_key: first_action.map(|action| action.action_key.clone()),
+            first_required_action_key: first_required_action
+                .map(|action| action.action_key.clone()),
+            first_operator_handoff_action_key: first_operator_handoff_action
+                .map(|action| action.action_key.clone()),
+            first_repair_action_key: first_repair_action.map(|action| action.action_key.clone()),
+            first_lineage_gap_action_key: first_lineage_gap_action
+                .map(|action| action.action_key.clone()),
+            first_release_execution_action_key: first_release_execution_action
+                .map(|action| action.action_key.clone()),
+            first_disposition_key: first_action.map(|action| action.disposition_key.clone()),
+            first_review_key: first_action.map(|action| action.review_key.clone()),
+            first_evidence_key: first_action.map(|action| action.evidence_key.clone()),
+            first_work_order_key: first_action.map(|action| action.work_order_key.clone()),
+            first_ticket_key: first_action.map(|action| action.ticket_key.clone()),
+            first_stage: first_action.map(|action| action.stage),
+            first_action_kind: first_action.map(|action| action.action_kind),
+            execution_evidence_review_disposition_actions_ready: actions.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_actions == 0
+    }
+
+    pub fn has_actions(&self) -> bool {
+        self.total_actions > 0
+    }
+
+    pub fn has_required_actions(&self) -> bool {
+        self.required_actions > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_actions > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_handoff_actions > 0
+    }
+
+    pub fn needs_repair(&self) -> bool {
+        self.repair_actions > 0
+    }
+
+    pub fn has_lineage_gaps(&self) -> bool {
+        self.lineage_gap_actions > 0
+    }
+
+    pub fn has_release_execution_actions(&self) -> bool {
+        self.release_execution_actions > 0
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required_actions > 0
+    }
+
+    pub fn has_complete_lineage(&self) -> bool {
+        self.lineage_complete_actions == self.total_actions
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
@@ -23827,6 +24138,37 @@ pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_d
     )
 }
 
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_actions(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionAction>
+{
+    mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions(
+        available_primitives,
+    )
+    .iter()
+    .enumerate()
+    .map(|(index, disposition)| {
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionAction::from_disposition(
+            index + 1,
+            disposition,
+        )
+    })
+    .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary
+{
+    let actions =
+        mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_actions(
+            available_primitives,
+        );
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary::from_actions(
+        actions.iter(),
+    )
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -31790,6 +32132,177 @@ mod tests {
         assert!(!summary.needs_repair());
         assert!(!summary.needs_review());
         assert!(!summary.has_lineage_gaps());
+        assert!(summary.has_complete_lineage());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_actions_route_work(
+    ) {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let actions =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_actions(
+                &available_primitives,
+            );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSummary::from_actions(
+                actions.iter(),
+            );
+
+        assert_eq!(actions.len(), 3);
+        assert_eq!(summary.total_actions, 3);
+        assert_eq!(summary.required_actions, 3);
+        assert_eq!(summary.blocking_actions, 3);
+        assert_eq!(summary.operator_handoff_actions, 2);
+        assert_eq!(summary.repair_actions, 1);
+        assert_eq!(summary.lineage_gap_actions, 0);
+        assert_eq!(summary.release_execution_actions, 0);
+        assert_eq!(summary.review_required_actions, 3);
+        assert_eq!(summary.lineage_complete_actions, 3);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_action_key,
+            Some("disposition-action-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_required_action_key,
+            Some("disposition-action-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_handoff_action_key,
+            Some("disposition-action-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(summary.first_lineage_gap_action_key, None);
+        assert_eq!(summary.first_release_execution_action_key, None);
+        assert_eq!(
+            summary.first_disposition_key,
+            Some("disposition-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_review_key,
+            Some("review-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_evidence_review_disposition_actions_ready);
+        assert!(summary.has_actions());
+        assert!(summary.has_required_actions());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.needs_repair());
+        assert!(!summary.has_lineage_gaps());
+        assert!(!summary.has_release_execution_actions());
+        assert!(summary.needs_review());
+        assert!(summary.has_complete_lineage());
+
+        let first = &actions[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(
+            first.action_key,
+            "disposition-action-01-radio-provision_radio"
+        );
+        assert_eq!(first.disposition_sequence, 1);
+        assert_eq!(
+            first.disposition_key,
+            "disposition-01-radio-provision_radio"
+        );
+        assert_eq!(first.review_sequence, 1);
+        assert_eq!(first.review_key, "review-01-radio-provision_radio");
+        assert_eq!(first.evidence_sequence, 1);
+        assert_eq!(first.evidence_key, "evidence-01-radio-provision_radio");
+        assert_eq!(first.work_order_sequence, 1);
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_sequence, 1);
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(
+            first.disposition_action_kind,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionKind::CoordinateOperatorHandoff
+        );
+        assert_eq!(
+            first.disposition_action_kind.as_str(),
+            "coordinate_operator_handoff"
+        );
+        assert!(first.requires_action());
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+        assert!(first.has_lineage());
+        assert!(first.needs_review());
+        assert!(first.is_operator_handoff());
+        assert!(!first.is_repair_action());
+        assert!(!first.is_lineage_action());
+        assert!(!first.is_release_execution_action());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_actions_empty_when_ready(
+    ) {
+        let actions =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_actions(
+                all_primitive_families(),
+            );
+        let summary =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_disposition_action_summary(
+                all_primitive_families(),
+            );
+
+        assert!(actions.is_empty());
+        assert_eq!(summary.total_actions, 0);
+        assert_eq!(summary.required_actions, 0);
+        assert_eq!(summary.blocking_actions, 0);
+        assert_eq!(summary.operator_handoff_actions, 0);
+        assert_eq!(summary.repair_actions, 0);
+        assert_eq!(summary.lineage_gap_actions, 0);
+        assert_eq!(summary.release_execution_actions, 0);
+        assert_eq!(summary.review_required_actions, 0);
+        assert_eq!(summary.lineage_complete_actions, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_action_key, None);
+        assert_eq!(summary.first_required_action_key, None);
+        assert_eq!(summary.first_operator_handoff_action_key, None);
+        assert_eq!(summary.first_repair_action_key, None);
+        assert_eq!(summary.first_lineage_gap_action_key, None);
+        assert_eq!(summary.first_release_execution_action_key, None);
+        assert_eq!(summary.first_disposition_key, None);
+        assert_eq!(summary.first_review_key, None);
+        assert_eq!(summary.first_evidence_key, None);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_evidence_review_disposition_actions_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_actions());
+        assert!(!summary.has_required_actions());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.needs_repair());
+        assert!(!summary.has_lineage_gaps());
+        assert!(!summary.has_release_execution_actions());
+        assert!(!summary.needs_review());
         assert!(summary.has_complete_lineage());
     }
 
