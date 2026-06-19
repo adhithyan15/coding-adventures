@@ -218,7 +218,14 @@ row_value         = "(" expr { "," expr } ")" ;
 # row_value_list is used by row-value comparisons: (a,b) IN ((x,y),(p,q))
 row_value_list    = row_value { "," row_value } ;
 
-update_stmt       = "UPDATE" NAME "SET" assignment { "," assignment }
+# UPDATE supports the same five conflict-resolution modes as INSERT.
+# The optional ``conflict_clause`` (``OR REPLACE | IGNORE | …``) must appear
+# immediately after UPDATE and before the table name — exactly as in SQLite.
+#
+#   UPDATE OR IGNORE t SET x = 1 WHERE …   — skip row if constraint violated
+#   UPDATE OR REPLACE t SET x = 1 WHERE …  — delete conflicting rows, then update
+#   UPDATE OR ABORT t SET x = 1 WHERE …    — raise error (default)
+update_stmt       = "UPDATE" [ conflict_clause ] NAME "SET" assignment { "," assignment }
                     [ where_clause ] [ returning_clause ] ;
 assignment        = NAME "=" expr ;
 

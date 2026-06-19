@@ -15,6 +15,13 @@
 - **`_plan_create_trigger`** passes `if_not_exists` through to the plan
   node unchanged.
 
+- `UpdateStmt` (AST) and `Update` (plan node) each gain an `on_conflict:
+  str | None` field carrying the optional `UPDATE OR <action>` strategy.
+  `None` means default ABORT behaviour.  Valid non-`None` values are
+  `"REPLACE"`, `"IGNORE"`, `"ABORT"`, `"FAIL"`, and `"ROLLBACK"`.
+  The planner's `_plan_update()` forwards the field through without
+  transformation so downstream stages can act on it.
+
 ## [0.43.0] - 2026-05-23
 
 ### Added
