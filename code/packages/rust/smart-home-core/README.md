@@ -79,7 +79,8 @@ Current scope:
   behind approval and blocker decisions
 - D18D integration mesh-release descriptors for read-only Zigbee, Z-Wave, and
   Thread primitive, substrate, preflight repair schedule, preflight
-  batch/schedule readiness, handoff, and release-readiness gate planning
+  repair slot audit, batch/schedule readiness, handoff, and release-readiness
+  gate planning
 - D18D integration activation-dossier descriptors for read-only bundled
   decision and evidence planning
 - D18D integration activation-readout descriptors for priority-wave health,
