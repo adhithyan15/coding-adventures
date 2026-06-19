@@ -98,6 +98,11 @@ document held in memory and restore it (`loadBook` / `sc_deserialize`): the
 document captures only the source (formula text + typed literals) and per-cell
 formats — not the computed values, which the engine recomputes on load, so a
 loaded formula stays live.
+The **Undo / Redo** buttons walk the engine's snapshot history
+(`WindowedSheetModel.undoEdit`/`redoEdit` over the C ABI's `sc_undo`/`sc_redo`);
+they disable at the history ends via `canUndo`/`canRedo` (re-evaluated whenever
+`revision`, a `@Published`, bumps). Every edit is reversible and a restored
+formula recomputes live.
 
 Headless proof: `Tests/VisiCalcTests/WindowedModelTests.swift` asserts the
 window is engine-computed and dense, a formula 1000 rows down (`Z1000` = 39) is
@@ -108,7 +113,9 @@ I3 = 40, source I1 = 20 untouched), and the clipboard (copy `I1 = =H1*2` → pas
 at I2 ⇒ I2 = H2*2 = 14; cut A1 → move to C1, A1 clears, a second paste is a
 no-op), and a save/load round trip (`saveBook` → mutate A1 ⇒ E1 523.00 →
 `loadBook` restores A1 15 / E1 38.00, the loaded formula stays live with A1=5 ⇒
-E1 28.00, and malformed input is rejected). Run with `swift test`.
+E1 28.00, and malformed input is rejected), and an undo/redo walk (two edits →
+undo both → redo both with the formula recomputing live → a fresh edit forks
+history). Run with `swift test`.
 
 ## Notes
 

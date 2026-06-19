@@ -120,4 +120,37 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertFalse(m.loadBook("not a workbook"))
         XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "28.00")
     }
+
+    /// Undo / redo: make two edits, walk history back and forward, and confirm a
+    /// restored formula recomputes live. (The model seeds its budget via setCell,
+    /// so history is non-empty from construction — undoing into the seed is
+    /// expected; this test only asserts the round trip of its own two edits.)
+    func testUndoRedoWalksHistory() {
+        let m = WindowedSheetModel()
+        // Two fresh edits on a clear column: H1 = 2 (col 8), I1 = H1*5 = 10 (col 9).
+        m.setCell("H1", "2")
+        m.setCell("I1", "=H1*5")
+        XCTAssertEqual(m.window(rows: 1...1, cols: 9...9)[0][0], "10")
+        XCTAssertTrue(m.canUndo())
+
+        // Undo the formula, then the literal.
+        XCTAssertTrue(m.undoEdit())
+        XCTAssertEqual(m.window(rows: 1...1, cols: 9...9)[0][0], "") // I1 gone
+        XCTAssertTrue(m.undoEdit())
+        XCTAssertEqual(m.window(rows: 1...1, cols: 8...8)[0][0], "") // H1 gone
+
+        // Redo both: I1 recomputes live (10).
+        XCTAssertTrue(m.canRedo())
+        XCTAssertTrue(m.redoEdit())
+        XCTAssertTrue(m.redoEdit())
+        XCTAssertEqual(m.window(rows: 1...1, cols: 9...9)[0][0], "10")
+        XCTAssertFalse(m.canRedo())
+        XCTAssertFalse(m.redoEdit()) // nothing left to redo
+
+        // A fresh edit forks history (drops the redo branch).
+        XCTAssertTrue(m.undoEdit()) // back: I1 gone
+        XCTAssertTrue(m.canRedo())
+        m.setCell("A1", "7")
+        XCTAssertFalse(m.canRedo())
+    }
 }
