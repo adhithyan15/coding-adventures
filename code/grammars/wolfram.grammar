@@ -33,12 +33,12 @@
 #   logical_or      ||
 #   logical_and     &&
 #   logical_not     !  (prefix)
+#   amp             expr &                (postfix, pure function)    (W-11)
 #   comparison      == != < > <= >=
 #   additive        + -
 #   multiplicative  * /
 #   unary           - +  (prefix)
 #   power           ^                     (right-associative)
-#   amp             expr &                (postfix, pure function)    (W-11)
 #   mapapply        /@ @@                 (infix, left-associative)   (W-6)
 #   application     f[...]  x[[...]]      (postfix)                   (W-6: [[]])
 #   atom            literals, symbols, patterns, slots, {...}, ( ... )  (W-11: # ## #n)
@@ -68,7 +68,36 @@ rule = logical_or [ ( RULE | RULEDELAYED ) rule ] ;
 
 logical_or  = logical_and { OR logical_and } ;
 logical_and = logical_not { AND logical_not } ;
-logical_not = NOT logical_not | comparison ;
+logical_not = NOT logical_not | amp ;
+
+# Pure-function `&` postfix (W-11). A trailing run of `&` turns the WHOLE
+# preceding expression into an anonymous `Function`. Wolfram gives `&` a very low
+# precedence — looser than every arithmetic/comparison operator but tighter than
+# `,`/`;`/assignment — so all of these are pure functions of their slots:
+#
+#   #^2 &            →  Function[Power[Slot[1], 2]]     (looser than ^)
+#   # + 1 &          →  Function[Plus[Slot[1], 1]]      (looser than +)
+#   Mod[#, 2] == 0 & →  Function[Equal[Mod[#,2], 0]]    (looser than ==)
+#
+# So `amp` sits high in the cascade — just below `logical_not`, ABOVE the whole
+# comparison/arithmetic stack — and its body is a full `comparison`. The `&` is
+# NOT reachable from inside `^`/`+`/etc, so a trailing `&` always belongs to the
+# outermost expression, never to a sub-operand. A double `& &` wraps twice.
+#
+# After the `&` run the pure function may be *applied immediately*: `(#^2)&[5]`
+# is `(#^2 &)[5]` — the `[5]` (and any chained `[…]` / `[[…]]`) applies to the
+# new Function, not to the body. The apply suffix can appear only when at least
+# one `&` is present (the no-`&` alternative falls straight through to
+# `comparison`, where ordinary application already lives — no double-application
+# ambiguity). The runtime lowers each trailing `&` to a slot-based
+# `Function[body]` and folds each suffix into an application.
+amp = comparison AMP { AMP } { amp_apply }
+    | comparison ;
+
+# The application suffix usable after a pure-function `&` (mirrors `postfix`):
+# `f & [args]` ordinary application, `f & [[i]]` Part sugar.
+amp_apply = LBRACKET [ arglist ] RBRACKET
+          | LDBRACKET arglist RBRACKET RBRACKET ;
 
 # A single (non-chained) comparison for the subset.
 comparison = additive [ ( EQUAL | UNEQUAL | LESS | GREATER | LE | GE ) additive ] ;
@@ -76,36 +105,10 @@ comparison = additive [ ( EQUAL | UNEQUAL | LESS | GREATER | LE | GE ) additive 
 additive       = multiplicative { ( PLUS | MINUS ) multiplicative } ;
 multiplicative = unary { ( TIMES | SLASH ) unary } ;
 
-# Prefix minus/plus. Binds looser than Power and than the `&` postfix, so
-# `-x^2` is -(x^2). Calls `amp` (the pure-function postfix) which in turn calls
-# `power`, so `-#^2 &` is -((#^2)&).
-unary = ( MINUS | PLUS ) unary | amp ;
+# Prefix minus/plus. Binds looser than Power, so `-x^2` is -(x^2).
+unary = ( MINUS | PLUS ) unary | power ;
 
-# Pure-function `&` postfix (W-11). A trailing run of `&` turns the preceding
-# `power` expression into an anonymous `Function`: `#^2 &` is `(#^2)&`, i.e.
-# Function[Power[Slot[1], 2]] — NOT Power[Slot[1], Function[2]]. The `&` binds
-# LOOSER than `^` (so it captures the whole `#^2`) but tighter than the prefix
-# unary / arithmetic above it; this is the key precedence the W-11 tests pin
-# down. A double `& &` wraps twice.
-#
-# After the `&` run, the pure function may be *applied immediately*: `(#^2)&[5]`
-# is `(#^2 &)[5]` — the `[5]` (and any chained `[…]` / `[[…]]`) applies to the
-# new Function, not to the body. That suffix is the same postfix forms `postfix`
-# uses, but it can only appear when at least one `&` is present (so the no-`&`
-# case falls straight through to `power`, where ordinary application already
-# lives — no double-application ambiguity). The runtime lowers each trailing `&`
-# to a slot-based `Function[body]` and folds each suffix into an application.
-amp = power AMP { AMP } { amp_apply }
-    | power ;
-
-# The application suffix usable after a pure-function `&` (mirrors `postfix`):
-# `f & [args]` ordinary application, `f & [[i]]` Part sugar.
-amp_apply = LBRACKET [ arglist ] RBRACKET
-          | LDBRACKET arglist RBRACKET RBRACKET ;
-
-# Power — right-associative: `a^b^c` is Power[a, Power[b, c]]. Unchanged by
-# W-11; `power` still calls `mapapply`, and the `&` postfix sits one level
-# *above* it (in `amp`).
+# Power — right-associative: `a^b^c` is Power[a, Power[b, c]]. Unchanged by W-11.
 power = mapapply [ POWER unary ] ;
 
 # Map / Apply sugar (W-6), infix and left-associative, binding just above

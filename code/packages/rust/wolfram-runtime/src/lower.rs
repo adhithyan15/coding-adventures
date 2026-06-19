@@ -81,6 +81,16 @@ const MAP_HEAD: &str = "Map";
 const APPLY_HEAD: &str = "Apply";
 const PART_HEAD: &str = "Part";
 
+/// The W-11 pure-function IR heads. A `#`/`#n` slot lowers to `Slot[n]`, `##` to
+/// `SlotSequence[1]`, and a pure function (either `Function[params, body]` or the
+/// `body &` slot form) to a `Function` apply. These are *surface* head names the
+/// runtime recognises (via the [`WolframBackend`](crate::backend) rewrite rule)
+/// and resolves by substitution when the function is applied — they are never
+/// handed to the shared VM handler table, so they need no entry there.
+pub(crate) const SLOT_HEAD: &str = "Slot";
+pub(crate) const SLOT_SEQUENCE_HEAD: &str = "SlotSequence";
+pub(crate) const FUNCTION_HEAD: &str = "Function";
+
 /// A failure while lowering the surface tree to IR. These are *structural*
 /// errors — a node shape the lowering did not expect — not user syntax errors
 /// (those are caught earlier by the parser). In practice they should never fire
@@ -163,9 +173,11 @@ fn lower_node(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
             "additive" | "multiplicative" => lower_binary_chain(node),
             "unary" => lower_unary(node),
             "power" => lower_power(node),
+            "amp" => lower_amp(node),
             "mapapply" => lower_mapapply(node),
             "postfix" => lower_postfix(node),
             "atom" => lower_atom(node),
+            "slot" => lower_slot(node),
             "list" => lower_list(node),
             "group" => lower_group(node),
             "arglist" => Err(LowerError::new(
@@ -187,6 +199,13 @@ fn lower_token(token: &Token) -> Result<IRNode, LowerError> {
         // `lower_atom` ever sees it — so the canonical place to interpret a lone
         // blank is at the token level.
         "BLANK" => Ok(apply(sym(BLANK), vec![])),
+        // A bare `#` (the `slot` rule with a single HASH child) is peeled down to
+        // this token by `unwrap_single` before `lower_slot` runs, so a lone slot
+        // is interpreted here — `#` ≡ `#1` → `Slot[1]`. A numbered `#n` keeps two
+        // tokens (HASH + NUMBER), so it is NOT unwrapped and reaches `lower_slot`.
+        "HASH" => Ok(apply(sym(SLOT_HEAD), vec![int(1)])),
+        // Likewise a lone `##` → `SlotSequence[1]`.
+        "SLOTSEQ" => Ok(apply(sym(SLOT_SEQUENCE_HEAD), vec![int(1)])),
         other => Err(LowerError::new(format!(
             "unexpected token `{other}` = {:?}",
             token.value
@@ -602,6 +621,20 @@ fn lower_postfix(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
 fn build_application(head: IRNode, args: Vec<IRNode>) -> IRNode {
     let canonical = canonical_head(head);
     if let IRNode::Symbol(name) = &canonical {
+        // W-11: normalise the *named* long form `Function[p, body]` so its
+        // parameter list is always a `List`. `Function[x, body]` (a single
+        // symbol param) becomes `Function[List[x], body]`; `Function[{x, y},
+        // body]` already has a `List` first arg and is left as-is. The
+        // slot-based one-arg form `Function[body]` is also left as-is (it has no
+        // parameter list — its body refers to slots). This single normalisation
+        // lets the backend application rule treat every named Function uniformly
+        // as `Function[List(params…), body]`.
+        if name == FUNCTION_HEAD && args.len() == 2 && !is_list_node(&args[0]) {
+            let mut it = args.into_iter();
+            let param = it.next().unwrap();
+            let body = it.next().unwrap();
+            return apply(sym(FUNCTION_HEAD), vec![apply(sym(LIST), vec![param]), body]);
+        }
         if matches!(name.as_str(), ADD | MUL | AND | OR) && args.len() > 2 {
             let mut iter = args.into_iter();
             let mut acc = iter.next().unwrap();
@@ -625,9 +658,9 @@ fn lower_arglist(node: &GrammarASTNode) -> Result<Vec<IRNode>, LowerError> {
 ///
 /// `atom = NUMBER | STRING | NAME [ BLANK [ NAME ] ] | BLANK [ NAME ] | list | group`
 fn lower_atom(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
-    // Sub-rule (list / group): delegate.
+    // Sub-rule (list / group / slot): delegate.
     if let Some(child) = child_nodes(node).next() {
-        if matches!(child.rule_name.as_str(), "list" | "group") {
+        if matches!(child.rule_name.as_str(), "list" | "group" | "slot") {
             return lower_node(child);
         }
     }
@@ -651,6 +684,115 @@ fn lower_atom(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
             tokens.iter().map(|t| &t.value).collect::<Vec<_>>()
         ))),
     }
+}
+
+/// `slot = HASH [ NUMBER ] | SLOTSEQ` — a pure-function argument slot (W-11).
+///
+/// | Surface | IR                  | meaning                          |
+/// |---------|---------------------|----------------------------------|
+/// | `#`     | `Slot[1]`           | the first argument (`#` ≡ `#1`)  |
+/// | `#n`    | `Slot[n]`           | the n-th argument                |
+/// | `##`    | `SlotSequence[1]`   | all arguments, spliced           |
+///
+/// A `#n` is `HASH` followed by the ordinary `NUMBER` token (there is no
+/// dedicated slot-number token), so we read the optional number here. A bare
+/// `#` defaults to slot 1. `##` carries no number in this subset (real Wolfram's
+/// `##n` is out of scope) and lowers to `SlotSequence[1]`.
+fn lower_slot(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
+    let tokens: Vec<&Token> = node.children.iter().filter_map(as_token).collect();
+    match tokens.as_slice() {
+        // `##` — SlotSequence (all args). The subset has no `##n`.
+        [s] if token_type(s) == "SLOTSEQ" => Ok(apply(sym(SLOT_SEQUENCE_HEAD), vec![int(1)])),
+        // `#` — the first slot.
+        [h] if token_type(h) == "HASH" => Ok(apply(sym(SLOT_HEAD), vec![int(1)])),
+        // `#n` — the n-th slot. The number must be a positive integer.
+        [h, n] if token_type(h) == "HASH" && token_type(n) == "NUMBER" => {
+            let idx = n
+                .value
+                .parse::<i64>()
+                .map_err(|e| LowerError::new(format!("invalid slot number {:?}: {e}", n.value)))?;
+            if idx < 1 {
+                return Err(LowerError::new(format!(
+                    "slot number must be >= 1, got {idx}"
+                )));
+            }
+            Ok(apply(sym(SLOT_HEAD), vec![int(idx)]))
+        }
+        _ => Err(LowerError::new(format!(
+            "unrecognised slot token shape: {:?}",
+            tokens.iter().map(|t| &t.value).collect::<Vec<_>>()
+        ))),
+    }
+}
+
+/// `amp = power AMP { AMP } { amp_apply } | power` — the W-11 `&` pure-function
+/// postfix (and the optional immediate application that may follow it).
+///
+/// With no `&` present the rule is a transparent single-child wrapper over
+/// `power`. With one or more trailing `&`, each `&` wraps the running expression
+/// into a slot-based `Function[body]` (so `expr & &` wraps twice). Then each
+/// trailing `amp_apply` (`[args]` or `[[i]]`) applies the resulting function —
+/// `(#^2)&[5]` is `(Function[#^2])[5]`, reusing the same `build_application` /
+/// `Part` lowering ordinary postfix application uses, so the backend's
+/// `Function`-application rewrite rule fires on it at eval time.
+fn lower_amp(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
+    // Fast path: no `&` — a transparent wrapper over one `power` child.
+    let amp_count = node
+        .children
+        .iter()
+        .filter(|c| as_token(c).is_some_and(|t| token_type(t) == "AMP"))
+        .count();
+    if amp_count == 0 {
+        return lower_first_node(node);
+    }
+
+    // The body is the first (and only) `power` child, before the `&` run.
+    let body = lower_first_node(node)?;
+
+    // Wrap once per `&`: `expr &` → Function[expr]; `expr & &` → Function[Function[expr]].
+    let mut result = body;
+    for _ in 0..amp_count {
+        result = apply(sym(FUNCTION_HEAD), vec![result]);
+    }
+
+    // Apply any trailing `amp_apply` suffixes (`[args]` / `[[i]]`) to the function.
+    for suffix in child_nodes(node).filter(|n| n.rule_name == "amp_apply") {
+        result = lower_amp_apply(result, suffix)?;
+    }
+    Ok(result)
+}
+
+/// Apply one `amp_apply` suffix to an already-built pure function.
+///
+/// `amp_apply = LBRACKET [ arglist ] RBRACKET | LDBRACKET arglist RBRACKET RBRACKET`
+/// — the same two postfix forms `postfix` handles. `f & [a, b]` builds the
+/// application `f[a, b]` (which the backend rule then resolves by substitution);
+/// `f & [[i]]` folds into nested `Part`s exactly as ordinary part sugar does.
+fn lower_amp_apply(func: IRNode, suffix: &GrammarASTNode) -> Result<IRNode, LowerError> {
+    let is_part = suffix
+        .children
+        .iter()
+        .any(|c| as_token(c).is_some_and(|t| token_type(t) == "LDBRACKET"));
+    let args = child_nodes(suffix)
+        .find(|n| n.rule_name == "arglist")
+        .map(lower_arglist)
+        .transpose()?
+        .unwrap_or_default();
+    if is_part {
+        let mut result = func;
+        for index in args {
+            result = apply(sym(PART_HEAD), vec![result, index]);
+        }
+        Ok(result)
+    } else {
+        Ok(build_application(func, args))
+    }
+}
+
+/// True if `node` is a `List(...)` apply — used to detect an already-list
+/// `Function` parameter list (`Function[{x, y}, body]`) vs a single-symbol one.
+fn is_list_node(node: &IRNode) -> bool {
+    matches!(node, IRNode::Apply(app) if matches!(&app.head, IRNode::Symbol(s) if s == LIST))
 }
 
 /// Build a `Blank()` / `Blank(h)` from the (possibly empty) trailing head-name
@@ -1208,5 +1350,115 @@ mod tests {
             assign(sym("x"), int(1)),
             apply(sym(symbolic_ir::ASSIGN), vec![sym("x"), int(1)])
         );
+    }
+
+    // --- W-11 pure functions: slots, & postfix, Function normalisation -----
+
+    #[test]
+    fn bare_and_numbered_slots_lower_to_slot_head() {
+        // #  →  Slot[1]   (# ≡ #1)
+        assert_eq!(lower_one("#\n"), apply(sym(SLOT_HEAD), vec![int(1)]));
+        // #2 →  Slot[2]
+        assert_eq!(lower_one("#2\n"), apply(sym(SLOT_HEAD), vec![int(2)]));
+        // ## →  SlotSequence[1]
+        assert_eq!(
+            lower_one("##\n"),
+            apply(sym(SLOT_SEQUENCE_HEAD), vec![int(1)])
+        );
+    }
+
+    #[test]
+    fn amp_postfix_wraps_body_in_a_slot_function() {
+        // (#^2)&  →  Function[Pow[Slot[1], 2]]  (slot-based, one-arg Function).
+        assert_eq!(
+            lower_one("#^2 &\n"),
+            apply(
+                sym(FUNCTION_HEAD),
+                vec![apply(
+                    sym(POW),
+                    vec![apply(sym(SLOT_HEAD), vec![int(1)]), int(2)]
+                )]
+            )
+        );
+    }
+
+    #[test]
+    fn amp_precedence_puts_power_inside_the_function_body() {
+        // The pinned precedence: `#^2 &` is `(#^2)&`, NOT `#^(2&)`. So the body
+        // must be a Pow whose base is Slot[1] — the `&` captured the whole `#^2`.
+        let ir = lower_one("#^2 &\n");
+        let IRNode::Apply(func) = &ir else {
+            panic!("expected a Function apply, got {ir:?}");
+        };
+        assert_eq!(func.head, sym(FUNCTION_HEAD));
+        assert_eq!(func.args.len(), 1, "slot-based Function has one (body) arg");
+        // The single body arg is a Pow, not a bare Slot with a Function exponent.
+        let IRNode::Apply(body) = &func.args[0] else {
+            panic!("body should be a Pow apply");
+        };
+        assert_eq!(body.head, sym(POW), "the `^` is inside the function body");
+    }
+
+    #[test]
+    fn double_ampersand_wraps_twice() {
+        // `# & &`  →  Function[Function[Slot[1]]].
+        assert_eq!(
+            lower_one("# & &\n"),
+            apply(
+                sym(FUNCTION_HEAD),
+                vec![apply(
+                    sym(FUNCTION_HEAD),
+                    vec![apply(sym(SLOT_HEAD), vec![int(1)])]
+                )]
+            )
+        );
+    }
+
+    #[test]
+    fn named_function_long_form_normalises_params_to_a_list() {
+        // Function[x, x^2]  →  Function[List[x], Pow[x, 2]]  (single param wrapped).
+        assert_eq!(
+            lower_one("Function[x, x^2]\n"),
+            apply(
+                sym(FUNCTION_HEAD),
+                vec![
+                    apply(sym(LIST), vec![sym("x")]),
+                    apply(sym(POW), vec![sym("x"), int(2)])
+                ]
+            )
+        );
+        // Function[{x, y}, x + y]  →  Function[List[x, y], Add[x, y]]  (list kept).
+        assert_eq!(
+            lower_one("Function[{x, y}, x + y]\n"),
+            apply(
+                sym(FUNCTION_HEAD),
+                vec![
+                    apply(sym(LIST), vec![sym("x"), sym("y")]),
+                    apply(sym(ADD), vec![sym("x"), sym("y")])
+                ]
+            )
+        );
+    }
+
+    #[test]
+    fn pure_function_applied_lowers_to_application_of_a_function() {
+        // (#^2)&[5]  →  (Function[Pow[Slot[1], 2]])[5]  — an Apply whose head is
+        // the Function node; the backend rule resolves it at eval time.
+        let ir = lower_one("(#^2)&[5]\n");
+        let IRNode::Apply(outer) = &ir else {
+            panic!("expected an application, got {ir:?}");
+        };
+        assert_eq!(outer.args, vec![int(5)], "the arg list is [5]");
+        let IRNode::Apply(func) = &outer.head else {
+            panic!("the head must be the Function node");
+        };
+        assert_eq!(func.head, sym(FUNCTION_HEAD));
+    }
+
+    #[test]
+    fn slot_number_must_be_positive() {
+        // `#0` is not a valid slot (slots are 1-indexed) — lowering errors.
+        let ast = parse_wolfram("#0\n");
+        assert!(lower_program(&ast).is_err());
     }
 }

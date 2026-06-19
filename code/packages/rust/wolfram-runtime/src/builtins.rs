@@ -127,6 +127,11 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("NestList".to_string(), handler_fn(nest_list_handler));
     m.insert("Fold".to_string(), handler_fn(fold_handler));
     m.insert("FoldList".to_string(), handler_fn(fold_list_handler));
+    // W-11 supports the canonical even-predicate idiom `Mod[#, 2] == 0 &`, so a
+    // minimal integer `Mod` is added here (eager, like every other list/numeric
+    // builtin). It is the only new builtin W-11 needs; the pure-function support
+    // itself lives in the lowering + the backend rewrite rule, not here.
+    m.insert("Mod".to_string(), handler_fn(mod_handler));
     m
 }
 
@@ -1154,6 +1159,36 @@ fn parity_q(expr: IRApply, want_even: bool) -> IRNode {
 }
 
 // ---------------------------------------------------------------------------
+// Integer modulo — Mod (W-11 support for the `Mod[#, 2] == 0 &` idiom)
+// ---------------------------------------------------------------------------
+
+/// `Mod[a, b]` → the integer remainder of `a` divided by `b`, using Wolfram's
+/// (and Rust's `rem_euclid`) convention that the result has the **sign of the
+/// divisor** and lies in `[0, |b|)` for positive `b`: `Mod[7, 2]` → `1`,
+/// `Mod[-1, 3]` → `2`. Both arguments must be exact integers and the divisor must
+/// be non-zero; any other shape (wrong arity, a non-integer, or a zero divisor)
+/// leaves the form unevaluated rather than panicking — the same fail-soft
+/// convention every W-5/W-9 builtin follows.
+fn mod_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let (Some(a), Some(b)) = (as_i64(&expr.args[0]), as_i64(&expr.args[1])) else {
+        return unevaluated(expr);
+    };
+    if b == 0 {
+        return unevaluated(expr); // Mod by zero is undefined.
+    }
+    // rem_euclid gives a non-negative remainder for a positive divisor; for a
+    // negative divisor we shift into the divisor's sign to match Wolfram.
+    let mut r = a.rem_euclid(b.abs());
+    if b < 0 && r != 0 {
+        r -= b.abs();
+    }
+    int(r)
+}
+
+// ---------------------------------------------------------------------------
 // Small shared helpers
 // ---------------------------------------------------------------------------
 
@@ -1946,6 +1981,34 @@ mod tests {
                 vec![list(vec![int(1), list(vec![int(2)])]), int(0)]
             ),
             list(vec![int(1), list(vec![int(2)])])
+        );
+    }
+
+    #[test]
+    fn mod_integer_remainder_uses_divisor_sign() {
+        // Positive divisor: result in [0, b).
+        assert_eq!(run("Mod", vec![int(7), int(2)]), int(1));
+        assert_eq!(run("Mod", vec![int(8), int(2)]), int(0));
+        // Negative dividend: still non-negative for a positive divisor.
+        assert_eq!(run("Mod", vec![int(-1), int(3)]), int(2));
+        // Negative divisor: result takes the divisor's sign.
+        assert_eq!(run("Mod", vec![int(7), int(-3)]), int(-2));
+        assert_eq!(run("Mod", vec![int(-7), int(-3)]), int(-1));
+    }
+
+    #[test]
+    fn mod_malformed_stays_unevaluated() {
+        // Mod by zero is undefined → unevaluated, no panic.
+        assert_eq!(
+            run("Mod", vec![int(5), int(0)]),
+            apply(sym("Mod"), vec![int(5), int(0)])
+        );
+        // Wrong arity.
+        assert_eq!(run("Mod", vec![int(5)]), apply(sym("Mod"), vec![int(5)]));
+        // Non-integer argument.
+        assert_eq!(
+            run("Mod", vec![sym("x"), int(2)]),
+            apply(sym("Mod"), vec![sym("x"), int(2)])
         );
     }
 
