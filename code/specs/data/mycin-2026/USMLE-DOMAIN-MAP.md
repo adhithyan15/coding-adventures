@@ -109,7 +109,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Pharmacology | Pharmacology | drug_class, mechanism, adverse_effect, antidote_for | 9 grounded (ADJ-only) | ✓ |
 | Immunology | Immunology | mediated_by, associated_hla, gene_defect, deficiency_of | 7 grounded (ADJ-only) | ✓ |
 | Genetics | Genetics | inheritance, gene_defect, trinucleotide_repeat, imprinting | 7 grounded (ADJ-only) | ✓ |
-| Rheumatology (Tier-2) | Path/Immuno | associated_autoantibody | 6 grounded (ADJ-only) | ✓ |
+| Rheumatology (Tier-2) | Path/Immuno | associated_autoantibody | 9 grounded (ADJ-only) | ✓ |
 | Oncology (Tier-2) | Pathology/neoplasia | tumor_marker | 4 grounded (ADJ-only) | ✓ |
 | Histology buzzwords (Tier-2) | Pathology | seen_in (finding→condition) | 5 grounded (ADJ-only) | ✓ |
 | Cardiology murmurs (Tier-2) | Cardiology | murmur_indicates (murmur→lesion) | 5 grounded (ADJ-only) | ✓ |
@@ -204,9 +204,11 @@ faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
     *Started (RHEUM — first Tier-2 domain):* `associated_autoantibody` for SLE (anti-dsDNA,
     anti-Sm, anti-ribosomal-P), GPA (PR3-ANCA), systemic sclerosis (anti-Scl-70,
     anti-centromere) — 6 edges, all grounded to byte-stable NCBI StatPearls spans, shipped
-    as the fifth **ADJ-only** domain (`recall/rheum-edges.adj`). Remaining: RA→anti-CCP,
-    PBC→anti-mitochondrial, Sjögren→anti-Ro/La, polymyositis→anti-Jo1 (deferred — pages
-    discuss these in risk-factor/criteria context, no clean both-endpoints-named span yet).
+    as the fifth **ADJ-only** domain (`recall/rheum-edges.adj`). **Backfilled** (primary-
+    source-first, zero-deferral): RA→anti-CCP (NBK441999, ACPA defined = anti-CCP on page)
+    and Sjögren→anti-Ro/SSA + anti-La/SSB (NBK431049, one span names disease + both markers)
+    — now 9 grounded edges. Still pursued for the next backfill (need a both-endpoints span
+    from a primary source): PBC→anti-mitochondrial, polymyositis/antisynthetase→anti-Jo1.
 11. Skin/derm (lesion→diagnosis)
     *Started (DERM — seventh Tier-2 domain):* `skin_finding_in` for target lesions→erythema
     multiforme (NBK470259), silvery scales→psoriasis (NBK448194), umbilicated papules→

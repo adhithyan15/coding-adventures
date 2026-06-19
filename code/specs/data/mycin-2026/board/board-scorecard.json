@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 135,
-    "correct": 128,
+    "total": 137,
+    "correct": 130,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 122,
+        "correct": 124,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9918,
-    "grounded_correct": 121
+    "grounded_coverage": 0.9919,
+    "grounded_correct": 123
   },
   "results": [
     {
@@ -864,6 +864,22 @@
       "tactic": "recall",
       "gold": "anti_scl70",
       "answer": "anti_scl70",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "rheum_ra_ab",
+      "tactic": "recall",
+      "gold": "anti_ccp",
+      "answer": "anti_ccp",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "rheum_sjo_ab",
+      "tactic": "recall",
+      "gold": "anti_ro",
+      "answer": "anti_ro",
       "outcome": "correct",
       "trust": "authoritative"
     },

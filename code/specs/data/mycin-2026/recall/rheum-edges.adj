@@ -19,11 +19,14 @@
 % check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 %
 % Honest scope: only edges whose cited span states the autoantibody↔disease association
-% AND names both endpoints are included. Declined here (the pages discuss these antibodies
-% in risk-factor / diagnostic-accuracy / citation-title context, not a self-contained
-% "antibody X marks disease Y" declarative): rheumatoid arthritis → anti-CCP, and primary
-% biliary cholangitis → anti-mitochondrial (the AMA "85% of cases" sentence does not name
-% PBC in-span). They deserve a span that names both endpoints, not an over-reach.
+% AND names both endpoints are included. Under the primary-source-first, zero-deferral
+% policy, two previously-declined associations are now GROUNDED from spans that name both
+% endpoints: rheumatoid arthritis → anti-CCP (the RA page defines ACPA = anti-cyclic
+% citrullinated peptide antibodies and names them among RA's best-known autoantibodies)
+% and Sjögren syndrome → anti-Ro/SSA and anti-La/SSB (one span names the disease and both
+% markers). Still pursued for the next backfill (need a primary source with a both-
+% endpoints span): primary biliary cholangitis → anti-mitochondrial, and polymyositis /
+% antisynthetase → anti-Jo-1.
 % ============================================================================
 
 dictionary rheum_vocab {
@@ -64,5 +67,23 @@ rulebook rheum_facts {
     relate associated_autoantibody(systemic_sclerosis, anti_centromere)
         source "Antinuclear antibodies may be present in more than 90% of cases of systemic sclerosis, and up to 70% of cases exhibit at least one of the more specific autoantibodies (anti-centromere, anti-Scl-70, and anti-RNA polymerase III)."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK430875/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): rheumatoid arthritis → anti-CCP (ACPA) ---
+    % The cited page defines: "These antibodies are called anti-cyclic citrullinated
+    % peptide antibodies (ACPA)." — so ACPA here IS anti-CCP, named among RA's autoantibodies.
+    relate associated_autoantibody(rheumatoid_arthritis, anti_ccp)
+        source "RF and ACPA antibodies are the best-known autoantibodies in RA, but several other autoantibodies are relatively specific for RA."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441999/"
+        trust authoritative
+
+    % --- BACKFILL: Sjögren syndrome → anti-Ro/SSA and anti-La/SSB (one span names both) ---
+    relate associated_autoantibody(sjogren_syndrome, anti_ro)
+        source "B cells generate autoantibodies characteristic of Sjögren disease, including rheumatoid factor, SSA/Ro, and SSB/La."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK431049/"
+        trust authoritative
+    relate associated_autoantibody(sjogren_syndrome, anti_la)
+        source "B cells generate autoantibodies characteristic of Sjögren disease, including rheumatoid factor, SSA/Ro, and SSB/La."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK431049/"
         trust authoritative
 }
