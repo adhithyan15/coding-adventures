@@ -626,6 +626,7 @@ class CreateTrigger:
     event: str    # "INSERT" | "UPDATE" | "DELETE"
     table: str
     body_sql: str
+    if_not_exists: bool = False
 
 
 @dataclass(frozen=True, slots=True)

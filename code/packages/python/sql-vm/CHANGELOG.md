@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.61.0 — 2026-06-19
+
+### Added
+
+- **`_do_create_trigger` honours `if_not_exists`** — when the backend raises
+  `TriggerAlreadyExists` and the IR instruction carries
+  `if_not_exists=True`, the VM now swallows the error silently (matching
+  SQLite's semantics for `CREATE TRIGGER IF NOT EXISTS`).  Without the
+  flag the error is still translated and re-raised as before.
+
 ## 1.60.0 — 2026-06-16
 
 ### Fixed

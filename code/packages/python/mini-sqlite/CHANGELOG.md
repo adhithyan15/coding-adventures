@@ -1,5 +1,39 @@
 # Changelog
 
+## [2.28.0] - 2026-06-19
+
+### Added
+
+- **`CREATE TRIGGER IF NOT EXISTS` is now accepted** — SQLite allows an
+  optional `IF NOT EXISTS` guard on `CREATE TRIGGER`:
+
+  ```sql
+  CREATE TRIGGER IF NOT EXISTS trg AFTER INSERT ON t
+  FOR EACH ROW BEGIN INSERT INTO log VALUES (1); END
+  ```
+
+  Without the guard, creating a trigger whose name already exists raises
+  an error as before.  With the guard the statement is silently ignored,
+  leaving the original trigger intact.
+
+  The fix propagates through the full pipeline:
+
+  | Layer      | File                             | Change                                  |
+  |------------|----------------------------------|-----------------------------------------|
+  | Grammar    | `sql.grammar`                    | `[ "IF" "NOT" "EXISTS" ]` added to rule |
+  | AST        | `sql_planner/ast.py`             | `CreateTriggerStmt.if_not_exists` field |
+  | Plan       | `sql_planner/plan.py`            | `CreateTrigger.if_not_exists` field     |
+  | Planner    | `sql_planner/planner.py`         | forwards field through plan node        |
+  | IR         | `sql_codegen/ir.py`              | `CreateTriggerDef.if_not_exists` field  |
+  | Compiler   | `sql_codegen/compiler.py`        | destructures and forwards field         |
+  | VM         | `sql_vm/vm.py`                   | catches `TriggerAlreadyExists` silently |
+  | Adapter    | `mini_sqlite/adapter.py`         | detects keyword sequence, sets flag     |
+
+  16 new oracle-style tests in `test_tier3_trigger_if_not_exists.py`
+  cover all six trigger forms (BEFORE/AFTER × INSERT/UPDATE/DELETE),
+  idempotent duplicate semantics, and the original-trigger-survives
+  invariant.
+
 ## [2.27.0] - 2026-06-19
 
 ### Fixed

@@ -1938,7 +1938,7 @@ def _create_trigger(node: ASTNode) -> CreateTriggerStmt:
     Grammar::
 
         create_trigger_stmt =
-            "CREATE" "TRIGGER" NAME
+            "CREATE" "TRIGGER" [ "IF" "NOT" "EXISTS" ] NAME
             ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
             [ "FOR" "EACH" "ROW" ]
             "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
@@ -1951,7 +1951,10 @@ def _create_trigger(node: ASTNode) -> CreateTriggerStmt:
 
     NAME tokens appear in order: trigger_name, table_name.
     KEYWORD tokens carry BEFORE/AFTER and INSERT/UPDATE/DELETE.
+    IF/NOT/EXISTS tokens are also keywords but are handled via
+    ``_has_keyword_sequence`` before the timing/event scan.
     """
+    if_not_exists = _has_keyword_sequence(node, ("IF", "NOT", "EXISTS"))
     names = [c.value for c in node.children if isinstance(c, Token) and _token_type(c) == "NAME"]
     if len(names) < 2:
         raise ProgrammingError("create_trigger_stmt: expected trigger name and table name")
@@ -1977,6 +1980,7 @@ def _create_trigger(node: ASTNode) -> CreateTriggerStmt:
         event=event,
         table=table_name,
         body_sql=body_sql,
+        if_not_exists=if_not_exists,
     )
 
 

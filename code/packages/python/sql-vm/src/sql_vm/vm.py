@@ -2864,6 +2864,9 @@ def _do_create_trigger(ins: CreateTriggerDef, st: _VmState) -> None:
     )
     try:
         st.backend.create_trigger(defn)
+    except be.TriggerAlreadyExists as e:
+        if not ins.if_not_exists:
+            raise _translate_backend_error(e) from e
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     st.result.rows_affected = 0

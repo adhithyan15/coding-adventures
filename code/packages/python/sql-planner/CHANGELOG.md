@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.44.0] - 2026-06-19
+
+### Added
+
+- **`CreateTriggerStmt.if_not_exists: bool`** — new field on the
+  `CreateTriggerStmt` AST node (default `False`).  Set to `True` when the
+  SQL source contains `CREATE TRIGGER IF NOT EXISTS`.
+
+- **`CreateTrigger.if_not_exists: bool`** — matching field on the
+  `CreateTrigger` logical-plan node so the flag survives the
+  plan → IR → VM pipeline.
+
+- **`_plan_create_trigger`** passes `if_not_exists` through to the plan
+  node unchanged.
+
 ## [0.43.0] - 2026-05-23
 
 ### Added
