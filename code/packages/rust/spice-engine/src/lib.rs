@@ -10271,6 +10271,23 @@ fn format_csv_cell(value: &str) -> String {
     }
 }
 
+pub fn format_deck_table_csv(table: &str) -> String {
+    let rows = table
+        .lines()
+        .map(|row| {
+            row.split('\t')
+                .map(format_csv_cell)
+                .collect::<Vec<_>>()
+                .join(",")
+        })
+        .collect::<Vec<_>>();
+    if rows.is_empty() {
+        String::new()
+    } else {
+        format!("{}\n", rows.join("\n"))
+    }
+}
+
 pub fn format_deck_run_artifact_csv(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![DECK_RUN_ARTIFACT_COLUMNS.join(",")];
     for artifact in artifacts {

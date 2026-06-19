@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck table CSV format** —
+  `format_deck_table_csv()` now converts stable tab-separated deck output
+  tables into deterministic CSV using the same escaping rules as selected-run
+  artifacts, matching Rust and TypeScript.
+
 - **Deck run artifact JSON format** —
   `format_deck_run_artifact_json()` now renders selected-run artifacts as
   compact JSON records with the same stable keys and normalized cell values as

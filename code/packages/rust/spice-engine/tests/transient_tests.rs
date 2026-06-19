@@ -9,7 +9,7 @@ use spice_engine::{
     format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
     format_corner_transient_table, format_dc_table, format_deck_noise_table,
     format_deck_run_artifact_csv, format_deck_run_artifact_json, format_deck_run_artifact_table,
-    format_deck_transient_table, format_digital_bridge_schedule_table,
+    format_deck_table_csv, format_deck_transient_table, format_digital_bridge_schedule_table,
     format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
     format_fourier_table, format_measurement_table, format_pole_zero_table, format_pss_table,
     format_transient_table, fourier, fourier_corners, fourier_transient_deck,
@@ -1888,6 +1888,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     );
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
+    assert_eq!(
+        format_deck_table_csv(&op_execution.table),
+        "Index,V(mid)\n0,5.000000e-01\n"
+    );
     assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
     assert_eq!(op_execution.run_artifacts[0].result_column_count, 2);
     assert_eq!(
@@ -1920,11 +1924,19 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         )
     );
     assert_eq!(
+        format_deck_table_csv(&op_execution.run_artifact_table),
+        format_deck_run_artifact_csv(&op_execution.run_artifacts)
+    );
+    assert_eq!(
         format_deck_run_artifact_csv(&op_execution.run_artifacts),
         format!(
             "Analysis,Directive,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\nop,.op,{},,,,,,,,,,,,,,,1,2,Index;V(mid),1,V(mid),1,.save,0,,0,,0,\n",
             op_execution.plan.line_number
         )
+    );
+    assert_eq!(
+        format_deck_table_csv("Name\tValue\nprobe\tSPICE,\"QUOTED\"\n"),
+        "Name,Value\nprobe,\"SPICE,\"\"QUOTED\"\"\"\n"
     );
     let artifact_json = format_deck_run_artifact_json(&op_execution.run_artifacts);
     assert!(artifact_json.starts_with(&format!(

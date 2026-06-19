@@ -91,7 +91,8 @@ downstream tools to compare.
      run artifacts; transfer-function, sensitivity, and noise run artifacts now
      also expose their selected output node, and selected-run artifacts can now
      render as stable CSV and compact JSON beside the existing tab-separated
-     table.
+     table; stable deck output tables can now also convert to deterministic CSV
+     across Python, Rust, and TypeScript.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -868,6 +869,16 @@ downstream tools to compare.
     - The JSON helpers preserve the same stable key order and normalized cell
       values as the tab-separated run-artifact table for browser and downstream
       data-pipeline consumers.
+
+80. Deck selected table CSV format.
+    - Status: completed in this deck table CSV slice.
+    - Python, Rust, and TypeScript now expose matching `format_deck_table_csv`
+      / `formatDeckTableCsv` helpers for stable tab-separated deck output
+      tables.
+    - The helper reuses deterministic CSV escaping so selected result,
+      measurement, Fourier, and run-artifact tables can be exported to browser,
+      spreadsheet, and downstream data-pipeline consumers without per-analysis
+      CSV formatters.
 
 ## Backlog
 

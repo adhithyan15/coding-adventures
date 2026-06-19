@@ -185,7 +185,8 @@ results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `format_deck_run_artifact_table` and
 `format_deck_run_artifact_csv` / `format_deck_run_artifact_json` output for
 stable result-row, output-probe, measurement, Fourier, and diagnostic
-count/name lists.
+count/name lists. `format_deck_table_csv` also converts any stable
+tab-separated deck table to CSV using the same escaping rules.
 `resolve_deck_fourier`, `fourier_transient_cards`,
 `fourier_transient_deck`, and `format_deck_fourier_table` extract parsed
 `.four` / `.FOUR` cards before `.end` and route transient samples into the

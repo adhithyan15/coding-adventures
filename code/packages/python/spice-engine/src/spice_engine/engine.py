@@ -2576,6 +2576,21 @@ def _format_csv_cell(value: str) -> str:
     return value
 
 
+def format_deck_table_csv(table: str) -> str:
+    """Format a stable tab-separated deck table as RFC 4180-style CSV."""
+
+    rows = table.splitlines()
+    if not rows:
+        return ""
+    return (
+        "\n".join(
+            ",".join(_format_csv_cell(cell) for cell in row.split("\t"))
+            for row in rows
+        )
+        + "\n"
+    )
+
+
 def format_deck_run_artifact_csv(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as stable RFC 4180-style CSV."""
 

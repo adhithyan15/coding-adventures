@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `formatDeckTableCsv` for stable tab-separated deck output tables with the
+  same deterministic CSV escaping as selected-run artifacts, matching Python
+  and Rust.
 - Add `formatDeckRunArtifactJson` for selected-run artifacts with the same
   stable keys and normalized cell values as `formatDeckRunArtifactTable`,
   matching Python and Rust.

@@ -44,6 +44,7 @@ import {
   formatDeckRunArtifactCsv,
   formatDeckRunArtifactJson,
   formatDeckRunArtifactTable,
+  formatDeckTableCsv,
   formatDeckTransientTable,
   formatDigitalBridgeScheduleTable,
   formatDigitalEventStreamTable,
@@ -1471,6 +1472,7 @@ describe("transient", () => {
     expect(opExecution.measurements).toEqual([]);
     expect(opExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
+    expect(formatDeckTableCsv(opExecution.table)).toBe("Index,V(mid)\n0,5.000000e-01\n");
     expect(opExecution.runArtifacts[0]?.resultRows).toBe(1);
     expect(opExecution.runArtifacts[0]?.resultColumnCount).toBe(2);
     expect(opExecution.runArtifacts[0]?.resultColumns).toEqual(["Index", "V(mid)"]);
@@ -1490,9 +1492,15 @@ describe("transient", () => {
       "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
         `op\t.op\t${opExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\n`,
     );
+    expect(formatDeckTableCsv(opExecution.runArtifactTable)).toBe(
+      formatDeckRunArtifactCsv(opExecution.runArtifacts),
+    );
     expect(formatDeckRunArtifactCsv(opExecution.runArtifacts)).toBe(
       "Analysis,Directive,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\n" +
         `op,.op,${opExecution.plan.lineNumber},,,,,,,,,,,,,,,1,2,Index;V(mid),1,V(mid),1,.save,0,,0,,0,\n`,
+    );
+    expect(formatDeckTableCsv('Name\tValue\nprobe\tSPICE,"QUOTED"\n')).toBe(
+      'Name,Value\nprobe,"SPICE,""QUOTED"""\n',
     );
     const artifactJson = formatDeckRunArtifactJson(opExecution.runArtifacts);
     const artifactRecords = JSON.parse(artifactJson) as Array<Record<string, string>>;
