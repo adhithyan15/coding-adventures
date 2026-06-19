@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 111,
-    "correct": 104,
+    "total": 116,
+    "correct": 109,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 98,
+        "correct": 103,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9898,
-    "grounded_correct": 97
+    "grounded_coverage": 0.9903,
+    "grounded_correct": 102
   },
   "results": [
     {
@@ -912,6 +912,46 @@
       "tactic": "recall",
       "gold": "g6pd_deficiency",
       "answer": "g6pd_deficiency",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cardio_mr_lesion",
+      "tactic": "recall",
+      "gold": "mitral_regurgitation",
+      "answer": "mitral_regurgitation",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cardio_as_lesion",
+      "tactic": "recall",
+      "gold": "aortic_stenosis",
+      "answer": "aortic_stenosis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cardio_mvp_lesion",
+      "tactic": "recall",
+      "gold": "mitral_valve_prolapse",
+      "answer": "mitral_valve_prolapse",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cardio_tr_lesion",
+      "tactic": "recall",
+      "gold": "tricuspid_regurgitation",
+      "answer": "tricuspid_regurgitation",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "cardio_ar_lesion",
+      "tactic": "recall",
+      "gold": "aortic_regurgitation",
+      "answer": "aortic_regurgitation",
       "outcome": "correct",
       "trust": "authoritative"
     }

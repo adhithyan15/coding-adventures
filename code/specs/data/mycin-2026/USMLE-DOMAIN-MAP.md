@@ -112,6 +112,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Rheumatology (Tier-2) | Path/Immuno | associated_autoantibody | 6 grounded (ADJ-only) | ✓ |
 | Oncology (Tier-2) | Pathology/neoplasia | tumor_marker | 4 grounded (ADJ-only) | ✓ |
 | Histology buzzwords (Tier-2) | Pathology | seen_in (finding→condition) | 5 grounded (ADJ-only) | ✓ |
+| Cardiology murmurs (Tier-2) | Cardiology | murmur_indicates (murmur→lesion) | 5 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
 faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
@@ -154,6 +155,16 @@ faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
 
 **Tier 2 — organ-system pathology (Step 1/2 diagnosis):**
 5. Cardiovascular (murmurs→lesion, ECG→arrhythmia, drug→effect)
+    *Started (CARDIO — fourth Tier-2 domain):* `murmur_indicates` for mitral regurgitation
+    (holosystolic apical), aortic stenosis (crescendo-decrescendo systolic), mitral valve
+    prolapse (late systolic with mid-systolic click), tricuspid regurgitation (holosystolic
+    at the lower-left sternal border), aortic regurgitation (decrescendo diastolic) — 5
+    edges, all grounded to byte-stable NCBI StatPearls spans naming both murmur and lesion,
+    shipped as the eighth **ADJ-only** domain (`recall/cardio-edges.adj`). Two lesions share
+    the "holosystolic" timing; the finding name carries the disambiguating auscultation site
+    (apex vs lower-left-sternal-border). Remaining: mitral stenosis (deferred — opening snap
+    and diastolic rumble described in separate sentences, no both-endpoints-named span yet);
+    ECG→arrhythmia and drug→effect subdomains.
 6. Respiratory (PFT pattern→disease, ABG→disorder)
 7. Renal/urinary (acid-base, electrolyte, glomerular disease→finding)
 8. Gastrointestinal (LFT pattern→disease, biopsy→diagnosis)
