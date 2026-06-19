@@ -1,0 +1,22 @@
+% ============================================================================
+% immuno-recall.query.adj — a worked recall query over the immunology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER an immunology recall
+% question: it states no immune fact — it only `import`s the grounded library and
+% asks binding queries. The native adj-lang engine resolves each `?` against the
+% imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli immuno-recall.query.adj
+% ============================================================================
+
+import "immuno-edges.adj"
+
+? mediated_by(type_i_hypersensitivity, $Mediator)          % expect ige
+? mediated_by(type_iv_hypersensitivity, $Mediator)         % expect t_cells
+? associated_hla(ankylosing_spondylitis, $HLA)             % expect hla_b27
+? gene_defect(x_linked_agammaglobulinemia, $Gene)          % expect btk
+? deficiency_of(chronic_granulomatous_disease, $Component) % expect nadph_oxidase
+? deficiency_of(digeorge_syndrome, $Component)             % expect t_cells
+? gene_defect(digeorge_syndrome, $Gene)                    % expect chromosome_22q11_2_deletion
