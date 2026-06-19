@@ -2591,6 +2591,29 @@ def format_deck_table_csv(table: str) -> str:
     )
 
 
+def _deck_table_records(table: str) -> list[dict[str, str]]:
+    rows = table.splitlines()
+    if not rows:
+        return []
+    columns = rows[0].split("\t")
+    records: list[dict[str, str]] = []
+    for row in rows[1:]:
+        cells = row.split("\t")
+        records.append(
+            {
+                column: cells[index] if index < len(cells) else ""
+                for index, column in enumerate(columns)
+            }
+        )
+    return records
+
+
+def format_deck_table_json(table: str) -> str:
+    """Format a stable tab-separated deck table as compact JSON records."""
+
+    return json.dumps(_deck_table_records(table), separators=(",", ":")) + "\n"
+
+
 def format_deck_run_artifact_csv(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as stable RFC 4180-style CSV."""
 

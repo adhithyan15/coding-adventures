@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `formatDeckTableJson` for stable tab-separated deck output tables as
+  compact JSON records keyed by the header row, matching Python and Rust.
 - Add `formatDeckTableCsv` for stable tab-separated deck output tables with the
   same deterministic CSV escaping as selected-run artifacts, matching Python
   and Rust.

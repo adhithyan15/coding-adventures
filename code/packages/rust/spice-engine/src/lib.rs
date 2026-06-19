@@ -10323,6 +10323,35 @@ fn format_json_string(value: &str) -> String {
     output
 }
 
+pub fn format_deck_table_json(table: &str) -> String {
+    let mut lines = table.lines();
+    let Some(header) = lines.next() else {
+        return "[]\n".to_string();
+    };
+    let columns = header.split('\t').collect::<Vec<_>>();
+    let records = lines
+        .map(|row| {
+            let cells = row.split('\t').collect::<Vec<_>>();
+            let fields = columns
+                .iter()
+                .enumerate()
+                .map(|(index, column)| {
+                    let value = cells.get(index).copied().unwrap_or("");
+                    format!(
+                        "{}:{}",
+                        format_json_string(column),
+                        format_json_string(value)
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join(",");
+            format!("{{{}}}", fields)
+        })
+        .collect::<Vec<_>>()
+        .join(",");
+    format!("[{}]\n", records)
+}
+
 pub fn format_deck_run_artifact_json(artifacts: &[DeckRunArtifact]) -> String {
     let records = artifacts
         .iter()
