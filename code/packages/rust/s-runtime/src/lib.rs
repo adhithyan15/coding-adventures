@@ -1275,3 +1275,30 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+mod r19_degenerate_probes {
+    use super::*;
+
+    /// R-19 hardening: the new empty named-argument production must not let any
+    /// degenerate or adversarial arg list panic the evaluator. Each input below
+    /// must resolve to an `Ok` or a recoverable `Err` — never a crash. (A panic
+    /// inside `eval_s` would propagate and fail this test directly; no
+    /// `catch_unwind` needed because the test itself is the panic boundary.)
+    #[test]
+    fn degenerate_empty_arg_inputs_do_not_panic() {
+        for src in [
+            "f(=)\n",                // bare EQ, no NAME before it
+            "switch()\n",            // no args at all
+            "switch(\"a\")\n",       // selector only, no arms
+            "c(x = )\n",             // empty arg in an ordinary call
+            "switch(\"a\", a = )\n", // single empty arm, matched and last
+            "switch(\"a\", = )\n",   // empty value with no name before EQ
+            "f(x = , )\n",           // empty arg followed by a trailing comma
+            "switch(1, a = )\n",     // numeric selector onto an empty arm
+        ] {
+            // Discarding the Result is the point: we only assert no panic.
+            let _ = eval_s(src);
+        }
+    }
+}
