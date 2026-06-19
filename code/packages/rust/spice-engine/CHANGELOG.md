@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add `format_deck_table_json` for stable tab-separated deck output tables as
+  compact JSON records keyed by the header row, matching Python and TypeScript.
 - Add `format_deck_table_csv` for stable tab-separated deck output tables with
   the same deterministic CSV escaping as selected-run artifacts, matching
   Python and TypeScript.

@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck table JSON format** —
+  `format_deck_table_json()` now converts stable tab-separated deck output
+  tables into compact JSON records keyed by the header row, matching Rust and
+  TypeScript.
+
 - **Deck table CSV format** —
   `format_deck_table_csv()` now converts stable tab-separated deck output
   tables into deterministic CSV using the same escaping rules as selected-run

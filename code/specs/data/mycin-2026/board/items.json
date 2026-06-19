@@ -149,6 +149,12 @@
     {"id": "derm_em_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "target_lesions",      "var": "Disease", "gold": "erythema_multiforme"},
     {"id": "derm_psoriasis_dx","domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "silvery_scales",      "var": "Disease", "gold": "psoriasis"},
     {"id": "derm_mc_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "umbilicated_papules", "var": "Disease", "gold": "molluscum_contagiosum"},
-    {"id": "derm_pr_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "herald_patch",        "var": "Disease", "gold": "pityriasis_rosea"}
+    {"id": "derm_pr_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "herald_patch",        "var": "Disease", "gold": "pityriasis_rosea"},
+
+    {"id": "resp_silica_dx",   "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "silica",      "var": "Disease", "gold": "silicosis"},
+    {"id": "resp_asbestos_dx", "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "asbestos",    "var": "Disease", "gold": "asbestosis"},
+    {"id": "resp_beryl_dx",    "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "beryllium",   "var": "Disease", "gold": "berylliosis"},
+    {"id": "resp_cotton_dx",   "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "cotton_dust", "var": "Disease", "gold": "byssinosis"},
+    {"id": "resp_coal_dx",     "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "coal_dust",   "var": "Disease", "gold": "coal_workers_pneumoconiosis"}
   ]
 }
