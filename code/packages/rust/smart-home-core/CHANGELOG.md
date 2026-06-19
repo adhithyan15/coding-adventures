@@ -81,6 +81,16 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_mesh_substrate_actions` and
   `smart_home.get_integration_mesh_action_readiness_summary` descriptors for
   read-only D23 mesh substrate action and action-readiness planning.
+- `smart_home.list_integration_mesh_substrate_preflight_checks`,
+  `smart_home.get_integration_mesh_substrate_preflight_summary`,
+  `smart_home.list_integration_mesh_preflight_repair_actions`,
+  `smart_home.get_integration_mesh_preflight_repair_action_summary`,
+  `smart_home.list_integration_mesh_preflight_repair_batches`,
+  `smart_home.get_integration_mesh_preflight_repair_batch_summary`,
+  `smart_home.get_integration_mesh_preflight_readiness_summary`, and
+  `smart_home.get_integration_mesh_preflight_repair_readiness_summary`
+  descriptors for read-only D23 mesh substrate preflight repair readiness
+  planning.
 - `smart_home.get_integration_mesh_release_readiness_summary` descriptor for
   read-only D23 mesh release-readiness rollups across package, stage, action,
   and remediation blockers.
