@@ -1515,6 +1515,164 @@ impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderSummar
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket {
+    pub sequence: usize,
+    pub evidence_key: String,
+    pub work_order_sequence: usize,
+    pub work_order_key: String,
+    pub ticket_sequence: usize,
+    pub ticket_key: String,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub lineage_complete: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket {
+    pub fn from_work_order(
+        sequence: usize,
+        work_order: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder,
+    ) -> Self {
+        let lineage_complete = !work_order.work_order_key.is_empty()
+            && work_order.ticket_sequence > 0
+            && !work_order.ticket_key.is_empty()
+            && work_order.slot_sequence > 0
+            && work_order.batch_sequence > 0;
+
+        Self {
+            sequence,
+            evidence_key: format!(
+                "evidence-{sequence:02}-{}-{}",
+                work_order.stage.as_str(),
+                work_order.action_kind.as_str()
+            ),
+            work_order_sequence: work_order.sequence,
+            work_order_key: work_order.work_order_key.clone(),
+            ticket_sequence: work_order.ticket_sequence,
+            ticket_key: work_order.ticket_key.clone(),
+            slot_sequence: work_order.slot_sequence,
+            batch_sequence: work_order.batch_sequence,
+            stage: work_order.stage,
+            action_kind: work_order.action_kind,
+            status: work_order.status,
+            action_count: work_order.action_count,
+            protocol_count: work_order.protocol_count,
+            primitive_count: work_order.primitive_count,
+            protocols: work_order.protocols.clone(),
+            primitives: work_order.primitives.clone(),
+            release_blocking: work_order.blocks_preflight(),
+            operator_required: work_order.requires_operator(),
+            lineage_complete,
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.lineage_complete
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary {
+    pub total_packets: usize,
+    pub scheduled_actions: usize,
+    pub blocking_packets: usize,
+    pub operator_required_packets: usize,
+    pub lineage_complete_packets: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_evidence_key: Option<String>,
+    pub first_blocking_evidence_key: Option<String>,
+    pub first_operator_evidence_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_evidence_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary {
+    pub fn from_packets<'a>(
+        packets: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket,
+        >,
+    ) -> Self {
+        let packets = packets.into_iter().collect::<Vec<_>>();
+        let first_packet = packets.iter().min_by_key(|packet| packet.sequence);
+        let first_blocking_packet = packets
+            .iter()
+            .filter(|packet| packet.blocks_preflight())
+            .min_by_key(|packet| packet.sequence);
+        let first_operator_packet = packets
+            .iter()
+            .filter(|packet| packet.requires_operator())
+            .min_by_key(|packet| packet.sequence);
+
+        Self {
+            total_packets: packets.len(),
+            scheduled_actions: packets.iter().map(|packet| packet.action_count).sum(),
+            blocking_packets: packets
+                .iter()
+                .filter(|packet| packet.blocks_preflight())
+                .count(),
+            operator_required_packets: packets
+                .iter()
+                .filter(|packet| packet.requires_operator())
+                .count(),
+            lineage_complete_packets: packets.iter().filter(|packet| packet.has_lineage()).count(),
+            protocol_mentions: packets.iter().map(|packet| packet.protocol_count).sum(),
+            primitive_mentions: packets.iter().map(|packet| packet.primitive_count).sum(),
+            first_evidence_key: first_packet.map(|packet| packet.evidence_key.clone()),
+            first_blocking_evidence_key: first_blocking_packet
+                .map(|packet| packet.evidence_key.clone()),
+            first_operator_evidence_key: first_operator_packet
+                .map(|packet| packet.evidence_key.clone()),
+            first_work_order_key: first_packet.map(|packet| packet.work_order_key.clone()),
+            first_ticket_key: first_packet.map(|packet| packet.ticket_key.clone()),
+            first_stage: first_packet.map(|packet| packet.stage),
+            first_action_kind: first_packet.map(|packet| packet.action_kind),
+            execution_evidence_ready: packets.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_packets == 0
+    }
+
+    pub fn has_packets(&self) -> bool {
+        self.total_packets > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_packets > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_packets > 0
+    }
+
+    pub fn has_complete_lineage(&self) -> bool {
+        self.lineage_complete_packets == self.total_packets
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
     pub required_primitives: Vec<PrimitiveFamily>,
@@ -23121,6 +23279,32 @@ pub fn mesh_protocol_substrate_preflight_repair_slot_execution_work_order_summar
     )
 }
 
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket> {
+    mesh_protocol_substrate_preflight_repair_slot_execution_work_orders(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, work_order)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket::from_work_order(
+                index + 1,
+                work_order,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary {
+    let packets = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(
+        available_primitives,
+    );
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary::from_packets(
+        packets.iter(),
+    )
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -30701,6 +30885,117 @@ mod tests {
         assert!(!summary.has_work_orders());
         assert!(!summary.has_blockers());
         assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_surfaces_lineage() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let packets = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(
+            &available_primitives,
+        );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary::from_packets(
+                packets.iter(),
+            );
+
+        assert_eq!(packets.len(), 3);
+        assert_eq!(summary.total_packets, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_packets, 3);
+        assert_eq!(summary.operator_required_packets, 2);
+        assert_eq!(summary.lineage_complete_packets, 3);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_blocking_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_evidence_ready);
+        assert!(summary.has_packets());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.has_complete_lineage());
+
+        let first = &packets[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.evidence_key, "evidence-01-radio-provision_radio");
+        assert_eq!(first.work_order_sequence, 1);
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_sequence, 1);
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(first.slot_sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(
+            first.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::OperatorHandoff
+        );
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+        assert!(first.has_lineage());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_empty_when_ready() {
+        let packets = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(
+            all_primitive_families(),
+        );
+        let summary = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_summary(
+            all_primitive_families(),
+        );
+
+        assert!(packets.is_empty());
+        assert_eq!(summary.total_packets, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_packets, 0);
+        assert_eq!(summary.operator_required_packets, 0);
+        assert_eq!(summary.lineage_complete_packets, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_evidence_key, None);
+        assert_eq!(summary.first_blocking_evidence_key, None);
+        assert_eq!(summary.first_operator_evidence_key, None);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_evidence_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_packets());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(summary.has_complete_lineage());
     }
 
     #[test]
