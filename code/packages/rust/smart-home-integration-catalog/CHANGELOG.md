@@ -88,6 +88,8 @@ All notable changes to this package will be documented in this file.
   mesh preflight readiness with protocol-scoped repair actions.
 - `IntegrationMeshPreflightBatchReadinessSummary` and helpers for combining
   mesh preflight repair readiness with stage/action-kind repair batches.
+- `IntegrationMeshPreflightScheduleReadinessSummary` and helpers for combining
+  mesh preflight batch readiness with deterministic repair execution slots.
 - `IntegrationMeshReadinessHandoffPackage`, summary helpers, and D23 mesh
   readiness handoff projections for release coordination across substrate
   actions, evidence remediation, and release-ready state.

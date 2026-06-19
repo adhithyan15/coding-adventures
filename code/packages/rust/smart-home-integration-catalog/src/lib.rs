@@ -1708,6 +1708,79 @@ impl IntegrationMeshPreflightBatchReadinessSummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshPreflightScheduleReadinessSummary {
+    pub batch_readiness_summary: IntegrationMeshPreflightBatchReadinessSummary,
+    pub repair_schedule_summary: IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary,
+    pub total_protocols: usize,
+    pub total_preflight_checks: usize,
+    pub preflight_blocker_count: usize,
+    pub release_blocker_count: usize,
+    pub queued_preflight_actions: usize,
+    pub repair_batch_count: usize,
+    pub repair_slot_count: usize,
+    pub scheduled_preflight_actions: usize,
+    pub blocking_repair_slots: usize,
+    pub operator_required_slots: usize,
+    pub first_schedule_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_schedule_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub first_schedule_protocol: Option<ProtocolFamily>,
+    pub first_schedule_primitive: Option<PrimitiveFamily>,
+    pub preflight_ready: bool,
+    pub repair_actions_ready: bool,
+    pub repair_batches_ready: bool,
+    pub repair_schedule_ready: bool,
+    pub release_ready: bool,
+    pub ready_for_release: bool,
+}
+
+impl IntegrationMeshPreflightScheduleReadinessSummary {
+    pub fn from_parts(
+        batch_readiness_summary: IntegrationMeshPreflightBatchReadinessSummary,
+        repair_schedule_summary: IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary,
+    ) -> Self {
+        let repair_schedule_ready = repair_schedule_summary.repair_schedule_ready;
+        let ready_for_release = batch_readiness_summary.ready_for_release && repair_schedule_ready;
+
+        Self {
+            total_protocols: batch_readiness_summary.total_protocols,
+            total_preflight_checks: batch_readiness_summary.total_preflight_checks,
+            preflight_blocker_count: batch_readiness_summary.preflight_blocker_count,
+            release_blocker_count: batch_readiness_summary.release_blocker_count,
+            queued_preflight_actions: batch_readiness_summary.queued_preflight_actions,
+            repair_batch_count: batch_readiness_summary.repair_batch_count,
+            repair_slot_count: repair_schedule_summary.total_slots,
+            scheduled_preflight_actions: repair_schedule_summary.total_actions,
+            blocking_repair_slots: repair_schedule_summary.blocking_slots,
+            operator_required_slots: repair_schedule_summary.operator_required_slots,
+            first_schedule_stage: repair_schedule_summary.first_stage,
+            first_schedule_action_kind: repair_schedule_summary.first_action_kind,
+            first_schedule_protocol: repair_schedule_summary.first_protocol.clone(),
+            first_schedule_primitive: repair_schedule_summary.first_primitive,
+            preflight_ready: batch_readiness_summary.preflight_ready,
+            repair_actions_ready: batch_readiness_summary.repair_actions_ready,
+            repair_batches_ready: batch_readiness_summary.repair_batches_ready,
+            release_ready: batch_readiness_summary.release_ready,
+            batch_readiness_summary,
+            repair_schedule_summary,
+            repair_schedule_ready,
+            ready_for_release,
+        }
+    }
+
+    pub fn has_repair_schedule(&self) -> bool {
+        self.repair_slot_count > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        !self.ready_for_release
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_slots > 0 || self.batch_readiness_summary.needs_operator()
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationMeshReadinessHandoffKind {
     SubstrateAction,
@@ -22542,6 +22615,41 @@ pub fn mesh_preflight_batch_readiness_summary(
     )
 }
 
+pub fn mesh_preflight_schedule_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightScheduleReadinessSummary {
+    let batch_readiness_summary = mesh_preflight_batch_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let repair_schedule_summary =
+        mesh_protocol_substrate_preflight_repair_schedule_summary(available_primitives);
+
+    IntegrationMeshPreflightScheduleReadinessSummary::from_parts(
+        batch_readiness_summary,
+        repair_schedule_summary,
+    )
+}
+
+pub fn mesh_preflight_schedule_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshPreflightScheduleReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_preflight_schedule_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_readiness_handoff_packages_from_summary(
     summary: &IntegrationMeshActionReadinessSummary,
     actions: &[IntegrationMeshProtocolSubstrateAction],
@@ -29909,6 +30017,93 @@ mod tests {
         assert!(summary.release_ready);
         assert!(summary.ready_for_release);
         assert!(!summary.has_repair_batches());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_preflight_schedule_readiness_summary_surfaces_scheduled_repairs() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_preflight_schedule_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.total_preflight_checks, 16);
+        assert_eq!(summary.preflight_blocker_count, 5);
+        assert_eq!(summary.queued_preflight_actions, 5);
+        assert_eq!(summary.repair_batch_count, 3);
+        assert_eq!(summary.repair_slot_count, 3);
+        assert_eq!(summary.scheduled_preflight_actions, 5);
+        assert_eq!(summary.blocking_repair_slots, 3);
+        assert_eq!(summary.operator_required_slots, 2);
+        assert_eq!(
+            summary.first_schedule_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_schedule_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert_eq!(summary.first_schedule_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_schedule_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.preflight_ready);
+        assert!(!summary.repair_actions_ready);
+        assert!(!summary.repair_batches_ready);
+        assert!(!summary.repair_schedule_ready);
+        assert!(!summary.ready_for_release);
+        assert!(summary.has_repair_schedule());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert_eq!(summary.repair_schedule_summary.network_security_slots, 1);
+    }
+
+    #[test]
+    fn mesh_preflight_schedule_readiness_summary_marks_ready_release() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_preflight_schedule_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_protocols, 3);
+        assert_eq!(summary.preflight_blocker_count, 0);
+        assert_eq!(summary.release_blocker_count, 0);
+        assert_eq!(summary.queued_preflight_actions, 0);
+        assert_eq!(summary.repair_batch_count, 0);
+        assert_eq!(summary.repair_slot_count, 0);
+        assert_eq!(summary.scheduled_preflight_actions, 0);
+        assert_eq!(summary.blocking_repair_slots, 0);
+        assert_eq!(summary.operator_required_slots, 0);
+        assert_eq!(summary.first_schedule_stage, None);
+        assert_eq!(summary.first_schedule_action_kind, None);
+        assert_eq!(summary.first_schedule_protocol, None);
+        assert_eq!(summary.first_schedule_primitive, None);
+        assert!(summary.preflight_ready);
+        assert!(summary.repair_actions_ready);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.repair_schedule_ready);
+        assert!(summary.release_ready);
+        assert!(summary.ready_for_release);
+        assert!(!summary.has_repair_schedule());
         assert!(!summary.has_blockers());
         assert!(!summary.needs_operator());
     }
