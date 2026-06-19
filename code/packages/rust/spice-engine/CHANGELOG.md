@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `format_deck_run_artifact_csv` for selected-run artifacts with the same
+  stable columns as `format_deck_run_artifact_table` plus deterministic CSV
+  escaping for browser and spreadsheet consumers, matching Python and
+  TypeScript.
 - Add selected Fourier probe names to selected-run artifacts in
   `run_deck_analysis` and render them in a stable `FourierList` column from
   `format_deck_run_artifact_table`, matching Python and TypeScript.

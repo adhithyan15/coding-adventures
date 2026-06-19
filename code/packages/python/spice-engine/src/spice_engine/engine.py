@@ -2412,6 +2412,40 @@ def _format_deck_artifact_bool(value: bool | None) -> str:
     return "" if value is None else str(value).lower()
 
 
+_DECK_RUN_ARTIFACT_COLUMNS = [
+    "Analysis",
+    "Directive",
+    "Line",
+    "SourceName",
+    "OutputNode",
+    "SweepKind",
+    "StartValue",
+    "StopValue",
+    "StepValue",
+    "PointCount",
+    "StartFrequencyHz",
+    "StopFrequencyHz",
+    "StepTime",
+    "StopTime",
+    "StartTime",
+    "MaxStep",
+    "UseInitialConditions",
+    "ResultRows",
+    "ResultColumns",
+    "ResultColumnList",
+    "OutputProbes",
+    "OutputProbeList",
+    "OutputDirectives",
+    "OutputDirectiveList",
+    "Measurements",
+    "MeasurementList",
+    "Fourier",
+    "FourierList",
+    "Diagnostics",
+    "DiagnosticCodeList",
+]
+
+
 def _deck_table_columns(table: str) -> list[str]:
     header = table.splitlines()[0] if table else ""
     return header.split("\t") if header else []
@@ -2484,45 +2518,60 @@ def _deck_analysis_diagnostic_codes(
 def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
-    rows = [
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList"
+    rows = ["\t".join(_DECK_RUN_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append("\t".join(_deck_run_artifact_cells(artifact)))
+    return "\n".join(rows) + "\n"
+
+
+def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
+    return [
+        artifact.analysis,
+        artifact.directive,
+        str(artifact.line_number),
+        artifact.source_name or "",
+        artifact.output_node or "",
+        artifact.sweep_kind or "",
+        _format_deck_artifact_float(artifact.start_value),
+        _format_deck_artifact_float(artifact.stop_value),
+        _format_deck_artifact_float(artifact.step_value),
+        "" if artifact.point_count is None else str(artifact.point_count),
+        _format_deck_artifact_float(artifact.start_frequency_hz),
+        _format_deck_artifact_float(artifact.stop_frequency_hz),
+        _format_deck_artifact_float(artifact.step_time),
+        _format_deck_artifact_float(artifact.stop_time),
+        _format_deck_artifact_float(artifact.start_time),
+        _format_deck_artifact_float(artifact.max_step),
+        _format_deck_artifact_bool(artifact.use_initial_conditions),
+        str(artifact.result_rows),
+        str(artifact.result_column_count),
+        ";".join(artifact.result_columns),
+        str(artifact.output_probe_count),
+        ";".join(artifact.output_probes),
+        str(artifact.output_directive_count),
+        ";".join(artifact.output_directives),
+        str(artifact.measurement_count),
+        ";".join(artifact.measurement_names),
+        str(artifact.fourier_count),
+        ";".join(artifact.fourier_probes),
+        str(artifact.diagnostic_count),
+        ";".join(artifact.diagnostic_codes),
     ]
+
+
+def _format_csv_cell(value: str) -> str:
+    if any(character in value for character in [",", '"', "\n", "\r"]):
+        return '"' + value.replace('"', '""') + '"'
+    return value
+
+
+def format_deck_run_artifact_csv(artifacts: Iterable[DeckRunArtifact]) -> str:
+    """Format selected deck-run artifacts as stable RFC 4180-style CSV."""
+
+    rows = [",".join(_DECK_RUN_ARTIFACT_COLUMNS)]
     for artifact in artifacts:
         rows.append(
-            "\t".join(
-                [
-                    artifact.analysis,
-                    artifact.directive,
-                    str(artifact.line_number),
-                    artifact.source_name or "",
-                    artifact.output_node or "",
-                    artifact.sweep_kind or "",
-                    _format_deck_artifact_float(artifact.start_value),
-                    _format_deck_artifact_float(artifact.stop_value),
-                    _format_deck_artifact_float(artifact.step_value),
-                    "" if artifact.point_count is None else str(artifact.point_count),
-                    _format_deck_artifact_float(artifact.start_frequency_hz),
-                    _format_deck_artifact_float(artifact.stop_frequency_hz),
-                    _format_deck_artifact_float(artifact.step_time),
-                    _format_deck_artifact_float(artifact.stop_time),
-                    _format_deck_artifact_float(artifact.start_time),
-                    _format_deck_artifact_float(artifact.max_step),
-                    _format_deck_artifact_bool(artifact.use_initial_conditions),
-                    str(artifact.result_rows),
-                    str(artifact.result_column_count),
-                    ";".join(artifact.result_columns),
-                    str(artifact.output_probe_count),
-                    ";".join(artifact.output_probes),
-                    str(artifact.output_directive_count),
-                    ";".join(artifact.output_directives),
-                    str(artifact.measurement_count),
-                    ";".join(artifact.measurement_names),
-                    str(artifact.fourier_count),
-                    ";".join(artifact.fourier_probes),
-                    str(artifact.diagnostic_count),
-                    ";".join(artifact.diagnostic_codes),
-                ]
-            )
+            ",".join(_format_csv_cell(cell) for cell in _deck_run_artifact_cells(artifact))
         )
     return "\n".join(rows) + "\n"
 

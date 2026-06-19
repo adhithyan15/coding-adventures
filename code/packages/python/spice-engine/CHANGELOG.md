@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck run artifact CSV format** —
+  `format_deck_run_artifact_csv()` now renders selected-run artifacts with the
+  same stable columns as `format_deck_run_artifact_table()`, using deterministic
+  CSV escaping for browser and spreadsheet consumers, matching Rust and
+  TypeScript.
+
 - **Deck run Fourier artifact probes** —
   `run_deck_analysis()` selected-run artifacts now include selected Fourier
   probe names alongside the Fourier result count, and

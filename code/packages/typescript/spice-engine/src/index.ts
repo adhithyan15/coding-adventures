@@ -7943,50 +7943,98 @@ function formatDeckArtifactBoolean(value: boolean | undefined): string {
   return value === undefined ? "" : String(value);
 }
 
+const DECK_RUN_ARTIFACT_COLUMNS = [
+  "Analysis",
+  "Directive",
+  "Line",
+  "SourceName",
+  "OutputNode",
+  "SweepKind",
+  "StartValue",
+  "StopValue",
+  "StepValue",
+  "PointCount",
+  "StartFrequencyHz",
+  "StopFrequencyHz",
+  "StepTime",
+  "StopTime",
+  "StartTime",
+  "MaxStep",
+  "UseInitialConditions",
+  "ResultRows",
+  "ResultColumns",
+  "ResultColumnList",
+  "OutputProbes",
+  "OutputProbeList",
+  "OutputDirectives",
+  "OutputDirectiveList",
+  "Measurements",
+  "MeasurementList",
+  "Fourier",
+  "FourierList",
+  "Diagnostics",
+  "DiagnosticCodeList",
+] as const;
+
+function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
+  return [
+    artifact.analysis,
+    artifact.directive,
+    String(artifact.lineNumber),
+    artifact.sourceName ?? "",
+    artifact.outputNode ?? "",
+    artifact.sweepKind ?? "",
+    formatDeckArtifactFloat(artifact.startValue),
+    formatDeckArtifactFloat(artifact.stopValue),
+    formatDeckArtifactFloat(artifact.stepValue),
+    artifact.pointCount === undefined ? "" : String(artifact.pointCount),
+    formatDeckArtifactFloat(artifact.startFrequencyHz),
+    formatDeckArtifactFloat(artifact.stopFrequencyHz),
+    formatDeckArtifactFloat(artifact.stepTime),
+    formatDeckArtifactFloat(artifact.stopTime),
+    formatDeckArtifactFloat(artifact.startTime),
+    formatDeckArtifactFloat(artifact.maxStep),
+    formatDeckArtifactBoolean(artifact.useInitialConditions),
+    String(artifact.resultRows),
+    String(artifact.resultColumnCount),
+    artifact.resultColumns.join(";"),
+    String(artifact.outputProbeCount),
+    artifact.outputProbes.join(";"),
+    String(artifact.outputDirectiveCount),
+    artifact.outputDirectives.join(";"),
+    String(artifact.measurementCount),
+    artifact.measurementNames.join(";"),
+    String(artifact.fourierCount),
+    artifact.fourierProbes.join(";"),
+    String(artifact.diagnosticCount),
+    artifact.diagnosticCodes.join(";"),
+  ];
+}
+
 function deckTableColumns(table: string): string[] {
   const header = table.split("\n", 1)[0] ?? "";
   return header.length === 0 ? [] : header.split("\t");
 }
 
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
-  const rows = [
-    "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList",
-  ];
+  const rows = [DECK_RUN_ARTIFACT_COLUMNS.join("\t")];
   for (const artifact of artifacts) {
-    rows.push(
-      [
-        artifact.analysis,
-        artifact.directive,
-        String(artifact.lineNumber),
-        artifact.sourceName ?? "",
-        artifact.outputNode ?? "",
-        artifact.sweepKind ?? "",
-        formatDeckArtifactFloat(artifact.startValue),
-        formatDeckArtifactFloat(artifact.stopValue),
-        formatDeckArtifactFloat(artifact.stepValue),
-        artifact.pointCount === undefined ? "" : String(artifact.pointCount),
-        formatDeckArtifactFloat(artifact.startFrequencyHz),
-        formatDeckArtifactFloat(artifact.stopFrequencyHz),
-        formatDeckArtifactFloat(artifact.stepTime),
-        formatDeckArtifactFloat(artifact.stopTime),
-        formatDeckArtifactFloat(artifact.startTime),
-        formatDeckArtifactFloat(artifact.maxStep),
-        formatDeckArtifactBoolean(artifact.useInitialConditions),
-        String(artifact.resultRows),
-        String(artifact.resultColumnCount),
-        artifact.resultColumns.join(";"),
-        String(artifact.outputProbeCount),
-        artifact.outputProbes.join(";"),
-        String(artifact.outputDirectiveCount),
-        artifact.outputDirectives.join(";"),
-        String(artifact.measurementCount),
-        artifact.measurementNames.join(";"),
-        String(artifact.fourierCount),
-        artifact.fourierProbes.join(";"),
-        String(artifact.diagnosticCount),
-        artifact.diagnosticCodes.join(";"),
-      ].join("\t"),
-    );
+    rows.push(deckRunArtifactCells(artifact).join("\t"));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+function formatCsvCell(value: string): string {
+  if (/[",\n\r]/u.test(value)) {
+    return `"${value.replace(/"/gu, '""')}"`;
+  }
+  return value;
+}
+
+export function formatDeckRunArtifactCsv(artifacts: readonly DeckRunArtifact[]): string {
+  const rows = [DECK_RUN_ARTIFACT_COLUMNS.join(",")];
+  for (const artifact of artifacts) {
+    rows.push(deckRunArtifactCells(artifact).map(formatCsvCell).join(","));
   }
   return `${rows.join("\n")}\n`;
 }

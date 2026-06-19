@@ -211,6 +211,7 @@ from spice_engine import (
     format_deck_dc_sweep_table,
     format_deck_noise_table,
     format_deck_op_table,
+    format_deck_run_artifact_csv,
     format_deck_run_artifact_table,
     format_deck_transient_table,
     format_digital_bridge_schedule_table,
@@ -6815,6 +6816,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n"
         f"op\t.op\t{op_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\n"
     )
+    assert format_deck_run_artifact_csv(op_execution.run_artifacts) == (
+        "Analysis,Directive,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\n"
+        f"op,.op,{op_execution.plan.line_number},,,,,,,,,,,,,,,1,2,Index;V(mid),1,V(mid),1,.save,0,,0,,0,\n"
+    )
     diagnostic_artifact = replace(
         op_execution.run_artifacts[0],
         diagnostic_count=2,
@@ -6827,6 +6832,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "2",
         "SPICE_DECK_ANALYSIS_TOKEN;SPICE_DECK_ANALYSIS_RANGE",
     ]
+    quoted_diagnostic_artifact = replace(
+        op_execution.run_artifacts[0],
+        diagnostic_count=2,
+        diagnostic_codes=["SPICE_DECK_ANALYSIS_TOKEN", 'SPICE,"QUOTED"'],
+    )
+    assert format_deck_run_artifact_csv([quoted_diagnostic_artifact]).endswith(
+        ',2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED"""\n'
+    )
 
     dc_execution = run_deck_analysis(circuit, netlist, "dc")
     assert dc_execution.plan.source_name == "V1"

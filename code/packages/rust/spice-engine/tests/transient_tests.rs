@@ -8,7 +8,7 @@ use spice_engine::{
     format_corner_digital_event_stream_table, format_corner_distortion_table,
     format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
     format_corner_transient_table, format_dc_table, format_deck_noise_table,
-    format_deck_run_artifact_table, format_deck_transient_table,
+    format_deck_run_artifact_csv, format_deck_run_artifact_table, format_deck_transient_table,
     format_digital_bridge_schedule_table, format_digital_event_stream_table,
     format_digital_event_table, format_distortion_table, format_fourier_table,
     format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
@@ -1918,6 +1918,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             op_execution.plan.line_number
         )
     );
+    assert_eq!(
+        format_deck_run_artifact_csv(&op_execution.run_artifacts),
+        format!(
+            "Analysis,Directive,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\nop,.op,{},,,,,,,,,,,,,,,1,2,Index;V(mid),1,V(mid),1,.save,0,,0,,0,\n",
+            op_execution.plan.line_number
+        )
+    );
     let mut diagnostic_artifact = op_execution.run_artifacts[0].clone();
     diagnostic_artifact.diagnostic_codes = vec![
         "SPICE_DECK_ANALYSIS_TOKEN".to_string(),
@@ -1937,6 +1944,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         diagnostic_tail,
         vec!["SPICE_DECK_ANALYSIS_TOKEN;SPICE_DECK_ANALYSIS_RANGE", "2"]
     );
+    let mut quoted_diagnostic_artifact = op_execution.run_artifacts[0].clone();
+    quoted_diagnostic_artifact.diagnostic_codes = vec![
+        "SPICE_DECK_ANALYSIS_TOKEN".to_string(),
+        "SPICE,\"QUOTED\"".to_string(),
+    ];
+    quoted_diagnostic_artifact.diagnostic_count = quoted_diagnostic_artifact.diagnostic_codes.len();
+    assert!(format_deck_run_artifact_csv(&[quoted_diagnostic_artifact])
+        .ends_with(",2,\"SPICE_DECK_ANALYSIS_TOKEN;SPICE,\"\"QUOTED\"\"\"\n"));
 
     let dc_execution = run_deck_analysis(&circuit, netlist, Some("dc")).unwrap();
     assert_eq!(dc_execution.plan.source_name.as_deref(), Some("V1"));

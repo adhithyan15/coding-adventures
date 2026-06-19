@@ -89,7 +89,8 @@ downstream tools to compare.
      output probes, measurements, and Fourier artifacts, with normalized
      output-probe, measurement, and Fourier probe name lists included in the
      run artifacts; transfer-function, sensitivity, and noise run artifacts now
-     also expose their selected output node.
+     also expose their selected output node, and selected-run artifacts can now
+     render as stable CSV beside the existing tab-separated table.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -848,6 +849,15 @@ downstream tools to compare.
     - The stable run-artifact table now includes `Diagnostics` and
       `DiagnosticCodeList`, preserving parser diagnostic provenance beside the
       selected analysis/output/measurement/Fourier metadata surface.
+
+78. Deck run artifact CSV format.
+    - Status: completed in this deck run artifact CSV slice.
+    - Python, Rust, and TypeScript now expose matching
+      `format_deck_run_artifact_csv` / `formatDeckRunArtifactCsv` helpers for
+      selected deck-run artifacts.
+    - The CSV helpers preserve the same stable columns as the tab-separated
+      run-artifact table while applying deterministic CSV escaping for browser,
+      spreadsheet, and downstream data-pipeline consumers.
 
 ## Backlog
 

@@ -10163,6 +10163,77 @@ fn format_deck_artifact_bool(value: Option<bool>) -> String {
     value.map(|value| value.to_string()).unwrap_or_default()
 }
 
+const DECK_RUN_ARTIFACT_COLUMNS: &[&str] = &[
+    "Analysis",
+    "Directive",
+    "Line",
+    "SourceName",
+    "OutputNode",
+    "SweepKind",
+    "StartValue",
+    "StopValue",
+    "StepValue",
+    "PointCount",
+    "StartFrequencyHz",
+    "StopFrequencyHz",
+    "StepTime",
+    "StopTime",
+    "StartTime",
+    "MaxStep",
+    "UseInitialConditions",
+    "ResultRows",
+    "ResultColumns",
+    "ResultColumnList",
+    "OutputProbes",
+    "OutputProbeList",
+    "OutputDirectives",
+    "OutputDirectiveList",
+    "Measurements",
+    "MeasurementList",
+    "Fourier",
+    "FourierList",
+    "Diagnostics",
+    "DiagnosticCodeList",
+];
+
+fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
+    vec![
+        artifact.analysis.clone(),
+        artifact.directive.clone(),
+        artifact.line_number.to_string(),
+        artifact.source_name.clone().unwrap_or_default(),
+        artifact.output_node.clone().unwrap_or_default(),
+        artifact.sweep_kind.clone().unwrap_or_default(),
+        format_deck_artifact_float(artifact.start_value),
+        format_deck_artifact_float(artifact.stop_value),
+        format_deck_artifact_float(artifact.step_value),
+        artifact
+            .point_count
+            .map(|value| value.to_string())
+            .unwrap_or_default(),
+        format_deck_artifact_float(artifact.start_frequency_hz),
+        format_deck_artifact_float(artifact.stop_frequency_hz),
+        format_deck_artifact_float(artifact.step_time),
+        format_deck_artifact_float(artifact.stop_time),
+        format_deck_artifact_float(artifact.start_time),
+        format_deck_artifact_float(artifact.max_step),
+        format_deck_artifact_bool(artifact.use_initial_conditions),
+        artifact.result_rows.to_string(),
+        artifact.result_column_count.to_string(),
+        artifact.result_columns.join(";"),
+        artifact.output_probe_count.to_string(),
+        artifact.output_probes.join(";"),
+        artifact.output_directive_count.to_string(),
+        artifact.output_directives.join(";"),
+        artifact.measurement_count.to_string(),
+        artifact.measurement_names.join(";"),
+        artifact.fourier_count.to_string(),
+        artifact.fourier_probes.join(";"),
+        artifact.diagnostic_count.to_string(),
+        artifact.diagnostic_codes.join(";"),
+    ]
+}
+
 fn deck_table_columns(table: &str) -> Vec<String> {
     table
         .lines()
@@ -10177,47 +10248,31 @@ fn deck_table_columns(table: &str) -> Vec<String> {
 }
 
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
-    let mut rows = vec![
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList"
-            .to_string(),
-    ];
+    let mut rows = vec![DECK_RUN_ARTIFACT_COLUMNS.join("\t")];
     for artifact in artifacts {
-        rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
-            artifact.analysis,
-            artifact.directive,
-            artifact.line_number,
-            artifact.source_name.as_deref().unwrap_or(""),
-            artifact.output_node.as_deref().unwrap_or(""),
-            artifact.sweep_kind.as_deref().unwrap_or(""),
-            format_deck_artifact_float(artifact.start_value),
-            format_deck_artifact_float(artifact.stop_value),
-            format_deck_artifact_float(artifact.step_value),
-            artifact
-                .point_count
-                .map(|value| value.to_string())
-                .unwrap_or_default(),
-            format_deck_artifact_float(artifact.start_frequency_hz),
-            format_deck_artifact_float(artifact.stop_frequency_hz),
-            format_deck_artifact_float(artifact.step_time),
-            format_deck_artifact_float(artifact.stop_time),
-            format_deck_artifact_float(artifact.start_time),
-            format_deck_artifact_float(artifact.max_step),
-            format_deck_artifact_bool(artifact.use_initial_conditions),
-            artifact.result_rows,
-            artifact.result_column_count,
-            artifact.result_columns.join(";"),
-            artifact.output_probe_count,
-            artifact.output_probes.join(";"),
-            artifact.output_directive_count,
-            artifact.output_directives.join(";"),
-            artifact.measurement_count,
-            artifact.measurement_names.join(";"),
-            artifact.fourier_count,
-            artifact.fourier_probes.join(";"),
-            artifact.diagnostic_count,
-            artifact.diagnostic_codes.join(";")
-        ));
+        rows.push(deck_run_artifact_cells(artifact).join("\t"));
+    }
+    format!("{}\n", rows.join("\n"))
+}
+
+fn format_csv_cell(value: &str) -> String {
+    if value.contains(',') || value.contains('"') || value.contains('\n') || value.contains('\r') {
+        format!("\"{}\"", value.replace('"', "\"\""))
+    } else {
+        value.to_string()
+    }
+}
+
+pub fn format_deck_run_artifact_csv(artifacts: &[DeckRunArtifact]) -> String {
+    let mut rows = vec![DECK_RUN_ARTIFACT_COLUMNS.join(",")];
+    for artifact in artifacts {
+        rows.push(
+            deck_run_artifact_cells(artifact)
+                .iter()
+                .map(|cell| format_csv_cell(cell))
+                .collect::<Vec<_>>()
+                .join(","),
+        );
     }
     format!("{}\n", rows.join("\n"))
 }
