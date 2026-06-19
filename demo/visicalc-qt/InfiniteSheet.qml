@@ -149,6 +149,22 @@ Item {
                 ToolTip.text: "Restore the workbook from the last save"
                 onClicked: if (doc) doc.deserialize(sheet.savedSnapshot)
             }
+            // Undo / redo: walk the engine's snapshot history. The buttons enable
+            // off the model's canUndo/canRedo (which notify on every edit).
+            Button {
+                text: "Undo"
+                enabled: doc ? doc.canUndo : false
+                ToolTip.visible: hovered
+                ToolTip.text: "Undo the last edit"
+                onClicked: if (doc) doc.undo()
+            }
+            Button {
+                text: "Redo"
+                enabled: doc ? doc.canRedo : false
+                ToolTip.visible: hovered
+                ToolTip.text: "Redo the last undone edit"
+                onClicked: if (doc) doc.redo()
+            }
         }
 
         // ── Column-letter header (frozen vertically, scrolls horizontally) ──

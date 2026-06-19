@@ -117,6 +117,11 @@ the C ABI's `sc_serialize`) to a JSON document held in memory and restore it
 (`model.deserialize` / `sc_deserialize`): the document captures only the source
 (formula text + typed literals) and per-cell formats — not the computed values,
 which the engine recomputes on load, so a loaded formula stays live.
+The **Undo / Redo** buttons walk the engine's snapshot history (`model.undo`/
+`redo` over the C ABI's `sc_undo`/`sc_redo`); they enable off the `canUndo`/
+`canRedo` Q_PROPERTYs (which notify on `revisionChanged`, so they re-evaluate
+after every edit). Every edit is reversible and a restored formula recomputes
+live.
 
 The model seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) on top of the
 budget so there's something to scroll to; the extent (`totalRows`/`totalCols`)
@@ -131,9 +136,10 @@ reachable, the gaps are empty (sparse), column letters run AA/BA, and editing
 the infinite-view binding layer directly: `rowCells` returns one engine-read
 row, `selectInf` selects + clamps and loads the source, and `commitInf` edits
 `A2` 8 → 108 with every dependent recomputing (E2 → 151, A5 → 139, E5 → 269).
-Further cases cover drag-fill, clipboard copy/cut/paste, and a save/load round
+Further cases cover drag-fill, clipboard copy/cut/paste, a save/load round
 trip (serialize → mutate → restore, with the loaded formula staying live and
-malformed input rejected):
+malformed input rejected), and an undo/redo walk (two edits → undo both → redo
+both with the formula recomputing live → a fresh edit forks history):
 
 ```bash
 cd test && qmake tst_window.pro && make && ./tst_window
