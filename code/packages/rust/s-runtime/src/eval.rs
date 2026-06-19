@@ -56,7 +56,18 @@ pub struct Interpreter {
     /// `RefCell` because builtins receive `&Interpreter` but the generator must
     /// advance its state on every draw.
     rng: RefCell<RngState>,
+    /// Warnings raised by `warning(...)` during the current program, in order.
+    /// Bounded by [`MAX_WARNINGS`] so a tight `warning()` loop cannot grow this
+    /// without limit. Each warning is also printed immediately (R defers them by
+    /// default, but immediate printing is simpler and equally faithful for a
+    /// REPL); the buffer exists so a future `warnings()` accessor can read them.
+    warnings: RefCell<Vec<String>>,
 }
+
+/// The most warnings retained per program. Beyond this, further `warning()`
+/// calls still print but are not appended to the buffer — a bound against a
+/// crafted `for (i in 1:1e9) warning("x")` exhausting memory.
+const MAX_WARNINGS: usize = 10_000;
 
 /// The fixed seed a fresh session starts from. Real R seeds from the clock and
 /// process state; we use a constant so a brand-new interpreter is reproducible
@@ -97,7 +108,21 @@ impl Interpreter {
             visible: Cell::new(false),
             depth: Cell::new(0),
             rng: RefCell::new(RngState::new(DEFAULT_SEED)),
+            warnings: RefCell::new(Vec::new()),
         }
+    }
+
+    /// Record and print a warning raised by `warning(...)`. The buffer is capped
+    /// at [`MAX_WARNINGS`]; the message is always printed (so the user sees it)
+    /// even once the buffer is full.
+    pub(crate) fn warn(&self, message: &str) {
+        {
+            let mut w = self.warnings.borrow_mut();
+            if w.len() < MAX_WARNINGS {
+                w.push(message.to_string());
+            }
+        }
+        self.emit_raw(&format!("Warning message:\n{message}\n"));
     }
 
     /// The global environment (for tests and the REPL).
@@ -168,6 +193,7 @@ impl Interpreter {
     /// directly, reusing the entire evaluator.
     pub fn eval_program(&self, program: &GrammarASTNode) -> SResult<Outcome> {
         self.out.borrow_mut().clear();
+        self.warnings.borrow_mut().clear();
 
         let mut last = SValue::Null;
         self.visible.set(false);
@@ -714,6 +740,40 @@ impl Interpreter {
             Some(ASTNodeOrToken::Node(n)) => n,
             _ => return Err(SError::Parse("malformed postfix".into())),
         };
+
+        // --- Special forms: `switch` / `tryCatch` -----------------------------
+        //
+        // These cannot be ordinary (eager) builtins: they must inspect their
+        // *unevaluated* argument expressions and evaluate only the selected arm /
+        // protected expression / chosen handler. We intercept here, at the call
+        // site, when the postfix is exactly `<bare-name> ( args )` — a single
+        // `call_suffix` directly on a bare-name primary — and the name is one of
+        // the special forms. (A name shadowed by a user variable is rare and R
+        // treats these as language constructs; intercepting by name keeps the
+        // laziness guarantee unconditional and simple.) Any other shape (extra
+        // suffixes, indexing) falls through to the ordinary eager path below.
+        if let Some(special) = special_form_name(primary) {
+            // The only suffix nodes (ignoring `(`/`)` tokens) must be a lone
+            // `call_suffix` — `switch(...)` / `tryCatch(...)`.
+            let suffix_nodes: Vec<&GrammarASTNode> = node.children[1..]
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Node(n) => Some(n),
+                    ASTNodeOrToken::Token(_) => None,
+                })
+                .collect();
+            if let [suffix] = suffix_nodes.as_slice() {
+                if suffix.rule_name == "call_suffix" {
+                    let raw = raw_args(suffix);
+                    return match special {
+                        "switch" => self.eval_switch(&raw, env),
+                        "tryCatch" => self.eval_try_catch(&raw, env),
+                        _ => unreachable!(),
+                    };
+                }
+            }
+        }
+
         let mut value = self.eval_node(primary, env)?;
         let mut had_suffix = false;
 
@@ -846,7 +906,7 @@ impl Interpreter {
                 // `print`/`cat` produce their own output, and `set.seed` mutates
                 // RNG state — all three return invisibly (R's `invisible(NULL)`);
                 // every other built-in yields a visible value.
-                if name == "print" || name == "cat" || name == "set.seed" {
+                if name == "print" || name == "cat" || name == "set.seed" || name == "warning" {
                     self.as_invisible(result)
                 } else {
                     self.as_visible(result)
@@ -1092,6 +1152,146 @@ impl Interpreter {
     }
 
     // -----------------------------------------------------------------------
+    // Special forms: switch / tryCatch (lazy — only the chosen arm evaluates)
+    // -----------------------------------------------------------------------
+
+    /// `switch(EXPR, ...)` — R's value-returning multi-way branch.
+    ///
+    /// The first argument `EXPR` is evaluated to choose *one* arm; only that arm
+    /// is then evaluated (the rest are never touched — this is why `switch` must
+    /// be a special form).
+    ///
+    /// - **Character `EXPR`**: match against the arm *names*. A matched arm that
+    ///   is **empty** (`a = ,`) falls through to the next non-empty arm's value;
+    ///   an **unnamed final arm** is the default when no name matches; no match
+    ///   and no default yields an invisible `NULL`.
+    /// - **Numeric `EXPR`**: select the n-th *value* arm by position (1-based),
+    ///   ignoring names; out of range (or NA / < 1) yields invisible `NULL`.
+    fn eval_switch(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        // `raw[0]` is EXPR; the remaining entries are the arms.
+        let expr_node = raw
+            .first()
+            .and_then(|(_, n)| arm_body(n))
+            .ok_or_else(|| SError::BadArgs("switch: EXPR is missing".into()))?;
+        let arms = &raw[1..];
+        let selector = self.eval_node(expr_node, env)?;
+
+        // A length-1 character selector matches by name; anything else is taken
+        // as a numeric position (matching R, which treats an integer selector
+        // positionally).
+        if let Some(name) = single_string(&selector) {
+            // Find the arm whose name equals `name`. On a match, fall through any
+            // empty arms to the next non-empty value.
+            if let Some(pos) = arms
+                .iter()
+                .position(|(arm_name, _)| arm_name.as_deref() == Some(name.as_str()))
+            {
+                for (_, arm) in &arms[pos..] {
+                    if let Some(body) = arm_body(arm) {
+                        return self.eval_node(body, env);
+                    }
+                    // else: an empty arm — fall through to the next.
+                }
+                // Fell off the end with only empty arms → NULL.
+                return self.as_invisible(SValue::Null);
+            }
+            // No name matched: an unnamed final arm is the default.
+            if let Some((arm_name, arm)) = arms.last() {
+                if arm_name.is_none() {
+                    if let Some(body) = arm_body(arm) {
+                        return self.eval_node(body, env);
+                    }
+                }
+            }
+            return self.as_invisible(SValue::Null);
+        }
+
+        // Numeric selector: the n-th arm, 1-based, by position.
+        let n = scalar_f64(&selector).ok();
+        match n {
+            Some(x) if x >= 1.0 => {
+                let idx = x as usize - 1;
+                match arms.get(idx).and_then(|(_, arm)| arm_body(arm)) {
+                    Some(body) => self.eval_node(body, env),
+                    None => self.as_invisible(SValue::Null),
+                }
+            }
+            _ => self.as_invisible(SValue::Null),
+        }
+    }
+
+    /// `tryCatch(expr, error = handler, finally = cleanup)` — evaluate `expr`;
+    /// on *any* catchable error route it to the `error` handler (called with a
+    /// condition object), returning the handler's value; otherwise return the
+    /// value of `expr`. The `finally` expression, if present, always runs (for
+    /// its side effects) afterward. Everything is lazy: handlers and `finally`
+    /// are unevaluated parse-tree nodes until needed.
+    fn eval_try_catch(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        // The protected expression is the first positional argument; the
+        // `error`/`finally` handlers are matched by name.
+        let expr_node = raw
+            .iter()
+            .find(|(name, _)| name.is_none())
+            .and_then(|(_, n)| arm_body(n))
+            .ok_or_else(|| SError::BadArgs("tryCatch: expr is missing".into()))?;
+        let handler_node = raw
+            .iter()
+            .find(|(name, _)| name.as_deref() == Some("error"))
+            .and_then(|(_, n)| arm_body(n));
+        let finally_node = raw
+            .iter()
+            .find(|(name, _)| name.as_deref() == Some("finally"))
+            .and_then(|(_, n)| arm_body(n));
+
+        // Evaluate the protected expression, intercepting any catchable error.
+        let result = self.eval_node(expr_node, env);
+        let outcome = match result {
+            Ok(value) => Ok(value),
+            Err(e) if e.is_catchable() => match handler_node {
+                Some(h) => {
+                    // Build the condition object and call the handler with it.
+                    let condition = make_condition(&e.condition_message());
+                    self.call_handler(h, condition, env)
+                }
+                // No `error` handler: the error still propagates (but `finally`
+                // must run first — handled below).
+                None => Err(e),
+            },
+            // A non-catchable control signal (break/next) is re-raised untouched,
+            // but `finally` still runs first.
+            Err(e) => Err(e),
+        };
+
+        // `finally` runs regardless of success or failure. If it itself errors,
+        // that error supersedes (matching R).
+        if let Some(f) = finally_node {
+            self.eval_node(f, env)?;
+        }
+        outcome
+    }
+
+    /// Evaluate a `tryCatch` `error =` handler and apply it to the condition.
+    /// The handler is normally a `function(e) ...`; we evaluate the handler
+    /// expression to a callable and call it with the single condition argument.
+    /// A non-callable handler is a clean error.
+    fn call_handler(
+        &self,
+        handler_node: &GrammarASTNode,
+        condition: SValue,
+        env: &Env,
+    ) -> SResult<SValue> {
+        let handler = self.eval_node(handler_node, env)?;
+        if !handler.is_callable() {
+            return Err(SError::NotCallable(handler.type_name().to_string()));
+        }
+        let args = [Arg {
+            name: None,
+            value: condition,
+        }];
+        self.call_value(handler, &args)
+    }
+
+    // -----------------------------------------------------------------------
     // Visibility helpers
     // -----------------------------------------------------------------------
 
@@ -1113,6 +1313,103 @@ impl Interpreter {
 /// The standard error when the right-hand side of `|>` is not a function call.
 fn pipe_needs_call() -> SError {
     SError::Parse("the right-hand side of |> must be a function call".into())
+}
+
+/// One *unevaluated* call argument: its optional name and its expression node.
+/// Special forms (`switch`/`tryCatch`) work on these so they can choose which
+/// arm to evaluate.
+type RawArg<'a> = (Option<String>, &'a GrammarASTNode);
+
+/// If `primary` is a bare-name reference to one of the lazy special forms
+/// (`switch`, `tryCatch`), return that name; otherwise `None`. A special form is
+/// recognized only when the primary reduces to exactly that single `NAME` token
+/// (so `f()(...)` or an indexed primary never trips the check).
+fn special_form_name(primary: &GrammarASTNode) -> Option<&'static str> {
+    let mut tokens: Vec<(&str, &str)> = Vec::new();
+    collect_tokens(primary, &mut tokens);
+    match tokens.as_slice() {
+        [("NAME", "switch")] => Some("switch"),
+        [("NAME", "tryCatch")] => Some("tryCatch"),
+        _ => None,
+    }
+}
+
+/// Collect the *unevaluated* arguments of a `call_suffix` as `(name, expr-node)`
+/// pairs, preserving order. A named argument (`NAME = expr`) keeps its name; a
+/// positional one has `None`. An empty arm (`a = ,` — a named `arg` with no
+/// inner expression, as in `switch`) is represented by a node whose
+/// [`arm_body`] is `None`.
+fn raw_args(suffix: &GrammarASTNode) -> Vec<RawArg<'_>> {
+    let mut out = Vec::new();
+    let Some(arg_list) = suffix.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Node(n) if n.rule_name == "arg_list" => Some(n),
+        _ => None,
+    }) else {
+        return out;
+    };
+    for child in &arg_list.children {
+        if let ASTNodeOrToken::Node(arg) = child {
+            if arg.rule_name != "arg" {
+                continue;
+            }
+            // A named argument is `NAME = expr` (two leading tokens); positional
+            // is just `expr`. (Mirrors `eval_arg`'s detection.)
+            let named = matches!(arg.children.first(), Some(ASTNodeOrToken::Token(_)))
+                && matches!(arg.children.get(1), Some(ASTNodeOrToken::Token(t)) if t.value == "=");
+            let name = if named {
+                match arg.children.first() {
+                    Some(ASTNodeOrToken::Token(t)) => Some(t.value.clone()),
+                    _ => None,
+                }
+            } else {
+                None
+            };
+            out.push((name, arg));
+        }
+    }
+    out
+}
+
+/// The expression node inside an `arg`, or `None` if the arg is **empty** (a
+/// `switch` fall-through arm like `a = ,`, which has a name but no value
+/// expression). Used by both `switch` arm selection and `tryCatch` handler
+/// lookup.
+fn arm_body(arg: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    first_node(arg)
+}
+
+/// A length-1 character value as its `String`, else `None`. Sees through the
+/// transparent wrappers. Used by `switch` to decide name- vs position-matching.
+fn single_string(value: &SValue) -> Option<String> {
+    match value.strip_names() {
+        SValue::Character(v) if v.len() == 1 => v[0].clone(),
+        SValue::Classed { inner, .. } => single_string(inner),
+        SValue::Attributed { inner, .. } => single_string(inner),
+        _ => None,
+    }
+}
+
+/// Build the minimal **condition object** handed to a `tryCatch` `error =`
+/// handler: a list `list(message = <chr>, call = NULL)` carrying the S3 class
+/// `c("simpleError", "error", "condition")`. This is enough for
+/// `conditionMessage(e)` and `e$message` to recover the message; full R
+/// condition machinery (custom classes, restarts) is out of scope.
+fn make_condition(message: &str) -> SValue {
+    let inner = SValue::list(vec![
+        (
+            Some("message".to_string()),
+            SValue::Character(vec![Some(message.to_string())]),
+        ),
+        (Some("call".to_string()), SValue::Null),
+    ]);
+    SValue::Classed {
+        inner: Box::new(inner),
+        class: vec![
+            "simpleError".to_string(),
+            "error".to_string(),
+            "condition".to_string(),
+        ],
+    }
 }
 
 /// Descend a single-operand expression chain (`range → unary → power → …`) to

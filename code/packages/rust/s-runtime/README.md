@@ -64,6 +64,20 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   name or position (missing name → `NULL`), seeing through the transparent
   `Classed`/`Attributed`/`Named` wrappers. Argument/result sizes are bounded and
   malformed input (non-list, non-callable, unnamed `val` element) fails closed.
+- **`switch()` + error handling** (R-18): `switch(EXPR, ...)` and
+  `tryCatch(expr, error = ..., finally = ...)` are **special forms** — the call
+  dispatcher intercepts them before argument evaluation, so only the selected arm
+  / protected expression / chosen handler runs (`switch("a", a = "ok", b =
+  stop("x"))` does not raise). `switch` matches a character `EXPR` against arm
+  names (unnamed final arm = default; no match and no default → invisible `NULL`)
+  or selects an arm by numeric position (out of range → `NULL`). `stop(...)`
+  raises a catchable `SError::User`; `warning(...)` records and prints a warning
+  (bounded by `MAX_WARNINGS`) without aborting; `tryCatch` routes any catchable
+  error to its `error` handler with a minimal condition object (`list(message,
+  call)` classed `c("simpleError", "error", "condition")`, so `conditionMessage`
+  / `e$message` work) and always runs `finally`. Loop-control signals
+  (`break`/`next`) are not caught. *(Empty-arm fall-through is implemented but
+  deferred to R-19 pending a grammar production for empty args.)*
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

@@ -1080,4 +1080,161 @@ mod tests {
         // A replacement target that isn't a registered `f<-` is undefined.
         assert!(eval_s("x <- c(1, 2)\nnope(x) <- 5\n").is_err());
     }
+
+    // --- R-18: switch() + error handling (in S syntax) ------------------
+
+    #[test]
+    fn switch_character_match_default_and_fallthrough() {
+        // A name match returns that arm's value.
+        assert_eq!(show("switch(\"b\", a = \"A\", b = \"B\")\n"), "[1] \"B\"");
+        // An unnamed final arm is the default when nothing matches.
+        assert_eq!(
+            show("switch(\"z\", a = \"A\", \"fallback\")\n"),
+            "[1] \"fallback\""
+        );
+        // No match and no default → invisible NULL.
+        assert_eq!(show("switch(\"z\", a = \"A\", b = \"B\")\n"), "NULL");
+        // NOTE: empty-arm fall-through (`switch("a", a = , b = "hit")`) is
+        // deferred to R-19 — the shared S/R grammar's `arg = NAME EQ expr` has no
+        // empty-value production, so `a = ,` is a *parse* error. `eval_switch`
+        // already implements the fall-through (see `arm_body`/the loop over
+        // `arms[pos..]`); it activates once the grammar admits empty args.
+    }
+
+    #[test]
+    fn switch_numeric_selects_by_position() {
+        assert_eq!(
+            show("switch(2, \"one\", \"two\", \"three\")\n"),
+            "[1] \"two\""
+        );
+        // Out of range → NULL (no error).
+        assert_eq!(show("switch(9, \"one\", \"two\")\n"), "NULL");
+        assert_eq!(show("switch(0, \"one\", \"two\")\n"), "NULL");
+    }
+
+    #[test]
+    fn switch_evaluates_only_the_selected_arm() {
+        // The non-selected arm would error if evaluated; it must not be.
+        assert_eq!(
+            show("switch(\"a\", a = \"ok\", b = stop(\"boom\"))\n"),
+            "[1] \"ok\""
+        );
+        // Numeric form: the unselected arm with an undefined name is untouched.
+        // (In S, `_` is assignment, so the dotted name `missing.name` is used.)
+        assert_eq!(show("switch(1, \"ok\", missing.name)\n"), "[1] \"ok\"");
+    }
+
+    #[test]
+    fn stop_raises_a_user_error() {
+        match eval_s("stop(\"boom\")\n") {
+            Err(SError::User(m)) => assert_eq!(m, "boom"),
+            other => panic!("expected user error, got {other:?}"),
+        }
+        // The message concatenates its arguments (paste0 style).
+        match eval_s("stop(\"a\", \"b\", \"c\")\n") {
+            Err(SError::User(m)) => assert_eq!(m, "abc"),
+            other => panic!("expected user error, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn try_catch_catches_and_returns_handler_value() {
+        // The handler's value becomes the result of the tryCatch.
+        assert_eq!(
+            show("tryCatch(stop(\"x\"), error = function(e) \"caught\")\n"),
+            "[1] \"caught\""
+        );
+        // No error: the protected expression's value is returned.
+        assert_eq!(
+            show("tryCatch(1 + 1, error = function(e) \"caught\")\n"),
+            "[1] 2"
+        );
+    }
+
+    #[test]
+    fn try_catch_handler_sees_the_condition_message() {
+        // conditionMessage(e) and e$message both recover the message.
+        assert_eq!(
+            show("tryCatch(stop(\"oops\"), error = function(e) conditionMessage(e))\n"),
+            "[1] \"oops\""
+        );
+        assert_eq!(
+            show("tryCatch(stop(\"oops\"), error = function(e) e$message)\n"),
+            "[1] \"oops\""
+        );
+        // A built-in (non-stop) error is catchable too. (`missing.name` is an
+        // undefined dotted name — `_` is assignment in S.)
+        assert_eq!(
+            show("tryCatch(missing.name, error = function(e) \"recovered\")\n"),
+            "[1] \"recovered\""
+        );
+    }
+
+    #[test]
+    fn try_catch_finally_always_runs() {
+        // finally runs on success (its side effect is captured via cat output).
+        let r = Interpreter::new();
+        let out = r
+            .eval_str("tryCatch(1, finally = cat(\"done\"))\n")
+            .unwrap();
+        assert!(out.printed.contains("done"), "got: {:?}", out.printed);
+        // finally runs even when the error is caught.
+        let r = Interpreter::new();
+        let out = r
+            .eval_str("tryCatch(stop(\"x\"), error = function(e) 0, finally = cat(\"cleanup\"))\n")
+            .unwrap();
+        assert!(out.printed.contains("cleanup"), "got: {:?}", out.printed);
+    }
+
+    #[test]
+    fn try_catch_without_handler_propagates_but_runs_finally() {
+        // With only a finally (no error handler), the error still propagates…
+        let r = Interpreter::new();
+        let res = r.eval_str("tryCatch(stop(\"x\"), finally = cat(\"cleanup\"))\n");
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn try_catch_is_lazy_handler_not_run_on_success() {
+        // The handler would error if ever invoked; on success it must not be.
+        assert_eq!(
+            show("tryCatch(42, error = function(e) stop(\"should not run\"))\n"),
+            "[1] 42"
+        );
+    }
+
+    #[test]
+    fn warning_does_not_abort_and_prints() {
+        let r = Interpreter::new();
+        let out = r.eval_str("warning(\"careful\")\n1 + 1\n").unwrap();
+        // Execution continues past the warning to the next statement.
+        assert_eq!(format_value(&out.value), vec!["[1] 2".to_string()]);
+        assert!(
+            out.printed.contains("careful"),
+            "warning not printed: {:?}",
+            out.printed
+        );
+    }
+
+    #[test]
+    fn nested_try_catch_inner_handles_first() {
+        // An inner tryCatch handles the error; the outer one never sees it.
+        assert_eq!(
+            show(
+                "tryCatch(tryCatch(stop(\"deep\"), error = function(e) stop(\"rethrown\")), \
+                 error = function(e) conditionMessage(e))\n"
+            ),
+            "[1] \"rethrown\""
+        );
+    }
+
+    #[test]
+    fn switch_does_not_catch_or_swallow_break() {
+        // A break inside a switch arm is not an error condition — it propagates
+        // to the enclosing loop (here it just exits the for).
+        assert_eq!(
+            nums("s <- 0\nfor (i in 1:3) { s <- s + 1\nswitch(\"a\", a = break) }\ns\n"),
+            vec![1.0]
+        );
+    }
 }

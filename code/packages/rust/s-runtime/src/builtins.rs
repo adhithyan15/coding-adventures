@@ -151,6 +151,19 @@ pub fn install(env: &Env) {
 
     // v2 — S3 dispatch and output.
     define(env, "cat", builtin("cat", b_cat));
+
+    // R-18 — error handling. `stop`/`warning` are ordinary (eager) builtins —
+    // their arguments *are* evaluated and concatenated into the message. The
+    // lazy `switch`/`tryCatch` are special forms handled in `eval.rs`, not here.
+    // `conditionMessage` reads the message of a condition object.
+    define(env, "stop", builtin("stop", b_stop));
+    define(env, "warning", builtin("warning", b_warning));
+    define(
+        env,
+        "conditionMessage",
+        builtin("conditionMessage", b_condition_message),
+    );
+
     define(env, "class", builtin("class", b_class));
     define(env, "structure", builtin("structure", b_structure));
     define(env, "inherits", builtin("inherits", b_inherits));
@@ -2820,6 +2833,44 @@ fn b_cat(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .collect();
     interp.emit_raw(&parts.join(&sep));
     Ok(SValue::Null)
+}
+
+/// Concatenate every positional argument into a single message string, the way
+/// `stop`/`warning` build their text (coerce to character, drop names, join with
+/// no separator — R's `.makeMessage` behaviour). NA elements render as the
+/// literal `"NA"`.
+fn concat_message(args: &[Arg]) -> String {
+    args.iter()
+        .filter(|a| a.name.is_none())
+        .flat_map(|a| a.value.as_character())
+        .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+        .collect::<Vec<_>>()
+        .join("")
+}
+
+/// `stop(...)` — raise an error whose message is the concatenation of the
+/// arguments. Surfaces as [`SError::User`], which `tryCatch(error = ...)` can
+/// catch. A bare `stop()` (no message) raises an empty-message error, as in R.
+fn b_stop(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    Err(SError::User(concat_message(args)))
+}
+
+/// `warning(...)` — emit a warning (concatenated message) without aborting, and
+/// return invisibly. The message is recorded in the session warning buffer and
+/// printed immediately. The evaluator marks builtins invisible by name, but a
+/// `warning()` value is `NULL` anyway.
+fn b_warning(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    interp.warn(&concat_message(args));
+    Ok(SValue::Null)
+}
+
+/// `conditionMessage(e)` — the `message` element of a condition object (the
+/// character string a `tryCatch` handler was handed). Equivalent to `e$message`.
+/// On a value with no `message` element this yields `NULL` (R would error, but
+/// the lenient list `$` access is harmless and keeps us panic-free).
+fn b_condition_message(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let cond = first_positional(args)?;
+    crate::dataframe::column_by_name(cond, "message")
 }
 
 /// `seq(to)` is `1:to`; `seq(from, to)` is `from:to` (step 1). A minimal subset

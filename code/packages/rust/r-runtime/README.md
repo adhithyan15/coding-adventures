@@ -38,6 +38,14 @@ positional and named arguments (`do.call(paste, list("a", "b", sep = "-"))` →
 `"a-b"`); `modifyList(x, val)` overlays `val` onto `x` by name (replace / append
 / `NULL` removes); and `lst$name` / `lst[["name"]]` / `lst[[i]]` index a list by
 name or position, with a missing name returning `NULL`.
+**`switch()` + error handling (R-18)** — `switch(EXPR, ...)` is a lazy multi-way
+branch: a character `EXPR` matches arm names (unnamed final arm = default; no
+match and no default → `NULL`), a numeric `EXPR` selects the n-th arm by position,
+and **only the chosen arm evaluates** (`switch("a", a = "ok", b = stop("x"))`
+does not raise). `stop(...)` raises an error, `warning(...)` emits a warning and
+returns invisibly without aborting, and `tryCatch(expr, error = fn, finally =
+cleanup)` runs `expr`, routes any error to `error` (with a condition object whose
+`conditionMessage(e)` / `e$message` give the message), and always runs `finally`.
 
 ## Usage
 
