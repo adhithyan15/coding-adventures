@@ -72,6 +72,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         block_counter: 0,
         multi_assign_counter: 0,
         interp_depth: 0,
+        block_param_methods: HashSet::new(),
     };
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
@@ -591,7 +592,23 @@ struct Lowerer {
     /// stop recursing at `MAX_INTERP_DEPTH` and fall back to the safe
     /// `__interp__` marker, which preserves correctness.
     interp_depth: usize,
+    /// Phase Q9e (FC) — names of methods whose body contains a direct
+    /// `yield`, discovered while lowering each `def`.  The
+    /// explicit-block-param ABI threads a trailing reserved block
+    /// parameter (`__sir_block__`) through these methods and rewrites
+    /// each in-body `yield` to an `IndirectCall` through that param.
+    /// Recording the name here lets a later call-site normalization pass
+    /// (Q9f) thread the matching block argument at every call to such a
+    /// method.  See [`Lowerer::thread_block_param`].
+    block_param_methods: HashSet<String>,
 }
+
+/// Phase Q9e (FC) — the reserved name of the synthesized trailing block
+/// parameter threaded through every method that `yield`s.  Chosen with a
+/// `__sir_`-prefix so it cannot collide with a user-written Ruby local
+/// (those never begin with a double underscore in idiomatic code, and
+/// the lowerer never mints another name with this exact spelling).
+const BLOCK_PARAM_NAME: &str = "__sir_block__";
 
 /// Phase 20a (FC): hard ceiling on nested string-interpolation
 /// re-parsing depth.  Real Ruby almost never nests interpolation more
@@ -2888,6 +2905,252 @@ impl Lowerer {
         })
     }
 
+    // -------------------------------------------------------------------
+    // Phase Q9e (FC) — explicit-block-param ABI, part 1
+    // -------------------------------------------------------------------
+
+    /// Thread an explicit trailing block parameter through a freshly
+    /// lowered method `Function` *iff* its body `yield`s.
+    ///
+    /// ## Why
+    ///
+    /// Ruby's `yield` invokes the block passed implicitly at the call
+    /// site — a side channel the narrow-waist SIR has no node for.  The
+    /// chosen ABI (see the TRANCHE-2 plan) makes that channel explicit
+    /// in the frontend: a method that `yield`s gains a reserved trailing
+    /// parameter ([`BLOCK_PARAM_NAME`]) holding the block as an ordinary
+    /// closure value, and every `yield` becomes an
+    /// [`Expr::IndirectCall`] through that parameter.  Backends already
+    /// emit `IndirectCall` (as runtime-core `apply`) and ordinary
+    /// `Param`s natively, so **no backend change is needed** — the whole
+    /// feature lives in this rewrite plus the Q9f call-site pass that
+    /// threads the matching block argument.
+    ///
+    /// ## What counts as an in-body `yield`
+    ///
+    /// The walk descends through control-flow and ordinary
+    /// expression/call children (so `yield` inside an `if`, a loop, a
+    /// `begin/rescue`, or a call argument is rewritten) but deliberately
+    /// **stops at [`Expr::MakeClosure`]**: a `yield` lexically inside a
+    /// block literal belongs to *that block's* enclosing method, not to
+    /// the method we are lowering, so rewriting it here would be wrong.
+    /// Handling yield-inside-a-hoisted-block is a documented v0 cut-line.
+    /// Nested `def`s never appear as body expressions (the lowerer
+    /// hoists them to their own top-level `Function`s), so they need no
+    /// special guard.
+    ///
+    /// Returns the function unchanged when its body contains no direct
+    /// `yield` (the common case), so non-yielding methods keep their
+    /// original arity and shape exactly.
+    fn thread_block_param(&mut self, mut func: Function) -> Function {
+        let found = Self::rewrite_yields_in_block(&mut func.body);
+        if found {
+            let span = func.span.clone();
+            func.params.push(Param {
+                name: BLOCK_PARAM_NAME.to_string(),
+                sir_type: None,
+                span,
+            });
+            // The synthesized parameter is untyped (`sir_type: None`),
+            // and the rewritten `yield`s introduce `IndirectCall`s; both
+            // must be reflected in the feature manifest, which the SIR
+            // validator requires to exactly match observed usage.
+            self.features_used.insert(Feature::DynamicTyping);
+            self.features_used.insert(Feature::Closures);
+            self.block_param_methods.insert(func.name.clone());
+        }
+        func
+    }
+
+    /// Rewrite every direct-in-body `yield` within a [`Block`], returning
+    /// whether at least one was found.  Recurses through the block's
+    /// statements and its trailing value expression.
+    fn rewrite_yields_in_block(block: &mut Block) -> bool {
+        let mut found = false;
+        for s in &mut block.stmts {
+            found |= Self::rewrite_yields_in_stmt(s);
+        }
+        found |= Self::rewrite_yields_in_expr(&mut block.value);
+        found
+    }
+
+    /// Rewrite a bare statement list (used by `Stmt::TryCatch` bodies and
+    /// rescue/ensure clause bodies, which carry `Vec<Stmt>` with no
+    /// trailing value slot).
+    fn rewrite_yields_in_stmts(stmts: &mut [Stmt]) -> bool {
+        let mut found = false;
+        for s in stmts {
+            found |= Self::rewrite_yields_in_stmt(s);
+        }
+        found
+    }
+
+    /// Rewrite every direct-in-body `yield` reachable from a single
+    /// statement.  Descends into loop/`while` bodies and `try/catch`
+    /// regions, but NOT into class/module/singleton declaration bodies
+    /// (whose `def`s — and any `yield`s therein — belong to their own
+    /// methods, hoisted separately).
+    fn rewrite_yields_in_stmt(stmt: &mut Stmt) -> bool {
+        match stmt {
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::Assign { value, .. }
+            | Stmt::ExprStmt { expr: value, .. } => Self::rewrite_yields_in_expr(value),
+            Stmt::While { cond, body, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(cond);
+                found |= Self::rewrite_yields_in_block(body);
+                found
+            }
+            Stmt::ForRange { start, stop, step, body, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(start);
+                found |= Self::rewrite_yields_in_expr(stop);
+                found |= Self::rewrite_yields_in_expr(step);
+                found |= Self::rewrite_yields_in_block(body);
+                found
+            }
+            Stmt::ForEach { iter, body, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(iter);
+                found |= Self::rewrite_yields_in_block(body);
+                found
+            }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(seq);
+                found |= Self::rewrite_yields_in_expr(index);
+                found |= Self::rewrite_yields_in_expr(value);
+                found
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(map);
+                found |= Self::rewrite_yields_in_expr(key);
+                found |= Self::rewrite_yields_in_expr(value);
+                found
+            }
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                let mut found = Self::rewrite_yields_in_stmts(body);
+                for r in rescues {
+                    found |= Self::rewrite_yields_in_stmts(&mut r.body);
+                }
+                if let Some(eb) = ensure_body {
+                    found |= Self::rewrite_yields_in_stmts(eb);
+                }
+                found
+            }
+            // Class/module/singleton declaration bodies are NOT descended:
+            // their method `def`s are hoisted to their own top-level
+            // Functions, where any `yield` is rewritten in its own right.
+            Stmt::ClassDef { .. }
+            | Stmt::ModuleDef { .. }
+            | Stmt::SingletonClassDef { .. } => false,
+        }
+    }
+
+    /// Rewrite every direct-in-body `yield` reachable from a single
+    /// expression.  A `BuiltinCall("yield", args)` is replaced in place
+    /// with an `IndirectCall` through the reserved block parameter (after
+    /// first rewriting any `yield`s nested in its own `args`).  All other
+    /// expression variants recurse into their children — except
+    /// [`Expr::MakeClosure`], which is intentionally NOT descended (a
+    /// `yield` inside a block literal belongs to the enclosing method).
+    fn rewrite_yields_in_expr(expr: &mut Expr) -> bool {
+        match expr {
+            Expr::BuiltinCall { name, args, effects, span } if name == "yield" => {
+                // Rewrite any yields nested within this yield's own
+                // arguments first (e.g. `yield(yield x)`), then replace
+                // the whole node with the indirect call.
+                let mut found = false;
+                for a in args.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(a);
+                }
+                let _ = found; // a nested rewrite still counts as "found"
+                let span = span.clone();
+                let target = Box::new(Expr::VarRef {
+                    name: BLOCK_PARAM_NAME.to_string(),
+                    scope: Scope::Param,
+                    span: span.clone(),
+                });
+                *expr = Expr::IndirectCall {
+                    target,
+                    args: std::mem::take(args),
+                    effects: *effects,
+                    span,
+                };
+                true
+            }
+            Expr::BuiltinCall { args, .. }
+            | Expr::DirectCall { args, .. }
+            | Expr::Intrinsic { args, .. } => {
+                let mut found = false;
+                for a in args.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(a);
+                }
+                found
+            }
+            Expr::IndirectCall { target, args, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(target);
+                for a in args.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(a);
+                }
+                found
+            }
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(cond);
+                found |= Self::rewrite_yields_in_block(then_branch);
+                found |= Self::rewrite_yields_in_block(else_branch);
+                found
+            }
+            Expr::Block(b) => Self::rewrite_yields_in_block(b),
+            Expr::SeqLit { items, .. } => {
+                let mut found = false;
+                for i in items.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(i);
+                }
+                found
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(seq);
+                found |= Self::rewrite_yields_in_expr(index);
+                found
+            }
+            Expr::SeqLen { seq, .. } => Self::rewrite_yields_in_expr(seq),
+            Expr::MapLit { entries, .. } => {
+                let mut found = false;
+                for e in entries.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(&mut e.key);
+                    found |= Self::rewrite_yields_in_expr(&mut e.value);
+                }
+                found
+            }
+            Expr::MapGet { map, key, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(map);
+                found |= Self::rewrite_yields_in_expr(key);
+                found
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(lhs);
+                found |= Self::rewrite_yields_in_expr(rhs);
+                found
+            }
+            Expr::StrConcat { parts, .. } => {
+                let mut found = false;
+                for p in parts.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(p);
+                }
+                found
+            }
+            // MakeClosure is deliberately NOT descended (v0 cut-line:
+            // yield inside a hoisted block belongs to the enclosing
+            // method).  Atomic literals and VarRef have no sub-exprs.
+            Expr::MakeClosure { .. }
+            | Expr::IntLit { .. }
+            | Expr::BoolLit { .. }
+            | Expr::NilLit { .. }
+            | Expr::SymLit { .. }
+            | Expr::StrLit { .. }
+            | Expr::FloatLit { .. }
+            | Expr::VarRef { .. } => false,
+        }
+    }
+
     /// Phase 7c — lower an endless method definition `def foo = expr`
     /// (or `def foo(x, y) = expr`) into a top-level `Function`.
     ///
@@ -2999,7 +3262,9 @@ impl Lowerer {
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
 
-        Ok(Function {
+        // Phase Q9e — an endless def may also `yield` (`def t = yield`);
+        // thread the explicit block param if so.
+        let func = Function {
             name,
             params,
             return_type: None,
@@ -3012,7 +3277,8 @@ impl Lowerer {
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: self.span_of(node),
-        })
+        };
+        Ok(self.thread_block_param(func))
     }
 
     fn lower_def_statement(
@@ -3201,7 +3467,11 @@ impl Lowerer {
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
 
-        Ok(Function {
+        // Phase Q9e — if the method body `yield`s, thread the explicit
+        // trailing block parameter and rewrite each `yield` into an
+        // `IndirectCall` through it.  Non-yielding methods are returned
+        // unchanged.
+        let func = Function {
             name,
             params,
             return_type: None,
@@ -3214,7 +3484,8 @@ impl Lowerer {
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: self.span_of(node),
-        })
+        };
+        Ok(self.thread_block_param(func))
     }
 
     // -------------------------------------------------------------------
