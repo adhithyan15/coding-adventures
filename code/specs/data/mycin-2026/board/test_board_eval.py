@@ -41,13 +41,13 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["tay_sachs_enzyme"].answer == "hexosaminidase_a"
     # A correct recall answer carries the citing edge's trust tier (its proof).
     assert by_id["tay_sachs_enzyme"].trust is not None
-    # The bank spans SEVEN recall domains: 18 IEM + 8 vitamin + 8 anemia + 8 endocrine
-    # + 11 coagulation (REL-13) + 13 microbiology (MICRO) + 9 pharmacology (PHARM) = 75
-    # covered recall items, all over one merged store. MICRO and PHARM are ADJ-ONLY
-    # domains: their *-edges.adj are hand-authored libraries carrying byte-provenance
-    # inline (no Python gate / JSON / manifest).
+    # The bank spans EIGHT recall domains: 18 IEM + 8 vitamin + 8 anemia + 8 endocrine
+    # + 11 coagulation (REL-13) + 13 microbiology (MICRO) + 9 pharmacology (PHARM) + 7
+    # immunology (IMMUNO) = 82 covered recall items, all over one merged store. MICRO,
+    # PHARM, and IMMUNO are ADJ-ONLY domains: their *-edges.adj are hand-authored
+    # libraries carrying byte-provenance inline (no Python gate / JSON / manifest).
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 75
+    assert len(recall_correct) == 82
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
@@ -61,6 +61,9 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["pharm_metformin_class"].answer == "biguanide"    # pharmacology (PHARM)
     assert by_id["pharm_opioid_antidote"].answer == "naloxone"     # pharm — antidote_for relation
     assert by_id["pharm_metformin_class"].trust == "authoritative"  # ADJ-only edge, grounded inline
+    assert by_id["immuno_as_hla"].answer == "hla_b27"             # immunology (IMMUNO)
+    assert by_id["immuno_type1_mediator"].answer == "ige"         # immuno — mediated_by relation
+    assert by_id["immuno_as_hla"].trust == "authoritative"        # ADJ-only edge, grounded inline
 
 
 def test_uncovered_items_abstain_not_fabricate() -> None:
@@ -94,16 +97,16 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
     # landed at direction_only. REL-14 found a stronger source whose verbatim span self-
     # contains the relation ("Factor VII deficiency is a bleeding disorder characterized
     # by a lack in the production of factor VII"), lifting it to authoritative. The ADJ-only
-    # domains MICRO (13 microbiology edges) and PHARM (9 pharmacology edges) — all spider-
-    # grounded to NCBI StatPearls byte-stable spans — add 22 more authoritative recall
-    # answers. 74 of the 75 recall answers across all SEVEN domains now cite an
-    # authoritative edge: grounded-coverage 99%. ONE holdout stays consensus + FLAG
-    # (direction_only) — the adversarial verify could not pin it verbatim, so the framework
-    # declines to claim grounding it cannot defend, by design: cortisol_def (endocrine,
-    # deficiency_syndrome__cortisol — the only verbatim spans frame cortisol deficiency as a
-    # consequence/feature of Addison disease, not the named-syndrome identity).
-    assert s["grounded_coverage"] == round(74 / 75, 4)   # 0.9867
-    assert s["grounded_correct"] == 74
+    # domains MICRO (13 microbiology), PHARM (9 pharmacology), and IMMUNO (7 immunology)
+    # edges — all spider-grounded to NCBI StatPearls byte-stable spans — add 29 more
+    # authoritative recall answers. 81 of the 82 recall answers across all EIGHT domains
+    # now cite an authoritative edge: grounded-coverage 99%. ONE holdout stays consensus +
+    # FLAG (direction_only) — the adversarial verify could not pin it verbatim, so the
+    # framework declines to claim grounding it cannot defend, by design: cortisol_def
+    # (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame cortisol
+    # deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
+    assert s["grounded_coverage"] == round(81 / 82, 4)   # 0.9878
+    assert s["grounded_correct"] == 81
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia

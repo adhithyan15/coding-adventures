@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 88,
-    "correct": 81,
+    "total": 95,
+    "correct": 88,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 75,
+        "correct": 82,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9867,
-    "grounded_correct": 74
+    "grounded_coverage": 0.9878,
+    "grounded_correct": 81
   },
   "results": [
     {
@@ -728,6 +728,62 @@
       "tactic": "recall",
       "gold": "flumazenil",
       "answer": "flumazenil",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_type1_mediator",
+      "tactic": "recall",
+      "gold": "ige",
+      "answer": "ige",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_type4_mediator",
+      "tactic": "recall",
+      "gold": "t_cells",
+      "answer": "t_cells",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_as_hla",
+      "tactic": "recall",
+      "gold": "hla_b27",
+      "answer": "hla_b27",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_xla_gene",
+      "tactic": "recall",
+      "gold": "btk",
+      "answer": "btk",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_cgd_deficiency",
+      "tactic": "recall",
+      "gold": "nadph_oxidase",
+      "answer": "nadph_oxidase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_digeorge_def",
+      "tactic": "recall",
+      "gold": "t_cells",
+      "answer": "t_cells",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_digeorge_gene",
+      "tactic": "recall",
+      "gold": "chromosome_22q11_2_deletion",
+      "answer": "chromosome_22q11_2_deletion",
       "outcome": "correct",
       "trust": "authoritative"
     }

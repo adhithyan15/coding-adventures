@@ -107,6 +107,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Bacteremia / UTI | Infectious dz | organism-id + treatment | grounded | ✓ |
 | Microbiology | Microbiology | gram_stain, morphology, causes | 13 grounded (ADJ-only) | ✓ |
 | Pharmacology | Pharmacology | drug_class, mechanism, adverse_effect, antidote_for | 9 grounded (ADJ-only) | ✓ |
+| Immunology | Immunology | mediated_by, associated_hla, gene_defect, deficiency_of | 7 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
 faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
@@ -131,6 +132,12 @@ faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
    declined for now — propranolol class (no drug-named span) and the one-hop
    adverse_effect(lisinopril, dry_cough) (attributed to the class, not the drug).
 3. **Immunology** — hypersensitivity types, immunodeficiencies, HLA associations, cytokines.
+   *Started (IMMUNO):* `mediated_by` (type I→IgE, type IV→T cells), `associated_hla`
+   (ankylosing spondylitis→HLA-B27), `gene_defect` (XLA→BTK, DiGeorge→22q11.2 deletion),
+   `deficiency_of` (CGD→NADPH oxidase, DiGeorge→T cells) — 7 edges, all grounded to byte-
+   stable NCBI StatPearls spans, shipped as the third **ADJ-only** domain
+   (`recall/immuno-edges.adj`). Remaining: type II/III mediators, more HLA links
+   (celiac→DQ2, narcolepsy→DR2 — deferred, no clean self-contained span yet), cytokines.
 4. **Genetics** — inheritance patterns, trinucleotide repeats, imprinting, gene defects
    (extends the IEM substrate).
 
@@ -184,8 +191,8 @@ manifest). MICRO onward, the order is grounding-FIRST (never seed authored-debt)
 ## Coverage accounting (the watchable number)
 
 The north-star metric: **% of the USMLE content outline covered by grounded, scored
-domains.** Today: 7 recall domains + ID differential/management (a slice of Multisystem,
-Endocrine, Hematology, Biochemistry, Nutrition, Microbiology, Pharmacology — 74/75 board
-recall answers cite an authoritative grounded edge). Each merged domain PR moves this number;
+domains.** Today: 8 recall domains + ID differential/management (a slice of Multisystem,
+Endocrine, Hematology, Biochemistry, Nutrition, Microbiology, Pharmacology, Immunology —
+81/82 board recall answers cite an authoritative grounded edge). Each merged domain PR moves this number;
 this map is the denominator. The campaign is done when every Tier-1/2/3 cell above has a
 grounded, scored domain and the board bank samples each.

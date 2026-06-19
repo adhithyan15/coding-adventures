@@ -98,6 +98,14 @@
     {"id": "pharm_apap_adverse",     "domain": "pharm", "tactic": "recall", "relation": "adverse_effect", "subject": "acetaminophen",          "var": "Effect",   "gold": "hepatic_necrosis"},
     {"id": "pharm_apap_antidote",    "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "acetaminophen_poisoning","var": "Antidote", "gold": "acetylcysteine"},
     {"id": "pharm_opioid_antidote",  "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "opioid_toxicity",        "var": "Antidote", "gold": "naloxone"},
-    {"id": "pharm_benzo_antidote",   "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "benzodiazepine_overdose","var": "Antidote", "gold": "flumazenil"}
+    {"id": "pharm_benzo_antidote",   "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "benzodiazepine_overdose","var": "Antidote", "gold": "flumazenil"},
+
+    {"id": "immuno_type1_mediator", "domain": "immuno", "tactic": "recall", "relation": "mediated_by",    "subject": "type_i_hypersensitivity",       "var": "Mediator",  "gold": "ige"},
+    {"id": "immuno_type4_mediator", "domain": "immuno", "tactic": "recall", "relation": "mediated_by",    "subject": "type_iv_hypersensitivity",      "var": "Mediator",  "gold": "t_cells"},
+    {"id": "immuno_as_hla",         "domain": "immuno", "tactic": "recall", "relation": "associated_hla", "subject": "ankylosing_spondylitis",        "var": "HLA",       "gold": "hla_b27"},
+    {"id": "immuno_xla_gene",       "domain": "immuno", "tactic": "recall", "relation": "gene_defect",    "subject": "x_linked_agammaglobulinemia",   "var": "Gene",      "gold": "btk"},
+    {"id": "immuno_cgd_deficiency", "domain": "immuno", "tactic": "recall", "relation": "deficiency_of",  "subject": "chronic_granulomatous_disease", "var": "Component", "gold": "nadph_oxidase"},
+    {"id": "immuno_digeorge_def",   "domain": "immuno", "tactic": "recall", "relation": "deficiency_of",  "subject": "digeorge_syndrome",             "var": "Component", "gold": "t_cells"},
+    {"id": "immuno_digeorge_gene",  "domain": "immuno", "tactic": "recall", "relation": "gene_defect",    "subject": "digeorge_syndrome",             "var": "Gene",      "gold": "chromosome_22q11_2_deletion"}
   ]
 }
