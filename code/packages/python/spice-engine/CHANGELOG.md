@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck run artifact JSON format** —
+  `format_deck_run_artifact_json()` now renders selected-run artifacts as
+  compact JSON records with the same stable keys and normalized cell values as
+  `format_deck_run_artifact_table()`, matching Rust and TypeScript.
+
 - **Deck run artifact CSV format** —
   `format_deck_run_artifact_csv()` now renders selected-run artifacts with the
   same stable columns as `format_deck_run_artifact_table()`, using deterministic

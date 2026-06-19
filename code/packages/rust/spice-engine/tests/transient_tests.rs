@@ -8,21 +8,22 @@ use spice_engine::{
     format_corner_digital_event_stream_table, format_corner_distortion_table,
     format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
     format_corner_transient_table, format_dc_table, format_deck_noise_table,
-    format_deck_run_artifact_csv, format_deck_run_artifact_table, format_deck_transient_table,
-    format_digital_bridge_schedule_table, format_digital_event_stream_table,
-    format_digital_event_table, format_distortion_table, format_fourier_table,
-    format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
-    fourier, fourier_corners, fourier_transient_deck, measure_transient_deck,
-    measure_transient_delay_between_probes, measure_transient_find_at_probe,
-    measure_transient_probe, measure_transient_when_probe, measure_transient_when_probe_counted,
-    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
-    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, run_deck_analysis, sample_transient_probe_as_digital_events,
-    sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
-    transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
+    format_deck_run_artifact_csv, format_deck_run_artifact_json, format_deck_run_artifact_table,
+    format_deck_transient_table, format_digital_bridge_schedule_table,
+    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
+    format_fourier_table, format_measurement_table, format_pole_zero_table, format_pss_table,
+    format_transient_table, fourier, fourier_corners, fourier_transient_deck,
+    measure_transient_deck, measure_transient_delay_between_probes,
+    measure_transient_find_at_probe, measure_transient_probe, measure_transient_when_probe,
+    measure_transient_when_probe_counted, pole_zero_rc_highpass, pole_zero_rc_lowpass,
+    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
+    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, run_deck_analysis,
+    sample_transient_probe_as_digital_events, sample_transient_probes_as_digital_event_streams,
+    transient, transient_adaptive, transient_adaptive_corners,
+    transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
     transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
     transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
@@ -1925,6 +1926,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
             op_execution.plan.line_number
         )
     );
+    let artifact_json = format_deck_run_artifact_json(&op_execution.run_artifacts);
+    assert!(artifact_json.starts_with(&format!(
+        "[{{\"Analysis\":\"op\",\"Directive\":\".op\",\"Line\":\"{}\",\"SourceName\":\"\",\"OutputNode\":\"\"",
+        op_execution.plan.line_number
+    )));
+    assert!(artifact_json.contains("\"ResultColumnList\":\"Index;V(mid)\""));
+    assert!(artifact_json.contains("\"OutputProbeList\":\"V(mid)\""));
+    assert!(artifact_json.ends_with("\"Diagnostics\":\"0\",\"DiagnosticCodeList\":\"\"}]\n"));
     let mut diagnostic_artifact = op_execution.run_artifacts[0].clone();
     diagnostic_artifact.diagnostic_codes = vec![
         "SPICE_DECK_ANALYSIS_TOKEN".to_string(),
@@ -1950,8 +1959,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         "SPICE,\"QUOTED\"".to_string(),
     ];
     quoted_diagnostic_artifact.diagnostic_count = quoted_diagnostic_artifact.diagnostic_codes.len();
-    assert!(format_deck_run_artifact_csv(&[quoted_diagnostic_artifact])
-        .ends_with(",2,\"SPICE_DECK_ANALYSIS_TOKEN;SPICE,\"\"QUOTED\"\"\"\n"));
+    assert!(
+        format_deck_run_artifact_csv(&[quoted_diagnostic_artifact.clone()])
+            .ends_with(",2,\"SPICE_DECK_ANALYSIS_TOKEN;SPICE,\"\"QUOTED\"\"\"\n")
+    );
+    assert!(format_deck_run_artifact_json(&[quoted_diagnostic_artifact]).ends_with(
+        ",\"Diagnostics\":\"2\",\"DiagnosticCodeList\":\"SPICE_DECK_ANALYSIS_TOKEN;SPICE,\\\"QUOTED\\\"\"}]\n"
+    ));
 
     let dc_execution = run_deck_analysis(&circuit, netlist, Some("dc")).unwrap();
     assert_eq!(dc_execution.plan.source_name.as_deref(), Some("V1"));

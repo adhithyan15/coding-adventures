@@ -8011,6 +8011,15 @@ function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
   ];
 }
 
+type DeckRunArtifactRecord = Record<(typeof DECK_RUN_ARTIFACT_COLUMNS)[number], string>;
+
+function deckRunArtifactRecord(artifact: DeckRunArtifact): DeckRunArtifactRecord {
+  const cells = deckRunArtifactCells(artifact);
+  return Object.fromEntries(
+    DECK_RUN_ARTIFACT_COLUMNS.map((column, index) => [column, cells[index] ?? ""]),
+  ) as DeckRunArtifactRecord;
+}
+
 function deckTableColumns(table: string): string[] {
   const header = table.split("\n", 1)[0] ?? "";
   return header.length === 0 ? [] : header.split("\t");
@@ -8037,6 +8046,10 @@ export function formatDeckRunArtifactCsv(artifacts: readonly DeckRunArtifact[]):
     rows.push(deckRunArtifactCells(artifact).map(formatCsvCell).join(","));
   }
   return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckRunArtifactJson(artifacts: readonly DeckRunArtifact[]): string {
+  return `${JSON.stringify(artifacts.map(deckRunArtifactRecord))}\n`;
 }
 
 function selectDeckMeasurementCardsForAnalysis(

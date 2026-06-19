@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `formatDeckRunArtifactJson` for selected-run artifacts with the same
+  stable keys and normalized cell values as `formatDeckRunArtifactTable`,
+  matching Python and Rust.
 - Add `formatDeckRunArtifactCsv` for selected-run artifacts with the same
   stable columns as `formatDeckRunArtifactTable` plus deterministic CSV
   escaping for browser and spreadsheet consumers, matching Python and Rust.
