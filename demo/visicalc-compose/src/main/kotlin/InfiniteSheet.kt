@@ -135,6 +135,20 @@ fun InfiniteSheet() {
         rev++
     }
 
+    // Undo / redo: walk the engine's snapshot history. On success the grid
+    // re-reads (rev++) and the formula bar re-syncs; the buttons gate off the
+    // model's canUndo/canRedo (re-evaluated because rev is read in the layout).
+    fun undo() {
+        if (!model.undoEdit()) return
+        formula = model.formula
+        rev++
+    }
+    fun redo() {
+        if (!model.redoEdit()) return
+        formula = model.formula
+        rev++
+    }
+
     Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
         // ── Formula bar: the selected cell's address + an editable source ──
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -187,6 +201,12 @@ fun InfiniteSheet() {
             clipButton("Save") { saveBook() }
             Spacer(Modifier.width(8.dp))
             clipButton("Load") { loadBook() }
+            // Undo / redo: walk the engine's snapshot history. Reading `rev` here
+            // re-evaluates canUndo/canRedo on every edit so the buttons gate live.
+            Spacer(Modifier.width(8.dp))
+            gatedButton("Undo", enabled = rev.let { model.canUndo() }) { undo() }
+            Spacer(Modifier.width(8.dp))
+            gatedButton("Redo", enabled = rev.let { model.canRedo() }) { redo() }
         }
 
         Spacer(Modifier.height(6.dp))
@@ -271,8 +291,15 @@ private fun Text(text: String, color: Color, width: androidx.compose.ui.unit.Dp)
 /// A compact outlined button for the clipboard controls, matching "Fill ↓ 10".
 @Composable
 private fun clipButton(label: String, onClick: () -> Unit) {
+    gatedButton(label, enabled = true, onClick = onClick)
+}
+
+/// A clipboard-style button that disables when `enabled` is false (Undo/Redo).
+@Composable
+private fun gatedButton(label: String, enabled: Boolean, onClick: () -> Unit) {
     androidx.compose.material.OutlinedButton(
         onClick = onClick,
+        enabled = enabled,
         colors = androidx.compose.material.ButtonDefaults.outlinedButtonColors(
             backgroundColor = CHROME,
             contentColor = INK,

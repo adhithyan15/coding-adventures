@@ -59,6 +59,11 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     // sc_deserialize(session, data) -> int (1 loaded, 0 malformed/unsupported).
     private val scSerialize = handle("sc_serialize", FunctionDescriptor.of(ptr, ptr))
     private val scDeserialize = handle("sc_deserialize", FunctionDescriptor.of(i32, ptr, ptr))
+    // sc_undo / sc_redo / sc_can_undo / sc_can_redo(session) -> int (1/0).
+    private val scUndo = handle("sc_undo", FunctionDescriptor.of(i32, ptr))
+    private val scRedo = handle("sc_redo", FunctionDescriptor.of(i32, ptr))
+    private val scCanUndo = handle("sc_can_undo", FunctionDescriptor.of(i32, ptr))
+    private val scCanRedo = handle("sc_can_redo", FunctionDescriptor.of(i32, ptr))
     private val scUsedRange = handle("sc_used_range", FunctionDescriptor.of(ptr, ptr))
     private val scColumnLetters = handle("sc_column_letters", FunctionDescriptor.of(ptr, ptr, i32))
     private val scCurrentRevision = handle("sc_current_revision", FunctionDescriptor.of(i64, ptr))
@@ -175,6 +180,14 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     fun deserialize(data: String): Boolean = Arena.ofConfined().use { a ->
         (scDeserialize.invoke(session, a.allocateUtf8String(data)) as Int) != 0
     }
+
+    /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
+    /// changed the document (the host then re-reads the viewport), `false` if
+    /// there was nothing to do. canUndo/canRedo gate a host's Undo/Redo controls.
+    fun undo(): Boolean = (scUndo.invoke(session) as Int) != 0
+    fun redo(): Boolean = (scRedo.invoke(session) as Int) != 0
+    fun canUndo(): Boolean = (scCanUndo.invoke(session) as Int) != 0
+    fun canRedo(): Boolean = (scCanRedo.invoke(session) as Int) != 0
 
     /// Dense display strings for the inclusive 1-based rectangle, row-major
     /// (empty cells become ""). Empty list on a bad/oversized request.
@@ -452,6 +465,28 @@ class InfiniteSheetModel(
     fun saveBook(): String = session.serialize()
     fun loadBook(data: String): Boolean {
         val ok = session.deserialize(data)
+        if (ok) {
+            computeExtent()
+            formula = session.getRaw(infAddress())
+        }
+        return ok
+    }
+
+    /// Undo / redo: walk the engine's snapshot history. On success the extent
+    /// regrows and the formula bar refreshes (any cell could have changed); a
+    /// restored formula stays live. canUndo/canRedo gate the buttons.
+    fun canUndo(): Boolean = session.canUndo()
+    fun canRedo(): Boolean = session.canRedo()
+    fun undoEdit(): Boolean {
+        val ok = session.undo()
+        if (ok) {
+            computeExtent()
+            formula = session.getRaw(infAddress())
+        }
+        return ok
+    }
+    fun redoEdit(): Boolean {
+        val ok = session.redo()
         if (ok) {
             computeExtent()
             formula = session.getRaw(infAddress())
