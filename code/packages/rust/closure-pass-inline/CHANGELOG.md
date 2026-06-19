@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.13.1] - 2026-06-19
+
+### Fixed (soundness) — decline helpers that reassign a parameter
+
+A helper that **reassigns one of its parameters** (`function f(x){ x = x + 1;
+return x; }`) was being inlined, producing a **miscompile**: inlining
+substitutes each parameter occurrence with its *argument expression*, treating
+the parameter as an immutable value, so `var g = f(7)` became `var g = 7`
+(plus a stray global write `x = 8`) instead of the correct `var g = 8`. The
+same broke in `return`/assignment capture positions.
+
+This was a latent hazard that only became **reachable** once assignment-
+expression statements parsed (the CLOC17 grammar fix, `javascript-parser`
+0.9.0) — before that, any helper body containing `x = …` made the whole
+program fall back to whitespace-only, so the inliner never saw it.
+
+The candidate filter now declines any helper whose body assigns to a parameter
+(`x = …`, `x += …`, or nested forms like `y = (x = 5)` / `f(x = 5)` — a new
+recursive `body_assigns_to_param` walk covers every expression position). A
+member-target whose *base* is a parameter (`x.k = 5`) is still admitted: it
+mutates a property of the argument, not the parameter binding, and is sound
+under substitution. (`++`/`--` parameter mutation is not reachable — the typed
+AST has no `UpdateExpression` yet.)
+
+Correctly inlining a mutated parameter would require materialising it into a
+fresh local seeded from the argument; that is left as a future slice.
+Declining is never a miscompile. Four new unit tests (three decline cases, one
+positive control proving a *free*-variable assignment still inlines). No
+closurec fixture churn.
+
 ## [0.13.0] - 2026-06-19
 
 ### Added (CLOC15 PR-6 — assignment-target value capture, `g = f(x)`)
