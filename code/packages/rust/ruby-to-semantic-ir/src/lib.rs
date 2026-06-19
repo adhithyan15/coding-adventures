@@ -5363,6 +5363,135 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase Q10b — block_given? → not(null?(__sir_block__))
+    // -----------------------------------------------------------------------
+
+    /// Whether a `block_given?`-shaped nil-check —
+    /// `not(null?(VarRef __sir_block__))` — appears anywhere in a block.
+    fn finds_block_given_check(b: &semantic_ir::Block) -> bool {
+        fn is_check(e: &Expr) -> bool {
+            if let Expr::BuiltinCall { name, args, .. } = e {
+                if name == "not" && args.len() == 1 {
+                    if let Expr::BuiltinCall { name: inner, args: ia, .. } = &args[0] {
+                        if inner == "null?" && ia.len() == 1 {
+                            return matches!(&ia[0],
+                                Expr::VarRef { name, scope, .. }
+                                    if name == "__sir_block__" && *scope == Scope::Param);
+                        }
+                    }
+                }
+            }
+            false
+        }
+        fn in_expr(e: &Expr) -> bool {
+            if is_check(e) {
+                return true;
+            }
+            match e {
+                Expr::DirectCall { args, .. }
+                | Expr::BuiltinCall { args, .. }
+                | Expr::Intrinsic { args, .. } => args.iter().any(in_expr),
+                Expr::IndirectCall { target, args, .. } => {
+                    in_expr(target) || args.iter().any(in_expr)
+                }
+                Expr::If { cond, then_branch, else_branch, .. } => {
+                    in_expr(cond) || in_blk(then_branch) || in_blk(else_branch)
+                }
+                Expr::Block(b) => in_blk(b),
+                Expr::SeqLit { items, .. } => items.iter().any(in_expr),
+                Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                    in_expr(lhs) || in_expr(rhs)
+                }
+                _ => false,
+            }
+        }
+        fn in_blk(b: &semantic_ir::Block) -> bool {
+            b.stmts.iter().any(|s| match s {
+                Stmt::LetBinding { value, .. }
+                | Stmt::LetStarBinding { value, .. }
+                | Stmt::Assign { value, .. }
+                | Stmt::ExprStmt { expr: value, .. } => in_expr(value),
+                _ => false,
+            }) || in_expr(&b.value)
+        }
+        in_blk(b)
+    }
+
+    /// Whether a `VarRef` named `name` appears anywhere in a block (used to
+    /// assert the raw `block_given?` ref was fully rewritten away).
+    fn body_mentions_varref(b: &semantic_ir::Block, name: &str) -> bool {
+        fn in_expr(e: &Expr, name: &str) -> bool {
+            match e {
+                Expr::VarRef { name: n, .. } => n == name,
+                Expr::DirectCall { args, .. }
+                | Expr::BuiltinCall { args, .. }
+                | Expr::Intrinsic { args, .. } => args.iter().any(|a| in_expr(a, name)),
+                Expr::IndirectCall { target, args, .. } => {
+                    in_expr(target, name) || args.iter().any(|a| in_expr(a, name))
+                }
+                Expr::If { cond, then_branch, else_branch, .. } => {
+                    in_expr(cond, name) || in_blk(then_branch, name) || in_blk(else_branch, name)
+                }
+                Expr::Block(b) => in_blk(b, name),
+                Expr::SeqLit { items, .. } => items.iter().any(|i| in_expr(i, name)),
+                Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                    in_expr(lhs, name) || in_expr(rhs, name)
+                }
+                _ => false,
+            }
+        }
+        fn in_blk(b: &semantic_ir::Block, name: &str) -> bool {
+            b.stmts.iter().any(|s| match s {
+                Stmt::LetBinding { value, .. }
+                | Stmt::LetStarBinding { value, .. }
+                | Stmt::Assign { value, .. }
+                | Stmt::ExprStmt { expr: value, .. } => in_expr(value, name),
+                _ => false,
+            }) || in_expr(&b.value, name)
+        }
+        in_blk(b, name)
+    }
+
+    #[test]
+    fn block_given_in_yielding_method_becomes_nil_check() {
+        let m = lower("def t\n  if block_given?\n    yield 5\n  end\nend\n");
+        let t = func(&m, "t");
+        assert_eq!(t.params.last().map(|p| p.name.as_str()), Some("__sir_block__"));
+        assert!(
+            finds_block_given_check(&t.body),
+            "block_given? must become not(null?(__sir_block__))"
+        );
+        assert!(
+            !body_mentions_varref(&t.body, "block_given?"),
+            "no raw block_given? VarRef may remain"
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn block_given_alone_threads_block_param() {
+        // A method that queries block_given? but never yields must STILL be
+        // threaded (detection fires on block_given?, not only yield).
+        let m = lower("def t\n  if block_given?\n    1\n  else\n    2\n  end\nend\n");
+        let t = func(&m, "t");
+        assert_eq!(
+            t.params.last().map(|p| p.name.as_str()),
+            Some("__sir_block__"),
+            "block_given?-only method must still gain __sir_block__"
+        );
+        assert!(finds_block_given_check(&t.body));
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn method_without_block_given_or_yield_is_unchanged() {
+        let m = lower("def g(x)\n  x + 1\nend\n");
+        let g = func(&m, "g");
+        assert_eq!(g.params.len(), 1, "non-block method keeps its arity");
+        assert!(!finds_block_given_check(&g.body));
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 22d — `super` keyword lowering
     //
     //   super        → ExprStmt(BuiltinCall("zsuper", []))   (forward ALL)
@@ -7661,3 +7790,5 @@ b = "y"
         );
     }
 }
+
+
