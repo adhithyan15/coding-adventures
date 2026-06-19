@@ -2335,6 +2335,293 @@ impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewD
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind {
+    OperatorHandoff,
+    RepairAction,
+    LineageRepair,
+    ExecutionReady,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::OperatorHandoff => "operator_handoff",
+            Self::RepairAction => "repair_action",
+            Self::LineageRepair => "lineage_repair",
+            Self::ExecutionReady => "execution_ready",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationAction {
+    pub sequence: usize,
+    pub remediation_key: String,
+    pub disposition_sequence: usize,
+    pub disposition_key: String,
+    pub review_sequence: usize,
+    pub review_key: String,
+    pub evidence_sequence: usize,
+    pub evidence_key: String,
+    pub work_order_sequence: usize,
+    pub work_order_key: String,
+    pub ticket_sequence: usize,
+    pub ticket_key: String,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub remediation_kind:
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind,
+    pub disposition_kind:
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub lineage_complete: bool,
+    pub review_required: bool,
+    pub ready_for_execution: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationAction {
+    pub fn from_disposition(
+        sequence: usize,
+        disposition: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDisposition,
+    ) -> Self {
+        let remediation_kind = if disposition.is_lineage_gap() {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind::LineageRepair
+        } else if disposition.is_operator_handoff() {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind::OperatorHandoff
+        } else if disposition.is_repair_required()
+            || disposition.blocks_preflight()
+            || disposition.needs_review()
+        {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind::RepairAction
+        } else {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind::ExecutionReady
+        };
+
+        Self {
+            sequence,
+            remediation_key: format!(
+                "remediation-{sequence:02}-{}-{}",
+                disposition.stage.as_str(),
+                disposition.action_kind.as_str()
+            ),
+            disposition_sequence: disposition.sequence,
+            disposition_key: disposition.disposition_key.clone(),
+            review_sequence: disposition.review_sequence,
+            review_key: disposition.review_key.clone(),
+            evidence_sequence: disposition.evidence_sequence,
+            evidence_key: disposition.evidence_key.clone(),
+            work_order_sequence: disposition.work_order_sequence,
+            work_order_key: disposition.work_order_key.clone(),
+            ticket_sequence: disposition.ticket_sequence,
+            ticket_key: disposition.ticket_key.clone(),
+            slot_sequence: disposition.slot_sequence,
+            batch_sequence: disposition.batch_sequence,
+            stage: disposition.stage,
+            action_kind: disposition.action_kind,
+            status: disposition.status,
+            remediation_kind,
+            disposition_kind: disposition.disposition_kind,
+            action_count: disposition.action_count,
+            protocol_count: disposition.protocol_count,
+            primitive_count: disposition.primitive_count,
+            protocols: disposition.protocols.clone(),
+            primitives: disposition.primitives.clone(),
+            release_blocking: disposition.blocks_preflight(),
+            operator_required: disposition.requires_operator(),
+            lineage_complete: disposition.has_lineage(),
+            review_required: disposition.needs_review(),
+            ready_for_execution: disposition.is_ready_for_execution(),
+        }
+    }
+
+    pub fn blocks_release(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn is_operator_handoff(&self) -> bool {
+        self.remediation_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind::OperatorHandoff
+    }
+
+    pub fn is_repair_action(&self) -> bool {
+        self.remediation_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind::RepairAction
+    }
+
+    pub fn is_lineage_repair(&self) -> bool {
+        self.remediation_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind::LineageRepair
+    }
+
+    pub fn is_execution_ready(&self) -> bool {
+        self.remediation_kind
+            == IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind::ExecutionReady
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationSummary {
+    pub total_remediations: usize,
+    pub scheduled_actions: usize,
+    pub blocking_remediations: usize,
+    pub operator_handoff_remediations: usize,
+    pub repair_action_remediations: usize,
+    pub lineage_repair_remediations: usize,
+    pub review_required_remediations: usize,
+    pub execution_ready_remediations: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_remediation_key: Option<String>,
+    pub first_operator_handoff_remediation_key: Option<String>,
+    pub first_repair_action_remediation_key: Option<String>,
+    pub first_lineage_repair_remediation_key: Option<String>,
+    pub first_execution_ready_remediation_key: Option<String>,
+    pub first_disposition_key: Option<String>,
+    pub first_review_key: Option<String>,
+    pub first_evidence_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_evidence_remediations_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationSummary {
+    pub fn from_remediations<'a>(
+        remediations: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationAction,
+        >,
+    ) -> Self {
+        let remediations = remediations.into_iter().collect::<Vec<_>>();
+        let first_remediation = remediations
+            .iter()
+            .min_by_key(|remediation| remediation.sequence);
+        let first_operator_handoff_remediation = remediations
+            .iter()
+            .filter(|remediation| remediation.is_operator_handoff())
+            .min_by_key(|remediation| remediation.sequence);
+        let first_repair_action_remediation = remediations
+            .iter()
+            .filter(|remediation| remediation.is_repair_action())
+            .min_by_key(|remediation| remediation.sequence);
+        let first_lineage_repair_remediation = remediations
+            .iter()
+            .filter(|remediation| remediation.is_lineage_repair())
+            .min_by_key(|remediation| remediation.sequence);
+        let first_execution_ready_remediation = remediations
+            .iter()
+            .filter(|remediation| remediation.is_execution_ready())
+            .min_by_key(|remediation| remediation.sequence);
+
+        Self {
+            total_remediations: remediations.len(),
+            scheduled_actions: remediations
+                .iter()
+                .map(|remediation| remediation.action_count)
+                .sum(),
+            blocking_remediations: remediations
+                .iter()
+                .filter(|remediation| remediation.blocks_release())
+                .count(),
+            operator_handoff_remediations: remediations
+                .iter()
+                .filter(|remediation| remediation.is_operator_handoff())
+                .count(),
+            repair_action_remediations: remediations
+                .iter()
+                .filter(|remediation| remediation.is_repair_action())
+                .count(),
+            lineage_repair_remediations: remediations
+                .iter()
+                .filter(|remediation| remediation.is_lineage_repair())
+                .count(),
+            review_required_remediations: remediations
+                .iter()
+                .filter(|remediation| remediation.needs_review())
+                .count(),
+            execution_ready_remediations: remediations
+                .iter()
+                .filter(|remediation| remediation.is_execution_ready())
+                .count(),
+            protocol_mentions: remediations
+                .iter()
+                .map(|remediation| remediation.protocol_count)
+                .sum(),
+            primitive_mentions: remediations
+                .iter()
+                .map(|remediation| remediation.primitive_count)
+                .sum(),
+            first_remediation_key: first_remediation
+                .map(|remediation| remediation.remediation_key.clone()),
+            first_operator_handoff_remediation_key: first_operator_handoff_remediation
+                .map(|remediation| remediation.remediation_key.clone()),
+            first_repair_action_remediation_key: first_repair_action_remediation
+                .map(|remediation| remediation.remediation_key.clone()),
+            first_lineage_repair_remediation_key: first_lineage_repair_remediation
+                .map(|remediation| remediation.remediation_key.clone()),
+            first_execution_ready_remediation_key: first_execution_ready_remediation
+                .map(|remediation| remediation.remediation_key.clone()),
+            first_disposition_key: first_remediation
+                .map(|remediation| remediation.disposition_key.clone()),
+            first_review_key: first_remediation.map(|remediation| remediation.review_key.clone()),
+            first_evidence_key: first_remediation
+                .map(|remediation| remediation.evidence_key.clone()),
+            first_work_order_key: first_remediation
+                .map(|remediation| remediation.work_order_key.clone()),
+            first_ticket_key: first_remediation.map(|remediation| remediation.ticket_key.clone()),
+            first_stage: first_remediation.map(|remediation| remediation.stage),
+            first_action_kind: first_remediation.map(|remediation| remediation.action_kind),
+            execution_evidence_remediations_ready: remediations.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_remediations == 0
+    }
+
+    pub fn has_remediations(&self) -> bool {
+        self.total_remediations > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_remediations > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_handoff_remediations > 0
+    }
+
+    pub fn needs_repair(&self) -> bool {
+        self.repair_action_remediations > 0
+    }
+
+    pub fn has_lineage_repairs(&self) -> bool {
+        self.lineage_repair_remediations > 0
+    }
+
+    pub fn has_execution_ready_work(&self) -> bool {
+        self.execution_ready_remediations > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
@@ -24207,6 +24494,35 @@ pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_d
     )
 }
 
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_remediation_actions(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationAction> {
+    mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_dispositions(
+        available_primitives,
+    )
+    .iter()
+    .enumerate()
+    .map(|(index, disposition)| {
+        IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationAction::from_disposition(
+            index + 1,
+            disposition,
+        )
+    })
+    .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_remediation_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationSummary {
+    let remediations =
+        mesh_protocol_substrate_preflight_repair_slot_execution_evidence_remediation_actions(
+            available_primitives,
+        );
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationSummary::from_remediations(
+        remediations.iter(),
+    )
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -32213,6 +32529,163 @@ mod tests {
         assert!(!summary.needs_review());
         assert!(!summary.has_lineage_gaps());
         assert!(summary.has_complete_lineage());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_remediations_classify_work()
+    {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let remediations =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_remediation_actions(
+                &available_primitives,
+            );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationSummary::from_remediations(
+                remediations.iter(),
+            );
+
+        assert_eq!(remediations.len(), 3);
+        assert_eq!(summary.total_remediations, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_remediations, 3);
+        assert_eq!(summary.operator_handoff_remediations, 2);
+        assert_eq!(summary.repair_action_remediations, 1);
+        assert_eq!(summary.lineage_repair_remediations, 0);
+        assert_eq!(summary.review_required_remediations, 3);
+        assert_eq!(summary.execution_ready_remediations, 0);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_remediation_key,
+            Some("remediation-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_handoff_remediation_key,
+            Some("remediation-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_repair_action_remediation_key,
+            Some("remediation-02-discovery-enable_discovery".to_string())
+        );
+        assert_eq!(summary.first_lineage_repair_remediation_key, None);
+        assert_eq!(summary.first_execution_ready_remediation_key, None);
+        assert_eq!(
+            summary.first_disposition_key,
+            Some("disposition-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_review_key,
+            Some("review-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_evidence_remediations_ready);
+        assert!(summary.has_remediations());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.needs_repair());
+        assert!(!summary.has_lineage_repairs());
+        assert!(!summary.has_execution_ready_work());
+
+        let first = &remediations[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(
+            first.remediation_key,
+            "remediation-01-radio-provision_radio"
+        );
+        assert_eq!(first.disposition_sequence, 1);
+        assert_eq!(
+            first.disposition_key,
+            "disposition-01-radio-provision_radio"
+        );
+        assert_eq!(first.review_key, "review-01-radio-provision_radio");
+        assert_eq!(first.evidence_key, "evidence-01-radio-provision_radio");
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(
+            first.remediation_kind,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationKind::OperatorHandoff
+        );
+        assert_eq!(first.remediation_kind.as_str(), "operator_handoff");
+        assert_eq!(
+            first.disposition_kind,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionKind::OperatorHandoff
+        );
+        assert!(first.blocks_release());
+        assert!(first.requires_operator());
+        assert!(first.needs_review());
+        assert!(first.is_operator_handoff());
+        assert!(!first.is_repair_action());
+        assert!(!first.is_lineage_repair());
+        assert!(!first.is_execution_ready());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_remediations_empty_when_ready(
+    ) {
+        let remediations =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_remediation_actions(
+                all_primitive_families(),
+            );
+        let summary =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_remediation_summary(
+                all_primitive_families(),
+            );
+
+        assert!(remediations.is_empty());
+        assert_eq!(summary.total_remediations, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_remediations, 0);
+        assert_eq!(summary.operator_handoff_remediations, 0);
+        assert_eq!(summary.repair_action_remediations, 0);
+        assert_eq!(summary.lineage_repair_remediations, 0);
+        assert_eq!(summary.review_required_remediations, 0);
+        assert_eq!(summary.execution_ready_remediations, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_remediation_key, None);
+        assert_eq!(summary.first_operator_handoff_remediation_key, None);
+        assert_eq!(summary.first_repair_action_remediation_key, None);
+        assert_eq!(summary.first_lineage_repair_remediation_key, None);
+        assert_eq!(summary.first_execution_ready_remediation_key, None);
+        assert_eq!(summary.first_disposition_key, None);
+        assert_eq!(summary.first_review_key, None);
+        assert_eq!(summary.first_evidence_key, None);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_evidence_remediations_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_remediations());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.needs_repair());
+        assert!(!summary.has_lineage_repairs());
+        assert!(!summary.has_execution_ready_work());
     }
 
     #[test]

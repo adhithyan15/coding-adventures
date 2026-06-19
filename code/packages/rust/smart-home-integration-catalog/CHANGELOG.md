@@ -108,6 +108,9 @@ All notable changes to this package will be documented in this file.
   mesh preflight slot readiness with operator-ready execution ticket counts.
 - `IntegrationMeshPreflightWorkOrderReadinessSummary` and helpers for combining
   mesh preflight execution readiness with release work-order counts.
+- `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceRemediationAction`
+  and summary helpers for turning mesh execution evidence review dispositions
+  into operator, repair, lineage, and execution-ready queues.
 - `IntegrationMeshPreflightGuardrailReadinessSummary` and helpers for combining
   mesh preflight work-order readiness with guardrail and evidence-review
   disposition counts.

@@ -91,6 +91,8 @@ runtime and Chief of Staff tools a typed catalog for:
   with operator-ready execution ticket counts
 - mesh preflight work-order readiness summaries that combine execution
   readiness with release work-order counts
+- mesh repair-slot execution evidence remediation actions that turn review
+  dispositions into operator, repair, lineage, and execution-ready queues
 - mesh preflight guardrail readiness summaries that combine work-order
   readiness with guardrail and evidence-review disposition counts
 - mesh readiness handoff packages that project substrate actions, evidence
