@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 95,
-    "correct": 88,
+    "total": 102,
+    "correct": 95,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 82,
+        "correct": 89,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9878,
-    "grounded_correct": 81
+    "grounded_coverage": 0.9888,
+    "grounded_correct": 88
   },
   "results": [
     {
@@ -784,6 +784,62 @@
       "tactic": "recall",
       "gold": "chromosome_22q11_2_deletion",
       "answer": "chromosome_22q11_2_deletion",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_hd_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_dominant",
+      "answer": "autosomal_dominant",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_hd_gene",
+      "tactic": "recall",
+      "gold": "htt",
+      "answer": "htt",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_hd_repeat",
+      "tactic": "recall",
+      "gold": "cag",
+      "answer": "cag",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_marfan_inh",
+      "tactic": "recall",
+      "gold": "autosomal_dominant",
+      "answer": "autosomal_dominant",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_fragx_repeat",
+      "tactic": "recall",
+      "gold": "cgg",
+      "answer": "cgg",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_fragx_gene",
+      "tactic": "recall",
+      "gold": "fmr1",
+      "answer": "fmr1",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_pws_imprint",
+      "tactic": "recall",
+      "gold": "paternal",
+      "answer": "paternal",
       "outcome": "correct",
       "trust": "authoritative"
     }

@@ -1,0 +1,79 @@
+% ============================================================================
+% genetics-edges — the medical-genetics knowledge-graph (MYCIN-2026 GENETICS).
+% ============================================================================
+% A Tier-1 recall domain (USMLE-DOMAIN-MAP §"To build"): inheritance patterns,
+% trinucleotide-repeat expansions, parent-of-origin imprinting, and the gene behind a
+% classic Mendelian disorder. "How is Huntington disease inherited?" becomes the
+% binding query  ? inheritance(huntington_disease, $Pattern).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the fourth ADJ-only recall domain). Each fact is a `relate` clause
+% whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see genetics-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: relations chosen so the cited span NAMES both endpoints. gene_defect
+% reuses the same relation the IMMUNO library uses (the engine binds any grounded
+% `relate(rel, args)`); the disorders here are disjoint from immunology's. Edges with
+% no clean self-contained span (e.g. Marfan→FBN1, where the page's FBN1 mentions are
+% citation titles or negative-finding clauses) are deferred rather than over-claimed.
+% ============================================================================
+
+dictionary genetics_vocab {
+    define disorder : entity   surface "genetic disorder", "Mendelian disorder"
+    define pattern  : entity   surface "inheritance pattern"
+    define gene     : entity   surface "gene"
+    define repeat   : entity   surface "trinucleotide repeat"
+    define parent   : entity   surface "parent of origin"
+
+    define inheritance         : relation from disorder to pattern  % how the disorder is transmitted
+    define gene_defect         : relation from disorder to gene     % the mutated gene
+    define trinucleotide_repeat : relation from disorder to repeat  % the expanded triplet
+    define imprinting          : relation from disorder to parent   % the parent-of-origin lesion
+}
+
+rulebook genetics_facts {
+    use genetics_vocab
+
+    % --- Huntington disease (AD, CAG expansion in HTT) -------------------
+    relate inheritance(huntington_disease, autosomal_dominant)
+        source "Huntington disease, an autosomal dominant inherited neurodegenerative disorder, is characterized by the clinical triad of involuntary choreiform movements with cognitive and behavioral disturbances."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559166/"
+        trust authoritative
+    relate gene_defect(huntington_disease, htt)
+        source "Huntington disease is an autosomal dominant inherited neurodegenerative disorder caused by the elongation of CAG repeats on the short arm of chromosome 4p16.3 in the HTT gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559166/"
+        trust authoritative
+    relate trinucleotide_repeat(huntington_disease, cag)
+        source "Huntington disease is an autosomal dominant disorder that results from CAG repeat expansions, usually of paternal origin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559254/"
+        trust authoritative
+
+    % --- Marfan syndrome (autosomal dominant) ----------------------------
+    relate inheritance(marfan_syndrome, autosomal_dominant)
+        source "One of the most common inherited disorders affecting connective tissue, Marfan syndrome (MFS), is an autosomal dominant condition with a reported incidence of 1 in 3000 to 5000 individuals."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537339/"
+        trust authoritative
+
+    % --- Fragile X syndrome (CGG expansion in FMR1) ----------------------
+    relate trinucleotide_repeat(fragile_x_syndrome, cgg)
+        source "Fragile X syndrome: This condition results from CGG repeats in the noncoding region of the Fragile X mental retardation 1 ( FMR1 ) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559254/"
+        trust authoritative
+    relate gene_defect(fragile_x_syndrome, fmr1)
+        source "Fragile X syndrome: This condition results from CGG repeats in the noncoding region of the Fragile X mental retardation 1 ( FMR1 ) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559254/"
+        trust authoritative
+
+    % --- Prader-Willi syndrome (loss of PATERNAL 15q11-q13; imprinting) --
+    relate imprinting(prader_willi_syndrome, paternal)
+        source "PWS results from the loss of expression of paternally inherited genes on chromosome 15q11.2–q13, most commonly due to paternal deletion, maternal uniparental disomy, or imprinting defects."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553161/"
+        trust authoritative
+}
