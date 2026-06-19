@@ -859,6 +859,148 @@ impl IntegrationMeshProtocolSubstratePreflightActionSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairBatch {
+    pub sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub action_count: usize,
+    pub blocking_actions: usize,
+    pub operator_required_actions: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_primitive: Option<PrimitiveFamily>,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairBatch {
+    pub fn from_actions<'a>(
+        sequence: usize,
+        stage: IntegrationMeshProtocolSubstrateStage,
+        action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+        actions: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightAction>,
+    ) -> Self {
+        let mut actions = actions.into_iter().collect::<Vec<_>>();
+        actions.sort_by_key(|action| action.sequence);
+        let first_action = actions.first();
+        let mut protocols = Vec::new();
+        let mut primitives = Vec::new();
+
+        for action in &actions {
+            if !protocols.contains(&action.protocol) {
+                protocols.push(action.protocol.clone());
+            }
+            if !primitives.contains(&action.primitive) {
+                primitives.push(action.primitive);
+            }
+        }
+
+        Self {
+            sequence,
+            stage,
+            action_kind,
+            action_count: actions.len(),
+            blocking_actions: actions
+                .iter()
+                .filter(|action| action.blocks_preflight())
+                .count(),
+            operator_required_actions: actions
+                .iter()
+                .filter(|action| action.requires_operator())
+                .count(),
+            protocols,
+            primitives,
+            first_protocol: first_action.map(|action| action.protocol.clone()),
+            first_primitive: first_action.map(|action| action.primitive),
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.blocking_actions > 0
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required_actions > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairBatchSummary {
+    pub total_batches: usize,
+    pub total_actions: usize,
+    pub blocking_batches: usize,
+    pub operator_required_batches: usize,
+    pub controller_batches: usize,
+    pub radio_batches: usize,
+    pub discovery_batches: usize,
+    pub network_security_batches: usize,
+    pub supervision_batches: usize,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub first_protocol: Option<ProtocolFamily>,
+    pub first_primitive: Option<PrimitiveFamily>,
+    pub repair_batches_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairBatchSummary {
+    pub fn from_batches<'a>(
+        batches: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightRepairBatch>,
+    ) -> Self {
+        let batches = batches.into_iter().collect::<Vec<_>>();
+        let first_batch = batches.iter().min_by_key(|batch| batch.sequence);
+
+        Self {
+            total_batches: batches.len(),
+            total_actions: batches.iter().map(|batch| batch.action_count).sum(),
+            blocking_batches: batches
+                .iter()
+                .filter(|batch| batch.blocks_preflight())
+                .count(),
+            operator_required_batches: batches
+                .iter()
+                .filter(|batch| batch.requires_operator())
+                .count(),
+            controller_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Controller,
+            ),
+            radio_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Radio,
+            ),
+            discovery_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Discovery,
+            ),
+            network_security_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::NetworkSecurity,
+            ),
+            supervision_batches: mesh_substrate_preflight_repair_batch_count(
+                batches.iter().copied(),
+                IntegrationMeshProtocolSubstrateStage::Supervision,
+            ),
+            first_stage: first_batch.map(|batch| batch.stage),
+            first_action_kind: first_batch.map(|batch| batch.action_kind),
+            first_protocol: first_batch.and_then(|batch| batch.first_protocol.clone()),
+            first_primitive: first_batch.and_then(|batch| batch.first_primitive),
+            repair_batches_ready: batches.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_batches == 0
+    }
+
+    pub fn has_batches(&self) -> bool {
+        self.total_batches > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_batches > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
     pub required_primitives: Vec<PrimitiveFamily>,
@@ -21664,6 +21806,52 @@ pub fn mesh_protocol_substrate_preflight_action_summary(
     IntegrationMeshProtocolSubstratePreflightActionSummary::from_actions(actions.iter())
 }
 
+pub fn mesh_protocol_substrate_preflight_repair_batches(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairBatch> {
+    let actions = mesh_protocol_substrate_preflight_actions(available_primitives);
+    let mut grouped = BTreeMap::<
+        (
+            IntegrationMeshProtocolSubstrateStage,
+            IntegrationMeshProtocolSubstratePreflightActionKind,
+        ),
+        Vec<&IntegrationMeshProtocolSubstratePreflightAction>,
+    >::new();
+
+    for action in &actions {
+        grouped
+            .entry((action.stage, action.action_kind))
+            .or_default()
+            .push(action);
+    }
+
+    let mut batches = grouped
+        .into_iter()
+        .map(|((stage, action_kind), actions)| {
+            IntegrationMeshProtocolSubstratePreflightRepairBatch::from_actions(
+                0,
+                stage,
+                action_kind,
+                actions,
+            )
+        })
+        .collect::<Vec<_>>();
+    batches.sort_by(compare_mesh_substrate_preflight_repair_batches);
+
+    for (index, batch) in batches.iter_mut().enumerate() {
+        batch.sequence = index + 1;
+    }
+
+    batches
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_batch_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairBatchSummary {
+    let batches = mesh_protocol_substrate_preflight_repair_batches(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightRepairBatchSummary::from_batches(batches.iter())
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -22085,6 +22273,23 @@ fn mesh_substrate_preflight_action_count<'a>(
     actions
         .into_iter()
         .filter(|action| action.stage == stage)
+        .count()
+}
+
+fn compare_mesh_substrate_preflight_repair_batches(
+    left: &IntegrationMeshProtocolSubstratePreflightRepairBatch,
+    right: &IntegrationMeshProtocolSubstratePreflightRepairBatch,
+) -> Ordering {
+    (left.stage, left.action_kind).cmp(&(right.stage, right.action_kind))
+}
+
+fn mesh_substrate_preflight_repair_batch_count<'a>(
+    batches: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightRepairBatch>,
+    stage: IntegrationMeshProtocolSubstrateStage,
+) -> usize {
+    batches
+        .into_iter()
+        .filter(|batch| batch.stage == stage)
         .count()
 }
 
@@ -28417,6 +28622,91 @@ mod tests {
         assert!(summary.preflight_actions_ready);
         assert!(summary.is_empty());
         assert!(!summary.has_actions());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_batches_group_actions_by_stage() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let batches = mesh_protocol_substrate_preflight_repair_batches(&available_primitives);
+        let summary = IntegrationMeshProtocolSubstratePreflightRepairBatchSummary::from_batches(
+            batches.iter(),
+        );
+
+        assert_eq!(batches.len(), 3);
+        assert_eq!(summary.total_batches, 3);
+        assert_eq!(summary.total_actions, 5);
+        assert_eq!(summary.blocking_batches, 3);
+        assert_eq!(summary.operator_required_batches, 2);
+        assert_eq!(summary.radio_batches, 1);
+        assert_eq!(summary.discovery_batches, 1);
+        assert_eq!(summary.network_security_batches, 1);
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert_eq!(summary.first_protocol, Some(ProtocolFamily::ZWave));
+        assert_eq!(
+            summary.first_primitive,
+            Some(PrimitiveFamily::ZWaveSerialApi)
+        );
+        assert!(!summary.repair_batches_ready);
+        assert!(summary.has_batches());
+        assert!(summary.needs_operator());
+
+        let network_security = batches
+            .iter()
+            .find(|batch| batch.stage == IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+            .unwrap();
+        assert_eq!(network_security.action_count, 3);
+        assert_eq!(network_security.operator_required_actions, 3);
+        assert_eq!(
+            network_security.action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::InstallNetworkKey
+        );
+        assert_eq!(
+            network_security.primitives,
+            vec![PrimitiveFamily::RadioNetworkKey]
+        );
+        assert_eq!(
+            network_security.protocols,
+            vec![
+                ProtocolFamily::Zigbee,
+                ProtocolFamily::ZWave,
+                ProtocolFamily::Thread
+            ]
+        );
+        assert!(network_security.blocks_preflight());
+        assert!(network_security.requires_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_batches_empty_when_ready() {
+        let batches = mesh_protocol_substrate_preflight_repair_batches(all_primitive_families());
+        let summary =
+            mesh_protocol_substrate_preflight_repair_batch_summary(all_primitive_families());
+
+        assert!(batches.is_empty());
+        assert_eq!(summary.total_batches, 0);
+        assert_eq!(summary.total_actions, 0);
+        assert_eq!(summary.blocking_batches, 0);
+        assert_eq!(summary.operator_required_batches, 0);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert_eq!(summary.first_protocol, None);
+        assert_eq!(summary.first_primitive, None);
+        assert!(summary.repair_batches_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_batches());
         assert!(!summary.needs_operator());
     }
 
