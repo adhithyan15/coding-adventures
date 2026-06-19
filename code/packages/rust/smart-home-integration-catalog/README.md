@@ -79,6 +79,8 @@ runtime and Chief of Staff tools a typed catalog for:
   stage/action-kind repair batches
 - mesh preflight schedule readiness summaries that combine repair-batch
   readiness with deterministic repair execution slots
+- mesh preflight slot readiness summaries that combine schedule readiness with
+  slot-audit blocker and operator handoff counts
 - mesh readiness handoff packages that project substrate actions, evidence
   remediation, and release-ready state for reusable release coordination
 - mesh release-readiness checks that summarize substrate action, evidence,

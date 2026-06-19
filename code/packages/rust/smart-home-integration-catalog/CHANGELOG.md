@@ -92,6 +92,9 @@ All notable changes to this package will be documented in this file.
   mesh preflight repair readiness with stage/action-kind repair batches.
 - `IntegrationMeshPreflightScheduleReadinessSummary` and helpers for combining
   mesh preflight batch readiness with deterministic repair execution slots.
+- `IntegrationMeshPreflightSlotReadinessSummary` and helpers for combining mesh
+  preflight schedule readiness with repair-slot audit blockers and operator
+  handoff counts.
 - `IntegrationMeshReadinessHandoffPackage`, summary helpers, and D23 mesh
   readiness handoff projections for release coordination across substrate
   actions, evidence remediation, and release-ready state.
