@@ -22,6 +22,7 @@ from .pairs import Pair, car, cdr, cons, is_pair
 from .pairs import set_display as _set_pairs_display
 from .runtime import (
     Closure,
+    LocalJumpError,
     apply,
     builtin_closure,
     call_builtin,
@@ -70,6 +71,7 @@ __all__ = [
     "gt",
     # closures / globals / dispatch
     "Closure",
+    "LocalJumpError",
     "apply",
     "make_closure",
     "global_set",

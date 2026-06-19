@@ -142,6 +142,25 @@ def test_apply_rejects_non_closure() -> None:
         sir.apply(42, [])
 
 
+def test_apply_nil_target_raises_local_jump_error() -> None:
+    # No-block-given case: a `yield` reached through a nil block parameter
+    # (apply target is None) raises the dedicated LocalJumpError, not the
+    # generic non-closure TypeError.
+    with pytest.raises(sir.LocalJumpError):
+        sir.apply(None, [1, 2])
+
+
+def test_local_jump_error_message_mentions_no_block() -> None:
+    with pytest.raises(sir.LocalJumpError, match="no block given"):
+        sir.apply(None, [])
+
+
+def test_local_jump_error_is_distinct_from_type_error() -> None:
+    # The nil case must NOT be a TypeError (so the two failure modes stay
+    # distinguishable for callers / future rescue mapping).
+    assert not issubclass(sir.LocalJumpError, TypeError)
+
+
 # --- globals ---------------------------------------------------------------
 
 
