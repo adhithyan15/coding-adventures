@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use spice_engine::{
-    dc_op, digital_event_streams_to_voltage_sources, distortion_from_fourier,
+    dc_op, deck_table_records, digital_event_streams_to_voltage_sources, distortion_from_fourier,
     distortion_from_transient, distortion_from_transient_corners, estimate_period,
     format_adaptive_digital_event_stream_table, format_adaptive_transient_table,
     format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
@@ -1896,6 +1896,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         format_deck_table_json(&op_execution.table),
         "[{\"Index\":\"0\",\"V(mid)\":\"5.000000e-01\"}]\n"
     );
+    let op_records = deck_table_records(&op_execution.table);
+    assert_eq!(op_records.len(), 1);
+    assert_eq!(op_records[0].get("Index").map(String::as_str), Some("0"));
+    assert_eq!(
+        op_records[0].get("V(mid)").map(String::as_str),
+        Some("5.000000e-01")
+    );
     assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
     assert_eq!(op_execution.run_artifacts[0].result_column_count, 2);
     assert_eq!(
@@ -1935,6 +1942,24 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         format_deck_table_json(&op_execution.run_artifact_table),
         format_deck_run_artifact_json(&op_execution.run_artifacts)
     );
+    let artifact_records = deck_table_records(&op_execution.run_artifact_table);
+    assert_eq!(artifact_records.len(), 1);
+    assert_eq!(
+        artifact_records[0].get("Analysis").map(String::as_str),
+        Some("op")
+    );
+    assert_eq!(
+        artifact_records[0]
+            .get("ResultColumnList")
+            .map(String::as_str),
+        Some("Index;V(mid)")
+    );
+    assert_eq!(
+        artifact_records[0]
+            .get("OutputProbeList")
+            .map(String::as_str),
+        Some("V(mid)")
+    );
     assert_eq!(
         format_deck_run_artifact_csv(&op_execution.run_artifacts),
         format!(
@@ -1949,6 +1974,12 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         format_deck_table_json("Name\tValue\nprobe\tSPICE,\"QUOTED\"\n"),
         "[{\"Name\":\"probe\",\"Value\":\"SPICE,\\\"QUOTED\\\"\"}]\n"
+    );
+    let quoted_records = deck_table_records("Name\tValue\nprobe\tSPICE,\"QUOTED\"\n");
+    assert_eq!(quoted_records.len(), 1);
+    assert_eq!(
+        quoted_records[0].get("Value").map(String::as_str),
+        Some("SPICE,\"QUOTED\"")
     );
     let artifact_json = format_deck_run_artifact_json(&op_execution.run_artifacts);
     assert!(artifact_json.starts_with(&format!(

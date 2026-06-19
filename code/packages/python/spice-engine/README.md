@@ -64,7 +64,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
-| `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON conversion |
+| `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json`, `deck_table_records` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON/record conversion |
 | `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, output-probe, measurement, Fourier, and diagnostic count/name lists |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
@@ -111,8 +111,9 @@ Fourier table. Executions also include a selected-run artifact summary plus
 `format_deck_run_artifact_table()` and `format_deck_run_artifact_csv()` output
 for stable result-row, output-probe, measurement, Fourier, and diagnostic
 count/name lists. `format_deck_table_csv()` also converts any stable
-tab-separated deck table to CSV, while `format_deck_table_json()` converts the
-same tables to compact JSON records using the header row as stable keys. They
+tab-separated deck table to CSV, `format_deck_table_json()` converts the same
+tables to compact JSON records, and `deck_table_records()` returns
+header-keyed native records for host integrations. They
 route `START` output filtering, use `.tran TSTEP` as the output print grid, apply `MAXSTEP` as an
 internal fixed-step cap, and carry `UIC` initial-condition intent through that
 stable transient table surface.

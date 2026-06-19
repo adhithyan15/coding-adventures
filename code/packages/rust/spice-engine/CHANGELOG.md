@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `deck_table_records` for stable tab-separated deck output tables as
+  header-keyed records for browser and host integrations, matching Python and
+  TypeScript.
 - Add `format_deck_table_json` for stable tab-separated deck output tables as
   compact JSON records keyed by the header row, matching Python and TypeScript.
 - Add `format_deck_table_csv` for stable tab-separated deck output tables with

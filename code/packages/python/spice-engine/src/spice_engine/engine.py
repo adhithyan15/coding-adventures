@@ -2591,7 +2591,9 @@ def format_deck_table_csv(table: str) -> str:
     )
 
 
-def _deck_table_records(table: str) -> list[dict[str, str]]:
+def deck_table_records(table: str) -> list[dict[str, str]]:
+    """Parse a stable tab-separated deck table into header-keyed records."""
+
     rows = table.splitlines()
     if not rows:
         return []
@@ -2611,7 +2613,7 @@ def _deck_table_records(table: str) -> list[dict[str, str]]:
 def format_deck_table_json(table: str) -> str:
     """Format a stable tab-separated deck table as compact JSON records."""
 
-    return json.dumps(_deck_table_records(table), separators=(",", ":")) + "\n"
+    return json.dumps(deck_table_records(table), separators=(",", ":")) + "\n"
 
 
 def format_deck_run_artifact_csv(artifacts: Iterable[DeckRunArtifact]) -> str:

@@ -92,7 +92,8 @@ downstream tools to compare.
      also expose their selected output node, and selected-run artifacts can now
      render as stable CSV and compact JSON beside the existing tab-separated
      table; stable deck output tables can now also convert to deterministic CSV
-     and compact JSON records across Python, Rust, and TypeScript.
+     and compact JSON records or host-native header-keyed records across
+     Python, Rust, and TypeScript.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -888,6 +889,14 @@ downstream tools to compare.
     - The helper emits compact JSON records keyed by each table's header row,
       so selected result, measurement, Fourier, and run-artifact tables can be
       consumed by browser clients without per-analysis JSON formatters.
+
+82. Deck selected table records API.
+    - Status: completed in this deck table records slice.
+    - Python, Rust, and TypeScript now expose matching `deck_table_records` /
+      `deckTableRecords` helpers for stable tab-separated deck output tables.
+    - The helper returns header-keyed native records so browser and host
+      integrations can inspect selected result, measurement, Fourier, and
+      run-artifact tables without reparsing raw text or JSON strings.
 
 ## Backlog
 

@@ -44,6 +44,7 @@ import {
   formatDeckRunArtifactCsv,
   formatDeckRunArtifactJson,
   formatDeckRunArtifactTable,
+  deckTableRecords,
   formatDeckTableCsv,
   formatDeckTableJson,
   formatDeckTransientTable,
@@ -1474,6 +1475,9 @@ describe("transient", () => {
     expect(opExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
     expect(formatDeckTableCsv(opExecution.table)).toBe("Index,V(mid)\n0,5.000000e-01\n");
+    expect(deckTableRecords(opExecution.table)).toEqual([
+      { Index: "0", "V(mid)": "5.000000e-01" },
+    ]);
     expect(JSON.parse(formatDeckTableJson(opExecution.table))).toEqual([
       { Index: "0", "V(mid)": "5.000000e-01" },
     ]);
@@ -1502,6 +1506,9 @@ describe("transient", () => {
     expect(formatDeckTableJson(opExecution.runArtifactTable)).toBe(
       formatDeckRunArtifactJson(opExecution.runArtifacts),
     );
+    expect(deckTableRecords(opExecution.runArtifactTable)).toEqual(
+      JSON.parse(formatDeckRunArtifactJson(opExecution.runArtifacts)),
+    );
     expect(formatDeckRunArtifactCsv(opExecution.runArtifacts)).toBe(
       "Analysis,Directive,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\n" +
         `op,.op,${opExecution.plan.lineNumber},,,,,,,,,,,,,,,1,2,Index;V(mid),1,V(mid),1,.save,0,,0,,0,\n`,
@@ -1512,6 +1519,9 @@ describe("transient", () => {
     expect(formatDeckTableJson('Name\tValue\nprobe\tSPICE,"QUOTED"\n')).toBe(
       '[{"Name":"probe","Value":"SPICE,\\"QUOTED\\""}]\n',
     );
+    expect(deckTableRecords('Name\tValue\nprobe\tSPICE,"QUOTED"\n')).toEqual([
+      { Name: "probe", Value: 'SPICE,"QUOTED"' },
+    ]);
     const artifactJson = formatDeckRunArtifactJson(opExecution.runArtifacts);
     const artifactRecords = JSON.parse(artifactJson) as Array<Record<string, string>>;
     expect(Object.keys(artifactRecords[0]!)).toEqual([

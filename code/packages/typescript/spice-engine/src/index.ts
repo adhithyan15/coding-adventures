@@ -8056,16 +8056,20 @@ export function formatDeckTableCsv(table: string): string {
   return `${rows.map((row) => row.split("\t").map(formatCsvCell).join(",")).join("\n")}\n`;
 }
 
-export function formatDeckTableJson(table: string): string {
+export function deckTableRecords(table: string): Array<Record<string, string>> {
   const rows = deckTableRows(table);
   if (rows.length === 0) {
-    return "[]\n";
+    return [];
   }
   const columns = rows[0]!.split("\t");
-  const records = rows.slice(1).map((row) => {
+  return rows.slice(1).map((row) => {
     const cells = row.split("\t");
     return Object.fromEntries(columns.map((column, index) => [column, cells[index] ?? ""]));
   });
+}
+
+export function formatDeckTableJson(table: string): string {
+  const records = deckTableRecords(table);
   return `${JSON.stringify(records)}\n`;
 }
 
