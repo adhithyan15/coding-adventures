@@ -23,6 +23,9 @@ private slots:
     void extentColumnLettersAndChangedSince();
     void infiniteViewSelectEditAndRowCells();
     void fillReplicatesShiftingReferences();
+    void clipboardCopyCutPaste();
+    void saveLoadRoundTrips();
+    void undoRedoWalksHistory();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -155,6 +158,83 @@ void TstWindow::fillReplicatesShiftingReferences() {
     QCOMPARE(m.window(3, 9, 3, 9).at(0).toList().at(0).toString(), QStringLiteral("40"));
     // The source cell is untouched by its own fill.
     QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QStringLiteral("20"));
+}
+
+// Clipboard (the Copy/Cut/Paste controls drive model.copy/cut/paste): copy a
+// 1×2 block and paste it as a unit; cut a cell and move it.
+void TstWindow::clipboardCopyCutPaste() {
+    SpreadsheetModel m;
+    m.setCell("H1", "5");
+    m.setCell("I1", "=H1*2"); // 10 (col 8 = H, col 9 = I)
+    // Copy the block H1:I1 and paste at H2 — the block shifts down one row.
+    m.copy("H1", "I1");
+    QVERIFY(m.paste("H2")); // applied
+    QCOMPARE(m.window(2, 9, 2, 9).at(0).toList().at(0).toString(), QStringLiteral("10")); // I2 = H2*2
+    // Cut a cell, move it, confirm the source clears and a second paste is a no-op.
+    m.setCell("A1", "99");
+    m.cut("A1", "A1");
+    QVERIFY(m.paste("K1")); // col 11 = K
+    QCOMPARE(m.window(1, 11, 1, 11).at(0).toList().at(0).toString(), QStringLiteral("99"));
+    QCOMPARE(m.window(1, 1, 1, 1).at(0).toList().at(0).toString(), QString()); // A1 cleared
+    QVERIFY(!m.paste("M1")); // buffer consumed
+}
+
+// Save / load (the Save / Load controls drive model.serialize/deserialize):
+// serialize the workbook, scribble over it, then restore the snapshot and
+// confirm the workbook comes back — and that a loaded formula stays LIVE.
+void TstWindow::saveLoadRoundTrips() {
+    SpreadsheetModel m;
+    // Default seed: A1=15, E1 = SUM(A1:D1) = 38 (formatted "38.00").
+    const QString snapshot = m.serialize();
+    QVERIFY2(!snapshot.isEmpty(), "serialize produced a JSON document");
+
+    // Mutate away from the saved state so a successful load has to undo it.
+    m.setCell("A1", "500"); // E1 → 500+3+12+8 = 523
+    QCOMPARE(m.window(1, 5, 1, 5).at(0).toList().at(0).toString(), QStringLiteral("523.00"));
+
+    // Restore the snapshot: E1 recomputes through its format back to "38.00".
+    QVERIFY(m.deserialize(snapshot));
+    QCOMPARE(m.window(1, 1, 1, 1).at(0).toList().at(0).toString(), QStringLiteral("15"));  // A1 restored
+    QCOMPARE(m.window(1, 5, 1, 5).at(0).toList().at(0).toString(), QStringLiteral("38.00")); // E1 formatted
+    // The loaded formula is live, not frozen: edit a precedent and E1 recomputes.
+    m.setCell("A1", "5"); // 5+3+12+8 = 28
+    QCOMPARE(m.window(1, 5, 1, 5).at(0).toList().at(0).toString(), QStringLiteral("28.00"));
+    // Garbage in is rejected (false), leaving the workbook intact.
+    QVERIFY(!m.deserialize(QStringLiteral("not a workbook")));
+    QCOMPARE(m.window(1, 5, 1, 5).at(0).toList().at(0).toString(), QStringLiteral("28.00"));
+}
+
+// Undo / redo (the Undo / Redo controls drive model.undo/redo): make two edits,
+// walk history back and forward, and confirm a restored formula recomputes live.
+void TstWindow::undoRedoWalksHistory() {
+    SpreadsheetModel m;
+    // (The model seeds its budget through set_cell, so those seed edits are
+    // themselves undoable — history is non-empty from construction.)
+    // Two fresh edits on a clear column: H1 = 2, I1 = H1*5 = 10 (col 8/9).
+    m.setCell("H1", "2");
+    m.setCell("I1", "=H1*5");
+    QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QStringLiteral("10"));
+    QVERIFY(m.canUndo());
+
+    // Undo the formula, then the literal.
+    QVERIFY(m.undo());
+    QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QString()); // I1 gone
+    QVERIFY(m.undo());
+    QCOMPARE(m.window(1, 8, 1, 8).at(0).toList().at(0).toString(), QString()); // H1 gone
+
+    // Redo both: I1 recomputes live (10).
+    QVERIFY(m.canRedo());
+    QVERIFY(m.redo());
+    QVERIFY(m.redo());
+    QCOMPARE(m.window(1, 9, 1, 9).at(0).toList().at(0).toString(), QStringLiteral("10"));
+    QVERIFY(!m.canRedo());
+    QVERIFY(!m.redo()); // nothing left to redo
+
+    // A fresh edit forks history (drops the redo branch).
+    QVERIFY(m.undo()); // back: I1 gone
+    QVERIFY(m.canRedo());
+    m.setCell("A1", "7");
+    QVERIFY(!m.canRedo());
 }
 
 QTEST_MAIN(TstWindow)

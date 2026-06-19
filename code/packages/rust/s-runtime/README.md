@@ -19,7 +19,14 @@ re-implementation.
 s-lexer → s-parser → GrammarASTNode → s-runtime (this crate) → s-repl
                                           |
                           r-vector / numeric-tower / statistics-core
+                                          |
+                          array-runtime → matrix-ir/-cpu/-runtime   (matrix %*%)
 ```
+
+The matrix product `%*%` lowers onto the **shared f64 matrix-execution
+substrate** (`array-runtime` → `matrix-ir` → `matrix-cpu`/`matrix-runtime`) — the
+same cost-based CPU/GPU planner MATLAB uses — at full `f64` precision, instead of
+a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-here).
 
 ## What "S-flavored" means here
 
@@ -34,9 +41,31 @@ s-lexer → s-parser → GrammarASTNode → s-runtime (this crate) → s-repl
 - **Index sub-assignment** (R-14): the left side of `<-` may be a subscript,
   e.g. `v[i] <- x`, `v[-i] <- x`, `m[i, j] <- x`, `m[, j] <- x` — copy-on-modify,
   RHS recycled, so a prior `b <- a` copy is never aliased.
+- **Named vectors / the `names` attribute** (R-15): `c(a = 1, b = 2)` attaches
+  names (nested named pieces combine R-style), `names(x)` gets them and
+  `names(x) <- value` / `setNames(x, nm)` set them (NA-pad short, `NULL` clears),
+  `x["b"]` indexes by name, and a named vector prints names above values. Names
+  are a transparent `SValue::Named` wrapper — they ride through indexing and drop
+  through arithmetic, exactly as in R.
+- **General attributes** (R-16): `attr(x, which)` / `attr(x, which) <- value`
+  (assigning `NULL` removes), `attributes(x)` / `attributes(x) <- list(...)`, and
+  `structure(x, class = "myc", foo = "bar")`. General (non-special) attributes
+  live in a transparent `SValue::Attributed` wrapper; the *special* attributes
+  route to their dedicated representations, so `attr(x, "names")` agrees with
+  `names(x)`, `attr(x, "class")` with `class(x)`, and `attr(x, "dim")` with the
+  matrix `dim` by construction. The general map is bounded and malformed input
+  fails closed.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
+- **Matrices on the shared substrate (MXF-4)** — the matrix product `%*%` routes
+  through [`array_runtime::execute`]`(MatMul, …)` at `DType::F64`, so R's matmul
+  gets cost-based CPU/GPU dispatch at full double precision, with results
+  **bit-identical** to the previous loop (R's column-major `Matrix` matches
+  `array_runtime::Array`'s layout, and the `f64` kernel folds the contraction in
+  the same order). NA-bearing products fall back to the loop to preserve R's
+  exact NA bit pattern. `t()`, `rowSums`/`colSums`, `diag`, `solve`, and `det`
+  stay on their own implementations — no clean substrate primitive exists yet.
 
 ## Quick start
 

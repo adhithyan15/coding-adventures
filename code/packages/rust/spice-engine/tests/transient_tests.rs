@@ -7,21 +7,22 @@ use spice_engine::{
     format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
     format_corner_digital_event_stream_table, format_corner_distortion_table,
     format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
-    format_corner_transient_table, format_dc_table, format_deck_transient_table,
-    format_digital_bridge_schedule_table, format_digital_event_stream_table,
-    format_digital_event_table, format_distortion_table, format_fourier_table,
-    format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
-    fourier, fourier_corners, fourier_transient_deck, measure_transient_deck,
-    measure_transient_delay_between_probes, measure_transient_find_at_probe,
-    measure_transient_probe, measure_transient_when_probe, measure_transient_when_probe_counted,
-    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
-    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, run_deck_analysis, sample_transient_probe_as_digital_events,
-    sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
-    transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
+    format_corner_transient_table, format_dc_table, format_deck_noise_table,
+    format_deck_transient_table, format_digital_bridge_schedule_table,
+    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
+    format_fourier_table, format_measurement_table, format_pole_zero_table, format_pss_table,
+    format_transient_table, fourier, fourier_corners, fourier_transient_deck,
+    measure_transient_deck, measure_transient_delay_between_probes,
+    measure_transient_find_at_probe, measure_transient_probe, measure_transient_when_probe,
+    measure_transient_when_probe_counted, pole_zero_rc_highpass, pole_zero_rc_lowpass,
+    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
+    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, run_deck_analysis,
+    sample_transient_probe_as_digital_events, sample_transient_probes_as_digital_event_streams,
+    transient, transient_adaptive, transient_adaptive_corners,
+    transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
     transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
     transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
@@ -1868,6 +1869,9 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 .dc V1 0 1 1
 .ac dec 1 1k 1k
 .tran 1m 1m
+.tf V(mid) V1
+.sens V(mid)
+.noise V(mid) V1 lin 1 1k 1k
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -1884,10 +1888,21 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
     assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(op_execution.run_artifacts[0].source_name, None);
+    assert_eq!(
+        op_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert_eq!(
+        op_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string()]
+    );
+    assert!(op_execution.run_artifacts[0].measurement_names.is_empty());
+    assert!(op_execution.run_artifacts[0].fourier_probes.is_empty());
     assert_eq!(
         op_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\nop\t.op\t{}\t1\t1\t0\t0\n",
+            "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nop\t.op\t{}\t\t1\t1\tV(mid)\t1\t.save\t0\t\t0\t\n",
             op_execution.plan.line_number
         )
     );
@@ -1913,9 +1928,26 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
     assert_eq!(dc_execution.run_artifacts[0].analysis, "dc");
     assert_eq!(
+        dc_execution.run_artifacts[0].source_name.as_deref(),
+        Some("V1")
+    );
+    assert_eq!(
+        dc_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string(), "I(V1)".to_string()]
+    );
+    assert_eq!(
+        dc_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string(), ".probe".to_string()]
+    );
+    assert_eq!(
+        dc_execution.run_artifacts[0].measurement_names,
+        vec!["mid_avg".to_string()]
+    );
+    assert!(dc_execution.run_artifacts[0].fourier_probes.is_empty());
+    assert_eq!(
         dc_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\ndc\t.dc\t{}\t2\t2\t1\t0\n",
+            "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ndc\t.dc\t{}\tV1\t2\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\n",
             dc_execution.plan.line_number
         )
     );
@@ -1936,9 +1968,23 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
     );
     assert_eq!(
+        ac_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert_eq!(ac_execution.run_artifacts[0].source_name, None);
+    assert_eq!(
+        ac_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string()]
+    );
+    assert_eq!(
+        ac_execution.run_artifacts[0].measurement_names,
+        vec!["mid_peak".to_string()]
+    );
+    assert!(ac_execution.run_artifacts[0].fourier_probes.is_empty());
+    assert_eq!(
         ac_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\nac\t.ac\t{}\t1\t1\t1\t0\n",
+            "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nac\t.ac\t{}\t\t1\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\n",
             ac_execution.plan.line_number
         )
     );
@@ -1959,10 +2005,153 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         "Index\tTime\tV(mid)\n0\t1.000000e-03\t5.000000e-01\n"
     );
     assert_eq!(
+        tran_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert_eq!(tran_execution.run_artifacts[0].source_name, None);
+    assert_eq!(
+        tran_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string()]
+    );
+    assert_eq!(
+        tran_execution.run_artifacts[0].measurement_names,
+        vec!["mid_final".to_string()]
+    );
+    assert!(tran_execution.run_artifacts[0].fourier_probes.is_empty());
+    assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\ntran\t.tran\t{}\t1\t1\t1\t0\n",
+            "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t1\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\n",
             tran_execution.plan.line_number
+        )
+    );
+
+    let tf_execution = run_deck_analysis(&circuit, netlist, Some("tf")).unwrap();
+    assert_eq!(tf_execution.plan.output_node.as_deref(), Some("mid"));
+    assert_eq!(tf_execution.plan.source_name.as_deref(), Some("V1"));
+    match &tf_execution.result {
+        DeckAnalysisExecutionResult::Tf(result) => {
+            assert_close(result.transfer_ratio, 0.5);
+            assert_close(result.input_impedance_ohms, 2_000.0);
+            assert_close(result.output_impedance_ohms, 500.0);
+        }
+        other => panic!("expected TF result, got {other:?}"),
+    }
+    assert_eq!(tf_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert!(tf_execution.measurements.is_empty());
+    assert_eq!(
+        tf_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    );
+    assert_eq!(
+        tf_execution.table,
+        "TransferRatio\tInputImpedance\tOutputImpedance\n5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+    );
+    assert_eq!(tf_execution.run_artifacts[0].analysis, "tf");
+    assert_eq!(
+        tf_execution.run_artifacts[0].source_name.as_deref(),
+        Some("V1")
+    );
+    assert_eq!(tf_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(
+        tf_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert!(tf_execution.run_artifacts[0].output_directives.is_empty());
+    assert!(tf_execution.run_artifacts[0].measurement_names.is_empty());
+    assert!(tf_execution.run_artifacts[0].fourier_probes.is_empty());
+    assert_eq!(
+        tf_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntf\t.tf\t{}\tV1\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
+            tf_execution.plan.line_number
+        )
+    );
+
+    let sens_execution = run_deck_analysis(&circuit, netlist, Some("sens")).unwrap();
+    assert_eq!(sens_execution.plan.output_node.as_deref(), Some("mid"));
+    assert_eq!(sens_execution.plan.source_name, None);
+    match &sens_execution.result {
+        DeckAnalysisExecutionResult::Sens(result) => {
+            assert_eq!(result.output_node, "mid");
+            assert_eq!(result.entries.len(), 3);
+        }
+        other => panic!("expected sensitivity result, got {other:?}"),
+    }
+    assert_eq!(sens_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert!(sens_execution.measurements.is_empty());
+    assert_eq!(
+        sens_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    );
+    assert!(sens_execution.table.starts_with(
+        "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity\n"
+    ));
+    assert_eq!(sens_execution.run_artifacts[0].analysis, "sens");
+    assert_eq!(sens_execution.run_artifacts[0].source_name, None);
+    assert_eq!(sens_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(
+        sens_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert!(sens_execution.run_artifacts[0].output_directives.is_empty());
+    assert!(sens_execution.run_artifacts[0].measurement_names.is_empty());
+    assert!(sens_execution.run_artifacts[0].fourier_probes.is_empty());
+    assert_eq!(
+        sens_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nsens\t.sens\t{}\t\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
+            sens_execution.plan.line_number
+        )
+    );
+
+    let noise_execution = run_deck_analysis(&circuit, netlist, Some("noise")).unwrap();
+    assert_eq!(noise_execution.plan.output_node.as_deref(), Some("mid"));
+    assert_eq!(noise_execution.plan.source_name.as_deref(), Some("V1"));
+    assert_eq!(noise_execution.plan.sweep_kind.as_deref(), Some("lin"));
+    assert_eq!(noise_execution.plan.point_count, Some(1));
+    assert!((noise_execution.plan.start_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
+    assert!((noise_execution.plan.stop_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
+    match &noise_execution.result {
+        DeckAnalysisExecutionResult::Noise(result) => {
+            assert_eq!(result.output_node, "mid");
+            assert_eq!(result.input_source, "V1");
+            assert_eq!(result.points.len(), 1);
+            assert_eq!(noise_execution.table, format_deck_noise_table(result));
+        }
+        other => panic!("expected noise result, got {other:?}"),
+    }
+    assert_eq!(noise_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert!(noise_execution.measurements.is_empty());
+    assert_eq!(
+        noise_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    );
+    assert!(noise_execution.table.starts_with(
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD\n"
+    ));
+    assert_eq!(noise_execution.run_artifacts[0].analysis, "noise");
+    assert_eq!(
+        noise_execution.run_artifacts[0].source_name.as_deref(),
+        Some("V1")
+    );
+    assert_eq!(noise_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(
+        noise_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert!(noise_execution.run_artifacts[0]
+        .output_directives
+        .is_empty());
+    assert!(noise_execution.run_artifacts[0]
+        .measurement_names
+        .is_empty());
+    assert!(noise_execution.run_artifacts[0].fourier_probes.is_empty());
+    assert_eq!(
+        noise_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nnoise\t.noise\t{}\tV1\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
+            noise_execution.plan.line_number
         )
     );
 
@@ -2064,10 +2253,24 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     assert_eq!(result.probes[0].harmonics.len(), 1);
     assert_eq!(tran_execution.fourier_table, format_fourier_table(result));
     assert_eq!(tran_execution.run_artifacts[0].fourier_count, 1);
+    assert_eq!(tran_execution.run_artifacts[0].source_name, None);
+    assert_eq!(
+        tran_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert_eq!(
+        tran_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string()]
+    );
+    assert!(tran_execution.run_artifacts[0].measurement_names.is_empty());
+    assert_eq!(
+        tran_execution.run_artifacts[0].fourier_probes,
+        vec!["V(mid)".to_string()]
+    );
     assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\ntran\t.tran\t{}\t2\t1\t0\t1\n",
+            "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t2\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\n",
             tran_execution.plan.line_number
         )
     );

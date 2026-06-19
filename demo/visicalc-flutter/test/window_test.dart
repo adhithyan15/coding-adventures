@@ -67,6 +67,36 @@ void main() {
       expect(diff.changed, contains('Z1000')); // far dependent recomputed
       expect(s.window(1000, 26, 1000, 26)[0][0], '139'); // 115+8+12+4
     });
+
+    test('undo / redo walks the snapshot history with live recompute', () {
+      // A fresh, unseeded session so the initial history is empty.
+      final s = SpreadsheetSession();
+      addTearDown(s.dispose);
+      expect(s.canUndo(), isFalse);
+      s.setCell('A1', '1');
+      s.setCell('B1', '=A1*10'); // 10
+      expect(s.canUndo(), isTrue);
+
+      // Undo the formula, then the literal.
+      expect(s.undo(), isTrue);
+      expect(s.window(1, 2, 1, 2)[0][0], ''); // B1 cleared
+      expect(s.undo(), isTrue);
+      expect(s.window(1, 1, 1, 1)[0][0], ''); // A1 cleared
+      expect(s.canUndo(), isFalse);
+      expect(s.undo(), isFalse); // nothing left to undo
+
+      // Redo both: B1 recomputes live (10).
+      expect(s.redo(), isTrue);
+      expect(s.redo(), isTrue);
+      expect(s.window(1, 2, 1, 2)[0][0], '10');
+      expect(s.canRedo(), isFalse);
+
+      // A fresh edit forks history (drops the redo branch).
+      s.undo(); // back: B1 gone
+      expect(s.canRedo(), isTrue);
+      s.setCell('C1', '9');
+      expect(s.canRedo(), isFalse);
+    });
   });
 
   // The infinite-view binding layer (InfiniteGrid drives these): one engine read
@@ -133,6 +163,63 @@ void main() {
       expect(m.rowCells(2)[8], '30'); // I2 = H2*10
       expect(m.rowCells(3)[8], '40'); // I3 = H3*10
       expect(m.rowCells(1)[8], '20'); // I1 source untouched
+    });
+
+    test('clipboard copyCell/cutCell/pasteCell shifts a formula and moves a cut', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // Seed H1=5, H2=7; I1 = H1*2 (col 8 = H, col 9 = I). Copy I1, then paste at
+      // I2 — the relative ref shifts by the destination's offset, so I2 = H2*2.
+      m.selectInf(1, 8); m.commitInf('5'); // H1
+      m.selectInf(2, 8); m.commitInf('7'); // H2
+      m.selectInf(1, 9); m.commitInf('=H1*2'); // I1 = 10
+      m.selectInf(1, 9); m.copyCell(); // copy I1
+      m.selectInf(2, 9); expect(m.pasteCell(), isTrue); // paste at I2
+      expect(m.rowCells(2)[8], '14'); // I2 = H2*2 = 14
+      // Cut A1, move it to C1: source clears, a second paste is a no-op.
+      m.selectInf(1, 1); m.commitInf('99'); // A1
+      m.selectInf(1, 1); m.cutCell();
+      m.selectInf(1, 3); expect(m.pasteCell(), isTrue); // paste at C1
+      expect(m.rowCells(1)[2], '99'); // C1 moved
+      expect(m.rowCells(1)[0], ''); // A1 cleared
+      m.selectInf(1, 5); expect(m.pasteCell(), isFalse); // buffer consumed
+    });
+
+    test('saveBook/loadBook round trips and keeps formulas live', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // Default seed: A1=15, E1 = SUM(A1:D1) = 38 (formatted "38.00").
+      final snapshot = m.saveBook();
+      expect(snapshot, isNotEmpty);
+      // Mutate away from the saved state so a load has to visibly undo it.
+      m.selectInf(1, 1); m.commitInf('500'); // E1 → 500+3+12+8 = 523
+      expect(m.rowCells(1)[4], '523.00');
+      // Restore: A1 → 15, E1 recomputes through its format back to "38.00".
+      expect(m.loadBook(snapshot), isTrue);
+      expect(m.rowCells(1)[0], '15');
+      expect(m.rowCells(1)[4], '38.00');
+      // The loaded formula is live, not frozen: edit a precedent and E1 recomputes.
+      m.selectInf(1, 1); m.commitInf('5'); // 5+3+12+8 = 28
+      expect(m.rowCells(1)[4], '28.00');
+      // Garbage in is rejected (false), leaving the workbook intact.
+      expect(m.loadBook('not a workbook'), isFalse);
+      expect(m.rowCells(1)[4], '28.00');
+    });
+
+    test('undoEdit/redoEdit reverse and replay a model edit', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // (The model seeds its budget via commitInf, so history is non-empty from
+      // construction — undoing into the seed is expected.) Make one fresh edit.
+      m.selectInf(1, 8); m.commitInf('=A1+1'); // H1 = 15+1 = 16
+      expect(m.rowCells(1)[7], '16');
+      expect(m.canUndo, isTrue);
+      // Undo it: H1 goes away; redo brings it back, recomputed live.
+      expect(m.undoEdit(), isTrue);
+      expect(m.rowCells(1)[7], '');
+      expect(m.canRedo, isTrue);
+      expect(m.redoEdit(), isTrue);
+      expect(m.rowCells(1)[7], '16');
     });
   });
 }

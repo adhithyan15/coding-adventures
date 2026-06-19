@@ -154,6 +154,78 @@ export function createEngine(wasmBytes) {
           freeInput(ep, el);
         },
 
+        /**
+         * Copy the inclusive rectangle `start`..`end` into the clipboard — a
+         * whole-block copy that pastes as a unit (the sibling of fill). The
+         * source is untouched and the buffer survives any number of pastes.
+         */
+        copy: (start, end) => {
+          const [sp, sl] = writeStr(String(start));
+          const [ep, el] = writeStr(String(end));
+          ex.copy(sp, sl, ep, el);
+          freeInput(sp, sl);
+          freeInput(ep, el);
+        },
+
+        /**
+         * Cut the inclusive rectangle `start`..`end`. Like copy but a one-shot
+         * move: the paste that places it clears the source it didn't overwrite
+         * and consumes the buffer.
+         */
+        cut: (start, end) => {
+          const [sp, sl] = writeStr(String(start));
+          const [ep, el] = writeStr(String(end));
+          ex.cut(sp, sl, ep, el);
+          freeInput(sp, sl);
+          freeInput(ep, el);
+        },
+
+        /**
+         * Paste the clipboard so its top-left lands at `dstStart`. Returns `true`
+         * when applied, `false` for a no-op (empty clipboard, malformed address,
+         * or off-grid). Re-read via getWindow / getDisplayWindow / getRaw after.
+         */
+        paste: (dstStart) => {
+          const [dp, dl] = writeStr(String(dstStart));
+          const ok = ex.paste(dp, dl);
+          freeInput(dp, dl);
+          return ok === 1;
+        },
+
+        // ── Save / load (serialize) ──────────────────────────────────
+        // A round-trippable JSON document of the workbook's SOURCE (formula
+        // text + typed literals) and formats — not computed values, which
+        // recompute on load. Persist the string, then deserialize to restore.
+
+        /** Serialize the workbook to a self-contained JSON document string. */
+        serialize: () => call0("serialize"),
+        /**
+         * Replace the workbook with a document from `serialize`. Returns `true`
+         * on success, `false` if the data is malformed or an unsupported version
+         * (the existing workbook is left untouched on failure). Re-read via
+         * getWindow / getDisplayWindow / getRaw afterwards.
+         */
+        deserialize: (data) => {
+          const [dp, dl] = writeStr(String(data));
+          const ok = ex.deserialize(dp, dl);
+          freeInput(dp, dl);
+          return ok === 1;
+        },
+
+        // ── Undo / redo (session history) ────────────────────────────
+        // Snapshot-based history: every mutating edit is undoable, and a
+        // restored formula stays live. Re-read via getWindow / getDisplayWindow
+        // / getRaw after an undo/redo that returns true.
+
+        /** Undo the most recent edit. Returns `true` if something was undone. */
+        undo: () => ex.undo() === 1,
+        /** Redo the most recently undone edit. Returns `true` if something was redone. */
+        redo: () => ex.redo() === 1,
+        /** `true` if there is an edit to undo (enable/disable an Undo control). */
+        canUndo: () => ex.can_undo() === 1,
+        /** `true` if there is an undone edit to redo. */
+        canRedo: () => ex.can_redo() === 1,
+
         // ── Viewport primitive (virtualized infinite sheet) ──────────
         // A scrolling host renders only the visible window of an unbounded
         // sheet: getWindow for the visible rectangle, usedRange for scrollbar

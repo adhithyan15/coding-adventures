@@ -208,6 +208,7 @@ from spice_engine import (
     format_dc_table,
     format_deck_ac_table,
     format_deck_dc_sweep_table,
+    format_deck_noise_table,
     format_deck_op_table,
     format_deck_transient_table,
     format_digital_bridge_schedule_table,
@@ -6778,6 +6779,9 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 .dc V1 0 1 1
 .ac dec 1 1k 1k
 .tran 1m 1m
+.tf V(mid) V1
+.sens V(mid)
+.noise V(mid) V1 lin 1 1k 1k
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -6791,9 +6795,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
     assert op_execution.run_artifacts[0].result_rows == 1
+    assert op_execution.run_artifacts[0].source_name is None
+    assert op_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert op_execution.run_artifacts[0].output_directives == [".save"]
+    assert op_execution.run_artifacts[0].measurement_names == []
+    assert op_execution.run_artifacts[0].fourier_probes == []
     assert op_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"op\t.op\t{op_execution.plan.line_number}\t1\t1\t0\t0\n"
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"op\t.op\t{op_execution.plan.line_number}\t\t1\t1\tV(mid)\t1\t.save\t0\t\t0\t\n"
     )
 
     dc_execution = run_deck_analysis(circuit, netlist, "dc")
@@ -6812,9 +6821,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
     )
     assert dc_execution.run_artifacts[0].analysis == "dc"
+    assert dc_execution.run_artifacts[0].source_name == "V1"
+    assert dc_execution.run_artifacts[0].output_probes == ["V(mid)", "I(V1)"]
+    assert dc_execution.run_artifacts[0].output_directives == [".save", ".probe"]
+    assert dc_execution.run_artifacts[0].measurement_names == ["mid_avg"]
+    assert dc_execution.run_artifacts[0].fourier_probes == []
     assert dc_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"dc\t.dc\t{dc_execution.plan.line_number}\t2\t2\t1\t0\n"
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"dc\t.dc\t{dc_execution.plan.line_number}\tV1\t2\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\n"
     )
 
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
@@ -6830,9 +6844,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
         "0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
     )
+    assert ac_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert ac_execution.run_artifacts[0].source_name is None
+    assert ac_execution.run_artifacts[0].output_directives == [".save"]
+    assert ac_execution.run_artifacts[0].measurement_names == ["mid_peak"]
+    assert ac_execution.run_artifacts[0].fourier_probes == []
     assert ac_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"ac\t.ac\t{ac_execution.plan.line_number}\t1\t1\t1\t0\n"
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"ac\t.ac\t{ac_execution.plan.line_number}\t\t1\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\n"
     )
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
@@ -6850,9 +6869,95 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "0\t0.000000e+00\t5.000000e-01\n"
         "1\t1.000000e-03\t5.000000e-01\n"
     )
+    assert tran_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert tran_execution.run_artifacts[0].source_name is None
+    assert tran_execution.run_artifacts[0].output_directives == [".save"]
+    assert tran_execution.run_artifacts[0].measurement_names == ["mid_final"]
+    assert tran_execution.run_artifacts[0].fourier_probes == []
     assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"tran\t.tran\t{tran_execution.plan.line_number}\t2\t1\t1\t0\n"
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"tran\t.tran\t{tran_execution.plan.line_number}\t\t2\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\n"
+    )
+
+    tf_execution = run_deck_analysis(circuit, netlist, "tf")
+    assert tf_execution.plan.output_node == "mid"
+    assert tf_execution.plan.source_name == "V1"
+    assert isinstance(tf_execution.result, TfResult)
+    assert tf_execution.result.transfer_ratio == pytest.approx(0.5)
+    assert tf_execution.result.input_impedance == pytest.approx(2000.0)
+    assert tf_execution.result.output_impedance == pytest.approx(500.0)
+    assert tf_execution.output_probes == ["V(mid)"]
+    assert tf_execution.measurements == []
+    assert tf_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert tf_execution.table == (
+        "TransferRatio\tInputImpedance\tOutputImpedance\n"
+        "5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+    )
+    assert tf_execution.run_artifacts[0].analysis == "tf"
+    assert tf_execution.run_artifacts[0].source_name == "V1"
+    assert tf_execution.run_artifacts[0].result_rows == 1
+    assert tf_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert tf_execution.run_artifacts[0].output_directives == []
+    assert tf_execution.run_artifacts[0].measurement_names == []
+    assert tf_execution.run_artifacts[0].fourier_probes == []
+    assert tf_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"tf\t.tf\t{tf_execution.plan.line_number}\tV1\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n"
+    )
+
+    sens_execution = run_deck_analysis(circuit, netlist, "sens")
+    assert sens_execution.plan.output_node == "mid"
+    assert sens_execution.plan.source_name is None
+    assert isinstance(sens_execution.result, SensResult)
+    assert sens_execution.result.output_node == "mid"
+    assert len(sens_execution.result.entries) == 3
+    assert sens_execution.output_probes == ["V(mid)"]
+    assert sens_execution.measurements == []
+    assert sens_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert sens_execution.table.startswith(
+        "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity\n"
+    )
+    assert sens_execution.run_artifacts[0].analysis == "sens"
+    assert sens_execution.run_artifacts[0].source_name is None
+    assert sens_execution.run_artifacts[0].result_rows == 1
+    assert sens_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert sens_execution.run_artifacts[0].output_directives == []
+    assert sens_execution.run_artifacts[0].measurement_names == []
+    assert sens_execution.run_artifacts[0].fourier_probes == []
+    assert sens_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"sens\t.sens\t{sens_execution.plan.line_number}\t\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n"
+    )
+
+    noise_execution = run_deck_analysis(circuit, netlist, "noise")
+    assert noise_execution.plan.output_node == "mid"
+    assert noise_execution.plan.source_name == "V1"
+    assert noise_execution.plan.sweep_kind == "lin"
+    assert noise_execution.plan.point_count == 1
+    assert noise_execution.plan.start_frequency == pytest.approx(1.0e3)
+    assert noise_execution.plan.stop_frequency == pytest.approx(1.0e3)
+    assert isinstance(noise_execution.result, NoiseResult)
+    assert noise_execution.result.output_node == "mid"
+    assert noise_execution.result.input_source == "V1"
+    assert len(noise_execution.result.points) == 1
+    assert noise_execution.output_probes == ["V(mid)"]
+    assert noise_execution.measurements == []
+    assert noise_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert noise_execution.table == format_deck_noise_table(noise_execution.result)
+    assert noise_execution.table.startswith(
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\t"
+        "Element\tType\tSourcePSD\tContributionPSD\n"
+    )
+    assert noise_execution.run_artifacts[0].analysis == "noise"
+    assert noise_execution.run_artifacts[0].source_name == "V1"
+    assert noise_execution.run_artifacts[0].result_rows == 1
+    assert noise_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert noise_execution.run_artifacts[0].output_directives == []
+    assert noise_execution.run_artifacts[0].measurement_names == []
+    assert noise_execution.run_artifacts[0].fourier_probes == []
+    assert noise_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"noise\t.noise\t{noise_execution.plan.line_number}\tV1\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n"
     )
 
     tran_window_execution = run_deck_analysis(
@@ -6926,9 +7031,14 @@ def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
     assert len(result.probes[0].harmonics) == 1
     assert tran_execution.fourier_table == format_fourier_table(result)
     assert tran_execution.run_artifacts[0].fourier_count == 1
+    assert tran_execution.run_artifacts[0].source_name is None
+    assert tran_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert tran_execution.run_artifacts[0].output_directives == [".save"]
+    assert tran_execution.run_artifacts[0].measurement_names == []
+    assert tran_execution.run_artifacts[0].fourier_probes == ["V(mid)"]
     assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\n"
-        f"tran\t.tran\t{tran_execution.plan.line_number}\t3\t1\t0\t1\n"
+        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"tran\t.tran\t{tran_execution.plan.line_number}\t\t3\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\n"
     )
 
 

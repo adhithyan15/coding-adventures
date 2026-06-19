@@ -41,6 +41,12 @@ Item {
     // Alias it once as `doc` and use that everywhere to dodge the shadowing.
     readonly property var doc: model
 
+    // In-memory "saved file" slot for the Save / Load buttons: Save stows the
+    // serialized workbook here, Load restores from it. (A real app would write
+    // this string to a file or QSettings; the demo keeps it in memory so the
+    // round trip is self-contained.)
+    property string savedSnapshot: ""
+
     // Cell geometry (pixels). The gutter and body share rowH so their two
     // ListViews scroll in lockstep.
     readonly property int rowH: 24
@@ -105,6 +111,59 @@ Item {
                     var last = doc.columnLetters(doc.infCol) + (doc.infRow + 10);
                     doc.fill(doc.infAddress, first, last);
                 }
+            }
+            // Clipboard: copy/cut the selected cell, paste at the selection. The
+            // engine shifts the pasted formula's relative refs by the offset,
+            // pins absolute ($) refs, carries the format; a cut clears on paste.
+            Button {
+                text: "Copy"
+                ToolTip.visible: hovered
+                ToolTip.text: "Copy the selected cell to the clipboard"
+                onClicked: if (doc) doc.copy(doc.infAddress, doc.infAddress)
+            }
+            Button {
+                text: "Cut"
+                ToolTip.visible: hovered
+                ToolTip.text: "Cut the selected cell (cleared when you paste)"
+                onClicked: if (doc) doc.cut(doc.infAddress, doc.infAddress)
+            }
+            Button {
+                text: "Paste"
+                ToolTip.visible: hovered
+                ToolTip.text: "Paste the clipboard at the selected cell, shifting relative references"
+                onClicked: if (doc) doc.paste(doc.infAddress)
+            }
+            // Save / load: serialize the whole workbook (formulas + formats) to a
+            // JSON document and restore it. The document stores only the source —
+            // computed values recompute on load, so a loaded formula stays live.
+            Button {
+                text: "Save"
+                ToolTip.visible: hovered
+                ToolTip.text: "Serialize the whole workbook to memory"
+                onClicked: if (doc) sheet.savedSnapshot = doc.serialize()
+            }
+            Button {
+                text: "Load"
+                enabled: sheet.savedSnapshot.length > 0
+                ToolTip.visible: hovered
+                ToolTip.text: "Restore the workbook from the last save"
+                onClicked: if (doc) doc.deserialize(sheet.savedSnapshot)
+            }
+            // Undo / redo: walk the engine's snapshot history. The buttons enable
+            // off the model's canUndo/canRedo (which notify on every edit).
+            Button {
+                text: "Undo"
+                enabled: doc ? doc.canUndo : false
+                ToolTip.visible: hovered
+                ToolTip.text: "Undo the last edit"
+                onClicked: if (doc) doc.undo()
+            }
+            Button {
+                text: "Redo"
+                enabled: doc ? doc.canRedo : false
+                ToolTip.visible: hovered
+                ToolTip.text: "Redo the last undone edit"
+                onClicked: if (doc) doc.redo()
             }
         }
 

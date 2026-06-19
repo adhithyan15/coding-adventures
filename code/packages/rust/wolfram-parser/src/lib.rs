@@ -200,10 +200,50 @@ mod tests {
         assert!(parses("1 + 1")); // trailing newline optional
     }
 
+    // --- W-6 operator sugar: /@, @@, [[ ]] ------------------------------
+
+    #[test]
+    fn map_and_apply_sugar_parse_via_mapapply() {
+        // `f /@ x` and `f @@ x` match the new `mapapply` infix level.
+        assert_eq!(
+            first_token_of(&parse_wolfram("f /@ x\n"), "mapapply").as_deref(),
+            Some("/@")
+        );
+        assert_eq!(
+            first_token_of(&parse_wolfram("f @@ x\n"), "mapapply").as_deref(),
+            Some("@@")
+        );
+        // Over a list literal (the common form), and chained.
+        assert!(parses("f /@ {1, 2}\n"));
+        assert!(parses("Plus @@ {1, 2, 3}\n"));
+        assert!(parses("g @@ f /@ x\n")); // left-folds: Apply[g, Map[f, x]]
+    }
+
+    #[test]
+    fn double_bracket_part_sugar_parses_via_postfix() {
+        // `x[[i]]` is a postfix, like `f[…]` application.
+        assert!(contains_rule(&parse_wolfram("x[[2]]\n"), "postfix"));
+        assert!(parses("{a, b, c}[[2]]\n"));
+        // Chained / nested part: `m[[1]][[2]]` and a multi-index `m[[1, 2]]`.
+        assert!(parses("{{1, 2}, {3, 4}}[[1]][[2]]\n"));
+        assert!(parses("m[[1, 2]]\n"));
+        // Interleaves with application: `f[x][[1]]`, `x[[1]][y]`.
+        assert!(parses("f[x][[1]]\n"));
+        assert!(parses("x[[1]][y]\n"));
+    }
+
+    #[test]
+    fn empty_double_brackets_are_a_syntax_error() {
+        // `[[ ]]` requires at least one index (unlike `f[]`).
+        assert!(try_parse_wolfram("x[[]]\n").is_err());
+    }
+
     #[test]
     fn syntax_error_is_reported() {
         assert!(try_parse_wolfram("1 +\n").is_err());
         assert!(try_parse_wolfram("f[x\n").is_err()); // unclosed bracket
+        assert!(try_parse_wolfram("x[[1\n").is_err()); // unclosed double bracket
+        assert!(try_parse_wolfram("f /@\n").is_err()); // map with no right operand
     }
 
     #[test]

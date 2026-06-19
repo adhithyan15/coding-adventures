@@ -11,4 +11,8 @@ lexer = { path = "../lexer" }
 r-vector = { path = "../r-vector" }
 numeric-tower = { path = "../numeric-tower" }
 statistics-core = { path = "../statistics-core" }
+# MXF-4: route `%*%` through the shared f64 matrix-execution substrate
+# (cost-based CPU/GPU dispatch, bit-exact f64). Pulls matrix-ir/matrix-cpu/
+# matrix-runtime/executor-protocol/compute-ir transitively.
+array-runtime = { package = "coding-adventures-array-runtime", path = "../array-runtime" }
 regex = "1"

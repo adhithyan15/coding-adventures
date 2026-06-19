@@ -2,6 +2,108 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2026-06-17
+
+### Added
+
+- **General attributes — `attr()`, `attributes()`, `structure()` (R-16)** — R's
+  open key→value metadata map. A new transparent wrapper
+  `SValue::Attributed { attrs, inner }` stores the *general* (non-special)
+  attributes as an insertion-ordered association list beside a boxed inner value.
+  Like `Named`/`Classed` it is *see-through*: `length`, `type_name`, `class_of`,
+  the coercions, `arithmetic`, `compare`, `truthy`, `index`, `assign_index`, and
+  printing all delegate to `inner`; only the attribute builtins observe the map.
+  - The three **special** attributes keep their dedicated representations and are
+    *never* duplicated into the general map: `names` → `SValue::Named` (R-15),
+    `class` → `SValue::Classed` (S v2), `dim` → `SValue::Matrix` (R-11). This
+    makes the consistency invariant structural — `attr(x, "names")` reads the same
+    field as `names(x)`, `attr(x, "class")` agrees with `class(x)`/`class_of`, and
+    `attr(x, "dim")` agrees with the matrix `dim`.
+  - `attr(x, which)` gets one attribute (or `NULL`); `attr(x, which) <- value`
+    sets/replaces it (`NULL` removes), wired through R-15's replacement-function
+    lvalue path, now **generalized** to thread extra call arguments through
+    (`attr(x, "foo") <- v` desugars to ``x <- `attr<-`(x, "foo", value = v)``).
+  - `attributes(x)` returns all attributes as a named list (special ones first in
+    R's canonical `names`/`dim`/general order, `class` last) or `NULL`;
+    `attributes(x) <- list(...)` replaces the whole set; `NULL` clears it.
+  - `structure(x, ...)` (previously `class`-only) now routes *every* named
+    argument through the same per-name logic, so `dim`, `names`, and arbitrary
+    attributes all attach in one call. `.Names`/`.Dim` aliases are honoured.
+  - `dim`/`nrow`/`ncol`/`levels` peel the new transparent wrappers (and `names`
+    peels class/general but stops at the names wrapper) so a classed or
+    generally-attributed matrix/factor still reports its shape/levels.
+
+### Safety
+
+- The general attribute map is bounded by `MAX_ATTRIBUTES` (4096) — `attr<-`,
+  `attributes<-`, and `structure` refuse runaway growth from crafted input. A
+  `"dim"` set validates the reshape with checked multiplication against
+  `MAX_SEQ_LEN` before allocating. No `unwrap`/panic is reachable from malformed
+  `attributes(x) <- …` input: a non-list `value`, an unnamed element, a too-long
+  `names`, a non-integer `dim` component, or a non-conforming `dim` product all
+  return a clean `SError`.
+
+## [0.11.0] - 2026-06-17
+
+### Added
+
+- **Named vectors / the `names` attribute (R-15)** — a new transparent wrapper
+  `SValue::Named { names, values }` carries a parallel `Vec<Option<String>>` of
+  element names beside a boxed atomic value (`Double`/`Logical`/`Character`). Like
+  `SValue::Classed` it is *see-through*: `length`, `type_name`, `class_of`, the
+  coercions, `arithmetic`, `compare`, and `truthy` all delegate to the inner
+  value, so names drop exactly where R drops them and survive where R keeps them.
+  - `c(a = 1, b = 2)` attaches argument tags; nested named pieces combine R-style
+    (`c(x = c(a = 1), 2)` → names `"x.a"`, `""`; `c(p = c(1, 2))` → `"p1"`, `"p2"`).
+    `combine` builds names only when some argument is tagged or already named.
+  - `names(x)` returns the character names (or `NULL`); the `names<-` replacement
+    function sets them with R's NA-padding recycling (too-short pads with `NA`,
+    too-long is an error, `NULL` clears), and `setNames(x, nm)` is the functional
+    form. A general **replacement-function lvalue path** in the evaluator desugars
+    `f(x) <- v` to ``x <- `f<-`(x, v)`` (reusable for future `levels<-`/`dim<-`).
+  - **Character indexing** `x["b"]` / `x[c("a","c")]` selects by name (unmatched →
+    `NA`); a `resolve_picks_named` helper extends `resolve_picks` with the
+    by-name path. Positional / negative / logical indexing still work and now
+    **carry the selected names along**. `assign_index` keeps names through
+    `v[i] <- val` and resolves a character subscript by name.
+  - **Printing** lays a named vector out R-style — right-aligned names above
+    right-aligned values, each column the wider of the two — instead of the `[i]`
+    prefix; an unset name prints `<NA>`.
+
+### Changed
+
+- **`%*%` adopts the shared f64 matrix-execution substrate (MXF-4)** — R's
+  matrix product, formerly a hand-written `f64` triple loop in `eval.rs`, now
+  routes through [`array_runtime::execute`]`(Kernel::MatMul, …)` at
+  `DType::F64`. R's matmul therefore flows through the same cost-based CPU/GPU
+  planner as MATLAB's `A * B`, at full double precision (MXF-3's bit-exact
+  8-byte `f64` path) — completing the MX12 `f64`-substrate rollout. R's `Matrix`
+  is already column-major `[nrow, ncol]`, identical to `array_runtime::Array`'s
+  layout, and `matrix-cpu`'s `matmul_f64` folds the contraction left-to-right
+  from `0.0` just as the old loop did, so results are **bit-identical**. Adds
+  `array-runtime` as a dependency (it pulls `matrix-ir`/`matrix-cpu`/
+  `matrix-runtime`/`executor-protocol`/`compute-ir` transitively).
+
+### Safety
+
+- The names vector is always kept exactly as long as the values (every
+  constructor truncates / `NA`-pads via `with_names`), so a name lookup can never
+  index out of bounds; the by-name index path reuses the bounded `resolve_picks`.
+  No new unbounded allocation or integer-overflow surface — name lengths ride the
+  same vector-length channels already capped at `MAX_SEQ_LEN`.
+- **NA correctness boundary (MXF-4).** R's NA is a *specific* NaN bit pattern;
+  IEEE arithmetic on a NaN yields an implementation-defined payload, so an NA
+  pushed through the substrate's floating multiply/add would not reliably return
+  as R's NA. When either operand contains an NA (or the inner dimension is `0`),
+  `matrix_multiply` keeps the original loop, which emits `na_real()` exactly as
+  before. The conformability check and the `MAX_SEQ_LEN` result-size cap are
+  preserved ahead of dispatch; any substrate error falls through to the bounded
+  loop. `t()`, `rowSums`/`colSums`/`apply`, `diag`, `solve`, and `det` are left
+  on their existing implementations — none has a matching `array-runtime`
+  primitive (transpose/axis-reductions are not lowered for execution;
+  `solve`/`det` are LU algorithms the substrate doesn't model), and `solve`
+  keeps its O(n³) size guard.
+
 ## [0.10.0] - 2026-06-16
 
 ### Added

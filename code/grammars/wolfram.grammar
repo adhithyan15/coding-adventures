@@ -17,8 +17,10 @@
 #   AND (&&)  OR (||)  NOT (!)
 #   EQUAL (==)  UNEQUAL (!=)  LESS (<)  GREATER (>)  LE (<=)  GE (>=)
 #   PLUS MINUS TIMES SLASH POWER       arithmetic
+#   MAP (/@)  APPLY (@@)                map / apply sugar  (W-6)
 #   BLANK (_)                          pattern blank
 #   LBRACKET RBRACKET   (f[...] application)
+#   LDBRACKET           ([[...]] Part sugar opener; closes with RBRACKET RBRACKET)  (W-6)
 #   LBRACE RBRACE       ({...} list)
 #   LPAREN RPAREN       (grouping)
 #   COMMA SEMI NEWLINE
@@ -36,7 +38,8 @@
 #   multiplicative  * /
 #   unary           - +  (prefix)
 #   power           ^                     (right-associative)
-#   application     f[...]                (postfix)
+#   mapapply        /@ @@                 (infix, left-associative)   (W-6)
+#   application     f[...]  x[[...]]      (postfix)                   (W-6: [[]])
 #   atom            literals, symbols, patterns, {...}, ( ... )
 # =============================================================================
 
@@ -76,11 +79,29 @@ multiplicative = unary { ( TIMES | SLASH ) unary } ;
 unary = ( MINUS | PLUS ) unary | power ;
 
 # Power — right-associative: `a^b^c` is Power[a, Power[b, c]].
-power = postfix [ POWER unary ] ;
+power = mapapply [ POWER unary ] ;
 
-# Function application in square brackets, left-associative and chainable:
-# `f[x][y]` is `(f[x])[y]`. The arg list may be empty (`f[]`).
-postfix = atom { LBRACKET [ arglist ] RBRACKET } ;
+# Map / Apply sugar (W-6), infix and left-associative, binding just above
+# application: `f /@ x` is Map[f, x], `f @@ x` is Apply[f, x]. The runtime
+# desugars each to the SAME W-5 head the long form uses (`Map`/`Apply`), so
+# `f /@ {1, 2}` and `Map[f, {1, 2}]` produce identical IR. A chain folds left,
+# `g @@ f /@ x` ⇒ `Apply[g, Map[f, x]]` — exact precedence vs arithmetic is not
+# part of the tested subset (write parentheses when mixing).
+mapapply = postfix { ( MAP | APPLY ) postfix } ;
+
+# Postfix application (W-6 adds the `[[ … ]]` Part sugar alongside `f[…]`):
+#   `f[x][y]`     is `(f[x])[y]`             — function application, may be empty
+#   `x[[i]]`      is Part[x, i]              — double-bracket Part sugar
+#   `x[[1]][[2]]` is Part[Part[x, 1], 2]     — both chain left-associatively
+# Both forms are postfix and bind equally tightly, so they interleave freely
+# (`f[x][[1]]`, `x[[1]][y]`). `[[ … ]]` requires at least one index expression
+# (a bare `x[[]]` is not valid Wolfram); the runtime emits one `Part` per index.
+#
+# The opener `[[` is a single LDBRACKET token, but the closer is `RBRACKET
+# RBRACKET` — there is intentionally no `]]` token (see wolfram.tokens for why:
+# a greedy `]]` would mis-lex the tail of nested `f[g[x]]`). So `x[[i]]` closes
+# with two single `]`, exactly as it lexes.
+postfix = atom { LBRACKET [ arglist ] RBRACKET | LDBRACKET arglist RBRACKET RBRACKET } ;
 
 arglist = expr { COMMA expr } ;
 

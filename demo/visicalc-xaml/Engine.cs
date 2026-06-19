@@ -67,6 +67,30 @@ internal static class ScNative
         [MarshalAs(UnmanagedType.LPUTF8Str)] string src,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string dstStart,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string dstEnd);
+    // sc_copy / sc_cut(session, start, end) → void (clipboard capture; two A1 strings).
+    [DllImport("spreadsheet_capi")]
+    internal static extern void sc_copy(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string start,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string end);
+    [DllImport("spreadsheet_capi")]
+    internal static extern void sc_cut(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string start,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string end);
+    // sc_paste(session, dst_start) → int (1 applied, 0 no-op).
+    [DllImport("spreadsheet_capi")]
+    internal static extern int sc_paste(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string dstStart);
+    // sc_serialize(session) → char* (workbook source + formats as JSON);
+    // sc_deserialize(session, data) → int (1 loaded, 0 malformed/unsupported).
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_serialize(IntPtr s);
+    [DllImport("spreadsheet_capi")]
+    internal static extern int sc_deserialize(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string data);
+    // sc_undo / sc_redo / sc_can_undo / sc_can_redo(session) → int (1/0).
+    [DllImport("spreadsheet_capi")] internal static extern int sc_undo(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_redo(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_can_undo(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern int sc_can_redo(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_used_range(IntPtr s);
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_column_letters(IntPtr s, uint index);
     [DllImport("spreadsheet_capi")] internal static extern ulong sc_current_revision(IntPtr s);
@@ -132,6 +156,42 @@ public sealed class SpreadsheetSession : IDisposable
     /// every dependent. Reaches sc_fill — the same path every other backend drives.
     public void Fill(string src, string dstStart, string dstEnd) =>
         ScNative.sc_fill(_handle, src, dstStart, dstEnd);
+
+    /// Copy the inclusive rectangle `start`..`end` into the clipboard — a
+    /// whole-block copy that pastes as a unit. The source is untouched; the
+    /// buffer survives any number of pastes.
+    public void Copy(string start, string end) => ScNative.sc_copy(_handle, start, end);
+
+    /// Cut the inclusive rectangle `start`..`end`. Like <see cref="Copy"/> but a
+    /// one-shot move: the paste that places it clears the source it didn't overwrite.
+    public void Cut(string start, string end) => ScNative.sc_cut(_handle, start, end);
+
+    /// Paste the clipboard so its top-left lands at `dstStart`. Returns `true`
+    /// when applied, `false` (a no-op) for an empty clipboard, malformed address,
+    /// or off-grid destination. The block's references shift by the destination's
+    /// offset; content and format ride along.
+    public bool Paste(string dstStart) => ScNative.sc_paste(_handle, dstStart) != 0;
+
+    /// Serialize the whole workbook to a self-contained JSON document — the
+    /// SOURCE (formula text + typed literals) + per-cell formats, not the
+    /// computed values (those recompute on load, so the document is small and
+    /// can't disagree with itself). <see cref="Take"/> frees the engine's char*;
+    /// the host persists the returned string wherever it likes.
+    public string Serialize() => Take(ScNative.sc_serialize(_handle));
+
+    /// Replace the workbook from a document produced by <see cref="Serialize"/>.
+    /// Returns `true` on success, `false` for malformed / unsupported input (the
+    /// workbook is left untouched — the engine validates before it mutates).
+    /// Formulas reload live.
+    public bool Deserialize(string data) => ScNative.sc_deserialize(_handle, data) != 0;
+
+    /// Undo / redo: walk the engine's snapshot history. Each returns `true` if it
+    /// changed the document (the host then re-reads the viewport), `false` if
+    /// there was nothing to do. CanUndo/CanRedo gate a host's Undo/Redo controls.
+    public bool Undo() => ScNative.sc_undo(_handle) != 0;
+    public bool Redo() => ScNative.sc_redo(_handle) != 0;
+    public bool CanUndo() => ScNative.sc_can_undo(_handle) != 0;
+    public bool CanRedo() => ScNative.sc_can_redo(_handle) != 0;
 
     /// The display string for a cell — what a spreadsheet should show. Parses
     /// the engine's JSON (the fixed shape every backend's engine emits).
@@ -464,6 +524,63 @@ public sealed class InfiniteSheetModel : IDisposable
         int last = Saturate((long)SelRow + rows, floor: 1);
         _session.Fill(InfAddress, $"{col}{first}", $"{col}{last}");
         ComputeExtent();
+    }
+
+    /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
+    /// engine shifts the pasted formula's relative references by the destination's
+    /// offset, pins absolute (`$`) refs, carries the format; a cut clears the
+    /// source on paste. <see cref="PasteCell"/> returns false (a no-op) when the
+    /// clipboard is empty, and regrows the extent on success.
+    public void CopyCell() => _session.Copy(InfAddress, InfAddress);
+    public void CutCell() => _session.Cut(InfAddress, InfAddress);
+    public bool PasteCell()
+    {
+        bool ok = _session.Paste(InfAddress);
+        if (ok) ComputeExtent();
+        return ok;
+    }
+
+    /// Save / load: serialize the whole workbook to a JSON document, and restore
+    /// it. The document stores only the source + formats — computed values
+    /// recompute on load, so a loaded formula stays live. <see cref="LoadBook"/>
+    /// returns false (workbook untouched) for malformed input; on success it
+    /// regrows the extent and refreshes the formula bar so the view re-reads.
+    public string SaveBook() => _session.Serialize();
+    public bool LoadBook(string data)
+    {
+        bool ok = _session.Deserialize(data);
+        if (ok)
+        {
+            ComputeExtent();
+            Formula = _session.GetRaw(InfAddress);
+        }
+        return ok;
+    }
+
+    /// Undo / redo: walk the engine's snapshot history. On success the extent
+    /// regrows and the formula bar refreshes (any cell could have changed); a
+    /// restored formula stays live. CanUndo/CanRedo gate the buttons.
+    public bool CanUndo => _session.CanUndo();
+    public bool CanRedo => _session.CanRedo();
+    public bool UndoEdit()
+    {
+        bool ok = _session.Undo();
+        if (ok)
+        {
+            ComputeExtent();
+            Formula = _session.GetRaw(InfAddress);
+        }
+        return ok;
+    }
+    public bool RedoEdit()
+    {
+        bool ok = _session.Redo();
+        if (ok)
+        {
+            ComputeExtent();
+            Formula = _session.GetRaw(InfAddress);
+        }
+        return ok;
     }
 
     public void Dispose() => _session.Dispose();

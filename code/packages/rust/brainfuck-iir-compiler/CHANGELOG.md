@@ -1,5 +1,35 @@
 # Changelog — brainfuck-iir-compiler
 
+## [0.4.0] — 2026-06-17 (LANG-FULL B1-eof — `,` normalises EOF to 0, so cat runs cross-backend)
+
+### Fixed — `,` stores 0 at end-of-input, on every backend
+
+`getchar` yields a byte (0–255) or a negative sentinel at end-of-input — but the
+sentinel differs by runtime: libc `getchar` (native/LLVM), `Console.Read` (CLR) and the
+wasm host return `-1`, while the JVM/VM/JIT stubs return `0`. The old lowering stored the
+raw result into the `u8` cell, so on the `-1` runtimes EOF truncated to `255`. The
+canonical cat `,[.,]` (loop while cell ≠ 0) therefore **looped forever** on those
+backends, while halting on the `0` ones — the deferred half of B1-stdin.
+
+`,` now normalises EOF to `0` **in the shared IIR**, so behaviour is identical on every
+backend rather than patched per-backend:
+
+```text
+call_builtin v getchar      i64   ; read at i64 so -1 survives (a u8 read masks it to 255)
+const        z 0            i64
+cmp_lt       c v z          i64   ; c = (v < 0)  → EOF?
+jmp_if_false c input_N_store      ; byte in range → store as-is
+const        v 0            i64   ; EOF → cell = 0
+label          input_N_store
+store_mem      ptr v        u8
+```
+
+This is the "EOF leaves 0" convention. A program that never reads past its input
+(`,+.`, `,.,.`) never reaches the clamp, so its lowering is unchanged. **Verified by
+RUNNING** the cat `,[.,]` with input `"Hi"` → stdout `"Hi"` on native/LLVM/WASM/JVM/CLR/
+VM/JIT (`lang-aot` `tests/lang_matrix.rs`). New unit tests
+`comma_emits_getchar_with_eof_clamp_then_store`, `two_commas_use_distinct_clamp_labels`.
+
 ## [0.3.3] — 2026-05-22 (BF → CLR end-to-end + BEAM rejection doc)
 
 ### Added — `tests/clr_e2e.rs`

@@ -2,6 +2,45 @@
 
 All notable changes to the `coding-adventures-closure-pass-pipeline` crate will be documented in this file.
 
+## [0.3.0] - 2026-06-17
+
+### Added — real fixed-point iteration (CLOC13.F)
+
+`PassPipeline::run` no longer runs each pass exactly once. It topo-sorts the
+passes once, then runs that order in repeated **sweeps**, continuing while any
+`FixedPoint` pass reports `PassOutput::changed` — so a transform one pass
+exposes is picked up by an earlier pass on the next sweep:
+
+```text
+inline turns double(7) into 7 * 2   (sweep 1)
+constant-fold folds 7 * 2 into 14   (sweep 2 — fold ran before inline in sweep 1)
+no FixedPoint change                (sweep 3 → converged)
+```
+
+- **`OneShot` passes re-run each sweep but do NOT drive the loop** — only a
+  `FixedPoint` pass's `changed` triggers another sweep. OneShot passes are
+  expected to be idempotent at the fixed point, so re-running them just lets
+  them observe the converged program (e.g. `rename` shortens names on the
+  fully-folded output) without risking a spin.
+- **`MAX_SWEEPS` cap (100)** — a backstop against a buggy pass that reports
+  `changed = true` forever (e.g. two passes that undo each other). Real
+  cascades converge in a handful of sweeps. Hitting the cap emits a
+  `pipeline.fixed-point-cap-reached` note instead of looping or silently
+  under-optimizing.
+- **Removed** the `pipeline.fixed-point-not-yet-iterated` diagnostic — the
+  limitation it described is gone.
+- Diagnostics and per-pass stats now reflect the **final (converged) sweep**;
+  CV contributions accumulate across all sweeps (each is a real transformation
+  in the provenance record).
+
+### Tests
+- New: a counting `FixedPoint` pass that changes N times then converges
+  (asserts N+1 runs — N changing sweeps + 1 confirming), an always-changing
+  `OneShot` pass that must NOT spin the loop, and a runaway `FixedPoint` pass
+  that hits the cap and surfaces the note.
+
+Crate bumped `0.2.0 → 0.3.0`.
+
 ## [0.2.0] - 2026-05-24
 
 ### Added — `PassRegistry` runtime-discovery layer (CLOC10.A)

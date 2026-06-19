@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-06-17
+
+### Added (via the shared `s-runtime`)
+
+- **R-16 — general attributes**: `attr(x, which)` gets a named attribute (`NULL`
+  if absent); `attr(x, which) <- value` sets/replaces it (`NULL` removes);
+  `attributes(x)` gets all attributes as a named list (`NULL` if none);
+  `attributes(x) <- list(...)` replaces them (`NULL` clears); `structure(x, ...)`
+  returns `x` with the `...` named args attached as attributes. The special
+  attributes stay consistent with their dedicated wrappers — `attr(x, "names")`
+  == `names(x)` (R-15), `attr(x, "class")` == `class(x)` (S3), `attr(x, "dim")`
+  == `dim(x)` (R-11) — even after layering a class on a matrix, and setting `dim`
+  via `attr<-` reshapes a vector into a matrix. `attr<-`/`attributes<-` slot into
+  R-15's replacement-function lvalue path (now generalized to thread the `which`
+  argument through). See `s-runtime` 0.12.0.
+
+## [0.10.0] - 2026-06-17
+
+### Added (via the shared `s-runtime`)
+
+- **R-15 — `names()` and named-vector access**: `c(a = 1, b = 2)` attaches names
+  (nested named pieces combine R-style — `c(x = c(a = 1), 2)` → `"x.a"`, `""`);
+  `names(x)` gets them (`NULL` if unset); `names(x) <- value` sets them with R's
+  NA-padding recycling (`NULL` clears); `setNames(x, nm)` is the functional form;
+  `x["b"]` / `x[c("a","c")]` index by name (unmatched → `NA`). Positional /
+  negative / logical indexing still work and carry names along; sub-assignment
+  (`x[2] <- 9`, `x["a"] <- 5`) keeps names; arithmetic drops them, as in R. Named
+  vectors print names above values in aligned columns instead of the `[i]` prefix
+  — a user-visible change in the R REPL. See `s-runtime` 0.11.0.
+
 ## [0.9.0] - 2026-06-16
 
 ### Added (via the shared `s-runtime` lvalue machinery)

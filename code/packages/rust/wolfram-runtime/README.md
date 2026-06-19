@@ -7,7 +7,10 @@ M-expression AST from
 [`symbolic-vm`](../symbolic-vm) — reusing the same symbolic substrate that
 Macsyma/Maxima drive rather than writing a bespoke evaluator.
 
-See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfram-language.md) §7.
+See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfram-language.md)
+§7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), §10 (W-7
+iteration constructs), §11 (W-8 local scoping), and §12 (W-9 list-manipulation
+builtins).
 
 ## What it does
 
@@ -66,11 +69,167 @@ assert_eq!(eval("Power[2, 10]\n").unwrap(), "Out[1]= 1024\n");
 assert_eq!(eval("{1 + 1, 2*3}\n").unwrap(), "Out[1]= {2, 6}\n");
 assert_eq!(eval("x /. x -> 5\n").unwrap(), "Out[1]= 5\n");
 
+// W-5 list / functional / control / numeric built-ins:
+assert_eq!(eval("Length[{1, 2, 3}]\n").unwrap(), "Out[1]= 3\n");
+assert_eq!(eval("Range[3]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+assert_eq!(eval("Map[f, {1, 2}]\n").unwrap(), "Out[1]= {f[1], f[2]}\n");
+assert_eq!(eval("Apply[Plus, {1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
+assert_eq!(eval("Part[{a, b, c}, 2]\n").unwrap(), "Out[1]= b\n");
+assert_eq!(eval("If[1 > 0, a, b]\n").unwrap(), "Out[1]= a\n");
+assert_eq!(eval("N[1/2]\n").unwrap(), "Out[1]= 0.5\n");
+
+// W-6 operator sugar — identical to the head forms above:
+assert_eq!(eval("f /@ {1, 2}\n").unwrap(), "Out[1]= {f[1], f[2]}\n"); // Map
+assert_eq!(eval("Plus @@ {1, 2, 3}\n").unwrap(), "Out[1]= 6\n");      // Apply
+assert_eq!(eval("{a, b, c}[[2]]\n").unwrap(), "Out[1]= b\n");          // Part
+
+// W-7 iteration constructs — bind a local index over a range:
+assert_eq!(eval("Table[i^2, {i, 3}]\n").unwrap(), "Out[1]= {1, 4, 9}\n");
+assert_eq!(eval("Sum[i, {i, 1, 10}]\n").unwrap(), "Out[1]= 55\n");
+assert_eq!(eval("Product[i, {i, 1, 4}]\n").unwrap(), "Out[1]= 24\n");
+assert_eq!(eval("Do[i, {i, 3}]\n").unwrap(), "Out[1]= Null\n");
+
+// W-8 local scoping — bind named locals over a body (locals never leak):
+assert_eq!(eval("With[{x = 3}, x^2]\n").unwrap(), "Out[1]= 9\n");
+assert_eq!(eval("With[{a = 1, b = 2}, a + b]\n").unwrap(), "Out[1]= 3\n");
+assert_eq!(eval("Module[{a = 1, b = 2}, a + b]\n").unwrap(), "Out[1]= 3\n");
+assert_eq!(eval("Block[{x = 5}, x + 1]\n").unwrap(), "Out[1]= 6\n");
+
+// W-9 list manipulation — reorder, concatenate, flatten, filter, count, sum:
+assert_eq!(eval("Sort[{3, 1, 2}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+assert_eq!(eval("Reverse[{1, 2, 3}]\n").unwrap(), "Out[1]= {3, 2, 1}\n");
+assert_eq!(eval("Join[{1}, {2, 3}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+assert_eq!(eval("Flatten[{{1, 2}, {3}}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+assert_eq!(eval("Select[{1, 2, 3, 4}, EvenQ]\n").unwrap(), "Out[1]= {2, 4}\n");
+assert_eq!(eval("Count[{1, 2, 3, 4}, EvenQ]\n").unwrap(), "Out[1]= 2\n");
+assert_eq!(eval("Total[{1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
+
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
 s.feed("square[x_] := x^2;\n").unwrap();   // `;` suppresses display
 assert_eq!(s.feed("square[5]\n").unwrap(), "Out[2]= 25\n");
 ```
+
+## Built-ins
+
+W-4 inherited arithmetic, comparisons, logic, `If`, lists-as-data, patterns/`/.`,
+`Set`/`SetDelayed`, and the elementary functions from the shared
+`SymbolicBackend`. **W-5** adds the list/functional/control/numeric built-ins via
+a `WolframBackend` *decorator* — it answers those heads from a small table and
+delegates everything else to the inner `SymbolicBackend`, so the change touches
+only this crate (not `symbolic-vm`'s 50-dependent shared table) while reusing the
+whole engine:
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Length` | `Length[{1,2,3}]` | `3` |
+| `First` / `Last` | `First[{9,8}]` | `9` |
+| `Part` | `Part[{a,b,c}, 2]` (1-based; `-1` = last; `0` = head) | `b` |
+| `Append` | `Append[{1,2}, 3]` | `{1, 2, 3}` |
+| `Range` | `Range[1,7,2]` | `{1, 3, 5, 7}` |
+| `Map` | `Map[f, {1,2}]` | `{f[1], f[2]}` |
+| `Apply` | `Apply[Plus, {1,2,3}]` | `6` |
+| `If` | `If[1>0, a, b]` | `a` |
+| `N` | `N[1/2]` | `0.5` |
+
+`Map`/`Apply` route the head they build through the same `Plus`→`Add` bridge as
+lowering, so `Apply[Plus, …]` sums. `First`/`Last`/`Part` on an empty list or an
+out-of-range index, and `Range` of an oversize span (capped at
+`MAX_RANGE_LENGTH = 1_000_000` *before* allocation), are left **unevaluated** —
+never a panic, never an OOM.
+
+**W-6** adds the operator *sugar* for three of these heads, desugared in lowering
+to the exact same head so the results are byte-identical:
+
+| Sugar | ≡ head form | Result |
+|-------|-------------|--------|
+| `f /@ x` | `Map[f, x]` | `{f[…], …}` |
+| `f @@ x` | `Apply[f, x]` | e.g. `Plus @@ {1,2,3}` = `6` |
+| `x[[i]]` | `Part[x, i]` | e.g. `{a,b,c}[[2]]` = `b` |
+
+`[[ ]]` chains and nests (`{{1,2},{3,4}}[[1]][[2]]` = `2`, `x[[i, j]]` =
+`Part[Part[x,i],j]`) and interleaves with `f[…]` application; `/@` and `@@` share
+one left-associative precedence level (parenthesise when mixing them).
+
+**W-7** adds the iteration constructs — the first forms that introduce a *scoped
+local index*. Each binds a fresh `i` over a range and evaluates a body per value,
+folded onto the same engine:
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Table` | `Table[i^2, {i, 3}]` | `{1, 4, 9}` |
+| `Table` | `Table[i, {i, 2, 4}]` | `{2, 3, 4}` |
+| `Do` | `Do[x = i, {i, 3}]` (runs 3×, side effects) | `Null` |
+| `Sum` | `Sum[i, {i, 1, 10}]` | `55` (empty range → `0`) |
+| `Product` | `Product[i, {i, 1, 4}]` | `24` (empty range → `1`) |
+
+The iterator spec `{i, …}` accepts the same 1-/2-/3-bound forms as `Range`
+(`{i, imax}`, `{i, imin, imax}`, `{i, imin, imax, di}`). The four heads are
+**held** so the body and spec arrive unevaluated; each iteration binds `i → value`
+with the *same* substitution that binds user-function parameters, so the index
+stays local (no session leak) and nested `Table`s bind their own index cleanly.
+The spec *bounds* are still evaluated (a bound may be `{i, 1+1}` or reference a
+session binding). An over-large iterator is capped at `MAX_RANGE_LENGTH` *before*
+allocation/looping (so `Table[0, {i, 2000000}]` stays unevaluated, never OOMs or
+hangs), and a malformed spec (`{i}` with no bound, a zero step, a non-integer
+bound) is left unevaluated rather than panicking. No grammar change — these are
+ordinary `Head[args]` forms.
+
+**W-8** adds the local-scoping heads — the generalisation of W-7's local index
+into named locals over a body, lowered onto the same held-head + substitution
+substrate:
+
+| Head | Example | Result |
+|------|---------|--------|
+| `With` | `With[{x = 3}, x^2]` | `9` |
+| `With` | `With[{a = 1, b = 2}, a + b]` | `3` |
+| `Module` | `Module[{a = 1, b = 2}, a + b]` | `3` |
+| `Block` | `Block[{x = 5}, x + 1]` | `6` |
+
+All three are `Head[{decls}, body]` forms (no grammar change — `{x = e, …}` is an
+ordinary list of `Set` nodes). They are **held** so the decl list and body arrive
+unevaluated; the handler evaluates each decl's RHS, then binds the locals into a
+*copy* of the body with the *same* `substitute` that binds W-7's index and
+user-function parameters. Because the session environment is never touched, a
+**local never leaks** (`x` is still free after `With[{x = 3}, x]`) and never
+clobbers a same-named global. `With`/`Block` require every local initialised
+(`name = value`); `Module` also accepts a bare `name`, which it α-renames to a
+fresh gensym `name$nnn` (as real Wolfram does) so an uninitialised local stays
+undefined and cannot capture a global. `Block`'s dynamic scope is approximated by
+lexical substitution — observably identical to `With` for the self-contained
+bodies this subset supports (see MA04 §11.3). A malformed form (a non-list decl
+argument, a `With`/`Block` local with no value, a non-symbol assignment target,
+the wrong arity) is left unevaluated rather than panicking.
+
+**W-9** adds the list-manipulation heads — reorder, concatenate, flatten, filter,
+count, sum — lowered onto the same W-5 substrate (the list accessor, the
+`Map`/`Apply` application path, the `Add` fold). All are eager `Head[args]` forms
+(no grammar change, nothing held):
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Sort` | `Sort[{3, 1, 2}]` | `{1, 2, 3}` |
+| `Reverse` | `Reverse[{1, 2, 3}]` | `{3, 2, 1}` |
+| `Join` | `Join[{1}, {2, 3}]` | `{1, 2, 3}` |
+| `Flatten` | `Flatten[{{1, 2}, {3}}]` | `{1, 2, 3}` |
+| `Flatten` | `Flatten[{1, {2, {3}}}, 1]` | `{1, 2, {3}}` |
+| `Select` | `Select[{1, 2, 3, 4}, EvenQ]` | `{2, 4}` |
+| `Count` | `Count[{1, 2, 3, 4}, EvenQ]` | `2` |
+| `Total` | `Total[{1, 2, 3}]` | `6` |
+| `EvenQ` / `OddQ` | `EvenQ[4]` | `True` |
+
+`Sort` uses a documented total canonical order over `IRNode` (numbers by
+magnitude < symbols < strings < compound; stable, panic-free); pure-numeric lists
+sort numerically. `Select`/`Count` apply `pred[e]` through the **same** path as
+`Map`/`Apply` and keep/tally where it evaluates to `True`, so a built-in `EvenQ`, a
+user `f[x_] := …` predicate, or any bridged head all work (function-predicate
+`Count` is the documented simplification versus full pattern matching). `Total`
+folds onto the canonical `Add` head, consistent with W-7 `Sum`. `Flatten` defaults
+to flattening **all** levels; `Flatten[list, n]` flattens only the top `n` levels.
+`Join`/`Flatten` outputs are DoS-capped at `MAX_LIST_LENGTH` (= `MAX_RANGE_LENGTH`,
+1,000,000); the minimal `EvenQ`/`OddQ` parity predicates exist so `Select`/`Count`
+are testable. Every malformed form (non-list, non-callable predicate, bad depth,
+wrong arity) is left unevaluated rather than panicking.
 
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
@@ -88,11 +247,24 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
 
 - **W-1** spec + grammar, **W-2** `wolfram-lexer`, **W-3** `wolfram-parser`
   (all merged) — the frontend.
-- **W-4** (this crate) — lowering + evaluation over the shared symbolic engine.
-- **W-5** [`wolfram-repl`](../wolfram-repl) — the interactive `wolfram`/`math`
-  binary on top of this crate.
-- **W-6** — the full `cas-*` function surface under Wolfram names
-  (`Simplify`, `Expand`, `Factor`, `Solve`, …), a later item.
+- **W-4** (this crate) — lowering + evaluation over the shared symbolic engine,
+  plus [`wolfram-repl`](../wolfram-repl) (the interactive `wolfram`/`math` binary).
+- **W-5** (this crate) — the list/functional/control/numeric built-ins above,
+  added via the `WolframBackend` decorator.
+- **W-6** (this crate) — the `/@`/`@@`/`[[ ]]` operator sugar (a lexer+grammar
+  change), each desugaring to the W-5 `Map`/`Apply`/`Part` head.
+- **W-7** (this crate) — the `Table`/`Do`/`Sum`/`Product` iteration constructs,
+  iterator-bound evaluation over a local index (held heads + per-step
+  substitution), DoS-capped like `Range`. No grammar change.
+- **W-8** (this crate) — the `With`/`Module`/`Block` local-scoping heads, named
+  locals bound into a held body via substitution (no session leak, no global
+  clobber; `Module` gensym-renames uninitialised locals). No grammar change.
+- **W-9** (this crate) — the `Sort`/`Reverse`/`Join`/`Flatten`/`Select`/`Count`/
+  `Total` list-manipulation heads (plus `EvenQ`/`OddQ` predicates), lowered onto
+  the W-5 list/`Map`/`Apply`/`Add` substrate, DoS-capped on `Join`/`Flatten`
+  output. No grammar change.
+- **Future** — the full `cas-*` function surface under Wolfram names
+  (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 
 ## Testing
 

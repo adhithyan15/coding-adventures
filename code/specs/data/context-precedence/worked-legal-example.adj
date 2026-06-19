@@ -1,0 +1,61 @@
+% =====================================================================
+% worked-legal-example.adj — lex superior, end-to-end (ADJ73 PR-B-3).
+%
+% THE CASE.  The term "navigable waters" is read two ways by two courts:
+%   • the Ninth Circuit reads it BROADLY;
+%   • a district court in that circuit reads it NARROWLY.
+% A statute's term has at most one governing meaning, so the two readings
+% CONFLICT. Which governs?
+%
+% The naive answer would look at the priority TIER — and here the trap is
+% deliberately set: the narrow district-court reading is asserted at the
+% `mandatory` tier (the highest), while the broad circuit reading sits at the
+% `default` tier. A pure-tier engine would pick the narrow reading.
+%
+% But context precedence is PRIMARY (lex superior). The grounded rulebook says
+% `ninth_circuit` outranks `district_court` (vertical stare decisis), so the
+% circuit's BROAD reading GOVERNS and the district's narrow reading is DEFEATED
+% — despite its higher tier. The tier only breaks ties the context order leaves
+% open. Run this through adj-lang-cli and read the `governing` section:
+%
+%   means(navigable_waters, broad)   status governing   context ninth_circuit
+%   means(navigable_waters, narrow)  status defeated     context district_court
+%                                    defeated_by means(navigable_waters, broad)
+%
+% 0 answer-time model calls — pure SLD + a precedence post-pass over the
+% grounded graph. The precedence is auditable: `? outranks_context_by(ninth_circuit,
+% $lower, $canon)` recalls the tagged edge WITH its charter (the WCL stare-decisis quote).
+% =====================================================================
+
+% The grounded precedence order (federal>state, ninth_circuit>district_court),
+% each edge carrying its byte-quoted charter. Resolution relies on a DEFENSIBLE
+% order, so it is imported as a checked-in rulebook, not declared bare.
+import "context-precedence.adj"
+
+% A statute term has at most one governing reading → declare `means` functional
+% on its last argument, so the two readings conflict and precedence must pick.
+functional means(term, reading)
+
+% The Ninth Circuit's reading (broad), grounded in `ninth_circuit` context.
+% Left at the DEFAULT tier on purpose — it wins on context, not tier.
+rule {
+  head: means(navigable_waters, broad)
+  when: ninth_circuit_held
+  context: ninth_circuit
+}
+
+% The district court's reading (narrow), grounded in `district_court` context,
+% asserted at the MANDATORY tier — the highest. Context still overrides it.
+rule {
+  head: means(navigable_waters, narrow)
+  when: district_held
+  priority: mandatory
+  context: district_court
+}
+
+% Per-case facts: both courts have spoken.
+observe ninth_circuit_held
+observe district_held
+
+% Which reading governs?  (binding query → the `governing` section resolves it.)
+? means(navigable_waters, $reading)

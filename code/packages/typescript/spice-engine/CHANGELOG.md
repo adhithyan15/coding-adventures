@@ -2,6 +2,60 @@
 
 ## Unreleased
 
+- Add selected Fourier probe names to selected-run artifacts in
+  `runDeckAnalysis` and render them in a stable `FourierList` column from
+  `formatDeckRunArtifactTable`, matching Python and Rust.
+- Add selected measurement names to selected-run artifacts in
+  `runDeckAnalysis` and render them in a stable `MeasurementList` column from
+  `formatDeckRunArtifactTable`, matching Python and Rust.
+- Add normalized output-probe names to selected-run artifacts in
+  `runDeckAnalysis` and render them in a stable `OutputProbeList` column from
+  `formatDeckRunArtifactTable`, matching Python and Rust.
+- Emit explicit policy diagnostics for selected `.control` block
+  variable/state mutation commands, including `let`, `alter`, `alterparam`,
+  `set`, and `unset`, in `analyzeDeckControls` and `resolveDeckSources`,
+  matching Python and Rust. Accepted no-op `set` options still route as no-op
+  markers.
+- Emit explicit policy diagnostics for selected `.control` block control-flow
+  commands, including `if`, `while`, `foreach`, and `repeat`, in
+  `analyzeDeckControls` and `resolveDeckSources`, matching Python and Rust.
+  Control-flow execution remains disabled by the deck execution policy.
+- Emit explicit policy diagnostics for selected `.control` block `cd`
+  working-directory mutation commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust. Working-directory mutation
+  remains disabled by the deck execution policy.
+- Emit explicit policy diagnostics for selected `.control` block `source` and
+  `shell` external script/shell commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust. External script execution
+  and shelling out remain disabled by the deck execution policy.
+- Accept selected `.control` block read-only `echo`, `rusage`, and `where`
+  console/debug commands as no-op control commands in `analyzeDeckControls`
+  and `resolveDeckSources`, matching Python and Rust. Actual console/debug
+  output remains out of scope for these markers.
+- Accept selected `.control` block read-only `status`, `version`, and `help`
+  UI introspection commands as no-op control commands in `analyzeDeckControls`
+  and `resolveDeckSources`, matching Python and Rust. Actual console/help
+  output remains out of scope for these markers.
+- Accept selected `.control` block read-only `show` and `showmod`
+  device/model inspection commands as no-op control commands in
+  `analyzeDeckControls` and `resolveDeckSources`, matching Python and Rust.
+  Actual console/model inspection output remains out of scope for these
+  markers.
+- Accept selected `.control` block read-only `display` and `listing`
+  inspection commands as no-op control commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust. Actual console/listing
+  output remains out of scope for these markers.
+- Accept selected `.control` block `wrdata <file> <probes...>` ASCII
+  data-write markers as no-op control commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust. Actual data-file
+  serialization remains out of scope for this marker.
+- Accept selected `.control` block `write <rawfile> [probes...]` rawfile-write
+  markers as no-op control commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust. Rawfile serialization remains
+  out of scope for this marker.
+- Accept selected `.control` block `set appendwrite` rawfile append-write
+  options as no-op control commands in `analyzeDeckControls` and
+  `resolveDeckSources`, matching Python and Rust.
 - Accept selected `.control` block `set wr_vecnames` and `set wr_singlescale`
   rawfile output toggles as no-op control commands in `analyzeDeckControls`
   and `resolveDeckSources`, matching Python and Rust.

@@ -91,9 +91,42 @@ def test_prompt_lists_the_closed_vocabulary() -> None:
 
 
 def test_distractor_pool_well_formed() -> None:
-    assert gcd.DISTRACTORS
-    for phrase, reason in gcd.DISTRACTORS:
+    assert gcd.DISTRACTORS and gcd.NEAR_MISS_DISTRACTORS
+    for phrase, reason in gcd.DISTRACTORS + gcd.NEAR_MISS_DISTRACTORS:
         assert isinstance(phrase, str) and len(phrase) >= 4 and isinstance(reason, str) and reason
+
+
+def test_near_miss_distractors_are_discarded_never_coined() -> None:
+    # A near-miss look-alike present in a note (with NO matching sampled fact) must be recorded
+    # as a justified discard and must NOT become a chart fact — only sampled facts coin facts, so
+    # the gold is correct by construction; this pins that contract over the whole near-miss pool.
+    for phrase, reason in gcd.NEAR_MISS_DISTRACTORS:
+        note = f"A 50-year-old patient with a headache; {phrase}."
+        facts = [{"kind": "age_band", "value": "adult", "surfaces": ["A 50-year-old"]}]
+        gold = gcd.build_gold_chart_ir(note, facts, [(phrase, reason)])
+        # exactly the one sampled fact (age_band) — the near-miss did NOT coin a look-alike fact.
+        assert [gf["kind"] for gf in gold["chart_facts"]] == ["age_band"], (phrase, gold)
+        # and the near-miss is set aside with its reason, span verbatim in the note.
+        assert len(gold["discard"]) == 1, gold
+        assert gold["discard"][0]["span"].lower() in note.lower()
+        assert gold["discard"][0]["reason"] == reason
+
+
+def test_near_miss_does_not_add_a_second_lookalike_fact() -> None:
+    # Discrimination: the SAME drug name ("penicillin") appears as a real allergy AND as an
+    # efficacy near-miss in one note. The allergy phrasing coins exactly one allergy fact; the
+    # efficacy phrasing is discarded — never a second, spurious allergy.
+    note = ("A 45-year-old man with anaphylaxis to penicillin; note that penicillin cleared "
+            "her last urinary infection.")
+    facts = [{"kind": "age_band", "value": "adult", "surfaces": ["A 45-year-old man"]},
+             {"kind": "allergy", "value": "penicillin", "surfaces": ["anaphylaxis to penicillin"]}]
+    near = ("penicillin cleared her last urinary infection",
+            "drug EFFICACY history, NOT an allergy — wrong relation")
+    gold = gcd.build_gold_chart_ir(note, facts, [near])
+    allergy_facts = [gf for gf in gold["chart_facts"] if gf["kind"] == "allergy"]
+    assert len(allergy_facts) == 1 and allergy_facts[0]["value"] == "penicillin", gold
+    assert allergy_facts[0]["span"] == "anaphylaxis to penicillin", gold
+    assert any("urinary infection" in d["span"] for d in gold["discard"]), gold
 
 
 def main() -> int:

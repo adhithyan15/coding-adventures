@@ -72,8 +72,9 @@ rulebook coag_facts {
 
     % --- Factor VII deficiency -------------------------------------------
     relate factor_deficiency(factor_vii_deficiency, factor_vii)
-        source "Factor VII deficiency is a deficiency of coagulation factor VII of the extrinsic pathway."
-        trust consensus   % [FLAG: direction_only]
+        source "Factor VII deficiency is a bleeding disorder characterized by a lack in the production of factor VII"
+        locator "https://en.wikipedia.org/wiki/Factor_VII_deficiency"
+        trust authoritative
     relate coag_inheritance(factor_vii_deficiency, autosomal_recessive)
         source "Inherited Factor VII deficiency is the most common among rare autosomal recessive bleeding disorders."
         locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC5406770/"

@@ -24,6 +24,21 @@ runtime and Chief of Staff tools a typed catalog for:
   plan prerequisites and target shape, including a Hue trial-run helper
 - readiness package summaries that combine Hue activation-package shape with
   host-specific primitive, capability, and dependency blockers
+- activation evidence briefing summaries that combine catalog, activation-plan,
+  readiness, policy, and local-boundary lanes into compact release evidence
+  briefs, including a Hue trial-run helper
+- activation evidence scorecard summaries that roll integration evidence
+  briefings into catalog-wide ready, blocked, lane, local/cloud, and
+  policy-tier counts for Chief planning
+- activation evidence rows that project each integration briefing into a
+  compact sorted ready/blocker row with the next blocked evidence lane and
+  missing-prerequisite counts
+- activation evidence lane inventories that group blocked integration rows by
+  first-blocked catalog, activation-plan, readiness, policy, or local-boundary
+  lane for reusable release planning
+- activation evidence remediation items that turn lane inventories into a
+  sorted catalog-owned work plan before Chief-specific escalation or response
+  tooling
 - read-only D18D tool descriptors for listing/describing integrations and
   primitive families
 - typed ecosystem-survey source rows that map Home Assistant, Hubitat, Homey
@@ -36,6 +51,36 @@ runtime and Chief of Staff tools a typed catalog for:
   multi-platform primitive-backlog rows
 - ecosystem platform coverage rollups that show which surveyed platform
   lessons overlap a priority-bounded reusable primitive backlog
+- low-level Zigbee, Z-Wave, and Thread primitive-readiness rows and summaries
+  for checking radio substrate, controller, network-key, and supervision gaps
+- low-level mesh substrate stage rows that classify required primitives into
+  controller, radio, discovery, network-security, and supervision blockers
+- low-level mesh substrate action queues that order missing stage primitives
+  into concrete protocol-scoped substrate work
+- low-level mesh preflight repair actions that translate failed substrate
+  gates into concrete protocol-scoped remediation work
+- low-level mesh preflight repair batches that group failed substrate gates by
+  stage and action kind
+- low-level mesh preflight repair schedules that order repair batches into
+  deterministic execution slots
+- mesh readiness package summaries that combine Zigbee, Z-Wave, and Thread
+  primitive substrate readiness with mesh-scoped activation evidence
+  remediation rollups
+- mesh stage release summaries that combine substrate-stage blockers,
+  primitive-readiness blockers, and mesh-scoped remediation into one release
+  readiness rollup
+- mesh action readiness summaries that combine release readiness with the
+  substrate action queue and next concrete low-level action
+- mesh preflight repair readiness summaries that combine release readiness,
+  substrate preflight gates, and protocol-scoped repair queues
+- mesh preflight batch readiness summaries that combine repair readiness with
+  stage/action-kind repair batches
+- mesh preflight schedule readiness summaries that combine repair-batch
+  readiness with deterministic repair execution slots
+- mesh readiness handoff packages that project substrate actions, evidence
+  remediation, and release-ready state for reusable release coordination
+- mesh release-readiness checks that summarize substrate action, evidence,
+  human-review, operator handoff, and release packet gates
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and

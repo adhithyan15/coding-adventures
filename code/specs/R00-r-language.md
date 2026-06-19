@@ -199,6 +199,98 @@ unchanged.
     (`v[i] <- c()`) is an error; assigning into an **undefined base** is an error.
     No write can touch another binding, so the rebind cannot corrupt unrelated
     variables. The number of writes is bounded by the (capped) selection length.
+- **R-15 — `names()` and named-vector access** *(this PR)*. R's *names attribute*
+  on atomic vectors, in the shared `s-runtime`. A new transparent wrapper
+  `SValue::Named { names, values }` carries a parallel `Vec<Option<String>>` of
+  element names beside a boxed atomic value (`Double`/`Logical`/`Character`), the
+  same "see-through" wrapper pattern as `SValue::Classed` (`length`, `type_name`,
+  coercions, arithmetic, comparison, and `class` all delegate to the inner value;
+  most operations therefore ignore names, and where R *drops* names — arithmetic,
+  comparison, `c()` of partly-unnamed pieces — so do we).
+  - **Construction.** `c(a = 1, b = 2, c = 3)` attaches the argument names. `c()`
+    builds a names vector iff any contributing argument is named *or* already
+    carries names; nested named vectors combine R-style — `c(x = c(a = 1), 2)`
+    yields names `c("x.a", "")` (a named element of a named piece is `outer.inner`;
+    an unnamed slot is the empty string). A `c()` with no names anywhere stays a
+    plain unnamed vector.
+  - **`names(x)`** returns the character vector of names (an unset name → `NA`),
+    or `NULL` when `x` has none. **`names(x) <- value`** is the replacement form:
+    it coerces `value` to character and, R-style, **recycles by NA-padding** — a
+    too-short names vector pads the tail with `NA`, a too-long one is an error;
+    `names(x) <- NULL` drops the wrapper entirely. The evaluator gains a general
+    **replacement-function** lvalue path so `f(x) <- v` desugars to
+    `x <- \`f<-\`(x, v)` for the registered replacements (`names<-`; the
+    machinery is reusable for future `levels<-`, `dim<-`, …). `setNames(x, nm)`
+    is the functional form.
+  - **Character indexing.** `x["b"]` and `x[c("a", "c")]` select by name; an
+    unmatched name yields an `NA` element (and an `NA` name). Positional,
+    negative, and logical indexing are unchanged, and a named vector indexed
+    positionally **carries the selected names along** (`v[c(1, 3)]` keeps those
+    two names), matching R.
+  - **Printing.** A named vector prints R-style — a row of right-aligned names
+    above the row of values, each column as wide as the wider of the two — instead
+    of the `[i]` index prefix. Unnamed slots print as `<NA>`.
+  - **Safety.** Names are attacker-controllable in length only through the same
+    vector-length channels already capped at `MAX_SEQ_LEN`; the names vector is
+    always kept exactly as long as the values (truncated/`NA`-padded on every
+    constructor), so no name lookup can index out of bounds, and the
+    character-index path reuses the bounds-checked `resolve_picks`. No new
+    unbounded allocation or integer-overflow surface is introduced.
+
+- **R-16 — general attributes** *(this PR)*. R's *general attribute system* — the
+  open key→value metadata map every object carries — in the shared `s-runtime`.
+  R-15 modelled the one special attribute it needed (`names`) as a transparent
+  `SValue::Named` wrapper; R-16 generalizes that to **arbitrary** attributes while
+  keeping the three *special* attributes — `names`, `class`, `dim` — routed to
+  their existing dedicated representations so they can never disagree with the
+  wrappers built for them in R-11/R-15/S v2.
+  - **Representation.** A new transparent wrapper
+    `SValue::Attributed { attrs: Vec<(String, SValue)>, inner }` stores the
+    *general* (non-special) attributes as an insertion-ordered association list
+    beside a boxed inner value — the same "see-through" pattern as `Named` and
+    `Classed` (`length`, `type_name`, the coercions, arithmetic, comparison,
+    `class`, indexing, and printing all delegate to `inner`; only the attribute
+    builtins observe the map). The three special attributes are **never** stored
+    in this map: `names` lives in `SValue::Named`, `class` in `SValue::Classed`,
+    and `dim` is the `nrow`/`ncol` of `SValue::Matrix` (and the implicit
+    `c(nrow, ncol)` of a data frame). This makes the consistency invariant
+    structural rather than a runtime check — `attr(x, "names")` *is*
+    `names(x)` because both read the very same `Named.names` field, and likewise
+    for `class`/`dim`.
+  - **`attr(x, which)`** returns the named attribute or `NULL` if absent. The
+    special names are synthesized from the wrappers (`"names"` → the names vector,
+    `"class"` → the explicit class if one was set, `"dim"` → `c(nrow, ncol)`);
+    everything else is looked up in the general map. **`attr(x, which) <- value`**
+    is the replacement form, wired through R-15's general replacement-function
+    lvalue path (`attr(x, "foo") <- v` desugars to
+    `x <- \`attr<-\`(x, "foo", v)`). Assigning `NULL` **removes** the attribute
+    (clears the `Named`/`Classed`/`Matrix`-derived wrapper for a special name, or
+    drops the entry — and the whole `Attributed` wrapper when its last entry goes
+    — for a general one). Setting `"names"`/`"class"` routes to the same
+    `with_names`/`Classed` machinery `names<-`/`structure` use; setting `"dim"`
+    reshapes a length-`nrow*ncol` vector into a matrix (the product must equal the
+    element count, as in R).
+  - **`attributes(x)`** returns *all* attributes as a named `list` (special ones
+    first, in R's canonical `names`, `dim`, then-general order, with `class`
+    last), or `NULL` when the value has none. **`attributes(x) <- list(...)`**
+    replaces the whole set: each named element is applied as the corresponding
+    attribute (special names routed, the rest stored generally); `NULL` clears
+    every attribute. An unnamed element, or a `value` that is not a list (other
+    than `NULL`), is an error.
+  - **`structure(x, ...)`** returns `x` with each `...` named argument attached as
+    an attribute (`structure(1:3, class = "myc", foo = "bar")`). R-16 extends the
+    v2 `structure` (which handled only `class`) to route every named argument
+    through the same per-name logic as `attr<-`, so `dim`, `names`, and arbitrary
+    attributes all attach correctly in one call. The `.Names`/`.Dim` aliases R
+    accepts for `names`/`dim` inside `structure` are honoured.
+  - **Safety.** The general attribute map is bounded: a per-object cap
+    (`MAX_ATTRIBUTES`) refuses runaway `attr<-`/`attributes<-`/`structure` growth
+    (a crafted `attributes(x) <- list` with millions of entries), and a `"dim"`
+    set validates the reshape length with checked multiplication against
+    `MAX_SEQ_LEN` before allocating, reusing the existing matrix bound. No
+    `unwrap`/panic is reachable from malformed `attributes(x) <- …` input — a
+    non-list `value`, an unnamed element, a too-long `names`, or a non-conforming
+    `dim` all return a clean `SError`.
 
 ## §4 Reuse strategy
 

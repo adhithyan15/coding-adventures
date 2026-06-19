@@ -56,22 +56,47 @@ board items + the filename in `EDGE_FILES`; the harness merges and scores it unc
 |---|---|
 | `items.json` | the board-style item bank. **recall** items (fact recall as a relational binding query, gold answer or `ABSTAIN`) + **differential** items (a diagnostic case, gold leader or `ABSTAIN`). |
 | `cases/*.adj` | differential case rulebooks — `prior`/`contributes` + observations + `? hypothesis` queries the native engine ranks. |
-| `board_eval.py` | the harness. **recall** is scored over the grounded graph (REL-1 `RelationStore`, pure Python, 0 model calls). **differential** runs the native `adj-lang-cli` on a case and reads its ranked decision — determinate→commit, kickback/empty→abstain. Scores correct/abstained/wrong, emits `board-scorecard.json`, exits non-zero on any fabrication. If the CLI binary is absent, differential items abstain and the run logs how many were skipped (no silent caps). |
-| `test_board_eval.py` | pins the defensibility contract for both tactics (never fabricate, covered→correct-with-proof, uncovered→abstain, differential commits only on decisive evidence, grounded-coverage tracks recall trust). |
+| `board_eval.py` | the harness. **All three tactics — recall, differential, management — run on the ONE native `adj-lang-cli`** (recall as a `? relation(subject, $Var)` binding query over the imported grounded edges; differential as a ranked decision; management as a chart-as-constraints solve). Scores correct/abstained/wrong, emits `board-scorecard.json`, exits non-zero on any fabrication. With the CLI absent, engine-backed items abstain and the run logs how many were skipped (no silent caps, no Python fallback). |
+| `test_board_eval.py` | pins the defensibility contract for all tactics (never fabricate, covered→correct-with-proof, uncovered→abstain, differential commits only on decisive evidence, grounded-coverage tracks recall trust). |
 
-Two query tactics, one defensibility metric — boards test both fact recall and
-diagnostic reasoning, and both reduce to "answer-with-proof or abstain" over the
-same engine.
+Three query tactics, **one engine**, one defensibility metric — boards test fact
+recall, diagnostic reasoning, and management, and all three reduce to
+"answer-with-proof or abstain" over the same native adj-lang engine. (Recall used to
+take a Python `RelationStore` shortcut; it now runs on the engine like everything
+else — `recall.py` is deprecated.)
+
+## Offline mode — prose questions, zero online model calls
+
+Real board items are *prose*. `board_offline.py` adds the missing frontend: a
+**local, in-memory** model decomposes a prose stem into an ADJ recall query, then the
+native engine answers — with the whole path wrapped in a network-egress guard so the
+run *proves* it made no online call. A **faithfulness gate** requires the model's
+chosen subject to be attested by the stem's own bytes, so a mis-decomposition becomes
+an honest abstention rather than a wrong answer. See
+[OFFLINE-BOARD-EXAM.md](../OFFLINE-BOARD-EXAM.md) and
+[OFFLINE-DEMO.md](OFFLINE-DEMO.md).
+
+| file | what it is |
+|---|---|
+| `free_text_board.json` | prose board stems (gold answer + gold query) across all five domains |
+| `offline_guard.py` | `no_network()` — a reusable egress tripwire that raises on any non-loopback outbound connection |
+| `decompose_query.py` | prose → `{relation, subject, $Var}` via an injected local-model generator (constrained to legal relations + canonical subjects; faithfulness gate on the subject) |
+| `board_offline.py` | decompose → answer on the native engine inside `no_network()` → score; cached (deterministic) or `--model PATH` (live local MLX) |
+| `run_offline_demo.py` | live demo driver; writes `offline-demo-transcript-<tag>.json` |
 
 ## Run
 
 ```sh
-python3 board_eval.py        # the scoreboard
-python3 test_board_eval.py   # 6 tests
+python3 board_eval.py          # structured-item scoreboard (recall+differential+management)
+python3 test_board_eval.py     # 12 tests
+python3 board_offline.py       # offline prose pipeline (cached gold queries, 0 online calls)
+python3 test_board_offline.py  # 14 tests
+# live local-model decode (needs mlx_lm + a cached model):
+HF_HUB_OFFLINE=1 python run_offline_demo.py mlx-community/gemma-3-4b-it-bf16 gemma3-4b
 ```
 
 ## Next
 
-Differential and management items slot into the same `items.json` schema once the
-harness drives the native `adj-lang-cli` for ranked hypotheses; expanding the bank
-(more diseases, more organ systems) is how coverage grows toward a full board.
+Expanding the bank (more diseases, more organ systems) grows coverage toward a full
+board; routing prose *vignettes* (infer the disease from findings, then recall) through
+the differential tactic is the reverse-direction slice of the same engine.

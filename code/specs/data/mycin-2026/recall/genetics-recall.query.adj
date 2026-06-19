@@ -1,0 +1,22 @@
+% ============================================================================
+% genetics-recall.query.adj — a worked recall query over the genetics library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a genetics recall question:
+% it states no genetic fact — it only `import`s the grounded library and asks binding
+% queries. The native adj-lang engine resolves each `?` against the imported `relate`
+% edges and returns the binding + the citing clause's source/locator/trust. All
+% knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli genetics-recall.query.adj
+% ============================================================================
+
+import "genetics-edges.adj"
+
+? inheritance(huntington_disease, $Pattern)            % expect autosomal_dominant
+? gene_defect(huntington_disease, $Gene)               % expect htt
+? trinucleotide_repeat(huntington_disease, $Repeat)    % expect cag
+? inheritance(marfan_syndrome, $Pattern)               % expect autosomal_dominant
+? trinucleotide_repeat(fragile_x_syndrome, $Repeat)    % expect cgg
+? gene_defect(fragile_x_syndrome, $Gene)               % expect fmr1
+? imprinting(prader_willi_syndrome, $Parent)           % expect paternal

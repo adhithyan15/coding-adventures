@@ -1,5 +1,72 @@
 # Changelog
 
+## 0.9.0
+
+**Persistence — serialize / deserialize (save / load).** `Workbook::serialize`
+captures the whole workbook as a portable JSON string; `Workbook::deserialize`
+rebuilds a workbook from one. The engine side of save/load — no I/O happens here,
+the caller supplies/keeps the bytes.
+
+- `Workbook::serialize() -> String` (`workbook.rs`): per sheet, every **source**
+  cell (a formula's text, or a literal's typed value) + every **format**
+  (including formats on otherwise-empty cells, which outlive content). Computed
+  values are deliberately NOT stored — `deserialize` recomputes them, so the file
+  is small and can't disagree with the engine. Cells and formats are sorted by
+  (row, col), so output is stable (byte-identical for equal workbooks — handy for
+  diffing and tests). Shape, version 1:
+  `{"version":1,"sheets":[{"name":..,"cells":[{"a1":"A1","value":{"number":15.0}},
+  {"a1":"E1","formula":"=SUM(A1:D1)"}],"formats":[{"a1":"E1","code":"#,##0.00"}]}]}`.
+  A literal value is one of `{"number":n}` / `{"text":s}` / `{"bool":b}` /
+  `{"error":"#REF!"}`; a non-finite number degrades to `#NUM!` (JSON can't hold
+  NaN/∞), matching how it reads in the grid.
+- `Workbook::deserialize(&str) -> Result<(), String>`: validates the JSON +
+  `version` + `sheets` array BEFORE mutating (a bad file leaves the workbook
+  untouched), then clears sheets/graph/clipboard/changelog and rebuilds in file
+  order (so a single-sheet host keeps `SheetId(0)`), and `recalc_all` repopulates
+  caches (revision bumps once). A stored formula that no longer parses is kept as
+  its literal text rather than dropped — no user input is silently lost. Errs on
+  malformed JSON, unsupported version, missing `sheets`, or a bad cell address.
+- New dependency: `serde_json` (the engine had none; serialization is pure
+  String↔state, no I/O, `forbid(unsafe_code)` intact). 4 round-trip tests
+  (values+formulas+formats incl. empty-cell format + stable re-serialize;
+  replace-not-merge; reject bad JSON/version/missing-sheets; keep-bad-formula-as-text).
+  Spec §16 (Persistence) rewritten from "out of scope" to this JSON format.
+
+## 0.8.0
+
+**Clipboard — cut / copy / paste.** A stateful clipboard on `Workbook`, layered
+over the same `FormulaAst::shift` reference arithmetic that powers fill. Where
+fill replicates one source cell across a range (each target shifts by its own
+offset), copy/paste captures a whole **rectangle** and shifts it as a unit on
+paste — the block's internal structure is preserved (`=A1` copied two columns
+right pastes as `=C1`).
+
+- `Workbook::copy(sheet, range)` / `cut(sheet, range)` (`workbook.rs`): snapshot
+  the non-blank cells of `range` (content **and** format) as offsets from the
+  range's top-left anchor. A copy survives any number of pastes; a cut is a
+  one-shot move (the buffer is consumed on the paste that places it). The source
+  is captured but not cleared until paste — a cut with no paste is a no-op
+  (spreadsheet "marching-ants" semantics). A `range` over `MAX_RANGE_CELLS` is
+  rejected (the same DoS guard fill/formula ranges use); an unknown sheet too.
+- `Workbook::paste(sheet, dst_anchor) -> bool`: place the block so its top-left
+  lands at `dst_anchor`. The whole block's references shift by
+  `dst_anchor − anchor` via `FormulaAst::shift` (relative refs track, absolute
+  `$` refs pin, off-grid → `#REF!`); content + format ride along. Every cell of
+  the destination rectangle is written, so blanks in the source **erase** their
+  targets. A cut then clears the source cells it didn't overwrite and consumes
+  the buffer. Returns `false` (a no-op) for an empty clipboard, unknown sheet, or
+  a destination rectangle that would run past the u32 grid edge — never silently
+  truncates or wraps. The block-shift delta is computed in `i64` then clamped
+  into `shift`'s `i32` contract, so a paste anchored at a high coordinate can't
+  overflow. `has_clipboard()` reports whether a block is held.
+- Known divergence (documented in code + spec): a **cut** shifts the moved
+  formulas' own references like a copy, rather than preserving them as Excel's
+  move does (Excel additionally rewrites outside references that pointed into the
+  moved range). This keeps cut a thin layer over the copy machinery.
+- 8 new tests: whole-block ref-shift, format-carry + absolute-pin, blank-cell
+  erase, cut-move-and-clear (+ one-shot), off-grid reject (buffer kept),
+  oversized-range reject, empty-clipboard no-op, unknown-sheet no-op.
+
 ## 0.7.0
 
 **Fill / replicate (drag-fill)** — `Workbook::fill` plus the `FormulaAst::shift`

@@ -128,7 +128,37 @@ set noaskquit
 set filetype=ascii
 set wr_vecnames
 set wr_singlescale
+set appendwrite
 set filetype=binary
+write out.raw V(out)
+wrdata out.dat V(out)
+wrdata empty.dat
+display all
+listing physical
+show all
+showmod Q1
+status
+version
+help tran
+echo running selected deck
+rusage all
+where
+source nested-control.cir
+.source dotted-control.cir
+shell echo nope
+.shell echo dotted
+cd models
+.cd /tmp
+if $&run_monte
+.while $&again
+foreach dev M1 M2
+.repeat 2
+let gain = 2
+.let bias = v(out)
+alter R1=2k
+.alterparam gain=3
+set temp=27
+.unset temp
 run
 quit
 .endc
@@ -156,13 +186,47 @@ quit
       [".include", 2, "error"],
       [".lib", 3, "error"],
       [".control", 4, "error"],
-      [".control", 18, "error"],
+      [".control", 19, "error"],
+      [".control", 22, "error"],
+      [".control", 33, "error"],
+      [".control", 34, "error"],
+      [".control", 35, "error"],
+      [".control", 36, "error"],
+      [".control", 37, "error"],
+      [".control", 38, "error"],
+      [".control", 39, "error"],
+      [".control", 40, "error"],
+      [".control", 41, "error"],
+      [".control", 42, "error"],
+      [".control", 43, "error"],
+      [".control", 44, "error"],
+      [".control", 45, "error"],
+      [".control", 46, "error"],
+      [".control", 47, "error"],
+      [".control", 48, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
       "SPICE_DECK_CONTROL_COMMAND",
+      "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+      "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+      "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+      "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+      "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+      "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
     ]);
     const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
     expect(measurementSummary.measurements.map((card) => [
@@ -245,6 +309,34 @@ four 2k V(b)
 .set filetype=ascii
 .set wr_vecnames
 .set wr_singlescale
+.set appendwrite
+.write out.raw V(a)
+.wrdata out.dat V(a)
+.display all
+.listing deck
+.show all
+.showmod Q1
+.status
+.version
+.help tran
+.echo running selected deck
+.rusage all
+.where
+.source nested-control.cir
+source plain-control.cir
+.shell echo nope
+shell echo plain
+.cd nested
+cd /tmp
+.if $&run_monte
+while $&again
+.foreach dev M1 M2
+repeat 2
+.let gain = 2
+alter R1=2k
+.alterparam gain=3
+set temp=27
+.unset temp
 run
 .quit
 .endc
@@ -273,12 +365,42 @@ run
       "SPICE_DECK_INCLUDE_CYCLE",
       "SPICE_DECK_LIB_SECTION_NOT_FOUND",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+      "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+      "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+      "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+      "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+      "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+      "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
     ]);
     expect(summary.diagnostics.slice(3).map(({ directive, lineNumber }) => [
       directive,
       lineNumber,
     ])).toStrictEqual([
       [".control", 5],
+      [".control", 32],
+      [".control", 33],
+      [".control", 34],
+      [".control", 35],
+      [".control", 36],
+      [".control", 37],
+      [".control", 38],
+      [".control", 39],
+      [".control", 40],
+      [".control", 41],
+      [".control", 42],
+      [".control", 43],
+      [".control", 44],
+      [".control", 45],
+      [".control", 46],
     ]);
     const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
     expect(measurementSummary.measurements.map((card) => [
@@ -738,19 +860,25 @@ R1 in out 1k
 .dc V1 0 5 1
 .ac dec 10 1k 1Meg
 .tran 1u 2m 0 10u uic
+.tf V(out) V1
+.sens V(out)
+.noise V(out) V1 dec 1 1k 1k
 .end
 .tran 1u 1m
 `);
 
     expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 0", "R1 in out 1k"]);
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(8);
+    expect(summary.endLineNumber).toBe(11);
     expect(summary.diagnostics).toStrictEqual([]);
     expect(summary.analyses.map((analysis) => analysis.analysis)).toStrictEqual([
       "op",
       "dc",
       "ac",
       "tran",
+      "tf",
+      "sens",
+      "noise",
     ]);
 
     const dc = summary.analyses[1];
@@ -774,6 +902,25 @@ R1 in out 1k
     expect(tran.startTime).toBeCloseTo(0.0);
     expect(tran.maxStep).toBeCloseTo(1.0e-5);
     expect(tran.useInitialConditions).toBe(true);
+
+    const tf = summary.analyses[4];
+    expect(tf.directive).toBe(".tf");
+    expect(tf.outputNode).toBe("out");
+    expect(tf.sourceName).toBe("V1");
+
+    const sens = summary.analyses[5];
+    expect(sens.directive).toBe(".sens");
+    expect(sens.outputNode).toBe("out");
+    expect(sens.sourceName).toBeUndefined();
+
+    const noise = summary.analyses[6];
+    expect(noise.directive).toBe(".noise");
+    expect(noise.outputNode).toBe("out");
+    expect(noise.sourceName).toBe("V1");
+    expect(noise.sweepKind).toBe("dec");
+    expect(noise.pointCount).toBe(1);
+    expect(noise.startFrequencyHz).toBeCloseTo(1.0e3);
+    expect(noise.stopFrequencyHz).toBeCloseTo(1.0e3);
   });
 
   it("reports invalid deck analysis cards", () => {
@@ -785,11 +932,15 @@ R1 in out 1k
 .ac lin 0 1 10
 .tran 0 1m
 .tran 1u 2m 0 1u extra
+.sens I(R1)
+.noise I(R1) V1
 .end
 `);
 
     expect(summary.analyses).toStrictEqual([]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code).sort()).toStrictEqual([
+      "SPICE_DECK_ANALYSIS_ARGUMENT",
+      "SPICE_DECK_ANALYSIS_ARGUMENT",
       "SPICE_DECK_ANALYSIS_ARGUMENT",
       "SPICE_DECK_ANALYSIS_ARGUMENT",
       "SPICE_DECK_ANALYSIS_INTERVAL",
@@ -823,6 +974,52 @@ V1 in 0 DC 0
     expect(selected.analysis).toBe("tran");
     expect(selected.lineNumber).toBe(4);
     expect(selected.stopTime).toBeCloseTo(2.0e-3);
+
+    const tf = selectDeckAnalysisPlan(
+      `
+V1 in 0 DC 1
+R1 in out 1k
+.tf V(out) V1
+.end
+`,
+      "transfer-function",
+    );
+    expect(tf.directive).toBe(".tf");
+    expect(tf.analysis).toBe("tf");
+    expect(tf.outputNode).toBe("out");
+    expect(tf.sourceName).toBe("V1");
+
+    const sens = selectDeckAnalysisPlan(
+      `
+V1 in 0 DC 1
+R1 in out 1k
+.sens V(out)
+.end
+`,
+      "sensitivity",
+    );
+    expect(sens.directive).toBe(".sens");
+    expect(sens.analysis).toBe("sens");
+    expect(sens.outputNode).toBe("out");
+    expect(sens.sourceName).toBeUndefined();
+
+    const noise = selectDeckAnalysisPlan(
+      `
+V1 in 0 DC 1
+R1 in out 1k
+.noise V(out) V1 lin 1 1k 1k
+.end
+`,
+      "noise",
+    );
+    expect(noise.directive).toBe(".noise");
+    expect(noise.analysis).toBe("noise");
+    expect(noise.outputNode).toBe("out");
+    expect(noise.sourceName).toBe("V1");
+    expect(noise.sweepKind).toBe("lin");
+    expect(noise.pointCount).toBe(1);
+    expect(noise.startFrequencyHz).toBeCloseTo(1.0e3);
+    expect(noise.stopFrequencyHz).toBeCloseTo(1.0e3);
   });
 
   it("reports ambiguous or invalid deck analysis plan selection", () => {
@@ -845,7 +1042,7 @@ V1 in 0 DC 0
       ),
     ).toThrow(/multiple \.tran analysis cards/);
 
-    expect(() => selectDeckAnalysisPlan(".op\n.end\n", "noise")).toThrow(
+    expect(() => selectDeckAnalysisPlan(".op\n.end\n", "pz")).toThrow(
       /unsupported analysis/,
     );
 

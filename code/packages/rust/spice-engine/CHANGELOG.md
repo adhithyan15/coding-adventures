@@ -2,6 +2,62 @@
 
 ## Unreleased
 
+- Add selected Fourier probe names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `FourierList` column from
+  `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Add selected measurement names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `MeasurementList` column
+  from `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Add normalized output-probe names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `OutputProbeList` column
+  from `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Emit explicit policy diagnostics for selected `.control` block
+  variable/state mutation commands, including `let`, `alter`, `alterparam`,
+  `set`, and `unset`, in `analyze_deck_controls` and `resolve_deck_sources`,
+  matching Python and TypeScript. Accepted no-op `set` options still route as
+  no-op markers.
+- Emit explicit policy diagnostics for selected `.control` block control-flow
+  commands, including `if`, `while`, `foreach`, and `repeat`, in
+  `analyze_deck_controls` and `resolve_deck_sources`, matching Python and
+  TypeScript. Control-flow execution remains disabled by the deck execution
+  policy.
+- Emit explicit policy diagnostics for selected `.control` block `cd`
+  working-directory mutation commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Working-directory
+  mutation remains disabled by the deck execution policy.
+- Emit explicit policy diagnostics for selected `.control` block `source` and
+  `shell` external script/shell commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. External script
+  execution and shelling out remain disabled by the deck execution policy.
+- Accept selected `.control` block read-only `echo`, `rusage`, and `where`
+  console/debug commands as no-op control commands in `analyze_deck_controls`
+  and `resolve_deck_sources`, matching Python and TypeScript. Actual
+  console/debug output remains out of scope for these markers.
+- Accept selected `.control` block read-only `status`, `version`, and `help`
+  UI introspection commands as no-op control commands in
+  `analyze_deck_controls` and `resolve_deck_sources`, matching Python and
+  TypeScript. Actual console/help output remains out of scope for these
+  markers.
+- Accept selected `.control` block read-only `show` and `showmod`
+  device/model inspection commands as no-op control commands in
+  `analyze_deck_controls` and `resolve_deck_sources`, matching Python and
+  TypeScript. Actual console/model inspection output remains out of scope for
+  these markers.
+- Accept selected `.control` block read-only `display` and `listing`
+  inspection commands as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Actual
+  console/listing output remains out of scope for these markers.
+- Accept selected `.control` block `wrdata <file> <probes...>` ASCII
+  data-write markers as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Actual data-file
+  serialization remains out of scope for this marker.
+- Accept selected `.control` block `write <rawfile> [probes...]` rawfile-write
+  markers as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Rawfile
+  serialization remains out of scope for this marker.
+- Accept selected `.control` block `set appendwrite` rawfile append-write
+  options as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript.
 - Accept selected `.control` block `set wr_vecnames` and `set wr_singlescale`
   rawfile output toggles as no-op control commands in `analyze_deck_controls`
   and `resolve_deck_sources`, matching Python and TypeScript.

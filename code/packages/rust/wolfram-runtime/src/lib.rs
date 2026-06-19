@@ -16,7 +16,7 @@
 //!   symbolic_ir::IRNode   (Add, Mul, Pow, List, Rule, …)
 //!        │
 //!        ├─ ReplaceAll? ─► cas_pattern_matching::rewrite
-//!        ▼  symbolic_vm::VM over SymbolicBackend
+//!        ▼  symbolic_vm::VM over WolframBackend (decorates SymbolicBackend)
 //!   symbolic_ir::IRNode   (evaluated)
 //!        │
 //!        ▼  crate::printer
@@ -28,7 +28,10 @@
 //! [`SymbolicBackend`] already folds to `5`. The whole rewrite engine — numeric
 //! folding, algebraic identities, the elementary-function handlers, user-defined
 //! functions — is the *same* table Macsyma drives, reached through
-//! [`build_handler_table`].
+//! `symbolic_vm::handlers::build_handler_table`. W-5's list/functional/numeric
+//! built-ins (`Length`, `Map`, `Range`, …) are layered on top by
+//! [`WolframBackend`], a decorator that adds those heads and delegates the rest
+//! to the shared `SymbolicBackend` (MA04 §8).
 //!
 //! ## Public contract
 //!
@@ -64,9 +67,13 @@
 //!    backend env half-updated, so after catching one we **rebuild the session**,
 //!    trading the lost bindings for a guaranteed-usable session next call.
 
+mod backend;
+mod builtins;
 mod lower;
 mod printer;
 
+pub use backend::WolframBackend;
+pub use builtins::{MAX_LIST_LENGTH, MAX_RANGE_LENGTH};
 pub use lower::{LowerError, REPLACE_ALL};
 pub use printer::print_wolfram;
 
@@ -77,7 +84,7 @@ use coding_adventures_wolfram_parser::try_parse_wolfram;
 use lower::lower_program;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use symbolic_ir::{IRApply, IRNode};
-use symbolic_vm::{SymbolicBackend, VM};
+use symbolic_vm::VM;
 
 /// Maximum length, in bytes, of a single source chunk handed to [`WolframSession::feed`].
 ///
@@ -112,7 +119,7 @@ const EVAL_STACK_SIZE: usize = 512 * 1024 * 1024;
 
 /// A persistent Wolfram session.
 ///
-/// Owns the [`VM`] (and through it the [`SymbolicBackend`] environment), so
+/// Owns the [`VM`] (and through it the [`WolframBackend`] environment), so
 /// variable bindings (`x = 5`) and user-defined functions (`f[x_] := x^2`)
 /// persist across calls to [`feed`](WolframSession::feed), exactly as in an
 /// interactive Wolfram kernel. The `Out[n]` counter likewise persists.
@@ -141,7 +148,7 @@ impl WolframSession {
     /// Create a fresh session with an empty environment and `Out` counter.
     pub fn new() -> Self {
         WolframSession {
-            vm: VM::new(Box::new(SymbolicBackend::new())),
+            vm: VM::new(Box::new(WolframBackend::new())),
             output_index: 0,
         }
     }
@@ -220,7 +227,7 @@ impl WolframSession {
             // A panic the worker caught, or one that escaped and unwound the join.
             // Either way the env may be inconsistent, so rebuild the session.
             Ok(Err(payload)) | Err(payload) => {
-                self.vm = VM::new(Box::new(SymbolicBackend::new()));
+                self.vm = VM::new(Box::new(WolframBackend::new()));
                 self.output_index = 0;
                 Err(panic_message(payload))
             }

@@ -39,6 +39,46 @@ pub struct Workbook {
     /// `changed_since(r)` with `r < dropped_revision` can't prove completeness
     /// and must answer `Stale`.
     dropped_revision: u64,
+    /// The clipboard buffer set by [`copy`]/[`cut`] and consumed by [`paste`].
+    /// `None` until something is copied. A copy survives any number of pastes; a
+    /// cut is one-shot (the buffer is taken on the paste that moves it).
+    ///
+    /// [`copy`]: Workbook::copy
+    /// [`cut`]: Workbook::cut
+    /// [`paste`]: Workbook::paste
+    clipboard: Option<Clipboard>,
+}
+
+/// A copied/cut rectangle, captured relative to the source range's top-left
+/// anchor so it can be pasted anywhere. Content + format ride along; on paste
+/// the whole block shifts its references by `dst_anchor − anchor`.
+struct Clipboard {
+    /// The sheet the snapshot came from.
+    sheet: SheetId,
+    /// The source range's top-left cell — paste shifts references by the
+    /// destination anchor's offset from here.
+    anchor: CellAddress,
+    /// The full source rectangle (kept so a `cut` paste can clear the origin).
+    source: CellRange,
+    /// Source rectangle size; paste clears this whole rectangle at the
+    /// destination, so blank source cells erase their targets (Excel-style).
+    rows: u32,
+    cols: u32,
+    /// The non-blank source cells, each as a `(d_row, d_col)` offset from
+    /// `anchor` plus its content and format. Sparse: blank cells are omitted and
+    /// reconstructed as "clear the target" from `rows`×`cols`.
+    cells: Vec<ClipCell>,
+    /// `true` for a cut — paste clears the source cells it didn't overwrite and
+    /// then consumes the buffer. `false` for a copy (repeatable paste).
+    is_cut: bool,
+}
+
+/// One snapshotted cell in a [`Clipboard`], at `(d_row, d_col)` from the anchor.
+struct ClipCell {
+    d_row: u32,
+    d_col: u32,
+    content: CellContent,
+    format: Option<String>,
 }
 
 struct Sheet {
@@ -64,6 +104,7 @@ impl Workbook {
             revision: 0,
             changes: VecDeque::new(),
             dropped_revision: 0,
+            clipboard: None,
         }
     }
 
@@ -613,6 +654,388 @@ impl Workbook {
         }
     }
 
+    // ----------------------------------------------------------------
+    // Clipboard — cut / copy / paste
+    // ----------------------------------------------------------------
+
+    /// Copy `range` into the clipboard, capturing each cell's content **and**
+    /// format relative to the range's top-left anchor. The source is left
+    /// untouched and the buffer survives any number of [`paste`]s.
+    ///
+    /// This is `fill`'s sibling, generalised from one source cell to a whole
+    /// rectangle: where fill shifts each target's references by its own offset
+    /// from the source, a copy preserves the block's internal structure and
+    /// shifts it as a unit on paste (`=A1` copied two columns right pastes as
+    /// `=C1`). A `range` larger than [`MAX_RANGE_CELLS`] is rejected (the same
+    /// DoS guard fill and formula ranges use); an unknown `sheet` is a no-op.
+    ///
+    /// [`paste`]: Workbook::paste
+    pub fn copy(&mut self, sheet: SheetId, range: CellRange) {
+        self.snapshot(sheet, range, false);
+    }
+
+    /// Cut `range` into the clipboard. Identical to [`copy`] except the buffer is
+    /// marked as a move: the [`paste`] that places it clears the source cells it
+    /// did not overwrite and then consumes the buffer (a cut pastes once).
+    ///
+    /// The source is *not* cleared here — only on paste — so a cut with no
+    /// following paste leaves the sheet unchanged, matching a spreadsheet's
+    /// "marching ants" behaviour.
+    ///
+    /// [`copy`]: Workbook::copy
+    /// [`paste`]: Workbook::paste
+    pub fn cut(&mut self, sheet: SheetId, range: CellRange) {
+        self.snapshot(sheet, range, true);
+    }
+
+    /// Shared capture for [`copy`]/[`cut`]: snapshot the non-blank cells of
+    /// `range` (content + format) as offsets from its anchor.
+    fn snapshot(&mut self, sheet: SheetId, range: CellRange, is_cut: bool) {
+        if self.sheets.get(sheet.0 as usize).is_none() {
+            return;
+        }
+        // DoS guard: cap the rectangle a single copy/cut can capture.
+        if range.cell_count() > MAX_RANGE_CELLS {
+            return;
+        }
+
+        let anchor = range.start;
+        let rows = range.end.row - range.start.row + 1;
+        let cols = range.end.col - range.start.col + 1;
+
+        let s = &self.sheets[sheet.0 as usize];
+        let mut cells = Vec::new();
+        for row in range.start.row..=range.end.row {
+            for col in range.start.col..=range.end.col {
+                let addr = CellAddress::new(row, col);
+                let content = s.cells.get(&addr).map(|c| c.content.clone());
+                let format = s.formats.get(&addr).cloned();
+                // Skip cells that are blank in both content and format — they
+                // erase their targets, which `paste` already does for any
+                // offset not present in `cells`.
+                if content.is_none() && format.is_none() {
+                    continue;
+                }
+                cells.push(ClipCell {
+                    d_row: row - anchor.row,
+                    d_col: col - anchor.col,
+                    content: content.unwrap_or(CellContent::Empty),
+                    format,
+                });
+            }
+        }
+
+        self.clipboard = Some(Clipboard {
+            sheet,
+            anchor,
+            source: range,
+            rows,
+            cols,
+            cells,
+            is_cut,
+        });
+    }
+
+    /// Paste the clipboard so its top-left lands at `dst_anchor` on `sheet`.
+    ///
+    /// The whole block's references shift by `dst_anchor − anchor` via
+    /// [`FormulaAst::shift`] (relative refs track, absolute `$` refs pin, a ref
+    /// pushed off the grid becomes `#REF!`); content and format ride along. Every
+    /// cell of the destination rectangle is written, so blanks in the source
+    /// erase their targets. A **cut** then clears the source cells it didn't
+    /// overwrite and consumes the buffer; a **copy** leaves the buffer for reuse.
+    ///
+    /// No-op (returning `false`) if the clipboard is empty, `sheet` is unknown,
+    /// or the destination rectangle would run past the grid's last row/column —
+    /// the engine never silently truncates or wraps an off-grid paste. Returns
+    /// `true` when a paste was applied.
+    ///
+    /// > Note: for a cut, the moved formulas' own references are *shifted* like a
+    /// > copy, rather than preserved as Excel's move does (Excel also rewrites
+    /// > outside references that pointed into the moved range). This keeps cut a
+    /// > thin layer over the copy machinery; the divergence is documented here
+    /// > and in the spec.
+    pub fn paste(&mut self, sheet: SheetId, dst_anchor: CellAddress) -> bool {
+        // Take the buffer up front; restore it for a copy (repeatable), drop it
+        // for a cut (one-shot). Avoids borrowing `self.clipboard` across the
+        // mutations below.
+        let clip = match self.clipboard.take() {
+            Some(c) => c,
+            None => return false,
+        };
+        if self.sheets.get(sheet.0 as usize).is_none() {
+            self.clipboard = Some(clip); // sheet gone — leave the buffer intact
+            return false;
+        }
+
+        // Reject a paste whose rectangle would extend past the u32 grid edge,
+        // rather than wrap or clamp. `rows`/`cols` are ≥ 1, so subtract before
+        // adding to avoid overflow.
+        let last_row = dst_anchor.row as u64 + (clip.rows - 1) as u64;
+        let last_col = dst_anchor.col as u64 + (clip.cols - 1) as u64;
+        if last_row > u32::MAX as u64 || last_col > u32::MAX as u64 {
+            self.clipboard = Some(clip);
+            return false;
+        }
+
+        // The block shifts by the destination anchor's offset from the source
+        // anchor. i64 then clamped into shift's i32 contract — u32 coordinates
+        // up to ~4.3e9 would overflow an i32 subtraction (panic in debug, wrap in
+        // release); the clamp keeps it in range and any off-grid ref still
+        // collapses to #REF! inside `shift`.
+        let d_row =
+            (dst_anchor.row as i64 - clip.anchor.row as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+        let d_col =
+            (dst_anchor.col as i64 - clip.anchor.col as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+
+        // Index the snapshot by offset for O(1) lookup as we sweep the rectangle.
+        let mut by_offset: HashMap<(u32, u32), &ClipCell> = HashMap::new();
+        for c in &clip.cells {
+            by_offset.insert((c.d_row, c.d_col), c);
+        }
+
+        // Write every cell of the destination rectangle: snapshot cells get the
+        // shifted content + format, blanks clear their target.
+        for dr in 0..clip.rows {
+            for dc in 0..clip.cols {
+                let target = CellAddress::new(dst_anchor.row + dr, dst_anchor.col + dc);
+                let s = &mut self.sheets[sheet.0 as usize];
+                match by_offset.get(&(dr, dc)) {
+                    Some(cell) => {
+                        let new_content = match &cell.content {
+                            CellContent::Empty => CellContent::Empty,
+                            CellContent::Value(v) => CellContent::Value(v.clone()),
+                            CellContent::Formula { ast, .. } => {
+                                let shifted = ast.shift(d_row, d_col);
+                                CellContent::Formula {
+                                    text: shifted.to_formula_string(),
+                                    ast: shifted,
+                                    cached: None,
+                                }
+                            }
+                        };
+                        match new_content {
+                            CellContent::Empty => {
+                                s.cells.remove(&target);
+                            }
+                            content => {
+                                s.cells.insert(target, Cell { content });
+                            }
+                        }
+                        match &cell.format {
+                            Some(code) => {
+                                s.formats.insert(target, code.clone());
+                            }
+                            None => {
+                                s.formats.remove(&target);
+                            }
+                        }
+                    }
+                    None => {
+                        // Blank in the source → erase the target's content + format.
+                        s.cells.remove(&target);
+                        s.formats.remove(&target);
+                    }
+                }
+            }
+        }
+
+        // A cut moves: clear the source cells the paste didn't already overwrite
+        // (same sheet AND inside the destination rectangle = already rewritten).
+        if clip.is_cut {
+            let dst_end_row = dst_anchor.row + clip.rows - 1;
+            let dst_end_col = dst_anchor.col + clip.cols - 1;
+            for row in clip.source.start.row..=clip.source.end.row {
+                for col in clip.source.start.col..=clip.source.end.col {
+                    let covered = clip.sheet == sheet
+                        && row >= dst_anchor.row
+                        && row <= dst_end_row
+                        && col >= dst_anchor.col
+                        && col <= dst_end_col;
+                    if covered {
+                        continue;
+                    }
+                    let src_sheet = &mut self.sheets[clip.sheet.0 as usize];
+                    let addr = CellAddress::new(row, col);
+                    src_sheet.cells.remove(&addr);
+                    src_sheet.formats.remove(&addr);
+                }
+            }
+        }
+
+        // References changed en masse; rebuild edges, recalc once (one revision
+        // bump), then log every touched cell so a viewport `changed_since`
+        // snapshot taken before the paste sees the moves.
+        self.rebuild_dependency_graph();
+        self.recalc_all();
+        for dr in 0..clip.rows {
+            for dc in 0..clip.cols {
+                self.log_change(sheet, CellAddress::new(dst_anchor.row + dr, dst_anchor.col + dc));
+            }
+        }
+        if clip.is_cut {
+            for row in clip.source.start.row..=clip.source.end.row {
+                for col in clip.source.start.col..=clip.source.end.col {
+                    self.log_change(clip.sheet, CellAddress::new(row, col));
+                }
+            }
+        }
+
+        // A copy's buffer survives for further pastes; a cut's is consumed.
+        if !clip.is_cut {
+            self.clipboard = Some(clip);
+        }
+        true
+    }
+
+    /// Whether the clipboard currently holds a copied/cut block.
+    pub fn has_clipboard(&self) -> bool {
+        self.clipboard.is_some()
+    }
+
+    // ----------------------------------------------------------------
+    // Persistence — serialize / deserialize (save / load)
+    // ----------------------------------------------------------------
+
+    /// Serialize the whole workbook to a portable JSON string — the engine side
+    /// of save. Captures every sheet's **source** cells (a formula's text, or a
+    /// literal's typed value) plus its **formats** (including formats on
+    /// otherwise-empty cells, which outlive content). Computed values are *not*
+    /// stored — [`deserialize`] recomputes them, so the file stays small and can
+    /// never disagree with the engine.
+    ///
+    /// Shape (version 1), cells and formats sorted by (row, col) for stable
+    /// output:
+    /// ```json
+    /// {"version":1,"sheets":[{"name":"Sheet1",
+    ///   "cells":[{"a1":"A1","value":{"number":15.0}},
+    ///            {"a1":"E1","formula":"=SUM(A1:D1)"}],
+    ///   "formats":[{"a1":"E1","code":"#,##0.00"}]}]}
+    /// ```
+    /// No I/O happens here — the caller writes the returned string wherever it
+    /// likes. Round-trips through [`deserialize`].
+    ///
+    /// [`deserialize`]: Workbook::deserialize
+    pub fn serialize(&self) -> String {
+        use serde_json::{json, Value};
+
+        let sheets: Vec<Value> = self
+            .sheets
+            .iter()
+            .map(|s| {
+                let mut cells: Vec<(&CellAddress, &Cell)> = s.cells.iter().collect();
+                cells.sort_by_key(|(a, _)| (a.row, a.col));
+                let cells_json: Vec<Value> = cells
+                    .iter()
+                    .filter_map(|(addr, cell)| match &cell.content {
+                        CellContent::Empty => None,
+                        CellContent::Formula { text, .. } => {
+                            Some(json!({ "a1": addr.to_a1(), "formula": text }))
+                        }
+                        CellContent::Value(v) => value_to_json(v)
+                            .map(|vj| json!({ "a1": addr.to_a1(), "value": vj })),
+                    })
+                    .collect();
+
+                let mut fmts: Vec<(&CellAddress, &String)> = s.formats.iter().collect();
+                fmts.sort_by_key(|(a, _)| (a.row, a.col));
+                let fmts_json: Vec<Value> = fmts
+                    .iter()
+                    .map(|(addr, code)| json!({ "a1": addr.to_a1(), "code": code }))
+                    .collect();
+
+                json!({ "name": s.name, "cells": cells_json, "formats": fmts_json })
+            })
+            .collect();
+
+        json!({ "version": 1, "sheets": sheets }).to_string()
+    }
+
+    /// Replace the workbook's contents from a JSON string produced by
+    /// [`serialize`] — the engine side of load. Clears all sheets, the
+    /// dependency graph, and the clipboard, rebuilds the sheets in file order
+    /// (so a single-sheet host keeps `SheetId(0)`), then `recalc_all` repopulates
+    /// every cached value and the revision clock advances once.
+    ///
+    /// Returns `Err` on malformed JSON, an unsupported `version`, a missing
+    /// `sheets` array, or a bad cell address — the workbook is only mutated once
+    /// the structure validates (the reset happens after the parse + version
+    /// check). A stored formula that no longer parses is kept as its literal text
+    /// rather than dropped, so no user input is silently lost.
+    ///
+    /// No I/O — the caller supplies the bytes it read from wherever.
+    ///
+    /// [`serialize`]: Workbook::serialize
+    pub fn deserialize(&mut self, data: &str) -> Result<(), String> {
+        use serde_json::Value;
+
+        let root: Value =
+            serde_json::from_str(data).map_err(|e| format!("invalid JSON: {e}"))?;
+        match root.get("version").and_then(Value::as_u64) {
+            Some(1) => {}
+            other => return Err(format!("unsupported workbook version: {other:?}")),
+        }
+        let sheets = root
+            .get("sheets")
+            .and_then(Value::as_array)
+            .ok_or_else(|| "missing 'sheets' array".to_string())?;
+
+        // Structure validated enough to commit: reset, then rebuild.
+        self.sheets.clear();
+        self.sheet_by_name.clear();
+        self.graph = DependencyGraph::new();
+        self.clipboard = None;
+        self.changes.clear();
+
+        for sj in sheets {
+            let name = sj
+                .get("name")
+                .and_then(Value::as_str)
+                .ok_or_else(|| "sheet missing 'name'".to_string())?;
+            let sheet = self.add_sheet(name);
+
+            if let Some(cells) = sj.get("cells").and_then(Value::as_array) {
+                for c in cells {
+                    let a1 = c
+                        .get("a1")
+                        .and_then(Value::as_str)
+                        .ok_or_else(|| "cell missing 'a1'".to_string())?;
+                    let addr = CellAddress::parse(a1)
+                        .map_err(|e| format!("bad cell address {a1:?}: {}", e.display()))?;
+                    if let Some(f) = c.get("formula").and_then(Value::as_str) {
+                        // Keep the text as a literal if it no longer parses, so a
+                        // saved formula is never silently lost on load.
+                        if self.set_formula(sheet, addr, f).is_err() {
+                            self.set_value(sheet, addr, CellValue::Text(f.to_string()));
+                        }
+                    } else if let Some(vj) = c.get("value") {
+                        self.set_value(sheet, addr, json_to_value(vj));
+                    }
+                }
+            }
+
+            if let Some(fmts) = sj.get("formats").and_then(Value::as_array) {
+                for f in fmts {
+                    let a1 = f
+                        .get("a1")
+                        .and_then(Value::as_str)
+                        .ok_or_else(|| "format missing 'a1'".to_string())?;
+                    let code = f
+                        .get("code")
+                        .and_then(Value::as_str)
+                        .ok_or_else(|| "format missing 'code'".to_string())?;
+                    let addr = CellAddress::parse(a1)
+                        .map_err(|e| format!("bad format address {a1:?}: {}", e.display()))?;
+                    self.set_format(sheet, addr, code);
+                }
+            }
+        }
+
+        self.recalc_all();
+        self.revision = self.revision.wrapping_add(1);
+        Ok(())
+    }
+
     /// Rebuild the entire cross-sheet dependency graph from the current formula
     /// ASTs. Used after a structural edit relocates addresses en masse, which
     /// invalidates every existing edge.
@@ -768,6 +1191,58 @@ fn display_value(value: &CellValue, format: Option<&str>) -> String {
         CellValue::Text(s) => s.clone(),
         CellValue::Error(e) => e.display().to_string(),
     }
+}
+
+/// Encode a literal [`CellValue`] for [`Workbook::serialize`]. `Empty` returns
+/// `None` (nothing to store). A non-finite number can't be represented in JSON,
+/// so it degrades to its `#NUM!` error sentinel — the same way the value would
+/// read in the grid.
+fn value_to_json(v: &CellValue) -> Option<serde_json::Value> {
+    use serde_json::json;
+    match v {
+        CellValue::Empty => None,
+        CellValue::Boolean(b) => Some(json!({ "bool": b })),
+        CellValue::Number(n) if n.is_finite() => Some(json!({ "number": n })),
+        CellValue::Number(_) => Some(json!({ "error": SpreadsheetError::Num.display() })),
+        CellValue::Text(s) => Some(json!({ "text": s })),
+        CellValue::Error(e) => Some(json!({ "error": e.display() })),
+    }
+}
+
+/// Decode a `value` object from [`Workbook::deserialize`] back into a
+/// [`CellValue`]. Unknown / malformed shapes fall back to `Empty` rather than
+/// failing the whole load — a single odd cell shouldn't lose the rest of the
+/// sheet.
+fn json_to_value(vj: &serde_json::Value) -> CellValue {
+    if let Some(b) = vj.get("bool").and_then(serde_json::Value::as_bool) {
+        CellValue::Boolean(b)
+    } else if let Some(n) = vj.get("number").and_then(serde_json::Value::as_f64) {
+        CellValue::Number(n)
+    } else if let Some(t) = vj.get("text").and_then(serde_json::Value::as_str) {
+        CellValue::Text(t.to_string())
+    } else if let Some(code) = vj.get("error").and_then(serde_json::Value::as_str) {
+        error_from_code(code).map_or_else(|| CellValue::Text(code.to_string()), CellValue::Error)
+    } else {
+        CellValue::Empty
+    }
+}
+
+/// Reverse of [`SpreadsheetError::display`] — map a sentinel string back to its
+/// variant. Returns `None` for an unrecognised code.
+fn error_from_code(code: &str) -> Option<SpreadsheetError> {
+    Some(match code {
+        "#REF!" => SpreadsheetError::Ref,
+        "#NAME?" => SpreadsheetError::Name,
+        "#DIV/0!" => SpreadsheetError::DivZero,
+        "#VALUE!" => SpreadsheetError::Value,
+        "#N/A" => SpreadsheetError::NotAvailable,
+        "#NUM!" => SpreadsheetError::Num,
+        "#NULL!" => SpreadsheetError::Null,
+        "#CALC!" => SpreadsheetError::Calc,
+        "#SPILL!" => SpreadsheetError::Spill,
+        "#GETTING_DATA" => SpreadsheetError::GettingData,
+        _ => return None,
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -1457,5 +1932,206 @@ mod tests {
         wb.fill(SheetId(9), cell(1, 1), CellRange::new(cell(1, 1), cell(2, 2)));
         // No panic, nothing created.
         assert_eq!(wb.sheet_count(), 0);
+    }
+
+    // ── Clipboard: cut / copy / paste ────────────────────────────────
+
+    #[test]
+    fn copy_paste_shifts_a_block_as_a_unit() {
+        // A 1×2 block B1:C1 where C1 = B1*2. Copy it and paste at B2 → the block
+        // moves down one row: B2 keeps its literal, C2 = B2*2 (the relative ref
+        // tracked the whole-block shift).
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 2), CellValue::Number(5.0)); // B1 = 5
+        wb.set_formula(s, cell(1, 3), "=B1*2").unwrap(); // C1 = 10
+        wb.copy(s, CellRange::new(cell(1, 2), cell(1, 3))); // copy B1:C1
+        assert!(wb.has_clipboard());
+        assert!(wb.paste(s, cell(2, 2))); // paste at B2
+
+        assert_eq!(wb.get_value(s, cell(2, 2)), Some(CellValue::Number(5.0))); // B2
+        assert_eq!(wb.get_value(s, cell(2, 3)), Some(CellValue::Number(10.0))); // C2 = B2*2
+        // Source is untouched and a copy's buffer survives for another paste.
+        assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(5.0)));
+        assert!(wb.has_clipboard());
+        assert!(wb.paste(s, cell(3, 2))); // paste again at B3
+        assert_eq!(wb.get_value(s, cell(3, 3)), Some(CellValue::Number(10.0))); // C3 = B3*2
+    }
+
+    #[test]
+    fn copy_carries_format_and_pins_absolute_refs() {
+        // A1 = 1234.5 formatted; B1 = =$A$1 (absolute). Copy A1:B1 and paste two
+        // rows down at A3: the format rides along, and the absolute ref stays
+        // pinned to $A$1 (does NOT shift), so B3 still reads A1's value.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1234.5));
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+        wb.set_formula(s, cell(1, 2), "=$A$1").unwrap(); // B1 → 1234.5
+        wb.copy(s, CellRange::new(cell(1, 1), cell(1, 2)));
+        assert!(wb.paste(s, cell(3, 1))); // paste at A3
+
+        assert_eq!(wb.get_display(s, cell(3, 1)), "1,234.50"); // format carried
+        // Absolute ref pinned: B3 still points at $A$1 (1234.5), not A3.
+        assert_eq!(wb.get_value(s, cell(3, 2)), Some(CellValue::Number(1234.5)));
+    }
+
+    #[test]
+    fn paste_clears_blank_cells_of_the_source_rectangle() {
+        // Copy a 1×2 block whose second cell is blank over a destination whose
+        // matching cell is occupied — the blank must erase the target (a paste
+        // overwrites the whole rectangle, not just the non-blank cells).
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(7.0)); // A1 = 7, B1 blank
+        wb.set_value(s, cell(3, 2), CellValue::Number(99.0)); // B3 occupied (target)
+        wb.copy(s, CellRange::new(cell(1, 1), cell(1, 2))); // copy A1:B1
+        assert!(wb.paste(s, cell(3, 1))); // paste at A3:B3
+
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(7.0))); // A3 = 7
+        assert_eq!(wb.get_value(s, cell(3, 2)), None); // B3 erased by the blank
+    }
+
+    #[test]
+    fn cut_paste_moves_and_clears_the_source() {
+        // Cut A1 (=5) and paste at C1. The value moves; A1 is cleared; the buffer
+        // is consumed (a cut pastes once).
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(5.0));
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+        wb.cut(s, CellRange::new(cell(1, 1), cell(1, 1)));
+        assert!(wb.paste(s, cell(1, 3))); // paste at C1
+
+        assert_eq!(wb.get_value(s, cell(1, 3)), Some(CellValue::Number(5.0))); // moved
+        assert_eq!(wb.get_format(s, cell(1, 3)), Some("#,##0.00")); // format moved too
+        assert_eq!(wb.get_value(s, cell(1, 1)), None); // source cleared
+        assert_eq!(wb.get_format(s, cell(1, 1)), None);
+        // Buffer consumed: a second paste does nothing.
+        assert!(!wb.has_clipboard());
+        assert!(!wb.paste(s, cell(1, 5)));
+        assert_eq!(wb.get_value(s, cell(1, 5)), None);
+    }
+
+    #[test]
+    fn paste_off_grid_is_rejected_and_keeps_the_buffer() {
+        // A 1×2 copy whose destination's second column would run past the last
+        // column (u32::MAX) is rejected wholesale — nothing is written and the
+        // buffer is preserved.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        wb.set_value(s, cell(1, 2), CellValue::Number(2.0));
+        wb.copy(s, CellRange::new(cell(1, 1), cell(1, 2))); // 1×2 block
+        // Anchor at the last column: the second cell would be at col u32::MAX+1.
+        assert!(!wb.paste(s, cell(1, u32::MAX)));
+        assert!(wb.has_clipboard()); // buffer kept for a valid paste
+        assert_eq!(wb.get_value(s, cell(1, u32::MAX)), None); // nothing written
+    }
+
+    #[test]
+    fn copy_oversized_range_captures_nothing() {
+        // A copy spanning more than MAX_RANGE_CELLS is rejected (DoS guard), so
+        // the clipboard stays empty and a following paste is a no-op.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        let huge = CellRange::new(cell(1, 1), cell((1 << 20) + 1, 1));
+        assert!(huge.cell_count() > MAX_RANGE_CELLS);
+        wb.copy(s, huge);
+        assert!(!wb.has_clipboard());
+        assert!(!wb.paste(s, cell(10, 10)));
+    }
+
+    #[test]
+    fn paste_with_empty_clipboard_is_noop() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        assert!(!wb.has_clipboard());
+        assert!(!wb.paste(s, cell(1, 1)));
+    }
+
+    #[test]
+    fn copy_unknown_sheet_is_noop() {
+        let mut wb = Workbook::new();
+        wb.copy(SheetId(9), CellRange::new(cell(1, 1), cell(2, 2)));
+        assert!(!wb.has_clipboard());
+    }
+
+    // ── Persistence: serialize / deserialize ─────────────────────────
+
+    #[test]
+    fn serialize_then_deserialize_round_trips_values_formulas_and_formats() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("Sheet1");
+        wb.set_value(s, cell(1, 1), CellValue::Number(15.0)); // A1
+        wb.set_value(s, cell(1, 2), CellValue::Text("hi".into())); // B1
+        wb.set_value(s, cell(1, 3), CellValue::Boolean(true)); // C1
+        wb.set_formula(s, cell(2, 1), "=A1*2").unwrap(); // A2 = 30
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+        wb.set_format(s, cell(9, 9), "0%"); // a format on an otherwise-empty cell
+
+        let saved = wb.serialize();
+
+        // Load into a fresh workbook and confirm every cell recomputed identically.
+        let mut loaded = Workbook::new();
+        loaded.deserialize(&saved).unwrap();
+        let s2 = loaded.sheet_id("Sheet1").unwrap();
+        assert_eq!(loaded.get_value(s2, cell(1, 1)), Some(CellValue::Number(15.0)));
+        assert_eq!(loaded.get_value(s2, cell(1, 2)), Some(CellValue::Text("hi".into())));
+        assert_eq!(loaded.get_value(s2, cell(1, 3)), Some(CellValue::Boolean(true)));
+        assert_eq!(loaded.get_value(s2, cell(2, 1)), Some(CellValue::Number(30.0))); // formula recomputed
+        assert_eq!(loaded.get_format(s2, cell(1, 1)), Some("#,##0.00"));
+        assert_eq!(loaded.get_format(s2, cell(9, 9)), Some("0%")); // empty-cell format survived
+        // The formula re-evaluates against the loaded inputs (not a frozen value).
+        loaded.set_value(s2, cell(1, 1), CellValue::Number(100.0));
+        assert_eq!(loaded.get_value(s2, cell(2, 1)), Some(CellValue::Number(200.0)));
+        // Serializing the loaded workbook yields byte-identical JSON (stable order).
+        assert_eq!(wb.serialize(), saved);
+    }
+
+    #[test]
+    fn deserialize_replaces_existing_contents() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("Sheet1");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        let saved = wb.serialize(); // a sheet with only A1=1
+
+        // Pre-fill a different workbook, then load over it.
+        let mut other = Workbook::new();
+        let os = other.add_sheet("Sheet1");
+        other.set_value(os, cell(5, 5), CellValue::Number(999.0)); // E5 — should vanish
+        other.deserialize(&saved).unwrap();
+        let s2 = other.sheet_id("Sheet1").unwrap();
+        assert_eq!(other.get_value(s2, cell(1, 1)), Some(CellValue::Number(1.0)));
+        assert_eq!(other.get_value(s2, cell(5, 5)), None); // replaced, not merged
+        assert_eq!(other.sheet_count(), 1);
+    }
+
+    #[test]
+    fn deserialize_rejects_bad_json_and_bad_version() {
+        let mut wb = Workbook::new();
+        wb.add_sheet("Sheet1");
+        assert!(wb.deserialize("not json").is_err());
+        assert!(wb.deserialize(r#"{"version":99,"sheets":[]}"#).is_err());
+        assert!(wb.deserialize(r#"{"version":1}"#).is_err()); // missing sheets
+        // A valid empty workbook loads fine (zero sheets).
+        assert!(wb.deserialize(r#"{"version":1,"sheets":[]}"#).is_ok());
+        assert_eq!(wb.sheet_count(), 0);
+    }
+
+    #[test]
+    fn deserialize_keeps_an_unparseable_formula_as_text() {
+        // A corrupt/old formula that no longer parses is preserved as literal
+        // text rather than silently dropped.
+        let mut wb = Workbook::new();
+        let json = r#"{"version":1,"sheets":[{"name":"Sheet1",
+            "cells":[{"a1":"A1","formula":"=THIS IS NOT A FORMULA"}],"formats":[]}]}"#;
+        wb.deserialize(json).unwrap();
+        let s = wb.sheet_id("Sheet1").unwrap();
+        assert_eq!(
+            wb.get_value(s, cell(1, 1)),
+            Some(CellValue::Text("=THIS IS NOT A FORMULA".into()))
+        );
     }
 }

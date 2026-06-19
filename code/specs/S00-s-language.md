@@ -296,6 +296,51 @@ an aligned table. (Empty-subscript forms `df[, c]` / `df[r, ]` are deferred —
 they need an empty grammar argument, which v2 does not yet add; pass an explicit
 row/column vector instead.)
 
+### V2.7 Named vectors (the `names` attribute)
+
+Atomic vectors may carry a *names* attribute — the R feature that the deferred
+`table` (V2.5) was waiting on. A new transparent wrapper
+`SValue::Named { names, values }` holds a `Vec<Option<String>>` (one slot per
+element, `None` = an unset/`NA` name) beside a boxed atomic value. Like
+`SValue::Classed` it is **see-through**: `length`, `type_name`, the coercions,
+arithmetic, comparison, and `class` all delegate to the inner value, so names are
+silently dropped exactly where R drops them (binary arithmetic, comparison, `c()`
+of unnamed pieces) and preserved where R keeps them (positional/character
+indexing, `rev` via index, the value as returned). Construction:
+`c(a = 1, b = 2)` attaches argument names, and nested named pieces combine
+R-style (`c(x = c(a = 1), 2)` → names `"x.a"`, `""`). `names(x)` returns the
+character names vector (or `NULL`); `names(x) <- value` sets them with R's
+NA-padding recycling (too-short pads with `NA`, `NULL` clears) via a general
+**replacement-function** lvalue path (`f(x) <- v` ≡ ``x <- `f<-`(x, v)``);
+`setNames(x, nm)` is the functional form. `x["b"]` / `x[c("a","c")]` select by
+name (unmatched → `NA`). A named vector prints names above values in aligned
+columns instead of the `[i]` prefix.
+
+### V2.8 General attributes (`attr`, `attributes`, `structure`)
+
+V2.7's `names` is *one* attribute; V2.8 adds the **general attribute system** —
+the open key→value metadata map R attaches to any object. The *special*
+attributes `names`, `class`, and `dim` keep their dedicated representations
+(`SValue::Named`, `SValue::Classed`, `SValue::Matrix`); a new transparent wrapper
+`SValue::Attributed { attrs: Vec<(String, SValue)>, inner }` stores every *other*
+attribute as an insertion-ordered association list. Like `Named`/`Classed` it is
+**see-through** (`length`, `type_name`, coercions, arithmetic, comparison,
+`class`, indexing, printing all delegate to `inner`); only the attribute builtins
+read the map.
+
+Because the three special attributes are *never* duplicated into the general map,
+the consistency invariant is structural: `attr(x, "names")` reads the same field
+`names(x)` does, `attr(x, "class")` agrees with `class(x)`/`class_of`, and
+`attr(x, "dim")` agrees with the matrix `dim` (R-11). `attr(x, which)` gets one
+attribute (or `NULL`); `attr(x, which) <- value` sets/replaces it (`NULL`
+removes) through the V2.7 replacement-function lvalue path (`\`attr<-\``).
+`attributes(x)` returns all attributes as a named list (or `NULL`);
+`attributes(x) <- list(...)` replaces them. `structure(x, ...)` attaches each
+named `...` argument as an attribute, routing special names appropriately. The
+general map is bounded (`MAX_ATTRIBUTES`) and a `"dim"` reshape is length-checked
+against `MAX_SEQ_LEN`, so attacker-controlled attribute input cannot exhaust
+memory or panic.
+
 ## §9 Divergences from ST00 (spec-sync)
 
 1. **S before R.** ST00 specs R first; we implement historical S first. The two

@@ -2,6 +2,335 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-19
+
+### Added (CLOC15 PR-4b — `if` without an early exit in the body)
+
+The statement-inlining body shape now admits an `IfStatement`, so a helper
+with conditional logic inlines:
+
+```js
+function guard(x) { if (x > 0) accept(x); else reject(x); }
+guard(value);
+// SIMPLE  ⇒  value > 0 ? accept(value) : reject(value);
+//   (inlined, then fold-control-flow turns the if/else into a ternary and
+//    treeshake removes the dead declaration)
+```
+
+Admitted **only** when the `if` is control-flow-inert and declaration-free —
+each branch is an `ExpressionStatement` or a block of `ExpressionStatement`s
+(`is_inlinable_if`). That excludes:
+
+- `return` / `break` / `continue` inside a branch — an early exit a flat
+  splice would mis-scope (the caller's following statements would still run);
+- nested `let` / `const` / `var` declarations — block-scoped locals the
+  name-based alpha-renamer cannot shadow-correctly;
+- nested `if` / loops / other control constructs (kept for a later slice).
+
+So an admitted `if` introduces no new local and no early exit: splicing it
+into the straight-line body is observationally inert. The test expression is
+unrestricted; its identifiers are vetted by the normal free-identifier walk
+(param / callee-local / true-global), and the `rename`/`substitute` passes
+now recurse into the `if` (test + branches) and its blocks. Composes with
+PR-2 (an `if` may precede the tail return), PR-3 (value capture), and PR-4a
+(non-simple arguments).
+
+- 8 new tests: unbraced-branch `if`, block-branch `if`, an `if` whose test
+  reads a renamed local, an `if` with a non-simple argument, three decline
+  cases (early `return` in a branch, a nested declaration, a nested `if`),
+  and a **dangling-else soundness guard** — a helper whose body ends in an
+  else-less `if`, called from a braceless `if`-consequent that has a caller
+  `else`: the single-statement-slot splice block-wraps the body
+  (`if(c){if(v)a(v);}else other();`) so the `else` binds to the outer `if`,
+  never the inner one. 65 pass-crate tests; full closurec suite + both
+  downstream consumers green, no fixture churn.
+
+## [0.8.0] - 2026-06-19
+
+### Added (CLOC15 PR-4a — non-simple arguments via per-argument temps)
+
+PR-1..PR-3 required every argument of an inlined statement-helper call to be
+*simple* (a literal or bare identifier), so `f(obj.x)`, `f(a + 1)`, `f(g())`
+were all declined. PR-4a lifts that for the statement-inlining paths (the
+void/discard pass and the value-capture pass) by **materialising arguments
+into temps**:
+
+```js
+function log2(x) { trace(x); record(x); }
+log2(compute());
+// SIMPLE  ⇒  const a = compute(); trace(a); record(a);
+//   (compute() is evaluated ONCE, captured, and read twice — never
+//    duplicated to trace(compute()); record(compute()))
+```
+
+`materialize_args`:
+
+- **All arguments simple** → unchanged: direct substitution, no temps. This
+  preserves the existing single-pass output byte-for-byte, so there is **no
+  fixture churn**.
+- **Any argument non-simple** → hoist EVERY argument into a fresh `const`
+  temp, in source order, before the spliced body, and substitute each
+  parameter with its temp. This evaluates all arguments left-to-right exactly
+  once (JS call semantics) and captures their values, so a parameter used N
+  times reads the captured value rather than re-evaluating the argument. The
+  redundant temps on the simple arguments are removed downstream by
+  `inline-variables` + `constant-fold`.
+
+Composes with PR-3: a result-used helper called with a non-simple argument
+hoists the arg temp before the captured body
+(`var x = f(obj.y)` ⇒ `const b = obj.y; …; const a = …; var x = a;`).
+
+**Soundness.** Any argument expression is admissible because the temp
+captures its value once at the splice point — a throwing argument still
+throws at the same point (before the body); a side-effecting argument runs
+once. Arg temps are program-fresh, minted from the same `avoid` set as the
+callee-local renames and **before** them, so the two name spaces are
+disjoint. (Arguments the front-end cannot bridge — e.g. assignment
+expressions — never reach the pass: the program falls back to whitespace-only
+minification.)
+
+**Plumbing.** The statement-path gate now counts name+arity matches
+(`Tally::arity_calls`, via `name_use_and_arity_calls`) rather than the
+expression inliner's simple-arg `inlinable` count, and `is_void_target_call`
+drops its `is_simple_arg` requirement (name + arity only). The expression
+inliner's `is_inlinable_call` is unchanged.
+
+- 5 new / changed tests (side-effecting arg via temp — the former
+  `does_not_inline_…_side_effecting_argument` now inlines; member arg used
+  twice; left-to-right temping of mixed args; non-simple arg in value
+  position; the all-simple no-temp no-churn guarantee). 57 pass-crate tests;
+  full closurec suite + both downstream consumers green, no fixture churn.
+
+## [0.7.0] - 2026-06-19
+
+### Added (CLOC15 PR-3 — result-used helpers captured into a hoisted temp)
+
+PR-1/PR-2 inlined a multi-statement helper only when its result was
+**discarded** (the call was a statement). PR-3 handles the case where the
+result is **used**: the body is hoisted to before the enclosing statement
+and the tail-return value captured into a fresh temp.
+
+```js
+function compute(a) { const t = a + 1; return t * 2; }
+var x = compute(5);
+// SIMPLE  ⇒  var x = 12;
+//   (body hoisted + return captured ⇒ `const u = 5+1; const v = u*2;
+//    var x = v;`, then constant-fold + inline-variables + treeshake finish)
+```
+
+**The soundness crux is evaluation order:** hoisting the body to *before*
+the enclosing statement runs it before anything else that statement
+evaluates, which is sound only when nothing in the statement is evaluated
+before the call. The airtight subset admitted — the call is the **entire
+initializer of a single-declarator** `var`/`let`/`const`:
+
+- `var x = compute(5);` → admitted (the call is the whole init, always
+  evaluated, nothing before it);
+- `var x = a + compute(5);` → declined (`a` is evaluated first);
+- `var x = f(), y = compute(5);` → declined (multi-declarator ordering);
+- `var x = h(compute(5));` → declined (call is not the init's top expr);
+- a body with no tail-return value (`return;` / no return) → declined
+  (nothing to capture).
+
+All of PR-1/PR-2's guards still apply (single-use, no `this`/`arguments`,
+callee locals alpha-renamed to program-fresh names, free identifiers are
+true globals, side-effect-free args). The capture temp is itself a
+program-fresh name minted before the locals so it cannot collide. Broader
+value positions (assignment targets, `return` arguments, reordering-safe
+operand positions) are later slices on this same machinery.
+
+- New Phase 5 after the void inliner; runs second so the void pass consumes
+  any discarded-statement use first, leaving only the value-position use.
+- 7 new tests (the signature capture, free-global side effect hoisted, `let`
+  binding, and four decline cases: call-not-the-whole-init, nested-call
+  argument, multi-declarator, void-body-used-as-value). 53 pass-crate tests
+  total; full closurec suite + both downstream consumers green (no churn).
+
+## [0.6.0] - 2026-06-18
+
+### Added (CLOC15 PR-2 — tail `return` with a discarded result)
+
+The void statement-helper inliner (PR-1) now admits an **optional trailing
+`return`** as the body's final statement. Because the call site discards
+the result (the use is a statement call, not a value), the returned value
+is never read, so the tail return is normalized for the splice:
+
+```js
+function init(n) { setup(n); return ready(); }
+init(cfg);
+// SIMPLE  ⇒  setup(cfg); ready();
+//   (the tail `return ready()` is kept as `ready();` for its side effect;
+//    the dead declaration is then removed by remove-unused-vars/treeshake)
+```
+
+`normalize_tail_return`:
+
+- `return;` (no argument) → **dropped** (a no-op once the value is discarded);
+- `return E;` where `E` is **provably inert** — a literal, or a bare read
+  of a parameter / callee-local (a binding that always exists, so the read
+  neither throws nor has a side effect) → **dropped**;
+- `return E;` otherwise → rewritten to `E;` (an `ExpressionStatement`), so
+  `E` is still evaluated for its side effects with the value discarded —
+  exactly what the original function did before returning.
+
+A bare *global* identifier (`return glob`) is deliberately **not** dropped:
+reading an undeclared global throws `ReferenceError`, which must be
+preserved as `glob;`.
+
+This also unlocks a shape the expression inliner cannot reach — a body that
+is a single `return g()` where `g` is a free global: the expression inliner
+requires every identifier to be a parameter, but the discarded-statement
+splice turns `f();` into `g();`.
+
+Soundness rests on the **tail** restriction: a `return` anywhere but the
+final position would change control flow when spliced (the caller's
+following statements would still run), so an early `return` is a hard
+reject — the body must be straight-line to the optional tail return.
+
+- 6 new pass tests (literal/bare/param-identifier dropped, effectful call
+  kept as `E;`, single-`return`-of-free-global splice, free-global
+  identifier kept, early-`return` declined).
+- Two closurec fixtures (`simple_dce_drops_dead_after_return`,
+  `advanced-rename-globals`) updated: their helpers are now called twice so
+  they survive the single-use statement-inliner, preserving each test's
+  original intent (observing DCE-after-return / ADVANCED renaming a
+  *surviving* top-level function) rather than collapsing away.
+
+## [0.5.0] - 2026-06-18
+
+### Added (CLOC15 PR-1 — void multi-statement statement-helper inlining)
+
+The inliner is no longer limited to the `{ return EXPR; }` expression
+shape. A new statement-level path splices a **single-use void
+multi-statement helper** at its (statement-position) call site — the
+1 → N statement splice the expression walker structurally could not do:
+
+```js
+function track(n, v) { const e = n + v; metrics.push(e); }
+track(a, b);
+// SIMPLE  ⇒  const c = a + b; metrics.push(c);
+//           (helper inlined — local `e` alpha-renamed to a fresh `c`,
+//            params substituted — then the dead declaration is removed
+//            by remove-unused-vars / treeshake)
+```
+
+This implements the first staged slice of the
+[CLOC15 spec](../../../specs/CLOC15-multi-statement-inlining.md). It is
+**sound-by-construction** — every condition below is a hard reject, and
+declining to inline is never a miscompile:
+
+- **Single-use, single-declaration** — the helper's name is declared
+  exactly once (no shadowing) and used exactly once.
+- **The one use is a discarded statement call** (`track(…);`), not a
+  value (`x = track(…)`, `log(track(…))`). A discarded result means
+  there is nothing to capture — value capture is a later slice (PR-3).
+- **Straight-line body, no `return`** — each body statement is an
+  `ExpressionStatement` or a `let` / `const` `VariableDeclaration`;
+  nothing else (no `return`, control flow, `var`, or nested blocks).
+- **No `this` / `arguments`** — their meaning is frame-bound and would
+  silently rebind on a splice; rejected explicitly.
+- **Callee locals are alpha-renamed to program-fresh names** before
+  splicing (a base-26 generator avoiding every identifier in the
+  program), so a spliced `let e` can never collide with or shadow a
+  binding live at the call site.
+- **Free identifiers must be true globals** — a body name that is
+  neither a parameter nor a callee-local must be declared *nowhere* in
+  the program, so it is unshadowable at any splice site. (The
+  conservative bootstrap the spec's Open Question 1 sanctions; a later
+  slice can widen it via `closure-scope-analyzer`.)
+- **Side-effect-free arguments** (the existing `is_simple_arg` gate) —
+  substituting them for a parameter used any number of times never
+  drops or duplicates a side effect.
+
+When the call sits in an unbraced single-statement slot (`if (c) f();`),
+the spliced statements are wrapped in a fresh block so control flow stays
+correct; in a real statement list they are spliced in flat.
+
+- Runs as a new Phase 4 after the expression inliner. The two operate on
+  disjoint function shapes, so neither perturbs the other's candidate
+  set, and the declaration-count map stays valid (inlining removes call
+  sites, never declarations).
+- A `let`/`const` local sharing a parameter's spelling (illegal JS, but
+  cheap to guard) is declined — the name-based alpha-renamer is not
+  scope-aware, so this is defense in depth against a non-conformant
+  parser rather than a path reachable from valid input.
+- 14 new tests: the signature local+global splice, the no-locals case,
+  alpha-rename-avoids-argument-collision, empty-body call drop, the
+  unbraced-`if` block wrap, and eight decline cases (value-position use,
+  `var` local, tail `return`, `arguments`, free *declared* name,
+  side-effecting argument, multi-use, recursion, param/local collision).
+
+## [0.4.0] - 2026-06-17
+
+### Added (CLOC13.G — multi-use inlining under a size budget)
+
+The pass no longer inlines only single-use functions; it now inlines a callee
+at **all** its call sites when doing so is a size win:
+
+```js
+function sq(x) { return x * x; }
+a(sq(3));
+b(sq(4));
+// SIMPLE  ⇒  a(9); b(16);   (both sites inlined, then constant-fold)
+```
+
+- A function is inlined only when **every** use of its name is an inlinable
+  call (matching arity, side-effect-free args) — `uses == inlinable_calls`. If
+  even one use is a value (`g(f)`) or a non-inlinable call, the whole function
+  is declined: partial inlining would duplicate the body *and* keep the
+  declaration, usually a net loss.
+- **Single-use** → always inlined (a strict win). **Multi-use (N>1)** → inlined
+  only when the body fits the budget `expr_node_count(body) <= 2 + params.len()`
+  (see `multiuse_budget_ok`), so the substituted body is never larger than the
+  call it replaces — duplicating it across the sites can't grow the output, and
+  removing the declaration is a pure saving. A body too large to duplicate is
+  left alone.
+- All the soundness guarantees of the single-use slice carry over unchanged
+  (top-level plain function, body `{ return EXPR }`, every identifier a
+  parameter → no capture/`this`/`arguments`/recursion, name declared once,
+  side-effect-free args → safe to duplicate). Multi-use adds no new soundness
+  obligation; the budget is purely a "worth it?" knob.
+
+### Internals
+- `count_name_uses_*` → `tally_*`: one walk now counts both total uses and
+  inlinable calls (`Tally { uses, inlinable }`).
+- `inline_single_call` → `inline_all_calls`: the substitution walk no longer
+  short-circuits on the first match — it rewrites every call site.
+- New `expr_node_count` / `multiuse_budget_ok` / `is_inlinable_call` helpers.
+
+### Tests
+- New roundtrip tests: multi-use small body inlined at both sites; multi-use
+  large body declined (over budget); declined when one of several uses is a
+  value; declined when one call has a side-effecting argument.
+
+Crate bumped `0.3.0 → 0.4.0`.
+
+## [0.3.0] - 2026-06-17
+
+### Added (CLOC13.B.1 — real call-site substitution)
+- `InlinePass::run` is now a **real transform**: it inlines single-use top-level leaf functions whose body is exactly `{ return EXPR; }`, replacing the call with the substituted body. `log(double(7))` for `function double(x) { return x * 2; }` becomes `log(7 * 2)` (and the now-dead `double` declaration is removed by the later remove-unused-vars / treeshake passes — this pass deliberately leaves it in place).
+- The implementation is **self-contained** (its own name-based shadow + use analysis over the Phase-1 AST), mirroring the `rename` pass's philosophy — it no longer relies on `closure-scope-analyzer`'s candidate scan (which keyed on optional per-node CvIds that the bridge does not populate).
+
+### The provably-safe slice (every hard inlining hazard made structurally impossible)
+A call `f(a₁, …, aₙ)` is inlined only when ALL hold:
+1. **`f` is a top-level plain `function`** (not generator / not `async`) — no enclosing scope to capture, no resumable state.
+2. **`f`'s body is exactly `{ return EXPR; }`** — substitution is a pure expression-for-expression swap; no locals/branches to splice.
+3. **Every identifier in `EXPR` is one of `f`'s parameters** — the capture guard. No free identifiers ⇒ no global capture, no `this`/`arguments`, and recursion excluded for free (a self-call makes `f` a free identifier).
+4. **`f`'s name is declared exactly once in the whole program** — no shadowing, so every use of the identifier resolves to this function and can be counted/located by name.
+5. **`f` is used exactly once, and that use is the call**, with `arguments.len() == params.len()` — the unambiguous single-use size win.
+6. **Every argument is side-effect-free** (a literal or bare identifier) — substituting for a parameter used zero/one/many times can neither drop nor duplicate a side effect.
+
+Everything outside this subset is left untouched (`changed` stays `false`). The `changed = true` it now returns when it does inline is safe under `IterationPolicy::FixedPoint`: each round strictly removes a single-use callee's only reference, so the candidate set shrinks monotonically and the fixed point is reached in finitely many steps.
+
+### Precedence
+- Substitution operates on the typed AST, so the precedence-aware `closure-emitter` parenthesizes correctly — e.g. inlining a `BinaryExpression` body into a higher-precedence position emits the necessary parens from the tree structure.
+
+### Tests
+- 15 new source → bridge → inline → emit roundtrip tests covering the positive cases (single-use, identifier args, two params, computed members, nested-call arguments, property-name preservation) and every rejection (multi-use, recursive, free global, shadowed name, arity mismatch, side-effecting argument, non-call value use, multi-statement body).
+
+### Dependencies
+- Removed the (now unused) `closure-scope-analyzer`/`serde_json`/`type-sidecar`/`correlation-vector` reliance from the transform path; kept as deps for parity with sibling pass crates. Added dev-deps `coding-adventures-javascript-parser` and `coding-adventures-closure-emitter` for the roundtrip tests. Crate bumped `0.2.0 → 0.3.0`.
+
 ## [0.2.0] - 2026-06-01
 
 ### Added (CLOC13.B — consume `closure-scope-analyzer`)

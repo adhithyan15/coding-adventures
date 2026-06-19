@@ -1,0 +1,76 @@
+% ============================================================================
+% immuno-edges — the clinical-immunology knowledge-graph (MYCIN-2026 IMMUNO).
+% ============================================================================
+% A Tier-1 recall domain (USMLE-DOMAIN-MAP §"To build"): hypersensitivity mediators,
+% HLA disease associations, and the molecular lesions of primary immunodeficiencies.
+% "What mediates a type I hypersensitivity reaction?" becomes the binding query
+%   ? mediated_by(type_i_hypersensitivity, $Mediator).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the third ADJ-only recall domain, after MICRO and PHARM). Each
+% fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see immuno-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: relations chosen so the cited span NAMES both endpoints. Edges with no
+% clean self-contained span (e.g. celiac→HLA-DQ2, narcolepsy→HLA-DR2) are deferred to a
+% later slice rather than grounded on a span that names only the class or only one end.
+% ============================================================================
+
+dictionary immuno_vocab {
+    define reaction   : entity   surface "hypersensitivity reaction", "immune reaction"
+    define mediator   : entity   surface "immune mediator", "effector"
+    define condition  : entity   surface "disease", "immunodeficiency disorder"
+    define hla        : entity   surface "HLA allele"
+    define gene       : entity   surface "gene"
+    define component  : entity   surface "immune component"
+
+    define mediated_by    : relation from reaction to mediator    % the effector that drives the reaction
+    define associated_hla : relation from condition to hla        % the HLA allele a disease associates with
+    define gene_defect    : relation from condition to gene       % the mutated gene behind a disorder
+    define deficiency_of  : relation from condition to component  % the immune component that is missing/defective
+}
+
+rulebook immuno_facts {
+    use immuno_vocab
+
+    % --- Hypersensitivity reactions (Gell & Coombs effectors) ------------
+    relate mediated_by(type_i_hypersensitivity, ige)
+        source "Type I hypersensitivity, also known as immediate hypersensitivity, is an immunoglobulin E (IgE)-mediated immune response that occurs when the immune system overreacts to typically harmless environmental antigens."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560561/"
+        trust authoritative
+    relate mediated_by(type_iv_hypersensitivity, t_cells)
+        source "Type IV hypersensitivity, or delayed hypersensitivity reactions, are T-cell–mediated immune responses that typically manifest 48 to 72 hours after antigen exposure, although they can take weeks to manifest."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562228/"
+        trust authoritative
+
+    % --- HLA disease association -----------------------------------------
+    relate associated_hla(ankylosing_spondylitis, hla_b27)
+        source "HLA-B27 contributes to approximately thirty percent of the heritability of ankylosing spondylitis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551523/"
+        trust authoritative
+
+    % --- Primary immunodeficiencies: molecular lesion + missing component
+    relate gene_defect(x_linked_agammaglobulinemia, btk)
+        source "X-Linked Agammaglobulinemia XLA is caused by mutations in the BTK gene encoding Bruton tyrosine kinase."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562182/"
+        trust authoritative
+    relate deficiency_of(chronic_granulomatous_disease, nadph_oxidase)
+        source "Determine the part played by defective NADPH oxidase in the pathophysiology of chronic granulomatous disease."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493171/"
+        trust authoritative
+    relate deficiency_of(digeorge_syndrome, t_cells)
+        source "Complete DiGeorge syndrome, characterized by complete absence of thymic tissue and profound T-cell lymphopenia, affects less than 1% of individuals with 22q11.2 deletion but represents a life-threatening condition requiring thymus transplantation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549798/"
+        trust authoritative
+    relate gene_defect(digeorge_syndrome, chromosome_22q11_2_deletion)
+        source "Approximately 90% of DiGeorge syndrome cases result from a microdeletion on the long arm of chromosome 22 at the 11.2 locus, typically involving a 3-megabase region between low copy repeats LCR22A and LCR22D."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549798/"
+        trust authoritative
+}

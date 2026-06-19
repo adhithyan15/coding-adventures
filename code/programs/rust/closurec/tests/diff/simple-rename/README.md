@@ -7,7 +7,7 @@ End-to-end oracle for the `rename` pass in `--compilation_level SIMPLE`
 |------|------|
 | `flags.txt` | `--compilation_level SIMPLE --js input/a.js` |
 | `input/a.js` | A called leaf function with descriptive parameter names |
-| `expected.stdout` | `function distance(a,b){return a * a + b * b};distance(3,4);` |
+| `expected.stdout` | `function distance(a,b){return a * a + b * b};distance(3,4);distance(5,12);` |
 
 The SIMPLE pipeline is now
 `constant-fold → fold-control-flow → dce → inline → remove-unused-vars →
@@ -20,8 +20,10 @@ functions:
 | param `horizontal` | renamed to `a` |
 | param `vertical` | renamed to `b` |
 
-`distance(3, 4)` keeps the function past `treeshake`. The same input under
-`WHITESPACE_ONLY` keeps the full parameter names. See the
+`distance(...)` keeps the function past `treeshake`. It is called twice so
+the single-use `inline` pass leaves it in place — otherwise the body would be
+substituted at the lone call site and there would be no parameters left to
+rename. The same input under `WHITESPACE_ONLY` keeps the full parameter names. See the
 `closure-pass-rename` crate for the full (conservative) rename rules —
 property names, free globals, redeclared params, and non-leaf functions are
 all left untouched.

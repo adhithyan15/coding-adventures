@@ -54,7 +54,7 @@
 //! | `+` | `load_mem v ptr u8` + `const k 1 u8` + `add v v k u8` + `store_mem ptr v u8` |
 //! | `-` | `load_mem v ptr u8` + `const k 1 u8` + `sub v v k u8` + `store_mem ptr v u8` |
 //! | `.` | `load_mem v ptr u8` + `call_builtin putchar v void` |
-//! | `,` | `call_builtin getchar () u8` → `v` + `store_mem ptr v u8` |
+//! | `,` | `call_builtin getchar () i64` → branch on `<0` (EOF): store `0`, else store the byte (`u8`) |
 //! | `[`…`]` | label loop_N_start + load_mem c ptr u8 + jmp_if_false c loop_N_end + body + jmp loop_N_start + label loop_N_end |
 
 use interpreter_ir::{
@@ -76,6 +76,9 @@ const VAL: &str = "v";
 
 /// Loop-condition register.  Written at each loop guard, read by `jmp_if_false`.
 const COND: &str = "c";
+
+/// Scratch register holding the literal `0` for the `,`-EOF clamp comparison.
+const ZERO: &str = "z";
 
 /// Immediate-scratch register for the constant `1` used in `+`, `-`, `>`, `<`.
 const IMM: &str = "k";
@@ -151,9 +154,11 @@ pub fn compile_to_iir(ast: &GrammarASTNode, module_name: &str) -> IIRModule {
 /// The compiler keeps:
 /// - `instrs` — the ordered instruction list being built.
 /// - `loop_counter` — depth-first index for unique loop labels.
+/// - `input_counter` — index for unique `,`-EOF-clamp labels.
 struct Compiler {
     instrs: Vec<IIRInstr>,
     loop_counter: usize,
+    input_counter: usize,
 }
 
 impl Compiler {
@@ -161,6 +166,7 @@ impl Compiler {
         Self {
             instrs: Vec::new(),
             loop_counter: 0,
+            input_counter: 0,
         }
     }
 
@@ -331,25 +337,108 @@ impl Compiler {
         );
     }
 
-    /// Compile `,` — read one byte from stdin via `getchar`.
+    /// Compile `,` — read one byte from stdin via `getchar`, storing **0 on EOF**.
+    ///
+    /// `getchar` returns the next byte (0–255) or `-1` at end-of-input (libc `getchar` /
+    /// `Console.Read` / the wasm host yield `-1`; the JVM/VM/JIT stubs already yield `0`).
+    /// Storing the raw result into the `u8` cell would truncate `-1` to `255` on the `-1`
+    /// backends — so the canonical cat `,[.,]` (loop while cell ≠ 0) would never see the
+    /// `0` that ends the loop and would spin forever there, while terminating on the `0`
+    /// backends. To make `,` behave **identically on every backend**, EOF is normalised to
+    /// `0` here, in the shared IIR, rather than per backend.
+    ///
+    /// EOF detection cannot use a signed `v < 0` test: the runtimes widen the `i32` `-1`
+    /// differently (LLVM sign-extends → `0xFF…FF`; the native path zero-extends →
+    /// `0x0000_0000_FFFF_FFFF`), and `< 0` is false for the zero-extended form. Instead we
+    /// test the bits **above the low byte** with the mask `~0xFF` (`-256` — the same bit
+    /// pattern at i32 and i64, and a valid `int32` const, unlike `0xFFFFFF00`): those bits
+    /// are `0` for any valid byte and non-zero for `-1` under either extension.
     ///
     /// ```text
-    /// call_builtin  v  getchar   u8
-    /// store_mem        ptr v     u8
+    /// call_builtin  v   getchar          i64   ; byte (0..255) or -1 at EOF
+    /// const         k   -256             i64   ; mask ~0xFF
+    /// and           c   v k              i64   ; c = v & ~0xFF  → non-zero ⟺ EOF
+    /// jmp_if_false  c   input_N_raw            ; c == 0 (in range) → store the byte
+    /// const         z   0                i64
+    /// store_mem         ptr z            u8    ; EOF → cell = 0
+    /// jmp               input_N_done
+    /// label             input_N_raw
+    /// store_mem         ptr v            u8    ; store the byte (low 8 bits)
+    /// label             input_N_done
     /// ```
+    ///
+    /// Each arm does its OWN `store_mem`, so no register crosses the merge — Brainfuck
+    /// keeps all state in the tape and re-loads it after every branch, and the IIR has no
+    /// phi nodes, so a value flowing out of a branch join would be miscompiled by the SSA
+    /// backends. This is the "EOF leaves 0" convention the classic `,[.,]` cat relies on.
+    /// A program that never reads past its input (e.g. `,+.`) never reaches the EOF arm.
     fn emit_input(&mut self) {
+        let id = self.input_counter;
+        self.input_counter += 1;
+        let raw = format!("input_{id}_raw");
+        let done = format!("input_{id}_done");
+
+        // Read at i64. `getchar` returns the byte (0–255) or `-1` at EOF — but how that
+        // `-1` is widened to the i64 cell register differs by backend (LLVM sign-extends
+        // → `0xFFFF…FF`; the native path zero-extends the i32 → `0x0000_0000_FFFF_FFFF`).
+        // A signed `< 0` test is therefore NOT portable (it is false for the zero-extended
+        // form). Instead test the bits ABOVE the low byte with the mask `~0xFF` (= -256).
+        // Those bits are 0 for every valid byte and non-zero for `-1` under EITHER
+        // extension (`-1` is all-ones in at least its low 32 bits), so this detects EOF
+        // sign- and width-agnostically. `-256` is used rather than the literal
+        // `0xFFFFFF00` (4294967040) because the latter overflows the uniformly-`int32`
+        // CIL emitter; `-256` is the same bit pattern (`0xFF…FF00`) at both i32 and i64.
         self.emit(
             "call_builtin",
             Some(VAL),
             vec![Operand::Var("getchar".into())],
+            "i64",
+        );
+        // hi = v & ~0xFF  — non-zero ⟺ value is out of 0..=255 (EOF).
+        self.emit("const", Some(IMM), vec![Operand::Int(-256)], "i64");
+        self.emit(
+            "and",
+            Some(COND),
+            vec![Operand::Var(VAL.into()), Operand::Var(IMM.into())],
+            "i64",
+        );
+        // The two arms each do their OWN `store_mem`, so no register value crosses the
+        // merge. Brainfuck keeps all state in the tape and re-loads it after every branch
+        // — it never merges a register across control flow (the IIR has no phi nodes). A
+        // clamp that reassigned `v` in one arm and read it after the join would be
+        // miscompiled by the SSA backends (the join needs a phi that isn't emitted).
+        // Storing in each arm avoids the join entirely.
+        //
+        //   jmp_if_false hi, raw     ; hi == 0 (in range) → store the byte
+        //   store_mem ptr z   u8     ; EOF → store 0
+        //   jmp done
+        //   label raw
+        //   store_mem ptr v   u8     ; store the byte read
+        //   label done
+        self.emit(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(COND.into()), Operand::Var(raw.clone())],
+            "void",
+        );
+        // EOF arm: store 0.
+        self.emit("const", Some(ZERO), vec![Operand::Int(0)], "i64");
+        self.emit(
+            "store_mem",
+            None,
+            vec![Operand::Var(PTR.into()), Operand::Var(ZERO.into())],
             "u8",
         );
+        self.emit("jmp", None, vec![Operand::Var(done.clone())], "void");
+        // Byte arm: store the value read (its low 8 bits).
+        self.emit("label", None, vec![Operand::Var(raw)], "void");
         self.emit(
             "store_mem",
             None,
             vec![Operand::Var(PTR.into()), Operand::Var(VAL.into())],
             "u8",
         );
+        self.emit("label", None, vec![Operand::Var(done)], "void");
     }
 
     // ------------------------------------------------------------------
@@ -552,12 +641,46 @@ mod tests {
     // --- Input `,` ---
 
     #[test]
-    fn comma_emits_call_builtin_getchar_and_store() {
+    fn comma_emits_getchar_with_eof_clamp_then_store() {
+        // `,` reads at i64 (so a negative EOF sentinel survives), then branches: each
+        // arm does its OWN store_mem (0 on EOF, the byte otherwise) so no register
+        // crosses the merge. This is the "EOF leaves 0" convention cat `,[.,]` relies on.
         let i = instrs(",");
+        // [0]=prologue const ptr; then the input sequence:
         assert_eq!(i[1].op, "call_builtin");
         assert_eq!(i[1].srcs[0], Operand::Var("getchar".into()));
-        assert_eq!(i[1].type_hint, "u8");
-        assert_eq!(i[2].op, "store_mem");
+        assert_eq!(i[1].type_hint, "i64", "getchar must read at i64 so -1 survives the u8 store");
+        assert_eq!(i[2].op, "const"); // the ~0xFF (= -256) mask
+        assert_eq!(i[2].srcs[0], Operand::Int(-256));
+        assert_eq!(i[3].op, "and"); // hi = v & mask  → non-zero ⟺ EOF
+        assert_eq!(i[4].op, "jmp_if_false"); // hi == 0 (in range) → jump to the byte arm
+        assert_eq!(i[5].op, "const"); // EOF arm: 0
+        assert_eq!(i[6].op, "store_mem"); // EOF arm: store 0
+        assert_eq!(i[6].type_hint, "u8");
+        assert_eq!(i[7].op, "jmp"); //          → done
+        assert_eq!(i[8].op, "label"); // raw:
+        assert_eq!(i[9].op, "store_mem"); // byte arm: store v
+        assert_eq!(i[9].type_hint, "u8");
+        assert_eq!(i[10].op, "label"); // done
+    }
+
+    #[test]
+    fn two_commas_use_distinct_clamp_labels() {
+        // Each `,` must get unique EOF-branch labels, or a later jmp would target an
+        // earlier block. `,,` → input_0_{raw,done}, input_1_{raw,done}.
+        let i = instrs(",,");
+        let labels: Vec<String> = i
+            .iter()
+            .filter(|x| x.op == "label")
+            .filter_map(|x| match &x.srcs[0] {
+                Operand::Var(s) => Some(s.clone()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(
+            labels,
+            vec!["input_0_raw", "input_0_done", "input_1_raw", "input_1_done"]
+        );
     }
 
     // --- Loop `[...]` ---

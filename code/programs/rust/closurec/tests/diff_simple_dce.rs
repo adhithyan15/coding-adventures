@@ -16,6 +16,11 @@
 //! ⇒ function f(){keep();return 1};
 //! ```
 //!
+//! `f` is called TWICE so the single-use void statement-inliner (CLOC15)
+//! declines it — once dce reduces the body to `{ keep(); return 1; }`, a
+//! lone call site would otherwise be spliced away entirely (`keep();`),
+//! hiding the dce-inside-the-body effect this fixture exists to show.
+//!
 //! The same input under WHITESPACE_ONLY keeps every statement (see the
 //! `simple_dce_*` unit tests in `src/run.rs`).
 //!

@@ -52,6 +52,18 @@ Chief of Staff job/session/agent
   -> activation-approval list and summary reads for bundled approval packets
   -> activation-decision list and summary reads for approve/block queue planning
   -> activation-evidence list and summary reads for approval/block evidence rows
+  -> activation-evidence remediation list and summary reads for D23A lane fixes
+  -> activation-evidence lane inventory and scorecard summary reads for blocker
+     lane rollups
+  -> mesh primitive-readiness, substrate-stage, and substrate-action reads for
+     low-level protocol release blockers
+  -> mesh substrate preflight check, repair action, repair batch, repair
+     schedule, and
+     preflight readiness reads for release-prep blockers
+  -> mesh readiness package, stage-release, action-readiness, and
+     release-readiness reads for release go/no-go
+  -> mesh readiness handoff list and summary reads for release coordination
+  -> mesh release-readiness check list and summary reads for final gate review
   -> activation-dossier list and summary reads for bundled decision evidence
   -> activation-dashboard list and summary reads for priority-wave status cards
   -> activation-timeline list and summary reads for ordered wave milestones
@@ -127,6 +139,35 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_decision_summary`
 - `smart_home.list_integration_activation_evidence`
 - `smart_home.get_integration_activation_evidence_summary`
+- `smart_home.list_integration_activation_evidence_remediation`
+- `smart_home.get_integration_activation_evidence_remediation_summary`
+- `smart_home.list_integration_activation_evidence_lane_inventory`
+- `smart_home.get_integration_activation_evidence_lane_inventory_summary`
+- `smart_home.get_integration_activation_evidence_scorecard_summary`
+- `smart_home.list_integration_mesh_primitive_readiness`
+- `smart_home.get_integration_mesh_primitive_readiness_summary`
+- `smart_home.list_integration_mesh_substrate_stages`
+- `smart_home.get_integration_mesh_substrate_stage_summary`
+- `smart_home.list_integration_mesh_substrate_actions`
+- `smart_home.get_integration_mesh_substrate_action_summary`
+- `smart_home.get_integration_mesh_readiness_package_summary`
+- `smart_home.get_integration_mesh_stage_release_summary`
+- `smart_home.get_integration_mesh_action_readiness_summary`
+- `smart_home.list_integration_mesh_substrate_preflight_checks`
+- `smart_home.get_integration_mesh_substrate_preflight_summary`
+- `smart_home.list_integration_mesh_preflight_repair_actions`
+- `smart_home.get_integration_mesh_preflight_repair_action_summary`
+- `smart_home.list_integration_mesh_preflight_repair_batches`
+- `smart_home.get_integration_mesh_preflight_repair_batch_summary`
+- `smart_home.list_integration_mesh_preflight_repair_schedule`
+- `smart_home.get_integration_mesh_preflight_repair_schedule_summary`
+- `smart_home.get_integration_mesh_preflight_readiness_summary`
+- `smart_home.get_integration_mesh_preflight_repair_readiness_summary`
+- `smart_home.get_integration_mesh_release_readiness_summary`
+- `smart_home.list_integration_mesh_readiness_handoffs`
+- `smart_home.get_integration_mesh_readiness_handoff_summary`
+- `smart_home.list_integration_mesh_release_readiness_checks`
+- `smart_home.get_integration_mesh_release_readiness_summary`
 - `smart_home.list_integration_activation_dossiers`
 - `smart_home.get_integration_activation_dossier_summary`
 - `smart_home.list_integration_activation_readouts`

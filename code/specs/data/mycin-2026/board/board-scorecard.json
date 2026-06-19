@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 66,
-    "correct": 59,
+    "total": 102,
+    "correct": 95,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 53,
+        "correct": 89,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9623,
-    "grounded_correct": 51
+    "grounded_coverage": 0.9888,
+    "grounded_correct": 88
   },
   "results": [
     {
@@ -441,7 +441,7 @@
       "gold": "factor_vii",
       "answer": "factor_vii",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "hemophilia_a_inherit",
@@ -554,6 +554,294 @@
       "answer": "INFEASIBLE",
       "outcome": "correct",
       "trust": null
+    },
+    {
+      "id": "micro_saureus_gram",
+      "tactic": "recall",
+      "gold": "gram_positive",
+      "answer": "gram_positive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_saureus_shape",
+      "tactic": "recall",
+      "gold": "cocci",
+      "answer": "cocci",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_nmen_gram",
+      "tactic": "recall",
+      "gold": "gram_negative",
+      "answer": "gram_negative",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_nmen_shape",
+      "tactic": "recall",
+      "gold": "diplococci",
+      "answer": "diplococci",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_vibrio_gram",
+      "tactic": "recall",
+      "gold": "gram_negative",
+      "answer": "gram_negative",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_vibrio_shape",
+      "tactic": "recall",
+      "gold": "comma_shaped",
+      "answer": "comma_shaped",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_vibrio_causes",
+      "tactic": "recall",
+      "gold": "cholera",
+      "answer": "cholera",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_ecoli_gram",
+      "tactic": "recall",
+      "gold": "gram_negative",
+      "answer": "gram_negative",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_ecoli_shape",
+      "tactic": "recall",
+      "gold": "bacilli",
+      "answer": "bacilli",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_pseud_gram",
+      "tactic": "recall",
+      "gold": "gram_negative",
+      "answer": "gram_negative",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_pseud_shape",
+      "tactic": "recall",
+      "gold": "bacilli",
+      "answer": "bacilli",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_spneumo_gram",
+      "tactic": "recall",
+      "gold": "gram_positive",
+      "answer": "gram_positive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_spneumo_causes",
+      "tactic": "recall",
+      "gold": "community_acquired_pneumonia",
+      "answer": "community_acquired_pneumonia",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_metformin_class",
+      "tactic": "recall",
+      "gold": "biguanide",
+      "answer": "biguanide",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_lisinopril_class",
+      "tactic": "recall",
+      "gold": "ace_inhibitor",
+      "answer": "ace_inhibitor",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_naloxone_class",
+      "tactic": "recall",
+      "gold": "opioid_antagonist",
+      "answer": "opioid_antagonist",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_flumazenil_class",
+      "tactic": "recall",
+      "gold": "benzodiazepine_antagonist",
+      "answer": "benzodiazepine_antagonist",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_warfarin_moa",
+      "tactic": "recall",
+      "gold": "inhibits_vitamin_k_dependent_clotting_factor_synthesis",
+      "answer": "inhibits_vitamin_k_dependent_clotting_factor_synthesis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_apap_adverse",
+      "tactic": "recall",
+      "gold": "hepatic_necrosis",
+      "answer": "hepatic_necrosis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_apap_antidote",
+      "tactic": "recall",
+      "gold": "acetylcysteine",
+      "answer": "acetylcysteine",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_opioid_antidote",
+      "tactic": "recall",
+      "gold": "naloxone",
+      "answer": "naloxone",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "pharm_benzo_antidote",
+      "tactic": "recall",
+      "gold": "flumazenil",
+      "answer": "flumazenil",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_type1_mediator",
+      "tactic": "recall",
+      "gold": "ige",
+      "answer": "ige",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_type4_mediator",
+      "tactic": "recall",
+      "gold": "t_cells",
+      "answer": "t_cells",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_as_hla",
+      "tactic": "recall",
+      "gold": "hla_b27",
+      "answer": "hla_b27",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_xla_gene",
+      "tactic": "recall",
+      "gold": "btk",
+      "answer": "btk",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_cgd_deficiency",
+      "tactic": "recall",
+      "gold": "nadph_oxidase",
+      "answer": "nadph_oxidase",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_digeorge_def",
+      "tactic": "recall",
+      "gold": "t_cells",
+      "answer": "t_cells",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "immuno_digeorge_gene",
+      "tactic": "recall",
+      "gold": "chromosome_22q11_2_deletion",
+      "answer": "chromosome_22q11_2_deletion",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_hd_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_dominant",
+      "answer": "autosomal_dominant",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_hd_gene",
+      "tactic": "recall",
+      "gold": "htt",
+      "answer": "htt",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_hd_repeat",
+      "tactic": "recall",
+      "gold": "cag",
+      "answer": "cag",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_marfan_inh",
+      "tactic": "recall",
+      "gold": "autosomal_dominant",
+      "answer": "autosomal_dominant",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_fragx_repeat",
+      "tactic": "recall",
+      "gold": "cgg",
+      "answer": "cgg",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_fragx_gene",
+      "tactic": "recall",
+      "gold": "fmr1",
+      "answer": "fmr1",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_pws_imprint",
+      "tactic": "recall",
+      "gold": "paternal",
+      "answer": "paternal",
+      "outcome": "correct",
+      "trust": "authoritative"
     }
   ]
 }

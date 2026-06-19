@@ -95,11 +95,11 @@
       "relation": "factor_deficiency",
       "subject": "factor_vii_deficiency",
       "object": "factor_vii",
-      "status": "direction_only",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Factor VII deficiency is a deficiency of coagulation factor VII of the extrinsic pathway.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Factor VII deficiency is a bleeding disorder characterized by a lack in the production of factor VII",
+      "url": "https://en.wikipedia.org/wiki/Factor_VII_deficiency"
     },
     "coag_inheritance__factor_vii_deficiency": {
       "relation": "coag_inheritance",
@@ -152,5 +152,5 @@
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7153668/"
     }
   },
-  "hash": "f35fbbbde31b4374"
+  "hash": "3e4d4e682667c8ab"
 }

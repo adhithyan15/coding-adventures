@@ -38,8 +38,24 @@ downstream tools to compare.
      `measure`, `meas`, `four`, `fourier`, `print`, and `plot`) now normalize
      into dotted deck cards while `run`, `reset`, `quit`, and UI-only
      `set noaskquit` options plus ASCII rawfile-format `set filetype=ascii`
-     options and rawfile vector-name/single-scale toggles (`set wr_vecnames`,
-     `set wr_singlescale`) are accepted as no-op control markers; parsed
+     options, rawfile vector-name/single-scale toggles (`set wr_vecnames`,
+     `set wr_singlescale`), and rawfile append-write `set appendwrite` options
+     plus target-bearing rawfile `write <rawfile> [probes...]` markers and
+     ASCII data-write `wrdata <file> <probes...>` markers are accepted as
+     no-op control markers, and read-only `display` / `listing` / `show` /
+     `showmod` / `status` / `version` / `help` / `echo` / `rusage` / `where`
+     inspection, introspection, and console/debug commands are accepted as
+     no-op control markers, while selected `source` and `shell` external
+     script/shell commands now emit explicit policy diagnostics instead of
+     generic unsupported-command diagnostics, and selected `cd`
+     working-directory mutation commands now emit explicit policy diagnostics
+     instead of generic unsupported-command diagnostics, and selected
+     control-flow commands (`if`, `while`, `foreach`, and `repeat`) now emit
+     explicit policy diagnostics instead of generic unsupported-command
+     diagnostics, and selected variable/state mutation commands (`let`,
+     `alter`, `alterparam`, `set`, and `unset`) now emit explicit policy
+     diagnostics instead of generic unsupported-command diagnostics while
+     accepted no-op `set` options continue to route as no-op markers; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -70,7 +86,9 @@ downstream tools to compare.
      travel with deck execution results as structured Fourier artifacts plus
      stable Fourier tables; selected deck executions now include structured
      run-artifact summaries plus stable row/count tables for result rows,
-     output probes, measurements, and Fourier artifacts.
+     output probes, measurements, and Fourier artifacts, with normalized
+     output-probe, measurement, and Fourier probe name lists included in the
+     run artifacts.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -594,13 +612,204 @@ downstream tools to compare.
       non-comment commands inside `.control` blocks remain diagnostic-only so
       unsupported file I/O and script state are explicit.
 
+54. Selected `.control` appendwrite option routing.
+    - Status: completed in this selected control appendwrite-option routing
+      slice.
+    - Python, Rust, and TypeScript now accept exact selected `.control` block
+      `set appendwrite` rawfile append-write options as no-op control commands.
+    - Binary rawfile formats, actual rawfile serialization, other `set`
+      variables, and unrecognized non-comment commands inside `.control` blocks
+      remain diagnostic-only so unsupported file I/O and script state are
+      explicit.
+
+55. Selected `.control` rawfile write marker routing.
+    - Status: completed in this selected control rawfile-write marker routing
+      slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      `write <rawfile> [probes...]` rawfile-write markers as no-op control
+      commands when a target path token is present.
+    - Actual rawfile serialization, binary rawfile formats, other file-writing
+      commands, other `set` variables, and unrecognized non-comment commands
+      inside `.control` blocks remain diagnostic-only so unsupported file I/O
+      and script state are explicit.
+
+56. Selected `.control` WRDATA marker routing.
+    - Status: completed in this selected control WRDATA marker routing slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      `wrdata <file> <probes...>` ASCII data-write markers as no-op control
+      commands when both a target path token and at least one vector/probe token
+      are present.
+    - Actual ASCII data-file serialization, rawfile serialization, binary
+      rawfile formats, other file-writing commands, other `set` variables, and
+      unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported file I/O and script state are explicit.
+
+57. Selected `.control` inspection marker routing.
+    - Status: completed in this selected control inspection-marker routing
+      slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      read-only `display` and `listing` inspection commands as no-op control
+      commands.
+    - Actual console/listing output, mutating control-flow commands, other
+      `set` variables, and unrecognized non-comment commands inside `.control`
+      blocks remain diagnostic-only so unsupported UI output and script state
+      are explicit.
+
+58. Selected `.control` SHOW marker routing.
+    - Status: completed in this selected control show-marker routing slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      read-only `show` and `showmod` device/model inspection commands as no-op
+      control commands.
+    - Actual console/model inspection output, mutating control-flow commands,
+      other `set` variables, and unrecognized non-comment commands inside
+      `.control` blocks remain diagnostic-only so unsupported UI output and
+      script state are explicit.
+
+59. Selected `.control` introspection marker routing.
+    - Status: completed in this selected control introspection-marker routing
+      slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      read-only `status`, `version`, and `help` UI introspection commands as
+      no-op control commands.
+    - Actual console/help output, mutating control-flow commands, other `set`
+      variables, and unrecognized non-comment commands inside `.control`
+      blocks remain diagnostic-only so unsupported UI output and script state
+      are explicit.
+
+60. Selected `.control` console/debug marker routing.
+    - Status: completed in this selected control console/debug-marker routing
+      slice.
+    - Python, Rust, and TypeScript now accept selected `.control` block
+      read-only `echo`, `rusage`, and `where` console/debug commands as no-op
+      control commands.
+    - Actual console/debug output, mutating control-flow commands, external
+      script execution, other `set` variables, and unrecognized non-comment
+      commands inside `.control` blocks remain diagnostic-only so unsupported
+      UI output and script state are explicit.
+
+61. Selected `.control` script execution policy diagnostics.
+    - Status: completed in this selected control script-policy diagnostics
+      slice.
+    - Python, Rust, and TypeScript now emit explicit diagnostics for selected
+      `.control` block `source` and `shell` external script/shell commands
+      instead of generic unsupported-command diagnostics.
+    - External script execution, shelling out, working-directory mutation,
+      control flow, variables, and unrecognized non-comment commands inside
+      `.control` blocks remain diagnostic-only so unsupported script execution
+      policy is explicit.
+
+62. Selected `.control` working-directory policy diagnostics.
+    - Status: completed in this selected control working-directory policy
+      diagnostics slice.
+    - Python, Rust, and TypeScript now emit explicit diagnostics for selected
+      `.control` block `cd` working-directory mutation commands instead of
+      generic unsupported-command diagnostics.
+    - Working-directory mutation, external script execution, shelling out,
+      control flow, variables, and unrecognized non-comment commands inside
+      `.control` blocks remain diagnostic-only so unsupported execution policy
+      is explicit.
+
+63. Selected `.control` control-flow policy diagnostics.
+    - Status: completed in this selected control-flow policy diagnostics
+      slice.
+    - Python, Rust, and TypeScript now emit explicit diagnostics for selected
+      `.control` block control-flow commands, including `if`, `while`,
+      `foreach`, and `repeat`, instead of generic unsupported-command
+      diagnostics.
+    - Control-flow execution, variables, working-directory mutation, external
+      script execution, shelling out, and unrecognized non-comment commands
+      inside `.control` blocks remain diagnostic-only so unsupported execution
+      policy is explicit.
+
+64. Selected `.control` variable policy diagnostics.
+    - Status: completed in this selected variable policy diagnostics slice.
+    - Python, Rust, and TypeScript now emit explicit diagnostics for selected
+      `.control` block variable/state mutation commands, including `let`,
+      `alter`, `alterparam`, `set`, and `unset`, instead of generic
+      unsupported-command diagnostics.
+    - Accepted no-op `set` options still route as no-op markers; variable
+      mutation, circuit mutation, control-flow execution, working-directory
+      mutation, external script execution, shelling out, and unrecognized
+      non-comment commands inside `.control` blocks remain diagnostic-only so
+      unsupported execution policy is explicit.
+
+65. Deck run output-probe artifact names.
+    - Status: completed in this deck run output-probe artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now include the
+      normalized output-probe names inside selected-run artifacts alongside
+      the existing output-probe counts.
+    - The stable run-artifact table now includes `OutputProbeList`, so callers
+      can inspect deck-owned probe provenance without reparsing solver output
+      tables.
+
+66. Deck run measurement artifact names.
+    - Status: completed in this deck run measurement artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now include the
+      selected measurement names inside selected-run artifacts alongside the
+      existing measurement counts.
+    - The stable run-artifact table now includes `MeasurementList`, so callers
+      can inspect deck-owned measurement provenance without reparsing
+      measurement tables.
+
+67. Deck run Fourier artifact probes.
+    - Status: completed in this deck run Fourier artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now include the
+      selected Fourier probe names inside selected-run artifacts alongside the
+      existing Fourier result counts.
+    - The stable run-artifact table now includes `FourierList`, so callers can
+      inspect deck-owned Fourier provenance without reparsing Fourier tables.
+
+68. Deck run transfer-function routing.
+    - Status: completed in this deck run transfer-function routing slice.
+    - Python, Rust, and TypeScript selected deck executions now parse top-level
+      `.tf V(node) SOURCE` analysis cards into the shared deck-analysis plan
+      surface.
+    - Selected `.tf` deck executions route through the existing transfer-function
+      solver and stable transfer-function table while exposing a one-row deck-run
+      artifact for the transfer probe.
+
+69. Deck run sensitivity routing.
+    - Status: completed in this deck run sensitivity routing slice.
+    - Python, Rust, and TypeScript selected deck executions now parse top-level
+      `.sens V(node)` analysis cards into the shared deck-analysis plan surface.
+    - Selected `.sens` deck executions route through the existing DC sensitivity
+      solver and stable sensitivity table while exposing a one-row deck-run
+      artifact for the sensitivity probe.
+
+70. Deck run noise routing.
+    - Status: completed in this deck run noise routing slice.
+    - Python, Rust, and TypeScript selected deck executions now parse top-level
+      `.noise V(node) SOURCE` analysis cards into the shared deck-analysis plan
+      surface, including optional LIN/DEC/OCT frequency sweep controls.
+    - Selected `.noise` deck executions route through the existing AC noise
+      solver and stable noise table while exposing deck-run artifacts for the
+      noise output probe and selected frequency rows.
+
+71. Deck run output-directive artifacts.
+    - Status: completed in this deck run output-directive artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now expose the
+      selected output directive kinds that contributed to each deck-run
+      artifact, alongside the existing selected output probe list.
+    - The stable run-artifact table now includes `OutputDirectiveList`, so
+      callers can distinguish `.save`, `.probe`, `.print`, and `.plot`
+      provenance without reparsing deck output cards.
+
+72. Deck run analysis-source artifacts.
+    - Status: completed in this deck run analysis-source artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now copy each
+      selected analysis plan's source name into deck-run artifacts, preserving
+      `.dc`, `.tf`, and `.noise` input-source provenance beside the existing
+      output, measurement, Fourier, and directive lists.
+    - The stable run-artifact table now includes `SourceName`, with an empty
+      cell for analysis cards that do not name a source.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts beyond selected output probes,
-     selected measurement artifacts, selected Fourier artifacts, and selected
-     run summaries, plus output-plan integration beyond stable table routing.
+     including richer deck-owned run artifacts beyond selected output,
+     measurement, Fourier, and transfer-function probe lists, plus output-plan
+     integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
      selection toward full SPICE compatibility.

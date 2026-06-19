@@ -1,8 +1,8 @@
 [package]
 name = "brainfuck-iir-compiler"
-version = "0.3.3"
+version = "0.4.0"
 edition = "2021"
-description = "BF04/BF05 — Brainfuck → InterpreterIR compiler, vm-core wrapper, jit-core JIT chain, and real CIR-bytecode JIT backend"
+description = "BF04/BF05 — Brainfuck → InterpreterIR compiler, vm-core wrapper, jit-core JIT chain, and real CIR-bytecode JIT backend.  v0.4.0 (LANG-FULL B1-eof): `,` now normalises end-of-input to 0 in the shared IIR — getchar is read at i64 (so a negative EOF sentinel survives the u8 cell store), clamped to 0 via cmp_lt+branch, then stored — so the canonical cat `,[.,]` halts at EOF on EVERY backend (previously libc/Console/wasm returned -1 → cell 255 → infinite loop, while JVM/VM/JIT returned 0)."
 license = "MIT"
 
 [dependencies]

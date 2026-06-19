@@ -124,7 +124,37 @@ set noaskquit
 set filetype=ascii
 set wr_vecnames
 set wr_singlescale
+set appendwrite
 set filetype=binary
+write out.raw V(out)
+wrdata out.dat V(out)
+wrdata empty.dat
+display all
+listing physical
+show all
+showmod Q1
+status
+version
+help tran
+echo running selected deck
+rusage all
+where
+source nested-control.cir
+.source dotted-control.cir
+shell echo nope
+.shell echo dotted
+cd models
+.cd /tmp
+if $&run_monte
+.while $&again
+foreach dev M1 M2
+.repeat 2
+let gain = 2
+.let bias = v(out)
+alter R1=2k
+.alterparam gain=3
+set temp=27
+.unset temp
 run
 quit
 .endc
@@ -149,13 +179,47 @@ quit
         (".include", 2, "error"),
         (".lib", 3, "error"),
         (".control", 4, "error"),
-        (".control", 18, "error"),
+        (".control", 19, "error"),
+        (".control", 22, "error"),
+        (".control", 33, "error"),
+        (".control", 34, "error"),
+        (".control", 35, "error"),
+        (".control", 36, "error"),
+        (".control", 37, "error"),
+        (".control", 38, "error"),
+        (".control", 39, "error"),
+        (".control", 40, "error"),
+        (".control", 41, "error"),
+        (".control", 42, "error"),
+        (".control", 43, "error"),
+        (".control", 44, "error"),
+        (".control", 45, "error"),
+        (".control", 46, "error"),
+        (".control", 47, "error"),
+        (".control", 48, "error"),
     ]
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
         "SPICE_DECK_CONTROL_COMMAND",
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+        "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
     ]
     measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
     assert [
@@ -238,6 +302,34 @@ four 2k V(b)
 .set filetype=ascii
 .set wr_vecnames
 .set wr_singlescale
+.set appendwrite
+.write out.raw V(a)
+.wrdata out.dat V(a)
+.display all
+.listing deck
+.show all
+.showmod Q1
+.status
+.version
+.help tran
+.echo running selected deck
+.rusage all
+.where
+.source nested-control.cir
+source plain-control.cir
+.shell echo nope
+shell echo plain
+.cd nested
+cd /tmp
+.if $&run_monte
+while $&again
+.foreach dev M1 M2
+repeat 2
+.let gain = 2
+alter R1=2k
+.alterparam gain=3
+set temp=27
+.unset temp
 run
 .quit
 .endc
@@ -268,9 +360,39 @@ run
         "SPICE_DECK_INCLUDE_CYCLE",
         "SPICE_DECK_LIB_SECTION_NOT_FOUND",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+        "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
     ]
     assert [(diag.directive, diag.line_number) for diag in summary.diagnostics[3:]] == [
         (".control", 5),
+        (".control", 32),
+        (".control", 33),
+        (".control", 34),
+        (".control", 35),
+        (".control", 36),
+        (".control", 37),
+        (".control", 38),
+        (".control", 39),
+        (".control", 40),
+        (".control", 41),
+        (".control", 42),
+        (".control", 43),
+        (".control", 44),
+        (".control", 45),
+        (".control", 46),
     ]
     measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
     assert [
@@ -675,6 +797,9 @@ R1 in out 1k
 .dc V1 0 5 1
 .ac dec 10 1k 1Meg
 .tran 1u 2m 0 10u uic
+.tf V(out) V1
+.sens V(out)
+.noise V(out) V1 dec 1 1k 1k
 .end
 .tran 1u 1m
 """
@@ -682,13 +807,16 @@ R1 in out 1k
 
     assert summary.active_lines == ("V1 in 0 DC 0", "R1 in out 1k")
     assert summary.terminated is True
-    assert summary.end_line_number == 8
+    assert summary.end_line_number == 11
     assert summary.diagnostics == ()
     assert [analysis.analysis for analysis in summary.analyses] == [
         "op",
         "dc",
         "ac",
         "tran",
+        "tf",
+        "sens",
+        "noise",
     ]
 
     dc = summary.analyses[1]
@@ -713,6 +841,25 @@ R1 in out 1k
     assert tran.max_step == pytest.approx(1.0e-5)
     assert tran.use_initial_conditions is True
 
+    tf = summary.analyses[4]
+    assert tf.directive == ".tf"
+    assert tf.output_node == "out"
+    assert tf.source_name == "V1"
+
+    sens = summary.analyses[5]
+    assert sens.directive == ".sens"
+    assert sens.output_node == "out"
+    assert sens.source_name is None
+
+    noise = summary.analyses[6]
+    assert noise.directive == ".noise"
+    assert noise.output_node == "out"
+    assert noise.source_name == "V1"
+    assert noise.sweep_kind == "dec"
+    assert noise.point_count == 1
+    assert noise.start_frequency == pytest.approx(1.0e3)
+    assert noise.stop_frequency == pytest.approx(1.0e3)
+
 
 def test_resolve_deck_analyses_reports_invalid_cards() -> None:
     summary = resolve_deck_analyses(
@@ -724,12 +871,16 @@ def test_resolve_deck_analyses_reports_invalid_cards() -> None:
 .ac lin 0 1 10
 .tran 0 1m
 .tran 1u 2m 0 1u extra
+.sens I(R1)
+.noise I(R1) V1
 .end
 """
     )
 
     assert summary.analyses == ()
     assert sorted(diagnostic.code for diagnostic in summary.diagnostics) == [
+        "SPICE_DECK_ANALYSIS_ARGUMENT",
+        "SPICE_DECK_ANALYSIS_ARGUMENT",
         "SPICE_DECK_ANALYSIS_ARGUMENT",
         "SPICE_DECK_ANALYSIS_ARGUMENT",
         "SPICE_DECK_ANALYSIS_INTERVAL",
@@ -766,6 +917,52 @@ V1 in 0 DC 0
     assert selected.line_number == 4
     assert selected.stop_time == pytest.approx(2.0e-3)
 
+    tf = select_deck_analysis_plan(
+        """
+V1 in 0 DC 1
+R1 in out 1k
+.tf V(out) V1
+.end
+""",
+        "transfer-function",
+    )
+    assert tf.directive == ".tf"
+    assert tf.analysis == "tf"
+    assert tf.output_node == "out"
+    assert tf.source_name == "V1"
+
+    sens = select_deck_analysis_plan(
+        """
+V1 in 0 DC 1
+R1 in out 1k
+.sens V(out)
+.end
+""",
+        "sensitivity",
+    )
+    assert sens.directive == ".sens"
+    assert sens.analysis == "sens"
+    assert sens.output_node == "out"
+    assert sens.source_name is None
+
+    noise = select_deck_analysis_plan(
+        """
+V1 in 0 DC 1
+R1 in out 1k
+.noise V(out) V1 lin 1 1k 1k
+.end
+""",
+        "noise",
+    )
+    assert noise.directive == ".noise"
+    assert noise.analysis == "noise"
+    assert noise.output_node == "out"
+    assert noise.source_name == "V1"
+    assert noise.sweep_kind == "lin"
+    assert noise.point_count == 1
+    assert noise.start_frequency == pytest.approx(1.0e3)
+    assert noise.stop_frequency == pytest.approx(1.0e3)
+
 
 def test_select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() -> None:
     with pytest.raises(ValueError, match="multiple analysis cards"):
@@ -788,7 +985,7 @@ def test_select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() -> N
         )
 
     with pytest.raises(ValueError, match="unsupported analysis"):
-        select_deck_analysis_plan(".op\n.end\n", "noise")
+        select_deck_analysis_plan(".op\n.end\n", "pz")
 
     with pytest.raises(ValueError, match=r"line 2: \.dc step value must be non-zero"):
         select_deck_analysis_plan(

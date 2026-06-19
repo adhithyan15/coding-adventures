@@ -125,5 +125,74 @@ ok(fillWin.cells[0][0] === "40" && fillWin.cells[1][0] === "60",
   `fill G1 down → G2=${fillWin.cells[0][0]} (F2*2), G3=${fillWin.cells[1][0]} (F3*2)`);
 ok(wb.getRaw("G3") === "=(F3*2)", `filled G3 source tracked the row: ${wb.getRaw("G3")}`);
 
+// Clipboard (the Copy/Cut/Paste buttons): copy the block F1:G1 (F1=10,
+// G1 = F1*2) and paste at F4 — the block shifts as a unit, so the paste writes
+// F4=10 (the copied literal) and G4 = F4*2 = 20, the echo tracking the row.
+wb.copy("F1", "G1");
+const pasted = wb.paste("F4");
+const pasteWin = wb.getDisplayWindow(4, 7, 4, 7); // G4 (col 7 = G)
+ok(pasted === true, `paste applied (returned ${pasted})`);
+ok(pasteWin.cells[0][0] === "20", `copy F1:G1 → paste at F4: G4=${pasteWin.cells[0][0]} (F4*2)`);
+ok(wb.getRaw("G4") === "=(F4*2)", `pasted G4 source shifted as a unit: ${wb.getRaw("G4")}`);
+// Cut moves: cut A1, paste at H1, source clears; a second paste is a no-op.
+wb.setCell("A1", "99");
+wb.cut("A1", "A1");
+ok(wb.paste("H1") === true, "cut paste applied");
+ok(wb.getDisplayWindow(1, 8, 1, 8).cells[0][0] === "99", "cut moved value to H1");
+ok(wb.getDisplayWindow(1, 1, 1, 1).cells[0][0] === "", "cut cleared the source A1");
+ok(wb.paste("J1") === false, "cut buffer consumed (second paste is a no-op)");
+
+// Save / load (the Save / Load buttons): serialize the whole workbook to one
+// JSON document, mutate the live sheet, then deserialize the snapshot back and
+// confirm the workbook is restored — and that a loaded formula stays LIVE (the
+// document stores source + formats, not computed values, so editing a precedent
+// recomputes its dependents). This is exactly what the buttons do, minus the
+// localStorage round-trip (a plain string here).
+const snapshot = wb.serialize();
+ok(typeof snapshot === "string" && snapshot.length > 0, "serialize produced a JSON document");
+// Scribble over the sheet so a successful load has to visibly undo it (A1 was
+// cut away — empty — at snapshot time, so push it to 500 ⇒ E1 = 523.00).
+wb.setCell("A1", "500");
+ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] !== "23.00", "sheet mutated away from the saved state");
+// Load it back. At snapshot time the clipboard test had cut A1 away (empty), so
+// E1 = SUM(A1:D1) = 0+3+12+8 = 23, formatted "#,##0.00" → "23.00"; Z1000 =
+// SUM(A1:A4) = 0+8+12+4 = 24, formatted "0.0%" → "2400.0%".
+ok(wb.deserialize(snapshot) === true, "deserialize restored the snapshot");
+ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] === "23.00",
+  `loaded E1 recomputed through its format: ${wb.getDisplayWindow(1, 5, 1, 5).cells[0][0]}`);
+ok(wb.getRaw("E1") === "=SUM(A1:D1)", `loaded E1 source preserved: ${wb.getRaw("E1")}`);
+ok(wb.getDisplayWindow(1000, 26, 1000, 26).cells[0][0] === "2400.0%",
+  `loaded far Z1000 recomputed + formatted: ${wb.getDisplayWindow(1000, 26, 1000, 26).cells[0][0]}`);
+// The loaded formula is live, not frozen: edit a precedent and E1 recomputes.
+wb.setCell("A1", "5"); // 5+3+12+8 = 28
+ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] === "28.00",
+  `loaded formula stayed live (A1=5 ⇒ E1=${wb.getDisplayWindow(1, 5, 1, 5).cells[0][0]})`);
+// Garbage in is rejected without disturbing the workbook.
+ok(wb.deserialize("not a workbook") === false, "deserialize rejects malformed input");
+ok(wb.getDisplayWindow(1, 5, 1, 5).cells[0][0] === "28.00", "rejected load left the workbook intact");
+
+// Undo / redo (the Undo / Redo buttons): make two fresh edits, walk the history
+// back and forward, and confirm a restored formula recomputes live. Uses a fresh
+// session so the long edit history above doesn't muddy the expected can-undo end.
+const wbh = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+ok(wbh.canUndo() === false, "fresh session has nothing to undo");
+wbh.setCell("A1", "1");
+wbh.setCell("B1", "=A1*10"); // 10
+ok(wbh.canUndo() === true, "after edits, canUndo is true");
+ok(wbh.undo() === true, "undo the formula");
+ok(wbh.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "", "B1 cleared by undo");
+ok(wbh.undo() === true, "undo the literal");
+ok(wbh.getDisplayWindow(1, 1, 1, 1).cells[0][0] === "", "A1 cleared by undo");
+ok(wbh.canUndo() === false && wbh.undo() === false, "history bottom: nothing to undo");
+ok(wbh.redo() === true, "redo the literal");
+ok(wbh.redo() === true, "redo the formula");
+ok(wbh.getDisplayWindow(1, 2, 1, 2).cells[0][0] === "10",
+  `B1 recomputed live after redo: ${wbh.getDisplayWindow(1, 2, 1, 2).cells[0][0]}`);
+ok(wbh.canRedo() === false && wbh.redo() === false, "history top: nothing to redo");
+// A fresh edit forks history (drops the redo branch).
+wbh.undo(); // back to A1=1, B1 gone
+wbh.setCell("C1", "9");
+ok(wbh.canRedo() === false, "a fresh edit clears the redo branch");
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);
