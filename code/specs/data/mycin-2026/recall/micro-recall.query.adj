@@ -1,0 +1,22 @@
+% ============================================================================
+% micro-recall.query.adj — a worked recall query over the micro library.
+% ============================================================================
+% This is the shape an LLM (or a clinician) produces to ANSWER a recall question:
+% it does NOT restate any medical fact — it only `import`s the grounded libraries
+% and asks a binding query. The native adj-lang engine resolves each `?` against
+% the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. Zero facts live here; all knowledge is in the libraries.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli micro-recall.query.adj
+% ============================================================================
+
+import "micro-edges.adj"
+
+? gram_stain(staphylococcus_aureus, $Result)        % expect gram_positive
+? morphology(staphylococcus_aureus, $Shape)         % expect cocci
+? gram_stain(neisseria_meningitidis, $Result)       % expect gram_negative
+? morphology(vibrio_cholerae, $Shape)               % expect comma_shaped
+? causes(vibrio_cholerae, $Disease)                 % expect cholera
+? gram_stain(escherichia_coli, $Result)             % expect gram_negative
+? causes(streptococcus_pneumoniae, $Disease)        % expect community_acquired_pneumonia

@@ -74,6 +74,20 @@
     {"id": "mgmt_older_adult",       "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "older_adult", "aged 72"]],                                                        "gold": ["ampicillin", "ceftriaxone", "vancomycin"]},
     {"id": "mgmt_neurosurgical",     "domain": "meningitis_tx", "tactic": "management", "chart": [["setting", "post_neurosurgical", "POD#3 craniotomy"]],                                         "gold": ["cefepime", "vancomycin"]},
     {"id": "mgmt_pregnant_adult",    "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "28-year-old"], ["pregnancy", "present", "G2P1 at 24 weeks"]],            "gold": ["ceftriaxone", "vancomycin"]},
-    {"id": "mgmt_betalactam_allergic","domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "adult"], ["allergy", "betalactam", "anaphylaxis to multiple beta-lactams (whole-class)"]],       "gold": "INFEASIBLE"}
+    {"id": "mgmt_betalactam_allergic","domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "adult"], ["allergy", "betalactam", "anaphylaxis to multiple beta-lactams (whole-class)"]],       "gold": "INFEASIBLE"},
+
+    {"id": "micro_saureus_gram",   "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "staphylococcus_aureus",    "var": "Result",  "gold": "gram_positive"},
+    {"id": "micro_saureus_shape",  "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "staphylococcus_aureus",    "var": "Shape",   "gold": "cocci"},
+    {"id": "micro_nmen_gram",      "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "neisseria_meningitidis",   "var": "Result",  "gold": "gram_negative"},
+    {"id": "micro_nmen_shape",     "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "neisseria_meningitidis",   "var": "Shape",   "gold": "diplococci"},
+    {"id": "micro_vibrio_gram",    "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "vibrio_cholerae",          "var": "Result",  "gold": "gram_negative"},
+    {"id": "micro_vibrio_shape",   "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "vibrio_cholerae",          "var": "Shape",   "gold": "comma_shaped"},
+    {"id": "micro_vibrio_causes",  "domain": "micro", "tactic": "recall", "relation": "causes",     "subject": "vibrio_cholerae",          "var": "Disease", "gold": "cholera"},
+    {"id": "micro_ecoli_gram",     "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "escherichia_coli",         "var": "Result",  "gold": "gram_negative"},
+    {"id": "micro_ecoli_shape",    "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "escherichia_coli",         "var": "Shape",   "gold": "bacilli"},
+    {"id": "micro_pseud_gram",     "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "pseudomonas_aeruginosa",   "var": "Result",  "gold": "gram_negative"},
+    {"id": "micro_pseud_shape",    "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "pseudomonas_aeruginosa",   "var": "Shape",   "gold": "bacilli"},
+    {"id": "micro_spneumo_gram",   "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "streptococcus_pneumoniae", "var": "Result",  "gold": "gram_positive"},
+    {"id": "micro_spneumo_causes", "domain": "micro", "tactic": "recall", "relation": "causes",     "subject": "streptococcus_pneumoniae", "var": "Disease", "gold": "community_acquired_pneumonia"}
   ]
 }

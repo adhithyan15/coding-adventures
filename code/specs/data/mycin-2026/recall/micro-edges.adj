@@ -1,0 +1,115 @@
+% ============================================================================
+% micro-edges — the clinical-microbiology knowledge-graph (MYCIN-2026 MICRO).
+% ============================================================================
+% A Tier-1 recall domain (USMLE-DOMAIN-MAP §"To build"): the densest, cleanest
+% fact-recall region of Step 1. "Is Staphylococcus aureus gram-positive?" becomes
+% the binding query  ? gram_stain(staphylococcus_aureus, $Result).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — there is no
+% generator, no JSON, no manifest. Each fact is a `relate` clause whose byte-
+% provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that
+% `import`s this library and asks a binding query — see micro-recall.query.adj.
+% Nothing here is hand-asserted "from memory": every edge is defended by a span
+% that a reader can re-fetch and check. (See feedback_nothing_human_authored.)
+%
+% Honest scope of THIS file (declined edges left out rather than fabricated):
+%   - Mycobacterium tuberculosis: NBK441916 states "acid-fast bacilli" but never
+%     a self-contained "M tuberculosis is an acid-fast bacillus" span naming the
+%     organism — declined here; deserves its own page/PR, not a stretched quote.
+%   - Neisseria meningitidis `causes(meningococcal_meningitis)`: the organism page
+%     names gram/shape cleanly but has no self-contained "N meningitidis causes
+%     meningococcal meningitis" span — gram_stain + morphology kept, causes declined.
+% Declining an edge that lacks a clean self-contained authoritative span is the
+% correct move: honest absence beats a fabricated citation.
+% ============================================================================
+
+dictionary micro_vocab {
+    define organism : entity   surface "organism", "bacterium", "pathogen"
+    define gram     : entity   surface "Gram stain reaction"
+    define shape    : entity   surface "cellular morphology", "shape"
+    define disease  : entity   surface "infection", "disease"
+
+    define gram_stain : relation from organism to gram      % Gram reaction (positive / negative)
+    define morphology : relation from organism to shape     % cell shape (cocci / bacilli / …)
+    define causes     : relation from organism to disease   % the signature disease it causes
+}
+
+rulebook micro_facts {
+    use micro_vocab
+
+    % --- Staphylococcus aureus -------------------------------------------
+    % One span states BOTH the gram reaction and the shape for the named organism.
+    relate gram_stain(staphylococcus_aureus, gram_positive)
+        source "S aureus are gram-positive cocci that typically appear microscopically in grape-like clusters"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441868/"
+        trust authoritative
+    relate morphology(staphylococcus_aureus, cocci)
+        source "S aureus are gram-positive cocci that typically appear microscopically in grape-like clusters"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441868/"
+        trust authoritative
+
+    % --- Neisseria meningitidis ------------------------------------------
+    % "gram-negative diplococcus" — one span, both edges. (causes-edge declined; see header.)
+    relate gram_stain(neisseria_meningitidis, gram_negative)
+        source "N meningitidis is an aerobic or facultative anaerobic, gram-negative diplococcus that exclusively infects humans"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549849/"
+        trust authoritative
+    relate morphology(neisseria_meningitidis, diplococci)
+        source "N meningitidis is an aerobic or facultative anaerobic, gram-negative diplococcus that exclusively infects humans"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549849/"
+        trust authoritative
+
+    % --- Vibrio cholerae -------------------------------------------------
+    % The gram/shape span is the appositive of the sentence whose subject is
+    % "Vibrio cholerae" ("…Vibrio cholerae, a gram-negative, comma-shaped bacterium").
+    relate gram_stain(vibrio_cholerae, gram_negative)
+        source "a gram-negative, comma-shaped bacterium"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526099/"
+        trust authoritative
+    relate morphology(vibrio_cholerae, comma_shaped)
+        source "a gram-negative, comma-shaped bacterium"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526099/"
+        trust authoritative
+    relate causes(vibrio_cholerae, cholera)
+        source "Cholera is an acute secretory diarrhea caused by toxigenic strains of Vibrio cholerae"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526099/"
+        trust authoritative
+
+    % --- Escherichia coli ------------------------------------------------
+    % Sentence subject is Escherichia coli (E coli); the quoted clause gives gram + shape.
+    relate gram_stain(escherichia_coli, gram_negative)
+        source "is a gram-negative bacillus that normally inhabits the human intestinal tract"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK564298/"
+        trust authoritative
+    relate morphology(escherichia_coli, bacilli)
+        source "is a gram-negative bacillus that normally inhabits the human intestinal tract"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK564298/"
+        trust authoritative
+
+    % --- Pseudomonas aeruginosa ------------------------------------------
+    % "rod" and "bacillus" are synonyms (a bacillus is a rod-shaped bacterium).
+    relate gram_stain(pseudomonas_aeruginosa, gram_negative)
+        source "Pseudomonas aeruginosa is a gram-negative, aerobic, non-spore forming rod"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557831/"
+        trust authoritative
+    relate morphology(pseudomonas_aeruginosa, bacilli)
+        source "Pseudomonas aeruginosa is a gram-negative, aerobic, non-spore forming rod"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557831/"
+        trust authoritative
+
+    % --- Streptococcus pneumoniae ----------------------------------------
+    % One span states the gram reaction AND a signature disease for the named organism.
+    relate gram_stain(streptococcus_pneumoniae, gram_positive)
+        source "Streptococcus pneumoniae is a gram-positive, lancet-shaped bacterium and a cause of community-acquired pneumonia"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470537/"
+        trust authoritative
+    relate causes(streptococcus_pneumoniae, community_acquired_pneumonia)
+        source "Streptococcus pneumoniae is a gram-positive, lancet-shaped bacterium and a cause of community-acquired pneumonia"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470537/"
+        trust authoritative
+}
