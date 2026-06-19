@@ -126,16 +126,22 @@ structurally cannot do. It is admitted only under a tight, sound subset
 5. **Callee locals alpha-renamed to program-fresh names** before
    splicing — a spliced `let e` can never collide with the call-site
    scope.
-6. **Free identifiers must be true globals, or top-level declarations
-   spliced only at a top-level site.** A free ident declared *nowhere* is a
-   true global — unshadowable everywhere, spliceable anywhere. A free ident
-   that resolves to a **top-level declaration** (a sibling `function`, a
-   top-level `const`/`let`/`var`) is admitted by **CLOC16 Slice A** but marks
-   the candidate top-level-only: it splices **only when its single call is a
-   direct `program.body` member** (program scope can't shadow a top-level
-   name); at any nested call site the splice is declined. A free ident
-   declared only *inside another function* is still rejected. (Slice B will
-   widen nested sites via an in-scope-binding walk / `closure-scope-analyzer`.)
+6. **Free identifiers must be true globals, uniquely-declared top-level
+   names, or top-level names spliced only at a top-level site.** A free ident
+   declared *nowhere* is a true global — unshadowable everywhere, spliceable
+   anywhere. A free ident resolving to a **top-level declaration** (a sibling
+   `function`, a top-level `const`/`let`/`var`) is admitted by **CLOC16**:
+   - if it is declared **exactly once** program-wide (`decl_counts == 1`), no
+     other binding of the name exists, so it is unshadowable everywhere and
+     splices anywhere (**Slice B1**);
+   - if it is **also** declared elsewhere (`decl_counts > 1`), a local could
+     shadow it at a nested site, so the candidate is top-level-only — it
+     splices **only when its single call is a direct `program.body` member**
+     (**Slice A**); at any nested call site it is declined.
+
+   A free ident declared only *inside another function* is still rejected.
+   (Slice B2 will widen the multiply-declared nested case via an
+   in-scope-binding walk / `closure-scope-analyzer`.)
 7. **Side-effect-free arguments** — the same `is_simple_arg` gate.
 
 Since the call site discards the result (CLOC15 PR-2), a **tail `return E`**

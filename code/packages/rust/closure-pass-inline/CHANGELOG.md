@@ -2,6 +2,61 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.12.0] - 2026-06-19
+
+### Added (CLOC16 Slice B1 — nested splice sites via a global-uniqueness gate)
+
+Slice A admitted a free identifier resolving to a top-level declaration but
+restricted such a candidate to **top-level** splice sites (where no scope can
+shadow a top-level name). Slice B1 lifts that restriction for the common case
+**without any scope walk**, using a global-uniqueness check:
+
+```js
+function dep() { return 1; } dep(); dep();
+function f()   { log(0); use(dep); }
+function main(){ f(); }            // f's only call — NESTED
+main(); main();
+// SIMPLE ⇒ function main(){ log(0); use(dep) }   (f now spliced into main)
+```
+
+**The gate.** `count_decl_names_*` counts **every** binding declaration at
+every depth program-wide (its catch-all arm is deliberately exhaustive), so
+`decl_counts[name]` is exact. If a top-level free ident has
+`decl_counts[name] == 1`, it is declared **exactly once** in the entire program
+(the top-level declaration) — **no other binding of that name exists anywhere**,
+so it cannot be shadowed at *any* splice site. Such a name therefore behaves
+like a true global for splice-location purposes: the candidate carries no
+top-level-only obligation and inlines even at nested sites.
+
+A top-level name that is **also** declared elsewhere (`decl_counts > 1`) keeps
+the Slice A top-level-only obligation — a local of that name could shadow it at
+a nested site, so the splice is declined there:
+
+```js
+function dep() { keep(); return 1; } dep();
+function f()   { log(0); use(dep); }
+function g()   { let dep = 99; f(); }   // dep declared twice ⇒ f stays top-level-only
+g(); g();
+// f is NOT inlined into g by the inline pass in isolation (decl_counts[dep] == 2).
+```
+
+This is sound on the pass's own terms: the gate reads `decl_counts` of the
+program the pass actually receives, so a `== 1` count genuinely means the name
+is unshadowable in that program. (An earlier pass that renamed away a shadowing
+local merely makes the program the inliner sees have no shadow — still sound.)
+
+**Implementation.** One classification branch in `void_candidate_from_function`:
+a top-level free ident with `decl_counts == 1` is treated like a true global
+(no obligation); `> 1` keeps the Slice A `free_top_level` (top-level-only)
+behaviour. The splice-site guards are unchanged. 4 new/repurposed tests (76
+total): the two former Slice A nested/block *decline* tests used a
+singly-declared `const K`, so they are now positive Slice B1 cases
+(`inlines_unique_top_level_ref_at_nested_site`, `inlines_unique_top_level_ref_in_block`);
+new decline/admit tests cover the multiply-declared name at nested vs. top-level
+sites. Resolves CLOC16 **Slice B1**; **Slice B2** (an in-scope-binding scope
+walk to admit the multiply-declared, genuinely-unshadowed nested case) remains
+future work.
+
 ## [0.11.0] - 2026-06-19
 
 ### Added (CLOC16 Slice A — free idents resolving to top-level declarations)
