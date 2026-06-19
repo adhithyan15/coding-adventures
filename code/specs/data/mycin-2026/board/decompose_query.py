@@ -60,11 +60,12 @@ RECALL = HERE.parent / "recall"
 EDGE_FILES = ["iem-edges.adj", "vitamin-edges.adj", "anemia-edges.adj",
               "endocrine-edges.adj", "coag-edges.adj", "micro-edges.adj", "pharm-edges.adj",
               "immuno-edges.adj", "genetics-edges.adj", "rheum-edges.adj", "onco-edges.adj",
-              "histo-edges.adj", "cardio-edges.adj", "neuro-edges.adj", "gi-edges.adj"]
+              "histo-edges.adj", "cardio-edges.adj", "neuro-edges.adj", "gi-edges.adj",
+              "derm-edges.adj"]
 
 # Each recall relation binds one conventional variable (the "what is being asked").
-# This is the controlled query vocabulary the model must choose from — 31 relations
-# across fourteen domains. The engine ultimately validates the subject; this map
+# This is the controlled query vocabulary the model must choose from — 32 relations
+# across fifteen domains. The engine ultimately validates the subject; this map
 # pins the legal relation set and the variable name each relation answers.
 REL_VAR = {
     "deficient_in": "Enzyme",          # IEM: which enzyme is deficient
@@ -98,6 +99,7 @@ REL_VAR = {
     "murmur_indicates": "Lesion",      # cardiology: the valvular lesion a heart murmur points to
     "lesion_causes": "Deficit",        # neurology: the deficit/syndrome a lesion site produces
     "biopsy_finding_in": "Disease",    # gastroenterology: the GI diagnosis a biopsy finding points to
+    "skin_finding_in": "Disease",      # dermatology: the diagnosis a skin lesion morphology points to
 }
 
 _RELATE_RE = re.compile(r"^\s*relate\s+([a-z_][a-z0-9_]*)\s*\(([^)]*)\)\s*$")

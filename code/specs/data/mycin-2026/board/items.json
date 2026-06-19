@@ -144,6 +144,11 @@
     {"id": "gi_crohn_dx",    "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "transmural_inflammation",    "var": "Disease", "gold": "crohn_disease"},
     {"id": "gi_barrett_dx",  "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "goblet_cells",              "var": "Disease", "gold": "barrett_esophagus"},
     {"id": "gi_hirsch_dx",   "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "absence_of_ganglion_cells", "var": "Disease", "gold": "hirschsprung_disease"},
-    {"id": "gi_eoe_dx",      "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "eosinophils_15_per_hpf",     "var": "Disease", "gold": "eosinophilic_esophagitis"}
+    {"id": "gi_eoe_dx",      "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "eosinophils_15_per_hpf",     "var": "Disease", "gold": "eosinophilic_esophagitis"},
+
+    {"id": "derm_em_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "target_lesions",      "var": "Disease", "gold": "erythema_multiforme"},
+    {"id": "derm_psoriasis_dx","domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "silvery_scales",      "var": "Disease", "gold": "psoriasis"},
+    {"id": "derm_mc_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "umbilicated_papules", "var": "Disease", "gold": "molluscum_contagiosum"},
+    {"id": "derm_pr_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "herald_patch",        "var": "Disease", "gold": "pityriasis_rosea"}
   ]
 }
