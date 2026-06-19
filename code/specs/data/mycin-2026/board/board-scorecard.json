@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 66,
-    "correct": 59,
+    "total": 79,
+    "correct": 72,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 53,
+        "correct": 66,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9811,
-    "grounded_correct": 52
+    "grounded_coverage": 0.9848,
+    "grounded_correct": 65
   },
   "results": [
     {
@@ -554,6 +554,110 @@
       "answer": "INFEASIBLE",
       "outcome": "correct",
       "trust": null
+    },
+    {
+      "id": "micro_saureus_gram",
+      "tactic": "recall",
+      "gold": "gram_positive",
+      "answer": "gram_positive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_saureus_shape",
+      "tactic": "recall",
+      "gold": "cocci",
+      "answer": "cocci",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_nmen_gram",
+      "tactic": "recall",
+      "gold": "gram_negative",
+      "answer": "gram_negative",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_nmen_shape",
+      "tactic": "recall",
+      "gold": "diplococci",
+      "answer": "diplococci",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_vibrio_gram",
+      "tactic": "recall",
+      "gold": "gram_negative",
+      "answer": "gram_negative",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_vibrio_shape",
+      "tactic": "recall",
+      "gold": "comma_shaped",
+      "answer": "comma_shaped",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_vibrio_causes",
+      "tactic": "recall",
+      "gold": "cholera",
+      "answer": "cholera",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_ecoli_gram",
+      "tactic": "recall",
+      "gold": "gram_negative",
+      "answer": "gram_negative",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_ecoli_shape",
+      "tactic": "recall",
+      "gold": "bacilli",
+      "answer": "bacilli",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_pseud_gram",
+      "tactic": "recall",
+      "gold": "gram_negative",
+      "answer": "gram_negative",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_pseud_shape",
+      "tactic": "recall",
+      "gold": "bacilli",
+      "answer": "bacilli",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_spneumo_gram",
+      "tactic": "recall",
+      "gold": "gram_positive",
+      "answer": "gram_positive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "micro_spneumo_causes",
+      "tactic": "recall",
+      "gold": "community_acquired_pneumonia",
+      "answer": "community_acquired_pneumonia",
+      "outcome": "correct",
+      "trust": "authoritative"
     }
   ]
 }
