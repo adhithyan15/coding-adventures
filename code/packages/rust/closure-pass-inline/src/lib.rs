@@ -125,10 +125,10 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_javascript_ast::statement::{ReturnStatement, TaggedStatement};
 use coding_adventures_javascript_ast::{
-    AssignmentTarget, BindingTarget, BlockStatement, CallExpression, Declaration, Expression,
-    ExpressionStatement, ForInit, FunctionDeclaration, FunctionParam, Identifier, IfStatement,
-    NullLiteral, Program, ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
-    VariableDeclarator,
+    AssignmentExpression, AssignmentOperator, AssignmentTarget, BindingTarget, BlockStatement,
+    CallExpression, Declaration, Expression, ExpressionStatement, ForInit, FunctionDeclaration,
+    FunctionParam, Identifier, IfStatement, NullLiteral, Program, ProgramItem, PropertyKey,
+    Statement, VarKind, VariableDeclaration, VariableDeclarator,
 };
 
 /// `Pass::depends_on` value. Kept as a `const` so future tests and
@@ -2130,6 +2130,12 @@ fn try_capture_in_stmt(
         Statement::Tagged(TaggedStatement::ReturnStatement(rs)) => {
             capture_splice_for_return(rs, cand, avoid, nodes_touched)
         }
+        // `g = f(x);` — PR-6 value capture in assignment-target position
+        // (CLOC15 Open Question 2's last case). Reachable only now that
+        // assignment-expression statements parse (CLOC17).
+        Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+            capture_splice_for_assignment(es, cand, avoid, nodes_touched)
+        }
         _ => None,
     }
 }
@@ -2164,6 +2170,59 @@ fn capture_splice_for_return(
         cand,
         &ce.arguments,
         CaptureTail::AsReturn,
+        avoid,
+        nodes_touched,
+    ))
+}
+
+/// The assignment-target capture core (CLOC15 PR-6 / Open Question 2): an
+/// expression statement qualifies iff it is a **simple** assignment
+/// (`g = …`, operator `=`) to a **bare identifier** whose right-hand side is
+/// **exactly** `cand.name(args)` (the call is the entire RHS). The replacement
+/// is the hoisted body with the callee's tail `return E` re-emitted as
+/// `g = E;` — no temp, because the value flows straight into the assignment
+/// target.
+///
+/// Soundness — why only `=` to a bare identifier:
+/// - `g = f(x)` evaluates the LHS *reference* to `g` (trivial, no side effects
+///   for a bare identifier), then evaluates `f(x)` (the body), then assigns.
+///   Splicing `body…; g = E` runs the body's effects and assigns `E` to `g` in
+///   exactly that order — observationally identical. The assignment
+///   expression's *result value* is discarded (it is an expression statement),
+///   so nothing downstream depends on it.
+/// - **Compound** assignment (`g += f(x)`) is declined: `g += f(x)` reads the
+///   OLD `g` *before* `f(x)` runs, but `body…; g += E` would read `g` *after*
+///   the body — if the body mutates `g`, the two differ. Reordering would
+///   miscompile.
+/// - **Member** targets (`obj.k = f(x)`) are declined: the reference to
+///   `obj.k`'s base (`obj`) is evaluated *before* `f(x)`; hoisting the body
+///   ahead of it could reorder observable effects (a getter on `obj`, or the
+///   body mutating `obj`).
+fn capture_splice_for_assignment(
+    es: &ExpressionStatement,
+    cand: &VoidStmtCandidate,
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> Option<Vec<Statement>> {
+    let Expression::AssignmentExpression(ae) = &es.expression else {
+        return None;
+    };
+    if ae.operator != AssignmentOperator::Eq {
+        return None; // compound assignment reads the target before the call
+    }
+    let AssignmentTarget::Identifier(target) = &ae.left else {
+        return None; // member targets evaluate their base before the call
+    };
+    let Expression::CallExpression(ce) = ae.right.as_ref() else {
+        return None; // the call must be the ENTIRE right-hand side
+    };
+    if !is_void_target_call(ce, cand) {
+        return None;
+    }
+    Some(build_captured_body(
+        cand,
+        &ce.arguments,
+        CaptureTail::IntoAssignment(&target.name),
         avoid,
         nodes_touched,
     ))
@@ -2237,6 +2296,14 @@ enum CaptureTail<'a> {
     /// `return f(x)` preserves both the effects and the returned value
     /// (CLOC15 PR-5).
     AsReturn,
+    /// The call was the entire right-hand side of a simple assignment to a
+    /// bare identifier (`g = f(x)`). Emit `g = <value>;` directly — no temp is
+    /// needed because the value flows straight into the assignment target. The
+    /// caller (`capture_splice_for_assignment`) has already verified the
+    /// operator is `=` and the target is a bare identifier, the two conditions
+    /// that make hoisting the body ahead of the assignment observationally
+    /// inert (CLOC15 PR-6).
+    IntoAssignment(&'a str),
 }
 
 /// Build the hoisted body for a captured call: the callee body with its
@@ -2322,6 +2389,24 @@ fn build_captured_body(
                 ReturnStatement {
                     cv: None,
                     argument: Some(return_value),
+                },
+            )));
+        }
+        // `g = E;` — the value flows straight into the assignment target
+        // (no temp). A bare-identifier simple-assignment expression statement.
+        CaptureTail::IntoAssignment(target) => {
+            body.push(Statement::Tagged(TaggedStatement::ExpressionStatement(
+                ExpressionStatement {
+                    cv: None,
+                    expression: Expression::AssignmentExpression(AssignmentExpression {
+                        cv: None,
+                        operator: AssignmentOperator::Eq,
+                        left: AssignmentTarget::Identifier(Identifier {
+                            cv: None,
+                            name: target.to_string(),
+                        }),
+                        right: Box::new(return_value),
+                    }),
                 },
             )));
         }
@@ -3747,6 +3832,82 @@ mod tests {
         assert_eq!(
             inline_source("function f(a) { g(); return; } function main() { return f(1); }"),
             "function f(a){g();return};function main(){return f(1)};"
+        );
+    }
+
+    // ===== CLOC15 PR-6 — assignment-target value capture (`g = f(x)`) =====
+
+    #[test]
+    fn captures_helper_in_assignment_position() {
+        // The signature PR-6 case: `h = f(7)` where `f` is a single-use
+        // multi-statement helper. The body is hoisted before the assignment
+        // and the callee's tail `return a` (param substituted by `7`) becomes
+        // the caller's own `h = 7` — no temp, the value flows straight into the
+        // assignment target. Reachable only now that assignment-expression
+        // statements parse (CLOC17).
+        assert_eq!(
+            inline_source("function f(a) { g(); return a; } var h; h = f(7);"),
+            "function f(a){g();return a};var h;g();h=7;"
+        );
+    }
+
+    #[test]
+    fn captures_assignment_position_with_local_and_nonsimple_arg() {
+        // Assignment-position capture composes with local alpha-renaming AND
+        // the per-argument temp: the non-simple argument `compute()` is
+        // materialised once into a fresh temp before the body, the callee local
+        // `t` is renamed program-fresh, and the tail expression becomes the
+        // assignment's right-hand side.
+        assert_eq!(
+            inline_source("function f(p) { const t = p + 1; return t; } var h; h = f(compute());"),
+            "function f(p){const t=p + 1;return t};var h;const a=compute();const b=a + 1;h=b;"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_compound_assignment() {
+        // `h += f(7)` reads the OLD `h` *before* `f(7)` runs; hoisting the body
+        // ahead (`g(); h += 7`) would read `h` *after* the body's effects. If
+        // the body mutated `h` the two would differ, so compound assignment is
+        // declined (the call is left intact).
+        assert_eq!(
+            inline_source("function f(a) { g(); return a; } var h = 0; h += f(7);"),
+            "function f(a){g();return a};var h=0;h+=f(7);"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_member_assignment_target() {
+        // `o.k = f(7)` evaluates the reference to `o.k`'s base (`o`) *before*
+        // `f(7)`; hoisting the body ahead could reorder observable effects (an
+        // `o` getter, or the body mutating `o`). Member targets are declined.
+        assert_eq!(
+            inline_source("function f(a) { g(); return a; } var o = {}; o.k = f(7);"),
+            "function f(a){g();return a};var o={};o.k=f(7);"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_assignment_when_call_is_not_entire_rhs() {
+        // `h = f(7) + 1` — the call is the left operand of `+`, not the entire
+        // right-hand side (the RHS is a `BinaryExpression`, not a
+        // `CallExpression`). Hoisting the body would be wrong, so it is
+        // declined.
+        assert_eq!(
+            inline_source("function f(a) { g(); return a; } var h; h = f(7) + 1;"),
+            "function f(a){g();return a};var h;h=f(7) + 1;"
+        );
+    }
+
+    #[test]
+    fn does_not_capture_void_helper_in_assignment_position() {
+        // A helper with no tail-return *value* (bare `return;`) is a void
+        // candidate, not a valued one; `h = f(1)` would assign its `undefined`,
+        // which the valued path does not synthesize — so the call is left
+        // intact rather than mis-spliced.
+        assert_eq!(
+            inline_source("function f(a) { g(); return; } var h; h = f(1);"),
+            "function f(a){g();return};var h;h=f(1);"
         );
     }
 }

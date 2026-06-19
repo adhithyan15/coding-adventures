@@ -2,6 +2,49 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.13.0] - 2026-06-19
+
+### Added (CLOC15 PR-6 — assignment-target value capture, `g = f(x)`)
+
+Completes the value-capture family (after PR-3 const-init `const r = f(x)` and
+PR-5 return `return f(x)`) with the assignment-target case — CLOC15 Open
+Question 2's last form. A single-use multi-statement helper whose call is the
+entire right-hand side of a **simple assignment to a bare identifier**
+(`g = f(x)`) now has its body hoisted before the assignment, with the callee's
+tail `return E` re-emitted as `g = E` — no temp, the value flows straight into
+the target. Example (SIMPLE, post-fold):
+
+```js
+function f(x){ side(); return x * 2; } var g; g = f(7); use(g);
+// before:  function f(x){side();return x*2};var g;g=f(7);use(g);
+// after:   var g;side();g=14;use(g);
+```
+
+This was prototyped during PR-5 but could not fire — or even be unit-tested
+through the bridge-based `inline_source` harness — until assignment-expression
+statements parsed (the CLOC17 grammar fix, `javascript-parser` 0.9.0). It is
+now reachable.
+
+**Soundness (why the gate is narrow):**
+- Only the simple `=` operator is admitted. **Compound** assignment
+  (`g += f(x)`) reads the old `g` *before* the call runs; hoisting the body
+  ahead (`body…; g += E`) would read `g` *after* the body's effects — if the
+  body mutates `g` the two differ, so it is declined.
+- Only a **bare identifier** target is admitted. **Member** targets
+  (`obj.k = f(x)`) evaluate the reference to `obj` *before* the call; hoisting
+  the body ahead could reorder observable effects (an `obj` getter, or the body
+  mutating `obj`), so they are declined.
+- The call must be the **entire** right-hand side (a `CallExpression`); a
+  `g = f(x) + 1` RHS is a `BinaryExpression` and is declined.
+- A void helper (no tail-return *value*) is not a valued candidate, so
+  `g = f(1)` against such a helper is left intact.
+
+Implemented as a third `CaptureTail::IntoAssignment` variant sharing
+`build_captured_body` with the const-init and return paths, plus a
+`capture_splice_for_assignment` recognizer wired into `try_capture_in_stmt`.
+Six new unit tests (one positive, one composing local-rename + non-simple-arg
+materialisation, four decline cases). No closurec fixture churn.
+
 ## [0.12.0] - 2026-06-19
 
 ### Added (CLOC16 Slice B1 — nested splice sites via a global-uniqueness gate)
