@@ -4,6 +4,22 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 Semantic Versioning.
 
+## [0.3.0] — 2026-06-19
+
+### Added (W-11 — pure-function grammar)
+
+- A `slot` atom (`slot = HASH [ NUMBER ] | SLOTSEQ`) for `#`, `#n`, and `##`.
+- A low-binding postfix `amp` level for the `&` pure-function postfix:
+  `amp = comparison AMP { AMP } { amp_apply } | comparison`, placed just below
+  `logical_not` and ABOVE the whole comparison/arithmetic stack, so `&` binds
+  looser than every arithmetic/comparison operator but tighter than `,`. Thus
+  `#^2 &`, `# + 1 &`, and `Mod[#,2]==0 &` all wrap the *whole* body. The
+  `amp_apply` suffix lets a pure function be applied immediately (`(#^2)&[5]`)
+  and chains (`f&[1][2]`, `f&[[i]]`); it appears only after at least one `&`, so
+  the no-`&` path falls through to ordinary application (no ambiguity).
+
+The embedded `_grammar.rs` was regenerated via the Rust grammar-tools CLI.
+
 ## [0.2.0] — 2026-06-17
 
 ### Added (W-6 — operator sugar)
