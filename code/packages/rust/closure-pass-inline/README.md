@@ -189,6 +189,24 @@ when its parameter is used many times (never duplicated to
 old direct-substitution path is kept (no temps), so existing output is
 unchanged. Composes with PR-3 for value-position calls.
 
+### Conditional bodies — `if` without an early exit (CLOC15 PR-4b)
+
+A helper body may contain an `if`, as long as it is control-flow-inert: each
+branch is an expression statement or a block of expression statements — no
+`return`/`break`/`continue` (an early exit a flat splice would mis-scope) and
+no nested declaration (a block-scoped local the name-based renamer cannot
+shadow-correctly):
+
+```js
+function guard(x) { if (x > 0) accept(x); else reject(x); }
+guard(value);
+// SIMPLE  ⇒  value > 0 ? accept(value) : reject(value);
+//   (inlined, then fold-control-flow makes the ternary, treeshake drops the decl)
+```
+
+The `if`'s test is unrestricted (its identifiers are vetted normally).
+Nested `if` / loops are kept for a later slice.
+
 ## Where this pass sits
 
 CLOC06 §"Canonical pass set" pins:

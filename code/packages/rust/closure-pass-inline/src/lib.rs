@@ -126,8 +126,9 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     AssignmentTarget, BindingTarget, BlockStatement, CallExpression, Declaration, Expression,
-    ExpressionStatement, ForInit, FunctionDeclaration, FunctionParam, Identifier, NullLiteral,
-    Program, ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration, VariableDeclarator,
+    ExpressionStatement, ForInit, FunctionDeclaration, FunctionParam, Identifier, IfStatement,
+    NullLiteral, Program, ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
+    VariableDeclarator,
 };
 
 /// `Pass::depends_on` value. Kept as a `const` so future tests and
@@ -1361,9 +1362,17 @@ fn void_candidate_from_function(
             // A `return` is admitted ONLY in the final (tail) position;
             // anywhere earlier it would alter control flow on splice.
             Statement::Tagged(TaggedStatement::ReturnStatement(_)) if i == last_index => {}
-            // Anything else (early `return`, if, while, for, throw, break,
-            // continue, switch, labeled, empty, nested block, a nested
-            // function declaration) is outside this slice.
+            // CLOC15 PR-4b — an `if` with no early exit. Each branch must be
+            // an `ExpressionStatement` or a block of `ExpressionStatement`s
+            // (no `return`/`break`/`continue`, which would change control
+            // flow on splice; and no nested declarations, which would
+            // introduce block-scoped locals the name-based renamer cannot
+            // shadow-correctly). So an admitted `if` declares NO locals and
+            // contains NO early exit — splicing it is observationally inert.
+            Statement::Tagged(TaggedStatement::IfStatement(is)) if is_inlinable_if(is) => {}
+            // Anything else (early `return`, a richer `if`, while, for,
+            // throw, break, continue, switch, labeled, empty, a nested block,
+            // a nested function declaration) is outside this slice.
             _ => return None,
         }
     }
@@ -1407,6 +1416,36 @@ fn void_candidate_from_function(
         body: fd.body.body.clone(),
         locals,
     })
+}
+
+/// CLOC15 PR-4b: is `is` an `if` we can splice into a straight-line body?
+/// Admitted only when every branch is "control-flow-inert and
+/// declaration-free" — an `ExpressionStatement` or a block of
+/// `ExpressionStatement`s. That excludes (a) `return`/`break`/`continue`,
+/// which would alter control flow once spliced into the caller, and (b)
+/// nested `let`/`const`/`var` declarations, whose block-scoped locals the
+/// name-based alpha-renamer could not shadow-correctly. So an admitted `if`
+/// introduces no new local and no early exit; splicing it is inert. The
+/// test expression is unrestricted — its identifiers are vetted by the
+/// normal free-identifier walk.
+fn is_inlinable_if(is: &IfStatement) -> bool {
+    is_inlinable_if_branch(&is.consequent)
+        && is.alternate.as_deref().map_or(true, is_inlinable_if_branch)
+}
+
+/// One `if` branch: a bare `ExpressionStatement`, or a `BlockStatement`
+/// whose every statement is an `ExpressionStatement`.
+fn is_inlinable_if_branch(stmt: &Statement) -> bool {
+    match stmt {
+        Statement::Tagged(TaggedStatement::ExpressionStatement(_)) => true,
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) => b.body.iter().all(|s| {
+            matches!(
+                s,
+                Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+            )
+        }),
+        _ => false,
+    }
 }
 
 /// Count, for `name`, every binding-use and how many of those are
@@ -2198,8 +2237,10 @@ fn splice_valued_in_decl(
 
 /// Rename binding identifiers in a body statement per `map` — both the
 /// declared name of a `let`/`const` and every use of it in expressions.
-/// Only the two statement shapes the candidate admits are handled; any
-/// other shape is left untouched (it cannot occur in a valid body).
+/// Handles the statement shapes the candidate admits (`ExpressionStatement`,
+/// `let`/`const` `VariableDeclaration`, and — CLOC15 PR-4b — a control-flow-
+/// inert `IfStatement` / `BlockStatement` of those); any other shape is left
+/// untouched (it cannot occur in a valid body).
 fn rename_in_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
     match stmt {
         Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
@@ -2214,6 +2255,22 @@ fn rename_in_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
                 if let Some(init) = &mut d.init {
                     rename_in_expr(init, map);
                 }
+            }
+        }
+        // PR-4b: an admitted `if` (test + control-flow-inert branches) and
+        // the blocks its branches may be. The branch restriction guarantees
+        // these contain only `ExpressionStatement`s — no nested declaration
+        // re-binds a renamed name, so the name-based rename stays correct.
+        Statement::Tagged(TaggedStatement::IfStatement(is)) => {
+            rename_in_expr(&mut is.test, map);
+            rename_in_stmt(&mut is.consequent, map);
+            if let Some(alt) = &mut is.alternate {
+                rename_in_stmt(alt, map);
+            }
+        }
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) => {
+            for s in &mut b.body {
+                rename_in_stmt(s, map);
             }
         }
         _ => {}
@@ -2297,7 +2354,7 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
 }
 
 /// Apply parameter→argument [`substitute`] across a body statement (the
-/// two admitted shapes).
+/// admitted shapes, including the PR-4b `if` / block).
 fn substitute_in_stmt(stmt: &mut Statement, map: &HashMap<String, Expression>) {
     match stmt {
         Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
@@ -2308,6 +2365,19 @@ fn substitute_in_stmt(stmt: &mut Statement, map: &HashMap<String, Expression>) {
                 if let Some(init) = &mut d.init {
                     substitute(init, map);
                 }
+            }
+        }
+        // PR-4b: an admitted `if` and the blocks its branches may be.
+        Statement::Tagged(TaggedStatement::IfStatement(is)) => {
+            substitute(&mut is.test, map);
+            substitute_in_stmt(&mut is.consequent, map);
+            if let Some(alt) = &mut is.alternate {
+                substitute_in_stmt(alt, map);
+            }
+        }
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) => {
+            for s in &mut b.body {
+                substitute_in_stmt(s, map);
             }
         }
         _ => {}
@@ -3077,6 +3147,90 @@ mod tests {
         assert_eq!(
             inline_source("function f(p) { sink(p); use(p); } f(v);"),
             "function f(p){sink(p);use(p)};sink(v);use(v);"
+        );
+    }
+
+    // ----- CLOC15 PR-4b: `if` without an early exit in the body -----
+
+    #[test]
+    fn inlines_if_with_unbraced_branches() {
+        // An `if` whose branches are bare expression statements is spliced
+        // verbatim with the parameter substituted in.
+        assert_eq!(
+            inline_source("function f(x) { if (x > 0) log(x); else warn(x); } f(v);"),
+            "function f(x){if(x > 0)log(x);else warn(x);};if(v > 0)log(v);else warn(v);"
+        );
+    }
+
+    #[test]
+    fn inlines_if_with_block_branch() {
+        // A block branch of expression statements is spliced as a block.
+        assert_eq!(
+            inline_source("function f(x) { if (x) { a(x); b(x); } } f(v);"),
+            "function f(x){if(x){a(x);b(x)}};if(v){a(v);b(v)}"
+        );
+    }
+
+    #[test]
+    fn inlines_if_whose_test_reads_a_renamed_local() {
+        // A local declared before the `if` is alpha-renamed; the `if` test
+        // and branch that read it are renamed consistently.
+        assert_eq!(
+            inline_source("function f(x) { const t = x > 0; if (t) sink(x); } f(v);"),
+            "function f(x){const t=x > 0;if(t)sink(x);};const a=v > 0;if(a)sink(v);"
+        );
+    }
+
+    #[test]
+    fn inlines_if_with_non_simple_argument() {
+        // PR-4b composes with PR-4a: a non-simple argument is hoisted into a
+        // temp once, and the `if` reads the temp.
+        assert_eq!(
+            inline_source("function f(p) { if (p) sink(p); } f(g());"),
+            "function f(p){if(p)sink(p);};const a=g();if(a)sink(a);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_if_with_early_return() {
+        // A `return` inside an `if` branch is a control-flow exit that a flat
+        // splice would mis-scope — the whole helper is declined.
+        assert_eq!(
+            inline_source("function f(x) { if (x) return; sink(x); } f(v);"),
+            "function f(x){if(x)return;sink(x)};f(v);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_if_with_nested_declaration() {
+        // A `let` inside an `if` block introduces a block-scoped local the
+        // name-based renamer cannot shadow-correctly — declined.
+        assert_eq!(
+            inline_source("function f(x) { if (x) { let t = 1; sink(t); } } f(v);"),
+            "function f(x){if(x){let t=1;sink(t)}};f(v);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_nested_if() {
+        // A nested `if` is not a bare expression statement, so the outer
+        // branch fails the restriction — declined (kept for a later slice).
+        assert_eq!(
+            inline_source("function f(x) { if (x) { if (y) a(); } } f(v);"),
+            "function f(x){if(x){if(y)a();}};f(v);"
+        );
+    }
+
+    #[test]
+    fn if_body_spliced_into_unbraced_slot_is_block_wrapped() {
+        // Soundness guard against dangling-else capture: a helper whose body
+        // ends in an else-less `if`, called from a braceless `if`-consequent
+        // that has a caller `else`. The single-statement-slot splice wraps
+        // the body in a block, so the caller's `else` stays bound to the
+        // OUTER `if` (it must NOT capture the inner else-less `if`).
+        assert_eq!(
+            inline_source("function g(x) { if (x) a(x); } if (c) g(v); else other();"),
+            "function g(x){if(x)a(x);};if(c){if(v)a(v);}else other();"
         );
     }
 
