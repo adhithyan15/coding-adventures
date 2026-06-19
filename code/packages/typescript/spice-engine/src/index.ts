@@ -663,6 +663,13 @@ export interface DeckRunArtifact {
   readonly directive: DeckAnalysisPlan["directive"];
   readonly lineNumber: number;
   readonly sourceName?: string;
+  readonly sweepKind?: DeckAnalysisPlan["sweepKind"];
+  readonly startValue?: number;
+  readonly stopValue?: number;
+  readonly stepValue?: number;
+  readonly pointCount?: number;
+  readonly startFrequencyHz?: number;
+  readonly stopFrequencyHz?: number;
   readonly resultRows: number;
   readonly outputProbeCount: number;
   readonly outputProbes: readonly string[];
@@ -7877,6 +7884,13 @@ function deckRunArtifacts(
       directive: plan.directive,
       lineNumber: plan.lineNumber,
       sourceName: plan.sourceName,
+      sweepKind: plan.sweepKind,
+      startValue: plan.startValue,
+      stopValue: plan.stopValue,
+      stepValue: plan.stepValue,
+      pointCount: plan.pointCount,
+      startFrequencyHz: plan.startFrequencyHz,
+      stopFrequencyHz: plan.stopFrequencyHz,
       resultRows: deckResultRowCount(result),
       outputProbeCount: outputProbes.length,
       outputProbes: [...outputProbes],
@@ -7890,9 +7904,13 @@ function deckRunArtifacts(
   ];
 }
 
+function formatDeckArtifactFloat(value: number | undefined): string {
+  return value === undefined ? "" : formatTableNumber(value);
+}
+
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [
-    "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
+    "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
   ];
   for (const artifact of artifacts) {
     rows.push(
@@ -7901,6 +7919,13 @@ export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]
         artifact.directive,
         String(artifact.lineNumber),
         artifact.sourceName ?? "",
+        artifact.sweepKind ?? "",
+        formatDeckArtifactFloat(artifact.startValue),
+        formatDeckArtifactFloat(artifact.stopValue),
+        formatDeckArtifactFloat(artifact.stepValue),
+        artifact.pointCount === undefined ? "" : String(artifact.pointCount),
+        formatDeckArtifactFloat(artifact.startFrequencyHz),
+        formatDeckArtifactFloat(artifact.stopFrequencyHz),
         String(artifact.resultRows),
         String(artifact.outputProbeCount),
         artifact.outputProbes.join(";"),

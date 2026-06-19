@@ -2320,6 +2320,13 @@ class DeckRunArtifact:
     directive: str
     line_number: int
     source_name: str | None
+    sweep_kind: str | None
+    start_value: float | None
+    stop_value: float | None
+    step_value: float | None
+    point_count: int | None
+    start_frequency_hz: float | None
+    stop_frequency_hz: float | None
     result_rows: int
     output_probe_count: int
     output_probes: list[str]
@@ -2386,6 +2393,10 @@ def _deck_result_row_count(
     return len(result.points)
 
 
+def _format_deck_artifact_float(value: float | None) -> str:
+    return "" if value is None else f"{value:.6e}"
+
+
 def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
     result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
@@ -2400,6 +2411,13 @@ def _deck_run_artifacts(
             directive=plan.directive,
             line_number=plan.line_number,
             source_name=plan.source_name,
+            sweep_kind=plan.sweep_kind,
+            start_value=plan.start_value,
+            stop_value=plan.stop_value,
+            step_value=plan.step_value,
+            point_count=plan.point_count,
+            start_frequency_hz=plan.start_frequency,
+            stop_frequency_hz=plan.stop_frequency,
             result_rows=_deck_result_row_count(result),
             output_probe_count=len(output_probes),
             output_probes=list(output_probes),
@@ -2419,7 +2437,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
     rows = [
-        "Analysis\tDirective\tLine\tSourceName\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
     ]
     for artifact in artifacts:
         rows.append(
@@ -2429,6 +2447,13 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
                     artifact.directive,
                     str(artifact.line_number),
                     artifact.source_name or "",
+                    artifact.sweep_kind or "",
+                    _format_deck_artifact_float(artifact.start_value),
+                    _format_deck_artifact_float(artifact.stop_value),
+                    _format_deck_artifact_float(artifact.step_value),
+                    "" if artifact.point_count is None else str(artifact.point_count),
+                    _format_deck_artifact_float(artifact.start_frequency_hz),
+                    _format_deck_artifact_float(artifact.stop_frequency_hz),
                     str(artifact.result_rows),
                     str(artifact.output_probe_count),
                     ";".join(artifact.output_probes),
