@@ -1,0 +1,17 @@
+% ============================================================================
+% wom_reverse.query.adj — WRITE-ONCE / USE-MANY, consumer #2: reverse lookup.
+% ============================================================================
+% The SAME genetics-edges.adj written once, now queried BACKWARDS: you are given
+% the object (a gene / repeat) and bind the subject (the disease). The native SLD
+% resolver binds whichever argument is the variable — no second copy of the facts,
+% no "reverse index" to maintain. The provenance returned is byte-identical to the
+% forward query's, because it is the same written fact.
+%
+% Run (from the recall/ directory):
+%     ../../../../packages/rust/target/debug/adj-lang-cli wom_reverse.query.adj
+% ============================================================================
+
+import "genetics-edges.adj"
+
+? gene_defect($Disease, htt)               % expect huntington_disease (the forward query's subject)
+? trinucleotide_repeat($Disease, cgg)      % expect fragile_x_syndrome

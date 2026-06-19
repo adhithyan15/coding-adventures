@@ -1,0 +1,16 @@
+% ============================================================================
+% wom_forward.query.adj — WRITE-ONCE / USE-MANY, consumer #1: forward recall.
+% ============================================================================
+% The canonical board direction: you are GIVEN the subject (a disease) and bind
+% the object (its gene / repeat). This file writes NO fact — it only `import`s the
+% one grounded library and asks. The same genetics-edges.adj is reused, unchanged,
+% by every other wom_*.query.adj and by board_eval / decompose_query.
+%
+% Run (from the recall/ directory):
+%     ../../../../packages/rust/target/debug/adj-lang-cli wom_forward.query.adj
+% ============================================================================
+
+import "genetics-edges.adj"
+
+? gene_defect(huntington_disease, $Gene)              % expect htt
+? trinucleotide_repeat(fragile_x_syndrome, $Repeat)   % expect cgg

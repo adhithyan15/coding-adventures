@@ -1,0 +1,15 @@
+% ============================================================================
+% wom_enumerate.query.adj — WRITE-ONCE / USE-MANY, consumer #3: enumeration.
+% ============================================================================
+% The SAME genetics-edges.adj, now used as an aggregate index: bind EVERY subject
+% that shares one object. "Which disorders are autosomal dominant?" returns the
+% full set — each answer carrying its OWN citation from the one library. The facts
+% were written once as independent edges; the engine assembles the set on demand.
+%
+% Run (from the recall/ directory):
+%     ../../../../packages/rust/target/debug/adj-lang-cli wom_enumerate.query.adj
+% ============================================================================
+
+import "genetics-edges.adj"
+
+? inheritance($Disease, autosomal_dominant)   % expect {huntington_disease, marfan_syndrome}
