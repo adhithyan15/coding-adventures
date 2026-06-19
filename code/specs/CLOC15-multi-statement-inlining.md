@@ -156,6 +156,22 @@ miscompile, miscompiling is).
    identifier argument must not be captured by a callee-local of the same name —
    prevented by condition 5 (locals are fresh) plus 7 (args are simple).
 
+9. **Parameters are not reassigned.** Substitution (condition 1) replaces every
+   parameter occurrence with its *argument expression*, which is only sound if
+   the parameter behaves as an immutable value. If the body reassigns a
+   parameter (`x = …`, `x += …`, or a nested `y = (x = 5)` / `f(x = 5)`), the
+   model breaks: a non-lvalue argument would become an assignment target
+   (`7 = …`), and a captured tail value would read the pre-assignment argument
+   rather than the post-assignment parameter — so `function f(x){ x = x+1;
+   return x }` inlined at `var g = f(7)` would yield `g = 7` instead of `8`, a
+   miscompile. Reject any candidate whose body assigns to a parameter
+   (`body_assigns_to_param`, recursing every expression position). A
+   member-target whose base is a parameter (`x.k = 5`) mutates a *property* of
+   the argument, not the parameter binding, and stays admitted. (Only reachable
+   once assignment statements parse — CLOC17; before that such a helper made
+   the whole program fall back to whitespace-only.) Materialising a mutated
+   parameter into a fresh local seeded from the argument is a future slice.
+
 If any condition is unprovable from the local AST, **reject**.
 
 ## Staged implementation plan
@@ -352,11 +368,11 @@ Empirical behaviour of the merged slices, confirmed by running the real
    call when its enclosing statement is a plain `ExpressionStatement`,
    `VariableDeclaration` init, or `return` argument, and the call is not under a
    short-circuit/conditional operator."
-   **Resolved:** PR-3 implemented the `VariableDeclaration`-init position and
-   PR-5 the `return`-argument position (see the staged plan above); both reject
-   the short-circuit/conditional sub-positions. Assignment-target capture
-   remains unbuilt (and is moot until the typed bridge supports assignment
-   expressions — see *Implementation findings*).
+   **Resolved:** PR-3 implemented the `VariableDeclaration`-init position, PR-5
+   the `return`-argument position, and PR-6 the assignment-target position
+   (`g = f(x)`, bare-identifier simple assignment only); all reject the
+   short-circuit/conditional sub-positions. PR-6 became buildable once the
+   typed bridge parsed assignment-expression statements (CLOC17).
 
 3. **`var` hoisting vs. let/const.** First slice should restrict callee locals
    to `let`/`const` to sidestep hoisting reasoning, then admit `var` once the

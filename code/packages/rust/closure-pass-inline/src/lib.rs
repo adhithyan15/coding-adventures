@@ -1351,6 +1351,113 @@ fn collect_top_level_decl_names(program: &Program) -> HashSet<String> {
     out
 }
 
+/// Does any statement in `body` reassign one of `params`? Used to decline a
+/// candidate whose parameter is mutated — see the soundness note at the call
+/// site (parameter substitution assumes parameters are immutable). Walks every
+/// expression position, so a nested assignment (`y = (x = 5)`, `f(x = 5)`,
+/// `c ? (x = 5) : 0`) is caught too. Only `AssignmentTarget::Identifier`
+/// matters: a member-target whose *base* is a parameter (`x.k = 5`) mutates a
+/// property of the argument, not the parameter binding, and is sound under
+/// substitution.
+fn body_assigns_to_param(body: &[Statement], params: &HashSet<String>) -> bool {
+    body.iter().any(|s| stmt_assigns_to_param(s, params))
+}
+
+fn stmt_assigns_to_param(stmt: &Statement, params: &HashSet<String>) -> bool {
+    match stmt {
+        Statement::Declaration(Declaration::VariableDeclaration(vd)) => vd
+            .declarations
+            .iter()
+            .filter_map(|d| d.init.as_ref())
+            .any(|e| expr_assigns_to_param(e, params)),
+        Statement::Declaration(_) => false,
+        Statement::Tagged(t) => match t {
+            TaggedStatement::ExpressionStatement(es) => {
+                expr_assigns_to_param(&es.expression, params)
+            }
+            TaggedStatement::ReturnStatement(rs) => rs
+                .argument
+                .as_ref()
+                .is_some_and(|a| expr_assigns_to_param(a, params)),
+            TaggedStatement::IfStatement(is) => {
+                expr_assigns_to_param(&is.test, params)
+                    || stmt_assigns_to_param(&is.consequent, params)
+                    || is
+                        .alternate
+                        .as_ref()
+                        .is_some_and(|a| stmt_assigns_to_param(a, params))
+            }
+            TaggedStatement::BlockStatement(b) => body_assigns_to_param(&b.body, params),
+            TaggedStatement::ThrowStatement(ts) => expr_assigns_to_param(&ts.argument, params),
+            // The remaining forms never appear in an admitted candidate body
+            // (the shape filter rejects loops/switch/labeled/break/continue
+            // before this check). Treat them as non-mutating; if the shape
+            // filter ever widens, this must widen with it.
+            _ => false,
+        },
+    }
+}
+
+fn expr_assigns_to_param(expr: &Expression, params: &HashSet<String>) -> bool {
+    match expr {
+        Expression::AssignmentExpression(ae) => {
+            let target_is_param = matches!(
+                &ae.left,
+                AssignmentTarget::Identifier(id) if params.contains(&id.name)
+            );
+            target_is_param
+                || matches!(&ae.left,
+                    AssignmentTarget::MemberExpression(m) if expr_assigns_to_param(&m.object, params)
+                        || (m.computed && expr_assigns_to_param(&m.property, params)))
+                || expr_assigns_to_param(&ae.right, params)
+        }
+        Expression::BinaryExpression(be) => {
+            expr_assigns_to_param(&be.left, params) || expr_assigns_to_param(&be.right, params)
+        }
+        Expression::LogicalExpression(le) => {
+            expr_assigns_to_param(&le.left, params) || expr_assigns_to_param(&le.right, params)
+        }
+        Expression::UnaryExpression(ue) => expr_assigns_to_param(&ue.argument, params),
+        Expression::ConditionalExpression(ce) => {
+            expr_assigns_to_param(&ce.test, params)
+                || expr_assigns_to_param(&ce.consequent, params)
+                || expr_assigns_to_param(&ce.alternate, params)
+        }
+        Expression::CallExpression(ce) => {
+            expr_assigns_to_param(&ce.callee, params)
+                || ce.arguments.iter().any(|a| expr_assigns_to_param(a, params))
+        }
+        Expression::MemberExpression(m) => {
+            expr_assigns_to_param(&m.object, params)
+                || (m.computed && expr_assigns_to_param(&m.property, params))
+        }
+        // Array/object literals: recurse every contained expression. The typed
+        // AST has no spread element (`[...e]` / `{...e}` are Phase 2) and no
+        // function-expression variant, so a parameter assignment cannot hide in
+        // a spread argument or a getter/method body — `prop.value` is always a
+        // plain sub-expression, and an unrepresentable form makes the whole
+        // program bridge as unsupported (never reaching the inliner). If either
+        // becomes representable, add a recursion arm here.
+        Expression::ArrayExpression(ae) => ae
+            .elements
+            .iter()
+            .flatten()
+            .any(|el| expr_assigns_to_param(el, params)),
+        Expression::ObjectExpression(oe) => oe.properties.iter().any(|prop| {
+            (prop.computed
+                && matches!(&prop.key, PropertyKey::Expression(e) if expr_assigns_to_param(e, params)))
+                || expr_assigns_to_param(&prop.value, params)
+        }),
+        Expression::Identifier(_)
+        | Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::UndefinedLiteral(_) => false,
+    }
+}
+
 /// Decide whether a top-level function declaration is a void
 /// statement-helper candidate. Returns its name, params, body statements,
 /// declared local names, and the free identifiers that resolve to top-level
@@ -1443,6 +1550,25 @@ fn void_candidate_from_function(
     // decline outright when params and locals collide. (Declining is never
     // a miscompile.)
     if params.iter().any(|p| local_set.contains(p)) {
+        return None;
+    }
+
+    // (4b) A reassigned PARAMETER is unsound to inline. Inlining substitutes
+    // each parameter occurrence with its ARGUMENT EXPRESSION, treating the
+    // parameter as an immutable value. If the body reassigns the parameter
+    // (`x = …`, `x += …`), that model breaks two ways: (1) when the argument
+    // is a non-lvalue (`f(7)` → the assignment target becomes the literal
+    // `7`), and (2) the captured tail value is read from the substituted
+    // argument, not the post-assignment parameter — so `function f(x){ x = x+1;
+    // return x; }` inlined at `g = f(7)` yields `g = 7` instead of `8`, a
+    // miscompile. (This only became reachable once assignment-expression
+    // statements parsed, CLOC17 — before that such a helper made the whole
+    // program fall back to whitespace-only.) Correctly inlining a mutated
+    // parameter would require materialising it into a fresh local seeded from
+    // the argument; until that slice lands, decline. (Declining is never a
+    // miscompile. Parameter reassignment via `++`/`--` is not reachable: the
+    // typed AST has no `UpdateExpression` yet.)
+    if body_assigns_to_param(&fd.body.body, &param_set) {
         return None;
     }
 
@@ -3908,6 +4034,59 @@ mod tests {
         assert_eq!(
             inline_source("function f(a) { g(); return; } var h; h = f(1);"),
             "function f(a){g();return};var h;h=f(1);"
+        );
+    }
+
+    // ===== Parameter-reassignment soundness guard =====
+    // Inlining substitutes each parameter with its ARGUMENT EXPRESSION, so a
+    // helper that REASSIGNS a parameter cannot be inlined: substituting a
+    // non-lvalue argument would target a literal, and the captured value would
+    // read the pre-assignment argument. (Reachable only since CLOC17 made
+    // assignment statements parse.) These pin that such helpers are declined.
+
+    #[test]
+    fn does_not_inline_helper_that_reassigns_param() {
+        // `function f(x){ x = x + 1; return x; }` returns 8 for `f(7)`.
+        // Substituting `x -> 7` would yield `7 = 7 + 1` / a `g = 7` capture —
+        // a miscompile — so the helper is left intact.
+        assert_eq!(
+            inline_source("function f(x) { x = x + 1; return x; } var g = f(7);"),
+            "function f(x){x=x + 1;return x};var g=f(7);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_helper_with_compound_param_assignment() {
+        // Compound assignment (`x += 1`) is a parameter mutation too.
+        assert_eq!(
+            inline_source("function f(x) { x += 1; return x; } var g = f(7);"),
+            "function f(x){x+=1;return x};var g=f(7);"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_helper_with_nested_param_assignment() {
+        // The mutation need not be a top-level statement: `y = (x = 5)` mutates
+        // `x` inside a larger expression. The walker recurses every expression
+        // position, so this is caught and the helper declined.
+        assert_eq!(
+            inline_source("function f(x) { var y; y = (x = 5); return y; } var g = f(7);"),
+            "function f(x){var y;y=x=5;return y};var g=f(7);"
+        );
+    }
+
+    #[test]
+    fn still_inlines_helper_that_assigns_a_free_variable() {
+        // Assigning a FREE (non-parameter) variable is sound — it is not
+        // substituted, so the spliced body writes the same binding the helper
+        // did. Only parameter mutation is unsound, so this helper still inlines:
+        // `glob = 7` is spliced and the tail value captured into a temp that
+        // the declaration reads (`const a = 7; var g = a`). (The inline pass
+        // runs alone here; constant-fold/propagate would later collapse the
+        // temp to `var g = 7` in the full SIMPLE pipeline.)
+        assert_eq!(
+            inline_source("function f(x) { glob = x; return x; } var g = f(7);"),
+            "function f(x){glob=x;return x};glob=7;const a=7;var g=a;"
         );
     }
 }
