@@ -159,6 +159,14 @@
             return ok === 1;
           },
 
+          // Undo / redo: snapshot-based history. Each undo/redo returns true if it
+          // changed the document; canUndo/canRedo gate the buttons. Re-read via
+          // getWindow / getDisplayWindow / getRaw after a true undo/redo.
+          undo: () => ex.undo() === 1,
+          redo: () => ex.redo() === 1,
+          canUndo: () => ex.can_undo() === 1,
+          canRedo: () => ex.can_redo() === 1,
+
           // Viewport primitive — render only the visible window of an unbounded
           // sheet. 1-based inclusive coords.
           getWindow: (row0, col0, row1, col1) =>
