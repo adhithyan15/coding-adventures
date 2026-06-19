@@ -81,6 +81,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder` and
   summary helpers for projecting execution tickets into deterministic release
   work orders.
+- `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrderGuardrail`
+  and summary helpers for classifying low-level release work orders into
+  release blockers, operator handoffs, and ready-to-execute work.
 - `IntegrationMeshStageReleaseSummary` and helpers for combining substrate
   stage blockers, primitive readiness blockers, and mesh-scoped remediation
   into a single release readiness rollup.
