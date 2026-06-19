@@ -1248,6 +1248,17 @@ struct VoidStmtCandidate {
     params: Vec<String>,
     body: Vec<Statement>,
     locals: Vec<String>,
+    /// Free identifiers in the body that resolve to a **top-level program
+    /// declaration** (a sibling `function`, a top-level `var`/`let`/`const`)
+    /// rather than a true global (CLOC16 Slice A). When non-empty, the
+    /// candidate may be spliced **only at a direct `program.body` site**,
+    /// where the program scope guarantees those names resolve to the same
+    /// top-level binding they did in the helper — no intervening scope can
+    /// shadow them. At any nested site a local of the same name could capture
+    /// the reference, so the splice is declined there. Empty ⇒ no such
+    /// obligation (every free ident is a true global or there are none), and
+    /// the candidate splices anywhere exactly as before.
+    free_top_level: HashSet<String>,
 }
 
 /// Find every qualifying void statement-helper and splice its single call.
@@ -1261,10 +1272,11 @@ fn inline_void_statement_helpers(
     // level only, mirroring the expression inliner: no enclosing scope to
     // capture, and the free-identifier guard is reasoned against the whole
     // program).
+    let top_level_decls = collect_top_level_decl_names(program);
     let mut candidates: Vec<VoidStmtCandidate> = Vec::new();
     for item in &program.body {
         if let ProgramItem::Declaration(Declaration::FunctionDeclaration(fd)) = item {
-            if let Some(c) = void_candidate_from_function(fd, decl_counts) {
+            if let Some(c) = void_candidate_from_function(fd, decl_counts, &top_level_decls) {
                 candidates.push(c);
             }
         }
@@ -1304,12 +1316,52 @@ fn inline_void_statement_helpers(
     changed
 }
 
+/// Collect the names declared at **program scope** — the direct members of
+/// `program.body` (CLOC16). These are the only declarations a free identifier
+/// can resolve to that are unshadowable at a *top-level* splice site, so a
+/// `free_top_level` candidate (Slice A) may reference them.
+///
+/// We count a top-level `function`, and a top-level `var`/`let`/`const` of any
+/// kind. A declaration nested inside a top-level *block* (`{ let x = … }`) is
+/// block-scoped, NOT program-scope, so it is intentionally excluded — walking
+/// only `program.body`'s direct items gives exactly the program scope. A
+/// top-level variable declaration may bridge as either a
+/// `ProgramItem::Declaration` or a `ProgramItem::Statement`, so both forms are
+/// gathered.
+fn collect_top_level_decl_names(program: &Program) -> HashSet<String> {
+    let mut out = HashSet::new();
+    let add_decl = |d: &Declaration, out: &mut HashSet<String>| match d {
+        Declaration::FunctionDeclaration(fd) => {
+            out.insert(fd.id.name.clone());
+        }
+        Declaration::VariableDeclaration(vd) => {
+            for decl in &vd.declarations {
+                let BindingTarget::Identifier(id) = &decl.id;
+                out.insert(id.name.clone());
+            }
+        }
+    };
+    for item in &program.body {
+        match item {
+            ProgramItem::Declaration(d) => add_decl(d, &mut out),
+            ProgramItem::Statement(Statement::Declaration(d)) => add_decl(d, &mut out),
+            ProgramItem::Statement(_) => {}
+        }
+    }
+    out
+}
+
 /// Decide whether a top-level function declaration is a void
 /// statement-helper candidate. Returns its name, params, body statements,
-/// and declared local names when every structural condition holds.
+/// declared local names, and the free identifiers that resolve to top-level
+/// declarations (Slice A) when every structural condition holds.
+///
+/// `top_level_decls` is the program-scope declaration set from
+/// [`collect_top_level_decl_names`].
 fn void_candidate_from_function(
     fd: &FunctionDeclaration,
     decl_counts: &HashMap<String, usize>,
+    top_level_decls: &HashSet<String>,
 ) -> Option<VoidStmtCandidate> {
     // (3a) Plain function only — generators / async carry resumable state.
     if fd.generator || fd.is_async {
@@ -1395,12 +1447,15 @@ fn void_candidate_from_function(
     }
 
     // (4) + (6) Walk every body expression's binding-use identifiers. Each
-    // must be a parameter, a callee-local, or a true global (never declared
-    // anywhere). `this` / `arguments` are rejected outright.
+    // must be a parameter, a callee-local, a true global (never declared
+    // anywhere), or — CLOC16 Slice A — a top-level program declaration (which
+    // imposes the top-level-only splice obligation, recorded in
+    // `free_top_level`). `this` / `arguments` are rejected outright.
     let mut used: HashSet<String> = HashSet::new();
     for stmt in &fd.body.body {
         collect_used_idents_stmt(stmt, &mut used);
     }
+    let mut free_top_level: HashSet<String> = HashSet::new();
     for name in &used {
         if name == "this" || name == "arguments" {
             return None; // (4) frame-bound meaning would change on splice
@@ -1408,9 +1463,25 @@ fn void_candidate_from_function(
         if param_set.contains(name) || local_set.contains(name) {
             continue; // a parameter or a callee-local — handled by splicing
         }
-        // (6) a free identifier: sound only if it is a true global, i.e.
-        // never declared as a binding anywhere (so unshadowable everywhere).
-        if decl_counts.get(name).copied().unwrap_or(0) != 0 {
+        // (6) a free identifier. Three sound cases; anything else is rejected.
+        if top_level_decls.contains(name) {
+            // CLOC16 Slice A: resolves to a top-level declaration. Sound to
+            // splice ONLY at a direct `program.body` site (where program scope
+            // guarantees the same resolution, unshadowed). The splice walker
+            // enforces that; here we just record the obligation. Note this
+            // holds regardless of `decl_counts[name]`: even if the name is
+            // ALSO bound in some nested scope elsewhere, a top-level splice
+            // site sees only program scope, so the reference still resolves to
+            // the top-level binding.
+            free_top_level.insert(name.clone());
+        } else if decl_counts.get(name).copied().unwrap_or(0) == 0 {
+            // A true global — declared nowhere, so unshadowable everywhere.
+            // No obligation (unchanged behaviour).
+        } else {
+            // Declared somewhere, but NOT at program scope — i.e. bound only
+            // inside some other function/block. We cannot prove what it
+            // resolves to at an arbitrary splice site, so decline (CLOC16
+            // proof obligation 4; declining is never a miscompile).
             return None;
         }
     }
@@ -1420,6 +1491,7 @@ fn void_candidate_from_function(
         params,
         body: fd.body.body.clone(),
         locals,
+        free_top_level,
     })
 }
 
@@ -1492,6 +1564,16 @@ fn splice_void_call_program(
     // The top level is a `Vec<ProgramItem>`. Splicing here means rewriting
     // a `ProgramItem::Statement(ExpressionStatement(call))` into the body
     // statements. We rebuild the vector so a 1 → N expansion is natural.
+    //
+    // CLOC16 Slice A: a candidate that references a top-level declaration
+    // (`!free_top_level.is_empty()`) is sound to splice ONLY at a direct
+    // `program.body` site — exactly the `try_splice_statement` branch below.
+    // Descending into a nested statement / declaration body would reach a
+    // site where a local could shadow the referenced top-level name, so for
+    // such candidates we skip the recursion (the call is left intact —
+    // declining is never a miscompile). A candidate with no top-level free
+    // idents (`free_top_level` empty) recurses everywhere, exactly as before.
+    let top_level_only = !cand.free_top_level.is_empty();
     let mut changed = false;
     let mut new_items: Vec<ProgramItem> = Vec::with_capacity(program.body.len());
     for item in std::mem::take(&mut program.body) {
@@ -1504,12 +1586,16 @@ fn splice_void_call_program(
                     changed = true;
                 } else {
                     let mut stmt = stmt;
-                    changed |= splice_void_in_stmt(&mut stmt, cand, avoid, nodes_touched);
+                    if !top_level_only {
+                        changed |= splice_void_in_stmt(&mut stmt, cand, avoid, nodes_touched);
+                    }
                     new_items.push(ProgramItem::Statement(stmt));
                 }
             }
             ProgramItem::Declaration(mut d) => {
-                changed |= splice_void_in_decl(&mut d, cand, avoid, nodes_touched);
+                if !top_level_only {
+                    changed |= splice_void_in_decl(&mut d, cand, avoid, nodes_touched);
+                }
                 new_items.push(ProgramItem::Declaration(d));
             }
         }
@@ -1913,10 +1999,11 @@ fn inline_valued_statement_helpers(
     // Candidates share PR-1/PR-2's body shape (straight-line + optional tail
     // return), but here the tail `return E` MUST be present with an argument
     // — that is the value we capture.
+    let top_level_decls = collect_top_level_decl_names(program);
     let mut candidates: Vec<VoidStmtCandidate> = Vec::new();
     for item in &program.body {
         if let ProgramItem::Declaration(Declaration::FunctionDeclaration(fd)) = item {
-            if let Some(c) = void_candidate_from_function(fd, decl_counts) {
+            if let Some(c) = void_candidate_from_function(fd, decl_counts, &top_level_decls) {
                 if candidate_has_tail_return_value(&c) {
                     candidates.push(c);
                 }
@@ -1963,6 +2050,15 @@ fn splice_valued_call_program(
     avoid: &mut HashSet<String>,
     nodes_touched: &mut u32,
 ) -> bool {
+    // CLOC16 Slice A (same rule as the void path): a `free_top_level`
+    // candidate may be captured ONLY at a direct `program.body` site — the
+    // `try_capture_in_stmt` / top-level `capture_splice_for_vardecl` branches
+    // below (a top-level `const r = f(x);`). A `return f(x)` is never valid at
+    // program scope, so for these candidates the return-capture path is simply
+    // unreachable here. Descending into nested statement / function bodies
+    // would reach a site where a local could shadow a referenced top-level
+    // name, so the recursion is skipped for them (the call is left intact).
+    let top_level_only = !cand.free_top_level.is_empty();
     let mut changed = false;
     let mut new_items: Vec<ProgramItem> = Vec::with_capacity(program.body.len());
     for item in std::mem::take(&mut program.body) {
@@ -1975,7 +2071,9 @@ fn splice_valued_call_program(
                     changed = true;
                 } else {
                     let mut stmt = stmt;
-                    changed |= splice_valued_in_stmt(&mut stmt, cand, avoid, nodes_touched);
+                    if !top_level_only {
+                        changed |= splice_valued_in_stmt(&mut stmt, cand, avoid, nodes_touched);
+                    }
                     new_items.push(ProgramItem::Statement(stmt));
                 }
             }
@@ -1992,7 +2090,9 @@ fn splice_valued_call_program(
                     }
                 }
                 let mut d = d;
-                changed |= splice_valued_in_decl(&mut d, cand, avoid, nodes_touched);
+                if !top_level_only {
+                    changed |= splice_valued_in_decl(&mut d, cand, avoid, nodes_touched);
+                }
                 new_items.push(ProgramItem::Declaration(d));
             }
         }
@@ -3173,14 +3273,83 @@ mod tests {
         );
     }
 
+    // ----- CLOC16 Slice A: free idents resolving to top-level decls -----
+
     #[test]
-    fn does_not_inline_void_helper_with_free_declared_name() {
-        // The body reads a top-level `const K` — a free identifier that
-        // IS declared somewhere, so the conservative global-only rule
-        // (PR-1) cannot prove it unshadowed at the splice site. Declined.
+    fn inlines_top_level_helper_referencing_top_level_const() {
+        // CLOC16 Slice A: the body reads a top-level `const K` — a free
+        // identifier that resolves to a PROGRAM-SCOPE declaration. The single
+        // call `f()` is a direct `program.body` statement, so at that scope
+        // `K` resolves to the same top-level binding it did in the helper
+        // (nothing can shadow it at program scope). The body is spliced and
+        // `K` is preserved. (Previously declined by the conservative
+        // global-only rule; this is the intended Slice A behaviour change. The
+        // now-dead `function f` declaration is removed downstream by
+        // remove-unused-vars / treeshake, not by this pass.)
         assert_eq!(
             inline_source("const K = 5; function f() { sink(K); } f();"),
-            "const K=5;function f(){sink(K)};f();"
+            "const K=5;function f(){sink(K)};sink(K);"
+        );
+    }
+
+    #[test]
+    fn inlines_top_level_helper_referencing_sibling_function() {
+        // The common case: a helper that calls another top-level function.
+        // `dep` is program-scope, the call site is top level → spliced. `dep`
+        // is kept multi-use AND multi-statement so it is NOT itself inlined —
+        // it survives as a genuine free top-level reference inside the spliced
+        // body.
+        assert_eq!(
+            inline_source(
+                "function dep(x) { trace(x); return x * 2; } dep(0); \
+                 function f(p) { log(p); use(dep(p)); } f(5);"
+            ),
+            "function dep(x){trace(x);return x * 2};dep(0);\
+             function f(p){log(p);use(dep(p))};log(5);use(dep(5));"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_free_top_level_when_call_is_nested() {
+        // The SAME helper, but its single call sits inside another function.
+        // That is a NESTED splice site where a local could shadow `K`, so
+        // Slice A declines it (the call is left intact). `main` is multi-use
+        // so it is not itself inlined, keeping the call nested.
+        assert_eq!(
+            inline_source(
+                "const K = 5; function f() { sink(K); } \
+                 function main() { f(); } main(); main();"
+            ),
+            "const K=5;function f(){sink(K)};function main(){f()};main();main();"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_free_top_level_when_call_in_top_level_block() {
+        // A call inside a top-level BLOCK is not a direct `program.body`
+        // member — a block-scoped `let K` there could shadow the top-level
+        // `K`, so Slice A declines it.
+        assert_eq!(
+            inline_source("const K = 5; function f() { sink(K); } { f(); }"),
+            "const K=5;function f(){sink(K)};{f()}"
+        );
+    }
+
+    #[test]
+    fn does_not_inline_free_name_declared_only_in_other_function() {
+        // The body's free `q` is declared ONLY inside an unrelated function
+        // (never at program scope). We cannot prove what it resolves to, so
+        // the candidate is rejected outright — not even a top-level call site
+        // makes it sound (CLOC16 proof obligation 4). `other` is multi-use AND
+        // multi-statement so it is not itself inlined (keeping the test focused
+        // on `f`).
+        assert_eq!(
+            inline_source(
+                "function other(q) { trace(q); return q; } other(1); other(2); \
+                 function f() { sink(q); } f();"
+            ),
+            "function other(q){trace(q);return q};other(1);other(2);\
+             function f(){sink(q)};f();"
         );
     }
 
