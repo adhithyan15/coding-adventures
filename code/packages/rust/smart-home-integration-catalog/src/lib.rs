@@ -1120,6 +1120,116 @@ impl IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow {
+    pub sequence: usize,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow {
+    pub fn from_slot(
+        sequence: usize,
+        slot: &IntegrationMeshProtocolSubstratePreflightRepairScheduleSlot,
+    ) -> Self {
+        Self {
+            sequence,
+            slot_sequence: slot.sequence,
+            batch_sequence: slot.batch_sequence,
+            stage: slot.stage,
+            action_kind: slot.action_kind,
+            action_count: slot.action_count,
+            protocol_count: slot.protocols.len(),
+            primitive_count: slot.primitives.len(),
+            protocols: slot.protocols.clone(),
+            primitives: slot.primitives.clone(),
+            release_blocking: slot.blocks_preflight(),
+            operator_required: slot.requires_operator(),
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary {
+    pub total_rows: usize,
+    pub scheduled_actions: usize,
+    pub blocking_rows: usize,
+    pub operator_required_rows: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_blocking_sequence: Option<usize>,
+    pub first_operator_required_sequence: Option<usize>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub repair_slot_audit_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary {
+    pub fn from_rows<'a>(
+        rows: impl IntoIterator<Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow>,
+    ) -> Self {
+        let rows = rows.into_iter().collect::<Vec<_>>();
+        let first_row = rows.iter().min_by_key(|row| row.sequence);
+        let first_blocking_sequence = rows
+            .iter()
+            .filter(|row| row.blocks_preflight())
+            .map(|row| row.sequence)
+            .min();
+        let first_operator_required_sequence = rows
+            .iter()
+            .filter(|row| row.requires_operator())
+            .map(|row| row.sequence)
+            .min();
+
+        Self {
+            total_rows: rows.len(),
+            scheduled_actions: rows.iter().map(|row| row.action_count).sum(),
+            blocking_rows: rows.iter().filter(|row| row.blocks_preflight()).count(),
+            operator_required_rows: rows.iter().filter(|row| row.requires_operator()).count(),
+            protocol_mentions: rows.iter().map(|row| row.protocol_count).sum(),
+            primitive_mentions: rows.iter().map(|row| row.primitive_count).sum(),
+            first_blocking_sequence,
+            first_operator_required_sequence,
+            first_stage: first_row.map(|row| row.stage),
+            first_action_kind: first_row.map(|row| row.action_kind),
+            repair_slot_audit_ready: rows.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_rows == 0
+    }
+
+    pub fn has_rows(&self) -> bool {
+        self.total_rows > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_rows > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_rows > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
     pub required_primitives: Vec<PrimitiveFamily>,
@@ -22385,6 +22495,25 @@ pub fn mesh_protocol_substrate_preflight_repair_schedule_summary(
     IntegrationMeshProtocolSubstratePreflightRepairScheduleSummary::from_slots(slots.iter())
 }
 
+pub fn mesh_protocol_substrate_preflight_repair_slot_audit_rows(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow> {
+    mesh_protocol_substrate_preflight_repair_schedule(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, slot)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotAuditRow::from_slot(index + 1, slot)
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_audit_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary {
+    let rows = mesh_protocol_substrate_preflight_repair_slot_audit_rows(available_primitives);
+    IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary::from_rows(rows.iter())
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -29555,6 +29684,91 @@ mod tests {
         assert!(summary.repair_schedule_ready);
         assert!(summary.is_empty());
         assert!(!summary.has_slots());
+        assert!(!summary.needs_operator());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_audit_rows_surface_schedule_risk() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let rows = mesh_protocol_substrate_preflight_repair_slot_audit_rows(&available_primitives);
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotAuditSummary::from_rows(rows.iter());
+
+        assert_eq!(rows.len(), 3);
+        assert_eq!(summary.total_rows, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_rows, 3);
+        assert_eq!(summary.operator_required_rows, 2);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(summary.first_blocking_sequence, Some(1));
+        assert_eq!(summary.first_operator_required_sequence, Some(1));
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.repair_slot_audit_ready);
+        assert!(summary.has_rows());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+
+        let first = &rows[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.slot_sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.protocol_count, 1);
+        assert_eq!(first.primitive_count, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+
+        let network_security = rows
+            .iter()
+            .find(|row| row.stage == IntegrationMeshProtocolSubstrateStage::NetworkSecurity)
+            .unwrap();
+        assert_eq!(network_security.sequence, 3);
+        assert_eq!(network_security.action_count, 3);
+        assert_eq!(network_security.protocol_count, 3);
+        assert_eq!(network_security.primitive_count, 1);
+        assert_eq!(
+            network_security.action_kind,
+            IntegrationMeshProtocolSubstratePreflightActionKind::InstallNetworkKey
+        );
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_audit_empty_when_ready() {
+        let rows =
+            mesh_protocol_substrate_preflight_repair_slot_audit_rows(all_primitive_families());
+        let summary =
+            mesh_protocol_substrate_preflight_repair_slot_audit_summary(all_primitive_families());
+
+        assert!(rows.is_empty());
+        assert_eq!(summary.total_rows, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_rows, 0);
+        assert_eq!(summary.operator_required_rows, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_blocking_sequence, None);
+        assert_eq!(summary.first_operator_required_sequence, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.repair_slot_audit_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_rows());
+        assert!(!summary.has_blockers());
         assert!(!summary.needs_operator());
     }
 
