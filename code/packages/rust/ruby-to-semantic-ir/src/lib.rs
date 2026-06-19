@@ -5230,6 +5230,139 @@ mod tests {
     // defensive; no source-level test can exercise it today.)
 
     // -----------------------------------------------------------------------
+    // Phase Q9f — explicit block-param ABI, part 2: call-site
+    // normalization.  Calls to a yielding method get the matching block
+    // argument threaded into the trailing slot so arity matches the def.
+    // -----------------------------------------------------------------------
+
+    /// Recursively locate the first `DirectCall` to `name` reachable from
+    /// a block's statements / value (one finder shared by the Q9f tests).
+    fn find_direct_call<'a>(b: &'a semantic_ir::Block, name: &str) -> Option<&'a Expr> {
+        fn in_expr<'a>(e: &'a Expr, name: &str) -> Option<&'a Expr> {
+            match e {
+                Expr::DirectCall { fn_name, args, .. } => {
+                    if fn_name == name {
+                        return Some(e);
+                    }
+                    args.iter().find_map(|a| in_expr(a, name))
+                }
+                Expr::BuiltinCall { args, .. } | Expr::Intrinsic { args, .. } => {
+                    args.iter().find_map(|a| in_expr(a, name))
+                }
+                Expr::IndirectCall { target, args, .. } => in_expr(target, name)
+                    .or_else(|| args.iter().find_map(|a| in_expr(a, name))),
+                Expr::If { cond, then_branch, else_branch, .. } => in_expr(cond, name)
+                    .or_else(|| in_block(then_branch, name))
+                    .or_else(|| in_block(else_branch, name)),
+                Expr::Block(b) => in_block(b, name),
+                Expr::SeqLit { items, .. } => items.iter().find_map(|i| in_expr(i, name)),
+                _ => None,
+            }
+        }
+        fn in_stmt<'a>(s: &'a Stmt, name: &str) -> Option<&'a Expr> {
+            match s {
+                Stmt::LetBinding { value, .. }
+                | Stmt::LetStarBinding { value, .. }
+                | Stmt::Assign { value, .. }
+                | Stmt::ExprStmt { expr: value, .. } => in_expr(value, name),
+                _ => None,
+            }
+        }
+        fn in_block<'a>(b: &'a semantic_ir::Block, name: &str) -> Option<&'a Expr> {
+            b.stmts
+                .iter()
+                .find_map(|s| in_stmt(s, name))
+                .or_else(|| in_expr(&b.value, name))
+        }
+        in_block(b, name)
+    }
+
+    #[test]
+    fn call_to_yielding_method_with_block_keeps_makeclosure() {
+        let m = lower("def t\n  yield 5\nend\nt { |x| puts x }\n");
+        let call = find_direct_call(main_body(&m), "t").expect("DirectCall to t");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1, "block arg occupies the single trailing slot");
+            assert!(
+                matches!(args.last(), Some(Expr::MakeClosure { .. })),
+                "explicit block stays a MakeClosure, got {:?}",
+                args.last()
+            );
+        }
+        // Arity matches the threaded def (1 param: __sir_block__).
+        let t = func(&m, "t");
+        assert_eq!(t.params.len(), 1);
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn call_to_yielding_method_without_block_appends_nil() {
+        // `t(1)` passes no block, so a trailing nil is appended to match
+        // the def's threaded arity (params: `a`, `__sir_block__`).
+        let m = lower("def t(a)\n  yield a\nend\nt(1)\n");
+        let call = find_direct_call(main_body(&m), "t").expect("DirectCall to t");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 2, "positional arg + appended nil block slot");
+            assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
+            assert!(
+                matches!(args.last(), Some(Expr::NilLit { .. })),
+                "no-block call binds nil, got {:?}",
+                args.last()
+            );
+        }
+        // Arity matches the threaded def (params: a, __sir_block__).
+        assert_eq!(func(&m, "t").params.len(), 2);
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn block_pass_to_yielding_method_unwraps_to_inner() {
+        // `foo(&p)` — the block_pass envelope is unwrapped to the proc
+        // value `p` itself in the trailing slot.
+        let m = lower("def foo\n  yield 5\nend\np = 1\nfoo(&p)\n");
+        let call = find_direct_call(main_body(&m), "foo").expect("DirectCall to foo");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1);
+            match args.last() {
+                Some(Expr::VarRef { name, .. }) => assert_eq!(name, "p"),
+                other => panic!("expected unwrapped VarRef(p), got {:?}", other),
+            }
+            // The block_pass envelope must NOT survive.
+            assert!(
+                !matches!(args.last(), Some(Expr::BuiltinCall { name, .. }) if name == "block_pass"),
+                "block_pass envelope must be unwrapped"
+            );
+        }
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn call_to_non_block_method_is_unchanged() {
+        // `g` does not yield, so its call site keeps its exact args — no
+        // spurious trailing nil.
+        let m = lower("def g(x)\n  x + 1\nend\ng(1)\n");
+        let call = find_direct_call(main_body(&m), "g").expect("DirectCall to g");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1, "non-yielding call keeps its arity");
+            assert!(matches!(args.last(), Some(Expr::IntLit { value: 1, .. })));
+        }
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn call_before_def_is_threaded() {
+        // The pass runs after the whole program is lowered, so a call
+        // appearing before the `def` is still threaded (order-independent).
+        let m = lower("t { |x| puts x }\ndef t\n  yield 5\nend\n");
+        let call = find_direct_call(main_body(&m), "t").expect("DirectCall to t");
+        if let Expr::DirectCall { args, .. } = call {
+            assert_eq!(args.len(), 1);
+            assert!(matches!(args.last(), Some(Expr::MakeClosure { .. })));
+        }
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    // -----------------------------------------------------------------------
     // Phase 22d — `super` keyword lowering
     //
     //   super        → ExprStmt(BuiltinCall("zsuper", []))   (forward ALL)

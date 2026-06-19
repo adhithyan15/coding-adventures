@@ -98,6 +98,21 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
     let mut functions = std::mem::take(&mut lw.user_functions);
     functions.push(main);
 
+    // Phase Q9f (FC) — explicit block-param ABI, part 2: call-site
+    // normalization.  Now that every `def` has been lowered,
+    // `lw.block_param_methods` holds the full set of methods that gained
+    // a trailing `__sir_block__` parameter (Q9e).  Walk *all* function
+    // bodies (user functions + `main`) and thread the matching block
+    // argument at every `DirectCall` to one of those methods, so call
+    // arity matches the threaded def regardless of call-before-def or
+    // mutual recursion.  Running here — after the whole program is
+    // lowered — is what makes the pass order-independent.
+    if !lw.block_param_methods.is_empty() {
+        for f in &mut functions {
+            Lowerer::normalize_block_call_args(&mut f.body, &lw.block_param_methods);
+        }
+    }
+
     // SIR's validator requires the manifest to *exactly* match
     // usage (declared-but-unused is a warning, used-but-undeclared
     // is an error).  We've been tallying features as we lowered;
@@ -3148,6 +3163,187 @@ impl Lowerer {
             | Expr::StrLit { .. }
             | Expr::FloatLit { .. }
             | Expr::VarRef { .. } => false,
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // Phase Q9f (FC) — explicit block-param ABI, part 2: call-site
+    // normalization
+    // -------------------------------------------------------------------
+
+    /// Thread the matching block argument at every `DirectCall` to a
+    /// method that gained a trailing `__sir_block__` parameter (recorded
+    /// in `blk` by Q9e's [`Lowerer::thread_block_param`]).
+    ///
+    /// For each such call, the trailing argument slot is normalized so
+    /// the call's arity matches the threaded def's (one extra trailing
+    /// block parameter):
+    ///
+    /// - trailing arg is a `MakeClosure` (`foo { … }` / `foo do … end`) —
+    ///   already the block; **left as-is**.
+    /// - trailing arg is `BuiltinCall("block_pass", [inner])` (`foo(&p)`)
+    ///   — **unwrapped** to `inner`, the proc/block value itself.
+    /// - otherwise (`foo`, `foo(1, 2)`) — **append `NilLit`**: no block
+    ///   was passed, so the parameter binds nil (and a later `yield`
+    ///   through a nil block is the documented v0 LocalJumpError analogue).
+    ///
+    /// The walk descends through every statement, expression, and nested
+    /// call (including `MakeClosure` capture values) so calls anywhere in
+    /// the program are threaded. It is idempotent in practice because it
+    /// runs exactly once, after the whole program is lowered.
+    fn normalize_block_call_args(block: &mut Block, blk: &HashSet<String>) {
+        for s in &mut block.stmts {
+            Self::normalize_calls_in_stmt(s, blk);
+        }
+        Self::normalize_calls_in_expr(&mut block.value, blk);
+    }
+
+    fn normalize_calls_in_stmts(stmts: &mut [Stmt], blk: &HashSet<String>) {
+        for s in stmts {
+            Self::normalize_calls_in_stmt(s, blk);
+        }
+    }
+
+    fn normalize_calls_in_stmt(stmt: &mut Stmt, blk: &HashSet<String>) {
+        match stmt {
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::Assign { value, .. }
+            | Stmt::ExprStmt { expr: value, .. } => Self::normalize_calls_in_expr(value, blk),
+            Stmt::While { cond, body, .. } => {
+                Self::normalize_calls_in_expr(cond, blk);
+                Self::normalize_block_call_args(body, blk);
+            }
+            Stmt::ForRange { start, stop, step, body, .. } => {
+                Self::normalize_calls_in_expr(start, blk);
+                Self::normalize_calls_in_expr(stop, blk);
+                Self::normalize_calls_in_expr(step, blk);
+                Self::normalize_block_call_args(body, blk);
+            }
+            Stmt::ForEach { iter, body, .. } => {
+                Self::normalize_calls_in_expr(iter, blk);
+                Self::normalize_block_call_args(body, blk);
+            }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                Self::normalize_calls_in_expr(seq, blk);
+                Self::normalize_calls_in_expr(index, blk);
+                Self::normalize_calls_in_expr(value, blk);
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                Self::normalize_calls_in_expr(map, blk);
+                Self::normalize_calls_in_expr(key, blk);
+                Self::normalize_calls_in_expr(value, blk);
+            }
+            // Class/module/singleton bodies carry non-`def` statements
+            // (their `def`s are hoisted to top-level functions, which the
+            // outer loop over `functions` already visits) — descend so a
+            // call inside e.g. a constant initializer is threaded too.
+            Stmt::ClassDef { body, .. }
+            | Stmt::ModuleDef { body, .. }
+            | Stmt::SingletonClassDef { body, .. } => Self::normalize_calls_in_stmts(body, blk),
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                Self::normalize_calls_in_stmts(body, blk);
+                for r in rescues {
+                    Self::normalize_calls_in_stmts(&mut r.body, blk);
+                }
+                if let Some(eb) = ensure_body {
+                    Self::normalize_calls_in_stmts(eb, blk);
+                }
+            }
+        }
+    }
+
+    fn normalize_calls_in_expr(expr: &mut Expr, blk: &HashSet<String>) {
+        match expr {
+            Expr::DirectCall { fn_name, args, span, .. } => {
+                // Normalize nested calls in the arguments first (so an
+                // unwrapped `block_pass` inner / a closure capture value
+                // is itself threaded), then fix this call's trailing slot.
+                for a in args.iter_mut() {
+                    Self::normalize_calls_in_expr(a, blk);
+                }
+                if blk.contains(fn_name) {
+                    let n = args.len();
+                    let trailing_is_closure =
+                        n > 0 && matches!(args[n - 1], Expr::MakeClosure { .. });
+                    let trailing_is_block_pass = n > 0
+                        && matches!(&args[n - 1],
+                            Expr::BuiltinCall { name, .. } if name == "block_pass");
+                    if trailing_is_block_pass {
+                        // Unwrap `block_pass(inner)` → `inner` (the proc
+                        // value passed as the block). A malformed envelope
+                        // (not exactly one operand) is left untouched.
+                        if let Expr::BuiltinCall { args: inner, .. } = &mut args[n - 1] {
+                            if inner.len() == 1 {
+                                let v = inner.remove(0);
+                                args[n - 1] = v;
+                            }
+                        }
+                    } else if !trailing_is_closure {
+                        // No block syntactically passed: bind nil.
+                        args.push(Expr::NilLit { span: span.clone() });
+                    }
+                }
+            }
+            Expr::BuiltinCall { args, .. } | Expr::Intrinsic { args, .. } => {
+                for a in args.iter_mut() {
+                    Self::normalize_calls_in_expr(a, blk);
+                }
+            }
+            Expr::IndirectCall { target, args, .. } => {
+                Self::normalize_calls_in_expr(target, blk);
+                for a in args.iter_mut() {
+                    Self::normalize_calls_in_expr(a, blk);
+                }
+            }
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                Self::normalize_calls_in_expr(cond, blk);
+                Self::normalize_block_call_args(then_branch, blk);
+                Self::normalize_block_call_args(else_branch, blk);
+            }
+            Expr::Block(b) => Self::normalize_block_call_args(b, blk),
+            Expr::MakeClosure { captures, .. } => {
+                for c in captures.iter_mut() {
+                    Self::normalize_calls_in_expr(&mut c.value, blk);
+                }
+            }
+            Expr::SeqLit { items, .. } => {
+                for i in items.iter_mut() {
+                    Self::normalize_calls_in_expr(i, blk);
+                }
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                Self::normalize_calls_in_expr(seq, blk);
+                Self::normalize_calls_in_expr(index, blk);
+            }
+            Expr::SeqLen { seq, .. } => Self::normalize_calls_in_expr(seq, blk),
+            Expr::MapLit { entries, .. } => {
+                for e in entries.iter_mut() {
+                    Self::normalize_calls_in_expr(&mut e.key, blk);
+                    Self::normalize_calls_in_expr(&mut e.value, blk);
+                }
+            }
+            Expr::MapGet { map, key, .. } => {
+                Self::normalize_calls_in_expr(map, blk);
+                Self::normalize_calls_in_expr(key, blk);
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                Self::normalize_calls_in_expr(lhs, blk);
+                Self::normalize_calls_in_expr(rhs, blk);
+            }
+            Expr::StrConcat { parts, .. } => {
+                for p in parts.iter_mut() {
+                    Self::normalize_calls_in_expr(p, blk);
+                }
+            }
+            // Atomic literals and VarRef carry no sub-expressions.
+            Expr::IntLit { .. }
+            | Expr::BoolLit { .. }
+            | Expr::NilLit { .. }
+            | Expr::SymLit { .. }
+            | Expr::StrLit { .. }
+            | Expr::FloatLit { .. }
+            | Expr::VarRef { .. } => {}
         }
     }
 
