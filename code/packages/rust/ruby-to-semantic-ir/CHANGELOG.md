@@ -2,6 +2,44 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.90.0] - 2026-06-19
+
+### Added (Q9e — explicit block-param ABI, part 1: def threading + yield rewrite)
+
+- A method whose body contains a direct `yield` now gains a trailing
+  reserved parameter `__sir_block__` (an ordinary untyped `Param`), and
+  each in-body `yield` is rewritten from `BuiltinCall("yield", args)` to
+  `IndirectCall { target: VarRef("__sir_block__", Scope::Param), args }`.
+  This makes Ruby's implicit block channel explicit in the SIR so the
+  Python/TS backends can emit it natively (`IndirectCall` already lowers
+  to runtime-core `apply`, and ordinary params emit directly) — **no
+  backend or `semantic-ir` core change required**.
+- New `Lowerer::thread_block_param` runs at the return of both
+  `lower_def_statement` and `lower_endless_def_statement`. The recursive
+  rewrite (`rewrite_yields_in_{block,stmts,stmt,expr}`) descends through
+  control flow (`If`/`While`/`ForRange`/`ForEach`/`TryCatch`/`Block`) and
+  ordinary call/expression children, but deliberately **stops at
+  `Expr::MakeClosure`** (a `yield` inside a hoisted block belongs to its
+  own enclosing method — a documented v0 cut-line) and does not descend
+  into class/module/singleton declaration bodies (their `def`s are
+  hoisted and threaded in their own right).
+- Threading a method records its name in the new
+  `Lowerer::block_param_methods` set and requests `Feature::Closures` +
+  `Feature::DynamicTyping`, keeping the manifest in sync with the
+  introduced `IndirectCall` and untyped param.
+- New tests: `def_with_yield_threads_block_param_and_rewrites_yield`,
+  `def_without_yield_is_unchanged`, `yield_inside_if_in_def_is_rewritten`.
+
+### Notes / v0 cut-lines
+
+- **Call-site threading is NOT in this release.** Until Q9f wires the
+  matching block argument at every call to a `block_param_methods`
+  method, a direct call to such a method is arity-short by one. `yield`
+  used directly at the top level (`main`) is unaffected and still lowers
+  to `BuiltinCall("yield", …)` (it is not a `def` body).
+- `yield` inside a block literal, `block_given?`, proc-vs-lambda arity,
+  and non-local `return`/`break` from blocks remain deferred.
+
 ## [0.89.0] - 2026-06-03
 
 ### Added (FC — array splat pattern lowering)

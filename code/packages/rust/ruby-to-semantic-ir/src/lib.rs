@@ -5130,6 +5130,106 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // Phase Q9e — explicit block-param ABI, part 1: a method that
+    // `yield`s gains a trailing reserved `__sir_block__` parameter and
+    // every in-body `yield` is rewritten to an `IndirectCall` through it.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn def_with_yield_threads_block_param_and_rewrites_yield() {
+        let m = lower("def t\n  yield 5\nend\n");
+        let t = func(&m, "t");
+        // Trailing reserved block parameter appended.
+        assert_eq!(
+            t.params.last().map(|p| p.name.as_str()),
+            Some("__sir_block__"),
+            "yielding method must gain a trailing __sir_block__ param"
+        );
+        // The in-body `yield 5` is now an IndirectCall through that
+        // param — NOT a BuiltinCall("yield").
+        match &t.body.stmts[0] {
+            Stmt::ExprStmt { expr: Expr::IndirectCall { target, args, .. }, .. } => {
+                match target.as_ref() {
+                    Expr::VarRef { name, scope, .. } => {
+                        assert_eq!(name, "__sir_block__");
+                        assert_eq!(*scope, Scope::Param);
+                    }
+                    other => panic!("expected VarRef(__sir_block__, param), got {:?}", other),
+                }
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::IntLit { value: 5, .. }));
+            }
+            other => panic!("expected ExprStmt(IndirectCall(...)), got {:?}", other),
+        }
+        // And no BuiltinCall("yield") survives anywhere in the body.
+        assert!(
+            !matches!(
+                &t.body.stmts[0],
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "yield"
+            ),
+            "no BuiltinCall(\"yield\") may remain after threading"
+        );
+        // The rewritten module still validates (param resolves, the
+        // Closures/DynamicTyping features are declared).
+        assert!(semantic_ir::validate(&m).is_ok(), "threaded module validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn def_without_yield_is_unchanged() {
+        // A non-yielding method keeps its exact arity — no spurious
+        // __sir_block__ param is appended.
+        let m = lower("def t\n  5\nend\n");
+        let t = func(&m, "t");
+        assert!(
+            t.params.is_empty(),
+            "non-yielding method must not gain a block param, got {:?}",
+            t.params
+        );
+        assert!(matches!(t.body.value, Expr::IntLit { value: 5, .. }));
+    }
+
+    #[test]
+    fn yield_inside_if_in_def_is_rewritten() {
+        // The rewrite descends into control flow: a `yield` guarded by an
+        // `if` inside the method body is still threaded.
+        let m = lower("def t(x)\n  if x\n    yield 1\n  end\nend\n");
+        let t = func(&m, "t");
+        // Params: the original `x`, then the trailing block param.
+        assert_eq!(t.params.len(), 2);
+        assert_eq!(t.params[0].name, "x");
+        assert_eq!(t.params[1].name, "__sir_block__");
+        // The `yield 1` lives in the `if`'s then-branch and is now an
+        // IndirectCall.  Locate the If and inspect its then-branch.
+        let if_expr = t
+            .body
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt { expr: e @ Expr::If { .. }, .. } => Some(e),
+                _ => None,
+            })
+            .or_else(|| match &t.body.value {
+                e @ Expr::If { .. } => Some(e),
+                _ => None,
+            })
+            .expect("if-expression present in method body");
+        if let Expr::If { then_branch, .. } = if_expr {
+            let found_indirect = then_branch.stmts.iter().any(|s| {
+                matches!(s, Stmt::ExprStmt { expr: Expr::IndirectCall { .. }, .. })
+            }) || matches!(then_branch.value, Expr::IndirectCall { .. });
+            assert!(found_indirect, "yield inside if must become IndirectCall");
+        }
+        assert!(semantic_ir::validate(&m).is_ok(), "threaded module validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    // (A `yield` lexically inside a block literal — the documented v0
+    // cut-line where the rewrite must NOT descend into a `MakeClosure` —
+    // cannot be expressed in the current grammar: `yield` is a
+    // statement, not an expression, so it never appears inside a `{ … }`
+    // brace block.  The guard in `rewrite_yields_in_expr` is therefore
+    // defensive; no source-level test can exercise it today.)
+
+    // -----------------------------------------------------------------------
     // Phase 22d — `super` keyword lowering
     //
     //   super        → ExprStmt(BuiltinCall("zsuper", []))   (forward ALL)
