@@ -663,6 +663,7 @@ export interface DeckRunArtifact {
   readonly directive: DeckAnalysisPlan["directive"];
   readonly lineNumber: number;
   readonly sourceName?: string;
+  readonly outputNode?: string;
   readonly sweepKind?: DeckAnalysisPlan["sweepKind"];
   readonly startValue?: number;
   readonly stopValue?: number;
@@ -7884,6 +7885,7 @@ function deckRunArtifacts(
       directive: plan.directive,
       lineNumber: plan.lineNumber,
       sourceName: plan.sourceName,
+      outputNode: plan.outputNode,
       sweepKind: plan.sweepKind,
       startValue: plan.startValue,
       stopValue: plan.stopValue,
@@ -7910,7 +7912,7 @@ function formatDeckArtifactFloat(value: number | undefined): string {
 
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [
-    "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
+    "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
   ];
   for (const artifact of artifacts) {
     rows.push(
@@ -7919,6 +7921,7 @@ export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]
         artifact.directive,
         String(artifact.lineNumber),
         artifact.sourceName ?? "",
+        artifact.outputNode ?? "",
         artifact.sweepKind ?? "",
         formatDeckArtifactFloat(artifact.startValue),
         formatDeckArtifactFloat(artifact.stopValue),

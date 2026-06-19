@@ -2320,6 +2320,7 @@ class DeckRunArtifact:
     directive: str
     line_number: int
     source_name: str | None
+    output_node: str | None
     sweep_kind: str | None
     start_value: float | None
     stop_value: float | None
@@ -2411,6 +2412,7 @@ def _deck_run_artifacts(
             directive=plan.directive,
             line_number=plan.line_number,
             source_name=plan.source_name,
+            output_node=plan.output_node,
             sweep_kind=plan.sweep_kind,
             start_value=plan.start_value,
             stop_value=plan.stop_value,
@@ -2437,7 +2439,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
     rows = [
-        "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
     ]
     for artifact in artifacts:
         rows.append(
@@ -2447,6 +2449,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
                     artifact.directive,
                     str(artifact.line_number),
                     artifact.source_name or "",
+                    artifact.output_node or "",
                     artifact.sweep_kind or "",
                     _format_deck_artifact_float(artifact.start_value),
                     _format_deck_artifact_float(artifact.stop_value),

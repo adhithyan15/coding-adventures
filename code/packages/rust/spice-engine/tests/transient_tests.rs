@@ -1889,6 +1889,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
     assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
     assert_eq!(op_execution.run_artifacts[0].source_name, None);
+    assert_eq!(op_execution.run_artifacts[0].output_node, None);
     assert_eq!(op_execution.run_artifacts[0].sweep_kind, None);
     assert_eq!(op_execution.run_artifacts[0].point_count, None);
     assert_eq!(
@@ -1904,7 +1905,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         op_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nop\t.op\t{}\t\t\t\t\t\t\t\t\t1\t1\tV(mid)\t1\t.save\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nop\t.op\t{}\t\t\t\t\t\t\t\t\t\t1\t1\tV(mid)\t1\t.save\t0\t\t0\t\n",
             op_execution.plan.line_number
         )
     );
@@ -1933,6 +1934,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         dc_execution.run_artifacts[0].source_name.as_deref(),
         Some("V1")
     );
+    assert_eq!(dc_execution.run_artifacts[0].output_node, None);
     assert_eq!(dc_execution.run_artifacts[0].start_value, Some(0.0));
     assert_eq!(dc_execution.run_artifacts[0].stop_value, Some(1.0));
     assert_eq!(dc_execution.run_artifacts[0].step_value, Some(1.0));
@@ -1952,7 +1954,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         dc_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ndc\t.dc\t{}\tV1\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t2\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ndc\t.dc\t{}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t2\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\n",
             dc_execution.plan.line_number
         )
     );
@@ -1977,6 +1979,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         vec!["V(mid)".to_string()]
     );
     assert_eq!(ac_execution.run_artifacts[0].source_name, None);
+    assert_eq!(ac_execution.run_artifacts[0].output_node, None);
     assert_eq!(
         ac_execution.run_artifacts[0].sweep_kind.as_deref(),
         Some("dec")
@@ -1999,7 +2002,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         ac_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nac\t.ac\t{}\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t1\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nac\t.ac\t{}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t1\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\n",
             ac_execution.plan.line_number
         )
     );
@@ -2024,6 +2027,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         vec!["V(mid)".to_string()]
     );
     assert_eq!(tran_execution.run_artifacts[0].source_name, None);
+    assert_eq!(tran_execution.run_artifacts[0].output_node, None);
     assert_eq!(
         tran_execution.run_artifacts[0].output_directives,
         vec![".save".to_string()]
@@ -2036,7 +2040,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t1\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t\t1\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\n",
             tran_execution.plan.line_number
         )
     );
@@ -2067,6 +2071,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         tf_execution.run_artifacts[0].source_name.as_deref(),
         Some("V1")
     );
+    assert_eq!(
+        tf_execution.run_artifacts[0].output_node.as_deref(),
+        Some("mid")
+    );
     assert_eq!(tf_execution.run_artifacts[0].result_rows, 1);
     assert_eq!(
         tf_execution.run_artifacts[0].output_probes,
@@ -2078,7 +2086,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tf_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntf\t.tf\t{}\tV1\t\t\t\t\t\t\t\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntf\t.tf\t{}\tV1\tmid\t\t\t\t\t\t\t\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
             tf_execution.plan.line_number
         )
     );
@@ -2104,6 +2112,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     ));
     assert_eq!(sens_execution.run_artifacts[0].analysis, "sens");
     assert_eq!(sens_execution.run_artifacts[0].source_name, None);
+    assert_eq!(
+        sens_execution.run_artifacts[0].output_node.as_deref(),
+        Some("mid")
+    );
     assert_eq!(sens_execution.run_artifacts[0].result_rows, 1);
     assert_eq!(
         sens_execution.run_artifacts[0].output_probes,
@@ -2115,7 +2127,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         sens_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nsens\t.sens\t{}\t\t\t\t\t\t\t\t\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nsens\t.sens\t{}\t\tmid\t\t\t\t\t\t\t\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
             sens_execution.plan.line_number
         )
     );
@@ -2151,6 +2163,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         Some("V1")
     );
     assert_eq!(
+        noise_execution.run_artifacts[0].output_node.as_deref(),
+        Some("mid")
+    );
+    assert_eq!(
         noise_execution.run_artifacts[0].sweep_kind.as_deref(),
         Some("lin")
     );
@@ -2178,7 +2194,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         noise_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nnoise\t.noise\t{}\tV1\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nnoise\t.noise\t{}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
             noise_execution.plan.line_number
         )
     );
@@ -2282,6 +2298,7 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     assert_eq!(tran_execution.fourier_table, format_fourier_table(result));
     assert_eq!(tran_execution.run_artifacts[0].fourier_count, 1);
     assert_eq!(tran_execution.run_artifacts[0].source_name, None);
+    assert_eq!(tran_execution.run_artifacts[0].output_node, None);
     assert_eq!(
         tran_execution.run_artifacts[0].output_probes,
         vec!["V(mid)".to_string()]
@@ -2298,7 +2315,7 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t2\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\n",
+            "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t\t\t\t\t\t\t\t\t\t2\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\n",
             tran_execution.plan.line_number
         )
     );
