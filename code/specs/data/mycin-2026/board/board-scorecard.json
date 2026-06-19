@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 102,
-    "correct": 95,
+    "total": 105,
+    "correct": 98,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 89,
+        "correct": 92,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9888,
-    "grounded_correct": 88
+    "grounded_coverage": 0.9891,
+    "grounded_correct": 91
   },
   "results": [
     {
@@ -840,6 +840,30 @@
       "tactic": "recall",
       "gold": "paternal",
       "answer": "paternal",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "rheum_sle_ab",
+      "tactic": "recall",
+      "gold": "anti_dsdna",
+      "answer": "anti_dsdna",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "rheum_gpa_ab",
+      "tactic": "recall",
+      "gold": "pr3",
+      "answer": "pr3",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "rheum_ssc_ab",
+      "tactic": "recall",
+      "gold": "anti_scl70",
+      "answer": "anti_scl70",
       "outcome": "correct",
       "trust": "authoritative"
     }
