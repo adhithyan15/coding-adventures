@@ -10234,6 +10234,14 @@ fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
     ]
 }
 
+fn deck_run_artifact_record(artifact: &DeckRunArtifact) -> Vec<(&'static str, String)> {
+    DECK_RUN_ARTIFACT_COLUMNS
+        .iter()
+        .copied()
+        .zip(deck_run_artifact_cells(artifact))
+        .collect()
+}
+
 fn deck_table_columns(table: &str) -> Vec<String> {
     table
         .lines()
@@ -10275,6 +10283,45 @@ pub fn format_deck_run_artifact_csv(artifacts: &[DeckRunArtifact]) -> String {
         );
     }
     format!("{}\n", rows.join("\n"))
+}
+
+fn format_json_string(value: &str) -> String {
+    let mut output = String::from("\"");
+    for character in value.chars() {
+        match character {
+            '"' => output.push_str("\\\""),
+            '\\' => output.push_str("\\\\"),
+            '\u{08}' => output.push_str("\\b"),
+            '\u{0c}' => output.push_str("\\f"),
+            '\n' => output.push_str("\\n"),
+            '\r' => output.push_str("\\r"),
+            '\t' => output.push_str("\\t"),
+            character if (character as u32) < 0x20 => {
+                output.push_str(&format!("\\u{:04x}", character as u32));
+            }
+            character => output.push(character),
+        }
+    }
+    output.push('"');
+    output
+}
+
+pub fn format_deck_run_artifact_json(artifacts: &[DeckRunArtifact]) -> String {
+    let records = artifacts
+        .iter()
+        .map(|artifact| {
+            let fields = deck_run_artifact_record(artifact)
+                .into_iter()
+                .map(|(key, value)| {
+                    format!("{}:{}", format_json_string(key), format_json_string(&value))
+                })
+                .collect::<Vec<_>>()
+                .join(",");
+            format!("{{{}}}", fields)
+        })
+        .collect::<Vec<_>>()
+        .join(",");
+    format!("[{}]\n", records)
 }
 
 fn select_deck_measurement_cards_for_analysis(

@@ -54,6 +54,7 @@ from __future__ import annotations
 
 import ast
 import cmath
+import json
 import math
 import random
 import re
@@ -2559,6 +2560,16 @@ def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
     ]
 
 
+def _deck_run_artifact_record(artifact: DeckRunArtifact) -> dict[str, str]:
+    return dict(
+        zip(
+            _DECK_RUN_ARTIFACT_COLUMNS,
+            _deck_run_artifact_cells(artifact),
+            strict=True,
+        )
+    )
+
+
 def _format_csv_cell(value: str) -> str:
     if any(character in value for character in [",", '"', "\n", "\r"]):
         return '"' + value.replace('"', '""') + '"'
@@ -2574,6 +2585,13 @@ def format_deck_run_artifact_csv(artifacts: Iterable[DeckRunArtifact]) -> str:
             ",".join(_format_csv_cell(cell) for cell in _deck_run_artifact_cells(artifact))
         )
     return "\n".join(rows) + "\n"
+
+
+def format_deck_run_artifact_json(artifacts: Iterable[DeckRunArtifact]) -> str:
+    """Format selected deck-run artifacts as stable compact JSON records."""
+
+    records = [_deck_run_artifact_record(artifact) for artifact in artifacts]
+    return json.dumps(records, separators=(",", ":")) + "\n"
 
 
 def run_deck_analysis(

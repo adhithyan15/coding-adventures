@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `format_deck_run_artifact_json` for selected-run artifacts with the same
+  stable keys and normalized cell values as `format_deck_run_artifact_table`,
+  matching Python and TypeScript.
 - Add `format_deck_run_artifact_csv` for selected-run artifacts with the same
   stable columns as `format_deck_run_artifact_table` plus deterministic CSV
   escaping for browser and spreadsheet consumers, matching Python and

@@ -42,6 +42,7 @@ import {
   formatDeckNoiseTable,
   formatDeckOpTable,
   formatDeckRunArtifactCsv,
+  formatDeckRunArtifactJson,
   formatDeckRunArtifactTable,
   formatDeckTransientTable,
   formatDigitalBridgeScheduleTable,
@@ -1493,6 +1494,74 @@ describe("transient", () => {
       "Analysis,Directive,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\n" +
         `op,.op,${opExecution.plan.lineNumber},,,,,,,,,,,,,,,1,2,Index;V(mid),1,V(mid),1,.save,0,,0,,0,\n`,
     );
+    const artifactJson = formatDeckRunArtifactJson(opExecution.runArtifacts);
+    const artifactRecords = JSON.parse(artifactJson) as Array<Record<string, string>>;
+    expect(Object.keys(artifactRecords[0]!)).toEqual([
+      "Analysis",
+      "Directive",
+      "Line",
+      "SourceName",
+      "OutputNode",
+      "SweepKind",
+      "StartValue",
+      "StopValue",
+      "StepValue",
+      "PointCount",
+      "StartFrequencyHz",
+      "StopFrequencyHz",
+      "StepTime",
+      "StopTime",
+      "StartTime",
+      "MaxStep",
+      "UseInitialConditions",
+      "ResultRows",
+      "ResultColumns",
+      "ResultColumnList",
+      "OutputProbes",
+      "OutputProbeList",
+      "OutputDirectives",
+      "OutputDirectiveList",
+      "Measurements",
+      "MeasurementList",
+      "Fourier",
+      "FourierList",
+      "Diagnostics",
+      "DiagnosticCodeList",
+    ]);
+    expect(artifactRecords).toEqual([
+      {
+        Analysis: "op",
+        Directive: ".op",
+        Line: String(opExecution.plan.lineNumber),
+        SourceName: "",
+        OutputNode: "",
+        SweepKind: "",
+        StartValue: "",
+        StopValue: "",
+        StepValue: "",
+        PointCount: "",
+        StartFrequencyHz: "",
+        StopFrequencyHz: "",
+        StepTime: "",
+        StopTime: "",
+        StartTime: "",
+        MaxStep: "",
+        UseInitialConditions: "",
+        ResultRows: "1",
+        ResultColumns: "2",
+        ResultColumnList: "Index;V(mid)",
+        OutputProbes: "1",
+        OutputProbeList: "V(mid)",
+        OutputDirectives: "1",
+        OutputDirectiveList: ".save",
+        Measurements: "0",
+        MeasurementList: "",
+        Fourier: "0",
+        FourierList: "",
+        Diagnostics: "0",
+        DiagnosticCodeList: "",
+      },
+    ]);
     const diagnosticArtifact = {
       ...opExecution.runArtifacts[0]!,
       diagnosticCount: 2,
@@ -1513,6 +1582,11 @@ describe("transient", () => {
     expect(formatDeckRunArtifactCsv([quotedDiagnosticArtifact])).toMatch(
       /,2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED"""\n$/u,
     );
+    expect(
+      (JSON.parse(formatDeckRunArtifactJson([quotedDiagnosticArtifact])) as Array<Record<string, string>>)[0]?.[
+        "DiagnosticCodeList"
+      ],
+    ).toBe('SPICE_DECK_ANALYSIS_TOKEN;SPICE,"QUOTED"');
 
     const dcExecution = runDeckAnalysis(circuit, netlist, "dc");
     expect(dcExecution.plan.sourceName).toBe("V1");
