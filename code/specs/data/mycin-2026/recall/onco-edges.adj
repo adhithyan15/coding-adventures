@@ -1,0 +1,60 @@
+% ============================================================================
+% onco-edges — the oncology tumor-marker knowledge-graph (MYCIN-2026 ONCO).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", neoplasia): the
+% serum tumor-marker → neoplasm associations behind the oncology board questions.
+% "Which tumor marker is associated with ovarian cancer?" becomes the binding query
+%   ? tumor_marker(ovarian_cancer, $Marker).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the sixth ADJ-only recall domain). Each fact is a `relate` clause
+% whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see onco-recall.query.adj. Nothing here is asserted
+% "from memory": every edge is defended by a span a reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only edges whose cited span states the marker↔neoplasm association AND
+% names both endpoints are included. Spans were taken from the per-marker / per-cancer
+% pages (the aggregate "tumor biomarkers" page discusses markers mostly in sensitivity /
+% false-positive / procedure-context, not a clean both-endpoints-named declarative).
+% Deferred (no clean self-contained span yet here): PSA→prostate (the marker page frames
+% PSA by its limited specificity), CEA→colorectal, beta-hCG→germ-cell/choriocarcinoma.
+% ============================================================================
+
+dictionary onco_vocab {
+    define neoplasm : entity   surface "cancer", "neoplasm", "tumor"
+    define marker   : entity   surface "tumor marker", "serum biomarker"
+
+    define tumor_marker : relation from neoplasm to marker  % the serum marker of a neoplasm
+}
+
+rulebook onco_facts {
+    use onco_vocab
+
+    % --- Ovarian cancer (CA-125) -----------------------------------------
+    relate tumor_marker(ovarian_cancer, ca_125)
+        source "Cancer antigen 125 (CA125) is an antigenic tumor marker expressed by epithelial ovarian neoplasms and cells lining various organs such as the endometrium, fallopian tubes, pleura, peritoneum, and pericardium."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562245/"
+        trust authoritative
+
+    % --- Medullary thyroid carcinoma (calcitonin and CEA; one span names both) ---
+    relate tumor_marker(medullary_thyroid_carcinoma, calcitonin)
+        source "Baseline serum calcitonin and carcinoembryonic antigen (CEA) measurements are essential tumor markers in MTC."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459354/"
+        trust authoritative
+    relate tumor_marker(medullary_thyroid_carcinoma, cea)
+        source "Baseline serum calcitonin and carcinoembryonic antigen (CEA) measurements are essential tumor markers in MTC."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459354/"
+        trust authoritative
+
+    % --- Hepatocellular carcinoma (alpha-fetoprotein) --------------------
+    relate tumor_marker(hepatocellular_carcinoma, alpha_fetoprotein)
+        source "HCC is diagnosed by elevation of serum biomarkers, including alpha-fetoprotein, imaging including ultrasound, contrast CT/MRI, and biopsy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559177/"
+        trust authoritative
+}

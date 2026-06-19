@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 105,
-    "correct": 98,
+    "total": 108,
+    "correct": 101,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 92,
+        "correct": 95,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9891,
-    "grounded_correct": 91
+    "grounded_coverage": 0.9895,
+    "grounded_correct": 94
   },
   "results": [
     {
@@ -864,6 +864,30 @@
       "tactic": "recall",
       "gold": "anti_scl70",
       "answer": "anti_scl70",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "onco_ovarian_marker",
+      "tactic": "recall",
+      "gold": "ca_125",
+      "answer": "ca_125",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "onco_mtc_marker",
+      "tactic": "recall",
+      "gold": "calcitonin",
+      "answer": "calcitonin",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "onco_hcc_marker",
+      "tactic": "recall",
+      "gold": "alpha_fetoprotein",
+      "answer": "alpha_fetoprotein",
       "outcome": "correct",
       "trust": "authoritative"
     }
