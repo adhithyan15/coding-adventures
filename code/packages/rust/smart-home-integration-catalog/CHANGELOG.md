@@ -78,6 +78,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionTicket` and
   summary helpers for turning audited repair slots into operator-ready
   execution tickets.
+- `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionWorkOrder` and
+  summary helpers for projecting execution tickets into deterministic release
+  work orders.
 - `IntegrationMeshStageReleaseSummary` and helpers for combining substrate
   stage blockers, primitive readiness blockers, and mesh-scoped remediation
   into a single release readiness rollup.
