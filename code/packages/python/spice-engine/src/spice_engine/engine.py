@@ -2328,6 +2328,11 @@ class DeckRunArtifact:
     point_count: int | None
     start_frequency_hz: float | None
     stop_frequency_hz: float | None
+    step_time: float | None
+    stop_time: float | None
+    start_time: float | None
+    max_step: float | None
+    use_initial_conditions: bool | None
     result_rows: int
     output_probe_count: int
     output_probes: list[str]
@@ -2398,6 +2403,10 @@ def _format_deck_artifact_float(value: float | None) -> str:
     return "" if value is None else f"{value:.6e}"
 
 
+def _format_deck_artifact_bool(value: bool | None) -> str:
+    return "" if value is None else str(value).lower()
+
+
 def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
     result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
@@ -2406,6 +2415,7 @@ def _deck_run_artifacts(
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
 ) -> list[DeckRunArtifact]:
+    is_transient = plan.analysis == "tran"
     return [
         DeckRunArtifact(
             analysis=plan.analysis,
@@ -2420,6 +2430,13 @@ def _deck_run_artifacts(
             point_count=plan.point_count,
             start_frequency_hz=plan.start_frequency,
             stop_frequency_hz=plan.stop_frequency,
+            step_time=plan.step_time if is_transient else None,
+            stop_time=plan.stop_time if is_transient else None,
+            start_time=plan.start_time if is_transient else None,
+            max_step=plan.max_step if is_transient else None,
+            use_initial_conditions=(
+                plan.use_initial_conditions if is_transient else None
+            ),
             result_rows=_deck_result_row_count(result),
             output_probe_count=len(output_probes),
             output_probes=list(output_probes),
@@ -2439,7 +2456,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
     rows = [
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
     ]
     for artifact in artifacts:
         rows.append(
@@ -2457,6 +2474,11 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
                     "" if artifact.point_count is None else str(artifact.point_count),
                     _format_deck_artifact_float(artifact.start_frequency_hz),
                     _format_deck_artifact_float(artifact.stop_frequency_hz),
+                    _format_deck_artifact_float(artifact.step_time),
+                    _format_deck_artifact_float(artifact.stop_time),
+                    _format_deck_artifact_float(artifact.start_time),
+                    _format_deck_artifact_float(artifact.max_step),
+                    _format_deck_artifact_bool(artifact.use_initial_conditions),
                     str(artifact.result_rows),
                     str(artifact.output_probe_count),
                     ";".join(artifact.output_probes),
