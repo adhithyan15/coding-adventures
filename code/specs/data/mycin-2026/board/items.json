@@ -122,6 +122,10 @@
 
     {"id": "onco_ovarian_marker", "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "ovarian_cancer",               "var": "Marker", "gold": "ca_125"},
     {"id": "onco_mtc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "medullary_thyroid_carcinoma",   "var": "Marker", "gold": "calcitonin"},
-    {"id": "onco_hcc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "hepatocellular_carcinoma",      "var": "Marker", "gold": "alpha_fetoprotein"}
+    {"id": "onco_hcc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "hepatocellular_carcinoma",      "var": "Marker", "gold": "alpha_fetoprotein"},
+
+    {"id": "histo_rs_cond",    "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "reed_sternberg_cells", "var": "Condition", "gold": "hodgkin_lymphoma"},
+    {"id": "histo_hj_cond",    "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "howell_jolly_bodies",  "var": "Condition", "gold": "asplenia"},
+    {"id": "histo_heinz_cond", "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "heinz_bodies",        "var": "Condition", "gold": "g6pd_deficiency"}
   ]
 }

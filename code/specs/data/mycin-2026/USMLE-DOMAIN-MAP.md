@@ -111,6 +111,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Genetics | Genetics | inheritance, gene_defect, trinucleotide_repeat, imprinting | 7 grounded (ADJ-only) | ✓ |
 | Rheumatology (Tier-2) | Path/Immuno | associated_autoantibody | 6 grounded (ADJ-only) | ✓ |
 | Oncology (Tier-2) | Pathology/neoplasia | tumor_marker | 4 grounded (ADJ-only) | ✓ |
+| Histology buzzwords (Tier-2) | Pathology | seen_in (finding→condition) | 5 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided
 faithfulness gate, zero online calls (OFFLINE-BOARD-EXAM.md).
@@ -207,11 +208,12 @@ manifest). MICRO onward, the order is grounding-FIRST (never seed authored-debt)
 ## Coverage accounting (the watchable number)
 
 The north-star metric: **% of the USMLE content outline covered by grounded, scored
-domains.** Today: 11 recall domains + ID differential/management (a slice of Multisystem,
+domains.** Today: 12 recall domains + ID differential/management (a slice of Multisystem,
 Endocrine, Hematology, Biochemistry, Nutrition, Microbiology, Pharmacology, Immunology,
-Genetics, Rheumatology, Oncology — 94/95 board recall answers cite an authoritative
-grounded edge). All four Tier-1 foundational-recall domains (microbiology, pharmacology,
-immunology, genetics) are grounded & scored; RHEUM (autoantibodies) and ONCO (tumor
-markers) are the first two Tier-2 organ-system pathology domains. Each merged domain PR moves this number;
+Genetics, Rheumatology, Oncology, Histology — 97/98 board recall answers cite an
+authoritative grounded edge). All four Tier-1 foundational-recall domains (microbiology,
+pharmacology, immunology, genetics) are grounded & scored; RHEUM (autoantibodies), ONCO
+(tumor markers), and HISTO (smear/histology buzzwords) are the first three Tier-2
+organ-system pathology domains. Each merged domain PR moves this number;
 this map is the denominator. The campaign is done when every Tier-1/2/3 cell above has a
 grounded, scored domain and the board bank samples each.
