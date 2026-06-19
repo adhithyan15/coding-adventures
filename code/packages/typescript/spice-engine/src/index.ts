@@ -665,6 +665,8 @@ export interface DeckRunArtifact {
   readonly resultRows: number;
   readonly outputProbeCount: number;
   readonly outputProbes: readonly string[];
+  readonly outputDirectiveCount: number;
+  readonly outputDirectives: readonly string[];
   readonly measurementCount: number;
   readonly measurementNames: readonly string[];
   readonly fourierCount: number;
@@ -3298,6 +3300,30 @@ export function selectDeckOutputProbes(netlist: string, analysis: string): strin
       seen.add(key);
       selected.push(probe);
     }
+  }
+  return selected;
+}
+
+export function selectDeckOutputDirectives(netlist: string, analysis: string): string[] {
+  const summary = resolveDeckOutputs(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0];
+    throw invalidElement(
+      "selectDeckOutputDirectives",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  const selected: string[] = [];
+  const seen = new Set<string>();
+  for (const selection of summary.selections) {
+    if (selection.analysis !== undefined && !deckOutputAnalysisMatches(selection.analysis, analysis)) {
+      continue;
+    }
+    if (seen.has(selection.directive)) {
+      continue;
+    }
+    seen.add(selection.directive);
+    selected.push(selection.directive);
   }
   return selected;
 }
@@ -7840,6 +7866,7 @@ function deckRunArtifacts(
   plan: DeckAnalysisPlan,
   result: DeckAnalysisExecutionResult,
   outputProbes: readonly string[],
+  outputDirectives: readonly string[],
   measurements: readonly ProbeMeasurement[],
   fourier: readonly FourierResult[],
 ): DeckRunArtifact[] {
@@ -7851,6 +7878,8 @@ function deckRunArtifacts(
       resultRows: deckResultRowCount(result),
       outputProbeCount: outputProbes.length,
       outputProbes: [...outputProbes],
+      outputDirectiveCount: outputDirectives.length,
+      outputDirectives: [...outputDirectives],
       measurementCount: measurements.length,
       measurementNames: measurements.map((measurement) => measurement.name),
       fourierCount: fourier.length,
@@ -7861,7 +7890,7 @@ function deckRunArtifacts(
 
 export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [
-    "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList",
+    "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList",
   ];
   for (const artifact of artifacts) {
     rows.push(
@@ -7872,6 +7901,8 @@ export function formatDeckRunArtifactTable(artifacts: readonly DeckRunArtifact[]
         String(artifact.resultRows),
         String(artifact.outputProbeCount),
         artifact.outputProbes.join(";"),
+        String(artifact.outputDirectiveCount),
+        artifact.outputDirectives.join(";"),
         String(artifact.measurementCount),
         artifact.measurementNames.join(";"),
         String(artifact.fourierCount),
@@ -7928,7 +7959,15 @@ export function runDeckAnalysis(
     const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -7955,7 +7994,15 @@ export function runDeckAnalysis(
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -7993,7 +8040,15 @@ export function runDeckAnalysis(
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8026,7 +8081,15 @@ export function runDeckAnalysis(
       selectDeckFourierCardsForAnalysis(netlist, plan.analysis),
     );
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives = selectDeckOutputDirectives(netlist, plan.analysis);
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8049,7 +8112,15 @@ export function runDeckAnalysis(
     const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = [`V(${outputNode})`];
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives: string[] = [];
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8071,7 +8142,15 @@ export function runDeckAnalysis(
     const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = [`V(${outputNode})`];
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives: string[] = [];
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8103,7 +8182,15 @@ export function runDeckAnalysis(
     const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = [`V(${outputNode})`];
-    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    const outputDirectives: string[] = [];
+    const runArtifacts = deckRunArtifacts(
+      plan,
+      result,
+      outputProbes,
+      outputDirectives,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,

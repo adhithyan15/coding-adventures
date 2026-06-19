@@ -785,6 +785,15 @@ downstream tools to compare.
       solver and stable noise table while exposing deck-run artifacts for the
       noise output probe and selected frequency rows.
 
+71. Deck run output-directive artifacts.
+    - Status: completed in this deck run output-directive artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now expose the
+      selected output directive kinds that contributed to each deck-run
+      artifact, alongside the existing selected output probe list.
+    - The stable run-artifact table now includes `OutputDirectiveList`, so
+      callers can distinguish `.save`, `.probe`, `.print`, and `.plot`
+      provenance without reparsing deck output cards.
+
 ## Backlog
 
 1. Deck execution layer.

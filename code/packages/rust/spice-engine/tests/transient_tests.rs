@@ -1892,12 +1892,16 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         op_execution.run_artifacts[0].output_probes,
         vec!["V(mid)".to_string()]
     );
+    assert_eq!(
+        op_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string()]
+    );
     assert!(op_execution.run_artifacts[0].measurement_names.is_empty());
     assert!(op_execution.run_artifacts[0].fourier_probes.is_empty());
     assert_eq!(
         op_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\nop\t.op\t{}\t1\t1\tV(mid)\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nop\t.op\t{}\t1\t1\tV(mid)\t1\t.save\t0\t\t0\t\n",
             op_execution.plan.line_number
         )
     );
@@ -1927,6 +1931,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         vec!["V(mid)".to_string(), "I(V1)".to_string()]
     );
     assert_eq!(
+        dc_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string(), ".probe".to_string()]
+    );
+    assert_eq!(
         dc_execution.run_artifacts[0].measurement_names,
         vec!["mid_avg".to_string()]
     );
@@ -1934,7 +1942,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         dc_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\ndc\t.dc\t{}\t2\t2\tV(mid);I(V1)\t1\tmid_avg\t0\t\n",
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ndc\t.dc\t{}\t2\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\n",
             dc_execution.plan.line_number
         )
     );
@@ -1959,6 +1967,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         vec!["V(mid)".to_string()]
     );
     assert_eq!(
+        ac_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string()]
+    );
+    assert_eq!(
         ac_execution.run_artifacts[0].measurement_names,
         vec!["mid_peak".to_string()]
     );
@@ -1966,7 +1978,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         ac_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\nac\t.ac\t{}\t1\t1\tV(mid)\t1\tmid_peak\t0\t\n",
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nac\t.ac\t{}\t1\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\n",
             ac_execution.plan.line_number
         )
     );
@@ -1991,6 +2003,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         vec!["V(mid)".to_string()]
     );
     assert_eq!(
+        tran_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string()]
+    );
+    assert_eq!(
         tran_execution.run_artifacts[0].measurement_names,
         vec!["mid_final".to_string()]
     );
@@ -1998,7 +2014,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t1\t1\tV(mid)\t1\tmid_final\t0\t\n",
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t1\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\n",
             tran_execution.plan.line_number
         )
     );
@@ -2030,12 +2046,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         tf_execution.run_artifacts[0].output_probes,
         vec!["V(mid)".to_string()]
     );
+    assert!(tf_execution.run_artifacts[0].output_directives.is_empty());
     assert!(tf_execution.run_artifacts[0].measurement_names.is_empty());
     assert!(tf_execution.run_artifacts[0].fourier_probes.is_empty());
     assert_eq!(
         tf_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntf\t.tf\t{}\t1\t1\tV(mid)\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntf\t.tf\t{}\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
             tf_execution.plan.line_number
         )
     );
@@ -2065,12 +2082,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         sens_execution.run_artifacts[0].output_probes,
         vec!["V(mid)".to_string()]
     );
+    assert!(sens_execution.run_artifacts[0].output_directives.is_empty());
     assert!(sens_execution.run_artifacts[0].measurement_names.is_empty());
     assert!(sens_execution.run_artifacts[0].fourier_probes.is_empty());
     assert_eq!(
         sens_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\nsens\t.sens\t{}\t1\t1\tV(mid)\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nsens\t.sens\t{}\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
             sens_execution.plan.line_number
         )
     );
@@ -2107,13 +2125,16 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         vec!["V(mid)".to_string()]
     );
     assert!(noise_execution.run_artifacts[0]
+        .output_directives
+        .is_empty());
+    assert!(noise_execution.run_artifacts[0]
         .measurement_names
         .is_empty());
     assert!(noise_execution.run_artifacts[0].fourier_probes.is_empty());
     assert_eq!(
         noise_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\nnoise\t.noise\t{}\t1\t1\tV(mid)\t0\t\t0\t\n",
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\nnoise\t.noise\t{}\t1\t1\tV(mid)\t0\t\t0\t\t0\t\n",
             noise_execution.plan.line_number
         )
     );
@@ -2220,6 +2241,10 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
         tran_execution.run_artifacts[0].output_probes,
         vec!["V(mid)".to_string()]
     );
+    assert_eq!(
+        tran_execution.run_artifacts[0].output_directives,
+        vec![".save".to_string()]
+    );
     assert!(tran_execution.run_artifacts[0].measurement_names.is_empty());
     assert_eq!(
         tran_execution.run_artifacts[0].fourier_probes,
@@ -2228,7 +2253,7 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     assert_eq!(
         tran_execution.run_artifact_table,
         format!(
-            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t2\t1\tV(mid)\t0\t\t1\tV(mid)\n",
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\ntran\t.tran\t{}\t2\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\n",
             tran_execution.plan.line_number
         )
     );

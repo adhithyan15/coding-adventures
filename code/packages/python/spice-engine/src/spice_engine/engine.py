@@ -73,6 +73,7 @@ from spice_engine.compatibility import (
     resolve_deck_fourier,
     resolve_deck_measurements,
     select_deck_analysis_plan,
+    select_deck_output_directives,
     select_deck_output_probes,
 )
 from spice_engine.elements import (
@@ -2321,6 +2322,8 @@ class DeckRunArtifact:
     result_rows: int
     output_probe_count: int
     output_probes: list[str]
+    output_directive_count: int
+    output_directives: list[str]
     measurement_count: int
     measurement_names: list[str]
     fourier_count: int
@@ -2386,6 +2389,7 @@ def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
     result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
     output_probes: list[str],
+    output_directives: list[str],
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
 ) -> list[DeckRunArtifact]:
@@ -2397,6 +2401,8 @@ def _deck_run_artifacts(
             result_rows=_deck_result_row_count(result),
             output_probe_count=len(output_probes),
             output_probes=list(output_probes),
+            output_directive_count=len(output_directives),
+            output_directives=list(output_directives),
             measurement_count=len(measurements),
             measurement_names=[measurement.name for measurement in measurements],
             fourier_count=len(fourier),
@@ -2411,7 +2417,7 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
     rows = [
-        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
     ]
     for artifact in artifacts:
         rows.append(
@@ -2423,6 +2429,8 @@ def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
                     str(artifact.result_rows),
                     str(artifact.output_probe_count),
                     ";".join(artifact.output_probes),
+                    str(artifact.output_directive_count),
+                    ";".join(artifact.output_directives),
                     str(artifact.measurement_count),
                     ";".join(artifact.measurement_names),
                     str(artifact.fourier_count),
@@ -2448,8 +2456,9 @@ def run_deck_analysis(
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         measurements: list[ProbeMeasurement] = []
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan, result, output_probes, output_directives, measurements, fourier
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2476,8 +2485,9 @@ def run_deck_analysis(
         fourier = []
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan, result, output_probes, output_directives, measurements, fourier
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2506,8 +2516,9 @@ def run_deck_analysis(
         fourier = []
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan, result, output_probes, output_directives, measurements, fourier
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2542,8 +2553,9 @@ def run_deck_analysis(
             _select_deck_fourier_cards_for_analysis(netlist, plan.analysis),
         )
         output_probes = select_deck_output_probes(netlist, plan.analysis)
+        output_directives = select_deck_output_directives(netlist, plan.analysis)
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan, result, output_probes, output_directives, measurements, fourier
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2566,8 +2578,9 @@ def run_deck_analysis(
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         fourier = []
         output_probes = [f"V({output_node})"]
+        output_directives: list[str] = []
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan, result, output_probes, output_directives, measurements, fourier
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2589,8 +2602,9 @@ def run_deck_analysis(
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         fourier = []
         output_probes = [f"V({output_node})"]
+        output_directives = []
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan, result, output_probes, output_directives, measurements, fourier
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2631,8 +2645,9 @@ def run_deck_analysis(
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         fourier = []
         output_probes = [f"V({output_node})"]
+        output_directives = []
         run_artifacts = _deck_run_artifacts(
-            plan, result, output_probes, measurements, fourier
+            plan, result, output_probes, output_directives, measurements, fourier
         )
         return DeckAnalysisExecution(
             plan=plan,
