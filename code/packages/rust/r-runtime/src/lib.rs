@@ -1213,4 +1213,144 @@ mod tests {
             vec![2.0]
         );
     }
+
+    // --- R-18: switch() + error handling (R syntax) ---------------------
+
+    #[test]
+    fn switch_character_match_and_default_r_syntax() {
+        // A name match returns that arm's value.
+        assert_eq!(show("switch(\"b\", a = \"A\", b = \"B\")\n"), "[1] \"B\"");
+        // An unnamed final arm is the default when nothing matches.
+        assert_eq!(
+            show("switch(\"z\", a = \"A\", \"fallback\")\n"),
+            "[1] \"fallback\""
+        );
+        // No match and no default → NULL.
+        assert_eq!(show("switch(\"z\", a = \"A\", b = \"B\")\n"), "NULL");
+    }
+
+    #[test]
+    fn switch_numeric_position_r_syntax() {
+        assert_eq!(
+            show("switch(2, \"one\", \"two\", \"three\")\n"),
+            "[1] \"two\""
+        );
+        // Out of range → NULL.
+        assert_eq!(show("switch(9, \"one\", \"two\")\n"), "NULL");
+        assert_eq!(show("switch(0, \"one\")\n"), "NULL");
+    }
+
+    #[test]
+    fn switch_is_lazy_only_selected_arm_evaluates_r_syntax() {
+        // The unselected arm would raise; switch must not evaluate it. This is
+        // the laziness proof: an eager builtin would error here.
+        assert_eq!(
+            show("switch(\"a\", a = \"ok\", b = stop(\"boom\"))\n"),
+            "[1] \"ok\""
+        );
+        // `_` is a name char in R, so undefined_var is a single undefined name;
+        // because it is in the unselected arm, it is never looked up.
+        assert_eq!(show("switch(1, \"ok\", undefined_var)\n"), "[1] \"ok\"");
+    }
+
+    #[test]
+    fn stop_raises_an_error_r_syntax() {
+        assert!(matches!(eval_r("stop(\"boom\")\n"), Err(RError::User(m)) if m == "boom"));
+        // Arguments concatenate into the message.
+        assert!(matches!(eval_r("stop(\"a\", \"b\")\n"), Err(RError::User(m)) if m == "ab"));
+    }
+
+    #[test]
+    fn try_catch_catches_error_and_returns_handler_value_r_syntax() {
+        // The headline case: catch a stop() and return the handler's value.
+        assert_eq!(
+            show("tryCatch(stop(\"x\"), error = function(e) \"caught\")\n"),
+            "[1] \"caught\""
+        );
+        // No error → the protected expression's value.
+        assert_eq!(nums("tryCatch(1 + 1, error = function(e) 0)\n"), vec![2.0]);
+        // The handler reads the condition message (both accessors).
+        assert_eq!(
+            show("tryCatch(stop(\"oops\"), error = function(e) conditionMessage(e))\n"),
+            "[1] \"oops\""
+        );
+        assert_eq!(
+            show("tryCatch(stop(\"oops\"), error = function(e) e$message)\n"),
+            "[1] \"oops\""
+        );
+        // A non-stop runtime error (undefined name) is catchable too.
+        assert_eq!(
+            show("tryCatch(undefined_var, error = function(e) \"recovered\")\n"),
+            "[1] \"recovered\""
+        );
+    }
+
+    #[test]
+    fn try_catch_finally_runs_on_success_and_on_catch_r_syntax() {
+        // finally runs on the success path (observed via cat output).
+        let r = RInterpreter::new();
+        let out = r
+            .eval_str("tryCatch(1, finally = cat(\"done\"))\n")
+            .unwrap();
+        assert!(out.printed.contains("done"), "got: {:?}", out.printed);
+        // finally runs even when the error is caught.
+        let out = r
+            .eval_str("tryCatch(stop(\"x\"), error = function(e) 0, finally = cat(\"cleanup\"))\n")
+            .unwrap();
+        assert!(out.printed.contains("cleanup"), "got: {:?}", out.printed);
+    }
+
+    #[test]
+    fn try_catch_handler_is_lazy_on_success_r_syntax() {
+        // The handler would error if invoked; on success it must not run.
+        assert_eq!(
+            nums("tryCatch(42, error = function(e) stop(\"unreached\"))\n"),
+            vec![42.0]
+        );
+    }
+
+    #[test]
+    fn warning_does_not_abort_r_syntax() {
+        let r = RInterpreter::new();
+        let out = r.eval_str("warning(\"careful\")\n1 + 1\n").unwrap();
+        // Execution continues to the next statement.
+        assert_eq!(format_value(&out.value), vec!["[1] 2".to_string()]);
+        assert!(out.printed.contains("careful"), "got: {:?}", out.printed);
+    }
+
+    #[test]
+    fn nested_try_catch_rethrow_r_syntax() {
+        // The inner handler re-raises; the outer one catches the new message.
+        assert_eq!(
+            show(
+                "tryCatch(\
+                   tryCatch(stop(\"deep\"), error = function(e) stop(\"rethrown\")), \
+                   error = function(e) conditionMessage(e))\n"
+            ),
+            "[1] \"rethrown\""
+        );
+    }
+
+    // --- regressions: R-15 / R-16 / R-17 still work ---------------------
+
+    #[test]
+    fn r15_r16_r17_still_work_after_r18() {
+        // R-15: named-vector access.
+        assert_eq!(nums("v <- c(a = 1, b = 2)\nv[\"b\"]\n"), vec![2.0]);
+        // R-16: attributes round-trip.
+        assert_eq!(
+            show("x <- structure(1:3, foo = \"bar\")\nattr(x, \"foo\")\n"),
+            "[1] \"bar\""
+        );
+        // R-17: do.call still spreads a named list into a call.
+        assert_eq!(
+            show("do.call(paste, list(\"a\", \"b\", sep = \"-\"))\n"),
+            "[1] \"a-b\""
+        );
+        // R-17: modifyList still overlays by name.
+        assert_eq!(
+            nums("modifyList(list(a = 1, b = 2), list(b = 20))$b\n"),
+            vec![20.0]
+        );
+    }
 }

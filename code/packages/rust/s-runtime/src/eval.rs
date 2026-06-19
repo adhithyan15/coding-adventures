@@ -1274,7 +1274,12 @@ impl Interpreter {
     /// The handler is normally a `function(e) ...`; we evaluate the handler
     /// expression to a callable and call it with the single condition argument.
     /// A non-callable handler is a clean error.
-    fn call_handler(&self, handler_node: &GrammarASTNode, condition: SValue, env: &Env) -> SResult<SValue> {
+    fn call_handler(
+        &self,
+        handler_node: &GrammarASTNode,
+        condition: SValue,
+        env: &Env,
+    ) -> SResult<SValue> {
         let handler = self.eval_node(handler_node, env)?;
         if !handler.is_callable() {
             return Err(SError::NotCallable(handler.type_name().to_string()));

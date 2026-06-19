@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2026-06-19
+
+### Added
+
+- **`switch()` + error handling (R-18)** — the value-returning multi-way branch
+  and condition-based error handling, in the shared runtime so R and S get them.
+  - **`switch(EXPR, ...)`** is a **special form**, intercepted in `eval_postfix`
+    before argument evaluation so it sees the *unevaluated* arm expressions and
+    evaluates only the chosen one. A character `EXPR` matches arm names (an
+    unnamed final arm is the default; no match and no default → invisible `NULL`);
+    a numeric `EXPR` selects the n-th arm by position (out of range → `NULL`).
+    Because only the selected arm runs, `switch("a", a = "ok", b = stop("x"))`
+    does not raise. *(Empty-arm fall-through `switch("a", a = , b = "hit")` is
+    implemented in `eval_switch` but deferred to R-19 — the shared S/R grammar's
+    `arg = NAME EQ expr` has no empty-value production, so `a = ,` is a parse
+    error today.)*
+  - **`stop(...)`** raises a new typed error variant `SError::User` whose message
+    is the concatenation of its arguments (catchable by `tryCatch`).
+  - **`warning(...)`** records and prints a warning (bounded by `MAX_WARNINGS`)
+    and returns invisibly without aborting.
+  - **`tryCatch(expr, error = handler, finally = cleanup)`** is a **special form**
+    (lazy): it evaluates `expr`, routes any catchable error to the `error` handler
+    (called with a minimal condition object `list(message, call)` classed
+    `c("simpleError", "error", "condition")`, returning the handler's value), and
+    always runs `finally`. Loop-control signals (`break`/`next`) are **not** caught
+    (`SError::is_catchable`).
+  - **`conditionMessage(e)`** / `e$message` recover the condition's message.
+
 ## [0.13.0] - 2026-06-17
 
 ### Added

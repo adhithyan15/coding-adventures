@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-06-19
+
+### Added (via the shared `s-runtime`)
+
+- **R-18 — `switch()` + error handling**: the value-returning multi-way branch
+  and condition-based error handling reach R unchanged through the shared
+  evaluator. **`switch(EXPR, ...)`** is lazy (only the chosen arm evaluates):
+  character `EXPR` matches arm names (unnamed final arm = default; no match and
+  no default → `NULL`); numeric `EXPR` selects the n-th arm by position (out of
+  range → `NULL`) — so `switch("a", a = "ok", b = stop("x"))` does not raise.
+  **`stop(...)`** raises an error (concatenated message); **`warning(...)`** emits
+  a warning and returns invisibly without aborting; **`tryCatch(expr, error = fn,
+  finally = cleanup)`** runs `expr`, routes any error to `error` (called with a
+  minimal condition object so `conditionMessage(e)` and `e$message` give the
+  message), and always runs `finally`. *(Empty-arm fall-through is deferred to
+  R-19 — it needs a grammar production for empty args.)* See `s-runtime` 0.14.0.
+
 ## [0.12.0] - 2026-06-17
 
 ### Added (via the shared `s-runtime`)

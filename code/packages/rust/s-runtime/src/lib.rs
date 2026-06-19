@@ -1103,7 +1103,10 @@ mod tests {
 
     #[test]
     fn switch_numeric_selects_by_position() {
-        assert_eq!(show("switch(2, \"one\", \"two\", \"three\")\n"), "[1] \"two\"");
+        assert_eq!(
+            show("switch(2, \"one\", \"two\", \"three\")\n"),
+            "[1] \"two\""
+        );
         // Out of range → NULL (no error).
         assert_eq!(show("switch(9, \"one\", \"two\")\n"), "NULL");
         assert_eq!(show("switch(0, \"one\", \"two\")\n"), "NULL");
