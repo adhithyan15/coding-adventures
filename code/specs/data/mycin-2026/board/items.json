@@ -119,6 +119,8 @@
     {"id": "rheum_sle_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "systemic_lupus_erythematosus",   "var": "Antibody", "gold": "anti_dsdna"},
     {"id": "rheum_gpa_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "granulomatosis_with_polyangiitis","var": "Antibody", "gold": "pr3"},
     {"id": "rheum_ssc_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "systemic_sclerosis",            "var": "Antibody", "gold": "anti_scl70"},
+    {"id": "rheum_ra_ab",    "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "rheumatoid_arthritis",           "var": "Antibody", "gold": "anti_ccp"},
+    {"id": "rheum_sjo_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "sjogren_syndrome",              "var": "Antibody", "gold": "anti_ro"},
 
     {"id": "onco_ovarian_marker", "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "ovarian_cancer",               "var": "Marker", "gold": "ca_125"},
     {"id": "onco_mtc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "medullary_thyroid_carcinoma",   "var": "Marker", "gold": "calcitonin"},

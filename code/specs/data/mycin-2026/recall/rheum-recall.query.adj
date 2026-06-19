@@ -17,3 +17,5 @@ import "rheum-edges.adj"
 ? associated_autoantibody(systemic_lupus_erythematosus, $Antibody)   % expect anti_dsdna / anti_smith / anti_ribosomal_p
 ? associated_autoantibody(granulomatosis_with_polyangiitis, $Antibody)  % expect pr3
 ? associated_autoantibody(systemic_sclerosis, $Antibody)             % expect anti_scl70 / anti_centromere
+? associated_autoantibody(rheumatoid_arthritis, $Antibody)           % expect anti_ccp        (backfill)
+? associated_autoantibody(sjogren_syndrome, $Antibody)               % expect anti_ro / anti_la (backfill)

@@ -33,6 +33,8 @@ EXPECTED = {
     "systemic_lupus_erythematosus": {"anti_dsdna", "anti_smith", "anti_ribosomal_p"},
     "granulomatosis_with_polyangiitis": {"pr3"},
     "systemic_sclerosis": {"anti_scl70", "anti_centromere"},
+    "rheumatoid_arthritis": {"anti_ccp"},                 # primary-source backfill (NBK441999)
+    "sjogren_syndrome": {"anti_ro", "anti_la"},           # primary-source backfill (NBK431049)
 }
 REL = "associated_autoantibody"
 VAR = "Antibody"
