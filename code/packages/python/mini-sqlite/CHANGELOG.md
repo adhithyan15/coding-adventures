@@ -1,5 +1,45 @@
 # Changelog
 
+## [2.27.0] - 2026-06-19
+
+### Fixed
+
+- **Column-level `ON CONFLICT` clause now accepted in `CREATE TABLE`** —
+  SQLite allows each `NOT NULL`, `UNIQUE`, and `PRIMARY KEY` column
+  constraint to carry its own conflict-resolution policy:
+
+  ```sql
+  CREATE TABLE t (x INT NOT NULL ON CONFLICT IGNORE, y TEXT)
+  CREATE TABLE t (x INT UNIQUE ON CONFLICT REPLACE, y TEXT)
+  CREATE TABLE t (x INT PRIMARY KEY ON CONFLICT ABORT, y TEXT)
+  CREATE TABLE t (x INTEGER PRIMARY KEY AUTOINCREMENT ON CONFLICT REPLACE, y TEXT)
+  ```
+
+  Previously all such forms raised a parse error.  The fix adds an optional
+  nested `col_conflict_clause` sub-rule to `col_constraint` in `sql.grammar`.
+  Using a *nested* sub-rule is deliberate: the adapter's keyword-sequence
+  matching in `_col_def` collects only the *direct* keyword children of each
+  `col_constraint` node, so the `ON / CONFLICT / action` tokens stay inside
+  the sub-node and existing logic (`NOT NULL → not_null=True`, `UNIQUE →
+  unique=True`, etc.) is completely unaffected.
+
+  Mini-sqlite always uses `ABORT` semantics for constraint violations; the
+  per-column action is parsed and silently ignored.
+
+  | SQL form                                              | Before      | After |
+  |-------------------------------------------------------|-------------|-------|
+  | `x INT NOT NULL ON CONFLICT IGNORE`                   | Parse error | OK    |
+  | `x INT NOT NULL ON CONFLICT REPLACE`                  | Parse error | OK    |
+  | `x INT UNIQUE ON CONFLICT ABORT`                      | Parse error | OK    |
+  | `x INT PRIMARY KEY ON CONFLICT FAIL`                  | Parse error | OK    |
+  | `x INT PRIMARY KEY AUTOINCREMENT ON CONFLICT REPLACE` | Parse error | OK    |
+  | All five actions: ROLLBACK, ABORT, FAIL, IGNORE, REPLACE | Parse error | OK |
+
+- **26 new oracle tests** in `test_tier3_col_conflict_clause.py` cover
+  all three constraint types × all five conflict actions, mixed
+  multi-column tables, COLLATE coexistence, table-level constraint
+  coexistence, and WITHOUT ROWID.
+
 ## [2.26.0] - 2026-06-16
 
 ### Fixed
