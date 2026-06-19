@@ -87,6 +87,8 @@ runtime and Chief of Staff tools a typed catalog for:
   slot-audit blocker and operator handoff counts
 - mesh preflight execution readiness summaries that combine slot readiness
   with operator-ready execution ticket counts
+- mesh preflight work-order readiness summaries that combine execution
+  readiness with release work-order counts
 - mesh readiness handoff packages that project substrate actions, evidence
   remediation, and release-ready state for reusable release coordination
 - mesh release-readiness checks that summarize substrate action, evidence,

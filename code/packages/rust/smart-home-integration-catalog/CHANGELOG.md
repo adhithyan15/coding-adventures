@@ -103,6 +103,8 @@ All notable changes to this package will be documented in this file.
   handoff counts.
 - `IntegrationMeshPreflightExecutionReadinessSummary` and helpers for combining
   mesh preflight slot readiness with operator-ready execution ticket counts.
+- `IntegrationMeshPreflightWorkOrderReadinessSummary` and helpers for combining
+  mesh preflight execution readiness with release work-order counts.
 - `IntegrationMeshReadinessHandoffPackage`, summary helpers, and D23 mesh
   readiness handoff projections for release coordination across substrate
   actions, evidence remediation, and release-ready state.
