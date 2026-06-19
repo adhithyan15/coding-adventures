@@ -132,6 +132,12 @@
     {"id": "cardio_as_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "crescendo_decrescendo_systolic",  "var": "Lesion", "gold": "aortic_stenosis"},
     {"id": "cardio_mvp_lesion", "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "late_systolic_click",            "var": "Lesion", "gold": "mitral_valve_prolapse"},
     {"id": "cardio_tr_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "holosystolic_left_lower_sternal", "var": "Lesion", "gold": "tricuspid_regurgitation"},
-    {"id": "cardio_ar_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "decrescendo_diastolic",          "var": "Lesion", "gold": "aortic_regurgitation"}
+    {"id": "cardio_ar_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "decrescendo_diastolic",          "var": "Lesion", "gold": "aortic_regurgitation"},
+
+    {"id": "neuro_wernicke_def", "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "wernicke_area",       "var": "Deficit", "gold": "fluent_aphasia"},
+    {"id": "neuro_broca_def",    "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "broca_area",          "var": "Deficit", "gold": "nonfluent_aphasia"},
+    {"id": "neuro_arcuate_def",  "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "arcuate_fasciculus",  "var": "Deficit", "gold": "conduction_aphasia"},
+    {"id": "neuro_nigra_def",    "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "substantia_nigra",    "var": "Deficit", "gold": "parkinson_disease"},
+    {"id": "neuro_stn_def",      "domain": "neuro", "tactic": "recall", "relation": "lesion_causes", "subject": "subthalamic_nucleus", "var": "Deficit", "gold": "hemiballismus"}
   ]
 }

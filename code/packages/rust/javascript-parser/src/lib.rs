@@ -304,4 +304,124 @@ mod tests {
         assert_eq!(pwc.ast.rule_name, "program");
         assert!(!pwc.cv.is_empty());
     }
+
+    // ===================================================================
+    // CLOC17 — assignment-expression parsing regression
+    // ===================================================================
+    //
+    // The `assignment_expression` PEG rule used to list `conditional_expression`
+    // BEFORE the `left_hand_side_expression assignment_operator
+    // assignment_expression` alternative. Ordered-choice PEG is first-match-
+    // wins: a bare identifier `a` is itself a valid `conditional_expression`,
+    // so the parser committed to that alternative, consumed only `a`, and left
+    // the `=` unconsumed — the assign-target alternative was never reached and
+    // `a = 1;` failed to parse. closurec then fell back to whitespace-only
+    // minification for the WHOLE program (see spec CLOC17). The fix reorders
+    // every es*.grammar so the assign-target alternative is tried first
+    // (function-likes ahead of it, `conditional_expression` last); when no
+    // assignment operator follows the left-hand side the sequence fails fast
+    // and falls through to `conditional_expression` exactly as before.
+    //
+    // The bug was identical across all 14 grammars, so these tests sweep
+    // `EsVersion::ALL` for the version-independent forms, and check the
+    // arrow/yield alternatives (which must stay AHEAD of assign-target) only
+    // on the versions that have them.
+
+    /// Assert `src` parses (grammar stage) under `version` and yields a
+    /// `program` root.
+    fn assert_parses(src: &str, version: EsVersion) {
+        let node = parse_javascript_typed(src, version)
+            .unwrap_or_else(|e| panic!("[{version:?}] expected `{src}` to parse, got: {e}"));
+        assert_eq!(node.rule_name, "program", "[{version:?}] `{src}`");
+    }
+
+    #[test]
+    fn cloc17_assignment_statements_parse_every_version() {
+        // The canonical forms the reorder unblocks: simple assignment,
+        // compound assignment, member-target assignment, a right-associative
+        // chain, and a ternary right-hand side. All 14 grammars shared the
+        // bug, so all 14 must now accept them.
+        for &version in EsVersion::ALL {
+            assert_parses("a = 1;", version);
+            assert_parses("a += 1;", version);
+            assert_parses("a.b = 1;", version);
+            assert_parses("a = b = c;", version); // right-associative chain
+            assert_parses("a = b ? c : d;", version); // ternary RHS
+        }
+    }
+
+    #[test]
+    fn cloc17_compound_assignment_operators_parse() {
+        // A representative spread of compound operators on a modern grammar —
+        // each is a distinct `assignment_operator` token, all of which now sit
+        // behind the reachable assign-target alternative.
+        for src in [
+            "a += 1;",
+            "a -= 1;",
+            "a *= 1;",
+            "a /= 1;",
+            "a %= 1;",
+            "a <<= 1;",
+            "a >>= 1;",
+            "a >>>= 1;",
+            "a &= 1;",
+            "a |= 1;",
+            "a ^= 1;",
+        ] {
+            assert_parses(src, EsVersion::Es2025);
+        }
+    }
+
+    #[test]
+    fn cloc17_non_assignment_forms_still_parse_every_version() {
+        // The reorder tries the assign-target alternative FIRST; when no
+        // assignment operator follows the left-hand side it must fail fast and
+        // fall through to `conditional_expression`. Pin that every common
+        // non-assignment expression statement (and the separate declarator
+        // path) still parses, on every version — i.e. the reorder is purely
+        // additive.
+        for &version in EsVersion::ALL {
+            assert_parses("a;", version); // bare identifier
+            assert_parses("a.b;", version); // member
+            assert_parses("f();", version); // call
+            assert_parses("a + b;", version); // binary
+            assert_parses("a ? b : c;", version); // ternary
+            assert_parses("var x = 1;", version); // declarator init (separate path)
+        }
+    }
+
+    #[test]
+    fn cloc17_arrow_and_yield_unaffected_on_modern_versions() {
+        // Arrow / yield alternatives stay AHEAD of the assign-target
+        // alternative in the reordered rule, so they must still parse where
+        // the version supports them (es2015+).
+        for &version in &[EsVersion::Es2015, EsVersion::Es2025] {
+            assert_parses("var f = x => x;", version);
+        }
+        // `yield` is only meaningful inside a generator body.
+        assert_parses("function* g() { yield 1; }", EsVersion::Es2025);
+    }
+
+    #[test]
+    fn cloc17_assignment_bridges_to_assignment_expression() {
+        // End-to-end through the bridge: the parsed assignment must produce an
+        // `AssignmentExpression` typed node (not a parse error / fallback),
+        // proving the fix unblocks the downstream optimization pipeline and
+        // not merely the parser.
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        use coding_adventures_javascript_ast::{Expression, ProgramItem, Statement};
+        let program = parse_javascript_program("a = 1;", EsVersion::Es2025)
+            .expect("assignment must bridge to a typed Program");
+        let item = program.body.first().expect("one program item");
+        match item {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(es))) => {
+                assert!(
+                    matches!(es.expression, Expression::AssignmentExpression(_)),
+                    "expected AssignmentExpression, got {:?}",
+                    es.expression
+                );
+            }
+            other => panic!("expected an expression statement, got {other:?}"),
+        }
+    }
 }

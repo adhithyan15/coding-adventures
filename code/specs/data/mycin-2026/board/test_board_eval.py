@@ -51,7 +51,7 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     # answers, so the board scores the top binding per subject (the libraries + their
     # tests cover all edges).
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 103
+    assert len(recall_correct) == 108
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
@@ -84,6 +84,9 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["cardio_mr_lesion"].answer == "mitral_regurgitation"  # cardiology (CARDIO, Tier-2)
     assert by_id["cardio_as_lesion"].answer == "aortic_stenosis"  # cardio — murmur_indicates (murmur->lesion)
     assert by_id["cardio_mr_lesion"].trust == "authoritative"    # ADJ-only edge, grounded inline
+    assert by_id["neuro_broca_def"].answer == "nonfluent_aphasia"  # neurology (NEURO, Tier-2)
+    assert by_id["neuro_stn_def"].answer == "hemiballismus"      # neuro — lesion_causes (site->deficit)
+    assert by_id["neuro_broca_def"].trust == "authoritative"     # ADJ-only edge, grounded inline
 
 
 def test_uncovered_items_abstain_not_fabricate() -> None:
@@ -126,8 +129,8 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
     # verbatim, so the framework declines to claim grounding it cannot defend, by design:
     # cortisol_def (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame
     # cortisol deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
-    assert s["grounded_coverage"] == round(102 / 103, 4)   # 0.9903
-    assert s["grounded_correct"] == 102
+    assert s["grounded_coverage"] == round(107 / 108, 4)   # 0.9907
+    assert s["grounded_correct"] == 107
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia
