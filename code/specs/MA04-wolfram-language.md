@@ -778,7 +778,148 @@ lexer, grammar, `_grammar.rs`, and the decorator's held set are untouched (none 
 these heads is held — `f`, the seed, and the list are eagerly evaluated before the
 handler runs).
 
-## §6 References
+## §14 W-11 pure functions — `Function`, `#`/`#n`/`##` slots, `&` postfix (implemented)
+
+W-4..W-10 gave the M-expression core, the arithmetic/`Plus`→`Add` bridge, operator
+sugar (`/@`, `@@`, `[[ ]]`), iteration (`Table`, `Sum`), scoping (`With`, `Module`),
+list manipulation (`Sort`, `Select`, `Total`), and the functional-iteration
+combinators (`Map`, `Nest`, `Fold`). W-11 adds Wolfram's **anonymous (pure)
+functions** — the single most-used functional idiom — so a higher-order builtin can
+take an inline lambda instead of a named definition:
+
+```wolfram
+Map[#^2 &, {1, 2, 3}]            (* {1, 4, 9}  — square each *)
+Select[{1, 2, 3, 4}, EvenQ]     (* already worked since W-9   *)
+Select[{1, 2, 3, 4}, Mod[#, 2] == 0 &]   (* {2, 4} — inline predicate *)
+Nest[# + 1 &, 0, 3]             (* 3 *)
+```
+
+### §14.1 Surface forms
+
+Pure functions have **two interchangeable spellings**, both of which lower to the
+*same* IR head `Function`:
+
+| Surface                       | Meaning                                              |
+|-------------------------------|------------------------------------------------------|
+| `Function[x, body]`           | one named parameter `x`                              |
+| `Function[{x, y}, body]`      | named parameters `x`, `y`                            |
+| `body &`                      | a slot-based pure function (the `&` postfix)         |
+| `#`  ≡  `#1`                  | the first argument slot                              |
+| `#1`, `#2`, …                 | the *n*-th argument slot                             |
+| `##`                          | `SlotSequence` — *all* arguments, spliced            |
+
+`(#^2)&` and `Function[x, x^2]` are two ways to write "square the argument"; applied
+to `5` both give `25`. `(#1 + #2)&` and `Function[{x, y}, x + y]` both add two args.
+
+### §14.2 Grammar + lexer change (mirrors W-6)
+
+Unlike every head since W-5, pure functions **need new surface syntax**, so W-11
+edits `wolfram.tokens` and `wolfram.grammar` and **regenerates** the embedded
+`_grammar.rs` for the lexer and parser via the Rust `grammar-tools` CLI — exactly as
+W-6 did for `/@`, `@@`, `[[`. The `_grammar.rs` files are GENERATED; they are never
+hand-edited (lessons.md).
+
+**Tokens** (`wolfram.tokens`, longest-match-first — `##` *before* `#`):
+
+| Token     | Lexeme | Note                                                       |
+|-----------|--------|------------------------------------------------------------|
+| `SLOTSEQ` | `##`   | listed first so `##` wins over two `#`                      |
+| `HASH`    | `#`    | the slot opener; a following `NUMBER` (`#2`) is read in the parser |
+| `AMP`     | `&`    | the postfix "make a pure function" marker                  |
+
+A slot *number* is **not** a dedicated token: `#2` lexes as `HASH` followed by the
+existing `NUMBER` token, and the grammar's `slot` rule consumes the optional number.
+This reuses the lexer untouched (no new number-suffix regex) and keeps the lexer
+change to three plain string tokens — the minimal, W-6-shaped diff. (`#` and the
+multiply `*` never collide; `&` is unrelated to the existing `&&` `AND`, which
+remains a separate longest-match-first multi-char token.)
+
+**Grammar** (`wolfram.grammar`):
+
+- A new `slot` atom: `slot = HASH [ NUMBER ] | SLOTSEQ` — `#`, `#n`, or `##` — added
+  as an alternative in `atom`.
+- A new **postfix** level `amp` for the trailing `&`. The `&` must bind **looser
+  than `^`** so it captures the *whole* `#^2` (giving `(#^2)&`, not `#^(2&)`), so
+  `amp` sits *above* `power` in the cascade and the existing `mapapply` layer now
+  calls `amp` instead of `power`:
+
+  ```text
+  mapapply = amp { ( MAP | APPLY ) amp }   # /@, @@ now operate on amp operands
+  amp      = power { AMP }                  # trailing & wraps the preceding expr
+  power    = postfix [ POWER unary ]        # ^ unchanged, binds tighter than &
+  ```
+
+  A trailing run of `&` (`expr &`) wraps the preceding `power` expression into a
+  `Function` node with no explicit parameter list (a slot-based pure function);
+  `expr & &` wraps twice (rare but well-defined). The precedence is **tested
+  directly**: `#^2 &` must lower to `Function[Pow[Slot[1], 2]]`, *not*
+  `Pow[Slot[1], Function[2]]`.
+
+The opener-only / longest-match conventions follow W-6: no `&&`-vs-`&` ambiguity (the
+two-char `AND` is matched first), and `##`-before-`#` guarantees the sequence slot is
+never mis-lexed as two single slots.
+
+### §14.3 Lowering — `Function`, slots, and `&` to a callable
+
+`wolfram-runtime` lowers the three forms to a single canonical IR shape the
+evaluator recognises:
+
+| Surface                  | IR                                                        |
+|--------------------------|----------------------------------------------------------|
+| `#` / `#1`               | `Slot[1]`                                                 |
+| `#n`                     | `Slot[n]`                                                 |
+| `##`                     | `SlotSequence[1]`                                         |
+| `Function[x, body]`      | `Function[List[x], body]`  (named params normalised to a list) |
+| `Function[{x,y}, body]`  | `Function[List[x, y], body]`                              |
+| `body &`                 | `Function[body]`  (a one-argument `Function`, slot-based) |
+
+So a `Function` node is either **two-argument** (`Function[params, body]`, named) or
+**one-argument** (`Function[body]`, slot-based). Both are *inert values* until
+applied: `Function[…]` on its own evaluates to itself (it is the Wolfram "function
+object"). Application is `Function[…][args]` — an `Apply` whose **head is itself a
+`Function` apply**.
+
+### §14.4 Application — a backend rewrite rule, reusing `vm.rs::substitute`
+
+The application `Function[…][args]` is intercepted by a **backend rewrite rule** (the
+`Backend::rules()` seam the VM already consults in `eval_apply`, *before* head
+dispatch, on the already-arg-evaluated `IRApply`). The predicate matches an `Apply`
+whose head is `Apply(Function, …)`; the transform:
+
+1. **Named** `Function[List[p1, …, pn], body]`: bind `p1 → arg1, …` and run the
+   **same `vm.rs::substitute`** user functions (W-4 `Define`), W-7 `Table`, and W-8
+   scoping already use. Arity is checked; a mismatch leaves the form unevaluated.
+2. **Slot-based** `Function[body]`: substitute `Slot[k] → argk` and splice
+   `SlotSequence[k] → argk, argk+1, …` into any enclosing application's argument
+   list, then return the body for the VM to re-evaluate.
+
+Because the rule fires *inside* `vm.eval` on `Apply(Function[…], [args])`, it
+**composes for free** with every W-5/W-9/W-10 combinator: `map_handler` already does
+`vm.eval(build_canonical_application(f, [x]))`; when `f` is a `Function[…]` that is
+exactly `Apply(Function[…], [x])`, so `Map[#^2 &, {1,2,3}]` → `{1,4,9}` with **no new
+code in `Map`**. Likewise `Select[{1,2,3,4}, Mod[#,2]==0 &]` → `{2,4}` and
+`Nest[#+1 &, 0, 3]` → `3`.
+
+Slot substitution is **non-capturing by construction**: slots are looked up only
+against the *current* application's arguments, and a nested `Function` re-binds its
+own slots when *it* is applied, so an outer `#` cannot leak into an inner pure
+function's body before the inner one is applied. (Wolfram's true nested-slot scoping
+via `Function` levels is out of subset scope and documented as such; the common
+single-level idioms all behave correctly.)
+
+### §14.5 DoS surface — bounded substitution, bounded recursion
+
+A pure function substitutes its body **once** per application (one `substitute` walk
+over a body whose size is bounded by the token/-input-capped source), so a single
+application is linear in the body size. Self-referential recursion — e.g. a pure
+function that re-applies itself — is bounded by the evaluator's existing recursion
+handling exactly as a self-referential `Define` is (each re-application is an ordinary
+`vm.eval` over a strictly *non-growing* body; an unbounded fixpoint diverges no worse
+than `f[x_] := f[x]`, which W-4 already tolerates). The slot/`SlotSequence` splice
+produces an argument list bounded by the *call's* argument count, never amplified.
+W-11 therefore adds **no new unbounded growth source** beyond what W-4 already bounds.
+
+### §6 References
 
 Internal: [`HML00`](HML00-historical-math-languages-roadmap.md),
 [`MA03`](MA03-maxima-language.md) (the Maxima reuse precedent),
