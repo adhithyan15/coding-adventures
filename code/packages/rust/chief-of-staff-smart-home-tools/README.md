@@ -57,6 +57,8 @@ Chief of Staff job/session/agent
      lane rollups
   -> mesh primitive-readiness, substrate-stage, and substrate-action reads for
      low-level protocol release blockers
+  -> mesh substrate preflight check, repair action, repair batch, and
+     preflight readiness reads for release-prep blockers
   -> mesh readiness package, stage-release, action-readiness, and
      release-readiness reads for release go/no-go
   -> mesh readiness handoff list and summary reads for release coordination
