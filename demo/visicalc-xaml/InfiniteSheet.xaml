@@ -85,6 +85,18 @@
                         Content="Load"
                         ToolTipService.ToolTip="Restore the workbook from the last save"
                         Click="LoadButton_Click"/>
+                <Button x:Name="UndoButton" Margin="8,0,0,0" Height="28"
+                        Background="#2D2D30" Foreground="#CCCCCC" BorderBrush="#3F3F46"
+                        BorderThickness="1" FontSize="12" FontFamily="Consolas"
+                        Content="Undo"
+                        ToolTipService.ToolTip="Undo the last edit"
+                        Click="UndoButton_Click"/>
+                <Button x:Name="RedoButton" Margin="8,0,0,0" Height="28"
+                        Background="#2D2D30" Foreground="#CCCCCC" BorderBrush="#3F3F46"
+                        BorderThickness="1" FontSize="12" FontFamily="Consolas"
+                        Content="Redo"
+                        ToolTipService.ToolTip="Redo the last undone edit"
+                        Click="RedoButton_Click"/>
             </StackPanel>
         </Grid>
 

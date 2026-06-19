@@ -161,6 +161,10 @@ document held in memory and restore it (`LoadBook` / `sc_deserialize`): the
 document captures only the source (formula text + typed literals) and per-cell
 formats — not the computed values, which the engine recomputes on load, so a
 loaded formula stays live.
+The **Undo / Redo** buttons walk the engine's snapshot history
+(`InfiniteSheetModel.UndoEdit`/`RedoEdit` over the C ABI's `sc_undo`/`sc_redo`);
+they enable/disable off `CanUndo`/`CanRedo` (refreshed after every edit). Every
+edit is reversible and a restored formula recomputes live.
 
 `InfiniteSheetModel` (in `Engine.cs`, WinUI-free) seeds far-flung sparse cells
 (`Z1000`, `BA50`, `BB50`) and derives the extent from `UsedRange()` + a margin
@@ -182,7 +186,9 @@ directly: `RowCells` one-read rows, `SelectInf` clamping + source load,
 `CommitInf` recompute (A2 `8`→`108` ⇒ E2 151, A5 139, E5 269), drag-fill,
 clipboard copy/cut/paste, and a save/load round trip (`SaveBook` → mutate A1 ⇒
 E1 523.00 → `LoadBook` restores A1 15 / E1 38.00, the loaded formula stays live
-with A1=5 ⇒ E1 28.00, and malformed input is rejected).
+with A1=5 ⇒ E1 28.00, and malformed input is rejected), and an undo/redo walk on
+a fresh session (two edits → undo both → redo both with the formula recomputing
+live → a fresh edit forks history).
 
 ## Where this fits in the cross-backend demo plan
 
