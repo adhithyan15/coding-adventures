@@ -90,7 +90,9 @@ All notable changes to this package will be documented in this file.
   `smart_home.list_integration_mesh_preflight_repair_schedule`,
   `smart_home.get_integration_mesh_preflight_repair_schedule_summary`,
   `smart_home.get_integration_mesh_preflight_readiness_summary`, and
-  `smart_home.get_integration_mesh_preflight_repair_readiness_summary`
+  `smart_home.get_integration_mesh_preflight_repair_readiness_summary`,
+  `smart_home.get_integration_mesh_preflight_batch_readiness_summary`, and
+  `smart_home.get_integration_mesh_preflight_schedule_readiness_summary`
   descriptors for read-only D23 mesh substrate preflight repair readiness
   planning.
 - `smart_home.get_integration_mesh_release_readiness_summary` descriptor for

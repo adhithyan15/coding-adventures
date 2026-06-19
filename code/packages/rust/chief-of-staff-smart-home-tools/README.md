@@ -58,8 +58,8 @@ Chief of Staff job/session/agent
   -> mesh primitive-readiness, substrate-stage, and substrate-action reads for
      low-level protocol release blockers
   -> mesh substrate preflight check, repair action, repair batch, repair
-     schedule, and
-     preflight readiness reads for release-prep blockers
+     schedule, and preflight repair/batch/schedule readiness reads for
+     release-prep blockers
   -> mesh readiness package, stage-release, action-readiness, and
      release-readiness reads for release go/no-go
   -> mesh readiness handoff list and summary reads for release coordination
@@ -163,6 +163,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_mesh_preflight_repair_schedule_summary`
 - `smart_home.get_integration_mesh_preflight_readiness_summary`
 - `smart_home.get_integration_mesh_preflight_repair_readiness_summary`
+- `smart_home.get_integration_mesh_preflight_batch_readiness_summary`
+- `smart_home.get_integration_mesh_preflight_schedule_readiness_summary`
 - `smart_home.get_integration_mesh_release_readiness_summary`
 - `smart_home.list_integration_mesh_readiness_handoffs`
 - `smart_home.get_integration_mesh_readiness_handoff_summary`
