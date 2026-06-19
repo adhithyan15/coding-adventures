@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 121,
-    "correct": 114,
+    "total": 126,
+    "correct": 119,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 108,
+        "correct": 113,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9907,
-    "grounded_correct": 107
+    "grounded_coverage": 0.9912,
+    "grounded_correct": 112
   },
   "results": [
     {
@@ -992,6 +992,46 @@
       "tactic": "recall",
       "gold": "hemiballismus",
       "answer": "hemiballismus",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "gi_celiac_dx",
+      "tactic": "recall",
+      "gold": "celiac_disease",
+      "answer": "celiac_disease",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "gi_crohn_dx",
+      "tactic": "recall",
+      "gold": "crohn_disease",
+      "answer": "crohn_disease",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "gi_barrett_dx",
+      "tactic": "recall",
+      "gold": "barrett_esophagus",
+      "answer": "barrett_esophagus",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "gi_hirsch_dx",
+      "tactic": "recall",
+      "gold": "hirschsprung_disease",
+      "answer": "hirschsprung_disease",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "gi_eoe_dx",
+      "tactic": "recall",
+      "gold": "eosinophilic_esophagitis",
+      "answer": "eosinophilic_esophagitis",
       "outcome": "correct",
       "trust": "authoritative"
     }

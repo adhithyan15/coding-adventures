@@ -1,0 +1,75 @@
+% ============================================================================
+% gi-edges — the GI biopsy/histology knowledge-graph (MYCIN-2026 GI).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", #8 gastrointestinal):
+% the characteristic biopsy/histology finding and the GI diagnosis it points to. "A small-
+% bowel biopsy shows villous atrophy — what is the diagnosis?" becomes the binding query
+%     ? biopsy_finding_in(villous_atrophy, $Disease).
+%
+% Direction note: the relation is finding -> disease (`biopsy_finding_in`), the board
+% direction — you SEE the histology and must name the disease. The cited spans read either
+% way ("villous atrophy ... confirm the diagnosis of celiac disease"; "Crohn disease ...
+% characterized by transmural inflammation") — what matters for grounding is that one
+% self-contained span names BOTH the finding AND the disease. Each finding here maps to one
+% canonical diagnosis, so a query binds a single answer with its citation.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the tenth ADJ-only recall domain; sixth Tier-2 organ-system domain
+% after RHEUM, ONCO, HISTO, CARDIO, NEURO). Each fact is a `relate` clause whose byte-
+% provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it appears
+%                character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see gi-recall.query.adj. Nothing here is asserted
+% "from memory": every edge is defended by a span a reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only findings whose page states the association in a clean self-contained
+% span (both finding AND disease named) are included. Deferred — ulcerative colitis: its
+% page describes crypt distortion / goblet-cell depletion in sentences that do not name
+% "ulcerative colitis" alongside the finding; Whipple disease: its PAS-positive-foamy-
+% macrophage criterion sentence does not name "Whipple" in the same declarative.
+% ============================================================================
+
+dictionary gi_vocab {
+    define finding : entity   surface "biopsy finding", "histology finding"
+    define disease : entity   surface "GI diagnosis", "disease"
+
+    define biopsy_finding_in : relation from finding to disease  % the disease a biopsy finding points to
+}
+
+rulebook gi_facts {
+    use gi_vocab
+
+    % --- villous atrophy -> celiac disease -------------------------------------
+    relate biopsy_finding_in(villous_atrophy, celiac_disease)
+        source "Characteristic histologic findings, such as villous atrophy, crypt hyperplasia, and intraepithelial lymphocytosis, confirm the diagnosis of celiac disease, particularly in seronegative or borderline cases."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441900/"
+        trust authoritative
+
+    % --- transmural inflammation -> Crohn disease ------------------------------
+    relate biopsy_finding_in(transmural_inflammation, crohn_disease)
+        source "Crohn disease is an immunologically mediated gastrointestinal disorder characterized by transmural inflammation that can involve any segment of the gastrointestinal tract."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK436021/"
+        trust authoritative
+
+    % --- goblet cells (intestinal metaplasia) -> Barrett esophagus -------------
+    relate biopsy_finding_in(goblet_cells, barrett_esophagus)
+        source "Barrett esophagus is a premalignant condition characterized by salmon-colored mucosa extending at least 1 cm proximal to the gastroesophageal junction, with biopsies showing columnar epithelium and goblet cells indicative of intestinal metaplasia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430979/"
+        trust authoritative
+
+    % --- absence of ganglion cells -> Hirschsprung disease ---------------------
+    relate biopsy_finding_in(absence_of_ganglion_cells, hirschsprung_disease)
+        source "Hirschsprung disease (HD) is a congenital disorder defined by the absence of ganglion cells (GC) at the Meissner's plexus of the submucosa and Auerbach's plexus of the muscularis in the terminal rectum"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562142/"
+        trust authoritative
+
+    % --- >=15 eosinophils per HPF -> eosinophilic esophagitis ------------------
+    relate biopsy_finding_in(eosinophils_15_per_hpf, eosinophilic_esophagitis)
+        source "The pathological diagnosis of EoE is made when eosinophils are present greater than or equal to 15 per high power field (HPF)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459297/"
+        trust authoritative
+}
