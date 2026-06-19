@@ -58,7 +58,7 @@ Chief of Staff job/session/agent
   -> mesh primitive-readiness, substrate-stage, and substrate-action reads for
      low-level protocol release blockers
   -> mesh substrate preflight check, repair action, repair batch, repair
-     schedule, repair slot audit, and preflight repair/batch/schedule
+     schedule, repair slot audit, and preflight repair/batch/schedule/slot
      readiness reads for release-prep blockers
   -> mesh readiness package, stage-release, action-readiness, and
      release-readiness reads for release go/no-go
