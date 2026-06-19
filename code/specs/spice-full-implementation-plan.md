@@ -79,10 +79,11 @@ downstream tools to compare.
      `START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
      initial-condition intent; selected `.tran` execution now keeps `.tran
      TSTEP` as the deck output print grid while `MAXSTEP` caps internal solver
-     stepping; deck executions now expose normalized selected output probes as
-     an inspectable artifact alongside the stable table; selected `.measure`
-     outputs now travel with deck execution results as structured measurements
-     plus stable measurement tables; selected transient `.four` outputs now
+     stepping; deck executions now expose normalized selected output probes and
+     output directives as inspectable artifacts alongside the stable table;
+     selected `.measure` outputs now travel with deck execution results as
+     structured measurements plus stable measurement tables; selected transient
+     `.four` outputs now
      travel with deck execution results as structured Fourier artifacts plus
      stable Fourier tables; selected deck executions now include structured
      run-artifact summaries plus stable row/count tables for result rows,
@@ -898,13 +899,22 @@ downstream tools to compare.
       integrations can inspect selected result, measurement, Fourier, and
       run-artifact tables without reparsing raw text or JSON strings.
 
+83. Deck execution output directives artifact.
+    - Status: completed in this deck output directives slice.
+    - Python, Rust, and TypeScript selected deck executions now expose
+      normalized output directives beside selected output probes on the
+      execution result.
+    - Host and browser integrations can inspect which `.save`, `.probe`,
+      `.print`, or `.plot` cards selected the output table without reparsing
+      run-artifact tables.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
      including richer deck-owned run artifacts beyond selected output,
-     measurement, Fourier, and transfer-function probe lists, plus output-plan
-     integration beyond stable table routing.
+     output-directive, measurement, Fourier, and transfer-function probe lists,
+     plus output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
      selection toward full SPICE compatibility.

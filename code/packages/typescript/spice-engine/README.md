@@ -91,17 +91,18 @@ by analysis alias, defaults decks without analysis cards to an implicit `.op`,
 and reports ambiguity before solver dispatch.
 `runDeckAnalysis` executes one selected `.op`, `.dc`, `.ac LIN`, `.ac DEC`,
 `.ac OCT`, or `.tran` plan against an existing `Circuit` and returns the plan,
-solver result, deck-selected output table, and normalized output probes that
-produced the table, plus selected `.measure` results and a stable measurement
-table for `.dc`, `.ac`, and `.tran` executions. Selected `.tran` plans route
+solver result, deck-selected output table, and normalized output probes and
+output directives that produced the table, plus selected `.measure` results and
+a stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
+`.tran` plans route
 `START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
 an internal fixed-step cap, and `UIC` initial-condition intent through that
 stable transient table surface. They also return selected `.four` harmonic
 results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `formatDeckRunArtifactTable` and
 `formatDeckRunArtifactCsv` / `formatDeckRunArtifactJson` output for stable
-result-row, output-probe, measurement, Fourier, and diagnostic count/name
-lists. `formatDeckTableCsv` also converts any stable tab-separated deck table to
+result-row, output-probe, output-directive, measurement, Fourier, and
+diagnostic count/name lists. `formatDeckTableCsv` also converts any stable tab-separated deck table to
 CSV, `formatDeckTableJson` converts the same tables to compact JSON records,
 and `deckTableRecords` returns header-keyed native records for browser and host
 integrations.
@@ -195,8 +196,9 @@ malformed deck-level analysis controls.
 `selectDeckAnalysisPlan` returns one selected or implicit plan for downstream
 deck execution helpers.
 `runDeckAnalysis` routes that selected plan into the matching solver and stable
-deck-selected table output with normalized output-probe artifacts, selected
-measurement artifacts, selected transient Fourier artifacts, selected-run
-artifact summaries with output-probe, measurement, and Fourier probe name
-lists, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and `.tran` `START` /
+deck-selected table output with normalized output-probe and output-directive
+artifacts, selected measurement artifacts, selected transient Fourier artifacts,
+selected-run artifact summaries with output-probe, output-directive,
+measurement, and Fourier probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT`
+frequency grids, and `.tran` `START` /
 print-step `TSTEP` / `MAXSTEP` / `UIC` controls.

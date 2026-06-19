@@ -2358,6 +2358,7 @@ class DeckAnalysisExecution:
     result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult
     table: str
     output_probes: list[str]
+    output_directives: list[str]
     measurements: list[ProbeMeasurement]
     measurement_table: str
     fourier: list[FourierResult]
@@ -2667,6 +2668,7 @@ def run_deck_analysis(
             result=result,
             table=table,
             output_probes=output_probes,
+            output_directives=output_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2704,6 +2706,7 @@ def run_deck_analysis(
             result=result,
             table=table,
             output_probes=output_probes,
+            output_directives=output_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2743,6 +2746,7 @@ def run_deck_analysis(
             result=result,
             table=table,
             output_probes=output_probes,
+            output_directives=output_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2788,6 +2792,7 @@ def run_deck_analysis(
             result=result,
             table=table,
             output_probes=output_probes,
+            output_directives=output_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2821,6 +2826,7 @@ def run_deck_analysis(
             result=result,
             table=table,
             output_probes=output_probes,
+            output_directives=output_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2853,6 +2859,7 @@ def run_deck_analysis(
             result=result,
             table=table,
             output_probes=output_probes,
+            output_directives=output_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2904,6 +2911,7 @@ def run_deck_analysis(
             result=result,
             table=table,
             output_probes=output_probes,
+            output_directives=output_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,

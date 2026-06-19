@@ -65,7 +65,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 | `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json`, `deck_table_records` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON/record conversion |
-| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, output-probe, measurement, Fourier, and diagnostic count/name lists |
+| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, output-probe, output-directive, measurement, Fourier, and diagnostic count/name lists |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
@@ -104,13 +104,14 @@ implicit `.op`, and reports ambiguity before solver dispatch.
 `run_deck_analysis()` executes one selected `.op`, `.dc`, `.ac LIN`,
 `.ac DEC`, `.ac OCT`, or `.tran` plan against an existing `Circuit` and
 returns the plan, solver result, deck-selected output table, and normalized
-output probes that produced the table, plus selected `.measure` results and a
-stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
+output probes and output directives that produced the table, plus selected
+`.measure` results and a stable measurement table for `.dc`, `.ac`, and `.tran`
+executions. Selected
 `.tran` plans also return selected `.four` harmonic results and a stable
 Fourier table. Executions also include a selected-run artifact summary plus
 `format_deck_run_artifact_table()` and `format_deck_run_artifact_csv()` output
-for stable result-row, output-probe, measurement, Fourier, and diagnostic
-count/name lists. `format_deck_table_csv()` also converts any stable
+for stable result-row, output-probe, output-directive, measurement, Fourier,
+and diagnostic count/name lists. `format_deck_table_csv()` also converts any stable
 tab-separated deck table to CSV, `format_deck_table_json()` converts the same
 tables to compact JSON records, and `deck_table_records()` returns
 header-keyed native records for host integrations. They
@@ -220,10 +221,12 @@ diagnostics for malformed deck-level analysis controls.
 `select_deck_analysis_plan()` returns one selected or implicit plan for
 downstream deck execution helpers.
 `run_deck_analysis()` routes that selected plan into the matching solver and
-stable deck-selected table output with normalized output-probe artifacts,
+stable deck-selected table output with normalized output-probe and
+output-directive artifacts,
 selected measurement artifacts, selected transient Fourier artifacts,
-selected-run artifact summaries with output-probe, measurement, and Fourier
-probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and `.tran`
+selected-run artifact summaries with output-probe, output-directive,
+measurement, and Fourier probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT`
+frequency grids, and `.tran`
 `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
 
 ## Controlled source examples

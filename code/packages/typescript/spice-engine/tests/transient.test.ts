@@ -1471,6 +1471,7 @@ describe("transient", () => {
     const opExecution = runDeckAnalysis(circuit, netlist, "op");
     expect(opExecution.plan.analysis).toBe("op");
     expect(opExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(opExecution.outputDirectives).toEqual([".save"]);
     expect(opExecution.measurements).toEqual([]);
     expect(opExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
@@ -1619,6 +1620,7 @@ describe("transient", () => {
     const dcExecution = runDeckAnalysis(circuit, netlist, "dc");
     expect(dcExecution.plan.sourceName).toBe("V1");
     expect(dcExecution.outputProbes).toEqual(["V(mid)", "I(V1)"]);
+    expect(dcExecution.outputDirectives).toEqual([".save", ".probe"]);
     expect(dcExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_avg"]);
     expect(dcExecution.measurementTable).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
@@ -1657,6 +1659,7 @@ describe("transient", () => {
 
     const acExecution = runDeckAnalysis(circuit, netlist, "ac");
     expect(acExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(acExecution.outputDirectives).toEqual([".save"]);
     expect(acExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_peak"]);
     expect(acExecution.measurementTable).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
@@ -1696,6 +1699,7 @@ describe("transient", () => {
 
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
     expect(tranExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(tranExecution.outputDirectives).toEqual([".save"]);
     expect(tranExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_final"]);
     expect(tranExecution.measurementTable).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
@@ -1738,6 +1742,7 @@ describe("transient", () => {
     expect(tfResult.inputImpedanceOhms).toBeCloseTo(2_000.0, 9);
     expect(tfResult.outputImpedanceOhms).toBeCloseTo(500.0, 9);
     expect(tfExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(tfExecution.outputDirectives).toEqual([]);
     expect(tfExecution.measurements).toEqual([]);
     expect(tfExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(tfExecution.table).toBe(

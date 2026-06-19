@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck execution output directives** —
+  `run_deck_analysis()` now returns selected output directives beside selected
+  output probes so callers can inspect the deck output plan without reparsing
+  run-artifact tables, matching Rust and TypeScript.
+
 - **Deck table records** —
   `deck_table_records()` now parses stable tab-separated deck output tables into
   header-keyed records for browser and host integrations, matching Rust and

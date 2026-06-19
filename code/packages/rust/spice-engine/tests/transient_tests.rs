@@ -1888,6 +1888,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     );
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
+    assert_eq!(op_execution.output_directives, vec![".save".to_string()]);
     assert_eq!(
         format_deck_table_csv(&op_execution.table),
         "Index,V(mid)\n0,5.000000e-01\n"
@@ -2028,6 +2029,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         dc_execution.output_probes,
         vec!["V(mid)".to_string(), "I(V1)".to_string()]
     );
+    assert_eq!(
+        dc_execution.output_directives,
+        vec![".save".to_string(), ".probe".to_string()]
+    );
     assert_eq!(dc_execution.measurements[0].name, "mid_avg");
     assert_eq!(
         dc_execution.measurement_table,
@@ -2086,6 +2091,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 
     let ac_execution = run_deck_analysis(&circuit, netlist, Some("ac")).unwrap();
     assert_eq!(ac_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert_eq!(ac_execution.output_directives, vec![".save".to_string()]);
     assert_eq!(ac_execution.measurements[0].name, "mid_peak");
     assert_eq!(
         ac_execution.measurement_table,
@@ -2149,6 +2155,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 
     let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
     assert_eq!(tran_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert_eq!(tran_execution.output_directives, vec![".save".to_string()]);
     assert_eq!(tran_execution.measurements[0].name, "mid_final");
     assert_eq!(
         tran_execution.measurement_table,
@@ -2216,6 +2223,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         other => panic!("expected TF result, got {other:?}"),
     }
     assert_eq!(tf_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert!(tf_execution.output_directives.is_empty());
     assert!(tf_execution.measurements.is_empty());
     assert_eq!(
         tf_execution.measurement_table,
