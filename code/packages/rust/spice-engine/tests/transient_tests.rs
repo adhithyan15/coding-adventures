@@ -7,21 +7,22 @@ use spice_engine::{
     format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
     format_corner_digital_event_stream_table, format_corner_distortion_table,
     format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
-    format_corner_transient_table, format_dc_table, format_deck_transient_table,
-    format_digital_bridge_schedule_table, format_digital_event_stream_table,
-    format_digital_event_table, format_distortion_table, format_fourier_table,
-    format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
-    fourier, fourier_corners, fourier_transient_deck, measure_transient_deck,
-    measure_transient_delay_between_probes, measure_transient_find_at_probe,
-    measure_transient_probe, measure_transient_when_probe, measure_transient_when_probe_counted,
-    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
-    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, run_deck_analysis, sample_transient_probe_as_digital_events,
-    sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
-    transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
+    format_corner_transient_table, format_dc_table, format_deck_noise_table,
+    format_deck_transient_table, format_digital_bridge_schedule_table,
+    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
+    format_fourier_table, format_measurement_table, format_pole_zero_table, format_pss_table,
+    format_transient_table, fourier, fourier_corners, fourier_transient_deck,
+    measure_transient_deck, measure_transient_delay_between_probes,
+    measure_transient_find_at_probe, measure_transient_probe, measure_transient_when_probe,
+    measure_transient_when_probe_counted, pole_zero_rc_highpass, pole_zero_rc_lowpass,
+    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
+    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, run_deck_analysis,
+    sample_transient_probe_as_digital_events, sample_transient_probes_as_digital_event_streams,
+    transient, transient_adaptive, transient_adaptive_corners,
+    transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
     transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
     transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
@@ -1870,6 +1871,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 .tran 1m 1m
 .tf V(mid) V1
 .sens V(mid)
+.noise V(mid) V1 lin 1 1k 1k
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -2070,6 +2072,49 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         format!(
             "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\nsens\t.sens\t{}\t1\t1\tV(mid)\t0\t\t0\t\n",
             sens_execution.plan.line_number
+        )
+    );
+
+    let noise_execution = run_deck_analysis(&circuit, netlist, Some("noise")).unwrap();
+    assert_eq!(noise_execution.plan.output_node.as_deref(), Some("mid"));
+    assert_eq!(noise_execution.plan.source_name.as_deref(), Some("V1"));
+    assert_eq!(noise_execution.plan.sweep_kind.as_deref(), Some("lin"));
+    assert_eq!(noise_execution.plan.point_count, Some(1));
+    assert!((noise_execution.plan.start_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
+    assert!((noise_execution.plan.stop_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
+    match &noise_execution.result {
+        DeckAnalysisExecutionResult::Noise(result) => {
+            assert_eq!(result.output_node, "mid");
+            assert_eq!(result.input_source, "V1");
+            assert_eq!(result.points.len(), 1);
+            assert_eq!(noise_execution.table, format_deck_noise_table(result));
+        }
+        other => panic!("expected noise result, got {other:?}"),
+    }
+    assert_eq!(noise_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert!(noise_execution.measurements.is_empty());
+    assert_eq!(
+        noise_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    );
+    assert!(noise_execution.table.starts_with(
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD\n"
+    ));
+    assert_eq!(noise_execution.run_artifacts[0].analysis, "noise");
+    assert_eq!(noise_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(
+        noise_execution.run_artifacts[0].output_probes,
+        vec!["V(mid)".to_string()]
+    );
+    assert!(noise_execution.run_artifacts[0]
+        .measurement_names
+        .is_empty());
+    assert!(noise_execution.run_artifacts[0].fourier_probes.is_empty());
+    assert_eq!(
+        noise_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\nnoise\t.noise\t{}\t1\t1\tV(mid)\t0\t\t0\t\n",
+            noise_execution.plan.line_number
         )
     );
 

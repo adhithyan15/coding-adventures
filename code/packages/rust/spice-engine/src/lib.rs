@@ -3399,6 +3399,7 @@ pub enum DeckAnalysisExecutionResult {
     Tran(Vec<TransientPoint>),
     Tf(TfResult),
     Sens(SensResult),
+    Noise(NoiseResult),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -3953,7 +3954,7 @@ pub fn resolve_deck_analyses(netlist: &str) -> DeckAnalysisSummary {
         }
         if matches!(
             directive.as_deref(),
-            Some(".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens")
+            Some(".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens" | ".noise")
         ) {
             resolve_analysis_line(
                 stripped,
@@ -5386,6 +5387,7 @@ fn resolve_analysis_line(
         ".tran" => resolve_tran_analysis(&tokens, line_number, state),
         ".tf" => resolve_tf_analysis(&tokens, line_number, state),
         ".sens" => resolve_sens_analysis(&tokens, line_number, state),
+        ".noise" => resolve_noise_analysis(&tokens, line_number, state),
         _ => {}
     }
 }
@@ -5784,6 +5786,130 @@ fn resolve_sens_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
+    });
+}
+
+fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
+    if !matches!(tokens.len(), 3 | 7) {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".noise",
+            line_number,
+            ".noise requires output voltage probe, input source, and optional sweep kind, point count, start frequency, and stop frequency tokens",
+            None,
+        );
+        return;
+    }
+    let output_probe = normalize_deck_output_probe(&unquote_token(tokens[1]));
+    let Some(output_probe) = output_probe.filter(|probe| probe.starts_with("V(")) else {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".noise",
+            line_number,
+            &format!(
+                ".noise output must be a voltage probe V(node), got {:?}",
+                tokens[1]
+            ),
+            Some(tokens[1].to_string()),
+        );
+        return;
+    };
+    let input_source = unquote_token(tokens[2]).trim().to_string();
+    if input_source.is_empty() {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".noise",
+            line_number,
+            ".noise input source name must not be empty",
+            Some(tokens[2].to_string()),
+        );
+        return;
+    }
+
+    let mut sweep_kind = None;
+    let mut point_count = None;
+    let mut start_frequency_hz = None;
+    let mut stop_frequency_hz = None;
+    if tokens.len() == 7 {
+        let Some(parsed_sweep_kind) = normalize_ac_sweep_kind(tokens[3]) else {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_MODE",
+                ".noise",
+                line_number,
+                &format!(
+                    ".noise sweep kind must be LIN, DEC, or OCT, got {:?}",
+                    tokens[3]
+                ),
+                Some(tokens[3].to_string()),
+            );
+            return;
+        };
+        let parsed_point_count =
+            parse_deck_analysis_integer(tokens[4], ".noise", line_number, state);
+        let parsed_start_frequency =
+            parse_deck_analysis_value(tokens[5], ".noise", line_number, state);
+        let parsed_stop_frequency =
+            parse_deck_analysis_value(tokens[6], ".noise", line_number, state);
+        let (Some(parsed_point_count), Some(parsed_start_frequency), Some(parsed_stop_frequency)) = (
+            parsed_point_count,
+            parsed_start_frequency,
+            parsed_stop_frequency,
+        ) else {
+            return;
+        };
+        if parsed_point_count < 1 {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_SWEEP",
+                ".noise",
+                line_number,
+                ".noise point count must be a positive integer",
+                Some(tokens[4].to_string()),
+            );
+            return;
+        }
+        if parsed_start_frequency <= 0.0
+            || parsed_stop_frequency <= 0.0
+            || parsed_stop_frequency < parsed_start_frequency
+        {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_SWEEP",
+                ".noise",
+                line_number,
+                ".noise frequencies must be positive and stop must be >= start",
+                None,
+            );
+            return;
+        }
+        sweep_kind = Some(parsed_sweep_kind.to_string());
+        point_count = Some(parsed_point_count);
+        start_frequency_hz = Some(parsed_start_frequency);
+        stop_frequency_hz = Some(parsed_stop_frequency);
+    }
+
+    state.analyses.push(DeckAnalysisPlan {
+        directive: ".noise".to_string(),
+        analysis: "noise".to_string(),
+        line_number,
+        source_name: Some(input_source),
+        output_node: Some(output_probe[2..output_probe.len() - 1].to_string()),
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind,
+        point_count,
+        start_frequency_hz,
+        stop_frequency_hz,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -6887,6 +7013,7 @@ fn normalize_deck_analysis_name(analysis: &str) -> Option<&'static str> {
         "tran" | "transient" => Some("tran"),
         "tf" | "transfer-function" | "transferfunction" => Some("tf"),
         "sens" | "sensitivity" => Some("sens"),
+        "noise" | "ac-noise" | "noise-ac" => Some("noise"),
         _ => None,
     }
 }
@@ -9916,6 +10043,10 @@ pub fn format_deck_sens_table(result: &SensResult) -> String {
     format_sens_table(result)
 }
 
+pub fn format_deck_noise_table(result: &NoiseResult) -> String {
+    format_noise_table(result)
+}
+
 fn deck_run_artifacts(
     plan: &DeckAnalysisPlan,
     result_rows: usize,
@@ -10186,6 +10317,50 @@ pub fn run_deck_analysis(
                 plan,
                 result: DeckAnalysisExecutionResult::Sens(result.clone()),
                 table: format_deck_sens_table(&result),
+                output_probes,
+                measurements,
+                measurement_table,
+                fourier,
+                fourier_table,
+                run_artifacts,
+                run_artifact_table,
+            })
+        }
+        "noise" => {
+            let output_node =
+                require_deck_plan_string(plan.output_node.as_deref(), &plan, "output_node")?;
+            let input_source =
+                require_deck_plan_string(plan.source_name.as_deref(), &plan, "source_name")?;
+            let frequencies = if let Some(sweep_kind) = plan.sweep_kind.as_deref() {
+                let point_count = require_deck_plan_usize(plan.point_count, &plan, "point_count")?;
+                let start =
+                    require_deck_plan_number(plan.start_frequency_hz, &plan, "start_frequency_hz")?;
+                let stop =
+                    require_deck_plan_number(plan.stop_frequency_hz, &plan, "stop_frequency_hz")?;
+                deck_ac_frequencies(&plan, sweep_kind, point_count, start, stop)?
+            } else {
+                Vec::new()
+            };
+            let result = noise_ac(circuit, output_node, input_source, &frequencies, 300.0)?;
+            select_deck_measurement_cards_for_analysis(netlist, "noise")?;
+            let measurements = Vec::new();
+            let measurement_table = format_measurement_table(&measurements);
+            select_deck_fourier_cards_for_analysis(netlist, "noise")?;
+            let fourier = Vec::new();
+            let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = vec![format!("V({output_node})")];
+            let run_artifacts = deck_run_artifacts(
+                &plan,
+                result.points.len(),
+                &output_probes,
+                &measurements,
+                &fourier,
+            );
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Noise(result.clone()),
+                table: format_deck_noise_table(&result),
                 output_probes,
                 measurements,
                 measurement_table,

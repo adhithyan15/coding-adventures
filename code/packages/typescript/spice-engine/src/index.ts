@@ -613,8 +613,8 @@ export interface DeckOutputSummary {
 }
 
 export interface DeckAnalysisPlan {
-  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens";
-  readonly analysis: "op" | "dc" | "ac" | "tran" | "tf" | "sens";
+  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens" | ".noise";
+  readonly analysis: "op" | "dc" | "ac" | "tran" | "tf" | "sens" | "noise";
   readonly lineNumber: number;
   readonly sourceName?: string;
   readonly outputNode?: string;
@@ -634,7 +634,7 @@ export interface DeckAnalysisPlan {
 
 export interface DeckAnalysisDiagnostic {
   readonly code: string;
-  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens";
+  readonly directive: ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens" | ".noise";
   readonly lineNumber: number;
   readonly message: string;
   readonly severity: "error" | "warning";
@@ -655,7 +655,8 @@ export type DeckAnalysisExecutionResult =
   | readonly AcPoint[]
   | readonly TransientPoint[]
   | TfResult
-  | SensResult;
+  | SensResult
+  | NoiseResult;
 
 export interface DeckRunArtifact {
   readonly analysis: DeckAnalysisPlan["analysis"];
@@ -3324,7 +3325,8 @@ export function resolveDeckAnalyses(netlist: string): DeckAnalysisSummary {
       directive === ".ac" ||
       directive === ".tran" ||
       directive === ".tf" ||
-      directive === ".sens"
+      directive === ".sens" ||
+      directive === ".noise"
     ) {
       resolveAnalysisLine(stripped, lineNumber, directive, state);
       continue;
@@ -4597,6 +4599,9 @@ function resolveAnalysisLine(
     case ".sens":
       resolveSensAnalysis(tokens, lineNumber, state);
       break;
+    case ".noise":
+      resolveNoiseAnalysis(tokens, lineNumber, state);
+      break;
   }
 }
 
@@ -4905,6 +4910,104 @@ function resolveSensAnalysis(
     analysis: "sens",
     lineNumber,
     outputNode: outputProbe.slice(2, -1),
+    useInitialConditions: false,
+  });
+}
+
+function resolveNoiseAnalysis(
+  tokens: readonly string[],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): void {
+  if (tokens.length !== 3 && tokens.length !== 7) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".noise",
+      lineNumber,
+      message: ".noise requires output voltage probe, input source, and optional sweep kind, point count, start frequency, and stop frequency tokens",
+    });
+    return;
+  }
+  const outputProbe = normalizeDeckOutputProbe(unquoteToken(tokens[1]));
+  if (outputProbe === undefined || !outputProbe.startsWith("V(")) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".noise",
+      lineNumber,
+      message: `.noise output must be a voltage probe V(node), got ${JSON.stringify(tokens[1])}`,
+      token: tokens[1],
+    });
+    return;
+  }
+  const inputSource = unquoteToken(tokens[2]).trim();
+  if (inputSource.length === 0) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".noise",
+      lineNumber,
+      message: ".noise input source name must not be empty",
+      token: tokens[2],
+    });
+    return;
+  }
+
+  let sweepKind: DeckAnalysisPlan["sweepKind"];
+  let pointCount: number | undefined;
+  let startFrequencyHz: number | undefined;
+  let stopFrequencyHz: number | undefined;
+  if (tokens.length === 7) {
+    sweepKind = normalizeAcSweepKind(tokens[3]);
+    if (sweepKind === undefined) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_MODE",
+        directive: ".noise",
+        lineNumber,
+        message: `.noise sweep kind must be LIN, DEC, or OCT, got ${JSON.stringify(tokens[3])}`,
+        token: tokens[3],
+      });
+      return;
+    }
+    pointCount = parseDeckAnalysisInteger(tokens[4], ".noise", lineNumber, state);
+    startFrequencyHz = parseDeckAnalysisValue(tokens[5], ".noise", lineNumber, state);
+    stopFrequencyHz = parseDeckAnalysisValue(tokens[6], ".noise", lineNumber, state);
+    if (
+      pointCount === undefined ||
+      startFrequencyHz === undefined ||
+      stopFrequencyHz === undefined
+    ) {
+      return;
+    }
+    if (pointCount < 1) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_SWEEP",
+        directive: ".noise",
+        lineNumber,
+        message: ".noise point count must be a positive integer",
+        token: tokens[4],
+      });
+      return;
+    }
+    if (startFrequencyHz <= 0.0 || stopFrequencyHz <= 0.0 || stopFrequencyHz < startFrequencyHz) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_SWEEP",
+        directive: ".noise",
+        lineNumber,
+        message: ".noise frequencies must be positive and stop must be >= start",
+      });
+      return;
+    }
+  }
+
+  state.analyses.push({
+    directive: ".noise",
+    analysis: "noise",
+    lineNumber,
+    sourceName: inputSource,
+    outputNode: outputProbe.slice(2, -1),
+    sweepKind,
+    pointCount,
+    startFrequencyHz,
+    stopFrequencyHz,
     useInitialConditions: false,
   });
 }
@@ -5784,6 +5887,10 @@ function normalizeDeckAnalysisName(analysis: string): DeckAnalysisPlan["analysis
     case "sens":
     case "sensitivity":
       return "sens";
+    case "noise":
+    case "ac-noise":
+    case "noise-ac":
+      return "noise";
     default:
       return undefined;
   }
@@ -7717,8 +7824,16 @@ export function formatDeckSensTable(result: SensResult): string {
   return formatSensTable(result);
 }
 
+export function formatDeckNoiseTable(result: NoiseResult): string {
+  return formatNoiseTable(result);
+}
+
 function deckResultRowCount(result: DeckAnalysisExecutionResult): number {
-  return Array.isArray(result) ? result.length : 1;
+  return Array.isArray(result)
+    ? result.length
+    : "points" in result && Array.isArray(result.points)
+      ? result.points.length
+      : 1;
 }
 
 function deckRunArtifacts(
@@ -7961,6 +8076,38 @@ export function runDeckAnalysis(
       plan,
       result,
       table: formatDeckSensTable(result),
+      outputProbes,
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
+      fourier,
+      fourierTable: formatDeckFourierTable(fourier),
+      runArtifacts,
+      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    };
+  }
+  if (plan.analysis === "noise") {
+    const outputNode = requireDeckPlanString(plan.outputNode, plan, "outputNode");
+    const inputSource = requireDeckPlanString(plan.sourceName, plan, "sourceName");
+    const frequenciesHz = plan.sweepKind === undefined
+      ? undefined
+      : deckAcFrequencies(
+          plan,
+          plan.sweepKind,
+          requireDeckPlanInteger(plan.pointCount, plan, "pointCount"),
+          requireDeckPlanNumber(plan.startFrequencyHz, plan, "startFrequencyHz"),
+          requireDeckPlanNumber(plan.stopFrequencyHz, plan, "stopFrequencyHz"),
+        );
+    const result = noiseAc(circuit, outputNode, inputSource, frequenciesHz);
+    selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
+    selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
+    const measurements: ProbeMeasurement[] = [];
+    const fourier: FourierResult[] = [];
+    const outputProbes = [`V(${outputNode})`];
+    const runArtifacts = deckRunArtifacts(plan, result, outputProbes, measurements, fourier);
+    return {
+      plan,
+      result,
+      table: formatDeckNoiseTable(result),
       outputProbes,
       measurements,
       measurementTable: formatMeasurementTable(measurements),

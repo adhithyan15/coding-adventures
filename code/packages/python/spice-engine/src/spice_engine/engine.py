@@ -2305,6 +2305,12 @@ def format_deck_sens_table(result: SensResult) -> str:
     return format_sens_table(result)
 
 
+def format_deck_noise_table(result: NoiseResult) -> str:
+    """Format a deck-selected AC noise result."""
+
+    return format_noise_table(result)
+
+
 @dataclass(frozen=True)
 class DeckRunArtifact:
     """Stable metadata for one selected deck analysis execution."""
@@ -2326,7 +2332,7 @@ class DeckAnalysisExecution:
     """A selected deck analysis plan plus its executed solver output."""
 
     plan: DeckAnalysisPlan
-    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult
+    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult
     table: str
     output_probes: list[str]
     measurements: list[ProbeMeasurement]
@@ -2369,7 +2375,7 @@ def _select_deck_fourier_cards_for_analysis(
 
 
 def _deck_result_row_count(
-    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult,
+    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
 ) -> int:
     if isinstance(result, (DcResult, TfResult, SensResult)):
         return 1
@@ -2378,7 +2384,7 @@ def _deck_result_row_count(
 
 def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
-    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult,
+    result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
     output_probes: list[str],
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
@@ -2590,6 +2596,48 @@ def run_deck_analysis(
             plan=plan,
             result=result,
             table=format_deck_sens_table(result),
+            output_probes=output_probes,
+            measurements=measurements,
+            measurement_table=format_measurement_table(measurements),
+            fourier=fourier,
+            fourier_table=format_deck_fourier_table(fourier),
+            run_artifacts=run_artifacts,
+            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+        )
+    if plan.analysis == "noise":
+        output_node = _require_deck_plan_string(plan, "output_node")
+        input_source = _require_deck_plan_string(plan, "source_name")
+        frequencies: list[float] | None = None
+        if plan.sweep_kind is not None:
+            sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
+            point_count = _require_deck_plan_int(plan, "point_count")
+            start_frequency = _require_deck_plan_number(plan, "start_frequency")
+            stop_frequency = _require_deck_plan_number(plan, "stop_frequency")
+            frequencies = _deck_ac_frequencies(
+                plan,
+                sweep_kind,
+                point_count,
+                start_frequency,
+                stop_frequency,
+            )
+        result = noise_ac(
+            circuit,
+            output_node=output_node,
+            input_source=input_source,
+            freqs=frequencies,
+        )
+        _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
+        measurements = []
+        _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
+        fourier = []
+        output_probes = [f"V({output_node})"]
+        run_artifacts = _deck_run_artifacts(
+            plan, result, output_probes, measurements, fourier
+        )
+        return DeckAnalysisExecution(
+            plan=plan,
+            result=result,
+            table=format_deck_noise_table(result),
             output_probes=output_probes,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),

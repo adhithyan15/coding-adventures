@@ -208,6 +208,7 @@ from spice_engine import (
     format_dc_table,
     format_deck_ac_table,
     format_deck_dc_sweep_table,
+    format_deck_noise_table,
     format_deck_op_table,
     format_deck_transient_table,
     format_digital_bridge_schedule_table,
@@ -6780,6 +6781,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 .tran 1m 1m
 .tf V(mid) V1
 .sens V(mid)
+.noise V(mid) V1 lin 1 1k 1k
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -6913,6 +6915,35 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert sens_execution.run_artifact_table == (
         "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
         f"sens\t.sens\t{sens_execution.plan.line_number}\t1\t1\tV(mid)\t0\t\t0\t\n"
+    )
+
+    noise_execution = run_deck_analysis(circuit, netlist, "noise")
+    assert noise_execution.plan.output_node == "mid"
+    assert noise_execution.plan.source_name == "V1"
+    assert noise_execution.plan.sweep_kind == "lin"
+    assert noise_execution.plan.point_count == 1
+    assert noise_execution.plan.start_frequency == pytest.approx(1.0e3)
+    assert noise_execution.plan.stop_frequency == pytest.approx(1.0e3)
+    assert isinstance(noise_execution.result, NoiseResult)
+    assert noise_execution.result.output_node == "mid"
+    assert noise_execution.result.input_source == "V1"
+    assert len(noise_execution.result.points) == 1
+    assert noise_execution.output_probes == ["V(mid)"]
+    assert noise_execution.measurements == []
+    assert noise_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert noise_execution.table == format_deck_noise_table(noise_execution.result)
+    assert noise_execution.table.startswith(
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\t"
+        "Element\tType\tSourcePSD\tContributionPSD\n"
+    )
+    assert noise_execution.run_artifacts[0].analysis == "noise"
+    assert noise_execution.run_artifacts[0].result_rows == 1
+    assert noise_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert noise_execution.run_artifacts[0].measurement_names == []
+    assert noise_execution.run_artifacts[0].fourier_probes == []
+    assert noise_execution.run_artifact_table == (
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n"
+        f"noise\t.noise\t{noise_execution.plan.line_number}\t1\t1\tV(mid)\t0\t\t0\t\n"
     )
 
     tran_window_execution = run_deck_analysis(

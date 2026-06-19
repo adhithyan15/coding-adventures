@@ -862,13 +862,14 @@ R1 in out 1k
 .tran 1u 2m 0 10u uic
 .tf V(out) V1
 .sens V(out)
+.noise V(out) V1 dec 1 1k 1k
 .end
 .tran 1u 1m
 `);
 
     expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 0", "R1 in out 1k"]);
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(10);
+    expect(summary.endLineNumber).toBe(11);
     expect(summary.diagnostics).toStrictEqual([]);
     expect(summary.analyses.map((analysis) => analysis.analysis)).toStrictEqual([
       "op",
@@ -877,6 +878,7 @@ R1 in out 1k
       "tran",
       "tf",
       "sens",
+      "noise",
     ]);
 
     const dc = summary.analyses[1];
@@ -910,6 +912,15 @@ R1 in out 1k
     expect(sens.directive).toBe(".sens");
     expect(sens.outputNode).toBe("out");
     expect(sens.sourceName).toBeUndefined();
+
+    const noise = summary.analyses[6];
+    expect(noise.directive).toBe(".noise");
+    expect(noise.outputNode).toBe("out");
+    expect(noise.sourceName).toBe("V1");
+    expect(noise.sweepKind).toBe("dec");
+    expect(noise.pointCount).toBe(1);
+    expect(noise.startFrequencyHz).toBeCloseTo(1.0e3);
+    expect(noise.stopFrequencyHz).toBeCloseTo(1.0e3);
   });
 
   it("reports invalid deck analysis cards", () => {
@@ -922,11 +933,13 @@ R1 in out 1k
 .tran 0 1m
 .tran 1u 2m 0 1u extra
 .sens I(R1)
+.noise I(R1) V1
 .end
 `);
 
     expect(summary.analyses).toStrictEqual([]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code).sort()).toStrictEqual([
+      "SPICE_DECK_ANALYSIS_ARGUMENT",
       "SPICE_DECK_ANALYSIS_ARGUMENT",
       "SPICE_DECK_ANALYSIS_ARGUMENT",
       "SPICE_DECK_ANALYSIS_ARGUMENT",
@@ -989,6 +1002,24 @@ R1 in out 1k
     expect(sens.analysis).toBe("sens");
     expect(sens.outputNode).toBe("out");
     expect(sens.sourceName).toBeUndefined();
+
+    const noise = selectDeckAnalysisPlan(
+      `
+V1 in 0 DC 1
+R1 in out 1k
+.noise V(out) V1 lin 1 1k 1k
+.end
+`,
+      "noise",
+    );
+    expect(noise.directive).toBe(".noise");
+    expect(noise.analysis).toBe("noise");
+    expect(noise.outputNode).toBe("out");
+    expect(noise.sourceName).toBe("V1");
+    expect(noise.sweepKind).toBe("lin");
+    expect(noise.pointCount).toBe(1);
+    expect(noise.startFrequencyHz).toBeCloseTo(1.0e3);
+    expect(noise.stopFrequencyHz).toBeCloseTo(1.0e3);
   });
 
   it("reports ambiguous or invalid deck analysis plan selection", () => {
@@ -1011,7 +1042,7 @@ R1 in out 1k
       ),
     ).toThrow(/multiple \.tran analysis cards/);
 
-    expect(() => selectDeckAnalysisPlan(".op\n.end\n", "noise")).toThrow(
+    expect(() => selectDeckAnalysisPlan(".op\n.end\n", "pz")).toThrow(
       /unsupported analysis/,
     );
 

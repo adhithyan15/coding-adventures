@@ -7,6 +7,7 @@ import {
   DigitalThresholds,
   ExpWaveform,
   type FourierResult,
+  type NoiseResult,
   type PoleZeroResult,
   type TransientPoint,
   PulseWaveform,
@@ -38,6 +39,7 @@ import {
   formatCornerPssTable,
   formatCornerTransientTable,
   formatDcTable,
+  formatDeckNoiseTable,
   formatDeckOpTable,
   formatDeckTransientTable,
   formatDigitalBridgeScheduleTable,
@@ -1453,6 +1455,7 @@ describe("transient", () => {
 .tran 1m 1m
 .tf V(mid) V1
 .sens V(mid)
+.noise V(mid) V1 lin 1 1k 1k
 .measure dc mid_avg avg V(mid)
 .measure ac mid_peak max V(mid)
 .measure tran mid_final final V(mid)
@@ -1588,6 +1591,34 @@ describe("transient", () => {
     expect(sensExecution.runArtifactTable).toBe(
       "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
         `sens\t.sens\t${sensExecution.plan.lineNumber}\t1\t1\tV(mid)\t0\t\t0\t\n`,
+    );
+
+    const noiseExecution = runDeckAnalysis(circuit, netlist, "noise");
+    expect(noiseExecution.plan.outputNode).toBe("mid");
+    expect(noiseExecution.plan.sourceName).toBe("V1");
+    expect(noiseExecution.plan.sweepKind).toBe("lin");
+    expect(noiseExecution.plan.pointCount).toBe(1);
+    expect(noiseExecution.plan.startFrequencyHz).toBeCloseTo(1.0e3, 9);
+    expect(noiseExecution.plan.stopFrequencyHz).toBeCloseTo(1.0e3, 9);
+    const noiseResult = noiseExecution.result as NoiseResult;
+    expect(noiseResult.outputNode).toBe("mid");
+    expect(noiseResult.inputSource).toBe("V1");
+    expect(noiseResult.points).toHaveLength(1);
+    expect(noiseExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(noiseExecution.measurements).toEqual([]);
+    expect(noiseExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
+    expect(noiseExecution.table).toBe(formatDeckNoiseTable(noiseResult));
+    expect(noiseExecution.table.startsWith(
+      "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD\n",
+    )).toBe(true);
+    expect(noiseExecution.runArtifacts[0]?.analysis).toBe("noise");
+    expect(noiseExecution.runArtifacts[0]?.resultRows).toBe(1);
+    expect(noiseExecution.runArtifacts[0]?.outputProbes).toEqual(["V(mid)"]);
+    expect(noiseExecution.runArtifacts[0]?.measurementNames).toEqual([]);
+    expect(noiseExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
+    expect(noiseExecution.runArtifactTable).toBe(
+      "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tOutputProbeList\tMeasurements\tMeasurementList\tFourier\tFourierList\n" +
+        `noise\t.noise\t${noiseExecution.plan.lineNumber}\t1\t1\tV(mid)\t0\t\t0\t\n`,
     );
 
     const tranWindowExecution = runDeckAnalysis(

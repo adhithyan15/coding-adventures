@@ -799,6 +799,7 @@ R1 in out 1k
 .tran 1u 2m 0 10u uic
 .tf V(out) V1
 .sens V(out)
+.noise V(out) V1 dec 1 1k 1k
 .end
 .tran 1u 1m
 """
@@ -806,7 +807,7 @@ R1 in out 1k
 
     assert summary.active_lines == ("V1 in 0 DC 0", "R1 in out 1k")
     assert summary.terminated is True
-    assert summary.end_line_number == 10
+    assert summary.end_line_number == 11
     assert summary.diagnostics == ()
     assert [analysis.analysis for analysis in summary.analyses] == [
         "op",
@@ -815,6 +816,7 @@ R1 in out 1k
         "tran",
         "tf",
         "sens",
+        "noise",
     ]
 
     dc = summary.analyses[1]
@@ -849,6 +851,15 @@ R1 in out 1k
     assert sens.output_node == "out"
     assert sens.source_name is None
 
+    noise = summary.analyses[6]
+    assert noise.directive == ".noise"
+    assert noise.output_node == "out"
+    assert noise.source_name == "V1"
+    assert noise.sweep_kind == "dec"
+    assert noise.point_count == 1
+    assert noise.start_frequency == pytest.approx(1.0e3)
+    assert noise.stop_frequency == pytest.approx(1.0e3)
+
 
 def test_resolve_deck_analyses_reports_invalid_cards() -> None:
     summary = resolve_deck_analyses(
@@ -861,12 +872,14 @@ def test_resolve_deck_analyses_reports_invalid_cards() -> None:
 .tran 0 1m
 .tran 1u 2m 0 1u extra
 .sens I(R1)
+.noise I(R1) V1
 .end
 """
     )
 
     assert summary.analyses == ()
     assert sorted(diagnostic.code for diagnostic in summary.diagnostics) == [
+        "SPICE_DECK_ANALYSIS_ARGUMENT",
         "SPICE_DECK_ANALYSIS_ARGUMENT",
         "SPICE_DECK_ANALYSIS_ARGUMENT",
         "SPICE_DECK_ANALYSIS_ARGUMENT",
@@ -932,6 +945,24 @@ R1 in out 1k
     assert sens.output_node == "out"
     assert sens.source_name is None
 
+    noise = select_deck_analysis_plan(
+        """
+V1 in 0 DC 1
+R1 in out 1k
+.noise V(out) V1 lin 1 1k 1k
+.end
+""",
+        "noise",
+    )
+    assert noise.directive == ".noise"
+    assert noise.analysis == "noise"
+    assert noise.output_node == "out"
+    assert noise.source_name == "V1"
+    assert noise.sweep_kind == "lin"
+    assert noise.point_count == 1
+    assert noise.start_frequency == pytest.approx(1.0e3)
+    assert noise.stop_frequency == pytest.approx(1.0e3)
+
 
 def test_select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() -> None:
     with pytest.raises(ValueError, match="multiple analysis cards"):
@@ -954,7 +985,7 @@ def test_select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() -> N
         )
 
     with pytest.raises(ValueError, match="unsupported analysis"):
-        select_deck_analysis_plan(".op\n.end\n", "noise")
+        select_deck_analysis_plan(".op\n.end\n", "pz")
 
     with pytest.raises(ValueError, match=r"line 2: \.dc step value must be non-zero"):
         select_deck_analysis_plan(
