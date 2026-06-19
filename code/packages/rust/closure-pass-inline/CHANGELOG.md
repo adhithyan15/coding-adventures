@@ -2,6 +2,51 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-19
+
+### Added (CLOC15 PR-3 — result-used helpers captured into a hoisted temp)
+
+PR-1/PR-2 inlined a multi-statement helper only when its result was
+**discarded** (the call was a statement). PR-3 handles the case where the
+result is **used**: the body is hoisted to before the enclosing statement
+and the tail-return value captured into a fresh temp.
+
+```js
+function compute(a) { const t = a + 1; return t * 2; }
+var x = compute(5);
+// SIMPLE  ⇒  var x = 12;
+//   (body hoisted + return captured ⇒ `const u = 5+1; const v = u*2;
+//    var x = v;`, then constant-fold + inline-variables + treeshake finish)
+```
+
+**The soundness crux is evaluation order:** hoisting the body to *before*
+the enclosing statement runs it before anything else that statement
+evaluates, which is sound only when nothing in the statement is evaluated
+before the call. The airtight subset admitted — the call is the **entire
+initializer of a single-declarator** `var`/`let`/`const`:
+
+- `var x = compute(5);` → admitted (the call is the whole init, always
+  evaluated, nothing before it);
+- `var x = a + compute(5);` → declined (`a` is evaluated first);
+- `var x = f(), y = compute(5);` → declined (multi-declarator ordering);
+- `var x = h(compute(5));` → declined (call is not the init's top expr);
+- a body with no tail-return value (`return;` / no return) → declined
+  (nothing to capture).
+
+All of PR-1/PR-2's guards still apply (single-use, no `this`/`arguments`,
+callee locals alpha-renamed to program-fresh names, free identifiers are
+true globals, side-effect-free args). The capture temp is itself a
+program-fresh name minted before the locals so it cannot collide. Broader
+value positions (assignment targets, `return` arguments, reordering-safe
+operand positions) are later slices on this same machinery.
+
+- New Phase 5 after the void inliner; runs second so the void pass consumes
+  any discarded-statement use first, leaving only the value-position use.
+- 7 new tests (the signature capture, free-global side effect hoisted, `let`
+  binding, and four decline cases: call-not-the-whole-init, nested-call
+  argument, multi-declarator, void-body-used-as-value). 53 pass-crate tests
+  total; full closurec suite + both downstream consumers green (no churn).
+
 ## [0.6.0] - 2026-06-18
 
 ### Added (CLOC15 PR-2 — tail `return` with a discarded result)
