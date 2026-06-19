@@ -315,21 +315,32 @@ fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
     changed
 }
 
-/// The two counts [`inline_program`] needs per candidate, gathered in a
-/// single walk: total binding-uses of the name, and how many of those
-/// are inlinable calls.
+/// The counts [`inline_program`] needs per candidate, gathered in a single
+/// walk: total binding-uses of the name; how many are *simple-arg* inlinable
+/// calls (the expression inliner's gate); and how many are name+arity calls
+/// regardless of argument simplicity (the statement inliner's gate — CLOC15
+/// PR-4a hoists non-simple arguments into temps, so it does not require them
+/// to be simple).
 #[derive(Default)]
 struct Tally {
     uses: usize,
     inlinable: usize,
+    arity_calls: usize,
 }
 
 /// Is `ce` a call we can inline for `cand` — `cand.name(args)` with the
 /// right number of side-effect-free arguments?
 fn is_inlinable_call(ce: &CallExpression, cand: &InlineCandidate) -> bool {
+    is_name_arity_call(ce, cand) && ce.arguments.iter().all(is_simple_arg)
+}
+
+/// Is `ce` a call to `cand.name` with the right ARITY (any arguments)? The
+/// statement-inlining paths match on this and materialise non-simple
+/// arguments into temps; the expression inliner additionally requires
+/// [`is_simple_arg`] via [`is_inlinable_call`].
+fn is_name_arity_call(ce: &CallExpression, cand: &InlineCandidate) -> bool {
     matches!(&*ce.callee, Expression::Identifier(id) if id.name == cand.name)
         && ce.arguments.len() == cand.params.len()
-        && ce.arguments.iter().all(is_simple_arg)
 }
 
 /// Conservative size budget for inlining a callee used at MORE THAN ONE
@@ -811,11 +822,18 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
         }
         Expression::CallExpression(ce) => {
             // A call whose callee is our name, with the right arity and
-            // side-effect-free args, is an inlinable call. (Its callee
-            // identifier is also counted as a use when we recurse — so
-            // `uses == inlinable` exactly when every use is such a call.)
-            if is_inlinable_call(ce, cand) {
-                t.inlinable += 1;
+            // side-effect-free args, is an inlinable call (the expression
+            // inliner's gate). A name+arity match regardless of arg
+            // simplicity is an `arity_call` (the statement inliner's gate —
+            // it materialises non-simple args into temps). Both counts are
+            // gathered here. (The callee identifier is also counted as a use
+            // when we recurse — so `uses == inlinable`/`arity_calls` exactly
+            // when every use is such a call.)
+            if is_name_arity_call(ce, cand) {
+                t.arity_calls += 1;
+                if ce.arguments.iter().all(is_simple_arg) {
+                    t.inlinable += 1;
+                }
             }
             tally_expr(&ce.callee, cand, t);
             for a in &ce.arguments {
@@ -1269,8 +1287,8 @@ fn inline_void_statement_helpers(
         // so all uses are external. We require exactly one use that is an
         // inlinable call; the splice walker then confirms it sits at
         // statement position (result discarded) and rewrites it.
-        let (uses, inlinable) = name_use_and_call_counts(program, &cand.name, cand.params.len());
-        if uses != 1 || inlinable != 1 {
+        let (uses, arity_calls) = name_use_and_arity_calls(program, &cand.name, cand.params.len());
+        if uses != 1 || arity_calls != 1 {
             continue;
         }
         if splice_void_call_program(program, cand, &mut avoid, nodes_touched) {
@@ -1392,25 +1410,29 @@ fn void_candidate_from_function(
 }
 
 /// Count, for `name`, every binding-use and how many of those are
-/// inlinable calls (right arity, side-effect-free args), reusing the
-/// expression inliner's [`tally_program`]. The probe's `return_expr` is a
-/// placeholder — `tally_program` reads only the name and parameter count.
-fn name_use_and_call_counts(program: &Program, name: &str, arity: usize) -> (usize, usize) {
+/// name+arity calls (any arguments — the statement-inlining gate), reusing
+/// the shared [`tally_program`]. The probe's `return_expr` is a placeholder
+/// — `tally_program` reads only the name and parameter count.
+fn name_use_and_arity_calls(program: &Program, name: &str, arity: usize) -> (usize, usize) {
     let probe = InlineCandidate {
         name: name.to_string(),
         params: vec![String::new(); arity],
         return_expr: Expression::NullLiteral(NullLiteral { cv: None }),
     };
     let t = tally_program(program, &probe);
-    (t.uses, t.inlinable)
+    // The statement-inlining paths gate on name+arity matches (not simple-arg
+    // inlinability): PR-4a materialises non-simple arguments into temps.
+    (t.uses, t.arity_calls)
 }
 
 /// Is `ce` the discardable statement call we splice — `name(args)` with the
 /// right arity and side-effect-free arguments?
 fn is_void_target_call(ce: &CallExpression, cand: &VoidStmtCandidate) -> bool {
+    // Name + arity only: PR-4a materialises non-simple arguments into temps
+    // (see [`materialize_args`]), so the simple-arg requirement is lifted for
+    // the statement-inlining paths.
     matches!(&*ce.callee, Expression::Identifier(id) if id.name == cand.name)
         && ce.arguments.len() == cand.params.len()
-        && ce.arguments.iter().all(is_simple_arg)
 }
 
 /// Walk the program's statement structure and replace the single
@@ -1598,9 +1620,12 @@ fn splice_void_in_decl(
 
 /// Build the statement list to splice in for one call site: a clone of the
 /// body with (0) the tail `return` normalized (the result is discarded),
-/// then (a) callee locals alpha-renamed to program-fresh names, then
-/// (b) parameters substituted by their (simple) arguments. Newly minted
-/// fresh names are added to `avoid` so a second splice cannot reuse them.
+/// (1) arguments materialised (non-simple ones hoisted into temps via
+/// [`materialize_args`], CLOC15 PR-4a), then (a) callee locals alpha-renamed
+/// to program-fresh names, then (b) parameters substituted by their argument
+/// (or its temp). The argument-temp prelude is prepended so the arguments
+/// evaluate left-to-right, once each, before the body. Newly minted fresh
+/// names are added to `avoid` so a second splice cannot reuse them.
 fn build_spliced_body(
     cand: &VoidStmtCandidate,
     args: &[Expression],
@@ -1613,12 +1638,21 @@ fn build_spliced_body(
     // Done first, while the names are still the callee's own, so the
     // membership test in [`is_drop_safe_return`] sees the original param /
     // local names; the resulting `E;` (if kept) is then renamed and
-    // substituted by steps (a)/(b) like any other expression statement.
+    // substituted by the steps below like any other expression statement.
     normalize_tail_return(&mut body, cand);
+
+    // (1) Materialise arguments. With all-simple args this is the previous
+    // direct substitution (no prelude). With any non-simple arg, every arg
+    // is hoisted into a fresh `const` temp (in source order) and the param
+    // map sends each parameter to its temp — so a non-simple argument is
+    // evaluated exactly once regardless of how often its parameter is used.
+    // Done BEFORE local renaming so the arg temps occupy `avoid` first.
+    let (prelude, param_map) = materialize_args(cand, args, avoid, nodes_touched);
 
     // (a) Alpha-rename callee locals → fresh. Renaming the binding *and*
     // every in-body use of it makes a spliced `let event` collision-proof
-    // against the call-site scope.
+    // against the call-site scope (and against the arg temps already in
+    // `avoid`).
     if !cand.locals.is_empty() {
         let mut gen = FreshNames::new();
         let mut rename: HashMap<String, String> = HashMap::new();
@@ -1632,24 +1666,88 @@ fn build_spliced_body(
         }
     }
 
-    // (b) Substitute parameters → arguments. Args are simple (literal /
-    // identifier), so this is duplication-safe regardless of use count,
-    // and — because the locals are now fresh — an identifier argument can
-    // never be captured by a callee local.
-    if !cand.params.is_empty() {
+    // (b) Substitute parameters → arguments (or their temps). Because the
+    // locals are now fresh, an identifier argument can never be captured by
+    // a callee local.
+    if !param_map.is_empty() {
+        for stmt in &mut body {
+            substitute_in_stmt(stmt, &param_map);
+        }
+    }
+
+    *nodes_touched += body.len() as u32;
+
+    // The arg-temp prelude (if any) runs before the body.
+    let mut out = prelude;
+    out.extend(body);
+    out
+}
+
+/// Materialise a call's arguments for splicing.
+///
+/// - **All arguments simple** (literal / bare identifier): the previous
+///   behaviour — no prelude, and the param map substitutes each parameter
+///   directly by its argument. A simple argument has no side effect and its
+///   value cannot change before the body runs, so duplicating it across N
+///   parameter uses is sound; keeping this path byte-for-byte preserves the
+///   existing single-pass output (no fixture churn).
+/// - **Any argument non-simple**: hoist EVERY argument into a fresh `const`
+///   temp, in source order, and map each parameter to its temp identifier.
+///   This evaluates all arguments left-to-right exactly once before the body
+///   (JS call semantics) and captures their values, so a parameter used many
+///   times reads the captured value rather than re-evaluating the argument.
+///   The redundant temps on the simple arguments are removed downstream by
+///   `inline-variables` + `constant-fold`.
+///
+/// Temps are program-fresh (minted from `avoid`, each added as minted). The
+/// caller mints these BEFORE any callee-local fresh names, so the two name
+/// spaces are disjoint.
+fn materialize_args(
+    cand: &VoidStmtCandidate,
+    args: &[Expression],
+    avoid: &mut HashSet<String>,
+    nodes_touched: &mut u32,
+) -> (Vec<Statement>, HashMap<String, Expression>) {
+    if args.iter().all(is_simple_arg) {
         let map: HashMap<String, Expression> = cand
             .params
             .iter()
             .cloned()
             .zip(args.iter().cloned())
             .collect();
-        for stmt in &mut body {
-            substitute_in_stmt(stmt, &map);
-        }
+        return (Vec::new(), map);
     }
 
-    *nodes_touched += body.len() as u32;
-    body
+    let mut prelude: Vec<Statement> = Vec::with_capacity(args.len());
+    let mut map: HashMap<String, Expression> = HashMap::with_capacity(args.len());
+    let mut gen = FreshNames::new();
+    for (param, arg) in cand.params.iter().zip(args.iter()) {
+        let temp = gen.next(avoid);
+        avoid.insert(temp.clone());
+        prelude.push(Statement::Declaration(Declaration::VariableDeclaration(
+            VariableDeclaration {
+                cv: None,
+                kind: VarKind::Const,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(Identifier {
+                        cv: None,
+                        name: temp.clone(),
+                    }),
+                    init: Some(arg.clone()),
+                }],
+            },
+        )));
+        map.insert(
+            param.clone(),
+            Expression::Identifier(Identifier {
+                cv: None,
+                name: temp,
+            }),
+        );
+    }
+    *nodes_touched += prelude.len() as u32;
+    (prelude, map)
 }
 
 /// Normalize a tail `return` for a discarded-result splice (CLOC15 PR-2).
@@ -1790,8 +1888,8 @@ fn inline_valued_statement_helpers(
 
     let mut changed = false;
     for cand in &candidates {
-        let (uses, inlinable) = name_use_and_call_counts(program, &cand.name, cand.params.len());
-        if uses != 1 || inlinable != 1 {
+        let (uses, arity_calls) = name_use_and_arity_calls(program, &cand.name, cand.params.len());
+        if uses != 1 || arity_calls != 1 {
             continue;
         }
         if splice_valued_call_program(program, cand, &mut avoid, nodes_touched) {
@@ -1944,6 +2042,13 @@ fn build_captured_body(
         None => unreachable!("PR-3 candidate body is non-empty"),
     };
 
+    // (1) Materialise arguments (CLOC15 PR-4a): non-simple args hoisted into
+    // fresh temps before the body, in source order; the param map sends each
+    // parameter to its argument (or temp). Minted BEFORE local renaming so
+    // the arg temps occupy `avoid` first. The capture temp (`temp`) was
+    // already minted by the caller and is in `avoid`, so it cannot collide.
+    let (prelude, param_map) = materialize_args(cand, args, avoid, nodes_touched);
+
     // (a) Alpha-rename callee locals → fresh, in the body AND the captured
     // return expression.
     let mut rename: HashMap<String, String> = HashMap::new();
@@ -1960,19 +2065,13 @@ fn build_captured_body(
         rename_in_expr(&mut return_value, &rename);
     }
 
-    // (b) Substitute parameters → arguments, in the body AND the captured
-    // return expression.
-    if !cand.params.is_empty() {
-        let map: HashMap<String, Expression> = cand
-            .params
-            .iter()
-            .cloned()
-            .zip(args.iter().cloned())
-            .collect();
+    // (b) Substitute parameters → arguments (or their temps), in the body AND
+    // the captured return expression.
+    if !param_map.is_empty() {
         for stmt in &mut body {
-            substitute_in_stmt(stmt, &map);
+            substitute_in_stmt(stmt, &param_map);
         }
-        substitute(&mut return_value, &map);
+        substitute(&mut return_value, &param_map);
     }
 
     // Capture the return value into the fresh temp.
@@ -1992,7 +2091,11 @@ fn build_captured_body(
     )));
 
     *nodes_touched += body.len() as u32;
-    body
+
+    // The arg-temp prelude (if any) runs before the hoisted body + capture.
+    let mut out = prelude;
+    out.extend(body);
+    out
 }
 
 /// Recurse a statement, splicing a capturable initializer in any nested
@@ -2923,14 +3026,57 @@ mod tests {
         );
     }
 
+    // ----- CLOC15 PR-4a: non-simple arguments via per-argument temps -----
+
     #[test]
-    fn does_not_inline_void_helper_with_side_effecting_argument() {
-        // The argument `g()` has a side effect; substituting it for a
-        // parameter used any number of times could drop or duplicate it.
-        // The simple-arg gate declines this call.
+    fn inlines_side_effecting_argument_via_temp() {
+        // A side-effecting argument `g()` is hoisted into a temp evaluated
+        // exactly once, then the parameter reads the temp — so the call
+        // inlines without dropping or duplicating the side effect. (PR-1..3
+        // declined this; PR-4a admits it.)
         assert_eq!(
             inline_source("function f(x) { sink(x); } f(g());"),
-            "function f(x){sink(x)};f(g());"
+            "function f(x){sink(x)};const a=g();sink(a);"
+        );
+    }
+
+    #[test]
+    fn inlines_member_argument_via_temp_used_twice() {
+        // A non-simple member-access arg used by a parameter referenced
+        // twice: the temp captures the read once, both uses read the temp.
+        assert_eq!(
+            inline_source("function f(p) { sink(p); use(p); } f(obj.x);"),
+            "function f(p){sink(p);use(p)};const a=obj.x;sink(a);use(a);"
+        );
+    }
+
+    #[test]
+    fn temps_all_args_left_to_right_when_any_non_simple() {
+        // Mixed simple + non-simple args: when ANY arg is non-simple, ALL
+        // are hoisted in source order, preserving left-to-right evaluation.
+        assert_eq!(
+            inline_source("function f(p, q) { sink(p, q); } f(5, obj.x);"),
+            "function f(p,q){sink(p,q)};const a=5;const b=obj.x;sink(a,b);"
+        );
+    }
+
+    #[test]
+    fn captures_non_simple_argument_in_value_position() {
+        // PR-4a composes with PR-3: a result-used helper called with a
+        // non-simple argument hoists the arg temp before the captured body.
+        assert_eq!(
+            inline_source("function f(p) { g(); return p + 1; } var x = f(obj.y);"),
+            "function f(p){g();return p + 1};const b=obj.y;g();const a=b + 1;var x=a;"
+        );
+    }
+
+    #[test]
+    fn all_simple_args_still_substitute_directly_no_temp() {
+        // The all-simple path is unchanged (no temps), so existing output is
+        // preserved byte-for-byte — the no-churn guarantee.
+        assert_eq!(
+            inline_source("function f(p) { sink(p); use(p); } f(v);"),
+            "function f(p){sink(p);use(p)};sink(v);use(v);"
         );
     }
 
