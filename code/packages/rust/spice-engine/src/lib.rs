@@ -3408,6 +3408,7 @@ pub struct DeckRunArtifact {
     pub directive: String,
     pub line_number: usize,
     pub source_name: Option<String>,
+    pub output_node: Option<String>,
     pub sweep_kind: Option<String>,
     pub start_value: Option<f64>,
     pub stop_value: Option<f64>,
@@ -10096,6 +10097,7 @@ fn deck_run_artifacts(
         directive: plan.directive.clone(),
         line_number: plan.line_number,
         source_name: plan.source_name.clone(),
+        output_node: plan.output_node.clone(),
         sweep_kind: plan.sweep_kind.clone(),
         start_value: plan.start_value,
         stop_value: plan.stop_value,
@@ -10127,16 +10129,17 @@ fn format_deck_artifact_float(value: Option<f64>) -> String {
 
 pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![
-        "Analysis\tDirective\tLine\tSourceName\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
+        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tResultRows\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList"
             .to_string(),
     ];
     for artifact in artifacts {
         rows.push(format!(
-            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             artifact.analysis,
             artifact.directive,
             artifact.line_number,
             artifact.source_name.as_deref().unwrap_or(""),
+            artifact.output_node.as_deref().unwrap_or(""),
             artifact.sweep_kind.as_deref().unwrap_or(""),
             format_deck_artifact_float(artifact.start_value),
             format_deck_artifact_float(artifact.stop_value),

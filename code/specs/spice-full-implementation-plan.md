@@ -88,7 +88,8 @@ downstream tools to compare.
      run-artifact summaries plus stable row/count tables for result rows,
      output probes, measurements, and Fourier artifacts, with normalized
      output-probe, measurement, and Fourier probe name lists included in the
-     run artifacts.
+     run artifacts; transfer-function, sensitivity, and noise run artifacts now
+     also expose their selected output node.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -813,6 +814,15 @@ downstream tools to compare.
       `StopValue`, `StepValue`, `PointCount`, `StartFrequencyHz`, and
       `StopFrequencyHz`, with empty cells for analysis cards without that
       sweep metadata.
+
+74. Deck run output-node artifacts.
+    - Status: completed in this deck run output-node artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now copy each
+      selected analysis plan's output node into deck-run artifacts, preserving
+      `.tf`, `.sens`, and `.noise` output-target provenance beside source and
+      sweep metadata.
+    - The stable run-artifact table now includes `OutputNode`, with an empty
+      cell for analysis cards that do not select a single output node.
 
 ## Backlog
 
