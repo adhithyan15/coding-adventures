@@ -353,11 +353,14 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
 `tryCatch` handler must not run unless its expression actually errors.
 
 - **`switch(EXPR, ...)`** — choose one arm by the value of `EXPR`.
-  - **Character `EXPR`** matches against the *names* of the arms. An **empty
-    arm falls through** to the next non-empty arm's value
-    (`switch("a", a = , b = "hit")` → `"hit"`). An **unnamed final arm** is the
-    **default**, used when no name matches. With no match and no default the
-    result is an **invisible `NULL`**.
+  - **Character `EXPR`** matches against the *names* of the arms. An **unnamed
+    final arm** is the **default**, used when no name matches. With no match and
+    no default the result is an **invisible `NULL`**. *(Deferred to R-19:* the
+    **empty-arm fall-through** `switch("a", a = , b = "hit")` → `"hit"`. The
+    shared S/R grammar's `arg = NAME EQ expr` has no empty-value production, so
+    `a = ,` is a parse error today. The evaluator's `eval_switch` already
+    implements the fall-through; it activates once the grammar admits empty
+    args.)*
   - **Numeric `EXPR`** selects the `n`-th arm by **position** (1-based), ignoring
     names; out of range (or `NA`/`< 1`) → `NULL`. Only the chosen arm is
     evaluated.

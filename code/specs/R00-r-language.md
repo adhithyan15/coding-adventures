@@ -337,11 +337,13 @@ unchanged.
   call dispatcher intercepts them and evaluates only the selected arm / protected
   expression / chosen handler, never all arms eagerly. See S00 §V2.9 for the full
   semantics. In brief:
-  - **`switch(EXPR, ...)`** — character `EXPR` matches arm *names* (an **empty
-    arm falls through** to the next non-empty value; an **unnamed final arm** is
-    the default; no match and no default → invisible `NULL`); numeric `EXPR`
-    selects the n-th arm by position (out of range → `NULL`). Only the chosen arm
-    evaluates, so `switch("a", a = stop("x"), b = "ok")` does not raise.
+  - **`switch(EXPR, ...)`** — character `EXPR` matches arm *names* (an **unnamed
+    final arm** is the default; no match and no default → invisible `NULL`);
+    numeric `EXPR` selects the n-th arm by position (out of range → `NULL`). Only
+    the chosen arm evaluates, so `switch("a", a = stop("x"), b = "ok")` does not
+    raise. *(Empty-arm fall-through `switch("a", a = , b = "hit")` is deferred to
+    R-19 — it needs a grammar production for empty args; `eval_switch` already
+    implements the behaviour.)*
   - **`stop(...)`** raises an error (concatenated message → `SError::User`);
     **`warning(...)`** emits a warning and returns invisibly without aborting;
     **`tryCatch(expr, error = fn, finally = cleanup)`** runs `expr`, routing any
