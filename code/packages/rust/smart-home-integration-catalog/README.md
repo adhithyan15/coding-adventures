@@ -65,6 +65,8 @@ runtime and Chief of Staff tools a typed catalog for:
   deterministic execution slots
 - low-level mesh preflight repair slot audits that expose per-slot blocker and
   operator handoff risk
+- low-level mesh preflight repair slot execution tickets that turn audited
+  slots into operator-ready execution work
 - mesh readiness package summaries that combine Zigbee, Z-Wave, and Thread
   primitive substrate readiness with mesh-scoped activation evidence
   remediation rollups
