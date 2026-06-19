@@ -1673,6 +1673,195 @@ impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceSummary
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview {
+    pub sequence: usize,
+    pub review_key: String,
+    pub evidence_sequence: usize,
+    pub evidence_key: String,
+    pub work_order_sequence: usize,
+    pub work_order_key: String,
+    pub ticket_sequence: usize,
+    pub ticket_key: String,
+    pub slot_sequence: usize,
+    pub batch_sequence: usize,
+    pub stage: IntegrationMeshProtocolSubstrateStage,
+    pub action_kind: IntegrationMeshProtocolSubstratePreflightActionKind,
+    pub status: IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus,
+    pub action_count: usize,
+    pub protocol_count: usize,
+    pub primitive_count: usize,
+    pub protocols: Vec<ProtocolFamily>,
+    pub primitives: Vec<PrimitiveFamily>,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub lineage_complete: bool,
+    pub review_required: bool,
+    pub ready_for_execution: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview {
+    pub fn from_packet(
+        sequence: usize,
+        packet: &IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidencePacket,
+    ) -> Self {
+        let review_required =
+            packet.blocks_preflight() || packet.requires_operator() || !packet.has_lineage();
+        let ready_for_execution =
+            !packet.blocks_preflight() && !packet.requires_operator() && packet.has_lineage();
+
+        Self {
+            sequence,
+            review_key: format!(
+                "review-{sequence:02}-{}-{}",
+                packet.stage.as_str(),
+                packet.action_kind.as_str()
+            ),
+            evidence_sequence: packet.sequence,
+            evidence_key: packet.evidence_key.clone(),
+            work_order_sequence: packet.work_order_sequence,
+            work_order_key: packet.work_order_key.clone(),
+            ticket_sequence: packet.ticket_sequence,
+            ticket_key: packet.ticket_key.clone(),
+            slot_sequence: packet.slot_sequence,
+            batch_sequence: packet.batch_sequence,
+            stage: packet.stage,
+            action_kind: packet.action_kind,
+            status: packet.status,
+            action_count: packet.action_count,
+            protocol_count: packet.protocol_count,
+            primitive_count: packet.primitive_count,
+            protocols: packet.protocols.clone(),
+            primitives: packet.primitives.clone(),
+            release_blocking: packet.blocks_preflight(),
+            operator_required: packet.requires_operator(),
+            lineage_complete: packet.has_lineage(),
+            review_required,
+            ready_for_execution,
+        }
+    }
+
+    pub fn blocks_preflight(&self) -> bool {
+        self.release_blocking
+    }
+
+    pub fn requires_operator(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn has_lineage(&self) -> bool {
+        self.lineage_complete
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn is_ready_for_execution(&self) -> bool {
+        self.ready_for_execution
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary {
+    pub total_reviews: usize,
+    pub scheduled_actions: usize,
+    pub blocking_reviews: usize,
+    pub operator_required_reviews: usize,
+    pub lineage_complete_reviews: usize,
+    pub review_required_reviews: usize,
+    pub execution_ready_reviews: usize,
+    pub protocol_mentions: usize,
+    pub primitive_mentions: usize,
+    pub first_review_key: Option<String>,
+    pub first_blocking_review_key: Option<String>,
+    pub first_operator_review_key: Option<String>,
+    pub first_evidence_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_ticket_key: Option<String>,
+    pub first_stage: Option<IntegrationMeshProtocolSubstrateStage>,
+    pub first_action_kind: Option<IntegrationMeshProtocolSubstratePreflightActionKind>,
+    pub execution_evidence_reviews_ready: bool,
+}
+
+impl IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary {
+    pub fn from_reviews<'a>(
+        reviews: impl IntoIterator<
+            Item = &'a IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview,
+        >,
+    ) -> Self {
+        let reviews = reviews.into_iter().collect::<Vec<_>>();
+        let first_review = reviews.iter().min_by_key(|review| review.sequence);
+        let first_blocking_review = reviews
+            .iter()
+            .filter(|review| review.blocks_preflight())
+            .min_by_key(|review| review.sequence);
+        let first_operator_review = reviews
+            .iter()
+            .filter(|review| review.requires_operator())
+            .min_by_key(|review| review.sequence);
+
+        Self {
+            total_reviews: reviews.len(),
+            scheduled_actions: reviews.iter().map(|review| review.action_count).sum(),
+            blocking_reviews: reviews
+                .iter()
+                .filter(|review| review.blocks_preflight())
+                .count(),
+            operator_required_reviews: reviews
+                .iter()
+                .filter(|review| review.requires_operator())
+                .count(),
+            lineage_complete_reviews: reviews.iter().filter(|review| review.has_lineage()).count(),
+            review_required_reviews: reviews
+                .iter()
+                .filter(|review| review.needs_review())
+                .count(),
+            execution_ready_reviews: reviews
+                .iter()
+                .filter(|review| review.is_ready_for_execution())
+                .count(),
+            protocol_mentions: reviews.iter().map(|review| review.protocol_count).sum(),
+            primitive_mentions: reviews.iter().map(|review| review.primitive_count).sum(),
+            first_review_key: first_review.map(|review| review.review_key.clone()),
+            first_blocking_review_key: first_blocking_review
+                .map(|review| review.review_key.clone()),
+            first_operator_review_key: first_operator_review
+                .map(|review| review.review_key.clone()),
+            first_evidence_key: first_review.map(|review| review.evidence_key.clone()),
+            first_work_order_key: first_review.map(|review| review.work_order_key.clone()),
+            first_ticket_key: first_review.map(|review| review.ticket_key.clone()),
+            first_stage: first_review.map(|review| review.stage),
+            first_action_kind: first_review.map(|review| review.action_kind),
+            execution_evidence_reviews_ready: reviews.is_empty(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_reviews == 0
+    }
+
+    pub fn has_reviews(&self) -> bool {
+        self.total_reviews > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_reviews > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_reviews > 0
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required_reviews > 0
+    }
+
+    pub fn has_complete_lineage(&self) -> bool {
+        self.lineage_complete_reviews == self.total_reviews
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshProtocolPrimitiveReadinessRow {
     pub protocol: ProtocolFamily,
     pub required_primitives: Vec<PrimitiveFamily>,
@@ -23305,6 +23494,32 @@ pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_summary(
     )
 }
 
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews(
+    available_primitives: &[PrimitiveFamily],
+) -> Vec<IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview> {
+    mesh_protocol_substrate_preflight_repair_slot_execution_evidence_packets(available_primitives)
+        .iter()
+        .enumerate()
+        .map(|(index, packet)| {
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReview::from_packet(
+                index + 1,
+                packet,
+            )
+        })
+        .collect()
+}
+
+pub fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_summary(
+    available_primitives: &[PrimitiveFamily],
+) -> IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary {
+    let reviews = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews(
+        available_primitives,
+    );
+    IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary::from_reviews(
+        reviews.iter(),
+    )
+}
+
 pub fn mesh_readiness_package_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -30995,6 +31210,133 @@ mod tests {
         assert!(!summary.has_packets());
         assert!(!summary.has_blockers());
         assert!(!summary.needs_operator());
+        assert!(summary.has_complete_lineage());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews_track_readiness() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let reviews = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews(
+            &available_primitives,
+        );
+        let summary =
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewSummary::from_reviews(
+                reviews.iter(),
+            );
+
+        assert_eq!(reviews.len(), 3);
+        assert_eq!(summary.total_reviews, 3);
+        assert_eq!(summary.scheduled_actions, 5);
+        assert_eq!(summary.blocking_reviews, 3);
+        assert_eq!(summary.operator_required_reviews, 2);
+        assert_eq!(summary.lineage_complete_reviews, 3);
+        assert_eq!(summary.review_required_reviews, 3);
+        assert_eq!(summary.execution_ready_reviews, 0);
+        assert_eq!(summary.protocol_mentions, 5);
+        assert_eq!(summary.primitive_mentions, 3);
+        assert_eq!(
+            summary.first_review_key,
+            Some("review-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_blocking_review_key,
+            Some("review-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_review_key,
+            Some("review-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_evidence_key,
+            Some("evidence-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some("work-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_ticket_key,
+            Some("slot-01-radio-provision_radio".to_string())
+        );
+        assert_eq!(
+            summary.first_stage,
+            Some(IntegrationMeshProtocolSubstrateStage::Radio)
+        );
+        assert_eq!(
+            summary.first_action_kind,
+            Some(IntegrationMeshProtocolSubstratePreflightActionKind::ProvisionRadio)
+        );
+        assert!(!summary.execution_evidence_reviews_ready);
+        assert!(summary.has_reviews());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.needs_review());
+        assert!(summary.has_complete_lineage());
+
+        let first = &reviews[0];
+        assert_eq!(first.sequence, 1);
+        assert_eq!(first.review_key, "review-01-radio-provision_radio");
+        assert_eq!(first.evidence_sequence, 1);
+        assert_eq!(first.evidence_key, "evidence-01-radio-provision_radio");
+        assert_eq!(first.work_order_sequence, 1);
+        assert_eq!(first.work_order_key, "work-01-radio-provision_radio");
+        assert_eq!(first.ticket_sequence, 1);
+        assert_eq!(first.ticket_key, "slot-01-radio-provision_radio");
+        assert_eq!(first.slot_sequence, 1);
+        assert_eq!(first.batch_sequence, 1);
+        assert_eq!(
+            first.status,
+            IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionStatus::OperatorHandoff
+        );
+        assert_eq!(first.action_count, 1);
+        assert_eq!(first.protocols, vec![ProtocolFamily::ZWave]);
+        assert_eq!(first.primitives, vec![PrimitiveFamily::ZWaveSerialApi]);
+        assert!(first.blocks_preflight());
+        assert!(first.requires_operator());
+        assert!(first.has_lineage());
+        assert!(first.needs_review());
+        assert!(!first.is_ready_for_execution());
+    }
+
+    #[test]
+    fn mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews_empty_when_ready() {
+        let reviews = mesh_protocol_substrate_preflight_repair_slot_execution_evidence_reviews(
+            all_primitive_families(),
+        );
+        let summary =
+            mesh_protocol_substrate_preflight_repair_slot_execution_evidence_review_summary(
+                all_primitive_families(),
+            );
+
+        assert!(reviews.is_empty());
+        assert_eq!(summary.total_reviews, 0);
+        assert_eq!(summary.scheduled_actions, 0);
+        assert_eq!(summary.blocking_reviews, 0);
+        assert_eq!(summary.operator_required_reviews, 0);
+        assert_eq!(summary.lineage_complete_reviews, 0);
+        assert_eq!(summary.review_required_reviews, 0);
+        assert_eq!(summary.execution_ready_reviews, 0);
+        assert_eq!(summary.protocol_mentions, 0);
+        assert_eq!(summary.primitive_mentions, 0);
+        assert_eq!(summary.first_review_key, None);
+        assert_eq!(summary.first_blocking_review_key, None);
+        assert_eq!(summary.first_operator_review_key, None);
+        assert_eq!(summary.first_evidence_key, None);
+        assert_eq!(summary.first_work_order_key, None);
+        assert_eq!(summary.first_ticket_key, None);
+        assert_eq!(summary.first_stage, None);
+        assert_eq!(summary.first_action_kind, None);
+        assert!(summary.execution_evidence_reviews_ready);
+        assert!(summary.is_empty());
+        assert!(!summary.has_reviews());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.needs_review());
         assert!(summary.has_complete_lineage());
     }
 
