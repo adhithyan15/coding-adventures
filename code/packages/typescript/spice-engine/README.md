@@ -102,7 +102,8 @@ artifact summaries plus `formatDeckRunArtifactTable` and
 `formatDeckRunArtifactCsv` / `formatDeckRunArtifactJson` output for stable
 result-row, output-probe, measurement, Fourier, and diagnostic count/name
 lists. `formatDeckTableCsv` also converts any stable tab-separated deck table to
-CSV using the same escaping rules.
+CSV, while `formatDeckTableJson` converts the same tables to compact JSON
+records using the header row as stable keys.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save`, scoped or
 global `.probe`, scoped `.print <analysis> ...`, and scoped
 `.plot <analysis> ...` cards before `.end`, normalize and deduplicate output

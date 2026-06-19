@@ -216,6 +216,7 @@ from spice_engine import (
     format_deck_run_artifact_json,
     format_deck_run_artifact_table,
     format_deck_table_csv,
+    format_deck_table_json,
     format_deck_transient_table,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
@@ -6801,6 +6802,9 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
     assert format_deck_table_csv(op_execution.table) == "Index,V(mid)\n0,5.000000e-01\n"
+    assert json.loads(format_deck_table_json(op_execution.table)) == [
+        {"Index": "0", "V(mid)": "5.000000e-01"}
+    ]
     assert op_execution.run_artifacts[0].result_rows == 1
     assert op_execution.run_artifacts[0].result_column_count == 2
     assert op_execution.run_artifacts[0].result_columns == ["Index", "V(mid)"]
@@ -6823,12 +6827,18 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert format_deck_table_csv(
         op_execution.run_artifact_table
     ) == format_deck_run_artifact_csv(op_execution.run_artifacts)
+    assert format_deck_table_json(
+        op_execution.run_artifact_table
+    ) == format_deck_run_artifact_json(op_execution.run_artifacts)
     assert format_deck_run_artifact_csv(op_execution.run_artifacts) == (
         "Analysis,Directive,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\n"
         f"op,.op,{op_execution.plan.line_number},,,,,,,,,,,,,,,1,2,Index;V(mid),1,V(mid),1,.save,0,,0,,0,\n"
     )
     assert format_deck_table_csv('Name\tValue\nprobe\tSPICE,"QUOTED"\n') == (
         'Name,Value\nprobe,"SPICE,""QUOTED"""\n'
+    )
+    assert format_deck_table_json('Name\tValue\nprobe\tSPICE,"QUOTED"\n') == (
+        '[{"Name":"probe","Value":"SPICE,\\"QUOTED\\""}]\n'
     )
     artifact_json = format_deck_run_artifact_json(op_execution.run_artifacts)
     artifact_records = json.loads(artifact_json)

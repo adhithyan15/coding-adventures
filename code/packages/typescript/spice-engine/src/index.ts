@@ -8040,15 +8040,33 @@ function formatCsvCell(value: string): string {
   return value;
 }
 
-export function formatDeckTableCsv(table: string): string {
+function deckTableRows(table: string): string[] {
   const rows = table.split(/\r?\n/u);
   if (rows[rows.length - 1] === "") {
     rows.pop();
   }
+  return rows;
+}
+
+export function formatDeckTableCsv(table: string): string {
+  const rows = deckTableRows(table);
   if (rows.length === 0) {
     return "";
   }
   return `${rows.map((row) => row.split("\t").map(formatCsvCell).join(",")).join("\n")}\n`;
+}
+
+export function formatDeckTableJson(table: string): string {
+  const rows = deckTableRows(table);
+  if (rows.length === 0) {
+    return "[]\n";
+  }
+  const columns = rows[0]!.split("\t");
+  const records = rows.slice(1).map((row) => {
+    const cells = row.split("\t");
+    return Object.fromEntries(columns.map((column, index) => [column, cells[index] ?? ""]));
+  });
+  return `${JSON.stringify(records)}\n`;
 }
 
 export function formatDeckRunArtifactCsv(artifacts: readonly DeckRunArtifact[]): string {
