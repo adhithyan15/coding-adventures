@@ -24,9 +24,12 @@
 //!   collapses to the inner `{"type": "VariableDeclaration", ...}`
 //!   shape directly.
 //!
-//! Phase 2 will add `TryStatement`, `DoWhileStatement`,
-//! `ForInStatement`, `ForOfStatement`, `DebuggerStatement`, and
-//! `WithStatement`.
+//! - [`TryStatement`] + [`CatchClause`] (CLOC19 — `try`/`catch`/`finally`,
+//!   added to unblock the whitespace-only fallback on any program using
+//!   exception handling)
+//!
+//! Phase 2 will add `DoWhileStatement`, `ForInStatement`, `ForOfStatement`,
+//! `DebuggerStatement`, and `WithStatement`.
 
 use crate::declaration::{Declaration, VariableDeclaration};
 use crate::expression::{Expression, Identifier};
@@ -70,6 +73,7 @@ pub enum TaggedStatement {
     LabeledStatement(LabeledStatement),
     ThrowStatement(ThrowStatement),
     SwitchStatement(SwitchStatement),
+    TryStatement(TryStatement),
     EmptyStatement(EmptyStatement),
 }
 
@@ -108,6 +112,9 @@ impl Statement {
     }
     pub fn switch_statement(s: SwitchStatement) -> Self {
         Self::Tagged(TaggedStatement::SwitchStatement(s))
+    }
+    pub fn try_statement(s: TryStatement) -> Self {
+        Self::Tagged(TaggedStatement::TryStatement(s))
     }
     pub fn empty_statement(s: EmptyStatement) -> Self {
         Self::Tagged(TaggedStatement::EmptyStatement(s))
@@ -304,6 +311,53 @@ pub struct SwitchCase {
     /// `case expr:` form.
     pub test: Option<Expression>,
     pub consequent: Vec<Statement>,
+}
+
+/// `try { … } catch (e) { … } finally { … }` (CLOC19). ESTree shape:
+/// `block` is the protected block, `handler` is an optional [`CatchClause`],
+/// and `finalizer` is the optional `finally` block. The grammar guarantees at
+/// least one of `handler` / `finalizer` is present (a bare `try { }` is a
+/// SyntaxError), but the AST does not enforce that.
+///
+/// Control flow: the `block` runs; if it throws and a `handler` is present, the
+/// thrown value binds to the handler's `param` and the handler `body` runs; the
+/// `finalizer` (if any) always runs last, on every exit path. A `try` is
+/// therefore NOT an unconditional terminator — it can catch and continue.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+// NB: no self `#[serde(tag = "type")]` here. `TryStatement` is a variant of the
+// internally-tagged `TaggedStatement` enum, which injects `"type":
+// "TryStatement"` from the variant name. Adding a second `type` tag on the
+// struct itself double-tags it and breaks deserialization back into
+// `Statement` (the untagged outer enum) — every sibling statement struct
+// (IfStatement, SwitchStatement, …) likewise carries only `rename_all`.
+#[serde(rename_all = "camelCase")]
+pub struct TryStatement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub block: BlockStatement,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub handler: Option<CatchClause>,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub finalizer: Option<BlockStatement>,
+}
+
+/// The `catch (param) { body }` arm of a [`TryStatement`].
+///
+/// - `param: Some(id)` — the bound identifier the thrown value is assigned to.
+///   (Destructuring catch params are not represented yet — the bridge declines
+///   them, falling back to whitespace-only, which is sound.)
+/// - `param: None` — the optional-catch-binding form `catch { … }` (ES2019).
+///
+/// The `param` is a binding scoped to `body` (and nowhere else). Passes that
+/// rename or remove bindings MUST treat it as such — see the per-pass handling.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "type", rename = "CatchClause", rename_all = "camelCase")]
+pub struct CatchClause {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub param: Option<Identifier>,
+    pub body: BlockStatement,
 }
 
 /// A lone semicolon `;`. Rare in user code but legal everywhere a
@@ -661,6 +715,88 @@ mod tests {
         });
         let json = serde_json::to_string(&s).unwrap();
         assert!(!json.contains("\"cv\""), "expected no cv key; got {}", json);
+        assert_eq!(s.clone(), roundtrip(s));
+    }
+
+    // ---- try / catch / finally (CLOC19) -----------------------
+
+    /// Build `try { ; } catch (e) { ; } finally { ; }` with the catch
+    /// param `e` and a trivial body in each block.
+    fn full_try() -> TryStatement {
+        let one = || BlockStatement {
+            cv: None,
+            body: vec![Statement::empty_statement(EmptyStatement { cv: None })],
+        };
+        TryStatement {
+            cv: Some("try.1".to_string()),
+            block: one(),
+            handler: Some(CatchClause {
+                cv: Some("catch.1".to_string()),
+                param: Some(Identifier {
+                    cv: None,
+                    name: "e".to_string(),
+                }),
+                body: one(),
+            }),
+            finalizer: Some(one()),
+        }
+    }
+
+    #[test]
+    fn try_statement_full_roundtrips() {
+        let s = Statement::try_statement(full_try());
+        assert_eq!(type_tag(&s), "TryStatement");
+        assert_eq!(s.clone(), roundtrip(s));
+    }
+
+    #[test]
+    fn try_statement_optional_catch_binding_roundtrips() {
+        // `catch { … }` — handler present, param None.
+        let s = Statement::try_statement(TryStatement {
+            cv: None,
+            block: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            handler: Some(CatchClause {
+                cv: None,
+                param: None,
+                body: BlockStatement {
+                    cv: None,
+                    body: vec![],
+                },
+            }),
+            finalizer: None,
+        });
+        let json = serde_json::to_string(&s).unwrap();
+        // An absent param must not serialize a `param` key (skip-if-none).
+        assert!(
+            !json.contains("\"param\""),
+            "optional-catch-binding should omit the param key; got {json}",
+        );
+        assert_eq!(s.clone(), roundtrip(s));
+    }
+
+    #[test]
+    fn try_finally_without_catch_roundtrips() {
+        // `try { } finally { }` — handler omitted entirely.
+        let s = Statement::try_statement(TryStatement {
+            cv: None,
+            block: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            handler: None,
+            finalizer: Some(BlockStatement {
+                cv: None,
+                body: vec![],
+            }),
+        });
+        let json = serde_json::to_string(&s).unwrap();
+        assert!(
+            !json.contains("\"handler\""),
+            "absent handler should omit the key; got {json}",
+        );
         assert_eq!(s.clone(), roundtrip(s));
     }
 

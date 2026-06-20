@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-20
+
+### Added — CLOC19: fold control flow inside `try`/`catch`/`finally`
+
+New `TryStatement` arm recurses control-flow folding through the protected
+block, the catch handler body, and the finalizer (each an ordinary block),
+preserving the catch `param`. The `try` itself is never treated as a terminator —
+it can catch and continue — so code after it stays reachable.
+
 ## [0.8.0] - 2026-06-04
 
 ### Added — CLOC12.37: var hoisting (gap-015)

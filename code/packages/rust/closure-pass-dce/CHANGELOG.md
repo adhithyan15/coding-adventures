@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.10.0] - 2026-06-20
+
+### Added — CLOC19: DCE inside `try`/`catch`/`finally`
+
+New `TryStatement` arm recurses dead-code elimination into the protected block,
+the catch handler body, and the finalizer. Dead-after-terminator and
+empty-statement cleanup now apply within those blocks (e.g. a `dead()` call after
+a `return` inside a `catch` handler is truncated). The catch `param` is preserved
+verbatim, and the `try` statement is explicitly NOT treated as a terminator — a
+statement following a `try`/`catch` remains reachable because the handler can
+catch and continue. Added unit tests for both behaviours.
+
 ## [0.9.0] - 2026-06-19
 
 ### Added — dead-code-after-`throw` at block level
@@ -66,7 +78,6 @@ statement variants default to unsafe (preserved) until vetted.
 Six new unit tests (drop-after-throw; the no-op last-statement case; the
 hoisting guard for `throw` and `return`; compound-statement-tail preservation;
 and a droppable `let`-only tail). No closurec fixture churn.
-
 ## [0.8.0] - 2026-06-04
 
 ### Added — CLOC12.36: constant-discriminant switch collapse (gap-014 step 4/N)

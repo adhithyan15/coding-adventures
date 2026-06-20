@@ -322,6 +322,35 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
                     .collect(),
             })
         }
+        TaggedStatement::TryStatement(s) => {
+            // Fold within the protected block, the catch body, and the
+            // finalizer — each is an ordinary block. The catch `param` is a
+            // binding name, not an expression, so it is preserved verbatim.
+            let block = BlockStatement {
+                cv: s.block.cv.clone(),
+                body: s.block.body.iter().map(|x| fold_statement(x, st)).collect(),
+            };
+            let handler = s.handler.as_ref().map(|h| {
+                coding_adventures_javascript_ast::CatchClause {
+                    cv: h.cv.clone(),
+                    param: h.param.clone(),
+                    body: BlockStatement {
+                        cv: h.body.cv.clone(),
+                        body: h.body.body.iter().map(|x| fold_statement(x, st)).collect(),
+                    },
+                }
+            });
+            let finalizer = s.finalizer.as_ref().map(|f| BlockStatement {
+                cv: f.cv.clone(),
+                body: f.body.iter().map(|x| fold_statement(x, st)).collect(),
+            });
+            TaggedStatement::TryStatement(coding_adventures_javascript_ast::TryStatement {
+                cv: s.cv.clone(),
+                block,
+                handler,
+                finalizer,
+            })
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => stmt.clone(),

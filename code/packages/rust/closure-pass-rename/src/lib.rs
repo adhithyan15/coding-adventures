@@ -284,6 +284,24 @@ fn process_tagged(t: &mut TaggedStatement, nodes_touched: &mut u32) -> bool {
                 }
             }
         }
+        TaggedStatement::TryStatement(ts) => {
+            // Drive leaf-function renaming into the three blocks so nested
+            // functions inside try/catch/finally are processed. The catch
+            // `param` is preserved.
+            for s in &mut ts.block.body {
+                changed |= process_stmt(s, nodes_touched);
+            }
+            if let Some(h) = &mut ts.handler {
+                for s in &mut h.body.body {
+                    changed |= process_stmt(s, nodes_touched);
+                }
+            }
+            if let Some(f) = &mut ts.finalizer {
+                for s in &mut f.body {
+                    changed |= process_stmt(s, nodes_touched);
+                }
+            }
+        }
         // No nested statements that could hold a function declaration.
         TaggedStatement::ExpressionStatement(_)
         | TaggedStatement::ReturnStatement(_)
@@ -351,6 +369,17 @@ fn stmt_has_function(stmt: &Statement) -> bool {
                 .cases
                 .iter()
                 .any(|c| c.consequent.iter().any(stmt_has_function)),
+            TaggedStatement::TryStatement(ts) => {
+                ts.block.body.iter().any(stmt_has_function)
+                    || ts
+                        .handler
+                        .as_ref()
+                        .is_some_and(|h| h.body.body.iter().any(stmt_has_function))
+                    || ts
+                        .finalizer
+                        .as_ref()
+                        .is_some_and(|f| f.body.iter().any(stmt_has_function))
+            }
             // Statements that cannot (in the Phase-1 AST) contain a
             // function declaration. Listed EXHAUSTIVELY on purpose: when
             // the AST grows a new scope-introducing construct (a class
@@ -562,12 +591,31 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
                     }
                 }
             }
+            TaggedStatement::TryStatement(ts) => {
+                // The catch `param` is a block-scoped binding (like a nested
+                // `let`): record it as INELIGIBLE so it is never renamed
+                // function-wide, and so a function-scoped `var` of the same
+                // name becomes a duplicate occurrence → skipped (ambiguous),
+                // which is the sound conservative outcome. Recurse into the
+                // three blocks as nested scopes (their `var`s remain eligible
+                // via `push_var_occurrences`; their `let`/`const` are
+                // block-scoped → ineligible).
+                collect_decl_occurrences(&ts.block, out, true);
+                if let Some(h) = &ts.handler {
+                    if let Some(param) = &h.param {
+                        out.push((param.name.clone(), false));
+                    }
+                    collect_decl_occurrences(&h.body, out, true);
+                }
+                if let Some(f) = &ts.finalizer {
+                    collect_decl_occurrences(f, out, true);
+                }
+            }
             // Statements that introduce no binding in the Phase-1 AST.
             // Exhaustive on purpose: a future binding-introducing
-            // statement (a `try`/`catch`, a `class` declaration) must be
-            // handled here, otherwise its name could shadow a local
-            // without our noticing and we'd rename unsoundly. The compiler
-            // will flag the omission.
+            // statement (a `class` declaration) must be handled here,
+            // otherwise its name could shadow a local without our noticing
+            // and we'd rename unsoundly. The compiler will flag the omission.
             TaggedStatement::ExpressionStatement(_)
             | TaggedStatement::ReturnStatement(_)
             | TaggedStatement::ThrowStatement(_)
@@ -687,6 +735,21 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             TaggedStatement::ContinueStatement(c) => {
                 if let Some(l) = &c.label {
                     out.insert(l.name.clone());
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                // Add the catch `param` to the avoid set so no renamed local
+                // can collide with it (it is itself left unrenamed). Recurse
+                // into the three blocks to collect every other identifier.
+                collect_all_idents_block(&ts.block, out);
+                if let Some(h) = &ts.handler {
+                    if let Some(param) = &h.param {
+                        out.insert(param.name.clone());
+                    }
+                    collect_all_idents_block(&h.body, out);
+                }
+                if let Some(f) = &ts.finalizer {
+                    collect_all_idents_block(f, out);
                 }
             }
             TaggedStatement::EmptyStatement(_) => {}
@@ -865,6 +928,18 @@ fn rewrite_uses_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
                 for s in &mut c.consequent {
                     rewrite_uses_stmt(s, map);
                 }
+            }
+        }
+        TaggedStatement::TryStatement(ts) => {
+            // Rewrite renamed-binding uses inside the three blocks. The catch
+            // `param` is never in `map` (it is not collected as a renameable),
+            // so its binding site and its uses are left untouched.
+            rewrite_uses_block(&mut ts.block, map);
+            if let Some(h) = &mut ts.handler {
+                rewrite_uses_block(&mut h.body, map);
+            }
+            if let Some(f) = &mut ts.finalizer {
+                rewrite_uses_block(f, map);
             }
         }
         // Labels (break/continue) live in a separate label namespace, not
@@ -1127,6 +1202,51 @@ mod tests {
         assert_eq!(
             rename_source("function f(longName) { return longName + 1; }"),
             "function f(a){return a + 1};"
+        );
+    }
+
+    // ---- catch-param soundness (CLOC19) -----------------------
+
+    #[test]
+    fn rewrites_param_use_inside_catch_body() {
+        // The param `longName` is used inside the catch handler. Renaming
+        // must reach into the catch body and rewrite the use, while the
+        // catch binding `e` is preserved verbatim (catch params are never
+        // in the local-rename set).
+        assert_eq!(
+            rename_source(
+                "function f(longName) { try { risky(); } catch (e) { return longName; } }"
+            ),
+            "function f(a){try{risky()}catch(e){return a}};"
+        );
+    }
+
+    #[test]
+    fn does_not_rename_catch_param_itself() {
+        // A long catch-binding name is NOT shortened — catch params are
+        // bindings the renamer treats as reserved, not locals to compress.
+        assert_eq!(
+            rename_source(
+                "function f(p) { try { risky(); } catch (longError) { report(longError); } }"
+            ),
+            // `p` is already 1 char (no byte savings), so it stays; the
+            // catch binding `longError` is reserved and stays verbatim too.
+            "function f(p){try{risky()}catch(longError){report(longError)}};"
+        );
+    }
+
+    #[test]
+    fn fresh_name_avoids_colliding_with_catch_param() {
+        // The killer case: the catch param is literally `a`, the name the
+        // allocator would otherwise hand to the function's own param. The
+        // soundness guard adds the catch param to the avoid set, so
+        // `longName` must become `b` (NOT `a`) — otherwise the renamed
+        // param would alias the caught value and miscompile `use(a, …)`.
+        assert_eq!(
+            rename_source(
+                "function f(longName) { try { risky(); } catch (a) { use(a, longName); } }"
+            ),
+            "function f(b){try{risky()}catch(a){use(a,b)}};"
         );
     }
 

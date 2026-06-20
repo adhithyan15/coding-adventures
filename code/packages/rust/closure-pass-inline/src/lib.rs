@@ -580,12 +580,34 @@ fn count_decl_names_stmt(
                     }
                 }
             }
+            TaggedStatement::TryStatement(ts) => {
+                // Count the catch `param` as a program-wide binding so the
+                // exact-decl-count shadow guard (CLOC16 Slice B1) stays exact:
+                // a free body identifier resolving to a name ALSO bound by a
+                // catch param is multiply-declared, so it is not treated as
+                // unshadowable. Recurse into the three blocks.
+                for s in &ts.block.body {
+                    count_decl_names_stmt(s, out, nodes_touched);
+                }
+                if let Some(h) = &ts.handler {
+                    if let Some(param) = &h.param {
+                        *out.entry(param.name.clone()).or_insert(0) += 1;
+                    }
+                    for s in &h.body.body {
+                        count_decl_names_stmt(s, out, nodes_touched);
+                    }
+                }
+                if let Some(f) = &ts.finalizer {
+                    for s in &f.body {
+                        count_decl_names_stmt(s, out, nodes_touched);
+                    }
+                }
+            }
             // Statements that introduce no binding in the Phase-1 AST.
             // Exhaustive on purpose: a future binding-introducing
-            // statement (a `try`/`catch`, a `class` declaration) must be
-            // handled here so a shadowing name can't slip past the
-            // shadow guard and make an unsound inline. The compiler
-            // flags the omission.
+            // statement (a `class` declaration) must be handled here so a
+            // shadowing name can't slip past the shadow guard and make an
+            // unsound inline. The compiler flags the omission.
             TaggedStatement::ExpressionStatement(_)
             | TaggedStatement::ReturnStatement(_)
             | TaggedStatement::ThrowStatement(_)
@@ -773,6 +795,23 @@ fn tally_stmt(stmt: &Statement, cand: &InlineCandidate, t: &mut Tally) {
                         tally_expr(test, cand, t);
                     }
                     for s in &c.consequent {
+                        tally_stmt(s, cand, t);
+                    }
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                // Tally candidate uses / inlinable calls inside the three
+                // blocks — a call site can live in any of them.
+                for s in &ts.block.body {
+                    tally_stmt(s, cand, t);
+                }
+                if let Some(h) = &ts.handler {
+                    for s in &h.body.body {
+                        tally_stmt(s, cand, t);
+                    }
+                }
+                if let Some(f) = &ts.finalizer {
+                    for s in &f.body {
                         tally_stmt(s, cand, t);
                     }
                 }
@@ -979,6 +1018,22 @@ fn inline_in_stmt(stmt: &mut Statement, cand: &InlineCandidate) -> bool {
                         changed |= inline_in_expr(test, cand);
                     }
                     for s in &mut c.consequent {
+                        changed |= inline_in_stmt(s, cand);
+                    }
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                // Expression-inline call sites inside the three blocks.
+                for s in &mut ts.block.body {
+                    changed |= inline_in_stmt(s, cand);
+                }
+                if let Some(h) = &mut ts.handler {
+                    for s in &mut h.body.body {
+                        changed |= inline_in_stmt(s, cand);
+                    }
+                }
+                if let Some(f) = &mut ts.finalizer {
+                    for s in &mut f.body {
                         changed |= inline_in_stmt(s, cand);
                     }
                 }
@@ -1854,6 +1909,21 @@ fn splice_void_in_stmt(
                 }
                 changed
             }
+            TaggedStatement::TryStatement(ts) => {
+                // Splice the void target call in any of the three blocks'
+                // statement lists. Fresh-renamed locals avoid the catch param
+                // (it is in the `avoid` set via `collect_used_idents`).
+                let mut changed =
+                    splice_void_in_stmt_vec(&mut ts.block.body, cand, avoid, nodes_touched);
+                if let Some(h) = &mut ts.handler {
+                    changed |=
+                        splice_void_in_stmt_vec(&mut h.body.body, cand, avoid, nodes_touched);
+                }
+                if let Some(f) = &mut ts.finalizer {
+                    changed |= splice_void_in_stmt_vec(&mut f.body, cand, avoid, nodes_touched);
+                }
+                changed
+            }
             // Leaf / expression-only statements hold no nested statement
             // list to splice into. (A target call inside one of these — an
             // `ExpressionStatement` whose expression is NOT the bare call,
@@ -2674,6 +2744,20 @@ fn splice_valued_in_stmt(
                 }
                 changed
             }
+            TaggedStatement::TryStatement(ts) => {
+                // Value-capture splice within any of the three blocks.
+                let mut changed =
+                    splice_valued_in_stmt_vec(&mut ts.block.body, cand, avoid, nodes_touched);
+                if let Some(h) = &mut ts.handler {
+                    changed |=
+                        splice_valued_in_stmt_vec(&mut h.body.body, cand, avoid, nodes_touched);
+                }
+                if let Some(f) = &mut ts.finalizer {
+                    changed |=
+                        splice_valued_in_stmt_vec(&mut f.body, cand, avoid, nodes_touched);
+                }
+                changed
+            }
             TaggedStatement::ExpressionStatement(_)
             | TaggedStatement::ReturnStatement(_)
             | TaggedStatement::ThrowStatement(_)
@@ -2968,6 +3052,28 @@ fn collect_used_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                         collect_binding_idents_expr(test, out);
                     }
                     for s in &c.consequent {
+                        collect_used_idents_stmt(s, out);
+                    }
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                // The catch `param` MUST join the avoid set: a callee local
+                // alpha-renamed to a fresh name at a splice site inside the
+                // catch body must not collide with `param`. Recurse into the
+                // three blocks for every other used identifier.
+                for s in &ts.block.body {
+                    collect_used_idents_stmt(s, out);
+                }
+                if let Some(h) = &ts.handler {
+                    if let Some(param) = &h.param {
+                        out.insert(param.name.clone());
+                    }
+                    for s in &h.body.body {
+                        collect_used_idents_stmt(s, out);
+                    }
+                }
+                if let Some(f) = &ts.finalizer {
+                    for s in &f.body {
                         collect_used_idents_stmt(s, out);
                     }
                 }

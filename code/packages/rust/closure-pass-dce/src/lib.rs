@@ -482,6 +482,26 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                 cases: new_cases,
             })
         }
+        TaggedStatement::TryStatement(s) => {
+            // Recurse DCE into the protected block, the catch body, and the
+            // finalizer — each is an ordinary block, so dead-after-terminator
+            // and empty-statement cleanup apply within them. The catch `param`
+            // is preserved verbatim (it is a binding, not removable here). We
+            // do NOT treat the `try` itself as a terminator: it can catch and
+            // continue, so code after it is reachable.
+            TaggedStatement::TryStatement(coding_adventures_javascript_ast::TryStatement {
+                cv: s.cv.clone(),
+                block: dce_block_statement(&s.block, st),
+                handler: s.handler.as_ref().map(|h| {
+                    coding_adventures_javascript_ast::CatchClause {
+                        cv: h.cv.clone(),
+                        param: h.param.clone(),
+                        body: dce_block_statement(&h.body, st),
+                    }
+                }),
+                finalizer: s.finalizer.as_ref().map(|f| dce_block_statement(f, st)),
+            })
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => stmt.clone(),
@@ -987,8 +1007,8 @@ mod tests {
     use coding_adventures_closure_pass_fold_control_flow::FoldControlFlowPass;
     use coding_adventures_closure_pass_pipeline::{PassPipeline, PipelineOutput};
     use coding_adventures_javascript_ast::{
-        statement::TaggedStatement, BinaryOperator, BooleanLiteral, EmptyStatement, Identifier,
-        NumericLiteral, SourceType, SwitchCase, SwitchStatement,
+        statement::TaggedStatement, BinaryOperator, BooleanLiteral, CatchClause, EmptyStatement,
+        Identifier, NumericLiteral, SourceType, SwitchCase, SwitchStatement, TryStatement,
     };
     use coding_adventures_javascript_tokens::EsVersion;
     use coding_adventures_type_sidecar::Sidecar;
@@ -2153,5 +2173,94 @@ mod tests {
         // through is_pure_leaf because we'd already have flagged
         // it).
         assert!(block.body.is_empty());
+    }
+
+    // ---- try / catch / finally (CLOC19) -----------------------
+
+    /// Helper: pull the single `TryStatement` out of a function body.
+    fn extract_try(block: &BlockStatement) -> &TryStatement {
+        let Statement::Tagged(TaggedStatement::TryStatement(t)) = &block.body[0] else {
+            panic!("expected a TryStatement at body[0], got {:?}", block.body[0]);
+        };
+        t
+    }
+
+    #[test]
+    fn dce_recurses_into_catch_body_and_drops_dead_after_return() {
+        // try { } catch (e) { return; foo(); }  — the `foo()` after the
+        // `return` inside the catch body is unreachable. DCE must recurse
+        // into the handler block and truncate it, while leaving the catch
+        // param `e` untouched.
+        let try_stmt = Statement::try_statement(TryStatement {
+            cv: None,
+            block: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            handler: Some(CatchClause {
+                cv: None,
+                param: Some(Identifier {
+                    cv: None,
+                    name: "e".to_string(),
+                }),
+                body: BlockStatement {
+                    cv: None,
+                    body: vec![return_stmt(), expr_stmt(ident("foo"))],
+                },
+            }),
+            finalizer: None,
+        });
+        let prog = program_with_function(vec![try_stmt], Some("fn.1"));
+        let (out, _, changed, _) = run_pass(prog);
+        assert!(changed, "DCE should report a change (dropped dead foo())");
+
+        let block = extract_function_body(&out);
+        let t = extract_try(block);
+        let handler = t.handler.as_ref().expect("handler preserved");
+        assert_eq!(
+            handler.param.as_ref().map(|p| p.name.as_str()),
+            Some("e"),
+            "catch param must be preserved verbatim",
+        );
+        assert_eq!(
+            handler.body.body.len(),
+            1,
+            "dead-after-return inside catch body must be truncated to just the return",
+        );
+        assert!(
+            matches!(
+                &handler.body.body[0],
+                Statement::Tagged(TaggedStatement::ReturnStatement(_))
+            ),
+            "the surviving statement must be the return",
+        );
+    }
+
+    #[test]
+    fn dce_does_not_treat_try_as_a_terminator() {
+        // try { } finally { }  followed by a reachable statement: the
+        // `after()` call must survive, because a `try` can catch and
+        // continue — it is NOT an unconditional terminator.
+        let try_stmt = Statement::try_statement(TryStatement {
+            cv: None,
+            block: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            handler: None,
+            finalizer: Some(BlockStatement {
+                cv: None,
+                body: vec![],
+            }),
+        });
+        let prog = program_with_function(vec![try_stmt, expr_stmt(ident("after"))], Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert_eq!(
+            block.body.len(),
+            2,
+            "the statement after a try/finally must remain reachable; got {:?}",
+            block.body,
+        );
     }
 }

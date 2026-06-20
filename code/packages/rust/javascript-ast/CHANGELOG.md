@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-20
+
+### Added — CLOC19: `TryStatement` + `CatchClause` (closes the try/catch coverage gap)
+
+Adds `TryStatement { cv, block, handler: Option<CatchClause>, finalizer: Option<BlockStatement> }`
+and `CatchClause { cv, param: Option<Identifier>, body: BlockStatement }`, a new
+`TaggedStatement::TryStatement` variant, and a `Statement::try_statement`
+convenience constructor. This makes `try`/`catch`/`finally` representable in the
+typed AST for the first time — previously any program containing `try` could not
+be lowered and the closurec CLI fell back to WHITESPACE_ONLY (zero optimization).
+
+ESTree wire format:
+
+```json
+{
+  "type": "TryStatement",
+  "block": <BlockStatement>,
+  "handler": { "type": "CatchClause", "param": <Identifier> | (absent), "body": <BlockStatement> } | (absent),
+  "finalizer": <BlockStatement> | (absent)
+}
+```
+
+`param` is absent for the ES2019 optional-catch-binding form (`catch { … }`).
+Destructuring catch params are intentionally not modelled — the bridge declines
+them rather than mis-binding (sound WHITESPACE_ONLY fallback at the CLI).
+
+### Fixed — serde double-tagging on `TryStatement`
+
+The initial `TryStatement` struct carried its own `#[serde(tag = "type")]` *and*
+was a variant of the internally-tagged `TaggedStatement` enum, which injects the
+tag from the variant name. The two tags collided and a serialized `TryStatement`
+failed to deserialize back into the untagged outer `Statement` enum. Removed the
+struct-level tag so it matches every sibling statement struct (only `rename_all`);
+added round-trip tests covering the full, optional-binding, and no-catch forms.
+
 ## [0.7.0] - 2026-06-04
 
 ### Added — CLOC12.33: `SwitchStatement` + `SwitchCase` (Phase 1.x, closes gap-014)
