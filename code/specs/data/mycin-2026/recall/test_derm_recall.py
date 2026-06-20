@@ -34,6 +34,8 @@ EXPECTED = {
     "silvery_scales": "psoriasis",
     "umbilicated_papules": "molluscum_contagiosum",
     "herald_patch": "pityriasis_rosea",
+    "nikolsky_sign": "pemphigus_vulgaris",   # expand (NBK560860)
+    "sandpaper_rash": "scarlet_fever",       # expand (NBK507889)
 }
 REL = "skin_finding_in"
 VAR = "Disease"

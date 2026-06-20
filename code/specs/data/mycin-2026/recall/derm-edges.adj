@@ -27,12 +27,15 @@
 % (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 %
 % Honest scope: only morphologies whose page states the association in a clean self-
-% contained span (both finding AND disease named) are included. Deferred — impetigo
-% (its honey-colored-crust sentence is phrased without naming impetigo, e.g. only the
-% negative "Bullous impetigo does not form a honey-colored crust"); herpes zoster
-% (its dermatomal-distribution sentences do not name zoster alongside the finding).
-% The molluscum span names the disease by its on-page abbreviation "MC" (= molluscum
-% contagiosum, defined in that StatPearls article's title).
+% contained span (both finding AND disease named) are included. Two on-page-abbreviation
+% spans are accepted (the disease is named by an abbreviation the article defines):
+% molluscum contagiosum via "MC", and pemphigus vulgaris via "PV".
+% Still deferred (re-checked) — impetigo (its honey-colored-crust sentence is phrased
+% without naming impetigo); herpes zoster (its dermatomal-distribution sentences do not
+% name zoster alongside the finding); varicella → "dew drops on a rose petal" (the lesion
+% sentence on NBK448191 does NOT name chickenpox/varicella, so it stays out despite the
+% engine now carrying the quoted finding-phrase verbatim — the missing endpoint, not the
+% quotes, is the blocker).
 % ============================================================================
 
 dictionary derm_vocab {
@@ -67,5 +70,17 @@ rulebook derm_facts {
     relate skin_finding_in(herald_patch, pityriasis_rosea)
         source "Pityriasis rosea (PR) can sometimes be difficult to manage because of factors including variations in the clinical manifestation of the condition and acknowledging instances where the typical herald patch may be absent."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK448091/"
+        trust authoritative
+
+    % --- EXPAND: Nikolsky sign -> pemphigus vulgaris (named on-page as "PV") ----
+    relate skin_finding_in(nikolsky_sign, pemphigus_vulgaris)
+        source "A Nikolsky sign is described as a blister formation with minor pressure or trauma and is seen in PV."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560860/"
+        trust authoritative
+
+    % --- EXPAND: sandpaper rash -> scarlet fever -------------------------------
+    relate skin_finding_in(sandpaper_rash, scarlet_fever)
+        source "Scarlet fever is a syndrome characterized by a blanching, erythematous, maculopapular rash often described as sandpaper-like, strawberry tongue, and exudative pharyngitis"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507889/"
         trust authoritative
 }

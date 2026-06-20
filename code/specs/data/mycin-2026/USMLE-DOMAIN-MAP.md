@@ -115,7 +115,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Cardiology murmurs (Tier-2) | Cardiology | murmur_indicates (murmur→lesion) | 5 grounded (ADJ-only) | ✓ |
 | Neurology localization (Tier-2) | Neurology | lesion_causes (site→deficit) | 5 grounded (ADJ-only) | ✓ |
 | GI biopsy (Tier-2) | Gastroenterology | biopsy_finding_in (finding→dx) | 6 grounded (ADJ-only) | ✓ |
-| Dermatology (Tier-2) | Dermatology | skin_finding_in (lesion→dx) | 4 grounded (ADJ-only) | ✓ |
+| Dermatology (Tier-2) | Dermatology | skin_finding_in (lesion→dx) | 6 grounded (ADJ-only) | ✓ |
 | Respiratory occupational (Tier-2) | Pulmonology | inhalation_causes (exposure→dz) | 5 grounded (ADJ-only) | ✓ |
 
 Offline pipeline: prose → local-model decompose → ADJ → native engine, two-sided

@@ -164,6 +164,8 @@
     {"id": "derm_psoriasis_dx","domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "silvery_scales",      "var": "Disease", "gold": "psoriasis"},
     {"id": "derm_mc_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "umbilicated_papules", "var": "Disease", "gold": "molluscum_contagiosum"},
     {"id": "derm_pr_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "herald_patch",        "var": "Disease", "gold": "pityriasis_rosea"},
+    {"id": "derm_pv_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "nikolsky_sign",       "var": "Disease", "gold": "pemphigus_vulgaris"},
+    {"id": "derm_sf_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "sandpaper_rash",      "var": "Disease", "gold": "scarlet_fever"},
 
     {"id": "resp_silica_dx",   "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "silica",      "var": "Disease", "gold": "silicosis"},
     {"id": "resp_asbestos_dx", "domain": "resp", "tactic": "recall", "relation": "inhalation_causes", "subject": "asbestos",    "var": "Disease", "gold": "asbestosis"},
