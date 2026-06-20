@@ -52,6 +52,17 @@ An **empty arm** falls through to the next non-empty arm (R-19):
 (`arg = NAME EQ [expr] | expr`) so `a = ,` parses; an empty arg in an ordinary
 call is an eval-time error.
 
+**Functional helpers (R-20)** — the rest of R's functional toolkit, on top of the
+R-10 family. `Find(f, x)` returns the first element where `f` is `TRUE`
+(`NULL` if none); `Position(f, x)` returns its 1-based index. `Negate(f)` is a
+new function computing `!f(...)` (`Negate(is.na)(NA)` → `FALSE`).
+`Reduce(f, x, accumulate = TRUE)` returns the running folds
+(`Reduce(\(a, b) a + b, 1:4, accumulate = TRUE)` → `c(1, 3, 6, 10)`; an init
+seeds the first element). `Recall(...)` re-invokes the enclosing function for
+anonymous recursion (`(\(n) if (n <= 1) 1 else n * Recall(n - 1))(5)` → `120`).
+All take the function by name, so they compose with the pipe
+(`1:5 |> Find(f = \(x) x > 2)`).
+
 ## Usage
 
 ```rust

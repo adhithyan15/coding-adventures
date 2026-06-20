@@ -360,6 +360,51 @@ unchanged.
     condition machinery (custom condition classes, calling handlers, restarts) is
     out of scope.
 
+- **R-20 — functional helpers** *(this PR)*. The remaining members of R's
+  functional-programming toolkit (`?funprog`), built on the R-10 family and, like
+  it, living in the shared `s-runtime` (R inherits them through the same
+  evaluator — no grammar change, all plain builtins). They take their function by
+  name (`f =`/`FUN =`) or as the first callable positional and the data as the
+  remaining positionals (the R-10 `split_fun` helper), so they compose with the
+  pipe (`1:5 |> Find(f = \(x) x > 2)`):
+  - **`Find(f, x)`** — the **first** element of `x` for which `f(element)` is
+    `TRUE`; if none matches, an **invisible `NULL`**. `f` is invoked through
+    `Interpreter::call_value`, exactly as `Filter` does, but it short-circuits on
+    the first hit rather than scanning the whole vector.
+  - **`Position(f, x)`** — the **1-based index** of the first matching element
+    (the counterpart to `Find`, which returns the *value*); `NULL` if none match.
+  - **`Negate(f)`** — returns a **new callable** computing `!f(...)`: the logical
+    negation of `f`'s result. Implemented with a small dedicated value,
+    `SValue::Negated(Box<SValue>)`, that wraps the function; calling it invokes
+    the inner `f` (through the same `call_value`/`apply` path, so recursion is
+    bounded by `MAX_EVAL_DEPTH`) and negates the verdict via the shared `negate`
+    coercion (so `Negate(is.na)(NA)` → `FALSE`, `Negate(\(x) x > 0)(5)` →
+    `FALSE`). `is.callable`/`Negate(f)(...)` see it as a function; it negates
+    element-wise and is `NA`-preserving like `!`. The wrapped `f` must itself be
+    callable (else an `NotCallable` error, never a panic).
+  - **`Reduce(f, x, ..., accumulate = FALSE)`** — the R-10 left fold, now with
+    R's **`accumulate`** flag. With `accumulate = TRUE` the result is the vector
+    (or list) of *running* folds rather than the final one:
+    `Reduce(\(a, b) a + b, 1:4, accumulate = TRUE)` → `c(1, 3, 6, 10)`; with an
+    `init`, the init is the **first** accumulated element
+    (`Reduce(\(a, b) a + b, 1:3, 10, accumulate = TRUE)` → `c(10, 11, 13, 16)`).
+    The no-`accumulate` behaviour (with and without `init`) is unchanged. The
+    accumulated result is built with the shared `combine`/`c()` engine, so it
+    simplifies to a vector for atomic folds and stays a list when the folds are
+    themselves lists; an empty `x` with no `init` is `NULL`. The accumulated
+    length never exceeds `length(x) (+1 for init)`, itself bounded by
+    `MAX_SEQ_LEN`.
+  - **`Recall(...)`** — **anonymous recursion**: inside a running function body,
+    `Recall(args…)` re-invokes *that same function*. The interpreter keeps a small
+    **call stack** of the currently-executing closures (pushed/popped by
+    `call_closure` with an RAII guard, so it is exception-safe); `Recall` reads
+    the top and calls it with the supplied arguments. Outside any function it is
+    an error (`"Recall called from outside a closure"`). Recursion is bounded by
+    `MAX_EVAL_DEPTH` (each `Recall` goes through `call_value` → `eval_node`),
+    so runaway anonymous recursion returns a clean error instead of overflowing
+    the native stack. This makes the classic anonymous factorial work:
+    `(\(n) if (n <= 1) 1 else n * Recall(n - 1))(5)` → `120`.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`

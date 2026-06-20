@@ -83,6 +83,20 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   to `arg = NAME EQ [expr] | expr` so `a = ,` parses; the empty value is only
   meaningful in `switch` — an empty arg in an ordinary call is an eval-time
   error.)
+- **Functional helpers** (R-20): the rest of R's functional toolkit, on top of
+  the R-10 family. `Find(f, x)` returns the first element where `f(element)` is
+  `TRUE` (invisible `NULL` if none, short-circuiting); `Position(f, x)` returns
+  its 1-based index. `Negate(f)` returns a new callable computing `!f(...)` — a
+  small `SValue::Negated` wrapper the call dispatcher recognizes, invoking `f`
+  through the normal depth-bounded path and logically negating the result
+  (`Negate(is.na)(NA)` → `FALSE`). `Reduce(f, x, ..., accumulate = TRUE)` returns
+  the running folds (`Reduce(\(a, b) a + b, 1:4, accumulate = TRUE)` →
+  `c(1, 3, 6, 10)`; an init seeds the first element); the no-`accumulate`
+  behaviour is unchanged. `Recall(...)` re-invokes the enclosing function for
+  anonymous recursion, reading a per-interpreter call stack pushed by
+  `call_closure` (RAII-popped). Recursion is bounded by `MAX_EVAL_DEPTH` and the
+  accumulator by `MAX_SEQ_LEN`; non-callable predicates and out-of-closure
+  `Recall` fail closed.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

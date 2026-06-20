@@ -21,7 +21,7 @@ use crate::env::{define, lookup, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
     arithmetic, assign_index, assign_index2d, bounded_sequence, class_of, compare, format_value,
-    index, index2d, membership, negate, Arg, Param, SValue, MAX_SEQ_LEN,
+    index, index2d, logical_not, membership, negate, Arg, Param, SValue, MAX_SEQ_LEN,
 };
 use coding_adventures_s_parser::try_parse_s;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -62,6 +62,14 @@ pub struct Interpreter {
     /// default, but immediate printing is simpler and equally faithful for a
     /// REPL); the buffer exists so a future `warnings()` accessor can read them.
     warnings: RefCell<Vec<String>>,
+    /// The stack of closures currently being evaluated, innermost last (R-20).
+    /// `call_closure` pushes the function it is about to run and pops it on the
+    /// way out (via an RAII guard, so an early-return/error still pops), so the
+    /// top is always "the function we are inside right now". `Recall()` reads the
+    /// top to re-invoke the enclosing function for anonymous recursion. Its depth
+    /// is naturally bounded by [`MAX_EVAL_DEPTH`] — every nested call increments
+    /// the eval depth — so it cannot grow without limit.
+    call_stack: RefCell<Vec<SValue>>,
 }
 
 /// The most warnings retained per program. Beyond this, further `warning()`
@@ -91,6 +99,25 @@ impl Drop for DepthGuard<'_> {
     }
 }
 
+/// RAII guard that pushes a closure onto the interpreter's call stack (R-20) on
+/// construction and pops it on drop, so the stack stays balanced even when the
+/// closure body returns early via `?` or raises an error. `Recall()` reads the
+/// top of this stack to re-invoke the enclosing function.
+struct CallFrameGuard<'a>(&'a RefCell<Vec<SValue>>);
+
+impl<'a> CallFrameGuard<'a> {
+    fn push(stack: &'a RefCell<Vec<SValue>>, f: SValue) -> Self {
+        stack.borrow_mut().push(f);
+        CallFrameGuard(stack)
+    }
+}
+
+impl Drop for CallFrameGuard<'_> {
+    fn drop(&mut self) {
+        self.0.borrow_mut().pop();
+    }
+}
+
 impl Default for Interpreter {
     fn default() -> Self {
         Self::new()
@@ -109,7 +136,14 @@ impl Interpreter {
             depth: Cell::new(0),
             rng: RefCell::new(RngState::new(DEFAULT_SEED)),
             warnings: RefCell::new(Vec::new()),
+            call_stack: RefCell::new(Vec::new()),
         }
+    }
+
+    /// The function currently being evaluated, if any — the top of the call
+    /// stack. `Recall()` (R-20) uses this to re-invoke the enclosing closure.
+    pub(crate) fn current_function(&self) -> Option<SValue> {
+        self.call_stack.borrow().last().cloned()
     }
 
     /// Record and print a warning raised by `warning(...)`. The buffer is capped
@@ -913,8 +947,20 @@ impl Interpreter {
                 }
             }
             SValue::Closure { params, body, env } => self.call_closure(&params, &body, &env, args),
+            SValue::Negated(inner) => self.as_visible(self.call_negated(&inner, args)?),
             other => Err(SError::NotCallable(other.type_name().to_string())),
         }
+    }
+
+    /// Invoke a `Negate(f)` wrapper (R-20): call the wrapped `f` with `args`
+    /// through the normal (depth-bounded) call path, then return the **logical
+    /// negation** of its verdict. `!` flips `TRUE`/`FALSE` element-wise and
+    /// preserves `NA`, so `Negate(is.na)(NA)` → `FALSE` and
+    /// `Negate(\(x) x > 0)(5)` → `FALSE`. A non-callable inner `f` yields a clean
+    /// `NotCallable` error (never a panic).
+    fn call_negated(&self, inner: &SValue, args: &[Arg]) -> SResult<SValue> {
+        let verdict = self.call_value(inner.clone(), args)?;
+        logical_not(&verdict)
     }
 
     /// Call a callable value and return its result, *without* the top-level
@@ -924,6 +970,7 @@ impl Interpreter {
         match callee {
             SValue::Builtin { func, .. } => func(self, args),
             SValue::Closure { params, body, env } => self.call_closure(&params, &body, &env, args),
+            SValue::Negated(inner) => self.call_negated(&inner, args),
             other => Err(SError::NotCallable(other.type_name().to_string())),
         }
     }
@@ -935,6 +982,21 @@ impl Interpreter {
         closure_env: &Env,
         args: &[Arg],
     ) -> SResult<SValue> {
+        // Record the function we are about to run so `Recall()` (R-20) can
+        // re-invoke it. The guard pops it again on the way out — including on an
+        // early `?`/error — so the stack stays balanced. Reconstructing the
+        // `Closure` value here is cheap: `params`/`body`/`env` are all `Rc`/clone
+        // -friendly, and the alternative (threading the value through every call
+        // site) is far more invasive.
+        let _frame = CallFrameGuard::push(
+            &self.call_stack,
+            SValue::Closure {
+                params: params.to_vec(),
+                body: Rc::clone(body),
+                env: Rc::clone(closure_env),
+            },
+        );
+
         let scope = Scope::child(closure_env);
         let mut bound = vec![false; params.len()];
 
