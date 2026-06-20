@@ -260,6 +260,10 @@ pub const SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID: &str = "smart_home.list_dis
 pub const SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID: &str = "smart_home.get_discovery_summary";
 pub const SMART_HOME_GET_PAIRING_PLAN_TOOL_ID: &str = "smart_home.get_pairing_plan";
 pub const SMART_HOME_LIST_DEVICES_TOOL_ID: &str = "smart_home.list_devices";
+pub const SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID: &str =
+    "smart_home.list_device_inventory_audit";
+pub const SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_device_inventory_audit_summary";
 pub const SMART_HOME_LIST_ROOMS_TOOL_ID: &str = "smart_home.list_rooms";
 pub const SMART_HOME_LIST_SCENES_TOOL_ID: &str = "smart_home.list_scenes";
 pub const SMART_HOME_DESCRIBE_SCENE_TOOL_ID: &str = "smart_home.describe_scene";
@@ -1951,6 +1955,24 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_devices"))
+                }
+                SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID => {
+                    let query = device_inventory_audit_query(&arguments)?;
+                    list_device_inventory_audit_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID => {
+                    let query = device_inventory_audit_query(&arguments)?;
+                    get_device_inventory_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
                 }
                 SMART_HOME_LIST_ROOMS_TOOL_ID => {
                     let query = room_query(&arguments)?;
@@ -5726,6 +5748,20 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             collection_output_schema("devices"),
         ),
         read_definition(
+            SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID,
+            "List smart-home device inventory audit",
+            "List Chief-derived smart-home device inventory audit rows over runtime-owned D23 device records.",
+            device_inventory_audit_query_schema(),
+            device_inventory_audit_list_output_schema(),
+        ),
+        read_definition(
+            SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID,
+            "Get smart-home device inventory audit summary",
+            "Summarize Chief-derived smart-home device inventory gaps without returning individual device rows.",
+            device_inventory_audit_query_schema(),
+            device_inventory_audit_summary_output_schema(),
+        ),
+        read_definition(
             SMART_HOME_LIST_ROOMS_TOOL_ID,
             "List smart-home rooms",
             "List runtime-derived D23 room topology summaries, including device health, state coverage, and scene action coverage.",
@@ -7122,6 +7158,40 @@ fn list_devices_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest,
             .map(|value| parse_health(&value))
             .transpose()?,
         capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
+    })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct DeviceInventoryAuditQuery {
+    bridge_id: Option<BridgeId>,
+    health: Option<Health>,
+    capability_id: Option<CapabilityId>,
+    manufacturer: Option<String>,
+    model: Option<String>,
+    attention_only: bool,
+    missing_room_only: bool,
+    missing_entities_only: bool,
+    identity_gaps_only: bool,
+    limit: Option<usize>,
+}
+
+fn device_inventory_audit_query(
+    arguments: &JsonValue,
+) -> Result<DeviceInventoryAuditQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(DeviceInventoryAuditQuery {
+        bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
+        health: optional_string(arguments, "health")?
+            .map(|value| parse_health(&value))
+            .transpose()?,
+        capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
+        manufacturer: optional_string(arguments, "manufacturer")?,
+        model: optional_string(arguments, "model")?,
+        attention_only: optional_bool(arguments, "attention_only")?.unwrap_or(false),
+        missing_room_only: optional_bool(arguments, "missing_room_only")?.unwrap_or(false),
+        missing_entities_only: optional_bool(arguments, "missing_entities_only")?.unwrap_or(false),
+        identity_gaps_only: optional_bool(arguments, "identity_gaps_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
 
@@ -30955,6 +31025,276 @@ fn get_integration_readiness_gap_summary_output_handler_output(
     )
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct DeviceInventoryAuditRow {
+    device_id: DeviceId,
+    bridge_id: BridgeId,
+    name: String,
+    manufacturer: String,
+    model: String,
+    health: Health,
+    room_id: Option<String>,
+    entity_count: usize,
+    has_serial: bool,
+    has_firmware_version: bool,
+    inventory_lane: &'static str,
+    inventory_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+impl DeviceInventoryAuditRow {
+    fn from_device(device: &Device) -> Self {
+        let has_serial = device
+            .serial
+            .as_ref()
+            .map(|value| !value.is_empty())
+            .unwrap_or(false);
+        let has_firmware_version = device
+            .firmware_version
+            .as_ref()
+            .map(|value| !value.is_empty())
+            .unwrap_or(false);
+        let has_room = device.room_id.is_some();
+        let entity_count = device.entity_ids.len();
+        let has_entities = entity_count > 0;
+        let identity_gap = !has_serial || !has_firmware_version;
+        let blocked = device.health.needs_attention()
+            || device.health.is_pairing_candidate()
+            || !has_entities;
+        let requires_attention = blocked || !device.health.is_online() || !has_room || identity_gap;
+        let (inventory_lane, inventory_action) =
+            if device.health.needs_attention() || matches!(device.health, Health::Unknown) {
+                ("runtime_health", "restore_device_health")
+            } else if device.health.is_pairing_candidate() {
+                ("pairing", "complete_device_pairing")
+            } else if !has_entities {
+                ("entity_mapping", "map_runtime_entities")
+            } else if !has_room {
+                ("room_topology", "assign_room")
+            } else if identity_gap {
+                ("device_identity", "capture_device_identity")
+            } else {
+                ("ready", "monitor_inventory")
+            };
+
+        Self {
+            device_id: device.device_id.clone(),
+            bridge_id: device.bridge_id.clone(),
+            name: device.name.clone(),
+            manufacturer: device.manufacturer.clone(),
+            model: device.model.clone(),
+            health: device.health,
+            room_id: device.room_id.clone(),
+            entity_count,
+            has_serial,
+            has_firmware_version,
+            inventory_lane,
+            inventory_action,
+            blocked,
+            requires_attention,
+        }
+    }
+
+    fn has_room(&self) -> bool {
+        self.room_id.is_some()
+    }
+
+    fn has_entities(&self) -> bool {
+        self.entity_count > 0
+    }
+
+    fn has_identity_gap(&self) -> bool {
+        !self.has_serial || !self.has_firmware_version
+    }
+
+    fn is_ready(&self) -> bool {
+        self.health.is_online()
+            && self.has_room()
+            && self.has_entities()
+            && !self.has_identity_gap()
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct DeviceInventoryAuditSummary {
+    total_devices: usize,
+    online_devices: usize,
+    runtime_attention_devices: usize,
+    pairing_candidate_devices: usize,
+    missing_room_devices: usize,
+    missing_entity_devices: usize,
+    identity_gap_devices: usize,
+    blocked_devices: usize,
+    requires_attention_devices: usize,
+    ready_devices: usize,
+}
+
+impl DeviceInventoryAuditSummary {
+    fn from_rows(rows: &[DeviceInventoryAuditRow]) -> Self {
+        let mut summary = Self::default();
+        for row in rows {
+            summary.total_devices += 1;
+            if row.health.is_online() {
+                summary.online_devices += 1;
+            }
+            if row.health.needs_attention() {
+                summary.runtime_attention_devices += 1;
+            }
+            if row.health.is_pairing_candidate() {
+                summary.pairing_candidate_devices += 1;
+            }
+            if !row.has_room() {
+                summary.missing_room_devices += 1;
+            }
+            if !row.has_entities() {
+                summary.missing_entity_devices += 1;
+            }
+            if row.has_identity_gap() {
+                summary.identity_gap_devices += 1;
+            }
+            if row.blocked {
+                summary.blocked_devices += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_devices += 1;
+            }
+            if row.is_ready() {
+                summary.ready_devices += 1;
+            }
+        }
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_devices > 0
+    }
+
+    fn has_inventory_gaps(&self) -> bool {
+        self.requires_attention_devices > 0
+    }
+}
+
+fn list_device_inventory_audit_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: DeviceInventoryAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) = device_inventory_audit_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "device_inventory_audit",
+            JsonValue::Array(rows.iter().map(device_inventory_audit_row_json).collect()),
+        ),
+        ("summary", device_inventory_audit_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_device_inventory_audit")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_devices",
+                integer(summary.requires_attention_devices as i64),
+            ),
+            ("blocked_devices", integer(summary.blocked_devices as i64)),
+        ]),
+    ))
+}
+
+fn get_device_inventory_audit_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: DeviceInventoryAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = device_inventory_audit_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        device_inventory_audit_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_device_inventory_audit_summary")),
+            (
+                "requires_attention_devices",
+                integer(summary.requires_attention_devices as i64),
+            ),
+            ("blocked_devices", integer(summary.blocked_devices as i64)),
+        ]),
+    ))
+}
+
+fn device_inventory_audit_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &DeviceInventoryAuditQuery,
+) -> Result<(Vec<DeviceInventoryAuditRow>, DeviceInventoryAuditSummary), ToolCallError> {
+    let output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::ListDevices {
+                bridge_id: query.bridge_id.clone(),
+                health: query.health,
+                capability_id: query.capability_id.clone(),
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::Devices(devices) = output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "device inventory audit expected device list output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+    let rows = devices
+        .iter()
+        .map(DeviceInventoryAuditRow::from_device)
+        .filter(|row| device_inventory_audit_row_matches(row, query))
+        .collect::<Vec<_>>();
+    let summary = DeviceInventoryAuditSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+fn device_inventory_audit_row_matches(
+    row: &DeviceInventoryAuditRow,
+    query: &DeviceInventoryAuditQuery,
+) -> bool {
+    if let Some(manufacturer) = &query.manufacturer {
+        if !row.manufacturer.eq_ignore_ascii_case(manufacturer) {
+            return false;
+        }
+    }
+    if let Some(model) = &query.model {
+        if !row.model.eq_ignore_ascii_case(model) {
+            return false;
+        }
+    }
+    if query.attention_only && !row.requires_attention {
+        return false;
+    }
+    if query.missing_room_only && row.has_room() {
+        return false;
+    }
+    if query.missing_entities_only && row.has_entities() {
+        return false;
+    }
+    if query.identity_gaps_only && !row.has_identity_gap() {
+        return false;
+    }
+    true
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -53298,6 +53638,88 @@ fn device_json(device: &Device) -> JsonValue {
     ])
 }
 
+fn device_inventory_audit_row_json(row: &DeviceInventoryAuditRow) -> JsonValue {
+    object([
+        (
+            "audit_id",
+            string(format!("device-inventory-audit:{}", row.device_id.as_str())),
+        ),
+        ("device_id", string(row.device_id.as_str())),
+        ("bridge_id", string(row.bridge_id.as_str())),
+        ("name", string(&row.name)),
+        ("manufacturer", string(&row.manufacturer)),
+        ("model", string(&row.model)),
+        ("health", string(health_label(row.health))),
+        (
+            "room_id",
+            row.room_id.as_ref().map(string).unwrap_or(JsonValue::Null),
+        ),
+        ("entity_count", integer(row.entity_count as i64)),
+        ("has_room", JsonValue::Bool(row.has_room())),
+        ("has_entities", JsonValue::Bool(row.has_entities())),
+        ("has_serial", JsonValue::Bool(row.has_serial)),
+        (
+            "has_firmware_version",
+            JsonValue::Bool(row.has_firmware_version),
+        ),
+        ("has_identity_gap", JsonValue::Bool(row.has_identity_gap())),
+        (
+            "pairing_candidate",
+            JsonValue::Bool(row.health.is_pairing_candidate()),
+        ),
+        (
+            "runtime_health_attention",
+            JsonValue::Bool(row.health.needs_attention()),
+        ),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+        ("inventory_lane", string(row.inventory_lane)),
+        ("inventory_action", string(row.inventory_action)),
+        ("ready", JsonValue::Bool(row.is_ready())),
+    ])
+}
+
+fn device_inventory_audit_summary_json(summary: &DeviceInventoryAuditSummary) -> JsonValue {
+    object([
+        ("total_devices", integer(summary.total_devices as i64)),
+        ("online_devices", integer(summary.online_devices as i64)),
+        (
+            "runtime_attention_devices",
+            integer(summary.runtime_attention_devices as i64),
+        ),
+        (
+            "pairing_candidate_devices",
+            integer(summary.pairing_candidate_devices as i64),
+        ),
+        (
+            "missing_room_devices",
+            integer(summary.missing_room_devices as i64),
+        ),
+        (
+            "missing_entity_devices",
+            integer(summary.missing_entity_devices as i64),
+        ),
+        (
+            "identity_gap_devices",
+            integer(summary.identity_gap_devices as i64),
+        ),
+        ("blocked_devices", integer(summary.blocked_devices as i64)),
+        (
+            "requires_attention_devices",
+            integer(summary.requires_attention_devices as i64),
+        ),
+        ("ready_devices", integer(summary.ready_devices as i64)),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_inventory_gaps",
+            JsonValue::Bool(summary.has_inventory_gaps()),
+        ),
+    ])
+}
+
 fn scene_json(scene: &Scene) -> JsonValue {
     object([
         ("scene_id", string(scene.scene_id.as_str())),
@@ -60010,6 +60432,50 @@ fn collection_output_schema(field_name: &str) -> JsonSchema {
     )
 }
 
+fn device_inventory_audit_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("bridge_id", JsonSchema::String),
+            SchemaProperty::new("health", JsonSchema::String),
+            SchemaProperty::new("capability_id", JsonSchema::String),
+            SchemaProperty::new("manufacturer", JsonSchema::String),
+            SchemaProperty::new("model", JsonSchema::String),
+            SchemaProperty::new("attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("missing_room_only", JsonSchema::Boolean),
+            SchemaProperty::new("missing_entities_only", JsonSchema::Boolean),
+            SchemaProperty::new("identity_gaps_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn device_inventory_audit_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "device_inventory_audit",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["device_inventory_audit", "summary", "count"],
+        false,
+    )
+}
+
+fn device_inventory_audit_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
 fn event_delivery_output_schema() -> JsonSchema {
     object_schema(
         vec![
@@ -60058,7 +60524,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 238);
+        assert_eq!(definitions.len(), 240);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -60735,9 +61201,15 @@ mod tests {
         assert!(export.tool_ids().contains(
             &SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATION_SUMMARY_TOOL_ID
         ));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            230
+            232
         );
         assert_eq!(
             export
@@ -61577,11 +62049,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(238))
+            Some(&integer(240))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(230))
+            Some(&integer(232))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -74682,6 +75154,112 @@ mod tests {
                 .unwrap()
                 .auth_ref,
             Some(VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"))
+        );
+    }
+
+    #[test]
+    fn device_inventory_audit_tools_surface_runtime_inventory_gaps_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let mut device = runtime
+            .borrow()
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .unwrap()
+            .clone();
+        device.health = Health::Offline;
+        device.room_id = None;
+        device.entity_ids.clear();
+        device.serial = None;
+        device.firmware_version = None;
+        runtime.borrow_mut().upsert_device(device).unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let list_request = request(
+            "call-list-device-inventory-audit",
+            SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID,
+            object([
+                ("attention_only", JsonValue::Bool(true)),
+                ("missing_room_only", JsonValue::Bool(true)),
+                ("identity_gaps_only", JsonValue::Bool(true)),
+            ]),
+            2_000,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_output, "count"), Some(&integer(1)));
+        let summary = field(list_output, "summary").unwrap();
+        assert_eq!(field(summary, "total_devices"), Some(&integer(1)));
+        assert_eq!(field(summary, "missing_room_devices"), Some(&integer(1)));
+        assert_eq!(field(summary, "missing_entity_devices"), Some(&integer(1)));
+        assert_eq!(field(summary, "identity_gap_devices"), Some(&integer(1)));
+        assert_eq!(
+            field(summary, "has_inventory_gaps"),
+            Some(&JsonValue::Bool(true))
+        );
+        let row = array_item(field(list_output, "device_inventory_audit").unwrap(), 0).unwrap();
+        assert_eq!(field(row, "device_id"), Some(&string("device-1")));
+        assert_eq!(field(row, "health"), Some(&string("offline")));
+        assert_eq!(field(row, "has_room"), Some(&JsonValue::Bool(false)));
+        assert_eq!(field(row, "has_entities"), Some(&JsonValue::Bool(false)));
+        assert_eq!(field(row, "blocked"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(row, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(row, "inventory_lane"),
+            Some(&string("runtime_health"))
+        );
+        assert_eq!(
+            field(row, "inventory_action"),
+            Some(&string("restore_device_health"))
+        );
+
+        let summary_request = request(
+            "call-device-inventory-audit-summary",
+            SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID,
+            object([
+                ("attention_only", JsonValue::Bool(true)),
+                ("missing_entities_only", JsonValue::Bool(true)),
+            ]),
+            2_001,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_devices"), Some(&integer(1)));
+        assert_eq!(field(rollup, "blocked_devices"), Some(&integer(1)));
+        assert_eq!(
+            field(rollup, "requires_attention_devices"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 2);
+        assert_eq!(journal_summary.completed_count, 2);
+        assert_eq!(
+            runtime.borrow().registry().counts().authorization_decisions,
+            2,
+            "device inventory audit list and summary both authorize through runtime read tools"
         );
     }
 
