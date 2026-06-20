@@ -163,6 +163,17 @@ pub fn lookup(env: &Env, name: &str) -> Option<SValue> {
     }
 }
 
+/// Look up `name` in **only** the current frame (no parent walk), returning the
+/// bound value if this exact scope binds it. This is the lookup the R-24
+/// reference-class machinery needs to classify an object: an instance is a *child*
+/// of its generator, so a chain-walking [`lookup`] of a generator's private marker
+/// (`.refClassName`) would find it *through the parent* and misclassify the
+/// instance as a generator. A frame-local read sees only the markers actually
+/// placed on *this* object's own frame, so generator and instance stay distinct.
+pub fn lookup_local(env: &Env, name: &str) -> Option<SValue> {
+    env.borrow().vars.get(name).cloned()
+}
+
 /// Is `name` bound *anywhere* on the chain (current frame or any enclosing one)?
 /// This is the engine behind R's `exists(x)`: a cheap presence test that does not
 /// clone the value. Like [`lookup`] it walks outward (iteratively) to the root.

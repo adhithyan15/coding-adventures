@@ -33,6 +33,7 @@ mod dataframe;
 mod env;
 mod error;
 mod eval;
+mod refclass;
 mod value;
 
 pub use error::{SError, SResult};
@@ -1723,5 +1724,130 @@ mod r22_environments {
         ] {
             let _ = eval_s(src);
         }
+    }
+}
+
+#[cfg(test)]
+mod r24_reference_classes {
+    //! R-24 R5 reference classes, exercised through **S** syntax (the shared
+    //! tree-walker is language-neutral; R inherits the same behaviour). These
+    //! cover the `refclass` module's classification, instantiation, `$` read /
+    //! write, method rebuild, and the headline reference (alias) semantics.
+    use super::*;
+
+    fn nums(src: &str) -> Vec<f64> {
+        match eval_s(src).unwrap().strip_names() {
+            SValue::Double(d) => d.data().to_vec(),
+            other => panic!("expected double, got {}", other.type_name()),
+        }
+    }
+
+    fn show(src: &str) -> String {
+        format_value(&eval_s(src).unwrap()).join("\n")
+    }
+
+    const ACC: &str = "Acc <- setRefClass(\"Acc\",\n  \
+        fields = list(total = \"numeric\"),\n  \
+        methods = list(\n    \
+            add = function(x) { total <<- total + x },\n    \
+            get = function() total\n  ))\n";
+
+    #[test]
+    fn add_and_get() {
+        assert_eq!(
+            nums(&format!("{ACC}a <- Acc$new(total = 0)\na$add(5)\na$add(3)\na$total\n")),
+            vec![8.0]
+        );
+        assert_eq!(
+            nums(&format!("{ACC}a <- Acc$new(total = 0)\na$add(5)\na$get()\n")),
+            vec![5.0]
+        );
+    }
+
+    #[test]
+    fn direct_field_write() {
+        assert_eq!(
+            nums(&format!("{ACC}a <- Acc$new(total = 1)\na$total <- 100\na$total\n")),
+            vec![100.0]
+        );
+    }
+
+    #[test]
+    fn reference_semantics() {
+        // b <- a aliases the same instance (reference, not copy).
+        assert_eq!(
+            nums(&format!("{ACC}a <- Acc$new(total = 0)\nb <- a\nb$add(7)\na$total\n")),
+            vec![7.0]
+        );
+    }
+
+    #[test]
+    fn independent_instances() {
+        assert_eq!(
+            nums(&format!(
+                "{ACC}a <- Acc$new(total = 0)\nb <- Acc$new(total = 0)\n\
+                 a$add(2)\nb$add(9)\nc(a$total, b$total)\n"
+            )),
+            vec![2.0, 9.0]
+        );
+    }
+
+    #[test]
+    fn generator_is_an_environment() {
+        // The generator reifies as an environment value.
+        assert_eq!(show(&format!("{ACC}is.environment(Acc)\n")), "[1] TRUE");
+        // ...and so is an instance.
+        assert_eq!(
+            show(&format!("{ACC}a <- Acc$new(total = 0)\nis.environment(a)\n")),
+            "[1] TRUE"
+        );
+    }
+
+    #[test]
+    fn omitted_field_is_null() {
+        assert_eq!(show(&format!("{ACC}Acc$new()$total\n")), "NULL");
+    }
+
+    #[test]
+    fn self_method_dispatch() {
+        let src = "C <- setRefClass(\"C\",\n  \
+            fields = list(n = \"numeric\"),\n  \
+            methods = list(\n    \
+                bump = function() { n <<- n + 1 },\n    \
+                twice = function() { .self$bump(); .self$bump() }\n  ))\n\
+            x <- C$new(n = 0)\nx$twice()\nx$n\n";
+        assert_eq!(nums(src), vec![2.0]);
+    }
+
+    #[test]
+    fn no_fields_no_methods() {
+        assert_eq!(
+            show("E <- setRefClass(\"E\")\nis.environment(E$new())\n"),
+            "[1] TRUE"
+        );
+    }
+
+    #[test]
+    fn malformed_inputs_are_clean_errors() {
+        for src in [
+            "setRefClass(123)\n",                                       // non-char name
+            "setRefClass()\n",                                          // missing name
+            "setRefClass(\"X\", methods = list(m = 5))\n",              // non-fn method
+            "setRefClass(\"X\", methods = 5)\n",                        // methods not a list
+            "setRefClass(\"X\", fields = 5)\n",                         // fields not list/char
+            "Acc <- setRefClass(\"X\", fields = list(a = \"numeric\"))\nAcc$new(bad = 1)\n", // unknown field
+            "v <- c(1, 2)\nv$x <- 3\n",                                 // $<- on non-env
+        ] {
+            assert!(eval_s(src).is_err(), "expected error for {src:?}");
+        }
+    }
+
+    #[test]
+    fn fields_as_character_vector() {
+        // R also accepts `fields = c("a", "b")`; the elements are the names.
+        let src = "K <- setRefClass(\"K\", fields = c(\"a\", \"b\"),\n  \
+            methods = list(seta = function(v) { a <<- v }))\n\
+            k <- K$new(a = 1, b = 2)\nk$seta(10)\nc(k$a, k$b)\n";
+        assert_eq!(nums(src), vec![10.0, 2.0]);
     }
 }
