@@ -7977,6 +7977,19 @@ function deckAnalysisDiagnosticCodes(netlist: string, plan: DeckAnalysisPlan): s
     .map((diagnostic) => diagnostic.code);
 }
 
+function deckControlDiagnosticCodes(netlist: string): string[] {
+  return analyzeDeckControls(netlist).diagnostics
+    .filter((diagnostic) => diagnostic.code.startsWith("SPICE_DECK_CONTROL_"))
+    .map((diagnostic) => diagnostic.code);
+}
+
+function deckRunDiagnosticCodes(netlist: string, plan: DeckAnalysisPlan): string[] {
+  return [
+    ...deckAnalysisDiagnosticCodes(netlist, plan),
+    ...deckControlDiagnosticCodes(netlist),
+  ];
+}
+
 function formatDeckArtifactFloat(value: number | undefined): string {
   return value === undefined ? "" : formatTableNumber(value);
 }
@@ -8203,7 +8216,7 @@ export function runDeckAnalysis(
   analysis?: string,
 ): DeckAnalysisExecution {
   const plan = selectDeckAnalysisPlan(netlist, analysis);
-  const diagnosticCodes = deckAnalysisDiagnosticCodes(netlist, plan);
+  const diagnosticCodes = deckRunDiagnosticCodes(netlist, plan);
   const analysisDirectives = deckAnalysisDirectives(plan);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);

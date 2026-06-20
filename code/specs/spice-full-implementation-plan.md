@@ -99,7 +99,9 @@ downstream tools to compare.
      and compact JSON records or host-native header-keyed records across
      Python, Rust, and TypeScript, and selected executions now expose ordered
      table export artifacts with text, CSV, compact JSON, and host-native
-     records for each stable table.
+     records for each stable table; selected deck run artifacts now also carry
+     existing `.control` body policy diagnostic codes through their stable
+     table, CSV, compact JSON, and ordered table export artifacts.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -950,6 +952,16 @@ downstream tools to compare.
     - Each table artifact carries the stable table text, deterministic CSV,
       compact JSON records, and host-native header-keyed records for the
       selected result, measurement, Fourier, and run-artifact tables.
+
+88. Deck run control diagnostic artifacts.
+    - Status: completed in this deck run control diagnostic artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now add existing
+      `.control` body policy diagnostics to selected-run artifact
+      `Diagnostics` / `DiagnosticCodeList` metadata.
+    - The diagnostic counts and code lists propagate through stable
+      run-artifact tables, CSV/JSON export helpers, and ordered table export
+      artifacts without executing control-flow, variables, external scripts,
+      or working-directory mutations.
 
 ## Backlog
 

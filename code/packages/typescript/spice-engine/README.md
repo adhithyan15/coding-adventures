@@ -105,7 +105,10 @@ results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `formatDeckRunArtifactTable` and
 `formatDeckRunArtifactCsv` / `formatDeckRunArtifactJson` output for stable
 result-row, table, analysis-directive, output-probe, output-directive,
-measurement, Fourier, and diagnostic count/name lists. `formatDeckTableCsv` also converts any stable tab-separated deck table to
+measurement, Fourier, and diagnostic count/name lists. Existing `.control` body
+policy diagnostics flow into those selected-run artifact `Diagnostics` /
+`DiagnosticCodeList` fields and through the same run-artifact table, CSV, JSON,
+and `tableArtifacts` records. `formatDeckTableCsv` also converts any stable tab-separated deck table to
 CSV, `formatDeckTableJson` converts the same tables to compact JSON records,
 and `deckTableRecords` returns header-keyed native records for browser and host
 integrations.

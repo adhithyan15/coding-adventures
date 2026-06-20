@@ -71,6 +71,7 @@ from spice_engine.compatibility import (
     DeckInitialConditionSummary,
     DeckMeasurementCard,
     DeckNodeCondition,
+    analyze_deck_controls,
     resolve_deck_analyses,
     resolve_deck_fourier,
     resolve_deck_measurements,
@@ -2563,6 +2564,22 @@ def _deck_analysis_diagnostic_codes(
     ]
 
 
+def _deck_control_diagnostic_codes(netlist: str) -> list[str]:
+    summary = analyze_deck_controls(netlist)
+    return [
+        diagnostic.code
+        for diagnostic in summary.diagnostics
+        if diagnostic.code.startswith("SPICE_DECK_CONTROL_")
+    ]
+
+
+def _deck_run_diagnostic_codes(netlist: str, plan: DeckAnalysisPlan) -> list[str]:
+    return [
+        *_deck_analysis_diagnostic_codes(netlist, plan),
+        *_deck_control_diagnostic_codes(netlist),
+    ]
+
+
 def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
@@ -2720,7 +2737,7 @@ def run_deck_analysis(
     """Select one deck analysis card, execute it, and format deck-selected output."""
 
     plan = select_deck_analysis_plan(netlist, analysis)
-    diagnostic_codes = _deck_analysis_diagnostic_codes(netlist, plan)
+    diagnostic_codes = _deck_run_diagnostic_codes(netlist, plan)
     analysis_directives = _deck_analysis_directives(plan)
     if plan.analysis == "op":
         result = dc_op(circuit)

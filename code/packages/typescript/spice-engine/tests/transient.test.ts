@@ -2010,6 +2010,43 @@ describe("transient", () => {
     );
   });
 
+  it("surfaces control diagnostics in selected run artifacts", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "0", 1_000.0));
+    const netlist = `
+.save V(in)
+.control
+source other.cir
+cd /tmp
+if v(in) > 0
+let gain = 2
+.endc
+.op
+.end
+`;
+
+    const execution = runDeckAnalysis(circuit, netlist, "op");
+    const expectedCodes = [
+      "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+      "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+      "SPICE_DECK_CONTROL_FLOW_COMMAND",
+      "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+    ];
+    const codeList = expectedCodes.join(";");
+
+    expect(execution.runArtifacts[0]?.diagnosticCount).toBe(expectedCodes.length);
+    expect(execution.runArtifacts[0]?.diagnosticCodes).toEqual(expectedCodes);
+    const record = deckTableRecords(execution.runArtifactTable)[0]!;
+    expect(record["Diagnostics"]).toBe(String(expectedCodes.length));
+    expect(record["DiagnosticCodeList"]).toBe(codeList);
+    const runArtifact = execution.tableArtifacts[execution.tableArtifacts.length - 1]!;
+    expect(runArtifact.name).toBe("run-artifact");
+    expect(runArtifact.records[0]?.["DiagnosticCodeList"]).toBe(codeList);
+    expect(runArtifact.csv).toBe(formatDeckRunArtifactCsv(execution.runArtifacts));
+    expect(runArtifact.json).toBe(formatDeckRunArtifactJson(execution.runArtifacts));
+  });
+
   it("exposes selected Fourier artifacts from deck transient execution", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("V1", "vin", "0", 1.0));
