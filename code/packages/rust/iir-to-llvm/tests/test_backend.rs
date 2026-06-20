@@ -1361,3 +1361,107 @@ fn non_reassigned_parameter_stays_pure_ssa() {
     assert!(!ll.contains("%x.slot"),
         "a parameter that is never reassigned must NOT be slotted; got:\n{ll}");
 }
+
+// ===========================================================================
+// f64 variable slots (LANG-FULL enabler E3)
+// ===========================================================================
+
+/// A `real` local — seeded with an `f64` const then reassigned the result of
+/// an `f64` op — is promoted to a slot, which must be a **`double`** slot:
+/// `alloca double` + `store double` + `load double`. The old uniform-`i64`
+/// slot produced `store i64 <double>`, invalid IR that clang rejected.
+#[test]
+fn f64_local_gets_a_double_slot() {
+    // r := 2.5; r := r * 2.0; ret r   (two writes to `r` → slotted)
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "f64",
+        vec![
+            IIRInstr::new("const", Some("r".into()), vec![Operand::Float(2.5)], "f64"),
+            IIRInstr::new("const", Some("two".into()), vec![Operand::Float(2.0)], "f64"),
+            IIRInstr::new("mul", Some("r".into()),
+                vec![Operand::Var("r".into()), Operand::Var("two".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%r.slot = alloca double"),
+        "f64 local must get a double slot; got:\n{ll}");
+    assert!(ll.contains("store double"),
+        "f64 slot stores must be `store double`; got:\n{ll}");
+    assert!(ll.contains("load double, ptr %r.slot"),
+        "f64 slot reads must be `load double`; got:\n{ll}");
+    // The float slot must never be accessed as i64 (the old bug).
+    assert!(!ll.contains("i64, ptr %r.slot"),
+        "float slot must not be load/store'd as i64; got:\n{ll}");
+}
+
+/// An `f64` const literal is rendered as LLVM's exact hexadecimal double form
+/// (`0x...`), never Rust's `2e0`/`0e0` scientific notation (which lacks a
+/// decimal point and is rejected by LLVM's assembler).
+#[test]
+fn f64_constants_use_hex_double_form() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "f64",
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Float(2.0)], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "f64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    // 2.0 → IEEE-754 bits 0x4000000000000000
+    assert!(ll.contains("0x4000000000000000"),
+        "f64 literal must use the exact hex double form; got:\n{ll}");
+    assert!(!ll.contains("2e0"),
+        "must not emit decimal-point-less scientific notation; got:\n{ll}");
+}
+
+/// A **float comparison** result is a boolean — it must `zext i1` to an integer
+/// (`i64`), never to the float operand width (`zext i1 to double` is invalid IR).
+#[test]
+fn float_comparison_result_zexts_to_integer() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Float(5.0)], "f64"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Float(5.0)], "f64"),
+            IIRInstr::new("cmp_eq", Some("c".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("fcmp oeq double"),
+        "float compare must use fcmp; got:\n{ll}");
+    assert!(ll.contains("zext i1") && ll.contains("to i64"),
+        "float-compare bool result must zext to i64; got:\n{ll}");
+    assert!(!ll.contains("zext i1 %c.i1 to double"),
+        "must NOT zext a bool to double (invalid IR); got:\n{ll}");
+}
+
+/// Integer programs are completely unaffected — an i64 local still gets an
+/// `i64` slot (no float typing leaks into the common path).
+#[test]
+fn integer_local_still_gets_i64_slot() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("add", Some("x".into()),
+                vec![Operand::Var("x".into()), Operand::Var("x".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%x.slot = alloca i64"),
+        "i64 local must keep its i64 slot; got:\n{ll}");
+    assert!(!ll.contains("alloca double"),
+        "no double slot should appear for an integer program; got:\n{ll}");
+}

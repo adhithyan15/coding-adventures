@@ -544,12 +544,25 @@ struct FnState<'a> {
     /// (`alloca`): every assignment becomes a `store`, every read a `load`. This
     /// is the naive-frontend / `opt -mem2reg` pattern (McCarthy W12b-3, F5).
     slots: std::collections::HashSet<String>,
+    /// The LLVM stack-slot type for each promoted variable — `"i64"` for the
+    /// usual integer/word values, `"double"` for an `f64` variable (LANG-FULL
+    /// enabler E3). A slot's `alloca`/`load`/`store` all use this type so a
+    /// `real` local stores a `double` into a `double` slot instead of the old
+    /// invalid `store i64 <double>`. Any slot not present here defaults to
+    /// `i64`. (See [`collect_slot_types`].)
+    slot_types: std::collections::HashMap<String, &'static str>,
 }
 
 impl FnState<'_> {
     fn fresh(&mut self, hint: &str) -> String {
         self.counter += 1;
         format!("%__{}{}", hint, self.counter)
+    }
+
+    /// The LLVM type of a promoted variable's stack slot (`"i64"` by default,
+    /// `"double"` for an `f64` slot).
+    fn slot_ty(&self, name: &str) -> &'static str {
+        self.slot_types.get(name).copied().unwrap_or("i64")
     }
 
     /// Like [`fresh`](Self::fresh) but without the leading `%` — a *bare* SSA
@@ -598,11 +611,14 @@ fn lower_function(
     // for const/mov) keeps output close to what `opt -mem2reg` would
     // produce — short, idiomatic, easy to eyeball-verify.
     // McCarthy W12b-3: any variable assigned in 2+ instructions is promoted to a
-    // stack slot (an `alloca` in the entry block). All slots are `i64` — every
-    // tagged-word / scalar lisp value is an i64 in this backend.
+    // stack slot (an `alloca` in the entry block). Most slots are `i64` (every
+    // tagged-word / scalar value), but an `f64` local gets a `double` slot
+    // (LANG-FULL E3) — `collect_slot_types` decides per slot.
     let slots = collect_slot_vars(func);
+    let slot_types = collect_slot_types(func, &slots);
     for slot in &slots {
-        out.push_str(&format!("  %{slot}.slot = alloca i64\n"));
+        let ty = slot_types.get(slot).copied().unwrap_or("i64");
+        out.push_str(&format!("  %{slot}.slot = alloca {ty}\n"));
     }
 
     // Initialise the slot of any **promoted parameter** (a parameter that is
@@ -639,6 +655,7 @@ fn lower_function(
         callee_sigs,
         block_open: true, // the entry block is open until its first terminator.
         slots,
+        slot_types,
     };
     for (pname, _) in &func.params {
         state.env.insert(pname.clone(), format!("%{pname}"));
@@ -686,6 +703,32 @@ fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
         .collect()
 }
 
+/// Decide the LLVM stack-slot type for each promoted variable in `slots`.
+///
+/// A slot is `"double"` if it ever holds an `f64` value — i.e. some
+/// instruction whose `dest` is that slot carries a float `type_hint` (a
+/// `const f64`, an `f64` arithmetic op, an `f64` `mov`, …). Otherwise it is the
+/// default `"i64"` word slot. (Float *parameters* are not promoted to slots —
+/// `param_slot_compatible` excludes them — so every slot we see here is a body
+/// local; a real local seeded with `const … : f64` then reassigned is the
+/// shape `ScalarType::Real` produces.) Enabler E3 (real arithmetic): without
+/// this, an `f64` variable was given an `i64` slot and `store i64 <double>`
+/// produced invalid IR that `clang` rejected.
+fn collect_slot_types(
+    func: &IIRFunction,
+    slots: &std::collections::HashSet<String>,
+) -> std::collections::HashMap<String, &'static str> {
+    let mut types = std::collections::HashMap::new();
+    for instr in &func.instructions {
+        if let Some(dest) = &instr.dest {
+            if slots.contains(dest) && is_float_type(&instr.type_hint) {
+                types.insert(dest.clone(), "double");
+            }
+        }
+    }
+    types
+}
+
 /// Whether a parameter of IIR type `pty` can be promoted to a stack slot.
 /// Slots are `i64`, so only values that already flow as a 64-bit word qualify:
 /// every integer width, `bool`, `any`, `symbol`, and the lisp heap references.
@@ -728,8 +771,9 @@ fn lower_instr_with_slots(
     for op in &instr.srcs {
         if let Operand::Var(name) = op {
             if state.slots.contains(name) {
+                let ty = state.slot_ty(name);
                 let fresh = state.fresh("ld");
-                out.push_str(&format!("  {fresh} = load i64, ptr %{name}.slot\n"));
+                out.push_str(&format!("  {fresh} = load {ty}, ptr %{name}.slot\n"));
                 let old = state.env.insert(name.clone(), fresh);
                 saved.push((name.clone(), old));
             }
@@ -762,7 +806,8 @@ fn lower_instr_with_slots(
 
         // 3a. Post-store the produced value into the original slot.
         if let Some(val) = state.env.get(&fresh).cloned() {
-            out.push_str(&format!("  store i64 {val}, ptr %{orig}.slot\n"));
+            let ty = state.slot_ty(orig);
+            out.push_str(&format!("  store {ty} {val}, ptr %{orig}.slot\n"));
         }
         state.env.remove(&fresh); // the fresh temp is not referenced again.
         state.env.remove(orig); // future reads of `orig` go through its slot load.
@@ -1207,13 +1252,18 @@ fn lower_cmp(
     state.env_i1.insert(dest.clone(), i1_name.clone());
 
     // If the operand type maps to i1 (`i1` or `bool`), use the i1 form
-    // directly. Otherwise zext to the wider type so subsequent arithmetic
-    // stays typed-correctly.
+    // directly. Otherwise zext to a wider integer so the boolean result can be
+    // consumed as a value. A comparison ALWAYS yields a boolean — never a
+    // float — so a *float* comparison (`operand_ty == "double"`) must still
+    // zext to an integer (`i64`), not to `double` (`zext i1 to double` is
+    // invalid IR clang rejects). Integer comparisons keep zext'ing to their
+    // own operand width.
     if operand_ty == "i1" {
         state.env.insert(dest.clone(), i1_name.clone());
     } else {
+        let result_ty = if is_float_type(&instr.type_hint) { "i64" } else { operand_ty };
         out.push_str(&format!(
-            "  %{dest} = zext i1 {i1_name} to {operand_ty}\n"
+            "  %{dest} = zext i1 {i1_name} to {result_ty}\n"
         ));
         state.env.insert(dest.clone(), format!("%{dest}"));
     }
@@ -1391,10 +1441,20 @@ fn render_literal(
     match op {
         Some(Operand::Int(n)) => Ok(n.to_string()),
         Some(Operand::Float(v)) => {
-            // LLVM accepts both 1.500000e+00 and 0x3FF8000000000000 for
-            // doubles; we use scientific notation because it round-trips
-            // through f64::to_string for finite values.
-            Ok(format!("{v:e}"))
+            // Render an `f64` as LLVM's **hexadecimal** double literal — `0x`
+            // followed by the 16 hex digits of the IEEE-754 bit pattern.
+            //
+            // This is exact (no rounding — a `real` constant round-trips
+            // bit-for-bit) *and* always parses. The previous `{:e}` form was
+            // neither: Rust's scientific notation emits `2e0` / `0e0` for round
+            // numbers (no decimal point), and LLVM's assembler rejects a
+            // floating literal without a `.` — `store double 0e0` fails with
+            // "integer constant must have integer type". The hex form sidesteps
+            // decimal-point and precision pitfalls entirely. (Every float the
+            // frontends emit is an `f64`/`double`; `llvm_type_for` maps the
+            // matching `f64` type_hint to `double`, so the literal's type
+            // agrees with its use site.)
+            Ok(format!("0x{:016X}", v.to_bits()))
         }
         Some(Operand::Bool(b)) => Ok(if *b { "1".into() } else { "0".into() }),
         Some(Operand::Var(name)) => {
