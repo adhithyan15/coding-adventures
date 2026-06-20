@@ -147,6 +147,27 @@ pub enum SValue {
         attrs: Vec<(String, SValue)>,
         inner: Box<SValue>,
     },
+
+    /// A **first-class environment** (R-22): a handle to a live scope. Holding an
+    /// `Env` (`Rc<RefCell<Scope>>`) makes the scope a value that can be passed to
+    /// a function, stored in a variable, and **mutated by reference** — passing it
+    /// to a function and binding a name in it is visible to the caller, unlike
+    /// R's otherwise copy-on-modify semantics.
+    ///
+    /// **Ownership / cycle safety.** This is the *only* `SValue` that owns a
+    /// strong `Rc` to a scope, and a scope's *parent* link is a `Weak` (see
+    /// [`crate::env`]). So even when an environment value is stored inside the very
+    /// scope it points at (`assign("self", e, envir = e)`), no uncollectable
+    /// strong-`Rc` cycle is formed: the only strong edges run root→leaf
+    /// (interpreter → global → … and value bindings); every parent edge is `Weak`.
+    ///
+    /// **Printing.** Deliberately rendered as the *stable* placeholder
+    /// `<environment>` rather than R's real heap address (`<environment: 0x..>`),
+    /// so test output is deterministic. Implicit class and `type_name` are both
+    /// `"environment"`. It is not an atomic vector: it has `length` 1 and is not
+    /// coercible to double/logical/character (those are clean errors, never
+    /// panics — the existing `other =>` arms of the coercions handle it).
+    Environment(crate::env::Env),
 }
 
 /// The largest number of *general* attributes a single value may carry. This
@@ -272,6 +293,8 @@ pub fn class_of(value: &SValue) -> Vec<String> {
         // General attributes are transparent to `class()` too — the class lives
         // in `Classed`, not the general map (R-16).
         SValue::Attributed { inner, .. } => class_of(inner),
+        // A first-class environment's implicit class is `"environment"` (R-22).
+        SValue::Environment(_) => vec!["environment".to_string()],
     }
 }
 
@@ -304,6 +327,16 @@ impl std::fmt::Debug for SValue {
             SValue::Attributed { attrs, inner } => {
                 let keys: Vec<&str> = attrs.iter().map(|(k, _)| k.as_str()).collect();
                 write!(f, "Attributed({keys:?}, {inner:?})")
+            }
+            // Summarise an environment by its binding count; never recurse into
+            // the scope (it may hold itself or its own parents — a cycle for the
+            // *value* graph even though the `Rc` graph is acyclic).
+            SValue::Environment(scope) => {
+                write!(
+                    f,
+                    "Environment({} bindings)",
+                    crate::env::names_in(scope).len()
+                )
             }
         }
     }
@@ -349,6 +382,7 @@ impl SValue {
             SValue::Matrix { .. } => "double",
             SValue::Named { values, .. } => values.type_name(),
             SValue::Attributed { inner, .. } => inner.type_name(),
+            SValue::Environment(_) => "environment",
         }
     }
 
@@ -368,6 +402,8 @@ impl SValue {
             SValue::Matrix { data, .. } => data.len(),
             SValue::Named { values, .. } => values.length(),
             SValue::Attributed { inner, .. } => inner.length(),
+            // An environment is a single scalar handle (R's `length(e)` is 1).
+            SValue::Environment(_) => 1,
         }
     }
 
@@ -1354,6 +1390,9 @@ pub fn format_value(value: &SValue) -> Vec<String> {
         SValue::Named { names, values } => return format_named(names, values),
         // General attributes are transparent to printing — show the inner value.
         SValue::Attributed { inner, .. } => return format_value(inner),
+        // An environment prints as a STABLE placeholder, NOT a real heap address
+        // (R shows `<environment: 0x55..>`), so test output stays deterministic.
+        SValue::Environment(_) => return vec!["<environment>".to_string()],
     };
 
     format_vector(&elems)
