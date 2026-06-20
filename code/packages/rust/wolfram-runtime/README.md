@@ -11,7 +11,8 @@ See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfra
 §7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), §10 (W-7
 iteration constructs), §11 (W-8 local scoping), §12 (W-9 list-manipulation
 builtins), §13 (W-10 functional-iteration combinators), §14 (W-11 pure
-functions), §15 (W-12 string builtins), and §16 (W-13 list set operations).
+functions), §15 (W-12 string builtins), §16 (W-13 list set operations), and §17
+(W-14 conditionals & predicates).
 
 ## What it does
 
@@ -136,6 +137,13 @@ assert_eq!(eval("Intersection[{1, 2, 3}, {2, 3, 4}]\n").unwrap(), "Out[1]= {2, 3
 assert_eq!(eval("Complement[{1, 2, 3, 4}, {2, 4}]\n").unwrap(), "Out[1]= {1, 3}\n");
 assert_eq!(eval("DeleteDuplicates[{3, 1, 1, 2, 3}]\n").unwrap(), "Out[1]= {3, 1, 2}\n"); // order kept
 assert_eq!(eval("MemberQ[{1, 2, 3}, 2]\n").unwrap(), "Out[1]= True\n");
+
+// W-14 conditionals & predicates — Which/Switch (held), Boole, type tests:
+assert_eq!(eval("Which[False, 1, True, 2]\n").unwrap(), "Out[1]= 2\n");
+assert_eq!(eval("Switch[2, 1, \"a\", 2, \"b\", _, \"z\"]\n").unwrap(), "Out[1]= \"b\"\n");
+assert_eq!(eval("Boole[2 > 1]\n").unwrap(), "Out[1]= 1\n");
+assert_eq!(eval("IntegerQ[3]\n").unwrap(), "Out[1]= True\n");
+assert_eq!(eval("ListQ[{1, 2}]\n").unwrap(), "Out[1]= True\n");
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -381,6 +389,37 @@ linear scan (no hashing — `IRNode` carries an `f64`), so the heads are worst-c
 quadratic in the bounded input. Every malformed form (non-list arg, wrong arity) is
 left unevaluated rather than panicking — the W-5/W-9 fail-soft contract.
 
+**W-14** adds the **conditionals** and **type predicates**. `Which` and `Switch`
+are **held** (they join the `WolframBackend` held set alongside `If`, the W-7
+iteration heads, and the W-8 scoping heads) so that **only the selected branch is
+ever evaluated** — a non-taken branch (which might error or have a side effect)
+never runs. `Switch` matches its evaluated subject against each **literal** form by
+structural equality (reusing the W-13 `same_element` comparator) and treats
+`Blank[]` (the lowering of `_`) as the catch-all default. `Boole` and the five
+`…Q` predicates are eager thin matches over the `IRNode` kind. All are `Head[args]`
+forms (no grammar change); `EvenQ`/`OddQ` (W-9) are unchanged.
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Which` | `Which[False, 1, True, 2]` | `2` |
+| `Which` | `Which[False, 1]` (none true) | `Null` |
+| `Switch` | `Switch[2, 1, "a", 2, "b", _, "z"]` | `"b"` |
+| `Switch` | `Switch[5, 1, "a", _, "z"]` (Blank default) | `"z"` |
+| `Boole` | `Boole[2 > 1]` / `Boole[1 > 2]` | `1` / `0` |
+| `NumberQ` | `NumberQ[3]` / `NumberQ["x"]` | `True` / `False` |
+| `IntegerQ` | `IntegerQ[3]` / `IntegerQ[2.0]` | `True` / `False` |
+| `StringQ` | `StringQ["x"]` | `True` |
+| `ListQ` | `ListQ[{1, 2}]` / `ListQ[3]` | `True` / `False` |
+| `TrueQ` | `TrueQ[True]` / `TrueQ[5]` | `True` / `False` |
+
+`Which` returns `Null` when no condition is true and is left unevaluated on an
+**odd** argument count (a dangling final condition); `Switch` is left unevaluated on
+no match or an **even** argument count (a final unpaired form). `TrueQ` is total —
+`TrueQ[x]` of a free symbol is `False`, never unevaluated — while `Boole` of a
+non-boolean argument stays unevaluated (`Boole[x]` echoes), matching Wolfram. The
+held forms evaluate exactly one branch via a single `vm.eval`, so there is no
+double-evaluation, no panic on a malformed pair list, and no new unbounded surface.
+
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
@@ -431,6 +470,11 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   and element-equality), DoS-capped on `Union`/`Tally` output. Two ordering
   families — `Union`/`Intersection`/`Complement` sorted, `DeleteDuplicates`/`Tally`
   order-preserving. No grammar change.
+- **W-14** (this crate) — the `Which`/`Switch` conditionals (held — only the
+  selected branch evaluates; `Switch` matches literal forms via the W-13
+  `same_element` comparator with a `Blank[]` default) plus the eager `Boole` and
+  `NumberQ`/`IntegerQ`/`StringQ`/`ListQ`/`TrueQ` type predicates, all thin matches
+  over the `IRNode` kind. No grammar change (`EvenQ`/`OddQ` from W-9 unchanged).
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 

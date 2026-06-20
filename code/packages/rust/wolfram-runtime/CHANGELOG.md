@@ -4,6 +4,57 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.11.0] — 2026-06-20
+
+The **W-14** deliverable (MA04 §17): Wolfram's **conditionals** and **type
+predicates**, lowered onto the same substrate as the rest of the lane. `Which` and
+`Switch` join the `WolframBackend` held set (alongside `If`, the W-7 iteration
+heads, and the W-8 scoping heads) so that **only the selected branch is ever
+evaluated** — a non-taken branch (which might error or have a side effect) never
+runs. `Switch`'s form matching reuses the W-13 `same_element` comparator, so it
+agrees with `MemberQ`/`Union` on what "the same" means, and recognises `Blank[]`
+(the lowering of `_`) as the catch-all default. The eager `Boole` and the
+`NumberQ`/`IntegerQ`/`StringQ`/`ListQ`/`TrueQ` predicates are thin matches over the
+`IRNode` kind. Like every head since W-5 these are plain `Head[args]` applications,
+so there is **no grammar change**; only the `wolfram-runtime` builtin handler table
+and the held set grow. `EvenQ`/`OddQ` (W-9) are left unchanged.
+
+### Added (conditionals — held)
+
+- **`Which[c1, v1, c2, v2, …]`** — evaluate conditions left to right; return the
+  value paired with the **first** condition that reduces to `True`. Held: only the
+  selected value is evaluated. No true condition → `Null` (the evaluated answer);
+  an **odd** argument count (dangling final condition) → left unevaluated.
+  (`Which[False, 1, True, 2]` → `2`; `Which[False, 1]` → `Null`;
+  `Which[2 > 1, "a"]` → `"a"`.)
+- **`Switch[expr, form1, v1, …, _, default]`** — evaluate `expr` once, then match
+  it against each **literal** `formi` by structural equality (W-13 `same_element`);
+  `Blank[]` (`_`) matches anything as the default. Held: only the selected value is
+  evaluated. No match → left unevaluated; an **even** argument count (final
+  unpaired form, or missing `expr`) → left unevaluated.
+  (`Switch[2, 1, "a", 2, "b", _, "z"]` → `"b"`; `Switch[5, 1, "a", _, "z"]` → `"z"`.)
+
+### Added (conditionals — eager) and type predicates
+
+- **`Boole[cond]`** — `True` → `1`, `False` → `0`; any other (non-boolean)
+  argument is left unevaluated. (`Boole[2 > 1]` → `1`; `Boole[1 > 2]` → `0`.)
+- **`NumberQ[x]`** — `True` for a real number (`Integer`/`Rational`/`Float`).
+- **`IntegerQ[x]`** — `True` only for an exact integer (`IntegerQ[2.0]` is `False`).
+- **`StringQ[x]`** — `True` for a string literal.
+- **`ListQ[x]`** — `True` for a `List[…]` (reuses `is_list`).
+- **`TrueQ[x]`** — `True` only for the literal `True` symbol; total — `False` for
+  everything else (including a free symbol), never unevaluated.
+
+### Security / robustness
+
+- `Which`/`Switch` evaluate **exactly one** branch via a single `vm.eval`, so a
+  non-selected branch cannot double-evaluate, error, or produce a side effect.
+- Odd-arity `Which` and even-arity `Switch` (malformed pair lists) are detected
+  *before* any `chunks_exact(2)` walk and left unevaluated — no index can run past
+  the end of the argument list, no panic. The predicates and `Boole` reject
+  arity ≠ 1 the same way. No new unbounded-recursion or growth surface is added
+  beyond the single selected-branch `vm.eval`, which the W-4 fuel machinery bounds.
+
 ## [0.10.0] — 2026-06-19
 
 The **W-13** deliverable (MA04 §16): Wolfram's **list set / multiset operations**,
