@@ -79,8 +79,18 @@ sorted; and an environment is **mutable by reference** — `f <- function(env)
 assign("x", 42, envir = env); f(e); get("x", envir = e)` → `42`. `environment()`
 returns the current env; an env prints as the stable placeholder `<environment>`
 with class `"environment"`. The parent link is a `Weak` so an env-holding-env
-cannot leak (see `s-runtime`). `environment(f)` / `environmentName` are deferred
-to R-23.
+cannot leak (see `s-runtime`).
+
+**Closure environments & frame reflection (R-23)** — `environment(f)` is the env
+a closure captured at definition (a top-level closure captures the global env, so
+`environmentName(environment(f))` → `"R_GlobalEnv"`; a non-closure → `NULL`).
+`environment(f) <- e` re-homes a closure (its free variables then resolve from
+`e`). `environmentName(e)` is `"R_GlobalEnv"` / `"R_EmptyEnv"` / `""`;
+`globalenv()` / `emptyenv()` / `baseenv()` return the well-known environments
+(`baseenv()` aliases global). `parent.frame(n = 1)` is the **caller's** env —
+`g <- function() get("x", envir = parent.frame()); f <- function() { x <- 42;
+g() }; f()` → `42` — clamping to the global env past the bottom of the stack
+rather than panicking. `is.environment(x)` is the type predicate.
 
 ## Usage
 

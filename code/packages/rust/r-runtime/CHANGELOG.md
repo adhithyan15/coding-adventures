@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.18.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-23 — closure environments & call-frame reflection**: reaches R unchanged
+  through the shared evaluator (everything lives in `s-runtime` — no grammar
+  change). In R syntax:
+  - **`environment(f)`** — a closure's captured (defining) env. For a top-level
+    closure that is the global env, so `environmentName(environment(f))` is
+    `"R_GlobalEnv"` and `is.environment(environment(f))` is `TRUE`. A non-closure
+    argument returns `NULL` (R's `environment(sum)`).
+  - **`environment(f) <- e`** — re-home a closure: after it, a free variable in
+    `f`'s body resolves from `e`'s chain (`assign("k", 99, envir = e);
+    environment(f) <- e; f()` → `99`). A non-environment value is a clean error.
+  - **`environmentName(e)`** — `"R_GlobalEnv"` / `"R_EmptyEnv"` / `""`.
+  - **`globalenv()` / `emptyenv()` / `baseenv()`** — the well-known environments
+    as values (`baseenv()` aliases the global env in this runtime — no separate
+    base namespace yet).
+  - **`parent.frame(n = 1)`** — the **caller's** environment: `g <- function()
+    get("x", envir = parent.frame()); f <- function() { x <- 42; g() }; f()` →
+    `42`. `parent.frame(2)` reaches the caller's caller. At top level, or for `n`
+    past the bottom of the stack, it **clamps** to the global env (never panics);
+    a non-positive `n` is a clean error.
+  - **`is.environment(x)`** — `TRUE` for an environment, `FALSE` otherwise.
+  - See `s-runtime` 0.19.0 for the (unchanged) Rc-cycle ownership model: the
+    caller env on the call stack is dropped when its frame is popped, and the
+    captured-env exposure is bounded by `MAX_ENVIRONMENTS`.
+
 ## [0.17.0] - 2026-06-20
 
 ### Added (via the shared `s-runtime`)

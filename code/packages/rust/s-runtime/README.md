@@ -118,7 +118,15 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   `Weak`: an env value owns the only strong `Rc` to its scope, parents are
   referenced but never owned, so no strong-`Rc` cycle is constructible from
   source. An environment prints as the stable placeholder `<environment>`, never a
-  heap address. `environment(f)` / `environmentName` are deferred to R-23.
+  heap address.
+- **Closure environments & frame reflection** (R-23): `environment(f)` is the env
+  a closure captured at definition (non-closure → `NULL`); `environment(f) <- e`
+  re-homes a closure via the replacement-function lvalue path; `environmentName(e)`
+  is `"R_GlobalEnv"` / `"R_EmptyEnv"` / `""` by `Rc` identity; `globalenv()` /
+  `emptyenv()` / `baseenv()` return the well-known envs (`baseenv()` aliases
+  global); `parent.frame(n = 1)` is the caller's env, recorded on the R-20 call
+  stack and **clamped** to global past the bottom rather than panicking;
+  `is.environment(x)` is the type predicate.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
