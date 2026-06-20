@@ -119,9 +119,29 @@ fn cil_local_type(type_hint: &str) -> &'static str {
         "object[]"
     } else if type_hint.starts_with("ref<") {
         "object"
+    } else if type_hint == "f64" {
+        // ALGOL `real` (LANG-FULL E3): an IEEE-754 double. The `.locals`
+        // declaration carries `float64`, and an `f64`-typed register is loaded/
+        // stored with the same `ldloc`/`stloc` (CIL stack slots are typed by the
+        // local signature, not the instruction). CIL's `add`/`sub`/`mul`/`div`
+        // and `ceq`/`cgt`/`clt` are stack-type-overloaded, so they operate on
+        // `float64` operands with no opcode change.
+        "float64"
+    } else if type_hint == "f32" {
+        "float32"
     } else {
         "int32"
     }
+}
+
+/// Is `op` one of the six IIR comparison ops? Their result is always a 0/1
+/// `int32` (CIL `ceq`/`cgt`/`clt`), independent of the operand width carried by
+/// `type_hint` — which matters for `float64` operands (LANG-FULL E3).
+fn is_comparison_op(op: &str) -> bool {
+    matches!(
+        op,
+        "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge"
+    )
 }
 
 /// The resolved entry-point function name — the module's `entry_point`, or `"main"`
@@ -189,6 +209,16 @@ impl FnRegs {
                 if !homes.contains_key(dest) {
                     let ty = if tape_vars.contains(dest.as_str()) {
                         "unsigned int8[]"
+                    } else if is_comparison_op(&instr.op) {
+                        // A comparison ALWAYS yields a 0/1 `int32` (`ceq`/`cgt`/
+                        // `clt`), even over `float64` operands (whose `type_hint`
+                        // is the operand width `f64`, not the result type). Typing
+                        // the result `float64` would `stloc` an `int32` into a
+                        // `float64` local — an ill-typed slot (LANG-FULL E3). For
+                        // integer comparisons this is already `int32` via
+                        // `cil_local_type`; floats are the case that needs the
+                        // override.
+                        "int32"
                     } else {
                         cil_local_type(&instr.type_hint)
                     };
@@ -430,6 +460,22 @@ fn emit_method(
                         }
                     }
                     let _ = writeln!(il, "    ldnull");
+                    store_var(il, &regs, dest)?;
+                } else if let Some(Operand::Float(v)) = instr.srcs.first() {
+                    // ALGOL `real` literal (LANG-FULL E3): push an IEEE-754 float.
+                    // We emit the *raw little-endian bytes* (`ldc.r8 (b0 b1 … b7)`)
+                    // rather than a decimal so the constant round-trips bit-exactly
+                    // — a decimal like `0.1` would be re-parsed by ilasm and could
+                    // differ from the IIR value. `f32` uses the 4-byte `ldc.r4`.
+                    if instr.type_hint == "f32" {
+                        let bytes = (*v as f32).to_le_bytes();
+                        let hex: Vec<String> = bytes.iter().map(|b| format!("{b:02X}")).collect();
+                        let _ = writeln!(il, "    ldc.r4 ({})", hex.join(" "));
+                    } else {
+                        let bytes = v.to_le_bytes();
+                        let hex: Vec<String> = bytes.iter().map(|b| format!("{b:02X}")).collect();
+                        let _ = writeln!(il, "    ldc.r8 ({})", hex.join(" "));
+                    }
                     store_var(il, &regs, dest)?;
                 } else {
                     let n = match instr.srcs.first() {
@@ -1667,5 +1713,51 @@ mod tests {
         m.entry_point = Some("main".into());
         let err = emit_il(&m, &IIRClrConfig::new("Main")).unwrap_err();
         assert!(matches!(err, IIRClrError::InvalidOperand { .. }), "store_byte must not have a dest");
+    }
+
+    // ── f64 (double) support — LANG-FULL E3 (ALGOL `real`) ───────────
+
+    /// An `f64` program: a `real` local seeded with `2.5`, multiplied by `2.0`,
+    /// compared `== 5.0`, folding to an integer exit code. The `.il` must declare
+    /// the real registers as `float64`, push their literals with `ldc.r8`, and
+    /// use the stack-type-overloaded `mul`/`ceq` (no opcode change for doubles).
+    #[test]
+    fn f64_program_emits_float64_locals_ldc_r8_and_mul() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("r".into()), vec![Operand::Float(2.5)], "f64"),
+            IIRInstr::new("const", Some("two".into()), vec![Operand::Float(2.0)], "f64"),
+            IIRInstr::new("mul", Some("p".into()),
+                vec![Operand::Var("r".into()), Operand::Var("two".into())], "f64"),
+            IIRInstr::new("const", Some("five".into()), vec![Operand::Float(5.0)], "f64"),
+            IIRInstr::new("cmp_eq", Some("eq".into()),
+                vec![Operand::Var("p".into()), Operand::Var("five".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("eq".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("float64 V_"), "real registers must be float64 locals; got:\n{il}");
+        assert!(il.contains("ldc.r8 ("), "f64 literals must use ldc.r8 (byte form); got:\n{il}");
+        assert!(il.contains("    mul\n"), "f64 multiply uses the overloaded `mul`; got:\n{il}");
+        assert!(il.contains("    ceq\n"), "f64 equality uses the overloaded `ceq`; got:\n{il}");
+        // The comparison result is an int32 (the exit-code fold), not a float.
+        assert!(il.contains("int32 V_"), "the cmp_eq result is an int32 local; got:\n{il}");
+    }
+
+    /// `ldc.r8` uses the exact little-endian IEEE-754 bytes so a `real` constant
+    /// round-trips bit-for-bit (2.0 → `00 00 00 00 00 00 00 40`).
+    #[test]
+    fn f64_constant_uses_exact_byte_form() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("two".into()), vec![Operand::Float(2.0)], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("two".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("ldc.r8 (00 00 00 00 00 00 00 40)"),
+            "2.0 should be the exact IEEE-754 LE bytes; got:\n{il}");
     }
 }
