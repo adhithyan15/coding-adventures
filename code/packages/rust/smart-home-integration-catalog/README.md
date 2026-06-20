@@ -111,6 +111,8 @@ runtime and Chief of Staff tools a typed catalog for:
   go/no-go state with release-readiness check slot execution state
 - low-level mesh release execution tasks that turn release-readiness check
   slots into deterministic operator work
+- mesh release task readiness summaries that combine execution readiness with
+  deterministic task state
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and
