@@ -662,12 +662,65 @@ unchanged.
     non-character class name, a `fields`/`methods` that is not a list, a method
     entry that is not a function, an unknown `new()` argument — are all clean
     `BadArgs`/`TypeError` results, never panics.
-  - **Deferred to R-25 (scope guard).** Inheritance (`contains = "Base"`),
-    `$copy()` (a deep value-copy breaking the reference sharing), active bindings,
-    and the `$methods()`/`$fields()` introspection accessors are **out of scope**
-    here. This PR ships fields + methods + `$new` + `$field` read/write + method
-    calls with `<<-`/`.self$field <-` field update, solidly and with full
-    reference-semantics tests. A clean partial beats a sprawling one.
+  - **Deferred to R-25.** Inheritance (`contains = "Base"`), `$copy()` (a deep
+    value-copy breaking the reference sharing), and the `$methods()`/`$fields()`
+    introspection accessors land in **R-25** (below). Active bindings remain
+    deferred to **R-26**. R-24 ships fields + methods + `$new` + `$field`
+    read/write + method calls with `<<-`/`.self$field <-` field update, solidly
+    and with full reference-semantics tests.
+
+- **R-25 — R5 inheritance, `$copy()`, and introspection** *(this PR)*. Builds
+  directly on R-24's generator/instance model in `refclass.rs`; no grammar change.
+  - **`setRefClass("Sub", contains = "Base", fields = …, methods = …)`** —
+    **single inheritance**. The `contains =` argument names the parent class; it
+    is given as the parent's **generator** value (the result of an earlier
+    `setRefClass`), or a length-1 character giving the parent class *name* (resolved
+    against the current environment). The subclass generator carries a fourth
+    private binding, `.refParent` (an `SValue::Environment` to the parent generator),
+    so the class chain can be walked at instantiation and introspection time. The
+    **effective field set** is the union *base ∪ sub* in **base-first** declaration
+    order (an inherited base field precedes a new sub field); the **effective method
+    set** is *base ∪ sub* with a **sub method overriding** a same-named base method.
+    An inherited base method is callable on a `Sub` instance, and a `Sub` method may
+    read and write base fields (they live in the one flat instance frame, so `<<-`
+    reaches them identically).
+  - **`obj$copy()`** — a **deep** value-copy. Unlike `b <- a` (which aliases the
+    same scope — R-24's headline reference semantics), `b <- a$copy()` returns a
+    **new, independent** instance: a fresh child scope of the same generator, with
+    each *field* binding copied across by value, and fresh `.self`/`.refMethods`
+    markers. Mutating `b` afterward does **not** affect `a`. The copy charges one
+    fresh environment against `MAX_ENVIRONMENTS` (it is a new reified scope, exactly
+    like `$new`). Field values are cloned via the normal `SValue` clone; a field
+    that *itself* holds another instance is copied as a **handle** (a shallow alias
+    of that nested instance) rather than recursively deep-copied — matching R5's
+    `copy(shallow = TRUE)` default and sidestepping any unbounded copy recursion.
+  - **Introspection.** `generator$fields()` returns the **sorted** character vector
+    of all field names (including inherited ones); `generator$methods()` returns the
+    **sorted** character vector of all method names (including inherited ones).
+    `is(obj, "Base")` and `inherits(obj, "Base")` return `TRUE` when `obj`'s class
+    is `"Base"` *or descends from it* through the `contains =` chain — the **class
+    chain** of an R5 instance is `c("Sub", "Base", …, "envRefClass", "environment")`,
+    computed by walking `.refParent` from the instance's generator up to the root.
+  - **Rc-cycle safety.** Inheritance adds exactly one new edge — the subclass
+    generator's `.refParent` strong `Rc` to the parent generator — which is a
+    **DAG** edge (child → parent), never a cycle: a `contains =` that would close a
+    loop (`A contains B contains A`) is **rejected** at `setRefClass` time by walking
+    the prospective parent chain and refusing if the new class name already appears
+    in it (or if the chain exceeds a depth bound). `$copy()` introduces no cycle: it
+    builds a sibling instance exactly as `$new` does, and copies fields by value
+    (nested instances aliased, not recursed), so the copy is bounded by the field
+    count and charged against `MAX_ENVIRONMENTS`. The instance⇄method discipline is
+    inherited verbatim from R-24 (methods are rebuilt lazily, never stored on the
+    instance).
+  - **Borrow-panic safety.** Inheritance and `$copy()` go through the same
+    per-operation `env::define`/`env::lookup` borrows R-24 established. Malformed
+    inputs — a `contains =` naming a non-generator / undefined class, a cyclic
+    `contains =`, `$copy()` called on a generator rather than an instance — are clean
+    `BadArgs`/`TypeError` results, never panics.
+  - **Deferred to R-26.** Multiple inheritance (`contains = c("A", "B")`) and
+    active bindings remain out of scope. R-25 ships single-`contains=` inheritance +
+    `$copy()` + `is`/`inherits` over the R5 class chain + `$fields()`/`$methods()`,
+    solidly. A clean partial beats a sprawling one.
 
 ## §4 Reuse strategy
 
@@ -687,9 +740,11 @@ Pipes (`|>`) and backslash lambdas (`\(x)`). The `SValue::Environment` value,
 `environment(f) <-`, `environmentName`, `globalenv()`/`emptyenv()`/`baseenv()`,
 `parent.frame()`, and `is.environment()` land in **R-23**. Still out of scope:
 `sys.call`/`sys.function`/`match.call` and the rest of the call-introspection
-family; S4 and R6 OO (R5 reference classes land in **R-24**, with inheritance,
-`$copy()`, active bindings and `$methods()`/`$fields()` introspection deferred to
-**R-25**); namespaces and `library()` (so `baseenv()` aliases the
+family; S4 and R6 OO (R5 reference classes land in **R-24**; single-`contains=`
+inheritance, `$copy()`, `is`/`inherits` over the class chain, and
+`$methods()`/`$fields()` introspection land in **R-25**, with multiple
+inheritance and active bindings deferred to **R-26**); namespaces and `library()`
+(so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.
 
