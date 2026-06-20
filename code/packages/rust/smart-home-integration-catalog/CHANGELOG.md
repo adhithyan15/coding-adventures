@@ -141,6 +141,10 @@ All notable changes to this package will be documented in this file.
   release execution readiness with deterministic task state.
 - `IntegrationMeshReleaseExecutionTaskDispatchSlot` and summary helpers for
   turning release execution tasks into deterministic dispatch queues.
+- `IntegrationMeshReleaseDispatchReadinessSummary` and helpers for combining
+  release task readiness with dispatch queue state.
+- `IntegrationMeshReleaseDispatchTicket` and summary helpers for wrapping
+  release dispatch queues in deterministic ticket keys.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,

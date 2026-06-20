@@ -22,8 +22,16 @@
 % names both endpoints are included. Spans were taken from the per-marker / per-cancer
 % pages (the aggregate "tumor biomarkers" page discusses markers mostly in sensitivity /
 % false-positive / procedure-context, not a clean both-endpoints-named declarative).
-% Deferred (no clean self-contained span yet here): PSA→prostate (the marker page frames
-% PSA by its limited specificity), CEA→colorectal, beta-hCG→germ-cell/choriocarcinoma.
+% Under the primary-source-first policy, PSA→prostate is now GROUNDED from the Prostate
+% Cancer page (NBK470550: "Elevated PSA levels have long been associated with prostate
+% cancer.") — the disease-specific page supplies the clean both-endpoints span the PSA
+% marker page (which frames PSA by its limited specificity) lacked. CEA→colorectal was
+% grounded earlier (NBK578172). hCG→choriocarcinoma is also now GROUNDED (NBK532950: hCG
+% testing aids the diagnosis of choriocarcinoma) — the marker atom is `hcg` to match the
+% span (the board buzzword "beta-hCG" is the assayed subunit of the named hCG). Still
+% deferred (re-checked): CA 19-9→pancreatic — the Pancreatic Cancer page (NBK518996) names
+% the marker only as a "pancreatic tumor marker (CA 19-9 and CEA)", not alongside
+% "pancreatic cancer" in one sentence. Honest absence beats an over-reaching citation.
 % ============================================================================
 
 dictionary onco_vocab {
@@ -62,5 +70,21 @@ rulebook onco_facts {
     relate tumor_marker(colorectal_cancer, cea)
         source "Carcinoembryonic antigen (CEA) is a nonspecific serum biomarker that is elevated in many malignancies, including colorectal cancer, medullary thyroid cancer, breast cancer, and mucinous ovarian cancer"
         locator "https://www.ncbi.nlm.nih.gov/books/NBK578172/"
+        trust authoritative
+
+    % --- EXPAND (primary-source-first): prostate cancer (PSA) -----------
+    % The Prostate Cancer page supplies the clean both-endpoints span the PSA
+    % marker page lacked (that page frames PSA by its limited specificity).
+    relate tumor_marker(prostate_cancer, psa)
+        source "Elevated PSA levels have long been associated with prostate cancer."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470550/"
+        trust authoritative
+
+    % --- EXPAND (primary-source-first): choriocarcinoma (hCG) -----------
+    % Marker atom is `hcg` to match the span verbatim (the board buzzword
+    % "beta-hCG" is the clinically-assayed subunit of the hCG named here).
+    relate tumor_marker(choriocarcinoma, hcg)
+        source "In addition, hCG testing can aid in the diagnosis of certain cancers, such as choriocarcinoma and some extra-uterine malignancies."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532950/"
         trust authoritative
 }

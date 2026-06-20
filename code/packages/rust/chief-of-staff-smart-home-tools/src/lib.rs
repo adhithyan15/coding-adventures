@@ -264,6 +264,9 @@ pub const SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID: &str =
     "smart_home.list_device_inventory_audit";
 pub const SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_device_inventory_audit_summary";
+pub const SMART_HOME_LIST_ROOM_TOPOLOGY_AUDIT_TOOL_ID: &str = "smart_home.list_room_topology_audit";
+pub const SMART_HOME_GET_ROOM_TOPOLOGY_AUDIT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_room_topology_audit_summary";
 pub const SMART_HOME_LIST_ROOMS_TOOL_ID: &str = "smart_home.list_rooms";
 pub const SMART_HOME_LIST_SCENES_TOOL_ID: &str = "smart_home.list_scenes";
 pub const SMART_HOME_DESCRIBE_SCENE_TOOL_ID: &str = "smart_home.describe_scene";
@@ -1968,6 +1971,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID => {
                     let query = device_inventory_audit_query(&arguments)?;
                     get_device_inventory_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_ROOM_TOPOLOGY_AUDIT_TOOL_ID => {
+                    let query = room_topology_audit_query(&arguments)?;
+                    list_room_topology_audit_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_ROOM_TOPOLOGY_AUDIT_SUMMARY_TOOL_ID => {
+                    let query = room_topology_audit_query(&arguments)?;
+                    get_room_topology_audit_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -5762,6 +5783,20 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             device_inventory_audit_summary_output_schema(),
         ),
         read_definition(
+            SMART_HOME_LIST_ROOM_TOPOLOGY_AUDIT_TOOL_ID,
+            "List smart-home room topology audit",
+            "List Chief-derived room topology audit rows over runtime-owned D23 room summaries.",
+            room_topology_audit_query_schema(),
+            room_topology_audit_list_output_schema(),
+        ),
+        read_definition(
+            SMART_HOME_GET_ROOM_TOPOLOGY_AUDIT_SUMMARY_TOOL_ID,
+            "Get smart-home room topology audit summary",
+            "Summarize Chief-derived room topology gaps without returning individual room rows.",
+            room_topology_audit_query_schema(),
+            room_topology_audit_summary_output_schema(),
+        ),
+        read_definition(
             SMART_HOME_LIST_ROOMS_TOOL_ID,
             "List smart-home rooms",
             "List runtime-derived D23 room topology summaries, including device health, state coverage, and scene action coverage.",
@@ -7175,6 +7210,17 @@ struct DeviceInventoryAuditQuery {
     limit: Option<usize>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RoomTopologyAuditQuery {
+    room_id: Option<String>,
+    attention_only: bool,
+    state_gaps_only: bool,
+    scene_gaps_only: bool,
+    gaps_only: bool,
+    sort: Option<RuntimeRoomSort>,
+    limit: Option<usize>,
+}
+
 fn device_inventory_audit_query(
     arguments: &JsonValue,
 ) -> Result<DeviceInventoryAuditQuery, ToolCallError> {
@@ -7191,6 +7237,23 @@ fn device_inventory_audit_query(
         missing_room_only: optional_bool(arguments, "missing_room_only")?.unwrap_or(false),
         missing_entities_only: optional_bool(arguments, "missing_entities_only")?.unwrap_or(false),
         identity_gaps_only: optional_bool(arguments, "identity_gaps_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn room_topology_audit_query(
+    arguments: &JsonValue,
+) -> Result<RoomTopologyAuditQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(RoomTopologyAuditQuery {
+        room_id: optional_string(arguments, "room_id")?,
+        attention_only: optional_bool(arguments, "attention_only")?.unwrap_or(false),
+        state_gaps_only: optional_bool(arguments, "state_gaps_only")?.unwrap_or(false),
+        scene_gaps_only: optional_bool(arguments, "scene_gaps_only")?.unwrap_or(false),
+        gaps_only: optional_bool(arguments, "gaps_only")?.unwrap_or(false),
+        sort: optional_string(arguments, "sort")?
+            .map(|value| parse_room_sort(&value))
+            .transpose()?,
         limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
@@ -31295,6 +31358,261 @@ fn device_inventory_audit_row_matches(
     true
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RoomTopologyAuditRow {
+    room_id: String,
+    device_count: usize,
+    online_devices: usize,
+    attention_devices: usize,
+    pairing_candidate_devices: usize,
+    entity_count: usize,
+    commandable_entities: usize,
+    state_gap_count: usize,
+    entities_without_state: usize,
+    stale_entities: usize,
+    scene_count: usize,
+    scene_action_count: usize,
+    topology_lane: &'static str,
+    topology_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+impl RoomTopologyAuditRow {
+    fn from_room(room: &RuntimeRoomSummary) -> Self {
+        let state_gap_count = room.state_gap_count();
+        let blocked = room.has_attention_items() || room.has_state_gaps();
+        let scene_gap = !room.has_scene_actions();
+        let requires_attention = blocked || scene_gap;
+        let (topology_lane, topology_action) = if room.has_attention_items() {
+            ("runtime_health", "restore_room_devices")
+        } else if room.has_state_gaps() {
+            ("state_coverage", "refresh_room_state")
+        } else if scene_gap {
+            ("scene_coverage", "map_room_scenes")
+        } else {
+            ("ready", "monitor_room_topology")
+        };
+
+        Self {
+            room_id: room.room_id.clone(),
+            device_count: room.device_count,
+            online_devices: room.online_devices,
+            attention_devices: room.attention_devices,
+            pairing_candidate_devices: room.pairing_candidate_devices,
+            entity_count: room.entity_count,
+            commandable_entities: room.commandable_entities,
+            state_gap_count,
+            entities_without_state: room.entities_without_state,
+            stale_entities: room.stale_entities,
+            scene_count: room.scene_count,
+            scene_action_count: room.scene_action_count,
+            topology_lane,
+            topology_action,
+            blocked,
+            requires_attention,
+        }
+    }
+
+    fn has_state_gaps(&self) -> bool {
+        self.state_gap_count > 0
+    }
+
+    fn has_scene_gap(&self) -> bool {
+        self.scene_action_count == 0
+    }
+
+    fn is_ready(&self) -> bool {
+        !self.requires_attention
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct RoomTopologyAuditSummary {
+    total_rooms: usize,
+    attention_rooms: usize,
+    state_gap_rooms: usize,
+    scene_gap_rooms: usize,
+    blocked_rooms: usize,
+    requires_attention_rooms: usize,
+    ready_rooms: usize,
+    total_devices: usize,
+    total_online_devices: usize,
+    total_entities: usize,
+    total_commandable_entities: usize,
+    total_state_gaps: usize,
+    total_scene_actions: usize,
+    devices_without_room: usize,
+    devices_without_entities: usize,
+    entities_without_state: usize,
+}
+
+impl RoomTopologyAuditSummary {
+    fn from_rows(rows: &[RoomTopologyAuditRow], topology: &RegistryTopologySummary) -> Self {
+        let mut summary = Self {
+            devices_without_room: topology.devices_without_room,
+            devices_without_entities: topology.devices_without_entities,
+            entities_without_state: topology.entities_without_state,
+            ..Self::default()
+        };
+        for row in rows {
+            summary.total_rooms += 1;
+            summary.total_devices += row.device_count;
+            summary.total_online_devices += row.online_devices;
+            summary.total_entities += row.entity_count;
+            summary.total_commandable_entities += row.commandable_entities;
+            summary.total_state_gaps += row.state_gap_count;
+            summary.total_scene_actions += row.scene_action_count;
+            if row.attention_devices > 0 {
+                summary.attention_rooms += 1;
+            }
+            if row.has_state_gaps() {
+                summary.state_gap_rooms += 1;
+            }
+            if row.has_scene_gap() {
+                summary.scene_gap_rooms += 1;
+            }
+            if row.blocked {
+                summary.blocked_rooms += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_rooms += 1;
+            }
+            if row.is_ready() {
+                summary.ready_rooms += 1;
+            }
+        }
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_rooms > 0
+            || self.devices_without_room > 0
+            || self.devices_without_entities > 0
+            || self.entities_without_state > 0
+    }
+
+    fn has_topology_gaps(&self) -> bool {
+        self.requires_attention_rooms > 0 || self.has_blockers()
+    }
+}
+
+fn list_room_topology_audit_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RoomTopologyAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) = room_topology_audit_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "room_topology_audit",
+            JsonValue::Array(rows.iter().map(room_topology_audit_row_json).collect()),
+        ),
+        ("summary", room_topology_audit_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_room_topology_audit")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_rooms",
+                integer(summary.requires_attention_rooms as i64),
+            ),
+            ("blocked_rooms", integer(summary.blocked_rooms as i64)),
+        ]),
+    ))
+}
+
+fn get_room_topology_audit_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RoomTopologyAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = room_topology_audit_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        room_topology_audit_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_room_topology_audit_summary")),
+            (
+                "requires_attention_rooms",
+                integer(summary.requires_attention_rooms as i64),
+            ),
+            ("blocked_rooms", integer(summary.blocked_rooms as i64)),
+        ]),
+    ))
+}
+
+fn room_topology_audit_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &RoomTopologyAuditQuery,
+) -> Result<(Vec<RoomTopologyAuditRow>, RoomTopologyAuditSummary), ToolCallError> {
+    let mut runtime_query = RuntimeRoomQuery::new();
+    if let Some(room_id) = &query.room_id {
+        runtime_query = runtime_query.for_room(room_id.clone());
+    }
+    if query.attention_only {
+        runtime_query = runtime_query.attention_only(true);
+    }
+    if query.state_gaps_only {
+        runtime_query = runtime_query.state_gaps_only(true);
+    }
+    if let Some(sort) = query.sort {
+        runtime_query = runtime_query.sorted_by(sort);
+    }
+
+    let output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::ListRooms {
+                query: runtime_query,
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::Rooms { rooms, topology } = output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "room topology audit expected room summary output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+    let rows = rooms
+        .iter()
+        .map(RoomTopologyAuditRow::from_room)
+        .filter(|row| room_topology_audit_row_matches(row, query))
+        .collect::<Vec<_>>();
+    let summary = RoomTopologyAuditSummary::from_rows(&rows, &topology);
+    Ok((rows, summary))
+}
+
+fn room_topology_audit_row_matches(
+    row: &RoomTopologyAuditRow,
+    query: &RoomTopologyAuditQuery,
+) -> bool {
+    if query.scene_gaps_only && !row.has_scene_gap() {
+        return false;
+    }
+    if query.gaps_only && !row.requires_attention {
+        return false;
+    }
+    true
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -53720,6 +54038,93 @@ fn device_inventory_audit_summary_json(summary: &DeviceInventoryAuditSummary) ->
     ])
 }
 
+fn room_topology_audit_row_json(row: &RoomTopologyAuditRow) -> JsonValue {
+    object([
+        (
+            "audit_id",
+            string(format!("room-topology-audit:{}", row.room_id)),
+        ),
+        ("room_id", string(&row.room_id)),
+        ("device_count", integer(row.device_count as i64)),
+        ("online_devices", integer(row.online_devices as i64)),
+        ("attention_devices", integer(row.attention_devices as i64)),
+        (
+            "pairing_candidate_devices",
+            integer(row.pairing_candidate_devices as i64),
+        ),
+        ("entity_count", integer(row.entity_count as i64)),
+        (
+            "commandable_entities",
+            integer(row.commandable_entities as i64),
+        ),
+        ("state_gap_count", integer(row.state_gap_count as i64)),
+        (
+            "entities_without_state",
+            integer(row.entities_without_state as i64),
+        ),
+        ("stale_entities", integer(row.stale_entities as i64)),
+        ("scene_count", integer(row.scene_count as i64)),
+        ("scene_action_count", integer(row.scene_action_count as i64)),
+        ("has_state_gaps", JsonValue::Bool(row.has_state_gaps())),
+        ("has_scene_gap", JsonValue::Bool(row.has_scene_gap())),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+        ("topology_lane", string(row.topology_lane)),
+        ("topology_action", string(row.topology_action)),
+        ("ready", JsonValue::Bool(row.is_ready())),
+    ])
+}
+
+fn room_topology_audit_summary_json(summary: &RoomTopologyAuditSummary) -> JsonValue {
+    object([
+        ("total_rooms", integer(summary.total_rooms as i64)),
+        ("attention_rooms", integer(summary.attention_rooms as i64)),
+        ("state_gap_rooms", integer(summary.state_gap_rooms as i64)),
+        ("scene_gap_rooms", integer(summary.scene_gap_rooms as i64)),
+        ("blocked_rooms", integer(summary.blocked_rooms as i64)),
+        (
+            "requires_attention_rooms",
+            integer(summary.requires_attention_rooms as i64),
+        ),
+        ("ready_rooms", integer(summary.ready_rooms as i64)),
+        ("total_devices", integer(summary.total_devices as i64)),
+        (
+            "total_online_devices",
+            integer(summary.total_online_devices as i64),
+        ),
+        ("total_entities", integer(summary.total_entities as i64)),
+        (
+            "total_commandable_entities",
+            integer(summary.total_commandable_entities as i64),
+        ),
+        ("total_state_gaps", integer(summary.total_state_gaps as i64)),
+        (
+            "total_scene_actions",
+            integer(summary.total_scene_actions as i64),
+        ),
+        (
+            "devices_without_room",
+            integer(summary.devices_without_room as i64),
+        ),
+        (
+            "devices_without_entities",
+            integer(summary.devices_without_entities as i64),
+        ),
+        (
+            "entities_without_state",
+            integer(summary.entities_without_state as i64),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_topology_gaps",
+            JsonValue::Bool(summary.has_topology_gaps()),
+        ),
+    ])
+}
+
 fn scene_json(scene: &Scene) -> JsonValue {
     object([
         ("scene_id", string(scene.scene_id.as_str())),
@@ -60476,6 +60881,47 @@ fn device_inventory_audit_summary_output_schema() -> JsonSchema {
     )
 }
 
+fn room_topology_audit_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("room_id", JsonSchema::String),
+            SchemaProperty::new("attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("state_gaps_only", JsonSchema::Boolean),
+            SchemaProperty::new("scene_gaps_only", JsonSchema::Boolean),
+            SchemaProperty::new("gaps_only", JsonSchema::Boolean),
+            SchemaProperty::new("sort", JsonSchema::String),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn room_topology_audit_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "room_topology_audit",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["room_topology_audit", "summary", "count"],
+        false,
+    )
+}
+
+fn room_topology_audit_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
 fn event_delivery_output_schema() -> JsonSchema {
     object_schema(
         vec![
@@ -60524,7 +60970,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 240);
+        assert_eq!(definitions.len(), 242);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -61207,9 +61653,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_ROOM_TOPOLOGY_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_ROOM_TOPOLOGY_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            232
+            234
         );
         assert_eq!(
             export
@@ -62049,11 +62501,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(240))
+            Some(&integer(242))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(232))
+            Some(&integer(234))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -75260,6 +75712,118 @@ mod tests {
             runtime.borrow().registry().counts().authorization_decisions,
             2,
             "device inventory audit list and summary both authorize through runtime read tools"
+        );
+    }
+
+    #[test]
+    fn room_topology_audit_tools_surface_runtime_room_gaps_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let mut device = runtime
+            .borrow()
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .unwrap()
+            .clone();
+        device.health = Health::Offline;
+        runtime.borrow_mut().upsert_device(device).unwrap();
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Bool(true),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Stale,
+            })
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let list_request = request(
+            "call-list-room-topology-audit",
+            SMART_HOME_LIST_ROOM_TOPOLOGY_AUDIT_TOOL_ID,
+            object([
+                ("gaps_only", JsonValue::Bool(true)),
+                ("sort", string("attention_desc")),
+            ]),
+            2_000,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_output, "count"), Some(&integer(1)));
+        let summary = field(list_output, "summary").unwrap();
+        assert_eq!(field(summary, "total_rooms"), Some(&integer(1)));
+        assert_eq!(field(summary, "attention_rooms"), Some(&integer(1)));
+        assert_eq!(field(summary, "state_gap_rooms"), Some(&integer(1)));
+        assert_eq!(field(summary, "scene_gap_rooms"), Some(&integer(0)));
+        assert_eq!(field(summary, "blocked_rooms"), Some(&integer(1)));
+        assert_eq!(
+            field(summary, "requires_attention_rooms"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(summary, "total_state_gaps"), Some(&integer(2)));
+        assert_eq!(
+            field(summary, "has_topology_gaps"),
+            Some(&JsonValue::Bool(true))
+        );
+        let row = array_item(field(list_output, "room_topology_audit").unwrap(), 0).unwrap();
+        assert_eq!(field(row, "room_id"), Some(&string("kitchen")));
+        assert_eq!(field(row, "device_count"), Some(&integer(1)));
+        assert_eq!(field(row, "attention_devices"), Some(&integer(1)));
+        assert_eq!(field(row, "state_gap_count"), Some(&integer(2)));
+        assert_eq!(field(row, "stale_entities"), Some(&integer(1)));
+        assert_eq!(field(row, "entities_without_state"), Some(&integer(1)));
+        assert_eq!(field(row, "blocked"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(row, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(row, "topology_lane"), Some(&string("runtime_health")));
+        assert_eq!(
+            field(row, "topology_action"),
+            Some(&string("restore_room_devices"))
+        );
+
+        let summary_request = request(
+            "call-room-topology-audit-summary",
+            SMART_HOME_GET_ROOM_TOPOLOGY_AUDIT_SUMMARY_TOOL_ID,
+            object([("state_gaps_only", JsonValue::Bool(true))]),
+            2_001,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_rooms"), Some(&integer(1)));
+        assert_eq!(field(rollup, "blocked_rooms"), Some(&integer(1)));
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 2);
+        assert_eq!(journal_summary.completed_count, 2);
+        assert_eq!(
+            runtime.borrow().registry().counts().authorization_decisions,
+            2,
+            "room topology audit list and summary both authorize through runtime read tools"
         );
     }
 

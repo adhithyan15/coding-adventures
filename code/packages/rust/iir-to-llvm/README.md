@@ -91,6 +91,7 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.10.0 | Reassigned **parameters** are promoted to i64 stack slots (initialised from the incoming argument, narrow args zext'd) — a parameter accumulated across a loop back-edge is no longer silently dropped (LANG-FULL — LLVM first-class). |
 | v0.11.0 | **Narrow unsigned arithmetic wraps mod-2ⁿ** (LANG-FULL E2). A `u4`/`u8`/`u16`/`u32` op computes at i64 then `and i64 …, <mask>` (see below). Adds `u4` to the supported types. |
 | v0.12.0 | **Bitwise `not`** — synthesised as `xor x, -1` (LLVM has no `not`); a narrow width masks the result (`~0u8 = 255`). Unblocks Nib N3-`~` / Oct O2-`~`. |
+| v0.13.0 | **`f64` variable slots** (LANG-FULL E3). An `f64` local gets an `alloca double` slot (`store/load double`); a float `cmp_*` result `zext i1 → i64` (not the invalid `→ double`); `f64` literals render as LLVM's exact hex double `0x…`. **ALGOL 60 reals run on LLVM.** |
 | (later) | GC, debug info via `!dbg`. |
 
 ### Byte-tape memory (v0.9.0)

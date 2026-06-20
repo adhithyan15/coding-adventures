@@ -115,6 +115,10 @@ runtime and Chief of Staff tools a typed catalog for:
   deterministic task state
 - low-level mesh release task dispatch slots that turn execution tasks into
   deterministic dispatch queues
+- mesh release dispatch readiness summaries that combine task readiness with
+  dispatch queue state
+- low-level mesh release dispatch tickets that wrap dispatch queues in
+  deterministic ticket keys
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and

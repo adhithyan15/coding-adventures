@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck run control command inventory artifacts** —
+  `analyze_deck_controls()` now exposes normalized `.control` command lines
+  separately from full active deck input, and `run_deck_analysis()`
+  selected-run artifacts carry those commands in `ControlLines` /
+  `ControlLineList` across stable tables, CSV/JSON helpers, and ordered
+  `table_artifacts`, matching Rust and TypeScript.
+
 - **Deck run control diagnostic artifacts** —
   `run_deck_analysis()` selected-run artifacts now include existing `.control`
   body policy diagnostic codes in `Diagnostics` / `DiagnosticCodeList`, and

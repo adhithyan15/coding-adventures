@@ -158,12 +158,20 @@ multiple languages; close an enabler before the features that depend on it.
     confirmed by running the ALGOL real matrix proofs on the JIT.
   - ✅ **Frontend driver (AL1)** — ALGOL 60 `real` lowers to `f64`; two executed VM/JIT matrix
     proofs (real `*`+`=` → 42, real `/`+`<` → 1). *(BASIC floats / BA7 are a later driver.)*
-  - ☐ **E3-codegen-slots** — `iir-to-{llvm,wasm,jvm}` already emit the f64 *ops*
-    (`fmul`/`f64.mul`/`dmul`, audited FULL) but model every *variable slot* as a uniform `i64`
-    (LLVM `alloca i64`, etc. — the backends' own source already flags this under E3), so storing
-    a double into an i64 slot is invalid. Needs per-slot float typing in the slot load/store
-    protocol **+** a boolean (not operand-width) comparison-result type (the LLVM cmp currently
-    `zext i1 → double`). This unblocks the 3 stack/SSA code-gen backends.
+  - ◑ **E3-codegen-slots** — `iir-to-{llvm,wasm,jvm}` already emit the f64 *ops*
+    (`fmul`/`f64.mul`/`dmul`) but modelled every *variable slot* as a uniform `i64`, so storing
+    a double into an i64 slot was invalid. Fix = per-slot float typing in the load/store protocol
+    **+** a boolean (not operand-width) comparison-result type.
+    - ✅ **iir-to-llvm** (v0.13.0) — `collect_slot_types` gives an `f64` local an `alloca double`
+      slot (`store/load double`); float `cmp_*` result `zext i1 → i64` (not the invalid
+      `→ double`); `Operand::Float` rendered as LLVM's exact hex double `0x…` (Rust `{:e}` emitted
+      `2e0`/`0e0`, which clang rejects). **Executed proof on real `clang`**: the two ALGOL real
+      programs (exit 42, exit 1) run on the LLVM matrix column. (`f64` *params* reassigned across a
+      back-edge still stay SSA — `param_slot_compatible` excludes floats — a separate unexercised case.)
+    - ☐ **iir-to-wasm** — same slot fix (locals typed `i32` today; need `f64` locals + `f64.const`
+      hex/literal handling + float compare result as `i32`).
+    - ☐ **iir-to-jvm-class-file** — same slot fix (`dstore`/`dload` for double locals; the
+      build_type_map slot typing must recognise f64; comparison result stays `int`).
   - ☐ **E3-native** — `x86_64-backend`/`aarch64-backend` reject `const_f64`/`CIROperand::Float`;
     need SSE (`addsd`/`mulsd`/`comisd`) and AArch64 FP (`fadd`/`fcmp`) emission. (`aot-core`'s
     `infer`/`specialise` already allow `f64`.)
@@ -327,8 +335,9 @@ backend immediately) come before the enabler-dependent items.
   `real` → IIR `f64`, `REAL_LIT` → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit
   the `f64` hint, `/` is real division, real comparisons compare at `f64` width; `div`/`mod`
   stay integer-only; no implicit int→real coercion (mixing is a clean error). **Verified by
-  RUNNING** on the VM and JIT (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1). Remaining
-  to clear every backend: **E3-codegen-slots / E3-native / E3-clr** (see enabler E3 above).
+  RUNNING** on the VM, JIT, **and LLVM** (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1;
+  LLVM via `iir-to-llvm` 0.13.0's f64 slots). Remaining to clear every backend: the wasm + jvm
+  half of **E3-codegen-slots**, plus **E3-native / E3-clr** (see enabler E3 above).
 - ☐ **AL2** — arrays with runtime bounds (needs **E5**).
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**

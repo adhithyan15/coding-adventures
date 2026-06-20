@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add normalized `.control` command inventories to `analyzeDeckControls`
+  separately from full active deck input, and carry those commands through
+  selected `runDeckAnalysis` run artifacts as stable `ControlLines` /
+  `ControlLineList` table, CSV/JSON, and ordered `tableArtifacts` fields,
+  matching Python and Rust.
 - Surface existing `.control` body policy diagnostic codes in selected
   `runDeckAnalysis` run artifacts and propagate them through stable
   run-artifact tables, CSV/JSON helpers, and ordered `tableArtifacts`,

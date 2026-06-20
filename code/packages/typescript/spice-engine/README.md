@@ -105,7 +105,9 @@ results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `formatDeckRunArtifactTable` and
 `formatDeckRunArtifactCsv` / `formatDeckRunArtifactJson` output for stable
 result-row, table, analysis-directive, output-probe, output-directive,
-measurement, Fourier, and diagnostic count/name lists. Existing `.control` body
+measurement, Fourier, control-command, and diagnostic count/name lists.
+Normalized accepted `.control` commands are surfaced separately in
+`ControlLines` / `ControlLineList` artifact fields. Existing `.control` body
 policy diagnostics flow into those selected-run artifact `Diagnostics` /
 `DiagnosticCodeList` fields and through the same run-artifact table, CSV, JSON,
 and `tableArtifacts` records. `formatDeckTableCsv` also converts any stable tab-separated deck table to
@@ -205,6 +207,6 @@ deck execution helpers.
 deck-selected table output with normalized table-inventory, output-probe, and
 output-directive artifacts, selected measurement artifacts, selected transient Fourier artifacts,
 selected-run artifact summaries with table, analysis-directive, output-probe, output-directive,
-measurement, and Fourier probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT`
+measurement, Fourier probe, and `.control` command inventories, `.ac LIN`, `.ac DEC`, `.ac OCT`
 frequency grids, and `.tran` `START` /
 print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
