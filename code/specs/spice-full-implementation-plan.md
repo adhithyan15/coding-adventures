@@ -97,7 +97,9 @@ downstream tools to compare.
      render as stable CSV and compact JSON beside the existing tab-separated
      table; stable deck output tables can now also convert to deterministic CSV
      and compact JSON records or host-native header-keyed records across
-     Python, Rust, and TypeScript.
+     Python, Rust, and TypeScript, and selected executions now expose ordered
+     table export artifacts with text, CSV, compact JSON, and host-native
+     records for each stable table.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -940,6 +942,14 @@ downstream tools to compare.
       measurement, Fourier, and run-artifact table inventory without drilling
       into the run-artifact table or reconstructing optional side-table
       presence.
+
+87. Deck execution table export artifacts.
+    - Status: completed in this deck execution table export artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now expose ordered
+      table export artifacts beside the stable table count/name inventory.
+    - Each table artifact carries the stable table text, deterministic CSV,
+      compact JSON records, and host-native header-keyed records for the
+      selected result, measurement, Fourier, and run-artifact tables.
 
 ## Backlog
 

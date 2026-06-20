@@ -3441,6 +3441,15 @@ pub struct DeckRunArtifact {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct DeckTableArtifact {
+    pub name: String,
+    pub table: String,
+    pub csv: String,
+    pub json: String,
+    pub records: Vec<BTreeMap<String, String>>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct DeckAnalysisExecution {
     pub plan: DeckAnalysisPlan,
     pub result: DeckAnalysisExecutionResult,
@@ -3450,6 +3459,7 @@ pub struct DeckAnalysisExecution {
     pub analysis_directives: Vec<String>,
     pub table_count: usize,
     pub tables: Vec<String>,
+    pub table_artifacts: Vec<DeckTableArtifact>,
     pub measurements: Vec<ProbeMeasurement>,
     pub measurement_table: String,
     pub fourier: Vec<FourierResult>,
@@ -10353,6 +10363,35 @@ pub fn deck_table_records(table: &str) -> Vec<BTreeMap<String, String>> {
         .collect()
 }
 
+fn deck_table_artifact(name: &str, table: &str) -> DeckTableArtifact {
+    DeckTableArtifact {
+        name: name.to_string(),
+        table: table.to_string(),
+        csv: format_deck_table_csv(table),
+        json: format_deck_table_json(table),
+        records: deck_table_records(table),
+    }
+}
+
+fn deck_table_artifacts(
+    result_table: &str,
+    measurement_table: &str,
+    fourier_table: &str,
+    run_artifact_table: &str,
+    measurements: &[ProbeMeasurement],
+    fourier: &[FourierResult],
+) -> Vec<DeckTableArtifact> {
+    let mut artifacts = vec![deck_table_artifact("result", result_table)];
+    if !measurements.is_empty() {
+        artifacts.push(deck_table_artifact("measurement", measurement_table));
+    }
+    if !fourier.is_empty() {
+        artifacts.push(deck_table_artifact("fourier", fourier_table));
+    }
+    artifacts.push(deck_table_artifact("run-artifact", run_artifact_table));
+    artifacts
+}
+
 pub fn format_deck_run_artifact_csv(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![DECK_RUN_ARTIFACT_COLUMNS.join(",")];
     for artifact in artifacts {
@@ -10505,6 +10544,14 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let table_artifacts = deck_table_artifacts(
+                &table,
+                &measurement_table,
+                &fourier_table,
+                &run_artifact_table,
+                &measurements,
+                &fourier,
+            );
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10515,6 +10562,7 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 table_count: tables.len(),
                 tables,
+                table_artifacts,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10551,6 +10599,14 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let table_artifacts = deck_table_artifacts(
+                &table,
+                &measurement_table,
+                &fourier_table,
+                &run_artifact_table,
+                &measurements,
+                &fourier,
+            );
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10561,6 +10617,7 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 table_count: tables.len(),
                 tables,
+                table_artifacts,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10598,6 +10655,14 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let table_artifacts = deck_table_artifacts(
+                &table,
+                &measurement_table,
+                &fourier_table,
+                &run_artifact_table,
+                &measurements,
+                &fourier,
+            );
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10608,6 +10673,7 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 table_count: tables.len(),
                 tables,
+                table_artifacts,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10648,6 +10714,14 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let table_artifacts = deck_table_artifacts(
+                &table,
+                &measurement_table,
+                &fourier_table,
+                &run_artifact_table,
+                &measurements,
+                &fourier,
+            );
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10658,6 +10732,7 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 table_count: tables.len(),
                 tables,
+                table_artifacts,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10692,6 +10767,14 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let table_artifacts = deck_table_artifacts(
+                &table,
+                &measurement_table,
+                &fourier_table,
+                &run_artifact_table,
+                &measurements,
+                &fourier,
+            );
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10702,6 +10785,7 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 table_count: tables.len(),
                 tables,
+                table_artifacts,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10734,6 +10818,14 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let table_artifacts = deck_table_artifacts(
+                &table,
+                &measurement_table,
+                &fourier_table,
+                &run_artifact_table,
+                &measurements,
+                &fourier,
+            );
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10744,6 +10836,7 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 table_count: tables.len(),
                 tables,
+                table_artifacts,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10788,6 +10881,14 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let table_artifacts = deck_table_artifacts(
+                &table,
+                &measurement_table,
+                &fourier_table,
+                &run_artifact_table,
+                &measurements,
+                &fourier,
+            );
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10798,6 +10899,7 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 table_count: tables.len(),
                 tables,
+                table_artifacts,
                 measurements,
                 measurement_table,
                 fourier,
