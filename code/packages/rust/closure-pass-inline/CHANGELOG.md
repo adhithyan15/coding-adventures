@@ -2,6 +2,49 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.15.0] - 2026-06-19
+
+### Added (CLOC18 — parameter-mutation materialization)
+
+Helpers that **reassign a parameter** are now inlinable. They were *declined*
+by the 0.13.1 soundness guard (#6272) because the inliner substitutes each
+parameter with its argument expression, so `function f(x){ x = x + 1; return
+x; }` at `var g = f(7)` would have miscompiled to `g = 7` instead of `8`. This
+supersedes that decline with a sound transform — and unblocks the *ubiquitous*
+default-argument idiom `function f(x){ x = x || DEFAULT; … }`, accumulators,
+and normalization helpers.
+
+Each mutated parameter is **materialised** into a fresh *mutable* local seeded
+from the argument and routed through the rename map:
+
+```js
+function f(x){ x = x + 1; return x; } var g = f(7); use(g);
+// inline pass:  let b = 7; b = b + 1; const a = b; var g = a; …
+// SIMPLE:       var g = 8; use(g);     ✓
+```
+
+**Why the rename path, not substitution:** `substitute` deliberately does not
+rewrite a bare-identifier assignment *target* (substituting a literal there is
+impossible), so a mutated parameter must flow through the target-aware `rename`
+walk. `materialize_args` now returns `(prelude, substitute_map,
+mutated_rename)`: a mutated parameter emits `let <fresh> = <arg>;` and goes in
+`mutated_rename` (merged into the local-rename map at both splice sites,
+`build_spliced_body` and `build_captured_body`); a pure parameter emits `const
+<fresh> = <arg>;` and substitutes as before. The fast direct-substitution path
+now requires all-simple arguments **and** no mutated parameters.
+
+**Soundness.** A materialised parameter is exactly a real call's binding: the
+argument is evaluated once into the `let`; reassigning the local never affects
+the caller's argument (pass-by-value); and the fresh `let` name is program-fresh
+so its block scope is inert (the same argument as CLOC15 `var` locals). A
+member-target write through a parameter (`x.k = …`) mutates a *property* of the
+argument, not the binding, so it stays on the substitution path.
+
+Five tests: the three #6272 decline tests **flipped** to materialisation-positive
+(simple / compound / nested), plus a mixed pure+mutated-parameter case and a
+side-effecting-argument-evaluated-once case. No closurec fixture churn. Spec:
+CLOC18 (PR #6279), now marked implemented.
+
 ## [0.14.0] - 2026-06-19
 
 ### Added (CLOC15 Open Q3 — `var` locals admitted)
