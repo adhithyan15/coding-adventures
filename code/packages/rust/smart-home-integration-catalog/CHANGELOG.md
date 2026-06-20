@@ -126,6 +126,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseReadinessCheck`, summary helpers, and D23 mesh
   release-readiness gate projections for substrate actions, evidence
   remediation, human review, operator handoff, and release packet state.
+- `IntegrationMeshReleaseReadinessCheckSlot` and summary helpers for
+  sequencing mesh release-readiness gates into deterministic low-level
+  operator and release execution slots.
 - `IntegrationMeshReleasePacketReadinessSummary` and helpers for condensing
   mesh release-readiness checks into package-facing go/no-go state and first
   actionable gates.
