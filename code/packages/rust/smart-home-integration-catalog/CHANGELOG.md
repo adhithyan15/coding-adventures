@@ -111,6 +111,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionAction`
   and summary helpers for turning mesh execution evidence review dispositions
   into operator, repair, lineage, and release queues.
+- `IntegrationMeshProtocolSubstratePreflightRepairSlotExecutionEvidenceReviewDispositionActionSlot`
+  and summary helpers for sequencing disposition-action queues into
+  deterministic operator and repair execution slots.
 - `IntegrationMeshPreflightGuardrailReadinessSummary` and helpers for combining
   mesh preflight work-order readiness with guardrail and evidence-review
   disposition counts.

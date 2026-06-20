@@ -93,6 +93,8 @@ runtime and Chief of Staff tools a typed catalog for:
   readiness with release work-order counts
 - mesh repair-slot execution evidence review disposition actions that turn
   review dispositions into operator, repair, lineage, and release queues
+- low-level mesh disposition-action execution slots that sequence those
+  queues into deterministic operator and repair work
 - mesh preflight guardrail readiness summaries that combine work-order
   readiness with guardrail and evidence-review disposition counts
 - mesh preflight disposition-action readiness summaries that combine guardrail
