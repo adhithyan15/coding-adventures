@@ -183,9 +183,13 @@ multiple languages; close an enabler before the features that depend on it.
   - ☐ **E3-native** — `x86_64-backend`/`aarch64-backend` reject `const_f64`/`CIROperand::Float`;
     need SSE (`addsd`/`mulsd`/`comisd`) and AArch64 FP (`fadd`/`fcmp`) emission. (`aot-core`'s
     `infer`/`specialise` already allow `f64`.)
-  - ☐ **E3-clr** — `iir-to-cil-bytecode` explicitly rejects `Operand::Float` ("float constants
-    are not supported in CLR v1"); need `ldc.r8` + `add`/`sub`/`mul`/`div`/float compares in both
-    the bytecode and textual-`.il` emitters.
+  - ✅ **E3-clr** (iir-to-cil-bytecode v0.22.0) — the **textual `.il` emitter** (the real-CLR /
+    `ilasm` matrix path) lowers `f64`: `cil_local_type` → `float64` locals, float consts →
+    `ldc.r8` (exact LE bytes), comparison result forced to `int32` (CIL `ceq`/`cgt`/`clt` push
+    an int even over `float64` operands). CIL `add`/`mul`/`ceq` are stack-type-overloaded → no
+    opcode change. **Executed proof on real `ilasm` + `dotnet`**: both ALGOL real programs run
+    on the CLR matrix column. (The structured **bytecode** emitter keeps its own f64 guard — a
+    later follow-up; the real-CLR path is textual.)
 - **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
   compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
   ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
@@ -343,11 +347,11 @@ backend immediately) come before the enabler-dependent items.
   `real` → IIR `f64`, `REAL_LIT` → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit
   the `f64` hint, `/` is real division, real comparisons compare at `f64` width; `div`/`mod`
   stay integer-only; no implicit int→real coercion (mixing is a clean error). **Verified by
-  RUNNING** on the VM, JIT, **LLVM, WASM, and JVM** (`lang_matrix.rs` — real `*`+`=`→42, real
-  `/`+`<`→1) — **5 of 7 backends**. LLVM via `iir-to-llvm` 0.13.0's f64 slots; WASM via its
+  RUNNING** on the VM, JIT, **LLVM, WASM, JVM, and CLR** (`lang_matrix.rs` — real `*`+`=`→42,
+  real `/`+`<`→1) — **6 of 7 backends**. LLVM via `iir-to-llvm` 0.13.0's f64 slots; WASM via its
   typed-local model (no change); JVM via `iir-to-jvm-class-file` 0.15.0's `CONSTANT_Double` pool
-  entries + `dcmpl`/`dcmpg`. Remaining: **E3-native / E3-clr** (the two direct native backends +
-  CLR reject `Operand::Float`; see enabler E3 above).
+  + `dcmpl`/`dcmpg`; CLR via `iir-to-cil-bytecode` 0.22.0's `float64` locals + `ldc.r8`. Only
+  remaining: **E3-native** (x86_64/aarch64 reject `Operand::Float`; see enabler E3 above).
 - ☐ **AL2** — arrays with runtime bounds (needs **E5**).
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**

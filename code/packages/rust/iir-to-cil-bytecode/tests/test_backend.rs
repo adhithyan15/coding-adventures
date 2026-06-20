@@ -110,12 +110,15 @@ fn validate_polymorphic_type_hint_is_rejected() {
     assert!(errs.iter().any(|e| e.contains("UntypedInstruction")));
 }
 
+/// An `f64` float const is now ACCEPTED (LANG-FULL E3 — the textual `.il`
+/// emitter lowers it to `ldc.r8`). (Was `validate_float_const_is_rejected`.)
 #[test]
-fn validate_float_const_is_rejected() {
+fn validate_f64_float_const_is_accepted() {
     let errs = validate_iir_for_clr(&single_fn(vec![
         IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "f64"),
     ]));
-    assert!(errs.iter().any(|e| e.contains("Float")));
+    assert!(!errs.iter().any(|e| e.contains("Float")),
+        "f64 float const should be accepted; got: {errs:?}");
 }
 
 #[test]

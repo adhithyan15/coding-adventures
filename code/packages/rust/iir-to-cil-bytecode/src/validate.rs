@@ -402,19 +402,24 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
 
             // ── Check 5: float const ─────────────────────────────────────────
             //
-            // CIL does support floating-point, but loading a float immediate
-            // requires `ldc.r4` (4-byte float) or `ldc.r8` (8-byte double),
-            // which this v1 lowering does not emit.  Rejecting float constants
-            // here gives a clear error rather than silently truncating the
-            // value to an integer (which would be a silent semantic bug).
+            // A floating-point constant is loaded with `ldc.r4`/`ldc.r8`. The
+            // **textual `.il` emitter** ([`crate::il_text`]) supports `f32`/`f64`
+            // (LANG-FULL E3 — ALGOL `real`), so a float const with a float
+            // `type_hint` is accepted. A float const with a *non-float* type_hint
+            // is still a bug (it would silently truncate), and is rejected.
+            //
+            // (The structured *bytecode* emitter [`crate::lower`] does not yet
+            // emit `ldc.r8` and keeps its own guard; the real-CLR matrix path
+            // uses the textual emitter, which this check unblocks.)
             if instr.op == "const" {
                 if let Some(Operand::Float(_)) = instr.srcs.first() {
-                    errors.push(format!(
-                        "UnsupportedType: function {:?}, const instruction has a Float \
-                         operand; float constants are not supported in CLR v1 \
-                         (use integer arithmetic or a separate fp lowering pass)",
-                        func.name
-                    ));
+                    if instr.type_hint != "f64" && instr.type_hint != "f32" {
+                        errors.push(format!(
+                            "UnsupportedType: function {:?}, const has a Float operand but a \
+                             non-float type_hint {:?} (would truncate)",
+                            func.name, instr.type_hint
+                        ));
+                    }
                 }
             }
 
@@ -532,12 +537,26 @@ mod tests {
         assert!(errs.iter().any(|e| e.contains("UntypedInstruction")));
     }
 
+    /// An `f64` float const is now ACCEPTED (LANG-FULL E3 — the textual `.il`
+    /// emitter lowers it to `ldc.r8`). (Was `float_const_rejected`.)
     #[test]
-    fn float_const_rejected() {
+    fn f64_float_const_accepted() {
         let errs = validate_iir_for_clr(&single_fn_module(vec![
             IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "f64"),
         ]));
-        assert!(errs.iter().any(|e| e.contains("Float")));
+        assert!(!errs.iter().any(|e| e.contains("Float")),
+            "an f64 float const should be accepted; got: {errs:?}");
+    }
+
+    /// A Float operand with a *non-float* type_hint is still rejected (it would
+    /// silently truncate).
+    #[test]
+    fn float_const_with_int_hint_rejected() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "i32"),
+        ]));
+        assert!(errs.iter().any(|e| e.contains("Float")),
+            "a Float with an int type_hint should be rejected; got: {errs:?}");
     }
 
     #[test]
