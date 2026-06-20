@@ -175,8 +175,8 @@ card by analysis alias, defaults decks without analysis cards to an implicit
 `.op`, and reports ambiguity before solver dispatch.
 `run_deck_analysis` executes one selected `.op`, `.dc`, `.ac LIN`, `.ac DEC`,
 `.ac OCT`, or `.tran` plan against an existing `Circuit` and returns the plan,
-solver result, deck-selected output table, and normalized output probes and
-output directives that produced the table, plus selected `.measure` results and
+solver result, deck-selected output table, and normalized analysis directive,
+output probes, and output directives that produced the table, plus selected `.measure` results and
 a stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
 `.tran` plans route
 `START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
@@ -185,7 +185,7 @@ stable transient table surface. They also return selected `.four` harmonic
 results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `format_deck_run_artifact_table` and
 `format_deck_run_artifact_csv` / `format_deck_run_artifact_json` output for
-stable result-row, output-probe, output-directive, measurement, Fourier, and
+stable result-row, analysis-directive, output-probe, output-directive, measurement, Fourier, and
 diagnostic count/name lists. `format_deck_table_csv` also converts any stable
 tab-separated deck table to CSV, `format_deck_table_json` converts the same
 tables to compact JSON records, and `deck_table_records` returns header-keyed
@@ -235,7 +235,7 @@ downstream deck execution helpers.
 stable deck-selected table output with normalized output-probe and
 output-directive artifacts,
 selected measurement artifacts, selected transient Fourier artifacts,
-selected-run artifact summaries with output-probe, output-directive,
+selected-run artifact summaries with analysis-directive, output-probe, output-directive,
 measurement, and Fourier probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT`
 frequency grids, and `.tran`
 `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.

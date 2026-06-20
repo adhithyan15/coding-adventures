@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck execution analysis directives** —
+  `run_deck_analysis()` now returns the selected analysis directive beside
+  selected output probes and output directives, and selected-run artifacts
+  include stable `AnalysisDirectiveList` metadata, matching Rust and
+  TypeScript.
+
 - **Deck execution output directives** —
   `run_deck_analysis()` now returns selected output directives beside selected
   output probes so callers can inspect the deck output plan without reparsing

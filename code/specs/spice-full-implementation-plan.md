@@ -79,8 +79,9 @@ downstream tools to compare.
      `START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
      initial-condition intent; selected `.tran` execution now keeps `.tran
      TSTEP` as the deck output print grid while `MAXSTEP` caps internal solver
-     stepping; deck executions now expose normalized selected output probes and
-     output directives as inspectable artifacts alongside the stable table;
+     stepping; deck executions now expose normalized selected analysis
+     directives, output probes, and output directives as inspectable artifacts
+     alongside the stable table;
      selected `.measure` outputs now travel with deck execution results as
      structured measurements plus stable measurement tables; selected transient
      `.four` outputs now
@@ -907,6 +908,16 @@ downstream tools to compare.
     - Host and browser integrations can inspect which `.save`, `.probe`,
       `.print`, or `.plot` cards selected the output table without reparsing
       run-artifact tables.
+
+84. Deck execution analysis directive artifacts.
+    - Status: completed in this deck analysis directives slice.
+    - Python, Rust, and TypeScript selected deck executions now expose the
+      normalized selected analysis directive beside selected output probes and
+      output directives on the execution result.
+    - Selected-run artifacts and stable run-artifact tables now include
+      `AnalysisDirectiveList`, so host and browser integrations can inspect
+      which `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`, or `.noise` card
+      drove the run without reparsing the selected plan or deck text.
 
 ## Backlog
 

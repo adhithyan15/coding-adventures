@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected analysis directives to `runDeckAnalysis` results and selected-run
+  artifacts, including a stable `AnalysisDirectiveList` column from
+  `formatDeckRunArtifactTable`, matching Python and Rust.
 - Add selected output directives to `runDeckAnalysis` results beside selected
   output probes, matching Python and Rust.
 - Add `deckTableRecords` for stable tab-separated deck output tables as

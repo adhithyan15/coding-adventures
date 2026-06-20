@@ -3406,6 +3406,8 @@ pub enum DeckAnalysisExecutionResult {
 pub struct DeckRunArtifact {
     pub analysis: String,
     pub directive: String,
+    pub analysis_directive_count: usize,
+    pub analysis_directives: Vec<String>,
     pub line_number: usize,
     pub source_name: Option<String>,
     pub output_node: Option<String>,
@@ -3443,6 +3445,7 @@ pub struct DeckAnalysisExecution {
     pub table: String,
     pub output_probes: Vec<String>,
     pub output_directives: Vec<String>,
+    pub analysis_directives: Vec<String>,
     pub measurements: Vec<ProbeMeasurement>,
     pub measurement_table: String,
     pub fourier: Vec<FourierResult>,
@@ -10105,9 +10108,12 @@ fn deck_run_artifacts(
     diagnostic_codes: &[String],
 ) -> Vec<DeckRunArtifact> {
     let is_transient = plan.analysis == "tran";
+    let analysis_directives = deck_analysis_directives(plan);
     vec![DeckRunArtifact {
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
+        analysis_directive_count: analysis_directives.len(),
+        analysis_directives,
         line_number: plan.line_number,
         source_name: plan.source_name.clone(),
         output_node: plan.output_node.clone(),
@@ -10145,6 +10151,14 @@ fn deck_run_artifacts(
     }]
 }
 
+fn deck_analysis_directives(plan: &DeckAnalysisPlan) -> Vec<String> {
+    if plan.directive.is_empty() {
+        Vec::new()
+    } else {
+        vec![plan.directive.clone()]
+    }
+}
+
 fn deck_analysis_diagnostic_codes(netlist: &str, plan: &DeckAnalysisPlan) -> Vec<String> {
     resolve_deck_analyses(netlist)
         .diagnostics
@@ -10167,6 +10181,8 @@ fn format_deck_artifact_bool(value: Option<bool>) -> String {
 const DECK_RUN_ARTIFACT_COLUMNS: &[&str] = &[
     "Analysis",
     "Directive",
+    "AnalysisDirectives",
+    "AnalysisDirectiveList",
     "Line",
     "SourceName",
     "OutputNode",
@@ -10201,6 +10217,8 @@ fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
     vec![
         artifact.analysis.clone(),
         artifact.directive.clone(),
+        artifact.analysis_directive_count.to_string(),
+        artifact.analysis_directives.join(";"),
         artifact.line_number.to_string(),
         artifact.source_name.clone().unwrap_or_default(),
         artifact.output_node.clone().unwrap_or_default(),
@@ -10440,6 +10458,7 @@ pub fn run_deck_analysis(
 ) -> Result<DeckAnalysisExecution, SpiceError> {
     let plan = select_deck_analysis_plan(netlist, analysis)?;
     let diagnostic_codes = deck_analysis_diagnostic_codes(netlist, &plan);
+    let analysis_directives = deck_analysis_directives(&plan);
     match plan.analysis.as_str() {
         "op" => {
             let result = dc_op(circuit)?;
@@ -10469,6 +10488,7 @@ pub fn run_deck_analysis(
                 table,
                 output_probes,
                 output_directives,
+                analysis_directives,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10511,6 +10531,7 @@ pub fn run_deck_analysis(
                 table,
                 output_probes,
                 output_directives,
+                analysis_directives,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10554,6 +10575,7 @@ pub fn run_deck_analysis(
                 table,
                 output_probes,
                 output_directives,
+                analysis_directives,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10600,6 +10622,7 @@ pub fn run_deck_analysis(
                 table,
                 output_probes,
                 output_directives,
+                analysis_directives,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10640,6 +10663,7 @@ pub fn run_deck_analysis(
                 table,
                 output_probes,
                 output_directives,
+                analysis_directives,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10678,6 +10702,7 @@ pub fn run_deck_analysis(
                 table,
                 output_probes,
                 output_directives,
+                analysis_directives,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10728,6 +10753,7 @@ pub fn run_deck_analysis(
                 table,
                 output_probes,
                 output_directives,
+                analysis_directives,
                 measurements,
                 measurement_table,
                 fourier,

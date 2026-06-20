@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected analysis directives to `run_deck_analysis` results and selected-run
+  artifacts, including a stable `AnalysisDirectiveList` column from
+  `format_deck_run_artifact_table`, matching Python and TypeScript.
 - Add selected output directives to `run_deck_analysis` results beside selected
   output probes, matching Python and TypeScript.
 - Add `deck_table_records` for stable tab-separated deck output tables as
