@@ -35,6 +35,7 @@ EXPECTED = {
     "heinz_bodies": {"g6pd_deficiency", "methemoglobinemia"},
     "auer_rods": {"acute_promyelocytic_leukemia"},        # primary-source backfill (NBK507875)
     "psammoma_bodies": {"meningioma"},                    # primary-source backfill (NBK560538)
+    "negri_bodies": {"rabies"},                           # expand (NBK448076)
 }
 REL = "seen_in"
 VAR = "Condition"

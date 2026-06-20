@@ -28,13 +28,17 @@
 % contained span (both finding AND condition named) are included. Under the primary-
 % source-first, zero-deferral policy, two previously-deferred buzzwords are now GROUNDED:
 % Auer rods → acute promyelocytic leukemia (the AML page names abundant Auer rods as a
-% pathognomonic APL feature) and psammoma bodies → meningioma (the meningioma page names
-% psammoma-body formation as a histopathological characteristic). Still deferred (re-checked):
-% psammoma bodies → papillary thyroid carcinoma — the PTC page (NBK536943) lists psammoma
-% bodies only as an isolated bullet, and the only both-endpoints span on the Thyroid-Gland
-% histology page (NBK551659) wraps "Orphan Annie eye" in DOUBLE quotes (plus inline citation
-% brackets), which cannot be carried verbatim inside an ADJ double-quoted source string.
-% Declined rather than mangle the span — honest absence beats a doctored citation.
+% pathognomonic APL feature), psammoma bodies → meningioma (the meningioma page names
+% psammoma-body formation as a histopathological characteristic), and Negri bodies →
+% rabies (the Rabies page names them pathognomonic in one clean sentence).
+% Still deferred (re-checked): psammoma bodies → papillary thyroid carcinoma. NOTE the
+% blocker has narrowed: ADJ string literals now carry escaped double quotes (adj-lang
+% 0.16.1, PR #6330), so the "Orphan Annie eye" quotes are no longer the obstacle. The
+% remaining obstacle is that NO checked authoritative page states both endpoints in one
+% clean sentence — both dedicated PTC pages (NBK536943, NBK459299) name psammoma bodies
+% and papillary thyroid carcinoma only in SEPARATE sentences, and the sole both-endpoints
+% location (Thyroid-Gland histology, NBK551659) spans a citation-marker boundary
+% ([43][40]) between its two endpoint sentences. Honest absence beats a stitched span.
 % ============================================================================
 
 dictionary histo_vocab {
@@ -83,5 +87,11 @@ rulebook histo_facts {
     relate seen_in(psammoma_bodies, meningioma)
         source "One of the histopathological characteristics of meningiomas is the growth of meningothelial cells that eventually mineralize to form psammoma bodies."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK560538/"
+        trust authoritative
+
+    % --- EXPAND: Negri bodies -> rabies (pathognomonic) -------------------------
+    relate seen_in(negri_bodies, rabies)
+        source "Intracytoplasmic Negri bodies are pathognomonic for rabies but are only present in 20% to 60% of cases."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448076/"
         trust authoritative
 }
