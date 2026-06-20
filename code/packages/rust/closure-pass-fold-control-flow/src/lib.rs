@@ -61,7 +61,7 @@ use coding_adventures_javascript_ast::{
     ForStatement, FunctionDeclaration, Identifier, IfStatement, LogicalExpression, LogicalOperator,
     MemberExpression, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, UnaryExpression, UnaryOperator, VarKind, VariableDeclaration,
-    VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
 
@@ -216,6 +216,17 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
         }
         TaggedStatement::IfStatement(s) => fold_if_statement(s, st),
         TaggedStatement::WhileStatement(s) => fold_while_statement(s, st),
+        // A `do … while(test)` runs its body at least once, so — unlike
+        // `while` — it can NEVER be eliminated as a dead loop even when
+        // `test` is statically falsy (the single body run is observable).
+        // We therefore only recurse structurally: fold the body and the test.
+        TaggedStatement::DoWhileStatement(s) => {
+            Statement::Tagged(TaggedStatement::DoWhileStatement(DoWhileStatement {
+                cv: s.cv.clone(),
+                body: Box::new(fold_statement(&s.body, st)),
+                test: fold_expression(&s.test, st),
+            }))
+        }
         TaggedStatement::ForStatement(s) => {
             Statement::Tagged(TaggedStatement::ForStatement(ForStatement {
                 cv: s.cv.clone(),

@@ -271,6 +271,9 @@ fn process_tagged(t: &mut TaggedStatement, nodes_touched: &mut u32) -> bool {
         TaggedStatement::WhileStatement(ws) => {
             changed |= process_stmt(&mut ws.body, nodes_touched);
         }
+        TaggedStatement::DoWhileStatement(ds) => {
+            changed |= process_stmt(&mut ds.body, nodes_touched);
+        }
         TaggedStatement::ForStatement(fs) => {
             changed |= process_stmt(&mut fs.body, nodes_touched);
         }
@@ -363,6 +366,7 @@ fn stmt_has_function(stmt: &Statement) -> bool {
                     || is.alternate.as_deref().is_some_and(stmt_has_function)
             }
             TaggedStatement::WhileStatement(ws) => stmt_has_function(&ws.body),
+            TaggedStatement::DoWhileStatement(ds) => stmt_has_function(&ds.body),
             TaggedStatement::ForStatement(fs) => stmt_has_function(&fs.body),
             TaggedStatement::LabeledStatement(ls) => stmt_has_function(&ls.body),
             TaggedStatement::SwitchStatement(ss) => ss
@@ -572,6 +576,9 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
             TaggedStatement::WhileStatement(ws) => {
                 collect_decl_occurrences_stmt(&ws.body, out, true)
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                collect_decl_occurrences_stmt(&ds.body, out, true)
+            }
             TaggedStatement::ForStatement(fs) => {
                 // A `for`-init `let`/`const` is scoped to the loop (never the
                 // whole body), so it is block-scoped → pass `nested = true`.
@@ -682,6 +689,10 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             TaggedStatement::WhileStatement(ws) => {
                 collect_all_idents_expr(&ws.test, out);
                 collect_all_idents_stmt(&ws.body, out);
+            }
+            TaggedStatement::DoWhileStatement(ds) => {
+                collect_all_idents_expr(&ds.test, out);
+                collect_all_idents_stmt(&ds.body, out);
             }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &fs.init {
@@ -884,6 +895,10 @@ fn rewrite_uses_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
         TaggedStatement::WhileStatement(ws) => {
             rewrite_uses_expr(&mut ws.test, map);
             rewrite_uses_stmt(&mut ws.body, map);
+        }
+        TaggedStatement::DoWhileStatement(ds) => {
+            rewrite_uses_expr(&mut ds.test, map);
+            rewrite_uses_stmt(&mut ds.body, map);
         }
         TaggedStatement::ForStatement(fs) => {
             if let Some(init) = &mut fs.init {

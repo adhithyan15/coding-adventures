@@ -27,8 +27,11 @@
 //! - [`TryStatement`] + [`CatchClause`] (CLOC19 — `try`/`catch`/`finally`,
 //!   added to unblock the whitespace-only fallback on any program using
 //!   exception handling)
+//! - [`DoWhileStatement`] (CLOC20 — `do body while (test)`, the
+//!   test-after-body loop; unblocks the whitespace-only fallback on any
+//!   program using a do-while loop)
 //!
-//! Phase 2 will add `DoWhileStatement`, `ForInStatement`, `ForOfStatement`,
+//! Phase 2 will add `ForInStatement`, `ForOfStatement`,
 //! `DebuggerStatement`, and `WithStatement`.
 
 use crate::declaration::{Declaration, VariableDeclaration};
@@ -66,6 +69,7 @@ pub enum TaggedStatement {
     BlockStatement(BlockStatement),
     IfStatement(IfStatement),
     WhileStatement(WhileStatement),
+    DoWhileStatement(DoWhileStatement),
     ForStatement(ForStatement),
     ReturnStatement(ReturnStatement),
     BreakStatement(BreakStatement),
@@ -91,6 +95,9 @@ impl Statement {
     }
     pub fn while_statement(s: WhileStatement) -> Self {
         Self::Tagged(TaggedStatement::WhileStatement(s))
+    }
+    pub fn do_while_statement(s: DoWhileStatement) -> Self {
+        Self::Tagged(TaggedStatement::DoWhileStatement(s))
     }
     pub fn for_statement(s: ForStatement) -> Self {
         Self::Tagged(TaggedStatement::ForStatement(s))
@@ -165,6 +172,25 @@ pub struct WhileStatement {
     pub cv: Option<CvId>,
     pub test: Expression,
     pub body: Box<Statement>,
+}
+
+/// `do body while (test)` (CLOC20). The mirror of [`WhileStatement`] with the
+/// test moved to *after* the body, which changes the control flow in one
+/// important way: the body always runs **at least once** before the test is
+/// first evaluated. Field order here follows that execution order (`body`
+/// before `test`) and matches ESTree's `DoWhileStatement`.
+///
+/// The shape is otherwise identical to `while`, so every pass treats it the
+/// same: recurse into `test` (an expression) and `body` (a statement). Like
+/// `while`, a `do`-`while` is **not** a terminator — control can fall out of
+/// the loop, so statements after it stay reachable.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DoWhileStatement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub body: Box<Statement>,
+    pub test: Expression,
 }
 
 /// `for (init; test; update) body`. All three head clauses are
@@ -470,6 +496,18 @@ mod tests {
         });
         assert_eq!(s.clone(), roundtrip(s.clone()));
         assert_eq!(type_tag(&s), "WhileStatement");
+    }
+
+    #[test]
+    fn do_while_statement_roundtrips() {
+        // do {} while (1) — body before test, mirroring execution order.
+        let s = Statement::do_while_statement(DoWhileStatement {
+            cv: Some("dw.1".to_string()),
+            body: Box::new(Statement::empty_statement(EmptyStatement { cv: None })),
+            test: lit(1.0),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "DoWhileStatement");
     }
 
     #[test]

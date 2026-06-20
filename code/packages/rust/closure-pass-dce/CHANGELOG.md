@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.11.0] - 2026-06-20
+
+### Added — CLOC20: DCE inside `do`/`while`
+
+New `DoWhileStatement` arm recurses dead-code elimination into the loop body and
+test. Like `while`, a `do`-`while` is NOT a terminator — control can fall out of
+the loop — so a statement following it stays reachable. (A do-while in a dead
+tail is preserved by the existing `tail_is_safe_to_truncate` whitelist, which
+defaults new compound statements to unsafe.)
+
 ## [0.10.0] - 2026-06-20
 
 ### Added — CLOC19: DCE inside `try`/`catch`/`finally`

@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-20
+
+### Added — CLOC20: property renaming recurses through `do`/`while`
+
+`classify_stmt` and `rewrite_stmt` recurse through `DoWhileStatement` (loop body
+and test) so property accesses inside a do-while loop are renamed consistently.
+
 ## [0.4.0] - 2026-06-20
 
 ### Added — CLOC19: property renaming recurses through `try`/`catch`/`finally`

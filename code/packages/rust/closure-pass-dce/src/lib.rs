@@ -76,7 +76,7 @@ use coding_adventures_javascript_ast::{
     FunctionDeclaration, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
     NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, VarKind,
-    VariableDeclaration, VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
 
@@ -264,6 +264,17 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             test: dce_expression(&s.test, st),
             body: Box::new(dce_statement(&s.body, st)),
         }),
+        // Recurse DCE into the do-while body and test. Like `while`, a
+        // `do`-`while` is NOT a terminator (control can exit the loop), so
+        // code after it stays reachable — we do not add it to the
+        // dead-after-terminator set.
+        TaggedStatement::DoWhileStatement(s) => {
+            TaggedStatement::DoWhileStatement(DoWhileStatement {
+                cv: s.cv.clone(),
+                body: Box::new(dce_statement(&s.body, st)),
+                test: dce_expression(&s.test, st),
+            })
+        }
         TaggedStatement::ForStatement(s) => TaggedStatement::ForStatement(ForStatement {
             cv: s.cv.clone(),
             init: s.init.as_ref().map(|i| match i {

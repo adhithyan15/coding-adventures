@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-20
+
+### Added — CLOC20: `DoWhileStatement` (the test-after-body loop)
+
+Adds `DoWhileStatement { cv, body: Box<Statement>, test: Expression }`, a new
+`TaggedStatement::DoWhileStatement` variant, and a `Statement::do_while_statement`
+constructor. This is the mirror of `WhileStatement` with the field order
+following execution order (`body` before `test`) — a `do`-`while` runs its body
+at least once *before* the test is first evaluated. ESTree wire format:
+
+```json
+{ "type": "DoWhileStatement", "body": <Statement>, "test": <Expression> }
+```
+
+Making it representable lets the closurec CLI optimize programs that use a
+do-while loop; previously any such program fell back to WHITESPACE_ONLY.
+
 ## [0.8.0] - 2026-06-20
 
 ### Added — CLOC19: `TryStatement` + `CatchClause` (closes the try/catch coverage gap)

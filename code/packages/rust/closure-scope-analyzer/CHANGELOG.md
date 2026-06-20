@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-20
+
+### Added — CLOC20: scope analysis for `do`/`while`
+
+`walk_tagged_statement` now handles `DoWhileStatement`: it walks the body and the
+test in the current scope. Like `while`, a do-while introduces no new scope, so
+this is a straight structural recurse.
+
 ## [0.5.0] - 2026-06-20
 
 ### Added — CLOC19: scope analysis for `try`/`catch`/`finally`

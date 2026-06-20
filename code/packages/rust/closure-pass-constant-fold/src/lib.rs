@@ -88,7 +88,7 @@ use coding_adventures_javascript_ast::{
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
     ObjectExpression, Program, ProgramItem, Property, PropertyKey, ReturnStatement, Statement,
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, VariableDeclaration,
-    VariableDeclarator, WhileStatement,
+    DoWhileStatement, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
 
@@ -267,6 +267,13 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
             test: fold_expression(&s.test, st),
             body: Box::new(fold_statement(&s.body, st)),
         }),
+        TaggedStatement::DoWhileStatement(s) => {
+            TaggedStatement::DoWhileStatement(DoWhileStatement {
+                cv: s.cv.clone(),
+                body: Box::new(fold_statement(&s.body, st)),
+                test: fold_expression(&s.test, st),
+            })
+        }
         TaggedStatement::ForStatement(s) => TaggedStatement::ForStatement(ForStatement {
             cv: s.cv.clone(),
             init: s.init.as_ref().map(|i| match i {

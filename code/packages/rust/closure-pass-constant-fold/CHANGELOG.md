@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.13.0] - 2026-06-20
+
+### Added — CLOC20: fold inside `do`/`while`
+
+`fold_tagged` now has a `DoWhileStatement` arm that recurses constant folding into
+the loop body and test. Constant expressions inside a do-while body (e.g.
+`1 + 2` ⇒ `3`) now fold like anywhere else.
+
 ## [0.12.0] - 2026-06-20
 
 ### Added — CLOC19: fold inside `try`/`catch`/`finally`
