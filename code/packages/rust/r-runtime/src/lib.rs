@@ -1367,6 +1367,137 @@ mod tests {
         );
     }
 
+    // --- R-20: functional helpers (Find / Position / Negate / Reduce
+    //           accumulate / Recall), in R syntax -------------------------
+
+    #[test]
+    fn find_returns_first_matching_element() {
+        // The first element greater than 2 in 1:5 is 3.
+        assert_eq!(nums("Find(\\(x) x > 2, 1:5)\n"), vec![3.0]);
+        // Short-circuits on the first hit, so a later predicate error is never
+        // reached: the first element > 1 is 2, returned before x reaches the NA.
+        assert_eq!(nums("Find(\\(x) x > 1, c(2, 3, NA))\n"), vec![2.0]);
+    }
+
+    #[test]
+    fn find_with_no_match_is_null() {
+        // No element satisfies the predicate -> NULL.
+        assert_eq!(show("Find(\\(x) x > 9, 1:5)\n"), "NULL");
+    }
+
+    #[test]
+    fn position_returns_first_matching_index() {
+        // 3 is the first element > 2, and it sits at (1-based) index 3.
+        assert_eq!(nums("Position(\\(x) x > 2, 1:5)\n"), vec![3.0]);
+        // Position returns the INDEX (here 1) where Find returns the VALUE.
+        assert_eq!(nums("Position(\\(x) x == 10, c(10, 20, 30))\n"), vec![1.0]);
+    }
+
+    #[test]
+    fn position_with_no_match_is_null() {
+        assert_eq!(show("Position(\\(x) x > 9, 1:5)\n"), "NULL");
+    }
+
+    #[test]
+    fn negate_flips_a_predicate() {
+        // Negate(is.na)(NA) -> FALSE (because is.na(NA) is TRUE).
+        assert_eq!(show("Negate(is.na)(NA)\n"), "[1] FALSE");
+        // Negate(is.na)(1) -> TRUE.
+        assert_eq!(show("Negate(is.na)(1)\n"), "[1] TRUE");
+        // Negate of a user lambda: !(5 > 0) -> FALSE.
+        assert_eq!(show("Negate(\\(x) x > 0)(5)\n"), "[1] FALSE");
+        assert_eq!(show("Negate(\\(x) x > 0)(-5)\n"), "[1] TRUE");
+    }
+
+    #[test]
+    fn negate_composes_with_filter() {
+        // Filter on the negated predicate keeps the ODD numbers.
+        assert_eq!(
+            nums("Filter(Negate(\\(x) x %% 2 == 0), 1:6)\n"),
+            vec![1.0, 3.0, 5.0]
+        );
+    }
+
+    #[test]
+    fn negate_of_non_function_errors() {
+        // A non-callable argument is a clean error, never a panic.
+        assert!(eval_r("Negate(3)\n").is_err());
+    }
+
+    #[test]
+    fn reduce_accumulate_returns_running_folds() {
+        // Running sums of 1:4: 1, 1+2, ...+3, ...+4.
+        assert_eq!(
+            nums("Reduce(\\(a, b) a + b, 1:4, accumulate = TRUE)\n"),
+            vec![1.0, 3.0, 6.0, 10.0]
+        );
+    }
+
+    #[test]
+    fn reduce_accumulate_with_init_seeds_first_element() {
+        // With an init, the init is the FIRST accumulated element:
+        // 10, 10+1, 11+2, 13+3.
+        assert_eq!(
+            nums("Reduce(\\(a, b) a + b, 1:3, 10, accumulate = TRUE)\n"),
+            vec![10.0, 11.0, 13.0, 16.0]
+        );
+    }
+
+    #[test]
+    fn reduce_without_accumulate_is_unchanged() {
+        // The R-10 behaviour must still hold (final fold only).
+        assert_eq!(nums("Reduce(\\(a, b) a + b, 1:4)\n"), vec![10.0]);
+        assert_eq!(nums("Reduce(\\(a, b) a + b, 1:4, 100)\n"), vec![110.0]);
+        // accumulate = FALSE is the explicit default.
+        assert_eq!(
+            nums("Reduce(\\(a, b) a + b, 1:4, accumulate = FALSE)\n"),
+            vec![10.0]
+        );
+    }
+
+    #[test]
+    fn functionals_compose_with_the_pipe_r20() {
+        // The new helpers take the function by name, so a piped vector lands in
+        // the data slot: 1:5 |> Find(> 2) -> 3, 1:5 |> Position(> 2) -> 3.
+        assert_eq!(nums("1:5 |> Find(f = \\(x) x > 2)\n"), vec![3.0]);
+        assert_eq!(nums("1:5 |> Position(f = \\(x) x > 2)\n"), vec![3.0]);
+        // Reduce(accumulate) over a pipe too.
+        assert_eq!(
+            nums("1:4 |> Reduce(f = \\(a, b) a + b, accumulate = TRUE)\n"),
+            vec![1.0, 3.0, 6.0, 10.0]
+        );
+    }
+
+    #[test]
+    fn recall_drives_anonymous_recursion() {
+        // The classic anonymous factorial: 5! = 120.
+        assert_eq!(
+            nums("(\\(n) if (n <= 1) 1 else n * Recall(n - 1))(5)\n"),
+            vec![120.0]
+        );
+        // 0! = 1 (base case taken immediately).
+        assert_eq!(
+            nums("(\\(n) if (n <= 1) 1 else n * Recall(n - 1))(0)\n"),
+            vec![1.0]
+        );
+    }
+
+    #[test]
+    fn recall_works_inside_a_named_function() {
+        // Recall re-invokes whatever function is currently running — including a
+        // named one. fib(7) = 13.
+        assert_eq!(
+            nums("fib <- function(n) if (n < 2) n else Recall(n - 1) + Recall(n - 2)\nfib(7)\n"),
+            vec![13.0]
+        );
+    }
+
+    #[test]
+    fn recall_outside_a_closure_errors() {
+        // Called at top level there is no enclosing function -> clean error.
+        assert!(eval_r("Recall(1)\n").is_err());
+    }
+
     // --- regressions: R-15 / R-16 / R-17 still work ---------------------
 
     #[test]
@@ -1388,5 +1519,21 @@ mod tests {
             nums("modifyList(list(a = 1, b = 2), list(b = 20))$b\n"),
             vec![20.0]
         );
+    }
+
+    #[test]
+    fn r10_r18_r19_still_work_after_r20() {
+        // R-10: the original functionals are intact (no accumulate -> final fold).
+        assert_eq!(nums("Reduce(\\(a, b) a - b, c(1, 2, 3), 10)\n"), vec![4.0]);
+        assert_eq!(nums("Filter(\\(x) x %% 2 == 0, 1:6)\n"), vec![2.0, 4.0, 6.0]);
+        assert_eq!(nums("Map(\\(x, y) x + y, 1:3, 4:6)[[2]]\n"), vec![7.0]);
+        // R-18: switch() + tryCatch still behave.
+        assert_eq!(show("switch(\"b\", a = \"x\", b = \"y\")\n"), "[1] \"y\"");
+        assert_eq!(
+            show("tryCatch(stop(\"boom\"), error = function(e) \"caught\")\n"),
+            "[1] \"caught\""
+        );
+        // R-19: empty-arm switch() fall-through.
+        assert_eq!(show("switch(\"a\", a = , b = \"hit\")\n"), "[1] \"hit\"");
     }
 }
