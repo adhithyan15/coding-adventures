@@ -102,6 +102,32 @@ impl Scope {
             parent: Some(Rc::downgrade(parent)),
         }))
     }
+
+    /// Create *the* empty environment (R-23) — a parentless scope with no
+    /// bindings. This is the terminus R exposes as `emptyenv()`: structurally
+    /// identical to [`Scope::global`] (both are parentless roots) but kept as a
+    /// **separate** long-lived handle on the interpreter so that
+    /// `environmentName` can tell the two apart by `Rc` pointer identity. It owns
+    /// no builtins and is never written to, so a lookup that walks *up to* it (a
+    /// chain rooted at the empty env) simply finds nothing and stops — exactly R's
+    /// behaviour for the empty environment.
+    pub fn empty() -> Env {
+        Rc::new(RefCell::new(Scope {
+            vars: HashMap::new(),
+            parent: None,
+        }))
+    }
+}
+
+/// Reference (pointer) equality of two environment handles: do `a` and `b` name
+/// the *same* underlying scope? This is the identity test R's `identical()` and
+/// `environmentName` use — two environments are "the same" iff they share one
+/// `Rc<RefCell<Scope>>`, never by comparing their (mutable) contents. Uses
+/// [`Rc::ptr_eq`], so it is O(1) and never borrows the `RefCell` (so it can never
+/// trip a re-entrant-borrow panic, even if called while a scope is mutably
+/// borrowed elsewhere).
+pub fn same_env(a: &Env, b: &Env) -> bool {
+    Rc::ptr_eq(a, b)
 }
 
 /// Upgrade a scope's parent link to a strong handle, or `None` if the scope is a

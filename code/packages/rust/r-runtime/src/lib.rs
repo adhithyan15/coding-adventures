@@ -1714,4 +1714,137 @@ mod tests {
         // R-21: `->>` right-super-assign creates globally.
         assert_eq!(nums("99 ->> zz\nzz\n"), vec![99.0]);
     }
+
+    // --- R-23: closure environments & frame reflection (R syntax) --------
+
+    /// `environment(f)` for a top-level closure is an environment value — the
+    /// captured (global) env.
+    #[test]
+    fn r23_environment_of_closure_is_an_env() {
+        let src = "f <- function() environment()\nis.environment(environment(f))\n";
+        assert_eq!(show(src), "[1] TRUE");
+    }
+
+    /// A top-level closure captures the **global** env, so `environmentName` of
+    /// its captured env is `"R_GlobalEnv"` (our stand-in for
+    /// `identical(environment(f), globalenv())`, since `identical` is not yet a
+    /// builtin).
+    #[test]
+    fn r23_top_level_closure_captures_global() {
+        let src = "f <- function() 1\nenvironmentName(environment(f))\n";
+        assert_eq!(show(src), "[1] \"R_GlobalEnv\"");
+    }
+
+    /// A non-closure argument to `environment` yields `NULL` (matches R's
+    /// `environment(sum)`).
+    #[test]
+    fn r23_environment_of_non_closure_is_null() {
+        assert_eq!(show("environment(1)\n"), "NULL");
+        assert_eq!(show("environment(\"x\")\n"), "NULL");
+    }
+
+    /// The well-known environment names.
+    #[test]
+    fn r23_environment_names() {
+        assert_eq!(
+            show("environmentName(globalenv())\n"),
+            "[1] \"R_GlobalEnv\""
+        );
+        assert_eq!(show("environmentName(emptyenv())\n"), "[1] \"R_EmptyEnv\"");
+        assert_eq!(show("environmentName(new.env())\n"), "[1] \"\"");
+        // baseenv aliases global in this runtime.
+        assert_eq!(show("environmentName(baseenv())\n"), "[1] \"R_GlobalEnv\"");
+    }
+
+    /// `environment(f) <- e` re-homes a closure: free variables in its body now
+    /// resolve from `e`'s chain.
+    #[test]
+    fn r23_set_closure_environment() {
+        let src = "e <- new.env()\nassign(\"k\", 99, envir = e)\n\
+                   f <- function() k\nenvironment(f) <- e\nf()\n";
+        assert_eq!(nums(src), vec![99.0]);
+    }
+
+    /// A non-environment replacement value is a clean error.
+    #[test]
+    fn r23_set_closure_environment_rejects_non_env() {
+        assert!(eval_r("f <- function() 1\nenvironment(f) <- 5\n").is_err());
+    }
+
+    /// `parent.frame()` returns the **caller's** environment: a binding the
+    /// caller made is visible through `get(..., envir = parent.frame())`.
+    #[test]
+    fn r23_parent_frame_sees_caller_binding() {
+        let src = "g <- function() get(\"x\", envir = parent.frame())\n\
+                   f <- function() { x <- 42; g() }\nf()\n";
+        assert_eq!(nums(src), vec![42.0]);
+    }
+
+    /// Two-deep `parent.frame(2)` reaches the caller's caller. `h` calls `g`
+    /// calls `parent.frame(2)`, which is `f`'s frame, where `x` is bound.
+    #[test]
+    fn r23_parent_frame_two_deep() {
+        let src = "g <- function() get(\"x\", envir = parent.frame(2))\n\
+                   h <- function() g()\n\
+                   f <- function() { x <- 7; h() }\nf()\n";
+        assert_eq!(nums(src), vec![7.0]);
+    }
+
+    /// `parent.frame()` at top level clamps to the global env (never panics);
+    /// a global binding is therefore visible through it.
+    #[test]
+    fn r23_parent_frame_top_level_clamps_to_global() {
+        let src = "x <- 11\nget(\"x\", envir = parent.frame())\n";
+        assert_eq!(nums(src), vec![11.0]);
+    }
+
+    /// `parent.frame(n)` past the bottom of the live stack clamps to global
+    /// rather than indexing out of bounds.
+    #[test]
+    fn r23_parent_frame_past_bottom_clamps() {
+        let src = "x <- 5\n\
+                   g <- function() get(\"x\", envir = parent.frame(100))\ng()\n";
+        assert_eq!(nums(src), vec![5.0]);
+    }
+
+    /// A non-positive / non-finite `n` is a clean error, never a panic.
+    #[test]
+    fn r23_parent_frame_bad_n_errors() {
+        assert!(eval_r("g <- function() parent.frame(0)\ng()\n").is_err());
+        assert!(eval_r("g <- function() parent.frame(-1)\ng()\n").is_err());
+    }
+
+    /// `is.environment` discriminates environments from everything else.
+    #[test]
+    fn r23_is_environment_predicate() {
+        assert_eq!(show("is.environment(new.env())\n"), "[1] TRUE");
+        assert_eq!(show("is.environment(globalenv())\n"), "[1] TRUE");
+        assert_eq!(show("is.environment(1)\n"), "[1] FALSE");
+        assert_eq!(show("is.environment(\"e\")\n"), "[1] FALSE");
+        assert_eq!(show("is.environment(function() 1)\n"), "[1] FALSE");
+    }
+
+    /// Regression: R-20..R-22 still work after the R-23 call-stack change
+    /// (the frame now carries a caller env alongside the Recall closure).
+    #[test]
+    fn r20_through_r22_still_work_after_r23() {
+        // R-20: anonymous recursion via Recall (reads the frame's closure).
+        assert_eq!(
+            nums("(function(n) if (n <= 1) 1 else n * Recall(n - 1))(5)\n"),
+            vec![120.0]
+        );
+        // R-21: counter closure via `<<-`.
+        let counter = "make <- function() { n <- 0; function() { n <<- n + 1; n } }\n\
+                       c1 <- make()\nc1(); c1(); c1()\n";
+        assert_eq!(nums(counter), vec![3.0]);
+        // R-22: by-reference mutation through an env value.
+        let byref = "e <- new.env()\n\
+                     f <- function(env) assign(\"x\", 8, envir = env)\nf(e)\nget(\"x\", envir = e)\n";
+        assert_eq!(nums(byref), vec![8.0]);
+        // R-22: env can hold itself, still safe.
+        assert_eq!(
+            show("e <- new.env()\nassign(\"self\", e, envir = e)\nexists(\"self\", envir = e)\n"),
+            "[1] TRUE"
+        );
+    }
 }

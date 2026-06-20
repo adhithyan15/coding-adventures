@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.19.0] - 2026-06-20
+
+### Added
+
+- **Closure environments & call-frame reflection (R-23)** — builds on the R-22
+  `SValue::Environment` value, the `MAX_ENVIRONMENTS` cap, and the R-20 call
+  stack. Grammar-free; lives in the shared runtime so both S and R inherit it.
+  - **`environment(f)`** — the environment a closure **captured** at definition,
+    read straight from `Closure { env, .. }` and handed back as an
+    `SValue::Environment`. A non-closure argument (a builtin, a number, …) returns
+    `NULL`, matching R (`environment(sum)`). `environment()` (no argument)
+    continues to return the current scope. Reifying either env counts against
+    `MAX_ENVIRONMENTS`.
+  - **`environment(f) <- e`** — a new `environment<-` builtin wired through the
+    R-15/R-16 replacement-function lvalue path. Returns a *fresh* `Closure` with
+    its `env` swapped (closures are immutable values; the variable is rebound, as
+    in R), so the re-homed closure's free variables now resolve from `e`'s chain.
+    A non-closure target or non-environment value is a clean error.
+  - **`environmentName(e)`** — `"R_GlobalEnv"` / `"R_EmptyEnv"` / `""` decided by
+    `Rc` **pointer** identity (`env::same_env`, `Rc::ptr_eq`) against the
+    interpreter's long-lived `global`/`empty` handles — O(1), re-entrancy-safe
+    (never borrows the `RefCell`).
+  - **`globalenv()` / `emptyenv()` / `baseenv()`** — the well-known environments
+    as values. `globalenv()`/`baseenv()` both return the session global env
+    (no separate base namespace yet, so `baseenv()` aliases global — documented);
+    `emptyenv()` returns a new long-lived **empty** root (`Scope::empty`: no
+    parent, no bindings). All three hand back the *same* `Rc` each call and
+    allocate nothing, so none counts against `MAX_ENVIRONMENTS`.
+  - **`parent.frame(n = 1)`** — the **caller's** environment `n` frames up. The
+    call stack now records a `(closure, caller_env)` `CallFrame` per call (R-20
+    recorded only the closure, for `Recall`); `call_closure` pushes the env the
+    call expression was evaluated in, and `parent.frame` reads it. **Clamps** to
+    the global env past the bottom of the live stack (and at top level), so it
+    never indexes out of bounds or panics; `n` must be a positive, finite whole
+    number, else a clean `BadArgs`.
+  - **`is.environment(x)`** — scalar type predicate.
+  - **Ownership model unchanged.** The caller env on the call stack is dropped
+    when its frame is popped (the RAII `CallFrameGuard`), so it never outlives the
+    call; the captured-env exposure is the same strong-`Rc` situation as
+    `environment()`, bounded by the same `MAX_ENVIRONMENTS` cap; the `Weak` parent
+    link still prevents any parent-chain cycle. `env.rs` gains `Scope::empty` and
+    `same_env`.
+
 ## [0.18.0] - 2026-06-20
 
 ### Added

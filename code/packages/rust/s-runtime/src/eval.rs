@@ -17,7 +17,7 @@
 //! call) is visible, exactly as in S.
 
 use crate::builtins;
-use crate::env::{define, exists, lookup, names_in, remove, super_assign, Env, Scope};
+use crate::env::{define, exists, lookup, names_in, remove, same_env, super_assign, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
     arithmetic, assign_index, assign_index2d, bounded_sequence, class_of, compare, format_value,
@@ -44,6 +44,12 @@ pub struct Outcome {
 /// accumulated `print()` output and the current visibility flag.
 pub struct Interpreter {
     global: Env,
+    /// The session's **empty** environment (R-23): a parentless, bindingless root
+    /// owned for the whole session, exactly like `global`. It is what `emptyenv()`
+    /// returns and what `environmentName` recognises as `"R_EmptyEnv"`. Kept as a
+    /// distinct strong `Rc` (never the same allocation as `global`) so the two can
+    /// be told apart by `Rc` pointer identity. See [`Scope::empty`].
+    empty: Env,
     out: RefCell<String>,
     visible: Cell<bool>,
     /// Current `eval_node` recursion depth, bounded by [`MAX_EVAL_DEPTH`] so
@@ -79,14 +85,31 @@ pub struct Interpreter {
     /// hits a clean error at the cap instead. The cap is far beyond any realistic
     /// program's environment count.
     envs_created: Cell<usize>,
-    /// The stack of closures currently being evaluated, innermost last (R-20).
-    /// `call_closure` pushes the function it is about to run and pops it on the
-    /// way out (via an RAII guard, so an early-return/error still pops), so the
-    /// top is always "the function we are inside right now". `Recall()` reads the
-    /// top to re-invoke the enclosing function for anonymous recursion. Its depth
-    /// is naturally bounded by [`MAX_EVAL_DEPTH`] — every nested call increments
-    /// the eval depth — so it cannot grow without limit.
-    call_stack: RefCell<Vec<SValue>>,
+    /// The stack of call frames currently being evaluated, innermost last
+    /// (R-20 / R-23). Each [`CallFrame`] records both the **closure** being run
+    /// (so `Recall()` can re-invoke the enclosing function for anonymous
+    /// recursion) and the **caller's environment** — the scope in which the call
+    /// expression was evaluated — so `parent.frame()` (R-23) can reflect the
+    /// caller's frame. `call_closure` pushes a frame before running the body and
+    /// pops it on the way out via an RAII guard, so an early-return/error still
+    /// pops and the top is always "the call we are inside right now". Its depth is
+    /// naturally bounded by [`MAX_EVAL_DEPTH`] — every nested call increments the
+    /// eval depth — so it cannot grow without limit, and because the caller env is
+    /// dropped when its frame is popped it never outlives the call (no extra
+    /// Rc-lifetime exposure beyond the live call).
+    call_stack: RefCell<Vec<CallFrame>>,
+}
+
+/// One entry on the interpreter's call stack (R-23). Pairs the closure being run
+/// (for `Recall`) with the environment of its **caller** (for `parent.frame()`).
+#[derive(Clone)]
+struct CallFrame {
+    /// The closure currently executing in this frame (reconstructed cheaply from
+    /// its `Rc` parts at the call site). Read by `Recall()`.
+    closure: SValue,
+    /// The environment in which the call expression was evaluated — i.e. the
+    /// *caller's* current scope. Read by `parent.frame()`.
+    caller: Env,
 }
 
 /// The most warnings retained per program. Beyond this, further `warning()`
@@ -126,15 +149,17 @@ impl Drop for DepthGuard<'_> {
     }
 }
 
-/// RAII guard that pushes a closure onto the interpreter's call stack (R-20) on
-/// construction and pops it on drop, so the stack stays balanced even when the
-/// closure body returns early via `?` or raises an error. `Recall()` reads the
-/// top of this stack to re-invoke the enclosing function.
-struct CallFrameGuard<'a>(&'a RefCell<Vec<SValue>>);
+/// RAII guard that pushes a [`CallFrame`] onto the interpreter's call stack
+/// (R-20 / R-23) on construction and pops it on drop, so the stack stays balanced
+/// even when the closure body returns early via `?` or raises an error.
+/// `Recall()` reads the top frame's closure; `parent.frame()` reads its caller
+/// env. Because the frame (and the `Rc` to the caller env it holds) is dropped
+/// here, the caller env never outlives the call.
+struct CallFrameGuard<'a>(&'a RefCell<Vec<CallFrame>>);
 
 impl<'a> CallFrameGuard<'a> {
-    fn push(stack: &'a RefCell<Vec<SValue>>, f: SValue) -> Self {
-        stack.borrow_mut().push(f);
+    fn push(stack: &'a RefCell<Vec<CallFrame>>, frame: CallFrame) -> Self {
+        stack.borrow_mut().push(frame);
         CallFrameGuard(stack)
     }
 }
@@ -158,6 +183,8 @@ impl Interpreter {
         builtins::install(&global);
         Interpreter {
             global,
+            // A distinct parentless root — the `emptyenv()` terminus (R-23).
+            empty: Scope::empty(),
             out: RefCell::new(String::new()),
             visible: Cell::new(false),
             depth: Cell::new(0),
@@ -182,10 +209,33 @@ impl Interpreter {
         Ok(())
     }
 
-    /// The function currently being evaluated, if any — the top of the call
-    /// stack. `Recall()` (R-20) uses this to re-invoke the enclosing closure.
+    /// The function currently being evaluated, if any — the closure of the top
+    /// call frame. `Recall()` (R-20) uses this to re-invoke the enclosing closure.
     pub(crate) fn current_function(&self) -> Option<SValue> {
-        self.call_stack.borrow().last().cloned()
+        self.call_stack
+            .borrow()
+            .last()
+            .map(|frame| frame.closure.clone())
+    }
+
+    /// The caller's environment `n` frames up the call stack (R-23,
+    /// `parent.frame(n)`). `n == 1` is the immediate caller (the top frame's
+    /// recorded caller env); larger `n` walks further out. **Clamps** rather than
+    /// indexes: an `n` that reaches past the bottom of the live stack (or
+    /// `parent.frame()` evaluated at top level, where there is no enclosing call)
+    /// falls back to the **global** environment, matching R's `R_GlobalEnv`
+    /// terminus — so this can never index out of bounds or panic. `n` is a 1-based
+    /// frame count; the caller has already validated `n >= 1`.
+    pub(crate) fn caller_frame(&self, n: usize) -> Env {
+        let stack = self.call_stack.borrow();
+        // The top frame (last) is `parent.frame(1)`; the k-th from the top is
+        // `parent.frame(k)`. `n.checked_sub(1)` and `len.checked_sub(n)` keep the
+        // arithmetic panic-free; any underflow (n past the bottom) clamps to
+        // global below.
+        match stack.len().checked_sub(n) {
+            Some(idx) => stack[idx].caller.clone(),
+            None => Rc::clone(&self.global),
+        }
     }
 
     /// Record and print a warning raised by `warning(...)`. The buffer is capped
@@ -873,6 +923,11 @@ impl Interpreter {
                         "new.env" => self.eval_new_env(&raw, env),
                         "environment" => self.eval_environment(&raw, env),
                         "ls" => self.eval_ls(&raw, env),
+                        // R-23 closure environments & frame reflection.
+                        "environmentName" => self.eval_environment_name(&raw, env),
+                        "globalenv" | "baseenv" => self.eval_globalenv(),
+                        "emptyenv" => self.eval_emptyenv(),
+                        "parent.frame" => self.eval_parent_frame(&raw, env),
                         _ => unreachable!(),
                     };
                 }
@@ -1004,7 +1059,7 @@ impl Interpreter {
     /// Apply a callable value at a top-level call site, applying S's result
     /// visibility rules (`print` is invisible and emits output; other calls are
     /// visible; a closure's body decides its own visibility).
-    fn apply(&self, callee: SValue, args: &[Arg], _env: &Env) -> SResult<SValue> {
+    fn apply(&self, callee: SValue, args: &[Arg], env: &Env) -> SResult<SValue> {
         match callee {
             SValue::Builtin { name, func } => {
                 let result = func(self, args)?;
@@ -1017,7 +1072,11 @@ impl Interpreter {
                     self.as_visible(result)
                 }
             }
-            SValue::Closure { params, body, env } => self.call_closure(&params, &body, &env, args),
+            // The call site's `env` is the *caller's* environment — record it on
+            // the frame so `parent.frame()` (R-23) inside the body can reflect it.
+            SValue::Closure { params, body, env: cenv } => {
+                self.call_closure(&params, &body, &cenv, env, args)
+            }
             SValue::Negated(inner) => self.as_visible(self.call_negated(&inner, args)?),
             other => Err(SError::NotCallable(other.type_name().to_string())),
         }
@@ -1040,7 +1099,17 @@ impl Interpreter {
     pub(crate) fn call_value(&self, callee: SValue, args: &[Arg]) -> SResult<SValue> {
         match callee {
             SValue::Builtin { func, .. } => func(self, args),
-            SValue::Closure { params, body, env } => self.call_closure(&params, &body, &env, args),
+            // Invoked from a builtin (e.g. `sapply`/`Reduce`/`do.call`), there is
+            // no R-level caller frame to thread through. The caller env is taken to
+            // be the **global** environment, so a `parent.frame()` inside such a
+            // callback sees the global frame — a faithful, panic-free default
+            // (R itself reports the calling context here, which for our purposes is
+            // the top level). Threading a real caller env through every builtin is
+            // out of scope and far more invasive.
+            SValue::Closure { params, body, env } => {
+                let global = Rc::clone(&self.global);
+                self.call_closure(&params, &body, &env, &global, args)
+            }
             SValue::Negated(inner) => self.call_negated(&inner, args),
             other => Err(SError::NotCallable(other.type_name().to_string())),
         }
@@ -1051,20 +1120,26 @@ impl Interpreter {
         params: &[Param],
         body: &Rc<GrammarASTNode>,
         closure_env: &Env,
+        caller_env: &Env,
         args: &[Arg],
     ) -> SResult<SValue> {
-        // Record the function we are about to run so `Recall()` (R-20) can
-        // re-invoke it. The guard pops it again on the way out — including on an
-        // early `?`/error — so the stack stays balanced. Reconstructing the
+        // Record the call frame we are about to run: the function (so `Recall()`
+        // (R-20) can re-invoke it) and the *caller's* environment (so
+        // `parent.frame()` (R-23) can reflect it). The guard pops the frame again
+        // on the way out — including on an early `?`/error — so the stack stays
+        // balanced and the caller env never outlives the call. Reconstructing the
         // `Closure` value here is cheap: `params`/`body`/`env` are all `Rc`/clone
         // -friendly, and the alternative (threading the value through every call
         // site) is far more invasive.
         let _frame = CallFrameGuard::push(
             &self.call_stack,
-            SValue::Closure {
-                params: params.to_vec(),
-                body: Rc::clone(body),
-                env: Rc::clone(closure_env),
+            CallFrame {
+                closure: SValue::Closure {
+                    params: params.to_vec(),
+                    body: Rc::clone(body),
+                    env: Rc::clone(closure_env),
+                },
+                caller: Rc::clone(caller_env),
             },
         );
 
@@ -1557,24 +1632,110 @@ impl Interpreter {
         self.as_visible(SValue::Environment(scope))
     }
 
-    /// `environment()` — the **current** environment as a first-class value (R-22).
-    /// The `environment(f)` form (a closure's captured environment) is **deferred
-    /// to R-23**: it requires reaching into the `Closure { env, .. }` payload, a
-    /// smaller orthogonal follow-up. Passing any argument is therefore a clean
-    /// `BadArgs` error here, not a wrong answer.
+    /// `environment([f])` — the **current** environment (no argument, R-22) or, in
+    /// the R-23 `environment(f)` form, the environment a closure `f` **captured**
+    /// at definition. A `Closure` stores its defining scope in `Closure { env }`;
+    /// we hand it back as an `SValue::Environment`, so for a top-level closure
+    /// `identical(environment(f), globalenv())` is `TRUE`. A non-closure argument
+    /// (a builtin, a number, …) yields `NULL`, matching R (`environment(sum)` is
+    /// `NULL`). Reifying *either* environment counts against `MAX_ENVIRONMENTS`
+    /// (both can participate in a value-binding cycle).
     fn eval_environment(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
-        if raw.iter().any(|(_, n)| arm_body(n).is_some()) {
-            return Err(SError::BadArgs(
-                "environment(f): a closure's captured environment is deferred to R-23; \
-                 environment() with no argument returns the current environment"
-                    .into(),
-            ));
+        // The `environment(f)` form: a single argument with a body expression.
+        if let Some(arg_node) = raw.iter().find_map(|(_, n)| arm_body(n)) {
+            let value = self.eval_node(arg_node, env)?;
+            return match value {
+                // A closure carries its captured (defining) environment.
+                SValue::Closure { env: captured, .. } => {
+                    self.account_environment()?;
+                    self.as_visible(SValue::Environment(captured))
+                }
+                // R returns NULL for a primitive/builtin or any non-closure.
+                _ => self.as_visible(SValue::Null),
+            };
         }
         // `environment()` reifies the current scope as a value too — count it
         // against the same cap (it can equally participate in a value-binding
         // cycle, e.g. `assign("self", environment(), envir = environment())`).
         self.account_environment()?;
         self.as_visible(SValue::Environment(Rc::clone(env)))
+    }
+
+    /// `environmentName(e)` (R-23) — the well-known *name* of an environment:
+    /// `"R_GlobalEnv"` for the session global env, `"R_EmptyEnv"` for the empty
+    /// env, and `""` for every other environment (R does not name anonymous
+    /// frames). Identity is by `Rc` **pointer** equality against the interpreter's
+    /// long-lived `global`/`empty` handles — never by comparing contents — so it
+    /// is O(1) and re-entrancy-safe. A non-environment argument is a clean
+    /// `BadArgs` error.
+    fn eval_environment_name(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        let node = self
+            .positional_nodes(raw)
+            .into_iter()
+            .next()
+            .ok_or_else(|| SError::BadArgs("environmentName: the environment is missing".into()))?;
+        let target = match self.eval_node(node, env)? {
+            SValue::Environment(e) => e,
+            other => {
+                return Err(SError::BadArgs(format!(
+                    "environmentName: expected an environment, got {}",
+                    other.type_name()
+                )))
+            }
+        };
+        let name = if same_env(&target, &self.global) {
+            "R_GlobalEnv"
+        } else if same_env(&target, &self.empty) {
+            "R_EmptyEnv"
+        } else {
+            ""
+        };
+        self.as_visible(SValue::Character(vec![Some(name.to_string())]))
+    }
+
+    /// `globalenv()` / `baseenv()` (R-23) — the session **global** environment as
+    /// a value. This runtime installs its builtins directly into the global frame
+    /// (there is no separate base namespace), so `baseenv()` deliberately aliases
+    /// the global env — documented in the spec. Hands back the *same* `Rc` every
+    /// call (so `identical(globalenv(), globalenv())` holds); allocates nothing, so
+    /// it does not count against `MAX_ENVIRONMENTS`.
+    fn eval_globalenv(&self) -> SResult<SValue> {
+        self.as_visible(SValue::Environment(Rc::clone(&self.global)))
+    }
+
+    /// `emptyenv()` (R-23) — the session **empty** environment as a value (the
+    /// parentless, bindingless root). Same `Rc` every call; allocates nothing.
+    fn eval_emptyenv(&self) -> SResult<SValue> {
+        self.as_visible(SValue::Environment(Rc::clone(&self.empty)))
+    }
+
+    /// `parent.frame(n = 1)` (R-23) — the environment of the **caller** `n` frames
+    /// up the call stack. R-20's call stack already records the closure being run;
+    /// R-23 records the caller's env alongside it, which this reads. `n` defaults
+    /// to `1` (the immediate caller) and must be a **positive whole number**; a
+    /// non-positive, non-finite, or non-numeric `n` is a clean `BadArgs` error.
+    /// The walk **clamps** to the global env past the bottom of the stack (or at
+    /// top level), so it can never index out of bounds — see
+    /// [`Interpreter::caller_frame`].
+    fn eval_parent_frame(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        let n = match self.positional_nodes(raw).into_iter().next() {
+            None => 1usize,
+            Some(node) => {
+                let v = self.eval_node(node, env)?;
+                let x = scalar_f64(&v).map_err(|_| {
+                    SError::BadArgs("parent.frame: n must be a single number".into())
+                })?;
+                if !x.is_finite() || x < 1.0 {
+                    return Err(SError::BadArgs(
+                        "parent.frame: n must be a positive whole number".into(),
+                    ));
+                }
+                // Truncate toward zero (R coerces to integer); we have x >= 1.0 and
+                // finite, so this is a safe, bounded cast.
+                x as usize
+            }
+        };
+        self.as_visible(SValue::Environment(self.caller_frame(n)))
     }
 
     /// `ls([envir = e])` — the names bound **directly** in the target frame (not
@@ -1716,6 +1877,15 @@ fn special_form_name(primary: &GrammarASTNode) -> Option<&'static str> {
         [("NAME", "new.env")] => Some("new.env"),
         [("NAME", "environment")] => Some("environment"),
         [("NAME", "ls")] => Some("ls"),
+        // R-23 closure environments & frame reflection. These also need the
+        // *current* environment (`parent.frame` reads the caller frame; the
+        // others read the interpreter's well-known handles), so they are special
+        // forms too. The dotted `parent.frame` lexes as a single `NAME` token.
+        [("NAME", "environmentName")] => Some("environmentName"),
+        [("NAME", "globalenv")] => Some("globalenv"),
+        [("NAME", "emptyenv")] => Some("emptyenv"),
+        [("NAME", "baseenv")] => Some("baseenv"),
+        [("NAME", "parent.frame")] => Some("parent.frame"),
         _ => None,
     }
 }
