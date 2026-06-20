@@ -107,6 +107,7 @@ V1 in 0 DC 1
     expect(summary.terminated).toBe(true);
     expect(summary.endLineNumber).toBe(5);
     expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 1", ".op"]);
+    expect(summary.controlLines).toStrictEqual([]);
     expect(summary.diagnostics).toStrictEqual([]);
   });
 
@@ -169,6 +170,16 @@ quit
     expect(summary.activeLines).toStrictEqual([
       ".include models.inc",
       ".LIB vendor.lib TT",
+      ".op",
+      ".save V(in)",
+      ".probe V(out)",
+      ".print op V(in)",
+      ".measure tran vmax MAX V(out)",
+      ".meas dc imax MAX I(V1)",
+      ".four 1k V(out)",
+      ".four 2k V(in)",
+    ]);
+    expect(summary.controlLines).toStrictEqual([
       ".op",
       ".save V(in)",
       ".probe V(out)",
