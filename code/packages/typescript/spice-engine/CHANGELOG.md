@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add stable table count/name lists directly to selected `runDeckAnalysis`
+  execution results beside analysis directives, output probes, output
+  directives, and selected-run artifacts, matching Python and Rust.
 - Add stable table count/name lists to selected-run artifacts in
   `runDeckAnalysis` and render them in a stable `TableList` column from
   `formatDeckRunArtifactTable`, matching Python and Rust.

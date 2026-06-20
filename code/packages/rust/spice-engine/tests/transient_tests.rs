@@ -1890,6 +1890,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
     assert_eq!(op_execution.output_directives, vec![".save".to_string()]);
     assert_eq!(op_execution.analysis_directives, vec![".op".to_string()]);
+    assert_eq!(op_execution.table_count, 2);
+    assert_eq!(
+        op_execution.tables,
+        vec!["result".to_string(), "run-artifact".to_string()]
+    );
     assert_eq!(
         format_deck_table_csv(&op_execution.table),
         "Index,V(mid)\n0,5.000000e-01\n"
@@ -2056,6 +2061,15 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         vec![".save".to_string(), ".probe".to_string()]
     );
     assert_eq!(dc_execution.analysis_directives, vec![".dc".to_string()]);
+    assert_eq!(dc_execution.table_count, 3);
+    assert_eq!(
+        dc_execution.tables,
+        vec![
+            "result".to_string(),
+            "measurement".to_string(),
+            "run-artifact".to_string()
+        ]
+    );
     assert_eq!(dc_execution.measurements[0].name, "mid_avg");
     assert_eq!(
         dc_execution.measurement_table,
@@ -2129,6 +2143,15 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(ac_execution.output_probes, vec!["V(mid)".to_string()]);
     assert_eq!(ac_execution.output_directives, vec![".save".to_string()]);
     assert_eq!(ac_execution.analysis_directives, vec![".ac".to_string()]);
+    assert_eq!(ac_execution.table_count, 3);
+    assert_eq!(
+        ac_execution.tables,
+        vec![
+            "result".to_string(),
+            "measurement".to_string(),
+            "run-artifact".to_string()
+        ]
+    );
     assert_eq!(ac_execution.measurements[0].name, "mid_peak");
     assert_eq!(
         ac_execution.measurement_table,
@@ -2205,6 +2228,15 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tran_execution.analysis_directives,
         vec![".tran".to_string()]
+    );
+    assert_eq!(tran_execution.table_count, 3);
+    assert_eq!(
+        tran_execution.tables,
+        vec![
+            "result".to_string(),
+            "measurement".to_string(),
+            "run-artifact".to_string()
+        ]
     );
     assert_eq!(tran_execution.measurements[0].name, "mid_final");
     assert_eq!(
@@ -2284,6 +2316,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(tf_execution.output_probes, vec!["V(mid)".to_string()]);
     assert!(tf_execution.output_directives.is_empty());
     assert_eq!(tf_execution.analysis_directives, vec![".tf".to_string()]);
+    assert_eq!(tf_execution.table_count, 2);
+    assert_eq!(
+        tf_execution.tables,
+        vec!["result".to_string(), "run-artifact".to_string()]
+    );
     assert!(tf_execution.measurements.is_empty());
     assert_eq!(
         tf_execution.measurement_table,
@@ -2348,6 +2385,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         sens_execution.analysis_directives,
         vec![".sens".to_string()]
+    );
+    assert_eq!(sens_execution.table_count, 2);
+    assert_eq!(
+        sens_execution.tables,
+        vec!["result".to_string(), "run-artifact".to_string()]
     );
     assert!(sens_execution.measurements.is_empty());
     assert_eq!(
@@ -2419,6 +2461,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         noise_execution.analysis_directives,
         vec![".noise".to_string()]
+    );
+    assert_eq!(noise_execution.table_count, 2);
+    assert_eq!(
+        noise_execution.tables,
+        vec!["result".to_string(), "run-artifact".to_string()]
     );
     assert!(noise_execution.measurements.is_empty());
     assert_eq!(
@@ -2542,6 +2589,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         tran_window_execution.run_artifacts[0].tables,
         vec!["result".to_string(), "run-artifact".to_string()]
     );
+    assert_eq!(tran_window_execution.table_count, 2);
+    assert_eq!(
+        tran_window_execution.tables,
+        vec!["result".to_string(), "run-artifact".to_string()]
+    );
     assert_eq!(
         tran_window_execution.output_probes,
         vec!["V(mid)".to_string()]
@@ -2629,9 +2681,23 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     let op_execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
     assert!(op_execution.fourier.is_empty());
     assert_eq!(op_execution.fourier_table, "");
+    assert_eq!(op_execution.table_count, 2);
+    assert_eq!(
+        op_execution.tables,
+        vec!["result".to_string(), "run-artifact".to_string()]
+    );
 
     let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
     assert_eq!(tran_execution.fourier.len(), 1);
+    assert_eq!(tran_execution.table_count, 3);
+    assert_eq!(
+        tran_execution.tables,
+        vec![
+            "result".to_string(),
+            "fourier".to_string(),
+            "run-artifact".to_string()
+        ]
+    );
     let result = &tran_execution.fourier[0];
     assert!((result.fundamental_frequency_hz - 2_000.0).abs() < 1.0e-12);
     assert_eq!(result.probes[0].probe, "V(mid)");
