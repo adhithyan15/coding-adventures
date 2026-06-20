@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expose accepted `.control` rawfile option inventories from
+  `analyzeDeckControls` and selected `runDeckAnalysis` execution results as
+  `rawfileOptionCount` / `rawfileOptions`, and carry them through selected-run
+  artifacts as stable `RawfileOptions` / `RawfileOptionList` table, CSV/JSON,
+  and ordered `tableArtifacts` fields, matching Python and Rust.
 - Expose accepted `.control` `write` / `wrdata` marker inventories from
   `analyzeDeckControls` and selected `runDeckAnalysis` execution results as
   `writeMarkerCount` / `writeMarkers`, and carry them through selected-run

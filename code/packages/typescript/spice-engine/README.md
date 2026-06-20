@@ -105,14 +105,18 @@ results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `formatDeckRunArtifactTable` and
 `formatDeckRunArtifactCsv` / `formatDeckRunArtifactJson` output for stable
 result-row, table, analysis-directive, output-probe, output-directive,
-measurement, Fourier, control-command, write-marker, and diagnostic count/name
-lists.
+measurement, Fourier, control-command, write-marker, rawfile-option, and
+diagnostic count/name lists.
 Normalized accepted `.control` commands are surfaced separately in
 `controlLineCount` / `controlLines` execution fields and in
 `ControlLines` / `ControlLineList` artifact fields.
 Accepted `.control` `write` / `wrdata` rawfile/data-write markers are surfaced
 as `writeMarkerCount` / `writeMarkers` execution fields and as `WriteMarkers` /
-`WriteMarkerList` artifact fields without serializing files. Existing
+`WriteMarkerList` artifact fields without serializing files.
+Accepted `.control` rawfile output options (`set filetype=ascii`,
+`set wr_vecnames`, `set wr_singlescale`, and `set appendwrite`) are surfaced as
+`rawfileOptionCount` / `rawfileOptions` execution fields and as
+`RawfileOptions` / `RawfileOptionList` artifact fields. Existing
 `.control` body policy diagnostics flow into those selected-run artifact `Diagnostics` /
 `DiagnosticCodeList` fields and through the same run-artifact table, CSV, JSON,
 and `tableArtifacts` records. `formatDeckTableCsv` also converts any stable tab-separated deck table to
@@ -212,8 +216,8 @@ deck execution helpers.
 deck-selected table output with normalized table-inventory, output-probe, and
 output-directive artifacts, selected measurement artifacts, selected transient Fourier artifacts,
 selected-run artifact summaries with table, analysis-directive, output-probe, output-directive,
-measurement, Fourier probe, `.control` command, write-marker, and diagnostic inventories,
-`.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and `.tran` `START` /
-print-step `TSTEP` / `MAXSTEP` / `UIC` controls. Selected execution fields
-expose `.control` command, write-marker, and diagnostic inventories directly
-for host integrations.
+measurement, Fourier probe, `.control` command, write-marker, rawfile-option, and
+diagnostic inventories, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and
+`.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls. Selected
+execution fields expose `.control` command, write-marker, rawfile-option, and
+diagnostic inventories directly for host integrations.

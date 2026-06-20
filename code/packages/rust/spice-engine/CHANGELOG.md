@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Expose accepted `.control` rawfile option inventories from
+  `analyze_deck_controls` and selected `run_deck_analysis` execution results as
+  `rawfile_option_count` / `rawfile_options`, and carry them through
+  selected-run artifacts as stable `RawfileOptions` / `RawfileOptionList`
+  table, CSV/JSON, and ordered `table_artifacts` fields, matching Python and
+  TypeScript.
 - Expose accepted `.control` `write` / `wrdata` marker inventories from
   `analyze_deck_controls` and selected `run_deck_analysis` execution results as
   `write_marker_count` / `write_markers`, and carry them through selected-run

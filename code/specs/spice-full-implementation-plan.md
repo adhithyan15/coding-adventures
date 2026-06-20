@@ -112,7 +112,11 @@ downstream tools to compare.
      artifacts; accepted rawfile/data-write marker inventories for `.control`
      `write` / `wrdata` commands now travel through direct selected-execution
      fields and stable selected-run artifact tables, CSV/JSON helpers, and
-     ordered table export artifacts without serializing files.
+     ordered table export artifacts without serializing files, and accepted
+     rawfile output option inventories for `.control` `set filetype=ascii`,
+     `set wr_vecnames`, `set wr_singlescale`, and `set appendwrite` now travel
+     through the same direct selected-execution fields and selected-run
+     artifact exports.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1010,6 +1014,15 @@ downstream tools to compare.
     - Selected deck executions carry those write-marker inventories directly and
       through selected-run artifact tables, CSV/JSON helpers, and ordered table
       export artifacts without serializing files.
+
+93. Deck rawfile option artifacts.
+    - Status: completed in this deck rawfile option artifact slice.
+    - Python, Rust, and TypeScript control analyzers now expose normalized
+      accepted `.control` rawfile option inventories for `set filetype=ascii`,
+      `set wr_vecnames`, `set wr_singlescale`, and `set appendwrite`.
+    - Selected deck executions carry those rawfile option inventories directly
+      and through selected-run artifact tables, CSV/JSON helpers, and ordered
+      table export artifacts without serializing rawfiles.
 
 ## Backlog
 
