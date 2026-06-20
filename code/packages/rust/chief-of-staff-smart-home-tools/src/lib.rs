@@ -268,6 +268,10 @@ pub const SMART_HOME_LIST_ROOM_TOPOLOGY_AUDIT_TOOL_ID: &str = "smart_home.list_r
 pub const SMART_HOME_GET_ROOM_TOPOLOGY_AUDIT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_room_topology_audit_summary";
 pub const SMART_HOME_LIST_ROOMS_TOOL_ID: &str = "smart_home.list_rooms";
+pub const SMART_HOME_LIST_SCENE_COVERAGE_AUDIT_TOOL_ID: &str =
+    "smart_home.list_scene_coverage_audit";
+pub const SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_scene_coverage_audit_summary";
 pub const SMART_HOME_LIST_SCENES_TOOL_ID: &str = "smart_home.list_scenes";
 pub const SMART_HOME_DESCRIBE_SCENE_TOOL_ID: &str = "smart_home.describe_scene";
 pub const SMART_HOME_GET_STATE_TOOL_ID: &str = "smart_home.get_state";
@@ -2005,6 +2009,24 @@ impl SmartHomeToolBridge {
                         )
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_rooms"))
+                }
+                SMART_HOME_LIST_SCENE_COVERAGE_AUDIT_TOOL_ID => {
+                    let query = scene_coverage_audit_query(&arguments)?;
+                    list_scene_coverage_audit_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID => {
+                    let query = scene_coverage_audit_query(&arguments)?;
+                    get_scene_coverage_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
                 }
                 SMART_HOME_LIST_SCENES_TOOL_ID => {
                     let request = list_scenes_request(&arguments)?;
@@ -5827,6 +5849,20 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             ),
         ),
         read_definition(
+            SMART_HOME_LIST_SCENE_COVERAGE_AUDIT_TOOL_ID,
+            "List smart-home scene coverage audit",
+            "List Chief-derived scene coverage audit rows over runtime-owned D23 scenes.",
+            scene_coverage_audit_query_schema(),
+            scene_coverage_audit_list_output_schema(),
+        ),
+        read_definition(
+            SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID,
+            "Get smart-home scene coverage audit summary",
+            "Summarize Chief-derived scene coverage gaps without returning individual scene rows.",
+            scene_coverage_audit_query_schema(),
+            scene_coverage_audit_summary_output_schema(),
+        ),
+        read_definition(
             SMART_HOME_LIST_SCENES_TOOL_ID,
             "List smart-home scenes",
             "List normalized D23 smart-home scenes, optionally filtered by scope, target entity, or target capability.",
@@ -7221,6 +7257,18 @@ struct RoomTopologyAuditQuery {
     limit: Option<usize>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct SceneCoverageAuditQuery {
+    scope: Option<SceneScope>,
+    entity_id: Option<EntityId>,
+    capability_id: Option<CapabilityId>,
+    empty_only: bool,
+    missing_native_ref_only: bool,
+    action_gaps_only: bool,
+    gaps_only: bool,
+    limit: Option<usize>,
+}
+
 fn device_inventory_audit_query(
     arguments: &JsonValue,
 ) -> Result<DeviceInventoryAuditQuery, ToolCallError> {
@@ -7254,6 +7302,25 @@ fn room_topology_audit_query(
         sort: optional_string(arguments, "sort")?
             .map(|value| parse_room_sort(&value))
             .transpose()?,
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn scene_coverage_audit_query(
+    arguments: &JsonValue,
+) -> Result<SceneCoverageAuditQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(SceneCoverageAuditQuery {
+        scope: optional_string(arguments, "scope")?
+            .map(|value| parse_scene_scope(&value))
+            .transpose()?,
+        entity_id: optional_string(arguments, "entity_id")?.map(EntityId::trusted),
+        capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
+        empty_only: optional_bool(arguments, "empty_only")?.unwrap_or(false),
+        missing_native_ref_only: optional_bool(arguments, "missing_native_ref_only")?
+            .unwrap_or(false),
+        action_gaps_only: optional_bool(arguments, "action_gaps_only")?.unwrap_or(false),
+        gaps_only: optional_bool(arguments, "gaps_only")?.unwrap_or(false),
         limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
@@ -31613,6 +31680,255 @@ fn room_topology_audit_row_matches(
     true
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct SceneCoverageAuditRow {
+    scene_id: SceneId,
+    scope: SceneScope,
+    action_count: usize,
+    target_entity_count: usize,
+    desired_field_count: usize,
+    has_native_ref: bool,
+    coverage_lane: &'static str,
+    coverage_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+impl SceneCoverageAuditRow {
+    fn from_scene(scene: &Scene) -> Self {
+        let action_count = scene.actions.len();
+        let target_entity_count = scene
+            .actions
+            .iter()
+            .map(|action| action.entity_id.clone())
+            .collect::<BTreeSet<_>>()
+            .len();
+        let desired_field_count = scene
+            .actions
+            .iter()
+            .map(|action| scene_action_desired_field_count(&action.desired_state))
+            .sum();
+        let has_native_ref = scene.native_ref.is_some();
+        let has_actions = action_count > 0;
+        let has_desired_state = desired_field_count > 0;
+        let blocked = !has_actions || !has_desired_state;
+        let requires_attention = blocked || !has_native_ref;
+        let (coverage_lane, coverage_action) = if !has_actions {
+            ("action_mapping", "map_scene_actions")
+        } else if !has_desired_state {
+            ("desired_state_mapping", "capture_scene_desired_state")
+        } else if !has_native_ref {
+            ("integration_binding", "capture_native_scene_reference")
+        } else {
+            ("ready", "monitor_scene_coverage")
+        };
+
+        Self {
+            scene_id: scene.scene_id.clone(),
+            scope: scene.scope,
+            action_count,
+            target_entity_count,
+            desired_field_count,
+            has_native_ref,
+            coverage_lane,
+            coverage_action,
+            blocked,
+            requires_attention,
+        }
+    }
+
+    fn has_action_gap(&self) -> bool {
+        self.action_count == 0 || self.desired_field_count == 0
+    }
+
+    fn is_ready(&self) -> bool {
+        !self.requires_attention
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct SceneCoverageAuditSummary {
+    total_scenes: usize,
+    room_scenes: usize,
+    zone_scenes: usize,
+    home_scenes: usize,
+    bridge_scenes: usize,
+    custom_scenes: usize,
+    empty_scenes: usize,
+    missing_native_ref_scenes: usize,
+    action_gap_scenes: usize,
+    blocked_scenes: usize,
+    requires_attention_scenes: usize,
+    ready_scenes: usize,
+    total_actions: usize,
+    total_target_entities: usize,
+    total_desired_fields: usize,
+}
+
+impl SceneCoverageAuditSummary {
+    fn from_rows(rows: &[SceneCoverageAuditRow]) -> Self {
+        let mut summary = Self::default();
+        for row in rows {
+            summary.total_scenes += 1;
+            match row.scope {
+                SceneScope::Room => summary.room_scenes += 1,
+                SceneScope::Zone => summary.zone_scenes += 1,
+                SceneScope::Home => summary.home_scenes += 1,
+                SceneScope::Bridge => summary.bridge_scenes += 1,
+                SceneScope::Custom => summary.custom_scenes += 1,
+            }
+            summary.total_actions += row.action_count;
+            summary.total_target_entities += row.target_entity_count;
+            summary.total_desired_fields += row.desired_field_count;
+            if row.action_count == 0 {
+                summary.empty_scenes += 1;
+            }
+            if !row.has_native_ref {
+                summary.missing_native_ref_scenes += 1;
+            }
+            if row.has_action_gap() {
+                summary.action_gap_scenes += 1;
+            }
+            if row.blocked {
+                summary.blocked_scenes += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_scenes += 1;
+            }
+            if row.is_ready() {
+                summary.ready_scenes += 1;
+            }
+        }
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_scenes > 0
+    }
+
+    fn has_scene_gaps(&self) -> bool {
+        self.requires_attention_scenes > 0
+    }
+}
+
+fn list_scene_coverage_audit_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: SceneCoverageAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) = scene_coverage_audit_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "scene_coverage_audit",
+            JsonValue::Array(rows.iter().map(scene_coverage_audit_row_json).collect()),
+        ),
+        ("summary", scene_coverage_audit_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_scene_coverage_audit")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_scenes",
+                integer(summary.requires_attention_scenes as i64),
+            ),
+            ("blocked_scenes", integer(summary.blocked_scenes as i64)),
+        ]),
+    ))
+}
+
+fn get_scene_coverage_audit_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: SceneCoverageAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = scene_coverage_audit_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        scene_coverage_audit_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_scene_coverage_audit_summary")),
+            (
+                "requires_attention_scenes",
+                integer(summary.requires_attention_scenes as i64),
+            ),
+            ("blocked_scenes", integer(summary.blocked_scenes as i64)),
+        ]),
+    ))
+}
+
+fn scene_coverage_audit_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &SceneCoverageAuditQuery,
+) -> Result<(Vec<SceneCoverageAuditRow>, SceneCoverageAuditSummary), ToolCallError> {
+    let output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::ListScenes {
+                scope: query.scope,
+                entity_id: query.entity_id.clone(),
+                capability_id: query.capability_id.clone(),
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::Scenes(scenes) = output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "scene coverage audit expected scene list output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+    let rows = scenes
+        .iter()
+        .map(SceneCoverageAuditRow::from_scene)
+        .filter(|row| scene_coverage_audit_row_matches(row, query))
+        .collect::<Vec<_>>();
+    let summary = SceneCoverageAuditSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+fn scene_coverage_audit_row_matches(
+    row: &SceneCoverageAuditRow,
+    query: &SceneCoverageAuditQuery,
+) -> bool {
+    if query.empty_only && row.action_count > 0 {
+        return false;
+    }
+    if query.missing_native_ref_only && row.has_native_ref {
+        return false;
+    }
+    if query.action_gaps_only && !row.has_action_gap() {
+        return false;
+    }
+    if query.gaps_only && !row.requires_attention {
+        return false;
+    }
+    true
+}
+
+fn scene_action_desired_field_count(value: &Value) -> usize {
+    match value {
+        Value::Null => 0,
+        Value::Object(fields) => fields.len(),
+        _ => 1,
+    }
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -54125,6 +54441,73 @@ fn room_topology_audit_summary_json(summary: &RoomTopologyAuditSummary) -> JsonV
     ])
 }
 
+fn scene_coverage_audit_row_json(row: &SceneCoverageAuditRow) -> JsonValue {
+    object([
+        (
+            "audit_id",
+            string(format!("scene-coverage-audit:{}", row.scene_id.as_str())),
+        ),
+        ("scene_id", string(row.scene_id.as_str())),
+        ("scope", string(scene_scope_label(row.scope))),
+        ("action_count", integer(row.action_count as i64)),
+        (
+            "target_entity_count",
+            integer(row.target_entity_count as i64),
+        ),
+        (
+            "desired_field_count",
+            integer(row.desired_field_count as i64),
+        ),
+        ("has_native_ref", JsonValue::Bool(row.has_native_ref)),
+        ("has_action_gap", JsonValue::Bool(row.has_action_gap())),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+        ("coverage_lane", string(row.coverage_lane)),
+        ("coverage_action", string(row.coverage_action)),
+        ("ready", JsonValue::Bool(row.is_ready())),
+    ])
+}
+
+fn scene_coverage_audit_summary_json(summary: &SceneCoverageAuditSummary) -> JsonValue {
+    object([
+        ("total_scenes", integer(summary.total_scenes as i64)),
+        ("room_scenes", integer(summary.room_scenes as i64)),
+        ("zone_scenes", integer(summary.zone_scenes as i64)),
+        ("home_scenes", integer(summary.home_scenes as i64)),
+        ("bridge_scenes", integer(summary.bridge_scenes as i64)),
+        ("custom_scenes", integer(summary.custom_scenes as i64)),
+        ("empty_scenes", integer(summary.empty_scenes as i64)),
+        (
+            "missing_native_ref_scenes",
+            integer(summary.missing_native_ref_scenes as i64),
+        ),
+        (
+            "action_gap_scenes",
+            integer(summary.action_gap_scenes as i64),
+        ),
+        ("blocked_scenes", integer(summary.blocked_scenes as i64)),
+        (
+            "requires_attention_scenes",
+            integer(summary.requires_attention_scenes as i64),
+        ),
+        ("ready_scenes", integer(summary.ready_scenes as i64)),
+        ("total_actions", integer(summary.total_actions as i64)),
+        (
+            "total_target_entities",
+            integer(summary.total_target_entities as i64),
+        ),
+        (
+            "total_desired_fields",
+            integer(summary.total_desired_fields as i64),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("has_scene_gaps", JsonValue::Bool(summary.has_scene_gaps())),
+    ])
+}
+
 fn scene_json(scene: &Scene) -> JsonValue {
     object([
         ("scene_id", string(scene.scene_id.as_str())),
@@ -60922,6 +61305,48 @@ fn room_topology_audit_summary_output_schema() -> JsonSchema {
     )
 }
 
+fn scene_coverage_audit_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("scope", JsonSchema::String),
+            SchemaProperty::new("entity_id", JsonSchema::String),
+            SchemaProperty::new("capability_id", JsonSchema::String),
+            SchemaProperty::new("empty_only", JsonSchema::Boolean),
+            SchemaProperty::new("missing_native_ref_only", JsonSchema::Boolean),
+            SchemaProperty::new("action_gaps_only", JsonSchema::Boolean),
+            SchemaProperty::new("gaps_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn scene_coverage_audit_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "scene_coverage_audit",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["scene_coverage_audit", "summary", "count"],
+        false,
+    )
+}
+
+fn scene_coverage_audit_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
 fn event_delivery_output_schema() -> JsonSchema {
     object_schema(
         vec![
@@ -60970,7 +61395,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 242);
+        assert_eq!(definitions.len(), 244);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -61659,9 +62084,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_ROOM_TOPOLOGY_AUDIT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_SCENE_COVERAGE_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            234
+            236
         );
         assert_eq!(
             export
@@ -62501,11 +62932,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(242))
+            Some(&integer(244))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(234))
+            Some(&integer(236))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -75824,6 +76255,116 @@ mod tests {
             runtime.borrow().registry().counts().authorization_decisions,
             2,
             "room topology audit list and summary both authorize through runtime read tools"
+        );
+    }
+
+    #[test]
+    fn scene_coverage_audit_tools_surface_runtime_scene_gaps_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let mut scene = runtime
+            .borrow()
+            .registry()
+            .scene(&SceneId::trusted("scene-kitchen-bright"))
+            .unwrap()
+            .clone();
+        scene.native_ref = None;
+        scene.actions.clear();
+        runtime.borrow_mut().upsert_scene(scene).unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let list_request = request(
+            "call-list-scene-coverage-audit",
+            SMART_HOME_LIST_SCENE_COVERAGE_AUDIT_TOOL_ID,
+            object([
+                ("scope", string("room")),
+                ("gaps_only", JsonValue::Bool(true)),
+            ]),
+            2_000,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_output, "count"), Some(&integer(1)));
+        let summary = field(list_output, "summary").unwrap();
+        assert_eq!(field(summary, "total_scenes"), Some(&integer(1)));
+        assert_eq!(field(summary, "room_scenes"), Some(&integer(1)));
+        assert_eq!(field(summary, "empty_scenes"), Some(&integer(1)));
+        assert_eq!(
+            field(summary, "missing_native_ref_scenes"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(summary, "action_gap_scenes"), Some(&integer(1)));
+        assert_eq!(field(summary, "blocked_scenes"), Some(&integer(1)));
+        assert_eq!(
+            field(summary, "requires_attention_scenes"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(summary, "has_scene_gaps"),
+            Some(&JsonValue::Bool(true))
+        );
+        let row = array_item(field(list_output, "scene_coverage_audit").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(row, "scene_id"),
+            Some(&string("scene-kitchen-bright"))
+        );
+        assert_eq!(field(row, "scope"), Some(&string("room")));
+        assert_eq!(field(row, "action_count"), Some(&integer(0)));
+        assert_eq!(field(row, "target_entity_count"), Some(&integer(0)));
+        assert_eq!(field(row, "desired_field_count"), Some(&integer(0)));
+        assert_eq!(field(row, "has_native_ref"), Some(&JsonValue::Bool(false)));
+        assert_eq!(field(row, "has_action_gap"), Some(&JsonValue::Bool(true)));
+        assert_eq!(field(row, "blocked"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(row, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(row, "coverage_lane"), Some(&string("action_mapping")));
+        assert_eq!(
+            field(row, "coverage_action"),
+            Some(&string("map_scene_actions"))
+        );
+
+        let summary_request = request(
+            "call-scene-coverage-audit-summary",
+            SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID,
+            object([
+                ("scope", string("room")),
+                ("empty_only", JsonValue::Bool(true)),
+            ]),
+            2_001,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_scenes"), Some(&integer(1)));
+        assert_eq!(field(rollup, "blocked_scenes"), Some(&integer(1)));
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 2);
+        assert_eq!(journal_summary.completed_count, 2);
+        assert_eq!(
+            runtime.borrow().registry().counts().authorization_decisions,
+            2,
+            "scene coverage audit list and summary both authorize through runtime read tools"
         );
     }
 
