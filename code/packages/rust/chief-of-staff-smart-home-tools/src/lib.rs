@@ -215,18 +215,18 @@ use smart_home_integration_catalog::{
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
 use smart_home_runtime::{
-    BridgeHealthReport, DesiredEntityState, DesiredStateAction, DesiredStateInventorySummary,
-    DesiredStateQuery, DesiredStateSort, DiscoveryWorkerQuery, DiscoveryWorkerRunInstruction,
-    DiscoveryWorkerSchedulerSnapshot, DiscoveryWorkerSort, PairingSessionStatus,
-    ReconciliationReason, RuntimeAuthorizationDecisionQuery, RuntimeAuthorizationDecisionSort,
-    RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind, RuntimeCapabilityGrantSort,
-    RuntimeClearDesiredStateToolOutput, RuntimeClearDesiredStateToolRequest,
-    RuntimeCommandResultQuery, RuntimeCommandResultRecord, RuntimeCommandResultSort,
-    RuntimeCommandResultSummary, RuntimeCommandToolRequest, RuntimeCompletePairingToolOutput,
-    RuntimeCompletePairingToolRequest, RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest,
-    RuntimeError, RuntimeEvent, RuntimeEventCheckpoint, RuntimeEventDeliveryBatch,
-    RuntimeEventFilter, RuntimeEventLogRecord, RuntimeEventLogSummary, RuntimeEventQuery,
-    RuntimeEventSort, RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest,
+    BridgeHealthReport, DesiredEntityState, DesiredStateAction, DesiredStateDriftPlan,
+    DesiredStateInventorySummary, DesiredStateQuery, DesiredStateSort, DiscoveryWorkerQuery,
+    DiscoveryWorkerRunInstruction, DiscoveryWorkerSchedulerSnapshot, DiscoveryWorkerSort,
+    PairingSessionStatus, ReconciliationReason, RuntimeAuthorizationDecisionQuery,
+    RuntimeAuthorizationDecisionSort, RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind,
+    RuntimeCapabilityGrantSort, RuntimeClearDesiredStateToolOutput,
+    RuntimeClearDesiredStateToolRequest, RuntimeCommandResultQuery, RuntimeCommandResultRecord,
+    RuntimeCommandResultSort, RuntimeCommandResultSummary, RuntimeCommandToolRequest,
+    RuntimeCompletePairingToolOutput, RuntimeCompletePairingToolRequest, RuntimeDiscoverToolOutput,
+    RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent, RuntimeEventCheckpoint,
+    RuntimeEventDeliveryBatch, RuntimeEventFilter, RuntimeEventLogRecord, RuntimeEventLogSummary,
+    RuntimeEventQuery, RuntimeEventSort, RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest,
     RuntimePairingPlanToolRequest, RuntimePairingSession, RuntimePairingSessionId,
     RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery, RuntimePairingSessionSort,
     RuntimePendingWorkSummary, RuntimePollEventsToolOutput, RuntimePollEventsToolRequest,
@@ -298,6 +298,10 @@ pub const SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID: &str =
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
+pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
+    "smart_home.list_desired_state_drift_audit";
+pub const SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_desired_state_drift_audit_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2270,6 +2274,24 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_desired_states"))
+                }
+                SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID => {
+                    let query = desired_state_drift_audit_query(&arguments)?;
+                    list_desired_state_drift_audit_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID => {
+                    let query = desired_state_drift_audit_query(&arguments)?;
+                    get_desired_state_drift_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
                 }
                 SMART_HOME_SET_DESIRED_STATE_TOOL_ID => {
                     let request = set_desired_state_request(&arguments, &principal_id)?;
@@ -5988,6 +6010,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_snapshot_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
+        list_desired_state_drift_audit_definition(),
+        get_desired_state_drift_audit_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -6599,6 +6623,69 @@ fn list_desired_states_definition() -> ToolDefinition {
             vec!["desired_states", "summary", "count"],
             false,
         ),
+    )
+}
+
+fn desired_state_drift_audit_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("entity_id", JsonSchema::String),
+            SchemaProperty::new("bridge_id", JsonSchema::String),
+            SchemaProperty::new("capability_id", JsonSchema::String),
+            SchemaProperty::new("requested_by", JsonSchema::String),
+            SchemaProperty::new("reason", JsonSchema::String),
+            SchemaProperty::new("reasons", string_array_schema()),
+            SchemaProperty::new("risk_only", JsonSchema::Boolean),
+            SchemaProperty::new("drift_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn desired_state_drift_audit_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "desired_state_drift_audit",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["desired_state_drift_audit", "summary", "count"],
+        false,
+    )
+}
+
+fn desired_state_drift_audit_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_desired_state_drift_audit_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID,
+        "List smart-home desired-state drift audit",
+        "List Chief-derived desired-state drift rows from D23 desired targets and supervision plans.",
+        desired_state_drift_audit_query_schema(),
+        desired_state_drift_audit_list_output_schema(),
+    )
+}
+
+fn get_desired_state_drift_audit_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID,
+        "Summarize smart-home desired-state drift audit",
+        "Summarize Chief-derived desired-state drift risk from D23 desired targets and supervision plans.",
+        desired_state_drift_audit_query_schema(),
+        desired_state_drift_audit_summary_output_schema(),
     )
 }
 
@@ -7657,6 +7744,36 @@ fn command_risk_audit_query(arguments: &JsonValue) -> Result<CommandRiskAuditQue
         failures_only: optional_bool(arguments, "failures_only")?.unwrap_or(false),
         denials_only: optional_bool(arguments, "denials_only")?.unwrap_or(false),
         approval_gated_only: optional_bool(arguments, "approval_gated_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct DesiredStateDriftAuditQuery {
+    entity_id: Option<EntityId>,
+    bridge_id: Option<BridgeId>,
+    capability_id: Option<CapabilityId>,
+    requested_by: Option<String>,
+    reasons: Vec<ReconciliationReason>,
+    risk_only: bool,
+    limit: Option<usize>,
+}
+
+fn desired_state_drift_audit_query(
+    arguments: &JsonValue,
+) -> Result<DesiredStateDriftAuditQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(DesiredStateDriftAuditQuery {
+        entity_id: optional_string(arguments, "entity_id")?.map(EntityId::trusted),
+        bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
+        capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
+        requested_by: optional_string(arguments, "requested_by")?,
+        reasons: optional_string_list(arguments, "reason", "reasons")?
+            .into_iter()
+            .map(|reason| parse_reconciliation_reason(&reason))
+            .collect::<Result<Vec<_>, _>>()?,
+        risk_only: optional_bool(arguments, "risk_only")?.unwrap_or(false)
+            || optional_bool(arguments, "drift_only")?.unwrap_or(false),
         limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
@@ -32448,6 +32565,343 @@ fn command_risk_is_approval_gated(tier: PrivilegeTier) -> bool {
     matches!(tier, PrivilegeTier::HumanApproval | PrivilegeTier::HighRisk)
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct DesiredStateDriftAuditRow {
+    audit_id: String,
+    entity_id: EntityId,
+    bridge_id: Option<BridgeId>,
+    capability_id: CapabilityId,
+    requested_by: String,
+    command_timeout_ms: u64,
+    desired_value: Value,
+    reason: Option<ReconciliationReason>,
+    risk_lane: &'static str,
+    risk_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+impl DesiredStateDriftAuditRow {
+    fn from_delta(
+        desired_state: &DesiredEntityState,
+        desired: &StateDelta,
+        drift: Option<&DesiredStateDriftPlan>,
+    ) -> Self {
+        let reason = drift.map(|drift| drift.reason);
+        let (risk_lane, risk_action) = desired_state_drift_lane_action(reason);
+        let blocked = reason.is_some();
+        Self {
+            audit_id: format!(
+                "desired_state:{}:{}",
+                desired_state.entity_id.as_str(),
+                desired.capability_id.as_str()
+            ),
+            entity_id: desired_state.entity_id.clone(),
+            bridge_id: drift.map(|drift| drift.bridge_id.clone()),
+            capability_id: desired.capability_id.clone(),
+            requested_by: desired_state.requested_by.clone(),
+            command_timeout_ms: desired_state.command_timeout_ms,
+            desired_value: desired.value.clone(),
+            reason,
+            risk_lane,
+            risk_action,
+            blocked,
+            requires_attention: blocked,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct DesiredStateDriftAuditSummary {
+    total_rows: usize,
+    desired_state_count: usize,
+    desired_capability_count: usize,
+    requested_by_count: usize,
+    ready_rows: usize,
+    missing_state_rows: usize,
+    stale_state_rows: usize,
+    drifted_state_rows: usize,
+    blocked_rows: usize,
+    requires_attention_rows: usize,
+}
+
+impl DesiredStateDriftAuditSummary {
+    fn from_rows(rows: &[DesiredStateDriftAuditRow]) -> Self {
+        let mut summary = Self::default();
+        let mut entity_ids = BTreeSet::new();
+        let mut requested_by = BTreeSet::new();
+        for row in rows {
+            summary.total_rows += 1;
+            summary.desired_capability_count += 1;
+            entity_ids.insert(row.entity_id.as_str().to_string());
+            requested_by.insert(row.requested_by.clone());
+            match row.reason {
+                Some(ReconciliationReason::MissingState) => summary.missing_state_rows += 1,
+                Some(ReconciliationReason::StaleState) => summary.stale_state_rows += 1,
+                Some(ReconciliationReason::Drifted) => summary.drifted_state_rows += 1,
+                None => summary.ready_rows += 1,
+            }
+            if row.blocked {
+                summary.blocked_rows += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_rows += 1;
+            }
+        }
+        summary.desired_state_count = entity_ids.len();
+        summary.requested_by_count = requested_by.len();
+        summary
+    }
+
+    fn has_desired_state_risks(&self) -> bool {
+        self.requires_attention_rows > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+}
+
+fn list_desired_state_drift_audit_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: DesiredStateDriftAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) =
+        desired_state_drift_audit_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "desired_state_drift_audit",
+            JsonValue::Array(
+                rows.iter()
+                    .map(desired_state_drift_audit_row_json)
+                    .collect(),
+            ),
+        ),
+        ("summary", desired_state_drift_audit_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_desired_state_drift_audit")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            (
+                "missing_state_rows",
+                integer(summary.missing_state_rows as i64),
+            ),
+            ("stale_state_rows", integer(summary.stale_state_rows as i64)),
+            (
+                "drifted_state_rows",
+                integer(summary.drifted_state_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn get_desired_state_drift_audit_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: DesiredStateDriftAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = desired_state_drift_audit_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        desired_state_drift_audit_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_desired_state_drift_audit_summary")),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            (
+                "missing_state_rows",
+                integer(summary.missing_state_rows as i64),
+            ),
+            ("stale_state_rows", integer(summary.stale_state_rows as i64)),
+            (
+                "drifted_state_rows",
+                integer(summary.drifted_state_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn desired_state_drift_audit_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &DesiredStateDriftAuditQuery,
+) -> Result<
+    (
+        Vec<DesiredStateDriftAuditRow>,
+        DesiredStateDriftAuditSummary,
+    ),
+    ToolCallError,
+> {
+    let mut desired_query = DesiredStateQuery::new().sorted_by(DesiredStateSort::EntityId);
+    if let Some(entity_id) = query.entity_id.clone() {
+        desired_query = desired_query.for_entity(entity_id);
+    }
+    if let Some(capability_id) = query.capability_id.clone() {
+        desired_query = desired_query.with_capability(capability_id);
+    }
+    if let Some(requested_by) = query.requested_by.clone() {
+        desired_query = desired_query.requested_by(requested_by);
+    }
+
+    let desired_output = runtime
+        .execute_read_tool(
+            principal_id.clone(),
+            RuntimeReadToolRequest::ListDesiredStates {
+                query: desired_query,
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::DesiredStates { desired_states, .. } = desired_output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "desired-state drift audit expected desired-state output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let plan_output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::GetSupervisionPlan,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::SupervisionPlan(plan) = plan_output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "desired-state drift audit expected supervision plan output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let mut rows = Vec::new();
+    for desired_state in &desired_states {
+        for desired in &desired_state.desired {
+            let drift =
+                desired_state_drift_for(&plan, &desired_state.entity_id, &desired.capability_id);
+            let row = DesiredStateDriftAuditRow::from_delta(desired_state, desired, drift);
+            if desired_state_drift_audit_row_matches(&row, query) {
+                rows.push(row);
+            }
+        }
+    }
+    rows.sort_by(|left, right| {
+        right
+            .blocked
+            .cmp(&left.blocked)
+            .then_with(|| right.requires_attention.cmp(&left.requires_attention))
+            .then_with(|| {
+                desired_state_drift_reason_rank(right.reason)
+                    .cmp(&desired_state_drift_reason_rank(left.reason))
+            })
+            .then_with(|| left.entity_id.cmp(&right.entity_id))
+            .then_with(|| left.capability_id.cmp(&right.capability_id))
+    });
+    let summary = DesiredStateDriftAuditSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+fn desired_state_drift_for<'a>(
+    plan: &'a RuntimeSupervisionPlan,
+    entity_id: &EntityId,
+    capability_id: &CapabilityId,
+) -> Option<&'a DesiredStateDriftPlan> {
+    plan.desired_state_drifts
+        .iter()
+        .find(|drift| &drift.entity_id == entity_id && &drift.capability_id == capability_id)
+}
+
+fn desired_state_drift_audit_row_matches(
+    row: &DesiredStateDriftAuditRow,
+    query: &DesiredStateDriftAuditQuery,
+) -> bool {
+    if query
+        .entity_id
+        .as_ref()
+        .is_some_and(|entity_id| &row.entity_id != entity_id)
+    {
+        return false;
+    }
+    if query
+        .bridge_id
+        .as_ref()
+        .is_some_and(|bridge_id| row.bridge_id.as_ref() != Some(bridge_id))
+    {
+        return false;
+    }
+    if query
+        .capability_id
+        .as_ref()
+        .is_some_and(|capability_id| &row.capability_id != capability_id)
+    {
+        return false;
+    }
+    if query
+        .requested_by
+        .as_ref()
+        .is_some_and(|requested_by| &row.requested_by != requested_by)
+    {
+        return false;
+    }
+    if !query.reasons.is_empty()
+        && !row
+            .reason
+            .is_some_and(|reason| query.reasons.contains(&reason))
+    {
+        return false;
+    }
+    if query.risk_only && !row.requires_attention {
+        return false;
+    }
+    true
+}
+
+fn desired_state_drift_lane_action(
+    reason: Option<ReconciliationReason>,
+) -> (&'static str, &'static str) {
+    match reason {
+        Some(ReconciliationReason::MissingState) => ("state_refresh", "refresh_missing_state"),
+        Some(ReconciliationReason::StaleState) => ("state_refresh", "refresh_stale_state"),
+        Some(ReconciliationReason::Drifted) => {
+            ("desired_state_reconciliation", "reconcile_desired_state")
+        }
+        None => ("ready", "monitor_desired_state"),
+    }
+}
+
+fn desired_state_drift_reason_rank(reason: Option<ReconciliationReason>) -> u8 {
+    match reason {
+        Some(ReconciliationReason::MissingState) => 3,
+        Some(ReconciliationReason::StaleState) => 2,
+        Some(ReconciliationReason::Drifted) => 1,
+        None => 0,
+    }
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -55496,6 +55950,75 @@ fn command_risk_audit_summary_json(summary: &CommandRiskAuditSummary) -> JsonVal
     ])
 }
 
+fn desired_state_drift_audit_row_json(row: &DesiredStateDriftAuditRow) -> JsonValue {
+    object([
+        ("audit_id", string(&row.audit_id)),
+        ("entity_id", string(row.entity_id.as_str())),
+        (
+            "bridge_id",
+            row.bridge_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("capability_id", string(row.capability_id.as_str())),
+        ("requested_by", string(&row.requested_by)),
+        ("command_timeout_ms", integer(row.command_timeout_ms as i64)),
+        ("desired_value", smart_value_to_json(&row.desired_value)),
+        (
+            "reason",
+            row.reason
+                .map(|reason| string(reconciliation_reason_label(reason)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("risk_lane", string(row.risk_lane)),
+        ("risk_action", string(row.risk_action)),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+    ])
+}
+
+fn desired_state_drift_audit_summary_json(summary: &DesiredStateDriftAuditSummary) -> JsonValue {
+    object([
+        ("total_rows", integer(summary.total_rows as i64)),
+        (
+            "desired_state_count",
+            integer(summary.desired_state_count as i64),
+        ),
+        (
+            "desired_capability_count",
+            integer(summary.desired_capability_count as i64),
+        ),
+        (
+            "requested_by_count",
+            integer(summary.requested_by_count as i64),
+        ),
+        ("ready_rows", integer(summary.ready_rows as i64)),
+        (
+            "missing_state_rows",
+            integer(summary.missing_state_rows as i64),
+        ),
+        ("stale_state_rows", integer(summary.stale_state_rows as i64)),
+        (
+            "drifted_state_rows",
+            integer(summary.drifted_state_rows as i64),
+        ),
+        ("blocked_rows", integer(summary.blocked_rows as i64)),
+        (
+            "requires_attention_rows",
+            integer(summary.requires_attention_rows as i64),
+        ),
+        (
+            "has_desired_state_risks",
+            JsonValue::Bool(summary.has_desired_state_risks()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -56106,6 +56629,17 @@ fn parse_authorization_outcome(label: &str) -> Result<AuthorizationOutcome, Tool
         "denied" | "deny" => Ok(AuthorizationOutcome::Denied),
         _ => Err(validation_error(format!(
             "unknown authorization outcome `{label}`"
+        ))),
+    }
+}
+
+fn parse_reconciliation_reason(label: &str) -> Result<ReconciliationReason, ToolCallError> {
+    match label {
+        "missing" | "missing_state" => Ok(ReconciliationReason::MissingState),
+        "stale" | "stale_state" => Ok(ReconciliationReason::StaleState),
+        "drifted" | "drift" | "desired_state_drift" => Ok(ReconciliationReason::Drifted),
+        _ => Err(validation_error(format!(
+            "unknown reconciliation reason `{label}`"
         ))),
     }
 }
@@ -62068,7 +62602,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 246);
+        assert_eq!(definitions.len(), 248);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -62092,6 +62626,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID));
@@ -62771,7 +63311,7 @@ mod tests {
             .contains(&SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            238
+            240
         );
         assert_eq!(
             export
@@ -63611,11 +64151,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(246))
+            Some(&integer(248))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(238))
+            Some(&integer(240))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -77188,6 +77728,137 @@ mod tests {
     }
 
     #[test]
+    fn desired_state_drift_audit_tools_surface_runtime_drift_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let set_desired_state_request = request(
+            "call-set-desired-state-for-drift-audit",
+            SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                (
+                    "desired",
+                    JsonValue::Array(vec![object([
+                        ("capability_id", string("light.on_off")),
+                        ("value", JsonValue::Bool(false)),
+                    ])]),
+                ),
+                ("requested_by", string("agent:scene-planner")),
+                ("command_timeout_ms", integer(750)),
+            ]),
+            2_000,
+        );
+        let set_desired_state_trace = tool_runtime.invoke_with_events(&set_desired_state_request);
+        assert!(set_desired_state_trace.result.ok);
+
+        let list_request = request(
+            "call-list-desired-state-drift-audit",
+            SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID,
+            object([
+                ("risk_only", JsonValue::Bool(true)),
+                ("requested_by", string("agent:scene-planner")),
+                ("reason", string("drifted")),
+            ]),
+            2_001,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_output, "count"), Some(&integer(1)));
+        let summary = field(list_output, "summary").unwrap();
+        assert_eq!(field(summary, "total_rows"), Some(&integer(1)));
+        assert_eq!(field(summary, "desired_state_count"), Some(&integer(1)));
+        assert_eq!(
+            field(summary, "desired_capability_count"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(summary, "drifted_state_rows"), Some(&integer(1)));
+        assert_eq!(field(summary, "blocked_rows"), Some(&integer(1)));
+        assert_eq!(field(summary, "requires_attention_rows"), Some(&integer(1)));
+        assert_eq!(
+            field(summary, "has_desired_state_risks"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let rows = field(list_output, "desired_state_drift_audit").unwrap();
+        let row = array_item(rows, 0).unwrap();
+        assert_eq!(field(row, "entity_id"), Some(&string("entity-light-1")));
+        assert_eq!(field(row, "bridge_id"), Some(&string("bridge-1")));
+        assert_eq!(field(row, "capability_id"), Some(&string("light.on_off")));
+        assert_eq!(
+            field(row, "requested_by"),
+            Some(&string("agent:scene-planner"))
+        );
+        assert_eq!(field(row, "desired_value"), Some(&JsonValue::Bool(false)));
+        assert_eq!(field(row, "reason"), Some(&string("drifted")));
+        assert_eq!(
+            field(row, "risk_lane"),
+            Some(&string("desired_state_reconciliation"))
+        );
+        assert_eq!(
+            field(row, "risk_action"),
+            Some(&string("reconcile_desired_state"))
+        );
+        assert_eq!(field(row, "blocked"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(row, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let summary_request = request(
+            "call-desired-state-drift-audit-summary",
+            SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID,
+            object([
+                ("risk_only", JsonValue::Bool(true)),
+                ("reason", string("drifted")),
+            ]),
+            2_002,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_rows"), Some(&integer(1)));
+        assert_eq!(field(rollup, "drifted_state_rows"), Some(&integer(1)));
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(set_desired_state_request, set_desired_state_trace);
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 3);
+        assert_eq!(journal_summary.completed_count, 3);
+    }
+
+    #[test]
     fn smart_home_handler_reports_runtime_authorization_denials() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
@@ -78310,21 +78981,29 @@ mod tests {
 
     #[test]
     fn activation_waiver_purge_tools_project_tombstone_lineage_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
-        let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
-        let mut tool_runtime = InMemoryToolRuntime::new();
-        bridge.register_all(&mut tool_runtime).unwrap();
+        std::thread::Builder::new()
+            .name("activation-waiver-purge-lineage".to_string())
+            .stack_size(8 * 1024 * 1024)
+            .spawn(|| {
+                let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+                let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
+                let mut tool_runtime = InMemoryToolRuntime::new();
+                bridge.register_all(&mut tool_runtime).unwrap();
 
-        let traces = exercise_activation_waiver_purge_tools(&tool_runtime);
-        let mut journal = ToolExecutionJournal::new();
-        for (request, trace) in traces {
-            journal.record_trace(request, trace);
-        }
+                let traces = exercise_activation_waiver_purge_tools(&tool_runtime);
+                let mut journal = ToolExecutionJournal::new();
+                for (request, trace) in traces {
+                    journal.record_trace(request, trace);
+                }
 
-        let summary = journal.summary();
-        assert_eq!(summary.invocation_count, 2);
-        assert_eq!(summary.completed_count, 2);
-        assert_eq!(journal.audit_records().len(), 2);
+                let summary = journal.summary();
+                assert_eq!(summary.invocation_count, 2);
+                assert_eq!(summary.completed_count, 2);
+                assert_eq!(journal.audit_records().len(), 2);
+            })
+            .expect("activation waiver purge lineage test thread can be spawned")
+            .join()
+            .expect("activation waiver purge lineage test thread completes");
     }
 
     fn exercise_activation_waiver_purge_tools(
