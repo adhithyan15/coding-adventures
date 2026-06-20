@@ -107,6 +107,8 @@ runtime and Chief of Staff tools a typed catalog for:
   deterministic operator and release execution work
 - mesh release packet readiness summaries that condense release-readiness
   checks into package-facing go/no-go state and first actionable gates
+- mesh release execution readiness summaries that combine release packet
+  go/no-go state with release-readiness check slot execution state
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and
