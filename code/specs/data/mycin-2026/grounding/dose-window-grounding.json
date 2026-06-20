@@ -249,6 +249,35 @@
         "final_verdict": "direction_only"
       },
       "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_cap_ceftriaxone_hepatorenal",
+      "kind": "dose_cap",
+      "drug": "ceftriaxone",
+      "claim": "In a patient with BOTH hepatic impairment AND significant renal impairment, ceftriaxone must be capped at 2 g/day. The cap is CONJUNCTIVE: hepatic impairment alone needs no dose adjustment, and renal impairment alone is handled by the ordinary renal dose-window; only the joint occurrence triggers this ceiling.",
+      "grounded": {
+        "id": "dose_cap_ceftriaxone_hepatorenal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=5cd2d96f-83e5-4326-ae87-d0ede4ba493a",
+        "source_title": "CEFTRIAXONE FOR INJECTION, USP — FDA prescribing information (DailyMed / NLM); USE IN SPECIFIC POPULATIONS / section 5.7 Patients with Hepatic and Renal Impairment",
+        "byte_quote": "Patients with hepatic impairment and significant renal impairment should not receive more than 2 grams per day of ceftriaxone.",
+        "value_found": "ceftriaxone capped at 2 g/day for the CONJUNCTION of hepatic impairment AND significant renal impairment; the label states this only for the joint condition, and elsewhere notes that ordinary hepatic impairment alone does not require a dosage adjustment.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29 — a different DailyMed ceftriaxone label revision used for the dose_ceftriaxone record; it carries the meningitis weight-based dosing but the hepatorenal-conjunction sentence used here is quoted from the 5cd2d96f revision where it appears verbatim in both Highlights and section 5.7, so that revision is cited as the primary source for THIS claim.",
+          "Single-condition framing ('hepatic impairment caps ceftriaxone' or 'renal impairment caps ceftriaxone') — DISCARDED as unsupported: the label conditions the 2 g/day cap on the CONJUNCTION ('hepatic impairment AND significant renal impairment'), and separately states no dosage adjustment is needed for hepatic impairment alone. Encoding either single condition as the trigger would misrepresent the source.",
+          "Secondary aggregators (drugs.com, Medscape ceftriaxone monographs) restating the 2 g/day hepatorenal cap — DISCARDED per the primary-source-first requirement; the FDA label states it directly."
+        ],
+        "note": "ENTAILED, and specifically a CONJUNCTIVE constraint. The verbatim sentence ties the 2 g/day ceiling to the JOINT presence of hepatic impairment AND significant renal impairment — not to either alone. This is why chart_to_cop.py models it as a derived 'hepatorenal' risk that exists only when a hepatic_status risk and a renal_status risk co-occur, and applies the dose-ceiling penalty to ceftriaxone only then; hepatic_status alone adds the risk marker (for audit) but no dose penalty, faithfully reflecting that hepatic impairment alone needs no adjustment. The grounded facts are (a) the existence and CONJUNCTIVE trigger of the cap and (b) its target drug (ceftriaxone) and direction (a ceiling, i.e. dose must shrink). The exact mg/kg ceiling-penalty number in formulary.json (a 12 mg/kg/day reduction, 50 -> 38) is the project's ILLUSTRATIVE feasibility model, NOT a verbatim PK/PD figure: the label's cap is an absolute 2 g/day, which the per-kg feasibility model only approximates. The mechanism (conjunction -> shrink the ceiling) is grounded; the precise numeric shrink is illustrative, consistent with formulary.json's standing dose-window disclaimer."
+      },
+      "verify": {
+        "id": "dose_cap_ceftriaxone_hepatorenal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 5cd2d96f DailyMed ceftriaxone label: the sentence 'Patients with hepatic impairment and significant renal impairment should not receive more than 2 grams per day of ceftriaxone.' appears verbatim under USE IN SPECIFIC POPULATIONS and is referenced from section 5.7 (Patients with Hepatic and Renal Impairment). Confirmed the conjunction wording ('hepatic impairment and significant renal impairment') is the literal trigger.",
+        "refute_attempt": "Strongest refutation: one might read the cap as applying whenever EITHER organ is impaired (treating 'and' loosely), which would make the constraint fire on hepatic-impairment alone and contradict the model's conjunctive gate. This FAILS: the sentence uses a coordinating 'and' joining two required conditions ('hepatic impairment AND significant renal impairment'), and the same label elsewhere states no dosage adjustment is necessary for hepatic impairment alone, so the conjunctive reading is the only one consistent with the full label. Second angle: the cap is an absolute 2 g/day while the model encodes a per-kg ceiling reduction — a units mismatch. This is acknowledged, not hidden: the formulary dose-window numbers are explicitly an illustrative feasibility model, not validated PK/PD; the grounded claim is the conjunctive trigger and the ceiling-shrink direction, both of which the model preserves.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
     }
   ]
 }

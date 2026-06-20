@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 152,
-    "correct": 145,
+    "total": 153,
+    "correct": 146,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -11,7 +11,7 @@
         "wrong": 0
       },
       "management": {
-        "correct": 5,
+        "correct": 6,
         "abstained": 0,
         "wrong": 0
       },
@@ -552,6 +552,14 @@
       "tactic": "management",
       "gold": "INFEASIBLE",
       "answer": "INFEASIBLE",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_hepatorenal",
+      "tactic": "management",
+      "gold": "ceftriaxone+vancomycin",
+      "answer": "ceftriaxone+vancomycin",
       "outcome": "correct",
       "trust": null
     },

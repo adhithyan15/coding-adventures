@@ -67,6 +67,33 @@ def test_dose_risk_facts_become_dose_constraints():
     assert not bad.risks and any("qt_additive" in d["fact"] for d in bad.discards)
 
 
+def test_hepatic_renal_conjunction_caps_ceftriaxone():
+    # CC-2b (ceftriaxone FDA label): hepatic dysfunction ALONE needs no dose adjustment, but
+    # combined hepatic + significant renal impairment caps the dose. The compiler must record
+    # a hepatic risk yet emit the grounded `hepatorenal` token ONLY when renal is also present.
+    hep = cc.compile_cop([cc.ChartFact("hepatic_status", "hepatic_severe", "cirrhosis")])
+    assert "hepatic_severe" in hep.risks and "hepatorenal" not in hep.risks, hep.risks
+    both = cc.compile_cop([cc.ChartFact("hepatic_status", "hepatic_severe"),
+                           cc.ChartFact("renal_status", "renal_moderate")])
+    assert "hepatorenal" in both.risks, both.risks
+    assert any(c.get("from") == "hepatic_status+renal_status" for c in both.constraints)
+    # an unrecognized hepatic value is discarded, not silently turned into a risk.
+    bad = cc.compile_cop([cc.ChartFact("hepatic_status", "hepatic_mild")])
+    assert not bad.risks and any("hepatic_mild" in d["fact"] for d in bad.discards)
+
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # End-to-end: the conjunction shrinks ceftriaxone's ceiling but it stays FEASIBLE — a
+    # dose-ADJUSTMENT, not a fabricated INFEASIBLE — so the standard regimen survives.
+    r = cc.derive(cli, [cc.ChartFact("age_band", "adult"),
+                        cc.ChartFact("hepatic_status", "hepatic_severe"),
+                        cc.ChartFact("renal_status", "renal_moderate")])
+    assert r["regimen"] and set(r["regimen"]) == {"ceftriaxone", "vancomycin"}, r
+    assert "ceftriaxone" not in r["dose_infeasible"], r["dose_infeasible"]
+    assert any(c.get("from") == "hepatic_status+renal_status" for c in r["constraints"]), r
+
+
 def test_dose_infeasibility_folds_into_the_cover():
     cli = decide_mod.find_cli()
     if cli is None:
@@ -288,6 +315,7 @@ def main() -> int:
     test_allergy_activates_a_context()
     test_culture_resistance_becomes_defeated_edge()
     test_dose_risk_facts_become_dose_constraints()
+    test_hepatic_renal_conjunction_caps_ceftriaxone()
     test_objective_priority_sets_the_cost_side_effect_weights()
     test_objective_breakdown_surfaced_with_chart_weights()
     test_decide_timing_decision_table()

@@ -21,7 +21,7 @@
                      "dose": {"floor_mg_per_kg": 15, "ceiling_base_mg_per_kg": 20, "ceiling_penalty_mg_per_kg": {"renal_severe": 6, "nephrotoxin_interaction": 6, "renal_moderate": 2}},
                      "source": "IDSA Tunkel 2004 (empiric vancomycin for resistant pneumococcus)"},
     "ceftriaxone":  {"covers": ["n_meningitidis", "h_influenzae", "s_pneumoniae_susceptible"], "csf_penetrant": true, "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 1,
-                     "dose": {"floor_mg_per_kg": 25, "ceiling_base_mg_per_kg": 50, "ceiling_penalty_mg_per_kg": {}},
+                     "dose": {"floor_mg_per_kg": 25, "ceiling_base_mg_per_kg": 50, "ceiling_penalty_mg_per_kg": {"hepatorenal": 12}},
                      "source": "IDSA Tunkel 2004 (3rd-gen cephalosporin)"},
     "ampicillin":   {"covers": ["listeria", "e_coli"], "csf_penetrant": true, "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 1,
                      "dose": {"floor_mg_per_kg": 25, "ceiling_base_mg_per_kg": 50, "ceiling_penalty_mg_per_kg": {}},

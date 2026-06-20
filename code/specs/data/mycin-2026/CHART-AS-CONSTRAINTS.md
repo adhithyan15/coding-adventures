@@ -54,7 +54,7 @@ feasibility/`check`, simplex `minimize`/`maximize`, observed-value substitution)
 | **Allergy** (penicillin) | exclusion | hard: `x_d = 0` | β-lactams excluded |
 | **Pregnancy** | exclusion | hard: `x_d = 0` | moxifloxacin, TMP-SMX excluded |
 | **Renal impairment** (eGFR/CrCl lab) | dose cap | `dose_d ≤ ceiling_d(renal)` | vancomycin ceiling shrinks; renally-cleared drugs capped |
-| **Hepatic impairment** | dose cap / exclusion | `dose_d ≤ ceiling_d(hepatic)` | |
+| **Hepatic impairment** | dose cap (conjunctive) | `dose_d ≤ ceiling_d(hepatic ∧ renal)` | ceftriaxone capped only when hepatic **and** renal impairment co-occur (FDA label); hepatic alone needs no adjustment (§3a) |
 | **Concurrent meds** | drug–drug interaction | exclusion or dose cap | other nephrotoxin → vancomycin ceiling ↓ (additive toxicity) |
 | **Comorbidity** (QT, G6PD, seizure hx, myasthenia) | exclusion / penalty | hard or soft | avoid QT-prolonging agents; avoid seizure-threshold-lowering |
 | **Dose-window** (efficacy ↔ toxicity) | feasibility band | `floor_d ≤ dose_d ≤ ceiling_d` | UNSAT when no safe-and-effective dose exists |
@@ -153,6 +153,26 @@ risks Y") — decision support, not a hidden choice.
   self-documenting about *why* each drug is out, the infeasibility verdict is the engine's, and
   the exclusion reasoning lives in ADJ, not the compiler. (Reasons are sanitized before reaching
   the `%` comment.)
+- **CC-2b — hepatic impairment is a CONJUNCTIVE dose cap, not a standalone one. ✅ DONE.** The
+  ceftriaxone FDA label conditions its 2 g/day ceiling on the *joint* presence of two organ
+  impairments: *"Patients with hepatic impairment and significant renal impairment should not
+  receive more than 2 grams per day of ceftriaxone."* (DailyMed setid
+  `5cd2d96f-83e5-4326-ae87-d0ede4ba493a`, §5.7 / USE IN SPECIFIC POPULATIONS; grounded as record
+  `dose_cap_ceftriaxone_hepatorenal` in `dose-window-grounding.json`). Faithfully modeling this
+  means **not** treating hepatic impairment as its own dose cap: a `hepatic_status` chart fact
+  alone adds an audit-only risk marker but **no** dose penalty (the same label says hepatic
+  impairment alone needs no adjustment). Only when a `hepatic_*` risk and a `renal_*` risk
+  co-occur does `chart_to_cop.derive()` synthesize a derived **`hepatorenal`** risk, which then
+  applies ceftriaxone's `ceiling_penalty_mg_per_kg.hepatorenal` reduction (50 → 38 mg/kg in the
+  feasibility model — still ≥ the 25 mg/kg floor, so the regimen stays FEASIBLE but
+  dose-adjusted, mirroring "cap, don't forbid"). This is the first constraint family whose
+  *trigger* is a conjunction of two chart facts rather than a single fact, exercising the
+  derived-risk path. As with every dose number in `formulary.json`, the **mechanism**
+  (conjunction → shrink the ceiling, on ceftriaxone) is grounded; the precise mg/kg shrink is the
+  standing **ILLUSTRATIVE** feasibility model (the label's cap is an absolute 2 g/day), not
+  validated PK/PD. Verified by `test_hepatic_renal_conjunction_caps_ceftriaxone` (hepatic-alone →
+  no `hepatorenal`; hepatic + renal_moderate → `hepatorenal` present and regimen still feasible;
+  unrecognized hepatic value discarded).
 - **CC-3 — contraindication / interaction grounding.** `contraindication-grounding.json` +
   `interaction-grounding.json` via the harness (pregnancy, QT, G6PD, allergy classes,
   drug–drug); gate → CAS; new "treatment constraints" ledger artifact.
