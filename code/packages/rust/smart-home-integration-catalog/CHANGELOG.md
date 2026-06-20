@@ -126,6 +126,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseReadinessCheck`, summary helpers, and D23 mesh
   release-readiness gate projections for substrate actions, evidence
   remediation, human review, operator handoff, and release packet state.
+- `IntegrationMeshReleasePacketReadinessSummary` and helpers for condensing
+  mesh release-readiness checks into package-facing go/no-go state and first
+  actionable gates.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
