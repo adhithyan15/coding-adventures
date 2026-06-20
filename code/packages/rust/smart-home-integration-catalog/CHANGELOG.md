@@ -145,6 +145,9 @@ All notable changes to this package will be documented in this file.
   release task readiness with dispatch queue state.
 - `IntegrationMeshReleaseDispatchTicket` and summary helpers for wrapping
   release dispatch queues in deterministic ticket keys.
+- `IntegrationMeshReleaseDispatchTicketHandoffPacket` and summary helpers for
+  classifying release dispatch tickets into release, operator, repair, and
+  review lanes.
 - `IntegrationMeshReleaseTicketReadinessSummary` and helpers for combining
   release dispatch readiness with deterministic ticket state.
 - Primitive backlog planning helpers for ranking the shared primitive families
