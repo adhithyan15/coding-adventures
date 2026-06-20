@@ -6,6 +6,27 @@ and deletes the rest. Per
 [CLOC06](../../../specs/CLOC06-pass-interface-contract.md)'s
 canonical pass set.
 
+## Implemented cleanups
+
+(The "v1 identity" notes below predate the real implementation — see the
+module-level docs in `src/lib.rs` for the authoritative description.)
+
+- **Dead-after-terminator**: in any block body, drop every statement after an
+  unconditional terminator — a `return` **or a `throw`** (both end the
+  statement list's execution in every block context). `break` / `continue` are
+  handled only inside switch-case consequents (they terminate flow only
+  relative to an enclosing loop/switch). **Hoisting guard:** the tail is dropped
+  only when *every* statement in it is provably free of a hoisted binding
+  (expression / empty / break / continue / return / throw / `let` / `const`).
+  A `var` or `function` declaration — or any compound statement that could wrap
+  a hoisted `var` (`if (c) var y;`, `for (var i …)`, blocks, switch) — preserves
+  the tail, since those bindings hoist to function-top and remain observable
+  before the terminator (a truly-unused one is still removed by
+  `remove-unused-vars`).
+- **Empty-statement removal**: drop `;` no-op nodes from block bodies.
+- **Constant-discriminant switch collapse** and per-case dead-after-`break`
+  dropping (gap-014).
+
 ## What's here (v1)
 
 - `DcePass` implementing the `Pass` trait from

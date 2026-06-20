@@ -9,9 +9,12 @@
 //! Two cleanup categories:
 //!
 //! 1. **Dead-after-terminator**: in any `BlockStatement.body`, drop
-//!    everything after a `ReturnStatement`. Phase 1 doesn't have
-//!    `ThrowStatement` yet; `BreakStatement` and `ContinueStatement`
-//!    only qualify in their enclosing loop scope (Phase 2 work).
+//!    everything after a `ReturnStatement` or a `ThrowStatement` — both
+//!    unconditionally end the statement list's execution, in every block
+//!    context, so what follows is unreachable. `BreakStatement` and
+//!    `ContinueStatement` only qualify relative to their enclosing loop/switch
+//!    scope, so they are handled only in switch-case consequents
+//!    (`is_case_terminator`), not at the general block level (Phase 2 work).
 //! 2. **Empty-statement removal**: drop `EmptyStatement` nodes
 //!    from `BlockStatement.body`. They're semantically a no-op,
 //!    just `;` noise.
@@ -556,13 +559,24 @@ fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement 
     }
 
     // Drop dead-after-terminator.
+    //
+    // SOUNDNESS — hoisting: `var` and `function` declarations hoist to the top
+    // of the enclosing function regardless of their textual position, so one in
+    // the otherwise-unreachable tail after a terminator still creates a binding
+    // that code BEFORE the terminator (or in a sibling scope) can observe.
+    // Example: `function f(){ h(); throw e; function h(){} }` — `h` is callable
+    // at `h()` because the declaration hoists past the `throw`; dropping
+    // `function h(){}` would make that a ReferenceError. We therefore truncate
+    // ONLY when every statement in the tail is provably free of a hoisted
+    // binding (`tail_is_safe_to_truncate` — a whitelist that excludes `var`,
+    // `function`, and every compound statement that could wrap a `var`).
+    // Declining to drop dead statements is never a miscompile; a genuinely
+    // unused hoisted declaration is still removed downstream by
+    // `remove-unused-vars`.
     let original_len = working.len();
-    if let Some(terminator_idx) = working
-        .iter()
-        .position(|s| is_terminator(s))
-    {
+    if let Some(terminator_idx) = working.iter().position(is_terminator) {
         let dropped = original_len - (terminator_idx + 1);
-        if dropped > 0 {
+        if dropped > 0 && tail_is_safe_to_truncate(&working[terminator_idx + 1..]) {
             working.truncate(terminator_idx + 1);
             st.record(
                 &b.cv,
@@ -595,11 +609,72 @@ fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement 
     }
 }
 
+/// A statement that unconditionally ends the execution of its enclosing
+/// statement list, making everything after it in the same `BlockStatement.body`
+/// (or function/program body) unreachable:
+///
+/// - `return …;` exits the enclosing function.
+/// - `throw …;` raises out of the function (propagating up through any
+///   `try`/loop/block), so nothing after it in the same list runs — exactly
+///   like `return` for dead-code purposes, in EVERY block context. (This is
+///   the same reasoning `is_case_terminator` already applies to switch cases.)
+///
+/// `break` / `continue` are deliberately excluded here: they only terminate
+/// flow relative to an *enclosing* loop/switch, so whether the statements after
+/// them in an arbitrary block are unreachable depends on context this
+/// block-level check doesn't have (and a bare `break`/`continue` in a
+/// function-body block is a SyntaxError a faithful parser never produces). The
+/// switch-case context handles `break` separately via `is_case_terminator`.
 fn is_terminator(stmt: &Statement) -> bool {
     matches!(
         stmt,
         Statement::Tagged(TaggedStatement::ReturnStatement(_))
+            | Statement::Tagged(TaggedStatement::ThrowStatement(_))
     )
+}
+
+/// Is every statement in `stmts` (a dead-after-terminator tail) provably free
+/// of a **hoisted binding**, so the whole tail can be dropped soundly?
+///
+/// `var` and `function` declarations hoist to the top of the enclosing
+/// function regardless of textual position, so one in an otherwise-unreachable
+/// tail still creates a binding observable *before* the terminator — dropping
+/// it would miscompile. Crucially a `var` can hoist while wrapped in a compound
+/// statement (`for (var i …)`, `if (c) var y;`, `while (c) var z;`, a nested
+/// `{ var x }`, a `switch` case…), so it is NOT enough to look for top-level
+/// `Declaration` nodes. We instead use a **whitelist**: a tail is safe to drop
+/// only when every statement is one of the forms that can carry no hoisted
+/// binding into this function scope —
+///
+/// - `ExpressionStatement` (a statement-position expression declares nothing;
+///   a function/class *expression* owns its own scope),
+/// - `EmptyStatement`, `break`, `continue`, `return`, `throw`,
+/// - `let` / `const` declarations (block-scoped, TDZ — not hoisted; a
+///   reference before the declaration throws either way).
+///
+/// Every other form — a `function` declaration, a `var` declaration, or ANY
+/// compound statement (`if` / `while` / `for` / block / `switch` / labeled)
+/// that might transitively contain a hoisted `var` — is treated as unsafe, so
+/// the tail is preserved. Conservative: declining to drop dead statements is
+/// never a miscompile, and any genuinely-unused hoisted declaration is still
+/// removed downstream by `remove-unused-vars`. New statement variants default
+/// to unsafe (preserved) until explicitly vetted.
+fn tail_is_safe_to_truncate(stmts: &[Statement]) -> bool {
+    stmts.iter().all(|s| match s {
+        Statement::Tagged(t) => matches!(
+            t,
+            TaggedStatement::ExpressionStatement(_)
+                | TaggedStatement::EmptyStatement(_)
+                | TaggedStatement::BreakStatement(_)
+                | TaggedStatement::ContinueStatement(_)
+                | TaggedStatement::ReturnStatement(_)
+                | TaggedStatement::ThrowStatement(_)
+        ),
+        // `let` / `const` are block-scoped (safe to drop); `var` hoists (unsafe).
+        Statement::Declaration(Declaration::VariableDeclaration(vd)) => vd.kind != VarKind::Var,
+        // A `function` declaration is itself a hoisted binding — unsafe.
+        Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
+    })
 }
 
 /// Inside a switch case's consequent, these statements end the
@@ -956,6 +1031,53 @@ mod tests {
     fn empty_stmt() -> Statement {
         Statement::empty_statement(EmptyStatement { cv: None })
     }
+    /// `let <name>;` as a block statement — a non-hoisted (block-scoped)
+    /// declaration, which the truncation whitelist treats as safe to drop.
+    fn let_decl_stmt(name: &str) -> Statement {
+        Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: name.to_string(),
+                }),
+                init: None,
+            }],
+        }))
+    }
+    /// `if (<test>) <consequent>;` — a compound statement. The truncation
+    /// whitelist treats every compound statement as unsafe to drop (it could
+    /// transitively wrap a hoisted `var`, e.g. `if (c) var y;`), so a tail
+    /// containing one is preserved.
+    fn if_stmt(test: Expression, consequent: Statement) -> Statement {
+        Statement::if_statement(coding_adventures_javascript_ast::IfStatement {
+            cv: None,
+            test,
+            consequent: Box::new(consequent),
+            alternate: None,
+        })
+    }
+    /// A `function <name>() {}` declaration as a block statement. Used to test
+    /// the hoisting guard: a function declaration is hoisted, so it must not be
+    /// dropped from a dead-after-terminator tail.
+    fn func_decl_stmt(name: &str) -> Statement {
+        Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: name.to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            generator: false,
+            is_async: false,
+        }))
+    }
 
     fn run_pass(prog: Program) -> (Program, Vec<Contribution>, bool, u32) {
         let pass = DcePass::new();
@@ -1052,6 +1174,115 @@ mod tests {
         );
         let new_block = extract_function_body(&out);
         assert_eq!(new_block.body.len(), 2, "expected 2 statements; got {:?}", new_block.body);
+    }
+
+    #[test]
+    fn drops_statements_after_throw() {
+        // { x; throw e; y; z; } → { x; throw e; }
+        // `throw` unconditionally exits the block, so `y` and `z` are
+        // unreachable — dropped exactly like dead-after-return.
+        let body = vec![
+            expr_stmt(ident("x")),
+            throw_stmt(ident("e")),
+            expr_stmt(ident("y")),
+            expr_stmt(ident("z")),
+        ];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(
+            contribs.iter().any(|c| c.tag == "removed-dead-code"),
+            "expected removed-dead-code contribution; got {:?}",
+            contribs
+        );
+        let new_block = extract_function_body(&out);
+        assert_eq!(
+            new_block.body.len(),
+            2,
+            "expected 2 statements (x; throw e;); got {:?}",
+            new_block.body
+        );
+    }
+
+    #[test]
+    fn keeps_throw_with_nothing_after_it() {
+        // { x; throw e; } is already minimal — the terminator is the last
+        // statement, so nothing is dropped.
+        let body = vec![expr_stmt(ident("x")), throw_stmt(ident("e"))];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(!changed);
+        let new_block = extract_function_body(&out);
+        assert_eq!(new_block.body.len(), 2);
+    }
+
+    #[test]
+    fn does_not_drop_hoisted_function_after_throw() {
+        // SOUNDNESS: `{ h; throw e; function h(){} }` — `h` is hoisted, so the
+        // reference `h` BEFORE the throw resolves to the declaration AFTER it.
+        // Dropping `function h(){}` would make `h` a ReferenceError. The tail
+        // contains a hoisted declaration, so truncation is declined: all three
+        // statements survive.
+        let body = vec![
+            expr_stmt(ident("h")),
+            throw_stmt(ident("e")),
+            func_decl_stmt("h"),
+        ];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(!changed, "must not truncate past a hoisted function decl");
+        let new_block = extract_function_body(&out);
+        assert_eq!(
+            new_block.body.len(),
+            3,
+            "hoisted `function h` must be preserved; got {:?}",
+            new_block.body
+        );
+    }
+
+    #[test]
+    fn does_not_drop_hoisted_function_after_return() {
+        // Same guard for `return` (the path the bug pre-existed on): a hoisted
+        // function declaration in the unreachable tail is preserved.
+        let body = vec![return_stmt(), func_decl_stmt("h")];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(!changed, "must not truncate past a hoisted function decl");
+        let new_block = extract_function_body(&out);
+        assert_eq!(new_block.body.len(), 2);
+    }
+
+    #[test]
+    fn does_not_drop_compound_statement_tail() {
+        // The whitelist is conservative about COMPOUND statements: an `if`
+        // (like `for`/`while`/block/`switch`) can transitively wrap a hoisted
+        // `var` (`if (c) var y;`), which a top-level-`Declaration`-only check
+        // would miss. So a tail containing any compound statement is preserved,
+        // even when the compound here holds no var — declining to drop dead
+        // code is never a miscompile.
+        let body = vec![
+            return_stmt(),
+            if_stmt(ident("c"), expr_stmt(ident("foo"))),
+        ];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(!changed, "must not truncate past a compound statement");
+        let new_block = extract_function_body(&out);
+        assert_eq!(new_block.body.len(), 2);
+    }
+
+    #[test]
+    fn drops_tail_of_let_declarations_after_terminator() {
+        // `let`/`const` are block-scoped (not hoisted), so a tail of only
+        // `let`/`const` declarations (here a `let`) IS safe to drop. Uses a
+        // `var`-free declaration to confirm the whitelist admits non-`var`
+        // declarations.
+        let body = vec![return_stmt(), let_decl_stmt("k")];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(changed, "a let-only tail after a terminator is safe to drop");
+        let new_block = extract_function_body(&out);
+        assert_eq!(new_block.body.len(), 1, "only the terminator should remain");
     }
 
     #[test]

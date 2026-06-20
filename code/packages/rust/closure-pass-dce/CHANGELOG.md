@@ -2,6 +2,71 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-19
+
+### Added — dead-code-after-`throw` at block level
+
+`throw E;` unconditionally ends the execution of its enclosing statement list
+(it raises out of the function, propagating through any `try`/loop/block), so
+every statement after it in the same `BlockStatement.body` is unreachable —
+exactly like `return`. The block-level `is_terminator` now recognizes
+`ThrowStatement` in addition to `ReturnStatement`, so:
+
+```js
+function f(x){ throw x; dead(); }
+// before:  function f(x){ throw x; dead(); }
+// after:   function f(x){ throw x; }
+
+{ throw e; cleanup1(); cleanup2(); }
+// after:   { throw e; }
+```
+
+This was a real gap: the switch-case terminator check (`is_case_terminator`)
+already treated `throw` (and `break`) as flow-ending, but the general
+block-level check dropped code only after `return`. Guard clauses and error
+paths are common — and an `inline` that splices a helper body flat after a
+guard makes them even more common on post-optimization code.
+
+`break` / `continue` remain excluded at the general block level: they terminate
+flow only relative to an enclosing loop/switch, which this context-free check
+cannot prove (and a bare `break` in a function-body block is a SyntaxError a
+faithful parser never produces). They are still handled inside switch-case
+consequents via `is_case_terminator`.
+
+### Fixed (soundness) — don't drop hoisted declarations from a dead tail
+
+While extending dead-after-terminator to `throw`, found and fixed a latent
+**miscompile** that also affected the pre-existing `return` path: `var` and
+`function` declarations are **hoisted** to the top of the enclosing function
+regardless of textual position, so a declaration in the otherwise-unreachable
+tail still creates a binding that code *before* the terminator can observe. The
+truncation was dropping it:
+
+```js
+function f(){ h(); throw e; function h(){} }
+// h() is callable because `function h` hoists past the throw.
+// Dropping `function h(){}` turned h() into a ReferenceError — a miscompile.
+// (The same happened after `return`.)
+```
+
+The dead-after-terminator truncation now truncates **only** when the
+unreachable tail is provably free of a hoisted binding, via a new
+`tail_is_safe_to_truncate` **whitelist**: the tail is dropped only if every
+statement is an `ExpressionStatement`, `EmptyStatement`, `break`, `continue`,
+`return`, `throw`, or a `let`/`const` declaration. A `var` or `function`
+declaration — OR any **compound** statement (`if` / `while` / `for` / block /
+`switch` / labeled) that could transitively wrap a hoisted `var` (e.g.
+`if (c) var y;`, `for (var i …)`) — makes the tail unsafe, so it is preserved.
+(A top-level-`Declaration`-only check would miss the compound cases.) `let` /
+`const` are block-scoped and not hoisted, so a tail of only those is still
+dropped. Declining to drop dead statements is never a miscompile; a truly-unused
+hoisted declaration is still removed downstream by `remove-unused-vars`. New
+statement variants default to unsafe (preserved) until vetted.
+
+Six new unit tests (drop-after-throw; the no-op last-statement case; the
+hoisting guard for `throw` and `return`; compound-statement-tail preservation;
+and a droppable `let`-only tail). No closurec fixture churn.
+
 ## [0.8.0] - 2026-06-04
 
 ### Added — CLOC12.36: constant-discriminant switch collapse (gap-014 step 4/N)
