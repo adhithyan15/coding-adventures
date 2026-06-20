@@ -2712,6 +2712,63 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 }
 
 #[test]
+fn run_deck_analysis_surfaces_control_diagnostics_in_artifacts() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "in", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R1", "in", "0", 1_000.0)));
+    let netlist = "
+.save V(in)
+.control
+source other.cir
+cd /tmp
+if v(in) > 0
+let gain = 2
+.endc
+.op
+.end
+";
+
+    let execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
+    let expected_codes = vec![
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND".to_string(),
+        "SPICE_DECK_CONTROL_WORKDIR_COMMAND".to_string(),
+        "SPICE_DECK_CONTROL_FLOW_COMMAND".to_string(),
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND".to_string(),
+    ];
+    let code_list = expected_codes.join(";");
+
+    assert_eq!(
+        execution.run_artifacts[0].diagnostic_count,
+        expected_codes.len()
+    );
+    assert_eq!(execution.run_artifacts[0].diagnostic_codes, expected_codes);
+    let records = deck_table_records(&execution.run_artifact_table);
+    assert_eq!(records[0].get("Diagnostics").map(String::as_str), Some("4"));
+    assert_eq!(
+        records[0].get("DiagnosticCodeList").map(String::as_str),
+        Some(code_list.as_str())
+    );
+    let run_artifact = execution.table_artifacts.last().unwrap();
+    assert_eq!(run_artifact.name, "run-artifact");
+    assert_eq!(
+        run_artifact.records[0]
+            .get("DiagnosticCodeList")
+            .map(String::as_str),
+        Some(code_list.as_str())
+    );
+    assert_eq!(
+        run_artifact.csv,
+        format_deck_run_artifact_csv(&execution.run_artifacts)
+    );
+    assert_eq!(
+        run_artifact.json,
+        format_deck_run_artifact_json(&execution.run_artifacts)
+    );
+}
+
+#[test]
 fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(

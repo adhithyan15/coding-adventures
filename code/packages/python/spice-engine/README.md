@@ -115,6 +115,9 @@ Fourier table. Executions also include a selected-run artifact summary plus
 `format_deck_run_artifact_table()` and `format_deck_run_artifact_csv()` output
 for stable result-row, table, analysis-directive, output-probe,
 output-directive, measurement, Fourier, and diagnostic count/name lists.
+Existing `.control` body policy diagnostics flow into those selected-run
+artifact `Diagnostics` / `DiagnosticCodeList` fields and through the same
+run-artifact table, CSV, JSON, and `table_artifacts` records.
 `format_deck_table_csv()` also converts any stable
 tab-separated deck table to CSV, `format_deck_table_json()` converts the same
 tables to compact JSON records, and `deck_table_records()` returns

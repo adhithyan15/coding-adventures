@@ -10199,6 +10199,21 @@ fn deck_analysis_diagnostic_codes(netlist: &str, plan: &DeckAnalysisPlan) -> Vec
         .collect()
 }
 
+fn deck_control_diagnostic_codes(netlist: &str) -> Vec<String> {
+    analyze_deck_controls(netlist)
+        .diagnostics
+        .into_iter()
+        .filter(|diagnostic| diagnostic.code.starts_with("SPICE_DECK_CONTROL_"))
+        .map(|diagnostic| diagnostic.code)
+        .collect()
+}
+
+fn deck_run_diagnostic_codes(netlist: &str, plan: &DeckAnalysisPlan) -> Vec<String> {
+    let mut codes = deck_analysis_diagnostic_codes(netlist, plan);
+    codes.extend(deck_control_diagnostic_codes(netlist));
+    codes
+}
+
 fn format_deck_artifact_float(value: Option<f64>) -> String {
     value.map(format_table_number).unwrap_or_default()
 }
@@ -10519,7 +10534,7 @@ pub fn run_deck_analysis(
     analysis: Option<&str>,
 ) -> Result<DeckAnalysisExecution, SpiceError> {
     let plan = select_deck_analysis_plan(netlist, analysis)?;
-    let diagnostic_codes = deck_analysis_diagnostic_codes(netlist, &plan);
+    let diagnostic_codes = deck_run_diagnostic_codes(netlist, &plan);
     let analysis_directives = deck_analysis_directives(&plan);
     match plan.analysis.as_str() {
         "op" => {

@@ -7341,6 +7341,49 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
 
 
+def test_run_deck_analysis_surfaces_control_diagnostics_in_artifacts() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(Resistor("R1", "in", "0", 1000.0))
+    netlist = """
+.save V(in)
+.control
+source other.cir
+cd /tmp
+if v(in) > 0
+let gain = 2
+.endc
+.op
+.end
+"""
+
+    execution = run_deck_analysis(circuit, netlist, "op")
+    expected_codes = [
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+    ]
+    code_list = ";".join(expected_codes)
+
+    assert execution.run_artifacts[0].diagnostic_count == len(expected_codes)
+    assert execution.run_artifacts[0].diagnostic_codes == expected_codes
+    record = deck_table_records(execution.run_artifact_table)[0]
+    assert record["Diagnostics"] == str(len(expected_codes))
+    assert record["DiagnosticCodeList"] == code_list
+    assert execution.table_artifacts[-1].name == "run-artifact"
+    assert execution.table_artifacts[-1].records[0]["DiagnosticCodeList"] == code_list
+    assert execution.table_artifacts[-1].csv == format_deck_run_artifact_csv(
+        execution.run_artifacts
+    )
+    assert execution.table_artifacts[-1].json == format_deck_run_artifact_json(
+        execution.run_artifacts
+    )
+    assert json.loads(format_deck_run_artifact_json(execution.run_artifacts))[0][
+        "DiagnosticCodeList"
+    ] == code_list
+
+
 def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
     circuit = Circuit()
     circuit.add(VoltageSource("V1", "vin", "0", 1.0))
