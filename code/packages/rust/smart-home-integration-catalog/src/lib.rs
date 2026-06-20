@@ -4703,6 +4703,193 @@ impl IntegrationMeshReleaseReadinessCheckSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseReadinessCheckSlot {
+    pub sequence: usize,
+    pub slot_key: String,
+    pub check_sequence: usize,
+    pub check_kind: IntegrationMeshReleaseReadinessCheckKind,
+    pub status: IntegrationMeshReleaseReadinessStatus,
+    pub package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub queued_substrate_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub remediation_item_count: usize,
+    pub review_required_packages: usize,
+    pub operator_required_packages: usize,
+    pub blocked_packages: usize,
+    pub packages_requiring_attention: usize,
+    pub ready: bool,
+    pub blocked: bool,
+    pub review_required: bool,
+    pub operator_required: bool,
+    pub requires_attention: bool,
+}
+
+impl IntegrationMeshReleaseReadinessCheckSlot {
+    pub fn from_check(sequence: usize, check: &IntegrationMeshReleaseReadinessCheck) -> Self {
+        Self {
+            sequence,
+            slot_key: format!(
+                "release-check-slot-{sequence:02}-{}",
+                check.check_kind.as_str()
+            ),
+            check_sequence: check.sequence,
+            check_kind: check.check_kind,
+            status: check.status,
+            package_kind: check.package_kind,
+            handoff_status: check.handoff_status,
+            queued_substrate_actions: check.queued_substrate_actions,
+            queued_stage_count: check.queued_stage_count,
+            queued_primitive_count: check.queued_primitive_count,
+            remediation_item_count: check.remediation_item_count,
+            review_required_packages: check.review_required_packages,
+            operator_required_packages: check.operator_required_packages,
+            blocked_packages: check.blocked_packages,
+            packages_requiring_attention: check.packages_requiring_attention,
+            ready: check.ready(),
+            blocked: check.blocked(),
+            review_required: check.review_required(),
+            operator_required: check.operator_required(),
+            requires_attention: check.requires_attention(),
+        }
+    }
+
+    pub fn ready(&self) -> bool {
+        self.ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn review_required(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn operator_required(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseReadinessCheckSlotSummary {
+    pub total_slots: usize,
+    pub ready_slots: usize,
+    pub blocked_slots: usize,
+    pub review_required_slots: usize,
+    pub operator_required_slots: usize,
+    pub slots_requiring_attention: usize,
+    pub queued_substrate_actions: usize,
+    pub queued_stage_count: usize,
+    pub queued_primitive_count: usize,
+    pub remediation_item_count: usize,
+    pub review_required_packages: usize,
+    pub operator_required_packages: usize,
+    pub blocked_packages: usize,
+    pub packages_requiring_attention: usize,
+    pub first_slot_key: Option<String>,
+    pub first_blocked_slot_key: Option<String>,
+    pub first_review_slot_key: Option<String>,
+    pub first_operator_slot_key: Option<String>,
+    pub next_slot_key: Option<String>,
+    pub next_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub next_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub next_handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub release_check_slots_ready: bool,
+}
+
+impl IntegrationMeshReleaseReadinessCheckSlotSummary {
+    pub fn from_slots<'a>(
+        slots: impl IntoIterator<Item = &'a IntegrationMeshReleaseReadinessCheckSlot>,
+    ) -> Self {
+        let slots = slots.into_iter().collect::<Vec<_>>();
+        let first_slot = slots.iter().min_by_key(|slot| slot.sequence);
+        let first_blocked_slot = slots
+            .iter()
+            .filter(|slot| slot.blocked())
+            .min_by_key(|slot| slot.sequence);
+        let first_review_slot = slots
+            .iter()
+            .filter(|slot| slot.review_required())
+            .min_by_key(|slot| slot.sequence);
+        let first_operator_slot = slots
+            .iter()
+            .filter(|slot| slot.operator_required())
+            .min_by_key(|slot| slot.sequence);
+        let next_slot = slots
+            .iter()
+            .filter(|slot| slot.requires_attention())
+            .min_by_key(|slot| slot.sequence);
+        let release_check_slots_ready = !slots.is_empty() && slots.iter().all(|slot| slot.ready());
+
+        Self {
+            total_slots: slots.len(),
+            ready_slots: slots.iter().filter(|slot| slot.ready()).count(),
+            blocked_slots: slots.iter().filter(|slot| slot.blocked()).count(),
+            review_required_slots: slots.iter().filter(|slot| slot.review_required()).count(),
+            operator_required_slots: slots.iter().filter(|slot| slot.operator_required()).count(),
+            slots_requiring_attention: slots
+                .iter()
+                .filter(|slot| slot.requires_attention())
+                .count(),
+            queued_substrate_actions: first_slot.map_or(0, |slot| slot.queued_substrate_actions),
+            queued_stage_count: first_slot.map_or(0, |slot| slot.queued_stage_count),
+            queued_primitive_count: first_slot.map_or(0, |slot| slot.queued_primitive_count),
+            remediation_item_count: first_slot.map_or(0, |slot| slot.remediation_item_count),
+            review_required_packages: first_slot.map_or(0, |slot| slot.review_required_packages),
+            operator_required_packages: first_slot
+                .map_or(0, |slot| slot.operator_required_packages),
+            blocked_packages: first_slot.map_or(0, |slot| slot.blocked_packages),
+            packages_requiring_attention: first_slot
+                .map_or(0, |slot| slot.packages_requiring_attention),
+            first_slot_key: first_slot.map(|slot| slot.slot_key.clone()),
+            first_blocked_slot_key: first_blocked_slot.map(|slot| slot.slot_key.clone()),
+            first_review_slot_key: first_review_slot.map(|slot| slot.slot_key.clone()),
+            first_operator_slot_key: first_operator_slot.map(|slot| slot.slot_key.clone()),
+            next_slot_key: next_slot.map(|slot| slot.slot_key.clone()),
+            next_check_kind: next_slot.map(|slot| slot.check_kind),
+            next_check_status: next_slot.map(|slot| slot.status),
+            next_package_kind: next_slot.and_then(|slot| slot.package_kind),
+            next_handoff_status: next_slot.and_then(|slot| slot.handoff_status),
+            release_check_slots_ready,
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_slots == 0
+    }
+
+    pub fn has_slots(&self) -> bool {
+        self.total_slots > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_slots > 0 || self.blocked_packages > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_slots > 0 || self.review_required_packages > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_slots > 0 || self.operator_required_packages > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.slots_requiring_attention > 0
+            || self.has_blockers()
+            || self.has_review_work()
+            || self.needs_operator()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshReleasePacketReadinessSummary {
     pub release_readiness_check_summary: IntegrationMeshReleaseReadinessCheckSummary,
     pub total_checks: usize,
@@ -25768,6 +25955,68 @@ pub fn mesh_release_readiness_check_summary(
     )
 }
 
+pub fn mesh_release_readiness_check_slots_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseReadinessCheckSlot> {
+    mesh_release_readiness_checks_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+    .iter()
+    .enumerate()
+    .map(|(index, check)| IntegrationMeshReleaseReadinessCheckSlot::from_check(index + 1, check))
+    .collect()
+}
+
+pub fn mesh_release_readiness_check_slots(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseReadinessCheckSlot> {
+    let catalog = first_party_catalog();
+    mesh_release_readiness_check_slots_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_readiness_check_slot_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseReadinessCheckSlotSummary {
+    let slots = mesh_release_readiness_check_slots_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+
+    IntegrationMeshReleaseReadinessCheckSlotSummary::from_slots(slots.iter())
+}
+
+pub fn mesh_release_readiness_check_slot_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseReadinessCheckSlotSummary {
+    let catalog = first_party_catalog();
+    mesh_release_readiness_check_slot_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 pub fn mesh_release_packet_readiness_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -35050,6 +35299,137 @@ mod tests {
             checks[4].status,
             IntegrationMeshReleaseReadinessStatus::Ready
         );
+    }
+
+    #[test]
+    fn mesh_release_readiness_check_slots_sequence_release_gates() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let slots =
+            mesh_release_readiness_check_slots(&available_primitives, &allowed_capabilities, &[]);
+        let summary = mesh_release_readiness_check_slot_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(slots.len(), 5);
+        assert_eq!(summary.total_slots, 5);
+        assert_eq!(summary.ready_slots, 0);
+        assert_eq!(summary.blocked_slots, 3);
+        assert_eq!(summary.review_required_slots, 2);
+        assert_eq!(summary.operator_required_slots, 4);
+        assert_eq!(summary.slots_requiring_attention, 5);
+        assert_eq!(summary.queued_substrate_actions, 5);
+        assert_eq!(summary.remediation_item_count, 2);
+        assert_eq!(summary.review_required_packages, 1);
+        assert_eq!(summary.operator_required_packages, 6);
+        assert_eq!(summary.blocked_packages, 5);
+        assert_eq!(
+            summary.first_slot_key,
+            Some("release-check-slot-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.first_blocked_slot_key,
+            Some("release-check-slot-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.first_review_slot_key,
+            Some("release-check-slot-02-evidence_remediation".to_string())
+        );
+        assert_eq!(
+            summary.first_operator_slot_key,
+            Some("release-check-slot-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_slot_key,
+            Some("release-check-slot-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_check_kind,
+            Some(IntegrationMeshReleaseReadinessCheckKind::SubstrateActions)
+        );
+        assert_eq!(
+            summary.next_check_status,
+            Some(IntegrationMeshReleaseReadinessStatus::Blocked)
+        );
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction)
+        );
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Blocked)
+        );
+        assert!(!summary.release_check_slots_ready);
+        assert!(summary.has_slots());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.needs_operator());
+        assert!(summary.requires_attention());
+
+        let first = &slots[0];
+        assert_eq!(
+            first.check_kind,
+            IntegrationMeshReleaseReadinessCheckKind::SubstrateActions
+        );
+        assert_eq!(first.status, IntegrationMeshReleaseReadinessStatus::Blocked);
+        assert_eq!(
+            first.package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction)
+        );
+        assert!(first.blocked());
+        assert!(first.operator_required());
+        assert!(first.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_readiness_check_slots_mark_release_ready() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let slots = mesh_release_readiness_check_slots_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+        let summary = mesh_release_readiness_check_slot_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(slots.len(), 5);
+        assert_eq!(summary.total_slots, 5);
+        assert_eq!(summary.ready_slots, 5);
+        assert_eq!(summary.blocked_slots, 0);
+        assert_eq!(summary.review_required_slots, 0);
+        assert_eq!(summary.operator_required_slots, 0);
+        assert_eq!(summary.slots_requiring_attention, 0);
+        assert_eq!(summary.next_slot_key, None);
+        assert_eq!(summary.next_check_kind, None);
+        assert_eq!(summary.next_check_status, None);
+        assert_eq!(summary.next_package_kind, None);
+        assert_eq!(summary.next_handoff_status, None);
+        assert!(summary.release_check_slots_ready);
+        assert!(summary.has_slots());
+        assert!(!summary.has_blockers());
+        assert!(!summary.has_review_work());
+        assert!(!summary.needs_operator());
+        assert!(!summary.requires_attention());
+        assert!(slots
+            .iter()
+            .all(IntegrationMeshReleaseReadinessCheckSlot::ready));
     }
 
     #[test]

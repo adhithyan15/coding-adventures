@@ -103,6 +103,8 @@ runtime and Chief of Staff tools a typed catalog for:
   remediation, and release-ready state for reusable release coordination
 - mesh release-readiness checks that summarize substrate action, evidence,
   human-review, operator handoff, and release packet gates
+- low-level mesh release-readiness check slots that sequence those gates into
+  deterministic operator and release execution work
 - mesh release packet readiness summaries that condense release-readiness
   checks into package-facing go/no-go state and first actionable gates
 - primitive backlog planning for prioritizing the shared families needed by a
