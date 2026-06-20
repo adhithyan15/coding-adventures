@@ -35,6 +35,7 @@ EXPECTED = {
     "systemic_sclerosis": {"anti_scl70", "anti_centromere"},
     "rheumatoid_arthritis": {"anti_ccp"},                 # primary-source backfill (NBK441999)
     "sjogren_syndrome": {"anti_ro", "anti_la"},           # primary-source backfill (NBK431049)
+    "primary_biliary_cholangitis": {"anti_mitochondrial"},  # primary-source backfill (NBK459209)
 }
 REL = "associated_autoantibody"
 VAR = "Antibody"
