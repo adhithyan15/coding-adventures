@@ -1677,23 +1677,49 @@ mod r22_environments {
         assert_eq!(nums(src), vec![1.0]);
     }
 
-    /// `environment(f)` (a closure's captured env) is deferred to R-23 — a clean
-    /// error, not a wrong answer.
+    /// `environment(f)` (a closure's captured env) now lands in R-23: for a
+    /// top-level closure it is the global env, so it is an environment value.
     #[test]
-    fn environment_of_a_function_is_deferred() {
-        assert!(eval_s("f <- function() 1\nenvironment(f)\n").is_err());
+    fn environment_of_a_function_is_the_captured_env() {
+        assert_eq!(
+            show("f <- function() 1\nis.environment(environment(f))\n"),
+            "[1] TRUE"
+        );
+        // A non-closure argument yields NULL (R's `environment(sum)` is NULL).
+        assert_eq!(show("environment(1)\n"), "NULL");
     }
 
-    /// Hardening: degenerate inputs to the R-22 forms must never panic.
+    /// R-23 well-known environment names (S syntax).
+    #[test]
+    fn r23_environment_names() {
+        assert_eq!(
+            show("environmentName(globalenv())\n"),
+            "[1] \"R_GlobalEnv\""
+        );
+        assert_eq!(show("environmentName(emptyenv())\n"), "[1] \"R_EmptyEnv\"");
+        assert_eq!(show("environmentName(new.env())\n"), "[1] \"\"");
+        // baseenv aliases the global env in this runtime.
+        assert_eq!(show("environmentName(baseenv())\n"), "[1] \"R_GlobalEnv\"");
+    }
+
+    /// Hardening: degenerate inputs to the R-22/R-23 forms must never panic.
     #[test]
     fn r22_forms_do_not_panic() {
         for src in [
-            "new.env(1, 2, 3)\n",                  // extra args ignored
-            "environment(1)\n",                    // environment(f) deferred → error
-            "ls(1)\n",                             // non-env positional → error
-            "ls(envir = 1)\n",                     // non-env envir → error
-            "get(\"x\", envir = e)\n",             // envir refers to an unbound name
-            "assign(\"x\", 1, envir = list(1))\n", // non-env envir → error
+            "new.env(1, 2, 3)\n",                    // extra args ignored
+            "environment(1)\n",                      // non-closure → NULL
+            "ls(1)\n",                               // non-env positional → error
+            "ls(envir = 1)\n",                       // non-env envir → error
+            "get(\"x\", envir = e)\n",               // envir refers to an unbound name
+            "assign(\"x\", 1, envir = list(1))\n",   // non-env envir → error
+            "environmentName(1)\n",                  // non-env → error
+            "environmentName()\n",                   // missing arg → error
+            "parent.frame(0)\n",                     // n < 1 → error
+            "parent.frame(-3)\n",                    // negative n → error
+            "parent.frame(1000000)\n",               // n past the bottom → clamps
+            "parent.frame()\n",                      // top-level → clamps to global
+            "f <- function() 1\nenvironment(f) <- 1\n", // non-env value → error
+            "environment(\"x\") <- globalenv()\n",   // non-closure target → error
         ] {
             let _ = eval_s(src);
         }

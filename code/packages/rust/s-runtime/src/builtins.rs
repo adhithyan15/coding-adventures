@@ -86,6 +86,13 @@ pub fn install(env: &Env) {
     define(env, "any", builtin("any", b_any));
     define(env, "all", builtin("all", b_all));
     define(env, "is.na", builtin("is.na", b_is_na));
+    // R-23 — environment predicate + the `environment(f) <- e` replacement.
+    define(env, "is.environment", builtin("is.environment", b_is_environment));
+    define(
+        env,
+        "environment<-",
+        builtin("environment<-", b_environment_replace),
+    );
     define(env, "cumsum", builtin("cumsum", b_cumsum));
     define(env, "cumprod", builtin("cumprod", b_cumprod));
     define(env, "paste", builtin("paste", b_paste));
@@ -1799,6 +1806,63 @@ fn b_is_na(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             .collect(),
     };
     Ok(SValue::Logical(flags))
+}
+
+/// `is.environment(x)` (R-23) — `TRUE` iff `x` is a first-class environment
+/// value, `FALSE` otherwise. A scalar predicate matching R: it inspects the
+/// single value's *type*, so `is.environment(new.env())` is `TRUE` and
+/// `is.environment(1)` / `is.environment("e")` are `FALSE`. The tests assert a
+/// closure's captured env through this (`is.environment(environment(f))`).
+fn b_is_environment(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let v = first_positional(args)?;
+    Ok(SValue::Logical(vec![Some(matches!(
+        v,
+        SValue::Environment(_)
+    ))]))
+}
+
+/// `environment(f) <- e` (R-23), reached through the R-15/R-16 replacement-
+/// function lvalue path (`f(x) <- v` ≡ ``x <- `f<-`(x, v)``). The replacement
+/// convention passes `(x, value)`: `x` is the closure whose captured environment
+/// is being set (positional[0]); `value` is the new environment (the `value =`
+/// named arg, or positional[1]).
+///
+/// Closures are **immutable values** here, so we return a *fresh* `Closure` with
+/// its `env` field swapped to `e` and the same `params`/`body` (the caller — the
+/// replacement-assignment desugaring — rebinds the variable to this result, as R
+/// does). The new closure now closes over `e`, so free variables in its body
+/// resolve from `e`'s chain. Errors are clean (never panics): a non-closure `x`
+/// is a `TypeError`, a missing or non-environment `value` is a `BadArgs`.
+fn b_environment_replace(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.clone();
+    let value = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("value"))
+        .map(|a| a.value.clone())
+        .or_else(|| nth_positional(args, 1).cloned())
+        .ok_or_else(|| {
+            SError::BadArgs("environment(f) <- value: the replacement value is missing".into())
+        })?;
+    let new_env = match value {
+        SValue::Environment(e) => e,
+        other => {
+            return Err(SError::BadArgs(format!(
+                "environment(f) <- value: value must be an environment, got {}",
+                other.type_name()
+            )))
+        }
+    };
+    match x {
+        SValue::Closure { params, body, .. } => Ok(SValue::Closure {
+            params,
+            body,
+            env: new_env,
+        }),
+        other => Err(SError::TypeError(format!(
+            "environment(f) <- value: f must be a closure, got {}",
+            other.type_name()
+        ))),
+    }
 }
 
 /// `cumsum(x)` — running totals (delegates to statistics-core).
