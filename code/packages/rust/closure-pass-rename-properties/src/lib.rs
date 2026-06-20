@@ -1042,6 +1042,24 @@ fn classify_stmt(stmt: &Statement, cls: &mut Classify, nodes_touched: &mut u32) 
                     }
                 }
             }
+            TaggedStatement::TryStatement(ts) => {
+                // Property renaming is variable-agnostic — recurse into the
+                // three blocks; the catch `param` is a variable binding, not a
+                // property, so nothing special is needed.
+                for s in &ts.block.body {
+                    classify_stmt(s, cls, nodes_touched);
+                }
+                if let Some(h) = &ts.handler {
+                    for s in &h.body.body {
+                        classify_stmt(s, cls, nodes_touched);
+                    }
+                }
+                if let Some(f) = &ts.finalizer {
+                    for s in &f.body {
+                        classify_stmt(s, cls, nodes_touched);
+                    }
+                }
+            }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
             | TaggedStatement::EmptyStatement(_) => {}
@@ -1213,6 +1231,22 @@ fn rewrite_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
                         rewrite_expr(test, map);
                     }
                     for s in &mut c.consequent {
+                        rewrite_stmt(s, map);
+                    }
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                // Rewrite property accesses inside the three blocks.
+                for s in &mut ts.block.body {
+                    rewrite_stmt(s, map);
+                }
+                if let Some(h) = &mut ts.handler {
+                    for s in &mut h.body.body {
+                        rewrite_stmt(s, map);
+                    }
+                }
+                if let Some(f) = &mut ts.finalizer {
+                    for s in &mut f.body {
                         rewrite_stmt(s, map);
                     }
                 }

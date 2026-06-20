@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-20
+
+### Added — CLOC19: scope analysis for `try`/`catch`/`finally`
+
+`walk_tagged_statement` now handles `TryStatement`: it walks the protected
+block, opens a dedicated `ScopeKind::Block` scope for the catch handler and emits
+the catch `param` as a `BindingKind::Let` binding scoped to the handler body
+(catch params bind only within `catch { … }`, never the surrounding scope), then
+walks the handler body and the finalizer. This keeps the analyzer's binding model
+accurate for programs containing try/catch.
+
 ## [0.4.1] - 2026-06-16
 
 ### Docs

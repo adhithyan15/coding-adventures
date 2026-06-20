@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.10.0] - 2026-06-20
+
+### Added — CLOC19: bridge `try_statement` → `TryStatement`
+
+`try_statement` no longer lands in the unsupported arm (which raised
+`UnsupportedSyntax` and forced a WHITESPACE_ONLY fallback at the CLI). New
+`convert_try_statement` reads the first `block` child and walks the remaining
+children for a `catch_clause` / `finally_clause`; `convert_catch_clause` extracts
+the single `NAME` token as the catch binding (or `None` for the ES2019
+optional-catch-binding form). The grammar restricts the catch binding to a simple
+`NAME`, so a destructuring catch param fails to parse or bridge and declines
+cleanly — it is never lowered to a fabricated simple identifier.
+
+Added structural bridge tests for the full `try/catch/finally`,
+optional-catch-binding, and `try/finally` (no catch) forms, plus a guard test
+that a destructuring catch param never mis-binds.
+
 ## [0.9.0] - 2026-06-19
 
 ### Fixed — assignment-expression statements failed to parse (CLOC17)

@@ -434,11 +434,32 @@ fn count_decl_names_stmt(
                     }
                 }
             }
+            TaggedStatement::TryStatement(ts) => {
+                // The catch `param` IS a binding — count it so it participates
+                // in the shadow guard (a top-level const sharing its name is
+                // not "uniquely declared"). Recurse into the three blocks.
+                for s in &ts.block.body {
+                    count_decl_names_stmt(s, out, nodes_touched);
+                }
+                if let Some(h) = &ts.handler {
+                    if let Some(param) = &h.param {
+                        *out.entry(param.name.clone()).or_insert(0) += 1;
+                    }
+                    for s in &h.body.body {
+                        count_decl_names_stmt(s, out, nodes_touched);
+                    }
+                }
+                if let Some(f) = &ts.finalizer {
+                    for s in &f.body {
+                        count_decl_names_stmt(s, out, nodes_touched);
+                    }
+                }
+            }
             // Statements that introduce no binding in the Phase-1 AST.
             // Exhaustive on purpose: a future binding-introducing
-            // statement (a `try`/`catch`, a `class` declaration) must be
-            // handled here so a shadowing name can't slip past the
-            // shadow guard. The compiler flags the omission.
+            // statement (a `class` declaration) must be handled here so a
+            // shadowing name can't slip past the shadow guard. The compiler
+            // flags the omission.
             TaggedStatement::ExpressionStatement(_)
             | TaggedStatement::ReturnStatement(_)
             | TaggedStatement::ThrowStatement(_)
@@ -542,6 +563,25 @@ fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
                         count_uses_expr(test, name, count);
                     }
                     for s in &c.consequent {
+                        count_uses_stmt(s, name, count);
+                    }
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                // Count `name` uses inside the three blocks. The catch `param`
+                // binding-site is not a use; references to it inside the body
+                // are counted by recursion (and a candidate can't share its
+                // name — the decl-count guard excludes that).
+                for s in &ts.block.body {
+                    count_uses_stmt(s, name, count);
+                }
+                if let Some(h) = &ts.handler {
+                    for s in &h.body.body {
+                        count_uses_stmt(s, name, count);
+                    }
+                }
+                if let Some(f) = &ts.finalizer {
+                    for s in &f.body {
                         count_uses_stmt(s, name, count);
                     }
                 }
@@ -729,6 +769,25 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
                         changed |= propagate_in_expr(test, cand);
                     }
                     for s in &mut c.consequent {
+                        changed |= propagate_in_stmt(s, cand);
+                    }
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                // Propagate into the three blocks. Sound because a candidate
+                // shadowed by a catch `param` of the same name is excluded
+                // upstream by the decl-count guard, so any `cand.name` use
+                // reached here truly resolves to the candidate.
+                for s in &mut ts.block.body {
+                    changed |= propagate_in_stmt(s, cand);
+                }
+                if let Some(h) = &mut ts.handler {
+                    for s in &mut h.body.body {
+                        changed |= propagate_in_stmt(s, cand);
+                    }
+                }
+                if let Some(f) = &mut ts.finalizer {
+                    for s in &mut f.body {
                         changed |= propagate_in_stmt(s, cand);
                     }
                 }

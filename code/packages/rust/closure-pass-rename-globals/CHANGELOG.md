@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.2.0] - 2026-06-20
+
+### Added — CLOC19: global renaming across `try`/`catch`/`finally` (catch-param soundness)
+
+`count_decl_names_stmt`, `collect_all_idents_stmt`, and `rename_apply_tagged`
+recurse through `TryStatement`. As in the local renamer, the catch `param` is
+counted as a declared binding and added to the avoid set, so a global rename can
+never produce a name that collides with a catch binding and the param itself is
+never rewritten.
+
 ## [0.1.0] - 2026-06-18
 
 ### Added (CLOC13.I — aggressive top-level / global renaming)

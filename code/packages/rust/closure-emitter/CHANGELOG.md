@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.13.0] - 2026-06-20
+
+### Added — CLOC19: emit `try`/`catch`/`finally`
+
+New `emit_try` writes `try <block> [ catch [(param)] <block> ] [ finally <block> ]`.
+No `required_ws` is needed anywhere: every boundary is keyword↔`{`/`}` or
+`}`↔keyword (`try{…}catch{…}`, `}finally{…}`), which lex cleanly with no
+separator. Pretty mode inserts readability spaces (`try {`, `catch (e) {`,
+`finally {`); minified mode emits the tight form. The optional-catch-binding
+form (`catch { … }`) emits with no parens. Added emitter unit tests pinning the
+minified token boundaries, the optional-binding and no-catch forms, and the
+pretty-mode spacing.
+
 ## [0.12.0] - 2026-06-08
 
 ### Changed

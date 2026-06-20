@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.16.0] - 2026-06-20
+
+### Added — CLOC19: function inlining across `try`/`catch`/`finally`
+
+Every phase of the pass recurses through `TryStatement`:
+`count_decl_names_stmt`, `tally_stmt`, `inline_in_stmt`, `splice_void_in_stmt`,
+`splice_valued_in_stmt`, and `collect_used_idents_stmt` now descend into the
+protected block, catch handler body, and finalizer. The catch `param` is counted
+as a declared binding (the CLOC16 shadow-guard linchpin — every binding must be
+counted program-wide so shadowing is detected) and is added to the used-idents
+avoid set so inlined temporaries never collide with it. Calls inside try/catch
+blocks are now inlined like anywhere else.
+
 ## [0.15.0] - 2026-06-19
 
 ### Added (CLOC18 — parameter-mutation materialization)

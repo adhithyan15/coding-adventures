@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-20
+
+### Added — CLOC19: local renaming across `try`/`catch`/`finally` (catch-param soundness)
+
+The pass now recurses through `TryStatement` in every phase
+(`process_tagged`, `stmt_has_function`, `collect_decl_occurrences_stmt`,
+`collect_all_idents_stmt`, `rewrite_uses_tagged`), so local renames reach into the
+protected block, catch handler, and finalizer. The catch `param` is treated as a
+**reserved binding**:
+
+* it is collected as an INELIGIBLE occurrence (never itself renamed), and
+* it is added to the fresh-name avoid set, so no other local can be renamed to a
+  name that collides with it.
+
+A regression test pins the killer case: when the catch param is literally `a`,
+the function's own param is renamed to `b` (not `a`) — proving a generated short
+name never aliases the caught value. Without either guard the handler would
+miscompile.
+
 ## [0.4.0] - 2026-06-16
 
 ### Added — local variables, not just parameters

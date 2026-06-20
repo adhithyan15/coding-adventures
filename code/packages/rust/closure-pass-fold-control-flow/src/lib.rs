@@ -289,6 +289,29 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
                 },
             ))
         }
+        TaggedStatement::TryStatement(s) => {
+            // Recurse fold-control-flow into the protected block, catch body,
+            // and finalizer (each an ordinary block). The catch `param` is
+            // preserved. The `try` is not a terminator, so no control-flow
+            // peephole applies to the statement itself here.
+            Statement::Tagged(TaggedStatement::TryStatement(
+                coding_adventures_javascript_ast::TryStatement {
+                    cv: s.cv.clone(),
+                    block: fold_block_statement(&s.block, st),
+                    handler: s.handler.as_ref().map(|h| {
+                        coding_adventures_javascript_ast::CatchClause {
+                            cv: h.cv.clone(),
+                            param: h.param.clone(),
+                            body: fold_block_statement(&h.body, st),
+                        }
+                    }),
+                    finalizer: s
+                        .finalizer
+                        .as_ref()
+                        .map(|f| fold_block_statement(f, st)),
+                },
+            ))
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => Statement::Tagged(stmt.clone()),

@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.12.0] - 2026-06-20
+
+### Added — CLOC19: fold inside `try`/`catch`/`finally`
+
+`fold_tagged` now has a `TryStatement` arm that recurses constant folding into
+the protected block, the catch handler body, and the finalizer, preserving the
+catch `param` verbatim. Constant initializers and expressions inside try/catch
+blocks (e.g. `1 + 2` ⇒ `3`) now fold like anywhere else.
+
 ## [0.11.0] - 2026-06-19
 
 ### Added — CLOC15.D: fold bitwise & shift operators on numeric literals
