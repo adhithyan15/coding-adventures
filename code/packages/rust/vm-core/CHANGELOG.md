@@ -1,5 +1,33 @@
 # Changelog — vm-core
 
+## [0.6.0] — 2026-06-20 (LANG-FULL E3 — floating-point execution)
+
+### Added — `f64` arithmetic and ordered comparisons
+
+The interpreter previously resolved an `Operand::Float` literal but rejected
+any *arithmetic* on it (`int_srcs` coerced to `i64`, erroring on a float). Now
+`add`/`sub`/`mul`/`div`/`neg` and the ordered comparisons (`cmp_lt`/`cmp_le`/
+`cmp_gt`/`cmp_ge`) take a **float track** when an op is `f64`/`f32`-typed or has
+a float operand, computing in `f64` and producing a `Value::Float` — never
+width-masked. `cmp_eq`/`cmp_ne` already compared floats via `Value`'s
+`PartialEq`.
+
+- A new `float_srcs(frame, srcs, type_hint)` helper returns `Some((f64, f64))`
+  on a float signal and `None` to fall through to the unchanged integer path —
+  so **every existing integer program behaves exactly as before** (the float
+  path is taken only on a genuine float signal).
+- **Float division is IEEE-754**: `x / 0.0` is `±inf`/`NaN`, *not* an error.
+  This matches the LLVM/WASM/JVM `fdiv` the code-gen backends emit, so a
+  real-division program agrees across every backend instead of trapping. Only
+  *integer* division still traps on a zero divisor.
+- An integer operand on the float track is widened (`n as f64`) so a future
+  mixed expression degrades gracefully; the current ALGOL frontend never mixes.
+
+This is the reference-tier half of enabler **E3** (floating-point): it lets the
+VM execute the `f64` IIR that the ALGOL 60 `real` frontend (AL1) now emits.
+Five unit tests cover arith, division-by-zero → inf, ordered/equality
+comparisons, and float negation.
+
 ## [0.5.0] — 2026-06-14 (LANG-FULL E2 — register width & wrap, backend 1 of 6)
 
 ### Added — narrow-width integer arithmetic wraps mod-2ⁿ by `type_hint`

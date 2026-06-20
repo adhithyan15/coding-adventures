@@ -149,9 +149,27 @@ multiple languages; close an enabler before the features that depend on it.
       op + `iir-to-cil-bytecode` 0.21.0's textual-`.il` `not` arm). **Oct O2-`~`** ✅ too
       (oct-iir-compiler 0.7.0 — Oct's single integer width makes every int op u8; needed a JVM
       long-model mask fix in iir-to-jvm-class-file 0.14.0). **E2 integration complete.**
-- **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and
-  literals on every backend. Unlocks ALGOL reals and BASIC floats. *(Audit which backends
-  already emit f64 ops; extend the rest.)*
+- **E3 — Real / floating-point (`f64`).** ◑ *In progress (phase 1 — VM/JIT execute f64).*
+  End-to-end f64 arithmetic, comparison, and literals. Unlocks ALGOL reals and BASIC floats.
+  - ✅ **vm-core** (0.6.0) — `add`/`sub`/`mul`/`div`/`neg` + ordered comparisons take a float
+    track (`f64` result, IEEE div-by-zero → ±inf to match the code-gen backends' `fdiv`);
+    integer programs unchanged. `cmp_eq`/`cmp_ne` already compared floats via `Value` equality.
+  - ✅ **jit-core** — already executes f64 (its CIR carries `add_f64`/… and a float operand);
+    confirmed by running the ALGOL real matrix proofs on the JIT.
+  - ✅ **Frontend driver (AL1)** — ALGOL 60 `real` lowers to `f64`; two executed VM/JIT matrix
+    proofs (real `*`+`=` → 42, real `/`+`<` → 1). *(BASIC floats / BA7 are a later driver.)*
+  - ☐ **E3-codegen-slots** — `iir-to-{llvm,wasm,jvm}` already emit the f64 *ops*
+    (`fmul`/`f64.mul`/`dmul`, audited FULL) but model every *variable slot* as a uniform `i64`
+    (LLVM `alloca i64`, etc. — the backends' own source already flags this under E3), so storing
+    a double into an i64 slot is invalid. Needs per-slot float typing in the slot load/store
+    protocol **+** a boolean (not operand-width) comparison-result type (the LLVM cmp currently
+    `zext i1 → double`). This unblocks the 3 stack/SSA code-gen backends.
+  - ☐ **E3-native** — `x86_64-backend`/`aarch64-backend` reject `const_f64`/`CIROperand::Float`;
+    need SSE (`addsd`/`mulsd`/`comisd`) and AArch64 FP (`fadd`/`fcmp`) emission. (`aot-core`'s
+    `infer`/`specialise` already allow `f64`.)
+  - ☐ **E3-clr** — `iir-to-cil-bytecode` explicitly rejects `Operand::Float` ("float constants
+    are not supported in CLR v1"); need `ldc.r8` + `add`/`sub`/`mul`/`div`/float compares in both
+    the bytecode and textual-`.il` emitters.
 - **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
   compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
   ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
@@ -293,7 +311,12 @@ backend immediately) come before the enabler-dependent items.
 - ☐ **BA7** — floating-point (needs **E3**).
 
 ### ALGOL 60
-- ☐ **AL1** — real arithmetic + `/` (needs **E3**).
+- ◑ **AL1** — real arithmetic + `/`. **Frontend + VM/JIT done** (algol-iir-compiler 0.4.0):
+  `real` → IIR `f64`, `REAL_LIT` → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit
+  the `f64` hint, `/` is real division, real comparisons compare at `f64` width; `div`/`mod`
+  stay integer-only; no implicit int→real coercion (mixing is a clean error). **Verified by
+  RUNNING** on the VM and JIT (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1). Remaining
+  to clear every backend: **E3-codegen-slots / E3-native / E3-clr** (see enabler E3 above).
 - ☐ **AL2** — arrays with runtime bounds (needs **E5**).
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**

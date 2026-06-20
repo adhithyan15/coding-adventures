@@ -11,11 +11,11 @@ ALGOL source -> algol-lexer/parser -> algol-iir-compiler -> IIRModule
   -> iir-to-beam / iir-to-llvm
 ```
 
-The first slice supports scalar `integer` and `boolean` programs with
-assignments, integer arithmetic (`+`, `-`, `*`, `div`, `mod`), comparisons,
-`if`/`else`, compound statements, labels, `goto`,
-`for i := a step k until b do ...`, **typed procedures with `value`
-parameters**, and **switches** (computed goto):
+The first slice supports scalar `integer`, `real`, and `boolean` programs with
+assignments, integer arithmetic (`+`, `-`, `*`, `div`, `mod`), **real (f64)
+arithmetic** (`+`, `-`, `*`, `/`), comparisons, `if`/`else`, compound
+statements, labels, `goto`, `for i := a step k until b do ...`, **typed
+procedures with `value` parameters**, and **switches** (computed goto):
 
 ```algol
 begin
@@ -42,7 +42,15 @@ out-of-range subscript falls through. Conditional designators
 before they are textually declared and may recurse; procedure bodies see their
 own value parameters but not enclosing-block variables (lexically flat for now).
 
-Unsupported ALGOL 60 features, including arrays, strings, reals, `own`
+`real` values lower to the IIR `f64` type and **run on the VM and JIT today**
+(LANG-FULL AL1 / enabler E3 phase 1); `2.5 * 2.0`, `7.0 / 2.0`, and real
+comparisons execute as IEEE-754 doubles. There is no implicit `integer`→`real`
+coercion yet — mixing the two in one operator (or using `/` on integers) is a
+clean type error. The five code-gen backends (LLVM/WASM/JVM/CLR/native) don't
+execute f64 yet; see the `E3-*` follow-ups in
+`code/specs/LANG-FULL-IMPLEMENTATION.md`.
+
+Unsupported ALGOL 60 features, including arrays, strings, `own`
 variables, proper (void) procedures, by-name (non-`value`) parameters,
 non-local access from a procedure body, and conditional/nested switch-list
 elements, return explicit compiler errors.
