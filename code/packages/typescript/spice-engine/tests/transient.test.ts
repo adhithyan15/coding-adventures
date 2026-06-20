@@ -2045,6 +2045,8 @@ let gain = 2
     const expectedControlLines = [".save V(in)", ".probe V(in)"];
     const controlLineList = expectedControlLines.join(";");
 
+    expect(execution.controlLineCount).toBe(expectedControlLines.length);
+    expect(execution.controlLines).toEqual(expectedControlLines);
     expect(execution.runArtifacts[0]?.controlLineCount).toBe(expectedControlLines.length);
     expect(execution.runArtifacts[0]?.controlLines).toEqual(expectedControlLines);
     expect(execution.runArtifacts[0]?.diagnosticCount).toBe(expectedCodes.length);

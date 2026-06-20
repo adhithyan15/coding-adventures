@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose normalized `.control` command inventories directly on selected
+  `run_deck_analysis` execution results as `control_line_count` /
+  `control_lines`, matching Python and TypeScript.
 - Add normalized `.control` command inventories to `analyze_deck_controls`
   separately from full active deck input, and carry those commands through
   selected `run_deck_analysis` run artifacts as stable `ControlLines` /

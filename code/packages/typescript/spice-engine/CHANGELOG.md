@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose normalized `.control` command inventories directly on selected
+  `runDeckAnalysis` execution results as `controlLineCount` / `controlLines`,
+  matching Python and Rust.
 - Add normalized `.control` command inventories to `analyzeDeckControls`
   separately from full active deck input, and carry those commands through
   selected `runDeckAnalysis` run artifacts as stable `ControlLines` /
