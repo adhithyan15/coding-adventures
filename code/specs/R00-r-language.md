@@ -341,9 +341,15 @@ unchanged.
     final arm** is the default; no match and no default → invisible `NULL`);
     numeric `EXPR` selects the n-th arm by position (out of range → `NULL`). Only
     the chosen arm evaluates, so `switch("a", a = stop("x"), b = "ok")` does not
-    raise. *(Empty-arm fall-through `switch("a", a = , b = "hit")` is deferred to
-    R-19 — it needs a grammar production for empty args; `eval_switch` already
-    implements the behaviour.)*
+    raise. An **empty arm** falls through to the next non-empty arm:
+    `switch("a", a = , b = "hit")` → `"hit"` (and chains: `a = , b = , c = "z"`
+    → `"z"`). *(R-19 added this.* It extends the shared S/R grammar's `arg` rule
+    to `arg = NAME EQ [expr] | expr` so a named argument may omit its value, then
+    regenerates the compiled `_grammar.rs` for both `s-parser` and `r-parser`.
+    `eval_switch` already implemented the fall-through; the grammar change makes
+    `a = ,` parse instead of erroring. An empty value parses everywhere but is
+    only meaningful in `switch`; an empty arg in an ordinary call is an eval-time
+    error, matching R. See S00 §V2.9.)*
   - **`stop(...)`** raises an error (concatenated message → `SError::User`);
     **`warning(...)`** emits a warning and returns invisibly without aborting;
     **`tryCatch(expr, error = fn, finally = cleanup)`** runs `expr`, routing any

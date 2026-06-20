@@ -76,8 +76,13 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   error to its `error` handler with a minimal condition object (`list(message,
   call)` classed `c("simpleError", "error", "condition")`, so `conditionMessage`
   / `e$message` work) and always runs `finally`. Loop-control signals
-  (`break`/`next`) are not caught. *(Empty-arm fall-through is implemented but
-  deferred to R-19 pending a grammar production for empty args.)*
+  (`break`/`next`) are not caught. An **empty arm** falls through to the next
+  non-empty arm (R-19): `switch("a", a = , b = "hit")` → `"hit"`, chaining across
+  several empties (`a = , b = , c = "z"` → `"z"`); a matched empty arm with
+  nothing non-empty after it yields `NULL`. (R-19 extended the shared S/R grammar
+  to `arg = NAME EQ [expr] | expr` so `a = ,` parses; the empty value is only
+  meaningful in `switch` — an empty arg in an ordinary call is an eval-time
+  error.)
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

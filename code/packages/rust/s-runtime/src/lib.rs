@@ -1094,11 +1094,48 @@ mod tests {
         );
         // No match and no default → invisible NULL.
         assert_eq!(show("switch(\"z\", a = \"A\", b = \"B\")\n"), "NULL");
-        // NOTE: empty-arm fall-through (`switch("a", a = , b = "hit")`) is
-        // deferred to R-19 — the shared S/R grammar's `arg = NAME EQ expr` has no
-        // empty-value production, so `a = ,` is a *parse* error. `eval_switch`
-        // already implements the fall-through (see `arm_body`/the loop over
-        // `arms[pos..]`); it activates once the grammar admits empty args.
+    }
+
+    // --- R-19: empty-arm switch() fall-through (in S syntax) ------------
+
+    #[test]
+    fn switch_empty_arm_falls_through_to_next_non_empty() {
+        // R-19: an empty arm (`a = ,`) falls through to the next non-empty arm.
+        // This is now parseable (the grammar's `arg = NAME EQ [expr]` admits an
+        // empty value) and eval_switch consumes it.
+        assert_eq!(show("switch(\"a\", a = , b = \"hit\")\n"), "[1] \"hit\"");
+    }
+
+    #[test]
+    fn switch_empty_arm_chains_across_multiple_empties() {
+        // Several empty arms in a row all fall through to the first non-empty.
+        assert_eq!(
+            show("switch(\"a\", a = , b = , c = \"z\")\n"),
+            "[1] \"z\""
+        );
+        // Matching a middle empty arm also chains forward.
+        assert_eq!(
+            show("switch(\"b\", a = \"A\", b = , c = \"z\")\n"),
+            "[1] \"z\""
+        );
+    }
+
+    #[test]
+    fn switch_last_arm_empty_yields_null() {
+        // If the matched arm is empty and nothing non-empty follows, the result
+        // is an invisible NULL (we fell off the end with only empty arms).
+        assert_eq!(show("switch(\"b\", a = \"A\", b = )\n"), "NULL");
+    }
+
+    #[test]
+    fn empty_named_arg_in_ordinary_call_is_an_error_not_a_panic() {
+        // The empty-value form parses everywhere but is only meaningful in
+        // switch. An empty arg in an ordinary call is an eval-time error (no
+        // panic), matching R's "argument is missing" behaviour.
+        assert!(eval_s("c(x = )\n").is_err());
+        // `switch(x)` with only EXPR and no arms is still well-formed → NULL
+        // when the selector is character with no matching arm.
+        assert_eq!(show("switch(\"a\")\n"), "NULL");
     }
 
     #[test]
@@ -1236,5 +1273,32 @@ mod tests {
             nums("s <- 0\nfor (i in 1:3) { s <- s + 1\nswitch(\"a\", a = break) }\ns\n"),
             vec![1.0]
         );
+    }
+}
+
+#[cfg(test)]
+mod r19_degenerate_probes {
+    use super::*;
+
+    /// R-19 hardening: the new empty named-argument production must not let any
+    /// degenerate or adversarial arg list panic the evaluator. Each input below
+    /// must resolve to an `Ok` or a recoverable `Err` — never a crash. (A panic
+    /// inside `eval_s` would propagate and fail this test directly; no
+    /// `catch_unwind` needed because the test itself is the panic boundary.)
+    #[test]
+    fn degenerate_empty_arg_inputs_do_not_panic() {
+        for src in [
+            "f(=)\n",                // bare EQ, no NAME before it
+            "switch()\n",            // no args at all
+            "switch(\"a\")\n",       // selector only, no arms
+            "c(x = )\n",             // empty arg in an ordinary call
+            "switch(\"a\", a = )\n", // single empty arm, matched and last
+            "switch(\"a\", = )\n",   // empty value with no name before EQ
+            "f(x = , )\n",           // empty arg followed by a trailing comma
+            "switch(1, a = )\n",     // numeric selector onto an empty arm
+        ] {
+            // Discarding the Result is the point: we only assert no panic.
+            let _ = eval_s(src);
+        }
     }
 }

@@ -145,7 +145,16 @@ arg_list = arg { COMMA arg } ;
 
 # A named argument (NAME = expr) is tried before a positional expression.
 # `==` is the EQEQ token, distinct from EQ, so `f(x == 1)` is positional.
-arg = NAME EQ expr
+#
+# The value after `NAME EQ` is OPTIONAL: `NAME EQ [expr]`. This admits an EMPTY
+# named argument — `a = ,` or `a = )` — which `switch` uses for fall-through:
+# `switch("a", a = , b = "hit")` returns `"hit"` (an empty arm falls through to
+# the next non-empty arm's value). The empty form parses everywhere an arg list
+# appears, but is only MEANINGFUL in `switch`; an empty arg in an ordinary call
+# (`f(x = )`) is rejected at eval time, matching R. Because the optional `expr`
+# is followed only by `COMMA` or `RPAREN` (the arg_list / call_suffix
+# terminators, both distinct from any `expr` start token), the rule stays LL(1).
+arg = NAME EQ [ expr ]
     | expr ;
 
 # =============================================================================

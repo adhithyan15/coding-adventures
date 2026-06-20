@@ -46,6 +46,11 @@ does not raise). `stop(...)` raises an error, `warning(...)` emits a warning and
 returns invisibly without aborting, and `tryCatch(expr, error = fn, finally =
 cleanup)` runs `expr`, routes any error to `error` (with a condition object whose
 `conditionMessage(e)` / `e$message` give the message), and always runs `finally`.
+An **empty arm** falls through to the next non-empty arm (R-19):
+`switch("a", a = , b = "hit")` → `"hit"`, chaining across several empties
+(`a = , b = , c = "z"` → `"z"`). This needed a shared-grammar change
+(`arg = NAME EQ [expr] | expr`) so `a = ,` parses; an empty arg in an ordinary
+call is an eval-time error.
 
 ## Usage
 

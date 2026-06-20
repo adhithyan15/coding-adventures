@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-06-19
+
+### Changed
+
+- **R-19 grammar**: the `arg` rule now allows an **empty named-argument value** —
+  `arg = NAME EQ [expr] | expr`. A named argument may omit its value (`a = ,` /
+  `a = )`), which `switch`'s empty-arm fall-through relies on
+  (`switch("a", a = , b = "hit")` → `"hit"`). The optional `expr` is only ever
+  followed by `COMMA` or `RPAREN`, so the rule stays LL(1). This is a shared
+  S/R grammar change; `r-parser` carries the mirror. Regenerated the embedded
+  `src/_grammar.rs` (single-line functional change: `expr` → `Optional(expr)`).
+
 ## [0.2.0] - 2026-06-15
 
 ### Added

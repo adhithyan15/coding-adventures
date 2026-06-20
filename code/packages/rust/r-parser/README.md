@@ -25,7 +25,10 @@ The only grammar differences from S are where R departs from S:
 
 Inside a call, `f(x = 1)` is still a *named argument*: the `arg` rule tries
 `NAME = expr` before the positional `expr`, so `=`-as-assignment at the top level
-and `=`-as-named-arg inside calls coexist.
+and `=`-as-named-arg inside calls coexist. Since R-19 the value is **optional** —
+`arg = NAME EQ [expr] | expr` — so a named argument may omit its value (`a = ,`).
+This admits `switch`'s empty-arm fall-through (`switch("a", a = , b = "hit")` →
+`"hit"`); the empty value parses anywhere but is only meaningful in `switch`.
 
 ## Usage
 
