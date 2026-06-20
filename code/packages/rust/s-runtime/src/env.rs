@@ -119,6 +119,15 @@ pub fn super_assign(env: &Env, name: &str, value: SValue) {
     // frame at all (we were already at global), bind here.
     match last {
         Some(global) => {
+            // `last` is the final frame the walk reached, so by the acyclic-chain
+            // invariant it must be the parent-less root (the global env). Assert
+            // that invariant in debug builds — if it ever fails, the scope chain
+            // has been wired into a cycle or a non-root terminus, which would be a
+            // construction bug elsewhere.
+            debug_assert!(
+                global.borrow().parent.is_none(),
+                "super_assign reached a non-root frame; scope chain is not rooted at global"
+            );
             global.borrow_mut().vars.insert(name.to_string(), value);
         }
         None => define(env, name, value),
