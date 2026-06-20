@@ -2380,6 +2380,8 @@ class DeckAnalysisExecution:
     analysis_directives: list[str]
     control_line_count: int
     control_lines: list[str]
+    diagnostic_count: int
+    diagnostic_codes: list[str]
     table_count: int
     tables: list[str]
     table_artifacts: list[DeckTableArtifact]
@@ -2796,6 +2798,8 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -2853,6 +2857,8 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -2912,6 +2918,8 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -2977,6 +2985,8 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -3030,6 +3040,8 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -3082,6 +3094,8 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -3153,6 +3167,8 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,

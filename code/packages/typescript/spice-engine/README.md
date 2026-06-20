@@ -208,6 +208,8 @@ deck execution helpers.
 deck-selected table output with normalized table-inventory, output-probe, and
 output-directive artifacts, selected measurement artifacts, selected transient Fourier artifacts,
 selected-run artifact summaries with table, analysis-directive, output-probe, output-directive,
-measurement, Fourier probe, and `.control` command inventories, `.ac LIN`, `.ac DEC`, `.ac OCT`
-frequency grids, and `.tran` `START` /
-print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
+measurement, Fourier probe, `.control` command, and diagnostic inventories,
+`.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and `.tran` `START` /
+print-step `TSTEP` / `MAXSTEP` / `UIC` controls. Selected execution fields
+expose `.control` command and diagnostic inventories directly for host
+integrations.

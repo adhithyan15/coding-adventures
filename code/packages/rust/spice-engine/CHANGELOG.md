@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose selected diagnostic inventories directly on selected
+  `run_deck_analysis` execution results as `diagnostic_count` /
+  `diagnostic_codes`, matching Python and TypeScript.
 - Expose normalized `.control` command inventories directly on selected
   `run_deck_analysis` execution results as `control_line_count` /
   `control_lines`, matching Python and TypeScript.

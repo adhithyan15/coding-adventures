@@ -1514,6 +1514,8 @@ describe("transient", () => {
     expect(opExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(opExecution.runArtifacts[0]?.controlLineCount).toBe(0);
     expect(opExecution.runArtifacts[0]?.controlLines).toEqual([]);
+    expect(opExecution.diagnosticCount).toBe(0);
+    expect(opExecution.diagnosticCodes).toEqual([]);
     expect(opExecution.runArtifacts[0]?.diagnosticCount).toBe(0);
     expect(opExecution.runArtifacts[0]?.diagnosticCodes).toEqual([]);
     expect(opExecution.runArtifactTable).toBe(
@@ -2047,6 +2049,8 @@ let gain = 2
 
     expect(execution.controlLineCount).toBe(expectedControlLines.length);
     expect(execution.controlLines).toEqual(expectedControlLines);
+    expect(execution.diagnosticCount).toBe(expectedCodes.length);
+    expect(execution.diagnosticCodes).toEqual(expectedCodes);
     expect(execution.runArtifacts[0]?.controlLineCount).toBe(expectedControlLines.length);
     expect(execution.runArtifacts[0]?.controlLines).toEqual(expectedControlLines);
     expect(execution.runArtifacts[0]?.diagnosticCount).toBe(expectedCodes.length);

@@ -1962,6 +1962,8 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert!(op_execution.run_artifacts[0].fourier_probes.is_empty());
     assert_eq!(op_execution.run_artifacts[0].control_line_count, 0);
     assert!(op_execution.run_artifacts[0].control_lines.is_empty());
+    assert_eq!(op_execution.diagnostic_count, 0);
+    assert!(op_execution.diagnostic_codes.is_empty());
     assert_eq!(op_execution.run_artifacts[0].diagnostic_count, 0);
     assert!(op_execution.run_artifacts[0].diagnostic_codes.is_empty());
     assert_eq!(
@@ -2749,6 +2751,8 @@ let gain = 2
 
     assert_eq!(execution.control_line_count, expected_control_lines.len());
     assert_eq!(execution.control_lines, expected_control_lines);
+    assert_eq!(execution.diagnostic_count, expected_codes.len());
+    assert_eq!(execution.diagnostic_codes, expected_codes);
     assert_eq!(
         execution.run_artifacts[0].control_line_count,
         expected_control_lines.len()

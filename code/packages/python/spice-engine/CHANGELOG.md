@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck execution diagnostic artifacts** —
+  `run_deck_analysis()` selected executions now expose selected diagnostic
+  inventories directly as `diagnostic_count` / `diagnostic_codes` alongside
+  control command, table, output, measurement, Fourier, and analysis-directive
+  metadata, matching Rust and TypeScript.
+
 - **Deck execution control command inventory artifacts** —
   `run_deck_analysis()` selected executions now expose normalized `.control`
   command inventories directly as `control_line_count` / `control_lines`
