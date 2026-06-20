@@ -2,6 +2,59 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.18.0] - 2026-06-20
+
+### Added
+
+- **First-class environment values (R-22)** — reifies the shared scope chain as a
+  value, completing the piece R-21 deferred. Grammar-free (the names lex as
+  ordinary dotted identifiers).
+  - **`SValue::Environment(Env)`** — boxes the shared `Rc<RefCell<Scope>>` handle,
+    so a scope can be passed, stored, and **mutated by reference**. Implicit class
+    and `type_name` are `"environment"`; `length` is 1; it is not an atomic vector
+    (the coercions reject it cleanly through their existing fallbacks, never a
+    panic). Prints as the **stable** placeholder `<environment>`, deliberately not
+    R's real heap address, so test output is deterministic.
+  - **Rc-cycle ownership model (the central correctness concern).** `Scope::parent`
+    changes from a strong `Rc` to a **`Weak<RefCell<Scope>>`**. An environment
+    value owns the only strong `Rc` to its scope; the global env and each live
+    call frame are held strongly by the interpreter / native call stack; parents
+    are only ever *referenced*, never *owned*, by their children. So **no cycle
+    through the parent chain is constructible** — the parent relation stays a
+    finite acyclic list, and all chain walks (`lookup`/`exists`/`super_assign`,
+    iterative — a deep chain cannot overflow the native stack) terminate. A
+    `Weak` parent that fails to upgrade (dropped frame) is treated as "no parent".
+  - **Residual value-binding cycle — bounded, not collected.** The `Weak` parent
+    breaks only parent-edge cycles. A cycle can still form through a *value
+    binding*, since an environment value is a strong `Rc`:
+    `assign("self", e, envir = e)` stores a strong `Rc`-to-`e` inside `e`, which
+    `Rc` cannot reclaim without a tracing GC (R has one; we do not). This is a
+    documented limitation, **bounded** by a new per-session `MAX_ENVIRONMENTS`
+    (2^20) cap on the number of environments `new.env()`/`environment()` may
+    reify, so a crafted loop building cyclic environments fails closed at a clean
+    error instead of exhausting memory. Documented inline in `env.rs` and the
+    `SValue::Environment` doc-comment. (The first draft over-claimed "no strong-Rc
+    cycle is constructible"; corrected here after the security review.)
+  - **`new.env()`** — fresh environment whose parent is the caller's scope,
+    returned as a value; two calls are independent. **`environment()`** — the
+    current environment as a value. **`ls([envir = e])` / `ls(e)`** — the names
+    bound directly in a frame (`env::names_in`), **sorted**.
+  - **`envir = e` on `assign`/`get`/`exists`/`rm`/`local`** — operate on the passed
+    environment value rather than the current scope (replaces R-21's runtime
+    rejection). `assign`/`rm` act on the target frame directly; `get`/`exists` walk
+    that environment's chain. A non-environment `envir` is a clean `BadArgs` error.
+  - **By-reference mutation** — passing an environment to a function and binding a
+    name inside it is visible to the caller; the defining difference from R's
+    otherwise copy-on-modify value semantics.
+  - `env.rs` gains `names_in`; the parent link is now `Weak` (with a `parent_of`
+    upgrade helper).
+
+### Deferred to R-23
+
+- `environment(f)` (a closure's captured environment — needs to reach into the
+  `Closure { env, .. }` payload) and `environmentName`. Passing an argument to
+  `environment()` is a clean error pointing at R-23, not a wrong answer.
+
 ## [0.17.0] - 2026-06-20
 
 ### Added

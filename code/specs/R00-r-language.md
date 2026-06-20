@@ -452,6 +452,75 @@ unchanged.
     against the current scope); R-22 adds the reified handles on top without
     changing any of it.
 
+- **R-22 — first-class environment values** *(this PR)*. Reifies the shared S
+  scope chain as a first-class value, completing the piece R-21 deferred. A new
+  `SValue::Environment(Env)` variant boxes the shared `Env`
+  (`Rc<RefCell<Scope>>`) handle, so a scope can be passed around, stored, and
+  mutated **by reference**. This is grammar-free (the names lex as ordinary
+  identifiers — `.` is a name character in both `s.tokens` and `r.tokens`, so
+  `new.env` is one token) and is wired through the same lazy-special-form path
+  R-18/R-21 use.
+  - **Rc-cycle ownership model (the central correctness concern).** Once a scope
+    can hold an `SValue::Environment` in its `vars`, an environment value can
+    reference another environment — and, crucially, a child's *parent* link could
+    point back to a scope that (transitively) holds the child. A naive strong
+    `Rc` parent link would then form a reference cycle that `Rc` can never
+    collect, leaking every binding in it. **R-22 makes the `Scope::parent` link a
+    `Weak<RefCell<Scope>>`.** The interpreter keeps the global environment alive
+    for the whole session (a strong `Rc` in `Interpreter::global`), and each live
+    call frame is held by a strong `Rc` on the native call stack for the duration
+    of the call; parents are only ever *referenced*, never *owned*, by their
+    children. Therefore: (a) **no cycle through the parent chain is constructible**
+    — every parent edge is `Weak`, so the parent relation stays a finite acyclic
+    list, and the chain-walk operations (`lookup`/`exists`/`super_assign`) always
+    terminate; (b) a child environment captured as a value keeps itself alive
+    through that strong binding, and its `Weak` parent upgrades as long as
+    *something else* still owns the parent (the global env always does,
+    transitively). A `Weak` parent that cannot be upgraded is treated as "no
+    parent" — the chain walk stops, as at the root.
+  - **The residual cycle: value bindings (a bounded, documented limitation).** The
+    `Weak` parent breaks only cycles *through the parent edge*. A cycle can still
+    form *through a value binding*, because an environment value is a **strong**
+    `Rc`: `assign("self", e, envir = e)` stores a strong `Rc`-to-`e` inside `e`
+    itself (and a mutual `a`/`b` pair does the same), an `Rc` cycle that — absent a
+    tracing GC, which R has and we do not — cannot be reclaimed once unreachable.
+    R-22 does **not** claim to collect it; it **bounds** the damage with a
+    per-session `MAX_ENVIRONMENTS` cap (in `eval.rs`) on the number of
+    environments `new.env()`/`environment()` may reify, so a crafted loop building
+    cyclic environments hits a clean error instead of exhausting memory. This and
+    the `Weak` parent are documented inline in `env.rs`/`value.rs` and are the
+    focus of the R-22 security review. (Divergence from the first draft of this
+    spec, which over-claimed that *no* strong-`Rc` cycle was constructible; the
+    value-binding cycle and its bounded mitigation are the corrected model.)
+  - **`new.env()`** — create a fresh environment whose parent is the **caller's**
+    current environment, and return it as a first-class value. Two calls produce
+    two independent environments. A lazy special form (it needs the current
+    `env`).
+  - **`environment()`** — the **current** environment as a value. The
+    `environment(f)` form (a closure's captured environment) is **deferred to
+    R-23** with a clear note: it requires reaching into the `Closure { env, .. }`
+    payload, which is a smaller, orthogonal follow-up.
+  - **`envir = e` on `assign`/`get`/`exists`/`rm`** — operate on the passed
+    environment **value** rather than the current scope. R-21's runtime rejection
+    is replaced by the real behaviour: `assign("x", 1, envir = e)` binds `x` in
+    `e`; `get`/`exists` read it; `rm` deletes it. A non-environment `envir`
+    argument is a clean `BadArgs` error (never a panic). `assign`/`rm` act on the
+    target frame directly; `get`/`exists` walk *that* environment's chain
+    outward, matching R.
+  - **By-reference mutation.** Because an environment value shares the same
+    `Rc<RefCell<Scope>>`, mutating it through one alias is visible through every
+    other: `e <- new.env(); f <- function(env) assign("x", 1, envir = env); f(e);
+    get("x", envir = e)` → `1`. This is the defining difference from R's
+    otherwise copy-on-modify value semantics.
+  - **`ls(envir = e)`** — the names bound directly in `e` (its own frame, not the
+    enclosing chain), **sorted** as a character vector. `ls()` with no `envir`
+    lists the current environment. `environmentName` is **deferred to R-23**.
+  - **Printing.** An environment prints as `<environment>` — a **stable
+    placeholder**, deliberately *not* the real heap address R shows
+    (`<environment: 0x55...>`), so test output is deterministic across runs and
+    platforms. Its implicit class is `"environment"` and `type_name` is
+    `"environment"`.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -464,12 +533,12 @@ unchanged.
 
 ## §5 Out of scope (for now)
 
-Pipes (`|>`) and backslash lambdas (`\(x)`); **first-class environment values**
-(`new.env()`, `environment()`, and the `envir = e` argument of
-`assign`/`get`/`exists`/`rm`/`local`) — deferred to **R-21's follow-up R-22**
-once an `SValue::Environment` variant lands (R-21 ships `local()` + `<<-` +
-current-scope `assign`/`get`/`exists`/`rm`); S4/R5/R6 OO; namespaces and
-`library()`; the C interface; graphics. These layer on later, following ST00.
+Pipes (`|>`) and backslash lambdas (`\(x)`); the `environment(f)` form (a
+closure's captured environment) and `environmentName` — **deferred to R-23** (the
+`SValue::Environment` value, `new.env()`, `environment()`, `ls(envir=)`, and the
+`envir = e` argument of `assign`/`get`/`exists`/`rm` all land in **R-22**);
+S4/R5/R6 OO; namespaces and `library()`; the C interface; graphics. These layer
+on later, following ST00.
 
 ## §6 References
 

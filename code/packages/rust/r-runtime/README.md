@@ -70,9 +70,17 @@ binding — `f <- function() { y <<- 99 }; f(); y` → `99` (created globally wh
 enclosing binding exists) — and the counter idiom `make_counter <- function() {
 n <- 0; function() { n <<- n + 1; n } }` advances across calls; the R-only `->>`
 form is the mirror image. `assign("q", 7); get("q")` → `7`; `exists("zzz")` →
-`FALSE`; `rm("d")` removes a binding. First-class environment *values*
-(`new.env()`, `environment()`, the `envir = e` argument) are deferred to R-22 and
-rejected today with a clear error.
+`FALSE`; `rm("d")` removes a binding.
+
+**First-class environments (R-22)** — an environment is now a value (the shared
+`SValue::Environment`). `e <- new.env()` makes a fresh env; `assign("x", 5, envir
+= e)` / `get("x", envir = e)` round-trip through it; `ls(e)` lists its names
+sorted; and an environment is **mutable by reference** — `f <- function(env)
+assign("x", 42, envir = env); f(e); get("x", envir = e)` → `42`. `environment()`
+returns the current env; an env prints as the stable placeholder `<environment>`
+with class `"environment"`. The parent link is a `Weak` so an env-holding-env
+cannot leak (see `s-runtime`). `environment(f)` / `environmentName` are deferred
+to R-23.
 
 ## Usage
 

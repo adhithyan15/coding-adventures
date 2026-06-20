@@ -1612,4 +1612,106 @@ mod tests {
         );
         assert_eq!(show("Negate(is.na)(NA)\n"), "[1] FALSE");
     }
+
+    // --- R-22: first-class environments (R syntax) -----------------------
+
+    /// `assign`/`get` round-trip through an explicit environment value.
+    #[test]
+    fn r22_assign_get_through_envir() {
+        assert_eq!(
+            nums("e <- new.env()\nassign(\"x\", 5, envir = e)\nget(\"x\", envir = e)\n"),
+            vec![5.0]
+        );
+    }
+
+    /// `exists(envir = e)` is TRUE after a bind, FALSE for a missing name.
+    #[test]
+    fn r22_exists_through_envir() {
+        assert_eq!(
+            show("e <- new.env()\nassign(\"x\", 1, envir = e)\nexists(\"x\", envir = e)\n"),
+            "[1] TRUE"
+        );
+        assert_eq!(
+            show("e <- new.env()\nexists(\"x\", envir = e)\n"),
+            "[1] FALSE"
+        );
+    }
+
+    /// The defining R-22 property — mutation **by reference** through a function:
+    /// passing `e` to a function and binding inside it is visible to the caller.
+    #[test]
+    fn r22_by_reference_mutation() {
+        let src = "e <- new.env()\n\
+                   f <- function(env) { assign(\"x\", 42, envir = env) }\n\
+                   f(e)\n\
+                   get(\"x\", envir = e)\n";
+        assert_eq!(nums(src), vec![42.0]);
+    }
+
+    /// `ls(e)` lists the env's own names, sorted.
+    #[test]
+    fn r22_ls_lists_sorted_names() {
+        let src = "e <- new.env()\n\
+                   assign(\"b\", 1, envir = e)\nassign(\"a\", 1, envir = e)\nls(e)\n";
+        assert_eq!(show(src), "[1] \"a\" \"b\"");
+    }
+
+    /// Two `new.env()` calls are independent.
+    #[test]
+    fn r22_two_envs_independent() {
+        let src = "a <- new.env()\nb <- new.env()\n\
+                   assign(\"x\", 1, envir = a)\nexists(\"x\", envir = b)\n";
+        assert_eq!(show(src), "[1] FALSE");
+    }
+
+    /// `rm(envir = e)` then `exists` → FALSE.
+    #[test]
+    fn r22_rm_through_envir() {
+        let src = "e <- new.env()\nassign(\"x\", 1, envir = e)\nrm(\"x\", envir = e)\nexists(\"x\", envir = e)\n";
+        assert_eq!(show(src), "[1] FALSE");
+    }
+
+    /// An environment prints as the stable placeholder and carries class
+    /// `"environment"`.
+    #[test]
+    fn r22_environment_prints_and_classes() {
+        assert_eq!(show("new.env()\n"), "<environment>");
+        assert_eq!(show("environment()\n"), "<environment>");
+        assert_eq!(show("class(new.env())\n"), "[1] \"environment\"");
+    }
+
+    /// A non-environment `envir =` is a clean error, never a panic.
+    #[test]
+    fn r22_non_environment_envir_errors() {
+        assert!(eval_r("assign(\"x\", 1, envir = 2)\n").is_err());
+        assert!(eval_r("get(\"x\", envir = \"oops\")\n").is_err());
+    }
+
+    /// An environment may hold itself (the Rc-cycle case): safe, no panic/loop.
+    #[test]
+    fn r22_environment_can_hold_itself() {
+        let src = "e <- new.env()\nassign(\"self\", e, envir = e)\nexists(\"self\", envir = e)\n";
+        assert_eq!(show(src), "[1] TRUE");
+    }
+
+    /// Regression: R-18..R-21 still work after the R-22 changes. (`->>`, the
+    /// R-only right-super-assign, exercises the changed `super_assign` walk.)
+    #[test]
+    fn r18_through_r21_still_work_after_r22() {
+        // R-18: tryCatch.
+        assert_eq!(
+            show("tryCatch(stop(\"boom\"), error = function(e) \"caught\")\n"),
+            "[1] \"caught\""
+        );
+        // R-19: switch fall-through.
+        assert_eq!(show("switch(\"a\", a = , b = \"hit\")\n"), "[1] \"hit\"");
+        // R-20: Negate.
+        assert_eq!(show("Negate(is.na)(NA)\n"), "[1] FALSE");
+        // R-21: counter closure via `<<-` (uses the Weak-parent chain walk).
+        let counter = "make <- function() { n <- 0; function() { n <<- n + 1; n } }\n\
+                       c1 <- make()\nc1(); c1(); c1()\n";
+        assert_eq!(nums(counter), vec![3.0]);
+        // R-21: `->>` right-super-assign creates globally.
+        assert_eq!(nums("99 ->> zz\nzz\n"), vec![99.0]);
+    }
 }

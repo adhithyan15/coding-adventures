@@ -1483,18 +1483,23 @@ mod r21_environments {
         assert!(eval_s("rm(\"never_there\")\n").is_ok());
     }
 
-    /// The `envir = e` argument is explicitly rejected (deferred to R-22) with a
-    /// clean error rather than a silent wrong answer or a panic.
+    /// A **non-environment** `envir =` argument is a clean error (R-22 accepts a
+    /// real environment value there; a number/string/etc. is rejected, never a
+    /// panic or a silent wrong answer).
     #[test]
-    fn envir_argument_is_rejected_for_now() {
+    fn non_environment_envir_is_rejected() {
         for src in [
             "assign(\"x\", 1, envir = 2)\n",
             "get(\"x\", envir = 2)\n",
             "exists(\"x\", envir = 2)\n",
             "rm(\"x\", envir = 2)\n",
             "local({ 1 }, envir = 2)\n",
+            "assign(\"x\", 1, envir = \"oops\")\n",
         ] {
-            assert!(eval_s(src).is_err(), "{src:?} should reject `envir`");
+            assert!(
+                eval_s(src).is_err(),
+                "{src:?} should reject a non-environment `envir`"
+            );
         }
     }
 
@@ -1523,5 +1528,174 @@ mod r21_environments {
     #[test]
     fn top_level_super_assign_binds_globally() {
         assert_eq!(nums("p <<- 8\np\n"), vec![8.0]);
+    }
+}
+
+/// R-22 — first-class environment values. `new.env()` reifies a scope as a
+/// value; `assign`/`get`/`exists`/`rm` accept `envir = e`; environments mutate by
+/// reference. The model lives in `s-runtime`, so these S-syntax tests exercise it
+/// directly; the R-syntax integration tests mirror them in `r-runtime`.
+#[cfg(test)]
+mod r22_environments {
+    use super::*;
+
+    fn nums(src: &str) -> Vec<f64> {
+        match eval_s(src).unwrap().strip_names() {
+            SValue::Double(d) => d.data().to_vec(),
+            other => panic!("expected double, got {}", other.type_name()),
+        }
+    }
+
+    fn show(src: &str) -> String {
+        format_value(&eval_s(src).unwrap()).join("\n")
+    }
+
+    /// `assign`/`get` round-trip through an explicit environment value.
+    #[test]
+    fn assign_get_through_envir() {
+        assert_eq!(
+            nums("e <- new.env()\nassign(\"x\", 5, envir = e)\nget(\"x\", envir = e)\n"),
+            vec![5.0]
+        );
+    }
+
+    /// `exists(envir = e)` reports presence in the target frame: TRUE after an
+    /// `assign`, FALSE for an unbound name.
+    #[test]
+    fn exists_through_envir() {
+        assert_eq!(
+            show("e <- new.env()\nassign(\"x\", 1, envir = e)\nexists(\"x\", envir = e)\n"),
+            "[1] TRUE"
+        );
+        assert_eq!(
+            show("e <- new.env()\nexists(\"nope\", envir = e)\n"),
+            "[1] FALSE"
+        );
+    }
+
+    /// `rm(envir = e)` deletes from the target frame; the name is gone afterward.
+    #[test]
+    fn rm_through_envir() {
+        let src = "e <- new.env()\nassign(\"x\", 1, envir = e)\nrm(\"x\", envir = e)\nexists(\"x\", envir = e)\n";
+        assert_eq!(show(src), "[1] FALSE");
+    }
+
+    /// The defining R-22 property: an environment is mutable **by reference**.
+    /// Passing `e` to a function and binding a name inside it is visible to the
+    /// caller after the call returns.
+    #[test]
+    fn by_reference_mutation_through_a_function() {
+        let src = "e <- new.env()\n\
+                   f <- function(env) { assign(\"x\", 42, envir = env) }\n\
+                   f(e)\n\
+                   get(\"x\", envir = e)\n";
+        assert_eq!(nums(src), vec![42.0]);
+    }
+
+    /// Two `new.env()` calls are independent: a binding in one is invisible in
+    /// the other.
+    #[test]
+    fn two_new_envs_are_independent() {
+        let src = "a <- new.env()\nb <- new.env()\n\
+                   assign(\"x\", 1, envir = a)\n\
+                   exists(\"x\", envir = b)\n";
+        assert_eq!(show(src), "[1] FALSE");
+    }
+
+    /// `ls(envir = e)` and `ls(e)` both list the target frame's own names, sorted.
+    #[test]
+    fn ls_lists_sorted_names() {
+        let src = "e <- new.env()\n\
+                   assign(\"zeta\", 1, envir = e)\n\
+                   assign(\"alpha\", 2, envir = e)\n\
+                   ls(envir = e)\n";
+        assert_eq!(show(src), "[1] \"alpha\"  \"zeta\"");
+        // Positional form `ls(e)` is equivalent.
+        let src2 =
+            "e <- new.env()\nassign(\"b\", 1, envir = e)\nassign(\"a\", 1, envir = e)\nls(e)\n";
+        assert_eq!(show(src2), "[1] \"a\" \"b\"");
+    }
+
+    /// `environment()` returns the current environment, which prints as the
+    /// stable placeholder `<environment>` (never a real heap address). An empty
+    /// `new.env()` lists nothing.
+    #[test]
+    fn environment_value_prints_stably() {
+        assert_eq!(show("environment()\n"), "<environment>");
+        assert_eq!(show("new.env()\n"), "<environment>");
+        assert_eq!(show("e <- new.env()\nls(e)\n"), "character(0)");
+    }
+
+    /// An environment value carries class and type `"environment"`, and length 1.
+    #[test]
+    fn environment_class_type_length() {
+        assert_eq!(show("class(new.env())\n"), "[1] \"environment\"");
+        assert_eq!(nums("length(new.env())\n"), vec![1.0]);
+    }
+
+    /// `get`/`exists` through `envir` walk *that* environment's chain: a name in
+    /// the parent (the scope where `new.env()` was called) is visible.
+    #[test]
+    fn get_walks_the_targets_chain() {
+        // `outer` is bound in the global frame; a child env's chain reaches it.
+        let src = "outer <- 7\ne <- new.env()\nget(\"outer\", envir = e)\n";
+        assert_eq!(nums(src), vec![7.0]);
+    }
+
+    /// Self-reference is *observably* safe: an environment may hold itself as a
+    /// binding. (This forms an `Rc` cycle through the value binding — a documented,
+    /// `MAX_ENVIRONMENTS`-bounded leak — but it must never panic, loop, or
+    /// mis-report.)
+    #[test]
+    fn environment_can_hold_itself() {
+        let src = "e <- new.env()\nassign(\"self\", e, envir = e)\nexists(\"self\", envir = e)\n";
+        assert_eq!(show(src), "[1] TRUE");
+        // `ls` still lists exactly that one binding.
+        assert_eq!(
+            show("e <- new.env()\nassign(\"self\", e, envir = e)\nls(e)\n"),
+            "[1] \"self\""
+        );
+    }
+
+    /// A **mutual** reference cycle (`a` holds `b`, `b` holds `a`) is also
+    /// observably safe — no panic, no infinite loop, correct membership. (Like the
+    /// self-cycle, this is a bounded leak, not a crash.)
+    #[test]
+    fn environments_can_reference_each_other() {
+        let src = "a <- new.env()\nb <- new.env()\n\
+                   assign(\"x\", b, envir = a)\nassign(\"y\", a, envir = b)\n\
+                   exists(\"x\", envir = a)\n";
+        assert_eq!(show(src), "[1] TRUE");
+    }
+
+    /// Creating many environments in a loop is fine well under the
+    /// `MAX_ENVIRONMENTS` cap — the counter does not falsely trip on ordinary use.
+    #[test]
+    fn many_new_envs_under_the_cap_are_fine() {
+        // 500 envs is trivially under the 2^20 cap.
+        let src = "for (i in 1:500) { e <- new.env() }\n1\n";
+        assert_eq!(nums(src), vec![1.0]);
+    }
+
+    /// `environment(f)` (a closure's captured env) is deferred to R-23 — a clean
+    /// error, not a wrong answer.
+    #[test]
+    fn environment_of_a_function_is_deferred() {
+        assert!(eval_s("f <- function() 1\nenvironment(f)\n").is_err());
+    }
+
+    /// Hardening: degenerate inputs to the R-22 forms must never panic.
+    #[test]
+    fn r22_forms_do_not_panic() {
+        for src in [
+            "new.env(1, 2, 3)\n",                  // extra args ignored
+            "environment(1)\n",                    // environment(f) deferred → error
+            "ls(1)\n",                             // non-env positional → error
+            "ls(envir = 1)\n",                     // non-env envir → error
+            "get(\"x\", envir = e)\n",             // envir refers to an unbound name
+            "assign(\"x\", 1, envir = list(1))\n", // non-env envir → error
+        ] {
+            let _ = eval_s(src);
+        }
     }
 }

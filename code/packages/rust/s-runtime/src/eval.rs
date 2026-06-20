@@ -17,7 +17,7 @@
 //! call) is visible, exactly as in S.
 
 use crate::builtins;
-use crate::env::{define, exists, lookup, remove, super_assign, Env, Scope};
+use crate::env::{define, exists, lookup, names_in, remove, super_assign, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
     arithmetic, assign_index, assign_index2d, bounded_sequence, class_of, compare, format_value,
@@ -62,6 +62,23 @@ pub struct Interpreter {
     /// default, but immediate printing is simpler and equally faithful for a
     /// REPL); the buffer exists so a future `warnings()` accessor can read them.
     warnings: RefCell<Vec<String>>,
+    /// The number of first-class environments reified this session via
+    /// `new.env()` / `environment()` (R-22), capped by [`MAX_ENVIRONMENTS`].
+    ///
+    /// **Why this counter exists (the Rc-cycle caveat).** Making `Scope::parent` a
+    /// `Weak` (see [`crate::env`]) breaks any cycle that closes *through the parent
+    /// link*. It does **not** break a cycle that closes *through a value binding* —
+    /// an environment value is a strong `Rc`, so `assign("self", e, envir = e)`
+    /// (or a mutual `a`/`b` pair) stores a strong `Rc` to a scope inside that very
+    /// scope's `vars`, an uncollectable cycle that `Rc` alone cannot reclaim
+    /// (R relies on a tracing GC here; we have only `Rc`). Such a cycle leaks the
+    /// bindings it retains once it becomes unreachable. We cannot cheaply collect
+    /// it, but we *bound* the damage: this counter caps how many environments a
+    /// single session can reify, so a crafted `for (i in 1:1e9) { e <- new.env();
+    /// assign("self", e, envir = e) }` cannot drive unbounded heap growth — it
+    /// hits a clean error at the cap instead. The cap is far beyond any realistic
+    /// program's environment count.
+    envs_created: Cell<usize>,
     /// The stack of closures currently being evaluated, innermost last (R-20).
     /// `call_closure` pushes the function it is about to run and pops it on the
     /// way out (via an RAII guard, so an early-return/error still pops), so the
@@ -88,6 +105,16 @@ const DEFAULT_SEED: u64 = 4357;
 /// real programs (including ordinary recursion) while staying well under the
 /// native stack limit.
 const MAX_EVAL_DEPTH: usize = 3000;
+
+/// The most first-class environments a single session may reify via `new.env()` /
+/// `environment()` (R-22). Because an environment value is a strong `Rc` that can
+/// be stored inside the very scope it points at (`assign("self", e, envir = e)`),
+/// a reference cycle through *value bindings* is constructible from user source —
+/// the `Weak` parent link cannot break it (it only breaks parent-link cycles), and
+/// `Rc` cannot collect it. This cap bounds the resulting leak: a crafted loop
+/// building self-/mutually-referential environments hits a clean error here rather
+/// than exhausting memory. 1,048,576 is far beyond any realistic program.
+const MAX_ENVIRONMENTS: usize = 1 << 20;
 
 /// RAII guard that decrements the interpreter's depth counter on scope exit,
 /// so every early `return`/`?` in `eval_node` is accounted for.
@@ -136,8 +163,23 @@ impl Interpreter {
             depth: Cell::new(0),
             rng: RefCell::new(RngState::new(DEFAULT_SEED)),
             warnings: RefCell::new(Vec::new()),
+            envs_created: Cell::new(0),
             call_stack: RefCell::new(Vec::new()),
         }
+    }
+
+    /// Account for one newly reified first-class environment (R-22), failing
+    /// closed at [`MAX_ENVIRONMENTS`] so a crafted loop building cyclic
+    /// environments cannot grow the heap without bound. See `envs_created`.
+    fn account_environment(&self) -> SResult<()> {
+        let n = self.envs_created.get();
+        if n >= MAX_ENVIRONMENTS {
+            return Err(SError::BadArgs(format!(
+                "too many environments created (limit {MAX_ENVIRONMENTS})"
+            )));
+        }
+        self.envs_created.set(n + 1);
+        Ok(())
     }
 
     /// The function currently being evaluated, if any — the top of the call
@@ -827,6 +869,10 @@ impl Interpreter {
                         "get" => self.eval_get_fn(&raw, env),
                         "exists" => self.eval_exists_fn(&raw, env),
                         "rm" => self.eval_rm_fn(&raw, env),
+                        // R-22 first-class environments.
+                        "new.env" => self.eval_new_env(&raw, env),
+                        "environment" => self.eval_environment(&raw, env),
+                        "ls" => self.eval_ls(&raw, env),
                         _ => unreachable!(),
                     };
                 }
@@ -1379,45 +1425,53 @@ impl Interpreter {
     }
 
     // -----------------------------------------------------------------------
-    // R-21 environment forms (local / assign / get / exists / rm)
+    // R-21 / R-22 environment forms
+    //   R-21: local / assign / get / exists / rm  (against the current scope)
+    //   R-22: new.env / environment / ls, and the `envir = e` argument on the
+    //         binding ops, which now operate on a passed first-class environment.
     //
     // These are *lazy special forms* rather than ordinary builtins because they
     // must see the **current** environment `env`: `local` evaluates its block in
-    // a fresh child of it, and the by-name binding ops read/write it directly.
-    // (Ordinary builtins receive only their evaluated argument *values*, never
-    // the live scope.) Each rejects the `envir = e` argument with a clear "not
-    // yet supported" error — first-class environment values land in R-22.
+    // a fresh child of it, `new.env` makes the caller's scope the new parent, and
+    // the by-name binding ops read/write the target frame directly. (Ordinary
+    // builtins receive only their evaluated argument *values*, never the live
+    // scope.)
+    //
+    // R-22 replaces R-21's runtime rejection of `envir = e` with the real
+    // behaviour: the argument is evaluated, required to be an `SValue::Environment`
+    // (any other value is a clean `BadArgs` error — never a panic), and the op
+    // runs against *that* scope. Because an environment value shares the same
+    // `Rc<RefCell<Scope>>`, mutating it through one alias is visible through every
+    // other — environments are mutable **by reference**.
     // -----------------------------------------------------------------------
 
     /// `local({ ... })` — evaluate the (single, unevaluated) expression argument
     /// in a **fresh child environment** of the current scope and return its
     /// value. Because the block runs in its own frame, any `<-` bindings it makes
     /// are locals that do not leak: `local({ x <- 5; x * 2 })` is `10`, and `x`
-    /// stays unbound in the caller. (R also accepts `local(expr, envir)`; the
-    /// second form needs a first-class environment value and is deferred to R-22.)
+    /// stays unbound in the caller. With `local(expr, envir = e)` (R-22) the block
+    /// runs **directly in `e`** (R's second form), so its bindings persist in `e`.
     fn eval_local(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
-        if raw.iter().any(|(name, _)| name.as_deref() == Some("envir")) {
-            return Err(SError::BadArgs(
-                "local(expr, envir = e): the `envir` argument needs a first-class \
-                 environment value, deferred to R-22"
-                    .into(),
-            ));
-        }
         let expr = raw
-            .first()
+            .iter()
+            .find(|(name, _)| name.is_none())
             .and_then(|(_, n)| arm_body(n))
             .ok_or_else(|| SError::BadArgs("local: expr is missing".into()))?;
-        // A fresh child scope: locals live and die here.
-        let scope = Scope::child(env);
+        // With `envir = e`, run the block *in* `e`; otherwise in a fresh child
+        // scope where locals live and die.
+        let scope = match self.resolve_envir(raw, env)? {
+            Some(target) => target,
+            None => Scope::child(env),
+        };
         self.eval_node(expr, &scope)
     }
 
-    /// `assign(x, value)` — bind the name given by the length-one character `x`
-    /// to `value` in the **current** environment (the `<-` target scope). Returns
-    /// `value` invisibly, like R. `assign("y", 1 + 1)` then `y` → `2`. The
-    /// `envir = e` argument is rejected (deferred to R-22).
+    /// `assign(x, value [, envir = e])` — bind the name given by the length-one
+    /// character `x` to `value` in the **target** environment: `e` if `envir =` is
+    /// supplied (R-22), else the current scope. Returns `value` invisibly, like R.
+    /// `assign("y", 1 + 1)` then `y` → `2`; `assign("x", 5, envir = e)` binds in
+    /// `e` and is visible via `get("x", envir = e)`.
     fn eval_assign_fn(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
-        self.reject_envir(raw, "assign")?;
         let positionals = self.positional_nodes(raw);
         let name_node = positionals
             .first()
@@ -1427,63 +1481,156 @@ impl Interpreter {
             .ok_or_else(|| SError::BadArgs("assign: `value` is missing".into()))?;
         let name = self.eval_name_string(name_node, env, "assign")?;
         let value = self.eval_node(value_node, env)?;
-        define(env, &name, value.clone());
+        // Resolve the target *after* evaluating the name/value, but the order is
+        // immaterial (no aliasing between them); a non-environment `envir` errors.
+        let target = self
+            .resolve_envir(raw, env)?
+            .unwrap_or_else(|| Rc::clone(env));
+        define(&target, &name, value.clone());
         self.as_invisible(value)
     }
 
-    /// `get(x)` — return the value currently bound to the name `x`, searching the
-    /// scope chain (current frame outward). An unbound name is a clean error,
-    /// exactly as in R (`Error: object 'x' not found`). `envir` is deferred.
+    /// `get(x [, envir = e])` — return the value bound to the name `x`, searching
+    /// the target environment's chain (the frame outward). With `envir = e` the
+    /// search starts in `e`; otherwise in the current frame. An unbound name is a
+    /// clean error, exactly as in R (`Error: object 'x' not found`).
     fn eval_get_fn(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
-        self.reject_envir(raw, "get")?;
         let positionals = self.positional_nodes(raw);
         let name_node = positionals
             .first()
             .ok_or_else(|| SError::BadArgs("get: `x` (the name) is missing".into()))?;
         let name = self.eval_name_string(name_node, env, "get")?;
-        let value = lookup(env, &name).ok_or_else(|| SError::Undefined(name.clone()))?;
+        let target = self
+            .resolve_envir(raw, env)?
+            .unwrap_or_else(|| Rc::clone(env));
+        let value = lookup(&target, &name).ok_or_else(|| SError::Undefined(name.clone()))?;
         self.as_visible(value)
     }
 
-    /// `exists(x)` — `TRUE` if the name `x` is bound anywhere on the scope chain,
-    /// `FALSE` otherwise. `exists("mean")` → `TRUE` (a builtin in the global
-    /// frame); `exists("zzz")` → `FALSE`. `envir` is deferred.
+    /// `exists(x [, envir = e])` — `TRUE` if the name `x` is bound anywhere on the
+    /// target environment's chain, `FALSE` otherwise. `exists("mean")` → `TRUE`
+    /// (a builtin in the global frame); `exists("zzz")` → `FALSE`. With `envir = e`
+    /// the search walks `e`'s chain.
     fn eval_exists_fn(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
-        self.reject_envir(raw, "exists")?;
         let positionals = self.positional_nodes(raw);
         let name_node = positionals
             .first()
             .ok_or_else(|| SError::BadArgs("exists: `x` (the name) is missing".into()))?;
         let name = self.eval_name_string(name_node, env, "exists")?;
-        self.as_visible(SValue::Logical(vec![Some(exists(env, &name))]))
+        let target = self
+            .resolve_envir(raw, env)?
+            .unwrap_or_else(|| Rc::clone(env));
+        self.as_visible(SValue::Logical(vec![Some(exists(&target, &name))]))
     }
 
-    /// `rm(x)` — remove the binding `x` from the **current** frame (it does not
-    /// reach into enclosing scopes, matching R's `rm(..., envir =
-    /// environment())` default). Returns `NULL` invisibly. Removing a name that
-    /// is not bound in the current frame is a no-op (R warns; we stay quiet).
+    /// `rm(x [, envir = e])` — remove the binding `x` from the **target frame**
+    /// directly (it does not reach into enclosing scopes, matching R's `rm(...,
+    /// envir = environment())` default). With `envir = e` it deletes from `e`'s
+    /// own frame; otherwise from the current one. Returns `NULL` invisibly.
+    /// Removing a name that is not bound in the target frame is a quiet no-op.
     fn eval_rm_fn(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
-        self.reject_envir(raw, "rm")?;
         let positionals = self.positional_nodes(raw);
         let name_node = positionals
             .first()
             .ok_or_else(|| SError::BadArgs("rm: a name to remove is missing".into()))?;
         let name = self.eval_name_string(name_node, env, "rm")?;
-        remove(env, &name);
+        let target = self
+            .resolve_envir(raw, env)?
+            .unwrap_or_else(|| Rc::clone(env));
+        remove(&target, &name);
         self.as_invisible(SValue::Null)
     }
 
-    /// Reject an `envir = e` argument for the R-21 binding forms — that argument
-    /// needs a first-class environment value (R-22). Centralised so every form
-    /// gives the identical, discoverable message.
-    fn reject_envir(&self, raw: &[RawArg], who: &str) -> SResult<()> {
-        if raw.iter().any(|(name, _)| name.as_deref() == Some("envir")) {
-            return Err(SError::BadArgs(format!(
-                "{who}(..., envir = e): the `envir` argument needs a first-class \
-                 environment value, deferred to R-22"
-            )));
+    // -----------------------------------------------------------------------
+    // R-22 first-class environment forms (new.env / environment / ls)
+    // -----------------------------------------------------------------------
+
+    /// `new.env()` — create a **fresh** environment whose parent is the caller's
+    /// current scope, and return it as a first-class value (R-22). Two calls
+    /// produce two **independent** environments (distinct `Rc`s). The new scope's
+    /// parent link is a `Weak` to `env` (see [`crate::env`]), so the returned
+    /// value owning the only strong `Rc` to the child cannot form a cycle with its
+    /// parent.
+    fn eval_new_env(&self, _raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        self.account_environment()?;
+        let scope = Scope::child(env);
+        self.as_visible(SValue::Environment(scope))
+    }
+
+    /// `environment()` — the **current** environment as a first-class value (R-22).
+    /// The `environment(f)` form (a closure's captured environment) is **deferred
+    /// to R-23**: it requires reaching into the `Closure { env, .. }` payload, a
+    /// smaller orthogonal follow-up. Passing any argument is therefore a clean
+    /// `BadArgs` error here, not a wrong answer.
+    fn eval_environment(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        if raw.iter().any(|(_, n)| arm_body(n).is_some()) {
+            return Err(SError::BadArgs(
+                "environment(f): a closure's captured environment is deferred to R-23; \
+                 environment() with no argument returns the current environment"
+                    .into(),
+            ));
         }
-        Ok(())
+        // `environment()` reifies the current scope as a value too — count it
+        // against the same cap (it can equally participate in a value-binding
+        // cycle, e.g. `assign("self", environment(), envir = environment())`).
+        self.account_environment()?;
+        self.as_visible(SValue::Environment(Rc::clone(env)))
+    }
+
+    /// `ls([envir = e])` — the names bound **directly** in the target frame (not
+    /// the enclosing chain), as a **sorted** character vector (R-22). `ls(e)`
+    /// accepts the environment positionally too (R's `ls` takes the env as its
+    /// first argument); `ls()` lists the current environment. Other (non-env)
+    /// arguments are a clean error.
+    fn eval_ls(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        // `envir = e` takes precedence; otherwise a lone positional environment
+        // argument (`ls(e)`) is honoured; otherwise the current scope.
+        let target = match self.resolve_envir(raw, env)? {
+            Some(t) => t,
+            None => match self.positional_nodes(raw).first() {
+                Some(node) => match self.eval_node(node, env)? {
+                    SValue::Environment(e) => e,
+                    other => {
+                        return Err(SError::BadArgs(format!(
+                            "ls: argument must be an environment, got {}",
+                            other.type_name()
+                        )))
+                    }
+                },
+                None => Rc::clone(env),
+            },
+        };
+        let names = names_in(&target);
+        let chars = names.into_iter().map(Some).collect();
+        self.as_visible(SValue::Character(chars))
+    }
+
+    /// Resolve an `envir = e` argument, if present, to the [`Env`] it names. R-22:
+    /// the argument is evaluated and **must** be an `SValue::Environment`; any
+    /// other value (a number, string, list, …) is a clean `BadArgs` error rather
+    /// than a panic. Returns `Ok(None)` when no `envir =` argument was supplied
+    /// (the caller then defaults to the current scope). The shared
+    /// `Rc<RefCell<Scope>>` is cloned out — the same underlying frame — so writes
+    /// through it are visible by reference.
+    fn resolve_envir(&self, raw: &[RawArg], env: &Env) -> SResult<Option<Env>> {
+        let Some((_, node)) = raw
+            .iter()
+            .find(|(name, _)| name.as_deref() == Some("envir"))
+        else {
+            return Ok(None);
+        };
+        let Some(expr) = arm_body(node) else {
+            return Err(SError::BadArgs(
+                "envir = : the environment is missing".into(),
+            ));
+        };
+        match self.eval_node(expr, env)? {
+            SValue::Environment(e) => Ok(Some(e)),
+            other => Err(SError::BadArgs(format!(
+                "envir = : expected an environment, got {}",
+                other.type_name()
+            ))),
+        }
     }
 
     /// The *positional* (unnamed) argument nodes of a raw arg list, in order —
@@ -1562,6 +1709,13 @@ fn special_form_name(primary: &GrammarASTNode) -> Option<&'static str> {
         [("NAME", "get")] => Some("get"),
         [("NAME", "exists")] => Some("exists"),
         [("NAME", "rm")] => Some("rm"),
+        // R-22 first-class environment forms — also special because they read the
+        // *current* environment (`new.env`'s parent, `environment()`'s value,
+        // `ls()`'s default frame). The dotted names lex as a single `NAME` token
+        // (`.` is a name character), so `new.env` matches as one token.
+        [("NAME", "new.env")] => Some("new.env"),
+        [("NAME", "environment")] => Some("environment"),
+        [("NAME", "ls")] => Some("ls"),
         _ => None,
     }
 }
