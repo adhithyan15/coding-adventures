@@ -242,9 +242,16 @@ fn validate_methods(methods: &SValue) -> SResult<SValue> {
                         ))
                     }
                     Some(name) => {
-                        if !v.is_callable() {
+                        // A method must be a user `function(...) ...` (an
+                        // `SValue::Closure`) so it can be *re-homed* onto the
+                        // instance on access (see `rebuild_method`). A builtin or
+                        // `Negate(f)` wrapper is callable but has no re-parentable
+                        // body, so it could never see the instance's fields —
+                        // reject it up front with a clear error rather than have it
+                        // silently read back as `NULL` later.
+                        if !matches!(v, SValue::Closure { .. }) {
                             return Err(SError::TypeError(format!(
-                                "setRefClass: method '{name}' must be a function"
+                                "setRefClass: method '{name}' must be a function defined with `function(...)`"
                             )));
                         }
                     }
