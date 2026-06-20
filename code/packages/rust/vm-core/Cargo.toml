@@ -1,6 +1,6 @@
 [package]
 name = "vm-core"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 description = "Generic register interpreter for InterpreterIR — the vm-core of the LANG pipeline.  v0.5.0 (LANG-FULL E2 — register width & wrap, backend 1/6): integer arithmetic / bitwise / shift handlers now mask their result to the width named by the instruction's type_hint (u4→&0xF, u8→&0xFF, u16, u32), so a u8-typed `add` of 200+100 yields 44 and `~x` on a u8 flips 8 bits — the register-arithmetic analogue of the existing byte-tape store_byte mask, on top of the legacy whole-module u8_wrap flag.  v0.4.0 (LANG-MATRIX Phase V): adds the byte-tape ops alloc_bytes/load_byte/store_byte over the flat memory address space (a cell is memory[base+idx], store_byte masks to a byte for Brainfuck's 8-bit wrap), so the generic VM runs Brainfuck — every matrix language now runs on this one register interpreter."
 
