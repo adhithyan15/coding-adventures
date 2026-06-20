@@ -6707,6 +6707,326 @@ impl IntegrationMeshReleaseTicketHandoffReadinessSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffExecutionSlot {
+    pub sequence: usize,
+    pub execution_slot_key: String,
+    pub packet_key: String,
+    pub ticket_key: String,
+    pub dispatch_key: String,
+    pub task_key: String,
+    pub slot_key: String,
+    pub check_sequence: usize,
+    pub check_kind: IntegrationMeshReleaseReadinessCheckKind,
+    pub status: IntegrationMeshReleaseReadinessStatus,
+    pub package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub handoff_lane: IntegrationMeshReleaseDispatchTicketHandoffLane,
+    pub ready: bool,
+    pub blocked: bool,
+    pub review_required: bool,
+    pub operator_required: bool,
+    pub dispatch_required: bool,
+    pub execution_required: bool,
+    pub packet_status: IntegrationMeshReleaseReadinessStatus,
+    pub execution_status: IntegrationMeshReleaseReadinessStatus,
+    pub release_dispatch_ready: bool,
+}
+
+impl IntegrationMeshReleaseTicketHandoffExecutionSlot {
+    pub fn from_packet(
+        sequence: usize,
+        packet: &IntegrationMeshReleaseDispatchTicketHandoffPacket,
+    ) -> Self {
+        let execution_required = !packet.ready() || !packet.is_release_lane();
+
+        Self {
+            sequence,
+            execution_slot_key: format!(
+                "release-ticket-handoff-execution-slot-{sequence:02}-{}-{}",
+                packet.handoff_lane.as_str(),
+                packet.check_kind.as_str()
+            ),
+            packet_key: packet.packet_key.clone(),
+            ticket_key: packet.ticket_key.clone(),
+            dispatch_key: packet.dispatch_key.clone(),
+            task_key: packet.task_key.clone(),
+            slot_key: packet.slot_key.clone(),
+            check_sequence: packet.check_sequence,
+            check_kind: packet.check_kind,
+            status: packet.status,
+            package_kind: packet.package_kind,
+            handoff_status: packet.handoff_status,
+            handoff_lane: packet.handoff_lane,
+            ready: packet.ready(),
+            blocked: packet.blocked(),
+            review_required: packet.review_required(),
+            operator_required: packet.operator_required(),
+            dispatch_required: packet.dispatch_required(),
+            execution_required,
+            packet_status: packet.packet_status,
+            execution_status: packet.execution_status,
+            release_dispatch_ready: packet.release_dispatch_ready,
+        }
+    }
+
+    pub fn ready(&self) -> bool {
+        self.ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn review_required(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn operator_required(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn dispatch_required(&self) -> bool {
+        self.dispatch_required
+    }
+
+    pub fn execution_required(&self) -> bool {
+        self.execution_required
+    }
+
+    pub fn is_release_lane(&self) -> bool {
+        self.handoff_lane == IntegrationMeshReleaseDispatchTicketHandoffLane::Release
+    }
+
+    pub fn is_operator_lane(&self) -> bool {
+        self.handoff_lane == IntegrationMeshReleaseDispatchTicketHandoffLane::Operator
+    }
+
+    pub fn is_repair_lane(&self) -> bool {
+        self.handoff_lane == IntegrationMeshReleaseDispatchTicketHandoffLane::Repair
+    }
+
+    pub fn is_review_lane(&self) -> bool {
+        self.handoff_lane == IntegrationMeshReleaseDispatchTicketHandoffLane::Review
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffExecutionSlotSummary {
+    pub release_ticket_handoff_readiness_summary:
+        IntegrationMeshReleaseTicketHandoffReadinessSummary,
+    pub total_execution_slots: usize,
+    pub ready_execution_slots: usize,
+    pub blocked_execution_slots: usize,
+    pub review_required_execution_slots: usize,
+    pub operator_required_execution_slots: usize,
+    pub dispatch_required_execution_slots: usize,
+    pub release_lane_execution_slots: usize,
+    pub operator_lane_execution_slots: usize,
+    pub repair_lane_execution_slots: usize,
+    pub review_lane_execution_slots: usize,
+    pub execution_required_slots: usize,
+    pub first_execution_slot_key: Option<String>,
+    pub first_release_execution_slot_key: Option<String>,
+    pub first_operator_execution_slot_key: Option<String>,
+    pub first_repair_execution_slot_key: Option<String>,
+    pub first_review_execution_slot_key: Option<String>,
+    pub next_execution_slot_key: Option<String>,
+    pub next_packet_key: Option<String>,
+    pub next_ticket_key: Option<String>,
+    pub next_dispatch_key: Option<String>,
+    pub next_task_key: Option<String>,
+    pub next_slot_key: Option<String>,
+    pub next_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub next_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub next_handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub next_handoff_lane: Option<IntegrationMeshReleaseDispatchTicketHandoffLane>,
+    pub packet_status: IntegrationMeshReleaseReadinessStatus,
+    pub execution_status: IntegrationMeshReleaseReadinessStatus,
+    pub release_packet_ready: bool,
+    pub release_execution_ready: bool,
+    pub release_tasks_ready: bool,
+    pub release_dispatch_ready: bool,
+    pub release_ticket_ready: bool,
+    pub release_handoff_ready: bool,
+    pub release_handoff_execution_ready: bool,
+}
+
+impl IntegrationMeshReleaseTicketHandoffExecutionSlotSummary {
+    pub fn from_parts<'a>(
+        release_ticket_handoff_readiness_summary: IntegrationMeshReleaseTicketHandoffReadinessSummary,
+        execution_slots: impl IntoIterator<Item = &'a IntegrationMeshReleaseTicketHandoffExecutionSlot>,
+    ) -> Self {
+        let execution_slots = execution_slots.into_iter().collect::<Vec<_>>();
+        let first_execution_slot = execution_slots.iter().min_by_key(|slot| slot.sequence);
+        let first_release_execution_slot = execution_slots
+            .iter()
+            .filter(|slot| slot.is_release_lane())
+            .min_by_key(|slot| slot.sequence);
+        let first_operator_execution_slot = execution_slots
+            .iter()
+            .filter(|slot| slot.is_operator_lane())
+            .min_by_key(|slot| slot.sequence);
+        let first_repair_execution_slot = execution_slots
+            .iter()
+            .filter(|slot| slot.is_repair_lane())
+            .min_by_key(|slot| slot.sequence);
+        let first_review_execution_slot = execution_slots
+            .iter()
+            .filter(|slot| slot.is_review_lane())
+            .min_by_key(|slot| slot.sequence);
+        let next_execution_slot = execution_slots
+            .iter()
+            .filter(|slot| slot.execution_required())
+            .min_by_key(|slot| slot.sequence);
+        let release_handoff_execution_ready = release_ticket_handoff_readiness_summary
+            .ready_for_release_handoff()
+            && !execution_slots.is_empty()
+            && execution_slots
+                .iter()
+                .all(|slot| slot.ready() && slot.is_release_lane());
+
+        Self {
+            total_execution_slots: execution_slots.len(),
+            ready_execution_slots: execution_slots.iter().filter(|slot| slot.ready()).count(),
+            blocked_execution_slots: execution_slots.iter().filter(|slot| slot.blocked()).count(),
+            review_required_execution_slots: execution_slots
+                .iter()
+                .filter(|slot| slot.review_required())
+                .count(),
+            operator_required_execution_slots: execution_slots
+                .iter()
+                .filter(|slot| slot.operator_required())
+                .count(),
+            dispatch_required_execution_slots: execution_slots
+                .iter()
+                .filter(|slot| slot.dispatch_required())
+                .count(),
+            release_lane_execution_slots: execution_slots
+                .iter()
+                .filter(|slot| slot.is_release_lane())
+                .count(),
+            operator_lane_execution_slots: execution_slots
+                .iter()
+                .filter(|slot| slot.is_operator_lane())
+                .count(),
+            repair_lane_execution_slots: execution_slots
+                .iter()
+                .filter(|slot| slot.is_repair_lane())
+                .count(),
+            review_lane_execution_slots: execution_slots
+                .iter()
+                .filter(|slot| slot.is_review_lane())
+                .count(),
+            execution_required_slots: execution_slots
+                .iter()
+                .filter(|slot| slot.execution_required())
+                .count(),
+            first_execution_slot_key: first_execution_slot
+                .map(|slot| slot.execution_slot_key.clone()),
+            first_release_execution_slot_key: first_release_execution_slot
+                .map(|slot| slot.execution_slot_key.clone()),
+            first_operator_execution_slot_key: first_operator_execution_slot
+                .map(|slot| slot.execution_slot_key.clone()),
+            first_repair_execution_slot_key: first_repair_execution_slot
+                .map(|slot| slot.execution_slot_key.clone()),
+            first_review_execution_slot_key: first_review_execution_slot
+                .map(|slot| slot.execution_slot_key.clone()),
+            next_execution_slot_key: next_execution_slot
+                .map(|slot| slot.execution_slot_key.clone()),
+            next_packet_key: next_execution_slot.map(|slot| slot.packet_key.clone()),
+            next_ticket_key: next_execution_slot.map(|slot| slot.ticket_key.clone()),
+            next_dispatch_key: next_execution_slot.map(|slot| slot.dispatch_key.clone()),
+            next_task_key: next_execution_slot.map(|slot| slot.task_key.clone()),
+            next_slot_key: next_execution_slot
+                .map(|slot| slot.slot_key.clone())
+                .or_else(|| {
+                    release_ticket_handoff_readiness_summary
+                        .next_slot_key
+                        .clone()
+                }),
+            next_check_kind: next_execution_slot
+                .map(|slot| slot.check_kind)
+                .or(release_ticket_handoff_readiness_summary.next_check_kind),
+            next_check_status: next_execution_slot
+                .map(|slot| slot.status)
+                .or(release_ticket_handoff_readiness_summary.next_check_status),
+            next_package_kind: next_execution_slot
+                .and_then(|slot| slot.package_kind)
+                .or(release_ticket_handoff_readiness_summary.next_package_kind),
+            next_handoff_status: next_execution_slot
+                .and_then(|slot| slot.handoff_status)
+                .or(release_ticket_handoff_readiness_summary.next_handoff_status),
+            next_handoff_lane: next_execution_slot
+                .map(|slot| slot.handoff_lane)
+                .or(release_ticket_handoff_readiness_summary.next_handoff_lane),
+            packet_status: release_ticket_handoff_readiness_summary.packet_status,
+            execution_status: release_ticket_handoff_readiness_summary.execution_status,
+            release_packet_ready: release_ticket_handoff_readiness_summary.release_packet_ready,
+            release_execution_ready: release_ticket_handoff_readiness_summary
+                .release_execution_ready,
+            release_tasks_ready: release_ticket_handoff_readiness_summary.release_tasks_ready,
+            release_dispatch_ready: release_ticket_handoff_readiness_summary.release_dispatch_ready,
+            release_ticket_ready: release_ticket_handoff_readiness_summary.release_ticket_ready,
+            release_handoff_ready: release_ticket_handoff_readiness_summary.release_handoff_ready,
+            release_handoff_execution_ready,
+            release_ticket_handoff_readiness_summary,
+        }
+    }
+
+    pub fn has_execution_slots(&self) -> bool {
+        self.total_execution_slots > 0
+    }
+
+    pub fn ready_for_release_handoff_execution(&self) -> bool {
+        self.execution_status == IntegrationMeshReleaseReadinessStatus::Ready
+            && self.release_packet_ready
+            && self.release_execution_ready
+            && self.release_tasks_ready
+            && self.release_dispatch_ready
+            && self.release_ticket_ready
+            && self.release_handoff_ready
+            && self.release_handoff_execution_ready
+            && !self.requires_attention()
+    }
+
+    pub fn has_repair_work(&self) -> bool {
+        self.repair_lane_execution_slots > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_execution_slots > 0
+            || self.has_repair_work()
+            || self.release_ticket_handoff_readiness_summary.has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_execution_slots > 0
+            || self.review_lane_execution_slots > 0
+            || self
+                .release_ticket_handoff_readiness_summary
+                .has_review_work()
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_execution_slots > 0
+            || self.operator_lane_execution_slots > 0
+            || self
+                .release_ticket_handoff_readiness_summary
+                .needs_operator()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.execution_required_slots > 0
+            || self.dispatch_required_execution_slots > 0
+            || self.has_blockers()
+            || self.has_review_work()
+            || self.needs_operator()
+            || !self.release_handoff_execution_ready
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
     pub display_name: String,
@@ -28309,6 +28629,80 @@ pub fn mesh_release_ticket_handoff_readiness_summary(
     )
 }
 
+pub fn mesh_release_ticket_handoff_execution_slots_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffExecutionSlot> {
+    mesh_release_dispatch_ticket_handoff_packets_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+    .iter()
+    .enumerate()
+    .map(|(index, packet)| {
+        IntegrationMeshReleaseTicketHandoffExecutionSlot::from_packet(index + 1, packet)
+    })
+    .collect()
+}
+
+pub fn mesh_release_ticket_handoff_execution_slots(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffExecutionSlot> {
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_execution_slots_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_ticket_handoff_execution_slot_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffExecutionSlotSummary {
+    let release_ticket_handoff_readiness_summary =
+        mesh_release_ticket_handoff_readiness_summary_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+    let execution_slots = mesh_release_ticket_handoff_execution_slots_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+
+    IntegrationMeshReleaseTicketHandoffExecutionSlotSummary::from_parts(
+        release_ticket_handoff_readiness_summary,
+        execution_slots.iter(),
+    )
+}
+
+pub fn mesh_release_ticket_handoff_execution_slot_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffExecutionSlotSummary {
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_execution_slot_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_protocol_catalog_entries(
     catalog: &[IntegrationCatalogEntry],
 ) -> Vec<IntegrationCatalogEntry> {
@@ -39310,6 +39704,160 @@ mod tests {
         assert!(!summary.has_review_work());
         assert!(!summary.needs_operator());
         assert!(!summary.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_execution_slots_sequence_lane_work() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let execution_slots = mesh_release_ticket_handoff_execution_slots(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let summary = mesh_release_ticket_handoff_execution_slot_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(execution_slots.len(), 5);
+        assert_eq!(summary.total_execution_slots, 5);
+        assert_eq!(summary.ready_execution_slots, 0);
+        assert_eq!(summary.blocked_execution_slots, 3);
+        assert_eq!(summary.review_required_execution_slots, 2);
+        assert_eq!(summary.operator_required_execution_slots, 4);
+        assert_eq!(summary.dispatch_required_execution_slots, 5);
+        assert_eq!(summary.release_lane_execution_slots, 0);
+        assert_eq!(summary.operator_lane_execution_slots, 0);
+        assert_eq!(summary.repair_lane_execution_slots, 3);
+        assert_eq!(summary.review_lane_execution_slots, 2);
+        assert_eq!(summary.execution_required_slots, 5);
+        assert_eq!(
+            summary.first_execution_slot_key,
+            Some("release-ticket-handoff-execution-slot-01-repair-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.first_repair_execution_slot_key,
+            Some("release-ticket-handoff-execution-slot-01-repair-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.first_review_execution_slot_key,
+            Some(
+                "release-ticket-handoff-execution-slot-02-review-evidence_remediation".to_string()
+            )
+        );
+        assert_eq!(
+            summary.next_execution_slot_key,
+            Some("release-ticket-handoff-execution-slot-01-repair-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_packet_key,
+            Some("release-dispatch-handoff-packet-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_ticket_key,
+            Some("release-dispatch-ticket-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_handoff_lane,
+            Some(IntegrationMeshReleaseDispatchTicketHandoffLane::Repair)
+        );
+        assert!(!summary.release_handoff_execution_ready);
+        assert!(!summary.ready_for_release_handoff_execution());
+        assert!(summary.has_execution_slots());
+        assert!(summary.has_repair_work());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.needs_operator());
+        assert!(summary.requires_attention());
+
+        let first = &execution_slots[0];
+        assert_eq!(
+            first.execution_slot_key,
+            "release-ticket-handoff-execution-slot-01-repair-substrate_actions"
+        );
+        assert_eq!(
+            first.packet_key,
+            "release-dispatch-handoff-packet-01-substrate_actions"
+        );
+        assert_eq!(
+            first.handoff_lane,
+            IntegrationMeshReleaseDispatchTicketHandoffLane::Repair
+        );
+        assert!(first.blocked());
+        assert!(first.operator_required());
+        assert!(first.dispatch_required());
+        assert!(first.execution_required());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_execution_slots_mark_release_ready() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let execution_slots = mesh_release_ticket_handoff_execution_slots_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+        let summary = mesh_release_ticket_handoff_execution_slot_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(execution_slots.len(), 5);
+        assert_eq!(summary.total_execution_slots, 5);
+        assert_eq!(summary.ready_execution_slots, 5);
+        assert_eq!(summary.blocked_execution_slots, 0);
+        assert_eq!(summary.review_required_execution_slots, 0);
+        assert_eq!(summary.operator_required_execution_slots, 0);
+        assert_eq!(summary.dispatch_required_execution_slots, 0);
+        assert_eq!(summary.release_lane_execution_slots, 5);
+        assert_eq!(summary.operator_lane_execution_slots, 0);
+        assert_eq!(summary.repair_lane_execution_slots, 0);
+        assert_eq!(summary.review_lane_execution_slots, 0);
+        assert_eq!(summary.execution_required_slots, 0);
+        assert_eq!(
+            summary.first_execution_slot_key,
+            Some("release-ticket-handoff-execution-slot-01-release-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.first_release_execution_slot_key,
+            Some("release-ticket-handoff-execution-slot-01-release-substrate_actions".to_string())
+        );
+        assert_eq!(summary.first_operator_execution_slot_key, None);
+        assert_eq!(summary.first_repair_execution_slot_key, None);
+        assert_eq!(summary.first_review_execution_slot_key, None);
+        assert_eq!(summary.next_execution_slot_key, None);
+        assert_eq!(summary.next_packet_key, None);
+        assert_eq!(summary.next_ticket_key, None);
+        assert_eq!(summary.next_handoff_lane, None);
+        assert!(summary.release_handoff_execution_ready);
+        assert!(summary.ready_for_release_handoff_execution());
+        assert!(summary.has_execution_slots());
+        assert!(!summary.has_repair_work());
+        assert!(!summary.has_blockers());
+        assert!(!summary.has_review_work());
+        assert!(!summary.needs_operator());
+        assert!(!summary.requires_attention());
+        assert!(execution_slots
+            .iter()
+            .all(IntegrationMeshReleaseTicketHandoffExecutionSlot::ready));
+        assert!(execution_slots
+            .iter()
+            .all(|slot| slot.is_release_lane() && !slot.execution_required()));
     }
 
     #[test]
