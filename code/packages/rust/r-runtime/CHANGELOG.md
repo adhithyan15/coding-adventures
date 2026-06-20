@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.17.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-22 — first-class environment values**: reaches R unchanged through the
+  shared evaluator (the `SValue::Environment` variant, the `Weak` parent link, and
+  all new forms live in `s-runtime` — no grammar change). In R syntax:
+  - **`e <- new.env(); assign("x", 5, envir = e); get("x", envir = e)`** → `5`.
+    `exists("x", envir = e)` → `TRUE` (missing → `FALSE`); `rm("x", envir = e)`
+    then `exists` → `FALSE`.
+  - **By-reference mutation**: `f <- function(env) assign("x", 42, envir = env);
+    f(e); get("x", envir = e)` → `42` — the binding `f` made in `e` is visible to
+    the caller (the defining difference from R's copy-on-modify semantics).
+  - **`ls(e)` / `ls(envir = e)`** lists the env's own names, **sorted**. Two
+    `new.env()` calls are independent.
+  - **`environment()`** returns the current environment; an environment prints as
+    the stable placeholder `<environment>` and has class `"environment"`. A
+    non-environment `envir =` is a clean error.
+  - Deferred to **R-23**: `environment(f)` (a closure's captured environment) and
+    `environmentName`. See `s-runtime` 0.18.0 for the Rc-cycle ownership model
+    (the parent link is `Weak`, so an env-holding-env cannot leak).
+
 ## [0.16.0] - 2026-06-20
 
 ### Added (via the shared `s-runtime`)

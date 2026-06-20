@@ -105,9 +105,20 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   locals (`local({ x <- 5; x * 2 })` → `10`). `assign`/`get`/`exists`/`rm` are
   lazy special forms (like `switch`/`tryCatch`) operating by name against the
   current scope. The chain walk is iterative over a finite acyclic scope list, so
-  it always terminates; non-name super-assign targets and the not-yet-supported
-  `envir = e` argument fail closed. First-class environment *values* (`new.env`,
-  `environment`) are deferred to R-22.
+  it always terminates; non-name super-assign targets fail closed.
+- **First-class environments** (R-22): the `SValue::Environment` variant boxes a
+  shared scope handle, so a scope is a value that can be passed, stored, and
+  **mutated by reference**. `new.env()` makes a fresh env (parent = caller's
+  scope); `environment()` returns the current env; `ls(e)` lists its names sorted;
+  and `assign`/`get`/`exists`/`rm`/`local` honour an `envir = e` argument that
+  operates on the passed environment (replacing R-21's rejection). Mutating an env
+  through one alias is visible through every other — `e <- new.env(); f <-
+  function(env) assign("x", 1, envir = env); f(e); get("x", envir = e)` → `1`. The
+  cycle risk an env-holding-env would pose is broken by making `Scope::parent` a
+  `Weak`: an env value owns the only strong `Rc` to its scope, parents are
+  referenced but never owned, so no strong-`Rc` cycle is constructible from
+  source. An environment prints as the stable placeholder `<environment>`, never a
+  heap address. `environment(f)` / `environmentName` are deferred to R-23.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
