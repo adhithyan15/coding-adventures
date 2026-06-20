@@ -123,6 +123,8 @@ runtime and Chief of Staff tools a typed catalog for:
   dispatch into release, operator, repair, and review lanes
 - mesh release ticket readiness summaries that combine release dispatch
   readiness with deterministic ticket state
+- mesh release ticket handoff readiness summaries that combine ticket
+  readiness with dispatch handoff lane state
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and
