@@ -10,8 +10,8 @@ Macsyma/Maxima drive rather than writing a bespoke evaluator.
 See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfram-language.md)
 §7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), §10 (W-7
 iteration constructs), §11 (W-8 local scoping), §12 (W-9 list-manipulation
-builtins), §13 (W-10 functional-iteration combinators), and §14 (W-11 pure
-functions).
+builtins), §13 (W-10 functional-iteration combinators), §14 (W-11 pure
+functions), and §15 (W-12 string builtins).
 
 ## What it does
 
@@ -120,6 +120,15 @@ assert_eq!(eval("(#1 + #2)&[3, 4]\n").unwrap(), "Out[1]= 7\n");
 assert_eq!(eval("Map[#^2 &, {1, 2, 3}]\n").unwrap(), "Out[1]= {1, 4, 9}\n");
 assert_eq!(eval("Select[{1, 2, 3, 4}, Mod[#, 2] == 0 &]\n").unwrap(), "Out[1]= {2, 4}\n");
 assert_eq!(eval("Nest[# + 1 &, 0, 3]\n").unwrap(), "Out[1]= 3\n");
+
+// W-12 string builtins — concatenate, measure, slice, split, replace, render:
+assert_eq!(eval("StringJoin[\"a\", \"b\", \"c\"]\n").unwrap(), "Out[1]= \"abc\"\n");
+assert_eq!(eval("StringLength[\"héllo\"]\n").unwrap(), "Out[1]= 5\n"); // by char, not byte
+assert_eq!(eval("StringTake[\"hello\", {2, 4}]\n").unwrap(), "Out[1]= \"ell\"\n");
+assert_eq!(eval("StringSplit[\"a,b,c\", \",\"]\n").unwrap(), "Out[1]= {\"a\", \"b\", \"c\"}\n");
+assert_eq!(eval("StringReplace[\"banana\", \"a\" -> \"o\"]\n").unwrap(), "Out[1]= \"bonono\"\n");
+assert_eq!(eval("ToString[123]\n").unwrap(), "Out[1]= \"123\"\n");
+assert_eq!(eval("Characters[\"ab\"]\n").unwrap(), "Out[1]= {\"a\", \"b\"}\n");
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -300,6 +309,38 @@ keeps an arity-mismatched/malformed form from re-matching and looping (it falls
 through to `on_unknown_head` and stays unevaluated). The only new builtin W-11
 needs is a minimal integer `Mod` (for the canonical `Mod[#,2]==0 &` predicate).
 
+**W-12** adds the **string builtins** — concatenate, measure, slice, split,
+replace, render — lowered onto the *same* substrate as everything above: the
+string atom is already `IRNode::Str`, and `StringSplit`/`Characters` reuse the W-9
+list machinery (and its `MAX_LIST_LENGTH` cap). All are eager `Head[args]` forms
+(no grammar change, nothing held):
+
+| Head | Example | Result |
+|------|---------|--------|
+| `StringJoin` | `StringJoin["a", "b", "c"]` | `"abc"` |
+| `StringLength` | `StringLength["héllo"]` (by char, not byte) | `5` |
+| `StringTake` | `StringTake["hello", 3]` | `"hel"` |
+| `StringTake` | `StringTake["hello", {2, 4}]` (1-based inclusive) | `"ell"` |
+| `StringTake` | `StringTake["hello", -2]` | `"lo"` |
+| `StringDrop` | `StringDrop["hello", 2]` | `"llo"` |
+| `StringSplit` | `StringSplit["a b  c"]` (whitespace) | `{"a", "b", "c"}` |
+| `StringSplit` | `StringSplit["a,b,c", ","]` (separator) | `{"a", "b", "c"}` |
+| `StringReplace` | `StringReplace["banana", "a" -> "o"]` | `"bonono"` |
+| `ToString` | `ToString[123]` | `"123"` |
+| `Characters` | `Characters["ab"]` | `{"a", "b"}` |
+
+Every length, index, and slice operates on **Unicode by character** — each goes
+through `chars().count()` / a `Vec<char>`, never a byte index — so a multi-byte
+char (`é`, an emoji) counts as one and `StringTake`/`StringDrop` can never split a
+UTF-8 boundary or panic (`StringTake["héllo", 2]` → `"hé"`). `StringJoin` and
+`StringReplace` are DoS-capped at `MAX_STRING_LENGTH` (= `MAX_LIST_LENGTH`,
+1,000,000); `StringReplace` rejects an **empty pattern** and scans non-overlapping
+left-to-right (so `"a" -> "aa"` terminates). `ToString` reuses the `print_wolfram`
+printer (a bare string renders unquoted: `ToString["hi"]` → `"hi"`). The `<>`
+infix sugar for `StringJoin` is **deferred** to a future grammar-change item.
+Every malformed form (non-string arg, out-of-range or `i64::MIN` index, malformed
+rule) is left unevaluated rather than panicking — the W-5/W-9 fail-soft contract.
+
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
@@ -336,6 +377,14 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   iteration combinators, iterating a function through the W-5 `Map`/`Apply`
   application path, DoS-capped on the iteration count and result-list size. No
   grammar change.
+- **W-11** (this crate) — pure (anonymous) functions: `Function[…]`, the slot
+  forms `#`/`#n`/`##`, and the `&` postfix, applied via a backend rewrite rule
+  that reuses `vm.rs::substitute`. Required a grammar + lexer change.
+- **W-12** (this crate) — the `StringJoin`/`StringLength`/`StringTake`/
+  `StringDrop`/`StringSplit`/`StringReplace`/`ToString`/`Characters` string
+  builtins, Unicode-by-character, lowered onto the `IRNode::Str` atom + the W-9
+  list machinery + the `print_wolfram` printer, DoS-capped on `StringJoin`/
+  `StringReplace` output. No grammar change (`<>` infix deferred).
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 
