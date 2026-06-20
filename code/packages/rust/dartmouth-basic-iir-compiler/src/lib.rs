@@ -32,7 +32,7 @@
 //! | `READ` / `DATA` / `RESTORE` | **deferred** — needs data pool |
 //! | `DIM` / arrays | **deferred** — needs LANG76 byte memory ops |
 //! | `STOP`         | same as `END` for V1 |
-//! | `DEF`          | **deferred** |
+//! | `DEF FNx(P)=e` | sibling `IIRFunction` + `call` (BA5); `FNx(arg)` → `call` |
 //!
 //! ## Strings
 //!
@@ -164,6 +164,12 @@ fn compile_program(ast: &GrammarASTNode, module_name: &str)
     main.source_map = std::mem::take(&mut comp.source_map);
     let mut module = IIRModule::new(module_name, "dartmouth-basic");
     module.functions.push(main);
+    // Sibling user-defined functions (`DEF FNx`, BA5) follow `main`.  They
+    // were lowered out of line into their own emission contexts during
+    // `emit_program`; a same-module `call` resolves each by name.
+    for func in std::mem::take(&mut comp.functions) {
+        module.functions.push(func);
+    }
     module.entry_point = Some("main".to_string());
     Ok(module)
 }
@@ -190,6 +196,22 @@ struct Compiler {
     /// `emit(&self, ...)` would not require a re-shuffle of mut
     /// signatures.
     current_loc: std::cell::Cell<SourceLoc>,
+    /// Sibling `IIRFunction`s lowered out of line — one per `DEF FNx`
+    /// user-defined function (BA5).  Pushed onto the module *after*
+    /// `main`, so a same-module `call` resolves the callee by name.
+    functions: Vec<IIRFunction>,
+    /// Set of `USER_FN` names (`fna`..`fnz`) declared anywhere in the
+    /// program, collected in a pre-pass so a call site can be lowered
+    /// before the `DEF` line is reached (BASIC permits forward use).
+    defined_fns: std::collections::HashSet<String>,
+    /// When lowering a `DEF` body this holds the function's single
+    /// formal parameter name.  A body may reference *only* its
+    /// parameter (and numeric literals / other functions) — global
+    /// access from inside a function needs the host global table the
+    /// code-gen backends reject (enabler **E6**), so any other variable
+    /// reference is a clean `Unsupported` error rather than an
+    /// undefined-register miscompile.  `None` while lowering `main`.
+    current_fn_param: Option<String>,
 }
 
 impl Default for Compiler {
@@ -201,6 +223,9 @@ impl Default for Compiler {
             for_counter: 0,
             source_map: Vec::new(),
             current_loc: std::cell::Cell::new(SourceLoc::SYNTHETIC),
+            functions: Vec::new(),
+            defined_fns: std::collections::HashSet::new(),
+            current_fn_param: None,
         }
     }
 }
@@ -258,6 +283,19 @@ impl Compiler {
         // (e.g. the synthesised end-of-program epilogue): the program
         // root's own position.
         self.set_loc(node_loc(ast));
+
+        // Pre-pass — register every `DEF FNx` name *before* lowering any
+        // statement.  BASIC lets a program call `FNS(7)` on an earlier
+        // line than the `DEF FNS(X) = …` that defines it, so a call site
+        // must be able to resolve the name even though its body has not
+        // been compiled yet.
+        for child in &ast.children {
+            if let ASTNodeOrToken::Node(line) = child {
+                if line.rule_name == "line" {
+                    self.register_def_names(line);
+                }
+            }
+        }
 
         // Walk every `line` child, in order.
         for child in &ast.children {
@@ -337,7 +375,7 @@ impl Compiler {
             "data_stmt"    => Err(CompileError::UnsupportedStatement("DATA".into())),
             "restore_stmt" => Err(CompileError::UnsupportedStatement("RESTORE".into())),
             "dim_stmt"     => Err(CompileError::UnsupportedStatement("DIM".into())),
-            "def_stmt"     => Err(CompileError::UnsupportedStatement("DEF".into())),
+            "def_stmt"     => self.emit_def(stmt),
             other => Err(CompileError::Malformed(
                 format!("unknown statement `{other}`"))),
         }
@@ -667,8 +705,8 @@ impl Compiler {
     {
         // primary = NUMBER | BUILTIN_FN(expr) | USER_FN(expr) | variable | (expr)
         //
-        // V1 supports NUMBER and `variable` only.  Function calls (built-in
-        // or user-defined) are deferred.
+        // V1 supports NUMBER, `variable`, and `USER_FN(expr)` calls (BA5).
+        // Built-in maths functions (SIN/ABS/…) stay deferred until E3 (reals).
         for c in &node.children {
             match c {
                 ASTNodeOrToken::Token(t) if t.effective_type_name() == "NUMBER" => {
@@ -681,14 +719,32 @@ impl Compiler {
                         vec![Operand::Int(v)], "i64");
                     return Ok(dest);
                 }
-                ASTNodeOrToken::Token(t) if t.effective_type_name() == "BUILTIN_FN"
-                    || t.effective_type_name() == "USER_FN" =>
-                {
+                ASTNodeOrToken::Token(t) if t.effective_type_name() == "USER_FN" => {
+                    // `USER_FN LPAREN expr RPAREN` — a call to a user-defined
+                    // function (BA5).  Lower to the same IIR `call` convention
+                    // ALGOL's value procedures use: `call dest = callee, arg`.
+                    return self.emit_user_fn_call(&t.value, node);
+                }
+                ASTNodeOrToken::Token(t) if t.effective_type_name() == "BUILTIN_FN" => {
                     return Err(CompileError::Unsupported(format!(
-                        "function call `{}` (deferred)", t.value)));
+                        "built-in function `{}` (needs E3 reals)", t.value)));
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "variable" => {
                     let name = scalar_variable_name(n)?;
+                    // Inside a `DEF` body, only the formal parameter is in
+                    // scope.  Referencing any other variable would read an
+                    // undefined register on the code-gen backends (a function
+                    // can't see `main`'s globals without the host global table
+                    // those backends reject — enabler E6), so reject it
+                    // cleanly instead of miscompiling.
+                    if let Some(param) = &self.current_fn_param {
+                        if &name != param {
+                            return Err(CompileError::Unsupported(format!(
+                                "DEF FN body references `{name}` — only its \
+                                 parameter `{param}` is in scope (global access \
+                                 from a function needs enabler E6)")));
+                        }
+                    }
                     return Ok(name);
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "expr" => {
@@ -699,6 +755,109 @@ impl Compiler {
         }
         Err(CompileError::Malformed(format!(
             "unrecognised `primary` shape: children={}", node.children.len())))
+    }
+
+    /// Lower a user-defined function *call* `FNx(arg)` to an IIR `call`.
+    ///
+    /// `name` is the `USER_FN` token value (`fns`, `fna`, …); `node` is the
+    /// enclosing `primary` whose single `expr` child is the argument.  The
+    /// emitted instruction is `call dest = [Var(name), Var(arg)]` with an
+    /// `i64` return hint — the calling convention every backend understands
+    /// (`srcs[0]` names the callee, the rest are argument slots).  This is
+    /// the BASIC counterpart of ALGOL's value-procedure calls (AL3), which
+    /// already run on native/LLVM/WASM/JVM/CLR/VM/JIT.
+    fn emit_user_fn_call(&mut self, name: &str, node: &GrammarASTNode)
+        -> Result<String, CompileError>
+    {
+        if !self.defined_fns.contains(name) {
+            return Err(CompileError::Unsupported(format!(
+                "call to undefined function `{name}` (no matching DEF FN)")));
+        }
+        // The single argument is the lone `expr` child of the primary.
+        let arg_node = child_nodes(node).into_iter()
+            .find(|n| n.rule_name == "expr")
+            .ok_or_else(|| CompileError::Malformed(format!(
+                "user function call `{name}` missing argument expr")))?;
+        let arg = self.emit_expr(arg_node)?;
+        let dest = self.fresh_temp();
+        self.emit("call", Some(&dest),
+            vec![Operand::Var(name.to_string()), Operand::Var(arg)], "i64");
+        Ok(dest)
+    }
+
+    /// Pre-pass: record every `DEF FNx` name declared on `line` so a call
+    /// site lowered earlier in the program can resolve it (forward use).
+    fn register_def_names(&mut self, line: &GrammarASTNode) {
+        let Some(stmt) = child_nodes(line).into_iter()
+            .find(|n| n.rule_name == "statement")
+        else { return };
+        let Some(inner) = child_nodes(stmt).into_iter().next() else { return };
+        if inner.rule_name != "def_stmt" { return; }
+        if let Some(name) = user_fn_token_value(inner) {
+            self.defined_fns.insert(name);
+        }
+    }
+
+    /// Lower a `DEF FNx(P) = expr` definition (BA5) into a sibling
+    /// `IIRFunction` pushed onto `self.functions`.  Emits *nothing* into the
+    /// caller's (`main`'s) instruction stream — a `DEF` is a declaration, not
+    /// a runtime statement.
+    ///
+    /// ```text
+    ///   10 DEF FNS(X) = X * X      ⇒   fn fns(X: i64) -> i64 { ret X * X }
+    /// ```
+    ///
+    /// The body is lowered in a swapped-in emission context (mirroring
+    /// ALGOL's `compile_procedure`, AL3) so its temporaries and the parameter
+    /// register live in the function's own namespace, independent of `main`.
+    fn emit_def(&mut self, stmt: &GrammarASTNode) -> Result<(), CompileError> {
+        // def_stmt = "DEF" USER_FN LPAREN NAME RPAREN EQ expr
+        let name = user_fn_token_value(stmt)
+            .ok_or_else(|| CompileError::Malformed(
+                "DEF missing USER_FN name".into()))?;
+        let param = first_name_token_value(stmt)
+            .ok_or_else(|| CompileError::Malformed(
+                "DEF missing parameter NAME".into()))?;
+        let body = child_nodes(stmt).into_iter()
+            .find(|n| n.rule_name == "expr")
+            .ok_or_else(|| CompileError::Malformed(
+                "DEF missing body expr".into()))?;
+
+        // ── swap in a fresh emission context for the function body ───────
+        let saved_instrs = std::mem::take(&mut self.instrs);
+        let saved_source_map = std::mem::take(&mut self.source_map);
+        let saved_temp = std::mem::replace(&mut self.temp_counter, 0);
+        let saved_param = self.current_fn_param.replace(param.clone());
+
+        // Lower the body and return its value.  The parameter is bound by
+        // name (`param`) and the body may reference only it (enforced in
+        // `emit_primary`).
+        let result = self.emit_expr(body)?;
+        self.emit("ret", None, vec![Operand::Var(result)], "i64");
+
+        // ── assemble the function and restore main's context ────────────
+        let body_instrs = std::mem::take(&mut self.instrs);
+        let body_len = body_instrs.len();
+        let mut func = IIRFunction::new(
+            name,
+            vec![(param, "i64".to_string())],
+            "i64",
+            body_instrs,
+        );
+        func.type_status = FunctionTypeStatus::FullyTyped;
+        let mut sm = std::mem::take(&mut self.source_map);
+        while sm.len() < body_len {
+            sm.push(SourceLoc::SYNTHETIC);
+        }
+        sm.truncate(body_len);
+        func.source_map = sm;
+        self.functions.push(func);
+
+        self.instrs = saved_instrs;
+        self.source_map = saved_source_map;
+        self.temp_counter = saved_temp;
+        self.current_fn_param = saved_param;
+        Ok(())
     }
 }
 
@@ -758,6 +917,21 @@ fn first_name_token_value(node: &GrammarASTNode) -> Option<String> {
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
             if t.effective_type_name() == "NAME" {
+                return Some(t.value.clone());
+            }
+        }
+    }
+    None
+}
+
+/// The first `USER_FN` token value (`fns`, `fna`, …) directly under `node`.
+/// Used for both the name in a `DEF FNx(…)` declaration and at a `FNx(…)`
+/// call site.  `USER_FN` is a distinct lexer token (regex `/fn[a-z]/`), so it
+/// never collides with a plain `NAME` parameter.
+fn user_fn_token_value(node: &GrammarASTNode) -> Option<String> {
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.effective_type_name() == "USER_FN" {
                 return Some(t.value.clone());
             }
         }
@@ -976,6 +1150,88 @@ mod tests {
         match err {
             CompileError::UnsupportedStatement(name) => assert_eq!(name, "GOSUB"),
             other => panic!("expected UnsupportedStatement(GOSUB), got {other:?}"),
+        }
+    }
+
+    // ── DEF FN — user-defined single-line functions (BA5) ────────────
+
+    /// `DEF FNS(X) = X * X` lowers to a sibling `IIRFunction` named `fns`
+    /// (one `i64` parameter `X`, body `mul X X` then `ret`), pushed after
+    /// `main`.  The `DEF` line itself emits nothing runtime into `main`.
+    #[test]
+    fn compiles_def_fn_into_sibling_function() {
+        let m = compile("10 DEF FNS(X) = X * X\n20 PRINT FNS(7)\n30 END\n")
+            .expect("ok");
+        // main + one sibling function.
+        assert_eq!(m.functions.len(), 2, "expected main + fns");
+        let f = m.functions.iter().find(|f| f.name == "FNS")
+            .expect("sibling function `FNS`");
+        assert_eq!(f.return_type, "i64");
+        assert_eq!(f.params, vec![("X".to_string(), "i64".to_string())]);
+        let ops: Vec<&str> = f.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"mul"), "fns body should multiply: {ops:?}");
+        assert_eq!(ops.last(), Some(&"ret"), "fns body ends with ret: {ops:?}");
+        // The call site in `main` emits a `call` naming `fns`.
+        let main = &m.functions[0];
+        let call = main.instructions.iter().find(|i|
+            i.op == "call"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "FNS"))
+            .expect("main calls fns");
+        // `call dest = fns, <arg>` — callee + one argument slot.
+        assert_eq!(call.srcs.len(), 2, "call passes one argument");
+    }
+
+    /// A function may be *called before* its `DEF` line appears (BASIC
+    /// permits forward use) — the pre-pass registers the name first.
+    #[test]
+    fn compiles_forward_referenced_def_fn() {
+        let m = compile("10 PRINT FNS(7)\n20 DEF FNS(X) = X * X\n30 END\n")
+            .expect("forward reference should compile");
+        assert!(m.functions.iter().any(|f| f.name == "FNS"));
+        assert!(m.functions[0].instructions.iter().any(|i|
+            i.op == "call"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "FNS")));
+    }
+
+    /// Calling a function that was never `DEF`-ined is a clean
+    /// `Unsupported` error, not a malformed-AST panic.
+    #[test]
+    fn rejects_call_to_undefined_function() {
+        let err = compile("10 PRINT FNQ(1)\n20 END\n").unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) => assert!(
+                msg.contains("undefined function"),
+                "message should name the cause: {msg}"),
+            other => panic!("expected Unsupported, got {other:?}"),
+        }
+    }
+
+    /// A `DEF` body may reference only its own parameter — touching any
+    /// other variable (a `main`-scope global) is rejected, because a
+    /// function can't read `main`'s registers on the code-gen backends
+    /// without the host global table they reject (enabler E6).
+    #[test]
+    fn rejects_global_reference_in_def_body() {
+        let err = compile(
+            "10 LET A = 5\n20 DEF FNS(X) = X + A\n30 PRINT FNS(7)\n40 END\n")
+            .unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) => assert!(
+                msg.contains("only its") || msg.contains("parameter"),
+                "message should explain the scope rule: {msg}"),
+            other => panic!("expected Unsupported, got {other:?}"),
+        }
+    }
+
+    /// The source-map lockstep invariant holds for the *sibling* function
+    /// too (one entry per instruction), not just `main`.
+    #[test]
+    fn def_fn_source_map_lockstep() {
+        let m = compile("10 DEF FNS(X) = X * X\n20 PRINT FNS(7)\n30 END\n")
+            .expect("ok");
+        for f in &m.functions {
+            assert_eq!(f.source_map.len(), f.instructions.len(),
+                "function {} source_map/instruction mismatch", f.name);
         }
     }
 

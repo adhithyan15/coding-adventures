@@ -1,6 +1,6 @@
 [package]
 name = "dartmouth-basic-iir-compiler"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule (i64 integer programs only in V1).  v0.2.0: ships BasicCirJit — a real bytecode JIT backend for jit-core.  v0.3.0: backend_compat e2e tests prove BASIC's IIR is accepted by every IIR-to-{wasm,jvm,clr,beam} validator.  v0.4.0: threads real source positions through IIRFunction::source_map for line-based debugger breakpoints."
 

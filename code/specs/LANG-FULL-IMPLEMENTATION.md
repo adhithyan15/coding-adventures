@@ -288,7 +288,19 @@ backend immediately) come before the enabler-dependent items.
 - ☐ **BA2** — multi-item `PRINT`, `;`/`,` separators, more relops.
 - ☐ **BA3** — arrays / `DIM` (needs **E5**).
 - ☐ **BA4** — strings + string PRINT (needs **E4**).
-- ☐ **BA5** — `DEF FN`.
+- ✅ **BA5** — `DEF FN` single-line user functions. `DEF FNx(P) = expr` lowers to a
+  sibling `IIRFunction` (one numeric param, `FullyTyped`) and `FNx(arg)` lowers to the
+  shared IIR `call` — the same convention ALGOL's value procedures (AL3) run on every
+  backend. A pre-pass registers all `DEF` names first so a call may precede its `DEF`
+  (BASIC forward use). **Verified by RUNNING** `DEF FNS(X) = X * X : PRINT FNS(7)` → `49`
+  across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). Surfaced & fixed a JVM bug:
+  `lang-aot`'s `concretize_scalar_any_for_jvm` decided the i32/i64 value model
+  **per-function**, so the printing `main` (kept i64) called the non-printing helper `FNS`
+  (narrowed to `(I)I`) with a `long` arg → `VerifyError`, empty output. Concretization is
+  now a **whole-module** decision (any printing function ⇒ the whole scalar module stays
+  i64), keeping cross-function call signatures consistent (lang-aot 0.94.0). **Limits:** one
+  numeric parameter; body references its parameter only (globals need **E6**); built-in
+  maths fns (`SIN`/`ABS`/…) need **E3**.
 - ☐ **BA6** — `READ` / `DATA` / `RESTORE`.
 - ☐ **BA7** — floating-point (needs **E3**).
 

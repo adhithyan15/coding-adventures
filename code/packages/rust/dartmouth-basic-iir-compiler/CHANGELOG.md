@@ -1,5 +1,46 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.6.0 — 2026-06-20 — `DEF FN` user-defined functions (LANG-FULL BA5)
+
+### Added — single-line user-defined functions (`DEF FNx(P) = expr`)
+
+`DEF` was previously an `UnsupportedStatement`. A single-line BASIC function
+now lowers to a **sibling `IIRFunction`** and `FNx(arg)` call sites lower to the
+shared IIR `call` op — the same calling convention ALGOL's value procedures
+(AL3) already run on every backend:
+
+```basic
+10 DEF FNS(X) = X * X
+20 PRINT FNS(7)
+30 END
+```
+
+⇒ `fn FNS(X: i64) -> i64 { ret X * X }` plus `call FNS, 7` in `main`, printing
+`49`. **Verified by RUNNING** across native / LLVM / WASM / JVM / CLR / VM / JIT
+(`lang-aot` `tests/lang_matrix.rs`).
+
+Mechanics, mirroring `algol-iir-compiler`'s `compile_procedure`:
+
+- A **pre-pass** registers every `DEF FNx` name before any statement is lowered,
+  so a program may *call a function on an earlier line than its `DEF`* (BASIC
+  permits forward use).
+- Each `DEF` body is lowered in a swapped-in emission context (its own
+  instruction stream / temp counter / source map), then assembled into a
+  `FullyTyped` `IIRFunction` pushed onto the module **after** `main`.
+- A `FNx(arg)` call evaluates its single argument and emits
+  `call dest = [callee, arg]` with an `i64` return hint.
+
+**Limits (follow-ups):** one numeric parameter only (per the 1964 grammar); the
+body may reference **only its parameter** — global access from inside a function
+needs the host global table the code-gen backends reject (enabler **E6**), so any
+other variable reference is a clean `Unsupported` error rather than an
+undefined-register miscompile. Built-in maths functions (`SIN`/`ABS`/…) stay
+deferred until E3 (reals).
+
+A companion fix in `lang-aot` 0.94.0 made the JVM scalar-concretization
+**module-consistent** so the printing `main` and its non-printing callee `FNS`
+share one value model (see that crate's changelog).
+
 ## 0.5.0 — 2026-06-13 — comparisons emit the operand width; control flow runs on the code-gen backends (LANG-FULL BA0)
 
 ### Fixed — `IF`/`FOR` comparisons emitted a `bool` type hint, breaking LLVM (and WASM)
