@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expose accepted `.control` `write` / `wrdata` marker inventories from
+  `analyzeDeckControls` and selected `runDeckAnalysis` execution results as
+  `writeMarkerCount` / `writeMarkers`, and carry them through selected-run
+  artifacts as stable `WriteMarkers` / `WriteMarkerList` table, CSV/JSON, and
+  ordered `tableArtifacts` fields, matching Python and Rust.
 - Expose selected diagnostic inventories directly on selected
   `runDeckAnalysis` execution results as `diagnosticCount` /
   `diagnosticCodes`, matching Python and Rust.

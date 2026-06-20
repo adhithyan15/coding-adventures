@@ -189,6 +189,10 @@ quit
       ".four 1k V(out)",
       ".four 2k V(in)",
     ]);
+    expect(summary.writeMarkers).toStrictEqual([
+      "write out.raw V(out)",
+      "wrdata out.dat V(out)",
+    ]);
     expect(summary.diagnostics.map(({ directive, lineNumber, severity }) => [
       directive,
       lineNumber,
@@ -258,6 +262,21 @@ quit
     ])).toStrictEqual([
       [".four", 1000, ["V(out)"]],
       [".four", 2000, ["V(in)"]],
+    ]);
+  });
+
+  it("surfaces dotted write markers from control blocks", () => {
+    const summary = analyzeDeckControls(`
+.control
+.write out.raw V(a)
+.wrdata out.dat V(a)
+.endc
+.end
+`);
+
+    expect(summary.writeMarkers).toStrictEqual([
+      "write out.raw V(a)",
+      "wrdata out.dat V(a)",
     ]);
   });
 
