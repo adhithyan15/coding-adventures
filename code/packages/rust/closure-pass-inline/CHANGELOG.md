@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.18.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+Every phase of the pass now covers `DebuggerStatement` (grouped with the other
+childless leaf statements) as a no-op (`false` for the contains-function checks).
+Added to keep the matches exhaustive over the new AST variant.
+
 ## [0.17.0] - 2026-06-20
 
 ### Added — CLOC20: function inlining across `do`/`while`

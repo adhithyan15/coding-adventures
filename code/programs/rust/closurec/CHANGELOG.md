@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.154.0] - 2026-06-20
+
+### Added — CLOC21: `debugger;` no longer forces a WHITESPACE_ONLY fallback
+
+Programs containing a `debugger` statement now route through the full typed-AST
+optimization pipeline at both SIMPLE and ADVANCED levels. Previously any
+`debugger` made the parse/bridge step decline, and closurec silently fell back
+to WHITESPACE_ONLY (no real optimization). Now inlining, constant folding,
+DCE, and (under ADVANCED) renaming all run across a `debugger` statement, which
+is itself preserved verbatim. (Stripping `debugger` at SIMPLE/ADVANCED, as the
+upstream Closure Compiler does, is a planned follow-up.)
+
+The end-to-end `simple-debugger` diff fixture pins the behaviour, with a
+regression guard that the output is NOT the whitespace fallback.
+
 ## [0.153.0] - 2026-06-20
 
 ### Added — CLOC20: end-to-end `do`/`while` support

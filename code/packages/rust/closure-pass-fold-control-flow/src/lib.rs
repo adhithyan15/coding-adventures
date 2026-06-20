@@ -325,7 +325,8 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
         }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
-        | TaggedStatement::EmptyStatement(_) => Statement::Tagged(stmt.clone()),
+        | TaggedStatement::EmptyStatement(_)
+        | TaggedStatement::DebuggerStatement(_) => Statement::Tagged(stmt.clone()),
     }
 }
 

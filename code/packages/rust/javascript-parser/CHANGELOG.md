@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.12.0] - 2026-06-20
+
+### Added — CLOC21: bridge `debugger_statement` → `DebuggerStatement`
+
+`debugger_statement` no longer lands in the unsupported arm (which raised
+`UnsupportedSyntax` and forced a WHITESPACE_ONLY fallback at the CLI). The
+grammar production is `"debugger" SEMICOLON` — no node children — so the bridge
+emits a bare `DebuggerStatement` marker. Added a `debugger_bridge_shape` test.
+
 ## [0.11.0] - 2026-06-20
 
 ### Added — CLOC20: bridge `do_while_statement` → `DoWhileStatement`

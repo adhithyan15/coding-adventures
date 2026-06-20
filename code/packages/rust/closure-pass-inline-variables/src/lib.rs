@@ -468,7 +468,8 @@ fn count_decl_names_stmt(
             | TaggedStatement::ThrowStatement(_)
             | TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -595,7 +596,8 @@ fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -805,7 +807,8 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
     changed

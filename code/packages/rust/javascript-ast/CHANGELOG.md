@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.10.0] - 2026-06-20
+
+### Added — CLOC21: `DebuggerStatement` (`debugger;`)
+
+Adds `DebuggerStatement { cv }`, a new `TaggedStatement::DebuggerStatement`
+variant, and a `Statement::debugger_statement` constructor. Like
+`EmptyStatement` it carries no children. ESTree wire format:
+`{ "type": "DebuggerStatement" }`. Making it representable lets the closurec
+CLI optimize the rest of a program containing a `debugger` statement;
+previously any such program fell back to WHITESPACE_ONLY. v1 preserves the
+statement (stripping it, as upstream Closure does, is future work).
+
 ## [0.9.0] - 2026-06-20
 
 ### Added — CLOC20: `DoWhileStatement` (the test-after-body loop)

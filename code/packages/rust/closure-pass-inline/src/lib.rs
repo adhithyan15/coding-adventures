@@ -616,7 +616,8 @@ fn count_decl_names_stmt(
             | TaggedStatement::ThrowStatement(_)
             | TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -827,7 +828,8 @@ fn tally_stmt(stmt: &Statement, cand: &InlineCandidate, t: &mut Tally) {
             // hold no variable uses.
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -1051,7 +1053,8 @@ fn inline_in_stmt(stmt: &mut Statement, cand: &InlineCandidate) -> bool {
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
     changed
@@ -1948,7 +1951,8 @@ fn splice_void_in_stmt(
             | TaggedStatement::ThrowStatement(_)
             | TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => false,
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => false,
         },
     }
 }
@@ -2780,7 +2784,8 @@ fn splice_valued_in_stmt(
             | TaggedStatement::ThrowStatement(_)
             | TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => false,
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => false,
         },
     }
 }
@@ -3101,7 +3106,8 @@ fn collect_used_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }

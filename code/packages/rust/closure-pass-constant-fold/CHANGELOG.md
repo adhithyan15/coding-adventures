@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.14.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+`fold_tagged` now covers `DebuggerStatement` (grouped with the other childless
+leaf statements). A `debugger;` has no foldable sub-expressions, so it is
+returned unchanged — added to keep the match exhaustive over the new variant.
+
 ## [0.13.0] - 2026-06-20
 
 ### Added — CLOC20: fold inside `do`/`while`

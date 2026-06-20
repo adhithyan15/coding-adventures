@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+`walk_tagged_statement` now has a `DebuggerStatement` arm. A `debugger;` has no
+children and binds nothing, so the arm is a no-op — added only to keep the
+statement match exhaustive over the new AST variant.
+
 ## [0.6.0] - 2026-06-20
 
 ### Added — CLOC20: scope analysis for `do`/`while`

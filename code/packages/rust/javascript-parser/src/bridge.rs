@@ -61,10 +61,10 @@ use coding_adventures_javascript_ast::{
         UndefinedLiteral,
     },
     statement::{
-        BlockStatement, BreakStatement, CatchClause, ContinueStatement, DoWhileStatement,
-        EmptyStatement, ExpressionStatement, ForInit, ForStatement, IfStatement, LabeledStatement,
-        ReturnStatement, Statement, SwitchCase, SwitchStatement, ThrowStatement, TryStatement,
-        WhileStatement,
+        BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
+        DoWhileStatement, EmptyStatement, ExpressionStatement, ForInit, ForStatement, IfStatement,
+        LabeledStatement, ReturnStatement, Statement, SwitchCase, SwitchStatement, ThrowStatement,
+        TryStatement, WhileStatement,
     },
     Program, ProgramItem, SourceType,
 };
@@ -277,11 +277,12 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         "labelled_statement" => convert_labeled_statement(child).map(Statement::labeled_statement),
         "throw_statement" => convert_throw_statement(child).map(Statement::throw_statement),
         "try_statement" => convert_try_statement(child).map(Statement::try_statement),
+        // debugger_statement = "debugger" SEMICOLON — no node children, so the
+        // typed node is a bare marker. (CLOC21.)
+        "debugger_statement" => Ok(Statement::debugger_statement(DebuggerStatement { cv: None })),
         // Phase 2+ — not yet in the typed AST
         "for_in_statement" | "for_of_statement" | "for_await_of_statement" | "with_statement"
-        | "debugger_statement" | "using_declaration" | "await_using_declaration" => {
-            Err(unsupported(child))
-        }
+        | "using_declaration" | "await_using_declaration" => Err(unsupported(child)),
         other => Err(BridgeError::InternalError {
             msg: format!("unknown statement child rule '{other}'"),
             rule: node.rule_name.clone(),
@@ -2199,6 +2200,26 @@ mod tests {
             matches!(&t.test, Expression::Identifier(id) if id.name == "x"),
             "expected test to be identifier `x`, got {:?}",
             t.test
+        );
+    }
+
+    #[test]
+    fn debugger_bridge_shape() {
+        // CLOC21: `debugger;` now bridges to a DebuggerStatement (a bare
+        // marker with no children). Previously this returned UnsupportedSyntax
+        // → WHITESPACE_ONLY.
+        let p = bridge_ok("debugger;");
+        assert!(
+            matches!(
+                &p.body[0],
+                ProgramItem::Statement(Statement::Tagged(
+                    coding_adventures_javascript_ast::statement::TaggedStatement::DebuggerStatement(
+                        _
+                    )
+                ))
+            ),
+            "expected a DebuggerStatement, got {:?}",
+            p.body[0]
         );
     }
 

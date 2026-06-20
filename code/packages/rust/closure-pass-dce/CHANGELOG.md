@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.12.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+`dce_tagged_statement` now covers `DebuggerStatement` (grouped with the other
+childless leaf statements), preserved as-is. A `debugger;` is a no-op leaf with
+no bindings; stripping it is intentionally left as future work, so v1 keeps it.
+
 ## [0.11.0] - 2026-06-20
 
 ### Added — CLOC20: DCE inside `do`/`while`

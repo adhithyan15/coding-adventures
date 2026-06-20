@@ -700,6 +700,8 @@ fn walk_tagged_statement(
         TaggedStatement::BreakStatement(_) => {}
         TaggedStatement::ContinueStatement(_) => {}
         TaggedStatement::EmptyStatement(_) => {}
+        // `debugger;` has no children and binds nothing — nothing to analyze.
+        TaggedStatement::DebuggerStatement(_) => {}
     }
 }
 
