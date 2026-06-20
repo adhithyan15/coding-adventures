@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.16.1] - 2026-06-20 — string-literal escape hardening (byte-provenance)
+
+### Added
+
+- **`\t` (tab) escape** in string literals, completing the common escape set
+  (`\"`, `\\`, `\n`, `\t`). Handled in `unquote_string`; the lexer regex
+  `"([^"\\]|\\.)*"` already admitted it.
+
+### Changed / hardened
+
+- `unquote_string` now keeps a dangling trailing backslash verbatim instead of
+  dropping it (defensive — the real lexer can't emit this, but the unescaper
+  must never silently mutate a citation).
+- Documented the full escape table on `unquote_string` and in `adj_lang.tokens`,
+  spelling out *why* it is load-bearing: a `source "..."` provenance span must
+  reproduce the cited page byte-for-byte after unescaping, so a span that itself
+  contains a double quote (e.g. a histology page's `"Orphan Annie eye"` nuclei)
+  is carried as `\"` and restored here. This unblocks grounding quote-containing
+  verbatim spans that were previously (wrongly) treated as un-carryable.
+
+### Tests
+
+- Six new unit/round-trip tests pin every escape-table row, the
+  unknown-escape-kept-verbatim rule, the dangling-backslash case, and an
+  end-to-end `source "...\"...\""` → real-quote check through lexer+parser+adapter.
+
+### Notes
+
+- No grammar/AST/API change. `_lexer_grammar.rs` regenerated (line-number
+  metadata only; the STRING pattern is unchanged).
+
 ## [0.16.0] - 2026-06-16 — context precedence surface (ADJ73 PR-B)
 
 ### Added

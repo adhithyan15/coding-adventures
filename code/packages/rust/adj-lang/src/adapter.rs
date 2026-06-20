@@ -1312,11 +1312,99 @@ mod tests {
             }
         }
     }
+
+    // ---- string-literal escape handling (load-bearing for byte-provenance) ----
+    //
+    // `unquote_string` turns the raw lexeme (quotes included) into the semantic
+    // value. These tests pin every row of the escape table so a `source "..."`
+    // span that itself contains a quote, backslash, newline, or tab is restored
+    // character-for-character — and so an escape we don't recognize is never
+    // silently altered. The raw lexemes are written as Rust raw strings
+    // (`r#"..."#`) so the backslashes below are literal, exactly as the ADJ
+    // lexer would see them.
+
+    #[test]
+    fn unquote_string_strips_quotes_on_a_plain_literal() {
+        assert_eq!(unquote_string(r#""plain text""#), "plain text");
+    }
+
+    #[test]
+    fn unquote_string_restores_an_escaped_double_quote() {
+        // ADJ source:  "shows \"Orphan Annie eye\" nuclei"
+        // -> verbatim:  shows "Orphan Annie eye" nuclei
+        assert_eq!(
+            unquote_string(r#""shows \"Orphan Annie eye\" nuclei""#),
+            "shows \"Orphan Annie eye\" nuclei"
+        );
+    }
+
+    #[test]
+    fn unquote_string_restores_backslash_newline_and_tab() {
+        assert_eq!(unquote_string(r#""a\\b""#), "a\\b"); // \\  -> \
+        assert_eq!(unquote_string(r#""l1\nl2""#), "l1\nl2"); // \n  -> newline
+        assert_eq!(unquote_string(r#""c1\tc2""#), "c1\tc2"); // \t  -> tab
+    }
+
+    #[test]
+    fn unquote_string_keeps_an_unrecognized_escape_verbatim() {
+        // We never drop the backslash on an escape we don't understand —
+        // mutating a citation we can't interpret would corrupt provenance.
+        assert_eq!(unquote_string(r#""a\xb""#), r"a\xb");
+    }
+
+    #[test]
+    fn unquote_string_keeps_a_dangling_backslash() {
+        // Defensive: the real lexer can't emit this (its regex requires a char
+        // after `\` plus a closing quote), but the unescaper must not panic or
+        // eat a trailing backslash sitting just inside the closing quote.
+        // Raw lexeme is the 5 chars  " a b \ "  -> inner "ab\" -> value "ab\".
+        assert_eq!(unquote_string("\"ab\\\""), "ab\\");
+    }
+
+    #[test]
+    fn source_annotation_carries_an_escaped_quote_verbatim() {
+        // End-to-end through the lexer + parser + adapter: a provenance span
+        // containing a literal double quote survives as real bytes.
+        let src = r#"contributes 1.0 from x to y
+            source "shows \"Orphan Annie eye\" nuclei and psammoma bodies"
+            trust authoritative"#;
+        match parse_one(src) {
+            Statement::Contributes { annotations, .. } => {
+                let source = annotations
+                    .iter()
+                    .find_map(|a| match a {
+                        Annotation::Source(s) => Some(s.clone()),
+                        _ => None,
+                    })
+                    .expect("a Source annotation");
+                assert_eq!(source, "shows \"Orphan Annie eye\" nuclei and psammoma bodies");
+                assert!(source.contains('"'), "the span must carry a real quote");
+            }
+            other => panic!("expected Contributes, got {other:?}"),
+        }
+    }
 }
 
 /// Strip surrounding double quotes and process backslash escapes.
-/// The grammar-driven lexer hands us the raw lexeme including the
-/// outer `"`; we unescape `\"` → `"`, `\\` → `\`, `\n` → newline.
+///
+/// The grammar-driven lexer matches a string with `/"([^"\\]|\\.)*"/` and
+/// hands us the raw lexeme *including* the outer `"`. We strip the quotes and
+/// translate the recognized escape sequences:
+///
+/// | in source | becomes  | why it matters                                   |
+/// |-----------|----------|--------------------------------------------------|
+/// | `\"`      | `"`      | a verbatim span may itself contain a quote (e.g. |
+/// |           |          | a histology page's `"Orphan Annie eye"` nuclei)  |
+/// | `\\`      | `\`      | a literal backslash                              |
+/// | `\n`      | newline  | multi-line provenance text                       |
+/// | `\t`      | tab      | tabular provenance text                          |
+///
+/// This is load-bearing for byte-provenance: a `source "..."` annotation must
+/// reproduce the cited page's text *character-for-character* after unescaping,
+/// so a span that contains a `"` is carried as `\"` and restored here. An
+/// unrecognized escape (`\x`) is kept verbatim (`\x`) rather than silently
+/// dropping the backslash — we never want to mutate a citation we don't
+/// understand. See the `unquote_string_*` unit tests, which pin every row.
 fn unquote_string(raw: &str) -> String {
     let inner = raw
         .strip_prefix('"')
@@ -1331,12 +1419,16 @@ fn unquote_string(raw: &str) -> String {
                     '"' => out.push('"'),
                     '\\' => out.push('\\'),
                     'n' => out.push('\n'),
+                    't' => out.push('\t'),
                     other => {
                         // Unknown escape — keep verbatim.
                         out.push('\\');
                         out.push(other);
                     }
                 }
+            } else {
+                // Dangling backslash at end of string — keep it verbatim.
+                out.push('\\');
             }
         } else {
             out.push(c);
