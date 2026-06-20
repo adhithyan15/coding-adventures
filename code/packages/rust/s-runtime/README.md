@@ -138,8 +138,18 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   instance⇄method `Rc` cycle is broken by construction (instance-bound closures are
   rebuilt lazily and never stored; the stored method closures close over the
   *generator*); the lone `.self` self-reference is the documented,
-  `MAX_ENVIRONMENTS`-bounded R-22 value-binding cycle. Inheritance, `$copy()`,
-  active bindings, and `$methods()`/`$fields()` introspection are deferred to R-25.
+  `MAX_ENVIRONMENTS`-bounded R-22 value-binding cycle.
+- **R5 inheritance, `$copy()`, and introspection** (R-25, `src/refclass.rs`):
+  `setRefClass("Sub", contains = "Base", …)` gives **single inheritance** — a
+  subclass generator links to its parent (`.refParent`, a child→parent DAG edge),
+  and an instance gets the union of base ∪ sub fields and methods (a sub method
+  overrides a same-named base method; an inherited base method is callable on a Sub;
+  a sub method reads/writes base fields). `obj$copy()` is a **deep**, independent
+  value-copy (vs `b <- a`, which aliases). `is(obj, "Base")` / `inherits(obj,
+  "Base")` / `class(obj)` walk the class chain `c("Sub", "Base", …, "envRefClass",
+  "environment")`; `generator$fields()` / `generator$methods()` return the sorted
+  effective names. A cyclic `contains =` is rejected; all chain walks are bounded by
+  `MAX_CHAIN_DEPTH`. Multiple inheritance and active bindings are deferred to R-26.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

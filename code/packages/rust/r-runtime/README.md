@@ -102,8 +102,20 @@ directly and updates them with `<<-`, so `a$add(5); a$add(3); a$total` → `8`.
 names share one instance, unlike R's copy-on-modify), while two separate `$new`
 calls are independent. `.self` is bound in the instance, so a method can reach a
 sibling as `.self$other()`. Field type strings are recorded but not enforced in
-this subset; inheritance, `$copy()`, active bindings, and `$methods()`/`$fields()`
-introspection are deferred to R-25.
+this subset.
+
+**R5 inheritance, `$copy()`, and introspection (R-25)** — `Sub <-
+setRefClass("Sub", contains = "Base", fields = list(y = "numeric"), methods =
+list(sum = function() x + y))` declares a **subclass**. A `Sub` instance has the
+union of base and sub fields, inherited base methods are callable on it
+(`s$getx()`), a sub method reads/writes base fields, and a sub method overrides a
+same-named base method. `b <- a$copy()` is a **deep, independent** copy —
+`b$x <- 9` leaves `a$x` unchanged — in contrast to `d <- a; d$x <- 7`, which
+aliases. `is(s, "Base")`, `inherits(s, "Base")`, and `class(s)` walk the class
+chain `c("Sub", "Base", "envRefClass", "environment")`; `Sub$fields()` and
+`Sub$methods()` return the sorted field/method names including inherited ones. A
+cyclic or unknown `contains =` is a clean error. Multiple inheritance and active
+bindings are deferred to R-26.
 
 ## Usage
 

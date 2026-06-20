@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.20.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-25 — R5 inheritance, `$copy()`, and `is`/`inherits` introspection**:
+  reaches R unchanged through the shared evaluator (all logic lives in
+  `s-runtime/src/refclass.rs`; no grammar change). In R syntax:
+  - **`Sub <- setRefClass("Sub", contains = "Base", fields = …, methods = …)`** —
+    single inheritance. A `Sub` instance has the union of base and sub fields;
+    inherited base methods are callable on it; a sub method may read/write base
+    fields; a sub method overrides a same-named base method. `contains =` takes the
+    parent generator value or a class-name string. Cyclic / unknown `contains =`
+    is a clean error.
+  - **`b <- a$copy()`** — a deep, independent copy: `b$x <- 9` leaves `a$x`
+    untouched, whereas `d <- a; d$x <- 7` aliases (`a$x` becomes 7).
+  - **`is(s, "Base")` / `inherits(s, "Base")` / `class(s)`** — walk the R5 class
+    chain `c("Sub", "Base", "envRefClass", "environment")`.
+  - **`Sub$fields()` / `Sub$methods()`** — sorted field / method names, including
+    inherited ones.
+  - 20 new R-syntax tests plus an R-24 regression test.
+  - Defers multiple inheritance + active bindings to **R-26**.
+
 ## [0.19.0] - 2026-06-20
 
 ### Added (via the shared `s-runtime`)
