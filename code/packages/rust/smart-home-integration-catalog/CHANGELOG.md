@@ -154,6 +154,8 @@ All notable changes to this package will be documented in this file.
   combining release ticket readiness with dispatch handoff lane state.
 - `IntegrationMeshReleaseTicketHandoffExecutionSlot` and summary helpers for
   sequencing dispatch handoff packets into deterministic lane execution slots.
+- `IntegrationMeshReleaseTicketHandoffExecutionReadinessSummary` and helpers
+  for combining handoff readiness with execution slot state.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,

@@ -127,6 +127,8 @@ runtime and Chief of Staff tools a typed catalog for:
   readiness with dispatch handoff lane state
 - low-level mesh release ticket handoff execution slots that sequence handoff
   packets into deterministic lane execution work
+- mesh release ticket handoff execution readiness summaries that combine
+  handoff readiness with deterministic execution slot state
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and

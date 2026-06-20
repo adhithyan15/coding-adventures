@@ -7027,6 +7027,233 @@ impl IntegrationMeshReleaseTicketHandoffExecutionSlotSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffExecutionReadinessSummary {
+    pub release_ticket_handoff_readiness_summary:
+        IntegrationMeshReleaseTicketHandoffReadinessSummary,
+    pub release_ticket_handoff_execution_slot_summary:
+        IntegrationMeshReleaseTicketHandoffExecutionSlotSummary,
+    pub total_tickets: usize,
+    pub ready_tickets: usize,
+    pub blocked_tickets: usize,
+    pub review_required_tickets: usize,
+    pub operator_required_tickets: usize,
+    pub dispatch_required_tickets: usize,
+    pub total_handoff_packets: usize,
+    pub release_lane_packets: usize,
+    pub operator_lane_packets: usize,
+    pub repair_lane_packets: usize,
+    pub review_lane_packets: usize,
+    pub dispatch_required_packets: usize,
+    pub total_execution_slots: usize,
+    pub ready_execution_slots: usize,
+    pub blocked_execution_slots: usize,
+    pub review_required_execution_slots: usize,
+    pub operator_required_execution_slots: usize,
+    pub dispatch_required_execution_slots: usize,
+    pub release_lane_execution_slots: usize,
+    pub operator_lane_execution_slots: usize,
+    pub repair_lane_execution_slots: usize,
+    pub review_lane_execution_slots: usize,
+    pub execution_required_slots: usize,
+    pub queued_substrate_actions: usize,
+    pub remediation_item_count: usize,
+    pub review_required_packages: usize,
+    pub operator_required_packages: usize,
+    pub blocked_packages: usize,
+    pub first_execution_slot_key: Option<String>,
+    pub next_execution_slot_key: Option<String>,
+    pub next_packet_key: Option<String>,
+    pub next_ticket_key: Option<String>,
+    pub next_dispatch_key: Option<String>,
+    pub next_task_key: Option<String>,
+    pub next_slot_key: Option<String>,
+    pub next_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub next_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub next_handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub next_handoff_lane: Option<IntegrationMeshReleaseDispatchTicketHandoffLane>,
+    pub packet_status: IntegrationMeshReleaseReadinessStatus,
+    pub execution_status: IntegrationMeshReleaseReadinessStatus,
+    pub release_packet_ready: bool,
+    pub release_execution_ready: bool,
+    pub release_tasks_ready: bool,
+    pub release_dispatch_ready: bool,
+    pub release_ticket_ready: bool,
+    pub release_handoff_ready: bool,
+    pub release_handoff_execution_ready: bool,
+    pub release_ticket_handoff_execution_ready: bool,
+}
+
+impl IntegrationMeshReleaseTicketHandoffExecutionReadinessSummary {
+    pub fn from_summaries(
+        release_ticket_handoff_readiness_summary: IntegrationMeshReleaseTicketHandoffReadinessSummary,
+        release_ticket_handoff_execution_slot_summary: IntegrationMeshReleaseTicketHandoffExecutionSlotSummary,
+    ) -> Self {
+        let release_ticket_handoff_execution_ready = release_ticket_handoff_readiness_summary
+            .ready_for_release_handoff()
+            && release_ticket_handoff_execution_slot_summary.ready_for_release_handoff_execution();
+
+        Self {
+            total_tickets: release_ticket_handoff_readiness_summary.total_tickets,
+            ready_tickets: release_ticket_handoff_readiness_summary.ready_tickets,
+            blocked_tickets: release_ticket_handoff_readiness_summary.blocked_tickets,
+            review_required_tickets: release_ticket_handoff_readiness_summary
+                .review_required_tickets,
+            operator_required_tickets: release_ticket_handoff_readiness_summary
+                .operator_required_tickets,
+            dispatch_required_tickets: release_ticket_handoff_readiness_summary
+                .dispatch_required_tickets,
+            total_handoff_packets: release_ticket_handoff_readiness_summary.total_handoff_packets,
+            release_lane_packets: release_ticket_handoff_readiness_summary.release_lane_packets,
+            operator_lane_packets: release_ticket_handoff_readiness_summary.operator_lane_packets,
+            repair_lane_packets: release_ticket_handoff_readiness_summary.repair_lane_packets,
+            review_lane_packets: release_ticket_handoff_readiness_summary.review_lane_packets,
+            dispatch_required_packets: release_ticket_handoff_readiness_summary
+                .dispatch_required_packets,
+            total_execution_slots: release_ticket_handoff_execution_slot_summary
+                .total_execution_slots,
+            ready_execution_slots: release_ticket_handoff_execution_slot_summary
+                .ready_execution_slots,
+            blocked_execution_slots: release_ticket_handoff_execution_slot_summary
+                .blocked_execution_slots,
+            review_required_execution_slots: release_ticket_handoff_execution_slot_summary
+                .review_required_execution_slots,
+            operator_required_execution_slots: release_ticket_handoff_execution_slot_summary
+                .operator_required_execution_slots,
+            dispatch_required_execution_slots: release_ticket_handoff_execution_slot_summary
+                .dispatch_required_execution_slots,
+            release_lane_execution_slots: release_ticket_handoff_execution_slot_summary
+                .release_lane_execution_slots,
+            operator_lane_execution_slots: release_ticket_handoff_execution_slot_summary
+                .operator_lane_execution_slots,
+            repair_lane_execution_slots: release_ticket_handoff_execution_slot_summary
+                .repair_lane_execution_slots,
+            review_lane_execution_slots: release_ticket_handoff_execution_slot_summary
+                .review_lane_execution_slots,
+            execution_required_slots: release_ticket_handoff_execution_slot_summary
+                .execution_required_slots,
+            queued_substrate_actions: release_ticket_handoff_readiness_summary
+                .queued_substrate_actions,
+            remediation_item_count: release_ticket_handoff_readiness_summary.remediation_item_count,
+            review_required_packages: release_ticket_handoff_readiness_summary
+                .review_required_packages,
+            operator_required_packages: release_ticket_handoff_readiness_summary
+                .operator_required_packages,
+            blocked_packages: release_ticket_handoff_readiness_summary.blocked_packages,
+            first_execution_slot_key: release_ticket_handoff_execution_slot_summary
+                .first_execution_slot_key
+                .clone(),
+            next_execution_slot_key: release_ticket_handoff_execution_slot_summary
+                .next_execution_slot_key
+                .clone(),
+            next_packet_key: release_ticket_handoff_execution_slot_summary
+                .next_packet_key
+                .clone(),
+            next_ticket_key: release_ticket_handoff_execution_slot_summary
+                .next_ticket_key
+                .clone(),
+            next_dispatch_key: release_ticket_handoff_execution_slot_summary
+                .next_dispatch_key
+                .clone(),
+            next_task_key: release_ticket_handoff_execution_slot_summary
+                .next_task_key
+                .clone(),
+            next_slot_key: release_ticket_handoff_execution_slot_summary
+                .next_slot_key
+                .clone(),
+            next_check_kind: release_ticket_handoff_execution_slot_summary.next_check_kind,
+            next_check_status: release_ticket_handoff_execution_slot_summary.next_check_status,
+            next_package_kind: release_ticket_handoff_execution_slot_summary.next_package_kind,
+            next_handoff_status: release_ticket_handoff_execution_slot_summary.next_handoff_status,
+            next_handoff_lane: release_ticket_handoff_execution_slot_summary.next_handoff_lane,
+            packet_status: release_ticket_handoff_readiness_summary.packet_status,
+            execution_status: release_ticket_handoff_readiness_summary.execution_status,
+            release_packet_ready: release_ticket_handoff_readiness_summary.release_packet_ready,
+            release_execution_ready: release_ticket_handoff_readiness_summary
+                .release_execution_ready,
+            release_tasks_ready: release_ticket_handoff_readiness_summary.release_tasks_ready,
+            release_dispatch_ready: release_ticket_handoff_readiness_summary.release_dispatch_ready,
+            release_ticket_ready: release_ticket_handoff_readiness_summary.release_ticket_ready,
+            release_handoff_ready: release_ticket_handoff_readiness_summary.release_handoff_ready,
+            release_handoff_execution_ready: release_ticket_handoff_execution_slot_summary
+                .release_handoff_execution_ready,
+            release_ticket_handoff_execution_ready,
+            release_ticket_handoff_readiness_summary,
+            release_ticket_handoff_execution_slot_summary,
+        }
+    }
+
+    pub fn ready_for_release_ticket_handoff_execution(&self) -> bool {
+        self.execution_status == IntegrationMeshReleaseReadinessStatus::Ready
+            && self.release_packet_ready
+            && self.release_execution_ready
+            && self.release_tasks_ready
+            && self.release_dispatch_ready
+            && self.release_ticket_ready
+            && self.release_handoff_ready
+            && self.release_handoff_execution_ready
+            && self.release_ticket_handoff_execution_ready
+            && !self.requires_attention()
+    }
+
+    pub fn has_execution_slots(&self) -> bool {
+        self.total_execution_slots > 0
+    }
+
+    pub fn has_repair_work(&self) -> bool {
+        self.repair_lane_execution_slots > 0
+            || self.repair_lane_packets > 0
+            || self
+                .release_ticket_handoff_execution_slot_summary
+                .has_repair_work()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_execution_slots > 0
+            || self.blocked_tickets > 0
+            || self.blocked_packages > 0
+            || self.queued_substrate_actions > 0
+            || self.has_repair_work()
+            || self
+                .release_ticket_handoff_execution_slot_summary
+                .has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_execution_slots > 0
+            || self.review_lane_execution_slots > 0
+            || self.review_required_tickets > 0
+            || self.review_lane_packets > 0
+            || self.review_required_packages > 0
+            || self
+                .release_ticket_handoff_execution_slot_summary
+                .has_review_work()
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_execution_slots > 0
+            || self.operator_lane_execution_slots > 0
+            || self.operator_required_tickets > 0
+            || self.operator_lane_packets > 0
+            || self.operator_required_packages > 0
+            || self
+                .release_ticket_handoff_execution_slot_summary
+                .needs_operator()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.execution_required_slots > 0
+            || self.dispatch_required_execution_slots > 0
+            || self.dispatch_required_packets > 0
+            || self.dispatch_required_tickets > 0
+            || self.has_blockers()
+            || self.has_review_work()
+            || self.needs_operator()
+            || !self.release_ticket_handoff_execution_ready
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
     pub display_name: String,
@@ -28703,6 +28930,47 @@ pub fn mesh_release_ticket_handoff_execution_slot_summary(
     )
 }
 
+pub fn mesh_release_ticket_handoff_execution_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffExecutionReadinessSummary {
+    let release_ticket_handoff_readiness_summary =
+        mesh_release_ticket_handoff_readiness_summary_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+    let release_ticket_handoff_execution_slot_summary =
+        mesh_release_ticket_handoff_execution_slot_summary_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+
+    IntegrationMeshReleaseTicketHandoffExecutionReadinessSummary::from_summaries(
+        release_ticket_handoff_readiness_summary,
+        release_ticket_handoff_execution_slot_summary,
+    )
+}
+
+pub fn mesh_release_ticket_handoff_execution_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffExecutionReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_execution_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_protocol_catalog_entries(
     catalog: &[IntegrationCatalogEntry],
 ) -> Vec<IntegrationCatalogEntry> {
@@ -39858,6 +40126,201 @@ mod tests {
         assert!(execution_slots
             .iter()
             .all(|slot| slot.is_release_lane() && !slot.execution_required()));
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_execution_readiness_summary_surfaces_execution_attention() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_release_ticket_handoff_execution_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_tickets, 5);
+        assert_eq!(summary.ready_tickets, 0);
+        assert_eq!(summary.blocked_tickets, 3);
+        assert_eq!(summary.review_required_tickets, 2);
+        assert_eq!(summary.operator_required_tickets, 4);
+        assert_eq!(summary.dispatch_required_tickets, 5);
+        assert_eq!(summary.total_handoff_packets, 5);
+        assert_eq!(summary.repair_lane_packets, 3);
+        assert_eq!(summary.review_lane_packets, 2);
+        assert_eq!(summary.dispatch_required_packets, 5);
+        assert_eq!(summary.total_execution_slots, 5);
+        assert_eq!(summary.ready_execution_slots, 0);
+        assert_eq!(summary.blocked_execution_slots, 3);
+        assert_eq!(summary.review_required_execution_slots, 2);
+        assert_eq!(summary.operator_required_execution_slots, 4);
+        assert_eq!(summary.dispatch_required_execution_slots, 5);
+        assert_eq!(summary.repair_lane_execution_slots, 3);
+        assert_eq!(summary.review_lane_execution_slots, 2);
+        assert_eq!(summary.execution_required_slots, 5);
+        assert_eq!(summary.queued_substrate_actions, 5);
+        assert_eq!(summary.remediation_item_count, 2);
+        assert_eq!(summary.review_required_packages, 1);
+        assert_eq!(summary.operator_required_packages, 6);
+        assert_eq!(summary.blocked_packages, 5);
+        assert_eq!(
+            summary.first_execution_slot_key,
+            Some("release-ticket-handoff-execution-slot-01-repair-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_execution_slot_key,
+            Some("release-ticket-handoff-execution-slot-01-repair-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_packet_key,
+            Some("release-dispatch-handoff-packet-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_ticket_key,
+            Some("release-dispatch-ticket-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_dispatch_key,
+            Some("release-task-dispatch-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_task_key,
+            Some("release-execution-task-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_slot_key,
+            Some("release-check-slot-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_check_kind,
+            Some(IntegrationMeshReleaseReadinessCheckKind::SubstrateActions)
+        );
+        assert_eq!(
+            summary.next_check_status,
+            Some(IntegrationMeshReleaseReadinessStatus::Blocked)
+        );
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction)
+        );
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Blocked)
+        );
+        assert_eq!(
+            summary.next_handoff_lane,
+            Some(IntegrationMeshReleaseDispatchTicketHandoffLane::Repair)
+        );
+        assert_eq!(
+            summary.packet_status,
+            IntegrationMeshReleaseReadinessStatus::Blocked
+        );
+        assert_eq!(
+            summary.execution_status,
+            IntegrationMeshReleaseReadinessStatus::Blocked
+        );
+        assert!(!summary.release_packet_ready);
+        assert!(!summary.release_execution_ready);
+        assert!(!summary.release_tasks_ready);
+        assert!(!summary.release_dispatch_ready);
+        assert!(!summary.release_ticket_ready);
+        assert!(!summary.release_handoff_ready);
+        assert!(!summary.release_handoff_execution_ready);
+        assert!(!summary.release_ticket_handoff_execution_ready);
+        assert!(!summary.ready_for_release_ticket_handoff_execution());
+        assert!(summary.has_execution_slots());
+        assert!(summary.has_repair_work());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.needs_operator());
+        assert!(summary.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_execution_readiness_summary_marks_release_ready() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_release_ticket_handoff_execution_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_tickets, 5);
+        assert_eq!(summary.ready_tickets, 5);
+        assert_eq!(summary.blocked_tickets, 0);
+        assert_eq!(summary.review_required_tickets, 0);
+        assert_eq!(summary.operator_required_tickets, 0);
+        assert_eq!(summary.dispatch_required_tickets, 0);
+        assert_eq!(summary.total_handoff_packets, 5);
+        assert_eq!(summary.release_lane_packets, 5);
+        assert_eq!(summary.dispatch_required_packets, 0);
+        assert_eq!(summary.total_execution_slots, 5);
+        assert_eq!(summary.ready_execution_slots, 5);
+        assert_eq!(summary.blocked_execution_slots, 0);
+        assert_eq!(summary.review_required_execution_slots, 0);
+        assert_eq!(summary.operator_required_execution_slots, 0);
+        assert_eq!(summary.dispatch_required_execution_slots, 0);
+        assert_eq!(summary.release_lane_execution_slots, 5);
+        assert_eq!(summary.execution_required_slots, 0);
+        assert_eq!(summary.queued_substrate_actions, 0);
+        assert_eq!(summary.remediation_item_count, 0);
+        assert_eq!(summary.review_required_packages, 0);
+        assert_eq!(summary.operator_required_packages, 0);
+        assert_eq!(summary.blocked_packages, 0);
+        assert_eq!(
+            summary.first_execution_slot_key,
+            Some("release-ticket-handoff-execution-slot-01-release-substrate_actions".to_string())
+        );
+        assert_eq!(summary.next_execution_slot_key, None);
+        assert_eq!(summary.next_packet_key, None);
+        assert_eq!(summary.next_ticket_key, None);
+        assert_eq!(summary.next_dispatch_key, None);
+        assert_eq!(summary.next_task_key, None);
+        assert_eq!(summary.next_slot_key, None);
+        assert_eq!(summary.next_check_kind, None);
+        assert_eq!(summary.next_check_status, None);
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::ReleaseReady)
+        );
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Ready)
+        );
+        assert_eq!(summary.next_handoff_lane, None);
+        assert_eq!(
+            summary.packet_status,
+            IntegrationMeshReleaseReadinessStatus::Ready
+        );
+        assert_eq!(
+            summary.execution_status,
+            IntegrationMeshReleaseReadinessStatus::Ready
+        );
+        assert!(summary.release_packet_ready);
+        assert!(summary.release_execution_ready);
+        assert!(summary.release_tasks_ready);
+        assert!(summary.release_dispatch_ready);
+        assert!(summary.release_ticket_ready);
+        assert!(summary.release_handoff_ready);
+        assert!(summary.release_handoff_execution_ready);
+        assert!(summary.release_ticket_handoff_execution_ready);
+        assert!(summary.ready_for_release_ticket_handoff_execution());
+        assert!(summary.has_execution_slots());
+        assert!(!summary.has_repair_work());
+        assert!(!summary.has_blockers());
+        assert!(!summary.has_review_work());
+        assert!(!summary.needs_operator());
+        assert!(!summary.requires_attention());
     }
 
     #[test]
