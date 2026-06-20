@@ -515,7 +515,10 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
         }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
-        | TaggedStatement::EmptyStatement(_) => stmt.clone(),
+        | TaggedStatement::EmptyStatement(_)
+        // A `debugger;` statement is a childless leaf with no bindings — like
+        // EmptyStatement, DCE preserves it as-is. (Stripping it is future work.)
+        | TaggedStatement::DebuggerStatement(_) => stmt.clone(),
     }
 }
 

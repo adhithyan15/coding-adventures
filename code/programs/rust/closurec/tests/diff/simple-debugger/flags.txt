@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE
+--js
+tests/diff/simple-debugger/input/a.js

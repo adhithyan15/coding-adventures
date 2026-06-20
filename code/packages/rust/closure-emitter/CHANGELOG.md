@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.15.0] - 2026-06-20
+
+### Added — CLOC21: emit `debugger;`
+
+New `emit_debugger` writes `debugger;`. The keyword is followed only by its
+terminator `;` (or, after the semi is popped, a `}`/EOF), so no token-separation
+handling is needed. `DebuggerStatement` is added to
+`last_stmt_uses_terminator_semi` — its `;` is popped before a closing `}` (e.g.
+`{debugger}`), like `return`/`throw`/expression statements. Added emitter unit
+tests for the keyword+semi, terminator-pop, and not-last (semi kept) cases.
+
 ## [0.14.0] - 2026-06-20
 
 ### Added — CLOC20: emit `do`/`while`

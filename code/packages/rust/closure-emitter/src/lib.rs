@@ -67,7 +67,7 @@ use coding_adventures_javascript_ast::{
     AssignmentTarget, BigIntLiteral, BinaryExpression, BinaryOperator, BlockStatement,
     BooleanLiteral,
     BreakStatement, CallExpression, CatchClause, ConditionalExpression, ContinueStatement,
-    Declaration, DoWhileStatement,
+    Declaration, DebuggerStatement, DoWhileStatement,
     EmptyStatement, Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
@@ -301,6 +301,7 @@ impl<'a> Emitter<'a> {
             TaggedStatement::SwitchStatement(s) => self.emit_switch(s),
             TaggedStatement::TryStatement(t) => self.emit_try(t),
             TaggedStatement::EmptyStatement(e) => self.emit_empty(e),
+            TaggedStatement::DebuggerStatement(d) => self.emit_debugger(d),
         }
     }
 
@@ -544,6 +545,14 @@ impl<'a> Emitter<'a> {
     fn emit_empty(&mut self, e: &EmptyStatement) {
         self.maybe_map(&e.cv);
         self.write_str(";");
+    }
+
+    fn emit_debugger(&mut self, d: &DebuggerStatement) {
+        // `debugger;` — the keyword plus a real terminator `;`. The keyword is
+        // followed only by `;` (or, after the semi is popped, a `}`/EOF), so no
+        // token-separation handling is needed.
+        self.maybe_map(&d.cv);
+        self.write_str("debugger;");
     }
 
     /// `label: stmt`. No trailing semicolon — the body statement
@@ -1325,6 +1334,9 @@ fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
                 // supply before a closing `}`, so it is safe to pop. (Plain
                 // `while(x)…` is NOT here: its trailing `;` is a body slot.)
                 | TaggedStatement::DoWhileStatement(_)
+                // `debugger;` ends in a real terminator `;`, poppable before a
+                // closing `}` (ASI re-supplies it). The `;` is NOT a body slot.
+                | TaggedStatement::DebuggerStatement(_)
         ),
         // Declarations are conservatively excluded. Both
         // VariableDeclaration and FunctionDeclaration end in
@@ -2505,6 +2517,49 @@ mod tests {
         let item = ProgramItem::Statement(Statement::block_statement(outer));
         let code = emit_default(program().with_body(vec![item])).code;
         assert_eq!(code, "{do{a}while(b)}");
+    }
+
+    // ---- debugger (CLOC21) ------------------------------------
+
+    #[test]
+    fn debugger_statement_emits_keyword_and_semi() {
+        let item = ProgramItem::Statement(Statement::debugger_statement(DebuggerStatement {
+            cv: None,
+        }));
+        let code = emit_default(program().with_body(vec![item])).code;
+        assert_eq!(code, "debugger;");
+    }
+
+    #[test]
+    fn debugger_as_last_block_statement_pops_terminator_semi() {
+        // Inside a block, the trailing `;` of `debugger;` is redundant before
+        // the closing `}` (ASI), so it is popped: `{debugger}`.
+        let outer = BlockStatement {
+            cv: None,
+            body: vec![Statement::debugger_statement(DebuggerStatement { cv: None })],
+        };
+        let item = ProgramItem::Statement(Statement::block_statement(outer));
+        let code = emit_default(program().with_body(vec![item])).code;
+        assert_eq!(code, "{debugger}");
+    }
+
+    #[test]
+    fn debugger_followed_by_statement_keeps_semi() {
+        // `debugger;` followed by another statement keeps its `;` (only the
+        // last statement in a block pops it).
+        let outer = BlockStatement {
+            cv: None,
+            body: vec![
+                Statement::debugger_statement(DebuggerStatement { cv: None }),
+                Statement::expression_statement(ExpressionStatement {
+                    cv: None,
+                    expression: ident("a"),
+                }),
+            ],
+        };
+        let item = ProgramItem::Statement(Statement::block_statement(outer));
+        let code = emit_default(program().with_body(vec![item])).code;
+        assert_eq!(code, "{debugger;a}");
     }
 
     #[test]

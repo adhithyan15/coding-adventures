@@ -392,7 +392,7 @@ fn count_decl_names_stmt(
             | TaggedStatement::ThrowStatement(_)
             | TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_) | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -533,7 +533,7 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                     }
                 }
             }
-            TaggedStatement::EmptyStatement(_) => {}
+            TaggedStatement::EmptyStatement(_) | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -754,7 +754,7 @@ fn rename_apply_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
         // Labels live in a separate namespace from variables.
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
-        | TaggedStatement::EmptyStatement(_) => {}
+        | TaggedStatement::EmptyStatement(_) | TaggedStatement::DebuggerStatement(_) => {}
     }
 }
 

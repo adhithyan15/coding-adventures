@@ -1066,7 +1066,8 @@ fn classify_stmt(stmt: &Statement, cls: &mut Classify, nodes_touched: &mut u32) 
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -1261,7 +1262,8 @@ fn rewrite_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }

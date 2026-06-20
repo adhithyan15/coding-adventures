@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+Every phase of the pass now covers `DebuggerStatement` (grouped with the other
+childless leaf statements) as a no-op. Added to keep the matches exhaustive over
+the new AST variant.
+
 ## [0.3.0] - 2026-06-20
 
 ### Added — CLOC20: global renaming across `do`/`while`

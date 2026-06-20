@@ -311,7 +311,7 @@ fn process_tagged(t: &mut TaggedStatement, nodes_touched: &mut u32) -> bool {
         | TaggedStatement::ThrowStatement(_)
         | TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
-        | TaggedStatement::EmptyStatement(_) => {}
+        | TaggedStatement::EmptyStatement(_) | TaggedStatement::DebuggerStatement(_) => {}
     }
     changed
 }
@@ -397,7 +397,8 @@ fn stmt_has_function(stmt: &Statement) -> bool {
             | TaggedStatement::ThrowStatement(_)
             | TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => false,
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => false,
         },
     }
 }
@@ -628,7 +629,7 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
             | TaggedStatement::ThrowStatement(_)
             | TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_) | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -763,7 +764,7 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                     collect_all_idents_block(f, out);
                 }
             }
-            TaggedStatement::EmptyStatement(_) => {}
+            TaggedStatement::EmptyStatement(_) | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -961,7 +962,7 @@ fn rewrite_uses_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
         // the variable namespace — never rewritten.
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
-        | TaggedStatement::EmptyStatement(_) => {}
+        | TaggedStatement::EmptyStatement(_) | TaggedStatement::DebuggerStatement(_) => {}
     }
 }
 

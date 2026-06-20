@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.11.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+The statement dispatch now covers `DebuggerStatement` (grouped with the other
+childless leaf statements), returned unchanged. Added to keep the match
+exhaustive over the new AST variant.
+
 ## [0.10.0] - 2026-06-20
 
 ### Added — CLOC20: fold control flow inside `do`/`while` (no dead-loop elision)

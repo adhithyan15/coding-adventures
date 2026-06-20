@@ -31,8 +31,10 @@
 //!   test-after-body loop; unblocks the whitespace-only fallback on any
 //!   program using a do-while loop)
 //!
-//! Phase 2 will add `ForInStatement`, `ForOfStatement`,
-//! `DebuggerStatement`, and `WithStatement`.
+//! - [`DebuggerStatement`] (CLOC21 — `debugger;`, the breakpoint hook;
+//!   unblocks the whitespace-only fallback on any program using it)
+//!
+//! Phase 2 will add `ForInStatement`, `ForOfStatement`, and `WithStatement`.
 
 use crate::declaration::{Declaration, VariableDeclaration};
 use crate::expression::{Expression, Identifier};
@@ -79,6 +81,7 @@ pub enum TaggedStatement {
     SwitchStatement(SwitchStatement),
     TryStatement(TryStatement),
     EmptyStatement(EmptyStatement),
+    DebuggerStatement(DebuggerStatement),
 }
 
 // Convenience constructors so call sites don't have to write
@@ -125,6 +128,9 @@ impl Statement {
     }
     pub fn empty_statement(s: EmptyStatement) -> Self {
         Self::Tagged(TaggedStatement::EmptyStatement(s))
+    }
+    pub fn debugger_statement(s: DebuggerStatement) -> Self {
+        Self::Tagged(TaggedStatement::DebuggerStatement(s))
     }
 }
 
@@ -391,6 +397,20 @@ pub struct CatchClause {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EmptyStatement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+}
+
+/// `debugger;` (CLOC21). A breakpoint hook: it pauses execution if a debugger
+/// is attached and is otherwise a no-op. Like [`EmptyStatement`] it carries no
+/// children. Making it representable lets the typed pipeline optimize the rest
+/// of a program that contains a `debugger` statement (previously any such
+/// program fell back to WHITESPACE_ONLY). v1 preserves the statement verbatim;
+/// stripping it (as the upstream Closure Compiler does at SIMPLE/ADVANCED) is a
+/// future enhancement.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DebuggerStatement {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
 }
@@ -695,6 +715,15 @@ mod tests {
         });
         assert_eq!(s.clone(), roundtrip(s.clone()));
         assert_eq!(type_tag(&s), "EmptyStatement");
+    }
+
+    #[test]
+    fn debugger_statement_roundtrips() {
+        let s = Statement::debugger_statement(DebuggerStatement {
+            cv: Some("dbg.1".to_string()),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "DebuggerStatement");
     }
 
     #[test]
