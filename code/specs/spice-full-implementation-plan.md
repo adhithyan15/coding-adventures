@@ -109,7 +109,10 @@ downstream tools to compare.
      count/list directly beside table, output, measurement, Fourier, and
      analysis-directive artifacts; selected executions now also expose
      diagnostic count/code inventories directly beside those execution-level
-     artifacts.
+     artifacts; accepted rawfile/data-write marker inventories for `.control`
+     `write` / `wrdata` commands now travel through direct selected-execution
+     fields and stable selected-run artifact tables, CSV/JSON helpers, and
+     ordered table export artifacts without serializing files.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -999,6 +1002,14 @@ downstream tools to compare.
       command artifacts.
     - Host and browser integrations can inspect selected execution diagnostic
       provenance without drilling into selected-run artifact tables.
+
+92. Deck rawfile write marker artifacts.
+    - Status: completed in this deck rawfile write marker artifact slice.
+    - Python, Rust, and TypeScript control analyzers now expose normalized
+      accepted `.control` `write` and `wrdata` marker inventories.
+    - Selected deck executions carry those write-marker inventories directly and
+      through selected-run artifact tables, CSV/JSON helpers, and ordered table
+      export artifacts without serializing files.
 
 ## Backlog
 

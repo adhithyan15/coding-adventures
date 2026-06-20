@@ -3149,6 +3149,7 @@ pub struct DeckControlDiagnostic {
 pub struct DeckControlSummary {
     pub active_lines: Vec<String>,
     pub control_lines: Vec<String>,
+    pub write_markers: Vec<String>,
     pub terminated: bool,
     pub end_line_number: Option<usize>,
     pub diagnostics: Vec<DeckControlDiagnostic>,
@@ -3439,6 +3440,8 @@ pub struct DeckRunArtifact {
     pub fourier_probes: Vec<String>,
     pub control_line_count: usize,
     pub control_lines: Vec<String>,
+    pub write_marker_count: usize,
+    pub write_markers: Vec<String>,
     pub diagnostic_count: usize,
     pub diagnostic_codes: Vec<String>,
 }
@@ -3462,6 +3465,8 @@ pub struct DeckAnalysisExecution {
     pub analysis_directives: Vec<String>,
     pub control_line_count: usize,
     pub control_lines: Vec<String>,
+    pub write_marker_count: usize,
+    pub write_markers: Vec<String>,
     pub diagnostic_count: usize,
     pub diagnostic_codes: Vec<String>,
     pub table_count: usize,
@@ -3601,6 +3606,7 @@ pub fn compatibility_corpus() -> Vec<CompatibilityDeck> {
 pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
     let mut active_lines = Vec::new();
     let mut control_lines = Vec::new();
+    let mut write_markers = Vec::new();
     let mut diagnostics = Vec::new();
     let mut end_line_number = None;
     let mut in_control_block = false;
@@ -3620,6 +3626,10 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
             if let Some(control_line) = control_block_command_as_deck_line(stripped) {
                 active_lines.push(control_line.clone());
                 control_lines.push(control_line);
+                continue;
+            }
+            if let Some(write_marker) = control_block_write_marker(stripped) {
+                write_markers.push(write_marker);
                 continue;
             }
             if is_noop_control_block_command(stripped) {
@@ -3703,6 +3713,7 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
     DeckControlSummary {
         active_lines,
         control_lines,
+        write_markers,
         terminated: end_line_number.is_some(),
         end_line_number,
         diagnostics,
@@ -7317,6 +7328,26 @@ fn control_block_command_as_deck_line(line: &str) -> Option<String> {
     }
 }
 
+fn control_block_write_marker(line: &str) -> Option<String> {
+    let mut parts = line.split_whitespace();
+    let command = parts.next()?.to_ascii_lowercase();
+    if matches!(command.as_str(), "write" | ".write") {
+        let rest = parts.collect::<Vec<_>>();
+        if rest.is_empty() {
+            return None;
+        }
+        return Some(format!("write {}", rest.join(" ")));
+    }
+    if matches!(command.as_str(), "wrdata" | ".wrdata") {
+        let rest = parts.collect::<Vec<_>>();
+        if rest.len() < 2 {
+            return None;
+        }
+        return Some(format!("wrdata {}", rest.join(" ")));
+    }
+    None
+}
+
 fn is_noop_control_block_command(line: &str) -> bool {
     let mut parts = line.split_whitespace();
     let Some(command) = parts.next().map(|command| command.to_ascii_lowercase()) else {
@@ -10130,6 +10161,7 @@ fn deck_run_artifacts(
     measurements: &[ProbeMeasurement],
     fourier: &[FourierResult],
     control_lines: &[String],
+    write_markers: &[String],
     diagnostic_codes: &[String],
 ) -> Vec<DeckRunArtifact> {
     let is_transient = plan.analysis == "tran";
@@ -10176,6 +10208,8 @@ fn deck_run_artifacts(
             .collect(),
         control_line_count: control_lines.len(),
         control_lines: control_lines.to_vec(),
+        write_marker_count: write_markers.len(),
+        write_markers: write_markers.to_vec(),
         diagnostic_count: diagnostic_codes.len(),
         diagnostic_codes: diagnostic_codes.to_vec(),
     }]
@@ -10223,6 +10257,10 @@ fn deck_control_diagnostic_codes(netlist: &str) -> Vec<String> {
 
 fn deck_control_lines(netlist: &str) -> Vec<String> {
     analyze_deck_controls(netlist).control_lines
+}
+
+fn deck_control_write_markers(netlist: &str) -> Vec<String> {
+    analyze_deck_controls(netlist).write_markers
 }
 
 fn deck_run_diagnostic_codes(netlist: &str, plan: &DeckAnalysisPlan) -> Vec<String> {
@@ -10274,6 +10312,8 @@ const DECK_RUN_ARTIFACT_COLUMNS: &[&str] = &[
     "FourierList",
     "ControlLines",
     "ControlLineList",
+    "WriteMarkers",
+    "WriteMarkerList",
     "Diagnostics",
     "DiagnosticCodeList",
 ];
@@ -10317,6 +10357,8 @@ fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
         artifact.fourier_probes.join(";"),
         artifact.control_line_count.to_string(),
         artifact.control_lines.join(";"),
+        artifact.write_marker_count.to_string(),
+        artifact.write_markers.join(";"),
         artifact.diagnostic_count.to_string(),
         artifact.diagnostic_codes.join(";"),
     ]
@@ -10557,6 +10599,7 @@ pub fn run_deck_analysis(
     let plan = select_deck_analysis_plan(netlist, analysis)?;
     let diagnostic_codes = deck_run_diagnostic_codes(netlist, &plan);
     let control_lines = deck_control_lines(netlist);
+    let write_markers = deck_control_write_markers(netlist);
     let analysis_directives = deck_analysis_directives(&plan);
     match plan.analysis.as_str() {
         "op" => {
@@ -10579,6 +10622,7 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
                 &control_lines,
+                &write_markers,
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
@@ -10600,6 +10644,8 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 control_line_count: control_lines.len(),
                 control_lines: control_lines.clone(),
+                write_marker_count: write_markers.len(),
+                write_markers: write_markers.clone(),
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10639,6 +10685,7 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
                 &control_lines,
+                &write_markers,
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
@@ -10660,6 +10707,8 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 control_line_count: control_lines.len(),
                 control_lines: control_lines.clone(),
+                write_marker_count: write_markers.len(),
+                write_markers: write_markers.clone(),
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10700,6 +10749,7 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
                 &control_lines,
+                &write_markers,
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
@@ -10721,6 +10771,8 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 control_line_count: control_lines.len(),
                 control_lines: control_lines.clone(),
+                write_marker_count: write_markers.len(),
+                write_markers: write_markers.clone(),
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10764,6 +10816,7 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
                 &control_lines,
+                &write_markers,
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
@@ -10785,6 +10838,8 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 control_line_count: control_lines.len(),
                 control_lines: control_lines.clone(),
+                write_marker_count: write_markers.len(),
+                write_markers: write_markers.clone(),
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10822,6 +10877,7 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
                 &control_lines,
+                &write_markers,
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
@@ -10843,6 +10899,8 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 control_line_count: control_lines.len(),
                 control_lines: control_lines.clone(),
+                write_marker_count: write_markers.len(),
+                write_markers: write_markers.clone(),
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10878,6 +10936,7 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
                 &control_lines,
+                &write_markers,
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
@@ -10899,6 +10958,8 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 control_line_count: control_lines.len(),
                 control_lines: control_lines.clone(),
+                write_marker_count: write_markers.len(),
+                write_markers: write_markers.clone(),
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10946,6 +11007,7 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
                 &control_lines,
+                &write_markers,
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
@@ -10967,6 +11029,8 @@ pub fn run_deck_analysis(
                 analysis_directives,
                 control_line_count: control_lines.len(),
                 control_lines: control_lines.clone(),
+                write_marker_count: write_markers.len(),
+                write_markers: write_markers.clone(),
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),

@@ -209,6 +209,13 @@ quit
             ".four 2k V(in)".to_string(),
         ]
     );
+    assert_eq!(
+        summary.write_markers,
+        &[
+            "write out.raw V(out)".to_string(),
+            "wrdata out.dat V(out)".to_string(),
+        ]
+    );
     let diagnostics = summary
         .diagnostics
         .iter()
@@ -313,6 +320,27 @@ quit
         vec![
             (".four", 1000.0, vec!["V(out)"]),
             (".four", 2000.0, vec!["V(in)"])
+        ]
+    );
+}
+
+#[test]
+fn analyze_deck_controls_surfaces_dotted_write_markers() {
+    let summary = analyze_deck_controls(
+        "
+.control
+.write out.raw V(a)
+.wrdata out.dat V(a)
+.endc
+.end
+",
+    );
+
+    assert_eq!(
+        summary.write_markers,
+        &[
+            "write out.raw V(a)".to_string(),
+            "wrdata out.dat V(a)".to_string(),
         ]
     );
 }
