@@ -37,7 +37,7 @@ use symbolic_vm::SymbolicBackend;
 
 use symbolic_ir::{apply, IRApply, IRNode, ADD, AND, MUL, OR};
 
-use crate::builtins::{build_wolfram_builtins, ITERATION_HEADS, SCOPING_HEADS};
+use crate::builtins::{build_wolfram_builtins, CONDITIONAL_HEADS, ITERATION_HEADS, SCOPING_HEADS};
 use crate::lower::{FUNCTION_HEAD, SLOT_HEAD, SLOT_SEQUENCE_HEAD};
 
 /// The Wolfram evaluation backend: a [`SymbolicBackend`] plus the W-5 built-in
@@ -50,9 +50,11 @@ pub struct WolframBackend {
     /// The set of heads whose args must NOT be pre-evaluated — the union of the
     /// inner backend's held set (`If`, `Assign`, `Define`, …), the W-7 iteration
     /// heads (`Table`, `Do`, `Sum`, `Product`), which must hold their body +
-    /// iterator spec so the local index can be bound per step, and the W-8
+    /// iterator spec so the local index can be bound per step, the W-8
     /// local-scoping heads (`With`, `Module`, `Block`), which must hold their
-    /// declaration list + body so the locals can be bound into the body.
+    /// declaration list + body so the locals can be bound into the body, and the
+    /// W-14 conditional heads (`Which`, `Switch`), which must hold their
+    /// condition/value pairs so only the selected branch is ever evaluated.
     ///
     /// `hold_heads` returns `&HashSet`, so the union must be *materialised and
     /// owned* here — we cannot synthesise it per-call. It is computed once at
@@ -79,6 +81,14 @@ impl WolframBackend {
         // W-8 local-scoping heads must also be held so their decl list + body
         // arrive unevaluated and the locals can be bound into the body.
         for head in SCOPING_HEADS {
+            held.insert(head.to_string());
+        }
+        // W-14 conditional heads (`Which`, `Switch`) must be held so every
+        // condition/value and the `expr`/forms arrive unevaluated and ONLY the
+        // selected branch is evaluated — a non-taken branch (which might error or
+        // have a side effect) must never run. `If` is already in the inner held
+        // set, so it is not added here.
+        for head in CONDITIONAL_HEADS {
             held.insert(head.to_string());
         }
         // W-11: the inner backend's rules followed by the pure-function
@@ -537,5 +547,54 @@ mod tests {
             ],
         ));
         assert_eq!(out, apply(sym(LIST), vec![int(1), int(4), int(9)]));
+    }
+
+    #[test]
+    fn conditional_heads_are_held() {
+        // W-14: Which/Switch must be held so their condition/value pairs arrive
+        // unevaluated and only the selected branch is evaluated. The inner held
+        // set (If) and the W-7/W-8 held sets must survive the union.
+        let backend = WolframBackend::new();
+        let held = backend.hold_heads();
+        for head in ["Which", "Switch"] {
+            assert!(held.contains(head), "{head} should be held");
+        }
+        assert!(held.contains("If"), "inner held set must be preserved");
+        assert!(held.contains("Table"), "W-7 held set must be preserved");
+        assert!(held.contains("With"), "W-8 held set must be preserved");
+    }
+
+    #[test]
+    fn which_evaluates_end_to_end_through_the_vm() {
+        // Which[2 > 1, "a"] → "a": held args, the comparison condition is
+        // evaluated to True by the handler, and only the selected value returns.
+        let mut vm = VM::new(Box::new(WolframBackend::new()));
+        let out = vm.eval(apply(
+            sym("Which"),
+            vec![
+                apply(sym(symbolic_ir::GREATER), vec![int(2), int(1)]),
+                symbolic_ir::str_node("a"),
+            ],
+        ));
+        assert_eq!(out, symbolic_ir::str_node("a"));
+    }
+
+    #[test]
+    fn switch_does_not_evaluate_a_non_selected_branch() {
+        // Switch[1, 1, 2, _, Pow[1,0,0]] → 2. If the held machinery were broken and
+        // the default value were eagerly evaluated, the malformed Pow would surface;
+        // instead the first form (1) matches and only its value (2) is evaluated.
+        let mut vm = VM::new(Box::new(WolframBackend::new()));
+        let out = vm.eval(apply(
+            sym("Switch"),
+            vec![
+                int(1),
+                int(1),
+                int(2),
+                apply(sym("Blank"), vec![]),
+                apply(sym("Pow"), vec![int(1), int(0), int(0)]),
+            ],
+        ));
+        assert_eq!(out, int(2));
     }
 }
