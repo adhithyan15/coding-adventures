@@ -1121,6 +1121,12 @@ impl Interpreter {
         if let Some(generator) = crate::refclass::as_new_marker(&callee) {
             return self.apply_ref_new(&generator, args);
         }
+        // R-25 nullary reference methods: `obj$copy()`, `gen$fields()`,
+        // `gen$methods()`. The marker is not a `Closure`/`Builtin`, so dispatch it
+        // before the ordinary callable match.
+        if let Some((action, target)) = crate::refclass::as_ref_method_marker(&callee) {
+            return self.as_visible(self.apply_ref_method(action, &target)?);
+        }
         match callee {
             SValue::Builtin { name, func } => {
                 let result = func(self, args)?;
@@ -1161,6 +1167,10 @@ impl Interpreter {
         // `generator$new(...)` reached via a builtin (`do.call(gen$new, …)`).
         if let Some(generator) = crate::refclass::as_new_marker(&callee) {
             return self.apply_ref_new(&generator, args);
+        }
+        // R-25 nullary reference methods reached via a builtin (`do.call`, etc.).
+        if let Some((action, target)) = crate::refclass::as_ref_method_marker(&callee) {
+            return self.apply_ref_method(action, &target);
         }
         match callee {
             SValue::Builtin { func, .. } => func(self, args),
@@ -1832,11 +1842,58 @@ impl Interpreter {
             .eval_named_arg(raw, "methods", env)?
             .unwrap_or(SValue::Null);
 
+        // R-25: `contains =` (single inheritance). The argument is the parent
+        // **generator** value, or a length-1 character giving the parent class
+        // *name* (resolved by evaluating that name as a variable in the current
+        // env — the generator was bound there by an earlier `setRefClass`). A
+        // missing `contains =` means a root (non-inheriting) class.
+        let parent_env = match self.eval_named_arg(raw, "contains", env)? {
+            None | Some(SValue::Null) => None,
+            Some(value) => Some(self.resolve_contains(&value, env)?),
+        };
+
         // Reifying the generator environment counts against the session cap, like
         // any `new.env()` — it can equally participate in a value-binding cycle.
         self.account_environment()?;
-        let generator = crate::refclass::make_generator(&class_name, &fields, &methods, env)?;
+        let generator = crate::refclass::make_generator(
+            &class_name,
+            &fields,
+            &methods,
+            parent_env.as_ref(),
+            env,
+        )?;
         self.as_visible(generator)
+    }
+
+    /// Resolve a `contains =` argument to the parent **generator** environment.
+    /// Accepts either the generator value directly (an `SValue::Environment`), or a
+    /// length-1 character naming the parent class — in which case that name is
+    /// looked up as a variable in `env` (where `setRefClass` binds its result). A
+    /// name that is unbound, or bound to a non-environment, is a clean error
+    /// (never a panic). The generator-ness of the resolved env is re-checked inside
+    /// `make_generator`.
+    fn resolve_contains(&self, value: &SValue, env: &Env) -> SResult<Env> {
+        match value {
+            SValue::Environment(e) => Ok(e.clone()),
+            other => {
+                // A character class name → look up the variable of that name.
+                let names = other.as_character();
+                let name = names.into_iter().flatten().next().ok_or_else(|| {
+                    SError::TypeError(
+                        "setRefClass: `contains =` must be a generator or a class name".into(),
+                    )
+                })?;
+                match lookup(env, &name) {
+                    Some(SValue::Environment(e)) => Ok(e),
+                    Some(_) => Err(SError::TypeError(format!(
+                        "setRefClass: `contains = \"{name}\"` is not a reference-class generator"
+                    ))),
+                    None => Err(SError::BadArgs(format!(
+                        "setRefClass: `contains = \"{name}\"`: no such reference class in scope"
+                    ))),
+                }
+            }
+        }
     }
 
     /// Apply a `generator$new(field = …, …)` instantiation (R-24): charge the new
@@ -1853,6 +1910,18 @@ impl Interpreter {
             .collect();
         let instance = crate::refclass::instantiate(generator, &init)?;
         self.as_visible(instance)
+    }
+
+    /// Apply an R-25 nullary reference method (`obj$copy()`, `gen$fields()`,
+    /// `gen$methods()`). `copy()` reifies a fresh instance environment, so it is
+    /// charged against `MAX_ENVIRONMENTS` exactly like `$new` before the copy runs;
+    /// the introspection accessors allocate no environment. The actual work lives in
+    /// [`crate::refclass::apply_ref_method`].
+    fn apply_ref_method(&self, action: &'static str, target: &Env) -> SResult<SValue> {
+        if action == crate::refclass::REF_METHOD_COPY {
+            self.account_environment()?;
+        }
+        crate::refclass::apply_ref_method(action, target)
     }
 
     /// Resolve `obj$name` for a `$` *read* (R-24). An [`SValue::Environment`]

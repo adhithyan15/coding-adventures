@@ -180,6 +180,7 @@ pub fn install(env: &Env) {
     define(env, "class", builtin("class", b_class));
     define(env, "structure", builtin("structure", b_structure));
     define(env, "inherits", builtin("inherits", b_inherits));
+    define(env, "is", builtin("is", b_is));
     define(env, "unclass", builtin("unclass", b_unclass));
 
     // R-16 — general attributes. `attr<-` / `attributes<-` slot into the
@@ -1186,9 +1187,13 @@ fn b_as_integer(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 // v2 — S3 dispatch helpers
 // ===========================================================================
 
-/// `class(x)` — the class vector (explicit if set, else the implicit type).
+/// `class(x)` — the class vector (explicit if set, else the implicit type). For an
+/// R5 reference-class **instance** the vector is its inheritance chain
+/// `c("Sub", "Base", …, "envRefClass", "environment")` (R-25), so `class(obj)`
+/// reveals the hierarchy; every other value keeps the ordinary `class_of`.
 fn b_class(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    let classes = class_of(first_positional(args)?);
+    let x = first_positional(args)?;
+    let classes = crate::refclass::instance_class_vector(x).unwrap_or_else(|| class_of(x));
     Ok(SValue::Character(classes.into_iter().map(Some).collect()))
 }
 
@@ -1214,14 +1219,23 @@ fn b_structure(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     Ok(value)
 }
 
-/// `inherits(x, what)` — whether any class of `x` matches `what`.
+/// The class vector used by `inherits`/`is`: an R5 instance's inheritance chain
+/// (R-25) when `x` is one, otherwise the ordinary [`class_of`]. Centralised so the
+/// two predicates agree on what "the classes of `x`" means.
+fn query_classes(x: &SValue) -> Vec<String> {
+    crate::refclass::instance_class_vector(x).unwrap_or_else(|| class_of(x))
+}
+
+/// `inherits(x, what)` — whether any class of `x` matches `what`. For an R5
+/// instance the classes are its inheritance chain, so
+/// `inherits(sub_obj, "Base")` is `TRUE` (R-25).
 fn b_inherits(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let positional: Vec<&SValue> = args
         .iter()
         .filter(|a| a.name.is_none())
         .map(|a| &a.value)
         .collect();
-    let classes: HashSet<String> = class_of(
+    let classes: HashSet<String> = query_classes(
         positional
             .first()
             .ok_or_else(|| SError::BadArgs("inherits: missing x".into()))?,
@@ -1233,6 +1247,34 @@ fn b_inherits(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .map(|v| v.as_character())
         .unwrap_or_default();
     let hit = what.into_iter().flatten().any(|w| classes.contains(&w));
+    Ok(SValue::Logical(vec![Some(hit)]))
+}
+
+/// `is(object, class2)` — whether `object` is (a member of, or inherits from)
+/// `class2`. In this subset `is` is the R5/S4-flavoured cousin of `inherits`: it is
+/// `TRUE` when `class2` appears anywhere in `object`'s class vector — which, for an
+/// R5 reference-class instance, is its full inheritance chain (R-25). So
+/// `is(sub_obj, "Sub")` and `is(sub_obj, "Base")` are both `TRUE`, while
+/// `is(sub_obj, "Other")` is `FALSE`. A missing `class2` is a clean error.
+fn b_is(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&SValue> = args
+        .iter()
+        .filter(|a| a.name.is_none())
+        .map(|a| &a.value)
+        .collect();
+    let object = positional
+        .first()
+        .ok_or_else(|| SError::BadArgs("is: missing object".into()))?;
+    let classes: HashSet<String> = query_classes(object).into_iter().collect();
+    let class2 = positional
+        .get(1)
+        .map(|v| v.as_character())
+        .unwrap_or_default();
+    // `is(x)` with no class2 in R returns the class vector; we require class2 here
+    // (the one-arg form is out of scope) and treat its absence as FALSE rather than
+    // erroring, so `is(x, missing)` never panics. A supplied class2 matches if any
+    // of its elements is in the class set.
+    let hit = class2.into_iter().flatten().any(|c| classes.contains(&c));
     Ok(SValue::Logical(vec![Some(hit)]))
 }
 
