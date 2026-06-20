@@ -2320,6 +2320,8 @@ class DeckRunArtifact:
 
     analysis: str
     directive: str
+    analysis_directive_count: int
+    analysis_directives: list[str]
     line_number: int
     source_name: str | None
     output_node: str | None
@@ -2359,6 +2361,7 @@ class DeckAnalysisExecution:
     table: str
     output_probes: list[str]
     output_directives: list[str]
+    analysis_directives: list[str]
     measurements: list[ProbeMeasurement]
     measurement_table: str
     fourier: list[FourierResult]
@@ -2417,6 +2420,8 @@ def _format_deck_artifact_bool(value: bool | None) -> str:
 _DECK_RUN_ARTIFACT_COLUMNS = [
     "Analysis",
     "Directive",
+    "AnalysisDirectives",
+    "AnalysisDirectiveList",
     "Line",
     "SourceName",
     "OutputNode",
@@ -2453,6 +2458,10 @@ def _deck_table_columns(table: str) -> list[str]:
     return header.split("\t") if header else []
 
 
+def _deck_analysis_directives(plan: DeckAnalysisPlan) -> list[str]:
+    return [plan.directive] if plan.directive else []
+
+
 def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
     result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
@@ -2464,10 +2473,13 @@ def _deck_run_artifacts(
     diagnostic_codes: list[str],
 ) -> list[DeckRunArtifact]:
     is_transient = plan.analysis == "tran"
+    analysis_directives = _deck_analysis_directives(plan)
     return [
         DeckRunArtifact(
             analysis=plan.analysis,
             directive=plan.directive,
+            analysis_directive_count=len(analysis_directives),
+            analysis_directives=analysis_directives,
             line_number=plan.line_number,
             source_name=plan.source_name,
             output_node=plan.output_node,
@@ -2530,6 +2542,8 @@ def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
     return [
         artifact.analysis,
         artifact.directive,
+        str(artifact.analysis_directive_count),
+        ";".join(artifact.analysis_directives),
         str(artifact.line_number),
         artifact.source_name or "",
         artifact.output_node or "",
@@ -2644,6 +2658,7 @@ def run_deck_analysis(
 
     plan = select_deck_analysis_plan(netlist, analysis)
     diagnostic_codes = _deck_analysis_diagnostic_codes(netlist, plan)
+    analysis_directives = _deck_analysis_directives(plan)
     if plan.analysis == "op":
         result = dc_op(circuit)
         table = format_deck_op_table(result, netlist)
@@ -2669,6 +2684,7 @@ def run_deck_analysis(
             table=table,
             output_probes=output_probes,
             output_directives=output_directives,
+            analysis_directives=analysis_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2707,6 +2723,7 @@ def run_deck_analysis(
             table=table,
             output_probes=output_probes,
             output_directives=output_directives,
+            analysis_directives=analysis_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2747,6 +2764,7 @@ def run_deck_analysis(
             table=table,
             output_probes=output_probes,
             output_directives=output_directives,
+            analysis_directives=analysis_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2793,6 +2811,7 @@ def run_deck_analysis(
             table=table,
             output_probes=output_probes,
             output_directives=output_directives,
+            analysis_directives=analysis_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2827,6 +2846,7 @@ def run_deck_analysis(
             table=table,
             output_probes=output_probes,
             output_directives=output_directives,
+            analysis_directives=analysis_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2860,6 +2880,7 @@ def run_deck_analysis(
             table=table,
             output_probes=output_probes,
             output_directives=output_directives,
+            analysis_directives=analysis_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
@@ -2912,6 +2933,7 @@ def run_deck_analysis(
             table=table,
             output_probes=output_probes,
             output_directives=output_directives,
+            analysis_directives=analysis_directives,
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
             fourier=fourier,
