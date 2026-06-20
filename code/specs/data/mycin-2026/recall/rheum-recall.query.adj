@@ -19,3 +19,4 @@ import "rheum-edges.adj"
 ? associated_autoantibody(systemic_sclerosis, $Antibody)             % expect anti_scl70 / anti_centromere
 ? associated_autoantibody(rheumatoid_arthritis, $Antibody)           % expect anti_ccp        (backfill)
 ? associated_autoantibody(sjogren_syndrome, $Antibody)               % expect anti_ro / anti_la (backfill)
+? associated_autoantibody(primary_biliary_cholangitis, $Antibody)    % expect anti_mitochondrial (backfill)

@@ -109,12 +109,12 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Pharmacology | Pharmacology | drug_class, mechanism, adverse_effect, antidote_for | 10 grounded (ADJ-only) | ✓ |
 | Immunology | Immunology | mediated_by, associated_hla, gene_defect, deficiency_of | 7 grounded (ADJ-only) | ✓ |
 | Genetics | Genetics | inheritance, gene_defect, trinucleotide_repeat, imprinting | 10 grounded (ADJ-only) | ✓ |
-| Rheumatology (Tier-2) | Path/Immuno | associated_autoantibody | 9 grounded (ADJ-only) | ✓ |
+| Rheumatology (Tier-2) | Path/Immuno | associated_autoantibody | 10 grounded (ADJ-only) | ✓ |
 | Oncology (Tier-2) | Pathology/neoplasia | tumor_marker | 5 grounded (ADJ-only) | ✓ |
 | Histology buzzwords (Tier-2) | Pathology | seen_in (finding→condition) | 7 grounded (ADJ-only) | ✓ |
 | Cardiology murmurs (Tier-2) | Cardiology | murmur_indicates (murmur→lesion) | 5 grounded (ADJ-only) | ✓ |
 | Neurology localization (Tier-2) | Neurology | lesion_causes (site→deficit) | 5 grounded (ADJ-only) | ✓ |
-| GI biopsy (Tier-2) | Gastroenterology | biopsy_finding_in (finding→dx) | 5 grounded (ADJ-only) | ✓ |
+| GI biopsy (Tier-2) | Gastroenterology | biopsy_finding_in (finding→dx) | 6 grounded (ADJ-only) | ✓ |
 | Dermatology (Tier-2) | Dermatology | skin_finding_in (lesion→dx) | 4 grounded (ADJ-only) | ✓ |
 | Respiratory occupational (Tier-2) | Pulmonology | inhalation_causes (exposure→dz) | 5 grounded (ADJ-only) | ✓ |
 

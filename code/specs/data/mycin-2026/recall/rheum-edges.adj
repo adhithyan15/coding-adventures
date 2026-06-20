@@ -24,9 +24,14 @@
 % endpoints: rheumatoid arthritis → anti-CCP (the RA page defines ACPA = anti-cyclic
 % citrullinated peptide antibodies and names them among RA's best-known autoantibodies)
 % and Sjögren syndrome → anti-Ro/SSA and anti-La/SSB (one span names the disease and both
-% markers). Still pursued for the next backfill (need a primary source with a both-
-% endpoints span): primary biliary cholangitis → anti-mitochondrial, and polymyositis /
-% antisynthetase → anti-Jo-1.
+% markers). A third backfill is now GROUNDED: primary biliary cholangitis → anti-
+% mitochondrial antibody (the StatPearls page titled "Primary Biliary Cholangitis" carries
+% a contiguous Pathophysiology span naming the disease — by its legacy name "Primary
+% biliary cirrhosis" — and its hallmark anti-mitochondrial antibody together).
+% Still deferred (checked, no both-endpoints declarative on the cited page): polymyositis /
+% antisynthetase → anti-Jo-1 — the Autoimmune Myopathies page (NBK532860) calls Jo-1 "the
+% most studied and commonly detected antisynthetase antibody" but does not name a disease
+% in the same sentence. Honest absence beats an over-reaching citation.
 % ============================================================================
 
 dictionary rheum_vocab {
@@ -85,5 +90,13 @@ rulebook rheum_facts {
     relate associated_autoantibody(sjogren_syndrome, anti_la)
         source "B cells generate autoantibodies characteristic of Sjögren disease, including rheumatoid factor, SSA/Ro, and SSB/La."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK431049/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): primary biliary cholangitis → anti-mitochondrial ---
+    % The page is titled "Primary Biliary Cholangitis"; this Pathophysiology span uses the
+    % disease's legacy name ("Primary biliary cirrhosis") and names its hallmark serology.
+    relate associated_autoantibody(primary_biliary_cholangitis, anti_mitochondrial)
+        source "Primary biliary cirrhosis is associated with highly specific autoantibodies. The anti-mitochondrial antibody is found in 85% of the cases."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459209/"
         trust authoritative
 }

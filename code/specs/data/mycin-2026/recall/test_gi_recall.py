@@ -34,6 +34,7 @@ EXPECTED = {
     "goblet_cells": "barrett_esophagus",
     "absence_of_ganglion_cells": "hirschsprung_disease",
     "eosinophils_15_per_hpf": "eosinophilic_esophagitis",
+    "crypt_abscesses": "ulcerative_colitis",            # primary-source backfill (NBK470312)
 }
 REL = "biopsy_finding_in"
 VAR = "Disease"
