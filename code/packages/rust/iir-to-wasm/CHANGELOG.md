@@ -3,6 +3,20 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.15.1] — 2026-06-20 (LANG-FULL E3 — f64 regression tests; ALGOL reals run on WASM)
+
+### Added — f64 `mul`/`div`/comparison op-selection tests (no code change)
+
+The WASM backend **already** executes `f64` correctly: its typed-local model
+carries an `f64` variable in an `F64` local, and `hint_to_value_type`/the op
+tables select `f64.mul`/`f64.div`/`f64.eq`/`f64.lt` from the `f64` type_hint.
+So — unlike the LLVM and JVM backends, whose uniform-`i64`/`long` slot models
+needed rework (LANG-FULL E3-codegen-slots) — WASM needed **no change** to run
+ALGOL 60 reals. This release adds `emit_f64_mul_div_opcodes` and
+`emit_f64_comparison_opcodes` tests to lock that op-selection against future
+regression, alongside the executed cross-backend proof (`lang-aot`'s
+`lang_matrix.rs` now runs the ALGOL real programs on the WASM column).
+
 ## [0.15.0] — 2026-06-15 (LANG-FULL E2 integration — compute-wide + mask)
 
 ### Changed — narrow unsigned types ride the i64 register model
