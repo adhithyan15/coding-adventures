@@ -92,4 +92,10 @@ rulebook pharm_facts {
         source "Acetylcysteine, most often given IV, is the critical antidote for acetaminophen poisoning, and is most effective if administered within the first 8 hours after an acute overdose."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK441917/"
         trust authoritative
+
+    % --- EXPAND: protamine reverses heparin anticoagulation -------------
+    relate antidote_for(heparin_overdose, protamine)
+        source "Protamine is a medication used to reverse and neutralize the anticoagulant effects of heparin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK547753/"
+        trust authoritative
 }

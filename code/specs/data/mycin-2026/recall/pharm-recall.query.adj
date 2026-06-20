@@ -20,3 +20,4 @@ import "pharm-edges.adj"
 ? adverse_effect(acetaminophen, $Effect)         % expect hepatic_necrosis
 ? antidote_for(acetaminophen_poisoning, $Antidote)  % expect acetylcysteine
 ? antidote_for(opioid_toxicity, $Antidote)       % expect naloxone
+? antidote_for(heparin_overdose, $Antidote)      % expect protamine (expand)

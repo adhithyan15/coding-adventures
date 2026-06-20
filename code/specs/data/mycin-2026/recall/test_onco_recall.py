@@ -33,6 +33,7 @@ EXPECTED = {
     "ovarian_cancer": {"ca_125"},
     "medullary_thyroid_carcinoma": {"calcitonin", "cea"},
     "hepatocellular_carcinoma": {"alpha_fetoprotein"},
+    "colorectal_cancer": {"cea"},                        # expand (NBK578172)
 }
 REL = "tumor_marker"
 VAR = "Marker"

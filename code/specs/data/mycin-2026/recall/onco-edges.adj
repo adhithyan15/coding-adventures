@@ -57,4 +57,10 @@ rulebook onco_facts {
         source "HCC is diagnosed by elevation of serum biomarkers, including alpha-fetoprotein, imaging including ultrasound, contrast CT/MRI, and biopsy."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK559177/"
         trust authoritative
+
+    % --- EXPAND: colorectal cancer (carcinoembryonic antigen, CEA) -------
+    relate tumor_marker(colorectal_cancer, cea)
+        source "Carcinoembryonic antigen (CEA) is a nonspecific serum biomarker that is elevated in many malignancies, including colorectal cancer, medullary thyroid cancer, breast cancer, and mucinous ovarian cancer"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK578172/"
+        trust authoritative
 }

@@ -24,10 +24,15 @@
 % asserted "from memory": every edge is defended by a span a reader can re-fetch and
 % check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 %
-% Honest scope: only findings whose dedicated page states the association in a clean
-% self-contained span (both finding AND condition named) are included. Deferred (the
-% disease pages bury the buzzword in context, not a both-endpoints-named declarative):
-% Auer rods → AML/APL, psammoma bodies → papillary thyroid carcinoma.
+% Honest scope: only findings whose cited page states the association in a clean self-
+% contained span (both finding AND condition named) are included. Under the primary-
+% source-first, zero-deferral policy, two previously-deferred buzzwords are now GROUNDED:
+% Auer rods → acute promyelocytic leukemia (the AML page names abundant Auer rods as a
+% pathognomonic APL feature) and psammoma bodies → meningioma (the meningioma page names
+% psammoma-body formation as a histopathological characteristic). Still pursued for the
+% next backfill (its disease page lists psammoma bodies only inside a run-on feature
+% list, not a both-endpoints-named declarative): psammoma bodies → papillary thyroid
+% carcinoma.
 % ============================================================================
 
 dictionary histo_vocab {
@@ -64,5 +69,17 @@ rulebook histo_facts {
     relate seen_in(heinz_bodies, methemoglobinemia)
         source "Heinz bodies may be present in patients with glucose-6-phosphate dehydrogenase (G6PD) deficiency and those with methemoglobinemia."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK551622/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): Auer rods -> acute promyelocytic leukemia ---
+    relate seen_in(auer_rods, acute_promyelocytic_leukemia)
+        source "Notably, a specific subtype of AML—acute promyelocytic leukemia (APL)—exhibits a distinctive and pathognomonic feature on peripheral blood morphology of abundant cytoplasmic Auer rods"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507875/"
+        trust authoritative
+
+    % --- BACKFILL: psammoma bodies -> meningioma --------------------------------
+    relate seen_in(psammoma_bodies, meningioma)
+        source "One of the histopathological characteristics of meningiomas is the growth of meningothelial cells that eventually mineralize to form psammoma bodies."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560538/"
         trust authoritative
 }

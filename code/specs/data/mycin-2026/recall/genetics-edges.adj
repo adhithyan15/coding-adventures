@@ -76,4 +76,20 @@ rulebook genetics_facts {
         source "PWS results from the loss of expression of paternally inherited genes on chromosome 15q11.2–q13, most commonly due to paternal deletion, maternal uniparental disomy, or imprinting defects."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK553161/"
         trust authoritative
+
+    % --- EXPAND: cystic fibrosis (autosomal recessive; CFTR) — one span names both ---
+    relate inheritance(cystic_fibrosis, autosomal_recessive)
+        source "Modern understanding began in 1949 when scientists identified the autosomal recessive inheritance pattern of cystic fibrosis and linked the disease to a defect in the CFTR protein, a chloride channel crucial for regulating salt and water balance in the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493206/"
+        trust authoritative
+    relate gene_defect(cystic_fibrosis, cftr)
+        source "Modern understanding began in 1949 when scientists identified the autosomal recessive inheritance pattern of cystic fibrosis and linked the disease to a defect in the CFTR protein, a chloride channel crucial for regulating salt and water balance in the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493206/"
+        trust authoritative
+
+    % --- EXPAND: Duchenne muscular dystrophy (dystrophin gene) -----------
+    relate gene_defect(duchenne_muscular_dystrophy, dystrophin)
+        source "Mutations in the dystrophin gene result in diseases known as dystrophinopathies, which encompass Duchenne muscular dystrophy, Becker muscular dystrophy, and an intermediate form."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482346/"
+        trust authoritative
 }
