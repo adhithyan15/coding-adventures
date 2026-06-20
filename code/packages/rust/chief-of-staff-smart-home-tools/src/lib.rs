@@ -285,6 +285,9 @@ pub const SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID: &str = "smart_home.inspect_event
 pub const SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID: &str = "smart_home.list_command_results";
 pub const SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_command_result_summary";
+pub const SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID: &str = "smart_home.list_command_risk_audit";
+pub const SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_command_risk_audit_summary";
 pub const SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID: &str =
     "smart_home.list_authorization_decisions";
 pub const SMART_HOME_GET_AUTHORIZATION_SUMMARY_TOOL_ID: &str =
@@ -2167,6 +2170,24 @@ impl SmartHomeToolBridge {
                         output,
                         "get_command_result_summary",
                     ))
+                }
+                SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID => {
+                    let query = command_risk_audit_query(&arguments)?;
+                    list_command_risk_audit_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID => {
+                    let query = command_risk_audit_query(&arguments)?;
+                    get_command_risk_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
                 }
                 SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID => {
                     let query = authorization_decision_query(&arguments)?;
@@ -5958,6 +5979,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         inspect_event_log_definition(),
         list_command_results_definition(),
         get_command_result_summary_definition(),
+        list_command_risk_audit_definition(),
+        get_command_risk_audit_summary_definition(),
         list_authorization_decisions_definition(),
         get_authorization_summary_definition(),
         list_capability_grants_definition(),
@@ -6314,6 +6337,70 @@ fn get_command_result_summary_definition() -> ToolDefinition {
             vec!["summary"],
             false,
         ),
+    )
+}
+
+fn command_risk_audit_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("bridge_id", JsonSchema::String),
+            SchemaProperty::new("principal_id", JsonSchema::String),
+            SchemaProperty::new("status", JsonSchema::String),
+            SchemaProperty::new("statuses", string_array_schema()),
+            SchemaProperty::new("outcome", JsonSchema::String),
+            SchemaProperty::new("risk_only", JsonSchema::Boolean),
+            SchemaProperty::new("failures_only", JsonSchema::Boolean),
+            SchemaProperty::new("denials_only", JsonSchema::Boolean),
+            SchemaProperty::new("approval_gated_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn command_risk_audit_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "command_risk_audit",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["command_risk_audit", "summary", "count"],
+        false,
+    )
+}
+
+fn command_risk_audit_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_command_risk_audit_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID,
+        "List smart-home command risk audit",
+        "List Chief-derived command risk rows from D23 command results and authorization decisions.",
+        command_risk_audit_query_schema(),
+        command_risk_audit_list_output_schema(),
+    )
+}
+
+fn get_command_risk_audit_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID,
+        "Summarize smart-home command risk audit",
+        "Summarize Chief-derived command risk signals from D23 command results and authorization decisions.",
+        command_risk_audit_query_schema(),
+        command_risk_audit_summary_output_schema(),
     )
 }
 
@@ -7539,6 +7626,39 @@ fn command_result_query(arguments: &JsonValue) -> Result<RuntimeCommandResultQue
         query = query.with_limit(limit as usize);
     }
     Ok(query)
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct CommandRiskAuditQuery {
+    bridge_id: Option<BridgeId>,
+    principal_id: Option<AgentId>,
+    command_statuses: Vec<CommandStatus>,
+    authorization_outcome: Option<AuthorizationOutcome>,
+    risk_only: bool,
+    failures_only: bool,
+    denials_only: bool,
+    approval_gated_only: bool,
+    limit: Option<usize>,
+}
+
+fn command_risk_audit_query(arguments: &JsonValue) -> Result<CommandRiskAuditQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(CommandRiskAuditQuery {
+        bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
+        principal_id: optional_string(arguments, "principal_id")?.map(AgentId::trusted),
+        command_statuses: optional_string_list(arguments, "status", "statuses")?
+            .into_iter()
+            .map(|status| parse_command_status(&status))
+            .collect::<Result<Vec<_>, _>>()?,
+        authorization_outcome: optional_string(arguments, "outcome")?
+            .map(|outcome| parse_authorization_outcome(&outcome))
+            .transpose()?,
+        risk_only: optional_bool(arguments, "risk_only")?.unwrap_or(false),
+        failures_only: optional_bool(arguments, "failures_only")?.unwrap_or(false),
+        denials_only: optional_bool(arguments, "denials_only")?.unwrap_or(false),
+        approval_gated_only: optional_bool(arguments, "approval_gated_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
 }
 
 fn authorization_decision_query(
@@ -31929,6 +32049,405 @@ fn scene_action_desired_field_count(value: &Value) -> usize {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct CommandRiskAuditRow {
+    audit_id: String,
+    source: &'static str,
+    command_id: Option<CommandId>,
+    bridge_id: Option<BridgeId>,
+    correlation_id: Option<CorrelationId>,
+    principal_id: Option<AgentId>,
+    entity_id: Option<EntityId>,
+    command_type: Option<CommandType>,
+    status: Option<CommandStatus>,
+    outcome: Option<AuthorizationOutcome>,
+    required_tier: Option<PrivilegeTier>,
+    required_capability_count: usize,
+    matched_grant_count: usize,
+    missing_capability_count: usize,
+    missing_capabilities: Vec<CapabilityId>,
+    sequence: Option<u64>,
+    decided_at_ms: Option<u64>,
+    risk_lane: &'static str,
+    risk_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+impl CommandRiskAuditRow {
+    fn from_command_result(record: &RuntimeCommandResultRecord) -> Self {
+        let result = &record.result;
+        let blocked = result.status.is_failure();
+        let (risk_lane, risk_action) = match result.status {
+            CommandStatus::Accepted => ("ready", "monitor_command_results"),
+            CommandStatus::Rejected => ("command_execution", "inspect_rejected_command"),
+            CommandStatus::TimedOut => ("bridge_runtime", "restore_command_delivery"),
+            CommandStatus::Failed => ("command_execution", "inspect_failed_command"),
+        };
+
+        Self {
+            audit_id: format!("command_result:{}", record.sequence),
+            source: "command_result",
+            command_id: Some(result.command_id.clone()),
+            bridge_id: Some(result.bridge_id.clone()),
+            correlation_id: Some(result.correlation_id.clone()),
+            principal_id: None,
+            entity_id: None,
+            command_type: None,
+            status: Some(result.status),
+            outcome: None,
+            required_tier: None,
+            required_capability_count: 0,
+            matched_grant_count: 0,
+            missing_capability_count: 0,
+            missing_capabilities: Vec::new(),
+            sequence: Some(record.sequence),
+            decided_at_ms: None,
+            risk_lane,
+            risk_action,
+            blocked,
+            requires_attention: blocked,
+        }
+    }
+
+    fn from_authorization_decision(decision: &AuthorizationDecision) -> Option<Self> {
+        let AuthorizationSubject::Command {
+            command_id,
+            entity_id,
+            command_type,
+        } = &decision.subject
+        else {
+            return None;
+        };
+        let missing_capability_count = decision.missing_capabilities.len();
+        let approval_gated = command_risk_is_approval_gated(decision.required_tier);
+        let blocked = !decision.is_allowed() || missing_capability_count > 0;
+        let requires_attention = blocked || approval_gated;
+        let (risk_lane, risk_action) = if blocked {
+            ("authorization", "grant_missing_command_capabilities")
+        } else if approval_gated {
+            ("approval", "review_command_approval_gate")
+        } else {
+            ("ready", "monitor_command_authorization")
+        };
+
+        Some(Self {
+            audit_id: format!(
+                "authorization:{}:{}",
+                decision.decided_at_ms,
+                command_id.as_str()
+            ),
+            source: "authorization_decision",
+            command_id: Some(command_id.clone()),
+            bridge_id: None,
+            correlation_id: None,
+            principal_id: Some(decision.principal_id.clone()),
+            entity_id: Some(entity_id.clone()),
+            command_type: Some(*command_type),
+            status: None,
+            outcome: Some(decision.outcome),
+            required_tier: Some(decision.required_tier),
+            required_capability_count: decision.required_capabilities.len(),
+            matched_grant_count: decision.matched_grants.len(),
+            missing_capability_count,
+            missing_capabilities: decision.missing_capabilities.clone(),
+            sequence: None,
+            decided_at_ms: Some(decision.decided_at_ms),
+            risk_lane,
+            risk_action,
+            blocked,
+            requires_attention,
+        })
+    }
+
+    fn is_failure_result(&self) -> bool {
+        self.status.is_some_and(CommandStatus::is_failure)
+    }
+
+    fn is_denial(&self) -> bool {
+        self.outcome == Some(AuthorizationOutcome::Denied)
+    }
+
+    fn is_approval_gated(&self) -> bool {
+        self.required_tier
+            .is_some_and(command_risk_is_approval_gated)
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct CommandRiskAuditSummary {
+    total_rows: usize,
+    command_result_rows: usize,
+    authorization_decision_rows: usize,
+    accepted_results: usize,
+    rejected_results: usize,
+    timed_out_results: usize,
+    failed_results: usize,
+    denied_authorizations: usize,
+    allowed_authorizations: usize,
+    approval_gated_authorizations: usize,
+    missing_capability_authorizations: usize,
+    blocked_rows: usize,
+    requires_attention_rows: usize,
+}
+
+impl CommandRiskAuditSummary {
+    fn from_rows(rows: &[CommandRiskAuditRow]) -> Self {
+        let mut summary = Self::default();
+        for row in rows {
+            summary.total_rows += 1;
+            match row.source {
+                "command_result" => {
+                    summary.command_result_rows += 1;
+                    match row.status {
+                        Some(CommandStatus::Accepted) => summary.accepted_results += 1,
+                        Some(CommandStatus::Rejected) => summary.rejected_results += 1,
+                        Some(CommandStatus::TimedOut) => summary.timed_out_results += 1,
+                        Some(CommandStatus::Failed) => summary.failed_results += 1,
+                        None => {}
+                    }
+                }
+                "authorization_decision" => {
+                    summary.authorization_decision_rows += 1;
+                    match row.outcome {
+                        Some(AuthorizationOutcome::Allowed) => summary.allowed_authorizations += 1,
+                        Some(AuthorizationOutcome::Denied) => summary.denied_authorizations += 1,
+                        None => {}
+                    }
+                    if row.is_approval_gated() {
+                        summary.approval_gated_authorizations += 1;
+                    }
+                    if row.missing_capability_count > 0 {
+                        summary.missing_capability_authorizations += 1;
+                    }
+                }
+                _ => {}
+            }
+            if row.blocked {
+                summary.blocked_rows += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_rows += 1;
+            }
+        }
+        summary
+    }
+
+    fn failure_results(&self) -> usize {
+        self.rejected_results + self.timed_out_results + self.failed_results
+    }
+
+    fn has_command_risks(&self) -> bool {
+        self.requires_attention_rows > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+}
+
+fn list_command_risk_audit_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: CommandRiskAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) = command_risk_audit_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "command_risk_audit",
+            JsonValue::Array(rows.iter().map(command_risk_audit_row_json).collect()),
+        ),
+        ("summary", command_risk_audit_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_command_risk_audit")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            ("failure_results", integer(summary.failure_results() as i64)),
+            (
+                "denied_authorizations",
+                integer(summary.denied_authorizations as i64),
+            ),
+        ]),
+    ))
+}
+
+fn get_command_risk_audit_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: CommandRiskAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = command_risk_audit_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        command_risk_audit_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_command_risk_audit_summary")),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            ("failure_results", integer(summary.failure_results() as i64)),
+            (
+                "denied_authorizations",
+                integer(summary.denied_authorizations as i64),
+            ),
+        ]),
+    ))
+}
+
+fn command_risk_audit_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &CommandRiskAuditQuery,
+) -> Result<(Vec<CommandRiskAuditRow>, CommandRiskAuditSummary), ToolCallError> {
+    let mut command_query = RuntimeCommandResultQuery::new()
+        .sorted_by(RuntimeCommandResultSort::StatusThenSequenceDesc);
+    if let Some(bridge_id) = query.bridge_id.clone() {
+        command_query = command_query.for_bridge(bridge_id);
+    }
+    let command_statuses = command_risk_statuses_for_query(query);
+    for status in command_statuses {
+        command_query = command_query.with_status(status);
+    }
+
+    let command_output = runtime
+        .execute_read_tool(
+            principal_id.clone(),
+            RuntimeReadToolRequest::ListCommandResults {
+                query: command_query,
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::CommandResults { results, .. } = command_output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "command risk audit expected command result output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let mut authorization_query = RuntimeAuthorizationDecisionQuery::new();
+    if let Some(principal_id) = query.principal_id.clone() {
+        authorization_query = authorization_query.for_principal(principal_id);
+    }
+    if let Some(outcome) = command_risk_authorization_outcome_for_query(query) {
+        authorization_query = authorization_query.with_outcome(outcome);
+    }
+    authorization_query =
+        authorization_query.sorted_by(RuntimeAuthorizationDecisionSort::DecidedAtDesc);
+
+    let authorization_output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::ListAuthorizationDecisions {
+                query: authorization_query,
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::AuthorizationDecisions { decisions, .. } = authorization_output
+    else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "command risk audit expected authorization decision output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let mut rows = results
+        .iter()
+        .map(CommandRiskAuditRow::from_command_result)
+        .chain(
+            decisions
+                .iter()
+                .filter_map(CommandRiskAuditRow::from_authorization_decision),
+        )
+        .filter(|row| command_risk_audit_row_matches(row, query))
+        .collect::<Vec<_>>();
+    rows.sort_by(|left, right| {
+        right
+            .blocked
+            .cmp(&left.blocked)
+            .then_with(|| right.requires_attention.cmp(&left.requires_attention))
+            .then_with(|| command_risk_sort_key(right).cmp(&command_risk_sort_key(left)))
+            .then_with(|| left.audit_id.cmp(&right.audit_id))
+    });
+    let summary = CommandRiskAuditSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+fn command_risk_audit_row_matches(
+    row: &CommandRiskAuditRow,
+    query: &CommandRiskAuditQuery,
+) -> bool {
+    if query.risk_only && !row.requires_attention {
+        return false;
+    }
+    if query.failures_only && !row.is_failure_result() {
+        return false;
+    }
+    if query.denials_only && !row.is_denial() {
+        return false;
+    }
+    if query.approval_gated_only && !row.is_approval_gated() {
+        return false;
+    }
+    true
+}
+
+fn command_risk_statuses_for_query(query: &CommandRiskAuditQuery) -> Vec<CommandStatus> {
+    if !query.command_statuses.is_empty() {
+        return query.command_statuses.clone();
+    }
+    if query.failures_only {
+        return vec![
+            CommandStatus::Rejected,
+            CommandStatus::TimedOut,
+            CommandStatus::Failed,
+        ];
+    }
+    Vec::new()
+}
+
+fn command_risk_authorization_outcome_for_query(
+    query: &CommandRiskAuditQuery,
+) -> Option<AuthorizationOutcome> {
+    query.authorization_outcome.or(if query.denials_only {
+        Some(AuthorizationOutcome::Denied)
+    } else {
+        None
+    })
+}
+
+fn command_risk_sort_key(row: &CommandRiskAuditRow) -> u64 {
+    row.sequence.or(row.decided_at_ms).unwrap_or(0)
+}
+
+fn command_risk_is_approval_gated(tier: PrivilegeTier) -> bool {
+    matches!(tier, PrivilegeTier::HumanApproval | PrivilegeTier::HighRisk)
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -54823,6 +55342,160 @@ fn command_result_summary_json(summary: &RuntimeCommandResultSummary) -> JsonVal
     ])
 }
 
+fn command_risk_audit_row_json(row: &CommandRiskAuditRow) -> JsonValue {
+    object([
+        ("audit_id", string(&row.audit_id)),
+        ("source", string(row.source)),
+        (
+            "command_id",
+            row.command_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "bridge_id",
+            row.bridge_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "correlation_id",
+            row.correlation_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "principal_id",
+            row.principal_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "entity_id",
+            row.entity_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "command_type",
+            row.command_type
+                .map(|value| string(command_type_label(value)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "status",
+            row.status
+                .map(|value| string(command_status_label(value)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "outcome",
+            row.outcome
+                .map(|value| string(authorization_outcome_label(value)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "required_tier",
+            row.required_tier
+                .map(|value| string(privilege_tier_label(value)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "required_capability_count",
+            integer(row.required_capability_count as i64),
+        ),
+        (
+            "matched_grant_count",
+            integer(row.matched_grant_count as i64),
+        ),
+        (
+            "missing_capability_count",
+            integer(row.missing_capability_count as i64),
+        ),
+        (
+            "missing_capabilities",
+            JsonValue::Array(
+                row.missing_capabilities
+                    .iter()
+                    .map(|capability_id| string(capability_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "sequence",
+            row.sequence
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "decided_at_ms",
+            row.decided_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("risk_lane", string(row.risk_lane)),
+        ("risk_action", string(row.risk_action)),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+    ])
+}
+
+fn command_risk_audit_summary_json(summary: &CommandRiskAuditSummary) -> JsonValue {
+    object([
+        ("total_rows", integer(summary.total_rows as i64)),
+        (
+            "command_result_rows",
+            integer(summary.command_result_rows as i64),
+        ),
+        (
+            "authorization_decision_rows",
+            integer(summary.authorization_decision_rows as i64),
+        ),
+        ("accepted_results", integer(summary.accepted_results as i64)),
+        ("rejected_results", integer(summary.rejected_results as i64)),
+        (
+            "timed_out_results",
+            integer(summary.timed_out_results as i64),
+        ),
+        ("failed_results", integer(summary.failed_results as i64)),
+        ("failure_results", integer(summary.failure_results() as i64)),
+        (
+            "denied_authorizations",
+            integer(summary.denied_authorizations as i64),
+        ),
+        (
+            "allowed_authorizations",
+            integer(summary.allowed_authorizations as i64),
+        ),
+        (
+            "approval_gated_authorizations",
+            integer(summary.approval_gated_authorizations as i64),
+        ),
+        (
+            "missing_capability_authorizations",
+            integer(summary.missing_capability_authorizations as i64),
+        ),
+        ("blocked_rows", integer(summary.blocked_rows as i64)),
+        (
+            "requires_attention_rows",
+            integer(summary.requires_attention_rows as i64),
+        ),
+        (
+            "has_command_risks",
+            JsonValue::Bool(summary.has_command_risks()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -61395,7 +62068,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 244);
+        assert_eq!(definitions.len(), 246);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -61413,6 +62086,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID));
@@ -62092,7 +62771,7 @@ mod tests {
             .contains(&SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            236
+            238
         );
         assert_eq!(
             export
@@ -62932,11 +63611,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(244))
+            Some(&integer(246))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(236))
+            Some(&integer(238))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -76365,6 +77044,146 @@ mod tests {
             runtime.borrow().registry().counts().authorization_decisions,
             2,
             "scene coverage audit list and summary both authorize through runtime read tools"
+        );
+    }
+
+    #[test]
+    fn command_risk_audit_tools_surface_runtime_command_risks_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+        runtime
+            .borrow_mut()
+            .event_bus_mut()
+            .publish(RuntimeEvent::CommandResult(CommandResult {
+                command_id: CommandId::trusted("cmd-risk-failed"),
+                status: CommandStatus::Failed,
+                bridge_id: BridgeId::trusted("bridge-1"),
+                correlation_id: CorrelationId::trusted("corr-risk-failed"),
+                message: Some("integration dispatch failed".to_string()),
+            }));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let list_request = request(
+            "call-list-command-risk-audit",
+            SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID,
+            object([
+                ("risk_only", JsonValue::Bool(true)),
+                ("statuses", JsonValue::Array(vec![string("failed")])),
+                ("outcome", string("denied")),
+            ]),
+            2_002,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_output, "count"), Some(&integer(2)));
+        let summary = field(list_output, "summary").unwrap();
+        assert_eq!(field(summary, "total_rows"), Some(&integer(2)));
+        assert_eq!(field(summary, "command_result_rows"), Some(&integer(1)));
+        assert_eq!(
+            field(summary, "authorization_decision_rows"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(summary, "failed_results"), Some(&integer(1)));
+        assert_eq!(field(summary, "failure_results"), Some(&integer(1)));
+        assert_eq!(field(summary, "denied_authorizations"), Some(&integer(1)));
+        assert_eq!(
+            field(summary, "missing_capability_authorizations"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(summary, "blocked_rows"), Some(&integer(2)));
+        assert_eq!(field(summary, "requires_attention_rows"), Some(&integer(2)));
+        assert_eq!(
+            field(summary, "has_command_risks"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let rows = field(list_output, "command_risk_audit").unwrap();
+        let first = array_item(rows, 0).unwrap();
+        let second = array_item(rows, 1).unwrap();
+        assert_eq!(field(first, "blocked"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(first, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(second, "blocked"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(second, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!([first, second].iter().any(|row| field(row, "source")
+            == Some(&string("command_result"))
+            && field(row, "status") == Some(&string("failed"))
+            && field(row, "risk_lane") == Some(&string("command_execution"))
+            && field(row, "risk_action") == Some(&string("inspect_failed_command"))));
+        assert!([first, second].iter().any(|row| field(row, "source")
+            == Some(&string("authorization_decision"))
+            && field(row, "outcome") == Some(&string("denied"))
+            && field(row, "missing_capability_count") == Some(&integer(1))
+            && field(row, "risk_lane") == Some(&string("authorization"))
+            && field(row, "risk_action") == Some(&string("grant_missing_command_capabilities"))));
+
+        let summary_request = request(
+            "call-command-risk-audit-summary",
+            SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID,
+            object([
+                ("risk_only", JsonValue::Bool(true)),
+                ("failures_only", JsonValue::Bool(true)),
+            ]),
+            2_003,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_rows"), Some(&integer(1)));
+        assert_eq!(field(rollup, "failure_results"), Some(&integer(1)));
+        assert_eq!(field(rollup, "blocked_rows"), Some(&integer(1)));
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 2);
+        assert_eq!(journal_summary.completed_count, 2);
+        assert_eq!(
+            runtime.borrow().registry().counts().authorization_decisions,
+            6,
+            "denied command records tool and command authorization; each audit call performs two runtime read authorizations"
         );
     }
 
