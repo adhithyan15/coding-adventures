@@ -185,8 +185,8 @@ stable transient table surface. They also return selected `.four` harmonic
 results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `format_deck_run_artifact_table` and
 `format_deck_run_artifact_csv` / `format_deck_run_artifact_json` output for
-stable result-row, analysis-directive, output-probe, output-directive, measurement, Fourier, and
-diagnostic count/name lists. `format_deck_table_csv` also converts any stable
+stable result-row, table, analysis-directive, output-probe, output-directive,
+measurement, Fourier, and diagnostic count/name lists. `format_deck_table_csv` also converts any stable
 tab-separated deck table to CSV, `format_deck_table_json` converts the same
 tables to compact JSON records, and `deck_table_records` returns header-keyed
 native records for host integrations.
@@ -235,7 +235,7 @@ downstream deck execution helpers.
 stable deck-selected table output with normalized output-probe and
 output-directive artifacts,
 selected measurement artifacts, selected transient Fourier artifacts,
-selected-run artifact summaries with analysis-directive, output-probe, output-directive,
+selected-run artifact summaries with table, analysis-directive, output-probe, output-directive,
 measurement, and Fourier probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT`
 frequency grids, and `.tran`
 `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.

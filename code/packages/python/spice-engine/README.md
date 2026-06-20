@@ -65,7 +65,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 | `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json`, `deck_table_records` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON/record conversion |
-| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, analysis-directive, output-probe, output-directive, measurement, Fourier, and diagnostic count/name lists |
+| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, table, analysis-directive, output-probe, output-directive, measurement, Fourier, and diagnostic count/name lists |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
@@ -110,8 +110,9 @@ executions. Selected
 `.tran` plans also return selected `.four` harmonic results and a stable
 Fourier table. Executions also include a selected-run artifact summary plus
 `format_deck_run_artifact_table()` and `format_deck_run_artifact_csv()` output
-for stable result-row, analysis-directive, output-probe, output-directive,
-measurement, Fourier, and diagnostic count/name lists. `format_deck_table_csv()` also converts any stable
+for stable result-row, table, analysis-directive, output-probe,
+output-directive, measurement, Fourier, and diagnostic count/name lists.
+`format_deck_table_csv()` also converts any stable
 tab-separated deck table to CSV, `format_deck_table_json()` converts the same
 tables to compact JSON records, and `deck_table_records()` returns
 header-keyed native records for host integrations. They

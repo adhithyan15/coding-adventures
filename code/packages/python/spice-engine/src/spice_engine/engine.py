@@ -2340,6 +2340,8 @@ class DeckRunArtifact:
     result_rows: int
     result_column_count: int
     result_columns: list[str]
+    table_count: int
+    tables: list[str]
     output_probe_count: int
     output_probes: list[str]
     output_directive_count: int
@@ -2440,6 +2442,8 @@ _DECK_RUN_ARTIFACT_COLUMNS = [
     "ResultRows",
     "ResultColumns",
     "ResultColumnList",
+    "Tables",
+    "TableList",
     "OutputProbes",
     "OutputProbeList",
     "OutputDirectives",
@@ -2462,6 +2466,19 @@ def _deck_analysis_directives(plan: DeckAnalysisPlan) -> list[str]:
     return [plan.directive] if plan.directive else []
 
 
+def _deck_stable_tables(
+    measurements: list[ProbeMeasurement],
+    fourier: list[FourierResult],
+) -> list[str]:
+    tables = ["result"]
+    if measurements:
+        tables.append("measurement")
+    if fourier:
+        tables.append("fourier")
+    tables.append("run-artifact")
+    return tables
+
+
 def _deck_run_artifacts(
     plan: DeckAnalysisPlan,
     result: DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult,
@@ -2474,6 +2491,7 @@ def _deck_run_artifacts(
 ) -> list[DeckRunArtifact]:
     is_transient = plan.analysis == "tran"
     analysis_directives = _deck_analysis_directives(plan)
+    tables = _deck_stable_tables(measurements, fourier)
     return [
         DeckRunArtifact(
             analysis=plan.analysis,
@@ -2500,6 +2518,8 @@ def _deck_run_artifacts(
             result_rows=_deck_result_row_count(result),
             result_column_count=len(result_columns),
             result_columns=list(result_columns),
+            table_count=len(tables),
+            tables=tables,
             output_probe_count=len(output_probes),
             output_probes=list(output_probes),
             output_directive_count=len(output_directives),
@@ -2562,6 +2582,8 @@ def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
         str(artifact.result_rows),
         str(artifact.result_column_count),
         ";".join(artifact.result_columns),
+        str(artifact.table_count),
+        ";".join(artifact.tables),
         str(artifact.output_probe_count),
         ";".join(artifact.output_probes),
         str(artifact.output_directive_count),

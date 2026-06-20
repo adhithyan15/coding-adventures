@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add stable table count/name lists to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `TableList` column from
+  `format_deck_run_artifact_table`, matching Python and TypeScript.
 - Add selected analysis directives to `run_deck_analysis` results and selected-run
   artifacts, including a stable `AnalysisDirectiveList` column from
   `format_deck_run_artifact_table`, matching Python and TypeScript.

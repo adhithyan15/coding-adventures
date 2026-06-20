@@ -3426,6 +3426,8 @@ pub struct DeckRunArtifact {
     pub result_rows: usize,
     pub result_column_count: usize,
     pub result_columns: Vec<String>,
+    pub table_count: usize,
+    pub tables: Vec<String>,
     pub output_probe_count: usize,
     pub output_probes: Vec<String>,
     pub output_directive_count: usize,
@@ -10109,6 +10111,7 @@ fn deck_run_artifacts(
 ) -> Vec<DeckRunArtifact> {
     let is_transient = plan.analysis == "tran";
     let analysis_directives = deck_analysis_directives(plan);
+    let tables = deck_stable_tables(measurements, fourier);
     vec![DeckRunArtifact {
         analysis: plan.analysis.clone(),
         directive: plan.directive.clone(),
@@ -10132,6 +10135,8 @@ fn deck_run_artifacts(
         result_rows,
         result_column_count: result_columns.len(),
         result_columns: result_columns.to_vec(),
+        table_count: tables.len(),
+        tables,
         output_probe_count: output_probes.len(),
         output_probes: output_probes.to_vec(),
         output_directive_count: output_directives.len(),
@@ -10157,6 +10162,18 @@ fn deck_analysis_directives(plan: &DeckAnalysisPlan) -> Vec<String> {
     } else {
         vec![plan.directive.clone()]
     }
+}
+
+fn deck_stable_tables(measurements: &[ProbeMeasurement], fourier: &[FourierResult]) -> Vec<String> {
+    let mut tables = vec!["result".to_string()];
+    if !measurements.is_empty() {
+        tables.push("measurement".to_string());
+    }
+    if !fourier.is_empty() {
+        tables.push("fourier".to_string());
+    }
+    tables.push("run-artifact".to_string());
+    tables
 }
 
 fn deck_analysis_diagnostic_codes(netlist: &str, plan: &DeckAnalysisPlan) -> Vec<String> {
@@ -10201,6 +10218,8 @@ const DECK_RUN_ARTIFACT_COLUMNS: &[&str] = &[
     "ResultRows",
     "ResultColumns",
     "ResultColumnList",
+    "Tables",
+    "TableList",
     "OutputProbes",
     "OutputProbeList",
     "OutputDirectives",
@@ -10240,6 +10259,8 @@ fn deck_run_artifact_cells(artifact: &DeckRunArtifact) -> Vec<String> {
         artifact.result_rows.to_string(),
         artifact.result_column_count.to_string(),
         artifact.result_columns.join(";"),
+        artifact.table_count.to_string(),
+        artifact.tables.join(";"),
         artifact.output_probe_count.to_string(),
         artifact.output_probes.join(";"),
         artifact.output_directive_count.to_string(),
