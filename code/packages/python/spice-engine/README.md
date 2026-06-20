@@ -65,7 +65,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 | `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json`, `deck_table_records` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON/record conversion |
-| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, table, analysis-directive, output-probe, output-directive, measurement, Fourier, and diagnostic count/name lists |
+| `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, table, analysis-directive, output-probe, output-directive, measurement, Fourier, control-command, and diagnostic count/name lists |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
@@ -115,6 +115,8 @@ Fourier table. Executions also include a selected-run artifact summary plus
 `format_deck_run_artifact_table()` and `format_deck_run_artifact_csv()` output
 for stable result-row, table, analysis-directive, output-probe,
 output-directive, measurement, Fourier, and diagnostic count/name lists.
+Normalized accepted `.control` commands are surfaced separately in
+`ControlLines` / `ControlLineList` artifact fields.
 Existing `.control` body policy diagnostics flow into those selected-run
 artifact `Diagnostics` / `DiagnosticCodeList` fields and through the same
 run-artifact table, CSV, JSON, and `table_artifacts` records.
@@ -232,7 +234,7 @@ stable deck-selected table output with normalized table-inventory,
 analysis-directive, output-probe, and output-directive artifacts,
 selected measurement artifacts, selected transient Fourier artifacts,
 selected-run artifact summaries with analysis-directive, output-probe, output-directive,
-measurement, and Fourier probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT`
+measurement, Fourier probe, and `.control` command inventories, `.ac LIN`, `.ac DEC`, `.ac OCT`
 frequency grids, and `.tran`
 `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
 

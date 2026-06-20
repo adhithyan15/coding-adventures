@@ -56,6 +56,7 @@ class DeckControlSummary:
     """Normalized active deck lines plus deck-control diagnostics."""
 
     active_lines: tuple[str, ...]
+    control_lines: tuple[str, ...]
     terminated: bool
     end_line_number: int | None
     diagnostics: tuple[DeckControlDiagnostic, ...]
@@ -607,6 +608,7 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
     """Return active pre-``.end`` lines and unsupported deck-control diagnostics."""
 
     active_lines: list[str] = []
+    control_lines: list[str] = []
     diagnostics: list[DeckControlDiagnostic] = []
     end_line_number: int | None = None
     in_control_block = False
@@ -623,6 +625,7 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
             control_line = _control_block_command_as_deck_line(stripped)
             if control_line is not None:
                 active_lines.append(control_line)
+                control_lines.append(control_line)
                 continue
             if _is_noop_control_block_command(stripped):
                 continue
@@ -706,6 +709,7 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
 
     return DeckControlSummary(
         active_lines=tuple(active_lines),
+        control_lines=tuple(control_lines),
         terminated=end_line_number is not None,
         end_line_number=end_line_number,
         diagnostics=tuple(diagnostics),

@@ -3,6 +3,42 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.0] — 2026-06-20 — `f64` variable slots (LANG-FULL enabler E3, code-gen backend 1)
+
+### Fixed — `real` (f64) variables produced invalid IR
+
+The backend already emitted `fadd`/`fmul`/`fcmp` for `f64` *ops*, but three
+things still broke a real program that uses a *variable* (clang rejected the
+module, so ALGOL reals ran only on the VM/JIT):
+
+1. **Uniform-`i64` stack slots.** A variable assigned 2+ times is promoted to an
+   `alloca`, and every slot was hard-coded `alloca i64` / `store i64` / `load i64`.
+   An `f64` local therefore did `store i64 <double>` — a type error. Slots now
+   carry a per-variable type: `collect_slot_types` marks a slot `double` when any
+   instruction writing it has a float `type_hint`, and the `alloca`/`load`/`store`
+   protocol uses it. (`FnState` gains `slot_types` + a `slot_ty()` helper.)
+2. **Comparison result `zext` to the operand width.** A `cmp_*` result is a
+   boolean, but the value form was `zext i1 … to <operand_ty>` — i.e. `zext i1 to
+   double` for a float comparison, which is invalid. A float comparison now
+   `zext`s its boolean to `i64` (integer comparisons keep their operand width).
+3. **Float literal formatting.** `Operand::Float` was rendered with Rust's `{:e}`,
+   which emits `2e0`/`0e0` (no decimal point) for round numbers — LLVM's
+   assembler rejects a floating literal without a `.` ("integer constant must
+   have integer type"). Floats now use LLVM's exact **hexadecimal** double form
+   `0x<16 hex>` (the IEEE-754 bit pattern) — always valid and bit-exact.
+
+**Verified by RUNNING** on real `clang`: ALGOL 60 `real` programs
+(`r := 2.5 * 2.0; if r = 5.0 …` → exit 42; `r := 7.0 / 2.0; if r < 4.0 …` →
+exit 1) now execute on the LLVM column of `lang-aot`'s `lang_matrix.rs`, joining
+the VM and JIT. Four new structural tests (`double` slot, hex literal, float-cmp
+zext-to-i64, integer-program-unaffected). Integer programs are byte-identical
+(the float path is taken only on a float `type_hint`).
+
+**Still pending (E3):** `f64` *parameters* reassigned across a back-edge stay
+SSA (`param_slot_compatible` excludes floats — a separate, unexercised case);
+the wasm/jvm backends need the same slot fix (E3-codegen-slots); native + CLR
+need FP emission (E3-native / E3-clr).
+
 ## [0.12.0] — 2026-06-16 — bitwise NOT (`not`) op
 
 ### Added — `not` (synthesised as `xor x, -1`)
