@@ -43,9 +43,12 @@ use symbolic_vm::backend::{handler_fn, Handler};
 use symbolic_vm::vm::substitute;
 use symbolic_vm::VM;
 
-use symbolic_ir::{apply, flt, int, sym, IRApply, IRNode, ADD, ASSIGN, LIST, MUL};
+use symbolic_ir::{apply, flt, int, str_node, sym, IRApply, IRNode, ADD, ASSIGN, LIST, MUL};
+
+use cas_pattern_matching::nodes::RULE as PM_RULE;
 
 use crate::lower::build_canonical_application;
+use crate::printer::print_wolfram;
 
 /// Maximum number of elements a single `Range[…]` may materialise.
 ///
@@ -71,6 +74,22 @@ pub const MAX_RANGE_LENGTH: usize = 1_000_000;
 /// size-non-increasing and need no separate cap. Shares `MAX_RANGE_LENGTH`'s
 /// value (1,000,000) — already far beyond any interactive list.
 pub const MAX_LIST_LENGTH: usize = MAX_RANGE_LENGTH;
+
+/// Maximum number of **characters** a W-12 string-*growing* built-in
+/// (`StringJoin`, `StringReplace`) may materialise into its result.
+///
+/// `StringJoin` sums its argument lengths and `StringReplace` can grow the string
+/// per match when the replacement is longer than the pattern — both are the W-12
+/// analogue of the W-9 `Join`/`Flatten` growth surface. The inputs are themselves
+/// bounded by the W-4 input/token caps, so this guard is defensive: a result that
+/// would exceed this bound is left unevaluated rather than allocated. The running
+/// length is accumulated in `usize` with `checked_add` so a crafted chain cannot
+/// overflow the count. The other W-12 heads are size-non-increasing
+/// (`StringTake`, `StringDrop`, `StringLength`) or bounded by their already-
+/// materialised input (`StringSplit`, `Characters`, which additionally cap their
+/// element count at [`MAX_LIST_LENGTH`]). Shares `MAX_RANGE_LENGTH`'s value
+/// (1,000,000 chars) — already far beyond any interactive string.
+pub const MAX_STRING_LENGTH: usize = MAX_RANGE_LENGTH;
 
 /// Build the W-5 Wolfram built-in handler table.
 ///
@@ -132,6 +151,22 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     // builtin). It is the only new builtin W-11 needs; the pure-function support
     // itself lives in the lowering + the backend rewrite rule, not here.
     m.insert("Mod".to_string(), handler_fn(mod_handler));
+    // W-12 string builtins. All *eager* (non-held) heads — their string/expr
+    // arguments arrive evaluated, exactly like the W-5/W-9 list builtins — so they
+    // are *not* added to the `WolframBackend` held set. They operate on Unicode by
+    // **character** (`chars()`, char indices — never byte slicing) and follow the
+    // same fail-soft contract: a non-string arg or out-of-range index leaves the
+    // form unevaluated rather than panicking. `StringSplit`/`Characters` build a
+    // `List` (reusing the W-9 list machinery + `MAX_LIST_LENGTH` cap); `ToString`
+    // reuses the W-4 `print_wolfram` printer.
+    m.insert("StringJoin".to_string(), handler_fn(string_join_handler));
+    m.insert("StringLength".to_string(), handler_fn(string_length_handler));
+    m.insert("StringTake".to_string(), handler_fn(string_take_handler));
+    m.insert("StringDrop".to_string(), handler_fn(string_drop_handler));
+    m.insert("StringSplit".to_string(), handler_fn(string_split_handler));
+    m.insert("StringReplace".to_string(), handler_fn(string_replace_handler));
+    m.insert("ToString".to_string(), handler_fn(to_string_handler));
+    m.insert("Characters".to_string(), handler_fn(characters_handler));
     m
 }
 
@@ -1193,6 +1228,376 @@ fn mod_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     }
     // r is now in (-|b|, |b|) with the divisor's sign, hence within i64 range.
     int(r as i64)
+}
+
+// ---------------------------------------------------------------------------
+// W-12 string builtins
+// ---------------------------------------------------------------------------
+//
+// Every handler in this block operates on Unicode **by character**: it reads the
+// argument as a `&str` (via `as_str`), then — for any indexing or slicing —
+// collects `s.chars()` into a `Vec<char>` and indexes *that*. No byte index is
+// ever taken, so a multi-byte character (`é`, an emoji) counts as exactly one
+// position and a slice can never fall in the middle of a UTF-8 sequence (the
+// `byte index N is not a char boundary` panic is structurally impossible). Like
+// every W-5/W-9 builtin, an argument of the wrong shape (a non-string, an
+// out-of-range or non-integer index) leaves the form **unevaluated** rather than
+// panicking — the Wolfram "I can't reduce this" answer.
+
+/// Read a `Str` node as a `&str`, or `None` for any non-string node. The string
+/// analogue of [`as_i64`].
+fn as_str(node: &IRNode) -> Option<&str> {
+    match node {
+        IRNode::Str(s) => Some(s.as_str()),
+        _ => None,
+    }
+}
+
+/// `StringJoin["a", "b", "c"]` → `"abc"`. Every argument must be a string; if any
+/// is not, the whole form is left unevaluated (Wolfram's `StringJoin` requires
+/// string arguments). Zero or one argument is fine (`StringJoin[]` → `""`,
+/// `StringJoin["x"]` → `"x"`).
+///
+/// **DoS-capped**: the combined character length is bounded by
+/// [`MAX_STRING_LENGTH`] — the running total is accumulated with `checked_add`
+/// (so a crafted chain cannot overflow the count) and an over-cap join is left
+/// unevaluated *before* any allocation.
+fn string_join_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    // First pass: every argument must be a string, and the combined character
+    // length must stay within the cap — checked before building the output.
+    let mut parts: Vec<&str> = Vec::with_capacity(expr.args.len());
+    let mut total: usize = 0;
+    for arg in &expr.args {
+        let Some(s) = as_str(arg) else {
+            return unevaluated(expr);
+        };
+        total = match total.checked_add(s.chars().count()) {
+            Some(t) if t <= MAX_STRING_LENGTH => t,
+            // Over the cap (or a usize overflow) — refuse, leave unevaluated.
+            _ => return unevaluated(expr),
+        };
+        parts.push(s);
+    }
+    str_node(parts.concat())
+}
+
+/// `StringLength["abc"]` → `3`. Counts **characters**, not bytes, so
+/// `StringLength["héllo"]` is `5`. A non-string argument or the wrong arity leaves
+/// the form unevaluated.
+fn string_length_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(s) = as_str(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    int(s.chars().count() as i64)
+}
+
+/// `StringTake["hello", 3]` → `"hel"` (first 3 chars); `StringTake["hello", -2]`
+/// → `"lo"` (last 2); `StringTake["hello", {2, 4}]` → `"ell"` (1-based inclusive
+/// character range). All indices are **character** indices, never bytes, so
+/// `StringTake["héllo", 2]` → `"hé"` and a multi-byte boundary is never split.
+///
+/// Out of range (`|n|` exceeds the length, or a `{m, n}` span outside `1..=len`),
+/// a non-integer spec, an `i64::MIN` index, or a non-string first argument all
+/// leave the form **unevaluated** rather than panicking.
+fn string_take_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(s) = as_str(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    // Collect once into a Vec<char> so every index below is a *character* index.
+    let chars: Vec<char> = s.chars().collect();
+    let len = chars.len();
+
+    // Form 1: StringTake[s, {m, n}] — a 1-based inclusive character range.
+    if let Some([m, n]) = list_pair(&expr.args[1]) {
+        // 1-based, inclusive. Require 1 <= m <= n <= len; anything else is out of
+        // range and stays unevaluated. `m`/`n` are i64 so a crafted i64::MIN /
+        // i64::MAX cannot overflow a usize conversion — we compare in i64 first.
+        if m < 1 || n < m || (n as i128) > len as i128 {
+            return unevaluated(expr);
+        }
+        // Safe: 1 <= m <= n <= len, so (m-1) and n are valid usize indices.
+        let lo = (m - 1) as usize;
+        let hi = n as usize;
+        return str_node(chars[lo..hi].iter().collect::<String>());
+    }
+
+    // Form 2: StringTake[s, n] — first n chars (n >= 0) or last |n| (n < 0).
+    let Some(n) = as_i64(&expr.args[1]) else {
+        return unevaluated(expr);
+    };
+    // Compute the magnitude in i128 so `i64::MIN` (whose i64 abs panics/overflows)
+    // is handled — its magnitude is `2^63`, far larger than any real `len`, so it
+    // simply falls out of range.
+    let mag = (n as i128).unsigned_abs();
+    if mag > len as u128 {
+        return unevaluated(expr); // |n| exceeds the length — out of range.
+    }
+    let take = mag as usize; // safe: take <= len
+    let slice: String = if n >= 0 {
+        chars[..take].iter().collect() // first `take` chars
+    } else {
+        chars[len - take..].iter().collect() // last `take` chars
+    };
+    str_node(slice)
+}
+
+/// `StringDrop["hello", 2]` → `"llo"` (drop the first 2 chars); `n < 0` drops the
+/// last `|n|` chars (`StringDrop["hello", -2]` → `"hel"`). **Character** indices,
+/// never bytes. Out of range / non-integer / non-string leaves it unevaluated.
+fn string_drop_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(s) = as_str(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    let Some(n) = as_i64(&expr.args[1]) else {
+        return unevaluated(expr);
+    };
+    let chars: Vec<char> = s.chars().collect();
+    let len = chars.len();
+    // i128 magnitude so i64::MIN does not overflow an i64 abs.
+    let mag = (n as i128).unsigned_abs();
+    if mag > len as u128 {
+        return unevaluated(expr); // dropping more than exists — out of range.
+    }
+    let drop = mag as usize; // safe: drop <= len
+    let slice: String = if n >= 0 {
+        chars[drop..].iter().collect() // drop the first `drop` chars
+    } else {
+        chars[..len - drop].iter().collect() // drop the last `drop` chars
+    };
+    str_node(slice)
+}
+
+/// `StringSplit["a b  c"]` → `{"a", "b", "c"}` (split on runs of whitespace,
+/// dropping empty fields); `StringSplit["a,b,c", ","]` → `{"a", "b", "c"}` (split
+/// on a literal string separator). Returns a `List` of strings, reusing the W-9
+/// list machinery. A non-string argument (or non-string separator) leaves the form
+/// unevaluated.
+///
+/// **DoS-capped**: the field count is bounded by [`MAX_LIST_LENGTH`] (it cannot
+/// exceed the input length anyway, itself W-4-input-capped; the check is
+/// defensive and mirrors the W-9 list builders).
+fn string_split_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    // Form 1: StringSplit[s] — split on whitespace, dropping empty fields.
+    let fields: Vec<&str> = match expr.args.len() {
+        1 => {
+            let Some(s) = as_str(&expr.args[0]) else {
+                return unevaluated(expr);
+            };
+            // `split_whitespace` already collapses runs and drops leading/trailing
+            // empties — exactly Wolfram's `StringSplit[s]` whitespace behaviour.
+            s.split_whitespace().collect()
+        }
+        // Form 2: StringSplit[s, sep] — split on a literal string separator.
+        2 => {
+            let (Some(s), Some(sep)) = (as_str(&expr.args[0]), as_str(&expr.args[1]))
+            else {
+                return unevaluated(expr);
+            };
+            if sep.is_empty() {
+                // An empty separator has no well-defined non-overlapping split;
+                // leave it unevaluated rather than guess (and avoid a per-char
+                // explosion).
+                return unevaluated(expr);
+            }
+            // Wolfram's StringSplit drops empty fields produced by adjacent /
+            // leading / trailing separators (`StringSplit[",a,", ","]` → `{"a"}`).
+            s.split(sep).filter(|f| !f.is_empty()).collect()
+        }
+        _ => return unevaluated(expr),
+    };
+    if fields.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
+    }
+    apply(sym(LIST), fields.into_iter().map(str_node).collect())
+}
+
+/// `StringReplace["banana", "a" -> "o"]` → `"bonono"`. Replaces **every**
+/// non-overlapping literal occurrence of the pattern with the replacement,
+/// scanning left-to-right and advancing past each match by the pattern length
+/// (so `"a" -> "aa"` does not re-scan the inserted text — the scan is linear and
+/// terminates). Accepts a single `a -> b` rule or a `{r1, r2, …}` list of rules
+/// applied in sequence (each rule's full pass runs before the next).
+///
+/// **DoS-guarded** on two axes: an **empty pattern** (`"" -> x`) is rejected and
+/// left unevaluated (it would match at every position — unbounded / quadratic
+/// expansion), and the output length is bounded by [`MAX_STRING_LENGTH`] (a
+/// replacement longer than its pattern grows the string per match). A non-string
+/// subject, a malformed rule, or a non-string pattern/replacement leaves the form
+/// unevaluated.
+fn string_replace_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(subject) = as_str(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    // The second argument is either a single Rule(a, b) or a List of Rules.
+    let rules: Vec<(&str, &str)> = match rule_pairs(&expr.args[1]) {
+        Some(rs) => rs,
+        None => return unevaluated(expr),
+    };
+    // An empty pattern in *any* rule is rejected — it would match between every
+    // character and never advance, an unbounded expansion / non-termination risk.
+    if rules.iter().any(|(pat, _)| pat.is_empty()) {
+        return unevaluated(expr);
+    }
+    let mut current = subject.to_string();
+    for (pat, rep) in rules {
+        match replace_all_literal(&current, pat, rep) {
+            Some(next) => current = next,
+            // Over the output cap — refuse the whole replacement, unevaluated.
+            None => return unevaluated(expr),
+        }
+    }
+    str_node(current)
+}
+
+/// `ToString[expr]` → the Wolfram surface form of `expr` as a string, reusing the
+/// W-4 [`print_wolfram`] printer. A **bare string** renders as its raw content
+/// (no surrounding quotes), so `ToString["hi"]` → `"hi"` and `ToString[123]` →
+/// `"123"`; any other expr renders exactly as the printer would show it
+/// (`ToString[1 + x]` → `"1 + x"`). Always reduces (it never fails) for arity 1;
+/// the wrong arity stays unevaluated.
+fn to_string_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    // A bare top-level string renders as its raw content (no quotes) — matching
+    // Wolfram's `ToString["hi"]` → hi. Inside a larger structure the printer's
+    // quoted form is kept (an intentional simplification, see spec §15.3).
+    let text = match &expr.args[0] {
+        IRNode::Str(s) => s.clone(),
+        other => print_wolfram(other),
+    };
+    str_node(text)
+}
+
+/// `Characters["ab"]` → `{"a", "b"}` — the list of single-character strings.
+/// Reuses the W-9 list machinery; a non-string argument leaves it unevaluated.
+///
+/// **DoS-capped**: the element count equals the input character count, itself
+/// W-4-input-capped; a defensive [`MAX_LIST_LENGTH`] check mirrors the W-9 list
+/// builders.
+fn characters_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(s) = as_str(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    let chars: Vec<char> = s.chars().collect();
+    if chars.len() > MAX_LIST_LENGTH {
+        return unevaluated(expr);
+    }
+    apply(
+        sym(LIST),
+        chars.into_iter().map(|c| str_node(c.to_string())).collect(),
+    )
+}
+
+// --- W-12 string helpers ----------------------------------------------------
+
+/// If `node` is a two-element `List(a, b)` of integers, return `[a, b]`. Used by
+/// `StringTake[s, {m, n}]` to read the 1-based range spec. Any other shape
+/// (wrong length, non-integer elements) gives `None`.
+fn list_pair(node: &IRNode) -> Option<[i64; 2]> {
+    let elems = list_elements(node)?;
+    if elems.len() != 2 {
+        return None;
+    }
+    Some([as_i64(&elems[0])?, as_i64(&elems[1])?])
+}
+
+/// Read the rule argument of `StringReplace` as a list of `(pattern, replacement)`
+/// string pairs. Accepts a single `Rule(a, b)` (→ one pair) or a `List` of
+/// `Rule(a, b)` nodes (→ many pairs). Any other shape — a non-rule, a rule whose
+/// sides are not both strings, or a list containing a non-rule — gives `None` so
+/// the caller leaves the form unevaluated.
+fn rule_pairs(node: &IRNode) -> Option<Vec<(&str, &str)>> {
+    // A single Rule.
+    if let Some(pair) = single_rule_pair(node) {
+        return Some(vec![pair]);
+    }
+    // A list of Rules.
+    if let Some(elems) = list_node_ref(node) {
+        let mut out = Vec::with_capacity(elems.len());
+        for e in elems {
+            out.push(single_rule_pair(e)?);
+        }
+        return Some(out);
+    }
+    None
+}
+
+/// Borrow the elements of a `List(...)` node without cloning (unlike
+/// [`list_elements`], which clones). Returns `None` for a non-list node.
+fn list_node_ref(node: &IRNode) -> Option<&[IRNode]> {
+    match node {
+        IRNode::Apply(app) if is_list(&app.head) => Some(&app.args),
+        _ => None,
+    }
+}
+
+/// Read a single `Rule(a, b)` whose both sides are strings as a `(a, b)` pair, or
+/// `None` for any other shape. Borrows from `node` (no clone).
+fn single_rule_pair(node: &IRNode) -> Option<(&str, &str)> {
+    let IRNode::Apply(app) = node else {
+        return None;
+    };
+    let is_rule = matches!(&app.head, IRNode::Symbol(s) if s == PM_RULE);
+    if !is_rule || app.args.len() != 2 {
+        return None;
+    }
+    Some((as_str(&app.args[0])?, as_str(&app.args[1])?))
+}
+
+/// Replace every **non-overlapping** literal occurrence of `pat` in `s` with
+/// `rep`, scanning left-to-right and advancing past each match by `pat.len()`
+/// (so an inserted copy of the pattern is never re-scanned — the pass is linear
+/// and terminates even for `"a" -> "aa"`). The caller guarantees `pat` is
+/// non-empty.
+///
+/// Returns `None` if the output would exceed [`MAX_STRING_LENGTH`] **characters**,
+/// so an amplifying replacement (`rep` longer than `pat`) cannot be used to aim
+/// for an unbounded allocation. Operates on byte offsets *internally* (via
+/// `str::find`, which returns valid char-boundary offsets for a literal needle),
+/// but the size guard counts characters to stay consistent with the rest of W-12.
+fn replace_all_literal(s: &str, pat: &str, rep: &str) -> Option<String> {
+    let mut out = String::new();
+    let mut char_count: usize = 0;
+    let mut rest = s;
+    // `str::find` on a literal &str needle returns a byte offset that is always a
+    // valid char boundary (the needle's bytes match a UTF-8-aligned subslice), so
+    // the byte slicing below can never split a multi-byte char.
+    while let Some(pos) = rest.find(pat) {
+        let head = &rest[..pos];
+        char_count = char_count
+            .checked_add(head.chars().count())?
+            .checked_add(rep.chars().count())?;
+        if char_count > MAX_STRING_LENGTH {
+            return None;
+        }
+        out.push_str(head);
+        out.push_str(rep);
+        // Advance past the match. `pat` is non-empty, so this strictly shrinks
+        // `rest` every iteration — the loop always terminates.
+        rest = &rest[pos + pat.len()..];
+    }
+    char_count = char_count.checked_add(rest.chars().count())?;
+    if char_count > MAX_STRING_LENGTH {
+        return None;
+    }
+    out.push_str(rest);
+    Some(out)
 }
 
 // ---------------------------------------------------------------------------
@@ -2333,5 +2738,347 @@ mod tests {
             run_wolfram("Fold", vec![sym("f"), int(0), list(vec![int(1), int(2)])]),
             outer
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-12 string builtins
+    // -----------------------------------------------------------------------
+
+    /// Build a `Str` node — a terse test helper.
+    fn s(text: &str) -> IRNode {
+        str_node(text)
+    }
+
+    /// Build a `Rule(a, b)` over two strings (for `StringReplace` tests).
+    fn rule(a: &str, b: &str) -> IRNode {
+        apply(sym(PM_RULE), vec![s(a), s(b)])
+    }
+
+    #[test]
+    fn string_length_counts_characters() {
+        assert_eq!(run("StringLength", vec![s("abc")]), int(3));
+        assert_eq!(run("StringLength", vec![s("")]), int(0));
+        // Multi-byte: "héllo" is 5 chars / 6 bytes — must count 5.
+        assert_eq!(run("StringLength", vec![s("héllo")]), int(5));
+        // An emoji is a single char (4 bytes) — counts as 1.
+        assert_eq!(run("StringLength", vec![s("a😀b")]), int(3));
+    }
+
+    #[test]
+    fn string_length_of_non_string_stays_unevaluated() {
+        assert_eq!(
+            run("StringLength", vec![int(123)]),
+            apply(sym("StringLength"), vec![int(123)])
+        );
+    }
+
+    #[test]
+    fn string_join_concatenates() {
+        assert_eq!(run("StringJoin", vec![s("a"), s("b"), s("c")]), s("abc"));
+        // Zero / one argument is fine.
+        assert_eq!(run("StringJoin", vec![]), s(""));
+        assert_eq!(run("StringJoin", vec![s("x")]), s("x"));
+        // Unicode parts concatenate without splitting a char.
+        assert_eq!(run("StringJoin", vec![s("hé"), s("llo")]), s("héllo"));
+    }
+
+    #[test]
+    fn string_join_with_a_non_string_stays_unevaluated() {
+        assert_eq!(
+            run("StringJoin", vec![s("a"), int(1)]),
+            apply(sym("StringJoin"), vec![s("a"), int(1)])
+        );
+    }
+
+    #[test]
+    fn string_take_first_n_and_last_n() {
+        assert_eq!(run("StringTake", vec![s("hello"), int(3)]), s("hel"));
+        assert_eq!(run("StringTake", vec![s("hello"), int(-2)]), s("lo"));
+        assert_eq!(run("StringTake", vec![s("hello"), int(0)]), s(""));
+        // Taking the whole string both ways.
+        assert_eq!(run("StringTake", vec![s("hello"), int(5)]), s("hello"));
+        assert_eq!(run("StringTake", vec![s("hello"), int(-5)]), s("hello"));
+    }
+
+    #[test]
+    fn string_take_range_is_one_based_inclusive() {
+        assert_eq!(
+            run("StringTake", vec![s("hello"), list(vec![int(2), int(4)])]),
+            s("ell")
+        );
+        // Single-character range {m, m}.
+        assert_eq!(
+            run("StringTake", vec![s("hello"), list(vec![int(1), int(1)])]),
+            s("h")
+        );
+        // Full range.
+        assert_eq!(
+            run("StringTake", vec![s("abc"), list(vec![int(1), int(3)])]),
+            s("abc")
+        );
+    }
+
+    #[test]
+    fn string_take_is_unicode_by_char() {
+        // "héllo" — taking 2 chars must give "hé" (3 bytes), never split the é.
+        assert_eq!(run("StringTake", vec![s("héllo"), int(2)]), s("hé"));
+        // A range spanning the multi-byte char.
+        assert_eq!(
+            run("StringTake", vec![s("héllo"), list(vec![int(1), int(2)])]),
+            s("hé")
+        );
+        // Last 3 of "a😀b😀" — must not split the emoji.
+        assert_eq!(run("StringTake", vec![s("a😀b"), int(-2)]), s("😀b"));
+    }
+
+    #[test]
+    fn string_take_out_of_range_or_malformed_stays_unevaluated() {
+        // |n| exceeds the length.
+        assert_eq!(
+            run("StringTake", vec![s("hi"), int(9)]),
+            apply(sym("StringTake"), vec![s("hi"), int(9)])
+        );
+        // i64::MIN index must not panic — just unevaluated.
+        assert_eq!(
+            run("StringTake", vec![s("hi"), int(i64::MIN)]),
+            apply(sym("StringTake"), vec![s("hi"), int(i64::MIN)])
+        );
+        // Range out of bounds.
+        assert_eq!(
+            run("StringTake", vec![s("hi"), list(vec![int(1), int(9)])]),
+            apply(sym("StringTake"), vec![s("hi"), list(vec![int(1), int(9)])])
+        );
+        // Inverted range (n < m).
+        assert_eq!(
+            run("StringTake", vec![s("hello"), list(vec![int(4), int(2)])]),
+            apply(sym("StringTake"), vec![s("hello"), list(vec![int(4), int(2)])])
+        );
+        // Non-string subject.
+        assert_eq!(
+            run("StringTake", vec![int(5), int(1)]),
+            apply(sym("StringTake"), vec![int(5), int(1)])
+        );
+    }
+
+    #[test]
+    fn string_drop_first_and_last() {
+        assert_eq!(run("StringDrop", vec![s("hello"), int(2)]), s("llo"));
+        assert_eq!(run("StringDrop", vec![s("hello"), int(-2)]), s("hel"));
+        assert_eq!(run("StringDrop", vec![s("hello"), int(0)]), s("hello"));
+        // Dropping everything.
+        assert_eq!(run("StringDrop", vec![s("hello"), int(5)]), s(""));
+        // Unicode: dropping 1 char from "héllo" → "éllo".
+        assert_eq!(run("StringDrop", vec![s("héllo"), int(1)]), s("éllo"));
+    }
+
+    #[test]
+    fn string_drop_out_of_range_or_malformed_stays_unevaluated() {
+        assert_eq!(
+            run("StringDrop", vec![s("hi"), int(9)]),
+            apply(sym("StringDrop"), vec![s("hi"), int(9)])
+        );
+        // i64::MIN must not panic.
+        assert_eq!(
+            run("StringDrop", vec![s("hi"), int(i64::MIN)]),
+            apply(sym("StringDrop"), vec![s("hi"), int(i64::MIN)])
+        );
+        assert_eq!(
+            run("StringDrop", vec![int(5), int(1)]),
+            apply(sym("StringDrop"), vec![int(5), int(1)])
+        );
+    }
+
+    #[test]
+    fn string_split_on_whitespace() {
+        assert_eq!(
+            run("StringSplit", vec![s("a b  c")]),
+            list(vec![s("a"), s("b"), s("c")])
+        );
+        // Leading / trailing whitespace is dropped.
+        assert_eq!(
+            run("StringSplit", vec![s("  a  b  ")]),
+            list(vec![s("a"), s("b")])
+        );
+        // No whitespace → a single field.
+        assert_eq!(run("StringSplit", vec![s("abc")]), list(vec![s("abc")]));
+        // All whitespace → empty list.
+        assert_eq!(run("StringSplit", vec![s("   ")]), list(vec![]));
+    }
+
+    #[test]
+    fn string_split_on_a_separator() {
+        assert_eq!(
+            run("StringSplit", vec![s("a,b,c"), s(",")]),
+            list(vec![s("a"), s("b"), s("c")])
+        );
+        // Adjacent / leading / trailing separators drop empty fields.
+        assert_eq!(
+            run("StringSplit", vec![s(",a,,b,"), s(",")]),
+            list(vec![s("a"), s("b")])
+        );
+        // A multi-character separator.
+        assert_eq!(
+            run("StringSplit", vec![s("a::b::c"), s("::")]),
+            list(vec![s("a"), s("b"), s("c")])
+        );
+    }
+
+    #[test]
+    fn string_split_malformed_stays_unevaluated() {
+        // Empty separator is rejected.
+        assert_eq!(
+            run("StringSplit", vec![s("abc"), s("")]),
+            apply(sym("StringSplit"), vec![s("abc"), s("")])
+        );
+        // Non-string subject.
+        assert_eq!(
+            run("StringSplit", vec![int(5)]),
+            apply(sym("StringSplit"), vec![int(5)])
+        );
+        // Non-string separator.
+        assert_eq!(
+            run("StringSplit", vec![s("a"), int(1)]),
+            apply(sym("StringSplit"), vec![s("a"), int(1)])
+        );
+    }
+
+    #[test]
+    fn string_replace_all_occurrences() {
+        assert_eq!(
+            run("StringReplace", vec![s("banana"), rule("a", "o")]),
+            s("bonono")
+        );
+        // Multi-character pattern.
+        assert_eq!(
+            run("StringReplace", vec![s("aXbXc"), rule("X", "-")]),
+            s("a-b-c")
+        );
+        // No match → unchanged.
+        assert_eq!(
+            run("StringReplace", vec![s("abc"), rule("z", "Q")]),
+            s("abc")
+        );
+        // Amplifying replacement (rep longer than pat) — non-overlapping scan does
+        // NOT re-scan the inserted text, so "a"->"aa" on "aa" gives "aaaa", not ∞.
+        assert_eq!(
+            run("StringReplace", vec![s("aa"), rule("a", "aa")]),
+            s("aaaa")
+        );
+    }
+
+    #[test]
+    fn string_replace_accepts_a_list_of_rules() {
+        // Rules apply in sequence: "a"->"b" then "b"->"c" turns "a" into "c".
+        assert_eq!(
+            run(
+                "StringReplace",
+                vec![s("abc"), list(vec![rule("a", "X"), rule("c", "Y")])]
+            ),
+            s("XbY")
+        );
+    }
+
+    #[test]
+    fn string_replace_empty_pattern_is_rejected() {
+        // "" -> x would match between every char (unbounded) — left unevaluated.
+        assert_eq!(
+            run("StringReplace", vec![s("abc"), rule("", "Z")]),
+            apply(sym("StringReplace"), vec![s("abc"), rule("", "Z")])
+        );
+    }
+
+    #[test]
+    fn string_replace_malformed_stays_unevaluated() {
+        // Non-string subject.
+        assert_eq!(
+            run("StringReplace", vec![int(5), rule("a", "b")]),
+            apply(sym("StringReplace"), vec![int(5), rule("a", "b")])
+        );
+        // Second arg is not a rule.
+        assert_eq!(
+            run("StringReplace", vec![s("abc"), int(1)]),
+            apply(sym("StringReplace"), vec![s("abc"), int(1)])
+        );
+        // A rule whose sides are not strings.
+        let bad = apply(sym(PM_RULE), vec![int(1), int(2)]);
+        assert_eq!(
+            run("StringReplace", vec![s("abc"), bad.clone()]),
+            apply(sym("StringReplace"), vec![s("abc"), bad])
+        );
+    }
+
+    #[test]
+    fn string_replace_is_unicode_safe() {
+        // Replacing a multi-byte char must not split a UTF-8 boundary.
+        assert_eq!(
+            run("StringReplace", vec![s("héllo"), rule("é", "e")]),
+            s("hello")
+        );
+        assert_eq!(
+            run("StringReplace", vec![s("a😀b"), rule("😀", "X")]),
+            s("aXb")
+        );
+    }
+
+    #[test]
+    fn to_string_renders_surface_form() {
+        // A bare number renders without quotes.
+        assert_eq!(run("ToString", vec![int(123)]), s("123"));
+        // A bare string renders as its raw content (no surrounding quotes).
+        assert_eq!(run("ToString", vec![s("hi")]), s("hi"));
+        // A symbol.
+        assert_eq!(run("ToString", vec![sym("x")]), s("x"));
+        // A compound expression reuses the printer.
+        assert_eq!(
+            run("ToString", vec![apply(sym(ADD), vec![sym("x"), int(1)])]),
+            s("x + 1")
+        );
+        // A list.
+        assert_eq!(
+            run("ToString", vec![list(vec![int(1), int(2)])]),
+            s("{1, 2}")
+        );
+    }
+
+    #[test]
+    fn to_string_wrong_arity_stays_unevaluated() {
+        assert_eq!(
+            run("ToString", vec![int(1), int(2)]),
+            apply(sym("ToString"), vec![int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn characters_splits_into_single_char_strings() {
+        assert_eq!(run("Characters", vec![s("ab")]), list(vec![s("a"), s("b")]));
+        assert_eq!(run("Characters", vec![s("")]), list(vec![]));
+        // Unicode: each multi-byte char is one element.
+        assert_eq!(
+            run("Characters", vec![s("héllo")]),
+            list(vec![s("h"), s("é"), s("l"), s("l"), s("o")])
+        );
+        assert_eq!(
+            run("Characters", vec![s("a😀")]),
+            list(vec![s("a"), s("😀")])
+        );
+    }
+
+    #[test]
+    fn characters_of_non_string_stays_unevaluated() {
+        assert_eq!(
+            run("Characters", vec![int(5)]),
+            apply(sym("Characters"), vec![int(5)])
+        );
+    }
+
+    #[test]
+    fn string_join_over_cap_stays_unevaluated() {
+        // Two strings whose combined length exceeds MAX_STRING_LENGTH are refused.
+        // Build via repeat so the test stays cheap (just over half the cap each).
+        let half = "a".repeat(MAX_STRING_LENGTH / 2 + 1);
+        let a = s(&half);
+        let b = s(&half);
+        let result = run("StringJoin", vec![a.clone(), b.clone()]);
+        assert_eq!(result, apply(sym("StringJoin"), vec![a, b]));
     }
 }

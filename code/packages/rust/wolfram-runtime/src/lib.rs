@@ -73,7 +73,7 @@ mod lower;
 mod printer;
 
 pub use backend::WolframBackend;
-pub use builtins::{MAX_LIST_LENGTH, MAX_RANGE_LENGTH};
+pub use builtins::{MAX_LIST_LENGTH, MAX_RANGE_LENGTH, MAX_STRING_LENGTH};
 pub use lower::{LowerError, REPLACE_ALL};
 pub use printer::print_wolfram;
 
@@ -793,5 +793,78 @@ mod tests {
         // worker stack — the per-statement token cap + the eval stack bound it.
         // Nest a pure function 50 times; the result is well-defined (50).
         assert_eq!(eval("Nest[# + 1 &, 0, 50]\n").unwrap(), "Out[1]= 50\n");
+    }
+
+    // --- W-12 string builtins, end-to-end through the full lex→lower→eval→print
+    //     pipeline (the unit tests in builtins.rs exercise the handlers directly;
+    //     these prove the surface syntax parses and the printer renders the
+    //     string results with quotes). ----------------------------------------
+
+    #[test]
+    fn w12_string_builtins_end_to_end() {
+        assert_eq!(eval("StringLength[\"abc\"]\n").unwrap(), "Out[1]= 3\n");
+        assert_eq!(
+            eval("StringJoin[\"a\", \"b\", \"c\"]\n").unwrap(),
+            "Out[1]= \"abc\"\n"
+        );
+        assert_eq!(
+            eval("StringTake[\"hello\", 3]\n").unwrap(),
+            "Out[1]= \"hel\"\n"
+        );
+        assert_eq!(
+            eval("StringTake[\"hello\", {2, 4}]\n").unwrap(),
+            "Out[1]= \"ell\"\n"
+        );
+        assert_eq!(
+            eval("StringTake[\"hello\", -2]\n").unwrap(),
+            "Out[1]= \"lo\"\n"
+        );
+        assert_eq!(
+            eval("StringDrop[\"hello\", 2]\n").unwrap(),
+            "Out[1]= \"llo\"\n"
+        );
+        assert_eq!(
+            eval("StringSplit[\"a,b,c\", \",\"]\n").unwrap(),
+            "Out[1]= {\"a\", \"b\", \"c\"}\n"
+        );
+        assert_eq!(
+            eval("StringSplit[\"a b  c\"]\n").unwrap(),
+            "Out[1]= {\"a\", \"b\", \"c\"}\n"
+        );
+        assert_eq!(
+            eval("StringReplace[\"banana\", \"a\" -> \"o\"]\n").unwrap(),
+            "Out[1]= \"bonono\"\n"
+        );
+        assert_eq!(eval("ToString[123]\n").unwrap(), "Out[1]= \"123\"\n");
+        assert_eq!(
+            eval("Characters[\"ab\"]\n").unwrap(),
+            "Out[1]= {\"a\", \"b\"}\n"
+        );
+    }
+
+    #[test]
+    fn w12_unicode_end_to_end() {
+        // A multi-byte char counts as one and is never split.
+        assert_eq!(eval("StringLength[\"héllo\"]\n").unwrap(), "Out[1]= 5\n");
+        assert_eq!(
+            eval("StringTake[\"héllo\", 2]\n").unwrap(),
+            "Out[1]= \"hé\"\n"
+        );
+    }
+
+    #[test]
+    fn w12_malformed_input_stays_unevaluated_and_session_survives() {
+        // A non-string arg and an out-of-range index both echo back unevaluated,
+        // and the session keeps working afterwards (no panic).
+        let mut s = WolframSession::new();
+        assert_eq!(
+            s.feed("StringLength[123]\n").unwrap(),
+            "Out[1]= StringLength[123]\n"
+        );
+        assert_eq!(
+            s.feed("StringTake[\"hi\", 9]\n").unwrap(),
+            "Out[2]= StringTake[\"hi\", 9]\n"
+        );
+        assert_eq!(s.feed("2 + 2\n").unwrap(), "Out[3]= 4\n");
     }
 }
