@@ -167,6 +167,22 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("StringReplace".to_string(), handler_fn(string_replace_handler));
     m.insert("ToString".to_string(), handler_fn(to_string_handler));
     m.insert("Characters".to_string(), handler_fn(characters_handler));
+
+    // W-13 list set/multiset operations (MA04 §16). All ordinary `Head[args]`
+    // forms — no grammar change. They reuse the W-9 list machinery
+    // (`list_elements`, `apply(sym(LIST), …)`, `MAX_LIST_LENGTH`) and the W-9
+    // canonical-order comparator `canonical_cmp` both to sort the unique outputs
+    // of `Union`/`Intersection`/`Complement` and to define element-equality
+    // (`same_element`). `Count` (W-9, predicate form) is left as-is.
+    m.insert("Union".to_string(), handler_fn(union_handler));
+    m.insert("Intersection".to_string(), handler_fn(intersection_handler));
+    m.insert("Complement".to_string(), handler_fn(complement_handler));
+    m.insert(
+        "DeleteDuplicates".to_string(),
+        handler_fn(delete_duplicates_handler),
+    );
+    m.insert("MemberQ".to_string(), handler_fn(member_q_handler));
+    m.insert("Tally".to_string(), handler_fn(tally_handler));
     m
 }
 
@@ -996,6 +1012,247 @@ fn total_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         acc = vm.eval(apply(sym(ADD), vec![acc, elem]));
     }
     acc
+}
+
+// ---------------------------------------------------------------------------
+// Set / multiset operations — Union / Intersection / Complement /
+// DeleteDuplicates / MemberQ / Tally (W-13)
+// ---------------------------------------------------------------------------
+//
+// The set-theoretic list vocabulary, lowered onto the *same* substrate as W-9:
+// `list_elements` to unwrap a `List(...)`, `apply(sym(LIST), …)` to rebuild one,
+// the `MAX_LIST_LENGTH` DoS cap, and — crucially — the W-9 canonical-order
+// comparator `canonical_cmp` reused *twice*: once to sort the unique outputs of
+// `Union`/`Intersection`/`Complement`, and once to define **element-equality**
+// via [`same_element`]. Reusing the comparator (rather than inventing a second
+// notion of equality) keeps the answers deterministic, consistent with `Sort`,
+// and panic-free for `NaN` (`canonical_cmp` is built on `f64::total_cmp`).
+//
+// Two ordering families, both matching Wolfram exactly:
+//   * `Union`/`Intersection`/`Complement` — outputs are **sorted** (canonical
+//     order) and duplicate-free, regardless of input order;
+//   * `DeleteDuplicates`/`Tally` — outputs are **order-preserving**, fixing each
+//     distinct element's position at its first occurrence.
+//
+// Cost note: membership is a linear `canonical_cmp` scan (no hashing — `IRNode`
+// carries an `f64` and is not value-`Hash`-keyable), so the heads are worst-case
+// quadratic. Every input is already bounded by `MAX_LIST_LENGTH`, so this is a
+// deliberate, documented trade (simplicity over a canonical-key index), never an
+// unbounded surface.
+
+/// Two `IRNode`s are the **same element** iff the W-9 canonical comparator ranks
+/// them `Equal`. This is the single notion of element-equality every W-13 head
+/// uses. It is total and panic-free (built on `f64::total_cmp`), and its
+/// type-tag tie-break keeps distinct numeric subtypes of equal magnitude
+/// separate, so `2` and `2.0` are **distinct** elements — matching Wolfram, where
+/// `Union[{2, 2.}]` keeps both. Structural equality on compound elements
+/// (`f[1]` vs `f[1]`) is decided recursively by `canonical_cmp`.
+fn same_element(a: &IRNode, b: &IRNode) -> bool {
+    canonical_cmp(a, b) == std::cmp::Ordering::Equal
+}
+
+/// True if `set` already contains an element equal (under [`same_element`]) to
+/// `candidate`. The linear membership scan shared by every W-13 head — the source
+/// of the documented worst-case quadratic cost, bounded by `MAX_LIST_LENGTH`.
+fn contains_element(set: &[IRNode], candidate: &IRNode) -> bool {
+    set.iter().any(|e| same_element(e, candidate))
+}
+
+/// `Union[a, b, …]` → the **sorted**, duplicate-free union of the element lists.
+///
+/// `Union[{1, 2}, {2, 3}]` → `{1, 2, 3}`; `Union[{3, 1, 2, 1}]` → `{1, 2, 3}`
+/// (a single argument doubles as "sort-and-unique"). Every argument must be a
+/// `List`; a non-list argument (or zero arguments) leaves the form unevaluated.
+///
+/// **DoS-capped**: the deduped accumulator is refused (form left unevaluated) the
+/// moment it would exceed [`MAX_LIST_LENGTH`] — symmetric with `Join`/`Flatten`.
+/// The final result is sorted with the W-9 `canonical_cmp` (a *stable* `sort_by`),
+/// so the order is deterministic.
+fn union_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.is_empty() {
+        return unevaluated(expr);
+    }
+    // Accumulate the deduped union across all argument lists, capping the
+    // accumulator length before each insert.
+    let mut out: Vec<IRNode> = Vec::new();
+    for arg in &expr.args {
+        let Some(elems) = list_elements(arg) else {
+            return unevaluated(expr);
+        };
+        for elem in elems {
+            if !contains_element(&out, &elem) {
+                if out.len() >= MAX_LIST_LENGTH {
+                    return unevaluated(expr);
+                }
+                out.push(elem);
+            }
+        }
+    }
+    out.sort_by(canonical_cmp);
+    apply(sym(LIST), out)
+}
+
+/// `Intersection[a, b, …]` → the **sorted** elements present in *every* argument
+/// list. `Intersection[{1, 2, 3}, {2, 3, 4}]` → `{2, 3}`. With a single list
+/// argument it is that list, sorted and deduplicated. Every argument must be a
+/// `List`; a non-list argument (or zero arguments) leaves the form unevaluated.
+///
+/// Output is size-non-increasing (a subset of the first list), so it is bounded by
+/// the already-capped first argument; the [`MAX_LIST_LENGTH`] cap is asserted
+/// anyway for symmetry. Result sorted with the W-9 `canonical_cmp`.
+fn intersection_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.is_empty() {
+        return unevaluated(expr);
+    }
+    // Materialise every argument up front so a non-list anywhere rejects the whole
+    // form before we start filtering.
+    let mut lists: Vec<Vec<IRNode>> = Vec::with_capacity(expr.args.len());
+    for arg in &expr.args {
+        let Some(elems) = list_elements(arg) else {
+            return unevaluated(expr);
+        };
+        lists.push(elems);
+    }
+    // Keep each distinct element of the first list that also appears in *all* the
+    // rest. Dedup against `out` so a repeated element in the first list is emitted
+    // once.
+    let (first, rest) = lists.split_first().expect("non-empty: checked above");
+    let mut out: Vec<IRNode> = Vec::new();
+    for elem in first {
+        if contains_element(&out, elem) {
+            continue;
+        }
+        if rest.iter().all(|other| contains_element(other, elem)) {
+            if out.len() >= MAX_LIST_LENGTH {
+                return unevaluated(expr);
+            }
+            out.push(elem.clone());
+        }
+    }
+    out.sort_by(canonical_cmp);
+    apply(sym(LIST), out)
+}
+
+/// `Complement[all, x, …]` → the **sorted** elements of `all` that appear in *none*
+/// of `x, …`. `Complement[{1, 2, 3, 4}, {2, 4}]` → `{1, 3}`. At least the `all`
+/// argument is required; `Complement[all]` is `all`, sorted and deduplicated.
+/// Every argument must be a `List`; a non-list argument leaves the form
+/// unevaluated.
+///
+/// Output is a subset of `all` (size-non-increasing), bounded by the already-capped
+/// first argument; [`MAX_LIST_LENGTH`] is asserted for symmetry. Result sorted with
+/// the W-9 `canonical_cmp`.
+fn complement_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.is_empty() {
+        return unevaluated(expr);
+    }
+    let mut lists: Vec<Vec<IRNode>> = Vec::with_capacity(expr.args.len());
+    for arg in &expr.args {
+        let Some(elems) = list_elements(arg) else {
+            return unevaluated(expr);
+        };
+        lists.push(elems);
+    }
+    let (all, subtract) = lists.split_first().expect("non-empty: checked above");
+    let mut out: Vec<IRNode> = Vec::new();
+    for elem in all {
+        if contains_element(&out, elem) {
+            continue;
+        }
+        if subtract.iter().all(|other| !contains_element(other, elem)) {
+            if out.len() >= MAX_LIST_LENGTH {
+                return unevaluated(expr);
+            }
+            out.push(elem.clone());
+        }
+    }
+    out.sort_by(canonical_cmp);
+    apply(sym(LIST), out)
+}
+
+/// `DeleteDuplicates[list]` → the list with later duplicates removed, **preserving
+/// the first-occurrence order** (deliberately *unlike* `Union`, which re-sorts).
+///
+/// `DeleteDuplicates[{3, 1, 1, 2, 3}]` → `{3, 1, 2}`. A non-list argument, or the
+/// wrong arity, leaves the form unevaluated. Output is size-non-increasing (a
+/// subsequence of the input), bounded by the already-capped input; no re-sort, so
+/// the input order is the output order.
+fn delete_duplicates_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    let mut out: Vec<IRNode> = Vec::new();
+    for elem in elems {
+        if !contains_element(&out, &elem) {
+            out.push(elem);
+        }
+    }
+    apply(sym(LIST), out)
+}
+
+/// `MemberQ[list, elem]` → the literal `True` symbol if some element of `list`
+/// equals `elem` (under [`same_element`]), else `False`.
+///
+/// `MemberQ[{1, 2, 3}, 2]` → `True`; `MemberQ[{1, 2, 3}, 9]` → `False`. A non-list
+/// first argument, or the wrong arity, leaves the form unevaluated (Wolfram's
+/// `MemberQ[3, 2]` is likewise unevaluated). Returns a boolean — no ordering or
+/// size concern.
+fn member_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    if contains_element(&elems, &expr.args[1]) {
+        sym("True")
+    } else {
+        sym("False")
+    }
+}
+
+/// `Tally[list]` → a list of `{element, count}` pairs in **first-occurrence**
+/// order, where `count` is how many times that element appears.
+///
+/// `Tally[{a, a, b, a}]` → `{{a, 3}, {b, 1}}`. A non-list argument, or the wrong
+/// arity, leaves the form unevaluated. The pair list has at most as many entries
+/// as the input has distinct elements; that count is capped at [`MAX_LIST_LENGTH`]
+/// (an over-cap distinct-element count leaves the form unevaluated) — defensive,
+/// since the input is itself already bounded.
+fn tally_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(elems) = list_elements(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    // Parallel vectors: the distinct elements in first-occurrence order, and their
+    // running counts. A linear scan per element keeps the order without hashing
+    // (the documented quadratic cost, bounded by MAX_LIST_LENGTH).
+    let mut keys: Vec<IRNode> = Vec::new();
+    let mut counts: Vec<i64> = Vec::new();
+    for elem in elems {
+        match keys.iter().position(|k| same_element(k, &elem)) {
+            Some(i) => counts[i] += 1,
+            None => {
+                if keys.len() >= MAX_LIST_LENGTH {
+                    return unevaluated(expr);
+                }
+                keys.push(elem);
+                counts.push(1);
+            }
+        }
+    }
+    // Build the {element, count} pairs in the recorded first-occurrence order.
+    let pairs: Vec<IRNode> = keys
+        .into_iter()
+        .zip(counts)
+        .map(|(k, c)| apply(sym(LIST), vec![k, int(c)]))
+        .collect();
+    apply(sym(LIST), pairs)
 }
 
 // ---------------------------------------------------------------------------
@@ -3080,5 +3337,346 @@ mod tests {
         let b = s(&half);
         let result = run("StringJoin", vec![a.clone(), b.clone()]);
         assert_eq!(result, apply(sym("StringJoin"), vec![a, b]));
+    }
+
+    // -----------------------------------------------------------------------
+    // W-13 list set operations — Union / Intersection / Complement /
+    // DeleteDuplicates / MemberQ / Tally
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn union_of_two_lists_is_sorted_and_unique() {
+        // Union[{1, 2}, {2, 3}] → {1, 2, 3}
+        assert_eq!(
+            run("Union", vec![list(vec![int(1), int(2)]), list(vec![int(2), int(3)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+    }
+
+    #[test]
+    fn union_of_a_single_list_sorts_and_dedups() {
+        // Union[{3, 1, 2, 1}] → {1, 2, 3} — a single argument doubles as
+        // sort-and-unique.
+        assert_eq!(
+            run("Union", vec![list(vec![int(3), int(1), int(2), int(1)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+    }
+
+    #[test]
+    fn union_over_three_lists_unions_all() {
+        assert_eq!(
+            run(
+                "Union",
+                vec![
+                    list(vec![int(1)]),
+                    list(vec![int(3), int(2)]),
+                    list(vec![int(2), int(5)])
+                ]
+            ),
+            list(vec![int(1), int(2), int(3), int(5)])
+        );
+    }
+
+    #[test]
+    fn union_keeps_distinct_numeric_subtypes() {
+        // 2 and 2.0 are DISTINCT elements (type-tag tie-break in canonical_cmp),
+        // matching Wolfram's Union[{2, 2.}] → {2, 2.}. The integer sorts before
+        // the equal-magnitude float.
+        assert_eq!(
+            run("Union", vec![list(vec![int(2), flt(2.0)])]),
+            list(vec![int(2), flt(2.0)])
+        );
+    }
+
+    #[test]
+    fn union_with_symbol_and_compound_elements() {
+        // Mixed tiers sort numbers < symbols, and a repeated compound dedups.
+        assert_eq!(
+            run(
+                "Union",
+                vec![
+                    list(vec![sym("b"), int(1), apply(sym("f"), vec![int(1)])]),
+                    list(vec![apply(sym("f"), vec![int(1)]), sym("a")])
+                ]
+            ),
+            list(vec![
+                int(1),
+                sym("a"),
+                sym("b"),
+                apply(sym("f"), vec![int(1)])
+            ])
+        );
+    }
+
+    #[test]
+    fn intersection_keeps_common_elements_sorted() {
+        // Intersection[{1, 2, 3}, {2, 3, 4}] → {2, 3}
+        assert_eq!(
+            run(
+                "Intersection",
+                vec![
+                    list(vec![int(1), int(2), int(3)]),
+                    list(vec![int(2), int(3), int(4)])
+                ]
+            ),
+            list(vec![int(2), int(3)])
+        );
+    }
+
+    #[test]
+    fn intersection_over_three_lists() {
+        assert_eq!(
+            run(
+                "Intersection",
+                vec![
+                    list(vec![int(1), int(2), int(3), int(4)]),
+                    list(vec![int(2), int(3), int(4)]),
+                    list(vec![int(3), int(4), int(5)])
+                ]
+            ),
+            list(vec![int(3), int(4)])
+        );
+    }
+
+    #[test]
+    fn intersection_with_no_common_elements_is_empty() {
+        assert_eq!(
+            run(
+                "Intersection",
+                vec![list(vec![int(1), int(2)]), list(vec![int(3), int(4)])]
+            ),
+            list(vec![])
+        );
+    }
+
+    #[test]
+    fn complement_removes_subtracted_elements_sorted() {
+        // Complement[{1, 2, 3, 4}, {2, 4}] → {1, 3}
+        assert_eq!(
+            run(
+                "Complement",
+                vec![
+                    list(vec![int(1), int(2), int(3), int(4)]),
+                    list(vec![int(2), int(4)])
+                ]
+            ),
+            list(vec![int(1), int(3)])
+        );
+    }
+
+    #[test]
+    fn complement_over_multiple_subtrahends() {
+        // Remove anything present in ANY of the trailing lists.
+        assert_eq!(
+            run(
+                "Complement",
+                vec![
+                    list(vec![int(1), int(2), int(3), int(4), int(5)]),
+                    list(vec![int(2)]),
+                    list(vec![int(4), int(5)])
+                ]
+            ),
+            list(vec![int(1), int(3)])
+        );
+    }
+
+    #[test]
+    fn complement_of_single_list_sorts_and_dedups() {
+        assert_eq!(
+            run("Complement", vec![list(vec![int(3), int(1), int(1), int(2)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+    }
+
+    #[test]
+    fn delete_duplicates_preserves_first_occurrence_order() {
+        // DeleteDuplicates[{3, 1, 1, 2, 3}] → {3, 1, 2} — order kept, NOT sorted.
+        assert_eq!(
+            run(
+                "DeleteDuplicates",
+                vec![list(vec![int(3), int(1), int(1), int(2), int(3)])]
+            ),
+            list(vec![int(3), int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn delete_duplicates_differs_from_union_ordering() {
+        // The key semantic contrast: same input, Union sorts, DeleteDuplicates
+        // preserves order.
+        let input = list(vec![int(3), int(1), int(2), int(1)]);
+        assert_eq!(
+            run("Union", vec![input.clone()]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        assert_eq!(
+            run("DeleteDuplicates", vec![input]),
+            list(vec![int(3), int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn member_q_true_and_false() {
+        // MemberQ[{1, 2, 3}, 2] → True ; MemberQ[{1, 2, 3}, 9] → False
+        assert_eq!(
+            run("MemberQ", vec![list(vec![int(1), int(2), int(3)]), int(2)]),
+            sym("True")
+        );
+        assert_eq!(
+            run("MemberQ", vec![list(vec![int(1), int(2), int(3)]), int(9)]),
+            sym("False")
+        );
+    }
+
+    #[test]
+    fn member_q_distinguishes_int_from_float() {
+        // 2 is not a member of {2.0} — distinct numeric subtypes.
+        assert_eq!(
+            run("MemberQ", vec![list(vec![flt(2.0)]), int(2)]),
+            sym("False")
+        );
+        assert_eq!(
+            run("MemberQ", vec![list(vec![sym("a"), sym("b")]), sym("b")]),
+            sym("True")
+        );
+    }
+
+    #[test]
+    fn tally_counts_in_first_occurrence_order() {
+        // Tally[{a, a, b, a}] → {{a, 3}, {b, 1}}
+        assert_eq!(
+            run("Tally", vec![list(vec![sym("a"), sym("a"), sym("b"), sym("a")])]),
+            list(vec![
+                list(vec![sym("a"), int(3)]),
+                list(vec![sym("b"), int(1)])
+            ])
+        );
+    }
+
+    #[test]
+    fn tally_of_empty_list_is_empty() {
+        assert_eq!(run("Tally", vec![list(vec![])]), list(vec![]));
+    }
+
+    #[test]
+    fn set_ops_on_empty_lists() {
+        assert_eq!(run("Union", vec![list(vec![])]), list(vec![]));
+        assert_eq!(
+            run("Intersection", vec![list(vec![]), list(vec![int(1)])]),
+            list(vec![])
+        );
+        assert_eq!(
+            run("Complement", vec![list(vec![]), list(vec![int(1)])]),
+            list(vec![])
+        );
+        assert_eq!(run("DeleteDuplicates", vec![list(vec![])]), list(vec![]));
+    }
+
+    #[test]
+    fn nan_element_does_not_panic_in_set_ops() {
+        // A crafted NaN float must compare panic-free (canonical_cmp uses
+        // total_cmp). Two NaNs are the SAME element under total_cmp, so they dedup.
+        let nan = flt(f64::NAN);
+        let result = run("Union", vec![list(vec![nan.clone(), nan.clone()])]);
+        // Exactly one NaN survives; assert via list_elements rather than `==`
+        // (NaN != NaN under PartialEq).
+        let elems = list_elements(&result).expect("Union returns a list");
+        assert_eq!(elems.len(), 1);
+        assert!(matches!(elems[0], IRNode::Float(f) if f.is_nan()));
+        // MemberQ finds a NaN among NaNs (same_element via total_cmp).
+        assert_eq!(
+            run("MemberQ", vec![list(vec![flt(f64::NAN)]), flt(f64::NAN)]),
+            sym("True")
+        );
+    }
+
+    #[test]
+    fn set_ops_on_non_list_stay_unevaluated() {
+        // Non-list argument to any head → original form, no panic.
+        assert_eq!(
+            run("Union", vec![int(1), list(vec![int(2)])]),
+            apply(sym("Union"), vec![int(1), list(vec![int(2)])])
+        );
+        assert_eq!(
+            run("Intersection", vec![sym("x")]),
+            apply(sym("Intersection"), vec![sym("x")])
+        );
+        assert_eq!(
+            run("Complement", vec![int(3), list(vec![int(1)])]),
+            apply(sym("Complement"), vec![int(3), list(vec![int(1)])])
+        );
+        assert_eq!(
+            run("DeleteDuplicates", vec![int(7)]),
+            apply(sym("DeleteDuplicates"), vec![int(7)])
+        );
+        // MemberQ[3, 2] — non-list first argument stays unevaluated.
+        assert_eq!(
+            run("MemberQ", vec![int(3), int(2)]),
+            apply(sym("MemberQ"), vec![int(3), int(2)])
+        );
+        assert_eq!(
+            run("Tally", vec![sym("y")]),
+            apply(sym("Tally"), vec![sym("y")])
+        );
+    }
+
+    #[test]
+    fn set_ops_with_wrong_arity_stay_unevaluated() {
+        // Zero arguments / wrong arity → unevaluated.
+        assert_eq!(run("Union", vec![]), apply(sym("Union"), vec![]));
+        assert_eq!(
+            run("Intersection", vec![]),
+            apply(sym("Intersection"), vec![])
+        );
+        assert_eq!(run("Complement", vec![]), apply(sym("Complement"), vec![]));
+        // DeleteDuplicates / MemberQ / Tally are fixed-arity.
+        assert_eq!(
+            run("DeleteDuplicates", vec![list(vec![]), list(vec![])]),
+            apply(sym("DeleteDuplicates"), vec![list(vec![]), list(vec![])])
+        );
+        assert_eq!(
+            run("MemberQ", vec![list(vec![int(1)])]),
+            apply(sym("MemberQ"), vec![list(vec![int(1)])])
+        );
+        assert_eq!(
+            run("Tally", vec![list(vec![]), int(1)]),
+            apply(sym("Tally"), vec![list(vec![]), int(1)])
+        );
+    }
+
+    #[test]
+    fn union_over_cap_stays_unevaluated() {
+        // A union whose deduped accumulator would exceed MAX_LIST_LENGTH is
+        // refused (DoS cap). Build a single list of MAX_LIST_LENGTH + 1 distinct
+        // integers — every element is unique, so the accumulator overruns the cap.
+        let big: Vec<IRNode> = (0..=(MAX_LIST_LENGTH as i64)).map(int).collect();
+        let arg = list(big);
+        let result = run("Union", vec![arg.clone()]);
+        assert_eq!(result, apply(sym("Union"), vec![arg]));
+    }
+
+    #[test]
+    fn tally_over_cap_stays_unevaluated() {
+        // MAX_LIST_LENGTH + 1 distinct elements → more than MAX_LIST_LENGTH pairs,
+        // refused before allocation.
+        let big: Vec<IRNode> = (0..=(MAX_LIST_LENGTH as i64)).map(int).collect();
+        let arg = list(big);
+        let result = run("Tally", vec![arg.clone()]);
+        assert_eq!(result, apply(sym("Tally"), vec![arg]));
+    }
+
+    #[test]
+    fn set_ops_resolve_end_to_end_through_the_backend() {
+        // Over a real WolframBackend the heads are reachable by name and compose
+        // with the rest of the lane (here just confirming dispatch + result shape).
+        assert_eq!(
+            run_wolfram("Union", vec![list(vec![int(2), int(1)]), list(vec![int(1), int(3)])]),
+            list(vec![int(1), int(2), int(3)])
+        );
+        assert_eq!(
+            run_wolfram("Tally", vec![list(vec![int(5), int(5)])]),
+            list(vec![list(vec![int(5), int(2)])])
+        );
     }
 }

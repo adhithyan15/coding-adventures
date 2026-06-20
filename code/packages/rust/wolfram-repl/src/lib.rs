@@ -202,6 +202,28 @@ mod tests {
     }
 
     #[test]
+    fn w13_set_ops_evaluate_end_to_end() {
+        // Union sorts + dedups; DeleteDuplicates preserves first-occurrence order.
+        let mut r = WolframRepl::new();
+        assert!(matches!(
+            r.feed("Union[{3, 1, 2, 1}]"),
+            ReplResponse::Output(t) if t.contains("{1, 2, 3}")
+        ));
+        assert!(matches!(
+            r.feed("DeleteDuplicates[{3, 1, 1, 2, 3}]"),
+            ReplResponse::Output(t) if t.contains("{3, 1, 2}")
+        ));
+        assert!(matches!(
+            r.feed("MemberQ[{1, 2, 3}, 2]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("Intersection[{1, 2, 3}, {2, 3, 4}]"),
+            ReplResponse::Output(t) if t.contains("{2, 3}")
+        ));
+    }
+
+    #[test]
     fn continues_while_a_bracket_is_open() {
         let mut r = WolframRepl::new();
         assert_eq!(r.feed("f[1,"), ReplResponse::NeedMore); // open bracket

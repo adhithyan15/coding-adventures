@@ -4,6 +4,55 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.10.0] — 2026-06-19
+
+The **W-13** deliverable (MA04 §16): Wolfram's **list set / multiset operations**,
+lowered onto the *same* substrate as the rest of the lane — the W-9 list machinery
+(`list_elements`, `apply(sym(LIST), …)`, the `MAX_LIST_LENGTH` cap) and the W-9
+canonical-order comparator `canonical_cmp`, reused both to *sort* the unique
+outputs of `Union`/`Intersection`/`Complement` and to define **element-equality**
+(two nodes are the same element iff `canonical_cmp` ranks them `Equal`). Like every
+head since W-5 these are plain `Head[args]` applications, so there is **no grammar
+change**; only the `wolfram-runtime` builtin handler table grows. `Count` (W-9,
+predicate form) is left as-is.
+
+### Added (list set operations)
+
+- **`Union[a, b, …]`** — the **sorted**, duplicate-free union of the element lists
+  (`Union[{1, 2}, {2, 3}]` → `{1, 2, 3}`; `Union[{3, 1, 2, 1}]` → `{1, 2, 3}`, so a
+  single argument doubles as sort-and-unique). DoS-capped at `MAX_LIST_LENGTH` —
+  the deduped accumulator is refused (form left unevaluated) before it can exceed
+  the cap, symmetric with `Join`/`Flatten`.
+- **`Intersection[a, b, …]`** — the **sorted** elements present in *every* argument
+  list (`Intersection[{1, 2, 3}, {2, 3, 4}]` → `{2, 3}`).
+- **`Complement[all, x, …]`** — the **sorted** elements of `all` not in any of
+  `x, …` (`Complement[{1, 2, 3, 4}, {2, 4}]` → `{1, 3}`).
+- **`DeleteDuplicates[list]`** — first-occurrence-order dedup, **order-preserving**
+  and deliberately *not* sorted (`DeleteDuplicates[{3, 1, 1, 2, 3}]` → `{3, 1, 2}`,
+  contrast with `Union`'s `{1, 2, 3}`).
+- **`MemberQ[list, elem]`** — `True`/`False` whether `elem` is an element of
+  `list` (`MemberQ[{1, 2, 3}, 2]` → `True`; `MemberQ[{1, 2, 3}, 9]` → `False`).
+- **`Tally[list]`** — `{element, count}` pairs in first-occurrence order
+  (`Tally[{a, a, b, a}]` → `{{a, 3}, {b, 1}}`). The distinct-element count is capped
+  at `MAX_LIST_LENGTH`.
+
+### Notes
+
+- **Element-equality reuses the W-9 comparator** (`same_element(a, b) ≡
+  canonical_cmp(a, b) == Equal`): deterministic, consistent with `Sort`, and
+  panic-free for `NaN` (built on `f64::total_cmp`). The type-tag tie-break keeps
+  distinct numeric subtypes of equal magnitude separate, so `2` and `2.0` are
+  **distinct** elements — matching Wolfram (`Union[{2, 2.}]` keeps both).
+- **Two ordering families**: `Union`/`Intersection`/`Complement` sort their
+  outputs; `DeleteDuplicates`/`Tally` preserve first-occurrence order.
+- **DoS / cost**: outputs never exceed the sum of input lengths (already bounded by
+  the W-4 input/token caps); each head re-asserts `MAX_LIST_LENGTH` defensively.
+  Membership is a linear `canonical_cmp` scan (no hashing — `IRNode` carries an
+  `f64` and is not value-`Hash`-keyable), so the heads are worst-case quadratic in
+  the (bounded) input — a documented simplicity trade, never unbounded.
+- **No grammar change**: lexer, parser, and grammar files are untouched; only the
+  builtin handler table grows.
+
 ## [0.9.0] — 2026-06-19
 
 The **W-12** deliverable (MA04 §15): Wolfram's **string builtins**, lowered onto

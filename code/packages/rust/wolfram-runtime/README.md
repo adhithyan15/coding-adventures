@@ -11,7 +11,7 @@ See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfra
 §7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), §10 (W-7
 iteration constructs), §11 (W-8 local scoping), §12 (W-9 list-manipulation
 builtins), §13 (W-10 functional-iteration combinators), §14 (W-11 pure
-functions), and §15 (W-12 string builtins).
+functions), §15 (W-12 string builtins), and §16 (W-13 list set operations).
 
 ## What it does
 
@@ -129,6 +129,13 @@ assert_eq!(eval("StringSplit[\"a,b,c\", \",\"]\n").unwrap(), "Out[1]= {\"a\", \"
 assert_eq!(eval("StringReplace[\"banana\", \"a\" -> \"o\"]\n").unwrap(), "Out[1]= \"bonono\"\n");
 assert_eq!(eval("ToString[123]\n").unwrap(), "Out[1]= \"123\"\n");
 assert_eq!(eval("Characters[\"ab\"]\n").unwrap(), "Out[1]= {\"a\", \"b\"}\n");
+
+// W-13 list set operations — union, intersection, complement, dedup, membership, tally:
+assert_eq!(eval("Union[{3, 1, 2, 1}]\n").unwrap(), "Out[1]= {1, 2, 3}\n"); // sorted + unique
+assert_eq!(eval("Intersection[{1, 2, 3}, {2, 3, 4}]\n").unwrap(), "Out[1]= {2, 3}\n");
+assert_eq!(eval("Complement[{1, 2, 3, 4}, {2, 4}]\n").unwrap(), "Out[1]= {1, 3}\n");
+assert_eq!(eval("DeleteDuplicates[{3, 1, 1, 2, 3}]\n").unwrap(), "Out[1]= {3, 1, 2}\n"); // order kept
+assert_eq!(eval("MemberQ[{1, 2, 3}, 2]\n").unwrap(), "Out[1]= True\n");
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -341,6 +348,39 @@ infix sugar for `StringJoin` is **deferred** to a future grammar-change item.
 Every malformed form (non-string arg, out-of-range or `i64::MIN` index, malformed
 rule) is left unevaluated rather than panicking — the W-5/W-9 fail-soft contract.
 
+**W-13** adds the **list set / multiset operations** — union, intersection,
+complement, dedup, membership, and tally — lowered onto the *same* substrate as
+W-9: the list machinery (`list_elements`, `MAX_LIST_LENGTH`) and the W-9
+canonical-order comparator `canonical_cmp`, reused both to *sort* the unique
+outputs and to define **element-equality** (two nodes are the same element iff
+`canonical_cmp` ranks them `Equal`). All are eager `Head[args]` forms (no grammar
+change):
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Union` | `Union[{1, 2}, {2, 3}]` | `{1, 2, 3}` |
+| `Union` | `Union[{3, 1, 2, 1}]` (sort + unique) | `{1, 2, 3}` |
+| `Intersection` | `Intersection[{1, 2, 3}, {2, 3, 4}]` | `{2, 3}` |
+| `Complement` | `Complement[{1, 2, 3, 4}, {2, 4}]` | `{1, 3}` |
+| `DeleteDuplicates` | `DeleteDuplicates[{3, 1, 1, 2, 3}]` (order kept) | `{3, 1, 2}` |
+| `MemberQ` | `MemberQ[{1, 2, 3}, 2]` | `True` |
+| `MemberQ` | `MemberQ[{1, 2, 3}, 9]` | `False` |
+| `Tally` | `Tally[{a, a, b, a}]` | `{{a, 3}, {b, 1}}` |
+
+Two **ordering families**: `Union`/`Intersection`/`Complement` always return a
+**sorted**, duplicate-free result (canonical order, regardless of input order),
+while `DeleteDuplicates`/`Tally` are **order-preserving** — the first occurrence of
+each distinct element fixes its position. The contrast is deliberate: on the same
+input `{3, 1, 2, 1}`, `Union` gives `{1, 2, 3}` but `DeleteDuplicates` gives
+`{3, 1, 2}`. Element-equality is `canonical_cmp`-derived, so it is deterministic,
+panic-free for `NaN` (via `f64::total_cmp`), and keeps distinct numeric subtypes of
+equal magnitude separate — `2` and `2.0` are distinct elements (`Union[{2, 2.}]`
+keeps both), matching Wolfram. Outputs never exceed the sum of the (already-bounded)
+input lengths and each head re-asserts the `MAX_LIST_LENGTH` cap; membership is a
+linear scan (no hashing — `IRNode` carries an `f64`), so the heads are worst-case
+quadratic in the bounded input. Every malformed form (non-list arg, wrong arity) is
+left unevaluated rather than panicking — the W-5/W-9 fail-soft contract.
+
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
@@ -385,6 +425,12 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   builtins, Unicode-by-character, lowered onto the `IRNode::Str` atom + the W-9
   list machinery + the `print_wolfram` printer, DoS-capped on `StringJoin`/
   `StringReplace` output. No grammar change (`<>` infix deferred).
+- **W-13** (this crate) — the `Union`/`Intersection`/`Complement`/
+  `DeleteDuplicates`/`MemberQ`/`Tally` list set/multiset operations, lowered onto
+  the W-9 list machinery and canonical-order comparator (reused for both sorting
+  and element-equality), DoS-capped on `Union`/`Tally` output. Two ordering
+  families — `Union`/`Intersection`/`Complement` sorted, `DeleteDuplicates`/`Tally`
+  order-preserving. No grammar change.
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 
