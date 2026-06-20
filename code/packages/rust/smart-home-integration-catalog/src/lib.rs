@@ -5710,6 +5710,180 @@ impl IntegrationMeshReleaseExecutionTaskDispatchSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseDispatchReadinessSummary {
+    pub release_task_readiness_summary: IntegrationMeshReleaseTaskReadinessSummary,
+    pub release_execution_task_dispatch_summary: IntegrationMeshReleaseExecutionTaskDispatchSummary,
+    pub total_checks: usize,
+    pub ready_checks: usize,
+    pub blocked_checks: usize,
+    pub review_required_checks: usize,
+    pub operator_required_checks: usize,
+    pub checks_requiring_attention: usize,
+    pub total_tasks: usize,
+    pub ready_tasks: usize,
+    pub blocked_tasks: usize,
+    pub review_required_tasks: usize,
+    pub operator_required_tasks: usize,
+    pub tasks_requiring_attention: usize,
+    pub total_dispatch_slots: usize,
+    pub ready_dispatch_slots: usize,
+    pub blocked_dispatch_slots: usize,
+    pub review_required_dispatch_slots: usize,
+    pub operator_required_dispatch_slots: usize,
+    pub dispatch_slots_requiring_attention: usize,
+    pub dispatch_required_slots: usize,
+    pub queued_substrate_actions: usize,
+    pub remediation_item_count: usize,
+    pub review_required_packages: usize,
+    pub operator_required_packages: usize,
+    pub blocked_packages: usize,
+    pub first_dispatch_key: Option<String>,
+    pub first_blocked_dispatch_key: Option<String>,
+    pub first_review_dispatch_key: Option<String>,
+    pub first_operator_dispatch_key: Option<String>,
+    pub next_dispatch_key: Option<String>,
+    pub next_task_key: Option<String>,
+    pub next_slot_key: Option<String>,
+    pub next_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub next_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_package_kind: Option<IntegrationMeshReadinessHandoffKind>,
+    pub next_handoff_status: Option<IntegrationMeshReadinessHandoffStatus>,
+    pub packet_status: IntegrationMeshReleaseReadinessStatus,
+    pub execution_status: IntegrationMeshReleaseReadinessStatus,
+    pub release_packet_ready: bool,
+    pub release_execution_ready: bool,
+    pub release_tasks_ready: bool,
+    pub release_dispatch_ready: bool,
+}
+
+impl IntegrationMeshReleaseDispatchReadinessSummary {
+    pub fn from_summaries(
+        release_task_readiness_summary: IntegrationMeshReleaseTaskReadinessSummary,
+        release_execution_task_dispatch_summary: IntegrationMeshReleaseExecutionTaskDispatchSummary,
+    ) -> Self {
+        let next_package_kind = release_execution_task_dispatch_summary
+            .next_package_kind
+            .or(release_task_readiness_summary.next_package_kind);
+        let next_handoff_status = release_execution_task_dispatch_summary
+            .next_handoff_status
+            .or(release_task_readiness_summary.next_handoff_status);
+        let release_dispatch_ready = release_execution_task_dispatch_summary.ready_for_dispatch()
+            && release_task_readiness_summary.ready_for_release_execution();
+
+        Self {
+            total_checks: release_task_readiness_summary.total_checks,
+            ready_checks: release_task_readiness_summary.ready_checks,
+            blocked_checks: release_task_readiness_summary.blocked_checks,
+            review_required_checks: release_task_readiness_summary.review_required_checks,
+            operator_required_checks: release_task_readiness_summary.operator_required_checks,
+            checks_requiring_attention: release_task_readiness_summary.checks_requiring_attention,
+            total_tasks: release_task_readiness_summary.total_tasks,
+            ready_tasks: release_task_readiness_summary.ready_tasks,
+            blocked_tasks: release_task_readiness_summary.blocked_tasks,
+            review_required_tasks: release_task_readiness_summary.review_required_tasks,
+            operator_required_tasks: release_task_readiness_summary.operator_required_tasks,
+            tasks_requiring_attention: release_task_readiness_summary.tasks_requiring_attention,
+            total_dispatch_slots: release_execution_task_dispatch_summary.total_dispatch_slots,
+            ready_dispatch_slots: release_execution_task_dispatch_summary.ready_dispatch_slots,
+            blocked_dispatch_slots: release_execution_task_dispatch_summary.blocked_dispatch_slots,
+            review_required_dispatch_slots: release_execution_task_dispatch_summary
+                .review_required_dispatch_slots,
+            operator_required_dispatch_slots: release_execution_task_dispatch_summary
+                .operator_required_dispatch_slots,
+            dispatch_slots_requiring_attention: release_execution_task_dispatch_summary
+                .dispatch_slots_requiring_attention,
+            dispatch_required_slots: release_execution_task_dispatch_summary
+                .dispatch_required_slots,
+            queued_substrate_actions: release_task_readiness_summary.queued_substrate_actions,
+            remediation_item_count: release_task_readiness_summary.remediation_item_count,
+            review_required_packages: release_task_readiness_summary.review_required_packages,
+            operator_required_packages: release_task_readiness_summary.operator_required_packages,
+            blocked_packages: release_task_readiness_summary.blocked_packages,
+            first_dispatch_key: release_execution_task_dispatch_summary
+                .first_dispatch_key
+                .clone(),
+            first_blocked_dispatch_key: release_execution_task_dispatch_summary
+                .first_blocked_dispatch_key
+                .clone(),
+            first_review_dispatch_key: release_execution_task_dispatch_summary
+                .first_review_dispatch_key
+                .clone(),
+            first_operator_dispatch_key: release_execution_task_dispatch_summary
+                .first_operator_dispatch_key
+                .clone(),
+            next_dispatch_key: release_execution_task_dispatch_summary
+                .next_dispatch_key
+                .clone(),
+            next_task_key: release_execution_task_dispatch_summary
+                .next_task_key
+                .clone(),
+            next_slot_key: release_execution_task_dispatch_summary
+                .next_slot_key
+                .clone(),
+            next_check_kind: release_execution_task_dispatch_summary.next_check_kind,
+            next_check_status: release_execution_task_dispatch_summary.next_check_status,
+            next_package_kind,
+            next_handoff_status,
+            packet_status: release_task_readiness_summary.packet_status,
+            execution_status: release_task_readiness_summary.execution_status,
+            release_packet_ready: release_task_readiness_summary.release_packet_ready,
+            release_execution_ready: release_task_readiness_summary.release_execution_ready,
+            release_tasks_ready: release_task_readiness_summary.release_tasks_ready,
+            release_dispatch_ready,
+            release_task_readiness_summary,
+            release_execution_task_dispatch_summary,
+        }
+    }
+
+    pub fn ready_for_release_dispatch(&self) -> bool {
+        self.execution_status == IntegrationMeshReleaseReadinessStatus::Ready
+            && self.release_packet_ready
+            && self.release_execution_ready
+            && self.release_tasks_ready
+            && self.release_dispatch_ready
+            && !self.has_blockers()
+            && !self.has_review_work()
+    }
+
+    pub fn has_dispatch_slots(&self) -> bool {
+        self.total_dispatch_slots > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_checks > 0
+            || self.blocked_tasks > 0
+            || self.blocked_dispatch_slots > 0
+            || self.blocked_packages > 0
+            || self.queued_substrate_actions > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_checks > 0
+            || self.review_required_tasks > 0
+            || self.review_required_dispatch_slots > 0
+            || self.review_required_packages > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required_checks > 0
+            || self.operator_required_tasks > 0
+            || self.operator_required_dispatch_slots > 0
+            || self.operator_required_packages > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.checks_requiring_attention > 0
+            || self.tasks_requiring_attention > 0
+            || self.dispatch_slots_requiring_attention > 0
+            || self.dispatch_required_slots > 0
+            || self.has_blockers()
+            || self.has_review_work()
+            || self.needs_operator()
+            || !self.release_dispatch_ready
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
     pub display_name: String,
@@ -27027,6 +27201,46 @@ pub fn mesh_release_execution_task_dispatch_summary(
     )
 }
 
+pub fn mesh_release_dispatch_readiness_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseDispatchReadinessSummary {
+    let release_task_readiness_summary = mesh_release_task_readiness_summary_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let release_execution_task_dispatch_summary =
+        mesh_release_execution_task_dispatch_summary_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+
+    IntegrationMeshReleaseDispatchReadinessSummary::from_summaries(
+        release_task_readiness_summary,
+        release_execution_task_dispatch_summary,
+    )
+}
+
+pub fn mesh_release_dispatch_readiness_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseDispatchReadinessSummary {
+    let catalog = first_party_catalog();
+    mesh_release_dispatch_readiness_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 fn mesh_protocol_catalog_entries(
     catalog: &[IntegrationCatalogEntry],
 ) -> Vec<IntegrationCatalogEntry> {
@@ -37127,6 +37341,164 @@ mod tests {
             .iter()
             .all(IntegrationMeshReleaseExecutionTaskDispatchSlot::ready));
         assert!(dispatch_slots.iter().all(|slot| !slot.dispatch_required()));
+    }
+
+    #[test]
+    fn mesh_release_dispatch_readiness_summary_surfaces_dispatch_blocker() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let summary = mesh_release_dispatch_readiness_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_checks, 5);
+        assert_eq!(summary.ready_checks, 0);
+        assert_eq!(summary.blocked_checks, 3);
+        assert_eq!(summary.review_required_checks, 2);
+        assert_eq!(summary.operator_required_checks, 4);
+        assert_eq!(summary.total_tasks, 5);
+        assert_eq!(summary.ready_tasks, 0);
+        assert_eq!(summary.blocked_tasks, 3);
+        assert_eq!(summary.review_required_tasks, 2);
+        assert_eq!(summary.operator_required_tasks, 4);
+        assert_eq!(summary.total_dispatch_slots, 5);
+        assert_eq!(summary.ready_dispatch_slots, 0);
+        assert_eq!(summary.blocked_dispatch_slots, 3);
+        assert_eq!(summary.review_required_dispatch_slots, 2);
+        assert_eq!(summary.operator_required_dispatch_slots, 4);
+        assert_eq!(summary.dispatch_slots_requiring_attention, 5);
+        assert_eq!(summary.dispatch_required_slots, 5);
+        assert_eq!(summary.queued_substrate_actions, 5);
+        assert_eq!(summary.remediation_item_count, 2);
+        assert_eq!(summary.review_required_packages, 1);
+        assert_eq!(summary.operator_required_packages, 6);
+        assert_eq!(summary.blocked_packages, 5);
+        assert_eq!(
+            summary.first_dispatch_key,
+            Some("release-task-dispatch-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_dispatch_key,
+            Some("release-task-dispatch-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_task_key,
+            Some("release-execution-task-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_slot_key,
+            Some("release-check-slot-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_check_kind,
+            Some(IntegrationMeshReleaseReadinessCheckKind::SubstrateActions)
+        );
+        assert_eq!(
+            summary.next_check_status,
+            Some(IntegrationMeshReleaseReadinessStatus::Blocked)
+        );
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::SubstrateAction)
+        );
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Blocked)
+        );
+        assert_eq!(
+            summary.packet_status,
+            IntegrationMeshReleaseReadinessStatus::Blocked
+        );
+        assert_eq!(
+            summary.execution_status,
+            IntegrationMeshReleaseReadinessStatus::Blocked
+        );
+        assert!(!summary.release_packet_ready);
+        assert!(!summary.release_execution_ready);
+        assert!(!summary.release_tasks_ready);
+        assert!(!summary.release_dispatch_ready);
+        assert!(!summary.ready_for_release_dispatch());
+        assert!(summary.has_dispatch_slots());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.needs_operator());
+        assert!(summary.requires_attention());
+    }
+
+    #[test]
+    fn mesh_release_dispatch_readiness_summary_marks_release_dispatch_ready() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary = mesh_release_dispatch_readiness_summary_for_catalog(
+            &catalog,
+            all_primitive_families(),
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(summary.total_checks, 5);
+        assert_eq!(summary.ready_checks, 5);
+        assert_eq!(summary.blocked_checks, 0);
+        assert_eq!(summary.review_required_checks, 0);
+        assert_eq!(summary.operator_required_checks, 0);
+        assert_eq!(summary.total_tasks, 5);
+        assert_eq!(summary.ready_tasks, 5);
+        assert_eq!(summary.blocked_tasks, 0);
+        assert_eq!(summary.review_required_tasks, 0);
+        assert_eq!(summary.operator_required_tasks, 0);
+        assert_eq!(summary.total_dispatch_slots, 5);
+        assert_eq!(summary.ready_dispatch_slots, 5);
+        assert_eq!(summary.blocked_dispatch_slots, 0);
+        assert_eq!(summary.review_required_dispatch_slots, 0);
+        assert_eq!(summary.operator_required_dispatch_slots, 0);
+        assert_eq!(summary.dispatch_slots_requiring_attention, 0);
+        assert_eq!(summary.dispatch_required_slots, 0);
+        assert_eq!(
+            summary.first_dispatch_key,
+            Some("release-task-dispatch-01-substrate_actions".to_string())
+        );
+        assert_eq!(summary.next_dispatch_key, None);
+        assert_eq!(summary.next_task_key, None);
+        assert_eq!(summary.next_slot_key, None);
+        assert_eq!(summary.next_check_kind, None);
+        assert_eq!(summary.next_check_status, None);
+        assert_eq!(
+            summary.next_package_kind,
+            Some(IntegrationMeshReadinessHandoffKind::ReleaseReady)
+        );
+        assert_eq!(
+            summary.next_handoff_status,
+            Some(IntegrationMeshReadinessHandoffStatus::Ready)
+        );
+        assert_eq!(
+            summary.packet_status,
+            IntegrationMeshReleaseReadinessStatus::Ready
+        );
+        assert_eq!(
+            summary.execution_status,
+            IntegrationMeshReleaseReadinessStatus::Ready
+        );
+        assert!(summary.release_packet_ready);
+        assert!(summary.release_execution_ready);
+        assert!(summary.release_tasks_ready);
+        assert!(summary.release_dispatch_ready);
+        assert!(summary.ready_for_release_dispatch());
+        assert!(summary.has_dispatch_slots());
+        assert!(!summary.has_blockers());
+        assert!(!summary.has_review_work());
+        assert!(!summary.needs_operator());
+        assert!(!summary.requires_attention());
     }
 
     #[test]
