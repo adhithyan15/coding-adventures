@@ -6799,6 +6799,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     op_execution = run_deck_analysis(circuit, netlist, "op")
     assert op_execution.plan.analysis == "op"
     assert op_execution.output_probes == ["V(mid)"]
+    assert op_execution.output_directives == [".save"]
     assert op_execution.measurements == []
     assert op_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
@@ -6945,6 +6946,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     dc_execution = run_deck_analysis(circuit, netlist, "dc")
     assert dc_execution.plan.source_name == "V1"
     assert dc_execution.output_probes == ["V(mid)", "I(V1)"]
+    assert dc_execution.output_directives == [".save", ".probe"]
     assert [measurement.name for measurement in dc_execution.measurements] == ["mid_avg"]
     assert dc_execution.measurement_table == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
@@ -6984,6 +6986,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
     assert ac_execution.output_probes == ["V(mid)"]
+    assert ac_execution.output_directives == [".save"]
     assert [measurement.name for measurement in ac_execution.measurements] == ["mid_peak"]
     assert ac_execution.measurement_table == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
@@ -7024,6 +7027,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
     assert tran_execution.output_probes == ["V(mid)"]
+    assert tran_execution.output_directives == [".save"]
     assert [measurement.name for measurement in tran_execution.measurements] == [
         "mid_final"
     ]
@@ -7065,6 +7069,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tf_execution.result.input_impedance == pytest.approx(2000.0)
     assert tf_execution.result.output_impedance == pytest.approx(500.0)
     assert tf_execution.output_probes == ["V(mid)"]
+    assert tf_execution.output_directives == []
     assert tf_execution.measurements == []
     assert tf_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert tf_execution.table == (

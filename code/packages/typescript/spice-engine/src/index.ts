@@ -696,6 +696,7 @@ export interface DeckAnalysisExecution {
   readonly result: DeckAnalysisExecutionResult;
   readonly table: string;
   readonly outputProbes: readonly string[];
+  readonly outputDirectives: readonly string[];
   readonly measurements: readonly ProbeMeasurement[];
   readonly measurementTable: string;
   readonly fourier: readonly FourierResult[];
@@ -8149,6 +8150,7 @@ export function runDeckAnalysis(
       result,
       table,
       outputProbes,
+      outputDirectives,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8187,6 +8189,7 @@ export function runDeckAnalysis(
       result,
       table,
       outputProbes,
+      outputDirectives,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8236,6 +8239,7 @@ export function runDeckAnalysis(
       result,
       table,
       outputProbes,
+      outputDirectives,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8280,6 +8284,7 @@ export function runDeckAnalysis(
       result,
       table,
       outputProbes,
+      outputDirectives,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8314,6 +8319,7 @@ export function runDeckAnalysis(
       result,
       table,
       outputProbes,
+      outputDirectives,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8347,6 +8353,7 @@ export function runDeckAnalysis(
       result,
       table,
       outputProbes,
+      outputDirectives,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8390,6 +8397,7 @@ export function runDeckAnalysis(
       result,
       table,
       outputProbes,
+      outputDirectives,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,

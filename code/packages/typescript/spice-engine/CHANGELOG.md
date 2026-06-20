@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add selected output directives to `runDeckAnalysis` results beside selected
+  output probes, matching Python and Rust.
 - Add `deckTableRecords` for stable tab-separated deck output tables as
   header-keyed records for browser and host integrations, matching Python and
   Rust.
