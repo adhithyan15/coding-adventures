@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.16.0] - 2026-06-20
+
+### Added — CLOC22: emit `for (… in …)`
+
+New `emit_for_in` writes `for ( <left> in <right> ) <body>`. The `in` keyword is
+separated on both sides with `required_ws` (a single space): the left ends in an
+identifier (`var k` / `k` / `o.p`) and the right starts with one, so `kin` /
+`inobj` would otherwise mis-lex. In the rare `a[b] in` / `in (x)` cases the space
+is one redundant byte but never wrong, matching upstream Closure's spacing around
+`in`. Added emitter unit tests for the `var`/`const` declaration left and the
+expression-left (bare-body) forms.
+
 ## [0.15.0] - 2026-06-20
 
 ### Added — CLOC21: emit `debugger;`

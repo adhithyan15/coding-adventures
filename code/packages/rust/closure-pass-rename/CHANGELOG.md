@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-20
+
+### Added — CLOC22: local renaming across `for`-`in` (loop-variable soundness)
+
+Every phase of the pass recurses through `ForInStatement`. The crux is the loop
+variable: for `for (var/let/const k in o)` the `left` binding is a rename target
+treated exactly like a for-loop init binding — `collect_decl_occurrences_stmt`
+records it (block-scoped to the loop) and `rewrite_uses` rewrites the declared
+name via the rename map, so the binding and its uses inside the body rename
+*consistently*. The expression-left form (`for (k in o)`) has its assignment
+target rewritten as a use. Verified end-to-end: `for (var element in c)` →
+`for (var b in c)` with `c[element]` → `c[b]`.
+
 ## [0.7.0] - 2026-06-20
 
 ### Added — CLOC21: handle `DebuggerStatement`

@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.155.0] - 2026-06-20
+
+### Added — CLOC22: end-to-end `for`-`in` support
+
+Programs containing a `for`-`in` loop now route through the full typed-AST
+optimization pipeline at both SIMPLE and ADVANCED levels. Previously any
+`for`-`in` made the parse/bridge step decline, and closurec silently fell back
+to WHITESPACE_ONLY (no real optimization). Now inlining, constant folding, DCE,
+and (under ADVANCED) local/global/property renaming all run inside the loop body
+and recurse into the enumerated expression. All four left forms are supported
+(`for (var/let/const k in o)` and `for (k in o)`); destructuring left-hand sides
+decline to WHITESPACE_ONLY. The loop variable renames consistently under
+ADVANCED (e.g. `for (var element in c)` with `c[element]` →
+`for (var b in c)` with `c[b]`).
+
+The end-to-end `simple-for-in` diff fixture pins the behaviour, with a
+regression guard that the output is NOT the whitespace fallback. The
+`simple_level_unsupported_syntax_degrades_gracefully` test now uses a `for`-`of`
+loop (still bridge-unsupported) for its example.
+
 ## [0.154.0] - 2026-06-20
 
 ### Added — CLOC21: `debugger;` no longer forces a WHITESPACE_ONLY fallback

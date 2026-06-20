@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.15.0] - 2026-06-20
+
+### Added — CLOC22: fold inside `for`-`in`
+
+`fold_tagged` now has a `ForInStatement` arm that recurses constant folding into
+the loop's left (declaration/expression), the enumerated right expression, and
+the body. Constant expressions inside a for-in body fold like anywhere else.
+
 ## [0.14.0] - 2026-06-20
 
 ### Added — CLOC21: handle `DebuggerStatement`

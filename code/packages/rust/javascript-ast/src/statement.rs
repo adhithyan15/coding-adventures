@@ -34,7 +34,10 @@
 //! - [`DebuggerStatement`] (CLOC21 — `debugger;`, the breakpoint hook;
 //!   unblocks the whitespace-only fallback on any program using it)
 //!
-//! Phase 2 will add `ForInStatement`, `ForOfStatement`, and `WithStatement`.
+//! - [`ForInStatement`] (CLOC22 — `for (left in right) body`, the
+//!   property-enumerating loop)
+//!
+//! Phase 2 will add `ForOfStatement` and `WithStatement`.
 
 use crate::declaration::{Declaration, VariableDeclaration};
 use crate::expression::{Expression, Identifier};
@@ -73,6 +76,7 @@ pub enum TaggedStatement {
     WhileStatement(WhileStatement),
     DoWhileStatement(DoWhileStatement),
     ForStatement(ForStatement),
+    ForInStatement(ForInStatement),
     ReturnStatement(ReturnStatement),
     BreakStatement(BreakStatement),
     ContinueStatement(ContinueStatement),
@@ -104,6 +108,9 @@ impl Statement {
     }
     pub fn for_statement(s: ForStatement) -> Self {
         Self::Tagged(TaggedStatement::ForStatement(s))
+    }
+    pub fn for_in_statement(s: ForInStatement) -> Self {
+        Self::Tagged(TaggedStatement::ForInStatement(s))
     }
     pub fn return_statement(s: ReturnStatement) -> Self {
         Self::Tagged(TaggedStatement::ReturnStatement(s))
@@ -223,6 +230,32 @@ pub struct ForStatement {
 pub enum ForInit {
     VariableDeclaration(VariableDeclaration),
     Expression(Expression),
+}
+
+/// `for (left in right) body` (CLOC22). The enumerating loop: `right` is
+/// evaluated once, and `body` runs with `left` bound to each enumerable
+/// property key in turn.
+///
+/// `left` reuses [`ForInit`]:
+/// - `ForInit::VariableDeclaration` for `for (var k in o)` / `for (let k in o)`
+///   / `for (const k in o)` — a single-declarator binding with no initializer.
+/// - `ForInit::Expression` for `for (k in o)` / `for (o.p in src)` — an
+///   existing assignment target.
+///
+/// (Destructuring left-hand sides are not represented; the bridge declines
+/// them, falling back to whitespace-only, which is sound.)
+///
+/// Like the other loops, a `for`-`in` is NOT a terminator — the loop body may
+/// run zero times (an object with no enumerable keys), so control can fall
+/// through and statements after it stay reachable.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ForInStatement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub left: ForInit,
+    pub right: Expression,
+    pub body: Box<Statement>,
 }
 
 /// `return;` or `return expr;`.
@@ -563,6 +596,52 @@ mod tests {
         });
         assert_eq!(s.clone(), roundtrip(s.clone()));
         assert_eq!(type_tag(&s), "ForStatement");
+    }
+
+    #[test]
+    fn for_in_statement_with_declaration_left_roundtrips() {
+        // for (var k in obj) {}
+        let s = Statement::for_in_statement(ForInStatement {
+            cv: Some("forin.1".to_string()),
+            left: ForInit::VariableDeclaration(VariableDeclaration {
+                cv: None,
+                kind: VarKind::Var,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(Identifier {
+                        cv: None,
+                        name: "k".to_string(),
+                    }),
+                    init: None,
+                }],
+            }),
+            right: Expression::Identifier(Identifier {
+                cv: None,
+                name: "obj".to_string(),
+            }),
+            body: Box::new(Statement::empty_statement(EmptyStatement { cv: None })),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "ForInStatement");
+    }
+
+    #[test]
+    fn for_in_statement_with_expression_left_roundtrips() {
+        // for (k in obj) {}  — an existing assignment target as the left.
+        let s = Statement::for_in_statement(ForInStatement {
+            cv: None,
+            left: ForInit::Expression(Expression::Identifier(Identifier {
+                cv: None,
+                name: "k".to_string(),
+            })),
+            right: Expression::Identifier(Identifier {
+                cv: None,
+                name: "obj".to_string(),
+            }),
+            body: Box::new(Statement::empty_statement(EmptyStatement { cv: None })),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "ForInStatement");
     }
 
     #[test]

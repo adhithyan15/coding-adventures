@@ -72,7 +72,8 @@ use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BigIntLiteral,
     BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
-    Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit, ForStatement,
+    Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
+    ForStatement,
     FunctionDeclaration, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
     NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, VarKind,
@@ -285,6 +286,20 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             }),
             test: s.test.as_ref().map(|e| dce_expression(e, st)),
             update: s.update.as_ref().map(|e| dce_expression(e, st)),
+            body: Box::new(dce_statement(&s.body, st)),
+        }),
+        // Recurse DCE into the for-in left, right, and body. Like the other
+        // loops, a for-in is NOT a terminator (the body may run zero times),
+        // so code after it stays reachable.
+        TaggedStatement::ForInStatement(s) => TaggedStatement::ForInStatement(ForInStatement {
+            cv: s.cv.clone(),
+            left: match &s.left {
+                ForInit::VariableDeclaration(v) => {
+                    ForInit::VariableDeclaration(dce_variable_declaration(v, st))
+                }
+                ForInit::Expression(e) => ForInit::Expression(dce_expression(e, st)),
+            },
+            right: dce_expression(&s.right, st),
             body: Box::new(dce_statement(&s.body, st)),
         }),
         TaggedStatement::ReturnStatement(s) => {

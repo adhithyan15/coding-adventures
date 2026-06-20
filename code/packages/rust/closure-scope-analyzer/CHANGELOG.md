@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-20
+
+### Added — CLOC22: scope analysis for `for`-`in`
+
+`walk_tagged_statement` now handles `ForInStatement`: it walks the `left` (a
+variable declaration binding the loop variable, or an assignment-target
+expression), then the enumerated `right`, then the body.
+
 ## [0.7.0] - 2026-06-20
 
 ### Added — CLOC21: handle `DebuggerStatement`

@@ -427,6 +427,13 @@ fn count_decl_names_stmt(
                 }
                 count_decl_names_stmt(&fs.body, out, nodes_touched);
             }
+            TaggedStatement::ForInStatement(fs) => {
+                // The for-in `left`, when a declaration, binds the loop variable.
+                if let ForInit::VariableDeclaration(vd) = &fs.left {
+                    count_decl_names_var(vd, out);
+                }
+                count_decl_names_stmt(&fs.body, out, nodes_touched);
+            }
             TaggedStatement::LabeledStatement(ls) => {
                 count_decl_names_stmt(&ls.body, out, nodes_touched)
             }
@@ -555,6 +562,20 @@ fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
                 if let Some(update) = &fs.update {
                     count_uses_expr(update, name, count);
                 }
+                count_uses_stmt(&fs.body, name, count);
+            }
+            TaggedStatement::ForInStatement(fs) => {
+                match &fs.left {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &vd.declarations {
+                            if let Some(i) = &d.init {
+                                count_uses_expr(i, name, count);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => count_uses_expr(e, name, count),
+                }
+                count_uses_expr(&fs.right, name, count);
                 count_uses_stmt(&fs.body, name, count);
             }
             TaggedStatement::ReturnStatement(rs) => {
@@ -762,6 +783,20 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
                 if let Some(update) = &mut fs.update {
                     changed |= propagate_in_expr(update, cand);
                 }
+                changed |= propagate_in_stmt(&mut fs.body, cand);
+            }
+            TaggedStatement::ForInStatement(fs) => {
+                match &mut fs.left {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &mut vd.declarations {
+                            if let Some(i) = &mut d.init {
+                                changed |= propagate_in_expr(i, cand);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => changed |= propagate_in_expr(e, cand),
+                }
+                changed |= propagate_in_expr(&mut fs.right, cand);
                 changed |= propagate_in_stmt(&mut fs.body, cand);
             }
             TaggedStatement::ReturnStatement(rs) => {

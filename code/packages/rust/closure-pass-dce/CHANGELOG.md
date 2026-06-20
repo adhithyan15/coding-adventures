@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.13.0] - 2026-06-20
+
+### Added — CLOC22: DCE inside `for`-`in`
+
+New `ForInStatement` arm recurses dead-code elimination into the loop's left,
+right expression, and body. Like the other loops, a for-in is NOT a terminator
+(the body may run zero times), so code after it stays reachable.
+
 ## [0.12.0] - 2026-06-20
 
 ### Added — CLOC21: handle `DebuggerStatement`

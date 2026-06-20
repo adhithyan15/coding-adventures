@@ -6490,11 +6490,12 @@ mod tests {
         let in_path = dir.join("in.js");
         let out_path = dir.join("out.js");
         let sidecar_path = dir.join("out.js.cv.json");
-        // for-in: the grammar parses it, but bridge::grammar_to_program
-        // returns UnsupportedSyntax (for_in_statement is still Phase 2+).
-        // (do-while is now supported as of CLOC20, so it no longer degrades;
-        // class declarations fail at the grammar parser level, not the bridge.)
-        fs::write(&in_path, "for (k in obj) { x(); }").expect("setup");
+        // for-of: the grammar parses it, but bridge::grammar_to_program
+        // returns UnsupportedSyntax (for_of_statement is still Phase 2+).
+        // (do-while is supported as of CLOC20 and for-in as of CLOC22, so
+        // neither degrades; class declarations fail at the grammar parser
+        // level, not the bridge.)
+        fs::write(&in_path, "for (k of arr) { x(); }").expect("setup");
         let cfg = CompilerConfig {
             io: IoConfig {
                 js_patterns: vec![in_path.to_string_lossy().to_string()],

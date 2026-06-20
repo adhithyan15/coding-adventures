@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.13.0] - 2026-06-20
+
+### Added — CLOC22: bridge `for_in_statement` → `ForInStatement`
+
+`for_in_statement` no longer lands in the unsupported arm. New
+`convert_for_in_statement` walks the children using the `in` and `)` tokens as
+phase delimiters (left / right-expression / body) and detects the
+`var`/`let`/`const` keyword to set the binding kind. The left binding reuses
+`convert_variable_declarator` (which already declines destructuring); any
+binding shape it can't represent is mapped to a graceful `UnsupportedSyntax`
+decline rather than a hard error, so an unrepresentable for-in left never aborts
+compilation. All four left forms (`var`/`let`/`const` and a left-hand-side
+expression) are covered; destructuring declines to WHITESPACE_ONLY.
+
 ## [0.12.0] - 2026-06-20
 
 ### Added — CLOC21: bridge `debugger_statement` → `DebuggerStatement`
