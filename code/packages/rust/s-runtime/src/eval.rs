@@ -463,15 +463,27 @@ impl Interpreter {
         let parts = node_children(postfix);
         let (primary, suffix) = match parts.as_slice() {
             [primary, suffix]
-                if suffix.rule_name == "index_suffix" || suffix.rule_name == "call_suffix" =>
+                if suffix.rule_name == "index_suffix"
+                    || suffix.rule_name == "call_suffix"
+                    || suffix.rule_name == "dollar_suffix" =>
             {
                 (*primary, *suffix)
             }
             _ => return Err(SError::TypeError(
-                "unsupported assignment target (only `x[...] <- v` and `f(x) <- v` are supported)"
+                "unsupported assignment target (only `x[...] <- v`, `x$name <- v` and `f(x) <- v` are supported)"
                     .into(),
             )),
         };
+
+        // `obj$name <- value` (R-24). When `obj` evaluates to an environment (an
+        // R5 instance, or any first-class environment), this is a **mutate-by-
+        // reference** write: we bind `name` *in place* in that live scope, so two
+        // references to the same instance both see the change. This is the
+        // headline R5 reference semantics, and it falls straight out of reusing
+        // R-22's shared `SValue::Environment`.
+        if suffix.rule_name == "dollar_suffix" {
+            return self.eval_dollar_assignment(primary, suffix, rhs, env);
+        }
 
         // `f(x) <- value` — a replacement-function call. R desugars this to
         // `x <- \`f<-\`(x, value)`: the inner argument must be a bare-name
@@ -497,6 +509,45 @@ impl Interpreter {
         };
         define(env, &base_name, updated);
         self.as_invisible(rhs)
+    }
+
+    /// Handle `obj$name <- value` (R-24). The `primary` expression is evaluated to
+    /// the target; when it is an [`SValue::Environment`] (an R5 instance, or any
+    /// first-class environment) the write is a **mutate-by-reference** `env::define`
+    /// **in place** — the live scope gains/updates the `name` binding, so every
+    /// reference to that same instance (`b <- a`) observes the change. This is the
+    /// defining R5 reference semantic.
+    ///
+    /// Crucially `primary` is *evaluated* (not required to be a bare name): both
+    /// `a$total <- v` (where `a` is a variable) and `.self$total <- v` (inside a
+    /// method, where `.self` is the instance) resolve the same way — they each
+    /// yield the shared `Rc` to the instance scope, and the `define` mutates it.
+    /// A non-environment `obj` is a clean error (R5 `$<-` is only meaningful on a
+    /// reference object / environment in this subset).
+    fn eval_dollar_assignment(
+        &self,
+        primary: &GrammarASTNode,
+        dollar_suffix: &GrammarASTNode,
+        rhs: SValue,
+        env: &Env,
+    ) -> SResult<SValue> {
+        let field = name_token(dollar_suffix)
+            .ok_or_else(|| SError::Parse("malformed `$` assignment target".into()))?;
+        let target = self.eval_node(primary, env)?;
+        match target {
+            SValue::Environment(e) => {
+                // In-place, by-reference field write. `env::define` takes and
+                // releases the scope's `RefCell` borrow within the call, so a
+                // method mutating a field mid-call never holds two borrows of the
+                // same scope at once (no re-entrant-borrow panic).
+                define(&e, &field, rhs.clone());
+                self.as_invisible(rhs)
+            }
+            other => Err(SError::TypeError(format!(
+                "$<- is invalid for {} (only environments / reference objects support `obj$name <- v`)",
+                other.type_name()
+            ))),
+        }
     }
 
     /// Handle a **replacement-function** assignment `f(x) <- value` (R-15).
@@ -928,6 +979,8 @@ impl Interpreter {
                         "globalenv" | "baseenv" => self.eval_globalenv(),
                         "emptyenv" => self.eval_emptyenv(),
                         "parent.frame" => self.eval_parent_frame(&raw, env),
+                        // R-24 R5 reference classes.
+                        "setRefClass" => self.eval_set_ref_class(&raw, env),
                         _ => unreachable!(),
                     };
                 }
@@ -977,10 +1030,11 @@ impl Interpreter {
                     self.visible.set(true);
                 }
                 "dollar_suffix" => {
-                    // `df$name` — column by name.
+                    // `df$name` — column by name; `obj$field` / `obj$method` /
+                    // `generator$new` for an R5 reference object (R-24).
                     let name = name_token(suffix)
                         .ok_or_else(|| SError::Parse("malformed $ access".into()))?;
-                    value = crate::dataframe::column_by_name(&value, &name)?;
+                    value = self.dollar_read(&value, &name)?;
                     self.visible.set(true);
                 }
                 other => return Err(SError::Parse(format!("unexpected suffix '{other}'"))),
@@ -1060,6 +1114,13 @@ impl Interpreter {
     /// visibility rules (`print` is invisible and emits output; other calls are
     /// visible; a closure's body decides its own visibility).
     fn apply(&self, callee: SValue, args: &[Arg], env: &Env) -> SResult<SValue> {
+        // `generator$new(...)` (R-24): `generator$new` evaluated to an
+        // instantiation marker; applying it builds a fresh instance. Handled
+        // before the ordinary callable dispatch because the marker is not a
+        // `Closure`/`Builtin`.
+        if let Some(generator) = crate::refclass::as_new_marker(&callee) {
+            return self.apply_ref_new(&generator, args);
+        }
         match callee {
             SValue::Builtin { name, func } => {
                 let result = func(self, args)?;
@@ -1097,6 +1158,10 @@ impl Interpreter {
     /// visibility/printing side effects. This is the entry point built-ins use
     /// to invoke a user function (`sapply`, `lapply`) or an S3 method.
     pub(crate) fn call_value(&self, callee: SValue, args: &[Arg]) -> SResult<SValue> {
+        // `generator$new(...)` reached via a builtin (`do.call(gen$new, …)`).
+        if let Some(generator) = crate::refclass::as_new_marker(&callee) {
+            return self.apply_ref_new(&generator, args);
+        }
         match callee {
             SValue::Builtin { func, .. } => func(self, args),
             // Invoked from a builtin (e.g. `sapply`/`Reduce`/`do.call`), there is
@@ -1738,6 +1803,97 @@ impl Interpreter {
         self.as_visible(SValue::Environment(self.caller_frame(n)))
     }
 
+    // -----------------------------------------------------------------------
+    // R-24 R5 reference classes (setRefClass)
+    // -----------------------------------------------------------------------
+
+    /// `setRefClass("Name", fields = …, methods = …)` (R-24) — build a reference
+    /// class **generator**. A lazy special form: it evaluates the class name and
+    /// the `fields`/`methods` arguments *in the current environment* (so the
+    /// method `function(...)` definitions close over the scope where the class was
+    /// declared), then hands the pieces to [`crate::refclass::make_generator`].
+    /// The generator is a first-class environment value carrying the class name,
+    /// field names, and method closures, and it counts against `MAX_ENVIRONMENTS`.
+    ///
+    /// The class name is the first **positional** argument (a length-1 character);
+    /// `fields` and `methods` are matched **by name** (R5's call shape). A missing
+    /// `fields`/`methods` defaults to "no fields"/"no methods". A non-character
+    /// name, or a malformed `fields`/`methods`, is a clean error (never a panic).
+    fn eval_set_ref_class(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        // First positional argument → the class name.
+        let name_node = self.positional_nodes(raw).into_iter().next().ok_or_else(|| {
+            SError::BadArgs("setRefClass: the class name is required".into())
+        })?;
+        let class_name = self.eval_name_string(name_node, env, "setRefClass")?;
+
+        // `fields =` / `methods =` (named); each defaults to NULL when omitted.
+        let fields = self.eval_named_arg(raw, "fields", env)?.unwrap_or(SValue::Null);
+        let methods = self
+            .eval_named_arg(raw, "methods", env)?
+            .unwrap_or(SValue::Null);
+
+        // Reifying the generator environment counts against the session cap, like
+        // any `new.env()` — it can equally participate in a value-binding cycle.
+        self.account_environment()?;
+        let generator = crate::refclass::make_generator(&class_name, &fields, &methods, env)?;
+        self.as_visible(generator)
+    }
+
+    /// Apply a `generator$new(field = …, …)` instantiation (R-24): charge the new
+    /// instance environment against `MAX_ENVIRONMENTS` (it is a fresh reified
+    /// scope, exactly like `new.env()`, and `.self` makes it a value-binding
+    /// self-cycle — the documented, bounded R-22 case), then build the instance via
+    /// [`crate::refclass::instantiate`]. The already-evaluated `args` carry their
+    /// names so fields are matched by keyword.
+    fn apply_ref_new(&self, generator: &Env, args: &[Arg]) -> SResult<SValue> {
+        self.account_environment()?;
+        let init: Vec<(Option<String>, SValue)> = args
+            .iter()
+            .map(|a| (a.name.clone(), a.value.clone()))
+            .collect();
+        let instance = crate::refclass::instantiate(generator, &init)?;
+        self.as_visible(instance)
+    }
+
+    /// Resolve `obj$name` for a `$` *read* (R-24). An [`SValue::Environment`]
+    /// target is routed through [`crate::refclass::dollar_access`], which handles
+    /// `generator$new` (returns the instantiation marker), `obj$method` (rebuilds
+    /// a fresh instance-bound closure on access — see the refclass module note on
+    /// the instance⇄method cycle), and falls through (`None`) to an ordinary field
+    /// / binding lookup in the environment. A `NULL` is returned for an unset field
+    /// (matching R5). Every other target keeps the existing data-frame / list `$`
+    /// behaviour.
+    fn dollar_read(&self, target: &SValue, name: &str) -> SResult<SValue> {
+        if let SValue::Environment(e) = target {
+            if let Some(v) = crate::refclass::dollar_access(e, name) {
+                return Ok(v);
+            }
+            // Ordinary environment access: the binding's value, or NULL if unset
+            // (R5 reads an unset field as NULL; a plain `env$x` for a missing name
+            // is likewise NULL in R rather than an error).
+            return Ok(lookup(e, name).unwrap_or(SValue::Null));
+        }
+        crate::dataframe::column_by_name(target, name)
+    }
+
+    /// Evaluate the named argument `key` of a raw arg list (`key = expr`), if
+    /// present, returning `Ok(None)` when it is absent. An empty arm (`key =`
+    /// with no expression) is a clean error. Shared by `setRefClass`'s
+    /// `fields =`/`methods =` handling.
+    fn eval_named_arg(
+        &self,
+        raw: &[RawArg],
+        key: &str,
+        env: &Env,
+    ) -> SResult<Option<SValue>> {
+        let Some((_, node)) = raw.iter().find(|(name, _)| name.as_deref() == Some(key)) else {
+            return Ok(None);
+        };
+        let expr = arm_body(node)
+            .ok_or_else(|| SError::BadArgs(format!("setRefClass: `{key} = ` is missing a value")))?;
+        Ok(Some(self.eval_node(expr, env)?))
+    }
+
     /// `ls([envir = e])` — the names bound **directly** in the target frame (not
     /// the enclosing chain), as a **sorted** character vector (R-22). `ls(e)`
     /// accepts the environment positionally too (R's `ls` takes the env as its
@@ -1886,6 +2042,14 @@ fn special_form_name(primary: &GrammarASTNode) -> Option<&'static str> {
         [("NAME", "emptyenv")] => Some("emptyenv"),
         [("NAME", "baseenv")] => Some("baseenv"),
         [("NAME", "parent.frame")] => Some("parent.frame"),
+        // R-24 R5 reference classes. `setRefClass` is a special form because it
+        // must (a) capture the *current* environment as the generator's lexical
+        // parent — so a method's free variables resolve to where the class was
+        // defined — and (b) evaluate `fields`/`methods` itself (the methods are
+        // function definitions that must close over that captured scope). An
+        // ordinary eager builtin receives neither the current env nor control over
+        // argument evaluation.
+        [("NAME", "setRefClass")] => Some("setRefClass"),
         _ => None,
     }
 }

@@ -587,6 +587,88 @@ unchanged.
     prevents any parent-chain cycle. `parent.frame(n)` clamps rather than indexes,
     so a crafted deep `n` cannot panic.
 
+- **R-24 — R5 reference classes (`setRefClass`)** *(this PR)*. The payoff of the
+  R-21/22/23 environment work: an R5 object **is** an environment holding its
+  fields, and a method **is** a closure whose enclosing environment is the
+  instance environment — so a method body sees fields directly and writes them
+  back with `<<-`. Everything lands in the shared `s-runtime`; no grammar change
+  (`$` already exists from the data-frame work).
+  - **`setRefClass("Name", fields = list(x = "numeric", …), methods = list(m = function(…) …))`**
+    → a **generator** object. `setRefClass` is a **lazy special form** (like
+    `switch`/`new.env`): it must capture the `methods = list(…)` *function
+    definitions unevaluated* and the *current environment* (the generator's
+    enclosing scope), neither of which an eager builtin receives. The generator
+    is represented as an `SValue::Environment` — a fresh scope carrying three
+    private bindings: `.refClassName` (the class name, a character), `.refFields`
+    (the field names, a character vector, in declaration order), and `.refMethods`
+    (a `list` of the method **closures** as written, each closing over the
+    generator's defining scope). The field *type* strings (`"numeric"`,
+    `"character"`) are recorded but **not enforced** in this subset — R5 type
+    checking is deferred — so a field may hold any value. Reifying the generator
+    env counts against `MAX_ENVIRONMENTS`.
+  - **`generator$new(x = …, y = …)`** → an **instance**. `new` creates a *fresh*
+    child environment of the generator's defining scope and binds: every declared
+    field (to the matching `new(field = …)` argument, or `NULL` when omitted),
+    `.self` (an `SValue::Environment` pointing at the instance itself), and
+    `.refMethods` (carried from the generator so methods can be rebuilt on
+    access). The instance also counts against `MAX_ENVIRONMENTS`.
+  - **`obj$field`** reads a field — an ordinary `env::lookup` in the instance
+    scope (the `$` read path, extended for `SValue::Environment`, returns the
+    bound value, or `NULL` for an unset field, matching R5).
+  - **`obj$field <- v`** writes a field **by reference**. The `$<-` lvalue path is
+    extended for an `SValue::Environment` target: it `env::define`s the name in the
+    *instance scope in place*, mutating the live environment rather than rebinding a
+    copy. This is what gives R5 its **reference semantics** — see below.
+  - **`obj$method(args)`** calls a method. The `$` read path, seeing a name that is
+    *not* a field but *is* present in `.refMethods`, **reconstructs** a fresh
+    `Closure` whose `env` is the **instance** environment (not the generator's),
+    then the trailing `call_suffix` applies it. Because the method closes over the
+    instance scope, its body sees the fields as free variables and updates them
+    with `field <<- value` (super-assignment walks to the enclosing instance frame
+    and rebinds in place — R-21's `<<-`), or via `.self$field <- v`. `.self` is
+    bound in the instance, so a method may call a sibling method as
+    `.self$other(…)`.
+  - **Reference semantics (the headline).** `b <- a` copies the *environment
+    handle* (a strong `Rc` to the same scope), **not** the scope's contents — so
+    `a` and `b` are two references to one instance. `b$add(1)` mutates the shared
+    scope and `a$total` reflects it. This is the deliberate exception to R's
+    otherwise copy-on-modify value semantics, and it falls straight out of reusing
+    R-22's first-class, mutate-by-reference `SValue::Environment`: the instance *is*
+    a live scope, and assigning it to a new name aliases rather than clones it. Two
+    instances built by two separate `$new` calls are *independent* (distinct
+    scopes), so their fields do not interfere.
+  - **Rc-cycle safety (the instance⇄method trap, broken by construction).** The
+    obvious encoding — bind each method *as a closure* directly in the instance's
+    `vars`, with that closure's `env` being the instance — forms a **strong
+    reference cycle**: `instance.vars["m"]` is a `Closure` whose `env` is a strong
+    `Rc` back to `instance`. `Rc` never reclaims a cycle, so every such instance
+    would leak its whole scope. **We break it by never storing the
+    instance-bound closures.** The instance holds only the *field bindings*, `.self`,
+    and `.refMethods` — and the closures inside `.refMethods` close over the
+    **generator's** scope, *not* the instance's, so they create no edge back to the
+    instance. The instance-bound method closure is materialised **lazily, per
+    access**, in `obj$method`, lives only for the duration of that one call, and is
+    dropped immediately after — it is never stored anywhere reachable from the
+    instance, so the instance→method→instance edge never exists at rest. The one
+    remaining strong self-reference is `.self` (an `Environment` to the instance
+    stored *inside* the instance) — exactly the *documented, pre-existing* R-22
+    value-binding self-cycle, bounded (not collected) by the `MAX_ENVIRONMENTS`
+    session cap; we inherit that boundary verbatim rather than widening it.
+  - **Borrow-panic safety.** A method that mutates a field mid-call goes through
+    `env::define`/`env::lookup`, each of which takes and releases the instance
+    scope's `RefCell` borrow *per operation* (the iterative-walk discipline R-22
+    established), so a method reading one field and writing another never holds two
+    borrows of the same scope at once. Malformed `setRefClass`/`$new` arguments — a
+    non-character class name, a `fields`/`methods` that is not a list, a method
+    entry that is not a function, an unknown `new()` argument — are all clean
+    `BadArgs`/`TypeError` results, never panics.
+  - **Deferred to R-25 (scope guard).** Inheritance (`contains = "Base"`),
+    `$copy()` (a deep value-copy breaking the reference sharing), active bindings,
+    and the `$methods()`/`$fields()` introspection accessors are **out of scope**
+    here. This PR ships fields + methods + `$new` + `$field` read/write + method
+    calls with `<<-`/`.self$field <-` field update, solidly and with full
+    reference-semantics tests. A clean partial beats a sprawling one.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -605,7 +687,9 @@ Pipes (`|>`) and backslash lambdas (`\(x)`). The `SValue::Environment` value,
 `environment(f) <-`, `environmentName`, `globalenv()`/`emptyenv()`/`baseenv()`,
 `parent.frame()`, and `is.environment()` land in **R-23**. Still out of scope:
 `sys.call`/`sys.function`/`match.call` and the rest of the call-introspection
-family; S4/R5/R6 OO; namespaces and `library()` (so `baseenv()` aliases the
+family; S4 and R6 OO (R5 reference classes land in **R-24**, with inheritance,
+`$copy()`, active bindings and `$methods()`/`$fields()` introspection deferred to
+**R-25**); namespaces and `library()` (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.
 

@@ -92,6 +92,19 @@ a closure captured at definition (a top-level closure captures the global env, s
 g() }; f()` → `42` — clamping to the global env past the bottom of the stack
 rather than panicking. `is.environment(x)` is the type predicate.
 
+**R5 reference classes (R-24)** — `setRefClass("Acc", fields = list(total =
+"numeric"), methods = list(add = function(x) { total <<- total + x }, get =
+function() total))` builds a **generator**; `Acc$new(total = 0)` builds an
+**instance** (an environment holding the fields). A method's body sees the fields
+directly and updates them with `<<-`, so `a$add(5); a$add(3); a$total` → `8`.
+`a$total <- 100` writes a field **by reference**. The headline R5 behaviour is
+**reference semantics**: `b <- a; b$add(1); a$total` reflects b's change (the two
+names share one instance, unlike R's copy-on-modify), while two separate `$new`
+calls are independent. `.self` is bound in the instance, so a method can reach a
+sibling as `.self$other()`. Field type strings are recorded but not enforced in
+this subset; inheritance, `$copy()`, active bindings, and `$methods()`/`$fields()`
+introspection are deferred to R-25.
+
 ## Usage
 
 ```rust

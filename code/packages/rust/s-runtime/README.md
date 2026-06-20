@@ -127,6 +127,19 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   global); `parent.frame(n = 1)` is the caller's env, recorded on the R-20 call
   stack and **clamped** to global past the bottom rather than panicking;
   `is.environment(x)` is the type predicate.
+- **R5 reference classes** (R-24, `src/refclass.rs`): `setRefClass("Name",
+  fields = …, methods = …)` builds a **generator** (an environment carrying the
+  class name, field names, and method closures); `generator$new(field = …)` builds
+  an **instance** (an environment holding the fields). `obj$field` reads a field,
+  `obj$field <- v` writes it **in place by reference**, and `obj$method(args)`
+  rebuilds a fresh instance-bound closure on access so `field <<- value` and
+  `.self$field <- v` mutate the live instance. `b <- a` *aliases* the same instance
+  (reference semantics — the deliberate exception to copy-on-modify). The
+  instance⇄method `Rc` cycle is broken by construction (instance-bound closures are
+  rebuilt lazily and never stored; the stored method closures close over the
+  *generator*); the lone `.self` self-reference is the documented,
+  `MAX_ENVIRONMENTS`-bounded R-22 value-binding cycle. Inheritance, `$copy()`,
+  active bindings, and `$methods()`/`$fields()` introspection are deferred to R-25.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
