@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 147,
-    "correct": 140,
+    "total": 149,
+    "correct": 142,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 134,
+        "correct": 136,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9925,
-    "grounded_correct": 133
+    "grounded_coverage": 0.9926,
+    "grounded_correct": 135
   },
   "results": [
     {
@@ -960,6 +960,22 @@
       "tactic": "recall",
       "gold": "cea",
       "answer": "cea",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "onco_prostate_marker",
+      "tactic": "recall",
+      "gold": "psa",
+      "answer": "psa",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "onco_chorio_marker",
+      "tactic": "recall",
+      "gold": "hcg",
+      "answer": "hcg",
       "outcome": "correct",
       "trust": "authoritative"
     },
