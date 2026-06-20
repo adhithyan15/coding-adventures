@@ -126,6 +126,7 @@
     {"id": "rheum_ra_ab",    "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "rheumatoid_arthritis",           "var": "Antibody", "gold": "anti_ccp"},
     {"id": "rheum_sjo_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "sjogren_syndrome",              "var": "Antibody", "gold": "anti_ro"},
     {"id": "rheum_pbc_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "primary_biliary_cholangitis",   "var": "Antibody", "gold": "anti_mitochondrial"},
+    {"id": "rheum_dm_ab",    "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "dermatomyositis",               "var": "Antibody", "gold": "anti_jo1"},
 
     {"id": "onco_ovarian_marker", "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "ovarian_cancer",               "var": "Marker", "gold": "ca_125"},
     {"id": "onco_mtc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "medullary_thyroid_carcinoma",   "var": "Marker", "gold": "calcitonin"},

@@ -30,11 +30,13 @@
 % span (both finding AND disease named) are included. Under the primary-source-first
 % policy, ulcerative colitis → crypt abscesses is now GROUNDED: the Inflammatory Bowel
 % Disease page (NBK470312) carries a Histopathology span naming "ulcerative colitis" and
-% its "cryptic abscesses" together. Still deferred (checked, no both-endpoints declarative
-% on the cited page): Whipple disease — its dedicated page (NBK441937) splits the diagnosis
-% ("The diagnosis of Whipple disease is made by a biopsy of the intestine...") from the
-% criterion ("...positive results for PAS-positive foamy macrophages in the small bowel
-% biopsy"), naming "Whipple" and "PAS-positive macrophages" in separate sentences.
+% its "cryptic abscesses" together. Still deferred (re-checked): Whipple disease → PAS-
+% positive macrophages — its dedicated page (NBK441937) splits the diagnosis ("The diagnosis
+% of Whipple disease is made by a biopsy of the intestine...") from the criterion
+% ("...positive results for PAS-positive foamy macrophages in the small bowel biopsy"), and
+% the Tropheryma review (PMC88990) likewise names the PAS-positive macrophages in a sentence
+% that does not contain "Whipple". No primary page checked carries a single both-endpoints
+% declarative, so the edge stays out — honest absence beats an over-reaching citation.
 % ============================================================================
 
 dictionary gi_vocab {
