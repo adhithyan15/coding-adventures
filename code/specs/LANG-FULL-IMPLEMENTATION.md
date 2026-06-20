@@ -168,8 +168,11 @@ multiple languages; close an enabler before the features that depend on it.
       `2e0`/`0e0`, which clang rejects). **Executed proof on real `clang`**: the two ALGOL real
       programs (exit 42, exit 1) run on the LLVM matrix column. (`f64` *params* reassigned across a
       back-edge still stay SSA — `param_slot_compatible` excludes floats — a separate unexercised case.)
-    - ☐ **iir-to-wasm** — same slot fix (locals typed `i32` today; need `f64` locals + `f64.const`
-      hex/literal handling + float compare result as `i32`).
+    - ✅ **iir-to-wasm** (v0.15.1) — **no backend change needed.** Unlike LLVM/JVM's uniform
+      slot model, WASM types each local individually (`hint_to_value_type("f64") = F64`) and
+      selects `f64.mul`/`f64.eq`/`f64.lt` from the `f64` type_hint, so an `f64` variable already
+      lived in an `F64` local. **Executed proof on `wasm-runtime`**: the two ALGOL real programs
+      run on the WASM matrix column; added op-selection regression tests.
     - ☐ **iir-to-jvm-class-file** — same slot fix (`dstore`/`dload` for double locals; the
       build_type_map slot typing must recognise f64; comparison result stays `int`).
   - ☐ **E3-native** — `x86_64-backend`/`aarch64-backend` reject `const_f64`/`CIROperand::Float`;
@@ -335,9 +338,10 @@ backend immediately) come before the enabler-dependent items.
   `real` → IIR `f64`, `REAL_LIT` → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit
   the `f64` hint, `/` is real division, real comparisons compare at `f64` width; `div`/`mod`
   stay integer-only; no implicit int→real coercion (mixing is a clean error). **Verified by
-  RUNNING** on the VM, JIT, **and LLVM** (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1;
-  LLVM via `iir-to-llvm` 0.13.0's f64 slots). Remaining to clear every backend: the wasm + jvm
-  half of **E3-codegen-slots**, plus **E3-native / E3-clr** (see enabler E3 above).
+  RUNNING** on the VM, JIT, **LLVM, and WASM** (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1;
+  LLVM via `iir-to-llvm` 0.13.0's f64 slots, WASM via its typed-local model — no change needed).
+  Remaining to clear every backend: the **jvm** half of **E3-codegen-slots**, plus
+  **E3-native / E3-clr** (see enabler E3 above).
 - ☐ **AL2** — arrays with runtime bounds (needs **E5**).
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
