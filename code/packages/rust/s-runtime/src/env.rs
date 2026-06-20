@@ -21,13 +21,13 @@
 //! ```
 //!
 //! and, more subtly, a child's parent could (transitively) hold the child as a
-//! value. If `parent` were a strong `Rc`, such a cycle of strong references
-//! would be **uncollectable** — `Rc` never frees a cycle — leaking every binding
-//! in it.
+//! value. If `parent` were a strong `Rc`, the *parent edge itself* would close a
+//! cycle of strong references — **uncollectable**, since `Rc` never frees a cycle.
 //!
-//! **The fix: the `parent` link is a [`Weak`].** A `Weak` does not contribute to
-//! the strong reference count, so it can never *close* a strong cycle. The strong
-//! ownership of every live scope flows root→leaf:
+//! **The fix for the parent edge: the `parent` link is a [`Weak`].** A `Weak`
+//! does not contribute to the strong reference count, so it can never *close* a
+//! strong cycle through the parent edge. The strong ownership of every live scope
+//! flows root→leaf:
 //!
 //! * the **global** environment is held by a strong `Rc` in `Interpreter::global`
 //!   for the whole session;
@@ -37,12 +37,34 @@
 //!   to a variable) is kept alive by that strong binding.
 //!
 //! Parents are therefore only ever *referenced* (`Weak`), never *owned*, by their
-//! children. No strong-`Rc` cycle is constructible from S/R source. A `Weak`
+//! children, so **no cycle through the parent chain is constructible**. A `Weak`
 //! parent that fails to upgrade (its frame was already dropped) is treated as "no
 //! parent" — every chain walk simply stops there, exactly as it would at the
 //! root. In practice the global env keeps the whole ancestor chain of any
 //! reachable scope alive, so a parent upgrade only fails for a frame that has
 //! genuinely gone out of scope, which has no bindings anyone can still name.
+//!
+//! ## The remaining cycle: value bindings (a bounded, documented limitation)
+//!
+//! The `Weak` parent breaks cycles through the *parent* edge — but **not** cycles
+//! that close through a *value binding*. Because [`SValue::Environment`] holds a
+//! **strong** `Rc` to a scope, user source can store an environment inside the
+//! very scope it points at:
+//!
+//! ```text
+//!   e <- new.env(); assign("self", e, envir = e)   # e$vars["self"] is a strong Rc to e
+//!   a <- new.env(); b <- new.env()                 # or a mutual pair:
+//!   assign("x", b, envir = a); assign("y", a, envir = b)
+//! ```
+//!
+//! Each is a strong-`Rc` cycle that `Rc` alone cannot reclaim once it becomes
+//! unreachable — exactly the case R handles with a tracing garbage collector,
+//! which we do not have. We do **not** claim to collect it. Instead the damage is
+//! *bounded*: the interpreter caps the number of environments a session may reify
+//! (`MAX_ENVIRONMENTS` in `eval.rs`), so a crafted loop building cyclic
+//! environments hits a clean error rather than exhausting memory. Reclaiming the
+//! cycles themselves would need a cycle collector or an arena with explicit
+//! teardown — out of scope here, and noted as a known limitation.
 
 use crate::value::SValue;
 use std::cell::RefCell;
@@ -163,9 +185,11 @@ pub fn names_in(env: &Env) -> Vec<String> {
 ///
 /// The walk follows `parent` links only. Every [`Scope`] is created by
 /// [`Scope::global`] (no parent) or [`Scope::child`] (parent is an *already
-/// existing* env), and the parent link is a [`Weak`] that we *upgrade* on each
-/// step, so the chain is a finite, acyclic list rooted at the global frame —
-/// there is no way to construct a cycle from S/R source. The loop below therefore
+/// existing* env), so the *parent* relation is a finite, acyclic list rooted at
+/// the global frame — a parent link can never point at a descendant, so this walk
+/// cannot loop. (Value-binding cycles, which this walk never follows, are a
+/// separate matter — see the module note.) The parent link is a [`Weak`] that we
+/// *upgrade* on each step. The loop below therefore
 /// always reaches a frame whose parent is absent (root) or no longer upgradable
 /// (dropped) and stops. We walk iteratively (not recursively) so even a
 /// pathologically deep chain cannot overflow the native stack here; the chain

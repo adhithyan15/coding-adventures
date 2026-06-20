@@ -62,6 +62,23 @@ pub struct Interpreter {
     /// default, but immediate printing is simpler and equally faithful for a
     /// REPL); the buffer exists so a future `warnings()` accessor can read them.
     warnings: RefCell<Vec<String>>,
+    /// The number of first-class environments reified this session via
+    /// `new.env()` / `environment()` (R-22), capped by [`MAX_ENVIRONMENTS`].
+    ///
+    /// **Why this counter exists (the Rc-cycle caveat).** Making `Scope::parent` a
+    /// `Weak` (see [`crate::env`]) breaks any cycle that closes *through the parent
+    /// link*. It does **not** break a cycle that closes *through a value binding* —
+    /// an environment value is a strong `Rc`, so `assign("self", e, envir = e)`
+    /// (or a mutual `a`/`b` pair) stores a strong `Rc` to a scope inside that very
+    /// scope's `vars`, an uncollectable cycle that `Rc` alone cannot reclaim
+    /// (R relies on a tracing GC here; we have only `Rc`). Such a cycle leaks the
+    /// bindings it retains once it becomes unreachable. We cannot cheaply collect
+    /// it, but we *bound* the damage: this counter caps how many environments a
+    /// single session can reify, so a crafted `for (i in 1:1e9) { e <- new.env();
+    /// assign("self", e, envir = e) }` cannot drive unbounded heap growth — it
+    /// hits a clean error at the cap instead. The cap is far beyond any realistic
+    /// program's environment count.
+    envs_created: Cell<usize>,
     /// The stack of closures currently being evaluated, innermost last (R-20).
     /// `call_closure` pushes the function it is about to run and pops it on the
     /// way out (via an RAII guard, so an early-return/error still pops), so the
@@ -88,6 +105,16 @@ const DEFAULT_SEED: u64 = 4357;
 /// real programs (including ordinary recursion) while staying well under the
 /// native stack limit.
 const MAX_EVAL_DEPTH: usize = 3000;
+
+/// The most first-class environments a single session may reify via `new.env()` /
+/// `environment()` (R-22). Because an environment value is a strong `Rc` that can
+/// be stored inside the very scope it points at (`assign("self", e, envir = e)`),
+/// a reference cycle through *value bindings* is constructible from user source —
+/// the `Weak` parent link cannot break it (it only breaks parent-link cycles), and
+/// `Rc` cannot collect it. This cap bounds the resulting leak: a crafted loop
+/// building self-/mutually-referential environments hits a clean error here rather
+/// than exhausting memory. 1,048,576 is far beyond any realistic program.
+const MAX_ENVIRONMENTS: usize = 1 << 20;
 
 /// RAII guard that decrements the interpreter's depth counter on scope exit,
 /// so every early `return`/`?` in `eval_node` is accounted for.
@@ -136,8 +163,23 @@ impl Interpreter {
             depth: Cell::new(0),
             rng: RefCell::new(RngState::new(DEFAULT_SEED)),
             warnings: RefCell::new(Vec::new()),
+            envs_created: Cell::new(0),
             call_stack: RefCell::new(Vec::new()),
         }
+    }
+
+    /// Account for one newly reified first-class environment (R-22), failing
+    /// closed at [`MAX_ENVIRONMENTS`] so a crafted loop building cyclic
+    /// environments cannot grow the heap without bound. See `envs_created`.
+    fn account_environment(&self) -> SResult<()> {
+        let n = self.envs_created.get();
+        if n >= MAX_ENVIRONMENTS {
+            return Err(SError::BadArgs(format!(
+                "too many environments created (limit {MAX_ENVIRONMENTS})"
+            )));
+        }
+        self.envs_created.set(n + 1);
+        Ok(())
     }
 
     /// The function currently being evaluated, if any — the top of the call
@@ -1510,6 +1552,7 @@ impl Interpreter {
     /// value owning the only strong `Rc` to the child cannot form a cycle with its
     /// parent.
     fn eval_new_env(&self, _raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        self.account_environment()?;
         let scope = Scope::child(env);
         self.as_visible(SValue::Environment(scope))
     }
@@ -1527,6 +1570,10 @@ impl Interpreter {
                     .into(),
             ));
         }
+        // `environment()` reifies the current scope as a value too — count it
+        // against the same cap (it can equally participate in a value-binding
+        // cycle, e.g. `assign("self", environment(), envir = environment())`).
+        self.account_environment()?;
         self.as_visible(SValue::Environment(Rc::clone(env)))
     }
 

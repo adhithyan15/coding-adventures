@@ -417,11 +417,15 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
    so a scope can be a value: passed, stored, and mutated **by reference**. The
    surface (`new.env()`, `environment()`, `envir =`, `ls(envir=)`) is driven from
    the R frontend (R-22), but the variant and the `Scope::parent` link's change
-   from strong `Rc` to **`Weak`** (to break the Rc cycle an environment-holding
-   environment would otherwise form) live in `s-runtime` so S benefits too. The
-   global env and each live call frame retain strong ownership (interpreter /
-   native call stack), so parents are referenced but never owned by children —
-   no strong-`Rc` cycle is constructible from source.
+   from strong `Rc` to **`Weak`** (to break the parent-edge cycle an
+   environment-holding environment would otherwise form) live in `s-runtime` so S
+   benefits too. The global env and each live call frame retain strong ownership
+   (interpreter / native call stack), so parents are referenced but never owned by
+   children — **no cycle through the parent chain is constructible**. A cycle
+   *through a value binding* (e.g. `assign("self", e, envir = e)`) remains
+   possible — a strong `Rc` stored inside its own scope, which `Rc` cannot reclaim
+   without a tracing GC — and is a documented limitation bounded by a per-session
+   `MAX_ENVIRONMENTS` cap rather than collected.
 
 ## §10 References
 

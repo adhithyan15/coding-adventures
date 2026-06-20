@@ -155,11 +155,14 @@ pub enum SValue {
     /// R's otherwise copy-on-modify semantics.
     ///
     /// **Ownership / cycle safety.** This is the *only* `SValue` that owns a
-    /// strong `Rc` to a scope, and a scope's *parent* link is a `Weak` (see
-    /// [`crate::env`]). So even when an environment value is stored inside the very
-    /// scope it points at (`assign("self", e, envir = e)`), no uncollectable
-    /// strong-`Rc` cycle is formed: the only strong edges run root→leaf
-    /// (interpreter → global → … and value bindings); every parent edge is `Weak`.
+    /// strong `Rc` to a scope. A scope's *parent* link is a `Weak` (see
+    /// [`crate::env`]), so no cycle can form *through the parent chain*. A cycle
+    /// **can** still form through a *value binding* — storing an environment inside
+    /// the very scope it points at (`assign("self", e, envir = e)`) puts a strong
+    /// `Rc`-to-`e` inside `e`, which `Rc` cannot reclaim (R uses a tracing GC; we
+    /// do not). That leak is a documented limitation, *bounded* by the
+    /// `MAX_ENVIRONMENTS` session cap so it cannot be amplified without limit — see
+    /// the `crate::env` module note and `eval::MAX_ENVIRONMENTS`.
     ///
     /// **Printing.** Deliberately rendered as the *stable* placeholder
     /// `<environment>` rather than R's real heap address (`<environment: 0x..>`),

@@ -1642,9 +1642,10 @@ mod r22_environments {
         assert_eq!(nums(src), vec![7.0]);
     }
 
-    /// Self-reference is safe: an environment may hold itself as a binding (this
-    /// is the Rc-cycle case the `Weak` parent link makes collectable). It must not
-    /// panic, loop, or mis-report.
+    /// Self-reference is *observably* safe: an environment may hold itself as a
+    /// binding. (This forms an `Rc` cycle through the value binding — a documented,
+    /// `MAX_ENVIRONMENTS`-bounded leak — but it must never panic, loop, or
+    /// mis-report.)
     #[test]
     fn environment_can_hold_itself() {
         let src = "e <- new.env()\nassign(\"self\", e, envir = e)\nexists(\"self\", envir = e)\n";
@@ -1654,6 +1655,26 @@ mod r22_environments {
             show("e <- new.env()\nassign(\"self\", e, envir = e)\nls(e)\n"),
             "[1] \"self\""
         );
+    }
+
+    /// A **mutual** reference cycle (`a` holds `b`, `b` holds `a`) is also
+    /// observably safe — no panic, no infinite loop, correct membership. (Like the
+    /// self-cycle, this is a bounded leak, not a crash.)
+    #[test]
+    fn environments_can_reference_each_other() {
+        let src = "a <- new.env()\nb <- new.env()\n\
+                   assign(\"x\", b, envir = a)\nassign(\"y\", a, envir = b)\n\
+                   exists(\"x\", envir = a)\n";
+        assert_eq!(show(src), "[1] TRUE");
+    }
+
+    /// Creating many environments in a loop is fine well under the
+    /// `MAX_ENVIRONMENTS` cap — the counter does not falsely trip on ordinary use.
+    #[test]
+    fn many_new_envs_under_the_cap_are_fine() {
+        // 500 envs is trivially under the 2^20 cap.
+        let src = "for (i in 1:500) { e <- new.env() }\n1\n";
+        assert_eq!(nums(src), vec![1.0]);
     }
 
     /// `environment(f)` (a closure's captured env) is deferred to R-23 — a clean

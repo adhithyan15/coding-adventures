@@ -470,16 +470,28 @@ unchanged.
     for the whole session (a strong `Rc` in `Interpreter::global`), and each live
     call frame is held by a strong `Rc` on the native call stack for the duration
     of the call; parents are only ever *referenced*, never *owned*, by their
-    children. Therefore: (a) no cycle of strong `Rc`s is constructible from R
-    source — every strong edge runs root→leaf via interpreter/call-stack
-    ownership or a value binding, while every parent edge is `Weak`; (b) a child
-    environment captured as a value (e.g. returned from `new.env()` and stored in
-    a variable) keeps itself alive through that strong binding, and its `Weak`
-    parent upgrades successfully as long as *something else* still owns the
-    parent (the global env always does, transitively). A `Weak` parent that
-    cannot be upgraded (its frame was dropped) is treated as "no parent" — the
-    chain walk simply stops, exactly as it would at the root. This is documented
-    inline in `env.rs` and is the focus of the R-22 security review.
+    children. Therefore: (a) **no cycle through the parent chain is constructible**
+    — every parent edge is `Weak`, so the parent relation stays a finite acyclic
+    list, and the chain-walk operations (`lookup`/`exists`/`super_assign`) always
+    terminate; (b) a child environment captured as a value keeps itself alive
+    through that strong binding, and its `Weak` parent upgrades as long as
+    *something else* still owns the parent (the global env always does,
+    transitively). A `Weak` parent that cannot be upgraded is treated as "no
+    parent" — the chain walk stops, as at the root.
+  - **The residual cycle: value bindings (a bounded, documented limitation).** The
+    `Weak` parent breaks only cycles *through the parent edge*. A cycle can still
+    form *through a value binding*, because an environment value is a **strong**
+    `Rc`: `assign("self", e, envir = e)` stores a strong `Rc`-to-`e` inside `e`
+    itself (and a mutual `a`/`b` pair does the same), an `Rc` cycle that — absent a
+    tracing GC, which R has and we do not — cannot be reclaimed once unreachable.
+    R-22 does **not** claim to collect it; it **bounds** the damage with a
+    per-session `MAX_ENVIRONMENTS` cap (in `eval.rs`) on the number of
+    environments `new.env()`/`environment()` may reify, so a crafted loop building
+    cyclic environments hits a clean error instead of exhausting memory. This and
+    the `Weak` parent are documented inline in `env.rs`/`value.rs` and are the
+    focus of the R-22 security review. (Divergence from the first draft of this
+    spec, which over-claimed that *no* strong-`Rc` cycle was constructible; the
+    value-binding cycle and its bounded mitigation are the corrected model.)
   - **`new.env()`** — create a fresh environment whose parent is the **caller's**
     current environment, and return it as a first-class value. Two calls produce
     two independent environments. A lazy special form (it needs the current
