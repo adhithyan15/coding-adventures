@@ -4,6 +4,73 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.9.0] — 2026-06-19
+
+The **W-12** deliverable (MA04 §15): Wolfram's **string builtins**, lowered onto
+the *same* substrate as the rest of the lane — the string atom is already
+`IRNode::Str(String)` (the W-4 lexer produces it, the printer renders it), and
+`StringSplit`/`Characters` reuse the W-9 list machinery (and its
+`MAX_LIST_LENGTH` cap). Like every head since W-5 these are plain `Head[args]`
+applications, so there is **no grammar change**; only the `wolfram-runtime`
+builtin handler table grows. The `<>` infix sugar for `StringJoin` is **deferred**
+to a future grammar-change lane item.
+
+### Added (string builtins)
+
+- **`StringJoin[a, b, …]`** — concatenate string arguments (`StringJoin["a","b"]`
+  → `"ab"`; `StringJoin[]` → `""`). DoS-capped at the new `MAX_STRING_LENGTH`
+  (the running total uses `checked_add`; an over-cap join stays unevaluated
+  before any allocation).
+- **`StringLength[s]`** — number of **characters**, not bytes
+  (`StringLength["héllo"]` → `5`).
+- **`StringTake[s, n]`** — first `n` chars (`n < 0` → last `|n|`); **`StringTake[s,
+  {m, n}]`** — 1-based inclusive character range. `StringTake["hello", 3]` →
+  `"hel"`, `StringTake["hello", {2, 4}]` → `"ell"`, `StringTake["hello", -2]` →
+  `"lo"`.
+- **`StringDrop[s, n]`** — drop the first `n` chars (`n < 0` → drop the last
+  `|n|`). `StringDrop["hello", 2]` → `"llo"`.
+- **`StringSplit[s]`** — split on runs of whitespace; **`StringSplit[s, sep]`** —
+  split on a literal string separator. Both drop empty fields and return a `List`
+  of strings. `StringSplit["a b  c"]` → `{"a","b","c"}`, `StringSplit["a,b,c",
+  ","]` → `{"a","b","c"}`.
+- **`StringReplace[s, a -> b]`** — replace **every** non-overlapping literal
+  occurrence of `a` with `b`; accepts a single rule or a `{r1, r2, …}` list of
+  rules applied in sequence. `StringReplace["banana", "a"->"o"]` → `"bonono"`.
+- **`ToString[expr]`** — the Wolfram surface form of `expr` via the existing
+  `print_wolfram` printer; a bare top-level string renders as its **raw content**
+  (no quotes), so `ToString[123]` → `"123"` and `ToString["hi"]` → `"hi"`.
+- **`Characters[s]`** — list of single-character strings (`Characters["ab"]` →
+  `{"a","b"}`).
+
+### Unicode by character, never by byte
+
+Every length, index, and slice goes through `s.chars().count()` / a
+`Vec<char>` — **no byte index is ever taken** — so a multi-byte character (`é`,
+an emoji) counts as exactly one position and `StringTake`/`StringDrop` can never
+slice through a UTF-8 boundary (the `byte index N is not a char boundary` panic
+is structurally impossible). `StringLength["héllo"]` is `5`; `StringTake["héllo",
+2]` is `"hé"`.
+
+### Safety / DoS
+
+- New **`MAX_STRING_LENGTH`** cap (mirrors `MAX_LIST_LENGTH` = 1,000,000) bounds
+  the two string-*growing* heads, `StringJoin` and `StringReplace`.
+- `StringReplace` rejects an **empty pattern** (`"" -> x`, which would match at
+  every position — unbounded expansion) and scans **non-overlapping
+  left-to-right** (so `"a" -> "aa"` does not re-scan the inserted text; linear,
+  terminating). Its output length is bounded by `MAX_STRING_LENGTH`.
+- `i64::MIN` indices are handled via an `i128` magnitude (no `i64::abs`
+  overflow); out-of-range / non-integer / non-string inputs leave the form
+  **unevaluated** rather than panicking — the W-5/W-9 fail-soft contract.
+
+### Tests
+
+28 new unit tests in `builtins.rs` (each head's happy path, the Unicode cases,
+the DoS caps, and the malformed-input/unevaluated paths) plus 3 end-to-end tests
+in `lib.rs` (full lex→lower→eval→print, Unicode, and a malformed-input
+session-survival case). `cargo clippy` clean; all `wolfram-runtime` +
+`wolfram-repl` tests green.
+
 ## [0.8.0] — 2026-06-19
 
 The **W-11** deliverable (MA04 §14): Wolfram's **pure (anonymous) functions** —
