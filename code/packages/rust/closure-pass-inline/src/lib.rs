@@ -564,6 +564,9 @@ fn count_decl_names_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                count_decl_names_stmt(&ds.body, out, nodes_touched)
+            }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(ForInit::VariableDeclaration(vd)) = &fs.init {
                     count_decl_names_var(vd, out);
@@ -759,6 +762,10 @@ fn tally_stmt(stmt: &Statement, cand: &InlineCandidate, t: &mut Tally) {
             TaggedStatement::WhileStatement(ws) => {
                 tally_expr(&ws.test, cand, t);
                 tally_stmt(&ws.body, cand, t);
+            }
+            TaggedStatement::DoWhileStatement(ds) => {
+                tally_expr(&ds.test, cand, t);
+                tally_stmt(&ds.body, cand, t);
             }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &fs.init {
@@ -980,6 +987,10 @@ fn inline_in_stmt(stmt: &mut Statement, cand: &InlineCandidate) -> bool {
             TaggedStatement::WhileStatement(ws) => {
                 changed |= inline_in_expr(&mut ws.test, cand);
                 changed |= inline_in_stmt(&mut ws.body, cand);
+            }
+            TaggedStatement::DoWhileStatement(ds) => {
+                changed |= inline_in_expr(&mut ds.test, cand);
+                changed |= inline_in_stmt(&mut ds.body, cand);
             }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &mut fs.init {
@@ -1895,6 +1906,9 @@ fn splice_void_in_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 splice_void_in_slot(&mut ws.body, cand, avoid, nodes_touched)
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                splice_void_in_slot(&mut ds.body, cand, avoid, nodes_touched)
+            }
             TaggedStatement::ForStatement(fs) => {
                 splice_void_in_slot(&mut fs.body, cand, avoid, nodes_touched)
             }
@@ -2730,6 +2744,9 @@ fn splice_valued_in_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 splice_valued_in_stmt(&mut ws.body, cand, avoid, nodes_touched)
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                splice_valued_in_stmt(&mut ds.body, cand, avoid, nodes_touched)
+            }
             TaggedStatement::ForStatement(fs) => {
                 splice_valued_in_stmt(&mut fs.body, cand, avoid, nodes_touched)
             }
@@ -3016,6 +3033,10 @@ fn collect_used_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             TaggedStatement::WhileStatement(ws) => {
                 collect_binding_idents_expr(&ws.test, out);
                 collect_used_idents_stmt(&ws.body, out);
+            }
+            TaggedStatement::DoWhileStatement(ds) => {
+                collect_binding_idents_expr(&ds.test, out);
+                collect_used_idents_stmt(&ds.body, out);
             }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &fs.init {

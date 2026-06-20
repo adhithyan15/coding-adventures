@@ -343,6 +343,9 @@ fn count_decl_names_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                count_decl_names_stmt(&ds.body, out, nodes_touched)
+            }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(ForInit::VariableDeclaration(vd)) = &fs.init {
                     count_decl_names_var(vd, out);
@@ -451,6 +454,10 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             TaggedStatement::WhileStatement(ws) => {
                 collect_all_idents_expr(&ws.test, out);
                 collect_all_idents_stmt(&ws.body, out);
+            }
+            TaggedStatement::DoWhileStatement(ds) => {
+                collect_all_idents_expr(&ds.test, out);
+                collect_all_idents_stmt(&ds.body, out);
             }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &fs.init {
@@ -677,6 +684,10 @@ fn rename_apply_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
         TaggedStatement::WhileStatement(ws) => {
             rename_apply_expr(&mut ws.test, map);
             rename_apply_stmt(&mut ws.body, map);
+        }
+        TaggedStatement::DoWhileStatement(ds) => {
+            rename_apply_expr(&mut ds.test, map);
+            rename_apply_stmt(&mut ds.body, map);
         }
         TaggedStatement::ForStatement(fs) => {
             if let Some(init) = &mut fs.init {

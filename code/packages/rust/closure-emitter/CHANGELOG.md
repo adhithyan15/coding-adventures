@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.14.0] - 2026-06-20
+
+### Added — CLOC20: emit `do`/`while`
+
+New `emit_do_while` writes `do <body> while ( <test> ) ;`. Token-separation: a
+required space is inserted after `do` only when the body is NOT a block (so
+`do{…}` stays tight but `do foo();` does not glue into `dofoo()`). The trailing
+`;` is a real statement terminator, so `DoWhileStatement` is added to
+`last_stmt_uses_terminator_semi` — its `;` is popped before a closing `}` (e.g.
+`{do{a}while(b)}`) just like `return`/`throw`/expression statements, but unlike
+plain `while` (whose trailing `;` is a body slot). Added emitter unit tests for
+the tight, bare-body, pretty-mode, and terminator-pop cases.
+
 ## [0.13.0] - 2026-06-20
 
 ### Added — CLOC19: emit `try`/`catch`/`finally`

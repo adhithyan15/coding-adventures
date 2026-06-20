@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.17.0] - 2026-06-20
+
+### Added — CLOC20: function inlining across `do`/`while`
+
+Every phase of the pass recurses through `DoWhileStatement`:
+`count_decl_names_stmt`, `tally_stmt`, `inline_in_stmt`, `splice_void_in_slot`,
+`splice_valued_in_stmt`, and `collect_used_idents_stmt` now descend into the loop
+body and test, mirroring the existing `while` handling. Calls inside a do-while
+body are now inlined like anywhere else.
+
 ## [0.16.0] - 2026-06-20
 
 ### Added — CLOC19: function inlining across `try`/`catch`/`finally`

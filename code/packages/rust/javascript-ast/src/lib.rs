@@ -140,9 +140,10 @@ pub use expression::{
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral,
 };
 pub use statement::{
-    BlockStatement, BreakStatement, CatchClause, ContinueStatement, EmptyStatement,
-    ExpressionStatement, ForInit, ForStatement, IfStatement, LabeledStatement, ReturnStatement,
-    Statement, SwitchCase, SwitchStatement, ThrowStatement, TryStatement, WhileStatement,
+    BlockStatement, BreakStatement, CatchClause, ContinueStatement, DoWhileStatement,
+    EmptyStatement, ExpressionStatement, ForInit, ForStatement, IfStatement, LabeledStatement,
+    ReturnStatement, Statement, SwitchCase, SwitchStatement, ThrowStatement, TryStatement,
+    WhileStatement,
 };
 
 /// A correlation-vector identifier. Aliased to `String` for v1 to match
