@@ -3,6 +3,39 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.15.0] — 2026-06-20 (f64 constants + comparisons — LANG-FULL E3; ALGOL reals run on the JVM)
+
+The backend already lowered f64 *arithmetic* (`dadd`/`dmul`/…) and typed `f64`
+locals as `Double` (two slots, `dstore`/`dload`), but two gaps made a real
+*program* fail JVM verification (empty output), so ALGOL reals ran only on the
+VM/JIT/LLVM/WASM. Both fixed:
+
+### Fixed — non-0/1 `f64` constants pointed at constant-pool index `#0`
+
+`emit_dconst` had a "placeholder for v1": `0.0d`/`1.0d` used the `dconst_0`/
+`dconst_1` short forms, but any *other* double emitted `ldc2_w #0000` — the
+unused phantom slot, not a real `CONSTANT_Double`. So a `real` literal like
+`2.5` loaded garbage and the verifier rejected the class. `emit_dconst_cp` now
+interns the value via a new `ConstantPoolBuilder::add_double` (which reserves
+the two pool slots a `Double` occupies, mirroring `add_long`) and emits
+`ldc2_w <real index>`.
+
+### Fixed — `f64` comparisons fell through to the integer `if_icmp` path
+
+The comparison dispatch handled only `Long` (`lcmp` + `ifXX`) and `int`
+(`if_icmp*`). A `Double` operand fell into the `int` branch, which `iload`ed a
+two-slot double as a single 32-bit int and used `if_icmpne` → the verifier
+rejected it. A new `Double` branch emits `dcmpl`/`dcmpg` (→ int -1/0/1) then the
+same unary `ifXX` the long path uses. `dcmpg` is used for `>`/`>=` (NaN → false)
+and `dcmpl` for the rest, matching javac's convention. The boolean result is an
+`int` (unchanged), stored with `istore`.
+
+**Verified by RUNNING on real `java`**: the two ALGOL real programs
+(`r := 2.5 * 2.0; if r = 5.0 …` → exit 42; `r := 7.0 / 2.0; if r < 4.0 …` →
+exit 1) now execute on the JVM matrix column. Five new structural tests
+(double pool entry, short forms, dcmp-not-if_icmp, dcmpg for `>`). Integer/long
+programs are unaffected (the new branches key on `JvmType::Double`).
+
 ## [0.14.0] — 2026-06-16 (narrow-width mask on the LONG model — LANG-FULL O2)
 
 ### Fixed — a narrow-width op over `long` operands now masks correctly

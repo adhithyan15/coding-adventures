@@ -2722,3 +2722,86 @@ fn mov_int_bool_into_long_accumulator_widens_with_i2l() {
     // int store of the comparison result is still present (it is the i2l source).
     assert!(code.contains(&ISTORE), "the int comparison result is istore'd before the widening mov");
 }
+
+// ===========================================================================
+// f64 (double) support — LANG-FULL enabler E3
+// ===========================================================================
+
+/// A non-0/1 `f64` constant must be loaded with `ldc2_w` pointing at a real
+/// `CONSTANT_Double` pool entry — not the old placeholder index `#0` (the
+/// unused phantom slot), which made the class fail JVM verification.
+#[test]
+fn f64_constant_uses_real_double_pool_entry() {
+    const LDC2_W: u8 = 0x14;
+    let f = IIRFunction::new("main", vec![], "f64", vec![
+        IIRInstr::new("const", Some("r".into()), vec![Operand::Float(2.5)], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+    ]);
+    let class = lower(&module_with(f));
+    // A CONSTANT_Double(2.5) entry exists in the pool.
+    assert!(class.constant_pool.iter().any(|e|
+        matches!(e, Some(JvmConstantPoolEntry::Double(v)) if (*v - 2.5).abs() < 1e-12)),
+        "expected a CONSTANT_Double(2.5) pool entry");
+    let code = code_bytes(&class);
+    // ldc2_w is emitted, and its 2-byte operand is NOT 0x0000 (the phantom slot).
+    let pos = code.iter().position(|&b| b == LDC2_W).expect("ldc2_w for the f64 const");
+    let idx = u16::from_be_bytes([code[pos + 1], code[pos + 2]]);
+    assert_ne!(idx, 0, "ldc2_w must reference a real CP index, not the phantom #0");
+}
+
+/// `0.0d` and `1.0d` keep their 1-byte short forms (`dconst_0`/`dconst_1`) —
+/// no pool entry needed.
+#[test]
+fn f64_zero_and_one_use_short_forms() {
+    const DCONST_0: u8 = 0x0E;
+    const DCONST_1: u8 = 0x0F;
+    let f = IIRFunction::new("main", vec![], "f64", vec![
+        IIRInstr::new("const", Some("z".into()), vec![Operand::Float(0.0)], "f64"),
+        IIRInstr::new("const", Some("o".into()), vec![Operand::Float(1.0)], "f64"),
+        IIRInstr::new("add", Some("s".into()),
+            vec![Operand::Var("z".into()), Operand::Var("o".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "f64"),
+    ]);
+    let code = code_bytes(&lower(&module_with(f)));
+    assert!(code.contains(&DCONST_0), "0.0d should use dconst_0");
+    assert!(code.contains(&DCONST_1), "1.0d should use dconst_1");
+}
+
+/// An `f64` comparison lowers to `dcmpl`/`dcmpg` + a unary branch — NOT the
+/// integer `if_icmp*` path, which would `iload` a two-slot double as a single
+/// int and fail verification.
+#[test]
+fn f64_comparison_uses_dcmp_not_if_icmp() {
+    const DCMPL: u8 = 0x97;
+    const DCMPG: u8 = 0x98;
+    const IF_ICMPNE: u8 = 0xA0;
+    // r := 7.0; if r < 4.0 ... — a real ordered comparison.
+    let lt = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("r".into()), vec![Operand::Float(7.0)], "f64"),
+        IIRInstr::new("const", Some("four".into()), vec![Operand::Float(4.0)], "f64"),
+        IIRInstr::new("cmp_lt", Some("c".into()),
+            vec![Operand::Var("r".into()), Operand::Var("four".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+    ]);
+    let code = code_bytes(&lower(&module_with(lt)));
+    assert!(code.contains(&DCMPL) || code.contains(&DCMPG),
+        "f64 comparison must use dcmpl/dcmpg");
+    assert!(!code.contains(&IF_ICMPNE),
+        "f64 comparison must NOT fall back to the integer if_icmp path");
+}
+
+/// `>` / `>=` over reals use `dcmpg` (so a NaN operand makes them false),
+/// matching javac's convention.
+#[test]
+fn f64_greater_uses_dcmpg() {
+    const DCMPG: u8 = 0x98;
+    let gt = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("a".into()), vec![Operand::Float(7.0)], "f64"),
+        IIRInstr::new("const", Some("b".into()), vec![Operand::Float(4.0)], "f64"),
+        IIRInstr::new("cmp_gt", Some("c".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+    ]);
+    let code = code_bytes(&lower(&module_with(gt)));
+    assert!(code.contains(&DCMPG), "cmp_gt over f64 should use dcmpg");
+}

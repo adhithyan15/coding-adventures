@@ -522,16 +522,14 @@ const PROGRAMS: &[Prog] = &[
     // The exit code stays an integer, so no float *printing* is needed to verify
     // (the comparison fold is the observable).
     //
-    // **Backends:** LLVM + WASM + VM + JIT.  The VM/JIT carry a real tagged value
-    // model (`Value::Float` / the JIT's CIR float operand); **LLVM** executes f64
-    // via `iir-to-llvm` 0.13.0's `double` stack slots; **WASM** executes f64 with
-    // no backend change at all — `iir-to-wasm`'s typed-local model already carries
-    // an `f64` variable in an `F64` local and selects `f64.mul`/`f64.eq`/`f64.lt`
-    // from the `f64` type_hint (unlike LLVM/JVM, whose uniform-`i64` slot model
-    // needed the rework).  The remaining code-gen backends are E3 follow-ups in
-    // `LANG-FULL-IMPLEMENTATION.md`:
-    //   * **E3-codegen-slots (jvm)** — `iir-to-jvm-class-file` still slots f64
-    //     locals as `long`; needs the LLVM-style per-slot double typing.
+    // **Backends:** LLVM + WASM + JVM + VM + JIT (5 of 7) — **E3-codegen-slots is
+    // complete**. VM/JIT carry a real tagged value model; **LLVM** uses
+    // `iir-to-llvm` 0.13.0's `double` stack slots; **WASM** needed no change
+    // (typed-local model); **JVM** uses `iir-to-jvm-class-file` 0.15.0's
+    // `CONSTANT_Double` pool entries (`ldc2_w`) + `dcmpl`/`dcmpg` comparisons
+    // (previously a real const loaded the invalid pool index `#0` and a real
+    // comparison fell into the integer `if_icmp` path → VerifyError). The two
+    // remaining backends are E3 follow-ups in `LANG-FULL-IMPLEMENTATION.md`:
     //   * **E3-native / E3-clr** — `x86_64`/`aarch64` and `iir-to-cil-bytecode`
     //     reject `const_f64`/`Operand::Float` outright (no FP emission yet).
     Prog {
@@ -540,20 +538,20 @@ const PROGRAMS: &[Prog] = &[
         src: "begin real r; integer result; r := 2.5 * 2.0; \
                if r = 5.0 then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
-        backends: &[Llvm, Wasm, Vm, Jit],
+        backends: &[Llvm, Wasm, Jvm, Vm, Jit],
     },
     // ALGOL 60 — *real division* (`/`) + an *ordered* real comparison (E3).
     // `r := 7.0 / 2.0` is true division (`3.5`, not integer `div`'s `3`), and
     // `if r < 4.0` exercises `f64` ordered comparison (LLVM `fcmp olt` / WASM
-    // `f64.lt`) ⇒ exit 1.  Same LLVM+WASM+VM+JIT slice as above (jvm pends
-    // E3-codegen-slots; native + CLR pend E3-native / E3-clr).
+    // `f64.lt` / JVM `dcmpl`+`ifge`) ⇒ exit 1.  Same LLVM+WASM+JVM+VM+JIT slice as
+    // above (native + CLR pend E3-native / E3-clr).
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real r; integer result; r := 7.0 / 2.0; \
                if r < 4.0 then result := 1 else result := 0 end",
         expect: Expect::Exit(1),
-        backends: &[Llvm, Wasm, Vm, Jit],
+        backends: &[Llvm, Wasm, Jvm, Vm, Jit],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
