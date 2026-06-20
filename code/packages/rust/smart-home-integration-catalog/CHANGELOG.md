@@ -139,6 +139,8 @@ All notable changes to this package will be documented in this file.
   release-readiness check slots into deterministic low-level operator work.
 - `IntegrationMeshReleaseTaskReadinessSummary` and helpers for combining mesh
   release execution readiness with deterministic task state.
+- `IntegrationMeshReleaseExecutionTaskDispatchSlot` and summary helpers for
+  turning release execution tasks into deterministic dispatch queues.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
