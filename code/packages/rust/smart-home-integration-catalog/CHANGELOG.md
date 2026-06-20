@@ -135,6 +135,8 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseExecutionReadinessSummary` and helpers for combining
   mesh release packet readiness with release-readiness check slot execution
   state.
+- `IntegrationMeshReleaseExecutionTask` and summary helpers for turning mesh
+  release-readiness check slots into deterministic low-level operator work.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
