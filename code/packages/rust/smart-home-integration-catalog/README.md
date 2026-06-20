@@ -119,6 +119,8 @@ runtime and Chief of Staff tools a typed catalog for:
   dispatch queue state
 - low-level mesh release dispatch tickets that wrap dispatch queues in
   deterministic ticket keys
+- mesh release ticket readiness summaries that combine release dispatch
+  readiness with deterministic ticket state
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and
