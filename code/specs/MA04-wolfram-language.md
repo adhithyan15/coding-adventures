@@ -919,6 +919,117 @@ than `f[x_] := f[x]`, which W-4 already tolerates). The slot/`SlotSequence` spli
 produces an argument list bounded by the *call's* argument count, never amplified.
 W-11 therefore adds **no new unbounded growth source** beyond what W-4 already bounds.
 
+## §15 W-12 string builtins — `StringJoin`, `StringLength`, `StringTake`/`Drop`/`Split`/`Replace`, `ToString`, `Characters` (implemented)
+
+W-4..W-11 gave the M-expression core, the arithmetic bridge, operator sugar,
+iteration, scoping, list manipulation, functional combinators, and pure functions
+— but every one of those heads operated over *numbers, symbols, and lists*. W-12
+adds the **string** builtins every introductory session reaches for, lowered onto
+the *same* substrate: the string atom is already `IRNode::Str(String)` (W-4's
+lexer produces it and the printer renders it), and the list machinery from W-9
+(`StringSplit`/`Characters` build a `List(...)`; the W-9 `MAX_LIST_LENGTH` cap is
+reused) is reused verbatim. Like every head since W-5 these are plain `Head[args]`
+applications, so **there is no grammar change**: W-12 touches only
+`wolfram-runtime`'s builtin handler table (`builtins.rs`), and — for `ToString`'s
+unquoted rendering of a bare string — adds one small consideration to the printer
+reuse. The `<>` infix sugar for `StringJoin` is **deferred** (it would need a
+`wolfram.tokens`/`wolfram.grammar` regen, out of scope for a no-grammar-change
+lane item); the `StringJoin[…]` head form ships instead.
+
+### §15.1 What W-12 adds
+
+| Head                        | Meaning                                                          |
+|-----------------------------|------------------------------------------------------------------|
+| `StringJoin[a, b, …]`       | concatenate string arguments                                     |
+| `StringLength[s]`           | number of **characters** (not bytes)                             |
+| `StringTake[s, n]`          | first `n` chars; `n < 0` → last `|n|`                            |
+| `StringTake[s, {m, n}]`     | 1-based inclusive character range                                |
+| `StringDrop[s, n]`          | drop first `n` chars; `n < 0` → drop last `|n|`                  |
+| `StringSplit[s]`            | split on runs of whitespace → list of strings                    |
+| `StringSplit[s, sep]`       | split on a literal string separator → list of strings            |
+| `StringReplace[s, a -> b]`  | replace every literal occurrence of `a` with `b`                 |
+| `StringReplace[s, {r, …}]`  | apply a list of literal rules left-to-right                      |
+| `ToString[expr]`            | the Wolfram surface form of `expr` as a string                   |
+| `Characters[s]`             | list of single-character strings                                 |
+
+Worked examples (the W-12 acceptance tests):
+
+```wolfram
+StringLength["abc"]              (* 3 *)
+StringJoin["a", "b", "c"]        (* "abc" *)
+StringTake["hello", 3]           (* "hel" *)
+StringTake["hello", {2, 4}]      (* "ell" *)
+StringTake["hello", -2]          (* "lo" *)
+StringDrop["hello", 2]           (* "llo" *)
+StringSplit["a,b,c", ","]        (* {"a", "b", "c"} *)
+StringSplit["a b  c"]            (* {"a", "b", "c"} *)
+StringReplace["banana", "a"->"o"](* "bonono" *)
+ToString[123]                    (* "123" *)
+Characters["ab"]                 (* {"a", "b"} *)
+StringLength["héllo"]            (* 5  — multi-byte char counts as 1 *)
+StringTake["héllo", 2]           (* "hé" — never splits a char *)
+```
+
+### §15.2 Unicode by character, never by byte
+
+Every length, index, and slice operates on **Unicode scalar values** (`char`),
+never bytes. The implementation uses `s.chars().count()` for length and collects
+`s.chars().collect::<Vec<char>>()` before any indexing, so a multi-byte character
+(`é`, an emoji) counts as exactly **one** position and `StringTake`/`StringDrop`
+can never slice through the middle of a UTF-8 sequence — the byte-slicing panic
+(`byte index N is not a char boundary`) is structurally impossible because no byte
+index is ever taken. `StringLength["héllo"]` is `5`, and `StringTake["héllo", 2]`
+is `"hé"` (two characters, three bytes).
+
+### §15.3 The "I can't reduce this" contract — malformed input stays unevaluated
+
+Following the W-5/W-9 convention, every W-12 handler returns the application
+**unevaluated** when it cannot reduce: a non-string argument
+(`StringLength[123]`), an out-of-range index (`StringTake["hi", 9]`), a
+non-integer/non-pair second argument, an `i64::MIN` index, or a `StringReplace`
+rule whose pattern/replacement is not a string. No handler panics; this is both
+the Wolfram-faithful behaviour and a safety property (a crafted index reduces to
+nothing rather than crashing).
+
+`ToString` is the one head that always reduces: it renders *any* expr via the
+existing `print_wolfram` printer, except that a bare `IRNode::Str(s)` renders as
+its **raw content** `s` (no surrounding quotes), so `ToString["hi"]` is the string
+`"hi"` and `ToString[123]` is `"123"`. (Inside a larger structure the quoted form
+is kept, matching Wolfram's `ToString[{"a"}]` → `{a}` simplification we
+intentionally do *not* chase — only the top-level bare-string case is unquoted.)
+
+### §15.4 DoS surface — bounded outputs, bounded scan
+
+Three heads can produce output *larger* than any single input and are capped at
+the W-9 `MAX_LIST_LENGTH` / a mirrored character cap:
+
+- **`StringJoin`** — output length is the sum of input lengths; the running total
+  is accumulated with `checked_add` and the join is left unevaluated if it would
+  exceed the cap, so a long chain cannot aim for an unbounded allocation.
+- **`StringReplace`** — a replacement longer than its pattern grows the string per
+  match; the output is bounded by the same cap, and an **empty pattern** (`"" ->
+  x`, which would match at every position and between every char, an unbounded /
+  quadratic expansion) is rejected and left unevaluated.
+- **`Characters`/`StringSplit`** — both build a `List` whose length is bounded by
+  the input character count, itself bounded by the W-4 input-size cap; a defensive
+  `MAX_LIST_LENGTH` check mirrors the W-9 list builders.
+
+`StringReplace`'s scan is **non-overlapping left-to-right** (advance past each
+match by the pattern length), so it is linear in the input and terminates even
+when the replacement contains the pattern (`"a" -> "aa"` does not re-scan the
+inserted text). The other heads (`StringLength`, `StringTake`, `StringDrop`,
+`ToString`) are size-non-increasing or bounded by their already-materialised
+input and need no separate cap.
+
+### §15.5 No grammar change
+
+`StringJoin[…]`, `StringLength[…]`, `StringTake[…]`, `StringDrop[…]`,
+`StringSplit[…]`, `StringReplace[…]`, `ToString[…]`, and `Characters[…]` are all
+ordinary `Head[args]` applications. W-12 touches only `wolfram-runtime`'s builtin
+handler table (and a one-line printer consideration for `ToString`); the lexer,
+parser, and grammar files are untouched. The `<>` infix operator for `StringJoin`
+is **deferred** to a future grammar-change lane item.
+
 ### §6 References
 
 Internal: [`HML00`](HML00-historical-math-languages-roadmap.md),
