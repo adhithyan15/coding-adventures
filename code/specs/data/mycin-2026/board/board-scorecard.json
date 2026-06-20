@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 149,
-    "correct": 142,
+    "total": 151,
+    "correct": 144,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 136,
+        "correct": 138,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9926,
-    "grounded_correct": 135
+    "grounded_coverage": 0.9928,
+    "grounded_correct": 137
   },
   "results": [
     {
@@ -1176,6 +1176,22 @@
       "tactic": "recall",
       "gold": "pityriasis_rosea",
       "answer": "pityriasis_rosea",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "derm_pv_dx",
+      "tactic": "recall",
+      "gold": "pemphigus_vulgaris",
+      "answer": "pemphigus_vulgaris",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "derm_sf_dx",
+      "tactic": "recall",
+      "gold": "scarlet_fever",
+      "answer": "scarlet_fever",
       "outcome": "correct",
       "trust": "authoritative"
     },
