@@ -260,6 +260,10 @@ pub const SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID: &str = "smart_home.list_dis
 pub const SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID: &str = "smart_home.get_discovery_summary";
 pub const SMART_HOME_GET_PAIRING_PLAN_TOOL_ID: &str = "smart_home.get_pairing_plan";
 pub const SMART_HOME_LIST_DEVICES_TOOL_ID: &str = "smart_home.list_devices";
+pub const SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID: &str =
+    "smart_home.list_device_inventory_audit";
+pub const SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_device_inventory_audit_summary";
 pub const SMART_HOME_LIST_ROOMS_TOOL_ID: &str = "smart_home.list_rooms";
 pub const SMART_HOME_LIST_SCENES_TOOL_ID: &str = "smart_home.list_scenes";
 pub const SMART_HOME_DESCRIBE_SCENE_TOOL_ID: &str = "smart_home.describe_scene";
@@ -671,6 +675,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATIONS_T
     "smart_home.list_integration_activation_waiver_release_certifications";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_waiver_release_certification_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATIONS_TOOL_ID:
+    &str = "smart_home.list_integration_activation_waiver_release_certification_remediations";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATION_SUMMARY_TOOL_ID:
+    &str = "smart_home.get_integration_activation_waiver_release_certification_remediation_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -1828,6 +1836,30 @@ impl SmartHomeToolBridge {
                         ),
                     )
                 }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATIONS_TOOL_ID =>
+                {
+                    let query =
+                        integration_activation_waiver_release_certification_remediation_query(
+                            &arguments,
+                        )?;
+                    Ok(
+                        list_integration_activation_waiver_release_certification_remediations_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATION_SUMMARY_TOOL_ID =>
+                {
+                    let query =
+                        integration_activation_waiver_release_certification_remediation_query(
+                            &arguments,
+                        )?;
+                    Ok(
+                        get_integration_activation_waiver_release_certification_remediation_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
                     Ok(list_integration_activation_risk_output_handler_output(
@@ -1923,6 +1955,24 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_devices"))
+                }
+                SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID => {
+                    let query = device_inventory_audit_query(&arguments)?;
+                    list_device_inventory_audit_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID => {
+                    let query = device_inventory_audit_query(&arguments)?;
+                    get_device_inventory_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
                 }
                 SMART_HOME_LIST_ROOMS_TOOL_ID => {
                     let query = room_query(&arguments)?;
@@ -5333,6 +5383,43 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             ),
         ),
         read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATIONS_TOOL_ID,
+            "List smart-home integration activation waiver release certification remediations",
+            "List Chief-facing D23A activation waiver release certification remediation work derived from release certification rows with remediation lane, blocker status, source lineage, and next release action.",
+            integration_activation_waiver_release_certification_remediation_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "activation_waiver_release_certification_remediations",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_waiver_release_certification_remediations",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATION_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation waiver release certification remediation summary",
+            "Return compact D23A activation waiver release certification remediation counts by remediation status, remediation lane, source linkage, blocker, certification requirement, and release-ready posture.",
+            integration_activation_waiver_release_certification_remediation_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
             "List smart-home integration activation risk",
             "List D23A activation risk rows grouped by policy tier and policy surface using host-specific readiness context.",
@@ -5659,6 +5746,20 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
                 false,
             ),
             collection_output_schema("devices"),
+        ),
+        read_definition(
+            SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID,
+            "List smart-home device inventory audit",
+            "List Chief-derived smart-home device inventory audit rows over runtime-owned D23 device records.",
+            device_inventory_audit_query_schema(),
+            device_inventory_audit_list_output_schema(),
+        ),
+        read_definition(
+            SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID,
+            "Get smart-home device inventory audit summary",
+            "Summarize Chief-derived smart-home device inventory gaps without returning individual device rows.",
+            device_inventory_audit_query_schema(),
+            device_inventory_audit_summary_output_schema(),
         ),
         read_definition(
             SMART_HOME_LIST_ROOMS_TOOL_ID,
@@ -7057,6 +7158,40 @@ fn list_devices_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest,
             .map(|value| parse_health(&value))
             .transpose()?,
         capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
+    })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct DeviceInventoryAuditQuery {
+    bridge_id: Option<BridgeId>,
+    health: Option<Health>,
+    capability_id: Option<CapabilityId>,
+    manufacturer: Option<String>,
+    model: Option<String>,
+    attention_only: bool,
+    missing_room_only: bool,
+    missing_entities_only: bool,
+    identity_gaps_only: bool,
+    limit: Option<usize>,
+}
+
+fn device_inventory_audit_query(
+    arguments: &JsonValue,
+) -> Result<DeviceInventoryAuditQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(DeviceInventoryAuditQuery {
+        bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
+        health: optional_string(arguments, "health")?
+            .map(|value| parse_health(&value))
+            .transpose()?,
+        capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
+        manufacturer: optional_string(arguments, "manufacturer")?,
+        model: optional_string(arguments, "model")?,
+        attention_only: optional_bool(arguments, "attention_only")?.unwrap_or(false),
+        missing_room_only: optional_bool(arguments, "missing_room_only")?.unwrap_or(false),
+        missing_entities_only: optional_bool(arguments, "missing_entities_only")?.unwrap_or(false),
+        identity_gaps_only: optional_bool(arguments, "identity_gaps_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
 
@@ -15779,6 +15914,294 @@ struct IntegrationActivationWaiverReleaseCertificationQuery {
     release_certification_limit: Option<usize>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationWaiverReleaseCertificationRemediationRecord {
+    sequence: usize,
+    remediation_id: String,
+    source_release_certification_id: String,
+    source_release_signoff_id: String,
+    source_release_closure_id: String,
+    source_receipt_id: String,
+    source_erasure_id: String,
+    release_certification_status: IntegrationActivationWaiverReleaseCertificationStatus,
+    remediation_status: IntegrationActivationWaiverRemediationStatus,
+    remediation_kind: String,
+    remediation_lane: IntegrationActivationResponseOwnerLane,
+    remediation_reason: String,
+    remediation_action: String,
+    release_certification: IntegrationActivationWaiverReleaseCertificationRecord,
+}
+
+impl IntegrationActivationWaiverReleaseCertificationRemediationRecord {
+    fn from_release_certification_record(
+        sequence: usize,
+        record: &IntegrationActivationWaiverReleaseCertificationRecord,
+    ) -> Self {
+        let remediation_status = activation_waiver_release_certification_remediation_status(record);
+        let remediation_lane =
+            activation_waiver_release_certification_remediation_lane(record, remediation_status);
+
+        Self {
+            sequence,
+            remediation_id: format!(
+                "activation-waiver-release-certification-remediation-{sequence}"
+            ),
+            source_release_certification_id: record.release_certification_id.clone(),
+            source_release_signoff_id: record.source_release_signoff_id.clone(),
+            source_release_closure_id: record.source_release_closure_id.clone(),
+            source_receipt_id: record.source_receipt_id.clone(),
+            source_erasure_id: record.source_erasure_id.clone(),
+            release_certification_status: record.release_certification_status,
+            remediation_status,
+            remediation_kind: activation_waiver_release_certification_remediation_kind(
+                record,
+                remediation_status,
+            )
+            .to_string(),
+            remediation_lane,
+            remediation_reason: activation_waiver_release_certification_remediation_reason(
+                record,
+                remediation_status,
+            )
+            .to_string(),
+            remediation_action: activation_waiver_release_certification_remediation_action(
+                remediation_status,
+            )
+            .to_string(),
+            release_certification: record.clone(),
+        }
+    }
+
+    fn source(&self) -> &IntegrationActivationWaiverErasureReceiptSource {
+        &self
+            .release_certification
+            .release_signoff
+            .release_closure
+            .receipt
+            .source
+    }
+
+    fn has_source_lineage(&self) -> bool {
+        self.release_certification.has_source_lineage()
+            && !self.source_release_certification_id.is_empty()
+    }
+
+    fn is_blocked(&self) -> bool {
+        self.remediation_status.is_blocked() || self.release_certification.is_blocked()
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.release_certification.requires_attention()
+            || self.remediation_status.requires_attention()
+    }
+
+    fn ready_to_execute(&self) -> bool {
+        matches!(
+            self.remediation_status,
+            IntegrationActivationWaiverRemediationStatus::ReadyToExecute
+        )
+    }
+
+    fn tracking(&self) -> bool {
+        matches!(
+            self.remediation_status,
+            IntegrationActivationWaiverRemediationStatus::Tracking
+        )
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationWaiverReleaseCertificationRemediationSummary {
+    total_records: usize,
+    unique_integrations: usize,
+    records_requiring_attention: usize,
+    blocked_records: usize,
+    owner_action_records: usize,
+    ready_records: usize,
+    tracking_records: usize,
+    certification_required_records: usize,
+    certified_for_release_records: usize,
+    release_ready_records: usize,
+    source_linked_records: usize,
+    reviewer_required_records: usize,
+    exception_required_records: usize,
+    source_signoff_required_records: usize,
+    platform_remediation_records: usize,
+    integration_remediation_records: usize,
+    security_remediation_records: usize,
+    reviewer_remediation_records: usize,
+    verification_remediation_records: usize,
+    audit_remediation_records: usize,
+    first_attention_priority: Option<u8>,
+    first_blocked_priority: Option<u8>,
+    first_ready_priority: Option<u8>,
+    next_remediation_kind: Option<String>,
+    next_remediation_status: Option<IntegrationActivationWaiverRemediationStatus>,
+    next_remediation_lane: Option<IntegrationActivationResponseOwnerLane>,
+    next_remediation_action: Option<String>,
+    highest_policy_tier: PrivilegeTier,
+    overall_status: IntegrationActivationHealthStatus,
+}
+
+impl IntegrationActivationWaiverReleaseCertificationRemediationSummary {
+    fn from_records<'a>(
+        records: impl IntoIterator<
+            Item = &'a IntegrationActivationWaiverReleaseCertificationRemediationRecord,
+        >,
+    ) -> Self {
+        let mut summary = Self {
+            total_records: 0,
+            unique_integrations: 0,
+            records_requiring_attention: 0,
+            blocked_records: 0,
+            owner_action_records: 0,
+            ready_records: 0,
+            tracking_records: 0,
+            certification_required_records: 0,
+            certified_for_release_records: 0,
+            release_ready_records: 0,
+            source_linked_records: 0,
+            reviewer_required_records: 0,
+            exception_required_records: 0,
+            source_signoff_required_records: 0,
+            platform_remediation_records: 0,
+            integration_remediation_records: 0,
+            security_remediation_records: 0,
+            reviewer_remediation_records: 0,
+            verification_remediation_records: 0,
+            audit_remediation_records: 0,
+            first_attention_priority: None,
+            first_blocked_priority: None,
+            first_ready_priority: None,
+            next_remediation_kind: None,
+            next_remediation_status: None,
+            next_remediation_lane: None,
+            next_remediation_action: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for record in records {
+            summary.total_records += 1;
+            if summary.next_remediation_kind.is_none() {
+                summary.next_remediation_kind = Some(record.remediation_kind.clone());
+                summary.next_remediation_status = Some(record.remediation_status);
+                summary.next_remediation_lane = Some(record.remediation_lane);
+                summary.next_remediation_action = Some(record.remediation_action.clone());
+            }
+            let source = record.source();
+            for integration_id in &source.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            if record.requires_attention() {
+                summary.records_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, source.priority);
+            }
+            if record.is_blocked() {
+                summary.blocked_records += 1;
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, source.priority);
+            }
+            if record.release_certification.release_ready() {
+                summary.release_ready_records += 1;
+            }
+            if record.release_certification.certification_required() {
+                summary.certification_required_records += 1;
+            }
+            if record.release_certification.certified() {
+                summary.certified_for_release_records += 1;
+            }
+            if record.has_source_lineage() {
+                summary.source_linked_records += 1;
+            }
+            if source.reviewer_required {
+                summary.reviewer_required_records += 1;
+            }
+            if source.exception_required {
+                summary.exception_required_records += 1;
+            }
+            if source.signoff_required {
+                summary.source_signoff_required_records += 1;
+            }
+            match record.remediation_status {
+                IntegrationActivationWaiverRemediationStatus::Blocked => {}
+                IntegrationActivationWaiverRemediationStatus::NeedsOwnerAction => {
+                    summary.owner_action_records += 1
+                }
+                IntegrationActivationWaiverRemediationStatus::ReadyToExecute => {
+                    summary.ready_records += 1;
+                    summary.first_ready_priority =
+                        min_optional_priority(summary.first_ready_priority, source.priority);
+                }
+                IntegrationActivationWaiverRemediationStatus::Tracking => {
+                    summary.tracking_records += 1
+                }
+            }
+            match record.remediation_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_remediation_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_remediation_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_remediation_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_remediation_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_remediation_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Audit => {
+                    summary.audit_remediation_records += 1
+                }
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(source.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.total_records == 0 {
+            IntegrationActivationHealthStatus::Empty
+        } else if summary.blocked_records > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.owner_action_records > 0 || summary.ready_records > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else {
+            IntegrationActivationHealthStatus::Ready
+        };
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_records > 0
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.records_requiring_attention > 0
+            || self.owner_action_records > 0
+            || self.ready_records > 0
+    }
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationWaiverReleaseCertificationRemediationQuery {
+    release_certification: Box<IntegrationActivationWaiverReleaseCertificationQuery>,
+    remediation_status: Option<IntegrationActivationWaiverRemediationStatus>,
+    remediation_kind: Option<String>,
+    remediation_lane: Option<IntegrationActivationResponseOwnerLane>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    ready_to_execute: Option<bool>,
+    tracking: Option<bool>,
+    certification_required: Option<bool>,
+    certified: Option<bool>,
+    release_ready: Option<bool>,
+    remediation_limit: Option<usize>,
+}
+
 fn activation_exception_reason(focus: IntegrationActivationGuardrailKind) -> &'static str {
     match focus {
         IntegrationActivationGuardrailKind::Incident => "incident evidence closure required",
@@ -16610,6 +17033,108 @@ fn activation_waiver_release_certification_action(
             "certify_waiver_release"
         }
         IntegrationActivationWaiverReleaseCertificationStatus::CertifiedForRelease => {
+            "monitor_waiver_release_certification"
+        }
+    }
+}
+
+fn activation_waiver_release_certification_remediation_status(
+    record: &IntegrationActivationWaiverReleaseCertificationRecord,
+) -> IntegrationActivationWaiverRemediationStatus {
+    if record.is_blocked() {
+        IntegrationActivationWaiverRemediationStatus::Blocked
+    } else if matches!(
+        record.release_certification_status,
+        IntegrationActivationWaiverReleaseCertificationStatus::SignoffRequired
+    ) {
+        IntegrationActivationWaiverRemediationStatus::NeedsOwnerAction
+    } else if record.certification_required() {
+        IntegrationActivationWaiverRemediationStatus::ReadyToExecute
+    } else {
+        IntegrationActivationWaiverRemediationStatus::Tracking
+    }
+}
+
+fn activation_waiver_release_certification_remediation_lane(
+    record: &IntegrationActivationWaiverReleaseCertificationRecord,
+    status: IntegrationActivationWaiverRemediationStatus,
+) -> IntegrationActivationResponseOwnerLane {
+    match status {
+        IntegrationActivationWaiverRemediationStatus::Blocked
+        | IntegrationActivationWaiverRemediationStatus::NeedsOwnerAction
+        | IntegrationActivationWaiverRemediationStatus::ReadyToExecute => record.certification_lane,
+        IntegrationActivationWaiverRemediationStatus::Tracking => {
+            IntegrationActivationResponseOwnerLane::Audit
+        }
+    }
+}
+
+fn activation_waiver_release_certification_remediation_kind(
+    record: &IntegrationActivationWaiverReleaseCertificationRecord,
+    status: IntegrationActivationWaiverRemediationStatus,
+) -> &'static str {
+    let source = &record.release_signoff.release_closure.receipt.source;
+    match status {
+        IntegrationActivationWaiverRemediationStatus::Blocked => {
+            "clear_release_certification_blocker"
+        }
+        IntegrationActivationWaiverRemediationStatus::NeedsOwnerAction => {
+            "collect_release_certification_signoff"
+        }
+        IntegrationActivationWaiverRemediationStatus::ReadyToExecute => {
+            if source.reviewer_required {
+                "complete_reviewer_release_certification"
+            } else if source.exception_required {
+                "complete_exception_release_certification"
+            } else {
+                "complete_release_certification"
+            }
+        }
+        IntegrationActivationWaiverRemediationStatus::Tracking => "track_release_certification",
+    }
+}
+
+fn activation_waiver_release_certification_remediation_reason(
+    record: &IntegrationActivationWaiverReleaseCertificationRecord,
+    status: IntegrationActivationWaiverRemediationStatus,
+) -> &'static str {
+    let source = &record.release_signoff.release_closure.receipt.source;
+    match status {
+        IntegrationActivationWaiverRemediationStatus::Blocked => {
+            "release certification blocker must clear before waiver release"
+        }
+        IntegrationActivationWaiverRemediationStatus::NeedsOwnerAction => {
+            "release signoff lineage must be completed before certification"
+        }
+        IntegrationActivationWaiverRemediationStatus::ReadyToExecute => {
+            if source.reviewer_required {
+                "reviewer certification must be recorded before waiver release"
+            } else if source.exception_required {
+                "exception certification must be recorded before waiver release"
+            } else {
+                "release certification must be recorded before waiver release"
+            }
+        }
+        IntegrationActivationWaiverRemediationStatus::Tracking => {
+            "waiver release certification is ready for monitoring"
+        }
+    }
+}
+
+fn activation_waiver_release_certification_remediation_action(
+    status: IntegrationActivationWaiverRemediationStatus,
+) -> &'static str {
+    match status {
+        IntegrationActivationWaiverRemediationStatus::Blocked => {
+            "clear_waiver_release_certification_blocker"
+        }
+        IntegrationActivationWaiverRemediationStatus::NeedsOwnerAction => {
+            "collect_waiver_release_certification_signoff"
+        }
+        IntegrationActivationWaiverRemediationStatus::ReadyToExecute => {
+            "execute_waiver_release_certification"
+        }
+        IntegrationActivationWaiverRemediationStatus::Tracking => {
             "monitor_waiver_release_certification"
         }
     }
@@ -19145,6 +19670,114 @@ fn integration_activation_waiver_release_certification_query(
             .or(optional_u64(arguments, "record_limit")?)
             .map(|value| value as usize),
     })
+}
+
+fn integration_activation_waiver_release_certification_remediation_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationWaiverReleaseCertificationRemediationQuery, ToolCallError> {
+    let remediation_status =
+        optional_string(arguments, "waiver_release_certification_remediation_status")?
+            .or(optional_string(
+                arguments,
+                "release_certification_remediation_status",
+            )?)
+            .or(optional_string(arguments, "remediation_status")?)
+            .map(|label| parse_activation_waiver_remediation_status(&label))
+            .transpose()?;
+    let remediation_lane =
+        optional_string(arguments, "waiver_release_certification_remediation_lane")?
+            .or(optional_string(
+                arguments,
+                "release_certification_remediation_lane",
+            )?)
+            .or(optional_string(arguments, "remediation_lane")?)
+            .map(|label| parse_activation_response_owner_lane(&label))
+            .transpose()?;
+
+    Ok(
+        IntegrationActivationWaiverReleaseCertificationRemediationQuery {
+            release_certification: Box::new(
+                integration_activation_waiver_release_certification_query(arguments)?,
+            ),
+            remediation_status,
+            remediation_kind: optional_string(
+                arguments,
+                "waiver_release_certification_remediation_kind",
+            )?
+            .or(optional_string(
+                arguments,
+                "release_certification_remediation_kind",
+            )?)
+            .or(optional_string(arguments, "remediation_kind")?),
+            remediation_lane,
+            requires_attention: optional_bool(
+                arguments,
+                "waiver_release_certification_remediation_requires_attention",
+            )?
+            .or(optional_bool(
+                arguments,
+                "release_certification_remediation_requires_attention",
+            )?)
+            .or(optional_bool(arguments, "remediation_requires_attention")?),
+            blocked: optional_bool(
+                arguments,
+                "waiver_release_certification_remediation_blocked",
+            )?
+            .or(optional_bool(
+                arguments,
+                "release_certification_remediation_blocked",
+            )?)
+            .or(optional_bool(arguments, "remediation_blocked")?),
+            ready_to_execute: optional_bool(
+                arguments,
+                "waiver_release_certification_remediation_ready",
+            )?
+            .or(optional_bool(
+                arguments,
+                "release_certification_remediation_ready",
+            )?)
+            .or(optional_bool(arguments, "remediation_ready_to_execute")?),
+            tracking: optional_bool(
+                arguments,
+                "waiver_release_certification_remediation_tracking",
+            )?
+            .or(optional_bool(
+                arguments,
+                "release_certification_remediation_tracking",
+            )?)
+            .or(optional_bool(arguments, "remediation_tracking")?),
+            certification_required: optional_bool(
+                arguments,
+                "waiver_release_certification_remediation_certification_required",
+            )?
+            .or(optional_bool(arguments, "certification_required")?),
+            certified: optional_bool(
+                arguments,
+                "waiver_release_certification_remediation_certified",
+            )?
+            .or(optional_bool(
+                arguments,
+                "release_certification_remediation_certified",
+            )?)
+            .or(optional_bool(arguments, "certified")?),
+            release_ready: optional_bool(
+                arguments,
+                "waiver_release_certification_remediation_release_ready",
+            )?
+            .or(optional_bool(arguments, "release_ready")?),
+            remediation_limit: optional_u64(
+                arguments,
+                "waiver_release_certification_remediation_limit",
+            )?
+            .or(optional_u64(
+                arguments,
+                "release_certification_remediation_limit",
+            )?)
+            .or(optional_u64(arguments, "remediation_limit")?)
+            .or(optional_u64(arguments, "record_limit")?)
+            .map(|value| value as usize),
+        },
+    )
 }
 
 fn integration_activation_risk_query(
@@ -22737,6 +23370,66 @@ fn integration_activation_waiver_release_certifications_for_query(
         });
     }
     if let Some(limit) = query.release_certification_limit {
+        records.truncate(limit);
+    }
+
+    (records, catalog_count)
+}
+
+fn integration_activation_waiver_release_certification_remediations_for_query(
+    query: &IntegrationActivationWaiverReleaseCertificationRemediationQuery,
+) -> (
+    Vec<IntegrationActivationWaiverReleaseCertificationRemediationRecord>,
+    usize,
+) {
+    let (certifications, catalog_count) =
+        integration_activation_waiver_release_certifications_for_query(
+            &query.release_certification,
+        );
+    let mut records: Vec<_> = certifications
+        .iter()
+        .enumerate()
+        .map(|(index, record)| {
+            IntegrationActivationWaiverReleaseCertificationRemediationRecord::from_release_certification_record(
+                index + 1,
+                record,
+            )
+        })
+        .collect();
+
+    if let Some(status) = query.remediation_status {
+        records.retain(|record| record.remediation_status == status);
+    }
+    if let Some(kind) = &query.remediation_kind {
+        records.retain(|record| record.remediation_kind == *kind);
+    }
+    if let Some(lane) = query.remediation_lane {
+        records.retain(|record| record.remediation_lane == lane);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        records.retain(|record| record.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        records.retain(|record| record.is_blocked() == blocked);
+    }
+    if let Some(ready_to_execute) = query.ready_to_execute {
+        records.retain(|record| record.ready_to_execute() == ready_to_execute);
+    }
+    if let Some(tracking) = query.tracking {
+        records.retain(|record| record.tracking() == tracking);
+    }
+    if let Some(certification_required) = query.certification_required {
+        records.retain(|record| {
+            record.release_certification.certification_required() == certification_required
+        });
+    }
+    if let Some(certified) = query.certified {
+        records.retain(|record| record.release_certification.certified() == certified);
+    }
+    if let Some(release_ready) = query.release_ready {
+        records.retain(|record| record.release_certification.release_ready() == release_ready);
+    }
+    if let Some(limit) = query.remediation_limit {
         records.truncate(limit);
     }
 
@@ -29997,6 +30690,88 @@ fn get_integration_activation_waiver_release_certification_summary_output_handle
     )
 }
 
+fn list_integration_activation_waiver_release_certification_remediations_output_handler_output(
+    query: IntegrationActivationWaiverReleaseCertificationRemediationQuery,
+) -> ToolHandlerOutput {
+    let (records, catalog_count) =
+        integration_activation_waiver_release_certification_remediations_for_query(&query);
+    let summary = IntegrationActivationWaiverReleaseCertificationRemediationSummary::from_records(
+        records.iter(),
+    );
+    let count = records.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_waiver_release_certification_remediations",
+            JsonValue::Array(
+                records
+                    .iter()
+                    .map(activation_waiver_release_certification_remediation_record_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_waiver_release_certification_remediation_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_waiver_release_certification_remediations"),
+            ),
+            ("records", integer(count as i64)),
+            (
+                "records_requiring_attention",
+                integer(summary.records_requiring_attention as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            ("ready_records", integer(summary.ready_records as i64)),
+            ("tracking_records", integer(summary.tracking_records as i64)),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn get_integration_activation_waiver_release_certification_remediation_summary_output_handler_output(
+    query: IntegrationActivationWaiverReleaseCertificationRemediationQuery,
+) -> ToolHandlerOutput {
+    let (records, _) =
+        integration_activation_waiver_release_certification_remediations_for_query(&query);
+    let summary = IntegrationActivationWaiverReleaseCertificationRemediationSummary::from_records(
+        records.iter(),
+    );
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_waiver_release_certification_remediation_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string(
+                    "get_integration_activation_waiver_release_certification_remediation_summary",
+                ),
+            ),
+            ("total_records", integer(summary.total_records as i64)),
+            (
+                "records_requiring_attention",
+                integer(summary.records_requiring_attention as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            ("ready_records", integer(summary.ready_records as i64)),
+            ("tracking_records", integer(summary.tracking_records as i64)),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
 fn list_integration_activation_risk_output_handler_output(
     query: IntegrationActivationRiskQuery,
 ) -> ToolHandlerOutput {
@@ -30248,6 +31023,276 @@ fn get_integration_readiness_gap_summary_output_handler_output(
             ("blocked_reports", integer(inventory.blocked_reports as i64)),
         ]),
     )
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct DeviceInventoryAuditRow {
+    device_id: DeviceId,
+    bridge_id: BridgeId,
+    name: String,
+    manufacturer: String,
+    model: String,
+    health: Health,
+    room_id: Option<String>,
+    entity_count: usize,
+    has_serial: bool,
+    has_firmware_version: bool,
+    inventory_lane: &'static str,
+    inventory_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+impl DeviceInventoryAuditRow {
+    fn from_device(device: &Device) -> Self {
+        let has_serial = device
+            .serial
+            .as_ref()
+            .map(|value| !value.is_empty())
+            .unwrap_or(false);
+        let has_firmware_version = device
+            .firmware_version
+            .as_ref()
+            .map(|value| !value.is_empty())
+            .unwrap_or(false);
+        let has_room = device.room_id.is_some();
+        let entity_count = device.entity_ids.len();
+        let has_entities = entity_count > 0;
+        let identity_gap = !has_serial || !has_firmware_version;
+        let blocked = device.health.needs_attention()
+            || device.health.is_pairing_candidate()
+            || !has_entities;
+        let requires_attention = blocked || !device.health.is_online() || !has_room || identity_gap;
+        let (inventory_lane, inventory_action) =
+            if device.health.needs_attention() || matches!(device.health, Health::Unknown) {
+                ("runtime_health", "restore_device_health")
+            } else if device.health.is_pairing_candidate() {
+                ("pairing", "complete_device_pairing")
+            } else if !has_entities {
+                ("entity_mapping", "map_runtime_entities")
+            } else if !has_room {
+                ("room_topology", "assign_room")
+            } else if identity_gap {
+                ("device_identity", "capture_device_identity")
+            } else {
+                ("ready", "monitor_inventory")
+            };
+
+        Self {
+            device_id: device.device_id.clone(),
+            bridge_id: device.bridge_id.clone(),
+            name: device.name.clone(),
+            manufacturer: device.manufacturer.clone(),
+            model: device.model.clone(),
+            health: device.health,
+            room_id: device.room_id.clone(),
+            entity_count,
+            has_serial,
+            has_firmware_version,
+            inventory_lane,
+            inventory_action,
+            blocked,
+            requires_attention,
+        }
+    }
+
+    fn has_room(&self) -> bool {
+        self.room_id.is_some()
+    }
+
+    fn has_entities(&self) -> bool {
+        self.entity_count > 0
+    }
+
+    fn has_identity_gap(&self) -> bool {
+        !self.has_serial || !self.has_firmware_version
+    }
+
+    fn is_ready(&self) -> bool {
+        self.health.is_online()
+            && self.has_room()
+            && self.has_entities()
+            && !self.has_identity_gap()
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct DeviceInventoryAuditSummary {
+    total_devices: usize,
+    online_devices: usize,
+    runtime_attention_devices: usize,
+    pairing_candidate_devices: usize,
+    missing_room_devices: usize,
+    missing_entity_devices: usize,
+    identity_gap_devices: usize,
+    blocked_devices: usize,
+    requires_attention_devices: usize,
+    ready_devices: usize,
+}
+
+impl DeviceInventoryAuditSummary {
+    fn from_rows(rows: &[DeviceInventoryAuditRow]) -> Self {
+        let mut summary = Self::default();
+        for row in rows {
+            summary.total_devices += 1;
+            if row.health.is_online() {
+                summary.online_devices += 1;
+            }
+            if row.health.needs_attention() {
+                summary.runtime_attention_devices += 1;
+            }
+            if row.health.is_pairing_candidate() {
+                summary.pairing_candidate_devices += 1;
+            }
+            if !row.has_room() {
+                summary.missing_room_devices += 1;
+            }
+            if !row.has_entities() {
+                summary.missing_entity_devices += 1;
+            }
+            if row.has_identity_gap() {
+                summary.identity_gap_devices += 1;
+            }
+            if row.blocked {
+                summary.blocked_devices += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_devices += 1;
+            }
+            if row.is_ready() {
+                summary.ready_devices += 1;
+            }
+        }
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_devices > 0
+    }
+
+    fn has_inventory_gaps(&self) -> bool {
+        self.requires_attention_devices > 0
+    }
+}
+
+fn list_device_inventory_audit_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: DeviceInventoryAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) = device_inventory_audit_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "device_inventory_audit",
+            JsonValue::Array(rows.iter().map(device_inventory_audit_row_json).collect()),
+        ),
+        ("summary", device_inventory_audit_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_device_inventory_audit")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_devices",
+                integer(summary.requires_attention_devices as i64),
+            ),
+            ("blocked_devices", integer(summary.blocked_devices as i64)),
+        ]),
+    ))
+}
+
+fn get_device_inventory_audit_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: DeviceInventoryAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = device_inventory_audit_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        device_inventory_audit_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_device_inventory_audit_summary")),
+            (
+                "requires_attention_devices",
+                integer(summary.requires_attention_devices as i64),
+            ),
+            ("blocked_devices", integer(summary.blocked_devices as i64)),
+        ]),
+    ))
+}
+
+fn device_inventory_audit_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &DeviceInventoryAuditQuery,
+) -> Result<(Vec<DeviceInventoryAuditRow>, DeviceInventoryAuditSummary), ToolCallError> {
+    let output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::ListDevices {
+                bridge_id: query.bridge_id.clone(),
+                health: query.health,
+                capability_id: query.capability_id.clone(),
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::Devices(devices) = output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "device inventory audit expected device list output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+    let rows = devices
+        .iter()
+        .map(DeviceInventoryAuditRow::from_device)
+        .filter(|row| device_inventory_audit_row_matches(row, query))
+        .collect::<Vec<_>>();
+    let summary = DeviceInventoryAuditSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+fn device_inventory_audit_row_matches(
+    row: &DeviceInventoryAuditRow,
+    query: &DeviceInventoryAuditQuery,
+) -> bool {
+    if let Some(manufacturer) = &query.manufacturer {
+        if !row.manufacturer.eq_ignore_ascii_case(manufacturer) {
+            return false;
+        }
+    }
+    if let Some(model) = &query.model {
+        if !row.model.eq_ignore_ascii_case(model) {
+            return false;
+        }
+    }
+    if query.attention_only && !row.requires_attention {
+        return false;
+    }
+    if query.missing_room_only && row.has_room() {
+        return false;
+    }
+    if query.missing_entities_only && row.has_entities() {
+        return false;
+    }
+    if query.identity_gaps_only && !row.has_identity_gap() {
+        return false;
+    }
+    true
 }
 
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
@@ -47536,6 +48581,350 @@ fn integration_activation_waiver_release_certification_summary_json(
     ]
 }
 
+fn activation_waiver_release_certification_remediation_record_json(
+    record: &IntegrationActivationWaiverReleaseCertificationRemediationRecord,
+) -> JsonValue {
+    let certification = &record.release_certification;
+    let release_signoff = &certification.release_signoff;
+    let release_closure = &release_signoff.release_closure;
+    let receipt = &release_closure.receipt;
+    let source = &receipt.source;
+    heap_object![
+        ("sequence", integer(record.sequence as i64)),
+        ("remediation_id", string(&record.remediation_id)),
+        (
+            "source_release_certification_id",
+            string(&record.source_release_certification_id),
+        ),
+        (
+            "source_release_signoff_id",
+            string(&record.source_release_signoff_id),
+        ),
+        (
+            "source_release_closure_id",
+            string(&record.source_release_closure_id),
+        ),
+        ("source_receipt_id", string(&record.source_receipt_id)),
+        ("source_erasure_id", string(&record.source_erasure_id)),
+        ("source_purge_id", string(&source.source_purge_id)),
+        ("source_tombstone_id", string(&source.source_tombstone_id)),
+        ("source_disposal_id", string(&source.source_disposal_id)),
+        ("source_expiration_id", string(&source.source_expiration_id)),
+        ("source_retention_id", string(&source.source_retention_id)),
+        ("source_archive_id", string(&source.source_archive_id)),
+        ("source_closure_id", string(&source.source_closure_id)),
+        (
+            "source_remediation_id",
+            string(&source.source_remediation_id),
+        ),
+        (
+            "source_disposition_id",
+            string(&source.source_disposition_id),
+        ),
+        ("source_review_id", string(&source.source_review_id)),
+        ("source_waiver_id", string(&source.source_waiver_id)),
+        ("source_exception_id", string(&source.source_exception_id)),
+        ("source_ledger_id", string(&source.source_ledger_id)),
+        (
+            "source_attestation_id",
+            string(&source.source_attestation_id),
+        ),
+        ("source_compliance_id", string(&source.source_compliance_id)),
+        ("source_governance_id", string(&source.source_governance_id)),
+        ("source_assurance_id", string(&source.source_assurance_id)),
+        ("source_guardrail_id", string(&source.source_guardrail_id)),
+        (
+            "release_certification_status",
+            string(record.release_certification_status.as_str()),
+        ),
+        (
+            "remediation_status",
+            string(record.remediation_status.as_str()),
+        ),
+        (
+            "release_signoff_status",
+            string(release_signoff.release_signoff_status.as_str()),
+        ),
+        (
+            "release_closure_status",
+            string(release_closure.release_closure_status.as_str()),
+        ),
+        ("receipt_status", string(receipt.receipt_status.as_str())),
+        ("erasure_status", string(source.erasure_status.as_str())),
+        ("purge_status", string(source.purge_status.as_str())),
+        ("tombstone_status", string(source.tombstone_status.as_str())),
+        ("disposal_status", string(source.disposal_status.as_str())),
+        (
+            "expiration_status",
+            string(source.expiration_status.as_str()),
+        ),
+        ("retention_status", string(source.retention_status.as_str())),
+        ("archive_status", string(source.archive_status.as_str())),
+        ("waiver_status", string(source.waiver_status.as_str())),
+        ("exception_status", string(source.exception_status.as_str())),
+        ("remediation_lane", string(record.remediation_lane.as_str()),),
+        (
+            "certification_lane",
+            string(certification.certification_lane.as_str()),
+        ),
+        (
+            "signoff_lane",
+            string(release_signoff.signoff_lane.as_str()),
+        ),
+        (
+            "release_lane",
+            string(release_closure.release_lane.as_str()),
+        ),
+        ("receipt_lane", string(receipt.receipt_lane.as_str())),
+        ("erasure_lane", string(source.erasure_lane.as_str())),
+        ("purge_lane", string(source.purge_lane.as_str())),
+        ("tombstone_lane", string(source.tombstone_lane.as_str())),
+        ("disposal_lane", string(source.disposal_lane.as_str())),
+        ("expiration_lane", string(source.expiration_lane.as_str())),
+        ("retention_lane", string(source.retention_lane.as_str())),
+        ("archive_lane", string(source.archive_lane.as_str())),
+        ("closure_lane", string(source.closure_lane.as_str())),
+        ("owner_lane", string(source.owner_lane.as_str())),
+        ("approval_lane", string(source.approval_lane.as_str())),
+        ("remediation_kind", string(&record.remediation_kind)),
+        ("remediation_reason", string(&record.remediation_reason)),
+        ("remediation_action", string(&record.remediation_action)),
+        (
+            "certification_reason",
+            string(&certification.certification_reason),
+        ),
+        (
+            "certification_action",
+            string(&certification.certification_action),
+        ),
+        ("signoff_reason", string(&release_signoff.signoff_reason)),
+        ("signoff_action", string(&release_signoff.signoff_action)),
+        ("release_reason", string(&release_closure.release_reason)),
+        ("release_action", string(&release_closure.release_action)),
+        ("receipt_reason", string(&receipt.receipt_reason)),
+        ("receipt_action", string(&receipt.receipt_action)),
+        ("evidence_kind", string(&source.evidence_kind)),
+        ("priority", integer(source.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                source
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(source.integration_ids.len() as i64),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(source.required_tier)),
+        ),
+        (
+            "reviewer_required",
+            JsonValue::Bool(source.reviewer_required),
+        ),
+        (
+            "exception_required",
+            JsonValue::Bool(source.exception_required),
+        ),
+        (
+            "source_signoff_required",
+            JsonValue::Bool(source.signoff_required),
+        ),
+        (
+            "signoff_required",
+            JsonValue::Bool(release_signoff.signoff_required()),
+        ),
+        (
+            "certification_required",
+            JsonValue::Bool(certification.certification_required()),
+        ),
+        ("certified", JsonValue::Bool(certification.certified())),
+        (
+            "ready_to_execute",
+            JsonValue::Bool(record.ready_to_execute()),
+        ),
+        ("tracking", JsonValue::Bool(record.tracking())),
+        ("evidence_ready", JsonValue::Bool(source.evidence_ready)),
+        ("waiver_ready", JsonValue::Bool(source.waiver_ready)),
+        ("archive_ready", JsonValue::Bool(source.archive_ready)),
+        ("retention_ready", JsonValue::Bool(source.retention_ready)),
+        ("expiration_ready", JsonValue::Bool(source.expiration_ready)),
+        ("disposal_ready", JsonValue::Bool(source.disposal_ready)),
+        ("tombstone_ready", JsonValue::Bool(source.tombstone_ready)),
+        ("purge_ready", JsonValue::Bool(source.purge_ready)),
+        ("erasure_ready", JsonValue::Bool(source.erasure_ready)),
+        ("receipt_ready", JsonValue::Bool(receipt.receipt_ready())),
+        (
+            "release_closure_ready",
+            JsonValue::Bool(release_closure.release_ready()),
+        ),
+        (
+            "release_ready",
+            JsonValue::Bool(certification.release_ready()),
+        ),
+        ("receipted", JsonValue::Bool(receipt.receipted())),
+        ("release_closed", JsonValue::Bool(release_closure.closed())),
+        ("erased", JsonValue::Bool(source.erased)),
+        ("purged", JsonValue::Bool(source.purged)),
+        ("tombstoned", JsonValue::Bool(source.tombstoned)),
+        ("disposed", JsonValue::Bool(source.disposed)),
+        ("retained", JsonValue::Bool(source.retained)),
+        ("expired", JsonValue::Bool(source.expired)),
+        ("archived", JsonValue::Bool(source.archived)),
+        ("blocked", JsonValue::Bool(record.is_blocked())),
+        (
+            "requires_attention",
+            JsonValue::Bool(record.requires_attention()),
+        ),
+        (
+            "has_source_lineage",
+            JsonValue::Bool(record.has_source_lineage()),
+        ),
+    ]
+}
+
+fn integration_activation_waiver_release_certification_remediation_summary_json(
+    summary: &IntegrationActivationWaiverReleaseCertificationRemediationSummary,
+) -> JsonValue {
+    heap_object![
+        ("total_records", integer(summary.total_records as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "records_requiring_attention",
+            integer(summary.records_requiring_attention as i64),
+        ),
+        ("blocked_records", integer(summary.blocked_records as i64)),
+        (
+            "owner_action_records",
+            integer(summary.owner_action_records as i64),
+        ),
+        ("ready_records", integer(summary.ready_records as i64)),
+        ("tracking_records", integer(summary.tracking_records as i64)),
+        (
+            "certification_required_records",
+            integer(summary.certification_required_records as i64),
+        ),
+        (
+            "certified_for_release_records",
+            integer(summary.certified_for_release_records as i64),
+        ),
+        (
+            "release_ready_records",
+            integer(summary.release_ready_records as i64),
+        ),
+        (
+            "source_linked_records",
+            integer(summary.source_linked_records as i64),
+        ),
+        (
+            "reviewer_required_records",
+            integer(summary.reviewer_required_records as i64),
+        ),
+        (
+            "exception_required_records",
+            integer(summary.exception_required_records as i64),
+        ),
+        (
+            "source_signoff_required_records",
+            integer(summary.source_signoff_required_records as i64),
+        ),
+        (
+            "platform_remediation_records",
+            integer(summary.platform_remediation_records as i64),
+        ),
+        (
+            "integration_remediation_records",
+            integer(summary.integration_remediation_records as i64),
+        ),
+        (
+            "security_remediation_records",
+            integer(summary.security_remediation_records as i64),
+        ),
+        (
+            "reviewer_remediation_records",
+            integer(summary.reviewer_remediation_records as i64),
+        ),
+        (
+            "verification_remediation_records",
+            integer(summary.verification_remediation_records as i64),
+        ),
+        (
+            "audit_remediation_records",
+            integer(summary.audit_remediation_records as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_priority",
+            summary
+                .first_ready_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_remediation_kind",
+            summary
+                .next_remediation_kind
+                .as_ref()
+                .map(|kind| string(kind))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_remediation_status",
+            summary
+                .next_remediation_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_remediation_lane",
+            summary
+                .next_remediation_lane
+                .map(|lane| string(lane.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_remediation_action",
+            summary
+                .next_remediation_action
+                .as_ref()
+                .map(|action| string(action))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.total_records == 0)),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ]
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -52245,6 +53634,88 @@ fn device_json(device: &Device) -> JsonValue {
                 .as_ref()
                 .map(|value| string(value))
                 .unwrap_or(JsonValue::Null),
+        ),
+    ])
+}
+
+fn device_inventory_audit_row_json(row: &DeviceInventoryAuditRow) -> JsonValue {
+    object([
+        (
+            "audit_id",
+            string(format!("device-inventory-audit:{}", row.device_id.as_str())),
+        ),
+        ("device_id", string(row.device_id.as_str())),
+        ("bridge_id", string(row.bridge_id.as_str())),
+        ("name", string(&row.name)),
+        ("manufacturer", string(&row.manufacturer)),
+        ("model", string(&row.model)),
+        ("health", string(health_label(row.health))),
+        (
+            "room_id",
+            row.room_id.as_ref().map(string).unwrap_or(JsonValue::Null),
+        ),
+        ("entity_count", integer(row.entity_count as i64)),
+        ("has_room", JsonValue::Bool(row.has_room())),
+        ("has_entities", JsonValue::Bool(row.has_entities())),
+        ("has_serial", JsonValue::Bool(row.has_serial)),
+        (
+            "has_firmware_version",
+            JsonValue::Bool(row.has_firmware_version),
+        ),
+        ("has_identity_gap", JsonValue::Bool(row.has_identity_gap())),
+        (
+            "pairing_candidate",
+            JsonValue::Bool(row.health.is_pairing_candidate()),
+        ),
+        (
+            "runtime_health_attention",
+            JsonValue::Bool(row.health.needs_attention()),
+        ),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+        ("inventory_lane", string(row.inventory_lane)),
+        ("inventory_action", string(row.inventory_action)),
+        ("ready", JsonValue::Bool(row.is_ready())),
+    ])
+}
+
+fn device_inventory_audit_summary_json(summary: &DeviceInventoryAuditSummary) -> JsonValue {
+    object([
+        ("total_devices", integer(summary.total_devices as i64)),
+        ("online_devices", integer(summary.online_devices as i64)),
+        (
+            "runtime_attention_devices",
+            integer(summary.runtime_attention_devices as i64),
+        ),
+        (
+            "pairing_candidate_devices",
+            integer(summary.pairing_candidate_devices as i64),
+        ),
+        (
+            "missing_room_devices",
+            integer(summary.missing_room_devices as i64),
+        ),
+        (
+            "missing_entity_devices",
+            integer(summary.missing_entity_devices as i64),
+        ),
+        (
+            "identity_gap_devices",
+            integer(summary.identity_gap_devices as i64),
+        ),
+        ("blocked_devices", integer(summary.blocked_devices as i64)),
+        (
+            "requires_attention_devices",
+            integer(summary.requires_attention_devices as i64),
+        ),
+        ("ready_devices", integer(summary.ready_devices as i64)),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_inventory_gaps",
+            JsonValue::Bool(summary.has_inventory_gaps()),
         ),
     ])
 }
@@ -58740,6 +60211,131 @@ fn integration_activation_waiver_release_certification_query_schema() -> JsonSch
     schema
 }
 
+fn integration_activation_waiver_release_certification_remediation_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_waiver_release_certification_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        let mut push_if_absent = |property: SchemaProperty| {
+            if !properties
+                .iter()
+                .any(|existing| existing.name == property.name)
+            {
+                properties.push(property);
+            }
+        };
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_status",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "release_certification_remediation_status",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_kind",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "release_certification_remediation_kind",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "release_certification_remediation_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new("remediation_lane", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "release_certification_remediation_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "remediation_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "release_certification_remediation_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "remediation_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_ready",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "release_certification_remediation_ready",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "remediation_ready_to_execute",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_tracking",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "release_certification_remediation_tracking",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "remediation_tracking",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_certification_required",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "certification_required",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_certified",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "release_certification_remediation_certified",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_release_ready",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_release_certification_remediation_limit",
+            JsonSchema::Integer,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "release_certification_remediation_limit",
+            JsonSchema::Integer,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "remediation_limit",
+            JsonSchema::Integer,
+        ));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -58836,6 +60432,50 @@ fn collection_output_schema(field_name: &str) -> JsonSchema {
     )
 }
 
+fn device_inventory_audit_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("bridge_id", JsonSchema::String),
+            SchemaProperty::new("health", JsonSchema::String),
+            SchemaProperty::new("capability_id", JsonSchema::String),
+            SchemaProperty::new("manufacturer", JsonSchema::String),
+            SchemaProperty::new("model", JsonSchema::String),
+            SchemaProperty::new("attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("missing_room_only", JsonSchema::Boolean),
+            SchemaProperty::new("missing_entities_only", JsonSchema::Boolean),
+            SchemaProperty::new("identity_gaps_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn device_inventory_audit_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "device_inventory_audit",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["device_inventory_audit", "summary", "count"],
+        false,
+    )
+}
+
+fn device_inventory_audit_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
 fn event_delivery_output_schema() -> JsonSchema {
     object_schema(
         vec![
@@ -58884,7 +60524,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 236);
+        assert_eq!(definitions.len(), 240);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -59555,9 +61195,21 @@ mod tests {
         assert!(export.tool_ids().contains(
             &SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_SUMMARY_TOOL_ID
         ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATIONS_TOOL_ID
+        ));
+        assert!(export.tool_ids().contains(
+            &SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATION_SUMMARY_TOOL_ID
+        ));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            228
+            232
         );
         assert_eq!(
             export
@@ -60397,11 +62049,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(236))
+            Some(&integer(240))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(228))
+            Some(&integer(232))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -73506,6 +75158,112 @@ mod tests {
     }
 
     #[test]
+    fn device_inventory_audit_tools_surface_runtime_inventory_gaps_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let mut device = runtime
+            .borrow()
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .unwrap()
+            .clone();
+        device.health = Health::Offline;
+        device.room_id = None;
+        device.entity_ids.clear();
+        device.serial = None;
+        device.firmware_version = None;
+        runtime.borrow_mut().upsert_device(device).unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let list_request = request(
+            "call-list-device-inventory-audit",
+            SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID,
+            object([
+                ("attention_only", JsonValue::Bool(true)),
+                ("missing_room_only", JsonValue::Bool(true)),
+                ("identity_gaps_only", JsonValue::Bool(true)),
+            ]),
+            2_000,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_output, "count"), Some(&integer(1)));
+        let summary = field(list_output, "summary").unwrap();
+        assert_eq!(field(summary, "total_devices"), Some(&integer(1)));
+        assert_eq!(field(summary, "missing_room_devices"), Some(&integer(1)));
+        assert_eq!(field(summary, "missing_entity_devices"), Some(&integer(1)));
+        assert_eq!(field(summary, "identity_gap_devices"), Some(&integer(1)));
+        assert_eq!(
+            field(summary, "has_inventory_gaps"),
+            Some(&JsonValue::Bool(true))
+        );
+        let row = array_item(field(list_output, "device_inventory_audit").unwrap(), 0).unwrap();
+        assert_eq!(field(row, "device_id"), Some(&string("device-1")));
+        assert_eq!(field(row, "health"), Some(&string("offline")));
+        assert_eq!(field(row, "has_room"), Some(&JsonValue::Bool(false)));
+        assert_eq!(field(row, "has_entities"), Some(&JsonValue::Bool(false)));
+        assert_eq!(field(row, "blocked"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(row, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(row, "inventory_lane"),
+            Some(&string("runtime_health"))
+        );
+        assert_eq!(
+            field(row, "inventory_action"),
+            Some(&string("restore_device_health"))
+        );
+
+        let summary_request = request(
+            "call-device-inventory-audit-summary",
+            SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID,
+            object([
+                ("attention_only", JsonValue::Bool(true)),
+                ("missing_entities_only", JsonValue::Bool(true)),
+            ]),
+            2_001,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_devices"), Some(&integer(1)));
+        assert_eq!(field(rollup, "blocked_devices"), Some(&integer(1)));
+        assert_eq!(
+            field(rollup, "requires_attention_devices"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 2);
+        assert_eq!(journal_summary.completed_count, 2);
+        assert_eq!(
+            runtime.borrow().registry().counts().authorization_decisions,
+            2,
+            "device inventory audit list and summary both authorize through runtime read tools"
+        );
+    }
+
+    #[test]
     fn smart_home_handler_reports_runtime_authorization_denials() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
@@ -75925,6 +77683,322 @@ mod tests {
         traces.push((
             activation_waiver_release_certification_summary_request,
             activation_waiver_release_certification_summary_trace,
+        ));
+
+        traces
+    }
+
+    #[test]
+    fn activation_waiver_release_certification_remediation_tools_project_certification_lineage_end_to_end(
+    ) {
+        std::thread::Builder::new()
+            .name("activation-waiver-release-certification-remediation-e2e".to_string())
+            .stack_size(16 * 1024 * 1024)
+            .spawn(
+                activation_waiver_release_certification_remediation_tools_project_certification_lineage_end_to_end_inner,
+            )
+            .unwrap()
+            .join()
+            .unwrap();
+    }
+
+    fn activation_waiver_release_certification_remediation_tools_project_certification_lineage_end_to_end_inner(
+    ) {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let traces =
+            exercise_activation_waiver_release_certification_remediation_tools(&tool_runtime);
+        let mut journal = ToolExecutionJournal::new();
+        for (request, trace) in traces {
+            journal.record_trace(request, trace);
+        }
+
+        let summary = journal.summary();
+        assert_eq!(summary.invocation_count, 2);
+        assert_eq!(summary.completed_count, 2);
+        assert_eq!(journal.audit_records().len(), 2);
+    }
+
+    fn exercise_activation_waiver_release_certification_remediation_tools(
+        tool_runtime: &InMemoryToolRuntime,
+    ) -> Vec<(ToolInvocationRequest, ToolExecutionTrace)> {
+        let mut traces = Vec::with_capacity(2);
+
+        let list_activation_waiver_release_certification_remediations_request = request(
+            "call-list-integration-activation-waiver-release-certification-remediations",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATIONS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                (
+                    "waiver_release_certification_remediation_blocked",
+                    JsonValue::Bool(true),
+                ),
+                (
+                    "waiver_release_certification_remediation_requires_attention",
+                    JsonValue::Bool(true),
+                ),
+                (
+                    "waiver_release_certification_remediation_limit",
+                    integer(3),
+                ),
+            ]),
+            5_421,
+        );
+        let list_activation_waiver_release_certification_remediations_trace = tool_runtime
+            .invoke_with_events(&list_activation_waiver_release_certification_remediations_request);
+        assert!(
+            list_activation_waiver_release_certification_remediations_trace
+                .result
+                .ok
+        );
+        assert_eq!(
+            list_activation_waiver_release_certification_remediations_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_waiver_release_certification_remediations_output =
+            list_activation_waiver_release_certification_remediations_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let activation_waiver_release_certification_remediation_count = integer_value(
+            field(
+                list_activation_waiver_release_certification_remediations_output,
+                "count",
+            )
+            .unwrap(),
+        )
+        .unwrap();
+        assert!((1..=3).contains(&activation_waiver_release_certification_remediation_count));
+        let activation_waiver_release_certification_remediation_summary = field(
+            list_activation_waiver_release_certification_remediations_output,
+            "summary",
+        )
+        .unwrap();
+        assert_eq!(
+            field(
+                activation_waiver_release_certification_remediation_summary,
+                "total_records",
+            ),
+            Some(&integer(
+                activation_waiver_release_certification_remediation_count
+            ))
+        );
+        assert!(
+            integer_value(
+                field(
+                    activation_waiver_release_certification_remediation_summary,
+                    "blocked_records",
+                )
+                .unwrap(),
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(
+                activation_waiver_release_certification_remediation_summary,
+                "has_blockers",
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(
+                activation_waiver_release_certification_remediation_summary,
+                "requires_attention",
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_waiver_release_certification_remediation = array_item(
+            field(
+                list_activation_waiver_release_certification_remediations_output,
+                "activation_waiver_release_certification_remediations",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "remediation_id"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "source_release_certification_id"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "source_release_signoff_id"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "source_release_closure_id"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "source_receipt_id"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "source_erasure_id"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "source_waiver_id"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "source_exception_id"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "remediation_kind"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "remediation_lane"
+        )
+        .is_some());
+        assert!(field(
+            activation_waiver_release_certification_remediation,
+            "remediation_action"
+        )
+        .is_some());
+        assert_eq!(
+            field(
+                activation_waiver_release_certification_remediation,
+                "blocked"
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(
+                activation_waiver_release_certification_remediation,
+                "requires_attention",
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(
+                activation_waiver_release_certification_remediation,
+                "has_source_lineage",
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+        traces.push((
+            list_activation_waiver_release_certification_remediations_request,
+            list_activation_waiver_release_certification_remediations_trace,
+        ));
+
+        let activation_waiver_release_certification_remediation_summary_request = request(
+            "call-integration-activation-waiver-release-certification-remediation-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RELEASE_CERTIFICATION_REMEDIATION_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                (
+                    "waiver_release_certification_remediation_blocked",
+                    JsonValue::Bool(true),
+                ),
+            ]),
+            5_422,
+        );
+        let activation_waiver_release_certification_remediation_summary_trace = tool_runtime
+            .invoke_with_events(
+                &activation_waiver_release_certification_remediation_summary_request,
+            );
+        assert!(
+            activation_waiver_release_certification_remediation_summary_trace
+                .result
+                .ok
+        );
+        assert_eq!(
+            activation_waiver_release_certification_remediation_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_waiver_release_certification_remediation_summary_output =
+            activation_waiver_release_certification_remediation_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let activation_waiver_release_certification_remediation_rollup = field(
+            activation_waiver_release_certification_remediation_summary_output,
+            "summary",
+        )
+        .unwrap();
+        assert!(
+            integer_value(
+                field(
+                    activation_waiver_release_certification_remediation_rollup,
+                    "blocked_records",
+                )
+                .unwrap(),
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(
+                activation_waiver_release_certification_remediation_rollup,
+                "has_blockers",
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+        traces.push((
+            activation_waiver_release_certification_remediation_summary_request,
+            activation_waiver_release_certification_remediation_summary_trace,
         ));
 
         traces

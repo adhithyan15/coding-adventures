@@ -359,6 +359,28 @@ fn count_decl_names_stmt(
                     }
                 }
             }
+            TaggedStatement::TryStatement(ts) => {
+                // Count the catch `param` as a declared binding: a top-level
+                // global of the same name is then shadowed (count > 1) and the
+                // shadow guard skips renaming it — sound. Recurse into the
+                // three blocks for their declarations.
+                for s in &ts.block.body {
+                    count_decl_names_stmt(s, out, nodes_touched);
+                }
+                if let Some(h) = &ts.handler {
+                    if let Some(param) = &h.param {
+                        *out.entry(param.name.clone()).or_insert(0) += 1;
+                    }
+                    for s in &h.body.body {
+                        count_decl_names_stmt(s, out, nodes_touched);
+                    }
+                }
+                if let Some(f) = &ts.finalizer {
+                    for s in &f.body {
+                        count_decl_names_stmt(s, out, nodes_touched);
+                    }
+                }
+            }
             // No binding introduced in the Phase-1 AST. Exhaustive on
             // purpose: a future binding-introducing statement must be
             // handled here so a shadowing name can't slip past the guard.
@@ -482,6 +504,26 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
             TaggedStatement::ContinueStatement(c) => {
                 if let Some(l) = &c.label {
                     out.insert(l.name.clone());
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                // Add the catch `param` to the avoid set so a renamed global
+                // never collides with it; recurse into the three blocks.
+                if let Some(h) = &ts.handler {
+                    if let Some(param) = &h.param {
+                        out.insert(param.name.clone());
+                    }
+                    for s in &h.body.body {
+                        collect_all_idents_stmt(s, out);
+                    }
+                }
+                for s in &ts.block.body {
+                    collect_all_idents_stmt(s, out);
+                }
+                if let Some(f) = &ts.finalizer {
+                    for s in &f.body {
+                        collect_all_idents_stmt(s, out);
+                    }
                 }
             }
             TaggedStatement::EmptyStatement(_) => {}
@@ -675,6 +717,25 @@ fn rename_apply_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
                     rename_apply_expr(test, map);
                 }
                 for s in &mut c.consequent {
+                    rename_apply_stmt(s, map);
+                }
+            }
+        }
+        TaggedStatement::TryStatement(ts) => {
+            // Rewrite renamed-global uses inside the three blocks. A global
+            // shadowed by the catch `param` was skipped by the shadow guard
+            // (not in `map`), so uses of the param resolve correctly and are
+            // left untouched; the param name itself is never a map key.
+            for s in &mut ts.block.body {
+                rename_apply_stmt(s, map);
+            }
+            if let Some(h) = &mut ts.handler {
+                for s in &mut h.body.body {
+                    rename_apply_stmt(s, map);
+                }
+            }
+            if let Some(f) = &mut ts.finalizer {
+                for s in &mut f.body {
                     rename_apply_stmt(s, map);
                 }
             }

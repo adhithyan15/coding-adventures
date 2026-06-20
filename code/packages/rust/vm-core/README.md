@@ -75,6 +75,13 @@ the instruction's `type_hint`** (`u4`→`& 0xF`, `u8`→`& 0xFF`, `u16`, `u32`),
 register-arithmetic analogue of the byte-tape `store_byte` mask, on top of the
 whole-module `with_u8_wrap()` flag below.
 
+**Floating-point (`f64`, LANG-FULL E3).** `add`/`sub`/`mul`/`div`/`neg` and the
+ordered comparisons take a float track when an op is `f64`/`f32`-typed or has a
+`Value::Float` operand — computing in `f64` and yielding a `Value::Float` (never
+width-masked). Float division is IEEE-754 (`x / 0.0` → `±inf`, matching the
+code-gen backends' `fdiv`, not a trap). This lets the VM execute the `f64` IIR
+that the ALGOL 60 `real` frontend now emits; integer programs are untouched.
+
 ### `VMFrame` — per-call state
 
 One frame per active function call.  Holds a flat `registers: Vec<Value>` and a

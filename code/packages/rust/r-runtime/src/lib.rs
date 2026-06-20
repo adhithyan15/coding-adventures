@@ -1536,4 +1536,80 @@ mod tests {
         // R-19: empty-arm switch() fall-through.
         assert_eq!(show("switch(\"a\", a = , b = \"hit\")\n"), "[1] \"hit\"");
     }
+
+    // --- R-21: environments & scoping (R syntax) -------------------------
+
+    /// `local({...})` returns the block's value and does not leak its locals.
+    #[test]
+    fn r21_local_scopes_its_bindings() {
+        assert_eq!(nums("local({ x <- 5; x * 2 })\n"), vec![10.0]);
+        // `x` was local to the block — referencing it afterward is an error.
+        assert!(
+            eval_r("local({ x <- 5 })\nx\n").is_err(),
+            "local() bindings must not escape"
+        );
+    }
+
+    /// `<<-` from a function with no enclosing binding creates the name globally.
+    #[test]
+    fn r21_super_assign_creates_global() {
+        assert_eq!(nums("f <- function() { y <<- 99 }\nf()\ny\n"), vec![99.0]);
+    }
+
+    /// A counter closure mutates the `n` captured in its enclosing frame via
+    /// `<<-`, so repeated calls advance the count.
+    #[test]
+    fn r21_counter_closure_with_super_assign() {
+        let src = "make_counter <- function() {\n\
+                   \x20 n <- 0\n\
+                   \x20 function() { n <<- n + 1; n }\n\
+                   }\n\
+                   counter <- make_counter()\n\
+                   counter()\ncounter()\ncounter()\n";
+        assert_eq!(nums(src), vec![3.0]);
+    }
+
+    /// The R-only right-super-assign `->>` (value on the left) behaves like `<<-`.
+    /// This form lives in `r.grammar` (not `s.grammar`), so it is tested here.
+    #[test]
+    fn r21_right_super_assign() {
+        assert_eq!(nums("f <- function() { 7 ->> z }\nf()\nz\n"), vec![7.0]);
+    }
+
+    /// `assign`/`get` round-trip; `exists` reports presence; an unbound name is
+    /// `FALSE`.
+    #[test]
+    fn r21_assign_get_exists() {
+        assert_eq!(nums("assign(\"q\", 3 + 4)\nget(\"q\")\n"), vec![7.0]);
+        assert_eq!(show("exists(\"zzz\")\n"), "[1] FALSE");
+        assert_eq!(show("kk <- 1\nexists(\"kk\")\n"), "[1] TRUE");
+        // `_` is a name character in R, so `my_name` is one identifier — assign
+        // through it to confirm the R lexer path round-trips.
+        assert_eq!(nums("my_name <- \"w\"\nassign(my_name, 11)\nget(my_name)\n"), vec![11.0]);
+    }
+
+    /// `rm` removes a binding; referencing it afterward errors.
+    #[test]
+    fn r21_rm_removes_binding() {
+        assert!(eval_r("d <- 5\nrm(\"d\")\nd\n").is_err());
+    }
+
+    /// Earlier lanes still work after the R-21 changes (regression guard).
+    #[test]
+    fn r18_r19_r20_still_work_after_r21() {
+        // R-18: tryCatch.
+        assert_eq!(
+            show("tryCatch(stop(\"boom\"), error = function(e) \"caught\")\n"),
+            "[1] \"caught\""
+        );
+        // R-19: empty-arm switch fall-through.
+        assert_eq!(show("switch(\"a\", a = , b = \"hit\")\n"), "[1] \"hit\"");
+        // R-20: Find / Reduce(accumulate) / Negate.
+        assert_eq!(nums("Find(\\(x) x > 2, 1:5)\n"), vec![3.0]);
+        assert_eq!(
+            nums("Reduce(\\(a, b) a + b, 1:4, accumulate = TRUE)\n"),
+            vec![1.0, 3.0, 6.0, 10.0]
+        );
+        assert_eq!(show("Negate(is.na)(NA)\n"), "[1] FALSE");
+    }
 }

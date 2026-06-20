@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.152.0] - 2026-06-20
+
+### Added — CLOC19: end-to-end `try`/`catch`/`finally` support
+
+Programs containing `try`/`catch`/`finally` now route through the full typed-AST
+optimization pipeline at both SIMPLE and ADVANCED levels. Previously *any* `try`
+made the parse/bridge step decline, and closurec silently fell back to
+WHITESPACE_ONLY — emitting the input with only inter-token whitespace stripped,
+zero real optimization. This was closurec's single largest coverage gap.
+
+Now inlining, constant folding, dead-code elimination, and (under ADVANCED)
+local/global/property renaming all run inside the protected block, the catch
+handler, and the finalizer, while control flow and the catch binding are
+preserved. The implementation spans the AST (`TryStatement`/`CatchClause`), the
+parser bridge, the emitter, the scope analyzer, and every optimization pass; the
+crucial soundness property is that the catch parameter is treated as a reserved
+binding so renaming never aliases or rewrites the caught value.
+
+Two end-to-end diff fixtures pin the behaviour:
+
+* `simple-try-catch` — SIMPLE inlining + folding + DCE through try/catch/finally,
+  plus a regression guard that the output is NOT the whitespace fallback.
+* `advanced-try-catch-rename` — ADVANCED renaming with the catch binding `err`
+  preserved verbatim and never collided with a generated short name.
+
 ## [0.151.0] - 2026-06-19
 
 ### Fixed (CLOC17 — assignment statements no longer force whitespace-only fallback)

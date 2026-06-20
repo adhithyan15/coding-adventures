@@ -66,13 +66,14 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BigIntLiteral, BinaryExpression, BinaryOperator, BlockStatement,
     BooleanLiteral,
-    BreakStatement, CallExpression, ConditionalExpression, ContinueStatement, Declaration,
+    BreakStatement, CallExpression, CatchClause, ConditionalExpression, ContinueStatement,
+    Declaration,
     EmptyStatement, Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
-    SwitchCase, SwitchStatement, ThrowStatement, UnaryExpression, UnaryOperator, UndefinedLiteral,
-    VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
+    SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator,
+    UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -297,7 +298,38 @@ impl<'a> Emitter<'a> {
             TaggedStatement::LabeledStatement(l) => self.emit_labeled(l),
             TaggedStatement::ThrowStatement(t) => self.emit_throw(t),
             TaggedStatement::SwitchStatement(s) => self.emit_switch(s),
+            TaggedStatement::TryStatement(t) => self.emit_try(t),
             TaggedStatement::EmptyStatement(e) => self.emit_empty(e),
+        }
+    }
+
+    fn emit_try(&mut self, t: &TryStatement) {
+        // try <block> [ catch [(param)] <block> ] [ finally <block> ]
+        // No `required_ws` anywhere: every boundary is keyword↔`{`/`}` or
+        // `}`↔keyword, which lex cleanly with no separator (`try{…}catch{…}`).
+        // `pretty_ws` adds readability spaces only in pretty mode.
+        self.maybe_map(&t.cv);
+        self.write_str("try");
+        self.pretty_ws();
+        self.emit_block_statement(&t.block);
+        if let Some(h) = &t.handler {
+            self.maybe_map(&h.cv);
+            self.pretty_ws();
+            self.write_str("catch");
+            if let Some(param) = &h.param {
+                self.pretty_ws();
+                self.write_str("(");
+                self.write_str(&param.name);
+                self.write_str(")");
+            }
+            self.pretty_ws();
+            self.emit_block_statement(&h.body);
+        }
+        if let Some(finalizer) = &t.finalizer {
+            self.pretty_ws();
+            self.write_str("finally");
+            self.pretty_ws();
+            self.emit_block_statement(finalizer);
         }
     }
 
@@ -2349,6 +2381,104 @@ mod tests {
     // Tracked as a follow-up to CLOC12.10's paren-policy work.
     // The PREC_UNARY entry for UndefinedLiteral is still correct
     // (it'll start firing the moment the emit_member fix lands).
+
+    // ---- try / catch / finally (CLOC19) -----------------------
+
+    /// Build a single-expression-statement block `{ <ident>; }`.
+    fn block_with(name: &str) -> BlockStatement {
+        BlockStatement {
+            cv: None,
+            body: vec![Statement::expression_statement(ExpressionStatement {
+                cv: None,
+                expression: ident(name),
+            })],
+        }
+    }
+
+    fn emit_try_item(t: TryStatement) -> String {
+        let item = ProgramItem::Statement(Statement::try_statement(t));
+        emit_default(program().with_body(vec![item])).code
+    }
+
+    #[test]
+    fn try_catch_finally_emits_with_clean_token_boundaries() {
+        // The whole point of the emitter's "no required_ws" claim: every
+        // boundary (`}catch`, `)`/`{`, `}finally`) lexes cleanly with no
+        // separator. The last statement in a block drops its `;` (the
+        // emitter's minified ASI), so the tight form is exactly this.
+        let t = TryStatement {
+            cv: None,
+            block: block_with("a"),
+            handler: Some(CatchClause {
+                cv: None,
+                param: Some(Identifier {
+                    cv: None,
+                    name: "e".to_string(),
+                }),
+                body: block_with("b"),
+            }),
+            finalizer: Some(block_with("c")),
+        };
+        assert_eq!(emit_try_item(t), "try{a}catch(e){b}finally{c}");
+    }
+
+    #[test]
+    fn try_with_optional_catch_binding_emits_no_parens() {
+        // ES2019 `catch { … }` — handler with no param.
+        let t = TryStatement {
+            cv: None,
+            block: block_with("a"),
+            handler: Some(CatchClause {
+                cv: None,
+                param: None,
+                body: block_with("b"),
+            }),
+            finalizer: None,
+        };
+        assert_eq!(emit_try_item(t), "try{a}catch{b}");
+    }
+
+    #[test]
+    fn try_finally_without_catch_emits() {
+        // A `try … finally` with no handler at all.
+        let t = TryStatement {
+            cv: None,
+            block: block_with("a"),
+            handler: None,
+            finalizer: Some(block_with("c")),
+        };
+        assert_eq!(emit_try_item(t), "try{a}finally{c}");
+    }
+
+    #[test]
+    fn try_catch_finally_pretty_mode_spaces_keywords() {
+        let t = TryStatement {
+            cv: None,
+            block: block_with("a"),
+            handler: Some(CatchClause {
+                cv: None,
+                param: Some(Identifier {
+                    cv: None,
+                    name: "e".to_string(),
+                }),
+                body: block_with("b"),
+            }),
+            finalizer: Some(block_with("c")),
+        };
+        let item = ProgramItem::Statement(Statement::try_statement(t));
+        let out = emit_with(
+            program().with_body(vec![item]),
+            EmitOptions {
+                pretty: true,
+                ..EmitOptions::default()
+            },
+        );
+        // Pretty mode inserts a space after each keyword and around the
+        // blocks; the catch param keeps its `(e)` form.
+        assert!(out.code.contains("try {"), "got:\n{}", out.code);
+        assert!(out.code.contains("catch (e) {"), "got:\n{}", out.code);
+        assert!(out.code.contains("finally {"), "got:\n{}", out.code);
+    }
 
     // ---- EmitError --------------------------------------------
 

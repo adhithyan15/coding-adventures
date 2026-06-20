@@ -79,7 +79,7 @@ arguments inside a call) — also faithful to the era.
 
 S3/S4 method dispatch; lazy-evaluation promises; data frames, factors, and
 formulas (`y ~ x`); the `d/p/q/r` distribution family and modeling (`lm`);
-`<<-` superassignment; user-defined `%op%` infix operators; complex numbers and
+user-defined `%op%` infix operators; complex numbers and
 the integer-`L` suffix; negative/logical/named indexing and `[[ ]]`/`$`;
 attributes beyond `names`; graphics. The numeric/statistical depth lives in
 ST02–ST12 and `statistics-core`; this spec is only the language frontend.
@@ -89,7 +89,7 @@ ST02–ST12 and `statistics-core`; this spec is only the language frontend.
 | Token | Pattern / value | Notes |
 |-------|-----------------|-------|
 | `ASSIGN` | `<-` | primary assignment |
-| `SUPER_ASSIGN` | `<<-` | lexed (reserved); v1 treats as `<-` |
+| `SUPER_ASSIGN` | `<<-` | super-assignment (R-21): rebinds in the nearest enclosing scope, else global |
 | `RIGHT_ASSIGN` | `->` | right assignment |
 | `UNDERSCORE` | `_` | **historical assignment** |
 | `NUMBER` | `[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?` | double literal |

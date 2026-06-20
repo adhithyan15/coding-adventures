@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.17.0] - 2026-06-20
+
+### Added
+
+- **Environments & scoping (R-21)** — R's environment-model core subset, living
+  in the shared runtime so both S and R inherit it. Grammar-free: the `<<-`
+  super-assign token already lexed and parsed.
+  - **`<<-` super-assignment** — a new `env::super_assign` walks the chain of
+    *enclosing* environments (skipping the current frame) and rebinds the
+    **nearest** existing binding of the name; if none exists, it creates the
+    binding in the **global** environment. This is what makes the counter-closure
+    idiom work — `make <- function() { n <- 0; function() { n <<- n + 1; n } }`
+    mutates the captured `n` rather than shadowing it. The walk is iterative (no
+    native-stack recursion) over the finite, acyclic scope list, so it always
+    terminates; a non-name target (`x[i] <<- v`) is a clean error.
+  - **`local({ ... })`** — evaluates a block in a fresh child environment and
+    returns its value; bindings made inside do not leak
+    (`local({ x <- 5; x * 2 })` → `10`, `x` unbound after).
+  - **`assign(x, value)` / `get(x)` / `exists(x)` / `rm(x)`** — by-name binding
+    ops against the **current** environment, implemented as lazy special forms
+    (intercepted at the call site like `switch`/`tryCatch`, since they need the
+    live scope). The name is a length-one character (a variable holding the name
+    works too); `get` of an unbound name errors, `exists` searches the whole
+    chain, `rm` deletes from the current frame.
+  - `env.rs` gains `exists` and `remove` helpers alongside `super_assign`.
+
+### Deferred to R-22
+
+- First-class environment **values**: `new.env()`, `environment()` /
+  `environment(f)`, and the `envir = e` argument of
+  `assign`/`get`/`exists`/`rm`/`local` (they need a new `SValue::Environment`
+  variant and a fresh round of Rc-cycle / leak analysis). The `envir` argument is
+  rejected today with a clear "deferred to R-22" error rather than silently
+  ignored.
+
 ## [0.16.0] - 2026-06-20
 
 ### Added

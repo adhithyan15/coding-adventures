@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.2.0] - 2026-06-20
+
+### Added — CLOC19: variable inlining inside `try`/`catch`/`finally`
+
+`count_decl_names_stmt`, `count_uses_stmt`, and `propagate_in_stmt` now recurse
+through `TryStatement` (protected block, catch handler body, finalizer). The catch
+`param` is counted as a declared binding in `count_decl_names_stmt` so a candidate
+that shadows it is correctly excluded from propagation — preserving soundness when
+a top-level name is also bound by a catch clause.
+
 ## [0.1.0] - 2026-06-17
 
 ### Added (CLOC13.H — constant propagation)

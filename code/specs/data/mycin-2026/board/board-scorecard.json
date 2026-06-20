@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 144,
-    "correct": 137,
+    "total": 147,
+    "correct": 140,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 131,
+        "correct": 134,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9924,
-    "grounded_correct": 130
+    "grounded_coverage": 0.9925,
+    "grounded_correct": 133
   },
   "results": [
     {
@@ -916,6 +916,22 @@
       "trust": "authoritative"
     },
     {
+      "id": "rheum_pbc_ab",
+      "tactic": "recall",
+      "gold": "anti_mitochondrial",
+      "answer": "anti_mitochondrial",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "rheum_dm_ab",
+      "tactic": "recall",
+      "gold": "anti_jo1",
+      "answer": "anti_jo1",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
       "id": "onco_ovarian_marker",
       "tactic": "recall",
       "gold": "ca_125",
@@ -1104,6 +1120,14 @@
       "tactic": "recall",
       "gold": "eosinophilic_esophagitis",
       "answer": "eosinophilic_esophagitis",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "gi_uc_dx",
+      "tactic": "recall",
+      "gold": "ulcerative_colitis",
+      "answer": "ulcerative_colitis",
       "outcome": "correct",
       "trust": "authoritative"
     },

@@ -27,10 +27,16 @@
 % (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 %
 % Honest scope: only findings whose page states the association in a clean self-contained
-% span (both finding AND disease named) are included. Deferred — ulcerative colitis: its
-% page describes crypt distortion / goblet-cell depletion in sentences that do not name
-% "ulcerative colitis" alongside the finding; Whipple disease: its PAS-positive-foamy-
-% macrophage criterion sentence does not name "Whipple" in the same declarative.
+% span (both finding AND disease named) are included. Under the primary-source-first
+% policy, ulcerative colitis → crypt abscesses is now GROUNDED: the Inflammatory Bowel
+% Disease page (NBK470312) carries a Histopathology span naming "ulcerative colitis" and
+% its "cryptic abscesses" together. Still deferred (re-checked): Whipple disease → PAS-
+% positive macrophages — its dedicated page (NBK441937) splits the diagnosis ("The diagnosis
+% of Whipple disease is made by a biopsy of the intestine...") from the criterion
+% ("...positive results for PAS-positive foamy macrophages in the small bowel biopsy"), and
+% the Tropheryma review (PMC88990) likewise names the PAS-positive macrophages in a sentence
+% that does not contain "Whipple". No primary page checked carries a single both-endpoints
+% declarative, so the edge stays out — honest absence beats an over-reaching citation.
 % ============================================================================
 
 dictionary gi_vocab {
@@ -71,5 +77,13 @@ rulebook gi_facts {
     relate biopsy_finding_in(eosinophils_15_per_hpf, eosinophilic_esophagitis)
         source "The pathological diagnosis of EoE is made when eosinophils are present greater than or equal to 15 per high power field (HPF)."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK459297/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): crypt abscesses -> ulcerative colitis ----------
+    % The IBD page's Histopathology span names "ulcerative colitis" and its "cryptic
+    % abscesses" (the board buzzword "crypt abscesses") together in one declarative.
+    relate biopsy_finding_in(crypt_abscesses, ulcerative_colitis)
+        source "The histopathology of ulcerative colitis will show involvement only of the mucosa and submucosa, with the formation of cryptic abscesses and mucosal ulcers."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470312/"
         trust authoritative
 }

@@ -4,6 +4,18 @@
 
 ### Added
 
+- **Deck run control diagnostic artifacts** —
+  `run_deck_analysis()` selected-run artifacts now include existing `.control`
+  body policy diagnostic codes in `Diagnostics` / `DiagnosticCodeList`, and
+  those codes flow through stable run-artifact tables, CSV/JSON helpers, and
+  ordered `table_artifacts`, matching Rust and TypeScript.
+
+- **Deck execution table export artifacts** —
+  `run_deck_analysis()` selected executions now expose ordered
+  `table_artifacts` with each stable table's text, CSV, compact JSON, and
+  header-keyed records beside the existing table inventory, matching Rust and
+  TypeScript.
+
 - **Deck execution table inventory** —
   `run_deck_analysis()` selected executions now expose stable table count/name
   lists beside analysis directives, output probes, output directives, and

@@ -35,6 +35,8 @@ EXPECTED = {
     "systemic_sclerosis": {"anti_scl70", "anti_centromere"},
     "rheumatoid_arthritis": {"anti_ccp"},                 # primary-source backfill (NBK441999)
     "sjogren_syndrome": {"anti_ro", "anti_la"},           # primary-source backfill (NBK431049)
+    "primary_biliary_cholangitis": {"anti_mitochondrial"},  # primary-source backfill (NBK459209)
+    "dermatomyositis": {"anti_jo1"},                       # primary-source backfill (NBK558917)
 }
 REL = "associated_autoantibody"
 VAR = "Antibody"
@@ -102,8 +104,8 @@ def test_unknown_disease_abstains() -> None:
     fd, path = tempfile.mkstemp(suffix=".adj", prefix=".rheum_q_", dir=HERE)
     try:
         with os.fdopen(fd, "w") as fh:
-            # dermatomyositis is not in the library → must abstain
-            fh.write(f'import "rheum-edges.adj"\n? {REL}(dermatomyositis, ${VAR})\n')
+            # behcet_syndrome is not in the library → must abstain
+            fh.write(f'import "rheum-edges.adj"\n? {REL}(behcet_syndrome, ${VAR})\n')
         res = _run(Path(path))
         r = res["recall"][0] if res["recall"] else None
         assert r is not None and r["abstained"], "an ungrounded disease must abstain"

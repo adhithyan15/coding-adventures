@@ -109,6 +109,11 @@ pub fn execute_source(source: &str, module_name: &str) -> Result<Option<Value>, 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum ScalarType {
     Integer,
+    /// ALGOL 60 `real` — an IEEE-754 double (`f64`) in the IIR (LANG-FULL AL1 /
+    /// enabler E3).  Real arithmetic (`+`/`-`/`*`/`/`) and ordered comparisons
+    /// lower to the IIR's `f64`-typed ops, which the WASM/LLVM/JVM backends and
+    /// the VM/JIT execute as doubles.
+    Real,
     Boolean,
 }
 
@@ -116,6 +121,7 @@ impl ScalarType {
     fn iir(self) -> &'static str {
         match self {
             Self::Integer => "i64",
+            Self::Real => "f64",
             Self::Boolean => "bool",
         }
     }
@@ -123,6 +129,7 @@ impl ScalarType {
     fn default_operand(self) -> Operand {
         match self {
             Self::Integer => Operand::Int(0),
+            Self::Real => Operand::Float(0.0),
             Self::Boolean => Operand::Bool(false),
         }
     }
@@ -130,6 +137,7 @@ impl ScalarType {
     fn name(self) -> &'static str {
         match self {
             Self::Integer => "integer",
+            Self::Real => "real",
             Self::Boolean => "boolean",
         }
     }
@@ -371,10 +379,8 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("type node has no token".into()))?;
         match token.value.as_str() {
             "integer" => Ok(ScalarType::Integer),
+            "real" => Ok(ScalarType::Real),
             "boolean" => Ok(ScalarType::Boolean),
-            "real" => Err(CompileError::Unsupported(
-                "real scalars on the common VM/JIT/backend slice".into(),
-            )),
             "string" => Err(CompileError::Unsupported("string scalars".into())),
             other => Err(CompileError::Malformed(format!(
                 "unknown type token {other:?}"
@@ -392,10 +398,8 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("specifier has no token".into()))?;
         match token.value.as_str() {
             "integer" => Ok(ScalarType::Integer),
+            "real" => Ok(ScalarType::Real),
             "boolean" => Ok(ScalarType::Boolean),
-            "real" => Err(CompileError::Unsupported(
-                "real parameters on the common VM/JIT/backend slice".into(),
-            )),
             "string" => Err(CompileError::Unsupported("string parameters".into())),
             kind @ ("array" | "label" | "switch" | "procedure") => Err(
                 CompileError::Unsupported(format!("{kind} parameters")),
@@ -1510,9 +1514,20 @@ impl Compiler {
                     ty: ScalarType::Integer,
                 })
             }
-            ("REAL_LIT", _) => Err(CompileError::Unsupported(
-                "real literals on the common VM/JIT/backend slice".into(),
-            )),
+            ("REAL_LIT", _) => {
+                // `REAL_LIT` is digits with a decimal point and/or exponent
+                // (`3.14`, `1.0E-3`, `100E2`).  Rust's `f64::from_str` accepts
+                // exactly that surface syntax, so parse it directly into an
+                // `Operand::Float` (LANG-FULL AL1 / E3).
+                let value = token.value.parse::<f64>().map_err(|_| {
+                    CompileError::Type(format!("malformed real literal {:?}", token.value))
+                })?;
+                let slot = self.emit_const(ScalarType::Real, Operand::Float(value));
+                Ok(ExprValue {
+                    slot,
+                    ty: ScalarType::Real,
+                })
+            }
             ("STRING_LIT", _) => Err(CompileError::Unsupported("string literals".into())),
             ("KEYWORD", "true") => {
                 let slot = self.emit_const(ScalarType::Boolean, Operand::Bool(true));
@@ -1609,6 +1624,34 @@ impl Compiler {
         Ok(acc)
     }
 
+    /// Require both operands of a numeric operator to be the **same** numeric
+    /// type (`integer`+`integer` or `real`+`real`) and return it. Rejects a
+    /// boolean operand and an integer/real mix — v1 has no implicit coercion.
+    fn same_numeric_type(
+        &self,
+        op: &str,
+        lhs: &ExprValue,
+        rhs: &ExprValue,
+    ) -> Result<ScalarType, CompileError> {
+        let numeric = |t: ScalarType| matches!(t, ScalarType::Integer | ScalarType::Real);
+        if !numeric(lhs.ty) || !numeric(rhs.ty) {
+            return Err(CompileError::Type(format!(
+                "operator {op:?} requires numeric operands, got {} and {}",
+                lhs.ty.name(),
+                rhs.ty.name()
+            )));
+        }
+        if lhs.ty != rhs.ty {
+            return Err(CompileError::Type(format!(
+                "operator {op:?} cannot mix {} and {} (no implicit integer→real \
+                 coercion in this slice)",
+                lhs.ty.name(),
+                rhs.ty.name()
+            )));
+        }
+        Ok(lhs.ty)
+    }
+
     fn emit_binary(
         &mut self,
         op: &str,
@@ -1616,23 +1659,41 @@ impl Compiler {
         rhs: ExprValue,
     ) -> Result<ExprValue, CompileError> {
         match op {
-            "+" | "-" | "*" | "div" | "mod" => {
-                if lhs.ty != ScalarType::Integer || rhs.ty != ScalarType::Integer {
-                    return Err(CompileError::Type(format!(
-                        "operator {op:?} requires integer operands"
-                    )));
-                }
+            "+" | "-" | "*" => {
+                // `+`/`-`/`*` work on **either** `integer` (i64) or `real` (f64)
+                // operands, but not a mix — ALGOL's implicit integer→real
+                // coercion needs an IIR int→f64 convert op the code-gen slice
+                // doesn't carry yet, so v1 requires both operands the same
+                // numeric type (a clean error otherwise). The IIR `type_hint`
+                // carries the operand width, so the backends pick `add`/`fadd`
+                // etc. from it.
+                let ty = self.same_numeric_type(op, &lhs, &rhs)?;
                 let iir_op = match op {
                     "+" => "add",
                     "-" => "sub",
                     "*" => "mul",
-                    "div" => "div",
-                    "mod" => "mod",
                     _ => unreachable!(),
                 };
                 let dest = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     iir_op,
+                    Some(dest.clone()),
+                    vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
+                    ty.iir(),
+                ));
+                Ok(ExprValue { slot: dest, ty })
+            }
+            "div" | "mod" => {
+                // `div` (integer division) and `mod` are integer-only operators
+                // in ALGOL 60 — reals use `/`.
+                if lhs.ty != ScalarType::Integer || rhs.ty != ScalarType::Integer {
+                    return Err(CompileError::Type(format!(
+                        "operator {op:?} requires integer operands"
+                    )));
+                }
+                let dest = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    op,
                     Some(dest.clone()),
                     vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
                     "i64",
@@ -1642,9 +1703,31 @@ impl Compiler {
                     ty: ScalarType::Integer,
                 })
             }
-            "/" => Err(CompileError::Unsupported(
-                "real division '/' in the integer-only backend slice; use div".into(),
-            )),
+            "/" => {
+                // Real division. ALGOL's `/` always yields a `real`; v1 requires
+                // real operands (no integer→real coercion yet — see the `+`/`-`
+                // note). Lowers to the IIR `div` with an `f64` hint, so the
+                // backends emit `fdiv`/`f64.div`/`ddiv`. IEEE division by zero
+                // is `±inf`, consistent across every backend (no trap).
+                if lhs.ty != ScalarType::Real || rhs.ty != ScalarType::Real {
+                    return Err(CompileError::Type(
+                        "real division '/' requires real operands (integer→real \
+                         coercion is not in this slice; use `div` for integers)"
+                            .into(),
+                    ));
+                }
+                let dest = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "div",
+                    Some(dest.clone()),
+                    vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
+                    "f64",
+                ));
+                Ok(ExprValue {
+                    slot: dest,
+                    ty: ScalarType::Real,
+                })
+            }
             "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=" => {
                 if lhs.ty != rhs.ty {
                     return Err(CompileError::Type(format!(
@@ -1760,21 +1843,26 @@ impl Compiler {
     }
 
     fn emit_unary_minus(&mut self, value: ExprValue) -> Result<ExprValue, CompileError> {
-        if value.ty != ScalarType::Integer {
-            return Err(CompileError::Type("unary minus requires an integer".into()));
-        }
-        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        // Negation is `0 - x` at the operand's numeric width: `i64` for
+        // `integer`, `f64` for `real` (the `0` const and the `sub` both carry
+        // the type, so a real negation lowers to an `f64` subtract → `fsub`).
+        let ty = match value.ty {
+            ScalarType::Integer | ScalarType::Real => value.ty,
+            ScalarType::Boolean => {
+                return Err(CompileError::Type(
+                    "unary minus requires a numeric operand".into(),
+                ))
+            }
+        };
+        let zero = self.emit_const(ty, ty.default_operand());
         let dest = self.fresh_temp();
         self.emit(IIRInstr::new(
             "sub",
             Some(dest.clone()),
             vec![Operand::Var(zero), Operand::Var(value.slot)],
-            "i64",
+            ty.iir(),
         ));
-        Ok(ExprValue {
-            slot: dest,
-            ty: ScalarType::Integer,
-        })
+        Ok(ExprValue { slot: dest, ty })
     }
 
     fn emit_const(&mut self, ty: ScalarType, operand: Operand) -> String {
@@ -2071,6 +2159,13 @@ mod tests {
         result.as_i64().expect("result should be an integer")
     }
 
+    fn run_f64(source: &str) -> f64 {
+        let result = execute_source(source, "test")
+            .expect("ALGOL source should compile and run")
+            .expect("main should return a value");
+        result.as_f64().expect("result should be a real")
+    }
+
     #[test]
     fn compiles_and_runs_integer_assignment() {
         let src = "begin integer result; result := 40 + 2 end";
@@ -2156,10 +2251,17 @@ mod tests {
     }
 
     #[test]
-    fn rejects_real_declarations_cleanly() {
-        let err = compile_source("begin real x; x := 1.5 end", "bad")
-            .expect_err("real declarations are outside this slice");
-        assert!(err.to_string().contains("real"));
+    fn real_declarations_compile_to_f64() {
+        // (Was `rejects_real_declarations_cleanly` — reals are now supported,
+        // LANG-FULL AL1 / E3.) A `real x` declares an `f64` slot seeded to 0.0.
+        let module = compile_source("begin real x; x := 1.5 end", "ok")
+            .expect("real declarations now compile");
+        let main = module.get_function("main").expect("main exists");
+        assert!(main.instructions.iter().any(|i|
+            i.op == "const"
+                && i.dest.as_deref() == Some("x")
+                && i.type_hint == "f64"),
+            "real `x` should get an f64 const slot");
     }
 
     #[test]
@@ -2365,5 +2467,78 @@ mod tests {
             .find(|i| i.op == "cmp_eq")
             .expect("emits cmp_eq");
         assert_eq!(cmp.type_hint, "i64", "cmp must carry the i64 operand width");
+    }
+
+    // ── real (f64) arithmetic — LANG-FULL AL1 / enabler E3 ───────────
+
+    #[test]
+    fn compiles_and_runs_real_multiplication() {
+        // `2.5 * 4.0` computes in f64 → 10.0 (an integer `*` would never produce
+        // a fraction; this proves the real track is taken).
+        assert_eq!(run_f64("begin real result; result := 2.5 * 4.0 end"), 10.0);
+    }
+
+    #[test]
+    fn compiles_and_runs_real_division() {
+        // `/` is true real division: 7.0 / 2.0 = 3.5 (integer `div` would give 3).
+        assert_eq!(run_f64("begin real result; result := 7.0 / 2.0 end"), 3.5);
+    }
+
+    #[test]
+    fn compiles_and_runs_real_add_sub() {
+        assert_eq!(run_f64("begin real result; result := 1.5 + 0.25 - 0.75 end"), 1.0);
+    }
+
+    #[test]
+    fn compiles_and_runs_real_unary_minus() {
+        assert_eq!(run_f64("begin real result; result := - 2.5 + 4.0 end"), 1.5);
+    }
+
+    #[test]
+    fn compiles_and_runs_real_comparison_fold() {
+        // The cross-backend matrix-proof shape: do real arithmetic, then fold a
+        // real comparison to an integer exit code (no float printing needed).
+        let src = "begin real r; integer result; r := 2.5 * 2.0; \
+                   if r = 5.0 then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_real_ordered_comparison() {
+        let src = "begin real r; integer result; r := 7.0 / 2.0; \
+                   if r < 4.0 then result := 1 else result := 0 end";
+        assert_eq!(run_i64(src), 1);
+    }
+
+    #[test]
+    fn real_lowers_to_f64_typed_ops() {
+        let module = compile_source(
+            "begin real result; result := 2.5 * 4.0 end", "test")
+            .expect("compiles");
+        let main = &module.functions[0];
+        let mul = main.instructions.iter()
+            .find(|i| i.op == "mul")
+            .expect("emits mul");
+        assert_eq!(mul.type_hint, "f64", "real multiply must carry the f64 hint");
+        assert!(main.instructions.iter().any(|i|
+            i.op == "const" && matches!(i.srcs.first(), Some(Operand::Float(_)))),
+            "a real literal lowers to an Operand::Float const");
+    }
+
+    #[test]
+    fn rejects_mixed_integer_and_real() {
+        // No implicit integer→real coercion in this slice.
+        let err = compile_source(
+            "begin real result; result := 1 + 2.5 end", "test").unwrap_err();
+        assert!(matches!(err, CompileError::Type(_)),
+            "mixing integer and real should be a Type error, got {err:?}");
+    }
+
+    #[test]
+    fn rejects_real_division_on_integers() {
+        let err = compile_source(
+            "begin integer result; result := 7 / 2 end", "test").unwrap_err();
+        assert!(matches!(err, CompileError::Type(_)),
+            "`/` on integers should be a Type error (use div), got {err:?}");
     }
 }

@@ -107,12 +107,17 @@ returns the plan, solver result, deck-selected output table, and normalized
 table count/name list, analysis directive, output probes, and output directives
 that produced the table, plus selected
 `.measure` results and a stable measurement table for `.dc`, `.ac`, and `.tran`
-executions. Selected
+executions. Execution `table_artifacts` preserve the same order as `tables` and
+carry each stable table's text, CSV, compact JSON, and header-keyed records.
+Selected
 `.tran` plans also return selected `.four` harmonic results and a stable
 Fourier table. Executions also include a selected-run artifact summary plus
 `format_deck_run_artifact_table()` and `format_deck_run_artifact_csv()` output
 for stable result-row, table, analysis-directive, output-probe,
 output-directive, measurement, Fourier, and diagnostic count/name lists.
+Existing `.control` body policy diagnostics flow into those selected-run
+artifact `Diagnostics` / `DiagnosticCodeList` fields and through the same
+run-artifact table, CSV, JSON, and `table_artifacts` records.
 `format_deck_table_csv()` also converts any stable
 tab-separated deck table to CSV, `format_deck_table_json()` converts the same
 tables to compact JSON records, and `deck_table_records()` returns

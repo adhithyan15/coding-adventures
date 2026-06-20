@@ -6803,6 +6803,9 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.analysis_directives == [".op"]
     assert op_execution.table_count == 2
     assert op_execution.tables == ["result", "run-artifact"]
+    assert [artifact.name for artifact in op_execution.table_artifacts] == (
+        op_execution.tables
+    )
     assert op_execution.measurements == []
     assert op_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
@@ -6813,6 +6816,16 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert json.loads(format_deck_table_json(op_execution.table)) == [
         {"Index": "0", "V(mid)": "5.000000e-01"}
     ]
+    assert op_execution.table_artifacts[0].table == op_execution.table
+    assert op_execution.table_artifacts[0].csv == format_deck_table_csv(
+        op_execution.table
+    )
+    assert op_execution.table_artifacts[0].json == format_deck_table_json(
+        op_execution.table
+    )
+    assert op_execution.table_artifacts[0].records == deck_table_records(
+        op_execution.table
+    )
     assert op_execution.run_artifacts[0].result_rows == 1
     assert op_execution.run_artifacts[0].result_column_count == 2
     assert op_execution.run_artifacts[0].result_columns == ["Index", "V(mid)"]
@@ -6835,6 +6848,11 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.run_artifact_table == (
         "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n"
         f"op\t.op\t1\t.op\t{op_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t2\tresult;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\n"
+    )
+    assert op_execution.table_artifacts[1].name == "run-artifact"
+    assert op_execution.table_artifacts[1].table == op_execution.run_artifact_table
+    assert op_execution.table_artifacts[1].records == deck_table_records(
+        op_execution.run_artifact_table
     )
     assert format_deck_table_csv(
         op_execution.run_artifact_table
@@ -6965,10 +6983,23 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.analysis_directives == [".dc"]
     assert dc_execution.table_count == 3
     assert dc_execution.tables == ["result", "measurement", "run-artifact"]
+    assert [artifact.name for artifact in dc_execution.table_artifacts] == (
+        dc_execution.tables
+    )
     assert [measurement.name for measurement in dc_execution.measurements] == ["mid_avg"]
     assert dc_execution.measurement_table == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "mid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n"
+    )
+    assert dc_execution.table_artifacts[1].table == dc_execution.measurement_table
+    assert dc_execution.table_artifacts[1].csv == format_deck_table_csv(
+        dc_execution.measurement_table
+    )
+    assert dc_execution.table_artifacts[1].json == format_deck_table_json(
+        dc_execution.measurement_table
+    )
+    assert dc_execution.table_artifacts[1].records == deck_table_records(
+        dc_execution.measurement_table
     )
     assert isinstance(dc_execution.result, DcSweepResult)
     assert len(dc_execution.result.points) == 2
@@ -7310,6 +7341,49 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
 
 
+def test_run_deck_analysis_surfaces_control_diagnostics_in_artifacts() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(Resistor("R1", "in", "0", 1000.0))
+    netlist = """
+.save V(in)
+.control
+source other.cir
+cd /tmp
+if v(in) > 0
+let gain = 2
+.endc
+.op
+.end
+"""
+
+    execution = run_deck_analysis(circuit, netlist, "op")
+    expected_codes = [
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+    ]
+    code_list = ";".join(expected_codes)
+
+    assert execution.run_artifacts[0].diagnostic_count == len(expected_codes)
+    assert execution.run_artifacts[0].diagnostic_codes == expected_codes
+    record = deck_table_records(execution.run_artifact_table)[0]
+    assert record["Diagnostics"] == str(len(expected_codes))
+    assert record["DiagnosticCodeList"] == code_list
+    assert execution.table_artifacts[-1].name == "run-artifact"
+    assert execution.table_artifacts[-1].records[0]["DiagnosticCodeList"] == code_list
+    assert execution.table_artifacts[-1].csv == format_deck_run_artifact_csv(
+        execution.run_artifacts
+    )
+    assert execution.table_artifacts[-1].json == format_deck_run_artifact_json(
+        execution.run_artifacts
+    )
+    assert json.loads(format_deck_run_artifact_json(execution.run_artifacts))[0][
+        "DiagnosticCodeList"
+    ] == code_list
+
+
 def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
     circuit = Circuit()
     circuit.add(VoltageSource("V1", "vin", "0", 1.0))
@@ -7334,11 +7408,24 @@ def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
     assert len(tran_execution.fourier) == 1
     assert tran_execution.table_count == 3
     assert tran_execution.tables == ["result", "fourier", "run-artifact"]
+    assert [artifact.name for artifact in tran_execution.table_artifacts] == (
+        tran_execution.tables
+    )
     result = tran_execution.fourier[0]
     assert result.fundamental_frequency == pytest.approx(2000.0)
     assert result.probes[0].probe == "V(mid)"
     assert len(result.probes[0].harmonics) == 1
     assert tran_execution.fourier_table == format_fourier_table(result)
+    assert tran_execution.table_artifacts[1].table == tran_execution.fourier_table
+    assert tran_execution.table_artifacts[1].csv == format_deck_table_csv(
+        tran_execution.fourier_table
+    )
+    assert tran_execution.table_artifacts[1].json == format_deck_table_json(
+        tran_execution.fourier_table
+    )
+    assert tran_execution.table_artifacts[1].records == deck_table_records(
+        tran_execution.fourier_table
+    )
     assert tran_execution.run_artifacts[0].fourier_count == 1
     assert tran_execution.run_artifacts[0].source_name is None
     assert tran_execution.run_artifacts[0].output_node is None

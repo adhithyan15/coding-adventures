@@ -97,6 +97,17 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   `call_closure` (RAII-popped). Recursion is bounded by `MAX_EVAL_DEPTH` and the
   accumulator by `MAX_SEQ_LEN`; non-callable predicates and out-of-closure
   `Recall` fail closed.
+- **Environments & scoping** (R-21): `<<-` super-assignment (`env::super_assign`)
+  walks the *enclosing* scope chain to rebind the nearest existing binding, else
+  creates it in the global environment — the engine behind the counter-closure
+  idiom `function() { n <- 0; function() { n <<- n + 1; n } }`. `local({ ... })`
+  evaluates a block in a fresh child scope and returns its value without leaking
+  locals (`local({ x <- 5; x * 2 })` → `10`). `assign`/`get`/`exists`/`rm` are
+  lazy special forms (like `switch`/`tryCatch`) operating by name against the
+  current scope. The chain walk is iterative over a finite acyclic scope list, so
+  it always terminates; non-name super-assign targets and the not-yet-supported
+  `envir = e` argument fail closed. First-class environment *values* (`new.env`,
+  `environment`) are deferred to R-22.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

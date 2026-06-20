@@ -61,9 +61,9 @@ use coding_adventures_javascript_ast::{
         UndefinedLiteral,
     },
     statement::{
-        BlockStatement, BreakStatement, ContinueStatement, EmptyStatement,
+        BlockStatement, BreakStatement, CatchClause, ContinueStatement, EmptyStatement,
         ExpressionStatement, ForInit, ForStatement, IfStatement, LabeledStatement,
-        ReturnStatement, Statement, SwitchCase, SwitchStatement, ThrowStatement,
+        ReturnStatement, Statement, SwitchCase, SwitchStatement, ThrowStatement, TryStatement,
         WhileStatement,
     },
     Program, ProgramItem, SourceType,
@@ -273,9 +273,10 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         "switch_statement" => convert_switch_statement(child).map(Statement::switch_statement),
         "labelled_statement" => convert_labeled_statement(child).map(Statement::labeled_statement),
         "throw_statement" => convert_throw_statement(child).map(Statement::throw_statement),
+        "try_statement" => convert_try_statement(child).map(Statement::try_statement),
         // Phase 2+ — not yet in the typed AST
         "do_while_statement" | "for_in_statement" | "for_of_statement"
-        | "for_await_of_statement" | "try_statement" | "with_statement"
+        | "for_await_of_statement" | "with_statement"
         | "debugger_statement" | "using_declaration" | "await_using_declaration" => {
             Err(unsupported(child))
         }
@@ -536,6 +537,76 @@ fn convert_labeled_statement(node: &GrammarASTNode) -> Result<LabeledStatement, 
         cv: None,
         label: Identifier { cv: None, name: label_name },
         body: Box::new(convert_statement(body_n)?),
+    })
+}
+
+// -------------------------------------------------------------------------
+// try_statement / catch_clause (CLOC19)
+// -------------------------------------------------------------------------
+
+fn convert_try_statement(node: &GrammarASTNode) -> Result<TryStatement, BridgeError> {
+    // try_statement = "try" block ( catch_clause [ finally_clause ]
+    //                             | finally_clause ) ;
+    // Groups flatten, so the Node children are, in order: the try `block`,
+    // then an optional `catch_clause` and/or `finally_clause`.
+    let children = node_children(node);
+    let block_n = children
+        .first()
+        .filter(|n| n.rule_name == "block")
+        .ok_or_else(|| internal(node, "try_statement: missing try block"))?;
+    let block = convert_block_statement(block_n)?;
+
+    let mut handler = None;
+    let mut finalizer = None;
+    for n in children.iter().skip(1) {
+        match n.rule_name.as_str() {
+            "catch_clause" => handler = Some(convert_catch_clause(n)?),
+            "finally_clause" => {
+                // finally_clause = "finally" block
+                let fb = node_children(n)
+                    .into_iter()
+                    .find(|c| c.rule_name == "block")
+                    .ok_or_else(|| internal(n, "finally_clause: missing block"))?;
+                finalizer = Some(convert_block_statement(fb)?);
+            }
+            _ => {}
+        }
+    }
+
+    Ok(TryStatement {
+        cv: None,
+        block,
+        handler,
+        finalizer,
+    })
+}
+
+fn convert_catch_clause(node: &GrammarASTNode) -> Result<CatchClause, BridgeError> {
+    // catch_clause = "catch" [ LPAREN NAME RPAREN ] block ;
+    // The grammar restricts the binding to a simple NAME (no destructuring),
+    // so the optional param is the single token that is neither the `catch`
+    // keyword nor a paren. Missing ⇒ the ES2019 optional-catch-binding form
+    // `catch { … }`.
+    let param = node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t)
+            if t.value != "catch" && t.value != "(" && t.value != ")" =>
+        {
+            Some(Identifier {
+                cv: None,
+                name: t.value.clone(),
+            })
+        }
+        _ => None,
+    });
+    let body_n = node_children(node)
+        .into_iter()
+        .find(|c| c.rule_name == "block")
+        .ok_or_else(|| internal(node, "catch_clause: missing body block"))?;
+    let body = convert_block_statement(body_n)?;
+    Ok(CatchClause {
+        cv: None,
+        param,
+        body,
     })
 }
 
@@ -2129,6 +2200,104 @@ mod tests {
                 coding_adventures_javascript_ast::statement::TaggedStatement::SwitchStatement(_)
             ))
         ));
+    }
+
+    // -----------------------------------------------------------------------
+    // try / catch / finally (CLOC19)
+    //
+    // The bridge maps the grammar's `try_statement` into the ESTree-shaped
+    // `TryStatement { block, handler, finalizer }`. Before CLOC19 the
+    // try_statement node landed in the unsupported arm, which raised
+    // `UnsupportedSyntax` and made closurec fall back to WHITESPACE_ONLY.
+    // These tests pin the structural conversion directly.
+    // -----------------------------------------------------------------------
+
+    /// Pull the single `TryStatement` out of a one-statement program.
+    fn bridge_try(src: &str) -> TryStatement {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::TryStatement(t),
+            )) => t.clone(),
+            other => panic!("expected a TryStatement, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn try_catch_bridge_shape() {
+        // `try { a(); } catch (e) { b(); }` — protected block + named
+        // handler, no finalizer.
+        let t = bridge_try("try { a(); } catch (e) { b(); }");
+        assert_eq!(t.block.body.len(), 1, "protected block has one statement");
+        let handler = t.handler.expect("handler present");
+        assert_eq!(
+            handler.param.as_ref().map(|p| p.name.as_str()),
+            Some("e"),
+            "catch binding is `e`",
+        );
+        assert_eq!(handler.body.body.len(), 1, "catch body has one statement");
+        assert!(t.finalizer.is_none(), "no finally clause");
+    }
+
+    #[test]
+    fn try_catch_finally_bridge_shape() {
+        // All three clauses present.
+        let t = bridge_try("try { a(); } catch (e) { b(); } finally { c(); }");
+        assert!(t.handler.is_some(), "handler present");
+        let fin = t.finalizer.expect("finalizer present");
+        assert_eq!(fin.body.len(), 1, "finally block has one statement");
+    }
+
+    #[test]
+    fn try_optional_catch_binding_bridge_shape() {
+        // ES2019 `catch { … }` — handler present, but `param` is None.
+        let t = bridge_try("try { a(); } catch { b(); }");
+        let handler = t.handler.expect("handler present");
+        assert!(
+            handler.param.is_none(),
+            "optional-catch-binding has no param",
+        );
+    }
+
+    #[test]
+    fn try_finally_without_catch_bridge_shape() {
+        // `try { … } finally { … }` — no handler at all.
+        let t = bridge_try("try { a(); } finally { c(); }");
+        assert!(t.handler.is_none(), "no catch handler");
+        assert!(t.finalizer.is_some(), "finally present");
+    }
+
+    #[test]
+    fn try_destructuring_catch_param_does_not_misbind() {
+        // A destructuring catch param (`catch ({ message })`) is not
+        // representable yet. The grammar restricts the catch binding to a
+        // simple NAME, so this either fails to parse outright or fails to
+        // bridge — both of which make the CLI fall back to WHITESPACE_ONLY,
+        // which is sound. What must NEVER happen is a TryStatement whose
+        // handler param is a fabricated simple identifier (silently
+        // dropping the destructuring), so we assert that explicitly.
+        let src = "try { a(); } catch ({ message }) { b(); }";
+        let Ok(node) = parse_javascript_typed(src, DEFAULT_ES_VERSION) else {
+            // Parse declined — sound fallback, nothing more to check.
+            return;
+        };
+        let Ok(p) = grammar_to_program(&node, DEFAULT_ES_VERSION) else {
+            // Bridge declined — sound fallback, nothing more to check.
+            return;
+        };
+        if let Some(ProgramItem::Statement(Statement::Tagged(
+            coding_adventures_javascript_ast::statement::TaggedStatement::TryStatement(t),
+        ))) = p.body.first()
+        {
+            assert!(
+                t.handler
+                    .as_ref()
+                    .map(|h| h.param.is_none())
+                    .unwrap_or(true),
+                "a destructuring catch param must not be lowered to a simple \
+                 identifier — that would silently mis-bind the caught value",
+            );
+        }
     }
 
     // -----------------------------------------------------------------------

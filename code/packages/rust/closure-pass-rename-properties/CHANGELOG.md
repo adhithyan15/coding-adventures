@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-20
+
+### Added — CLOC19: property renaming recurses through `try`/`catch`/`finally`
+
+`classify_stmt` and `rewrite_stmt` recurse through `TryStatement` so property
+accesses inside the protected block, catch handler, and finalizer are renamed
+consistently. No catch-param handling is required here: property renaming
+operates on member/key names, not variable bindings, so the catch `param` (a
+variable binding) is irrelevant to this pass.
+
 ## [0.3.0] - 2026-06-18
 
 ### Added (CLOC13.L — bundled DOM/host property boundary, `DOM_PROPERTIES`)

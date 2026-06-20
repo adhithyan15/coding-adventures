@@ -94,7 +94,9 @@ and reports ambiguity before solver dispatch.
 solver result, deck-selected output table, and normalized analysis directive,
 table count/name list, output probes, and output directives that produced the
 table, plus selected `.measure` results and
-a stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
+a stable measurement table for `.dc`, `.ac`, and `.tran` executions.
+Execution `tableArtifacts` preserve the same order as `tables` and carry each
+stable table's text, CSV, compact JSON, and header-keyed records. Selected
 `.tran` plans route
 `START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
 an internal fixed-step cap, and `UIC` initial-condition intent through that
@@ -103,7 +105,10 @@ results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `formatDeckRunArtifactTable` and
 `formatDeckRunArtifactCsv` / `formatDeckRunArtifactJson` output for stable
 result-row, table, analysis-directive, output-probe, output-directive,
-measurement, Fourier, and diagnostic count/name lists. `formatDeckTableCsv` also converts any stable tab-separated deck table to
+measurement, Fourier, and diagnostic count/name lists. Existing `.control` body
+policy diagnostics flow into those selected-run artifact `Diagnostics` /
+`DiagnosticCodeList` fields and through the same run-artifact table, CSV, JSON,
+and `tableArtifacts` records. `formatDeckTableCsv` also converts any stable tab-separated deck table to
 CSV, `formatDeckTableJson` converts the same tables to compact JSON records,
 and `deckTableRecords` returns header-keyed native records for browser and host
 integrations.

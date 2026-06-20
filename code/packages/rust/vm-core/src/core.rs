@@ -1030,4 +1030,90 @@ mod tests {
         assert_eq!(run_binop("mul", 16, 16, "i64"), 256);
         assert_eq!(run_unop("not", 0, "i64"), -1);
     }
+
+    // ---- E3: floating-point (f64) execution ----
+
+    /// Run `op fa fb` with an `f64` result hint and return the float value.
+    /// Operands are `Operand::Float` constants — exactly what the ALGOL real
+    /// frontend emits for a `real` expression.
+    fn run_fbinop(op: &str, fa: f64, fb: f64) -> f64 {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "f64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Float(fa)], "f64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Float(fb)], "f64"),
+                IIRInstr::new(op, Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap().as_f64().unwrap()
+    }
+
+    /// Run a float comparison `cmp_* fa fb` and return the resulting bool.
+    fn run_fcmp(op: &str, fa: f64, fb: f64) -> bool {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "bool",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Float(fa)], "f64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Float(fb)], "f64"),
+                IIRInstr::new(op, Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "bool"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap().as_bool().unwrap()
+    }
+
+    #[test]
+    fn f64_arithmetic_computes_in_double() {
+        assert_eq!(run_fbinop("add", 2.5, 0.25), 2.75);
+        assert_eq!(run_fbinop("sub", 2.5, 0.25), 2.25);
+        assert_eq!(run_fbinop("mul", 2.5, 4.0), 10.0);
+        assert_eq!(run_fbinop("div", 7.0, 2.0), 3.5);   // true division, not 3
+    }
+
+    #[test]
+    fn f64_division_by_zero_is_inf_not_a_trap() {
+        // IEEE-754: matches LLVM/WASM/JVM `fdiv` (the other backends), so a
+        // real-division program agrees cross-backend instead of trapping.
+        assert!(run_fbinop("div", 1.0, 0.0).is_infinite());
+    }
+
+    #[test]
+    fn f64_ordered_comparisons() {
+        assert!(run_fcmp("cmp_lt", 1.5, 2.5));
+        assert!(!run_fcmp("cmp_lt", 2.5, 1.5));
+        assert!(run_fcmp("cmp_gt", 2.5, 1.5));
+        assert!(run_fcmp("cmp_le", 2.5, 2.5));
+        assert!(run_fcmp("cmp_ge", 2.5, 2.5));
+    }
+
+    #[test]
+    fn f64_equality_via_value_eq() {
+        // cmp_eq / cmp_ne route through Value's PartialEq, which compares floats.
+        assert!(run_fcmp("cmp_eq", 5.0, 5.0));
+        assert!(!run_fcmp("cmp_eq", 5.0, 5.1));
+        assert!(run_fcmp("cmp_ne", 5.0, 5.1));
+    }
+
+    #[test]
+    fn f64_neg_stays_float() {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "f64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Float(2.5)], "f64"),
+                IIRInstr::new("neg", Some("r".into()), vec![Operand::Var("a".into())], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        let r = VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap();
+        assert_eq!(r, Value::Float(-2.5));
+    }
 }

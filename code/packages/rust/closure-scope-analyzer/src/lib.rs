@@ -661,6 +661,36 @@ fn walk_tagged_statement(
                 }
             }
         }
+        TaggedStatement::TryStatement(ts) => {
+            // `try { block } catch (param) { body } finally { fin }`.
+            // The protected block and the finalizer are ordinary blocks. The
+            // catch clause introduces a `param` binding scoped to the catch
+            // body — modeled as a Block scope holding a (block-scoped) binding,
+            // walked with the param in scope.
+            walk_block_statement(&ts.block, ctx, analysis, pending);
+            if let Some(handler) = &ts.handler {
+                let catch_scope = emit_scope(ScopeKind::Block, ctx.current, analysis);
+                if let Some(param) = &handler.param {
+                    emit_binding(
+                        param.name.clone(),
+                        BindingKind::Let,
+                        catch_scope,
+                        param.cv.clone(),
+                        analysis,
+                    );
+                }
+                let catch_ctx = WalkCtx {
+                    current: catch_scope,
+                    enclosing_function: ctx.enclosing_function,
+                };
+                for stmt in &handler.body.body {
+                    walk_statement(stmt, catch_ctx, analysis, pending);
+                }
+            }
+            if let Some(finalizer) = &ts.finalizer {
+                walk_block_statement(finalizer, ctx, analysis, pending);
+            }
+        }
         TaggedStatement::BreakStatement(_) => {}
         TaggedStatement::ContinueStatement(_) => {}
         TaggedStatement::EmptyStatement(_) => {}

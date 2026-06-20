@@ -17,7 +17,7 @@
 //! call) is visible, exactly as in S.
 
 use crate::builtins;
-use crate::env::{define, lookup, Env, Scope};
+use crate::env::{define, exists, lookup, remove, super_assign, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
     arithmetic, assign_index, assign_index2d, bounded_sequence, class_of, compare, format_value,
@@ -324,14 +324,33 @@ impl Interpreter {
             (nodes[0], nodes[1]) // target <- value
         };
         let value = self.eval_node(value_node, env)?;
+        // `<<-` / `->>` are *super-assignment* (R-21): rebind the nearest
+        // ENCLOSING binding of the name, or create one in the global environment
+        // if none exists. They only ever target a bare name (R does not define
+        // `x[i] <<- v` sub-assignment in this subset).
+        let is_super = op == "<<-" || op == "->>";
         // A bare-name target is the simple case; otherwise try `x[...] <- v`
         // sub-assignment (R-14) before giving up.
         match lvalue_name(target_node) {
             Ok(name) => {
-                define(env, &name, value.clone());
+                if is_super {
+                    super_assign(env, &name, value.clone());
+                } else {
+                    define(env, &name, value.clone());
+                }
                 self.as_invisible(value)
             }
-            Err(simple_err) => self.eval_indexed_assignment(target_node, value, env, simple_err),
+            Err(simple_err) => {
+                if is_super {
+                    // `<<-` with a non-name target (e.g. `x[1] <<- v`) is not
+                    // supported in this subset — fail cleanly rather than silently
+                    // falling through to ordinary (current-scope) sub-assignment.
+                    return Err(SError::TypeError(
+                        "super-assignment (`<<-`/`->>`) requires a bare-name target".into(),
+                    ));
+                }
+                self.eval_indexed_assignment(target_node, value, env, simple_err)
+            }
         }
     }
 
@@ -802,6 +821,12 @@ impl Interpreter {
                     return match special {
                         "switch" => self.eval_switch(&raw, env),
                         "tryCatch" => self.eval_try_catch(&raw, env),
+                        // R-21 environment forms.
+                        "local" => self.eval_local(&raw, env),
+                        "assign" => self.eval_assign_fn(&raw, env),
+                        "get" => self.eval_get_fn(&raw, env),
+                        "exists" => self.eval_exists_fn(&raw, env),
+                        "rm" => self.eval_rm_fn(&raw, env),
                         _ => unreachable!(),
                     };
                 }
@@ -1354,6 +1379,142 @@ impl Interpreter {
     }
 
     // -----------------------------------------------------------------------
+    // R-21 environment forms (local / assign / get / exists / rm)
+    //
+    // These are *lazy special forms* rather than ordinary builtins because they
+    // must see the **current** environment `env`: `local` evaluates its block in
+    // a fresh child of it, and the by-name binding ops read/write it directly.
+    // (Ordinary builtins receive only their evaluated argument *values*, never
+    // the live scope.) Each rejects the `envir = e` argument with a clear "not
+    // yet supported" error — first-class environment values land in R-22.
+    // -----------------------------------------------------------------------
+
+    /// `local({ ... })` — evaluate the (single, unevaluated) expression argument
+    /// in a **fresh child environment** of the current scope and return its
+    /// value. Because the block runs in its own frame, any `<-` bindings it makes
+    /// are locals that do not leak: `local({ x <- 5; x * 2 })` is `10`, and `x`
+    /// stays unbound in the caller. (R also accepts `local(expr, envir)`; the
+    /// second form needs a first-class environment value and is deferred to R-22.)
+    fn eval_local(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        if raw.iter().any(|(name, _)| name.as_deref() == Some("envir")) {
+            return Err(SError::BadArgs(
+                "local(expr, envir = e): the `envir` argument needs a first-class \
+                 environment value, deferred to R-22"
+                    .into(),
+            ));
+        }
+        let expr = raw
+            .first()
+            .and_then(|(_, n)| arm_body(n))
+            .ok_or_else(|| SError::BadArgs("local: expr is missing".into()))?;
+        // A fresh child scope: locals live and die here.
+        let scope = Scope::child(env);
+        self.eval_node(expr, &scope)
+    }
+
+    /// `assign(x, value)` — bind the name given by the length-one character `x`
+    /// to `value` in the **current** environment (the `<-` target scope). Returns
+    /// `value` invisibly, like R. `assign("y", 1 + 1)` then `y` → `2`. The
+    /// `envir = e` argument is rejected (deferred to R-22).
+    fn eval_assign_fn(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        self.reject_envir(raw, "assign")?;
+        let positionals = self.positional_nodes(raw);
+        let name_node = positionals
+            .first()
+            .ok_or_else(|| SError::BadArgs("assign: `x` (the name) is missing".into()))?;
+        let value_node = positionals
+            .get(1)
+            .ok_or_else(|| SError::BadArgs("assign: `value` is missing".into()))?;
+        let name = self.eval_name_string(name_node, env, "assign")?;
+        let value = self.eval_node(value_node, env)?;
+        define(env, &name, value.clone());
+        self.as_invisible(value)
+    }
+
+    /// `get(x)` — return the value currently bound to the name `x`, searching the
+    /// scope chain (current frame outward). An unbound name is a clean error,
+    /// exactly as in R (`Error: object 'x' not found`). `envir` is deferred.
+    fn eval_get_fn(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        self.reject_envir(raw, "get")?;
+        let positionals = self.positional_nodes(raw);
+        let name_node = positionals
+            .first()
+            .ok_or_else(|| SError::BadArgs("get: `x` (the name) is missing".into()))?;
+        let name = self.eval_name_string(name_node, env, "get")?;
+        let value = lookup(env, &name).ok_or_else(|| SError::Undefined(name.clone()))?;
+        self.as_visible(value)
+    }
+
+    /// `exists(x)` — `TRUE` if the name `x` is bound anywhere on the scope chain,
+    /// `FALSE` otherwise. `exists("mean")` → `TRUE` (a builtin in the global
+    /// frame); `exists("zzz")` → `FALSE`. `envir` is deferred.
+    fn eval_exists_fn(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        self.reject_envir(raw, "exists")?;
+        let positionals = self.positional_nodes(raw);
+        let name_node = positionals
+            .first()
+            .ok_or_else(|| SError::BadArgs("exists: `x` (the name) is missing".into()))?;
+        let name = self.eval_name_string(name_node, env, "exists")?;
+        self.as_visible(SValue::Logical(vec![Some(exists(env, &name))]))
+    }
+
+    /// `rm(x)` — remove the binding `x` from the **current** frame (it does not
+    /// reach into enclosing scopes, matching R's `rm(..., envir =
+    /// environment())` default). Returns `NULL` invisibly. Removing a name that
+    /// is not bound in the current frame is a no-op (R warns; we stay quiet).
+    fn eval_rm_fn(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        self.reject_envir(raw, "rm")?;
+        let positionals = self.positional_nodes(raw);
+        let name_node = positionals
+            .first()
+            .ok_or_else(|| SError::BadArgs("rm: a name to remove is missing".into()))?;
+        let name = self.eval_name_string(name_node, env, "rm")?;
+        remove(env, &name);
+        self.as_invisible(SValue::Null)
+    }
+
+    /// Reject an `envir = e` argument for the R-21 binding forms — that argument
+    /// needs a first-class environment value (R-22). Centralised so every form
+    /// gives the identical, discoverable message.
+    fn reject_envir(&self, raw: &[RawArg], who: &str) -> SResult<()> {
+        if raw.iter().any(|(name, _)| name.as_deref() == Some("envir")) {
+            return Err(SError::BadArgs(format!(
+                "{who}(..., envir = e): the `envir` argument needs a first-class \
+                 environment value, deferred to R-22"
+            )));
+        }
+        Ok(())
+    }
+
+    /// The *positional* (unnamed) argument nodes of a raw arg list, in order —
+    /// the binding ops take `x` (and `value`) positionally.
+    fn positional_nodes<'a>(&self, raw: &'a [RawArg<'a>]) -> Vec<&'a GrammarASTNode> {
+        raw.iter()
+            .filter(|(name, _)| name.is_none())
+            .filter_map(|(_, n)| arm_body(n))
+            .collect()
+    }
+
+    /// Evaluate a name-argument node to the `String` it denotes. R's binding ops
+    /// take the name as a length-one **character** value (`get("x")`), and a
+    /// variable holding such a string works too (`nm <- "x"; get(nm)`). We
+    /// therefore evaluate the node and require a length-one character result;
+    /// anything else (a number, a length-≠1 vector) is a clean `BadArgs` error.
+    fn eval_name_string(
+        &self,
+        node: &GrammarASTNode,
+        env: &Env,
+        who: &str,
+    ) -> SResult<String> {
+        let value = self.eval_node(node, env)?;
+        single_string(&value).ok_or_else(|| {
+            SError::BadArgs(format!(
+                "{who}: the name must be a single character string"
+            ))
+        })
+    }
+
+    // -----------------------------------------------------------------------
     // Visibility helpers
     // -----------------------------------------------------------------------
 
@@ -1392,6 +1553,15 @@ fn special_form_name(primary: &GrammarASTNode) -> Option<&'static str> {
     match tokens.as_slice() {
         [("NAME", "switch")] => Some("switch"),
         [("NAME", "tryCatch")] => Some("tryCatch"),
+        // R-21 environment forms — special because they must see the *current*
+        // environment (`local` evaluates its block in a fresh child scope; the
+        // binding ops read/write `env` by name), which ordinary eager builtins
+        // never receive.
+        [("NAME", "local")] => Some("local"),
+        [("NAME", "assign")] => Some("assign"),
+        [("NAME", "get")] => Some("get"),
+        [("NAME", "exists")] => Some("exists"),
+        [("NAME", "rm")] => Some("rm"),
         _ => None,
     }
 }

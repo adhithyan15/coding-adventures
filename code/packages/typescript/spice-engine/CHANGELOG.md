@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Surface existing `.control` body policy diagnostic codes in selected
+  `runDeckAnalysis` run artifacts and propagate them through stable
+  run-artifact tables, CSV/JSON helpers, and ordered `tableArtifacts`,
+  matching Python and Rust.
+- Add ordered `tableArtifacts` to selected `runDeckAnalysis` execution results
+  with each stable table's text, CSV, compact JSON, and header-keyed records
+  beside the existing table inventory, matching Python and Rust.
 - Add stable table count/name lists directly to selected `runDeckAnalysis`
   execution results beside analysis directives, output probes, output
   directives, and selected-run artifacts, matching Python and Rust.

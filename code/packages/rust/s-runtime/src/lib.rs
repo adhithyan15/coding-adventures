@@ -1381,4 +1381,147 @@ mod r20_functional_helpers {
             let _ = eval_s(src);
         }
     }
+
+}
+
+/// R-21 — environments & scoping. The model lives in `s-runtime` (the shared
+/// scope chain), so these S-syntax tests exercise it directly; the R-syntax
+/// integration tests mirror them in `r-runtime`.
+#[cfg(test)]
+mod r21_environments {
+    use super::*;
+
+    fn nums(src: &str) -> Vec<f64> {
+        match eval_s(src).unwrap().strip_names() {
+            SValue::Double(d) => d.data().to_vec(),
+            other => panic!("expected double, got {}", other.type_name()),
+        }
+    }
+
+    fn show(src: &str) -> String {
+        format_value(&eval_s(src).unwrap()).join("\n")
+    }
+
+    /// `local({...})` runs its block in a fresh child scope; the block's value
+    /// comes back but its local bindings do not leak into the caller.
+    #[test]
+    fn local_returns_value_and_does_not_leak() {
+        assert_eq!(nums("local({ x <- 5; x * 2 })\n"), vec![10.0]);
+        // `x` was a local of the block, so it is unbound afterward.
+        assert!(
+            eval_s("local({ x <- 5 })\nx\n").is_err(),
+            "local's bindings must not escape into the caller"
+        );
+    }
+
+    /// `<<-` from inside a function with no enclosing binding creates the name
+    /// in the GLOBAL environment (the value is visible after the call returns).
+    #[test]
+    fn super_assign_creates_in_global() {
+        assert_eq!(
+            nums("f <- function() { y <<- 99 }\nf()\ny\n"),
+            vec![99.0]
+        );
+    }
+
+    /// A counter closure: `<<-` mutates the `n` captured in the ENCLOSING frame
+    /// rather than shadowing it with a fresh local, so successive calls advance.
+    #[test]
+    fn super_assign_mutates_enclosing_state() {
+        let src = "make <- function() { n <- 0; function() { n <<- n + 1; n } }\n\
+                   c1 <- make()\n\
+                   c1(); c1(); c1()\n";
+        assert_eq!(nums(src), vec![3.0]);
+        // A second counter has its OWN enclosing `n` — they don't interfere.
+        let src2 = "make <- function() { n <- 0; function() { n <<- n + 1; n } }\n\
+                    a <- make()\nb <- make()\n\
+                    a(); a(); b()\n";
+        assert_eq!(nums(src2), vec![1.0]);
+    }
+
+    /// `<<-` rebinds the NEAREST enclosing binding, not the global one, when an
+    /// intermediate frame already binds the name.
+    #[test]
+    fn super_assign_targets_nearest_enclosing() {
+        let src = "g <- 1\n\
+                   outer <- function() { g <- 10; inner <- function() { g <<- 42 }; inner(); g }\n\
+                   outer()\n";
+        // `inner`'s `<<-` hits `outer`'s `g` (= 42), leaving the global `g` at 1.
+        assert_eq!(nums(src), vec![42.0]);
+        assert_eq!(nums(&format!("{src}g\n")), vec![1.0]);
+    }
+
+    // (The right-super-assign form `->>` is R-grammar-only — `s.grammar`'s
+    // `assignment` rule has no `RIGHT_SUPER_ASSIGN`, so it is exercised through
+    // the R parser in `r-runtime`'s tests, not here.)
+
+    /// `assign`/`get` round-trip against the current scope; `get` of an unbound
+    /// name is a clean error (not a panic).
+    #[test]
+    fn assign_get_round_trip() {
+        assert_eq!(nums("assign(\"q\", 3 + 4)\nget(\"q\")\n"), vec![7.0]);
+        // A variable holding the name works too.
+        assert_eq!(nums("nm <- \"w\"\nassign(nm, 11)\nget(nm)\n"), vec![11.0]);
+        assert!(eval_s("get(\"never_bound\")\n").is_err());
+    }
+
+    /// `exists` searches the whole chain: a builtin and a user binding are
+    /// `TRUE`; an unbound name is `FALSE`.
+    #[test]
+    fn exists_reports_binding_presence() {
+        assert_eq!(show("exists(\"mean\")\n"), "[1] TRUE");
+        assert_eq!(show("exists(\"zzz\")\n"), "[1] FALSE");
+        assert_eq!(show("kk <- 1\nexists(\"kk\")\n"), "[1] TRUE");
+    }
+
+    /// `rm` removes a binding from the current frame; the name is gone afterward.
+    #[test]
+    fn rm_removes_binding() {
+        assert_eq!(nums("d <- 5\nd\n"), vec![5.0]);
+        assert!(eval_s("d <- 5\nrm(\"d\")\nd\n").is_err());
+        // Removing an unbound name is a quiet no-op, not an error.
+        assert!(eval_s("rm(\"never_there\")\n").is_ok());
+    }
+
+    /// The `envir = e` argument is explicitly rejected (deferred to R-22) with a
+    /// clean error rather than a silent wrong answer or a panic.
+    #[test]
+    fn envir_argument_is_rejected_for_now() {
+        for src in [
+            "assign(\"x\", 1, envir = 2)\n",
+            "get(\"x\", envir = 2)\n",
+            "exists(\"x\", envir = 2)\n",
+            "rm(\"x\", envir = 2)\n",
+            "local({ 1 }, envir = 2)\n",
+        ] {
+            assert!(eval_s(src).is_err(), "{src:?} should reject `envir`");
+        }
+    }
+
+    /// Hardening: degenerate inputs to the new environment forms must never
+    /// panic — only `Ok` or a recoverable `Err`.
+    #[test]
+    fn environment_forms_do_not_panic() {
+        for src in [
+            "local()\n",            // no block
+            "assign()\n",           // no name, no value
+            "assign(\"x\")\n",      // name but no value
+            "assign(1, 2)\n",       // non-string name
+            "get()\n",              // no name
+            "get(1)\n",             // non-string name
+            "exists()\n",           // no name
+            "rm()\n",               // no name
+            "x <<- 1\n",            // super-assign at top level (no enclosing)
+            "(1:3)[1] <<- 9\n",     // super-assign with a non-name target
+        ] {
+            let _ = eval_s(src);
+        }
+    }
+
+    /// Top-level `<<-` (no enclosing frame at all) binds in the current (global)
+    /// scope rather than erroring or looping.
+    #[test]
+    fn top_level_super_assign_binds_globally() {
+        assert_eq!(nums("p <<- 8\np\n"), vec![8.0]);
+    }
 }

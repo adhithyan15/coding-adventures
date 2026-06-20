@@ -71,6 +71,7 @@ from spice_engine.compatibility import (
     DeckInitialConditionSummary,
     DeckMeasurementCard,
     DeckNodeCondition,
+    analyze_deck_controls,
     resolve_deck_analyses,
     resolve_deck_fourier,
     resolve_deck_measurements,
@@ -2355,6 +2356,17 @@ class DeckRunArtifact:
 
 
 @dataclass(frozen=True)
+class DeckTableArtifact:
+    """Stable text and structured exports for one selected deck output table."""
+
+    name: str
+    table: str
+    csv: str
+    json: str
+    records: list[dict[str, str]]
+
+
+@dataclass(frozen=True)
 class DeckAnalysisExecution:
     """A selected deck analysis plan plus its executed solver output."""
 
@@ -2366,6 +2378,7 @@ class DeckAnalysisExecution:
     analysis_directives: list[str]
     table_count: int
     tables: list[str]
+    table_artifacts: list[DeckTableArtifact]
     measurements: list[ProbeMeasurement]
     measurement_table: str
     fourier: list[FourierResult]
@@ -2551,6 +2564,22 @@ def _deck_analysis_diagnostic_codes(
     ]
 
 
+def _deck_control_diagnostic_codes(netlist: str) -> list[str]:
+    summary = analyze_deck_controls(netlist)
+    return [
+        diagnostic.code
+        for diagnostic in summary.diagnostics
+        if diagnostic.code.startswith("SPICE_DECK_CONTROL_")
+    ]
+
+
+def _deck_run_diagnostic_codes(netlist: str, plan: DeckAnalysisPlan) -> list[str]:
+    return [
+        *_deck_analysis_diagnostic_codes(netlist, plan),
+        *_deck_control_diagnostic_codes(netlist),
+    ]
+
+
 def format_deck_run_artifact_table(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as a stable summary table."""
 
@@ -2655,6 +2684,33 @@ def format_deck_table_json(table: str) -> str:
     return json.dumps(deck_table_records(table), separators=(",", ":")) + "\n"
 
 
+def _deck_table_artifact(name: str, table: str) -> DeckTableArtifact:
+    return DeckTableArtifact(
+        name=name,
+        table=table,
+        csv=format_deck_table_csv(table),
+        json=format_deck_table_json(table),
+        records=deck_table_records(table),
+    )
+
+
+def _deck_table_artifacts(
+    result_table: str,
+    measurement_table: str,
+    fourier_table: str,
+    run_artifact_table: str,
+    measurements: list[ProbeMeasurement],
+    fourier: list[FourierResult],
+) -> list[DeckTableArtifact]:
+    artifacts = [_deck_table_artifact("result", result_table)]
+    if measurements:
+        artifacts.append(_deck_table_artifact("measurement", measurement_table))
+    if fourier:
+        artifacts.append(_deck_table_artifact("fourier", fourier_table))
+    artifacts.append(_deck_table_artifact("run-artifact", run_artifact_table))
+    return artifacts
+
+
 def format_deck_run_artifact_csv(artifacts: Iterable[DeckRunArtifact]) -> str:
     """Format selected deck-run artifacts as stable RFC 4180-style CSV."""
 
@@ -2681,7 +2737,7 @@ def run_deck_analysis(
     """Select one deck analysis card, execute it, and format deck-selected output."""
 
     plan = select_deck_analysis_plan(netlist, analysis)
-    diagnostic_codes = _deck_analysis_diagnostic_codes(netlist, plan)
+    diagnostic_codes = _deck_run_diagnostic_codes(netlist, plan)
     analysis_directives = _deck_analysis_directives(plan)
     if plan.analysis == "op":
         result = dc_op(circuit)
@@ -2702,7 +2758,18 @@ def run_deck_analysis(
             fourier,
             diagnostic_codes,
         )
+        measurement_table = format_measurement_table(measurements)
+        fourier_table = format_deck_fourier_table(fourier)
+        run_artifact_table = format_deck_run_artifact_table(run_artifacts)
         tables = _deck_stable_tables(measurements, fourier)
+        table_artifacts = _deck_table_artifacts(
+            table,
+            measurement_table,
+            fourier_table,
+            run_artifact_table,
+            measurements,
+            fourier,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2712,12 +2779,13 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             table_count=len(tables),
             tables=tables,
+            table_artifacts=table_artifacts,
             measurements=measurements,
-            measurement_table=format_measurement_table(measurements),
+            measurement_table=measurement_table,
             fourier=fourier,
-            fourier_table=format_deck_fourier_table(fourier),
+            fourier_table=fourier_table,
             run_artifacts=run_artifacts,
-            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+            run_artifact_table=run_artifact_table,
         )
     if plan.analysis == "dc":
         source_name = _require_deck_plan_string(plan, "source_name")
@@ -2744,7 +2812,18 @@ def run_deck_analysis(
             fourier,
             diagnostic_codes,
         )
+        measurement_table = format_measurement_table(measurements)
+        fourier_table = format_deck_fourier_table(fourier)
+        run_artifact_table = format_deck_run_artifact_table(run_artifacts)
         tables = _deck_stable_tables(measurements, fourier)
+        table_artifacts = _deck_table_artifacts(
+            table,
+            measurement_table,
+            fourier_table,
+            run_artifact_table,
+            measurements,
+            fourier,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2754,12 +2833,13 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             table_count=len(tables),
             tables=tables,
+            table_artifacts=table_artifacts,
             measurements=measurements,
-            measurement_table=format_measurement_table(measurements),
+            measurement_table=measurement_table,
             fourier=fourier,
-            fourier_table=format_deck_fourier_table(fourier),
+            fourier_table=fourier_table,
             run_artifacts=run_artifacts,
-            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+            run_artifact_table=run_artifact_table,
         )
     if plan.analysis == "ac":
         sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
@@ -2788,7 +2868,18 @@ def run_deck_analysis(
             fourier,
             diagnostic_codes,
         )
+        measurement_table = format_measurement_table(measurements)
+        fourier_table = format_deck_fourier_table(fourier)
+        run_artifact_table = format_deck_run_artifact_table(run_artifacts)
         tables = _deck_stable_tables(measurements, fourier)
+        table_artifacts = _deck_table_artifacts(
+            table,
+            measurement_table,
+            fourier_table,
+            run_artifact_table,
+            measurements,
+            fourier,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2798,12 +2889,13 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             table_count=len(tables),
             tables=tables,
+            table_artifacts=table_artifacts,
             measurements=measurements,
-            measurement_table=format_measurement_table(measurements),
+            measurement_table=measurement_table,
             fourier=fourier,
-            fourier_table=format_deck_fourier_table(fourier),
+            fourier_table=fourier_table,
             run_artifacts=run_artifacts,
-            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+            run_artifact_table=run_artifact_table,
         )
     if plan.analysis == "tran":
         step_time = _require_deck_plan_number(plan, "step_time")
@@ -2838,7 +2930,18 @@ def run_deck_analysis(
             fourier,
             diagnostic_codes,
         )
+        measurement_table = format_measurement_table(measurements)
+        fourier_table = format_deck_fourier_table(fourier)
+        run_artifact_table = format_deck_run_artifact_table(run_artifacts)
         tables = _deck_stable_tables(measurements, fourier)
+        table_artifacts = _deck_table_artifacts(
+            table,
+            measurement_table,
+            fourier_table,
+            run_artifact_table,
+            measurements,
+            fourier,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2848,12 +2951,13 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             table_count=len(tables),
             tables=tables,
+            table_artifacts=table_artifacts,
             measurements=measurements,
-            measurement_table=format_measurement_table(measurements),
+            measurement_table=measurement_table,
             fourier=fourier,
-            fourier_table=format_deck_fourier_table(fourier),
+            fourier_table=fourier_table,
             run_artifacts=run_artifacts,
-            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+            run_artifact_table=run_artifact_table,
         )
     if plan.analysis == "tf":
         output_node = _require_deck_plan_string(plan, "output_node")
@@ -2876,7 +2980,18 @@ def run_deck_analysis(
             fourier,
             diagnostic_codes,
         )
+        measurement_table = format_measurement_table(measurements)
+        fourier_table = format_deck_fourier_table(fourier)
+        run_artifact_table = format_deck_run_artifact_table(run_artifacts)
         tables = _deck_stable_tables(measurements, fourier)
+        table_artifacts = _deck_table_artifacts(
+            table,
+            measurement_table,
+            fourier_table,
+            run_artifact_table,
+            measurements,
+            fourier,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2886,12 +3001,13 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             table_count=len(tables),
             tables=tables,
+            table_artifacts=table_artifacts,
             measurements=measurements,
-            measurement_table=format_measurement_table(measurements),
+            measurement_table=measurement_table,
             fourier=fourier,
-            fourier_table=format_deck_fourier_table(fourier),
+            fourier_table=fourier_table,
             run_artifacts=run_artifacts,
-            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+            run_artifact_table=run_artifact_table,
         )
     if plan.analysis == "sens":
         output_node = _require_deck_plan_string(plan, "output_node")
@@ -2913,7 +3029,18 @@ def run_deck_analysis(
             fourier,
             diagnostic_codes,
         )
+        measurement_table = format_measurement_table(measurements)
+        fourier_table = format_deck_fourier_table(fourier)
+        run_artifact_table = format_deck_run_artifact_table(run_artifacts)
         tables = _deck_stable_tables(measurements, fourier)
+        table_artifacts = _deck_table_artifacts(
+            table,
+            measurement_table,
+            fourier_table,
+            run_artifact_table,
+            measurements,
+            fourier,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2923,12 +3050,13 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             table_count=len(tables),
             tables=tables,
+            table_artifacts=table_artifacts,
             measurements=measurements,
-            measurement_table=format_measurement_table(measurements),
+            measurement_table=measurement_table,
             fourier=fourier,
-            fourier_table=format_deck_fourier_table(fourier),
+            fourier_table=fourier_table,
             run_artifacts=run_artifacts,
-            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+            run_artifact_table=run_artifact_table,
         )
     if plan.analysis == "noise":
         output_node = _require_deck_plan_string(plan, "output_node")
@@ -2969,7 +3097,18 @@ def run_deck_analysis(
             fourier,
             diagnostic_codes,
         )
+        measurement_table = format_measurement_table(measurements)
+        fourier_table = format_deck_fourier_table(fourier)
+        run_artifact_table = format_deck_run_artifact_table(run_artifacts)
         tables = _deck_stable_tables(measurements, fourier)
+        table_artifacts = _deck_table_artifacts(
+            table,
+            measurement_table,
+            fourier_table,
+            run_artifact_table,
+            measurements,
+            fourier,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2979,12 +3118,13 @@ def run_deck_analysis(
             analysis_directives=analysis_directives,
             table_count=len(tables),
             tables=tables,
+            table_artifacts=table_artifacts,
             measurements=measurements,
-            measurement_table=format_measurement_table(measurements),
+            measurement_table=measurement_table,
             fourier=fourier,
-            fourier_table=format_deck_fourier_table(fourier),
+            fourier_table=fourier_table,
             run_artifacts=run_artifacts,
-            run_artifact_table=format_deck_run_artifact_table(run_artifacts),
+            run_artifact_table=run_artifact_table,
         )
     raise ValueError(f"run_deck_analysis: unsupported analysis {plan.analysis!r}")
 

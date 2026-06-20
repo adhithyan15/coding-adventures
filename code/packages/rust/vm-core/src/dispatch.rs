@@ -169,6 +169,42 @@ fn int_srcs(
     Ok((a, b))
 }
 
+/// Decide whether a binary op should run on the **float** track and, if so,
+/// return its two operands as `f64`.
+///
+/// The IIR is type-hint driven: a `real` (f64) arithmetic op from a frontend
+/// such as ALGOL 60 carries `type_hint == "f64"` and `Operand::Float` literals
+/// (or variables already holding a `Value::Float`).  We take the float path
+/// when *either* signal is present — the hint, or a float operand — so a typed
+/// op is correct even if a literal was folded, and an untyped op over float
+/// values still does the sensible thing.  An integer operand on the float path
+/// is widened (`i as f64`) so a future mixed expression degrades gracefully;
+/// the ALGOL v1 frontend never mixes (it rejects int/real mixing), so in
+/// practice both operands are already floats.
+///
+/// Returns `Ok(None)` to signal "use the integer path" (the common case for
+/// every existing i64/u8/… program — zero behaviour change there).
+fn float_srcs(
+    frame: &VMFrame,
+    srcs: &[Operand],
+    type_hint: &str,
+) -> Result<Option<(f64, f64)>, VMError> {
+    let a = resolve_src(frame, srcs, 0)?;
+    let b = resolve_src(frame, srcs, 1)?;
+    let is_float = matches!(type_hint, "f64" | "f32")
+        || matches!(a, Value::Float(_))
+        || matches!(b, Value::Float(_));
+    if !is_float {
+        return Ok(None);
+    }
+    let widen = |v: &Value| -> Option<f64> {
+        v.as_f64().or_else(|| v.as_i64().map(|n| n as f64))
+    };
+    let af = widen(&a).ok_or_else(|| VMError::Custom("float arithmetic on non-number".into()))?;
+    let bf = widen(&b).ok_or_else(|| VMError::Custom("float arithmetic on non-number".into()))?;
+    Ok(Some((af, bf)))
+}
+
 // ---------------------------------------------------------------------------
 // Standard opcode handlers
 //
@@ -193,11 +229,17 @@ fn handle_const(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
 macro_rules! binary_arith_handler {
     ($name:ident, $op:tt) => {
         fn $name(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-            let (a, b) = {
+            // Float track first: an f64-typed op (or one over float operands)
+            // computes in `f64` and yields a `Value::Float` — never width-masked.
+            let result = {
                 let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-                int_srcs(frame, &instr.srcs)?
+                if let Some((a, b)) = float_srcs(frame, &instr.srcs, &instr.type_hint)? {
+                    Value::Float(a $op b)
+                } else {
+                    let (a, b) = int_srcs(frame, &instr.srcs)?;
+                    mask_result(a $op b, &instr.type_hint, ctx.u8_wrap)
+                }
             };
-            let result = mask_result(a $op b, &instr.type_hint, ctx.u8_wrap);
             if let Some(dest) = &instr.dest {
                 ctx.frames.last_mut().unwrap().assign(dest, result.clone());
             }
@@ -211,12 +253,20 @@ binary_arith_handler!(handle_sub, -);
 binary_arith_handler!(handle_mul, *);
 
 fn handle_div(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-    let (a, b) = {
+    // Float division follows IEEE-754: `x / 0.0` is `±inf`/`NaN`, never an
+    // error — this matches the LLVM/WASM/JVM `fdiv` the other backends emit, so
+    // a real-division program agrees across every backend. Only *integer*
+    // division traps on a zero divisor.
+    let result = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-        int_srcs(frame, &instr.srcs)?
+        if let Some((a, b)) = float_srcs(frame, &instr.srcs, &instr.type_hint)? {
+            Value::Float(a / b)
+        } else {
+            let (a, b) = int_srcs(frame, &instr.srcs)?;
+            if b == 0 { return Err(VMError::DivisionByZero); }
+            mask_result(a / b, &instr.type_hint, ctx.u8_wrap)
+        }
     };
-    if b == 0 { return Err(VMError::DivisionByZero); }
-    let result = mask_result(a / b, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -237,13 +287,21 @@ fn handle_mod(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 }
 
 fn handle_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-    let a = {
+    let result = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-        resolve_src(frame, &instr.srcs, 0)?
-            .as_i64()
-            .ok_or_else(|| VMError::Custom("neg on non-integer".into()))?
+        let v = resolve_src(frame, &instr.srcs, 0)?;
+        // Negating a float (or an f64-typed op) stays in `f64`; integer neg is
+        // width-masked as before.
+        if instr.type_hint == "f64" || instr.type_hint == "f32" || matches!(v, Value::Float(_)) {
+            let f = v.as_f64().or_else(|| v.as_i64().map(|n| n as f64))
+                .ok_or_else(|| VMError::Custom("neg on non-number".into()))?;
+            Value::Float(-f)
+        } else {
+            let a = v.as_i64()
+                .ok_or_else(|| VMError::Custom("neg on non-integer".into()))?;
+            mask_result(-a, &instr.type_hint, ctx.u8_wrap)
+        }
     };
-    let result = mask_result(-a, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -331,11 +389,20 @@ fn handle_shr(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 macro_rules! int_cmp_handler {
     ($name:ident, $op:tt) => {
         fn $name(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-            let (a, b) = {
+            // Ordered comparison takes the float track on an f64-typed op (or
+            // over float operands), so `real` relational tests (`r < 5.0`) work;
+            // otherwise it compares as i64 exactly as before. (`cmp_eq`/`cmp_ne`
+            // are handled separately via `Value`'s `PartialEq`, which already
+            // compares floats.)
+            let result = {
                 let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-                int_srcs(frame, &instr.srcs)?
+                if let Some((a, b)) = float_srcs(frame, &instr.srcs, &instr.type_hint)? {
+                    Value::Bool(a $op b)
+                } else {
+                    let (a, b) = int_srcs(frame, &instr.srcs)?;
+                    Value::Bool(a $op b)
+                }
             };
-            let result = Value::Bool(a $op b);
             if let Some(dest) = &instr.dest {
                 ctx.frames.last_mut().unwrap().assign(dest, result.clone());
             }

@@ -695,6 +695,14 @@ export interface DeckRunArtifact {
   readonly diagnosticCodes: readonly string[];
 }
 
+export interface DeckTableArtifact {
+  readonly name: string;
+  readonly table: string;
+  readonly csv: string;
+  readonly json: string;
+  readonly records: ReadonlyArray<Record<string, string>>;
+}
+
 export interface DeckAnalysisExecution {
   readonly plan: DeckAnalysisPlan;
   readonly result: DeckAnalysisExecutionResult;
@@ -704,6 +712,7 @@ export interface DeckAnalysisExecution {
   readonly analysisDirectives: readonly string[];
   readonly tableCount: number;
   readonly tables: readonly string[];
+  readonly tableArtifacts: readonly DeckTableArtifact[];
   readonly measurements: readonly ProbeMeasurement[];
   readonly measurementTable: string;
   readonly fourier: readonly FourierResult[];
@@ -7968,6 +7977,19 @@ function deckAnalysisDiagnosticCodes(netlist: string, plan: DeckAnalysisPlan): s
     .map((diagnostic) => diagnostic.code);
 }
 
+function deckControlDiagnosticCodes(netlist: string): string[] {
+  return analyzeDeckControls(netlist).diagnostics
+    .filter((diagnostic) => diagnostic.code.startsWith("SPICE_DECK_CONTROL_"))
+    .map((diagnostic) => diagnostic.code);
+}
+
+function deckRunDiagnosticCodes(netlist: string, plan: DeckAnalysisPlan): string[] {
+  return [
+    ...deckAnalysisDiagnosticCodes(netlist, plan),
+    ...deckControlDiagnosticCodes(netlist),
+  ];
+}
+
 function formatDeckArtifactFloat(value: number | undefined): string {
   return value === undefined ? "" : formatTableNumber(value);
 }
@@ -8114,6 +8136,35 @@ export function formatDeckTableJson(table: string): string {
   return `${JSON.stringify(records)}\n`;
 }
 
+function deckTableArtifact(name: string, table: string): DeckTableArtifact {
+  return {
+    name,
+    table,
+    csv: formatDeckTableCsv(table),
+    json: formatDeckTableJson(table),
+    records: deckTableRecords(table),
+  };
+}
+
+function deckTableArtifacts(
+  resultTable: string,
+  measurementTable: string,
+  fourierTable: string,
+  runArtifactTable: string,
+  measurements: readonly ProbeMeasurement[],
+  fourier: readonly FourierResult[],
+): DeckTableArtifact[] {
+  const artifacts = [deckTableArtifact("result", resultTable)];
+  if (measurements.length > 0) {
+    artifacts.push(deckTableArtifact("measurement", measurementTable));
+  }
+  if (fourier.length > 0) {
+    artifacts.push(deckTableArtifact("fourier", fourierTable));
+  }
+  artifacts.push(deckTableArtifact("run-artifact", runArtifactTable));
+  return artifacts;
+}
+
 export function formatDeckRunArtifactCsv(artifacts: readonly DeckRunArtifact[]): string {
   const rows = [DECK_RUN_ARTIFACT_COLUMNS.join(",")];
   for (const artifact of artifacts) {
@@ -8165,7 +8216,7 @@ export function runDeckAnalysis(
   analysis?: string,
 ): DeckAnalysisExecution {
   const plan = selectDeckAnalysisPlan(netlist, analysis);
-  const diagnosticCodes = deckAnalysisDiagnosticCodes(netlist, plan);
+  const diagnosticCodes = deckRunDiagnosticCodes(netlist, plan);
   const analysisDirectives = deckAnalysisDirectives(plan);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
@@ -8187,6 +8238,17 @@ export function runDeckAnalysis(
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
+    const measurementTable = formatMeasurementTable(measurements);
+    const fourierTable = formatDeckFourierTable(fourier);
+    const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
+    const tableArtifacts = deckTableArtifacts(
+      table,
+      measurementTable,
+      fourierTable,
+      runArtifactTable,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8196,12 +8258,13 @@ export function runDeckAnalysis(
       analysisDirectives,
       tableCount: tables.length,
       tables,
+      tableArtifacts,
       measurements,
-      measurementTable: formatMeasurementTable(measurements),
+      measurementTable,
       fourier,
-      fourierTable: formatDeckFourierTable(fourier),
+      fourierTable,
       runArtifacts,
-      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+      runArtifactTable,
     };
   }
   if (plan.analysis === "dc") {
@@ -8230,6 +8293,17 @@ export function runDeckAnalysis(
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
+    const measurementTable = formatMeasurementTable(measurements);
+    const fourierTable = formatDeckFourierTable(fourier);
+    const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
+    const tableArtifacts = deckTableArtifacts(
+      table,
+      measurementTable,
+      fourierTable,
+      runArtifactTable,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8239,12 +8313,13 @@ export function runDeckAnalysis(
       analysisDirectives,
       tableCount: tables.length,
       tables,
+      tableArtifacts,
       measurements,
-      measurementTable: formatMeasurementTable(measurements),
+      measurementTable,
       fourier,
-      fourierTable: formatDeckFourierTable(fourier),
+      fourierTable,
       runArtifacts,
-      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+      runArtifactTable,
     };
   }
   if (plan.analysis === "ac") {
@@ -8284,6 +8359,17 @@ export function runDeckAnalysis(
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
+    const measurementTable = formatMeasurementTable(measurements);
+    const fourierTable = formatDeckFourierTable(fourier);
+    const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
+    const tableArtifacts = deckTableArtifacts(
+      table,
+      measurementTable,
+      fourierTable,
+      runArtifactTable,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8293,12 +8379,13 @@ export function runDeckAnalysis(
       analysisDirectives,
       tableCount: tables.length,
       tables,
+      tableArtifacts,
       measurements,
-      measurementTable: formatMeasurementTable(measurements),
+      measurementTable,
       fourier,
-      fourierTable: formatDeckFourierTable(fourier),
+      fourierTable,
       runArtifacts,
-      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+      runArtifactTable,
     };
   }
   if (plan.analysis === "tran") {
@@ -8333,6 +8420,17 @@ export function runDeckAnalysis(
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
+    const measurementTable = formatMeasurementTable(measurements);
+    const fourierTable = formatDeckFourierTable(fourier);
+    const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
+    const tableArtifacts = deckTableArtifacts(
+      table,
+      measurementTable,
+      fourierTable,
+      runArtifactTable,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8342,12 +8440,13 @@ export function runDeckAnalysis(
       analysisDirectives,
       tableCount: tables.length,
       tables,
+      tableArtifacts,
       measurements,
-      measurementTable: formatMeasurementTable(measurements),
+      measurementTable,
       fourier,
-      fourierTable: formatDeckFourierTable(fourier),
+      fourierTable,
       runArtifacts,
-      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+      runArtifactTable,
     };
   }
   if (plan.analysis === "tf") {
@@ -8372,6 +8471,17 @@ export function runDeckAnalysis(
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
+    const measurementTable = formatMeasurementTable(measurements);
+    const fourierTable = formatDeckFourierTable(fourier);
+    const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
+    const tableArtifacts = deckTableArtifacts(
+      table,
+      measurementTable,
+      fourierTable,
+      runArtifactTable,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8381,12 +8491,13 @@ export function runDeckAnalysis(
       analysisDirectives,
       tableCount: tables.length,
       tables,
+      tableArtifacts,
       measurements,
-      measurementTable: formatMeasurementTable(measurements),
+      measurementTable,
       fourier,
-      fourierTable: formatDeckFourierTable(fourier),
+      fourierTable,
       runArtifacts,
-      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+      runArtifactTable,
     };
   }
   if (plan.analysis === "sens") {
@@ -8410,6 +8521,17 @@ export function runDeckAnalysis(
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
+    const measurementTable = formatMeasurementTable(measurements);
+    const fourierTable = formatDeckFourierTable(fourier);
+    const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
+    const tableArtifacts = deckTableArtifacts(
+      table,
+      measurementTable,
+      fourierTable,
+      runArtifactTable,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8419,12 +8541,13 @@ export function runDeckAnalysis(
       analysisDirectives,
       tableCount: tables.length,
       tables,
+      tableArtifacts,
       measurements,
-      measurementTable: formatMeasurementTable(measurements),
+      measurementTable,
       fourier,
-      fourierTable: formatDeckFourierTable(fourier),
+      fourierTable,
       runArtifacts,
-      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+      runArtifactTable,
     };
   }
   if (plan.analysis === "noise") {
@@ -8458,6 +8581,17 @@ export function runDeckAnalysis(
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
+    const measurementTable = formatMeasurementTable(measurements);
+    const fourierTable = formatDeckFourierTable(fourier);
+    const runArtifactTable = formatDeckRunArtifactTable(runArtifacts);
+    const tableArtifacts = deckTableArtifacts(
+      table,
+      measurementTable,
+      fourierTable,
+      runArtifactTable,
+      measurements,
+      fourier,
+    );
     return {
       plan,
       result,
@@ -8467,12 +8601,13 @@ export function runDeckAnalysis(
       analysisDirectives,
       tableCount: tables.length,
       tables,
+      tableArtifacts,
       measurements,
-      measurementTable: formatMeasurementTable(measurements),
+      measurementTable,
       fourier,
-      fourierTable: formatDeckFourierTable(fourier),
+      fourierTable,
       runArtifacts,
-      runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+      runArtifactTable,
     };
   }
   throw invalidElement("runDeckAnalysis", `unsupported analysis ${JSON.stringify(plan.analysis)}`);

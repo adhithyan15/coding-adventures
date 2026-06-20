@@ -125,6 +125,8 @@
     {"id": "rheum_ssc_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "systemic_sclerosis",            "var": "Antibody", "gold": "anti_scl70"},
     {"id": "rheum_ra_ab",    "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "rheumatoid_arthritis",           "var": "Antibody", "gold": "anti_ccp"},
     {"id": "rheum_sjo_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "sjogren_syndrome",              "var": "Antibody", "gold": "anti_ro"},
+    {"id": "rheum_pbc_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "primary_biliary_cholangitis",   "var": "Antibody", "gold": "anti_mitochondrial"},
+    {"id": "rheum_dm_ab",    "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "dermatomyositis",               "var": "Antibody", "gold": "anti_jo1"},
 
     {"id": "onco_ovarian_marker", "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "ovarian_cancer",               "var": "Marker", "gold": "ca_125"},
     {"id": "onco_mtc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "medullary_thyroid_carcinoma",   "var": "Marker", "gold": "calcitonin"},
@@ -154,6 +156,7 @@
     {"id": "gi_barrett_dx",  "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "goblet_cells",              "var": "Disease", "gold": "barrett_esophagus"},
     {"id": "gi_hirsch_dx",   "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "absence_of_ganglion_cells", "var": "Disease", "gold": "hirschsprung_disease"},
     {"id": "gi_eoe_dx",      "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "eosinophils_15_per_hpf",     "var": "Disease", "gold": "eosinophilic_esophagitis"},
+    {"id": "gi_uc_dx",       "domain": "gi", "tactic": "recall", "relation": "biopsy_finding_in", "subject": "crypt_abscesses",            "var": "Disease", "gold": "ulcerative_colitis"},
 
     {"id": "derm_em_dx",      "domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "target_lesions",      "var": "Disease", "gold": "erythema_multiforme"},
     {"id": "derm_psoriasis_dx","domain": "derm", "tactic": "recall", "relation": "skin_finding_in", "subject": "silvery_scales",      "var": "Disease", "gold": "psoriasis"},
