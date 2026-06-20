@@ -362,11 +362,13 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
             return [DropIndex(name=name, if_exists=ie)], ()
 
         case PlanCreateTrigger(
-            name=name, timing=timing, event=event, table=table, body_sql=body
+            name=name, timing=timing, event=event, table=table, body_sql=body,
+            if_not_exists=ine
         ):
             return [
                 CreateTriggerDef(
-                    name=name, timing=timing, event=event, table=table, body_sql=body
+                    name=name, timing=timing, event=event, table=table, body_sql=body,
+                    if_not_exists=ine,
                 ),
             ], ()
 

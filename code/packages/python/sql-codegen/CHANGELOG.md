@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.44.0] - 2026-06-19
+
+### Added
+
+- **`CreateTriggerDef.if_not_exists: bool`** — new field on the IR
+  instruction (default `False`).  When `True`, the VM silently skips a
+  duplicate-trigger error instead of propagating it.  The compiler
+  destructures the matching `CreateTrigger` plan-node field and forwards
+  it here.
+
 ## [1.43.0] - 2026-06-16
 
 ### Fixed

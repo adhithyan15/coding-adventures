@@ -1731,6 +1731,7 @@ def _plan_create_trigger(stmt: CreateTriggerStmt) -> P.LogicalPlan:
         event=stmt.event,
         table=stmt.table,
         body_sql=stmt.body_sql,
+        if_not_exists=stmt.if_not_exists,
     )
 
 

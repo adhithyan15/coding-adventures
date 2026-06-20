@@ -569,7 +569,7 @@ frame_bound   = "UNBOUNDED" "PRECEDING"
 # Grammar::
 #
 #   create_trigger_stmt =
-#     "CREATE" "TRIGGER" NAME
+#     "CREATE" "TRIGGER" [ "IF" "NOT" "EXISTS" ] NAME
 #     ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
 #     "FOR" "EACH" "ROW"
 #     "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
@@ -580,7 +580,7 @@ frame_bound   = "UNBOUNDED" "PRECEDING"
 # references inside the body — they are not keywords, just contextual names.
 # The executor injects single-row "NEW" and "OLD" tables at fire time.
 
-create_trigger_stmt = "CREATE" "TRIGGER" NAME
+create_trigger_stmt = "CREATE" "TRIGGER" [ "IF" "NOT" "EXISTS" ] NAME
                       ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
                       [ "FOR" "EACH" "ROW" ]
                       "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
