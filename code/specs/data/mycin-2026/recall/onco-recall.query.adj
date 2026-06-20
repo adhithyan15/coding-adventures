@@ -17,3 +17,4 @@ import "onco-edges.adj"
 ? tumor_marker(ovarian_cancer, $Marker)                % expect ca_125
 ? tumor_marker(medullary_thyroid_carcinoma, $Marker)   % expect calcitonin / cea
 ? tumor_marker(hepatocellular_carcinoma, $Marker)      % expect alpha_fetoprotein
+? tumor_marker(colorectal_cancer, $Marker)             % expect cea (expand)

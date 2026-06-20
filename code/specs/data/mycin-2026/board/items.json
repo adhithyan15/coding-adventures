@@ -99,6 +99,7 @@
     {"id": "pharm_apap_antidote",    "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "acetaminophen_poisoning","var": "Antidote", "gold": "acetylcysteine"},
     {"id": "pharm_opioid_antidote",  "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "opioid_toxicity",        "var": "Antidote", "gold": "naloxone"},
     {"id": "pharm_benzo_antidote",   "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "benzodiazepine_overdose","var": "Antidote", "gold": "flumazenil"},
+    {"id": "pharm_heparin_antidote", "domain": "pharm", "tactic": "recall", "relation": "antidote_for",   "subject": "heparin_overdose",       "var": "Antidote", "gold": "protamine"},
 
     {"id": "immuno_type1_mediator", "domain": "immuno", "tactic": "recall", "relation": "mediated_by",    "subject": "type_i_hypersensitivity",       "var": "Mediator",  "gold": "ige"},
     {"id": "immuno_type4_mediator", "domain": "immuno", "tactic": "recall", "relation": "mediated_by",    "subject": "type_iv_hypersensitivity",      "var": "Mediator",  "gold": "t_cells"},
@@ -115,6 +116,9 @@
     {"id": "genetics_fragx_repeat", "domain": "genetics", "tactic": "recall", "relation": "trinucleotide_repeat", "subject": "fragile_x_syndrome",   "var": "Repeat",  "gold": "cgg"},
     {"id": "genetics_fragx_gene",   "domain": "genetics", "tactic": "recall", "relation": "gene_defect",          "subject": "fragile_x_syndrome",   "var": "Gene",    "gold": "fmr1"},
     {"id": "genetics_pws_imprint",  "domain": "genetics", "tactic": "recall", "relation": "imprinting",           "subject": "prader_willi_syndrome","var": "Parent",  "gold": "paternal"},
+    {"id": "genetics_cf_inherit",   "domain": "genetics", "tactic": "recall", "relation": "inheritance",          "subject": "cystic_fibrosis",      "var": "Pattern", "gold": "autosomal_recessive"},
+    {"id": "genetics_cf_gene",      "domain": "genetics", "tactic": "recall", "relation": "gene_defect",          "subject": "cystic_fibrosis",      "var": "Gene",    "gold": "cftr"},
+    {"id": "genetics_dmd_gene",     "domain": "genetics", "tactic": "recall", "relation": "gene_defect",          "subject": "duchenne_muscular_dystrophy","var": "Gene","gold": "dystrophin"},
 
     {"id": "rheum_sle_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "systemic_lupus_erythematosus",   "var": "Antibody", "gold": "anti_dsdna"},
     {"id": "rheum_gpa_ab",   "domain": "rheum", "tactic": "recall", "relation": "associated_autoantibody", "subject": "granulomatosis_with_polyangiitis","var": "Antibody", "gold": "pr3"},
@@ -125,6 +129,7 @@
     {"id": "onco_ovarian_marker", "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "ovarian_cancer",               "var": "Marker", "gold": "ca_125"},
     {"id": "onco_mtc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "medullary_thyroid_carcinoma",   "var": "Marker", "gold": "calcitonin"},
     {"id": "onco_hcc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "hepatocellular_carcinoma",      "var": "Marker", "gold": "alpha_fetoprotein"},
+    {"id": "onco_crc_marker",     "domain": "onco", "tactic": "recall", "relation": "tumor_marker", "subject": "colorectal_cancer",            "var": "Marker", "gold": "cea"},
 
     {"id": "histo_rs_cond",    "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "reed_sternberg_cells", "var": "Condition", "gold": "hodgkin_lymphoma"},
     {"id": "histo_hj_cond",    "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "howell_jolly_bodies",  "var": "Condition", "gold": "asplenia"},

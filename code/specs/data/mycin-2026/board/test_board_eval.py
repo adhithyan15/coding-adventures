@@ -59,7 +59,7 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     # answers, so the board scores the top binding per subject (the libraries + their
     # tests cover all edges).
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 126
+    assert len(recall_correct) == 131
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
@@ -80,6 +80,10 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["genetics_pws_imprint"].answer == "paternal"    # genetics — imprinting relation
     assert by_id["genetics_hd_gene"].answer == "htt"             # gene_defect shared w/ IMMUNO, disjoint subj
     assert by_id["genetics_hd_repeat"].trust == "authoritative"   # ADJ-only edge, grounded inline
+    assert by_id["genetics_cf_inherit"].answer == "autosomal_recessive"  # expand: CF inheritance (NBK493206)
+    assert by_id["genetics_dmd_gene"].answer == "dystrophin"     # expand: Duchenne gene (NBK482346)
+    assert by_id["onco_crc_marker"].answer == "cea"             # expand: colorectal→CEA (NBK578172)
+    assert by_id["pharm_heparin_antidote"].answer == "protamine"  # expand: heparin→protamine (NBK547753)
     assert by_id["rheum_sle_ab"].answer == "anti_dsdna"          # rheumatology (RHEUM, Tier-2)
     assert by_id["rheum_gpa_ab"].answer == "pr3"                 # rheum — autoantibody association
     assert by_id["rheum_sle_ab"].trust == "authoritative"        # ADJ-only edge, grounded inline
@@ -153,8 +157,8 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
     # verbatim, so the framework declines to claim grounding it cannot defend, by design:
     # cortisol_def (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame
     # cortisol deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
-    assert s["grounded_coverage"] == round(125 / 126, 4)   # 0.9921
-    assert s["grounded_correct"] == 125
+    assert s["grounded_coverage"] == round(130 / 131, 4)   # 0.9924
+    assert s["grounded_correct"] == 130
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia

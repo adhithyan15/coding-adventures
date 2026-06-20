@@ -39,6 +39,7 @@ EXPECTED = [
     ("acetaminophen_poisoning", "antidote_for", "acetylcysteine"),
     ("opioid_toxicity", "antidote_for", "naloxone"),
     ("benzodiazepine_overdose", "antidote_for", "flumazenil"),
+    ("heparin_overdose", "antidote_for", "protamine"),   # expand (NBK547753)
 ]
 VAR = {"drug_class": "Class", "mechanism": "MOA", "adverse_effect": "Effect",
        "antidote_for": "Antidote"}
