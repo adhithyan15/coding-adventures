@@ -107,7 +107,9 @@ returns the plan, solver result, deck-selected output table, and normalized
 table count/name list, analysis directive, output probes, and output directives
 that produced the table, plus selected
 `.measure` results and a stable measurement table for `.dc`, `.ac`, and `.tran`
-executions. Selected
+executions. Execution `table_artifacts` preserve the same order as `tables` and
+carry each stable table's text, CSV, compact JSON, and header-keyed records.
+Selected
 `.tran` plans also return selected `.four` harmonic results and a stable
 Fourier table. Executions also include a selected-run artifact summary plus
 `format_deck_run_artifact_table()` and `format_deck_run_artifact_csv()` output

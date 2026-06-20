@@ -1910,6 +1910,24 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         op_records[0].get("V(mid)").map(String::as_str),
         Some("5.000000e-01")
     );
+    assert_eq!(
+        op_execution
+            .table_artifacts
+            .iter()
+            .map(|artifact| artifact.name.as_str())
+            .collect::<Vec<_>>(),
+        vec!["result", "run-artifact"]
+    );
+    assert_eq!(op_execution.table_artifacts[0].table, op_execution.table);
+    assert_eq!(
+        op_execution.table_artifacts[0].csv,
+        format_deck_table_csv(&op_execution.table)
+    );
+    assert_eq!(
+        op_execution.table_artifacts[0].json,
+        format_deck_table_json(&op_execution.table)
+    );
+    assert_eq!(&op_execution.table_artifacts[0].records, &op_records);
     assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
     assert_eq!(op_execution.run_artifacts[0].result_column_count, 2);
     assert_eq!(
@@ -1960,6 +1978,15 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         format_deck_run_artifact_json(&op_execution.run_artifacts)
     );
     let artifact_records = deck_table_records(&op_execution.run_artifact_table);
+    assert_eq!(
+        op_execution.table_artifacts[1].name.as_str(),
+        "run-artifact"
+    );
+    assert_eq!(
+        op_execution.table_artifacts[1].table,
+        op_execution.run_artifact_table
+    );
+    assert_eq!(&op_execution.table_artifacts[1].records, &artifact_records);
     assert_eq!(artifact_records.len(), 1);
     assert_eq!(
         artifact_records[0].get("Analysis").map(String::as_str),
@@ -2074,6 +2101,30 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         dc_execution.measurement_table,
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n"
+    );
+    assert_eq!(
+        dc_execution
+            .table_artifacts
+            .iter()
+            .map(|artifact| artifact.name.as_str())
+            .collect::<Vec<_>>(),
+        vec!["result", "measurement", "run-artifact"]
+    );
+    assert_eq!(
+        dc_execution.table_artifacts[1].table,
+        dc_execution.measurement_table
+    );
+    assert_eq!(
+        dc_execution.table_artifacts[1].csv,
+        format_deck_table_csv(&dc_execution.measurement_table)
+    );
+    assert_eq!(
+        dc_execution.table_artifacts[1].json,
+        format_deck_table_json(&dc_execution.measurement_table)
+    );
+    assert_eq!(
+        dc_execution.table_artifacts[1].records,
+        deck_table_records(&dc_execution.measurement_table)
     );
     match dc_execution.result {
         DeckAnalysisExecutionResult::DcSweep(points) => assert_eq!(points.len(), 2),
@@ -2698,11 +2749,35 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
             "run-artifact".to_string()
         ]
     );
+    assert_eq!(
+        tran_execution
+            .table_artifacts
+            .iter()
+            .map(|artifact| artifact.name.as_str())
+            .collect::<Vec<_>>(),
+        vec!["result", "fourier", "run-artifact"]
+    );
     let result = &tran_execution.fourier[0];
     assert!((result.fundamental_frequency_hz - 2_000.0).abs() < 1.0e-12);
     assert_eq!(result.probes[0].probe, "V(mid)");
     assert_eq!(result.probes[0].harmonics.len(), 1);
     assert_eq!(tran_execution.fourier_table, format_fourier_table(result));
+    assert_eq!(
+        tran_execution.table_artifacts[1].table,
+        tran_execution.fourier_table
+    );
+    assert_eq!(
+        tran_execution.table_artifacts[1].csv,
+        format_deck_table_csv(&tran_execution.fourier_table)
+    );
+    assert_eq!(
+        tran_execution.table_artifacts[1].json,
+        format_deck_table_json(&tran_execution.fourier_table)
+    );
+    assert_eq!(
+        tran_execution.table_artifacts[1].records,
+        deck_table_records(&tran_execution.fourier_table)
+    );
     assert_eq!(tran_execution.run_artifacts[0].fourier_count, 1);
     assert_eq!(tran_execution.run_artifacts[0].source_name, None);
     assert_eq!(tran_execution.run_artifacts[0].output_node, None);

@@ -94,7 +94,9 @@ and reports ambiguity before solver dispatch.
 solver result, deck-selected output table, and normalized analysis directive,
 table count/name list, output probes, and output directives that produced the
 table, plus selected `.measure` results and
-a stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
+a stable measurement table for `.dc`, `.ac`, and `.tran` executions.
+Execution `tableArtifacts` preserve the same order as `tables` and carry each
+stable table's text, CSV, compact JSON, and header-keyed records. Selected
 `.tran` plans route
 `START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
 an internal fixed-step cap, and `UIC` initial-condition intent through that

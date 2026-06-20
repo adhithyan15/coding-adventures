@@ -1475,6 +1475,9 @@ describe("transient", () => {
     expect(opExecution.analysisDirectives).toEqual([".op"]);
     expect(opExecution.tableCount).toBe(2);
     expect(opExecution.tables).toEqual(["result", "run-artifact"]);
+    expect(opExecution.tableArtifacts.map((artifact) => artifact.name)).toEqual(
+      opExecution.tables,
+    );
     expect(opExecution.measurements).toEqual([]);
     expect(opExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
@@ -1485,6 +1488,13 @@ describe("transient", () => {
     expect(JSON.parse(formatDeckTableJson(opExecution.table))).toEqual([
       { Index: "0", "V(mid)": "5.000000e-01" },
     ]);
+    expect(opExecution.tableArtifacts[0]).toMatchObject({
+      name: "result",
+      table: opExecution.table,
+      csv: formatDeckTableCsv(opExecution.table),
+      json: formatDeckTableJson(opExecution.table),
+      records: deckTableRecords(opExecution.table),
+    });
     expect(opExecution.runArtifacts[0]?.resultRows).toBe(1);
     expect(opExecution.runArtifacts[0]?.resultColumnCount).toBe(2);
     expect(opExecution.runArtifacts[0]?.resultColumns).toEqual(["Index", "V(mid)"]);
@@ -1507,6 +1517,11 @@ describe("transient", () => {
     expect(opExecution.runArtifactTable).toBe(
       "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
         `op\t.op\t1\t.op\t${opExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t2\tresult;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\n`,
+    );
+    expect(opExecution.tableArtifacts[1]?.name).toBe("run-artifact");
+    expect(opExecution.tableArtifacts[1]?.table).toBe(opExecution.runArtifactTable);
+    expect(opExecution.tableArtifacts[1]?.records).toEqual(
+      deckTableRecords(opExecution.runArtifactTable),
     );
     expect(formatDeckTableCsv(opExecution.runArtifactTable)).toBe(
       formatDeckRunArtifactCsv(opExecution.runArtifacts),
@@ -1639,11 +1654,21 @@ describe("transient", () => {
     expect(dcExecution.analysisDirectives).toEqual([".dc"]);
     expect(dcExecution.tableCount).toBe(3);
     expect(dcExecution.tables).toEqual(["result", "measurement", "run-artifact"]);
+    expect(dcExecution.tableArtifacts.map((artifact) => artifact.name)).toEqual(
+      dcExecution.tables,
+    );
     expect(dcExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_avg"]);
     expect(dcExecution.measurementTable).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
         "mid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n",
     );
+    expect(dcExecution.tableArtifacts[1]).toMatchObject({
+      name: "measurement",
+      table: dcExecution.measurementTable,
+      csv: formatDeckTableCsv(dcExecution.measurementTable),
+      json: formatDeckTableJson(dcExecution.measurementTable),
+      records: deckTableRecords(dcExecution.measurementTable),
+    });
     expect(Array.isArray(dcExecution.result)).toBe(true);
     expect(dcExecution.table).toBe(
       "Index\tSource\tValue\tV(mid)\tI(V1)\n" +
@@ -2008,11 +2033,21 @@ describe("transient", () => {
     expect(tranExecution.fourier).toHaveLength(1);
     expect(tranExecution.tableCount).toBe(3);
     expect(tranExecution.tables).toEqual(["result", "fourier", "run-artifact"]);
+    expect(tranExecution.tableArtifacts.map((artifact) => artifact.name)).toEqual(
+      tranExecution.tables,
+    );
     const result = tranExecution.fourier[0]!;
     expect(result.fundamentalFrequencyHz).toBeCloseTo(2_000.0, 12);
     expect(result.probes[0]?.probe).toBe("V(mid)");
     expect(result.probes[0]?.harmonics).toHaveLength(1);
     expect(tranExecution.fourierTable).toBe(formatFourierTable(result));
+    expect(tranExecution.tableArtifacts[1]).toMatchObject({
+      name: "fourier",
+      table: tranExecution.fourierTable,
+      csv: formatDeckTableCsv(tranExecution.fourierTable),
+      json: formatDeckTableJson(tranExecution.fourierTable),
+      records: deckTableRecords(tranExecution.fourierTable),
+    });
     expect(tranExecution.runArtifacts[0]?.fourierCount).toBe(1);
     expect(tranExecution.runArtifacts[0]?.sourceName).toBeUndefined();
     expect(tranExecution.runArtifacts[0]?.outputNode).toBeUndefined();

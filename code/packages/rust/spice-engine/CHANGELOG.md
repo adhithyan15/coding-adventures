@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add ordered `table_artifacts` to selected `run_deck_analysis` execution
+  results with each stable table's text, CSV, compact JSON, and header-keyed
+  records beside the existing table inventory, matching Python and TypeScript.
 - Add stable table count/name lists directly to selected `run_deck_analysis`
   execution results beside analysis directives, output probes, output
   directives, and selected-run artifacts, matching Python and TypeScript.

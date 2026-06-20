@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck execution table export artifacts** —
+  `run_deck_analysis()` selected executions now expose ordered
+  `table_artifacts` with each stable table's text, CSV, compact JSON, and
+  header-keyed records beside the existing table inventory, matching Rust and
+  TypeScript.
+
 - **Deck execution table inventory** —
   `run_deck_analysis()` selected executions now expose stable table count/name
   lists beside analysis directives, output probes, output directives, and
