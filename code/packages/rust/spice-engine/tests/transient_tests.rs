@@ -2747,6 +2747,8 @@ let gain = 2
     let expected_control_lines = vec![".save V(in)".to_string(), ".probe V(in)".to_string()];
     let control_line_list = expected_control_lines.join(";");
 
+    assert_eq!(execution.control_line_count, expected_control_lines.len());
+    assert_eq!(execution.control_lines, expected_control_lines);
     assert_eq!(
         execution.run_artifacts[0].control_line_count,
         expected_control_lines.len()

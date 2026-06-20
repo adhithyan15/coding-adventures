@@ -191,6 +191,7 @@ artifact summaries plus `format_deck_run_artifact_table` and
 stable result-row, table, analysis-directive, output-probe, output-directive,
 measurement, Fourier, control-command, and diagnostic count/name lists.
 Normalized accepted `.control` commands are surfaced separately in
+`control_line_count` / `control_lines` execution fields and in
 `ControlLines` / `ControlLineList` artifact fields. Existing `.control` body
 policy diagnostics flow into those selected-run artifact `Diagnostics` /
 `DiagnosticCodeList` fields and through the same run-artifact table, CSV, JSON,

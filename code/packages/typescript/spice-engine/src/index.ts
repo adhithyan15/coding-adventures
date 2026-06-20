@@ -713,6 +713,8 @@ export interface DeckAnalysisExecution {
   readonly outputProbes: readonly string[];
   readonly outputDirectives: readonly string[];
   readonly analysisDirectives: readonly string[];
+  readonly controlLineCount: number;
+  readonly controlLines: readonly string[];
   readonly tableCount: number;
   readonly tables: readonly string[];
   readonly tableArtifacts: readonly DeckTableArtifact[];
@@ -8275,6 +8277,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      controlLineCount: controlLines.length,
+      controlLines: [...controlLines],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8331,6 +8335,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      controlLineCount: controlLines.length,
+      controlLines: [...controlLines],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8398,6 +8404,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      controlLineCount: controlLines.length,
+      controlLines: [...controlLines],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8460,6 +8468,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      controlLineCount: controlLines.length,
+      controlLines: [...controlLines],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8512,6 +8522,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      controlLineCount: controlLines.length,
+      controlLines: [...controlLines],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8563,6 +8575,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      controlLineCount: controlLines.length,
+      controlLines: [...controlLines],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8624,6 +8638,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      controlLineCount: controlLines.length,
+      controlLines: [...controlLines],
       tableCount: tables.length,
       tables,
       tableArtifacts,

@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck execution control command inventory artifacts** —
+  `run_deck_analysis()` selected executions now expose normalized `.control`
+  command inventories directly as `control_line_count` / `control_lines`
+  alongside table, output, measurement, Fourier, and analysis-directive
+  metadata, matching Rust and TypeScript.
+
 - **Deck run control command inventory artifacts** —
   `analyze_deck_controls()` now exposes normalized `.control` command lines
   separately from full active deck input, and `run_deck_analysis()`

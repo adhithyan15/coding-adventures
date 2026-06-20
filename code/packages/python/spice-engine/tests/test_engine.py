@@ -7376,6 +7376,8 @@ let gain = 2
     expected_control_lines = [".save V(in)", ".probe V(in)"]
     control_line_list = ";".join(expected_control_lines)
 
+    assert execution.control_line_count == len(expected_control_lines)
+    assert execution.control_lines == expected_control_lines
     assert execution.run_artifacts[0].control_line_count == len(expected_control_lines)
     assert execution.run_artifacts[0].control_lines == expected_control_lines
     assert execution.run_artifacts[0].diagnostic_count == len(expected_codes)
