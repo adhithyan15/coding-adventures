@@ -51,7 +51,7 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     # answers, so the board scores the top binding per subject (the libraries + their
     # tests cover all edges).
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 124
+    assert len(recall_correct) == 126
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
@@ -84,6 +84,8 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["histo_rs_cond"].answer == "hodgkin_lymphoma"   # histology (HISTO, Tier-2)
     assert by_id["histo_heinz_cond"].answer == "g6pd_deficiency"  # histo — seen_in (finding->condition)
     assert by_id["histo_rs_cond"].trust == "authoritative"       # ADJ-only edge, grounded inline
+    assert by_id["histo_auer_cond"].answer == "acute_promyelocytic_leukemia"  # primary-source backfill
+    assert by_id["histo_psammoma_cond"].answer == "meningioma"   # primary-source backfill (psammoma→meningioma)
     assert by_id["cardio_mr_lesion"].answer == "mitral_regurgitation"  # cardiology (CARDIO, Tier-2)
     assert by_id["cardio_as_lesion"].answer == "aortic_stenosis"  # cardio — murmur_indicates (murmur->lesion)
     assert by_id["cardio_mr_lesion"].trust == "authoritative"    # ADJ-only edge, grounded inline
@@ -143,8 +145,8 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
     # verbatim, so the framework declines to claim grounding it cannot defend, by design:
     # cortisol_def (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame
     # cortisol deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
-    assert s["grounded_coverage"] == round(123 / 124, 4)   # 0.9919
-    assert s["grounded_correct"] == 123
+    assert s["grounded_coverage"] == round(125 / 126, 4)   # 0.9921
+    assert s["grounded_correct"] == 125
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia

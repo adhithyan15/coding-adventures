@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 137,
-    "correct": 130,
+    "total": 139,
+    "correct": 132,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 124,
+        "correct": 126,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9919,
-    "grounded_correct": 123
+    "grounded_coverage": 0.9921,
+    "grounded_correct": 125
   },
   "results": [
     {
@@ -928,6 +928,22 @@
       "tactic": "recall",
       "gold": "g6pd_deficiency",
       "answer": "g6pd_deficiency",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "histo_auer_cond",
+      "tactic": "recall",
+      "gold": "acute_promyelocytic_leukemia",
+      "answer": "acute_promyelocytic_leukemia",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "histo_psammoma_cond",
+      "tactic": "recall",
+      "gold": "meningioma",
+      "answer": "meningioma",
       "outcome": "correct",
       "trust": "authoritative"
     },

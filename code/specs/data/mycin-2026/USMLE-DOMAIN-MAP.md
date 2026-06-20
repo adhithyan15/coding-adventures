@@ -111,7 +111,7 @@ unchanged. Adding a relation just widens the schema — the engine already binds
 | Genetics | Genetics | inheritance, gene_defect, trinucleotide_repeat, imprinting | 7 grounded (ADJ-only) | ✓ |
 | Rheumatology (Tier-2) | Path/Immuno | associated_autoantibody | 9 grounded (ADJ-only) | ✓ |
 | Oncology (Tier-2) | Pathology/neoplasia | tumor_marker | 4 grounded (ADJ-only) | ✓ |
-| Histology buzzwords (Tier-2) | Pathology | seen_in (finding→condition) | 5 grounded (ADJ-only) | ✓ |
+| Histology buzzwords (Tier-2) | Pathology | seen_in (finding→condition) | 7 grounded (ADJ-only) | ✓ |
 | Cardiology murmurs (Tier-2) | Cardiology | murmur_indicates (murmur→lesion) | 5 grounded (ADJ-only) | ✓ |
 | Neurology localization (Tier-2) | Neurology | lesion_causes (site→deficit) | 5 grounded (ADJ-only) | ✓ |
 | GI biopsy (Tier-2) | Gastroenterology | biopsy_finding_in (finding→dx) | 5 grounded (ADJ-only) | ✓ |
