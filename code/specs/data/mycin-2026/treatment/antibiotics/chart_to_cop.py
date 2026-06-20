@@ -211,6 +211,19 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
             else:
                 cop.discards.append({"fact": f"interaction={f.value}",
                                      "reason": "no grounded dose-interaction rule for this interaction yet (CC-3)"})
+        elif f.kind == "hepatic_status":
+            # CC-2b: hepatic impairment is tracked, but per the ceftriaxone FDA label
+            # hepatic dysfunction ALONE needs no dose adjustment — only the CONJUNCTION
+            # of hepatic + significant renal impairment caps the dose (handled post-loop).
+            if f.value in ("hepatic_severe", "hepatic_moderate"):
+                cop.risks.add(f.value)
+                cop.constraints.append({"type": "dose_risk", "from": f"hepatic_status={f.value}",
+                                        "rule": "hepatic impairment alone needs no adjustment; "
+                                                "combined with renal impairment it caps the dose",
+                                        "span": f.span})
+            else:
+                cop.discards.append({"fact": f"hepatic_status={f.value}",
+                                     "reason": "unrecognized hepatic status (want hepatic_severe/hepatic_moderate)"})
         elif f.kind == "weight":
             try:
                 w = float(f.value)
@@ -315,6 +328,18 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
     cop.organisms = list(reg.SCENARIOS[scenario])
     cop.constraints.append({"type": "coverage", "from": "scenario", "rule": scenario,
                             "detail": cop.organisms})
+
+    # CC-2b conjunctive cap: the ceftriaxone FDA label states no hepatic-only adjustment is
+    # needed, but combined hepatic + significant renal impairment caps the dose at 2 g/day.
+    # Emit the grounded `hepatorenal` risk ONLY when both are present, so hepatic-alone leaves
+    # the regimen untouched (faithful) while the conjunction shrinks ceftriaxone's ceiling.
+    has_hepatic = any(r.startswith("hepatic_") for r in cop.risks)
+    has_renal = any(r.startswith("renal_") for r in cop.risks)
+    if has_hepatic and has_renal:
+        cop.risks.add("hepatorenal")
+        cop.constraints.append({"type": "dose_risk", "from": "hepatic_status+renal_status",
+                                "rule": "combined hepatic + significant renal impairment caps "
+                                        "ceftriaxone at 2 g/day (FDA label)"})
     return cop
 
 

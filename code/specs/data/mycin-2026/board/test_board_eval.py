@@ -259,6 +259,12 @@ def test_management_runs_the_constraint_engine_when_cli_present() -> None:
     assert by_id["mgmt_adult_community"].answer == "ceftriaxone+vancomycin"
     assert by_id["mgmt_betalactam_allergic"].outcome == "correct"
     assert by_id["mgmt_betalactam_allergic"].answer == "INFEASIBLE"
+    # CC-2b: hepatic + renal impairment is a CONJUNCTIVE dose cap. The chart carries
+    # hepatic_moderate AND renal_moderate, so the engine derives a `hepatorenal` risk that
+    # shrinks ceftriaxone's ceiling (50 -> 38 mg/kg) — still above its floor, so the regimen
+    # stays FEASIBLE and dose-adjusted (cap, don't forbid): ceftriaxone + vancomycin.
+    assert by_id["mgmt_hepatorenal"].outcome == "correct"
+    assert by_id["mgmt_hepatorenal"].answer == "ceftriaxone+vancomycin"
 
 
 def _card_with_diff():
