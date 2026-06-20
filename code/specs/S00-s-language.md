@@ -426,6 +426,20 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
    possible — a strong `Rc` stored inside its own scope, which `Rc` cannot reclaim
    without a tracing GC — and is a documented limitation bounded by a per-session
    `MAX_ENVIRONMENTS` cap rather than collected.
+6. **Closure environments & call-frame reflection (R-23, shared value).** Builds
+   on the R-22 variant. `s-runtime` gains a second long-lived interpreter handle —
+   the **empty** environment (a parentless, bindingless root, owned for the whole
+   session like the global env) — plus a closure's captured-env accessor and
+   replacer, and a **caller environment** recorded alongside the R-20 call-stack
+   closure so the caller's frame can be reflected. The S/R surface
+   (`environment(f)`, `environment(f) <-`, `environmentName`,
+   `globalenv()`/`emptyenv()`/`baseenv()`, `parent.frame()`, `is.environment()`)
+   is driven from the R frontend (R-23) but lives in `s-runtime`. No new ownership
+   risk: the caller env on the call stack is dropped when its frame is popped (RAII
+   guard), and the captured-env exposure is the same strong-`Rc` situation as
+   `environment()`, bounded by the same `MAX_ENVIRONMENTS` cap. `parent.frame(n)`
+   **clamps** to the global env past the bottom of the stack rather than indexing
+   out of bounds.
 
 ## §10 References
 

@@ -497,9 +497,8 @@ unchanged.
     two independent environments. A lazy special form (it needs the current
     `env`).
   - **`environment()`** — the **current** environment as a value. The
-    `environment(f)` form (a closure's captured environment) is **deferred to
-    R-23** with a clear note: it requires reaching into the `Closure { env, .. }`
-    payload, which is a smaller, orthogonal follow-up.
+    `environment(f)` form (a closure's captured environment) lands in **R-23**
+    (it reaches into the `Closure { env, .. }` payload).
   - **`envir = e` on `assign`/`get`/`exists`/`rm`** — operate on the passed
     environment **value** rather than the current scope. R-21's runtime rejection
     is replaced by the real behaviour: `assign("x", 1, envir = e)` binds `x` in
@@ -514,12 +513,79 @@ unchanged.
     otherwise copy-on-modify value semantics.
   - **`ls(envir = e)`** — the names bound directly in `e` (its own frame, not the
     enclosing chain), **sorted** as a character vector. `ls()` with no `envir`
-    lists the current environment. `environmentName` is **deferred to R-23**.
+    lists the current environment. `environmentName` lands in **R-23**.
   - **Printing.** An environment prints as `<environment>` — a **stable
     placeholder**, deliberately *not* the real heap address R shows
     (`<environment: 0x55...>`), so test output is deterministic across runs and
     platforms. Its implicit class is `"environment"` and `type_name` is
     `"environment"`.
+
+- **R-23 — closure environments & call-frame reflection** *(this PR)*. Builds
+  directly on the R-22 `SValue::Environment` value, the `MAX_ENVIRONMENTS` cap,
+  and the R-20 call stack. Everything lands in the shared `s-runtime`; no grammar
+  change (every name lexes as an ordinary identifier).
+  - **Two well-known environments held by the interpreter.** R-22 kept one
+    long-lived strong handle: `Interpreter::global`. R-23 adds a second, the
+    **empty** environment — a single root scope with **no parent and no bindings**
+    that the interpreter owns for the whole session (a strong `Rc`, exactly like
+    `global`). It is the terminus R uses for `emptyenv()` and the value that
+    `environmentName` recognises as `"R_EmptyEnv"`. Holding it on the interpreter
+    means `emptyenv()`/`globalenv()` hand back the *same* `Rc` every call, so
+    `identical`-style reference equality (pointer equality on the `Rc`) is stable.
+  - **`environment(f)`** — the environment a closure **captured** at definition.
+    A `Closure` already stores its defining scope in `Closure { env, .. }`; R-23
+    exposes that `env` as an `SValue::Environment`. For a closure defined at top
+    level this is the global env, so `identical(environment(f), globalenv())` is
+    `TRUE`. A non-closure argument (a builtin, a number, …) returns `NULL`,
+    matching R (`environment(sum)` is `NULL`). Reifying the captured env counts
+    against `MAX_ENVIRONMENTS` like any other reification — it can equally
+    participate in a value-binding cycle.
+  - **`environment(f) <- e`** — set a closure's captured environment, reusing the
+    R-15/R-16 replacement-function lvalue path (`f(x) <- v` ≡
+    ``x <- `f<-`(x, v)``). A new `environment<-` builtin takes the closure and the
+    replacement environment `value = e` and returns a **fresh** `Closure` with its
+    `env` field swapped (closures are immutable values; we rebind the variable, as
+    R does). The first argument must be a closure and `value` must be an
+    environment, else a clean `BadArgs`/`TypeError` (never a panic). Because the
+    new closure now closes over `e`, free variables in its body resolve from `e`'s
+    chain.
+  - **`environmentName(e)`** — `"R_GlobalEnv"` if `e` **is** the global env (`Rc`
+    pointer equality against `Interpreter::global`), `"R_EmptyEnv"` if it is the
+    empty env, `""` otherwise. A non-environment argument is a clean error.
+  - **`globalenv()` / `emptyenv()` / `baseenv()`** — the well-known environments
+    as values. `globalenv()` and `baseenv()` both return the session global env
+    (this runtime installs its builtins directly into the global frame — there is
+    no separate base namespace, so `baseenv()` aliases the global env, documented
+    as a deliberate simplification); `emptyenv()` returns the interpreter's empty
+    env. All three are lazy special forms (they need the interpreter, not the
+    current `env`); none allocate, so none counts against `MAX_ENVIRONMENTS`.
+  - **`parent.frame(n = 1)`** — the environment of the **caller** `n` frames up
+    the call stack. R-20's call stack recorded the *closure* being run (for
+    `Recall`); R-23 records the **caller's environment** alongside it, so a frame
+    is now `(closure, caller_env)`. `call_closure` pushes the env in which the
+    call expression was evaluated; `parent.frame()` reads the top caller env,
+    `parent.frame(n)` the n-th from the top. A binding the caller made is visible
+    through it: `g <- function() get("x", envir = parent.frame()); f <- function()
+    { x <- 42; g() }; f()` → `42`. **Clamping (not panicking) past the bottom.**
+    `n` larger than the live frame depth, or `parent.frame()` at top level, falls
+    back to the **global** environment — R returns `R_GlobalEnv` there — so the
+    walk can never index out of bounds. `n` must be a positive whole number; a
+    non-positive or non-finite `n` is a clean `BadArgs` error.
+  - **`is.environment(x)`** — `TRUE` iff `x` is an environment value, else
+    `FALSE` (the predicate the tests assert `environment(f)` through). A trivial
+    one-element logical, vectorised over… nothing (it inspects the single value's
+    type), matching R's scalar predicate.
+  - **Rc-cycle safety (unchanged model, two new exposure points).** R-23 hands out
+    two *new* kinds of environment value — a closure's captured env and a caller
+    frame's env — but neither widens the ownership model R-22 established. The
+    caller-env stored on the call stack is dropped when the frame is popped (the
+    RAII `CallFrameGuard`), so it never outlives the call; `parent.frame()` clones
+    the `Rc` out for the duration of one expression. A closure's captured env was
+    already reachable (the closure owned a strong `Rc` to it); exposing it as a
+    value adds another strong `Rc`, the same situation as `environment()`, and is
+    bounded by the same `MAX_ENVIRONMENTS` cap. The `Weak` parent link still
+    prevents any parent-chain cycle. `parent.frame(n)` clamps rather than indexes,
+    so a crafted deep `n` cannot panic.
 
 ## §4 Reuse strategy
 
@@ -533,12 +599,15 @@ unchanged.
 
 ## §5 Out of scope (for now)
 
-Pipes (`|>`) and backslash lambdas (`\(x)`); the `environment(f)` form (a
-closure's captured environment) and `environmentName` — **deferred to R-23** (the
-`SValue::Environment` value, `new.env()`, `environment()`, `ls(envir=)`, and the
-`envir = e` argument of `assign`/`get`/`exists`/`rm` all land in **R-22**);
-S4/R5/R6 OO; namespaces and `library()`; the C interface; graphics. These layer
-on later, following ST00.
+Pipes (`|>`) and backslash lambdas (`\(x)`). The `SValue::Environment` value,
+`new.env()`, `environment()`, `ls(envir=)`, and the `envir = e` argument of
+`assign`/`get`/`exists`/`rm` land in **R-22**; the `environment(f)` form,
+`environment(f) <-`, `environmentName`, `globalenv()`/`emptyenv()`/`baseenv()`,
+`parent.frame()`, and `is.environment()` land in **R-23**. Still out of scope:
+`sys.call`/`sys.function`/`match.call` and the rest of the call-introspection
+family; S4/R5/R6 OO; namespaces and `library()` (so `baseenv()` aliases the
+global env for now); the C interface; graphics. These layer on later, following
+ST00.
 
 ## §6 References
 
