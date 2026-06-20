@@ -34,6 +34,8 @@ EXPECTED = {
     "medullary_thyroid_carcinoma": {"calcitonin", "cea"},
     "hepatocellular_carcinoma": {"alpha_fetoprotein"},
     "colorectal_cancer": {"cea"},                        # expand (NBK578172)
+    "prostate_cancer": {"psa"},                          # expand (NBK470550)
+    "choriocarcinoma": {"hcg"},                           # expand (NBK532950)
 }
 REL = "tumor_marker"
 VAR = "Marker"
