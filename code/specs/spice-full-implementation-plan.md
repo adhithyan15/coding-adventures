@@ -88,8 +88,8 @@ downstream tools to compare.
      travel with deck execution results as structured Fourier artifacts plus
      stable Fourier tables; selected deck executions now include structured
      run-artifact summaries plus stable row/count tables for result rows,
-     output probes, measurements, and Fourier artifacts, with normalized
-     output-probe, measurement, and Fourier probe name lists included in the
+     stable table names, output probes, measurements, and Fourier artifacts,
+     with normalized table, output-probe, measurement, and Fourier probe name lists included in the
      run artifacts; transfer-function, sensitivity, and noise run artifacts now
      also expose their selected output node, and selected-run artifacts can now
      render as stable CSV and compact JSON beside the existing tab-separated
@@ -919,11 +919,20 @@ downstream tools to compare.
       which `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`, or `.noise` card
       drove the run without reparsing the selected plan or deck text.
 
+85. Deck run table artifacts.
+    - Status: completed in this deck run table artifact slice.
+    - Python, Rust, and TypeScript selected deck executions now expose stable
+      table count/name lists inside selected-run artifacts.
+    - The stable run-artifact table now includes `Tables` and `TableList`, so
+      host and browser integrations can inspect which selected result,
+      measurement, Fourier, and run-artifact tables belong to a run without
+      deriving the inventory from optional side tables.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts beyond selected output,
+     including richer deck-owned run artifacts beyond selected table, output,
      output-directive, measurement, Fourier, and transfer-function probe lists,
      plus output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table

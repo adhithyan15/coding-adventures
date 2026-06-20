@@ -681,6 +681,8 @@ export interface DeckRunArtifact {
   readonly resultRows: number;
   readonly resultColumnCount: number;
   readonly resultColumns: readonly string[];
+  readonly tableCount: number;
+  readonly tables: readonly string[];
   readonly outputProbeCount: number;
   readonly outputProbes: readonly string[];
   readonly outputDirectiveCount: number;
@@ -7896,6 +7898,7 @@ function deckRunArtifacts(
 ): DeckRunArtifact[] {
   const isTransient = plan.analysis === "tran";
   const analysisDirectives = deckAnalysisDirectives(plan);
+  const tables = deckStableTables(measurements, fourier);
   return [
     {
       analysis: plan.analysis,
@@ -7920,6 +7923,8 @@ function deckRunArtifacts(
       resultRows: deckResultRowCount(result),
       resultColumnCount: resultColumns.length,
       resultColumns: [...resultColumns],
+      tableCount: tables.length,
+      tables,
       outputProbeCount: outputProbes.length,
       outputProbes: [...outputProbes],
       outputDirectiveCount: outputDirectives.length,
@@ -7936,6 +7941,21 @@ function deckRunArtifacts(
 
 function deckAnalysisDirectives(plan: DeckAnalysisPlan): string[] {
   return plan.directive.length === 0 ? [] : [plan.directive];
+}
+
+function deckStableTables(
+  measurements: readonly ProbeMeasurement[],
+  fourier: readonly FourierResult[],
+): string[] {
+  const tables = ["result"];
+  if (measurements.length > 0) {
+    tables.push("measurement");
+  }
+  if (fourier.length > 0) {
+    tables.push("fourier");
+  }
+  tables.push("run-artifact");
+  return tables;
 }
 
 function deckAnalysisDiagnosticCodes(netlist: string, plan: DeckAnalysisPlan): string[] {
@@ -7977,6 +7997,8 @@ const DECK_RUN_ARTIFACT_COLUMNS = [
   "ResultRows",
   "ResultColumns",
   "ResultColumnList",
+  "Tables",
+  "TableList",
   "OutputProbes",
   "OutputProbeList",
   "OutputDirectives",
@@ -8013,6 +8035,8 @@ function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
     String(artifact.resultRows),
     String(artifact.resultColumnCount),
     artifact.resultColumns.join(";"),
+    String(artifact.tableCount),
+    artifact.tables.join(";"),
     String(artifact.outputProbeCount),
     artifact.outputProbes.join(";"),
     String(artifact.outputDirectiveCount),
