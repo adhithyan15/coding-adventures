@@ -127,6 +127,11 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("NestList".to_string(), handler_fn(nest_list_handler));
     m.insert("Fold".to_string(), handler_fn(fold_handler));
     m.insert("FoldList".to_string(), handler_fn(fold_list_handler));
+    // W-11 supports the canonical even-predicate idiom `Mod[#, 2] == 0 &`, so a
+    // minimal integer `Mod` is added here (eager, like every other list/numeric
+    // builtin). It is the only new builtin W-11 needs; the pure-function support
+    // itself lives in the lowering + the backend rewrite rule, not here.
+    m.insert("Mod".to_string(), handler_fn(mod_handler));
     m
 }
 
@@ -1154,6 +1159,43 @@ fn parity_q(expr: IRApply, want_even: bool) -> IRNode {
 }
 
 // ---------------------------------------------------------------------------
+// Integer modulo — Mod (W-11 support for the `Mod[#, 2] == 0 &` idiom)
+// ---------------------------------------------------------------------------
+
+/// `Mod[a, b]` → the integer remainder of `a` divided by `b`, using Wolfram's
+/// (and Rust's `rem_euclid`) convention that the result has the **sign of the
+/// divisor** and lies in `[0, |b|)` for positive `b`: `Mod[7, 2]` → `1`,
+/// `Mod[-1, 3]` → `2`. Both arguments must be exact integers and the divisor must
+/// be non-zero; any other shape (wrong arity, a non-integer, or a zero divisor)
+/// leaves the form unevaluated rather than panicking — the same fail-soft
+/// convention every W-5/W-9 builtin follows.
+fn mod_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let (Some(a), Some(b)) = (as_i64(&expr.args[0]), as_i64(&expr.args[1])) else {
+        return unevaluated(expr);
+    };
+    if b == 0 {
+        return unevaluated(expr); // Mod by zero is undefined.
+    }
+    // Compute in i128 so a crafted `i64::MIN` divisor cannot overflow: `b.abs()`
+    // panics (debug) / wraps (release) for `b == i64::MIN`, so we must NOT take a
+    // signed abs at i64 width. `(a as i128).rem_euclid(|b|)` lands in `[0, |b|)`;
+    // for a negative divisor we shift into the divisor's sign to match Wolfram.
+    // The final remainder's magnitude is < |b| <= i64::MAX + 1, and after the
+    // negative-divisor shift it lies in `(b, 0]`, so it always fits back in i64.
+    let a = a as i128;
+    let b = b as i128;
+    let mut r = a.rem_euclid(b.abs());
+    if b < 0 && r != 0 {
+        r -= b.abs();
+    }
+    // r is now in (-|b|, |b|) with the divisor's sign, hence within i64 range.
+    int(r as i64)
+}
+
+// ---------------------------------------------------------------------------
 // Small shared helpers
 // ---------------------------------------------------------------------------
 
@@ -1946,6 +1988,46 @@ mod tests {
                 vec![list(vec![int(1), list(vec![int(2)])]), int(0)]
             ),
             list(vec![int(1), list(vec![int(2)])])
+        );
+    }
+
+    #[test]
+    fn mod_integer_remainder_uses_divisor_sign() {
+        // Positive divisor: result in [0, b).
+        assert_eq!(run("Mod", vec![int(7), int(2)]), int(1));
+        assert_eq!(run("Mod", vec![int(8), int(2)]), int(0));
+        // Negative dividend: still non-negative for a positive divisor.
+        assert_eq!(run("Mod", vec![int(-1), int(3)]), int(2));
+        // Negative divisor: result takes the divisor's sign.
+        assert_eq!(run("Mod", vec![int(7), int(-3)]), int(-2));
+        assert_eq!(run("Mod", vec![int(-7), int(-3)]), int(-1));
+    }
+
+    #[test]
+    fn mod_extreme_operands_do_not_overflow() {
+        // A crafted i64::MIN divisor must NOT panic on `b.abs()` (the i128 path
+        // avoids the signed-abs overflow). i64::MIN mod 2 = 0 (it is even).
+        assert_eq!(run("Mod", vec![int(i64::MIN), int(2)]), int(0));
+        // i64::MIN as the divisor: Mod[-1, i64::MIN] = -1 (divisor-signed).
+        assert_eq!(run("Mod", vec![int(-1), int(i64::MIN)]), int(-1));
+        // i64::MAX divisor, large dividend — stays in range.
+        assert_eq!(run("Mod", vec![int(i64::MAX), int(i64::MAX)]), int(0));
+        assert_eq!(run("Mod", vec![int(i64::MIN), int(i64::MAX)]), int(i64::MAX - 1));
+    }
+
+    #[test]
+    fn mod_malformed_stays_unevaluated() {
+        // Mod by zero is undefined → unevaluated, no panic.
+        assert_eq!(
+            run("Mod", vec![int(5), int(0)]),
+            apply(sym("Mod"), vec![int(5), int(0)])
+        );
+        // Wrong arity.
+        assert_eq!(run("Mod", vec![int(5)]), apply(sym("Mod"), vec![int(5)]));
+        // Non-integer argument.
+        assert_eq!(
+            run("Mod", vec![sym("x"), int(2)]),
+            apply(sym("Mod"), vec![sym("x"), int(2)])
         );
     }
 

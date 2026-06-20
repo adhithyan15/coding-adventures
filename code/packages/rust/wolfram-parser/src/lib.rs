@@ -252,4 +252,79 @@ mod tests {
             "f[x_] := x^2\nf[3] + Sin[0]\n{1, 2, 3} /. a_ -> a + 1\n"
         ));
     }
+
+    // --- W-11 pure functions: #, #n, ##, & ------------------------------
+
+    #[test]
+    fn slot_forms_parse_via_the_slot_rule() {
+        // `#`, `#2`, `##` are all atoms matching the new `slot` rule.
+        assert!(contains_rule(&parse_wolfram("#\n"), "slot"));
+        assert!(contains_rule(&parse_wolfram("#2\n"), "slot"));
+        assert!(contains_rule(&parse_wolfram("##\n"), "slot"));
+        // A numbered slot is HASH then NUMBER inside the slot node.
+        assert_eq!(
+            first_token_of(&parse_wolfram("#2\n"), "slot").as_deref(),
+            Some("#")
+        );
+    }
+
+    #[test]
+    fn ampersand_postfix_parses_via_the_amp_level() {
+        // `#^2 &` matches the new `amp` postfix level.
+        assert!(contains_rule(&parse_wolfram("#^2 &\n"), "amp"));
+        assert!(parses("(#1 + #2) &\n"));
+        assert!(parses("# &\n"));
+        assert!(parses("(#^2) &\n"));
+    }
+
+    #[test]
+    fn amp_binds_looser_than_power_so_hash_pow_2_amp_is_a_function_of_a_power() {
+        // The pinned precedence: `#^2 &` is `(#^2)&`, NOT `#^(2&)`. Concretely,
+        // the `&`'s operand (the `power` under `amp`) must contain the POWER
+        // operator — i.e. the `^` is INSIDE the function body, below the `amp`.
+        let ast = parse_wolfram("#^2 &\n");
+        // The amp level must be present, and a `power` node carrying `^` must
+        // sit beneath it (the body), proving `&` captured the whole `#^2`.
+        assert!(contains_rule(&ast, "amp"), "amp level missing");
+        assert!(
+            contains_rule(&ast, "power"),
+            "the `^` must parse as a power INSIDE the function body"
+        );
+        // And the whole thing still parses as one statement.
+        assert!(parses("#^2 &\n"));
+    }
+
+    #[test]
+    fn named_function_long_form_parses_as_ordinary_application() {
+        // `Function[x, x^2]` and `Function[{x, y}, x + y]` are plain `Head[args]`
+        // applications — no special grammar, lowered to the Function head later.
+        assert!(parses("Function[x, x^2]\n"));
+        assert!(parses("Function[{x, y}, x + y]\n"));
+        // Applied immediately: `Function[x, x^2][5]` is postfix application.
+        assert!(parses("Function[x, x^2][5]\n"));
+        assert!(contains_rule(&parse_wolfram("Function[x, x^2][5]\n"), "postfix"));
+    }
+
+    #[test]
+    fn pure_function_applied_immediately_parses() {
+        // The whole point: `(#^2)&[5]` and `(#1+#2)&[3,4]` apply a pure function.
+        assert!(parses("(#^2)&[5]\n"));
+        assert!(parses("(#1 + #2)&[3, 4]\n"));
+        assert!(parses("#&[9]\n"));
+        // Composes inside higher-order builtins.
+        assert!(parses("Map[#^2 &, {1, 2, 3}]\n"));
+        assert!(parses("Select[{1, 2, 3, 4}, Mod[#, 2] == 0 &]\n"));
+        assert!(parses("Nest[# + 1 &, 0, 3]\n"));
+    }
+
+    #[test]
+    fn malformed_pure_function_inputs_are_syntax_errors() {
+        // A bare `&` with nothing to its left has no operand.
+        assert!(try_parse_wolfram("&\n").is_err());
+        // A `&` whose body is itself incomplete (`+ &` has no left operand for
+        // the `+`) cannot parse.
+        assert!(try_parse_wolfram("+ &\n").is_err());
+        // An applied pure function with an unclosed bracket is a syntax error.
+        assert!(try_parse_wolfram("(#^2)&[5\n").is_err());
+    }
 }

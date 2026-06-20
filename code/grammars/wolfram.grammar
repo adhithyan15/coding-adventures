@@ -33,6 +33,7 @@
 #   logical_or      ||
 #   logical_and     &&
 #   logical_not     !  (prefix)
+#   amp             expr &                (postfix, pure function)    (W-11)
 #   comparison      == != < > <= >=
 #   additive        + -
 #   multiplicative  * /
@@ -40,7 +41,7 @@
 #   power           ^                     (right-associative)
 #   mapapply        /@ @@                 (infix, left-associative)   (W-6)
 #   application     f[...]  x[[...]]      (postfix)                   (W-6: [[]])
-#   atom            literals, symbols, patterns, {...}, ( ... )
+#   atom            literals, symbols, patterns, slots, {...}, ( ... )  (W-11: # ## #n)
 # =============================================================================
 
 program = { statement_line } ;
@@ -67,7 +68,36 @@ rule = logical_or [ ( RULE | RULEDELAYED ) rule ] ;
 
 logical_or  = logical_and { OR logical_and } ;
 logical_and = logical_not { AND logical_not } ;
-logical_not = NOT logical_not | comparison ;
+logical_not = NOT logical_not | amp ;
+
+# Pure-function `&` postfix (W-11). A trailing run of `&` turns the WHOLE
+# preceding expression into an anonymous `Function`. Wolfram gives `&` a very low
+# precedence — looser than every arithmetic/comparison operator but tighter than
+# `,`/`;`/assignment — so all of these are pure functions of their slots:
+#
+#   #^2 &            →  Function[Power[Slot[1], 2]]     (looser than ^)
+#   # + 1 &          →  Function[Plus[Slot[1], 1]]      (looser than +)
+#   Mod[#, 2] == 0 & →  Function[Equal[Mod[#,2], 0]]    (looser than ==)
+#
+# So `amp` sits high in the cascade — just below `logical_not`, ABOVE the whole
+# comparison/arithmetic stack — and its body is a full `comparison`. The `&` is
+# NOT reachable from inside `^`/`+`/etc, so a trailing `&` always belongs to the
+# outermost expression, never to a sub-operand. A double `& &` wraps twice.
+#
+# After the `&` run the pure function may be *applied immediately*: `(#^2)&[5]`
+# is `(#^2 &)[5]` — the `[5]` (and any chained `[…]` / `[[…]]`) applies to the
+# new Function, not to the body. The apply suffix can appear only when at least
+# one `&` is present (the no-`&` alternative falls straight through to
+# `comparison`, where ordinary application already lives — no double-application
+# ambiguity). The runtime lowers each trailing `&` to a slot-based
+# `Function[body]` and folds each suffix into an application.
+amp = comparison AMP { AMP } { amp_apply }
+    | comparison ;
+
+# The application suffix usable after a pure-function `&` (mirrors `postfix`):
+# `f & [args]` ordinary application, `f & [[i]]` Part sugar.
+amp_apply = LBRACKET [ arglist ] RBRACKET
+          | LDBRACKET arglist RBRACKET RBRACKET ;
 
 # A single (non-chained) comparison for the subset.
 comparison = additive [ ( EQUAL | UNEQUAL | LESS | GREATER | LE | GE ) additive ] ;
@@ -78,7 +108,7 @@ multiplicative = unary { ( TIMES | SLASH ) unary } ;
 # Prefix minus/plus. Binds looser than Power, so `-x^2` is -(x^2).
 unary = ( MINUS | PLUS ) unary | power ;
 
-# Power — right-associative: `a^b^c` is Power[a, Power[b, c]].
+# Power — right-associative: `a^b^c` is Power[a, Power[b, c]]. Unchanged by W-11.
 power = mapapply [ POWER unary ] ;
 
 # Map / Apply sugar (W-6), infix and left-associative, binding just above
@@ -105,16 +135,31 @@ postfix = atom { LBRACKET [ arglist ] RBRACKET | LDBRACKET arglist RBRACKET RBRA
 
 arglist = expr { COMMA expr } ;
 
-# Atoms, including the pattern blank forms:
+# Atoms, including the pattern blank forms and the W-11 slots:
 #   NAME                a symbol
 #   NAME BLANK [NAME]   x_  or  x_h   (Pattern[x, Blank[]] / Pattern[x, Blank[h]])
 #   BLANK [NAME]        _   or  _h    (Blank[] / Blank[h])
-atom = NUMBER
+#   slot                #  #n  ##     (Slot / SlotSequence — W-11 pure functions)
+# `slot` is listed first: HASH/SLOTSEQ are disjoint token types from NUMBER/
+# STRING/NAME/BLANK, so order is not required for correctness, but putting the
+# new arm up front keeps the pure-function additions visually grouped.
+atom = slot
+     | NUMBER
      | STRING
      | NAME [ BLANK [ NAME ] ]
      | BLANK [ NAME ]
      | list
      | group ;
+
+# A pure-function argument slot (W-11):
+#   #     ≡  #1      the first argument            (HASH, no number)
+#   #n              the n-th argument              (HASH NUMBER)
+#   ##              SlotSequence — all arguments    (SLOTSEQ)
+# `#n` is HASH followed by the ordinary NUMBER token (there is no dedicated
+# slot-number token — the lexer is unchanged), so the parser reads the optional
+# number here; the runtime turns `#`/`#n` into Slot[n] and `##` into
+# SlotSequence[1].
+slot = HASH [ NUMBER ] | SLOTSEQ ;
 
 list  = LBRACE [ arglist ] RBRACE ;
 group = LPAREN expr RPAREN ;

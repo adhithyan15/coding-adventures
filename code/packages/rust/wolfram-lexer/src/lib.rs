@@ -228,6 +228,47 @@ mod tests {
         );
     }
 
+    // --- W-11 pure-function syntax: #, #n, ##, & ------------------------
+
+    #[test]
+    fn slot_hash_and_slotsequence_are_distinct_tokens() {
+        // A bare `#` is HASH (the first-argument slot).
+        pair(&lex("#\n"), 0, "HASH", "#");
+        // `##` wins over two `#` by longest-match-first (SLOTSEQ before HASH).
+        let pp = lex("##\n");
+        assert_eq!(types(&pp), vec!["SLOTSEQ"], "## must be ONE SlotSequence");
+        pair(&pp, 0, "SLOTSEQ", "##");
+        assert!(!types(&lex("##\n")).contains(&"HASH"));
+    }
+
+    #[test]
+    fn numbered_slot_is_hash_then_number() {
+        // `#2` is HASH followed by the ordinary NUMBER token — there is no
+        // dedicated slot-number token, so the parser reads the number.
+        let p = lex("#2\n");
+        pair(&p, 0, "HASH", "#");
+        pair(&p, 1, "NUMBER", "2");
+    }
+
+    #[test]
+    fn ampersand_postfix_is_amp_distinct_from_and() {
+        // A lone `&` is AMP (the pure-function postfix).
+        pair(&lex("#^2 &\n"), 3, "AMP", "&");
+        // `&&` still wins as one AND (longest-match-first), never two AMP.
+        assert!(types(&lex("a && b\n")).contains(&"AND"));
+        assert!(!types(&lex("a && b\n")).contains(&"AMP"));
+    }
+
+    #[test]
+    fn pure_function_full_form_lexes() {
+        // (#1 + #2) & — a slot-based two-argument pure function.
+        let p = lex("(#1 + #2) &\n");
+        assert_eq!(
+            types(&p),
+            vec!["LPAREN", "HASH", "NUMBER", "PLUS", "HASH", "NUMBER", "RPAREN", "AMP"]
+        );
+    }
+
     #[test]
     fn newline_inside_double_brackets_is_dropped() {
         // The W-6 hook tracks `[[`/`]]` depth, so an interior newline is dropped.

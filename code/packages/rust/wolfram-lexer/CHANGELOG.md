@@ -4,6 +4,18 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 Semantic Versioning.
 
+## [0.3.0] — 2026-06-19
+
+### Added (W-11 — pure-function tokens)
+
+- `SLOTSEQ` (`##`), `HASH` (`#`), and `AMP` (`&`), for Wolfram's pure-function
+  syntax. Longest-match-first: `##` is listed before `#` (so `##` is one
+  `SlotSequence`, never two slots) and the existing two-char `&&` (`AND`) is
+  matched before a lone `&` (`AMP`). A numbered slot `#n` lexes as `HASH`
+  followed by the ordinary `NUMBER` token — there is no dedicated slot-number
+  token, so the lexer's regex set is otherwise unchanged. The embedded
+  `_grammar.rs` was regenerated via the Rust grammar-tools CLI.
+
 ## [0.2.0] — 2026-06-17
 
 ### Added (W-6 — operator sugar)

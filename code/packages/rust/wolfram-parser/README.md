@@ -26,6 +26,16 @@ the `[[ … ]]` part sugar (`x[[i]]`) alongside `f[…]` application. The runtim
 desugars these to the `Map`/`Apply`/`Part` heads, so each is identical to its
 long form.
 
+The W-11 pure-function syntax adds a `slot` atom (`#`, `#n`, `##`) and a
+low-binding postfix `amp` level for the `&` postfix
+(`amp = comparison AMP { AMP } { amp_apply } | comparison`), placed just below
+`logical_not` and above the comparison/arithmetic stack. So `&` binds looser than
+every arithmetic/comparison operator but tighter than `,`, making `#^2 &`,
+`# + 1 &`, and `Mod[#,2]==0 &` pure functions of the *whole* body; the
+`amp_apply` suffix lets a pure function be applied immediately (`(#^2)&[5]`). The
+runtime lowers `#`/`#n` to `Slot[n]`, `##` to `SlotSequence[1]`, and `body &` /
+`Function[…]` to a `Function` it resolves by substitution at apply time.
+
 ## Where it fits
 
 ```

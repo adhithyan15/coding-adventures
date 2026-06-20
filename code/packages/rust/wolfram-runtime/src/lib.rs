@@ -689,4 +689,109 @@ mod tests {
         assert_eq!(eval("\n").unwrap(), "");
         assert_eq!(eval("   \n").unwrap(), "");
     }
+
+    // --- W-11 pure functions: end-to-end through the real session ----------
+
+    #[test]
+    fn named_function_applied_immediately() {
+        // Function[x, x^2][5] → 25
+        assert_eq!(eval("Function[x, x^2][5]\n").unwrap(), "Out[1]= 25\n");
+        // Function[{x, y}, x + y][3, 4] → 7
+        assert_eq!(
+            eval("Function[{x, y}, x + y][3, 4]\n").unwrap(),
+            "Out[1]= 7\n"
+        );
+    }
+
+    #[test]
+    fn slot_function_applied_immediately() {
+        // (#^2)&[5] → 25
+        assert_eq!(eval("(#^2)&[5]\n").unwrap(), "Out[1]= 25\n");
+        // (#1 + #2)&[3, 4] → 7
+        assert_eq!(eval("(#1 + #2)&[3, 4]\n").unwrap(), "Out[1]= 7\n");
+        // #&[9] → 9  (the identity pure function; # ≡ #1)
+        assert_eq!(eval("#&[9]\n").unwrap(), "Out[1]= 9\n");
+    }
+
+    #[test]
+    fn slot_and_named_forms_agree() {
+        // The two spellings of "square the argument" give the same answer.
+        assert_eq!(
+            eval("(#^2)&[7]\n").unwrap(),
+            eval("Function[x, x^2][7]\n").unwrap()
+        );
+    }
+
+    #[test]
+    fn pure_function_composes_with_map() {
+        // Map[#^2 &, {1, 2, 3}] → {1, 4, 9}  (no special code in Map — the
+        // backend rule fires when Map re-evals (#^2&)[x]).
+        assert_eq!(
+            eval("Map[#^2 &, {1, 2, 3}]\n").unwrap(),
+            "Out[1]= {1, 4, 9}\n"
+        );
+        // The /@ sugar form is identical (parenthesised: `&` is looser than `/@`,
+        // so the pure function must be grouped when used as `/@`'s left operand —
+        // the same "write parentheses when mixing" convention W-6 documents).
+        assert_eq!(
+            eval("(#^2 &) /@ {1, 2, 3}\n").unwrap(),
+            "Out[1]= {1, 4, 9}\n"
+        );
+    }
+
+    #[test]
+    fn pure_function_composes_with_select() {
+        // Select[{1, 2, 3, 4}, Mod[#, 2] == 0 &] → {2, 4}
+        assert_eq!(
+            eval("Select[{1, 2, 3, 4}, Mod[#, 2] == 0 &]\n").unwrap(),
+            "Out[1]= {2, 4}\n"
+        );
+    }
+
+    #[test]
+    fn pure_function_composes_with_nest() {
+        // Nest[# + 1 &, 0, 3] → 3
+        assert_eq!(eval("Nest[# + 1 &, 0, 3]\n").unwrap(), "Out[1]= 3\n");
+    }
+
+    #[test]
+    fn slot_sequence_splices_all_arguments() {
+        // Plus[##]& applied to three args sums them: (Plus[##]&)[1, 2, 3] → 6.
+        assert_eq!(eval("Plus[##] &[1, 2, 3]\n").unwrap(), "Out[1]= 6\n");
+    }
+
+    #[test]
+    fn nested_pure_functions_apply_independently() {
+        // Function[x, x + 1][Function[y, y*2][3]] → (3*2) + 1 = 7. The inner
+        // function is applied first (its slot/param is its own), then the outer.
+        assert_eq!(
+            eval("Function[x, x + 1][Function[y, y*2][3]]\n").unwrap(),
+            "Out[1]= 7\n"
+        );
+    }
+
+    #[test]
+    fn unapplied_pure_function_is_an_inert_value() {
+        // A pure function on its own is a value (Wolfram's "function object"); it
+        // does not error and does not try to substitute non-existent args.
+        assert!(eval("#^2 &\n").is_ok());
+        assert!(eval("Function[x, x^2]\n").is_ok());
+    }
+
+    #[test]
+    fn malformed_pure_function_application_does_not_abort_the_session() {
+        // A two-param function applied to one arg cannot reduce; the session must
+        // return cleanly (the form stays unevaluated) and remain usable.
+        let mut s = WolframSession::new();
+        assert!(s.feed("Function[{x, y}, x + y][1]\n").is_ok());
+        assert_eq!(s.feed("2 + 2\n").unwrap(), "Out[2]= 4\n");
+    }
+
+    #[test]
+    fn deeply_nested_pure_function_is_bounded_not_a_crash() {
+        // A self-referential-ish deeply applied chain must not overflow the
+        // worker stack — the per-statement token cap + the eval stack bound it.
+        // Nest a pure function 50 times; the result is well-defined (50).
+        assert_eq!(eval("Nest[# + 1 &, 0, 50]\n").unwrap(), "Out[1]= 50\n");
+    }
 }

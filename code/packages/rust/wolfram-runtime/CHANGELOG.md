@@ -4,6 +4,65 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.8.0] — 2026-06-19
+
+The **W-11** deliverable (MA04 §14): Wolfram's **pure (anonymous) functions** —
+`Function[…]`, the slot forms `#`/`#n`/`##`, and the `&` postfix — the single
+most-used functional idiom, so a higher-order builtin can take an inline lambda
+instead of a named definition. This is the first runtime change since W-5 to
+require a **grammar + lexer change** (regenerated `_grammar.rs`, mirroring W-6).
+
+### Added (pure functions)
+
+- **`Function[x, body]` / `Function[{x, y}, body]`** — named-parameter pure
+  functions. Applying substitutes the args for the named params in the body, via
+  the **same `vm.rs::substitute`** user functions, the W-7 `Table` index, and W-8
+  scoping already use. `Function[x, x^2][5]` → `25`; `Function[{x,y}, x+y][3,4]`
+  → `7`. A single-symbol param is normalised to a one-element list at lowering,
+  so every named function is uniformly `Function[List(params…), body]`.
+- **Slot forms `#`, `#1`, `#2`, …** (`#` ≡ `#1`) lowering to `Slot[n]`, and
+  **`##`** (`SlotSequence`) lowering to `SlotSequence[1]`. A `##` in an argument
+  position **splices** all the call's args into that argument list.
+- **The `&` postfix** (`(#^2)&`, `(#1+#2)&`) turning the preceding expression
+  into a slot-based `Function[body]`. `&` has a **low precedence** — looser than
+  every arithmetic/comparison operator but tighter than `,` — so `#^2 &`,
+  `# + 1 &`, and `Mod[#,2]==0 &` are all pure functions of the *whole* body. A
+  pure function may be applied immediately (`(#^2)&[5]`), and the apply suffix
+  chains (`f&[1][2]`, `f&[[i]]`).
+- **`Mod[a, b]`** — a minimal integer modulo (divisor-signed remainder), the
+  only new builtin W-11 needs (for the canonical `Mod[#,2]==0 &` even-predicate).
+
+### How it composes
+
+Application is a **rewrite rule on `Backend::rules()`**: its predicate matches a
+*reducible* `Function[…][args]` (well-formed record, matching arity) and the
+transform substitutes args → params/slots and returns the body for the VM to
+re-evaluate. Because the rule fires inside `vm.eval`, it composes for free with
+every W-5/W-9/W-10 higher-order builtin — they already re-apply `f` through
+`build_canonical_application` + `vm.eval`:
+
+- `Map[#^2 &, {1, 2, 3}]` → `{1, 4, 9}`
+- `Select[{1, 2, 3, 4}, Mod[#, 2] == 0 &]` → `{2, 4}`
+- `Nest[# + 1 &, 0, 3]` → `3`
+
+### Safety
+
+Gating reducibility in the **predicate** (not the transform) is what prevents an
+arity-mismatched / malformed `Function[…][args]` from re-matching the rule and
+looping forever (a self-DoS) — a non-reducible form falls through to
+`on_unknown_head` and stays unevaluated. A pure function substitutes its body
+once per application (linear in the body size); self-referential recursion is
+bounded by the evaluator's existing recursion handling exactly as a
+self-referential `Define` is.
+
+### Grammar (regenerated `_grammar.rs`)
+
+New tokens `HASH` (`#`), `SLOTSEQ` (`##`, longest-match before `#`), `AMP` (`&`,
+longest-match after `&&`); a `slot` atom; and a low-binding `amp` postfix level
+(`amp = comparison AMP { AMP } { amp_apply } | comparison`). The `_grammar.rs`
+for the lexer and parser were regenerated via the Rust grammar-tools CLI — never
+hand-edited.
+
 ## [0.7.0] — 2026-06-17
 
 The **W-10** deliverable (MA04 §13): the functional-iteration combinators — the

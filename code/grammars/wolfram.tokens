@@ -62,6 +62,13 @@ GE          = ">="
 AND         = "&&"
 OR          = "||"
 
+# `##` (SlotSequence) must precede the single `#` (HASH, in SECTION 2) so
+# longest-match wins: `##` lexes as one SLOTSEQ, never two HASH. There is no
+# `&&`-vs-`&` ambiguity for the `&` pure-function postfix — the two-char `AND`
+# above is already listed first, so a lone `&` (AMP) only ever forms where it is
+# NOT part of `&&`. (W-11 pure functions)
+SLOTSEQ     = "##"
+
 # ============================================================================
 # SECTION 2: Single-character operators and delimiters
 # ============================================================================
@@ -89,6 +96,16 @@ RPAREN    = ")"
 
 COMMA     = ","
 SEMI      = ";"
+
+# Pure-function syntax (W-11). `#` is the argument-slot opener — a following
+# NUMBER (`#2`) is read by the parser's `slot` rule (no dedicated slot-number
+# token, so the lexer stays unchanged otherwise). `&` is the postfix that turns
+# the preceding expression into a pure `Function` (`#^2 &`). The two-char `##`
+# (SLOTSEQ) is in SECTION 1 *before* this `#`, and the two-char `&&` (AND) is in
+# SECTION 1 before this `&`, so longest-match-first keeps both singles
+# unambiguous.
+HASH      = "#"
+AMP       = "&"
 
 # ============================================================================
 # SECTION 3: Literal value tokens

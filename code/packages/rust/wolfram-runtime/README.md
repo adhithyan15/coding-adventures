@@ -10,7 +10,8 @@ Macsyma/Maxima drive rather than writing a bespoke evaluator.
 See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfram-language.md)
 §7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), §10 (W-7
 iteration constructs), §11 (W-8 local scoping), §12 (W-9 list-manipulation
-builtins), and §13 (W-10 functional-iteration combinators).
+builtins), §13 (W-10 functional-iteration combinators), and §14 (W-11 pure
+functions).
 
 ## What it does
 
@@ -109,6 +110,16 @@ assert_eq!(eval("Nest[f, x, 3]\n").unwrap(), "Out[1]= f[f[f[x]]]\n");
 assert_eq!(eval("NestList[f, x, 2]\n").unwrap(), "Out[1]= {x, f[x], f[f[x]]}\n");
 assert_eq!(eval("Fold[Plus, 0, {1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
 assert_eq!(eval("FoldList[Plus, 0, {1, 2, 3}]\n").unwrap(), "Out[1]= {0, 1, 3, 6}\n");
+
+// W-11 pure (anonymous) functions — named, or slot-based with the `&` postfix:
+assert_eq!(eval("Function[x, x^2][5]\n").unwrap(), "Out[1]= 25\n");
+assert_eq!(eval("Function[{x, y}, x + y][3, 4]\n").unwrap(), "Out[1]= 7\n");
+assert_eq!(eval("(#^2)&[5]\n").unwrap(), "Out[1]= 25\n");      // # ≡ #1
+assert_eq!(eval("(#1 + #2)&[3, 4]\n").unwrap(), "Out[1]= 7\n");
+// …and they slot straight into the higher-order builtins:
+assert_eq!(eval("Map[#^2 &, {1, 2, 3}]\n").unwrap(), "Out[1]= {1, 4, 9}\n");
+assert_eq!(eval("Select[{1, 2, 3, 4}, Mod[#, 2] == 0 &]\n").unwrap(), "Out[1]= {2, 4}\n");
+assert_eq!(eval("Nest[# + 1 &, 0, 3]\n").unwrap(), "Out[1]= 3\n");
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -261,6 +272,33 @@ DoS-capped at `MAX_LIST_LENGTH` *before* iterating (so `Nest[f, x, 10^9]` cannot
 drive a billion evals), and the `NestList`/`FoldList` result allocations are
 bounded by that cap. Every malformed form (negative/non-integer/over-cap `n`,
 non-list fold target, wrong arity) is left unevaluated rather than panicking.
+
+**W-11** adds Wolfram's **pure (anonymous) functions** — the first runtime change
+since W-5 to require a grammar + lexer change (new tokens `#`/`##`/`&`, a `slot`
+atom, and a low-binding `amp` postfix level; the embedded `_grammar.rs` is
+regenerated, not hand-edited). Three interchangeable spellings lower to one IR
+shape:
+
+| Surface | Lowers to | Applied → |
+|---------|-----------|-----------|
+| `Function[x, body]` | `Function[List[x], body]` | substitutes `x`→arg |
+| `Function[{x,y}, body]` | `Function[List[x,y], body]` | substitutes both |
+| `body &` | `Function[body]` (slot-based) | substitutes `Slot[k]`→argk |
+| `#` ≡ `#1`, `#n` | `Slot[n]` | the n-th argument |
+| `##` | `SlotSequence[1]` | splices *all* args |
+
+The `&` has a **low precedence** (looser than every arithmetic/comparison
+operator, tighter than `,`), so `#^2 &`, `# + 1 &`, and `Mod[#,2]==0 &` are all
+pure functions of the *whole* body. Application is a **rewrite rule** on the
+backend: it matches a *reducible* `Function[…][args]` and substitutes args →
+params/slots via the **same `vm.rs::substitute`** user functions / `Table` /
+scoping already use, then re-evaluates. Because the rule fires inside `vm.eval`,
+it composes for free with `Map`/`Select`/`Nest` — they already re-apply `f`
+through `build_canonical_application` + `vm.eval`, so `Map[#^2 &, {1,2,3}]` →
+`{1, 4, 9}` with no special code in `Map`. Gating *reducibility in the predicate*
+keeps an arity-mismatched/malformed form from re-matching and looping (it falls
+through to `on_unknown_head` and stays unevaluated). The only new builtin W-11
+needs is a minimal integer `Mod` (for the canonical `Mod[#,2]==0 &` predicate).
 
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
