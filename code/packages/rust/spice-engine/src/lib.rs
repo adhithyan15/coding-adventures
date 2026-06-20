@@ -3448,6 +3448,8 @@ pub struct DeckAnalysisExecution {
     pub output_probes: Vec<String>,
     pub output_directives: Vec<String>,
     pub analysis_directives: Vec<String>,
+    pub table_count: usize,
+    pub tables: Vec<String>,
     pub measurements: Vec<ProbeMeasurement>,
     pub measurement_table: String,
     pub fourier: Vec<FourierResult>,
@@ -10503,6 +10505,7 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Op(result),
@@ -10510,6 +10513,8 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                table_count: tables.len(),
+                tables,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10546,6 +10551,7 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::DcSweep(result),
@@ -10553,6 +10559,8 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                table_count: tables.len(),
+                tables,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10590,6 +10598,7 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Ac(result),
@@ -10597,6 +10606,8 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                table_count: tables.len(),
+                tables,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10637,6 +10648,7 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Tran(result),
@@ -10644,6 +10656,8 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                table_count: tables.len(),
+                tables,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10678,6 +10692,7 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Tf(result.clone()),
@@ -10685,6 +10700,8 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                table_count: tables.len(),
+                tables,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10717,6 +10734,7 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Sens(result.clone()),
@@ -10724,6 +10742,8 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                table_count: tables.len(),
+                tables,
                 measurements,
                 measurement_table,
                 fourier,
@@ -10768,6 +10788,7 @@ pub fn run_deck_analysis(
                 &diagnostic_codes,
             );
             let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
+            let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Noise(result.clone()),
@@ -10775,6 +10796,8 @@ pub fn run_deck_analysis(
                 output_probes,
                 output_directives,
                 analysis_directives,
+                table_count: tables.len(),
+                tables,
                 measurements,
                 measurement_table,
                 fourier,

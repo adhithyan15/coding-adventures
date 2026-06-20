@@ -39,6 +39,9 @@ EXPECTED = [
     ("fragile_x_syndrome", "trinucleotide_repeat", "cgg"),
     ("fragile_x_syndrome", "gene_defect", "fmr1"),
     ("prader_willi_syndrome", "imprinting", "paternal"),
+    ("cystic_fibrosis", "inheritance", "autosomal_recessive"),       # expand (NBK493206)
+    ("cystic_fibrosis", "gene_defect", "cftr"),                      # expand (NBK493206)
+    ("duchenne_muscular_dystrophy", "gene_defect", "dystrophin"),    # expand (NBK482346)
 ]
 VAR = {"inheritance": "Pattern", "gene_defect": "Gene",
        "trinucleotide_repeat": "Repeat", "imprinting": "Parent"}
@@ -110,7 +113,7 @@ def _one(rel: str, subj: str, varname: str) -> dict | None:
 def test_unknown_disorder_abstains() -> None:
     if not _cli_available():
         return
-    r = _one("inheritance", "cystic_fibrosis", "Pattern")  # not in the library
+    r = _one("inheritance", "ehlers_danlos_syndrome", "Pattern")  # not in the library
     assert r is not None and r["abstained"], "an ungrounded disorder must abstain"
 
 

@@ -79,9 +79,9 @@ downstream tools to compare.
      `START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
      initial-condition intent; selected `.tran` execution now keeps `.tran
      TSTEP` as the deck output print grid while `MAXSTEP` caps internal solver
-     stepping; deck executions now expose normalized selected analysis
-     directives, output probes, and output directives as inspectable artifacts
-     alongside the stable table;
+     stepping; deck executions now expose normalized selected table
+     count/name lists, analysis directives, output probes, and output
+     directives as inspectable artifacts alongside the stable table;
      selected `.measure` outputs now travel with deck execution results as
      structured measurements plus stable measurement tables; selected transient
      `.four` outputs now
@@ -89,8 +89,10 @@ downstream tools to compare.
      stable Fourier tables; selected deck executions now include structured
      run-artifact summaries plus stable row/count tables for result rows,
      stable table names, output probes, measurements, and Fourier artifacts,
-     with normalized table, output-probe, measurement, and Fourier probe name lists included in the
-     run artifacts; transfer-function, sensitivity, and noise run artifacts now
+     with normalized table, output-probe, measurement, and Fourier probe name
+     lists included in the run artifacts, and selected executions now expose the
+     same stable table count/name inventory directly; transfer-function,
+     sensitivity, and noise run artifacts now
      also expose their selected output node, and selected-run artifacts can now
      render as stable CSV and compact JSON beside the existing tab-separated
      table; stable deck output tables can now also convert to deterministic CSV
@@ -928,11 +930,22 @@ downstream tools to compare.
       measurement, Fourier, and run-artifact tables belong to a run without
       deriving the inventory from optional side tables.
 
+86. Deck execution table inventory artifacts.
+    - Status: completed in this deck execution table inventory slice.
+    - Python, Rust, and TypeScript selected deck executions now expose stable
+      table count/name lists directly on the execution result beside selected
+      analysis directives, output probes, output directives, and selected-run
+      artifacts.
+    - Host and browser integrations can inspect the selected result,
+      measurement, Fourier, and run-artifact table inventory without drilling
+      into the run-artifact table or reconstructing optional side-table
+      presence.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts beyond selected table, output,
+     including richer deck-owned run artifacts beyond selected table inventory, output,
      output-directive, measurement, Fourier, and transfer-function probe lists,
      plus output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table

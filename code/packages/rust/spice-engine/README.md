@@ -176,7 +176,8 @@ card by analysis alias, defaults decks without analysis cards to an implicit
 `run_deck_analysis` executes one selected `.op`, `.dc`, `.ac LIN`, `.ac DEC`,
 `.ac OCT`, or `.tran` plan against an existing `Circuit` and returns the plan,
 solver result, deck-selected output table, and normalized analysis directive,
-output probes, and output directives that produced the table, plus selected `.measure` results and
+table count/name list, output probes, and output directives that produced the
+table, plus selected `.measure` results and
 a stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
 `.tran` plans route
 `START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
@@ -232,8 +233,8 @@ malformed deck-level analysis controls.
 `select_deck_analysis_plan` returns one selected or implicit plan for
 downstream deck execution helpers.
 `run_deck_analysis` routes that selected plan into the matching solver and
-stable deck-selected table output with normalized output-probe and
-output-directive artifacts,
+stable deck-selected table output with normalized table-inventory, output-probe
+and output-directive artifacts,
 selected measurement artifacts, selected transient Fourier artifacts,
 selected-run artifact summaries with table, analysis-directive, output-probe, output-directive,
 measurement, and Fourier probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT`

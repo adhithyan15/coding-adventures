@@ -92,7 +92,8 @@ and reports ambiguity before solver dispatch.
 `runDeckAnalysis` executes one selected `.op`, `.dc`, `.ac LIN`, `.ac DEC`,
 `.ac OCT`, or `.tran` plan against an existing `Circuit` and returns the plan,
 solver result, deck-selected output table, and normalized analysis directive,
-output probes, and output directives that produced the table, plus selected `.measure` results and
+table count/name list, output probes, and output directives that produced the
+table, plus selected `.measure` results and
 a stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
 `.tran` plans route
 `START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
@@ -196,8 +197,8 @@ malformed deck-level analysis controls.
 `selectDeckAnalysisPlan` returns one selected or implicit plan for downstream
 deck execution helpers.
 `runDeckAnalysis` routes that selected plan into the matching solver and stable
-deck-selected table output with normalized output-probe and output-directive
-artifacts, selected measurement artifacts, selected transient Fourier artifacts,
+deck-selected table output with normalized table-inventory, output-probe, and
+output-directive artifacts, selected measurement artifacts, selected transient Fourier artifacts,
 selected-run artifact summaries with table, analysis-directive, output-probe, output-directive,
 measurement, and Fourier probe name lists, `.ac LIN`, `.ac DEC`, `.ac OCT`
 frequency grids, and `.tran` `START` /

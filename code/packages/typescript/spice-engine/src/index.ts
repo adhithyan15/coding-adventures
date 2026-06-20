@@ -702,6 +702,8 @@ export interface DeckAnalysisExecution {
   readonly outputProbes: readonly string[];
   readonly outputDirectives: readonly string[];
   readonly analysisDirectives: readonly string[];
+  readonly tableCount: number;
+  readonly tables: readonly string[];
   readonly measurements: readonly ProbeMeasurement[];
   readonly measurementTable: string;
   readonly fourier: readonly FourierResult[];
@@ -8184,6 +8186,7 @@ export function runDeckAnalysis(
       fourier,
       diagnosticCodes,
     );
+    const tables = deckStableTables(measurements, fourier);
     return {
       plan,
       result,
@@ -8191,6 +8194,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      tableCount: tables.length,
+      tables,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8224,6 +8229,7 @@ export function runDeckAnalysis(
       fourier,
       diagnosticCodes,
     );
+    const tables = deckStableTables(measurements, fourier);
     return {
       plan,
       result,
@@ -8231,6 +8237,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      tableCount: tables.length,
+      tables,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8275,6 +8283,7 @@ export function runDeckAnalysis(
       fourier,
       diagnosticCodes,
     );
+    const tables = deckStableTables(measurements, fourier);
     return {
       plan,
       result,
@@ -8282,6 +8291,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      tableCount: tables.length,
+      tables,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8321,6 +8332,7 @@ export function runDeckAnalysis(
       fourier,
       diagnosticCodes,
     );
+    const tables = deckStableTables(measurements, fourier);
     return {
       plan,
       result,
@@ -8328,6 +8340,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      tableCount: tables.length,
+      tables,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8357,6 +8371,7 @@ export function runDeckAnalysis(
       fourier,
       diagnosticCodes,
     );
+    const tables = deckStableTables(measurements, fourier);
     return {
       plan,
       result,
@@ -8364,6 +8379,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      tableCount: tables.length,
+      tables,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8392,6 +8409,7 @@ export function runDeckAnalysis(
       fourier,
       diagnosticCodes,
     );
+    const tables = deckStableTables(measurements, fourier);
     return {
       plan,
       result,
@@ -8399,6 +8417,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      tableCount: tables.length,
+      tables,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,
@@ -8437,6 +8457,7 @@ export function runDeckAnalysis(
       fourier,
       diagnosticCodes,
     );
+    const tables = deckStableTables(measurements, fourier);
     return {
       plan,
       result,
@@ -8444,6 +8465,8 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      tableCount: tables.length,
+      tables,
       measurements,
       measurementTable: formatMeasurementTable(measurements),
       fourier,

@@ -11,6 +11,7 @@ Run:  python3 test_board_eval.py
 
 from __future__ import annotations
 
+import functools
 import json
 import sys
 from pathlib import Path
@@ -20,7 +21,14 @@ sys.path.insert(0, str(HERE))
 import board_eval as be  # noqa: E402
 
 
+@functools.lru_cache(maxsize=None)
 def _card():
+    # The scorecard is a PURE function of items.json + the (unchanging) edge libraries +
+    # the deterministic native engine, so it is computed ONCE and shared across every
+    # test. Without this cache the whole board — including the five `management` items,
+    # each of which runs the constraint solver through the CLI (chart_to_cop.derive) —
+    # was re-scored on every helper call (~6×), which dominated suite wall-clock. Every
+    # test reads the card read-only, so sharing one result is safe.
     items = json.loads((HERE / "items.json").read_text())["items"]
     return be.score(items), items
 
@@ -51,7 +59,7 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     # answers, so the board scores the top binding per subject (the libraries + their
     # tests cover all edges).
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 124
+    assert len(recall_correct) == 131
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
@@ -72,6 +80,10 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["genetics_pws_imprint"].answer == "paternal"    # genetics — imprinting relation
     assert by_id["genetics_hd_gene"].answer == "htt"             # gene_defect shared w/ IMMUNO, disjoint subj
     assert by_id["genetics_hd_repeat"].trust == "authoritative"   # ADJ-only edge, grounded inline
+    assert by_id["genetics_cf_inherit"].answer == "autosomal_recessive"  # expand: CF inheritance (NBK493206)
+    assert by_id["genetics_dmd_gene"].answer == "dystrophin"     # expand: Duchenne gene (NBK482346)
+    assert by_id["onco_crc_marker"].answer == "cea"             # expand: colorectal→CEA (NBK578172)
+    assert by_id["pharm_heparin_antidote"].answer == "protamine"  # expand: heparin→protamine (NBK547753)
     assert by_id["rheum_sle_ab"].answer == "anti_dsdna"          # rheumatology (RHEUM, Tier-2)
     assert by_id["rheum_gpa_ab"].answer == "pr3"                 # rheum — autoantibody association
     assert by_id["rheum_sle_ab"].trust == "authoritative"        # ADJ-only edge, grounded inline
@@ -84,6 +96,8 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["histo_rs_cond"].answer == "hodgkin_lymphoma"   # histology (HISTO, Tier-2)
     assert by_id["histo_heinz_cond"].answer == "g6pd_deficiency"  # histo — seen_in (finding->condition)
     assert by_id["histo_rs_cond"].trust == "authoritative"       # ADJ-only edge, grounded inline
+    assert by_id["histo_auer_cond"].answer == "acute_promyelocytic_leukemia"  # primary-source backfill
+    assert by_id["histo_psammoma_cond"].answer == "meningioma"   # primary-source backfill (psammoma→meningioma)
     assert by_id["cardio_mr_lesion"].answer == "mitral_regurgitation"  # cardiology (CARDIO, Tier-2)
     assert by_id["cardio_as_lesion"].answer == "aortic_stenosis"  # cardio — murmur_indicates (murmur->lesion)
     assert by_id["cardio_mr_lesion"].trust == "authoritative"    # ADJ-only edge, grounded inline
@@ -143,8 +157,8 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
     # verbatim, so the framework declines to claim grounding it cannot defend, by design:
     # cortisol_def (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame
     # cortisol deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
-    assert s["grounded_coverage"] == round(123 / 124, 4)   # 0.9919
-    assert s["grounded_correct"] == 123
+    assert s["grounded_coverage"] == round(130 / 131, 4)   # 0.9924
+    assert s["grounded_correct"] == 130
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia
@@ -235,9 +249,8 @@ def test_management_runs_the_constraint_engine_when_cli_present() -> None:
 
 
 def _card_with_diff():
-    import json
-    items = json.loads((HERE / "items.json").read_text())["items"]
-    return be.score(items), items
+    # Identical to _card(); delegate so the cached, single score() run is reused.
+    return _card()
 
 
 def _run() -> int:

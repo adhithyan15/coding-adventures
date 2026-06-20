@@ -20,3 +20,6 @@ import "genetics-edges.adj"
 ? trinucleotide_repeat(fragile_x_syndrome, $Repeat)    % expect cgg
 ? gene_defect(fragile_x_syndrome, $Gene)               % expect fmr1
 ? imprinting(prader_willi_syndrome, $Parent)           % expect paternal
+? inheritance(cystic_fibrosis, $Pattern)               % expect autosomal_recessive (expand)
+? gene_defect(cystic_fibrosis, $Gene)                  % expect cftr (expand)
+? gene_defect(duchenne_muscular_dystrophy, $Gene)      % expect dystrophin (expand)

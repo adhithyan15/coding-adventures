@@ -1302,3 +1302,83 @@ mod r19_degenerate_probes {
         }
     }
 }
+
+#[cfg(test)]
+mod r20_functional_helpers {
+    //! R-20 lives in `s-runtime` (R inherits it through the shared evaluator);
+    //! these S-syntax tests exercise the builtins directly. The R-syntax
+    //! integration tests mirror these in `r-runtime`.
+    use super::*;
+
+    fn nums(src: &str) -> Vec<f64> {
+        match eval_s(src).unwrap().strip_names() {
+            SValue::Double(d) => d.data().to_vec(),
+            other => panic!("expected double, got {}", other.type_name()),
+        }
+    }
+
+    fn show(src: &str) -> String {
+        format_value(&eval_s(src).unwrap()).join("\n")
+    }
+
+    #[test]
+    fn find_and_position() {
+        assert_eq!(nums("Find(function(x) x > 2, 1:5)\n"), vec![3.0]);
+        assert_eq!(show("Find(function(x) x > 9, 1:5)\n"), "NULL");
+        assert_eq!(nums("Position(function(x) x > 2, 1:5)\n"), vec![3.0]);
+        assert_eq!(show("Position(function(x) x > 9, 1:5)\n"), "NULL");
+    }
+
+    #[test]
+    fn negate_negates_and_is_callable() {
+        assert_eq!(show("Negate(is.na)(NA)\n"), "[1] FALSE");
+        assert_eq!(show("Negate(function(x) x > 0)(5)\n"), "[1] FALSE");
+        // The wrapper is itself a function (R's class() reports "function").
+        assert_eq!(show("class(Negate(is.na))\n"), "[1] \"function\"");
+    }
+
+    #[test]
+    fn reduce_accumulate() {
+        assert_eq!(
+            nums("Reduce(function(a, b) a + b, 1:4, accumulate = TRUE)\n"),
+            vec![1.0, 3.0, 6.0, 10.0]
+        );
+        assert_eq!(
+            nums("Reduce(function(a, b) a + b, 1:3, 10, accumulate = TRUE)\n"),
+            vec![10.0, 11.0, 13.0, 16.0]
+        );
+        // Empty x with no init is NULL even under accumulate.
+        assert_eq!(
+            show("Reduce(function(a, b) a + b, c(), accumulate = TRUE)\n"),
+            "NULL"
+        );
+    }
+
+    #[test]
+    fn recall_anonymous_recursion() {
+        assert_eq!(
+            nums("(function(n) if (n <= 1) 1 else n * Recall(n - 1))(5)\n"),
+            vec![120.0]
+        );
+    }
+
+    /// Hardening: degenerate or adversarial inputs to the new helpers must never
+    /// panic — only `Ok` or a recoverable `Err`. The test body is the panic
+    /// boundary, so a crash inside `eval_s` fails the test directly.
+    #[test]
+    fn degenerate_inputs_do_not_panic() {
+        for src in [
+            "Find()\n",                 // no function, no data
+            "Find(function(x) x)\n",    // function, no data
+            "Position(1, 1:3)\n",       // non-callable predicate
+            "Negate()\n",               // no function
+            "Negate(3)\n",              // non-callable
+            "Negate(is.na)()\n",        // negated wrapper called with no args
+            "Recall()\n",               // outside any closure
+            "Recall(1)\n",              // outside any closure, with an arg
+            "Reduce(function(a, b) a + b, accumulate = TRUE)\n", // no x
+        ] {
+            let _ = eval_s(src);
+        }
+    }
+}

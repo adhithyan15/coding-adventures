@@ -1,0 +1,101 @@
+# ================================================================
+# mycin-2026 — grounded medical-reasoning knowledge-library tests
+# ================================================================
+#
+# Runs the MYCIN-2026 ADJ-only recall libraries' tests + the board-eval
+# scorecard on every PR that touches the knowledge libraries or the native
+# engine they depend on.
+#
+# Why a dedicated workflow (not the Go build-tool)?  The build-tool only
+# discovers packages under code/packages/<lang>/ and code/programs/<lang>/;
+# it does not scan code/specs/, where this corpus lives.  Rather than move
+# the whole corpus (and break every relative `import "<domain>-edges.adj"`),
+# this standalone workflow runs the same tests directly.  It is an isolated
+# failure domain: a problem here reddens only this check, never repo-wide CI.
+#
+# The tests are pure-stdlib Python (no pip install), but they HARD-require
+# the native adj-lang engine — without the adj-lang-cli binary every engine-
+# backed item abstains and the board assertions fail.  So we build the CLI
+# (debug; the tests look for target/debug/adj-lang-cli) before running them.
+#
+# Scope: ubuntu-latest, single Python — the libraries are platform-agnostic
+# text + a deterministic CPU engine, so one cell gives the full signal.
+
+name: mycin-2026
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'code/specs/data/mycin-2026/**'
+      - 'code/packages/rust/adj-lang-cli/**'
+      - 'code/packages/rust/adj-lang/**'
+      - 'code/packages/rust/logic-engine/**'
+      - 'code/packages/rust/adj-constraint-solver/**'
+      - '.github/workflows/mycin-2026.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'code/specs/data/mycin-2026/**'
+      - 'code/packages/rust/adj-lang-cli/**'
+      - 'code/packages/rust/adj-lang/**'
+      - 'code/packages/rust/logic-engine/**'
+      - 'code/packages/rust/adj-constraint-solver/**'
+      - '.github/workflows/mycin-2026.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  recall-and-board:
+    name: recall libraries + board-eval scorecard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry + git + target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            code/packages/rust/target
+          key: ${{ runner.os }}-cargo-adj-lang-cli-${{ hashFiles('code/packages/rust/adj-lang-cli/Cargo.toml', 'code/packages/rust/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-adj-lang-cli-
+            ${{ runner.os }}-cargo-
+
+      - name: Install Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build the native adj-lang engine (debug)
+        # The tests resolve the CLI at code/packages/rust/target/debug/adj-lang-cli.
+        working-directory: code/packages/rust
+        run: cargo build -p adj-lang-cli
+
+      - name: Run the ADJ-only recall library tests
+        # Pure-stdlib Python; each file is its own runner that exits non-zero
+        # on any failure. Includes the write-once / use-many invariant test.
+        working-directory: code/specs/data/mycin-2026
+        run: |
+          set -eu
+          for t in recall/test_*.py; do
+            echo "== $t =="
+            python3 "$t"
+          done
+
+      - name: Run the board-eval scorecard test
+        # Recall + differential + management over the native engine; asserts
+        # 0 wrong (no fabrication) and the live grounded-coverage number.
+        working-directory: code/specs/data/mycin-2026
+        run: python3 board/test_board_eval.py

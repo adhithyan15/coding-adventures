@@ -107,6 +107,12 @@ pub fn install(env: &Env) {
     define(env, "mapply", builtin("mapply", b_mapply));
     define(env, "vapply", builtin("vapply", b_vapply));
 
+    // More functional helpers (R-20) — build on the R-10 family above.
+    define(env, "Find", builtin("Find", b_find));
+    define(env, "Position", builtin("Position", b_position));
+    define(env, "Negate", builtin("Negate", b_negate));
+    define(env, "Recall", builtin("Recall", b_recall));
+
     // Regular expressions (R-7).
     define(env, "grepl", builtin("grepl", b_grepl));
     define(env, "grep", builtin("grep", b_grep));
@@ -2661,8 +2667,24 @@ fn zip_apply(interp: &Interpreter, args: &[Arg], name: &str) -> SResult<(Vec<SVa
     Ok((items, len))
 }
 
-/// `Reduce(f, x[, init])` — left fold. Without `init`, `f` is first applied to
-/// the first two elements; an empty `x` with no `init` is `NULL`.
+/// `Reduce(f, x[, init][, accumulate])` — left fold. Without `init`, `f` is
+/// first applied to the first two elements; an empty `x` with no `init` is
+/// `NULL`.
+///
+/// **`accumulate` (R-20).** When `accumulate = TRUE`, the result is not the
+/// single final fold but the sequence of *running* folds, combined with `c()`
+/// (so atomic folds simplify to a vector, list folds stay a list):
+///
+/// ```text
+/// Reduce(\(a, b) a + b, 1:4)                     -> 10           (final only)
+/// Reduce(\(a, b) a + b, 1:4, accumulate = TRUE)  -> c(1, 3, 6, 10)
+/// Reduce(\(a, b) a + b, 1:3, 10, accumulate=TRUE)-> c(10, 11, 13, 16)
+/// ```
+///
+/// With an `init`, the init is the **first** accumulated element. The number of
+/// accumulated elements is `length(x)` (or `length(x) + 1` with an init), which
+/// is itself bounded by [`MAX_SEQ_LEN`]: `x` cannot be longer than that, so the
+/// accumulator vector is bounded too — no extra cap is needed.
 fn b_reduce(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let (f, data) = split_fun(args, "Reduce")?;
     let x = data
@@ -2675,6 +2697,11 @@ fn b_reduce(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .find(|a| a.name.as_deref() == Some("init"))
         .map(|a| a.value.clone())
         .or_else(|| data.get(1).cloned());
+    // `accumulate =` (named only; defaults to FALSE) selects running-fold output.
+    let accumulate = match args.iter().find(|a| a.name.as_deref() == Some("accumulate")) {
+        Some(a) => a.value.truthy()?,
+        None => false,
+    };
 
     let n = x.length();
     let (mut acc, start) = match init {
@@ -2682,6 +2709,16 @@ fn b_reduce(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         None if n == 0 => return Ok(SValue::Null),
         None => (nth_element(&x, 0), 1),
     };
+
+    // The running folds (only collected when `accumulate`), starting from `acc`.
+    let mut running: Vec<Arg> = Vec::new();
+    if accumulate {
+        running.push(Arg {
+            name: None,
+            value: acc.clone(),
+        });
+    }
+
     for i in start..n {
         acc = interp.call_value(
             f.clone(),
@@ -2696,8 +2733,109 @@ fn b_reduce(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
                 },
             ],
         )?;
+        if accumulate {
+            running.push(Arg {
+                name: None,
+                value: acc.clone(),
+            });
+        }
     }
-    Ok(acc)
+    if accumulate {
+        Ok(combine(&running))
+    } else {
+        Ok(acc)
+    }
+}
+
+/// `Find(f, x)` — the **first** element of `x` for which `f(element)` is `TRUE`,
+/// or an invisible `NULL` if none matches. Short-circuits on the first hit
+/// (unlike `Filter`, which scans the whole vector). `f` is taken by `f =` / the
+/// first callable positional (the R-10 `split_fun` helper), so it composes with
+/// the pipe: `1:5 |> Find(f = \(x) x > 2)` is `3`.
+fn b_find(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (f, data) = split_fun(args, "Find")?;
+    let x = data
+        .into_iter()
+        .next()
+        .ok_or_else(|| SError::BadArgs("Find: missing x".into()))?;
+    for i in 0..x.length() {
+        let element = nth_element(&x, i);
+        let verdict = interp.call_value(
+            f.clone(),
+            &[Arg {
+                name: None,
+                value: element.clone(),
+            }],
+        )?;
+        if verdict.truthy()? {
+            return Ok(element);
+        }
+    }
+    Ok(SValue::Null)
+}
+
+/// `Position(f, x)` — the **1-based index** of the first element for which
+/// `f(element)` is `TRUE`, or `NULL` if none. The index counterpart to `Find`
+/// (which returns the value).
+fn b_position(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (f, data) = split_fun(args, "Position")?;
+    let x = data
+        .into_iter()
+        .next()
+        .ok_or_else(|| SError::BadArgs("Position: missing x".into()))?;
+    for i in 0..x.length() {
+        let verdict = interp.call_value(
+            f.clone(),
+            &[Arg {
+                name: None,
+                value: nth_element(&x, i),
+            }],
+        )?;
+        if verdict.truthy()? {
+            // R indexes from 1.
+            return Ok(SValue::scalar((i + 1) as f64));
+        }
+    }
+    Ok(SValue::Null)
+}
+
+/// `Negate(f)` — return a **new function** computing `!f(...)`. The wrapped `f`
+/// must be callable (else a clean error). The returned value is an
+/// [`SValue::Negated`], recognized by the call dispatcher: calling it invokes
+/// `f` through the normal depth-bounded path and logically negates the result.
+/// So `Negate(is.na)(NA)` → `FALSE` and `Negate(\(x) x > 0)(5)` → `FALSE`.
+fn b_negate(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // The function is the sole argument — by `f =`/`FUN =` or the first callable
+    // positional. There is no data, so `split_fun` returning leftover positionals
+    // would be an error; instead pick the function directly.
+    let f = args
+        .iter()
+        .find(|a| matches!(a.name.as_deref(), Some("f") | Some("FUN")))
+        .map(|a| a.value.clone())
+        .or_else(|| {
+            args.iter()
+                .find(|a| a.name.is_none() && a.value.is_callable())
+                .map(|a| a.value.clone())
+        })
+        .ok_or_else(|| SError::BadArgs("Negate: missing function argument".into()))?;
+    if !f.is_callable() {
+        return Err(SError::NotCallable(f.type_name().to_string()));
+    }
+    Ok(SValue::Negated(Box::new(f)))
+}
+
+/// `Recall(...)` — re-invoke the **enclosing** function (anonymous recursion).
+/// Reads the current function off the interpreter's call stack and calls it with
+/// the supplied arguments. Outside any function it is an error. Recursion is
+/// bounded by `MAX_EVAL_DEPTH` (every `Recall` goes through `call_value` →
+/// `eval_node`), so runaway anonymous recursion fails cleanly rather than
+/// overflowing the native stack. This makes the classic anonymous factorial
+/// `(\(n) if (n <= 1) 1 else n * Recall(n - 1))(5)` evaluate to `120`.
+fn b_recall(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let current = interp
+        .current_function()
+        .ok_or_else(|| SError::BadArgs("Recall called from outside a closure".into()))?;
+    interp.call_value(current, args)
 }
 
 /// `Filter(f, x)` — keep the elements of `x` for which `f(element)` is true.

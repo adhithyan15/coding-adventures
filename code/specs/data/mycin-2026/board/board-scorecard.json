@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 137,
-    "correct": 130,
+    "total": 144,
+    "correct": 137,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 124,
+        "correct": 131,
         "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9919,
-    "grounded_correct": 123
+    "grounded_coverage": 0.9924,
+    "grounded_correct": 130
   },
   "results": [
     {
@@ -732,6 +732,14 @@
       "trust": "authoritative"
     },
     {
+      "id": "pharm_heparin_antidote",
+      "tactic": "recall",
+      "gold": "protamine",
+      "answer": "protamine",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
       "id": "immuno_type1_mediator",
       "tactic": "recall",
       "gold": "ige",
@@ -844,6 +852,30 @@
       "trust": "authoritative"
     },
     {
+      "id": "genetics_cf_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_recessive",
+      "answer": "autosomal_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_cf_gene",
+      "tactic": "recall",
+      "gold": "cftr",
+      "answer": "cftr",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "genetics_dmd_gene",
+      "tactic": "recall",
+      "gold": "dystrophin",
+      "answer": "dystrophin",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
       "id": "rheum_sle_ab",
       "tactic": "recall",
       "gold": "anti_dsdna",
@@ -908,6 +940,14 @@
       "trust": "authoritative"
     },
     {
+      "id": "onco_crc_marker",
+      "tactic": "recall",
+      "gold": "cea",
+      "answer": "cea",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
       "id": "histo_rs_cond",
       "tactic": "recall",
       "gold": "hodgkin_lymphoma",
@@ -928,6 +968,22 @@
       "tactic": "recall",
       "gold": "g6pd_deficiency",
       "answer": "g6pd_deficiency",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "histo_auer_cond",
+      "tactic": "recall",
+      "gold": "acute_promyelocytic_leukemia",
+      "answer": "acute_promyelocytic_leukemia",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "histo_psammoma_cond",
+      "tactic": "recall",
+      "gold": "meningioma",
+      "answer": "meningioma",
       "outcome": "correct",
       "trust": "authoritative"
     },

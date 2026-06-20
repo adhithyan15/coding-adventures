@@ -60,6 +60,17 @@ pub enum SValue {
     /// A built-in function (`c`, `mean`, …).
     Builtin { name: String, func: Builtin },
 
+    /// The result of `Negate(f)` (R-20) — a *callable* that wraps another
+    /// function `f` and, when called, returns the **logical negation** of
+    /// `f(...)`. Stored as its own value rather than a synthesized closure
+    /// because the S/R grammar has no `!` operator to express
+    /// `function(...) !f(...)` directly; the call dispatcher (`apply` /
+    /// `call_value`) recognizes it, invokes the inner `f` through the normal
+    /// (depth-bounded) call path, and flips the verdict. It is a function for
+    /// all observable purposes: `is_callable`/`class`/`type_name` see a
+    /// `"function"`, exactly like `Closure`/`Builtin`.
+    Negated(Box<SValue>),
+
     /// A factor: integer `codes` (1-based into `levels`, `None` = `NA`) plus the
     /// ordered `levels`. Implicit class `"factor"`.
     Factor {
@@ -251,7 +262,9 @@ pub fn class_of(value: &SValue) -> Vec<String> {
         SValue::Logical(_) => vec!["logical".to_string()],
         SValue::Character(_) => vec!["character".to_string()],
         SValue::Null => vec!["NULL".to_string()],
-        SValue::Closure { .. } | SValue::Builtin { .. } => vec!["function".to_string()],
+        SValue::Closure { .. } | SValue::Builtin { .. } | SValue::Negated(_) => {
+            vec!["function".to_string()]
+        }
         SValue::Matrix { .. } => vec!["matrix".to_string(), "array".to_string()],
         // A names attribute is transparent to `class()` — see through to the
         // underlying value's class (a named numeric is still `"numeric"`).
@@ -275,6 +288,7 @@ impl std::fmt::Debug for SValue {
                 write!(f, "Closure(/{} params/)", params.len())
             }
             SValue::Builtin { name, .. } => write!(f, "Builtin({name})"),
+            SValue::Negated(inner) => write!(f, "Negated({inner:?})"),
             SValue::Factor { codes, levels } => {
                 write!(f, "Factor({} codes, {} levels)", codes.len(), levels.len())
             }
@@ -327,7 +341,7 @@ impl SValue {
             SValue::Logical(_) => "logical",
             SValue::Character(_) => "character",
             SValue::Null => "NULL",
-            SValue::Closure { .. } | SValue::Builtin { .. } => "closure",
+            SValue::Closure { .. } | SValue::Builtin { .. } | SValue::Negated(_) => "closure",
             SValue::Factor { .. } => "factor",
             SValue::DataFrame { .. } => "data.frame",
             SValue::Classed { inner, .. } => inner.type_name(),
@@ -346,7 +360,7 @@ impl SValue {
             SValue::Logical(v) => v.len(),
             SValue::Character(v) => v.len(),
             SValue::Null => 0,
-            SValue::Closure { .. } | SValue::Builtin { .. } => 1,
+            SValue::Closure { .. } | SValue::Builtin { .. } | SValue::Negated(_) => 1,
             SValue::Factor { codes, .. } => codes.len(),
             SValue::DataFrame { columns, .. } => columns.len(),
             SValue::Classed { inner, .. } => inner.length(),
@@ -358,7 +372,10 @@ impl SValue {
     }
 
     pub fn is_callable(&self) -> bool {
-        matches!(self, SValue::Closure { .. } | SValue::Builtin { .. })
+        matches!(
+            self,
+            SValue::Closure { .. } | SValue::Builtin { .. } | SValue::Negated(_)
+        )
     }
 
     /// Coerce to a numeric `Double` for arithmetic and statistics. Logical
@@ -693,6 +710,17 @@ pub fn negate(value: &SValue) -> SResult<SValue> {
             .map(|x| if is_na_real(x) { na_real() } else { -x })
             .collect(),
     )))
+}
+
+/// `!x` — the **logical NOT** (R-20, used by `Negate`). Coerces `x` to logical
+/// (so `!0` is `TRUE`, `!2` is `FALSE`, `!"x"` is an error) and flips each
+/// element, preserving `NA` (`!NA` is `NA`). The result is always a logical
+/// vector the same length as `x`; `!NULL` is `logical(0)`.
+pub fn logical_not(value: &SValue) -> SResult<SValue> {
+    let bits = value.as_logical()?;
+    Ok(SValue::Logical(
+        bits.into_iter().map(|b| b.map(|t| !t)).collect(),
+    ))
 }
 
 /// `x %in% table` — for each element of `x`, whether it appears in `table`.
@@ -1300,6 +1328,10 @@ pub fn format_value(value: &SValue) -> Vec<String> {
         SValue::Builtin { name, .. } => {
             return vec![format!("function ({}) .Primitive", name)];
         }
+        SValue::Negated(_) => {
+            // R prints `Negate(f)` as the generated wrapper `function (...) !f(...)`.
+            return vec!["function (...) !f(...)".to_string()];
+        }
         SValue::Factor { codes, levels } => {
             if codes.is_empty() {
                 return vec![
@@ -1729,6 +1761,39 @@ mod tests {
     fn negate_handles_na() {
         let r = negate(&SValue::doubles(vec![1.0, -2.0])).unwrap();
         assert_eq!(dbl(&r), vec![-1.0, 2.0]);
+    }
+
+    #[test]
+    fn logical_not_flips_and_preserves_na() {
+        // !TRUE/!FALSE flip; !NA stays NA.
+        let r = logical_not(&SValue::Logical(vec![Some(true), Some(false), None])).unwrap();
+        match r {
+            SValue::Logical(v) => assert_eq!(v, vec![Some(false), Some(true), None]),
+            other => panic!("expected logical, got {}", other.type_name()),
+        }
+        // Numeric coerces: !0 is TRUE, !2 is FALSE.
+        let r = logical_not(&SValue::doubles(vec![0.0, 2.0])).unwrap();
+        match r {
+            SValue::Logical(v) => assert_eq!(v, vec![Some(true), Some(false)]),
+            other => panic!("expected logical, got {}", other.type_name()),
+        }
+        // !NULL is the empty logical vector.
+        assert_eq!(logical_not(&SValue::Null).unwrap().length(), 0);
+    }
+
+    #[test]
+    fn negated_value_is_function_like() {
+        // An SValue::Negated wrapper presents as a callable "function" for class,
+        // type_name, length, and is_callable — exactly like Closure/Builtin.
+        let neg = SValue::Negated(Box::new(SValue::Builtin {
+            name: "is.na".to_string(),
+            func: |_, _| Ok(SValue::Null),
+        }));
+        assert!(neg.is_callable());
+        assert_eq!(neg.type_name(), "closure");
+        assert_eq!(neg.length(), 1);
+        assert_eq!(class_of(&neg), vec!["function".to_string()]);
+        assert_eq!(format_value(&neg), vec!["function (...) !f(...)".to_string()]);
     }
 
     // --- comparison -----------------------------------------------------

@@ -1030,6 +1030,119 @@ handler table (and a one-line printer consideration for `ToString`); the lexer,
 parser, and grammar files are untouched. The `<>` infix operator for `StringJoin`
 is **deferred** to a future grammar-change lane item.
 
+## §16 W-13 list set operations — `Union`, `Intersection`, `Complement`, `DeleteDuplicates`, `MemberQ`, `Tally` (implemented)
+
+W-4..W-12 gave the M-expression core, the arithmetic bridge, operator sugar,
+iteration, scoping, list *manipulation* (W-9: `Sort`/`Reverse`/`Join`/`Flatten`/
+`Select`/`Count`/`Total`), functional combinators, pure functions, and string
+builtins. W-13 completes the introductory list vocabulary with the **set / multiset**
+operations, lowered onto the *same* substrate the rest of the lane already provides:
+
+- the **W-9 list machinery** — `list_elements` to unwrap a `List(...)`, `apply(sym(LIST), …)` to rebuild one, the `MAX_LIST_LENGTH` DoS cap;
+- the **W-9 canonical-order comparator** `canonical_cmp` — the documented total order that `Sort` introduced (numbers < symbols < strings < compound), reused both to *sort* the unique outputs of `Union`/`Intersection`/`Complement` and to define **element-equality** (two nodes are the *same element* iff `canonical_cmp` ranks them `Equal`). Because `canonical_cmp` is built on `f64::total_cmp`, equality is panic-free even for `NaN`, and the type-tag tie-break keeps `2` and `2.0` distinct elements (matching Wolfram, where `Union[{2, 2.}]` keeps both).
+
+Like every head since W-5 these are plain `Head[args]` applications, so **there is
+no grammar change**: W-13 touches only `wolfram-runtime`'s builtin handler table
+(`builtins.rs`). `Count` (added in W-9 as a *predicate* count, `Count[list, EvenQ]`)
+is left as-is; W-13's element membership and multiplicity needs are served by the
+new `MemberQ` and `Tally` heads.
+
+### §16.1 What W-13 adds
+
+| Head                       | Meaning                                                                |
+|----------------------------|------------------------------------------------------------------------|
+| `Union[a, b, …]`           | **sorted**, duplicate-free union of the element lists                  |
+| `Intersection[a, b, …]`    | **sorted** elements common to *all* argument lists                     |
+| `Complement[all, x, …]`    | **sorted** elements of `all` not in any of `x, …`                      |
+| `DeleteDuplicates[list]`   | first-occurrence-order dedup (**order-preserving**, *not* sorted)      |
+| `MemberQ[list, elem]`      | `True`/`False` — is `elem` an element of `list`?                       |
+| `Tally[list]`              | `{element, count}` pairs in **first-occurrence** order                 |
+
+Worked examples (the W-13 acceptance tests):
+
+```
+Union[{1, 2}, {2, 3}]              (* → {1, 2, 3}          *)
+Union[{3, 1, 2, 1}]                (* → {1, 2, 3}  sorted+unique *)
+Intersection[{1, 2, 3}, {2, 3, 4}] (* → {2, 3}             *)
+Complement[{1, 2, 3, 4}, {2, 4}]   (* → {1, 3}             *)
+DeleteDuplicates[{3, 1, 1, 2, 3}]  (* → {3, 1, 2}  order kept   *)
+MemberQ[{1, 2, 3}, 2]              (* → True               *)
+MemberQ[{1, 2, 3}, 9]              (* → False              *)
+Tally[{a, a, b, a}]                (* → {{a, 3}, {b, 1}}   *)
+```
+
+### §16.2 Ordering semantics — sorted vs order-preserving
+
+The single subtlety of this lane is that the heads split into **two ordering
+families**, both of which match Wolfram exactly:
+
+- **Sorted outputs** (`Union`, `Intersection`, `Complement`): the result is
+  *always* in `canonical_cmp` order, regardless of the input order, and free of
+  duplicates. `Union[{3, 1, 2, 1}]` → `{1, 2, 3}` (re-sorted, deduped) — `Union`
+  doubles as "sort-and-unique" of a single list.
+- **Order-preserving output** (`DeleteDuplicates`, `Tally`): the *first occurrence*
+  of each distinct element fixes its position; later duplicates are dropped (`DeleteDuplicates`)
+  or counted (`Tally`). `DeleteDuplicates[{3, 1, 1, 2, 3}]` → `{3, 1, 2}` keeps the
+  input order — deliberately *unlike* `Union`, which would sort to `{1, 2, 3}`.
+
+`MemberQ` returns a boolean and has no ordering concern.
+
+### §16.3 Element-equality — reusing the W-9 comparator
+
+Every W-13 head needs to answer "are these two elements the same?". Rather than
+introduce a second notion of equality, W-13 derives it from the W-9 comparator:
+`same_element(a, b) ≡ canonical_cmp(a, b) == Equal`. This is the natural,
+already-tested total order, so the answers are deterministic and consistent with
+`Sort`. Consequences worth stating:
+
+- distinct numeric subtypes with equal magnitude (`2` vs `2.0`) are **distinct**
+  elements (the type-tag tie-break separates them) — matching Wolfram;
+- a `NaN` float compares panic-free (via `total_cmp`), so a crafted `0./0.`-style
+  literal can never crash a set operation;
+- structural equality on compound elements (`f[1]` vs `f[1]`) is decided
+  recursively by `canonical_cmp`, so symbolic elements unify correctly.
+
+### §16.4 DoS surface — bounded outputs, bounded cost
+
+W-13's heads never produce an output larger than the **sum of their input
+lengths**, which the W-4 input/token caps already bound; the outputs are, in fact,
+size-*non-increasing* relative to that sum (dedup only shrinks). Each head still
+re-asserts the **W-9 `MAX_LIST_LENGTH`** cap on its result as a defensive,
+mirrored bound:
+
+- `Union` accumulates the deduped union and refuses (leaves the form unevaluated)
+  the moment the accumulator would exceed `MAX_LIST_LENGTH` — symmetric with
+  `Join`/`Flatten`.
+- `Tally` caps its `{element, count}` pair list at `MAX_LIST_LENGTH` distinct
+  elements.
+- `Intersection`/`Complement`/`DeleteDuplicates` only ever *shrink* a single input,
+  so they are bounded by their (already-capped) first argument; the cap is asserted
+  anyway for symmetry.
+
+Cost is **quadratic** in the worst case (each candidate is compared against the
+running unique/result set via a linear `canonical_cmp` scan — no hashing, because
+`IRNode` carries an `f64` and is not `Hash`-keyable by value). With every input
+already bounded by `MAX_LIST_LENGTH` this is a deliberate, documented trade
+(simplicity over a custom canonical-key index); the worst case is `O(n²)` element
+comparisons over a million-element cap, which is acceptable for the interactive
+scope and never unbounded.
+
+### §16.5 The "I can't reduce this" contract — malformed input stays unevaluated
+
+Following the W-5/W-9/W-12 convention, every W-13 handler returns the application
+**unevaluated** (never panics) when its arguments are malformed: a non-`List`
+argument to any head, the wrong arity, or an over-cap result all leave the original
+`Head[args]` node untouched, so the caller sees the literal form rather than a
+crash or a wrong answer. `MemberQ[3, 2]` (non-list first argument) → unevaluated;
+`Union[1, {2}]` (a non-list among the arguments) → unevaluated.
+
+### §16.6 No grammar change
+
+`Union[…]`, `Intersection[…]`, `Complement[…]`, `DeleteDuplicates[…]`,
+`MemberQ[…]`, and `Tally[…]` are all ordinary `Head[args]` applications. W-13
+touches only `wolfram-runtime`'s builtin handler table; the lexer, parser, and
+grammar files are untouched.
+
 ### §6 References
 
 Internal: [`HML00`](HML00-historical-math-languages-roadmap.md),

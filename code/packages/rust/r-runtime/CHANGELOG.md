@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.15.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-20 — functional helpers**: `Find`, `Position`, `Negate`,
+  `Reduce(..., accumulate = TRUE)`, and `Recall` reach R unchanged through the
+  shared evaluator (they are plain `s-runtime` builtins — no grammar change).
+  In R syntax: `Find(\(x) x > 2, 1:5)` → `3`, `Position(\(x) x > 2, 1:5)` → `3`
+  (`NULL` when nothing matches); `Negate(is.na)(NA)` → `FALSE` and
+  `Negate(\(x) x > 0)(5)` → `FALSE`; `Reduce(\(a, b) a + b, 1:4,
+  accumulate = TRUE)` → `c(1, 3, 6, 10)` (with an init,
+  `Reduce(\(a, b) a + b, 1:3, 10, accumulate = TRUE)` → `c(10, 11, 13, 16)`);
+  and `Recall` drives anonymous recursion —
+  `(\(n) if (n <= 1) 1 else n * Recall(n - 1))(5)` → `120`. All take the function
+  by name (`f =`), so they compose with the pipe (`1:5 |> Find(f = \(x) x > 2)`).
+  See `s-runtime` 0.16.0.
+
 ## [0.14.0] - 2026-06-19
 
 ### Added (via the shared `s-runtime`)

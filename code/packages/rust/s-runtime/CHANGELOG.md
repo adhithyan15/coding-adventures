@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.0] - 2026-06-20
+
+### Added
+
+- **Functional helpers (R-20)** — the remaining members of R's
+  functional-programming toolkit, built on the R-10 family (`Map`/`Reduce`/
+  `Filter`/`mapply`/`vapply`) and, like it, plain builtins in the shared runtime
+  (no grammar change). They take the function by `f =`/`FUN =` or the first
+  callable positional (the R-10 `split_fun` helper), so they compose with the
+  pipe (`1:5 |> Find(f = \(x) x > 2)`).
+  - **`Find(f, x)`** — the first element of `x` where `f(element)` is `TRUE`, or
+    an invisible `NULL` if none. Short-circuits on the first hit.
+  - **`Position(f, x)`** — the 1-based index of the first matching element
+    (`Find` returns the value, `Position` the index); `NULL` if none.
+  - **`Negate(f)`** — a new callable computing `!f(...)`. Implemented as a small
+    dedicated value, `SValue::Negated(Box<SValue>)`, recognized by the call
+    dispatcher (`apply`/`call_value`): it invokes the wrapped `f` through the
+    normal depth-bounded path and logically negates the verdict (new `logical_not`
+    helper — `NA`-preserving, like `!`). `Negate(is.na)(NA)` → `FALSE`. The
+    wrapper is a function for `class`/`type_name`/`length`/`is_callable`. A
+    non-callable `f` is a clean `NotCallable` error.
+  - **`Reduce(f, x, ..., accumulate = TRUE)`** — extends the R-10 left fold to
+    return the vector/list of *running* folds; with an `init`, the init is the
+    first accumulated element (`Reduce(\(a, b) a + b, 1:3, 10, accumulate=TRUE)`
+    → `c(10, 11, 13, 16)`). Built with the shared `combine`/`c()` engine; the
+    no-`accumulate` behaviour is unchanged. Bounded by `MAX_SEQ_LEN` (the
+    accumulator can be no longer than `x`, itself capped).
+  - **`Recall(...)`** — anonymous recursion: re-invokes the enclosing function.
+    The interpreter now keeps a small call stack of the currently-executing
+    closures (pushed/popped by `call_closure` via an RAII `CallFrameGuard`, so it
+    is exception-safe); `Recall` reads the top. Outside any function it is an
+    error. Recursion is bounded by `MAX_EVAL_DEPTH`, so runaway anonymous
+    recursion fails cleanly instead of overflowing the native stack.
+
 ## [0.15.0] - 2026-06-19
 
 ### Added

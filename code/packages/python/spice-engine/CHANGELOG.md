@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck execution table inventory** —
+  `run_deck_analysis()` selected executions now expose stable table count/name
+  lists beside analysis directives, output probes, output directives, and
+  selected-run artifacts, matching Rust and TypeScript.
+
 - **Deck run table artifacts** —
   `run_deck_analysis()` selected-run artifacts now include stable table
   count/name lists and `format_deck_run_artifact_table()` renders `TableList`,

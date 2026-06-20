@@ -6801,6 +6801,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.output_probes == ["V(mid)"]
     assert op_execution.output_directives == [".save"]
     assert op_execution.analysis_directives == [".op"]
+    assert op_execution.table_count == 2
+    assert op_execution.tables == ["result", "run-artifact"]
     assert op_execution.measurements == []
     assert op_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
@@ -6961,6 +6963,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.output_probes == ["V(mid)", "I(V1)"]
     assert dc_execution.output_directives == [".save", ".probe"]
     assert dc_execution.analysis_directives == [".dc"]
+    assert dc_execution.table_count == 3
+    assert dc_execution.tables == ["result", "measurement", "run-artifact"]
     assert [measurement.name for measurement in dc_execution.measurements] == ["mid_avg"]
     assert dc_execution.measurement_table == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
@@ -7009,6 +7013,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert ac_execution.output_probes == ["V(mid)"]
     assert ac_execution.output_directives == [".save"]
     assert ac_execution.analysis_directives == [".ac"]
+    assert ac_execution.table_count == 3
+    assert ac_execution.tables == ["result", "measurement", "run-artifact"]
     assert [measurement.name for measurement in ac_execution.measurements] == ["mid_peak"]
     assert ac_execution.measurement_table == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
@@ -7057,6 +7063,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tran_execution.output_probes == ["V(mid)"]
     assert tran_execution.output_directives == [".save"]
     assert tran_execution.analysis_directives == [".tran"]
+    assert tran_execution.table_count == 3
+    assert tran_execution.tables == ["result", "measurement", "run-artifact"]
     assert [measurement.name for measurement in tran_execution.measurements] == [
         "mid_final"
     ]
@@ -7106,6 +7114,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tf_execution.output_probes == ["V(mid)"]
     assert tf_execution.output_directives == []
     assert tf_execution.analysis_directives == [".tf"]
+    assert tf_execution.table_count == 2
+    assert tf_execution.tables == ["result", "run-artifact"]
     assert tf_execution.measurements == []
     assert tf_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert tf_execution.table == (
@@ -7143,6 +7153,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert len(sens_execution.result.entries) == 3
     assert sens_execution.output_probes == ["V(mid)"]
     assert sens_execution.analysis_directives == [".sens"]
+    assert sens_execution.table_count == 2
+    assert sens_execution.tables == ["result", "run-artifact"]
     assert sens_execution.measurements == []
     assert sens_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert sens_execution.table.startswith(
@@ -7188,6 +7200,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert len(noise_execution.result.points) == 1
     assert noise_execution.output_probes == ["V(mid)"]
     assert noise_execution.analysis_directives == [".noise"]
+    assert noise_execution.table_count == 2
+    assert noise_execution.tables == ["result", "run-artifact"]
     assert noise_execution.measurements == []
     assert noise_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert noise_execution.table == format_deck_noise_table(noise_execution.result)
@@ -7252,6 +7266,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "result",
         "run-artifact",
     ]
+    assert tran_window_execution.table_count == 2
+    assert tran_window_execution.tables == ["result", "run-artifact"]
     assert tran_window_execution.output_probes == ["V(mid)"]
     assert isinstance(tran_window_execution.result, TransientResult)
     assert [point.time for point in tran_window_execution.result.points] == pytest.approx(
@@ -7311,9 +7327,13 @@ def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
     op_execution = run_deck_analysis(circuit, netlist, "op")
     assert op_execution.fourier == []
     assert op_execution.fourier_table == ""
+    assert op_execution.table_count == 2
+    assert op_execution.tables == ["result", "run-artifact"]
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
     assert len(tran_execution.fourier) == 1
+    assert tran_execution.table_count == 3
+    assert tran_execution.tables == ["result", "fourier", "run-artifact"]
     result = tran_execution.fourier[0]
     assert result.fundamental_frequency == pytest.approx(2000.0)
     assert result.probes[0].probe == "V(mid)"
