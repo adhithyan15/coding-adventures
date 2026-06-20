@@ -1586,6 +1586,8 @@ pub enum SmartHomeTool {
     GetIntegrationActivationWaiverReleaseClosureSummary,
     ListIntegrationActivationWaiverReleaseSignoffs,
     GetIntegrationActivationWaiverReleaseSignoffSummary,
+    ListIntegrationActivationWaiverReleaseCertifications,
+    GetIntegrationActivationWaiverReleaseCertificationSummary,
     ListIntegrationActivationRisk,
     GetIntegrationActivationRiskSummary,
     ListIntegrationActivationDependencies,
@@ -2097,6 +2099,12 @@ impl SmartHomeTool {
             Self::GetIntegrationActivationWaiverReleaseSignoffSummary => {
                 read_tool("smart_home.get_integration_activation_waiver_release_signoff_summary")
             }
+            Self::ListIntegrationActivationWaiverReleaseCertifications => {
+                read_tool("smart_home.list_integration_activation_waiver_release_certifications")
+            }
+            Self::GetIntegrationActivationWaiverReleaseCertificationSummary => read_tool(
+                "smart_home.get_integration_activation_waiver_release_certification_summary",
+            ),
             Self::ListIntegrationActivationRisk => {
                 read_tool("smart_home.list_integration_activation_risk")
             }
@@ -3003,6 +3011,8 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetIntegrationActivationWaiverReleaseClosureSummary,
         SmartHomeTool::ListIntegrationActivationWaiverReleaseSignoffs,
         SmartHomeTool::GetIntegrationActivationWaiverReleaseSignoffSummary,
+        SmartHomeTool::ListIntegrationActivationWaiverReleaseCertifications,
+        SmartHomeTool::GetIntegrationActivationWaiverReleaseCertificationSummary,
         SmartHomeTool::ListIntegrationActivationRisk,
         SmartHomeTool::GetIntegrationActivationRiskSummary,
         SmartHomeTool::ListIntegrationActivationDependencies,
@@ -3891,7 +3901,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 234);
+        assert_eq!(catalog.len(), 236);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_integrations"
@@ -4682,6 +4692,14 @@ mod tests {
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_waiver_release_certifications"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_waiver_release_certification_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
             == "smart_home.list_integration_mesh_substrate_preflight_checks"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
@@ -4816,15 +4834,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 234);
-        assert_eq!(summary.read_tools, 226);
+        assert_eq!(summary.total_tools, 236);
+        assert_eq!(summary.read_tools, 228);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 226);
+        assert_eq!(summary.read_only_tier_tools, 228);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 234);
+        assert_eq!(summary.total_required_capabilities, 236);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());
