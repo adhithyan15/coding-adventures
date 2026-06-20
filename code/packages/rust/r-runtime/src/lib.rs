@@ -2005,4 +2005,265 @@ mod tests {
                   f <- function() { x <- 42; g() }\nf()\n";
         assert_eq!(nums(pf), vec![42.0]);
     }
+
+    // =====================================================================
+    // R-25 — R5 inheritance, $copy(), and is/inherits introspection
+    // =====================================================================
+
+    /// Canonical Base/Sub hierarchy reused across the R-25 tests. `Base` has a
+    /// numeric field `x` and a method `getx()`; `Sub` `contains = "Base"`, adds a
+    /// numeric field `y` and a method `sum()` returning `x + y` (reading the
+    /// inherited base field).
+    const BASE_SUB: &str = "Base <- setRefClass(\"Base\",\n  \
+        fields = list(x = \"numeric\"),\n  \
+        methods = list(getx = function() x))\n\
+        Sub <- setRefClass(\"Sub\",\n  contains = \"Base\",\n  \
+        fields = list(y = \"numeric\"),\n  \
+        methods = list(sum = function() x + y))\n";
+
+    #[test]
+    fn refclass_inherited_method_and_field() {
+        // A Sub method reads both its own field and the inherited base field.
+        let src = format!("{BASE_SUB}s <- Sub$new(x = 1, y = 2)\ns$sum()\n");
+        assert_eq!(nums(&src), vec![3.0]);
+        // An inherited *base method* is callable on a Sub instance and reads the
+        // base field.
+        let getx = format!("{BASE_SUB}s <- Sub$new(x = 1, y = 2)\ns$getx()\n");
+        assert_eq!(nums(&getx), vec![1.0]);
+    }
+
+    #[test]
+    fn refclass_sub_method_writes_base_field() {
+        // A Sub method may write an inherited base field via `<<-`; the flat
+        // instance frame holds base and sub fields alike.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(x = \"numeric\"),\n  methods = list())\n\
+            Sub <- setRefClass(\"Sub\",\n  contains = \"Base\",\n  \
+            fields = list(y = \"numeric\"),\n  \
+            methods = list(bump = function() { x <<- x + y }))\n\
+            s <- Sub$new(x = 10, y = 5)\ns$bump()\ns$x\n";
+        assert_eq!(nums(src), vec![15.0]);
+    }
+
+    #[test]
+    fn refclass_method_override() {
+        // A Sub method with the same name as a Base method shadows it.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(x = \"numeric\"),\n  \
+            methods = list(label = function() \"base\"))\n\
+            Sub <- setRefClass(\"Sub\",\n  contains = \"Base\",\n  \
+            fields = list(),\n  \
+            methods = list(label = function() \"sub\"))\n\
+            s <- Sub$new(x = 0)\ns$label()\n";
+        assert_eq!(show(src), "[1] \"sub\"");
+        // The base instance still sees the base method.
+        let base = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(x = \"numeric\"),\n  \
+            methods = list(label = function() \"base\"))\n\
+            Sub <- setRefClass(\"Sub\",\n  contains = \"Base\",\n  \
+            methods = list(label = function() \"sub\"))\n\
+            b <- Base$new(x = 0)\nb$label()\n";
+        assert_eq!(show(base), "[1] \"base\"");
+    }
+
+    #[test]
+    fn refclass_is_and_inherits_walk_the_chain() {
+        let pre = format!("{BASE_SUB}s <- Sub$new(x = 1, y = 2)\n");
+        assert_eq!(show(&format!("{pre}is(s, \"Base\")\n")), "[1] TRUE");
+        assert_eq!(show(&format!("{pre}is(s, \"Sub\")\n")), "[1] TRUE");
+        assert_eq!(show(&format!("{pre}inherits(s, \"Base\")\n")), "[1] TRUE");
+        assert_eq!(show(&format!("{pre}inherits(s, \"Sub\")\n")), "[1] TRUE");
+        assert_eq!(show(&format!("{pre}inherits(s, \"Other\")\n")), "[1] FALSE");
+        assert_eq!(show(&format!("{pre}is(s, \"Other\")\n")), "[1] FALSE");
+        // Every R5 instance is an envRefClass / environment at the tail.
+        assert_eq!(
+            show(&format!("{pre}inherits(s, \"environment\")\n")),
+            "[1] TRUE"
+        );
+        // A base instance is a Base but NOT a Sub.
+        let bpre = format!("{BASE_SUB}b <- Base$new(x = 9)\n");
+        assert_eq!(show(&format!("{bpre}is(b, \"Base\")\n")), "[1] TRUE");
+        assert_eq!(show(&format!("{bpre}is(b, \"Sub\")\n")), "[1] FALSE");
+    }
+
+    #[test]
+    fn refclass_class_shows_inheritance_chain() {
+        // `class(obj)` reveals the full chain for an R5 instance.
+        let src = format!("{BASE_SUB}s <- Sub$new(x = 1, y = 2)\nclass(s)\n");
+        assert_eq!(
+            show(&src),
+            "[1]         \"Sub\"        \"Base\" \"envRefClass\" \"environment\""
+        );
+    }
+
+    #[test]
+    fn refclass_copy_is_independent() {
+        // `b <- a$copy()` produces an independent instance: a later write to b's
+        // field does not touch a's.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(x = \"numeric\"), methods = list())\n\
+            a <- Base$new(x = 5)\nb <- a$copy()\nb$x <- 9\nc(a$x, b$x)\n";
+        assert_eq!(nums(src), vec![5.0, 9.0]);
+    }
+
+    #[test]
+    fn refclass_alias_still_shares_after_r25() {
+        // Contrast: `d <- a` (no copy) STILL aliases — R-24's headline semantics
+        // must survive the R-25 changes.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(x = \"numeric\"), methods = list())\n\
+            a <- Base$new(x = 5)\nd <- a\nd$x <- 7\na$x\n";
+        assert_eq!(nums(src), vec![7.0]);
+    }
+
+    #[test]
+    fn refclass_copy_carries_methods_and_fields() {
+        // A copied instance keeps its methods and all (inherited + own) fields.
+        let src = format!(
+            "{BASE_SUB}s <- Sub$new(x = 1, y = 2)\nt <- s$copy()\nt$sum()\n"
+        );
+        assert_eq!(nums(&src), vec![3.0]);
+        // Mutating the copy's inherited base field does not touch the source.
+        let indep = format!(
+            "{BASE_SUB}s <- Sub$new(x = 1, y = 2)\nt <- s$copy()\nt$x <- 100\nc(s$x, t$x)\n"
+        );
+        assert_eq!(nums(&indep), vec![1.0, 100.0]);
+    }
+
+    #[test]
+    fn refclass_fields_and_methods_introspection() {
+        // `$fields()` includes inherited "x" and own "y", sorted.
+        let f = format!("{BASE_SUB}Sub$fields()\n");
+        assert_eq!(show(&f), "[1] \"x\" \"y\"");
+        // `$methods()` includes inherited "getx" and own "sum", sorted.
+        let m = format!("{BASE_SUB}Sub$methods()\n");
+        assert_eq!(show(&m), "[1] \"getx\"  \"sum\"");
+        // Base introspection sees only its own members.
+        assert_eq!(show(&format!("{BASE_SUB}Base$fields()\n")), "[1] \"x\"");
+        assert_eq!(show(&format!("{BASE_SUB}Base$methods()\n")), "[1] \"getx\"");
+    }
+
+    #[test]
+    fn refclass_contains_by_generator_value() {
+        // `contains =` also accepts the parent generator value directly.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(x = \"numeric\"), methods = list(getx = function() x))\n\
+            Sub <- setRefClass(\"Sub\",\n  contains = Base,\n  \
+            fields = list(y = \"numeric\"),\n  \
+            methods = list(sum = function() x + y))\n\
+            s <- Sub$new(x = 4, y = 6)\ns$sum()\n";
+        assert_eq!(nums(src), vec![10.0]);
+    }
+
+    #[test]
+    fn refclass_three_level_chain() {
+        // Inheritance composes transitively: A <- B <- C.
+        let src = "A <- setRefClass(\"A\", fields = list(a = \"numeric\"),\n  \
+            methods = list(geta = function() a))\n\
+            B <- setRefClass(\"B\", contains = \"A\", fields = list(b = \"numeric\"))\n\
+            C <- setRefClass(\"C\", contains = \"B\", fields = list(d = \"numeric\"),\n  \
+            methods = list(total = function() a + b + d))\n\
+            obj <- C$new(a = 1, b = 2, d = 3)\nc(obj$total(), obj$geta())\n";
+        assert_eq!(nums(src), vec![6.0, 1.0]);
+        let is_a = "A <- setRefClass(\"A\", fields = list(a = \"numeric\"))\n\
+            B <- setRefClass(\"B\", contains = \"A\")\n\
+            C <- setRefClass(\"C\", contains = \"B\")\n\
+            obj <- C$new(a = 1)\nis(obj, \"A\")\n";
+        assert_eq!(show(is_a), "[1] TRUE");
+    }
+
+    // --- error / edge cases (clean errors, never panics) -----------------
+
+    #[test]
+    fn refclass_contains_unknown_class_errors() {
+        let src = "Sub <- setRefClass(\"Sub\", contains = \"Nope\")\n";
+        assert!(eval_r(src).is_err());
+    }
+
+    #[test]
+    fn refclass_contains_non_generator_errors() {
+        // `contains =` naming a variable that is not a generator is a clean error.
+        let src = "Base <- 5\nSub <- setRefClass(\"Sub\", contains = \"Base\")\n";
+        assert!(eval_r(src).is_err());
+    }
+
+    #[test]
+    fn refclass_self_inheritance_rejected() {
+        // A class cannot contain itself.
+        let src = "A <- setRefClass(\"A\")\nA <- setRefClass(\"A\", contains = \"A\")\n";
+        assert!(eval_r(src).is_err());
+    }
+
+    #[test]
+    fn refclass_cyclic_contains_rejected() {
+        // A contains B, then redefining B to contain A would close a cycle.
+        let src = "A <- setRefClass(\"A\")\n\
+            B <- setRefClass(\"B\", contains = \"A\")\n\
+            A2 <- setRefClass(\"A\", contains = \"B\")\n";
+        // `A2`'s chain is B -> A, and its own name is "A" which is already in the
+        // chain → rejected.
+        assert!(eval_r(src).is_err());
+    }
+
+    #[test]
+    fn refclass_copy_on_non_instance_errors() {
+        // `$copy` is meaningless on a generator; calling it is a clean error.
+        let src = "Base <- setRefClass(\"Base\", fields = list(x = \"numeric\"))\n\
+            Base$copy()\n";
+        assert!(eval_r(src).is_err());
+    }
+
+    #[test]
+    fn refclass_unknown_inherited_new_arg_errors() {
+        // A `$new` arg that is neither an own nor an inherited field still errors.
+        let src = format!("{BASE_SUB}Sub$new(x = 1, y = 2, z = 3)\n");
+        assert!(eval_r(&src).is_err());
+    }
+
+    #[test]
+    fn refclass_user_copy_method_overrides_builtin() {
+        // A user-defined method named `copy` shadows the builtin deep-copy.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(x = \"numeric\"),\n  \
+            methods = list(copy = function() \"custom\"))\n\
+            b <- Base$new(x = 1)\nb$copy()\n";
+        assert_eq!(show(src), "[1] \"custom\"");
+    }
+
+    /// Regression: every R-24 reference-class behaviour still holds after R-25.
+    #[test]
+    fn r24_refclass_still_works_after_r25() {
+        const ACC: &str = "Acc <- setRefClass(\"Acc\",\n  \
+            fields = list(total = \"numeric\"),\n  \
+            methods = list(\n    \
+                add = function(x) { total <<- total + x },\n    \
+                get = function() total\n  ))\n";
+        // Method updates field via `<<-`.
+        assert_eq!(
+            nums(&format!("{ACC}a <- Acc$new(total = 0)\na$add(5)\na$add(3)\na$get()\n")),
+            vec![8.0]
+        );
+        // Reference (alias) semantics: `b <- a` shares.
+        assert_eq!(
+            nums(&format!(
+                "{ACC}a <- Acc$new(total = 0)\nb <- a\nb$add(1)\nb$add(4)\na$total\n"
+            )),
+            vec![5.0]
+        );
+        // Two `$new` calls are independent.
+        assert_eq!(
+            nums(&format!(
+                "{ACC}a <- Acc$new(total = 0)\nb <- Acc$new(total = 0)\na$add(10)\nb$add(3)\nc(a$total, b$total)\n"
+            )),
+            vec![10.0, 3.0]
+        );
+        // `.self$method()` still reachable.
+        let selfcall = "Counter <- setRefClass(\"Counter\",\n  \
+            fields = list(n = \"numeric\"),\n  \
+            methods = list(\n    \
+                bump = function() { n <<- n + 1 },\n    \
+                bump_twice = function() { .self$bump(); .self$bump() }\n  ))\n\
+            c1 <- Counter$new(n = 0)\nc1$bump_twice()\nc1$n\n";
+        assert_eq!(nums(selfcall), vec![2.0]);
+    }
 }

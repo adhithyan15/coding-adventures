@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.21.0] - 2026-06-20
+
+### Added
+
+- **R5 inheritance, `$copy()`, and introspection (R-25)** — builds directly on
+  R-24's `src/refclass.rs` generator/instance model; grammar-free.
+  - **`setRefClass("Sub", contains = "Base", fields = …, methods = …)`** — single
+    inheritance. The subclass generator carries a new `.refParent` link to the
+    base generator (a strict child→parent **DAG** edge). The **effective field
+    set** is the union *base ∪ sub* in base-first declaration order; the
+    **effective method set** is *base ∪ sub* with a **sub method overriding** a
+    same-named base method. `instantiate` now binds the effective fields and
+    carries the effective method list, so an inherited base method is callable on
+    a `Sub` and a `Sub` method reads/writes base fields (one flat instance frame).
+    `contains =` accepts the parent **generator value** or a length-1 **character**
+    class name (resolved as a variable). A cyclic `contains =` (`A`⊃`B`⊃`A`, or
+    self-inheritance) is **rejected** at `setRefClass` time; a non-generator /
+    undefined parent is a clean error.
+  - **`obj$copy()`** — a **deep** value-copy returning a NEW, independent instance
+    (each effective field copied by value; a nested instance is aliased, not
+    recursed — bounded). Contrast `b <- a`, which still **aliases** (R-24
+    reference semantics preserved). Charged against `MAX_ENVIRONMENTS` like `$new`.
+  - **`is(obj, "Base")` / `inherits(obj, "Base")` / `class(obj)`** — an R5
+    instance's class vector is now its inheritance chain
+    `c("Sub", "Base", …, "envRefClass", "environment")`, computed by walking
+    `.refGenerator` → `.refParent`. New `is` builtin registered.
+  - **`generator$fields()` / `generator$methods()`** — the **sorted** effective
+    field / method names (including inherited), reached via nullary reference-method
+    markers routed through `apply`/`call_value`, mirroring the `$new` marker.
+  - **Rc-cycle safety.** The only new edges (subclass→parent generator,
+    instance→generator) are DAG edges, never cycles; `$copy()` builds a sibling
+    instance (no recursion through nested instances). The instance⇄method
+    lazy-rebuild discipline is inherited verbatim. All chain walks are bounded by
+    `MAX_CHAIN_DEPTH`.
+  - Defers multiple inheritance and active bindings to **R-26**.
+
 ## [0.20.0] - 2026-06-20
 
 ### Added
