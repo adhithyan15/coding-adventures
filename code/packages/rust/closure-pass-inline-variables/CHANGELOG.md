@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+The statement walks (`count_decl_names_stmt`, `count_uses_stmt`,
+`propagate_in_stmt`) now cover `DebuggerStatement` (grouped with the other
+childless leaf statements) as a no-op. Added to keep the matches exhaustive over
+the new AST variant.
+
+## [0.3.0] - 2026-06-20
+
+### Added — CLOC20: variable inlining inside `do`/`while`
+
+`count_decl_names_stmt`, `count_uses_stmt`, and `propagate_in_stmt` now recurse
+through `DoWhileStatement` (loop body and test), mirroring the existing `while`
+handling so const-literal propagation reaches into do-while loops.
+
 ## [0.2.0] - 2026-06-20
 
 ### Added — CLOC19: variable inlining inside `try`/`catch`/`finally`

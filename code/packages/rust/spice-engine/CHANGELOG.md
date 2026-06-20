@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Expose accepted `.control` `write` / `wrdata` marker inventories from
+  `analyze_deck_controls` and selected `run_deck_analysis` execution results as
+  `write_marker_count` / `write_markers`, and carry them through selected-run
+  artifacts as stable `WriteMarkers` / `WriteMarkerList` table, CSV/JSON, and
+  ordered `table_artifacts` fields, matching Python and TypeScript.
+- Expose selected diagnostic inventories directly on selected
+  `run_deck_analysis` execution results as `diagnostic_count` /
+  `diagnostic_codes`, matching Python and TypeScript.
+- Expose normalized `.control` command inventories directly on selected
+  `run_deck_analysis` execution results as `control_line_count` /
+  `control_lines`, matching Python and TypeScript.
 - Add normalized `.control` command inventories to `analyze_deck_controls`
   separately from full active deck input, and carry those commands through
   selected `run_deck_analysis` run artifacts as stable `ControlLines` /

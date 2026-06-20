@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.12.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+`dce_tagged_statement` now covers `DebuggerStatement` (grouped with the other
+childless leaf statements), preserved as-is. A `debugger;` is a no-op leaf with
+no bindings; stripping it is intentionally left as future work, so v1 keeps it.
+
+## [0.11.0] - 2026-06-20
+
+### Added — CLOC20: DCE inside `do`/`while`
+
+New `DoWhileStatement` arm recurses dead-code elimination into the loop body and
+test. Like `while`, a `do`-`while` is NOT a terminator — control can fall out of
+the loop — so a statement following it stays reachable. (A do-while in a dead
+tail is preserved by the existing `tail_is_safe_to_truncate` whitelist, which
+defaults new compound statements to unsafe.)
+
 ## [0.10.0] - 2026-06-20
 
 ### Added — CLOC19: DCE inside `try`/`catch`/`finally`

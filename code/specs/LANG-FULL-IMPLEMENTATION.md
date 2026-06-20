@@ -158,26 +158,38 @@ multiple languages; close an enabler before the features that depend on it.
     confirmed by running the ALGOL real matrix proofs on the JIT.
   - ✅ **Frontend driver (AL1)** — ALGOL 60 `real` lowers to `f64`; two executed VM/JIT matrix
     proofs (real `*`+`=` → 42, real `/`+`<` → 1). *(BASIC floats / BA7 are a later driver.)*
-  - ◑ **E3-codegen-slots** — `iir-to-{llvm,wasm,jvm}` already emit the f64 *ops*
-    (`fmul`/`f64.mul`/`dmul`) but modelled every *variable slot* as a uniform `i64`, so storing
-    a double into an i64 slot was invalid. Fix = per-slot float typing in the load/store protocol
-    **+** a boolean (not operand-width) comparison-result type.
+  - ✅ **E3-codegen-slots** — **COMPLETE** (llvm + wasm + jvm all run reals). The shared problem:
+    `iir-to-{llvm,jvm}` modelled every *variable slot* as a uniform `i64`/`long`, so an `f64`
+    variable's store/load/compare was invalid; fix = per-slot float typing **+** a boolean (not
+    operand-width) comparison-result type. (WASM was already fine — typed locals.)
     - ✅ **iir-to-llvm** (v0.13.0) — `collect_slot_types` gives an `f64` local an `alloca double`
       slot (`store/load double`); float `cmp_*` result `zext i1 → i64` (not the invalid
       `→ double`); `Operand::Float` rendered as LLVM's exact hex double `0x…` (Rust `{:e}` emitted
       `2e0`/`0e0`, which clang rejects). **Executed proof on real `clang`**: the two ALGOL real
       programs (exit 42, exit 1) run on the LLVM matrix column. (`f64` *params* reassigned across a
       back-edge still stay SSA — `param_slot_compatible` excludes floats — a separate unexercised case.)
-    - ☐ **iir-to-wasm** — same slot fix (locals typed `i32` today; need `f64` locals + `f64.const`
-      hex/literal handling + float compare result as `i32`).
-    - ☐ **iir-to-jvm-class-file** — same slot fix (`dstore`/`dload` for double locals; the
-      build_type_map slot typing must recognise f64; comparison result stays `int`).
+    - ✅ **iir-to-wasm** (v0.15.1) — **no backend change needed.** Unlike LLVM/JVM's uniform
+      slot model, WASM types each local individually (`hint_to_value_type("f64") = F64`) and
+      selects `f64.mul`/`f64.eq`/`f64.lt` from the `f64` type_hint, so an `f64` variable already
+      lived in an `F64` local. **Executed proof on `wasm-runtime`**: the two ALGOL real programs
+      run on the WASM matrix column; added op-selection regression tests.
+    - ✅ **iir-to-jvm-class-file** (v0.15.0) — f64 locals were already typed `Double` (`dstore`/
+      `dload`, two slots) and arithmetic already used `dadd`/`dmul`; the two real gaps were
+      (a) non-0/1 f64 *constants* emitted `ldc2_w #0` (the unused phantom slot) instead of a real
+      `CONSTANT_Double` — fixed with `add_double` + `emit_dconst_cp`; (b) f64 *comparisons* fell
+      into the integer `if_icmp` path (mis-reading a two-slot double as an int) — fixed with a
+      `Double` branch emitting `dcmpl`/`dcmpg` + a unary `ifXX`. **Executed proof on real `java`**:
+      both ALGOL real programs run on the JVM matrix column. **E3-codegen-slots COMPLETE.**
   - ☐ **E3-native** — `x86_64-backend`/`aarch64-backend` reject `const_f64`/`CIROperand::Float`;
     need SSE (`addsd`/`mulsd`/`comisd`) and AArch64 FP (`fadd`/`fcmp`) emission. (`aot-core`'s
     `infer`/`specialise` already allow `f64`.)
-  - ☐ **E3-clr** — `iir-to-cil-bytecode` explicitly rejects `Operand::Float` ("float constants
-    are not supported in CLR v1"); need `ldc.r8` + `add`/`sub`/`mul`/`div`/float compares in both
-    the bytecode and textual-`.il` emitters.
+  - ✅ **E3-clr** (iir-to-cil-bytecode v0.22.0) — the **textual `.il` emitter** (the real-CLR /
+    `ilasm` matrix path) lowers `f64`: `cil_local_type` → `float64` locals, float consts →
+    `ldc.r8` (exact LE bytes), comparison result forced to `int32` (CIL `ceq`/`cgt`/`clt` push
+    an int even over `float64` operands). CIL `add`/`mul`/`ceq` are stack-type-overloaded → no
+    opcode change. **Executed proof on real `ilasm` + `dotnet`**: both ALGOL real programs run
+    on the CLR matrix column. (The structured **bytecode** emitter keeps its own f64 guard — a
+    later follow-up; the real-CLR path is textual.)
 - **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
   compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
   ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
@@ -335,9 +347,11 @@ backend immediately) come before the enabler-dependent items.
   `real` → IIR `f64`, `REAL_LIT` → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit
   the `f64` hint, `/` is real division, real comparisons compare at `f64` width; `div`/`mod`
   stay integer-only; no implicit int→real coercion (mixing is a clean error). **Verified by
-  RUNNING** on the VM, JIT, **and LLVM** (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1;
-  LLVM via `iir-to-llvm` 0.13.0's f64 slots). Remaining to clear every backend: the wasm + jvm
-  half of **E3-codegen-slots**, plus **E3-native / E3-clr** (see enabler E3 above).
+  RUNNING** on the VM, JIT, **LLVM, WASM, JVM, and CLR** (`lang_matrix.rs` — real `*`+`=`→42,
+  real `/`+`<`→1) — **6 of 7 backends**. LLVM via `iir-to-llvm` 0.13.0's f64 slots; WASM via its
+  typed-local model (no change); JVM via `iir-to-jvm-class-file` 0.15.0's `CONSTANT_Double` pool
+  + `dcmpl`/`dcmpg`; CLR via `iir-to-cil-bytecode` 0.22.0's `float64` locals + `ldc.r8`. Only
+  remaining: **E3-native** (x86_64/aarch64 reject `Operand::Float`; see enabler E3 above).
 - ☐ **AL2** — arrays with runtime bounds (needs **E5**).
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**

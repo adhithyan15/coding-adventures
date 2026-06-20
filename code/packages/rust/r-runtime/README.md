@@ -70,9 +70,40 @@ binding — `f <- function() { y <<- 99 }; f(); y` → `99` (created globally wh
 enclosing binding exists) — and the counter idiom `make_counter <- function() {
 n <- 0; function() { n <<- n + 1; n } }` advances across calls; the R-only `->>`
 form is the mirror image. `assign("q", 7); get("q")` → `7`; `exists("zzz")` →
-`FALSE`; `rm("d")` removes a binding. First-class environment *values*
-(`new.env()`, `environment()`, the `envir = e` argument) are deferred to R-22 and
-rejected today with a clear error.
+`FALSE`; `rm("d")` removes a binding.
+
+**First-class environments (R-22)** — an environment is now a value (the shared
+`SValue::Environment`). `e <- new.env()` makes a fresh env; `assign("x", 5, envir
+= e)` / `get("x", envir = e)` round-trip through it; `ls(e)` lists its names
+sorted; and an environment is **mutable by reference** — `f <- function(env)
+assign("x", 42, envir = env); f(e); get("x", envir = e)` → `42`. `environment()`
+returns the current env; an env prints as the stable placeholder `<environment>`
+with class `"environment"`. The parent link is a `Weak` so an env-holding-env
+cannot leak (see `s-runtime`).
+
+**Closure environments & frame reflection (R-23)** — `environment(f)` is the env
+a closure captured at definition (a top-level closure captures the global env, so
+`environmentName(environment(f))` → `"R_GlobalEnv"`; a non-closure → `NULL`).
+`environment(f) <- e` re-homes a closure (its free variables then resolve from
+`e`). `environmentName(e)` is `"R_GlobalEnv"` / `"R_EmptyEnv"` / `""`;
+`globalenv()` / `emptyenv()` / `baseenv()` return the well-known environments
+(`baseenv()` aliases global). `parent.frame(n = 1)` is the **caller's** env —
+`g <- function() get("x", envir = parent.frame()); f <- function() { x <- 42;
+g() }; f()` → `42` — clamping to the global env past the bottom of the stack
+rather than panicking. `is.environment(x)` is the type predicate.
+
+**R5 reference classes (R-24)** — `setRefClass("Acc", fields = list(total =
+"numeric"), methods = list(add = function(x) { total <<- total + x }, get =
+function() total))` builds a **generator**; `Acc$new(total = 0)` builds an
+**instance** (an environment holding the fields). A method's body sees the fields
+directly and updates them with `<<-`, so `a$add(5); a$add(3); a$total` → `8`.
+`a$total <- 100` writes a field **by reference**. The headline R5 behaviour is
+**reference semantics**: `b <- a; b$add(1); a$total` reflects b's change (the two
+names share one instance, unlike R's copy-on-modify), while two separate `$new`
+calls are independent. `.self` is bound in the instance, so a method can reach a
+sibling as `.self$other()`. Field type strings are recorded but not enforced in
+this subset; inheritance, `$copy()`, active bindings, and `$methods()`/`$fields()`
+introspection are deferred to R-25.
 
 ## Usage
 

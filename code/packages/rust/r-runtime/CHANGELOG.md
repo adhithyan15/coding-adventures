@@ -2,6 +2,82 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.19.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-24 — R5 reference classes (`setRefClass`)**: reaches R unchanged through
+  the shared evaluator (everything lives in `s-runtime` — `$` already existed, so
+  no grammar change). In R syntax:
+  - **`setRefClass("Acc", fields = list(total = "numeric"), methods = list(add = function(x) { total <<- total + x }, get = function() total))`**
+    → a **generator**; **`Acc$new(total = 0)`** → an **instance** (an environment
+    holding the fields).
+  - **`a$add(5); a$add(3); a$total`** → `8` and **`a$get()`** → `8`: a method's
+    body sees the fields directly and writes them back with `<<-`.
+  - **`a$total <- 100; a$total`** → `100`: field write **by reference**.
+  - **Reference semantics**: `b <- a; b$add(1); a$total` reflects b's change (the
+    two names share one instance — unlike R's copy-on-modify). Two `$new`
+    instances are independent.
+  - **`.self`** is bound in the instance, so a method can call a sibling as
+    `.self$other()` and write a field as `.self$field <- v`.
+  - Field type strings are **not enforced** in this subset; a class may have no
+    fields and/or no methods. Malformed `setRefClass`/`$new` arguments are clean
+    errors, never panics.
+  - See `s-runtime` 0.20.0 for the instance⇄method Rc-cycle handling (broken by
+    construction — method closures close over the *generator*, instance-bound
+    closures are rebuilt lazily per access and never stored) and the deferral of
+    inheritance / `$copy()` / active bindings / introspection to R-25.
+
+## [0.18.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-23 — closure environments & call-frame reflection**: reaches R unchanged
+  through the shared evaluator (everything lives in `s-runtime` — no grammar
+  change). In R syntax:
+  - **`environment(f)`** — a closure's captured (defining) env. For a top-level
+    closure that is the global env, so `environmentName(environment(f))` is
+    `"R_GlobalEnv"` and `is.environment(environment(f))` is `TRUE`. A non-closure
+    argument returns `NULL` (R's `environment(sum)`).
+  - **`environment(f) <- e`** — re-home a closure: after it, a free variable in
+    `f`'s body resolves from `e`'s chain (`assign("k", 99, envir = e);
+    environment(f) <- e; f()` → `99`). A non-environment value is a clean error.
+  - **`environmentName(e)`** — `"R_GlobalEnv"` / `"R_EmptyEnv"` / `""`.
+  - **`globalenv()` / `emptyenv()` / `baseenv()`** — the well-known environments
+    as values (`baseenv()` aliases the global env in this runtime — no separate
+    base namespace yet).
+  - **`parent.frame(n = 1)`** — the **caller's** environment: `g <- function()
+    get("x", envir = parent.frame()); f <- function() { x <- 42; g() }; f()` →
+    `42`. `parent.frame(2)` reaches the caller's caller. At top level, or for `n`
+    past the bottom of the stack, it **clamps** to the global env (never panics);
+    a non-positive `n` is a clean error.
+  - **`is.environment(x)`** — `TRUE` for an environment, `FALSE` otherwise.
+  - See `s-runtime` 0.19.0 for the (unchanged) Rc-cycle ownership model: the
+    caller env on the call stack is dropped when its frame is popped, and the
+    captured-env exposure is bounded by `MAX_ENVIRONMENTS`.
+
+## [0.17.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-22 — first-class environment values**: reaches R unchanged through the
+  shared evaluator (the `SValue::Environment` variant, the `Weak` parent link, and
+  all new forms live in `s-runtime` — no grammar change). In R syntax:
+  - **`e <- new.env(); assign("x", 5, envir = e); get("x", envir = e)`** → `5`.
+    `exists("x", envir = e)` → `TRUE` (missing → `FALSE`); `rm("x", envir = e)`
+    then `exists` → `FALSE`.
+  - **By-reference mutation**: `f <- function(env) assign("x", 42, envir = env);
+    f(e); get("x", envir = e)` → `42` — the binding `f` made in `e` is visible to
+    the caller (the defining difference from R's copy-on-modify semantics).
+  - **`ls(e)` / `ls(envir = e)`** lists the env's own names, **sorted**. Two
+    `new.env()` calls are independent.
+  - **`environment()`** returns the current environment; an environment prints as
+    the stable placeholder `<environment>` and has class `"environment"`. A
+    non-environment `envir =` is a clean error.
+  - Deferred to **R-23**: `environment(f)` (a closure's captured environment) and
+    `environmentName`. See `s-runtime` 0.18.0 for the Rc-cycle ownership model
+    (the parent link is `Weak`, so an env-holding-env cannot leak).
+
 ## [0.16.0] - 2026-06-20
 
 ### Added (via the shared `s-runtime`)

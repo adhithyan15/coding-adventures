@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.12.0] - 2026-06-20
+
+### Added — CLOC21: bridge `debugger_statement` → `DebuggerStatement`
+
+`debugger_statement` no longer lands in the unsupported arm (which raised
+`UnsupportedSyntax` and forced a WHITESPACE_ONLY fallback at the CLI). The
+grammar production is `"debugger" SEMICOLON` — no node children — so the bridge
+emits a bare `DebuggerStatement` marker. Added a `debugger_bridge_shape` test.
+
+## [0.11.0] - 2026-06-20
+
+### Added — CLOC20: bridge `do_while_statement` → `DoWhileStatement`
+
+`do_while_statement` no longer lands in the unsupported arm (which raised
+`UnsupportedSyntax` and forced a WHITESPACE_ONLY fallback at the CLI). New
+`convert_do_while_statement` reads the grammar production
+`do statement while ( expression )` — whose Node children are
+`[statement, expression]` (body first, test second) — into the ESTree-shaped
+`DoWhileStatement`. The prior `do_while_is_unsupported` test is replaced by
+`do_while_bridge_shape`, which pins the structural conversion.
+
 ## [0.10.0] - 2026-06-20
 
 ### Added — CLOC19: bridge `try_statement` → `TryStatement`

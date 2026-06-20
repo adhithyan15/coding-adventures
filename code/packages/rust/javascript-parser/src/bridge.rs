@@ -61,10 +61,10 @@ use coding_adventures_javascript_ast::{
         UndefinedLiteral,
     },
     statement::{
-        BlockStatement, BreakStatement, CatchClause, ContinueStatement, EmptyStatement,
-        ExpressionStatement, ForInit, ForStatement, IfStatement, LabeledStatement,
-        ReturnStatement, Statement, SwitchCase, SwitchStatement, ThrowStatement, TryStatement,
-        WhileStatement,
+        BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
+        DoWhileStatement, EmptyStatement, ExpressionStatement, ForInit, ForStatement, IfStatement,
+        LabeledStatement, ReturnStatement, Statement, SwitchCase, SwitchStatement, ThrowStatement,
+        TryStatement, WhileStatement,
     },
     Program, ProgramItem, SourceType,
 };
@@ -266,6 +266,9 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         "expression_statement" => convert_expression_statement(child),
         "if_statement" => convert_if_statement(child).map(Statement::if_statement),
         "while_statement" => convert_while_statement(child).map(Statement::while_statement),
+        "do_while_statement" => {
+            convert_do_while_statement(child).map(Statement::do_while_statement)
+        }
         "for_statement" => convert_for_statement(child).map(Statement::for_statement),
         "continue_statement" => convert_continue_statement(child).map(Statement::continue_statement),
         "break_statement" => convert_break_statement(child).map(Statement::break_statement),
@@ -274,12 +277,12 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         "labelled_statement" => convert_labeled_statement(child).map(Statement::labeled_statement),
         "throw_statement" => convert_throw_statement(child).map(Statement::throw_statement),
         "try_statement" => convert_try_statement(child).map(Statement::try_statement),
+        // debugger_statement = "debugger" SEMICOLON — no node children, so the
+        // typed node is a bare marker. (CLOC21.)
+        "debugger_statement" => Ok(Statement::debugger_statement(DebuggerStatement { cv: None })),
         // Phase 2+ — not yet in the typed AST
-        "do_while_statement" | "for_in_statement" | "for_of_statement"
-        | "for_await_of_statement" | "with_statement"
-        | "debugger_statement" | "using_declaration" | "await_using_declaration" => {
-            Err(unsupported(child))
-        }
+        "for_in_statement" | "for_of_statement" | "for_await_of_statement" | "with_statement"
+        | "using_declaration" | "await_using_declaration" => Err(unsupported(child)),
         other => Err(BridgeError::InternalError {
             msg: format!("unknown statement child rule '{other}'"),
             rule: node.rule_name.clone(),
@@ -342,6 +345,22 @@ fn convert_while_statement(node: &GrammarASTNode) -> Result<WhileStatement, Brid
         cv: None,
         test: convert_expression(nodes[0])?,
         body: Box::new(convert_statement(nodes[1])?),
+    })
+}
+
+fn convert_do_while_statement(node: &GrammarASTNode) -> Result<DoWhileStatement, BridgeError> {
+    // do_while_statement = "do" statement "while" LPAREN expression RPAREN [";"]
+    // Node children (tokens filtered out): [statement, expression] — the body
+    // comes first in source order, the test second. This is the mirror of
+    // while_statement, which is [expression, statement].
+    let nodes = node_children(node);
+    if nodes.len() < 2 {
+        return Err(internal(node, "do_while_statement needs 2 node children"));
+    }
+    Ok(DoWhileStatement {
+        cv: None,
+        body: Box::new(convert_statement(nodes[0])?),
+        test: convert_expression(nodes[1])?,
     })
 }
 
@@ -2158,9 +2177,50 @@ mod tests {
     // -----------------------------------------------------------------------
 
     #[test]
-    fn do_while_is_unsupported() {
-        let result = bridge("do { } while (true);");
-        assert!(matches!(result, Err(BridgeError::UnsupportedSyntax { .. })));
+    fn do_while_bridge_shape() {
+        // CLOC20: `do { a(); } while (x)` now bridges to a DoWhileStatement
+        // with the body (a BlockStatement) and the test (the identifier `x`).
+        // Previously this returned UnsupportedSyntax → WHITESPACE_ONLY.
+        let p = bridge_ok("do { a(); } while (x);");
+        let t = match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::DoWhileStatement(d),
+            )) => d.clone(),
+            other => panic!("expected a DoWhileStatement, got {other:?}"),
+        };
+        // body is the `{ a(); }` block
+        assert!(matches!(
+            t.body.as_ref(),
+            Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::BlockStatement(_)
+            )
+        ));
+        // test is the identifier `x`
+        assert!(
+            matches!(&t.test, Expression::Identifier(id) if id.name == "x"),
+            "expected test to be identifier `x`, got {:?}",
+            t.test
+        );
+    }
+
+    #[test]
+    fn debugger_bridge_shape() {
+        // CLOC21: `debugger;` now bridges to a DebuggerStatement (a bare
+        // marker with no children). Previously this returned UnsupportedSyntax
+        // → WHITESPACE_ONLY.
+        let p = bridge_ok("debugger;");
+        assert!(
+            matches!(
+                &p.body[0],
+                ProgramItem::Statement(Statement::Tagged(
+                    coding_adventures_javascript_ast::statement::TaggedStatement::DebuggerStatement(
+                        _
+                    )
+                ))
+            ),
+            "expected a DebuggerStatement, got {:?}",
+            p.body[0]
+        );
     }
 
     #[test]

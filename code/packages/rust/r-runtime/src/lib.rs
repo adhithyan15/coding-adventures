@@ -1612,4 +1612,397 @@ mod tests {
         );
         assert_eq!(show("Negate(is.na)(NA)\n"), "[1] FALSE");
     }
+
+    // --- R-22: first-class environments (R syntax) -----------------------
+
+    /// `assign`/`get` round-trip through an explicit environment value.
+    #[test]
+    fn r22_assign_get_through_envir() {
+        assert_eq!(
+            nums("e <- new.env()\nassign(\"x\", 5, envir = e)\nget(\"x\", envir = e)\n"),
+            vec![5.0]
+        );
+    }
+
+    /// `exists(envir = e)` is TRUE after a bind, FALSE for a missing name.
+    #[test]
+    fn r22_exists_through_envir() {
+        assert_eq!(
+            show("e <- new.env()\nassign(\"x\", 1, envir = e)\nexists(\"x\", envir = e)\n"),
+            "[1] TRUE"
+        );
+        assert_eq!(
+            show("e <- new.env()\nexists(\"x\", envir = e)\n"),
+            "[1] FALSE"
+        );
+    }
+
+    /// The defining R-22 property — mutation **by reference** through a function:
+    /// passing `e` to a function and binding inside it is visible to the caller.
+    #[test]
+    fn r22_by_reference_mutation() {
+        let src = "e <- new.env()\n\
+                   f <- function(env) { assign(\"x\", 42, envir = env) }\n\
+                   f(e)\n\
+                   get(\"x\", envir = e)\n";
+        assert_eq!(nums(src), vec![42.0]);
+    }
+
+    /// `ls(e)` lists the env's own names, sorted.
+    #[test]
+    fn r22_ls_lists_sorted_names() {
+        let src = "e <- new.env()\n\
+                   assign(\"b\", 1, envir = e)\nassign(\"a\", 1, envir = e)\nls(e)\n";
+        assert_eq!(show(src), "[1] \"a\" \"b\"");
+    }
+
+    /// Two `new.env()` calls are independent.
+    #[test]
+    fn r22_two_envs_independent() {
+        let src = "a <- new.env()\nb <- new.env()\n\
+                   assign(\"x\", 1, envir = a)\nexists(\"x\", envir = b)\n";
+        assert_eq!(show(src), "[1] FALSE");
+    }
+
+    /// `rm(envir = e)` then `exists` → FALSE.
+    #[test]
+    fn r22_rm_through_envir() {
+        let src = "e <- new.env()\nassign(\"x\", 1, envir = e)\nrm(\"x\", envir = e)\nexists(\"x\", envir = e)\n";
+        assert_eq!(show(src), "[1] FALSE");
+    }
+
+    /// An environment prints as the stable placeholder and carries class
+    /// `"environment"`.
+    #[test]
+    fn r22_environment_prints_and_classes() {
+        assert_eq!(show("new.env()\n"), "<environment>");
+        assert_eq!(show("environment()\n"), "<environment>");
+        assert_eq!(show("class(new.env())\n"), "[1] \"environment\"");
+    }
+
+    /// A non-environment `envir =` is a clean error, never a panic.
+    #[test]
+    fn r22_non_environment_envir_errors() {
+        assert!(eval_r("assign(\"x\", 1, envir = 2)\n").is_err());
+        assert!(eval_r("get(\"x\", envir = \"oops\")\n").is_err());
+    }
+
+    /// An environment may hold itself (the Rc-cycle case): safe, no panic/loop.
+    #[test]
+    fn r22_environment_can_hold_itself() {
+        let src = "e <- new.env()\nassign(\"self\", e, envir = e)\nexists(\"self\", envir = e)\n";
+        assert_eq!(show(src), "[1] TRUE");
+    }
+
+    /// Regression: R-18..R-21 still work after the R-22 changes. (`->>`, the
+    /// R-only right-super-assign, exercises the changed `super_assign` walk.)
+    #[test]
+    fn r18_through_r21_still_work_after_r22() {
+        // R-18: tryCatch.
+        assert_eq!(
+            show("tryCatch(stop(\"boom\"), error = function(e) \"caught\")\n"),
+            "[1] \"caught\""
+        );
+        // R-19: switch fall-through.
+        assert_eq!(show("switch(\"a\", a = , b = \"hit\")\n"), "[1] \"hit\"");
+        // R-20: Negate.
+        assert_eq!(show("Negate(is.na)(NA)\n"), "[1] FALSE");
+        // R-21: counter closure via `<<-` (uses the Weak-parent chain walk).
+        let counter = "make <- function() { n <- 0; function() { n <<- n + 1; n } }\n\
+                       c1 <- make()\nc1(); c1(); c1()\n";
+        assert_eq!(nums(counter), vec![3.0]);
+        // R-21: `->>` right-super-assign creates globally.
+        assert_eq!(nums("99 ->> zz\nzz\n"), vec![99.0]);
+    }
+
+    // --- R-23: closure environments & frame reflection (R syntax) --------
+
+    /// `environment(f)` for a top-level closure is an environment value — the
+    /// captured (global) env.
+    #[test]
+    fn r23_environment_of_closure_is_an_env() {
+        let src = "f <- function() environment()\nis.environment(environment(f))\n";
+        assert_eq!(show(src), "[1] TRUE");
+    }
+
+    /// A top-level closure captures the **global** env, so `environmentName` of
+    /// its captured env is `"R_GlobalEnv"` (our stand-in for
+    /// `identical(environment(f), globalenv())`, since `identical` is not yet a
+    /// builtin).
+    #[test]
+    fn r23_top_level_closure_captures_global() {
+        let src = "f <- function() 1\nenvironmentName(environment(f))\n";
+        assert_eq!(show(src), "[1] \"R_GlobalEnv\"");
+    }
+
+    /// A non-closure argument to `environment` yields `NULL` (matches R's
+    /// `environment(sum)`).
+    #[test]
+    fn r23_environment_of_non_closure_is_null() {
+        assert_eq!(show("environment(1)\n"), "NULL");
+        assert_eq!(show("environment(\"x\")\n"), "NULL");
+    }
+
+    /// The well-known environment names.
+    #[test]
+    fn r23_environment_names() {
+        assert_eq!(
+            show("environmentName(globalenv())\n"),
+            "[1] \"R_GlobalEnv\""
+        );
+        assert_eq!(show("environmentName(emptyenv())\n"), "[1] \"R_EmptyEnv\"");
+        assert_eq!(show("environmentName(new.env())\n"), "[1] \"\"");
+        // baseenv aliases global in this runtime.
+        assert_eq!(show("environmentName(baseenv())\n"), "[1] \"R_GlobalEnv\"");
+    }
+
+    /// `environment(f) <- e` re-homes a closure: free variables in its body now
+    /// resolve from `e`'s chain.
+    #[test]
+    fn r23_set_closure_environment() {
+        let src = "e <- new.env()\nassign(\"k\", 99, envir = e)\n\
+                   f <- function() k\nenvironment(f) <- e\nf()\n";
+        assert_eq!(nums(src), vec![99.0]);
+    }
+
+    /// A non-environment replacement value is a clean error.
+    #[test]
+    fn r23_set_closure_environment_rejects_non_env() {
+        assert!(eval_r("f <- function() 1\nenvironment(f) <- 5\n").is_err());
+    }
+
+    /// `parent.frame()` returns the **caller's** environment: a binding the
+    /// caller made is visible through `get(..., envir = parent.frame())`.
+    #[test]
+    fn r23_parent_frame_sees_caller_binding() {
+        let src = "g <- function() get(\"x\", envir = parent.frame())\n\
+                   f <- function() { x <- 42; g() }\nf()\n";
+        assert_eq!(nums(src), vec![42.0]);
+    }
+
+    /// Two-deep `parent.frame(2)` reaches the caller's caller. `h` calls `g`
+    /// calls `parent.frame(2)`, which is `f`'s frame, where `x` is bound.
+    #[test]
+    fn r23_parent_frame_two_deep() {
+        let src = "g <- function() get(\"x\", envir = parent.frame(2))\n\
+                   h <- function() g()\n\
+                   f <- function() { x <- 7; h() }\nf()\n";
+        assert_eq!(nums(src), vec![7.0]);
+    }
+
+    /// `parent.frame()` at top level clamps to the global env (never panics);
+    /// a global binding is therefore visible through it.
+    #[test]
+    fn r23_parent_frame_top_level_clamps_to_global() {
+        let src = "x <- 11\nget(\"x\", envir = parent.frame())\n";
+        assert_eq!(nums(src), vec![11.0]);
+    }
+
+    /// `parent.frame(n)` past the bottom of the live stack clamps to global
+    /// rather than indexing out of bounds.
+    #[test]
+    fn r23_parent_frame_past_bottom_clamps() {
+        let src = "x <- 5\n\
+                   g <- function() get(\"x\", envir = parent.frame(100))\ng()\n";
+        assert_eq!(nums(src), vec![5.0]);
+    }
+
+    /// A non-positive / non-finite `n` is a clean error, never a panic.
+    #[test]
+    fn r23_parent_frame_bad_n_errors() {
+        assert!(eval_r("g <- function() parent.frame(0)\ng()\n").is_err());
+        assert!(eval_r("g <- function() parent.frame(-1)\ng()\n").is_err());
+    }
+
+    /// `is.environment` discriminates environments from everything else.
+    #[test]
+    fn r23_is_environment_predicate() {
+        assert_eq!(show("is.environment(new.env())\n"), "[1] TRUE");
+        assert_eq!(show("is.environment(globalenv())\n"), "[1] TRUE");
+        assert_eq!(show("is.environment(1)\n"), "[1] FALSE");
+        assert_eq!(show("is.environment(\"e\")\n"), "[1] FALSE");
+        assert_eq!(show("is.environment(function() 1)\n"), "[1] FALSE");
+    }
+
+    /// Regression: R-20..R-22 still work after the R-23 call-stack change
+    /// (the frame now carries a caller env alongside the Recall closure).
+    #[test]
+    fn r20_through_r22_still_work_after_r23() {
+        // R-20: anonymous recursion via Recall (reads the frame's closure).
+        assert_eq!(
+            nums("(function(n) if (n <= 1) 1 else n * Recall(n - 1))(5)\n"),
+            vec![120.0]
+        );
+        // R-21: counter closure via `<<-`.
+        let counter = "make <- function() { n <- 0; function() { n <<- n + 1; n } }\n\
+                       c1 <- make()\nc1(); c1(); c1()\n";
+        assert_eq!(nums(counter), vec![3.0]);
+        // R-22: by-reference mutation through an env value.
+        let byref = "e <- new.env()\n\
+                     f <- function(env) assign(\"x\", 8, envir = env)\nf(e)\nget(\"x\", envir = e)\n";
+        assert_eq!(nums(byref), vec![8.0]);
+        // R-22: env can hold itself, still safe.
+        assert_eq!(
+            show("e <- new.env()\nassign(\"self\", e, envir = e)\nexists(\"self\", envir = e)\n"),
+            "[1] TRUE"
+        );
+    }
+
+    // =====================================================================
+    // R-24 — R5 reference classes (setRefClass)
+    // =====================================================================
+
+    /// A program preamble defining the canonical `Acc` accumulator class, reused
+    /// across the R-24 tests. Fields: `total` (numeric). Methods: `add(x)` adds to
+    /// the running total via `<<-`; `get()` returns it.
+    const ACC: &str = "Acc <- setRefClass(\"Acc\",\n  \
+        fields = list(total = \"numeric\"),\n  \
+        methods = list(\n    \
+            add = function(x) { total <<- total + x },\n    \
+            get = function() total\n  ))\n";
+
+    #[test]
+    fn refclass_method_updates_field_via_superassign() {
+        // a$add(5); a$add(3) => total 8; a$get() also 8.
+        let src = format!("{ACC}a <- Acc$new(total = 0)\na$add(5)\na$add(3)\na$total\n");
+        assert_eq!(nums(&src), vec![8.0]);
+        let via_method = format!("{ACC}a <- Acc$new(total = 0)\na$add(5)\na$add(3)\na$get()\n");
+        assert_eq!(nums(&via_method), vec![8.0]);
+    }
+
+    #[test]
+    fn refclass_field_write_by_dollar() {
+        // Direct `a$total <- 100` writes the field by reference.
+        let src = format!("{ACC}a <- Acc$new(total = 0)\na$total <- 100\na$total\n");
+        assert_eq!(nums(&src), vec![100.0]);
+    }
+
+    #[test]
+    fn refclass_reference_semantics_alias() {
+        // `b <- a` SHARES state (unlike normal R copy-on-modify): b's mutation is
+        // visible through a. This is the headline R5 behaviour.
+        let src = format!(
+            "{ACC}a <- Acc$new(total = 0)\nb <- a\nb$add(1)\nb$add(4)\na$total\n"
+        );
+        assert_eq!(nums(&src), vec![5.0]);
+        // And a field write through `b` is visible through `a`.
+        let write = format!("{ACC}a <- Acc$new(total = 7)\nb <- a\nb$total <- 99\na$total\n");
+        assert_eq!(nums(&write), vec![99.0]);
+    }
+
+    #[test]
+    fn refclass_two_instances_are_independent() {
+        // Two `$new` calls build distinct scopes — their fields do not interfere.
+        let src = format!(
+            "{ACC}a <- Acc$new(total = 0)\nb <- Acc$new(total = 0)\n\
+             a$add(10)\nb$add(3)\nc(a$total, b$total)\n"
+        );
+        assert_eq!(nums(&src), vec![10.0, 3.0]);
+    }
+
+    #[test]
+    fn refclass_method_calls_sibling_via_self() {
+        // A method reaching a sibling method through `.self$other()`.
+        let src = "Counter <- setRefClass(\"Counter\",\n  \
+            fields = list(n = \"numeric\"),\n  \
+            methods = list(\n    \
+                bump = function() { n <<- n + 1 },\n    \
+                bump_twice = function() { .self$bump(); .self$bump() }\n  ))\n\
+            c1 <- Counter$new(n = 0)\nc1$bump_twice()\nc1$n\n";
+        assert_eq!(nums(src), vec![2.0]);
+    }
+
+    #[test]
+    fn refclass_self_field_write() {
+        // `.self$field <- v` inside a method mutates the instance by reference.
+        let src = "Box <- setRefClass(\"Box\",\n  \
+            fields = list(v = \"numeric\"),\n  \
+            methods = list(set = function(x) { .self$v <- x }))\n\
+            b <- Box$new(v = 0)\nb$set(42)\nb$v\n";
+        assert_eq!(nums(src), vec![42.0]);
+    }
+
+    #[test]
+    fn refclass_two_fields_and_character_field() {
+        // Multiple fields of different declared types; the type strings are not
+        // enforced in this subset, so a character field just holds a string.
+        let src = "Pt <- setRefClass(\"Pt\",\n  \
+            fields = list(x = \"numeric\", label = \"character\"),\n  \
+            methods = list(move = function(dx) { x <<- x + dx }))\n\
+            p <- Pt$new(x = 1, label = \"origin\")\np$move(4)\np$x\n";
+        assert_eq!(nums(src), vec![5.0]);
+        let lbl = "Pt <- setRefClass(\"Pt\",\n  \
+            fields = list(x = \"numeric\", label = \"character\"),\n  \
+            methods = list())\n\
+            p <- Pt$new(x = 1, label = \"origin\")\np$label\n";
+        assert_eq!(show(lbl), "[1] \"origin\"");
+    }
+
+    #[test]
+    fn refclass_omitted_field_defaults_null() {
+        // A field not supplied to `$new` reads as NULL.
+        let src = format!("{ACC}a <- Acc$new()\na$total\n");
+        assert_eq!(show(&src), "NULL");
+    }
+
+    #[test]
+    fn refclass_class_with_no_fields_or_methods() {
+        // Degenerate but legal: a class with neither fields nor methods.
+        let src = "Empty <- setRefClass(\"Empty\")\ne <- Empty$new()\nis.environment(e)\n";
+        assert_eq!(show(src), "[1] TRUE");
+    }
+
+    #[test]
+    fn refclass_method_reads_field_without_mutating() {
+        // A method that only reads (no `<<-`) still sees the current field value.
+        let src = format!("{ACC}a <- Acc$new(total = 9)\na$get()\n");
+        assert_eq!(nums(&src), vec![9.0]);
+    }
+
+    // --- error / edge cases (clean errors, never panics) -----------------
+
+    #[test]
+    fn refclass_unknown_new_arg_errors() {
+        let src = format!("{ACC}Acc$new(bogus = 1)\n");
+        assert!(eval_r(&src).is_err());
+    }
+
+    #[test]
+    fn refclass_non_function_method_errors() {
+        let src = "setRefClass(\"Bad\", fields = list(x = \"numeric\"), \
+                   methods = list(m = 5))\n";
+        assert!(eval_r(src).is_err());
+    }
+
+    #[test]
+    fn refclass_non_character_name_errors() {
+        assert!(eval_r("setRefClass(123)\n").is_err());
+    }
+
+    #[test]
+    fn refclass_dollar_assign_on_non_env_errors() {
+        // `$<-` on a plain vector is not supported (only environments / ref
+        // objects). Must be a clean error, not a panic.
+        assert!(eval_r("x <- c(1, 2)\nx$foo <- 3\n").is_err());
+    }
+
+    /// Regression: R-20..R-23 still work after the R-24 `$`/`$<-`/apply changes.
+    #[test]
+    fn r20_through_r23_still_work_after_r24() {
+        // R-22 by-reference env mutation.
+        let byref = "e <- new.env()\n\
+                     f <- function(env) assign(\"x\", 8, envir = env)\nf(e)\nget(\"x\", envir = e)\n";
+        assert_eq!(nums(byref), vec![8.0]);
+        // Plain `env$name` read/write still works for a non-ref environment.
+        assert_eq!(nums("e <- new.env()\ne$y <- 11\ne$y\n"), vec![11.0]);
+        // Data-frame `$` column access is untouched.
+        assert_eq!(
+            nums("df <- data.frame(a = c(1, 2), b = c(3, 4))\ndf$b\n"),
+            vec![3.0, 4.0]
+        );
+        // R-23 parent.frame still reflects the caller.
+        let pf = "g <- function() get(\"x\", envir = parent.frame())\n\
+                  f <- function() { x <- 42; g() }\nf()\n";
+        assert_eq!(nums(pf), vec![42.0]);
+    }
 }

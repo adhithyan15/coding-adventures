@@ -114,9 +114,14 @@ Selected
 Fourier table. Executions also include a selected-run artifact summary plus
 `format_deck_run_artifact_table()` and `format_deck_run_artifact_csv()` output
 for stable result-row, table, analysis-directive, output-probe,
-output-directive, measurement, Fourier, and diagnostic count/name lists.
+output-directive, measurement, Fourier, write-marker, and diagnostic
+count/name lists.
 Normalized accepted `.control` commands are surfaced separately in
+`control_line_count` / `control_lines` execution fields and in
 `ControlLines` / `ControlLineList` artifact fields.
+Accepted `.control` `write` / `wrdata` rawfile/data-write markers are surfaced
+as `write_marker_count` / `write_markers` execution fields and as
+`WriteMarkers` / `WriteMarkerList` artifact fields without serializing files.
 Existing `.control` body policy diagnostics flow into those selected-run
 artifact `Diagnostics` / `DiagnosticCodeList` fields and through the same
 run-artifact table, CSV, JSON, and `table_artifacts` records.
@@ -233,10 +238,12 @@ downstream deck execution helpers.
 stable deck-selected table output with normalized table-inventory,
 analysis-directive, output-probe, and output-directive artifacts,
 selected measurement artifacts, selected transient Fourier artifacts,
-selected-run artifact summaries with analysis-directive, output-probe, output-directive,
-measurement, Fourier probe, and `.control` command inventories, `.ac LIN`, `.ac DEC`, `.ac OCT`
-frequency grids, and `.tran`
-`START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
+selected-run artifact summaries with analysis-directive, output-probe,
+output-directive, measurement, Fourier probe, `.control` command, write-marker,
+and diagnostic inventories, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and `.tran`
+`START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls. Selected execution
+fields expose `.control` command, write-marker, and diagnostic inventories
+directly for host integrations.
 
 ## Controlled source examples
 

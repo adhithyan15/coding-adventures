@@ -541,6 +541,50 @@ fn emit_f64_add_opcode() {
     assert!(wm.code[0].code.contains(&0xA0));
 }
 
+// Test 4.6b — f64 `mul`/`div` and ordered/equality comparisons select the
+// `f64.*` opcodes (LANG-FULL E3 — locks the op selection that lets ALGOL 60
+// reals run on WASM; the typed-local model already carries an `f64` variable in
+// an `F64` local, so no slot rework was needed unlike the LLVM backend).
+#[test]
+fn emit_f64_mul_div_opcodes() {
+    let mul = module_one("mulf", vec![("a", "f64"), ("b", "f64")], "f64", vec![
+        IIRInstr::new("mul", Some("v".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "f64"),
+    ]);
+    let wm = lower_iir_to_wasm(&mul, &IIRWasmConfig::default()).unwrap();
+    assert!(wm.code[0].code.contains(&0xA2), "expected f64.mul (0xA2)");
+
+    let div = module_one("divf", vec![("a", "f64"), ("b", "f64")], "f64", vec![
+        IIRInstr::new("div", Some("v".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "f64"),
+    ]);
+    let wm = lower_iir_to_wasm(&div, &IIRWasmConfig::default()).unwrap();
+    assert!(wm.code[0].code.contains(&0xA3), "expected f64.div (0xA3)");
+}
+
+#[test]
+fn emit_f64_comparison_opcodes() {
+    // f64 equality → f64.eq (0x61).
+    let eq = module_one("eqf", vec![("a", "f64"), ("b", "f64")], "i64", vec![
+        IIRInstr::new("cmp_eq", Some("v".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    let wm = lower_iir_to_wasm(&eq, &IIRWasmConfig::default()).unwrap();
+    assert!(wm.code[0].code.contains(&0x61), "expected f64.eq (0x61)");
+
+    // f64 ordered `<` → f64.lt (0x63).
+    let lt = module_one("ltf", vec![("a", "f64"), ("b", "f64")], "i64", vec![
+        IIRInstr::new("cmp_lt", Some("v".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    let wm = lower_iir_to_wasm(&lt, &IIRWasmConfig::default()).unwrap();
+    assert!(wm.code[0].code.contains(&0x63), "expected f64.lt (0x63)");
+}
+
 // Test 4.7 — i32.sub emitted
 #[test]
 fn emit_i32_sub_opcode() {

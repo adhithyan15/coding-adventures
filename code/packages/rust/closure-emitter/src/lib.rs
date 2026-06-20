@@ -67,7 +67,7 @@ use coding_adventures_javascript_ast::{
     AssignmentTarget, BigIntLiteral, BinaryExpression, BinaryOperator, BlockStatement,
     BooleanLiteral,
     BreakStatement, CallExpression, CatchClause, ConditionalExpression, ContinueStatement,
-    Declaration,
+    Declaration, DebuggerStatement, DoWhileStatement,
     EmptyStatement, Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
@@ -291,6 +291,7 @@ impl<'a> Emitter<'a> {
             }
             TaggedStatement::IfStatement(i) => self.emit_if(i),
             TaggedStatement::WhileStatement(w) => self.emit_while(w),
+            TaggedStatement::DoWhileStatement(d) => self.emit_do_while(d),
             TaggedStatement::ForStatement(f) => self.emit_for(f),
             TaggedStatement::ReturnStatement(r) => self.emit_return(r),
             TaggedStatement::BreakStatement(b) => self.emit_break(b),
@@ -300,6 +301,7 @@ impl<'a> Emitter<'a> {
             TaggedStatement::SwitchStatement(s) => self.emit_switch(s),
             TaggedStatement::TryStatement(t) => self.emit_try(t),
             TaggedStatement::EmptyStatement(e) => self.emit_empty(e),
+            TaggedStatement::DebuggerStatement(d) => self.emit_debugger(d),
         }
     }
 
@@ -451,6 +453,37 @@ impl<'a> Emitter<'a> {
         self.emit_statement(&w.body);
     }
 
+    fn emit_do_while(&mut self, d: &DoWhileStatement) {
+        // `do <body> while ( <test> ) ;`
+        //
+        // Token-separation: `do` is a keyword sitting directly before the
+        // body, so `do{…}` lexes cleanly when the body is a block, but a
+        // bare-statement body would glue (`do foo()` must not become
+        // `dofoo()`). Insert a required space only when the body is NOT a
+        // block. After the body, a block ends in `}` and every other
+        // statement ends in `;`, so the following `while` always lexes
+        // cleanly. The trailing `;` is a real statement terminator (poppable
+        // before a closing `}` via `last_stmt_uses_terminator_semi`).
+        self.maybe_map(&d.cv);
+        self.write_str("do");
+        if matches!(
+            d.body.as_ref(),
+            Statement::Tagged(TaggedStatement::BlockStatement(_))
+        ) {
+            self.pretty_ws();
+        } else {
+            self.required_ws();
+        }
+        self.emit_statement(&d.body);
+        self.pretty_ws();
+        self.write_str("while");
+        self.pretty_ws();
+        self.write_str("(");
+        self.emit_expression(&d.test);
+        self.write_str(")");
+        self.write_str(";");
+    }
+
     fn emit_for(&mut self, f: &ForStatement) {
         self.maybe_map(&f.cv);
         self.write_str("for");
@@ -512,6 +545,14 @@ impl<'a> Emitter<'a> {
     fn emit_empty(&mut self, e: &EmptyStatement) {
         self.maybe_map(&e.cv);
         self.write_str(";");
+    }
+
+    fn emit_debugger(&mut self, d: &DebuggerStatement) {
+        // `debugger;` — the keyword plus a real terminator `;`. The keyword is
+        // followed only by `;` (or, after the semi is popped, a `}`/EOF), so no
+        // token-separation handling is needed.
+        self.maybe_map(&d.cv);
+        self.write_str("debugger;");
     }
 
     /// `label: stmt`. No trailing semicolon — the body statement
@@ -1289,6 +1330,13 @@ fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
                 | TaggedStatement::BreakStatement(_)
                 | TaggedStatement::ContinueStatement(_)
                 | TaggedStatement::ThrowStatement(_)
+                // `do … while(x);` ends in a real terminator `;` that ASI can
+                // supply before a closing `}`, so it is safe to pop. (Plain
+                // `while(x)…` is NOT here: its trailing `;` is a body slot.)
+                | TaggedStatement::DoWhileStatement(_)
+                // `debugger;` ends in a real terminator `;`, poppable before a
+                // closing `}` (ASI re-supplies it). The `;` is NOT a body slot.
+                | TaggedStatement::DebuggerStatement(_)
         ),
         // Declarations are conservatively excluded. Both
         // VariableDeclaration and FunctionDeclaration end in
@@ -2398,6 +2446,120 @@ mod tests {
     fn emit_try_item(t: TryStatement) -> String {
         let item = ProgramItem::Statement(Statement::try_statement(t));
         emit_default(program().with_body(vec![item])).code
+    }
+
+    // ---- do / while (CLOC20) ----------------------------------
+
+    fn emit_do_while_item(d: DoWhileStatement) -> String {
+        let item = ProgramItem::Statement(Statement::do_while_statement(d));
+        emit_default(program().with_body(vec![item])).code
+    }
+
+    #[test]
+    fn do_while_block_body_emits_tight() {
+        // do { a; } while (b)  — block body needs no separator after `do`
+        // (`do{` lexes cleanly), and the loop ends in a real terminator `;`.
+        let d = DoWhileStatement {
+            cv: None,
+            body: Box::new(Statement::block_statement(block_with("a"))),
+            test: ident("b"),
+        };
+        assert_eq!(emit_do_while_item(d), "do{a}while(b);");
+    }
+
+    #[test]
+    fn do_while_bare_body_inserts_separator() {
+        // do a; while (b)  — a bare expression-statement body MUST be
+        // separated from the `do` keyword (`doa` would mis-lex).
+        let d = DoWhileStatement {
+            cv: None,
+            body: Box::new(Statement::expression_statement(ExpressionStatement {
+                cv: None,
+                expression: ident("a"),
+            })),
+            test: ident("b"),
+        };
+        assert_eq!(emit_do_while_item(d), "do a;while(b);");
+    }
+
+    #[test]
+    fn do_while_pretty_mode_spaces() {
+        let d = DoWhileStatement {
+            cv: None,
+            body: Box::new(Statement::block_statement(block_with("a"))),
+            test: ident("b"),
+        };
+        let item = ProgramItem::Statement(Statement::do_while_statement(d));
+        let out = emit_with(
+            program().with_body(vec![item]),
+            EmitOptions {
+                pretty: true,
+                ..EmitOptions::default()
+            },
+        );
+        assert!(out.code.contains("do {"), "got:\n{}", out.code);
+        assert!(out.code.contains("} while ("), "got:\n{}", out.code);
+    }
+
+    #[test]
+    fn do_while_as_last_block_statement_pops_terminator_semi() {
+        // Inside a block, the do-while's trailing `;` is redundant before the
+        // closing `}` (ASI), so it is popped: `{do{a}while(b)}`.
+        let d = DoWhileStatement {
+            cv: None,
+            body: Box::new(Statement::block_statement(block_with("a"))),
+            test: ident("b"),
+        };
+        let outer = BlockStatement {
+            cv: None,
+            body: vec![Statement::do_while_statement(d)],
+        };
+        let item = ProgramItem::Statement(Statement::block_statement(outer));
+        let code = emit_default(program().with_body(vec![item])).code;
+        assert_eq!(code, "{do{a}while(b)}");
+    }
+
+    // ---- debugger (CLOC21) ------------------------------------
+
+    #[test]
+    fn debugger_statement_emits_keyword_and_semi() {
+        let item = ProgramItem::Statement(Statement::debugger_statement(DebuggerStatement {
+            cv: None,
+        }));
+        let code = emit_default(program().with_body(vec![item])).code;
+        assert_eq!(code, "debugger;");
+    }
+
+    #[test]
+    fn debugger_as_last_block_statement_pops_terminator_semi() {
+        // Inside a block, the trailing `;` of `debugger;` is redundant before
+        // the closing `}` (ASI), so it is popped: `{debugger}`.
+        let outer = BlockStatement {
+            cv: None,
+            body: vec![Statement::debugger_statement(DebuggerStatement { cv: None })],
+        };
+        let item = ProgramItem::Statement(Statement::block_statement(outer));
+        let code = emit_default(program().with_body(vec![item])).code;
+        assert_eq!(code, "{debugger}");
+    }
+
+    #[test]
+    fn debugger_followed_by_statement_keeps_semi() {
+        // `debugger;` followed by another statement keeps its `;` (only the
+        // last statement in a block pops it).
+        let outer = BlockStatement {
+            cv: None,
+            body: vec![
+                Statement::debugger_statement(DebuggerStatement { cv: None }),
+                Statement::expression_statement(ExpressionStatement {
+                    cv: None,
+                    expression: ident("a"),
+                }),
+            ],
+        };
+        let item = ProgramItem::Statement(Statement::block_statement(outer));
+        let code = emit_default(program().with_body(vec![item])).code;
+        assert_eq!(code, "{debugger;a}");
     }
 
     #[test]

@@ -105,9 +105,41 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   locals (`local({ x <- 5; x * 2 })` → `10`). `assign`/`get`/`exists`/`rm` are
   lazy special forms (like `switch`/`tryCatch`) operating by name against the
   current scope. The chain walk is iterative over a finite acyclic scope list, so
-  it always terminates; non-name super-assign targets and the not-yet-supported
-  `envir = e` argument fail closed. First-class environment *values* (`new.env`,
-  `environment`) are deferred to R-22.
+  it always terminates; non-name super-assign targets fail closed.
+- **First-class environments** (R-22): the `SValue::Environment` variant boxes a
+  shared scope handle, so a scope is a value that can be passed, stored, and
+  **mutated by reference**. `new.env()` makes a fresh env (parent = caller's
+  scope); `environment()` returns the current env; `ls(e)` lists its names sorted;
+  and `assign`/`get`/`exists`/`rm`/`local` honour an `envir = e` argument that
+  operates on the passed environment (replacing R-21's rejection). Mutating an env
+  through one alias is visible through every other — `e <- new.env(); f <-
+  function(env) assign("x", 1, envir = env); f(e); get("x", envir = e)` → `1`. The
+  cycle risk an env-holding-env would pose is broken by making `Scope::parent` a
+  `Weak`: an env value owns the only strong `Rc` to its scope, parents are
+  referenced but never owned, so no strong-`Rc` cycle is constructible from
+  source. An environment prints as the stable placeholder `<environment>`, never a
+  heap address.
+- **Closure environments & frame reflection** (R-23): `environment(f)` is the env
+  a closure captured at definition (non-closure → `NULL`); `environment(f) <- e`
+  re-homes a closure via the replacement-function lvalue path; `environmentName(e)`
+  is `"R_GlobalEnv"` / `"R_EmptyEnv"` / `""` by `Rc` identity; `globalenv()` /
+  `emptyenv()` / `baseenv()` return the well-known envs (`baseenv()` aliases
+  global); `parent.frame(n = 1)` is the caller's env, recorded on the R-20 call
+  stack and **clamped** to global past the bottom rather than panicking;
+  `is.environment(x)` is the type predicate.
+- **R5 reference classes** (R-24, `src/refclass.rs`): `setRefClass("Name",
+  fields = …, methods = …)` builds a **generator** (an environment carrying the
+  class name, field names, and method closures); `generator$new(field = …)` builds
+  an **instance** (an environment holding the fields). `obj$field` reads a field,
+  `obj$field <- v` writes it **in place by reference**, and `obj$method(args)`
+  rebuilds a fresh instance-bound closure on access so `field <<- value` and
+  `.self$field <- v` mutate the live instance. `b <- a` *aliases* the same instance
+  (reference semantics — the deliberate exception to copy-on-modify). The
+  instance⇄method `Rc` cycle is broken by construction (instance-bound closures are
+  rebuilt lazily and never stored; the stored method closures close over the
+  *generator*); the lone `.self` self-reference is the documented,
+  `MAX_ENVIRONMENTS`-bounded R-22 value-binding cycle. Inheritance, `$copy()`,
+  active bindings, and `$methods()`/`$fields()` introspection are deferred to R-25.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

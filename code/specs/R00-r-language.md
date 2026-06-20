@@ -452,6 +452,223 @@ unchanged.
     against the current scope); R-22 adds the reified handles on top without
     changing any of it.
 
+- **R-22 — first-class environment values** *(this PR)*. Reifies the shared S
+  scope chain as a first-class value, completing the piece R-21 deferred. A new
+  `SValue::Environment(Env)` variant boxes the shared `Env`
+  (`Rc<RefCell<Scope>>`) handle, so a scope can be passed around, stored, and
+  mutated **by reference**. This is grammar-free (the names lex as ordinary
+  identifiers — `.` is a name character in both `s.tokens` and `r.tokens`, so
+  `new.env` is one token) and is wired through the same lazy-special-form path
+  R-18/R-21 use.
+  - **Rc-cycle ownership model (the central correctness concern).** Once a scope
+    can hold an `SValue::Environment` in its `vars`, an environment value can
+    reference another environment — and, crucially, a child's *parent* link could
+    point back to a scope that (transitively) holds the child. A naive strong
+    `Rc` parent link would then form a reference cycle that `Rc` can never
+    collect, leaking every binding in it. **R-22 makes the `Scope::parent` link a
+    `Weak<RefCell<Scope>>`.** The interpreter keeps the global environment alive
+    for the whole session (a strong `Rc` in `Interpreter::global`), and each live
+    call frame is held by a strong `Rc` on the native call stack for the duration
+    of the call; parents are only ever *referenced*, never *owned*, by their
+    children. Therefore: (a) **no cycle through the parent chain is constructible**
+    — every parent edge is `Weak`, so the parent relation stays a finite acyclic
+    list, and the chain-walk operations (`lookup`/`exists`/`super_assign`) always
+    terminate; (b) a child environment captured as a value keeps itself alive
+    through that strong binding, and its `Weak` parent upgrades as long as
+    *something else* still owns the parent (the global env always does,
+    transitively). A `Weak` parent that cannot be upgraded is treated as "no
+    parent" — the chain walk stops, as at the root.
+  - **The residual cycle: value bindings (a bounded, documented limitation).** The
+    `Weak` parent breaks only cycles *through the parent edge*. A cycle can still
+    form *through a value binding*, because an environment value is a **strong**
+    `Rc`: `assign("self", e, envir = e)` stores a strong `Rc`-to-`e` inside `e`
+    itself (and a mutual `a`/`b` pair does the same), an `Rc` cycle that — absent a
+    tracing GC, which R has and we do not — cannot be reclaimed once unreachable.
+    R-22 does **not** claim to collect it; it **bounds** the damage with a
+    per-session `MAX_ENVIRONMENTS` cap (in `eval.rs`) on the number of
+    environments `new.env()`/`environment()` may reify, so a crafted loop building
+    cyclic environments hits a clean error instead of exhausting memory. This and
+    the `Weak` parent are documented inline in `env.rs`/`value.rs` and are the
+    focus of the R-22 security review. (Divergence from the first draft of this
+    spec, which over-claimed that *no* strong-`Rc` cycle was constructible; the
+    value-binding cycle and its bounded mitigation are the corrected model.)
+  - **`new.env()`** — create a fresh environment whose parent is the **caller's**
+    current environment, and return it as a first-class value. Two calls produce
+    two independent environments. A lazy special form (it needs the current
+    `env`).
+  - **`environment()`** — the **current** environment as a value. The
+    `environment(f)` form (a closure's captured environment) lands in **R-23**
+    (it reaches into the `Closure { env, .. }` payload).
+  - **`envir = e` on `assign`/`get`/`exists`/`rm`** — operate on the passed
+    environment **value** rather than the current scope. R-21's runtime rejection
+    is replaced by the real behaviour: `assign("x", 1, envir = e)` binds `x` in
+    `e`; `get`/`exists` read it; `rm` deletes it. A non-environment `envir`
+    argument is a clean `BadArgs` error (never a panic). `assign`/`rm` act on the
+    target frame directly; `get`/`exists` walk *that* environment's chain
+    outward, matching R.
+  - **By-reference mutation.** Because an environment value shares the same
+    `Rc<RefCell<Scope>>`, mutating it through one alias is visible through every
+    other: `e <- new.env(); f <- function(env) assign("x", 1, envir = env); f(e);
+    get("x", envir = e)` → `1`. This is the defining difference from R's
+    otherwise copy-on-modify value semantics.
+  - **`ls(envir = e)`** — the names bound directly in `e` (its own frame, not the
+    enclosing chain), **sorted** as a character vector. `ls()` with no `envir`
+    lists the current environment. `environmentName` lands in **R-23**.
+  - **Printing.** An environment prints as `<environment>` — a **stable
+    placeholder**, deliberately *not* the real heap address R shows
+    (`<environment: 0x55...>`), so test output is deterministic across runs and
+    platforms. Its implicit class is `"environment"` and `type_name` is
+    `"environment"`.
+
+- **R-23 — closure environments & call-frame reflection** *(this PR)*. Builds
+  directly on the R-22 `SValue::Environment` value, the `MAX_ENVIRONMENTS` cap,
+  and the R-20 call stack. Everything lands in the shared `s-runtime`; no grammar
+  change (every name lexes as an ordinary identifier).
+  - **Two well-known environments held by the interpreter.** R-22 kept one
+    long-lived strong handle: `Interpreter::global`. R-23 adds a second, the
+    **empty** environment — a single root scope with **no parent and no bindings**
+    that the interpreter owns for the whole session (a strong `Rc`, exactly like
+    `global`). It is the terminus R uses for `emptyenv()` and the value that
+    `environmentName` recognises as `"R_EmptyEnv"`. Holding it on the interpreter
+    means `emptyenv()`/`globalenv()` hand back the *same* `Rc` every call, so
+    `identical`-style reference equality (pointer equality on the `Rc`) is stable.
+  - **`environment(f)`** — the environment a closure **captured** at definition.
+    A `Closure` already stores its defining scope in `Closure { env, .. }`; R-23
+    exposes that `env` as an `SValue::Environment`. For a closure defined at top
+    level this is the global env, so `identical(environment(f), globalenv())` is
+    `TRUE`. A non-closure argument (a builtin, a number, …) returns `NULL`,
+    matching R (`environment(sum)` is `NULL`). Reifying the captured env counts
+    against `MAX_ENVIRONMENTS` like any other reification — it can equally
+    participate in a value-binding cycle.
+  - **`environment(f) <- e`** — set a closure's captured environment, reusing the
+    R-15/R-16 replacement-function lvalue path (`f(x) <- v` ≡
+    ``x <- `f<-`(x, v)``). A new `environment<-` builtin takes the closure and the
+    replacement environment `value = e` and returns a **fresh** `Closure` with its
+    `env` field swapped (closures are immutable values; we rebind the variable, as
+    R does). The first argument must be a closure and `value` must be an
+    environment, else a clean `BadArgs`/`TypeError` (never a panic). Because the
+    new closure now closes over `e`, free variables in its body resolve from `e`'s
+    chain.
+  - **`environmentName(e)`** — `"R_GlobalEnv"` if `e` **is** the global env (`Rc`
+    pointer equality against `Interpreter::global`), `"R_EmptyEnv"` if it is the
+    empty env, `""` otherwise. A non-environment argument is a clean error.
+  - **`globalenv()` / `emptyenv()` / `baseenv()`** — the well-known environments
+    as values. `globalenv()` and `baseenv()` both return the session global env
+    (this runtime installs its builtins directly into the global frame — there is
+    no separate base namespace, so `baseenv()` aliases the global env, documented
+    as a deliberate simplification); `emptyenv()` returns the interpreter's empty
+    env. All three are lazy special forms (they need the interpreter, not the
+    current `env`); none allocate, so none counts against `MAX_ENVIRONMENTS`.
+  - **`parent.frame(n = 1)`** — the environment of the **caller** `n` frames up
+    the call stack. R-20's call stack recorded the *closure* being run (for
+    `Recall`); R-23 records the **caller's environment** alongside it, so a frame
+    is now `(closure, caller_env)`. `call_closure` pushes the env in which the
+    call expression was evaluated; `parent.frame()` reads the top caller env,
+    `parent.frame(n)` the n-th from the top. A binding the caller made is visible
+    through it: `g <- function() get("x", envir = parent.frame()); f <- function()
+    { x <- 42; g() }; f()` → `42`. **Clamping (not panicking) past the bottom.**
+    `n` larger than the live frame depth, or `parent.frame()` at top level, falls
+    back to the **global** environment — R returns `R_GlobalEnv` there — so the
+    walk can never index out of bounds. `n` must be a positive whole number; a
+    non-positive or non-finite `n` is a clean `BadArgs` error.
+  - **`is.environment(x)`** — `TRUE` iff `x` is an environment value, else
+    `FALSE` (the predicate the tests assert `environment(f)` through). A trivial
+    one-element logical, vectorised over… nothing (it inspects the single value's
+    type), matching R's scalar predicate.
+  - **Rc-cycle safety (unchanged model, two new exposure points).** R-23 hands out
+    two *new* kinds of environment value — a closure's captured env and a caller
+    frame's env — but neither widens the ownership model R-22 established. The
+    caller-env stored on the call stack is dropped when the frame is popped (the
+    RAII `CallFrameGuard`), so it never outlives the call; `parent.frame()` clones
+    the `Rc` out for the duration of one expression. A closure's captured env was
+    already reachable (the closure owned a strong `Rc` to it); exposing it as a
+    value adds another strong `Rc`, the same situation as `environment()`, and is
+    bounded by the same `MAX_ENVIRONMENTS` cap. The `Weak` parent link still
+    prevents any parent-chain cycle. `parent.frame(n)` clamps rather than indexes,
+    so a crafted deep `n` cannot panic.
+
+- **R-24 — R5 reference classes (`setRefClass`)** *(this PR)*. The payoff of the
+  R-21/22/23 environment work: an R5 object **is** an environment holding its
+  fields, and a method **is** a closure whose enclosing environment is the
+  instance environment — so a method body sees fields directly and writes them
+  back with `<<-`. Everything lands in the shared `s-runtime`; no grammar change
+  (`$` already exists from the data-frame work).
+  - **`setRefClass("Name", fields = list(x = "numeric", …), methods = list(m = function(…) …))`**
+    → a **generator** object. `setRefClass` is a **lazy special form** (like
+    `switch`/`new.env`): it must capture the `methods = list(…)` *function
+    definitions unevaluated* and the *current environment* (the generator's
+    enclosing scope), neither of which an eager builtin receives. The generator
+    is represented as an `SValue::Environment` — a fresh scope carrying three
+    private bindings: `.refClassName` (the class name, a character), `.refFields`
+    (the field names, a character vector, in declaration order), and `.refMethods`
+    (a `list` of the method **closures** as written, each closing over the
+    generator's defining scope). The field *type* strings (`"numeric"`,
+    `"character"`) are recorded but **not enforced** in this subset — R5 type
+    checking is deferred — so a field may hold any value. Reifying the generator
+    env counts against `MAX_ENVIRONMENTS`.
+  - **`generator$new(x = …, y = …)`** → an **instance**. `new` creates a *fresh*
+    child environment of the generator's defining scope and binds: every declared
+    field (to the matching `new(field = …)` argument, or `NULL` when omitted),
+    `.self` (an `SValue::Environment` pointing at the instance itself), and
+    `.refMethods` (carried from the generator so methods can be rebuilt on
+    access). The instance also counts against `MAX_ENVIRONMENTS`.
+  - **`obj$field`** reads a field — an ordinary `env::lookup` in the instance
+    scope (the `$` read path, extended for `SValue::Environment`, returns the
+    bound value, or `NULL` for an unset field, matching R5).
+  - **`obj$field <- v`** writes a field **by reference**. The `$<-` lvalue path is
+    extended for an `SValue::Environment` target: it `env::define`s the name in the
+    *instance scope in place*, mutating the live environment rather than rebinding a
+    copy. This is what gives R5 its **reference semantics** — see below.
+  - **`obj$method(args)`** calls a method. The `$` read path, seeing a name that is
+    *not* a field but *is* present in `.refMethods`, **reconstructs** a fresh
+    `Closure` whose `env` is the **instance** environment (not the generator's),
+    then the trailing `call_suffix` applies it. Because the method closes over the
+    instance scope, its body sees the fields as free variables and updates them
+    with `field <<- value` (super-assignment walks to the enclosing instance frame
+    and rebinds in place — R-21's `<<-`), or via `.self$field <- v`. `.self` is
+    bound in the instance, so a method may call a sibling method as
+    `.self$other(…)`.
+  - **Reference semantics (the headline).** `b <- a` copies the *environment
+    handle* (a strong `Rc` to the same scope), **not** the scope's contents — so
+    `a` and `b` are two references to one instance. `b$add(1)` mutates the shared
+    scope and `a$total` reflects it. This is the deliberate exception to R's
+    otherwise copy-on-modify value semantics, and it falls straight out of reusing
+    R-22's first-class, mutate-by-reference `SValue::Environment`: the instance *is*
+    a live scope, and assigning it to a new name aliases rather than clones it. Two
+    instances built by two separate `$new` calls are *independent* (distinct
+    scopes), so their fields do not interfere.
+  - **Rc-cycle safety (the instance⇄method trap, broken by construction).** The
+    obvious encoding — bind each method *as a closure* directly in the instance's
+    `vars`, with that closure's `env` being the instance — forms a **strong
+    reference cycle**: `instance.vars["m"]` is a `Closure` whose `env` is a strong
+    `Rc` back to `instance`. `Rc` never reclaims a cycle, so every such instance
+    would leak its whole scope. **We break it by never storing the
+    instance-bound closures.** The instance holds only the *field bindings*, `.self`,
+    and `.refMethods` — and the closures inside `.refMethods` close over the
+    **generator's** scope, *not* the instance's, so they create no edge back to the
+    instance. The instance-bound method closure is materialised **lazily, per
+    access**, in `obj$method`, lives only for the duration of that one call, and is
+    dropped immediately after — it is never stored anywhere reachable from the
+    instance, so the instance→method→instance edge never exists at rest. The one
+    remaining strong self-reference is `.self` (an `Environment` to the instance
+    stored *inside* the instance) — exactly the *documented, pre-existing* R-22
+    value-binding self-cycle, bounded (not collected) by the `MAX_ENVIRONMENTS`
+    session cap; we inherit that boundary verbatim rather than widening it.
+  - **Borrow-panic safety.** A method that mutates a field mid-call goes through
+    `env::define`/`env::lookup`, each of which takes and releases the instance
+    scope's `RefCell` borrow *per operation* (the iterative-walk discipline R-22
+    established), so a method reading one field and writing another never holds two
+    borrows of the same scope at once. Malformed `setRefClass`/`$new` arguments — a
+    non-character class name, a `fields`/`methods` that is not a list, a method
+    entry that is not a function, an unknown `new()` argument — are all clean
+    `BadArgs`/`TypeError` results, never panics.
+  - **Deferred to R-25 (scope guard).** Inheritance (`contains = "Base"`),
+    `$copy()` (a deep value-copy breaking the reference sharing), active bindings,
+    and the `$methods()`/`$fields()` introspection accessors are **out of scope**
+    here. This PR ships fields + methods + `$new` + `$field` read/write + method
+    calls with `<<-`/`.self$field <-` field update, solidly and with full
+    reference-semantics tests. A clean partial beats a sprawling one.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -464,12 +681,17 @@ unchanged.
 
 ## §5 Out of scope (for now)
 
-Pipes (`|>`) and backslash lambdas (`\(x)`); **first-class environment values**
-(`new.env()`, `environment()`, and the `envir = e` argument of
-`assign`/`get`/`exists`/`rm`/`local`) — deferred to **R-21's follow-up R-22**
-once an `SValue::Environment` variant lands (R-21 ships `local()` + `<<-` +
-current-scope `assign`/`get`/`exists`/`rm`); S4/R5/R6 OO; namespaces and
-`library()`; the C interface; graphics. These layer on later, following ST00.
+Pipes (`|>`) and backslash lambdas (`\(x)`). The `SValue::Environment` value,
+`new.env()`, `environment()`, `ls(envir=)`, and the `envir = e` argument of
+`assign`/`get`/`exists`/`rm` land in **R-22**; the `environment(f)` form,
+`environment(f) <-`, `environmentName`, `globalenv()`/`emptyenv()`/`baseenv()`,
+`parent.frame()`, and `is.environment()` land in **R-23**. Still out of scope:
+`sys.call`/`sys.function`/`match.call` and the rest of the call-introspection
+family; S4 and R6 OO (R5 reference classes land in **R-24**, with inheritance,
+`$copy()`, active bindings and `$methods()`/`$fields()` introspection deferred to
+**R-25**); namespaces and `library()` (so `baseenv()` aliases the
+global env for now); the C interface; graphics. These layer on later, following
+ST00.
 
 ## §6 References
 

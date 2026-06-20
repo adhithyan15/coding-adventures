@@ -617,6 +617,12 @@ fn walk_tagged_statement(
             walk_expression(&ws.test, ctx, analysis, pending);
             walk_statement(&ws.body, ctx, analysis, pending);
         }
+        TaggedStatement::DoWhileStatement(ds) => {
+            // A do-while introduces no new scope (same as while); walk the
+            // body and the test in the current scope.
+            walk_statement(&ds.body, ctx, analysis, pending);
+            walk_expression(&ds.test, ctx, analysis, pending);
+        }
         TaggedStatement::ForStatement(fs) => {
             if let Some(init) = &fs.init {
                 match init {
@@ -694,6 +700,8 @@ fn walk_tagged_statement(
         TaggedStatement::BreakStatement(_) => {}
         TaggedStatement::ContinueStatement(_) => {}
         TaggedStatement::EmptyStatement(_) => {}
+        // `debugger;` has no children and binds nothing — nothing to analyze.
+        TaggedStatement::DebuggerStatement(_) => {}
     }
 }
 

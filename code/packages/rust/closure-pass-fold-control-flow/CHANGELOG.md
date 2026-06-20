@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.11.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+The statement dispatch now covers `DebuggerStatement` (grouped with the other
+childless leaf statements), returned unchanged. Added to keep the match
+exhaustive over the new AST variant.
+
+## [0.10.0] - 2026-06-20
+
+### Added — CLOC20: fold control flow inside `do`/`while` (no dead-loop elision)
+
+New `DoWhileStatement` arm recurses control-flow folding into the loop body and
+test. Crucially — unlike `while`, which can be eliminated when its test is
+statically falsy — a `do`-`while` runs its body **at least once**, so it is NEVER
+removed even when `test` folds to a falsy literal (the single body run is
+observable). The arm therefore only recurses structurally.
+
 ## [0.9.0] - 2026-06-20
 
 ### Added — CLOC19: fold control flow inside `try`/`catch`/`finally`

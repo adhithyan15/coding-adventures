@@ -1,5 +1,31 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.22.0] — 2026-06-20 — `f64` (ALGOL `real`) in the textual `.il` emitter (LANG-FULL E3)
+
+The CLR backend was uniformly `int32` and the validator rejected every float
+const ("float constants are not supported in CLR v1"). The **textual `.il`
+emitter** (the real-CLR / `ilasm` matrix path) now lowers `f64`:
+
+- **`float64` locals** — `cil_local_type` maps `f64` → `float64` (and `f32` →
+  `float32`), so a `real` register is declared `float64` in `.locals`. CIL's
+  `add`/`sub`/`mul`/`div` and `ceq`/`cgt`/`clt` are stack-type-overloaded, so
+  arithmetic and comparison need **no opcode change** for doubles.
+- **`ldc.r8` constants** — a float const lowers to `ldc.r8 (b0 b1 … b7)` using
+  the exact little-endian IEEE-754 bytes, so a `real` literal round-trips
+  bit-for-bit (a decimal would be re-parsed by `ilasm`). `f32` uses `ldc.r4`.
+- **Comparison result is `int32`** — a `cmp_*` over `float64` operands carries
+  the `f64` *operand* width in its `type_hint`, but `ceq`/`cgt`/`clt` push a 0/1
+  `int32`; the register typer now forces a comparison dest to `int32` so it isn't
+  declared `float64` (which would `stloc` an int into a float local).
+- **Validator** — a float const with a `f32`/`f64` `type_hint` is accepted; one
+  with a non-float hint is still rejected (it would silently truncate).
+
+**Verified by RUNNING on real `ilasm` + `dotnet`**: the two ALGOL 60 `real`
+programs (`r := 2.5 * 2.0; if r = 5.0 …` → exit 42; `r := 7.0 / 2.0; if r < 4.0 …`
+→ exit 1) run on the CLR matrix column. Integer programs are unaffected. (The
+structured **bytecode** `lower` emitter still keeps its own f64 guard — the
+real-CLR path is the textual one; the bytecode path's f64 is a later follow-up.)
+
 ## [0.21.0] — 2026-06-16 — unary `not` op in the textual `.il` emitter (LANG-FULL N3)
 
 The bytecode `lower` path already lowered the unary IIR `not` op, but the textual

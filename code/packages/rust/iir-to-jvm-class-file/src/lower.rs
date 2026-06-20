@@ -300,6 +300,8 @@ const LASTORE: u8 = 0x50;
 /// Used in `__callClosure` to dispatch on the function index:
 ///   `lload fn_idx_slot; ldc2_w target_idx; lcmp; ifeq case_N`
 const LCMP: u8 = 0x94;
+const DCMPL: u8 = 0x97; // compare two doubles → int -1/0/1 (NaN → -1)
+const DCMPG: u8 = 0x98; // compare two doubles → int -1/0/1 (NaN → +1)
 
 /// `l2i` (0x88) — narrow long to int (truncates to low 32 bits).
 ///
@@ -1053,19 +1055,51 @@ fn emit_fconst(code: &mut Vec<u8>, value: f32) {
     }
 }
 
-/// Emit a double constant push.
+/// Emit a double constant push, adding a `CONSTANT_Double` pool entry when one
+/// is needed (LANG-FULL E3).
 ///
-/// JVM has short forms for `0.0d` and `1.0d`.  Other double values need
-/// `ldc2_w`.  Placeholder for v1.
-fn emit_dconst(code: &mut Vec<u8>, value: f64) {
-    if value == 0.0f64 {
+/// JVM has 1-byte short forms for `0.0d` (`dconst_0`) and `1.0d` (`dconst_1`).
+/// Any *other* double must be loaded with `ldc2_w <cp_index>`, where the index
+/// points at a `CONSTANT_Double` pool entry. The old `emit_dconst` left a
+/// placeholder index `#0` (the unused phantom slot) — valid-looking bytecode
+/// that the verifier rejects, so an ALGOL `real` literal like `2.5` produced an
+/// unloadable class. `cp.add_double` interns the value (reserving the two pool
+/// slots a `Double` occupies) and we emit the real index.
+fn emit_dconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: f64) {
+    if value == 0.0f64 && value.is_sign_positive() {
         code.push(DCONST_0);
     } else if value == 1.0f64 {
         code.push(DCONST_1);
     } else {
+        let idx = cp.add_double(value);
         code.push(LDC2_W);
-        code.extend_from_slice(&0u16.to_be_bytes()); // placeholder CP index
+        code.extend_from_slice(&idx.to_be_bytes());
     }
+}
+
+/// Emit a "compare two doubles on the stack, push 1 if the condition holds,
+/// else 0" sequence — the `double` counterpart of [`emit_long_compare`]
+/// (LANG-FULL E3). The JVM has no `if_dcmpXX`; the idiom is a `dcmpl`/`dcmpg`
+/// (which leaves an `int` -1/0/1 on the stack) followed by a unary `ifXX`
+/// branch over that result, with the same negated-opcode table the long path
+/// uses.
+///
+/// `dcmp_opcode` is `DCMPL` (NaN → -1) or `DCMPG` (NaN → +1); `branch_opcode`
+/// is the negated unary branch (e.g. `IFNE` for `cmp_eq`). Stack on entry:
+/// `[…, double1, double2]`; on exit: `[…, 0_or_1]`.
+fn emit_double_compare(code: &mut Vec<u8>, dcmp_opcode: u8, branch_opcode: u8) {
+    code.push(dcmp_opcode); // 1 byte: compare doubles, push -1/0/1
+    // ifXX at current PC, offset to iconst_0 (7 bytes forward)
+    code.push(branch_opcode);
+    code.extend_from_slice(&7i16.to_be_bytes());
+    // True arm — condition held
+    code.push(ICONST_1);
+    // Jump past the false arm
+    code.push(GOTO);
+    code.extend_from_slice(&4i16.to_be_bytes());
+    // False arm
+    code.push(ICONST_0);
+    // 9 bytes total (1 for dcmp + 8 for the branch pattern)
 }
 
 // ---------------------------------------------------------------------------
@@ -1544,6 +1578,30 @@ impl ConstantPoolBuilder {
         idx
     }
 
+    /// Add a `CONSTANT_Double` entry (deduplicated by exact bit pattern) and
+    /// return its 1-based index, for an `f64` literal loaded with `ldc2_w`
+    /// (LANG-FULL E3 — ALGOL `real` constants). Like `Long`, a `Double`
+    /// occupies **two** pool slots, so a phantom `None` follows it.
+    fn add_double(&mut self, value: f64) -> u16 {
+        // Key on the raw bits so `-0.0`/`0.0` and any NaN payloads dedup
+        // exactly and we never rely on `f64: Eq` (which doesn't hold).
+        let key = format!("Double:{:016X}", value.to_bits());
+        if let Some(&idx) = self.index_map.get(&key) {
+            return idx;
+        }
+        // We need two free slots.
+        assert!(
+            self.entries.len() + 1 < u16::MAX as usize,
+            "JVM constant pool overflow: too many entries (limit 65535)"
+        );
+        self.entries.push(Some(JvmConstantPoolEntry::Double(value)));
+        let idx = (self.entries.len() - 1) as u16;
+        self.index_map.insert(key, idx);
+        // Push the phantom slot (index N+1 is unusable per JVM spec §4.4.5).
+        self.entries.push(None);
+        idx
+    }
+
     /// Finalise the pool and return it as a `Vec<Option<JvmConstantPoolEntry>>`.
     fn build(self) -> Vec<Option<JvmConstantPoolEntry>> {
         self.entries
@@ -1769,7 +1827,7 @@ fn lower_function(
                         match dest_type {
                             JvmType::Long => emit_lconst(&mut code, *v),
                             JvmType::Float => emit_fconst(&mut code, *v as f32),
-                            JvmType::Double => emit_dconst(&mut code, *v as f64),
+                            JvmType::Double => emit_dconst_cp(&mut code, cp, *v as f64),
                             _ => emit_iconst_cp(&mut code, cp, *v as i32),
                         }
                     }
@@ -1780,7 +1838,7 @@ fn lower_function(
                     Operand::Float(f) => {
                         match dest_type {
                             JvmType::Float => emit_fconst(&mut code, *f as f32),
-                            JvmType::Double => emit_dconst(&mut code, *f),
+                            JvmType::Double => emit_dconst_cp(&mut code, cp, *f),
                             _ => {
                                 // Integer destination with float source — unusual
                                 // but not necessarily wrong (e.g. casting).
@@ -1998,7 +2056,28 @@ fn lower_function(
             "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
                 let (src0, src1) = two_srcs(func, instr, &slots)?;
 
-                if src0.1 == JvmType::Long {
+                if src0.1 == JvmType::Double {
+                    // Double comparison (LANG-FULL E3): dload both, `dcmpl`/`dcmpg`
+                    // to an int -1/0/1, then the same unary `ifXX` branch the long
+                    // path uses. Without this branch a `real` comparison fell into
+                    // the `else` int path, which `iload`ed a two-slot double as a
+                    // single int and used `if_icmpne` — the verifier rejected the
+                    // class (empty output). `dcmpg` is chosen for `>`/`>=` so a
+                    // NaN operand makes them false (NaN → +1); `dcmpl` for the
+                    // rest (NaN → -1) — matching javac's convention.
+                    emit_typed_load(&mut code, src0.0, JvmType::Double);
+                    emit_typed_load(&mut code, src1.0, JvmType::Double);
+                    let (dcmp, branch) = match instr.op.as_str() {
+                        "cmp_eq" => (DCMPL, IFNE), // skip true when result ≠ 0
+                        "cmp_ne" => (DCMPL, IFEQ), // skip true when result = 0
+                        "cmp_lt" => (DCMPL, IFGE), // skip true when result ≥ 0
+                        "cmp_le" => (DCMPL, IFGT), // skip true when result > 0
+                        "cmp_gt" => (DCMPG, IFLE), // skip true when result ≤ 0
+                        "cmp_ge" => (DCMPG, IFLT), // skip true when result < 0
+                        _ => (DCMPL, IFNE),
+                    };
+                    emit_double_compare(&mut code, dcmp, branch);
+                } else if src0.1 == JvmType::Long {
                     // Long comparison: lload both, lcmp, then unary ifXX.
                     emit_typed_load(&mut code, src0.0, JvmType::Long);
                     emit_typed_load(&mut code, src1.0, JvmType::Long);
@@ -2221,7 +2300,7 @@ fn lower_function(
                                 code.push(FRETURN);
                             }
                             JvmType::Double => {
-                                emit_dconst(&mut code, *f);
+                                emit_dconst_cp(&mut code, cp, *f);
                                 code.push(DRETURN);
                             }
                             _ => {

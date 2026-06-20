@@ -1003,6 +1003,10 @@ fn classify_stmt(stmt: &Statement, cls: &mut Classify, nodes_touched: &mut u32) 
                 classify_expr(&ws.test, cls);
                 classify_stmt(&ws.body, cls, nodes_touched);
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                classify_expr(&ds.test, cls);
+                classify_stmt(&ds.body, cls, nodes_touched);
+            }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &fs.init {
                     match init {
@@ -1062,7 +1066,8 @@ fn classify_stmt(stmt: &Statement, cls: &mut Classify, nodes_touched: &mut u32) 
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -1196,6 +1201,10 @@ fn rewrite_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
                 rewrite_expr(&mut ws.test, map);
                 rewrite_stmt(&mut ws.body, map);
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                rewrite_expr(&mut ds.test, map);
+                rewrite_stmt(&mut ds.body, map);
+            }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &mut fs.init {
                     match init {
@@ -1253,7 +1262,8 @@ fn rewrite_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }

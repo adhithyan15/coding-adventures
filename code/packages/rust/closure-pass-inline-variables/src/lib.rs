@@ -418,6 +418,9 @@ fn count_decl_names_stmt(
             TaggedStatement::WhileStatement(ws) => {
                 count_decl_names_stmt(&ws.body, out, nodes_touched)
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                count_decl_names_stmt(&ds.body, out, nodes_touched)
+            }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(ForInit::VariableDeclaration(vd)) = &fs.init {
                     count_decl_names_var(vd, out);
@@ -465,7 +468,8 @@ fn count_decl_names_stmt(
             | TaggedStatement::ThrowStatement(_)
             | TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -528,6 +532,10 @@ fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
                 count_uses_expr(&ws.test, name, count);
                 count_uses_stmt(&ws.body, name, count);
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                count_uses_expr(&ds.test, name, count);
+                count_uses_stmt(&ds.body, name, count);
+            }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &fs.init {
                     match init {
@@ -588,7 +596,8 @@ fn count_uses_stmt(stmt: &Statement, name: &str, count: &mut usize) {
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
@@ -730,6 +739,10 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
                 changed |= propagate_in_expr(&mut ws.test, cand);
                 changed |= propagate_in_stmt(&mut ws.body, cand);
             }
+            TaggedStatement::DoWhileStatement(ds) => {
+                changed |= propagate_in_expr(&mut ds.test, cand);
+                changed |= propagate_in_stmt(&mut ds.body, cand);
+            }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &mut fs.init {
                     match init {
@@ -794,7 +807,8 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
             }
             TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
-            | TaggedStatement::EmptyStatement(_) => {}
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
     changed

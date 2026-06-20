@@ -2353,6 +2353,8 @@ class DeckRunArtifact:
     fourier_probes: list[str]
     control_line_count: int
     control_lines: list[str]
+    write_marker_count: int
+    write_markers: list[str]
     diagnostic_count: int
     diagnostic_codes: list[str]
 
@@ -2378,6 +2380,12 @@ class DeckAnalysisExecution:
     output_probes: list[str]
     output_directives: list[str]
     analysis_directives: list[str]
+    control_line_count: int
+    control_lines: list[str]
+    write_marker_count: int
+    write_markers: list[str]
+    diagnostic_count: int
+    diagnostic_codes: list[str]
     table_count: int
     tables: list[str]
     table_artifacts: list[DeckTableArtifact]
@@ -2471,6 +2479,8 @@ _DECK_RUN_ARTIFACT_COLUMNS = [
     "FourierList",
     "ControlLines",
     "ControlLineList",
+    "WriteMarkers",
+    "WriteMarkerList",
     "Diagnostics",
     "DiagnosticCodeList",
 ]
@@ -2507,6 +2517,7 @@ def _deck_run_artifacts(
     measurements: list[ProbeMeasurement],
     fourier: list[FourierResult],
     control_lines: list[str],
+    write_markers: list[str],
     diagnostic_codes: list[str],
 ) -> list[DeckRunArtifact]:
     is_transient = plan.analysis == "tran"
@@ -2552,6 +2563,8 @@ def _deck_run_artifacts(
             ],
             control_line_count=len(control_lines),
             control_lines=list(control_lines),
+            write_marker_count=len(write_markers),
+            write_markers=list(write_markers),
             diagnostic_count=len(diagnostic_codes),
             diagnostic_codes=list(diagnostic_codes),
         )
@@ -2582,6 +2595,10 @@ def _deck_control_diagnostic_codes(netlist: str) -> list[str]:
 
 def _deck_control_lines(netlist: str) -> list[str]:
     return list(analyze_deck_controls(netlist).control_lines)
+
+
+def _deck_control_write_markers(netlist: str) -> list[str]:
+    return list(analyze_deck_controls(netlist).write_markers)
 
 
 def _deck_run_diagnostic_codes(netlist: str, plan: DeckAnalysisPlan) -> list[str]:
@@ -2636,6 +2653,8 @@ def _deck_run_artifact_cells(artifact: DeckRunArtifact) -> list[str]:
         ";".join(artifact.fourier_probes),
         str(artifact.control_line_count),
         ";".join(artifact.control_lines),
+        str(artifact.write_marker_count),
+        ";".join(artifact.write_markers),
         str(artifact.diagnostic_count),
         ";".join(artifact.diagnostic_codes),
     ]
@@ -2752,6 +2771,7 @@ def run_deck_analysis(
     plan = select_deck_analysis_plan(netlist, analysis)
     diagnostic_codes = _deck_run_diagnostic_codes(netlist, plan)
     control_lines = _deck_control_lines(netlist)
+    write_markers = _deck_control_write_markers(netlist)
     analysis_directives = _deck_analysis_directives(plan)
     if plan.analysis == "op":
         result = dc_op(circuit)
@@ -2771,6 +2791,7 @@ def run_deck_analysis(
             measurements,
             fourier,
             control_lines,
+            write_markers,
             diagnostic_codes,
         )
         measurement_table = format_measurement_table(measurements)
@@ -2792,6 +2813,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            control_line_count=len(control_lines),
+            control_lines=list(control_lines),
+            write_marker_count=len(write_markers),
+            write_markers=list(write_markers),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -2826,6 +2853,7 @@ def run_deck_analysis(
             measurements,
             fourier,
             control_lines,
+            write_markers,
             diagnostic_codes,
         )
         measurement_table = format_measurement_table(measurements)
@@ -2847,6 +2875,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            control_line_count=len(control_lines),
+            control_lines=list(control_lines),
+            write_marker_count=len(write_markers),
+            write_markers=list(write_markers),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -2883,6 +2917,7 @@ def run_deck_analysis(
             measurements,
             fourier,
             control_lines,
+            write_markers,
             diagnostic_codes,
         )
         measurement_table = format_measurement_table(measurements)
@@ -2904,6 +2939,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            control_line_count=len(control_lines),
+            control_lines=list(control_lines),
+            write_marker_count=len(write_markers),
+            write_markers=list(write_markers),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -2946,6 +2987,7 @@ def run_deck_analysis(
             measurements,
             fourier,
             control_lines,
+            write_markers,
             diagnostic_codes,
         )
         measurement_table = format_measurement_table(measurements)
@@ -2967,6 +3009,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            control_line_count=len(control_lines),
+            control_lines=list(control_lines),
+            write_marker_count=len(write_markers),
+            write_markers=list(write_markers),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -2997,6 +3045,7 @@ def run_deck_analysis(
             measurements,
             fourier,
             control_lines,
+            write_markers,
             diagnostic_codes,
         )
         measurement_table = format_measurement_table(measurements)
@@ -3018,6 +3067,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            control_line_count=len(control_lines),
+            control_lines=list(control_lines),
+            write_marker_count=len(write_markers),
+            write_markers=list(write_markers),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -3047,6 +3102,7 @@ def run_deck_analysis(
             measurements,
             fourier,
             control_lines,
+            write_markers,
             diagnostic_codes,
         )
         measurement_table = format_measurement_table(measurements)
@@ -3068,6 +3124,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            control_line_count=len(control_lines),
+            control_lines=list(control_lines),
+            write_marker_count=len(write_markers),
+            write_markers=list(write_markers),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,
@@ -3116,6 +3178,7 @@ def run_deck_analysis(
             measurements,
             fourier,
             control_lines,
+            write_markers,
             diagnostic_codes,
         )
         measurement_table = format_measurement_table(measurements)
@@ -3137,6 +3200,12 @@ def run_deck_analysis(
             output_probes=output_probes,
             output_directives=output_directives,
             analysis_directives=analysis_directives,
+            control_line_count=len(control_lines),
+            control_lines=list(control_lines),
+            write_marker_count=len(write_markers),
+            write_markers=list(write_markers),
+            diagnostic_count=len(diagnostic_codes),
+            diagnostic_codes=list(diagnostic_codes),
             table_count=len(tables),
             tables=tables,
             table_artifacts=table_artifacts,

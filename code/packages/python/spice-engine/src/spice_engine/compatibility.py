@@ -57,6 +57,7 @@ class DeckControlSummary:
 
     active_lines: tuple[str, ...]
     control_lines: tuple[str, ...]
+    write_markers: tuple[str, ...]
     terminated: bool
     end_line_number: int | None
     diagnostics: tuple[DeckControlDiagnostic, ...]
@@ -609,6 +610,7 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
 
     active_lines: list[str] = []
     control_lines: list[str] = []
+    write_markers: list[str] = []
     diagnostics: list[DeckControlDiagnostic] = []
     end_line_number: int | None = None
     in_control_block = False
@@ -626,6 +628,10 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
             if control_line is not None:
                 active_lines.append(control_line)
                 control_lines.append(control_line)
+                continue
+            write_marker = _control_block_write_marker(stripped)
+            if write_marker is not None:
+                write_markers.append(write_marker)
                 continue
             if _is_noop_control_block_command(stripped):
                 continue
@@ -710,6 +716,7 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
     return DeckControlSummary(
         active_lines=tuple(active_lines),
         control_lines=tuple(control_lines),
+        write_markers=tuple(write_markers),
         terminated=end_line_number is not None,
         end_line_number=end_line_number,
         diagnostics=tuple(diagnostics),
@@ -3724,6 +3731,20 @@ def _control_block_command_as_deck_line(line: str) -> str | None:
     if len(parts) == 1:
         return directive
     return f"{directive} {parts[1]}"
+
+
+def _control_block_write_marker(line: str) -> str | None:
+    parts = line.split(maxsplit=1)
+    if not parts:
+        return None
+    command = parts[0].lower()
+    if command in _NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS and len(parts) == 2:
+        return f"{command.removeprefix('.')} {parts[1]}"
+    if command in _NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS and len(parts) == 2:
+        vector_parts = parts[1].split()
+        if len(vector_parts) >= 2:
+            return f"{command.removeprefix('.')} {parts[1]}"
+    return None
 
 
 def _is_noop_control_block_command(line: str) -> bool:

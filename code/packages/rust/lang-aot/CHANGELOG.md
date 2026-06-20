@@ -1,5 +1,44 @@
 # Changelog — `lang-aot`
 
+## 0.99.0 — 2026-06-20 — ALGOL 60 reals now run on the CLR too — 6/7 backends (LANG-FULL E3-clr)
+
+The two ALGOL 60 **real** matrix programs now also run on the **CLR** column
+(LLVM + WASM + JVM + CLR + VM + JIT — **6 of 7 backends**). `iir-to-cil-bytecode`
+0.22.0's textual `.il` emitter lowers `f64` to `float64` locals + `ldc.r8`
+constants (CIL's `add`/`mul`/`ceq`/`clt` are stack-type-overloaded, so no opcode
+change), with the comparison result forced to `int32`. The
+`proven_columns_do_not_silently_skip` guard confirms real `ilasm` + `dotnet`
+execute the programs.
+
+Only **E3-native** (the x86_64/aarch64 direct native backends) remains before
+ALGOL reals run on all 7.
+
+## 0.98.0 — 2026-06-20 — ALGOL 60 reals now run on the JVM too — E3-codegen-slots complete (LANG-FULL E3-codegen-slots, JVM)
+
+The two ALGOL 60 **real** matrix programs now also run on the **JVM** column
+(LLVM + WASM + JVM + VM + JIT — 5 of 7 backends). `iir-to-jvm-class-file` 0.15.0
+fixes the two remaining f64 gaps: non-0/1 double constants now get a real
+`CONSTANT_Double` pool entry (`ldc2_w <idx>` instead of the invalid `#0`
+placeholder), and f64 comparisons emit `dcmpl`/`dcmpg` + a unary branch instead
+of falling through to the integer `if_icmp` path (which mis-read a two-slot
+double as an int → VerifyError). The `proven_columns_do_not_silently_skip`
+guard confirms real `java` executes the programs.
+
+**This completes E3-codegen-slots** (LLVM + WASM + JVM all run reals). Remaining
+E3: the two direct native backends (x86_64/aarch64 — E3-native) and CLR
+(E3-clr) still reject `Operand::Float`.
+
+## 0.97.0 — 2026-06-20 — ALGOL 60 reals now run on the WASM backend too (LANG-FULL E3-codegen-slots, WASM)
+
+The two ALGOL 60 **real** matrix programs now also run on the **WASM** column
+(LLVM + WASM + VM + JIT). WASM needed **no backend change**: `iir-to-wasm`'s
+typed-local model already carries an `f64` variable in an `F64` local and
+selects `f64.mul`/`f64.eq`/`f64.lt` from the `f64` type_hint — the
+uniform-`i64`-slot problem that LLVM had simply doesn't exist there. The
+`proven_columns_do_not_silently_skip` guard confirms `wasm-runtime` actually
+executes the programs. (`iir-to-wasm` 0.15.1 adds op-selection regression
+tests.) Remaining E3: jvm (slot fix), native + CLR (FP emission).
+
 ## 0.96.0 — 2026-06-20 — ALGOL 60 reals now run on the LLVM backend too (LANG-FULL E3-codegen-slots, LLVM)
 
 The two ALGOL 60 **real** matrix programs (real `*`+`=` → exit 42, real `/`+`<`

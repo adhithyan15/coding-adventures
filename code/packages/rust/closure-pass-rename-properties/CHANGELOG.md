@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+`classify_stmt` and `rewrite_stmt` now cover `DebuggerStatement` (grouped with
+the other childless leaf statements) as a no-op. A `debugger;` has no property
+accesses — added to keep the matches exhaustive over the new AST variant.
+
+## [0.5.0] - 2026-06-20
+
+### Added — CLOC20: property renaming recurses through `do`/`while`
+
+`classify_stmt` and `rewrite_stmt` recurse through `DoWhileStatement` (loop body
+and test) so property accesses inside a do-while loop are renamed consistently.
+
 ## [0.4.0] - 2026-06-20
 
 ### Added — CLOC19: property renaming recurses through `try`/`catch`/`finally`

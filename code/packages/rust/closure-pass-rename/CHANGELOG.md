@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+Every phase of the pass now covers `DebuggerStatement` (grouped with the other
+childless leaf statements) as a no-op. A `debugger;` binds and references
+nothing, so there is nothing to rename — added to keep the matches exhaustive
+over the new AST variant.
+
+## [0.6.0] - 2026-06-20
+
+### Added — CLOC20: local renaming across `do`/`while`
+
+The pass recurses through `DoWhileStatement` in every phase (`process_tagged`,
+`stmt_has_function`, `collect_decl_occurrences_stmt`, `collect_all_idents_stmt`,
+`rewrite_uses_tagged`), so local renames reach into the loop body and test,
+mirroring the existing `while` handling. A do-while introduces no binding of its
+own, so no special reservation is needed (unlike a catch parameter).
+
 ## [0.5.0] - 2026-06-20
 
 ### Added — CLOC19: local renaming across `try`/`catch`/`finally` (catch-param soundness)

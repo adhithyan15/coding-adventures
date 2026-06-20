@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.154.0] - 2026-06-20
+
+### Added — CLOC21: `debugger;` no longer forces a WHITESPACE_ONLY fallback
+
+Programs containing a `debugger` statement now route through the full typed-AST
+optimization pipeline at both SIMPLE and ADVANCED levels. Previously any
+`debugger` made the parse/bridge step decline, and closurec silently fell back
+to WHITESPACE_ONLY (no real optimization). Now inlining, constant folding,
+DCE, and (under ADVANCED) renaming all run across a `debugger` statement, which
+is itself preserved verbatim. (Stripping `debugger` at SIMPLE/ADVANCED, as the
+upstream Closure Compiler does, is a planned follow-up.)
+
+The end-to-end `simple-debugger` diff fixture pins the behaviour, with a
+regression guard that the output is NOT the whitespace fallback.
+
+## [0.153.0] - 2026-06-20
+
+### Added — CLOC20: end-to-end `do`/`while` support
+
+Programs containing a `do`-`while` loop now route through the full typed-AST
+optimization pipeline at both SIMPLE and ADVANCED levels. Previously any
+`do`-`while` made the parse/bridge step decline, and closurec silently fell back
+to WHITESPACE_ONLY (no real optimization). Now inlining, constant folding,
+dead-code elimination, and (under ADVANCED) local/global/property renaming all
+run inside the loop body and recurse into its test, while control flow is
+preserved and the statement after the loop stays reachable (a do-while is not a
+terminator).
+
+The end-to-end `simple-do-while` diff fixture pins the behaviour, with a
+regression guard that the output is NOT the whitespace fallback. The
+`simple_level_unsupported_syntax_degrades_gracefully` unit test now uses a
+`for`-`in` loop (still bridge-unsupported) for its example, since `do`-`while`
+no longer degrades.
+
 ## [0.152.0] - 2026-06-20
 
 ### Added — CLOC19: end-to-end `try`/`catch`/`finally` support

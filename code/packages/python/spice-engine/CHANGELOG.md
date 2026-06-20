@@ -4,6 +4,25 @@
 
 ### Added
 
+- **Deck rawfile write marker artifacts** —
+  `analyze_deck_controls()` and selected `run_deck_analysis()` executions now
+  expose normalized accepted `.control` `write` / `wrdata` marker inventories
+  as `write_marker_count` / `write_markers`, and selected-run artifacts carry
+  stable `WriteMarkers` / `WriteMarkerList` columns through tables, CSV/JSON,
+  and ordered `table_artifacts`, matching Rust and TypeScript.
+
+- **Deck execution diagnostic artifacts** —
+  `run_deck_analysis()` selected executions now expose selected diagnostic
+  inventories directly as `diagnostic_count` / `diagnostic_codes` alongside
+  control command, table, output, measurement, Fourier, and analysis-directive
+  metadata, matching Rust and TypeScript.
+
+- **Deck execution control command inventory artifacts** —
+  `run_deck_analysis()` selected executions now expose normalized `.control`
+  command inventories directly as `control_line_count` / `control_lines`
+  alongside table, output, measurement, Fourier, and analysis-directive
+  metadata, matching Rust and TypeScript.
+
 - **Deck run control command inventory artifacts** —
   `analyze_deck_controls()` now exposes normalized `.control` command lines
   separately from full active deck input, and `run_deck_analysis()`
