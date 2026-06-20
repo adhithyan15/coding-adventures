@@ -715,6 +715,8 @@ export interface DeckAnalysisExecution {
   readonly analysisDirectives: readonly string[];
   readonly controlLineCount: number;
   readonly controlLines: readonly string[];
+  readonly diagnosticCount: number;
+  readonly diagnosticCodes: readonly string[];
   readonly tableCount: number;
   readonly tables: readonly string[];
   readonly tableArtifacts: readonly DeckTableArtifact[];
@@ -8279,6 +8281,8 @@ export function runDeckAnalysis(
       analysisDirectives,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
+      diagnosticCount: diagnosticCodes.length,
+      diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8337,6 +8341,8 @@ export function runDeckAnalysis(
       analysisDirectives,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
+      diagnosticCount: diagnosticCodes.length,
+      diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8406,6 +8412,8 @@ export function runDeckAnalysis(
       analysisDirectives,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
+      diagnosticCount: diagnosticCodes.length,
+      diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8470,6 +8478,8 @@ export function runDeckAnalysis(
       analysisDirectives,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
+      diagnosticCount: diagnosticCodes.length,
+      diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8524,6 +8534,8 @@ export function runDeckAnalysis(
       analysisDirectives,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
+      diagnosticCount: diagnosticCodes.length,
+      diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8577,6 +8589,8 @@ export function runDeckAnalysis(
       analysisDirectives,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
+      diagnosticCount: diagnosticCodes.length,
+      diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
       tables,
       tableArtifacts,
@@ -8640,6 +8654,8 @@ export function runDeckAnalysis(
       analysisDirectives,
       controlLineCount: controlLines.length,
       controlLines: [...controlLines],
+      diagnosticCount: diagnosticCodes.length,
+      diagnosticCodes: [...diagnosticCodes],
       tableCount: tables.length,
       tables,
       tableArtifacts,

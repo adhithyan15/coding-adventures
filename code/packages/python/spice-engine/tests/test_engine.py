@@ -6845,6 +6845,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.run_artifacts[0].fourier_probes == []
     assert op_execution.run_artifacts[0].control_line_count == 0
     assert op_execution.run_artifacts[0].control_lines == []
+    assert op_execution.diagnostic_count == 0
+    assert op_execution.diagnostic_codes == []
     assert op_execution.run_artifacts[0].diagnostic_count == 0
     assert op_execution.run_artifacts[0].diagnostic_codes == []
     assert op_execution.run_artifact_table == (
@@ -7378,6 +7380,8 @@ let gain = 2
 
     assert execution.control_line_count == len(expected_control_lines)
     assert execution.control_lines == expected_control_lines
+    assert execution.diagnostic_count == len(expected_codes)
+    assert execution.diagnostic_codes == expected_codes
     assert execution.run_artifacts[0].control_line_count == len(expected_control_lines)
     assert execution.run_artifacts[0].control_lines == expected_control_lines
     assert execution.run_artifacts[0].diagnostic_count == len(expected_codes)

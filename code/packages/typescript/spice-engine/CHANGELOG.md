@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose selected diagnostic inventories directly on selected
+  `runDeckAnalysis` execution results as `diagnosticCount` /
+  `diagnosticCodes`, matching Python and Rust.
 - Expose normalized `.control` command inventories directly on selected
   `runDeckAnalysis` execution results as `controlLineCount` / `controlLines`,
   matching Python and Rust.

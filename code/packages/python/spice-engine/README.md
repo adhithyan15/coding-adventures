@@ -234,10 +234,12 @@ downstream deck execution helpers.
 stable deck-selected table output with normalized table-inventory,
 analysis-directive, output-probe, and output-directive artifacts,
 selected measurement artifacts, selected transient Fourier artifacts,
-selected-run artifact summaries with analysis-directive, output-probe, output-directive,
-measurement, Fourier probe, and `.control` command inventories, `.ac LIN`, `.ac DEC`, `.ac OCT`
-frequency grids, and `.tran`
-`START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
+selected-run artifact summaries with analysis-directive, output-probe,
+output-directive, measurement, Fourier probe, `.control` command, and diagnostic
+inventories, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and `.tran`
+`START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls. Selected execution
+fields expose `.control` command and diagnostic inventories directly for host
+integrations.
 
 ## Controlled source examples
 
