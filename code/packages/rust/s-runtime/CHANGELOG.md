@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.20.0] - 2026-06-20
+
+### Added
+
+- **R5 reference classes (R-24)** — `setRefClass`, generators, and instances,
+  living in the shared runtime so both S and R inherit them. Grammar-free (`$`
+  already existed). New `src/refclass.rs` module.
+  - **`setRefClass("Name", fields = list(x = "numeric", …), methods = list(m = function(…) …))`**
+    → a **generator** (a first-class environment carrying `.refClassName`,
+    `.refFields`, and `.refMethods`). A *lazy special form*: it evaluates the
+    `fields`/`methods` arguments in the current scope, so each method
+    `function(...)` closes over where the class was defined. Field *type* strings
+    are recorded but **not enforced** in this subset. Two `fields` shapes are
+    accepted: a named `list(x = "numeric", …)` and a bare character vector
+    `c("x", "y")`.
+  - **`generator$new(x = …, …)`** → an **instance**: a fresh child environment
+    binding each declared field (to the matching `new()` argument, or `NULL` when
+    omitted), `.self` (the instance, for `.self$method()`), and `.refMethods`. An
+    unknown `new()` argument is a clean error.
+  - **`obj$field`** reads a field (frame-local), **`obj$field <- v`** writes it
+    **in place by reference** (the `$<-` lvalue path now accepts an environment
+    target), and **`obj$method(args)`** rebuilds a fresh instance-bound closure on
+    access and applies it — so `field <<- value` (R-21 super-assignment) and
+    `.self$field <- v` mutate the live instance.
+  - **Reference (alias) semantics** — `b <- a` shares state (both reference the
+    same instance scope), unlike R's copy-on-modify; two separate `$new` instances
+    are independent.
+  - **Rc-cycle safety (instance⇄method).** The naïve encoding (method closures
+    stored in the instance, closing over the instance) is a strong, uncollectable
+    cycle. Broken **by construction**: the instance stores only fields, `.self`,
+    and `.refMethods` (whose closures close over the *generator*, not the
+    instance); the instance-bound closure is materialised lazily per `obj$method`
+    access and never stored. The lone remaining `.self` strong self-reference is
+    the documented, `MAX_ENVIRONMENTS`-bounded R-22 value-binding self-cycle.
+  - New **`env::lookup_local`** (frame-local read, no parent walk) so an instance
+    — a child of its generator — is never misclassified as a generator.
+  - Malformed `setRefClass`/`$new` arguments (non-character name, non-list
+    `fields`/`methods`, non-function method, unknown field, `$<-` on a non-env)
+    are all clean errors, never panics.
+  - Each reified generator/instance environment counts against `MAX_ENVIRONMENTS`.
+  - **Deferred to R-25:** inheritance (`contains =`), `$copy()`, active bindings,
+    `$methods()`/`$fields()` introspection.
+
 ## [0.19.0] - 2026-06-20
 
 ### Added

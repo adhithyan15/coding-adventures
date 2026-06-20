@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.19.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-24 — R5 reference classes (`setRefClass`)**: reaches R unchanged through
+  the shared evaluator (everything lives in `s-runtime` — `$` already existed, so
+  no grammar change). In R syntax:
+  - **`setRefClass("Acc", fields = list(total = "numeric"), methods = list(add = function(x) { total <<- total + x }, get = function() total))`**
+    → a **generator**; **`Acc$new(total = 0)`** → an **instance** (an environment
+    holding the fields).
+  - **`a$add(5); a$add(3); a$total`** → `8` and **`a$get()`** → `8`: a method's
+    body sees the fields directly and writes them back with `<<-`.
+  - **`a$total <- 100; a$total`** → `100`: field write **by reference**.
+  - **Reference semantics**: `b <- a; b$add(1); a$total` reflects b's change (the
+    two names share one instance — unlike R's copy-on-modify). Two `$new`
+    instances are independent.
+  - **`.self`** is bound in the instance, so a method can call a sibling as
+    `.self$other()` and write a field as `.self$field <- v`.
+  - Field type strings are **not enforced** in this subset; a class may have no
+    fields and/or no methods. Malformed `setRefClass`/`$new` arguments are clean
+    errors, never panics.
+  - See `s-runtime` 0.20.0 for the instance⇄method Rc-cycle handling (broken by
+    construction — method closures close over the *generator*, instance-bound
+    closures are rebuilt lazily per access and never stored) and the deferral of
+    inheritance / `$copy()` / active bindings / introspection to R-25.
+
 ## [0.18.0] - 2026-06-20
 
 ### Added (via the shared `s-runtime`)
