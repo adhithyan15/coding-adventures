@@ -118,6 +118,7 @@ V1 in 0 DC 1
     assert!(summary.terminated);
     assert_eq!(summary.end_line_number, Some(5));
     assert_eq!(summary.active_lines, vec!["V1 in 0 DC 1", ".op"]);
+    assert!(summary.control_lines.is_empty());
     assert!(summary.diagnostics.is_empty());
 }
 
@@ -185,6 +186,19 @@ quit
         &[
             ".include models.inc".to_string(),
             ".LIB vendor.lib TT".to_string(),
+            ".op".to_string(),
+            ".save V(in)".to_string(),
+            ".probe V(out)".to_string(),
+            ".print op V(in)".to_string(),
+            ".measure tran vmax MAX V(out)".to_string(),
+            ".meas dc imax MAX I(V1)".to_string(),
+            ".four 1k V(out)".to_string(),
+            ".four 2k V(in)".to_string(),
+        ]
+    );
+    assert_eq!(
+        summary.control_lines,
+        &[
             ".op".to_string(),
             ".save V(in)".to_string(),
             ".probe V(out)".to_string(),

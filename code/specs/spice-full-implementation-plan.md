@@ -101,6 +101,9 @@ downstream tools to compare.
      table export artifacts with text, CSV, compact JSON, and host-native
      records for each stable table; selected deck run artifacts now also carry
      existing `.control` body policy diagnostic codes through their stable
+     table, CSV, compact JSON, and ordered table export artifacts; normalized
+     accepted `.control` command inventories now travel through
+     `ControlLines` / `ControlLineList` metadata in the same run-artifact
      table, CSV, compact JSON, and ordered table export artifacts.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
@@ -962,6 +965,16 @@ downstream tools to compare.
       run-artifact tables, CSV/JSON export helpers, and ordered table export
       artifacts without executing control-flow, variables, external scripts,
       or working-directory mutations.
+
+89. Deck run control command inventory artifacts.
+    - Status: completed in this deck run control command inventory artifact
+      slice.
+    - Python, Rust, and TypeScript control analyzers now expose normalized
+      `.control` command lines separately from full active deck input.
+    - Selected deck executions now carry those normalized command inventories
+      through `ControlLines` / `ControlLineList` run-artifact metadata,
+      stable run-artifact tables, CSV/JSON export helpers, and ordered table
+      export artifacts.
 
 ## Backlog
 

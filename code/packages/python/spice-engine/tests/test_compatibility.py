@@ -102,6 +102,7 @@ V1 in 0 DC 1
     assert summary.terminated is True
     assert summary.end_line_number == 5
     assert summary.active_lines == ("V1 in 0 DC 1", ".op")
+    assert summary.control_lines == ()
     assert summary.diagnostics == ()
 
 
@@ -166,6 +167,16 @@ quit
     assert summary.active_lines == (
         ".include models.inc",
         ".LIB vendor.lib TT",
+        ".op",
+        ".save V(in)",
+        ".probe V(out)",
+        ".print op V(in)",
+        ".measure tran vmax MAX V(out)",
+        ".meas dc imax MAX I(V1)",
+        ".four 1k V(out)",
+        ".four 2k V(in)",
+    )
+    assert summary.control_lines == (
         ".op",
         ".save V(in)",
         ".probe V(out)",

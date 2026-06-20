@@ -427,6 +427,7 @@ export interface DeckControlDiagnostic {
 
 export interface DeckControlSummary {
   readonly activeLines: readonly string[];
+  readonly controlLines: readonly string[];
   readonly terminated: boolean;
   readonly endLineNumber?: number;
   readonly diagnostics: readonly DeckControlDiagnostic[];
@@ -691,6 +692,8 @@ export interface DeckRunArtifact {
   readonly measurementNames: readonly string[];
   readonly fourierCount: number;
   readonly fourierProbes: readonly string[];
+  readonly controlLineCount: number;
+  readonly controlLines: readonly string[];
   readonly diagnosticCount: number;
   readonly diagnosticCodes: readonly string[];
 }
@@ -2976,6 +2979,7 @@ export function compatibilityCorpus(): readonly CompatibilityDeck[] {
 
 export function analyzeDeckControls(netlist: string): DeckControlSummary {
   const activeLines: string[] = [];
+  const controlLines: string[] = [];
   const diagnostics: DeckControlDiagnostic[] = [];
   let endLineNumber: number | undefined;
   let inControlBlock = false;
@@ -2996,6 +3000,7 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
       const controlLine = controlBlockCommandAsDeckLine(stripped);
       if (controlLine !== undefined) {
         activeLines.push(controlLine);
+        controlLines.push(controlLine);
         continue;
       }
       if (isNoopControlBlockCommand(stripped)) {
@@ -3072,6 +3077,7 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
 
   return {
     activeLines,
+    controlLines,
     terminated: endLineNumber !== undefined,
     endLineNumber,
     diagnostics,
@@ -7905,6 +7911,7 @@ function deckRunArtifacts(
   outputDirectives: readonly string[],
   measurements: readonly ProbeMeasurement[],
   fourier: readonly FourierResult[],
+  controlLines: readonly string[],
   diagnosticCodes: readonly string[],
 ): DeckRunArtifact[] {
   const isTransient = plan.analysis === "tran";
@@ -7944,6 +7951,8 @@ function deckRunArtifacts(
       measurementNames: measurements.map((measurement) => measurement.name),
       fourierCount: fourier.length,
       fourierProbes: fourier.flatMap((result) => result.probes.map((probe) => probe.probe)),
+      controlLineCount: controlLines.length,
+      controlLines: [...controlLines],
       diagnosticCount: diagnosticCodes.length,
       diagnosticCodes: [...diagnosticCodes],
     },
@@ -7981,6 +7990,10 @@ function deckControlDiagnosticCodes(netlist: string): string[] {
   return analyzeDeckControls(netlist).diagnostics
     .filter((diagnostic) => diagnostic.code.startsWith("SPICE_DECK_CONTROL_"))
     .map((diagnostic) => diagnostic.code);
+}
+
+function deckControlLines(netlist: string): string[] {
+  return [...analyzeDeckControls(netlist).controlLines];
 }
 
 function deckRunDiagnosticCodes(netlist: string, plan: DeckAnalysisPlan): string[] {
@@ -8031,6 +8044,8 @@ const DECK_RUN_ARTIFACT_COLUMNS = [
   "MeasurementList",
   "Fourier",
   "FourierList",
+  "ControlLines",
+  "ControlLineList",
   "Diagnostics",
   "DiagnosticCodeList",
 ] as const;
@@ -8069,6 +8084,8 @@ function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
     artifact.measurementNames.join(";"),
     String(artifact.fourierCount),
     artifact.fourierProbes.join(";"),
+    String(artifact.controlLineCount),
+    artifact.controlLines.join(";"),
     String(artifact.diagnosticCount),
     artifact.diagnosticCodes.join(";"),
   ];
@@ -8217,6 +8234,7 @@ export function runDeckAnalysis(
 ): DeckAnalysisExecution {
   const plan = selectDeckAnalysisPlan(netlist, analysis);
   const diagnosticCodes = deckRunDiagnosticCodes(netlist, plan);
+  const controlLines = deckControlLines(netlist);
   const analysisDirectives = deckAnalysisDirectives(plan);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
@@ -8235,6 +8253,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      controlLines,
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
@@ -8290,6 +8309,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      controlLines,
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
@@ -8356,6 +8376,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      controlLines,
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
@@ -8417,6 +8438,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      controlLines,
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
@@ -8468,6 +8490,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      controlLines,
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
@@ -8518,6 +8541,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      controlLines,
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);
@@ -8578,6 +8602,7 @@ export function runDeckAnalysis(
       outputDirectives,
       measurements,
       fourier,
+      controlLines,
       diagnosticCodes,
     );
     const tables = deckStableTables(measurements, fourier);

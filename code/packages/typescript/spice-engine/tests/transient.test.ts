@@ -1512,11 +1512,13 @@ describe("transient", () => {
     expect(opExecution.runArtifacts[0]?.analysisDirectives).toEqual([".op"]);
     expect(opExecution.runArtifacts[0]?.measurementNames).toEqual([]);
     expect(opExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
+    expect(opExecution.runArtifacts[0]?.controlLineCount).toBe(0);
+    expect(opExecution.runArtifacts[0]?.controlLines).toEqual([]);
     expect(opExecution.runArtifacts[0]?.diagnosticCount).toBe(0);
     expect(opExecution.runArtifacts[0]?.diagnosticCodes).toEqual([]);
     expect(opExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
-        `op\t.op\t1\t.op\t${opExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t2\tresult;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\n`,
+      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tDiagnostics\tDiagnosticCodeList\n" +
+        `op\t.op\t1\t.op\t${opExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t2\tresult;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\n`,
     );
     expect(opExecution.tableArtifacts[1]?.name).toBe("run-artifact");
     expect(opExecution.tableArtifacts[1]?.table).toBe(opExecution.runArtifactTable);
@@ -1533,8 +1535,8 @@ describe("transient", () => {
       JSON.parse(formatDeckRunArtifactJson(opExecution.runArtifacts)),
     );
     expect(formatDeckRunArtifactCsv(opExecution.runArtifacts)).toBe(
-      "Analysis,Directive,AnalysisDirectives,AnalysisDirectiveList,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,Tables,TableList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,Diagnostics,DiagnosticCodeList\n" +
-        `op,.op,1,.op,${opExecution.plan.lineNumber},,,,,,,,,,,,,,,1,2,Index;V(mid),2,result;run-artifact,1,V(mid),1,.save,0,,0,,0,\n`,
+      "Analysis,Directive,AnalysisDirectives,AnalysisDirectiveList,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,Tables,TableList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,ControlLines,ControlLineList,Diagnostics,DiagnosticCodeList\n" +
+        `op,.op,1,.op,${opExecution.plan.lineNumber},,,,,,,,,,,,,,,1,2,Index;V(mid),2,result;run-artifact,1,V(mid),1,.save,0,,0,,0,,0,\n`,
     );
     expect(formatDeckTableCsv('Name\tValue\nprobe\tSPICE,"QUOTED"\n')).toBe(
       'Name,Value\nprobe,"SPICE,""QUOTED"""\n',
@@ -1580,6 +1582,8 @@ describe("transient", () => {
       "MeasurementList",
       "Fourier",
       "FourierList",
+      "ControlLines",
+      "ControlLineList",
       "Diagnostics",
       "DiagnosticCodeList",
     ]);
@@ -1617,6 +1621,8 @@ describe("transient", () => {
         MeasurementList: "",
         Fourier: "0",
         FourierList: "",
+        ControlLines: "0",
+        ControlLineList: "",
         Diagnostics: "0",
         DiagnosticCodeList: "",
       },
@@ -1639,7 +1645,7 @@ describe("transient", () => {
       diagnosticCodes: ["SPICE_DECK_ANALYSIS_TOKEN", 'SPICE,"QUOTED"'],
     };
     expect(formatDeckRunArtifactCsv([quotedDiagnosticArtifact])).toMatch(
-      /,2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED"""\n$/u,
+      /,0,,2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED"""\n$/u,
     );
     expect(
       (JSON.parse(formatDeckRunArtifactJson([quotedDiagnosticArtifact])) as Array<Record<string, string>>)[0]?.[
@@ -1703,8 +1709,8 @@ describe("transient", () => {
     expect(dcExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_avg"]);
     expect(dcExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(dcExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
-        `dc\t.dc\t1\t.dc\t${dcExecution.plan.lineNumber}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t3\tresult;measurement;run-artifact\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\t0\t\n`,
+      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tDiagnostics\tDiagnosticCodeList\n" +
+        `dc\t.dc\t1\t.dc\t${dcExecution.plan.lineNumber}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t3\tresult;measurement;run-artifact\t2\tV(mid);I(V1)\t2\t.save;.probe\t1\tmid_avg\t0\t\t0\t\t0\t\n`,
     );
 
     const acExecution = runDeckAnalysis(circuit, netlist, "ac");
@@ -1752,8 +1758,8 @@ describe("transient", () => {
     expect(acExecution.runArtifacts[0]?.measurementNames).toEqual(["mid_peak"]);
     expect(acExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(acExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
-        `ac\t.ac\t1\t.ac\t${acExecution.plan.lineNumber}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t3\tresult;measurement;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\t0\t\n`,
+      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tDiagnostics\tDiagnosticCodeList\n" +
+        `ac\t.ac\t1\t.ac\t${acExecution.plan.lineNumber}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t3\tresult;measurement;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_peak\t0\t\t0\t\t0\t\n`,
     );
 
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
@@ -1794,8 +1800,8 @@ describe("transient", () => {
     expect(tranExecution.runArtifacts[0]?.diagnosticCount).toBe(0);
     expect(tranExecution.runArtifacts[0]?.diagnosticCodes).toEqual([]);
     expect(tranExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
-        `tran\t.tran\t1\t.tran\t${tranExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t1.000000e-03\t1.000000e-03\t\t\tfalse\t1\t3\tIndex;Time;V(mid)\t3\tresult;measurement;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\t0\t\n`,
+      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tDiagnostics\tDiagnosticCodeList\n" +
+        `tran\t.tran\t1\t.tran\t${tranExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t1.000000e-03\t1.000000e-03\t\t\tfalse\t1\t3\tIndex;Time;V(mid)\t3\tresult;measurement;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\t0\t\t0\t\n`,
     );
 
     const tfExecution = runDeckAnalysis(circuit, netlist, "tf");
@@ -1839,8 +1845,8 @@ describe("transient", () => {
     expect(tfExecution.runArtifacts[0]?.measurementNames).toEqual([]);
     expect(tfExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(tfExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
-        `tf\t.tf\t1\t.tf\t${tfExecution.plan.lineNumber}\tV1\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t3\tTransferRatio;InputImpedance;OutputImpedance\t2\tresult;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\n`,
+      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tDiagnostics\tDiagnosticCodeList\n" +
+        `tf\t.tf\t1\t.tf\t${tfExecution.plan.lineNumber}\tV1\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t3\tTransferRatio;InputImpedance;OutputImpedance\t2\tresult;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\n`,
     );
 
     const sensExecution = runDeckAnalysis(circuit, netlist, "sens");
@@ -1884,8 +1890,8 @@ describe("transient", () => {
     expect(sensExecution.runArtifacts[0]?.measurementNames).toEqual([]);
     expect(sensExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(sensExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
-        `sens\t.sens\t1\t.sens\t${sensExecution.plan.lineNumber}\t\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t7\tOutputNode;NominalVoltage;Element;Parameter;NominalValue;Sensitivity;RelativeSensitivity\t2\tresult;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\n`,
+      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tDiagnostics\tDiagnosticCodeList\n" +
+        `sens\t.sens\t1\t.sens\t${sensExecution.plan.lineNumber}\t\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t7\tOutputNode;NominalVoltage;Element;Parameter;NominalValue;Sensitivity;RelativeSensitivity\t2\tresult;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\n`,
     );
 
     const noiseExecution = runDeckAnalysis(circuit, netlist, "noise");
@@ -1939,8 +1945,8 @@ describe("transient", () => {
     expect(noiseExecution.runArtifacts[0]?.measurementNames).toEqual([]);
     expect(noiseExecution.runArtifacts[0]?.fourierProbes).toEqual([]);
     expect(noiseExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
-        `noise\t.noise\t1\t.noise\t${noiseExecution.plan.lineNumber}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t10\tIndex;Frequency;OutputNode;InputSource;OutputPSD;InputReferredPSD;Element;Type;SourcePSD;ContributionPSD\t2\tresult;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\n`,
+      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tDiagnostics\tDiagnosticCodeList\n" +
+        `noise\t.noise\t1\t.noise\t${noiseExecution.plan.lineNumber}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t10\tIndex;Frequency;OutputNode;InputSource;OutputPSD;InputReferredPSD;Element;Type;SourcePSD;ContributionPSD\t2\tresult;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\n`,
     );
 
     const tranWindowExecution = runDeckAnalysis(
@@ -1981,8 +1987,8 @@ describe("transient", () => {
         "2\t6.000000e-03\t5.000000e-01\n",
     );
     expect(tranWindowExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
-        `tran\t.tran\t1\t.tran\t${tranWindowExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t2.000000e-03\t6.000000e-03\t2.000000e-03\t1.000000e-03\ttrue\t3\t3\tIndex;Time;V(mid)\t2\tresult;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\n`,
+      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tDiagnostics\tDiagnosticCodeList\n" +
+        `tran\t.tran\t1\t.tran\t${tranWindowExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t2.000000e-03\t6.000000e-03\t2.000000e-03\t1.000000e-03\ttrue\t3\t3\tIndex;Time;V(mid)\t2\tresult;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\n`,
     );
 
     expect(() => runDeckAnalysis(circuit, netlist)).toThrow(/multiple analysis cards/);
@@ -2017,6 +2023,8 @@ describe("transient", () => {
     const netlist = `
 .save V(in)
 .control
+save V(in)
+probe V(in)
 source other.cir
 cd /tmp
 if v(in) > 0
@@ -2034,14 +2042,21 @@ let gain = 2
       "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
     ];
     const codeList = expectedCodes.join(";");
+    const expectedControlLines = [".save V(in)", ".probe V(in)"];
+    const controlLineList = expectedControlLines.join(";");
 
+    expect(execution.runArtifacts[0]?.controlLineCount).toBe(expectedControlLines.length);
+    expect(execution.runArtifacts[0]?.controlLines).toEqual(expectedControlLines);
     expect(execution.runArtifacts[0]?.diagnosticCount).toBe(expectedCodes.length);
     expect(execution.runArtifacts[0]?.diagnosticCodes).toEqual(expectedCodes);
     const record = deckTableRecords(execution.runArtifactTable)[0]!;
+    expect(record["ControlLines"]).toBe(String(expectedControlLines.length));
+    expect(record["ControlLineList"]).toBe(controlLineList);
     expect(record["Diagnostics"]).toBe(String(expectedCodes.length));
     expect(record["DiagnosticCodeList"]).toBe(codeList);
     const runArtifact = execution.tableArtifacts[execution.tableArtifacts.length - 1]!;
     expect(runArtifact.name).toBe("run-artifact");
+    expect(runArtifact.records[0]?.["ControlLineList"]).toBe(controlLineList);
     expect(runArtifact.records[0]?.["DiagnosticCodeList"]).toBe(codeList);
     expect(runArtifact.csv).toBe(formatDeckRunArtifactCsv(execution.runArtifacts));
     expect(runArtifact.json).toBe(formatDeckRunArtifactJson(execution.runArtifacts));
@@ -2106,8 +2121,8 @@ let gain = 2
     expect(tranExecution.runArtifacts[0]?.measurementNames).toEqual([]);
     expect(tranExecution.runArtifacts[0]?.fourierProbes).toEqual(["V(mid)"]);
     expect(tranExecution.runArtifactTable).toBe(
-      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tDiagnostics\tDiagnosticCodeList\n" +
-        `tran\t.tran\t1\t.tran\t${tranExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t2\t3\tIndex;Time;V(mid)\t3\tresult;fourier;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\n`,
+      "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tDiagnostics\tDiagnosticCodeList\n" +
+        `tran\t.tran\t1\t.tran\t${tranExecution.plan.lineNumber}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t2\t3\tIndex;Time;V(mid)\t3\tresult;fourier;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\t0\t\n`,
     );
   });
 
