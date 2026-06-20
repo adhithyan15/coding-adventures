@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 151,
-    "correct": 144,
+    "total": 152,
+    "correct": 145,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,7 +16,7 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 138,
+        "correct": 139,
         "abstained": 6,
         "wrong": 0
       }
@@ -24,7 +24,7 @@
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
     "grounded_coverage": 0.9928,
-    "grounded_correct": 137
+    "grounded_correct": 138
   },
   "results": [
     {
@@ -1016,6 +1016,14 @@
       "tactic": "recall",
       "gold": "meningioma",
       "answer": "meningioma",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "histo_negri_cond",
+      "tactic": "recall",
+      "gold": "rabies",
+      "answer": "rabies",
       "outcome": "correct",
       "trust": "authoritative"
     },

@@ -19,3 +19,4 @@ import "histo-edges.adj"
 ? seen_in(heinz_bodies, $Condition)           % expect g6pd_deficiency / methemoglobinemia
 ? seen_in(auer_rods, $Condition)              % expect acute_promyelocytic_leukemia (backfill)
 ? seen_in(psammoma_bodies, $Condition)        % expect meningioma (backfill)
+? seen_in(negri_bodies, $Condition)           % expect rabies (expand)

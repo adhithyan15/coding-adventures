@@ -59,7 +59,7 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     # answers, so the board scores the top binding per subject (the libraries + their
     # tests cover all edges).
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 138
+    assert len(recall_correct) == 139
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
@@ -101,6 +101,7 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["histo_rs_cond"].trust == "authoritative"       # ADJ-only edge, grounded inline
     assert by_id["histo_auer_cond"].answer == "acute_promyelocytic_leukemia"  # primary-source backfill
     assert by_id["histo_psammoma_cond"].answer == "meningioma"   # primary-source backfill (psammoma→meningioma)
+    assert by_id["histo_negri_cond"].answer == "rabies"          # expand: Negri bodies→rabies (NBK448076)
     assert by_id["rheum_pbc_ab"].answer == "anti_mitochondrial"  # primary-source backfill: PBC→AMA (NBK459209)
     assert by_id["rheum_pbc_ab"].trust == "authoritative"        # previously deferred, now grounded
     assert by_id["rheum_dm_ab"].answer == "anti_jo1"            # primary-source backfill: DM→anti-Jo-1 (NBK558917)
@@ -169,8 +170,8 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
     # verbatim, so the framework declines to claim grounding it cannot defend, by design:
     # cortisol_def (endocrine, deficiency_syndrome__cortisol — the only verbatim spans frame
     # cortisol deficiency as a consequence/feature of Addison disease, not the named-syndrome identity).
-    assert s["grounded_coverage"] == round(137 / 138, 4)   # 0.9928
-    assert s["grounded_correct"] == 137
+    assert s["grounded_coverage"] == round(138 / 139, 4)   # 0.9928
+    assert s["grounded_correct"] == 138
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia

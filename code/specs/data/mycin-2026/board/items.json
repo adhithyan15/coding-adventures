@@ -140,6 +140,7 @@
     {"id": "histo_heinz_cond", "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "heinz_bodies",        "var": "Condition", "gold": "g6pd_deficiency"},
     {"id": "histo_auer_cond",  "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "auer_rods",          "var": "Condition", "gold": "acute_promyelocytic_leukemia"},
     {"id": "histo_psammoma_cond", "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "psammoma_bodies", "var": "Condition", "gold": "meningioma"},
+    {"id": "histo_negri_cond", "domain": "histo", "tactic": "recall", "relation": "seen_in", "subject": "negri_bodies",     "var": "Condition", "gold": "rabies"},
 
     {"id": "cardio_mr_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "holosystolic_apical",             "var": "Lesion", "gold": "mitral_regurgitation"},
     {"id": "cardio_as_lesion",  "domain": "cardio", "tactic": "recall", "relation": "murmur_indicates", "subject": "crescendo_decrescendo_systolic",  "var": "Lesion", "gold": "aortic_stenosis"},
