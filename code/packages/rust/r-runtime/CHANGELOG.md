@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-21 — environments & scoping (core subset)**: R's environment model reaches
+  R unchanged through the shared evaluator (the scope chain and the new forms all
+  live in `s-runtime` — no grammar change; the `<<-`/`->>` tokens already lex and
+  parse). In R syntax:
+  - **`local({ x <- 5; x * 2 })`** → `10`, and `x` is unbound afterward (locals
+    don't leak).
+  - **`<<-` super-assignment** rebinds the nearest *enclosing* binding, else
+    creates one globally: `f <- function() { y <<- 99 }; f(); y` → `99`. The
+    counter idiom `make_counter <- function() { n <- 0; function() { n <<- n + 1;
+    n } }` advances across calls. The R-only right form `->>` (`7 ->> z`) behaves
+    identically.
+  - **`assign("q", 7); get("q")`** → `7`; **`exists("zzz")`** → `FALSE`,
+    `exists("mean")` → `TRUE`; **`rm("d")`** removes a binding from the current
+    scope.
+  - Deferred to **R-22** (first-class environment values): `new.env()`,
+    `environment()`, and the `envir = e` argument (rejected today with a clear
+    error). See `s-runtime` 0.17.0.
+
 ## [0.15.0] - 2026-06-20
 
 ### Added (via the shared `s-runtime`)

@@ -63,6 +63,17 @@ anonymous recursion (`(\(n) if (n <= 1) 1 else n * Recall(n - 1))(5)` → `120`)
 All take the function by name, so they compose with the pipe
 (`1:5 |> Find(f = \(x) x > 2)`).
 
+**Environments & scoping (R-21)** — R's environment-model core subset.
+`local({ x <- 5; x * 2 })` → `10` and `x` does not leak (the block runs in a
+fresh child scope). `<<-` super-assignment rebinds the nearest *enclosing*
+binding — `f <- function() { y <<- 99 }; f(); y` → `99` (created globally when no
+enclosing binding exists) — and the counter idiom `make_counter <- function() {
+n <- 0; function() { n <<- n + 1; n } }` advances across calls; the R-only `->>`
+form is the mirror image. `assign("q", 7); get("q")` → `7`; `exists("zzz")` →
+`FALSE`; `rm("d")` removes a binding. First-class environment *values*
+(`new.env()`, `environment()`, the `envir = e` argument) are deferred to R-22 and
+rejected today with a clear error.
+
 ## Usage
 
 ```rust
