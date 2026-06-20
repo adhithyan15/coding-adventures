@@ -663,6 +663,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — `DEF FN` user-defined function (LANG-FULL BA5). The
+    // single-line definition `DEF FNS(X) = X * X` lowers to a *sibling*
+    // `IIRFunction` named `FNS` (one `i64` parameter, body `mul X X; ret`),
+    // and `PRINT FNS(7)` lowers to an IIR `call` — exactly the calling
+    // convention ALGOL's value procedures (AL3) already run on every backend.
+    // This RUNS a real cross-function call combined with `print_i64` output:
+    // `FNS(7)` returns 49, which `main` prints. Until this slice BASIC had no
+    // user functions at all (`DEF` was an `UnsupportedStatement`). Proves that
+    // a `call` to a same-module function resolves and executes on the code-gen
+    // backends, not just the VM/JIT.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DEF FNS(X) = X * X\n20 PRINT FNS(7)\n30 END\n",
+        expect: Expect::Stdout("49"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

@@ -559,6 +559,29 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     const LISP_BUILTINS: &[&str] = &[
         "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
     ];
+    // Concretization is a **whole-module** decision, not a per-function one,
+    // because a `call` couples a caller and callee's value models: the caller
+    // pushes the argument and consumes the result at the callee's *declared*
+    // width, so if the two functions disagree the emitted bytecode is invalid.
+    //
+    // Concretely (LANG-FULL BA5 — Dartmouth BASIC `DEF FN`): a program like
+    // `DEF FNS(X) = X * X : PRINT FNS(7)` lowers to a printing `main` plus a
+    // non-printing helper `FNS`. `main` keeps the wide i64 model (its
+    // `print_i64` needs a `long` — see the per-function note below), but if we
+    // narrowed `FNS` to `(I)I` independently, `main` would `invokestatic` it
+    // with a `long` argument and `lstore` an `int` result → real `java` rejects
+    // it (`VerifyError`) and the program prints nothing. So: if **any** function
+    // in the module prints, the whole scalar module stays at i64, keeping every
+    // cross-function call signature consistent. (A module with no printing
+    // function — Nib/Twig/ALGOL, which return an exit code — concretizes to i32
+    // uniformly, exactly as before; this changes only printing modules.)
+    let module_prints = module.functions.iter().any(|f| {
+        f.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(i.srcs.first(),
+                    Some(interpreter_ir::Operand::Var(n)) if n == "print_i64")
+        })
+    });
     for func in &mut module.functions {
         let uses_lisp = func.params.iter().any(|(_, t)| t == "any" || t == "symbol")
             || func.instructions.iter().any(|i| {
@@ -586,8 +609,12 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
                 && matches!(i.srcs.first(),
                     Some(interpreter_ir::Operand::Var(n)) if n == "print_i64")
         });
-        if prints_i64 {
-            continue; // wide i64 value model — println(J)V needs a `long`.
+        if prints_i64 || module_prints {
+            // Wide i64 value model: this function either prints directly
+            // (`println(J)V` needs a `long`) or shares a module with one that
+            // does, so it must keep i64 to stay call-signature-consistent with
+            // its callers/callees (see the module-level note above).
+            continue;
         }
         let to_i32 = |t: &str| t == "any" || t == "polymorphic" || t == "i64";
         if to_i32(&func.return_type) {
