@@ -1,5 +1,25 @@
 # Changelog — `aarch64-encoder`
 
+## 0.4.0 — 2026-06-20 (scalar double-precision FP — LANG-FULL E3)
+
+### Added — `ldr_d`/`str_d`/`fadd`/`fsub`/`fmul`/`fdiv`/`fcmp` (double)
+
+Seven scalar double-precision floating-point instructions, for ALGOL `real`
+(enabler E3) on the native-AOT backend:
+
+- `ldr_d Dt, [Xn, #imm]` / `str_d Dt, [Xn, #imm]` — load/store a 64-bit double
+  (`0xFD400000`/`0xFD000000`, scaled-by-8 offset like the `Xt` forms). A
+  `float64` value rides its 8-byte stack slot as raw bits.
+- `fadd`/`fsub`/`fmul`/`fdiv Dd, Dn, Dm` — double arithmetic
+  (`0x1E602800`/`0x1E603800`/`0x1E600800`/`0x1E601800`).
+- `fcmp Dn, Dm` — compare two doubles, set NZCV (`0x1E602000`); read with a
+  following `cset Xd, <cond>`.
+
+The register number reuses `Reg::idx()` (0–31) — the *opcode* (not the register
+field) selects the FP/SIMD register file. **Every encoding was verified
+byte-for-byte against the system assembler** (`clang -c` of the same mnemonics)
+plus exact-encoding unit tests.
+
 ## 0.3.0 — 2026-05-20 (LANG76 — byte memory primitives)
 
 Adds the unsigned-offset byte load/store instructions used by

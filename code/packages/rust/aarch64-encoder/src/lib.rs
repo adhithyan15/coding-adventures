@@ -788,6 +788,67 @@ impl Assembler {
         Ok(())
     }
 
+    // -----------------------------------------------------------------------
+    // Scalar floating-point — double precision (LANG-FULL E3 / ALGOL `real`)
+    //
+    // The register number reuses [`Reg`]'s `idx()` (0..31), but names a `Dn`
+    // FP/SIMD register rather than an `Xn` GPR — the *opcode* (not the register
+    // field) selects the FP register file. A `f64` value lives in an 8-byte
+    // stack slot as raw bits, so `LDR Dt`/`STR Dt` load/store it with the same
+    // scaled-by-8 offset as the `Xt` forms.
+    // -----------------------------------------------------------------------
+
+    /// `LDR Dt, [Xn, #imm]` — load a 64-bit double from memory. Same scaled
+    /// (`imm % 8`, `imm ≤ 32760`) offset as [`ldr`](Self::ldr); only the size/V
+    /// bits differ. Encoding `01 111 1 01 01 imm12 Rn Rt` (`0xFD400000`).
+    pub fn ldr_d(&mut self, dt: Reg, rn: Reg, imm: u32) -> Result<(), EncodeError> {
+        if imm % 8 != 0 || imm > 0x7FF8 {
+            return Err(EncodeError::ImmediateOutOfRange { op: "ldr_d", bits: 12, value: imm as i64 });
+        }
+        let imm12 = imm / 8;
+        self.emit(0xFD400000 | (imm12 << 10) | (rn.idx() << 5) | dt.idx());
+        Ok(())
+    }
+
+    /// `STR Dt, [Xn, #imm]` — store a 64-bit double. Encoding `0xFD000000`.
+    pub fn str_d(&mut self, dt: Reg, rn: Reg, imm: u32) -> Result<(), EncodeError> {
+        if imm % 8 != 0 || imm > 0x7FF8 {
+            return Err(EncodeError::ImmediateOutOfRange { op: "str_d", bits: 12, value: imm as i64 });
+        }
+        let imm12 = imm / 8;
+        self.emit(0xFD000000 | (imm12 << 10) | (rn.idx() << 5) | dt.idx());
+        Ok(())
+    }
+
+    /// `FADD Dd, Dn, Dm` — IEEE-754 double add. Encoding
+    /// `0001_1110_011m_mmmm_0010_10nn_nnnd_dddd` (`0x1E602800`).
+    pub fn fadd(&mut self, dd: Reg, dn: Reg, dm: Reg) {
+        self.emit(0x1E602800 | (dm.idx() << 16) | (dn.idx() << 5) | dd.idx());
+    }
+
+    /// `FSUB Dd, Dn, Dm` — double subtract (`0x1E603800`).
+    pub fn fsub(&mut self, dd: Reg, dn: Reg, dm: Reg) {
+        self.emit(0x1E603800 | (dm.idx() << 16) | (dn.idx() << 5) | dd.idx());
+    }
+
+    /// `FMUL Dd, Dn, Dm` — double multiply (`0x1E600800`).
+    pub fn fmul(&mut self, dd: Reg, dn: Reg, dm: Reg) {
+        self.emit(0x1E600800 | (dm.idx() << 16) | (dn.idx() << 5) | dd.idx());
+    }
+
+    /// `FDIV Dd, Dn, Dm` — double divide (`0x1E601800`). IEEE division by zero
+    /// yields `±inf`/`NaN`, never a trap (matches every other backend's `fdiv`).
+    pub fn fdiv(&mut self, dd: Reg, dn: Reg, dm: Reg) {
+        self.emit(0x1E601800 | (dm.idx() << 16) | (dn.idx() << 5) | dd.idx());
+    }
+
+    /// `FCMP Dn, Dm` — compare two doubles, setting NZCV. Encoding
+    /// `0001_1110_011m_mmmm_0010_00nn_nnn0_0000` (`0x1E602000`). The result is
+    /// read with a following `CSET Xd, <cond>`.
+    pub fn fcmp(&mut self, dn: Reg, dm: Reg) {
+        self.emit(0x1E602000 | (dm.idx() << 16) | (dn.idx() << 5));
+    }
+
     /// `LDRB Wt, [Xn, #imm]` — load one byte, zero-extend to 32 bits (LANG76).
     ///
     /// `imm` is a 12-bit unsigned immediate in the range `[0, 4095]` (the
@@ -1219,6 +1280,41 @@ mod tests {
     fn ldr_rejects_unaligned() {
         let mut a = Assembler::new();
         assert!(a.ldr(Reg::X0, Reg::Sp, 7).is_err()); // not a multiple of 8
+    }
+
+    // ---- scalar double-precision FP (LANG-FULL E3) ----
+
+    #[test]
+    fn fp_ldr_str_d_sp_8() {
+        // ldr d0, [sp, #8]  →  FD4007E0 ; str d0, [sp, #8]  →  FD0007E0
+        let mut a = Assembler::new();
+        a.ldr_d(Reg::X0, Reg::Sp, 8).unwrap();
+        a.str_d(Reg::X0, Reg::Sp, 8).unwrap();
+        assert_eq!(a.finish().unwrap(), words_to_bytes(&[0xFD4007E0, 0xFD0007E0]));
+    }
+
+    #[test]
+    fn fp_arith_d0_d0_d1() {
+        // fadd/fsub/fmul/fdiv d0, d0, d1 (Dm=1 → bit16 set)
+        let mut a = Assembler::new();
+        a.fadd(Reg::X0, Reg::X0, Reg::X1);
+        a.fsub(Reg::X0, Reg::X0, Reg::X1);
+        a.fmul(Reg::X0, Reg::X0, Reg::X1);
+        a.fdiv(Reg::X0, Reg::X0, Reg::X1);
+        assert_eq!(a.finish().unwrap(), words_to_bytes(&[
+            0x1E612800, // fadd d0, d0, d1
+            0x1E613800, // fsub d0, d0, d1
+            0x1E610800, // fmul d0, d0, d1
+            0x1E611800, // fdiv d0, d0, d1
+        ]));
+    }
+
+    #[test]
+    fn fp_fcmp_d0_d1() {
+        // fcmp d0, d1  →  1E612000
+        let mut a = Assembler::new();
+        a.fcmp(Reg::X0, Reg::X1);
+        assert_eq!(a.finish().unwrap(), words_to_bytes(&[0x1E612000]));
     }
 
     // ---- STP / LDP ----

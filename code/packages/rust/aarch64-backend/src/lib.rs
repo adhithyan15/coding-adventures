@@ -531,7 +531,12 @@ fn emit_instr(
         let imm = match src {
             CIROperand::Int(n)   => *n as u64,
             CIROperand::Bool(b)  => if *b { 1 } else { 0 },
-            CIROperand::Float(_) => return Err(BackendError::UnsupportedOp("const_f64".into())),
+            // An `f64` (ALGOL `real`, LANG-FULL E3) lives in its 8-byte stack
+            // slot as raw IEEE-754 bits — identical to an integer slot — so we
+            // materialise the bit pattern in X0 and `str` it. No FP register is
+            // needed to *load a constant*; only arithmetic/compare use the D
+            // registers (see `emit_fp_binop`/`emit_fp_cmp`).
+            CIROperand::Float(f) => f.to_bits(),
             CIROperand::Var(_)   => return Err(BackendError::MalformedInstr(format!("{op} needs literal source"))),
         };
         asm.mov_imm64(Reg::X0, imm);
@@ -1134,6 +1139,17 @@ fn emit_binop(
     kind: BinKind,
     ty: &str,
 ) -> Result<(), BackendError> {
+    if ty == "f64" {
+        // ALGOL `real` arithmetic (LANG-FULL E3): operands ride D0/D1, the op
+        // is `fadd`/`fsub`/`fmul`, and the double result is `str`'d back. No
+        // E2 width mask (that's integer-only).
+        let fk = match kind {
+            BinKind::Add => FpBin::Add,
+            BinKind::Sub => FpBin::Sub,
+            BinKind::Mul => FpBin::Mul,
+        };
+        return emit_fp_binop(asm, alloc, instr, fk);
+    }
     let dest = require_dest(instr)?;
     if instr.srcs.len() < 2 {
         return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
@@ -1146,6 +1162,89 @@ fn emit_binop(
         BinKind::Mul => asm.mul(Reg::X0, Reg::X0, Reg::X1),
     }
     mask_narrow_x0(asm, ty); // E2: wrap u8/u16/u32 results mod 2ⁿ
+    let slot = alloc.slot_of(dest);
+    asm.str_(Reg::X0, Reg::Sp, slot)?;
+    Ok(())
+}
+
+/// Which floating-point binary op (LANG-FULL E3).
+#[derive(Debug, Clone, Copy)]
+enum FpBin { Add, Sub, Mul, Div }
+
+/// Load an `f64` operand into a D register (`Reg`'s `idx` names the D slot).
+/// Frontends materialise constants into stack slots first, so an arithmetic/
+/// compare operand is a `Var` — a `Float` *immediate* operand would need an
+/// `fmov`/scratch-slot dance and isn't emitted on this slice.
+fn load_fp_operand(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    dreg: Reg,
+    op: &CIROperand,
+) -> Result<(), BackendError> {
+    match op {
+        CIROperand::Var(name) => {
+            let s = alloc.slot_of(name);
+            asm.ldr_d(dreg, Reg::Sp, s)?;
+            Ok(())
+        }
+        other => Err(BackendError::UnsupportedOp(format!(
+            "f64 operand must be a Var (materialise the constant first), got {other:?}"
+        ))),
+    }
+}
+
+/// Emit an `f64` `add`/`sub`/`mul`/`div`: `ldr d0,[a]; ldr d1,[b]; f<op> d0,d0,d1;
+/// str d0,[dest]` (LANG-FULL E3). IEEE division by zero is `±inf`/`NaN` (no trap).
+fn emit_fp_binop(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    kind: FpBin,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    if instr.srcs.len() < 2 {
+        return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
+    }
+    load_fp_operand(asm, alloc, Reg::X0, &instr.srcs[0])?; // D0
+    load_fp_operand(asm, alloc, Reg::X1, &instr.srcs[1])?; // D1
+    match kind {
+        FpBin::Add => asm.fadd(Reg::X0, Reg::X0, Reg::X1),
+        FpBin::Sub => asm.fsub(Reg::X0, Reg::X0, Reg::X1),
+        FpBin::Mul => asm.fmul(Reg::X0, Reg::X0, Reg::X1),
+        FpBin::Div => asm.fdiv(Reg::X0, Reg::X0, Reg::X1),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.str_d(Reg::X0, Reg::Sp, slot)?;
+    Ok(())
+}
+
+/// Emit an `f64` comparison: `ldr d0,[a]; ldr d1,[b]; fcmp d0,d1; cset x0,<cond>;
+/// str x0,[dest]` (LANG-FULL E3). The boolean result is an `int` 0/1. FP
+/// condition codes give IEEE *ordered* semantics — a NaN operand makes every
+/// `<`/`<=`/`>`/`>=`/`==` false (and `!=` true).
+fn emit_fp_cmp(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    rel: CmpRel,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    if instr.srcs.len() < 2 {
+        return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
+    }
+    load_fp_operand(asm, alloc, Reg::X0, &instr.srcs[0])?; // D0
+    load_fp_operand(asm, alloc, Reg::X1, &instr.srcs[1])?; // D1
+    asm.fcmp(Reg::X0, Reg::X1);
+    // After FCMP: less→N=1; equal→Z=1,C=1; greater→C=1; unordered→C=1,V=1.
+    let cond = match rel {
+        CmpRel::Eq => Cond::Eq, // Z=1
+        CmpRel::Ne => Cond::Ne, // Z=0 (includes unordered)
+        CmpRel::Lt => Cond::Mi, // N=1 — only ordered-less-than
+        CmpRel::Le => Cond::Ls, // C=0 or Z=1 — ordered ≤
+        CmpRel::Gt => Cond::Gt, // Z=0 && N==V — ordered >
+        CmpRel::Ge => Cond::Ge, // N==V — ordered ≥
+    };
+    asm.cset(Reg::X0, cond);
     let slot = alloc.slot_of(dest);
     asm.str_(Reg::X0, Reg::Sp, slot)?;
     Ok(())
@@ -1173,6 +1272,9 @@ fn emit_cmp(
     rel: CmpRel,
     ty: &str,
 ) -> Result<(), BackendError> {
+    if ty == "f64" {
+        return emit_fp_cmp(asm, alloc, instr, rel);
+    }
     let dest = require_dest(instr)?;
     if instr.srcs.len() < 2 {
         return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
@@ -1221,6 +1323,14 @@ fn emit_div(
     ty: &str,
     want_mod: bool,
 ) -> Result<(), BackendError> {
+    if ty == "f64" {
+        // ALGOL `real` division (LANG-FULL E3). `mod` is integer-only, so a
+        // `mod_f64` would be a frontend bug.
+        if want_mod {
+            return Err(BackendError::UnsupportedOp("mod_f64 (real modulo is undefined)".into()));
+        }
+        return emit_fp_binop(asm, alloc, instr, FpBin::Div);
+    }
     let dest = require_dest(instr)?;
     if instr.srcs.len() < 2 {
         return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
@@ -2327,5 +2437,81 @@ mod tests {
         // u32: a 64-bit register does NOT wrap a u32 add for free, so the mask
         // is what makes this correct (unlike wasm, where the i32 op wraps).
         assert_eq!(run_narrow_binop("mul", "u32", 0x1_0000, 0x1_0000), 0);
+    }
+
+    // ---- f64 (ALGOL `real`) — LANG-FULL E3 ----
+
+    fn const_f64(dest: &str, v: f64) -> CIRInstr {
+        CIRInstr { op: "const_f64".into(), dest: Some(dest.into()),
+                   srcs: vec![CIROperand::Float(v)], ty: "f64".into(), deopt_to: None }
+    }
+
+    /// `const a; const b; <op>_f64 v0 = a,b; ret_u64 v0` → returns the f64 result's
+    /// raw bits (the value rides its 8-byte stack slot).
+    fn f64_binop_module(op: &str, a: f64, b: f64) -> Vec<u8> {
+        let cir = vec![
+            const_f64("a", a),
+            const_f64("b", b),
+            make_binop_cir(&format!("{op}_f64"), "v0", "a", "b", "f64"),
+            ret_u64("v0"),
+        ];
+        compile(&ctx("f", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("{op}_f64 compile failed: {e}"))
+    }
+
+    /// `const a; const b; cmp_<rel>_f64 v0 = a,b; ret_u64 v0` → returns 0/1.
+    fn f64_cmp_module(rel: &str, a: f64, b: f64) -> Vec<u8> {
+        let cir = vec![
+            const_f64("a", a),
+            const_f64("b", b),
+            make_binop_cir(&format!("cmp_{rel}_f64"), "v0", "a", "b", "f64"),
+            ret_u64("v0"),
+        ];
+        compile(&ctx("f", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("cmp_{rel}_f64 compile failed: {e}"))
+    }
+
+    /// f64 arithmetic and comparisons compile on every host (structural — runs on
+    /// the x86 CI box too, where the executed proofs below are `cfg`'d out).
+    #[test]
+    fn f64_ops_compile() {
+        for op in ["add", "sub", "mul", "div"] {
+            assert!(!f64_binop_module(op, 2.5, 2.0).is_empty(), "{op}_f64 should compile");
+        }
+        for rel in ["eq", "ne", "lt", "le", "gt", "ge"] {
+            assert!(!f64_cmp_module(rel, 2.5, 2.0).is_empty(), "cmp_{rel}_f64 should compile");
+        }
+    }
+
+    #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
+    fn run_u64(bytes: &[u8]) -> u64 {
+        let page = jit_loader_macos::CodePage::new(bytes).expect("install code page");
+        let f: extern "C" fn() -> u64 = unsafe { page.as_function() };
+        f()
+    }
+
+    /// **Executed** on real Apple-Silicon hardware: f64 arithmetic returns the
+    /// exact IEEE-754 result bits (LANG-FULL E3).
+    #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
+    #[test]
+    fn f64_arithmetic_executes() {
+        assert_eq!(run_u64(&f64_binop_module("mul", 2.5, 2.0)), 5.0_f64.to_bits());
+        assert_eq!(run_u64(&f64_binop_module("add", 2.5, 0.25)), 2.75_f64.to_bits());
+        assert_eq!(run_u64(&f64_binop_module("sub", 2.5, 0.25)), 2.25_f64.to_bits());
+        assert_eq!(run_u64(&f64_binop_module("div", 7.0, 2.0)), 3.5_f64.to_bits());
+    }
+
+    /// **Executed**: f64 comparisons return the right 0/1 boolean.
+    #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
+    #[test]
+    fn f64_comparisons_execute() {
+        assert_eq!(run_u64(&f64_cmp_module("eq", 5.0, 5.0)), 1);
+        assert_eq!(run_u64(&f64_cmp_module("eq", 5.0, 4.0)), 0);
+        assert_eq!(run_u64(&f64_cmp_module("lt", 3.5, 4.0)), 1);
+        assert_eq!(run_u64(&f64_cmp_module("lt", 4.0, 3.5)), 0);
+        assert_eq!(run_u64(&f64_cmp_module("gt", 4.0, 3.5)), 1);
+        assert_eq!(run_u64(&f64_cmp_module("le", 5.0, 5.0)), 1);
+        assert_eq!(run_u64(&f64_cmp_module("ge", 5.0, 5.0)), 1);
+        assert_eq!(run_u64(&f64_cmp_module("ne", 5.0, 4.0)), 1);
     }
 }
