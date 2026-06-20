@@ -29,10 +29,12 @@
 % source-first, zero-deferral policy, two previously-deferred buzzwords are now GROUNDED:
 % Auer rods → acute promyelocytic leukemia (the AML page names abundant Auer rods as a
 % pathognomonic APL feature) and psammoma bodies → meningioma (the meningioma page names
-% psammoma-body formation as a histopathological characteristic). Still pursued for the
-% next backfill (its disease page lists psammoma bodies only inside a run-on feature
-% list, not a both-endpoints-named declarative): psammoma bodies → papillary thyroid
-% carcinoma.
+% psammoma-body formation as a histopathological characteristic). Still deferred (re-checked):
+% psammoma bodies → papillary thyroid carcinoma — the PTC page (NBK536943) lists psammoma
+% bodies only as an isolated bullet, and the only both-endpoints span on the Thyroid-Gland
+% histology page (NBK551659) wraps "Orphan Annie eye" in DOUBLE quotes (plus inline citation
+% brackets), which cannot be carried verbatim inside an ADJ double-quoted source string.
+% Declined rather than mangle the span — honest absence beats a doctored citation.
 % ============================================================================
 
 dictionary histo_vocab {

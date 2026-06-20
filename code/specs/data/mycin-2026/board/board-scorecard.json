@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 146,
-    "correct": 139,
+    "total": 147,
+    "correct": 140,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -16,7 +16,7 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 133,
+        "correct": 134,
         "abstained": 6,
         "wrong": 0
       }
@@ -24,7 +24,7 @@
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
     "grounded_coverage": 0.9925,
-    "grounded_correct": 132
+    "grounded_correct": 133
   },
   "results": [
     {
@@ -920,6 +920,14 @@
       "tactic": "recall",
       "gold": "anti_mitochondrial",
       "answer": "anti_mitochondrial",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "rheum_dm_ab",
+      "tactic": "recall",
+      "gold": "anti_jo1",
+      "answer": "anti_jo1",
       "outcome": "correct",
       "trust": "authoritative"
     },

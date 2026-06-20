@@ -28,10 +28,13 @@
 % mitochondrial antibody (the StatPearls page titled "Primary Biliary Cholangitis" carries
 % a contiguous Pathophysiology span naming the disease — by its legacy name "Primary
 % biliary cirrhosis" — and its hallmark anti-mitochondrial antibody together).
-% Still deferred (checked, no both-endpoints declarative on the cited page): polymyositis /
-% antisynthetase → anti-Jo-1 — the Autoimmune Myopathies page (NBK532860) calls Jo-1 "the
-% most studied and commonly detected antisynthetase antibody" but does not name a disease
-% in the same sentence. Honest absence beats an over-reaching citation.
+% A fourth backfill is now GROUNDED: dermatomyositis → anti-Jo-1 (the dedicated
+% Dermatomyositis page, NBK558917, names "Anti-Jo" as the most common antisynthetase
+% antibody found in dermatomyositis — both endpoints in one sentence). The earlier
+% holdout was the Autoimmune Myopathies page (NBK532860), which calls Jo-1 "the most
+% studied and commonly detected antisynthetase antibody" but names no disease alongside;
+% the disease-specific Dermatomyositis page supplies the clean both-endpoints span.
+% Nothing rheumatologic remains deferred. (Honest absence still beats over-reach.)
 % ============================================================================
 
 dictionary rheum_vocab {
@@ -98,5 +101,13 @@ rulebook rheum_facts {
     relate associated_autoantibody(primary_biliary_cholangitis, anti_mitochondrial)
         source "Primary biliary cirrhosis is associated with highly specific autoantibodies. The anti-mitochondrial antibody is found in 85% of the cases."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK459209/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): dermatomyositis → anti-Jo-1 -----------------
+    % The disease-specific Dermatomyositis page names both endpoints in one sentence,
+    % where the Autoimmune Myopathies overview (NBK532860) named only the antibody.
+    relate associated_autoantibody(dermatomyositis, anti_jo1)
+        source "Anti-Jo is the most common antisynthetase antibody found in dermatomyositis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK558917/"
         trust authoritative
 }
