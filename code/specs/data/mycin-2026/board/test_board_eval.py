@@ -11,6 +11,7 @@ Run:  python3 test_board_eval.py
 
 from __future__ import annotations
 
+import functools
 import json
 import sys
 from pathlib import Path
@@ -20,7 +21,14 @@ sys.path.insert(0, str(HERE))
 import board_eval as be  # noqa: E402
 
 
+@functools.lru_cache(maxsize=None)
 def _card():
+    # The scorecard is a PURE function of items.json + the (unchanging) edge libraries +
+    # the deterministic native engine, so it is computed ONCE and shared across every
+    # test. Without this cache the whole board — including the five `management` items,
+    # each of which runs the constraint solver through the CLI (chart_to_cop.derive) —
+    # was re-scored on every helper call (~6×), which dominated suite wall-clock. Every
+    # test reads the card read-only, so sharing one result is safe.
     items = json.loads((HERE / "items.json").read_text())["items"]
     return be.score(items), items
 
@@ -237,9 +245,8 @@ def test_management_runs_the_constraint_engine_when_cli_present() -> None:
 
 
 def _card_with_diff():
-    import json
-    items = json.loads((HERE / "items.json").read_text())["items"]
-    return be.score(items), items
+    # Identical to _card(); delegate so the cached, single score() run is reused.
+    return _card()
 
 
 def _run() -> int:
