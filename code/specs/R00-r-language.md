@@ -405,6 +405,53 @@ unchanged.
     the native stack. This makes the classic anonymous factorial work:
     `(\(n) if (n <= 1) 1 else n * Recall(n - 1))(5)` → `120`.
 
+- **R-21 — environments & scoping (core subset)** *(this PR)*. R's *environment
+  model* — the machinery behind lexical scoping — made writable from R source.
+  R reuses the shared S scope chain (`env::Scope`, an `Rc<RefCell<…>>` frame with
+  an optional parent), so this item is **grammar-free**: the `<<-`/`->>` tokens
+  already lex (they were reserved in `s.tokens`/`r.tokens` from the start and the
+  `->>` right form was wired through the `assignment` rule by R-3), and the new
+  by-name binding operations are **lazy special forms** intercepted at the call
+  site (like R-18's `switch`/`tryCatch`), since they need the *current*
+  environment, which ordinary eager builtins never see. This PR ships the core
+  subset; first-class environment **values** are deferred to R-22 (see below).
+  - **`<<-` super-assignment** (and its right form `->>`). Where `<-` binds in
+    the *current* scope, `<<-` walks the chain of **enclosing** scopes (skipping
+    the current one) looking for an existing binding of the name and rebinds the
+    **nearest** one it finds. If no enclosing scope binds the name, the value is
+    created in the **global** environment (matching R). This is what makes the
+    counter-closure idiom work: `make_counter <- function() { n <- 0; function()
+    { n <<- n + 1; n } }` — the inner function mutates the `n` captured in its
+    enclosing frame rather than shadowing it locally. The chain walk is bounded
+    by the finite scope depth (every frame is a distinct `Rc`, and `child` only
+    ever links to an existing parent, so the chain is a DAG-free finite list — no
+    cycle is constructible from R source), so the walk always terminates.
+  - **`local({ … })`** — evaluate a block in a **fresh child environment** of the
+    current scope and return the block's value. Bindings made with `<-` inside the
+    block are locals and do **not** leak: `local({ x <- 5; x * 2 })` → `10`, and
+    `x` is unbound afterwards. A lazy special form: the unevaluated block argument
+    is evaluated in `Scope::child(env)`. (R also accepts a second `envir`
+    argument; that requires first-class environment values and is deferred.)
+  - **`assign(x, value)` / `get(x)` / `exists(x)` / `rm(x)`** — by-name binding
+    operations against the **current** environment. `assign("y", 10)` binds `y`;
+    `get("y")` returns it (erroring if unbound, like R); `exists("y")` is
+    `TRUE`/`FALSE` searching the whole chain (so `exists("mean")` is `TRUE`,
+    `exists("zzz")` is `FALSE`); `rm("y")` removes a binding from the current
+    frame. These are special forms because they must touch `env`; the name
+    argument is a length-one string evaluated normally (so `assign(nm, v)` with a
+    variable name works). The optional `envir = e` argument is **deferred** to
+    R-22 (it needs a first-class environment value to point at).
+  - **Deferred to R-22 (first-class environment values).** `new.env()`,
+    `environment()` / `environment(f)`, and the `envir = e` argument of
+    `assign`/`get`/`exists`/`rm`/`local` all require a new `SValue::Environment`
+    variant that boxes an `Env` handle and survives being passed as a value.
+    That is a larger change (printing, `is`-dispatch, copy semantics, and a fresh
+    round of Rc-cycle / leak analysis), so per the roadmap's "clean subset beats a
+    sprawling PR" guidance it is split out. The subset above already delivers the
+    *behaviour* R programs reach for most (`local`, `<<-`, `exists`/`get`/`assign`
+    against the current scope); R-22 adds the reified handles on top without
+    changing any of it.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -417,9 +464,12 @@ unchanged.
 
 ## §5 Out of scope (for now)
 
-Pipes (`|>`) and backslash lambdas (`\(x)`); environments/`<<-` semantics beyond
-the S subset; S4/R5/R6 OO; namespaces and `library()`; the C interface; graphics.
-These layer on later, following ST00.
+Pipes (`|>`) and backslash lambdas (`\(x)`); **first-class environment values**
+(`new.env()`, `environment()`, and the `envir = e` argument of
+`assign`/`get`/`exists`/`rm`/`local`) — deferred to **R-21's follow-up R-22**
+once an `SValue::Environment` variant lands (R-21 ships `local()` + `<<-` +
+current-scope `assign`/`get`/`exists`/`rm`); S4/R5/R6 OO; namespaces and
+`library()`; the C interface; graphics. These layer on later, following ST00.
 
 ## §6 References
 
