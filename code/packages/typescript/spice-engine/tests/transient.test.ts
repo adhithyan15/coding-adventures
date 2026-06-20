@@ -1473,6 +1473,8 @@ describe("transient", () => {
     expect(opExecution.outputProbes).toEqual(["V(mid)"]);
     expect(opExecution.outputDirectives).toEqual([".save"]);
     expect(opExecution.analysisDirectives).toEqual([".op"]);
+    expect(opExecution.tableCount).toBe(2);
+    expect(opExecution.tables).toEqual(["result", "run-artifact"]);
     expect(opExecution.measurements).toEqual([]);
     expect(opExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
@@ -1635,6 +1637,8 @@ describe("transient", () => {
     expect(dcExecution.outputProbes).toEqual(["V(mid)", "I(V1)"]);
     expect(dcExecution.outputDirectives).toEqual([".save", ".probe"]);
     expect(dcExecution.analysisDirectives).toEqual([".dc"]);
+    expect(dcExecution.tableCount).toBe(3);
+    expect(dcExecution.tables).toEqual(["result", "measurement", "run-artifact"]);
     expect(dcExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_avg"]);
     expect(dcExecution.measurementTable).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
@@ -1682,6 +1686,8 @@ describe("transient", () => {
     expect(acExecution.outputProbes).toEqual(["V(mid)"]);
     expect(acExecution.outputDirectives).toEqual([".save"]);
     expect(acExecution.analysisDirectives).toEqual([".ac"]);
+    expect(acExecution.tableCount).toBe(3);
+    expect(acExecution.tables).toEqual(["result", "measurement", "run-artifact"]);
     expect(acExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_peak"]);
     expect(acExecution.measurementTable).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
@@ -1729,6 +1735,8 @@ describe("transient", () => {
     expect(tranExecution.outputProbes).toEqual(["V(mid)"]);
     expect(tranExecution.outputDirectives).toEqual([".save"]);
     expect(tranExecution.analysisDirectives).toEqual([".tran"]);
+    expect(tranExecution.tableCount).toBe(3);
+    expect(tranExecution.tables).toEqual(["result", "measurement", "run-artifact"]);
     expect(tranExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_final"]);
     expect(tranExecution.measurementTable).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
@@ -1779,6 +1787,8 @@ describe("transient", () => {
     expect(tfExecution.outputProbes).toEqual(["V(mid)"]);
     expect(tfExecution.outputDirectives).toEqual([]);
     expect(tfExecution.analysisDirectives).toEqual([".tf"]);
+    expect(tfExecution.tableCount).toBe(2);
+    expect(tfExecution.tables).toEqual(["result", "run-artifact"]);
     expect(tfExecution.measurements).toEqual([]);
     expect(tfExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(tfExecution.table).toBe(
@@ -1819,6 +1829,8 @@ describe("transient", () => {
     expect(sensResult.entries).toHaveLength(3);
     expect(sensExecution.outputProbes).toEqual(["V(mid)"]);
     expect(sensExecution.analysisDirectives).toEqual([".sens"]);
+    expect(sensExecution.tableCount).toBe(2);
+    expect(sensExecution.tables).toEqual(["result", "run-artifact"]);
     expect(sensExecution.measurements).toEqual([]);
     expect(sensExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(sensExecution.table.startsWith(
@@ -1864,6 +1876,8 @@ describe("transient", () => {
     expect(noiseResult.points).toHaveLength(1);
     expect(noiseExecution.outputProbes).toEqual(["V(mid)"]);
     expect(noiseExecution.analysisDirectives).toEqual([".noise"]);
+    expect(noiseExecution.tableCount).toBe(2);
+    expect(noiseExecution.tables).toEqual(["result", "run-artifact"]);
     expect(noiseExecution.measurements).toEqual([]);
     expect(noiseExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(noiseExecution.table).toBe(formatDeckNoiseTable(noiseResult));
@@ -1923,6 +1937,8 @@ describe("transient", () => {
       "result",
       "run-artifact",
     ]);
+    expect(tranWindowExecution.tableCount).toBe(2);
+    expect(tranWindowExecution.tables).toEqual(["result", "run-artifact"]);
     expect(tranWindowExecution.outputProbes).toEqual(["V(mid)"]);
     const tranWindowPoints = tranWindowExecution.result as { time: number }[];
     expect(tranWindowPoints).toHaveLength(3);
@@ -1985,9 +2001,13 @@ describe("transient", () => {
     const opExecution = runDeckAnalysis(circuit, netlist, "op");
     expect(opExecution.fourier).toEqual([]);
     expect(opExecution.fourierTable).toBe("");
+    expect(opExecution.tableCount).toBe(2);
+    expect(opExecution.tables).toEqual(["result", "run-artifact"]);
 
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
     expect(tranExecution.fourier).toHaveLength(1);
+    expect(tranExecution.tableCount).toBe(3);
+    expect(tranExecution.tables).toEqual(["result", "fourier", "run-artifact"]);
     const result = tranExecution.fourier[0]!;
     expect(result.fundamentalFrequencyHz).toBeCloseTo(2_000.0, 12);
     expect(result.probes[0]?.probe).toBe("V(mid)");
