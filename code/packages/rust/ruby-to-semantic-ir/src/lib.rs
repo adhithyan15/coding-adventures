@@ -5415,6 +5415,66 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // RB1 — trailing block on a receiver/dotted method call
+    // (`recv.each { … }` / `recv.each do … end`).  The block is hoisted to
+    // a top-level Function and attached as the `__method__` envelope's
+    // trailing MakeClosure argument (previously the block was dropped /
+    // the whole construct failed to parse).
+    // -----------------------------------------------------------------------
+
+    /// The hoisted block function name on a `__method__` call's trailing
+    /// `MakeClosure` argument, if present.
+    fn method_block_closure(e: &Expr) -> Option<&str> {
+        if let Expr::BuiltinCall { name, args, .. } = e {
+            if name == "__method__" {
+                if let Some(Expr::MakeClosure { fn_name, .. }) = args.last() {
+                    return Some(fn_name.as_str());
+                }
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn receiver_method_brace_block_is_hoisted_and_attached() {
+        let m = lower("[1, 2].each { |x| puts x }\n");
+        let v = &main_body(&m).value;
+        let blk = method_block_closure(v)
+            .expect("each-with-block must attach a hoisted MakeClosure");
+        // The hoisted function exists and carries the block body.
+        let bf = m.functions.iter().find(|f| f.name == blk).expect("hoisted block fn");
+        assert!(
+            !bf.body.stmts.is_empty() || !matches!(bf.body.value, Expr::NilLit { .. }),
+            "hoisted block must carry its body"
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn receiver_method_do_end_block_is_hoisted_and_attached() {
+        let m = lower("[1, 2].each do |x|\n  puts x\nend\n");
+        let v = &main_body(&m).value;
+        assert!(
+            method_block_closure(v).is_some(),
+            "do/end block on a receiver call must attach a MakeClosure, got {:?}",
+            v
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn receiver_method_without_block_has_no_closure() {
+        // A plain dotted call keeps its `__method__` shape with no trailing
+        // closure (the block arm must not fire spuriously).
+        let m = lower("[1, 2].length\n");
+        assert!(
+            method_block_closure(&main_body(&m).value).is_none(),
+            "no block ⇒ no MakeClosure on the __method__ envelope"
+        );
+        assert!(semantic_ir::validate(&m).is_ok());
+    }
+
+    // -----------------------------------------------------------------------
     // Phase Q10b — block_given? → not(null?(__sir_block__))
     // -----------------------------------------------------------------------
 
@@ -7842,6 +7902,3 @@ b = "y"
         );
     }
 }
-
-
-
