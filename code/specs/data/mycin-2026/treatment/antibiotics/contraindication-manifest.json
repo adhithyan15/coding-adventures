@@ -79,6 +79,16 @@
       "source": "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular malformations, urinary tract defects, oral clefts, and club foot.",
       "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7"
     },
+    "drug_contraindicated_in__tmp_smx__g6pd_deficiency": {
+      "relation": "drug_contraindicated_in",
+      "subject": "tmp_smx",
+      "context": "g6pd_deficiency",
+      "grounding_id": "ci_tmpsmx_g6pd",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "In glucose-6-phosphate dehydrogenase deficient individuals, hemolysis may occur.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7"
+    },
     "class_contraindicated_in__penicillin__penicillin_allergy": {
       "relation": "class_contraindicated_in",
       "subject": "penicillin",
@@ -120,5 +130,5 @@
       "grounding_id": null
     }
   },
-  "hash": "feeebda9736e326b"
+  "hash": "c63c38b0d2e27b31"
 }

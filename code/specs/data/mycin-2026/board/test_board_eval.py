@@ -265,6 +265,12 @@ def test_management_runs_the_constraint_engine_when_cli_present() -> None:
     # stays FEASIBLE and dose-adjusted (cap, don't forbid): ceftriaxone + vancomycin.
     assert by_id["mgmt_hepatorenal"].outcome == "correct"
     assert by_id["mgmt_hepatorenal"].answer == "ceftriaxone+vancomycin"
+    # CC-3c: a comorbidity (G6PD deficiency) activates a clinical context; the engine derives
+    # tmp_smx as contraindicated (sulfonamide hemolysis) and folds it into forced_zero. The
+    # standard adult regimen is unaffected (tmp_smx wasn't used), so the answer stays correct —
+    # exercising the full comorbidity→context→engine-contraindication path end-to-end in CI.
+    assert by_id["mgmt_g6pd"].outcome == "correct"
+    assert by_id["mgmt_g6pd"].answer == "ceftriaxone+vancomycin"
 
 
 def _card_with_diff():

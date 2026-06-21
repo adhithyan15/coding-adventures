@@ -114,6 +114,12 @@ _CONTEXT_FROM_FACT = {
     ("allergy", "penicillin"): "penicillin_allergy",
     ("allergy", "cephalosporin"): "cephalosporin_allergy",
     ("allergy", "betalactam"): "betalactam_allergy",
+    # CC-3c comorbidity-driven contexts: a patient comorbidity activates a clinical context the
+    # engine joins against the grounded contraindication rulebook (same mechanism as allergy/
+    # pregnancy). g6pd_deficiency → the sulfonamide (tmp_smx) is hemolytic; qt_prolongation →
+    # the fluoroquinolone (moxifloxacin) is QT-prolonging — both already grounded in the rulebook.
+    ("comorbidity", "g6pd_deficiency"): "g6pd_deficiency",
+    ("comorbidity", "qt_prolongation"): "qt_prolongation",
 }
 
 # CC-4: a chart `objective_priority` fact → the (w_cost, w_tox) objective blend the
@@ -264,6 +270,23 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
             else:
                 cop.discards.append({"fact": f"pregnancy={f.value}",
                                      "reason": "pregnancy value not 'present' → no context activated"})
+        elif f.kind == "comorbidity":
+            # CC-3c: a patient comorbidity (G6PD deficiency, QT prolongation, …) activates a
+            # clinical CONTEXT. As with allergy/pregnancy, it does NOT name the excluded drugs —
+            # the engine derives those in derive() from the grounded contraindication rulebook
+            # (g6pd_deficiency → tmp_smx; qt_prolongation → moxifloxacin). New comorbidity = one
+            # row in _CONTEXT_FROM_FACT + a grounded fact, no drug-name logic here.
+            context = _CONTEXT_FROM_FACT.get((f.kind, f.value))
+            if context:
+                cop.active_contexts.add(context)
+                cop.constraints.append({"type": "context", "from": f"comorbidity={f.value}",
+                                        "rule": f"comorbidity → active clinical context '{context}' "
+                                                "(gates the contraindication rules)",
+                                        "detail": context, "span": f.span})
+            else:
+                cop.discards.append({"fact": f"comorbidity={f.value}",
+                                     "reason": "no grounded contraindication context for this "
+                                               "comorbidity yet (want g6pd_deficiency/qt_prolongation)"})
         elif f.kind == "culture_status":
             # CC-5: whether the culture is back drives the wait-vs-treat-now decision.
             if f.value in ("pending", "resulted"):
