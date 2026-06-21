@@ -3,6 +3,40 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.0] — 2026-06-21 (LANG-FULL E5 — arrays via linear memory + explicit bounds-trap)
+
+The four E5 array opcodes now lower to the **static** array model in WASM **linear
+memory** — the same length-prefixed layout + explicit out-of-bounds trap as the
+LLVM backend (WASM, like a native target, has no managed runtime to bounds-check
+for it). Per array, memory holds `[i64 length][elem 0][elem 1]…`; the *handle* is
+the byte offset of the block.
+
+| IIR op | WASM |
+|--------|------|
+| `alloc_array dest <- count` (`array<T>`) | `dest = global.get __array_bump`; advance bump by `8 + count*elemsize`; `i64.store` the length header |
+| `array_get dest <- handle, idx` | `idx >=u len` → `if … unreachable`; then `i64.load`/`f64.load` at `wrap(handle)+idx*elemsize` offset 8 |
+| `array_set handle, idx, val` | same bounds trap; `i64.store`/`f64.store` |
+| `array_len dest <- handle` | `i64.load` the header at `wrap(handle)+0` |
+
+- **Bump pointer**: a synthetic mutable `i64` global `__array_bump` (injected into
+  the global section when a module uses any array op, init 0) hands each
+  `alloc_array` a fresh region, so multiple arrays coexist. Using arrays also
+  triggers the 1-page linear `(memory …)` (as the Brainfuck tape does).
+- **Bounds check**: one **unsigned** compare `i64.ge_u` (0x5A — newly added) traps
+  via `unreachable` on both a `>= len` index and a negative one (a negative i64 is
+  a huge unsigned value). The wasm twin of LLVM's `icmp uge` + `llvm.trap`.
+- Element type from `T`: `i64`/`f64` elements (the ALGOL `integer`/`real` arrays);
+  the handle rides an `i64` register (a byte offset) wrapped to `i32` for
+  addressing, exactly like the byte-tape base. New `i64.load`/`i64.store`/
+  `f64.load`/`f64.store` encoders (with an offset immediate).
+- 3 new unit tests (memory + bump global + trap + load/store opcodes, handle
+  typing, `f64` element ops). Verified end to end: a straight-line ALGOL array
+  program runs on the in-repo `wasm-runtime` → exit 42.
+
+Scope: `i64`/`f64` elements (the ALGOL array element types). Narrower element
+widths and multidimensional arrays are follow-up; native x86_64/aarch64 arrays
+land in E5 PR-4c.
+
 ## [0.15.1] — 2026-06-20 (LANG-FULL E3 — f64 regression tests; ALGOL reals run on WASM)
 
 ### Added — f64 `mul`/`div`/comparison op-selection tests (no code change)

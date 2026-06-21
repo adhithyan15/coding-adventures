@@ -213,6 +213,41 @@ pub const I64_LE_S: u8 = 0x57;
 /// `i64.ge_s` (0x59) — signed i64 >=.
 pub const I64_GE_S: u8 = 0x59;
 
+/// `i64.ge_u` (0x5A) — **unsigned** i64 >=. Used by the E5 array bounds check:
+/// `idx >=u len` traps on both a `>= len` index and a negative one (a negative
+/// i64 reinterpreted as unsigned is huge), exactly like LLVM's `icmp uge`.
+pub const I64_GE_U: u8 = 0x5A;
+
+/// `i64.load` (0x29) — load an i64 from linear memory at `address + offset`,
+/// with an `align` hint. Used by the E5 array length header + `i64` elements.
+/// `align = 0` (1-byte) is always valid; the interpreter ignores it.
+pub fn encode_i64_load(offset: u32) -> Vec<u8> {
+    let mut b = vec![0x29u8, 0x00u8]; // i64.load, align = 0
+    b.extend(encode_unsigned(offset as u64));
+    b
+}
+
+/// `i64.store` (0x37) — store an i64 to `address + offset`. Stack: `[addr, val]`.
+pub fn encode_i64_store(offset: u32) -> Vec<u8> {
+    let mut b = vec![0x37u8, 0x00u8]; // i64.store, align = 0
+    b.extend(encode_unsigned(offset as u64));
+    b
+}
+
+/// `f64.load` (0x2B) — load an f64 from `address + offset` (E5 `array<f64>`).
+pub fn encode_f64_load(offset: u32) -> Vec<u8> {
+    let mut b = vec![0x2Bu8, 0x00u8]; // f64.load, align = 0
+    b.extend(encode_unsigned(offset as u64));
+    b
+}
+
+/// `f64.store` (0x39) — store an f64 to `address + offset`. Stack: `[addr, val]`.
+pub fn encode_f64_store(offset: u32) -> Vec<u8> {
+    let mut b = vec![0x39u8, 0x00u8]; // f64.store, align = 0
+    b.extend(encode_unsigned(offset as u64));
+    b
+}
+
 /// `i64.add` (0x7C) — i64 addition.
 pub const I64_ADD: u8 = 0x7C;
 

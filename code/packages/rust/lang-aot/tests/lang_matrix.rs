@@ -593,15 +593,20 @@ const PROGRAMS: &[Prog] = &[
     // each `array_set`/`array_get` emits an **explicit** `icmp uge idx, len` and a
     // `br` to a `call void @llvm.trap()` block on out-of-range (the native target
     // has no managed runtime to bounds-check for it), then a typed `getelementptr`
-    // + `load`/`store`. `clang` compiles the `.ll` and runs it → exit 42. Runs on
-    // every already-supported array backend too (VM/JIT/JVM/CLR), all straight-line.
+    // + `load`/`store`. `clang` compiles the `.ll` and runs it → exit 42. On **WASM**
+    // (`iir-to-wasm`, PR-4b) it is the same static model in **linear memory**: a
+    // `__array_bump` global hands each `alloc_array` a fresh `[i64 len][elems…]`
+    // region; `array_get`/`array_set` emit `idx >=u len` → `if … unreachable` (the
+    // wasm trap) then an `i64.load`/`i64.store` at `wrap(handle)+idx*8` offset 8.
+    // The in-repo `wasm-runtime` interpreter executes it → exit 42. Runs on every
+    // already-supported array backend too (VM/JIT/JVM/CLR), all straight-line.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin integer array A[1:3]; integer result; \
                A[1] := 40; A[3] := 2; result := A[1] + A[3] end",
         expect: Expect::Exit(42),
-        backends: &[Vm, Jit, Jvm, Clr, Llvm],
+        backends: &[Vm, Jit, Jvm, Clr, Llvm, Wasm],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width

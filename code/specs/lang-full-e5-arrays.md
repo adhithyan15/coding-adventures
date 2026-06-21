@@ -193,7 +193,11 @@ merge before the next:
      `getelementptr`+`load`/`store`, `array_len`→load header. A straight-line ALGOL
      array program runs via `clang` (exit 42). *(The for-loop array Prog awaits a
      separate ALGOL-for-loop→LLVM fix before joining the LLVM column.)*
-   - **4b — WASM** ☐ (linear memory, same length-prefixed model + `unreachable` trap).
+   - **4b — WASM** ✅ **done** (`iir-to-wasm` 0.16.0): linear-memory length-prefixed
+     `[i64 len][elems…]` via a `__array_bump` global; `array_get/set` emit `i64.ge_u`
+     → `if … unreachable` (the trap) then `i64.load`/`i64.store` at offset 8;
+     `array_len` reads the header. Straight-line ALGOL array Prog runs on the in-repo
+     `wasm-runtime` (exit 42). 3 tests.
    - **4c — native x86_64 + aarch64** ☐ (encodings byte-verified vs the assembler).
 5. **E5-bounds-trap-proof** — a matrix program that traps on OOB, asserted to
    abort on every backend.

@@ -55,6 +55,15 @@ through a deprecated intermediate.
   imports for `.`/`,`. Byte width lives only at the tape boundary; registers in
   between are uniform `i64`. This is the wasm sibling of the LLVM byte-tape
   lowering, so **Brainfuck runs on wasm** (LANG-MATRIX LM-W Brainfuck).
+- **Bounds-checked arrays (v0.16.0 — LANG-FULL E5)**: the *static* array model in
+  linear memory. A synthetic mutable `i64` global `__array_bump` hands each
+  `alloc_array` a fresh `[i64 length][elem 0][elem 1]…` region (the handle is the
+  block's byte offset); `array_get`/`array_set` emit an **explicit** unsigned
+  bounds check `idx >=u len` (`i64.ge_u`) → `if … unreachable` (the wasm trap, since
+  there is no managed runtime to bounds-check for it) then an `i64.load`/`i64.store`
+  (or `f64`) at `wrap(handle)+idx*elemsize` offset 8; `array_len` reads the header.
+  The wasm sibling of the LLVM `@calloc` + `icmp uge` + `llvm.trap` lowering. `i64`
+  and `f64` elements (the ALGOL `integer`/`real` arrays).
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 
