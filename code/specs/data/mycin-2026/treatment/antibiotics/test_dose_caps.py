@@ -43,8 +43,11 @@ def test_generated_rulebook_is_grounded_and_parseable():
     # The compound is defined structurally as TWO distinct component categories.
     assert "compound_first(hepatorenal, hepatic)" in text
     assert "compound_second(hepatorenal, renal)" in text
-    # The two GENERIC conjunction rules are present (not a drug-specific Python `if`).
-    assert text.count("rule {") == 2 and "derived_risk($C)" in text
+    # SINGLE-FACTOR grounded caps (vancomycin renal / nephrotoxin) reuse dose_capped_under.
+    assert "dose_capped_under(vancomycin, renal_severe)" in text
+    assert "dose_capped_under(vancomycin, nephrotoxin_interaction)" in text
+    # THREE GENERIC rules now: derived_risk + compound dose_capped + single-factor dose_capped.
+    assert text.count("rule {") == 3 and "derived_risk($C)" in text
 
 
 # --------------------------------------------------------------------------
@@ -58,7 +61,7 @@ def test_unsafe_risk_tokens_are_rejected(bad):
 
 def test_no_active_risks_short_circuits_without_the_engine():
     # An empty risk set must NOT touch the engine (cli unused) and derive nothing.
-    assert dc.derive_dose_caps(_DUMMY_CLI, set()) == (set(), {})
+    assert dc.derive_dose_caps(_DUMMY_CLI, set()) == (set(), [])
 
 
 class _DummyCli:
@@ -80,27 +83,31 @@ def _cli_or_skip():
     return cli
 
 
-def test_conjunction_requires_both_categories():
+def _drugs(caps):
+    return {c["drug"] for c in caps}
+
+
+def test_compound_requires_both_categories():
     cli = _cli_or_skip()
-    # A single organ risk derives NOTHING — hepatic alone, or renal alone, needs no compound
-    # cap (faithful to the label: hepatic impairment alone needs no dose adjustment).
-    assert dc.derive_dose_caps(cli, {"hepatic_severe"}) == (set(), {})
-    assert dc.derive_dose_caps(cli, {"renal_moderate"}) == (set(), {})
-    # Two hepatic risks (still no renal) must NOT fire — the rule needs two DISTINCT categories.
-    assert dc.derive_dose_caps(cli, {"hepatic_severe", "hepatic_moderate"}) == (set(), {})
+    # The COMPOUND (derived_risk) needs two DISTINCT organ categories: a single hepatic risk,
+    # or two hepatic risks, derive NO compound (faithful: hepatic alone needs no adjustment).
+    risks, caps = dc.derive_dose_caps(cli, {"hepatic_severe"})
+    assert risks == set() and caps == [], (risks, caps)  # hepatic has no single-factor cap either
+    risks2, _ = dc.derive_dose_caps(cli, {"hepatic_severe", "hepatic_moderate"})
+    assert risks2 == set(), risks2  # two hepatic, no renal → no hepatorenal
 
 
 def test_both_categories_derive_hepatorenal_with_grounded_provenance():
     cli = _cli_or_skip()
     risks, caps = dc.derive_dose_caps(cli, {"hepatic_severe", "renal_moderate"})
     assert risks == {"hepatorenal"}, risks
-    assert set(caps) == {"ceftriaxone"}, caps
-    info = caps["ceftriaxone"]
-    assert info["risk"] == "hepatorenal"
+    # caps is a list; the compound ceftriaxone cap AND the single-factor vancomycin renal cap.
+    cef = next((c for c in caps if c["drug"] == "ceftriaxone"), None)
+    assert cef and cef["risk"] == "hepatorenal"
     # the grounded FDA byte-quote flows through to the cap.
-    assert info["trust"] == "authoritative" and info["source"]
-    assert "hepatic impairment and significant renal impairment" in info["source"]
-    assert info["locator"] and "dailymed" in info["locator"]
+    assert cef["trust"] == "authoritative" and cef["source"]
+    assert "hepatic impairment and significant renal impairment" in cef["source"]
+    assert cef["locator"] and "dailymed" in cef["locator"]
 
 
 def test_graded_severities_all_map_to_their_category():
@@ -110,13 +117,34 @@ def test_graded_severities_all_map_to_their_category():
     for hep in ("hepatic_severe", "hepatic_moderate"):
         for ren in ("renal_severe", "renal_moderate"):
             risks, caps = dc.derive_dose_caps(cli, {hep, ren})
-            assert risks == {"hepatorenal"} and "ceftriaxone" in caps, (hep, ren)
+            assert risks == {"hepatorenal"} and "ceftriaxone" in _drugs(caps), (hep, ren)
 
 
-def test_unrelated_single_risk_caps_nothing():
+def test_single_factor_renal_cap_is_grounded():
     cli = _cli_or_skip()
-    # A non-organ risk token (e.g. an interaction) is not in any category → no compound, no cap.
-    assert dc.derive_dose_caps(cli, {"nephrotoxin_interaction"}) == (set(), {})
+    # CC-2c: a single renal risk caps vancomycin (no conjunction needed), carrying the FDA quote.
+    for ren in ("renal_severe", "renal_moderate"):
+        risks, caps = dc.derive_dose_caps(cli, {ren})
+        assert risks == set(), (ren, risks)  # single factor → no COMPOUND derived
+        van = next((c for c in caps if c["drug"] == "vancomycin"), None)
+        assert van and van["risk"] == ren and van["trust"] == "authoritative", (ren, caps)
+        assert "renal" in van["source"].lower()
+
+
+def test_single_factor_nephrotoxin_cap_is_grounded():
+    cli = _cli_or_skip()
+    # CC-2c: a concomitant nephrotoxin caps vancomycin, carrying the PRECAUTIONS byte-quote.
+    risks, caps = dc.derive_dose_caps(cli, {"nephrotoxin_interaction"})
+    assert risks == set()
+    van = next((c for c in caps if c["drug"] == "vancomycin"), None)
+    assert van and van["risk"] == "nephrotoxin_interaction" and van["trust"] == "authoritative", caps
+    assert "nephrotoxicity" in van["source"].lower()
+
+
+def test_unknown_single_risk_caps_nothing():
+    cli = _cli_or_skip()
+    # A risk token with no dose_capped_under fact and no category → no compound, no cap.
+    assert dc.derive_dose_caps(cli, {"qt_prolongation"}) == (set(), [])
 
 
 if __name__ == "__main__":

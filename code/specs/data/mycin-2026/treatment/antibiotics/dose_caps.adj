@@ -62,10 +62,24 @@ rulebook dose_caps {
     relate compound_first(hepatorenal, hepatic)
     relate compound_second(hepatorenal, renal)
 
-    % --- grounded dose caps (the clinical claim) ----------------------------
+    % --- grounded COMPOUND dose caps (the clinical claim) -------------------
     relate dose_capped_under(ceftriaxone, hepatorenal)
         source "Patients with hepatic impairment and significant renal impairment should not receive more than 2 grams per day of ceftriaxone."
         locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=5cd2d96f-83e5-4326-ae87-d0ede4ba493a"
+        trust authoritative
+
+    % --- grounded SINGLE-FACTOR dose caps (renal / nephrotoxin) -------------
+    relate dose_capped_under(vancomycin, renal_severe)
+        source "Vancomycin should be used with caution in patients with renal insufficiency because the risk of toxicity is appreciably increased by high, prolonged blood concentrations. Dosage of vancomycin hydrochloride for injection must be adjusted for patients with renal dysfunction."
+        locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce"
+        trust authoritative
+    relate dose_capped_under(vancomycin, renal_moderate)
+        source "Vancomycin should be used with caution in patients with renal insufficiency because the risk of toxicity is appreciably increased by high, prolonged blood concentrations. Dosage of vancomycin hydrochloride for injection must be adjusted for patients with renal dysfunction."
+        locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce"
+        trust authoritative
+    relate dose_capped_under(vancomycin, nephrotoxin_interaction)
+        source "In order to minimize the risk of nephrotoxicity when treating patients with underlying renal dysfunction or patients receiving concomitant therapy with an aminoglycoside, serial monitoring of renal function should be performed, and particular care should be taken in following appropriate dosing schedules."
+        locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce"
         trust authoritative
 
     % --- the GENERIC conjunction rules ---------------------------------------
@@ -82,5 +96,11 @@ rulebook dose_caps {
         when: compound_first($C, $CatA), risk_in_category($Ra, $CatA), active_risk($Ra),
               compound_second($C, $CatB), risk_in_category($Rb, $CatB), active_risk($Rb),
               dose_capped_under($D, $C)
+    }
+    % SINGLE-FACTOR cap: a drug is dose-capped when it is capped under a risk that is itself
+    % directly active (no conjunction). The same dose_capped query target serves both shapes.
+    rule {
+        head: dose_capped($D, $R)
+        when: active_risk($R), dose_capped_under($D, $R)
     }
 }

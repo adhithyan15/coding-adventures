@@ -93,9 +93,10 @@ def test_hepatic_renal_conjunction_caps_ceftriaxone():
     assert not hep_only and not caps_only, (hep_only, caps_only)
     both_risks, both_caps = dose_caps.derive_dose_caps(cli, {"hepatic_severe", "renal_moderate"})
     assert "hepatorenal" in both_risks, both_risks
-    assert both_caps.get("ceftriaxone", {}).get("trust") == "authoritative", both_caps
-    assert "hepatic impairment and significant renal impairment" in \
-        both_caps["ceftriaxone"]["source"], both_caps
+    # caps is a list of {drug, risk, source, locator, trust}; find the ceftriaxone hepatorenal cap.
+    cef = next((c for c in both_caps if c["drug"] == "ceftriaxone"), None)
+    assert cef and cef["risk"] == "hepatorenal" and cef["trust"] == "authoritative", both_caps
+    assert "hepatic impairment and significant renal impairment" in cef["source"], both_caps
     # End-to-end through derive(): the conjunction shrinks ceftriaxone's ceiling but it stays
     # FEASIBLE — a dose-ADJUSTMENT, not a fabricated INFEASIBLE — so the regimen survives, and
     # the grounded cap surfaces as a provenance-bearing constraint.

@@ -106,6 +106,26 @@ DOSE_CAPS: list[tuple[str, str, str, str]] = [
      "impairment and significant renal impairment (FDA label)."),
 ]
 
+# SINGLE-FACTOR grounded dose caps: (grounding_id, drug, active risk token, authored_fallback).
+# Unlike the COMPOUND caps above, these fire on ONE active risk directly (no conjunction). They
+# reuse the same `dose_capped_under` relation + the third generic rule below, so the substrate
+# now covers both shapes uniformly. The grounding ids point at the same dose-window records that
+# back the formulary's numeric ceiling penalties — making the FDA byte-quote ENGINE-QUERYABLE and
+# letting it flow as provenance onto the renal/nephrotoxin dose-risk constraints at answer time.
+# (The numeric per-kg shrink stays the formulary's illustrative model; only the DIRECTION/source
+# is grounded — verdict direction_only.)
+SINGLE_FACTOR_CAPS: list[tuple[str, str, str, str]] = [
+    ("dose_penalty_vancomycin_renal", "vancomycin", "renal_severe",
+     "Vancomycin dosage must be adjusted (the safe ceiling shrinks) in renal dysfunction "
+     "because toxicity rises with high, prolonged blood concentrations (FDA label)."),
+    ("dose_penalty_vancomycin_renal", "vancomycin", "renal_moderate",
+     "Vancomycin dosage must be adjusted (the safe ceiling shrinks) in renal dysfunction "
+     "because toxicity rises with high, prolonged blood concentrations (FDA label)."),
+    ("dose_penalty_vancomycin_nephrotoxin", "vancomycin", "nephrotoxin_interaction",
+     "Concomitant therapy with another nephrotoxin (e.g. an aminoglycoside) compounds "
+     "vancomycin nephrotoxicity, requiring careful/adjusted dosing (FDA label)."),
+]
+
 
 def _gate(rec: dict | None) -> tuple[str, str]:
     """Map a grounding record to (verdict, trust).  A dose cap is directional, so a `grounded`
@@ -219,6 +239,12 @@ RULES = """\
               compound_second($C, $CatB), risk_in_category($Rb, $CatB), active_risk($Rb),
               dose_capped_under($D, $C)
     }
+    % SINGLE-FACTOR cap: a drug is dose-capped when it is capped under a risk that is itself
+    % directly active (no conjunction). The same dose_capped query target serves both shapes.
+    rule {
+        head: dose_capped($D, $R)
+        when: active_risk($R), dose_capped_under($D, $R)
+    }
 """
 
 
@@ -248,8 +274,15 @@ def build(check: bool = False) -> int:
             "verdict": "DEFINITIONAL", "trust": "definitional", "grounding_id": None}
 
     body.append("")
-    body.append("    % --- grounded dose caps (the clinical claim) " + "-" * 28)
+    body.append("    % --- grounded COMPOUND dose caps (the clinical claim) " + "-" * 19)
     for gid, drug, risk, authored in DOSE_CAPS:
+        block, entry = _cap_block(drug, risk, gid, authored, recs.get(gid))
+        body.append(block)
+        clauses[f"dose_capped_under__{drug}__{risk}"] = entry
+
+    body.append("")
+    body.append("    % --- grounded SINGLE-FACTOR dose caps (renal / nephrotoxin) " + "-" * 13)
+    for gid, drug, risk, authored in SINGLE_FACTOR_CAPS:
         block, entry = _cap_block(drug, risk, gid, authored, recs.get(gid))
         body.append(block)
         clauses[f"dose_capped_under__{drug}__{risk}"] = entry
