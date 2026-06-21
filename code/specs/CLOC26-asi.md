@@ -1,0 +1,181 @@
+# CLOC26 — Automatic Semicolon Insertion (ASI)
+
+> **Status:** Design spec (specs-first). This document is committed *before* any
+> implementation code, per the repo standard. It defines the architecture and a
+> phased implementation plan; each phase below lands as its own follow-up PR.
+
+## The problem this solves
+
+closurec's grammar parser requires **explicit** statement terminators. Real JS
+routinely omits them — automatic semicolon insertion (ASI) is part of the
+ECMAScript spec (§12.10). Today, an input as ordinary as
+
+```js
+function f(x) { if (x) { return 1; } else { g() } }
+//                                          ^^^ no `;` before `}`
+```
+
+fails to parse (`Expected … or SEMICOLON, got "}"`), so closurec **silently
+degrades the whole program to `WHITESPACE_ONLY`** — every optimization pass is
+skipped. This is the single largest reason real-world code gets no SIMPLE/ADVANCED
+optimization from closurec: the constant-fold / inline / DCE / rename / control-flow
+passes are all reachable, but a single missing semicolon anywhere in the file
+turns them all off.
+
+ASI closes that gap. It is the **highest-leverage frontend item** because it
+unblocks the entire existing optimizer for the common case of
+semicolon-light source.
+
+> **Discovered while shipping CLOC25** (the `else`-hoist): hand-written test
+> inputs without semicolons looked "broken" at SIMPLE because they were silently
+> falling back to WHITESPACE_ONLY. Fixture inputs currently work around this with
+> explicit semicolons; ASI removes the workaround.
+
+## Why this is feasible *and localized* (no shared-crate risk)
+
+The parsing framework was built ASI-ready:
+
+* The lexer emits a dedicated **`TokenKind::Newline`** variant, distinct from
+  `Whitespace`, with an explicit note in
+  [`javascript-tokens/src/lib.rs`](../packages/rust/javascript-tokens/src/lib.rs)
+  (~line 302): *"Newline is sometimes not skipped — ASI implementations need to
+  observe newlines to decide whether to insert a semicolon."* Line terminators
+  are therefore observable.
+* The `GrammarParser` exposes a **pre-parse hook** —
+  `add_pre_parse_hook(Fn(Vec<Token>) -> Vec<Token>)`
+  ([`parser/src/grammar_parser.rs`](../packages/rust/parser/src/grammar_parser.rs):285,
+  applied in `parse()` ~line 322) — the official integration point for
+  token-stream rewriting before parsing.
+* The parser is PEG + packrat; a synthesized `SEMICOLON` token is just another
+  token, so memoization is unaffected (the hook runs *before* any parsing).
+
+**Scope:** ASI is implemented as a token-stream transform **inside the
+`javascript-parser` crate only**. There are **no changes** to the shared
+`grammar-tools` / `parser` crates (which every other language frontend uses) and
+**no changes** to `es2025.grammar` (semicolons stay mandatory in the grammar;
+ASI supplies them in the token stream). This is the load-bearing reason ASI is
+safe to add: it cannot regress any other language.
+
+### Open design question (resolve in Phase 1)
+
+The hook receives whatever token stream `tokenize_javascript_typed` produces.
+`Newline` is classified as trivia (`is_trivia()` groups
+`Comment | Whitespace | Newline`,
+[`javascript-tokens/src/lib.rs`](../packages/rust/javascript-tokens/src/lib.rs):308),
+so it may already be filtered out before `GrammarParser::new`. Two sub-cases:
+
+* **Newlines survive into the parser stream** → ASI is a `add_pre_parse_hook`
+  closure, full stop.
+* **Newlines are stripped before the parser** → the line-terminator-dependent
+  rules can't run in a pre-parse hook. ASI must instead run as a token-stream
+  step that still has the newline information — i.e. on the raw lexer output
+  inside `tokenize_javascript_typed`, *before* trivia is dropped, emitting a
+  stream where the parser-visible tokens already include the synthesized
+  semicolons. Still entirely within `javascript-parser`.
+
+Phase 1 begins by confirming which case holds (a 5-line probe test) and pins the
+hook location accordingly. The `}`/EOF rules (Phase 1) do **not** need newlines,
+so Phase 1 can proceed regardless; only Phases 2–3 depend on the answer.
+
+## The three ASI rules (ECMAScript §12.10)
+
+1. **Offending token after a line terminator.** When a token that cannot
+   continue the current production is encountered and it is **preceded by at
+   least one line terminator**, a `;` is inserted before it.
+   *(e.g. `a = 1\n b = 2` → `a = 1; b = 2`.)*
+2. **Offending token `}` / end of input.** A `;` is inserted before a `}` that
+   would otherwise be a syntax error, and at end of input. **This rule does NOT
+   require a line terminator** — `{ a() }` on one line still gets a `;`.
+   *(This is the rule that fixes the CLOC25 pain point.)*
+3. **Restricted productions.** A line terminator is **not allowed** in certain
+   positions, and ASI is *forced* there even mid-line:
+   `return`/`throw`/`break`/`continue`/`yield` followed by a newline before
+   their argument; postfix `++`/`--` preceded by a newline; arrow `=>` — e.g.
+   `return\n a` parses as `return; a` (NOT `return a`). Getting this wrong is a
+   **miscompile**, so Rule 3 is gated behind its own phase and tests.
+
+### What counts as an "offending token" / "can end a statement"
+
+ASI inserts only where parsing would otherwise fail. The conservative, correct
+predicate is **"the parser cannot consume the next token here"**. Two viable
+implementations:
+
+* **Lookahead table (preferred for a pure token transform):** a `;` is a
+  candidate before token *T* when the **preceding** significant token can end an
+  expression/statement (`NAME`, `RPAREN`, `RBRACKET`, `RBRACE`, a literal,
+  `this`, `super`, `++`/`--` postfix, …) **and** *T* cannot legally follow it as
+  a continuation (`}`, EOF, or — for Rule 1 — any token after a newline that
+  isn't an infix continuation like `.`, `(`, `[`, a binary operator, `,`, `?`,
+  `:`). The set of "continuation" tokens is small and enumerable.
+* **Parser-feedback (rejected):** insert on parse error / retry. Powerful but
+  requires modifying the shared `GrammarParser` error path and interacts badly
+  with packrat memo invalidation. **Not chosen** — keeps the change out of the
+  shared crate.
+
+The lookahead-table approach keeps ASI a pure `Vec<Token> -> Vec<Token>`
+function, fully unit-testable in isolation, with zero parser coupling.
+
+## Soundness: never change a valid parse
+
+The transform must satisfy: **for any input that already parses, ASI is a
+no-op** (it never inserts a semicolon where the next token is a legal
+continuation). This is the central correctness property and is enforced by:
+
+* the continuation-token denylist (never insert before `.`/`(`/`[`/operators/
+  `,`/etc.), and
+* a regression guard: **all existing closurec fixtures must produce byte-identical
+  output** after ASI lands (the 700+ `minify_*` + `simple-*` fixtures already use
+  explicit semicolons, so a correct ASI changes none of them).
+
+The dangerous direction is *over-insertion* (changing a valid multi-line
+expression's parse). Rule 3 (restricted productions) is the classic trap and is
+therefore isolated to Phase 3 with dedicated adversarial tests
+(`return\n a`, `a\n ++b` vs `a++\n b`, etc.).
+
+## Phased implementation plan (one PR per phase)
+
+**Phase 1 — `}` and EOF insertion (the high-value, newline-free slice).**
+New `javascript-parser/src/asi.rs` with
+`fn insert_automatic_semicolons(tokens: Vec<Token>) -> Vec<Token>` implementing
+Rule 2 only: insert `;` before a `}` / EOF when the preceding significant token
+can end a statement and there isn't already a `;`. Wire it into
+`tokenize_javascript_typed` / the parser construction. Confirm the
+newline-survival question. This alone fixes `{ a() }`, `function f(){return 1}`,
+etc. Unit tests for the transform + closurec e2e fixtures (`simple-asi-block`)
+that previously degraded now optimize. **Regression guard: every existing
+fixture is byte-identical.**
+
+**Phase 2 — line-terminator rule (Rule 1).** Extend the transform to insert
+before an offending token preceded by a newline, using the continuation-token
+denylist. Requires the newline-survival answer from Phase 1. Tests:
+`a=1\n b=2`, and negative cases (`a\n .b`, `a\n +b` stay single statements).
+
+**Phase 3 — restricted productions (Rule 3).** Force ASI after
+`return`/`throw`/`break`/`continue`/`yield` + newline, and around postfix
+`++`/`--`. Adversarial miscompile tests. This is the highest-risk phase and is
+deliberately last.
+
+**Phase 4 (optional) — remove the semicolon workaround** from any fixture inputs
+that only had explicit semicolons to avoid the fallback, and add a CHANGELOG note
+that closurec now optimizes semicolon-light source.
+
+## Test strategy
+
+* **Pure-function unit tests** on `insert_automatic_semicolons` (the transform is
+  `Vec<Token> -> Vec<Token>`, trivially testable): each rule, each offending
+  token, each continuation-token negative case, idempotence (running twice =
+  running once), and the no-op-on-already-valid property.
+* **closurec end-to-end fixtures**: inputs that omit semicolons and now optimize
+  at SIMPLE, each with the whitespace-fallback guard (the output is NOT the
+  whitespace fallback — an optimization that can only come from the typed
+  pipeline is present).
+* **Regression**: the full existing fixture suite must stay byte-identical
+  (proves no over-insertion).
+
+## Non-goals
+
+* No grammar-file changes (semicolons stay mandatory in `es2025.grammar`).
+* No shared `grammar-tools` / `parser` crate changes.
+* Not changing the bridge, AST, emitter, or any optimization pass — ASI is purely
+  a frontend token-stream concern. Once the program parses, everything downstream
+  already works.
