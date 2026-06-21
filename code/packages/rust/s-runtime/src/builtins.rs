@@ -1890,15 +1890,85 @@ fn b_rep(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     Ok(combine(&copies))
 }
 
-/// `unique(x)` — distinct elements, first occurrence order preserved.
+/// Parse the **`incomparables =`** keyword argument that `unique`, `duplicated`,
+/// and `anyDuplicated` share (R-31) into a set of *incomparable character keys*.
+///
+/// R's contract: the default is `incomparables = FALSE`, meaning "there are no
+/// incomparable values". Any other value is a **vector listing the elements** to
+/// treat as incomparable — a value listed there is **never considered equal to
+/// anything** (not even another copy of itself), so it is never flagged as a
+/// duplicate and never removed as one. We model "incomparable" on the same coerced
+/// **character** key the dedup builtins already use (`as_character`), so a numeric
+/// `incomparables = 1` and a character `incomparables = "1"` agree, exactly like the
+/// rest of the set-op family.
+///
+/// The single special case is the literal default `FALSE` (a length-1 logical that
+/// is `FALSE`): R spells "no incomparables" that way, so we must NOT treat the
+/// string `"FALSE"` as an incomparable element. Every other value — including a
+/// `TRUE`, a number, a string, or a longer vector — contributes its character keys.
+/// An absent argument yields the empty set. This never errors and never panics:
+/// `as_character` is total, and the result is just a `HashSet` whose size is bounded
+/// by the (already-`MAX_SEQ_LEN`-capped) `incomparables` vector.
+fn incomparables_keys(args: &[Arg]) -> HashSet<Option<String>> {
+    let Some(arg) = args.iter().find(|a| a.name.as_deref() == Some("incomparables")) else {
+        return HashSet::new();
+    };
+    // The default `FALSE` means "no incomparables" — treat it as the empty set.
+    if matches!(&arg.value, SValue::Logical(v) if v.as_slice() == [Some(false)]) {
+        return HashSet::new();
+    }
+    arg.value.as_character().into_iter().collect()
+}
+
+/// `unique(x, incomparables = FALSE, fromLast = FALSE)` — distinct elements,
+/// first-occurrence order preserved.
+///
+/// The base case is the same `as_character`-key + `seen`-set scan as `duplicated`:
+/// keep the 1-based position of each key the first time we meet it.
+///
+/// **`fromLast = TRUE`** (R-31) keeps the **last** occurrence of each distinct value
+/// instead of the first. We scan right-to-left to decide which positions survive,
+/// then gather them in **ascending index order** so the kept elements stay in input
+/// order — R's behaviour (`unique(c(1,2,1), fromLast=TRUE)` is `c(2, 1)`).
+///
+/// **`incomparables =`** (R-31, via [`incomparables_keys`]) lists values that are
+/// never equal to anything: a position whose key is incomparable is **always kept**
+/// and is **never recorded in `seen`** (so it can neither be suppressed nor suppress
+/// a later genuine duplicate). `unique(c(1,1,2,2), incomparables=1)` is `c(1, 1, 2)`.
 fn b_unique(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let v = first_positional(args)?;
+    let from_last = match args.iter().find(|a| a.name.as_deref() == Some("fromLast")) {
+        Some(arg) => arg.value.truthy()?,
+        None => false,
+    };
+    let incomparable = incomparables_keys(args);
     let keys = v.as_character();
+    let n = keys.len();
     let mut seen: HashSet<Option<String>> = HashSet::new();
-    let keep: Vec<f64> = keys
-        .iter()
-        .enumerate()
-        .filter_map(|(i, k)| seen.insert(k.clone()).then_some((i + 1) as f64))
+    // Decide which positions to keep. A key is kept if it is incomparable, or if
+    // it is the first sighting of a comparable key in the scan direction.
+    let mut keep_flag = vec![false; n];
+    let mut decide = |i: usize| {
+        if incomparable.contains(&keys[i]) {
+            keep_flag[i] = true;
+        } else if seen.insert(keys[i].clone()) {
+            keep_flag[i] = true;
+        }
+    };
+    if from_last {
+        for i in (0..n).rev() {
+            decide(i);
+        }
+    } else {
+        for i in 0..n {
+            decide(i);
+        }
+    }
+    // Gather kept positions in ascending index order (input order), regardless of
+    // scan direction, so `fromLast` only changes *which* copy survives, not order.
+    let keep: Vec<f64> = (0..n)
+        .filter(|&i| keep_flag[i])
+        .map(|i| (i + 1) as f64)
         .collect();
     index(v, &SValue::doubles(keep))
 }
@@ -2026,25 +2096,46 @@ fn b_is_element(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// duplicated(c(1, 2, 1))                 = c(FALSE, FALSE, TRUE)   (keep first 1)
 /// duplicated(c(1, 2, 1), fromLast=TRUE)  = c(TRUE,  FALSE, FALSE)  (keep last  1)
 /// ```
+///
+/// **`incomparables =`** (R-31, via [`incomparables_keys`]) lists values that are
+/// never equal to anything: an element whose key is incomparable is **always**
+/// `FALSE` (never a duplicate) and is **never recorded in `seen`**, so it cannot
+/// suppress a later genuine duplicate either:
+///
+/// ```text
+/// duplicated(c(1, 1, 2, 2), incomparables=1) = c(FALSE, FALSE, FALSE, TRUE)
+/// ```
 fn b_duplicated(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?;
     let from_last = match args.iter().find(|a| a.name.as_deref() == Some("fromLast")) {
         Some(arg) => arg.value.truthy()?,
         None => false,
     };
+    let incomparable = incomparables_keys(args);
     let keys = x.as_character();
     let n = keys.len();
     let mut seen: HashSet<Option<String>> = HashSet::new();
     let mut flags: Vec<Option<bool>> = vec![Some(false); n];
+    // One element's flag: incomparable keys are never a duplicate (and are never
+    // recorded, so they never suppress a later one); otherwise the first sighting
+    // (in the scan direction) is FALSE and the rest are TRUE.
+    let mut flag = |i: usize, key: &Option<String>| {
+        flags[i] = if incomparable.contains(key) {
+            Some(false)
+        } else {
+            Some(!seen.insert(key.clone()))
+        };
+    };
     if from_last {
-        // Right-to-left: the first key seen (from the right) is the last
-        // occurrence and is NOT a duplicate; earlier ones are.
+        // Right-to-left: the first comparable key seen (from the right) is the
+        // last occurrence and is NOT a duplicate; earlier ones are.
         for i in (0..n).rev() {
-            flags[i] = Some(!seen.insert(keys[i].clone()));
+            let key = keys[i].clone();
+            flag(i, &key);
         }
     } else {
-        for (i, k) in keys.into_iter().enumerate() {
-            flags[i] = Some(!seen.insert(k));
+        for (i, k) in keys.iter().enumerate() {
+            flag(i, k);
         }
     }
     Ok(SValue::Logical(flags))
@@ -2061,10 +2152,23 @@ fn b_duplicated(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// anyDuplicated(c(1, 2, 1)) = 3   (the second 1, at position 3, is the first dup)
 /// anyDuplicated(c(1, 2, 3)) = 0   (no repeats)
 /// ```
+///
+/// **`incomparables =`** (R-31, via [`incomparables_keys`]) lists values that are
+/// never equal to anything, so a repeat of an incomparable value is **not** counted
+/// as a duplicate (and the value is never recorded in `seen`):
+///
+/// ```text
+/// anyDuplicated(c(1, 2, 1), incomparables=1) = 0   (the only repeat is incomparable)
+/// anyDuplicated(c(1, 2, 2), incomparables=1) = 3   (the repeated 2 is comparable)
+/// ```
 fn b_any_duplicated(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?;
+    let incomparable = incomparables_keys(args);
     let mut seen: HashSet<Option<String>> = HashSet::new();
     for (i, k) in x.as_character().into_iter().enumerate() {
+        if incomparable.contains(&k) {
+            continue;
+        }
         if !seen.insert(k) {
             return Ok(SValue::scalar((i + 1) as f64));
         }
@@ -2106,18 +2210,28 @@ fn b_any_duplicated(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// For `"first"` the run members are scored in **original-index order** (the
 /// sort is stable, so `order` already lists tied indices smallest-first), giving
 /// distinct consecutive ranks. An unrecognised method is a graceful error.
-fn b_rank(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+///
+/// **`"random"`** (R-31) scores a run like `"first"` — consecutive ranks
+/// `lo, lo+1, …, hi` — but assigns those ranks to the tied positions in a **uniform
+/// random order** drawn from the **session RNG** (the same generator seeded by
+/// `set.seed` that `runif`/`rnorm` use, reached via `Interpreter::sample_with`). The
+/// permutation is a Fisher–Yates shuffle driven by `RngState::next_u32`, so the
+/// result is **fully reproducible** under `set.seed`. Each swap consumes at most one
+/// `u32`, and there are at most `n` swaps total, so the RNG draw is bounded — no
+/// unbounded work. Because non-tied elements form length-1 runs, `"random"` only
+/// perturbs genuine ties; with no ties it is identical to the plain ranks.
+fn b_rank(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?;
 
     // The tie rule. R's default is "average"; we additionally support "min",
-    // "max", and "first" (the "random" jitter rule needs an RNG seed contract and
-    // is deferred). The keyword is read as a character scalar, mirroring how
-    // `factor(levels=, labels=)` reads its string arguments.
+    // "max", "first", and "random" (R-31, RNG-backed). The keyword is read as a
+    // character scalar, mirroring how `factor(levels=, labels=)` reads its strings.
     enum Ties {
         Average,
         Min,
         Max,
         First,
+        Random,
     }
     let ties = match args.iter().find(|a| a.name.as_deref() == Some("ties.method")) {
         Some(arg) => match arg
@@ -2132,9 +2246,10 @@ fn b_rank(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             Some("min") => Ties::Min,
             Some("max") => Ties::Max,
             Some("first") => Ties::First,
+            Some("random") => Ties::Random,
             Some(other) => {
                 return Err(SError::BadArgs(format!(
-                    "unknown ties.method {other:?} (expected \"average\", \"min\", \"max\", or \"first\")"
+                    "unknown ties.method {other:?} (expected \"average\", \"min\", \"max\", \"first\", or \"random\")"
                 )));
             }
         },
@@ -2221,6 +2336,28 @@ fn b_rank(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
                 // order — distinct ranks, no ties.
                 for (offset, k) in (p..q).enumerate() {
                     ranks[order[k]] = lo + offset as f64;
+                }
+            }
+            Ties::Random => {
+                // Like "first" (consecutive ranks lo..=hi), but the tied positions
+                // receive those ranks in a uniformly random order. We shuffle the
+                // run's slice of `order` in place with Fisher–Yates, drawing each
+                // swap target from the session RNG so the whole thing is reproducible
+                // under `set.seed`. The shuffle is a no-op for a length-1 run, so
+                // non-tied elements keep their natural rank.
+                let m = q - p;
+                let mut slot: Vec<usize> = order[p..q].to_vec();
+                interp.sample_with(|rng| {
+                    // Fisher–Yates: for j from m-1 down to 1, swap slot[j] with a
+                    // uniformly chosen slot[0..=j]. `next_u32() % (j+1)` is bounded
+                    // and consumes exactly one u32 per iteration (≤ n draws total).
+                    for j in (1..m).rev() {
+                        let k = (rng.next_u32() as usize) % (j + 1);
+                        slot.swap(j, k);
+                    }
+                });
+                for (offset, &orig) in slot.iter().enumerate() {
+                    ranks[orig] = lo + offset as f64;
                 }
             }
         }
