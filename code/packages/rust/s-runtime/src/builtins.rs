@@ -121,6 +121,13 @@ pub fn install(env: &Env) {
     define(env, "Negate", builtin("Negate", b_negate));
     define(env, "Recall", builtin("Recall", b_recall));
 
+    // Apply-family & grouping (R-28) — pair the functional toolkit (R-10) with
+    // matrices (R-11), lists (R-6), and factors (F4).
+    define(env, "outer", builtin("outer", b_outer));
+    define(env, "tapply", builtin("tapply", b_tapply));
+    define(env, "split", builtin("split", b_split));
+    define(env, "tabulate", builtin("tabulate", b_tabulate));
+
     // Regular expressions (R-7).
     define(env, "grepl", builtin("grepl", b_grepl));
     define(env, "grep", builtin("grep", b_grep));
@@ -312,6 +319,15 @@ fn b_names(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             Ok(SValue::Character(names.iter().cloned().map(Some).collect()))
         }
         SValue::Named { names, .. } => Ok(SValue::Character(names.clone())),
+        // A named list (R-6 / R-28 `split`): report its element names. R renders an
+        // *unset* element name as `""` rather than `NA`, and a list with *no* names
+        // at all as `NULL`.
+        SValue::List { names, .. } if names.iter().any(|n| n.is_some()) => Ok(SValue::Character(
+            names
+                .iter()
+                .map(|n| Some(n.clone().unwrap_or_default()))
+                .collect(),
+        )),
         _ => Ok(SValue::Null),
     }
 }
@@ -3418,6 +3434,319 @@ fn b_vapply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         });
     }
     Ok(combine(&results))
+}
+
+// ===========================================================================
+// Apply-family & grouping (R-28)
+// ===========================================================================
+//
+// These pair the R-10 functional toolkit (`split_fun`, `interp.call_value`) with
+// the R-11 matrix, the R-6 list, and the factor machinery (F4). They are pure
+// builtins — no grammar change. The watchword is *bounded allocation*: `outer`
+// is O(len(X)·len(Y)), so the product is guarded with `checked_mul` against
+// `MAX_SEQ_LEN` *before* anything is allocated; `tabulate` caps `nbins`.
+
+/// `outer(X, Y, FUN = "*")` — the **outer product** generalised to any binary
+/// operation. The result is the `length(X) × length(Y)` matrix whose `(i, j)`
+/// entry is `FUN(X[i], Y[j])`, stored **column-major** (R-11 `SValue::Matrix`,
+/// element `(i, j)` at `j*nrow + i`).
+///
+/// ```text
+///   X = c(1, 2, 3), Y = c(1, 2), FUN = "*"
+///
+///        Y[0]=1  Y[1]=2          column-major data:
+///   X0=1   1       2               col 0 (Y=1): 1, 2, 3
+///   X1=2   2       4               col 1 (Y=2): 2, 4, 6
+///   X2=3   3       6             → c(1, 2, 3, 2, 4, 6), nrow=3, ncol=2
+/// ```
+///
+/// `FUN` defaults to `"*"` and may be:
+///   - the string `"*"` or `"+"` — taken on a **fast numeric path** (no per-cell
+///     function call), or
+///   - **any callable** (a closure, builtin, or R-9 lambda), invoked once per
+///     `(i, j)` pair through `interp.call_value` — so
+///     `outer(1:2, 1:2, \(a, b) a*10 + b)` works.
+///
+/// **Output-size cap (security).** The element count `nrow*ncol` is computed with
+/// [`usize::checked_mul`] and rejected with a clean `Index` error when it
+/// overflows or exceeds [`MAX_SEQ_LEN`] — *before* the result `Vec` is allocated,
+/// so a crafted `outer(1:1e6, 1:1e6)` cannot OOM. A non-callable `FUN` is a clean
+/// `NotCallable` error.
+fn b_outer(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&Arg> = args.iter().filter(|a| a.name.is_none()).collect();
+    let x = positional
+        .first()
+        .map(|a| a.value.clone())
+        .ok_or_else(|| SError::BadArgs("outer: missing X".into()))?;
+    let y = positional
+        .get(1)
+        .map(|a| a.value.clone())
+        .ok_or_else(|| SError::BadArgs("outer: missing Y".into()))?;
+    // `FUN` is the third positional or the `FUN =` named argument; default "*".
+    let fun = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("FUN"))
+        .map(|a| a.value.clone())
+        .or_else(|| positional.get(2).map(|a| a.value.clone()))
+        .unwrap_or_else(|| SValue::Character(vec![Some("*".to_string())]));
+
+    let nrow = x.length();
+    let ncol = y.length();
+    // Guard the product BEFORE allocating: refuse overflow or > MAX_SEQ_LEN.
+    let total = nrow.checked_mul(ncol).filter(|&t| t <= MAX_SEQ_LEN).ok_or_else(|| {
+        SError::Index(format!("outer: result too large (limit {MAX_SEQ_LEN} elements)"))
+    })?;
+
+    // Fast numeric paths for the two arithmetic primitives, identified by the
+    // string forms "*" / "+". Anything else (including a function value) goes
+    // through the general per-cell `call_value` path.
+    let op: Option<fn(f64, f64) -> f64> = match fun.strip_names() {
+        SValue::Character(v) if v.len() == 1 => match v[0].as_deref() {
+            Some("*") => Some(|a, b| a * b),
+            Some("+") => Some(|a, b| a + b),
+            _ => None,
+        },
+        _ => None,
+    };
+
+    if let Some(op) = op {
+        // Numeric fast path: read both inputs as doubles once, then fill
+        // column-major. NA in either operand propagates through f64 NA.
+        let xs = x.as_double()?;
+        let ys = y.as_double()?;
+        let mut out = vec![0.0; total];
+        for j in 0..ncol {
+            let yj = ys.get_value(j).unwrap_or_else(na_real);
+            for i in 0..nrow {
+                let xi = xs.get_value(i).unwrap_or_else(na_real);
+                out[j * nrow + i] = if is_na_real(xi) || is_na_real(yj) {
+                    na_real()
+                } else {
+                    op(xi, yj)
+                };
+            }
+        }
+        return Ok(SValue::Matrix {
+            data: Double::from_values(out),
+            nrow,
+            ncol,
+        });
+    }
+
+    // General path: `FUN` must be callable. Invoke it once per (i, j), reading a
+    // single double back from each result (R simplifies length-1 atomics).
+    if !fun.is_callable() {
+        return Err(SError::NotCallable(fun.type_name().to_string()));
+    }
+    let mut out = vec![0.0; total];
+    for j in 0..ncol {
+        let yj = nth_element(&y, j);
+        for i in 0..nrow {
+            let xi = nth_element(&x, i);
+            let r = interp.call_value(
+                fun.clone(),
+                &[
+                    Arg { name: None, value: xi },
+                    Arg {
+                        name: None,
+                        value: yj.clone(),
+                    },
+                ],
+            )?;
+            // Take the first element as a double (NA if absent/empty).
+            out[j * nrow + i] = r.as_double()?.get_value(0).unwrap_or_else(na_real);
+        }
+    }
+    Ok(SValue::Matrix {
+        data: Double::from_values(out),
+        nrow,
+        ncol,
+    })
+}
+
+/// Compute the **sorted, distinct, non-NA** group labels of an `INDEX`/`f`
+/// argument, *plus* the per-element label (one `Option<String>` per element of
+/// `index`, `None` where the element is `NA`). A `Factor` keeps its declared
+/// `levels` order (R semantics: factor levels define the group order even if some
+/// are empty); any other vector is coerced to character labels and the distinct
+/// labels are sorted.
+///
+/// Returns `(levels, labels)` where `labels[k]` is the group of element `k`.
+fn group_labels(index: &SValue) -> (Vec<String>, Vec<Option<String>>) {
+    match index.strip_names() {
+        SValue::Factor { codes, levels } => {
+            let labels: Vec<Option<String>> = codes
+                .iter()
+                .map(|c| c.and_then(|k| levels.get((k as usize).wrapping_sub(1)).cloned()))
+                .collect();
+            (levels.clone(), labels)
+        }
+        other => {
+            let labels = other.as_character();
+            let mut seen: HashSet<String> = HashSet::new();
+            let mut levels: Vec<String> = labels
+                .iter()
+                .flatten()
+                .filter(|s| seen.insert((*s).clone()))
+                .cloned()
+                .collect();
+            levels.sort();
+            (levels, labels)
+        }
+    }
+}
+
+/// Partition the elements of `x` into groups keyed by `labels`, one bucket per
+/// entry of `levels` (in `levels` order). Each bucket holds the `nth_element`
+/// values of `x` whose label matches; elements whose label is `NA` or not a level
+/// are dropped (R's `split`/`tapply` semantics). The data length governs the
+/// iteration, so a shorter/longer `INDEX` simply truncates/ignores extra labels —
+/// never an index panic.
+fn partition_by_group(x: &SValue, levels: &[String], labels: &[Option<String>]) -> Vec<SValue> {
+    let mut buckets: Vec<Vec<Arg>> = vec![Vec::new(); levels.len()];
+    let n = x.length();
+    for k in 0..n {
+        if let Some(Some(label)) = labels.get(k) {
+            if let Some(g) = levels.iter().position(|lv| lv == label) {
+                buckets[g].push(Arg {
+                    name: None,
+                    value: nth_element(x, k),
+                });
+            }
+        }
+    }
+    buckets.iter().map(|b| combine(b)).collect()
+}
+
+/// `tapply(X, INDEX, FUN)` — **table apply**: split `X` into groups by `INDEX`,
+/// apply `FUN` to each group, and return a **named** vector (names = the sorted
+/// unique levels, in lockstep with the per-group results).
+///
+/// ```text
+///   tapply(c(1, 2, 3, 4), c("a", "b", "a", "b"), sum)
+///     group "a" = c(1, 3) → sum = 4
+///     group "b" = c(2, 4) → sum = 6
+///   → c(a = 4, b = 6)
+/// ```
+///
+/// Reuses `split_fun` (to locate the callable `FUN`) and `group_labels` /
+/// `partition_by_group`. A non-callable `FUN` is a clean `NotCallable` error.
+fn b_tapply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // The function is the callable argument (FUN =, or the callable positional);
+    // the remaining positionals are X then INDEX.
+    let (fun, data) = split_fun(args, "tapply")?;
+    let x = data
+        .first()
+        .cloned()
+        .ok_or_else(|| SError::BadArgs("tapply: missing X".into()))?;
+    let index = data
+        .get(1)
+        .cloned()
+        .ok_or_else(|| SError::BadArgs("tapply: missing INDEX".into()))?;
+
+    let (levels, labels) = group_labels(&index);
+    let groups = partition_by_group(&x, &levels, &labels);
+
+    // Apply FUN to each group, taking the first element of the (length-1) result.
+    let mut values: Vec<f64> = Vec::with_capacity(groups.len());
+    for group in &groups {
+        let r = interp.call_value(
+            fun.clone(),
+            &[Arg {
+                name: None,
+                value: group.clone(),
+            }],
+        )?;
+        values.push(r.as_double()?.get_value(0).unwrap_or_else(na_real));
+    }
+    let names: Vec<Option<String>> = levels.into_iter().map(Some).collect();
+    Ok(SValue::with_names(SValue::doubles(values), names))
+}
+
+/// `split(x, f)` — partition `x` by the factor (or coerced vector) `f`, returning
+/// a **named list**: one element per level (in sorted-unique-level order), names
+/// = the levels.
+///
+/// ```text
+///   split(1:4, c("a", "b", "a", "b"))
+///     → list(a = c(1, 3), b = c(2, 4))
+/// ```
+///
+/// Reuses the R-6 `SValue::List` construction via `group_labels` /
+/// `partition_by_group`.
+fn b_split(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&Arg> = args.iter().filter(|a| a.name.is_none()).collect();
+    let x = positional
+        .first()
+        .map(|a| a.value.clone())
+        .ok_or_else(|| SError::BadArgs("split: missing x".into()))?;
+    let f = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("f"))
+        .map(|a| a.value.clone())
+        .or_else(|| positional.get(1).map(|a| a.value.clone()))
+        .ok_or_else(|| SError::BadArgs("split: missing f".into()))?;
+
+    let (levels, labels) = group_labels(&f);
+    let groups = partition_by_group(&x, &levels, &labels);
+    let names: Vec<Option<String>> = levels.into_iter().map(Some).collect();
+    Ok(SValue::List {
+        names,
+        items: groups,
+    })
+}
+
+/// `tabulate(bin, nbins = max(bin))` — count how many times each of `1..nbins`
+/// appears in the integer vector `bin`. Returns an integer (double) vector of
+/// length `nbins`. Values `< 1`, `> nbins`, and `NA` are silently ignored
+/// (matching R).
+///
+/// ```text
+///   tabulate(c(1, 2, 2, 3, 3, 3))   → c(1, 2, 3)   (nbins defaults to max = 3)
+///   tabulate(c(2, 3, 5), nbins = 5) → c(0, 1, 1, 0, 1)
+/// ```
+///
+/// **Output-size cap (security).** `nbins` is **data** — a crafted `nbins = 1e18`
+/// (or a `bin` containing a huge value, which feeds the default) must not allocate
+/// terabytes. `nbins` is clamped to `[0, MAX_SEQ_LEN]`: a non-finite or negative
+/// request becomes `0`, and an over-large one is a clean `Index` error.
+fn b_tabulate(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let bin = first_positional(args)?.as_double()?;
+
+    // Default nbins = max(bin) (0 when bin is empty or has no finite element).
+    let default_nbins = bin
+        .iter()
+        .filter(|x| !is_na_real(*x) && x.is_finite())
+        .fold(0.0f64, |acc, x| acc.max(x))
+        .floor();
+    let nbins_f = match args.iter().find(|a| a.name.as_deref() == Some("nbins")) {
+        Some(a) => a.value.as_double()?.get_value(0).unwrap_or(default_nbins),
+        None => default_nbins,
+    };
+
+    // Clamp to a sane, allocation-safe range. Non-finite / negative → 0.
+    let nbins: usize = if !nbins_f.is_finite() || nbins_f < 1.0 {
+        0
+    } else if nbins_f > MAX_SEQ_LEN as f64 {
+        return Err(SError::Index(format!(
+            "tabulate: nbins too large (limit {MAX_SEQ_LEN})"
+        )));
+    } else {
+        nbins_f.floor() as usize
+    };
+
+    let mut counts = vec![0.0f64; nbins];
+    for x in bin.iter() {
+        if is_na_real(x) || !x.is_finite() {
+            continue;
+        }
+        // R floors toward the integer bin; values in [1, nbins] count.
+        let b = x.floor();
+        if b >= 1.0 && b <= nbins as f64 {
+            counts[(b as usize) - 1] += 1.0;
+        }
+    }
+    Ok(SValue::doubles(counts))
 }
 
 fn builtin(name: &str, func: fn(&Interpreter, &[Arg]) -> SResult<SValue>) -> SValue {

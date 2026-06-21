@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.24.0] - 2026-06-21
+
+### Added
+
+- **Apply-family & grouping builtins (R-28)** — pure builtins available to both
+  S and R via the shared tree-walker; no grammar change. Pair the R-10
+  functional toolkit with R-11 matrices, R-6 lists, and factors.
+  - **`outer(X, Y, FUN = "*")`** — the outer product generalised to any binary
+    operation: the `length(X) × length(Y)` column-major matrix of
+    `FUN(X[i], Y[j])`. `FUN` defaults to `"*"` and may be `"*"`/`"+"` (taken on a
+    fast numeric path) **or any callable** (closure / builtin / `\(a, b) …`
+    lambda), invoked once per `(i, j)` pair. `outer(1:3, 1:2)` → the 3×2 product
+    matrix; `outer(1:2, 1:2, \(a, b) a*10 + b)` → `[[11,12],[21,22]]`.
+  - **`tapply(X, INDEX, FUN)`** — group `X` by `INDEX` (a factor or any vector
+    coerced to character labels), apply `FUN` per group, return a **named**
+    vector (names = sorted unique levels). `tapply(c(1,2,3,4),
+    c("a","b","a","b"), sum)` → `c(a = 4, b = 6)`.
+  - **`split(x, f)`** — partition `x` by `f` into a **named list** (one element
+    per level). `split(1:4, c("a","b","a","b"))` → `list(a = c(1,3), b = c(2,4))`.
+  - **`tabulate(bin, nbins = max(bin))`** — count occurrences of each of
+    `1..nbins` in `bin`; values `< 1`, `> nbins`, and `NA` are ignored.
+    `tabulate(c(2,3,5), nbins = 5)` → `c(0,1,1,0,1)`.
+- **`names()` on a named list** now returns its element names (an unset element
+  name renders as `""`, a wholly-unnamed list as `NULL`) — correct R behaviour
+  that `split()`'s named-list result relies on.
+
+### Security
+
+- **Output-size caps.** `outer` computes its element count `nrow*ncol` with
+  `checked_mul` and rejects an overflowing or `> MAX_SEQ_LEN` product with a
+  clean `Index` error **before** any allocation, so a crafted
+  `outer(1:1e6, 1:1e6)` cannot OOM. `tabulate` clamps `nbins` to
+  `[0, MAX_SEQ_LEN]` (non-finite/negative → `0`; over-large → clean error), so a
+  crafted `nbins = 1e18` cannot allocate terabytes. A non-callable `FUN`
+  (to `outer`/`tapply`) is a clean `NotCallable` error; an `INDEX`/`f` whose
+  length differs from the data recycles/truncates against the data length rather
+  than panicking; empty groups and empty inputs yield empty results.
+
+### Deferred to R-29
+
+- The `%o%` infix alias for `outer` (needs a grammar rule), matrix dimnames
+  carried by `outer`/`tapply`, multi-way `tapply` (a list of factors →
+  N-dimensional array), and `simplify = FALSE`.
+
 ## [0.23.0] - 2026-06-20
 
 ### Added

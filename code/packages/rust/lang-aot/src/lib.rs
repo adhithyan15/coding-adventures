@@ -639,6 +639,16 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
         for instr in &mut func.instructions {
             if to_i32(&instr.type_hint) {
                 instr.type_hint = "i32".to_string();
+            } else if let Some(elem) = interpreter_ir::opcodes::array_elem_type(&instr.type_hint) {
+                // LANG-FULL E5: narrow an `array<i64>` handle to `array<i32>` in
+                // lockstep with the scalar narrowing above. Otherwise `alloc_array`
+                // would build a `long[]` while the (now-`i32`) `array_get`/
+                // `array_set` element hints emit `iaload`/`iastore` — a `long[]`
+                // with `iaload` fails real `java`'s verifier. Aligning the element
+                // type across alloc/get/set makes the whole array `int[]`.
+                if to_i32(&elem) {
+                    instr.type_hint = interpreter_ir::opcodes::make_array_type("i32");
+                }
             }
         }
     }

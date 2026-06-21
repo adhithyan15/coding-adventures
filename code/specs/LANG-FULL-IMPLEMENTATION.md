@@ -205,8 +205,8 @@ multiple languages; close an enabler before the features that depend on it.
 - **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
   compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
   ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
-- **E5 — Arrays / linear aggregates.** ◑ *IR + VM + ALGOL frontend done (PR-1, PR-2);
-  code-gen backends pending (PR-3 managed, PR-4 static).* An IIR
+- **E5 — Arrays / linear aggregates.** ◑ *IR + VM + ALGOL frontend + JVM done (PR-1, PR-2,
+  PR-3a); CLR (PR-3b) + static backends (PR-4) pending.* An IIR
   array model (`alloc_array`/`array_len`/`array_get`/`array_set`, `array<T>` type hint,
   bounds-checked) that is **representation-agnostic** so it lowers to BOTH static-allocation
   (length-prefixed flat memory + explicit guard/trap on the native + LLVM backends, reusing the
@@ -369,8 +369,9 @@ backend immediately) come before the enabler-dependent items.
   and native-AOT (aarch64 `fadd`/`fcmp` executed on Apple Silicon + x86_64 SSE2 on CI). **E3 done.**
 - ◑ **AL2** — 1-D arrays with runtime bounds (E5). `integer`/`real array A[lo:hi]` →
   `alloc_array` (run-time span); `A[i]` reads/writes → bounds-checked `array_get`/`array_set`
-  with the 0-based index `i - lower`. Runs a sum-of-squares `Prog` on **VM + JIT** (`lang_matrix.rs`,
-  exit 55) + 9 unit tests. Code-gen backends lower the array ops in E5 PR-3/PR-4; multidim +
+  with the 0-based index `i - lower`. Runs a sum-of-squares `Prog` on **VM + JIT + JVM**
+  (`lang_matrix.rs`, exit 55; JVM via native `int[]` — E5 PR-3a) + 9 unit tests. Remaining
+  code-gen backends (CLR, then static LLVM/WASM/native) lower in E5 PR-3b/PR-4; multidim +
   array params are follow-up.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**

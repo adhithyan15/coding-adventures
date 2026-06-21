@@ -2643,4 +2643,125 @@ mod tests {
         // An empty (length-0) input formats to a length-0 character vector.
         assert_eq!(eval_r("format(c())\n").unwrap().length(), 0);
     }
+
+    // --- R-28: apply-family & grouping ----------------------------------
+
+    #[test]
+    fn outer_default_is_the_product_matrix() {
+        // outer(1:3, 1:2) is the 3x2 matrix of products, stored column-major:
+        //   col 0 (Y=1): 1, 2, 3   col 1 (Y=2): 2, 4, 6
+        assert_eq!(
+            nums("c(outer(1:3, 1:2))\n"),
+            vec![1.0, 2.0, 3.0, 2.0, 4.0, 6.0]
+        );
+        // Dimensions are c(length(X), length(Y)).
+        assert_eq!(nums("dim(outer(1:3, 1:2))\n"), vec![3.0, 2.0]);
+    }
+
+    #[test]
+    fn outer_with_plus_sums_the_grid() {
+        // outer(1:2, 1:2, "+") column-major: col0(Y=1): 2,3  col1(Y=2): 3,4
+        assert_eq!(nums("c(outer(1:2, 1:2, \"+\"))\n"), vec![2.0, 3.0, 3.0, 4.0]);
+    }
+
+    #[test]
+    fn outer_with_an_arbitrary_function() {
+        // outer(1:2, 1:2, \(a, b) a*10 + b) — FUN called per (i, j) pair.
+        //   col 0 (Y=1): 11, 21   col 1 (Y=2): 12, 22
+        assert_eq!(
+            nums("c(outer(1:2, 1:2, \\(a, b) a * 10 + b))\n"),
+            vec![11.0, 21.0, 12.0, 22.0]
+        );
+        // FUN = named form also works.
+        assert_eq!(
+            nums("c(outer(c(2, 3), c(4, 5), FUN = \\(a, b) a + b))\n"),
+            vec![6.0, 7.0, 7.0, 8.0]
+        );
+    }
+
+    #[test]
+    fn tapply_groups_and_applies_named() {
+        // Group by INDEX, apply per group, named by sorted unique levels.
+        assert_eq!(
+            nums("tapply(c(1, 2, 3, 4), c(\"a\", \"b\", \"a\", \"b\"), sum)\n"),
+            vec![4.0, 6.0]
+        );
+        assert_eq!(
+            names_of("names(tapply(c(1, 2, 3, 4), c(\"a\", \"b\", \"a\", \"b\"), sum))\n"),
+            vec!["a", "b"]
+        );
+        // A non-sum reducer (mean) and a factor INDEX both work.
+        assert_eq!(
+            nums("tapply(c(10, 20, 30, 40), factor(c(\"x\", \"y\", \"x\", \"y\")), mean)\n"),
+            vec![20.0, 30.0]
+        );
+    }
+
+    #[test]
+    fn split_partitions_into_a_named_list() {
+        // split(1:4, c("a","b","a","b")) → list(a = c(1, 3), b = c(2, 4)).
+        assert_eq!(
+            nums("split(1:4, c(\"a\", \"b\", \"a\", \"b\"))[[\"a\"]]\n"),
+            vec![1.0, 3.0]
+        );
+        assert_eq!(
+            nums("split(1:4, c(\"a\", \"b\", \"a\", \"b\"))[[\"b\"]]\n"),
+            vec![2.0, 4.0]
+        );
+        assert_eq!(
+            names_of("names(split(1:4, c(\"a\", \"b\", \"a\", \"b\")))\n"),
+            vec!["a", "b"]
+        );
+        // The result is a list of length nlevels.
+        assert_eq!(
+            nums("length(split(1:4, c(\"a\", \"b\", \"a\", \"b\")))\n"),
+            vec![2.0]
+        );
+    }
+
+    #[test]
+    fn tabulate_counts_one_through_nbins() {
+        // Default nbins = max(bin): counts of 1, 2, 3 are 1, 2, 3.
+        assert_eq!(nums("tabulate(c(1, 2, 2, 3, 3, 3))\n"), vec![1.0, 2.0, 3.0]);
+        // Explicit nbins: gaps are zeros, values > nbins are dropped.
+        assert_eq!(
+            nums("tabulate(c(2, 3, 5), nbins = 5)\n"),
+            vec![0.0, 1.0, 1.0, 0.0, 1.0]
+        );
+        // Values < 1 and > nbins are ignored.
+        assert_eq!(nums("tabulate(c(0, 1, 2, 99), nbins = 2)\n"), vec![1.0, 1.0]);
+    }
+
+    #[test]
+    fn r28_malformed_inputs_do_not_panic() {
+        // outer with a non-callable FUN → clean error, no panic.
+        assert!(eval_r("outer(1:2, 1:2, 5)\n").is_err());
+        // tapply with a non-callable FUN → clean error.
+        assert!(eval_r("tapply(c(1, 2), c(\"a\", \"b\"), 7)\n").is_err());
+        // An INDEX shorter than X simply truncates (extra X elements with no
+        // label are dropped) rather than panicking.
+        assert_eq!(
+            nums("tapply(c(1, 2, 3), c(\"a\", \"b\"), sum)\n"),
+            vec![1.0, 2.0]
+        );
+        // An empty input yields an empty (length-0) result, not a panic.
+        assert_eq!(eval_r("split(c(), c())\n").unwrap().length(), 0);
+        assert_eq!(eval_r("tabulate(c())\n").unwrap().length(), 0);
+        // tabulate with a non-finite/negative nbins clamps to length 0.
+        assert_eq!(
+            eval_r("tabulate(c(1, 2), nbins = -5)\n").unwrap().length(),
+            0
+        );
+    }
+
+    #[test]
+    fn outer_output_size_is_capped() {
+        // outer(1:1e6, 1:1e6) would be 1e12 elements (~8 TB) — rejected by the
+        // checked_mul + MAX_SEQ_LEN guard BEFORE any allocation, not OOM.
+        assert!(eval_r("outer(1:1000000, 1:1000000)\n").is_err());
+        // tabulate with a giant nbins is likewise rejected cleanly.
+        assert!(eval_r("tabulate(c(1), nbins = 1e18)\n").is_err());
+        // A modest outer still succeeds (sanity: the guard is not over-eager).
+        assert_eq!(nums("dim(outer(1:10, 1:10))\n"), vec![10.0, 10.0]);
+    }
 }
