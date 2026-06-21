@@ -191,8 +191,9 @@ merge before the next:
    - **4a — LLVM** ✅ **done** (`iir-to-llvm` 0.14.0): `alloc_array`→`@calloc`
      `[i64 len][elems…]`, `array_get/set`→`icmp uge`+`br` to `llvm.trap` then typed
      `getelementptr`+`load`/`store`, `array_len`→load header. A straight-line ALGOL
-     array program runs via `clang` (exit 42). *(The for-loop array Prog awaits a
-     separate ALGOL-for-loop→LLVM fix before joining the LLVM column.)*
+     array program runs via `clang` (exit 42). *(The for-loop sum-of-squares array
+     Prog also runs on LLVM now — the ALGOL-for-loop→LLVM guard-type fix landed in
+     `algol-iir-compiler` 0.5.1.)*
    - **4b — WASM** ✅ **done** (`iir-to-wasm` 0.16.0): linear-memory length-prefixed
      `[i64 len][elems…]` via a `__array_bump` global; `array_get/set` emit `i64.ge_u`
      → `if … unreachable` (the trap) then `i64.load`/`i64.store` at offset 8;

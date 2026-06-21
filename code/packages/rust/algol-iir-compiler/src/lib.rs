@@ -1390,7 +1390,13 @@ impl Compiler {
             "cmp_ge",
             Some(step_non_negative.clone()),
             vec![Operand::Var(step.slot.clone()), Operand::Var(zero)],
-            "bool",
+            // The guard compares **integer** operands (step vs 0), so the
+            // comparison's `type_hint` is the *operand* width `i64` — not the
+            // boolean *result* type. A code-gen backend (LLVM `lower_cmp`) reads
+            // this hint as the `icmp` operand type, so `"bool"` would emit the
+            // invalid `icmp i1 <i64>, <i64>`. This mirrors the regular relational
+            // path, which already tags the cmp with `lhs.ty.iir()`.
+            "i64",
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
@@ -1410,7 +1416,7 @@ impl Compiler {
                 Operand::Var(var_name.to_string()),
                 Operand::Var(limit.slot.clone()),
             ],
-            "bool",
+            "i64", // operand width (loop var vs limit, both integer) — see above
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
@@ -1434,7 +1440,7 @@ impl Compiler {
                 Operand::Var(var_name.to_string()),
                 Operand::Var(limit.slot.clone()),
             ],
-            "bool",
+            "i64", // operand width (loop var vs limit, both integer) — see above
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
@@ -2466,6 +2472,25 @@ mod tests {
     fn compiles_and_runs_for_step_until_sum() {
         let src = "begin integer i, result; result := 0; for i := 1 step 1 until 10 do result := result + i end";
         assert_eq!(run_i64(src), 55);
+    }
+
+    /// The `for … step … until` loop-guard comparisons must carry the **operand**
+    /// type (`i64`), not the boolean result type — a code-gen backend reads the
+    /// `type_hint` as the comparison operand width, so `"bool"` produced the
+    /// invalid `icmp i1 <i64>, <i64>` that broke ALGOL `for` loops on LLVM.
+    #[test]
+    fn for_loop_guard_compares_at_operand_width_not_bool() {
+        let src = "begin integer i, result; result := 0; for i := 1 step 1 until 5 do result := result + i end";
+        let module = compile_source(src, "test").unwrap();
+        let main = &module.functions[0];
+        let guard_cmps: Vec<&IIRInstr> = main.instructions.iter()
+            .filter(|i| matches!(i.op.as_str(), "cmp_le" | "cmp_ge"))
+            .collect();
+        assert!(!guard_cmps.is_empty(), "the for-loop emits step-sign and bound guards");
+        for c in guard_cmps {
+            assert_eq!(c.type_hint, "i64",
+                "guard {:?} must compare at i64 (its integer operands), not {:?}", c.op, c.type_hint);
+        }
     }
 
     #[test]
