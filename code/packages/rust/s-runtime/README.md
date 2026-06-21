@@ -149,7 +149,21 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   "Base")` / `class(obj)` walk the class chain `c("Sub", "Base", …, "envRefClass",
   "environment")`; `generator$fields()` / `generator$methods()` return the sorted
   effective names. A cyclic `contains =` is rejected; all chain walks are bounded by
-  `MAX_CHAIN_DEPTH`. Multiple inheritance and active bindings are deferred to R-26.
+  `MAX_CHAIN_DEPTH`.
+- **R5 `callSuper()`, active bindings, and multiple inheritance** (R-26,
+  `src/refclass.rs`): `callSuper()` (a lazy special form) invokes the parent's
+  same-named method — each instance-bound method is materialised inside a
+  **super-context** scope recording `.refSuperGens`/`.refMethodName`, so the call
+  resolves the same name starting one level up and chains to the root (past-the-root
+  is a clean `NULL`). A **function-valued field** is an **active binding**: `obj$ab`
+  calls a nullary getter, `obj$ab <- v` calls a setter (`v` bound), distinguished by
+  the new `missing(x)` special form; the binding is re-homed per instance (so a
+  `$copy()` is independent) and runs through the depth-bounded call path (a
+  self-referential getter errors at `MAX_EVAL_DEPTH`, never borrow-panics). **Multiple
+  inheritance** `contains = c("A", "B")` stores a `.refParents` list; a left-to-right
+  DFS `linearization` (de-duping diamonds; C3 not implemented) drives all
+  effective-set/class-chain walks with most-derived-first precedence, and the cycle
+  check runs over every parent so the multi-parent graph stays a DAG.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

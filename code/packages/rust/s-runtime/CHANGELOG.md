@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.22.0] - 2026-06-20
+
+### Added
+
+- **R5 `callSuper()`, active bindings, and multiple inheritance (R-26)** —
+  completes the R5 reference-class system on R-24/R-25's `src/refclass.rs`
+  generator/instance model; grammar-free.
+  - **`callSuper(...)`** — inside an overriding method, invoke the **same-named**
+    parent method. `rebuild_method` now materialises each instance-bound method
+    inside a thin **super-context** scope (parent = the instance) that records two
+    private markers: `.refSuperGens` (the parent generators of the class that
+    *defined* the running method version, where same-name resolution restarts) and
+    `.refMethodName`. `callSuper` is a new lazy special form: it reads those markers
+    from the current env, resolves the method starting at the super generators,
+    re-homes it onto the instance with a *fresh* super-context one level further up
+    (so chained `callSuper()` walks `C→B→A`), and applies it to the forwarded args.
+    **Past-the-root** (no parent definition) returns `NULL` — no recursion, no panic.
+  - **Active bindings** — a `fields = list(ab = function(v) …)` entry whose value is
+    a closure is an **active binding**: reading `obj$ab` **calls** it as a nullary
+    getter (`missing(v)` TRUE); `obj$ab <- val` **calls** it as a setter (`v` bound,
+    `missing(v)` FALSE). The function is re-homed onto each instance (so it reads
+    sibling fields and writes them with `<<-`); `$new`/`$copy` install it per
+    instance (the copy gets its *own* re-homed binding, never the source's). New
+    `missing(x)` special form reports whether a formal was supplied in the current
+    frame. Getter/setter run through the depth-bounded call path, so a
+    self-referential getter hits `MAX_EVAL_DEPTH` cleanly rather than borrow-panicking
+    or hanging.
+  - **Multiple inheritance** — `contains = c("A", "B")`. The single `.refParent`
+    link becomes a `.refParents` **list**; a new `linearization` does a left-to-right
+    **depth-first** pre-order walk (de-duping shared ancestors, so a diamond's base
+    appears once) that all the effective-field/method/class-chain computations and
+    the cycle check now consult. Method/field precedence is most-derived-first,
+    left-to-right (own ⊳ A ⊳ B ⊳ ancestors). C3 is **not** implemented (documented
+    simple DFS). The name-in-ancestry cycle check runs over **every** listed parent,
+    so the multi-parent graph stays a DAG; all walks bounded by `MAX_CHAIN_DEPTH`.
+  - **Rc-cycle / re-entrancy safety.** All new edges (`.refParents`, the
+    super-context's parent-to-instance link, an active binding's instance-homed
+    closure) are DAG/lazy edges; no new at-rest instance⇄method or generator cycle.
+    16 new R-syntax tests (in `r-runtime`).
+
 ## [0.21.0] - 2026-06-20
 
 ### Added
