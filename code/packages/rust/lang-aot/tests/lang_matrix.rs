@@ -560,11 +560,17 @@ const PROGRAMS: &[Prog] = &[
     // declaration, subscripted stores, and subscripted loads, and `vm-core`
     // executes them on its bounds-checked `Vec<Vec<Value>>` heap.
     //
-    // **Backends:** VM + JIT only for now. The reference interpreter (`vm-core`
-    // 0.7.0) implements the array ops; the JIT cold-interprets them through the
-    // same dispatch. The code-gen backends (LLVM/WASM/JVM/CLR/native) don't lower
-    // `alloc_array`/`array_get`/`array_set` yet — those join in E5 PR-3 (managed)
-    // and PR-4 (static), at which point this cell's `backends` grows to all 7.
+    // **Backends:** VM + JIT + **JVM** (E5 PR-1/2/3). The reference interpreter
+    // (`vm-core` 0.7.0) implements the array ops; the JIT cold-interprets them
+    // through the same dispatch. On the **JVM** (`iir-to-jvm-class-file`) the array
+    // lowers to a real `int[]`: `alloc_array`→`newarray T_INT`, `array_set`→
+    // `iastore`, `array_get`→`iaload`, each with the JVM's **native** bounds check
+    // (OOB → `ArrayIndexOutOfBoundsException`, i.e. E5's trap). The handle is a
+    // reference local (`astore`/`aload`); `concretize_scalar_any_for_jvm` narrows
+    // `array<i64>`→`array<i32>` so the `newarray` element width and the `iaload`/
+    // `iastore` element opcodes agree (a `long[]` with `iaload` is a `VerifyError`).
+    // The remaining code-gen backends (LLVM/WASM/CLR/native) join in E5 PR-3b
+    // (CLR) and PR-4 (static), at which point this cell's `backends` grows to all 7.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -573,7 +579,7 @@ const PROGRAMS: &[Prog] = &[
                result := 0; \
                for i := 1 step 1 until 5 do result := result + A[i] end",
         expect: Expect::Exit(55),
-        backends: &[Vm, Jit],
+        backends: &[Vm, Jit, Jvm],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
