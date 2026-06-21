@@ -786,6 +786,64 @@ unchanged.
     inheritance all reuse the existing chain-walk + lazy-method-rebuild machinery, so
     the change stayed contained.
 
+- **R-27 — output-formatting functions** *(this PR)*. A **pivot off the R5/OOP lane**
+  (R-24…R-26) into a fresh data/utility area: the string-formatting builtins R users
+  reach for when turning numbers and vectors into human-readable text. Everything is a
+  pure builtin in the shared `s-runtime` (R inherits via the tree-walker); **no grammar
+  change**. The watchword is **determinism**: no clock, no locale — the default
+  thousands separator is `","` and the decimal point is `"."`, fixed regardless of host
+  locale, and that choice is documented so the output never surprises a CI run in a
+  different locale. Five functions, all vectorized:
+  - **`format(x, nsmall=, width=, justify=, big.mark=)`** — the general-purpose
+    formatter. For a **numeric** vector: `nsmall` is the *minimum* number of decimal
+    places (so `format(3.14159, nsmall = 2)` is `"3.14"` but `format(3, nsmall = 2)` is
+    `"3.00"`); `big.mark` inserts a thousands separator into the integer part; then —
+    crucially — **a numeric vector formats to a *common* width**: R right-pads every
+    element to the width of the widest, so `format(c(1, 10, 100))` is
+    `c("  1", " 10", "100")`. For a **character** vector, `justify` (`"left"` /
+    `"right"` / `"centre"`, default `"left"`) controls padding within the field. `width`
+    is the *minimum* field width; the effective width is `max(width, widest element)`.
+    Returns a character vector the same length as `x`.
+  - **`formatC(x, format=, digits=, width=, flag=)`** — the C-style formatter, a thin
+    R-level wrapper over the same `printf` engine that powers `sprintf`. `format` is one
+    of `"d"` (integer), `"f"` (fixed), `"e"` (scientific), `"g"` (shortest), `"s"`
+    (string), or `"x"` (hex, integers only); `digits` is the precision; `width` the
+    minimum field width; `flag` a string of `printf` flags (`"-"` left-justify, `"0"`
+    zero-pad, `"+"` force a leading sign). `formatC(3.14159, format = "f", digits = 2)`
+    is `"3.14"`; `formatC(42, width = 6, flag = "0")` is `"000042"`. Vectorized over `x`.
+  - **`prettyNum(x, big.mark = ",")`** — insert a thousands separator into each number's
+    integer part. `prettyNum(1234567, big.mark = ",")` is `"1,234,567"`. Negative
+    numbers and decimal fractions are handled (the separator goes only in the integer
+    part, after any sign).
+  - **`toString(x, sep = ", ")`** — collapse a whole vector into a **single** string,
+    joining the (character-coerced) elements with `sep`. `toString(1:3)` is `"1, 2, 3"`;
+    `toString(c("a", "b"), sep = "; ")` is `"a; b"`. Length-1 result always.
+  - **Vectorized `sprintf(fmt, ...)`** — R-5 shipped a scalar-recycling `sprintf`; R-27
+    confirms and tests the **full vectorized recycling** contract: every `%`-conversion
+    pulls its argument from the matching positional, all arguments are recycled to the
+    longest length, and the result has that length. `sprintf("%d-%s", 1:2, c("a","b"))`
+    is `c("1-a", "2-b")`; `sprintf("%05.2f", 3.1)` is `"03.10"`. (The recycling was
+    already present in the R-5 implementation; R-27 adds the regression coverage and a
+    shared `printf` core that `formatC` reuses.)
+  - **Width-DoS cap (security).** A user `fmt` and the `width`/`nsmall`/`digits`
+    arguments are **data**, and a crafted spec like `%999999999d` or
+    `formatC(x, width = 1e9)` must not trigger a giant allocation. Every field width and
+    precision is capped at **`MAX_FIELD = 1 << 20`** (1 MiB) — the same cap the R-5
+    `sprintf` already enforced — and `format`/`formatC`/`prettyNum` clamp their
+    `width`/`nsmall`/`digits` to that bound (oversize is a clean `BadArgs` error, never a
+    panic or OOM). All field-width arithmetic uses `saturating_*`. There is no `%n`-style
+    conversion (the engine only supports the value-rendering conversions above), so there
+    is no write-what-where primitive. A `%`-spec with no matching argument renders from a
+    `0`/`""` default rather than panicking; a wrong-typed argument coerces (numbers via
+    `as.double`, strings via `as.character`) rather than erroring.
+  - **Scope outcome / deferred to R-28.** `format`, `prettyNum`, `toString`, and the
+    vectorized-`sprintf` regression ship **solidly**. `formatC` ships the common
+    `format`/`digits`/`width`/`flag` combinations (`"d"`/`"f"`/`"e"`/`"g"`/`"s"`/`"x"`).
+    Deferred to **R-28**: the exotic `formatC` corners — `format = "g"`'s exact
+    significant-digit/`%g` rounding edge cases, the `" "` and `"#"` flags, `mode=`/
+    `big.mark=` on `formatC`, and scientific-notation control on `format()` (`scientific=`)
+    — kept out to keep this PR a clean partial rather than a sprawling one.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -808,7 +866,10 @@ family; S4 and R6 OO (R5 reference classes land in **R-24**; single-`contains=`
 inheritance, `$copy()`, `is`/`inherits` over the class chain, and
 `$methods()`/`$fields()` introspection land in **R-25**, with `callSuper()`,
 active bindings, and multiple inheritance (`contains = c("A", "B")`) completing
-the R5 system in **R-26**); namespaces and `library()`
+the R5 system in **R-26**); the output-formatting family (`format`, `formatC`,
+`prettyNum`, `toString`, vectorized `sprintf`) lands in **R-27**, with the exotic
+`formatC` corners (`format = "g"` rounding edges, the `" "`/`"#"` flags,
+`scientific=`) deferred to **R-28**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.
