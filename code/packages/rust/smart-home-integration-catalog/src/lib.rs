@@ -7645,6 +7645,285 @@ impl IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity {
+    ReleaseBlocker,
+    OperatorHandoff,
+    ReviewGate,
+    ReadyToExecute,
+}
+
+impl IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ReleaseBlocker => "release_blocker",
+            Self::OperatorHandoff => "operator_handoff",
+            Self::ReviewGate => "review_gate",
+            Self::ReadyToExecute => "ready_to_execute",
+        }
+    }
+}
+
+impl From<IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailKind>
+    for IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity
+{
+    fn from(kind: IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailKind) -> Self {
+        match kind {
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailKind::ReleaseBlocker => {
+                Self::ReleaseBlocker
+            }
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailKind::OperatorHandoff => {
+                Self::OperatorHandoff
+            }
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailKind::ReviewGate => {
+                Self::ReviewGate
+            }
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailKind::ReadyToExecute => {
+                Self::ReadyToExecute
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditRow {
+    pub sequence: usize,
+    pub audit_key: String,
+    pub guardrail_key: String,
+    pub work_order_key: String,
+    pub execution_slot_key: String,
+    pub packet_key: String,
+    pub ticket_key: String,
+    pub check_sequence: usize,
+    pub check_kind: IntegrationMeshReleaseReadinessCheckKind,
+    pub status: IntegrationMeshReleaseReadinessStatus,
+    pub handoff_lane: IntegrationMeshReleaseDispatchTicketHandoffLane,
+    pub guardrail_kind: IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailKind,
+    pub severity: IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity,
+    pub release_blocking: bool,
+    pub operator_required: bool,
+    pub review_required: bool,
+    pub dispatch_required: bool,
+    pub execution_required: bool,
+}
+
+impl IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditRow {
+    pub fn from_guardrail(
+        sequence: usize,
+        guardrail: &IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrail,
+    ) -> Self {
+        let severity: IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity =
+            guardrail.guardrail_kind.into();
+
+        Self {
+            sequence,
+            audit_key: format!(
+                "release-ticket-handoff-execution-work-order-guardrail-audit-{sequence:02}-{}-{}",
+                severity.as_str(),
+                guardrail.check_kind.as_str()
+            ),
+            guardrail_key: guardrail.guardrail_key.clone(),
+            work_order_key: guardrail.work_order_key.clone(),
+            execution_slot_key: guardrail.execution_slot_key.clone(),
+            packet_key: guardrail.packet_key.clone(),
+            ticket_key: guardrail.ticket_key.clone(),
+            check_sequence: guardrail.check_sequence,
+            check_kind: guardrail.check_kind,
+            status: guardrail.status,
+            handoff_lane: guardrail.handoff_lane,
+            guardrail_kind: guardrail.guardrail_kind,
+            severity,
+            release_blocking: guardrail.blocks_release(),
+            operator_required: guardrail.requires_operator(),
+            review_required: guardrail.requires_review(),
+            dispatch_required: guardrail.dispatch_required,
+            execution_required: guardrail.execution_required,
+        }
+    }
+
+    pub fn blocks_release(&self) -> bool {
+        self.release_blocking || self.severity == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReleaseBlocker
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_required || self.severity == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::OperatorHandoff
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.review_required || self.severity == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReviewGate
+    }
+
+    pub fn ready_to_execute(&self) -> bool {
+        self.severity
+            == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReadyToExecute
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSummary {
+    pub total_audit_rows: usize,
+    pub release_blocker_rows: usize,
+    pub operator_handoff_rows: usize,
+    pub review_gate_rows: usize,
+    pub ready_to_execute_rows: usize,
+    pub release_blocking_rows: usize,
+    pub operator_required_rows: usize,
+    pub review_required_rows: usize,
+    pub dispatch_required_rows: usize,
+    pub execution_required_rows: usize,
+    pub first_audit_key: Option<String>,
+    pub first_guardrail_key: Option<String>,
+    pub first_work_order_key: Option<String>,
+    pub first_release_blocker_work_order_key: Option<String>,
+    pub first_operator_handoff_work_order_key: Option<String>,
+    pub first_review_gate_work_order_key: Option<String>,
+    pub first_ready_to_execute_work_order_key: Option<String>,
+    pub first_severity:
+        Option<IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity>,
+    pub first_handoff_lane: Option<IntegrationMeshReleaseDispatchTicketHandoffLane>,
+    pub first_check_kind: Option<IntegrationMeshReleaseReadinessCheckKind>,
+    pub first_check_status: Option<IntegrationMeshReleaseReadinessStatus>,
+    pub next_execution_slot_key: Option<String>,
+    pub next_packet_key: Option<String>,
+    pub next_ticket_key: Option<String>,
+    pub release_handoff_execution_work_order_guardrail_audit_ready: bool,
+}
+
+impl IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSummary {
+    pub fn from_audit_rows<'a>(
+        audit_rows: impl IntoIterator<
+            Item = &'a IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditRow,
+        >,
+    ) -> Self {
+        let audit_rows = audit_rows.into_iter().collect::<Vec<_>>();
+        let first_audit_row = audit_rows.iter().min_by_key(|row| row.sequence);
+        let first_release_blocker = audit_rows
+            .iter()
+            .filter(|row| {
+                row.severity
+                    == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReleaseBlocker
+            })
+            .min_by_key(|row| row.sequence);
+        let first_operator_handoff = audit_rows
+            .iter()
+            .filter(|row| {
+                row.severity
+                    == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::OperatorHandoff
+            })
+            .min_by_key(|row| row.sequence);
+        let first_review_gate = audit_rows
+            .iter()
+            .filter(|row| {
+                row.severity
+                    == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReviewGate
+            })
+            .min_by_key(|row| row.sequence);
+        let first_ready_to_execute = audit_rows
+            .iter()
+            .filter(|row| row.ready_to_execute())
+            .min_by_key(|row| row.sequence);
+        let next_audit_row = audit_rows
+            .iter()
+            .filter(|row| !row.ready_to_execute())
+            .min_by_key(|row| row.sequence);
+
+        Self {
+            total_audit_rows: audit_rows.len(),
+            release_blocker_rows: audit_rows
+                .iter()
+                .filter(|row| {
+                    row.severity
+                        == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReleaseBlocker
+                })
+                .count(),
+            operator_handoff_rows: audit_rows
+                .iter()
+                .filter(|row| {
+                    row.severity
+                        == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::OperatorHandoff
+                })
+                .count(),
+            review_gate_rows: audit_rows
+                .iter()
+                .filter(|row| {
+                    row.severity
+                        == IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReviewGate
+                })
+                .count(),
+            ready_to_execute_rows: audit_rows
+                .iter()
+                .filter(|row| row.ready_to_execute())
+                .count(),
+            release_blocking_rows: audit_rows
+                .iter()
+                .filter(|row| row.blocks_release())
+                .count(),
+            operator_required_rows: audit_rows
+                .iter()
+                .filter(|row| row.needs_operator())
+                .count(),
+            review_required_rows: audit_rows.iter().filter(|row| row.needs_review()).count(),
+            dispatch_required_rows: audit_rows
+                .iter()
+                .filter(|row| row.dispatch_required)
+                .count(),
+            execution_required_rows: audit_rows
+                .iter()
+                .filter(|row| row.execution_required)
+                .count(),
+            first_audit_key: first_audit_row.map(|row| row.audit_key.clone()),
+            first_guardrail_key: first_audit_row.map(|row| row.guardrail_key.clone()),
+            first_work_order_key: first_audit_row.map(|row| row.work_order_key.clone()),
+            first_release_blocker_work_order_key: first_release_blocker
+                .map(|row| row.work_order_key.clone()),
+            first_operator_handoff_work_order_key: first_operator_handoff
+                .map(|row| row.work_order_key.clone()),
+            first_review_gate_work_order_key: first_review_gate
+                .map(|row| row.work_order_key.clone()),
+            first_ready_to_execute_work_order_key: first_ready_to_execute
+                .map(|row| row.work_order_key.clone()),
+            first_severity: first_audit_row.map(|row| row.severity),
+            first_handoff_lane: first_audit_row.map(|row| row.handoff_lane),
+            first_check_kind: first_audit_row.map(|row| row.check_kind),
+            first_check_status: first_audit_row.map(|row| row.status),
+            next_execution_slot_key: next_audit_row.map(|row| row.execution_slot_key.clone()),
+            next_packet_key: next_audit_row.map(|row| row.packet_key.clone()),
+            next_ticket_key: next_audit_row.map(|row| row.ticket_key.clone()),
+            release_handoff_execution_work_order_guardrail_audit_ready: !audit_rows.is_empty()
+                && audit_rows.iter().all(|row| row.ready_to_execute()),
+        }
+    }
+
+    pub fn has_audit_rows(&self) -> bool {
+        self.total_audit_rows > 0
+    }
+
+    pub fn has_release_blockers(&self) -> bool {
+        self.release_blocker_rows > 0 || self.release_blocking_rows > 0
+    }
+
+    pub fn needs_operator(&self) -> bool {
+        self.operator_handoff_rows > 0 || self.operator_required_rows > 0
+    }
+
+    pub fn has_review_gates(&self) -> bool {
+        self.review_gate_rows > 0 || self.review_required_rows > 0
+    }
+
+    pub fn has_ready_to_execute_work(&self) -> bool {
+        self.ready_to_execute_rows > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_release_blockers()
+            || self.needs_operator()
+            || self.has_review_gates()
+            || self.dispatch_required_rows > 0
+            || self.execution_required_rows > 0
+            || !self.release_handoff_execution_work_order_guardrail_audit_ready
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationMeshReleaseTicketHandoffExecutionWorkOrderSummary {
     pub release_ticket_handoff_execution_readiness_summary:
@@ -30351,6 +30630,76 @@ pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_summary(
     )
 }
 
+pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_rows_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditRow> {
+    mesh_release_ticket_handoff_execution_work_order_guardrails_for_catalog(
+        catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+    .iter()
+    .enumerate()
+    .map(|(index, guardrail)| {
+        IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditRow::from_guardrail(
+            index + 1,
+            guardrail,
+        )
+    })
+    .collect()
+}
+
+pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_rows(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditRow> {
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_execution_work_order_guardrail_audit_rows_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
+pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_summary_for_catalog(
+    catalog: &[IntegrationCatalogEntry],
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSummary {
+    let audit_rows =
+        mesh_release_ticket_handoff_execution_work_order_guardrail_audit_rows_for_catalog(
+            catalog,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+
+    IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSummary::from_audit_rows(
+        audit_rows.iter(),
+    )
+}
+
+pub fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSummary {
+    let catalog = first_party_catalog();
+    mesh_release_ticket_handoff_execution_work_order_guardrail_audit_summary_for_catalog(
+        &catalog,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 pub fn mesh_release_ticket_handoff_execution_work_order_summary_for_catalog(
     catalog: &[IntegrationCatalogEntry],
     available_primitives: &[PrimitiveFamily],
@@ -42205,6 +42554,232 @@ mod tests {
         assert!(guardrails
             .iter()
             .all(IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrail::ready_to_execute));
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_rows_classify_lane_work() {
+        let available_primitives = vec![
+            PrimitiveFamily::Usb,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let audit_rows = mesh_release_ticket_handoff_execution_work_order_guardrail_audit_rows(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let summary = mesh_release_ticket_handoff_execution_work_order_guardrail_audit_summary(
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        assert_eq!(audit_rows.len(), 5);
+        assert_eq!(summary.total_audit_rows, 5);
+        assert_eq!(summary.release_blocker_rows, 3);
+        assert_eq!(summary.operator_handoff_rows, 0);
+        assert_eq!(summary.review_gate_rows, 2);
+        assert_eq!(summary.ready_to_execute_rows, 0);
+        assert_eq!(summary.release_blocking_rows, 3);
+        assert_eq!(summary.operator_required_rows, 4);
+        assert_eq!(summary.review_required_rows, 2);
+        assert_eq!(summary.dispatch_required_rows, 5);
+        assert_eq!(summary.execution_required_rows, 5);
+        assert_eq!(
+            summary.first_audit_key,
+            Some(
+                "release-ticket-handoff-execution-work-order-guardrail-audit-01-release_blocker-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_guardrail_key,
+            Some(
+                "release-ticket-handoff-execution-work-order-guardrail-01-release_blocker-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some(
+                "release-ticket-handoff-execution-work-order-01-repair-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_release_blocker_work_order_key,
+            Some(
+                "release-ticket-handoff-execution-work-order-01-repair-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(summary.first_operator_handoff_work_order_key, None);
+        assert_eq!(
+            summary.first_review_gate_work_order_key,
+            Some(
+                "release-ticket-handoff-execution-work-order-02-review-evidence_remediation"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_severity,
+            Some(
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReleaseBlocker
+            )
+        );
+        assert_eq!(
+            summary.first_handoff_lane,
+            Some(IntegrationMeshReleaseDispatchTicketHandoffLane::Repair)
+        );
+        assert_eq!(
+            summary.first_check_kind,
+            Some(IntegrationMeshReleaseReadinessCheckKind::SubstrateActions)
+        );
+        assert_eq!(
+            summary.first_check_status,
+            Some(IntegrationMeshReleaseReadinessStatus::Blocked)
+        );
+        assert_eq!(
+            summary.next_execution_slot_key,
+            Some("release-ticket-handoff-execution-slot-01-repair-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_packet_key,
+            Some("release-dispatch-handoff-packet-01-substrate_actions".to_string())
+        );
+        assert_eq!(
+            summary.next_ticket_key,
+            Some("release-dispatch-ticket-01-substrate_actions".to_string())
+        );
+        assert!(!summary.release_handoff_execution_work_order_guardrail_audit_ready);
+        assert!(summary.has_audit_rows());
+        assert!(summary.has_release_blockers());
+        assert!(summary.needs_operator());
+        assert!(summary.has_review_gates());
+        assert!(!summary.has_ready_to_execute_work());
+        assert!(summary.requires_attention());
+
+        let first = &audit_rows[0];
+        assert_eq!(
+            first.audit_key,
+            "release-ticket-handoff-execution-work-order-guardrail-audit-01-release_blocker-substrate_actions"
+        );
+        assert_eq!(
+            first.guardrail_key,
+            "release-ticket-handoff-execution-work-order-guardrail-01-release_blocker-substrate_actions"
+        );
+        assert_eq!(
+            first.work_order_key,
+            "release-ticket-handoff-execution-work-order-01-repair-substrate_actions"
+        );
+        assert_eq!(
+            first.severity,
+            IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReleaseBlocker
+        );
+        assert!(first.blocks_release());
+        assert!(first.needs_operator());
+        assert!(!first.needs_review());
+        assert!(!first.ready_to_execute());
+    }
+
+    #[test]
+    fn mesh_release_ticket_handoff_execution_work_order_guardrail_audit_rows_mark_release_ready() {
+        let catalog = vec![hue_entry()];
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let audit_rows =
+            mesh_release_ticket_handoff_execution_work_order_guardrail_audit_rows_for_catalog(
+                &catalog,
+                all_primitive_families(),
+                &allowed_capabilities,
+                &[],
+            );
+        let summary =
+            mesh_release_ticket_handoff_execution_work_order_guardrail_audit_summary_for_catalog(
+                &catalog,
+                all_primitive_families(),
+                &allowed_capabilities,
+                &[],
+            );
+
+        assert_eq!(audit_rows.len(), 5);
+        assert_eq!(summary.total_audit_rows, 5);
+        assert_eq!(summary.release_blocker_rows, 0);
+        assert_eq!(summary.operator_handoff_rows, 0);
+        assert_eq!(summary.review_gate_rows, 0);
+        assert_eq!(summary.ready_to_execute_rows, 5);
+        assert_eq!(summary.release_blocking_rows, 0);
+        assert_eq!(summary.operator_required_rows, 0);
+        assert_eq!(summary.review_required_rows, 0);
+        assert_eq!(summary.dispatch_required_rows, 0);
+        assert_eq!(summary.execution_required_rows, 0);
+        assert_eq!(
+            summary.first_audit_key,
+            Some(
+                "release-ticket-handoff-execution-work-order-guardrail-audit-01-ready_to_execute-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_guardrail_key,
+            Some(
+                "release-ticket-handoff-execution-work-order-guardrail-01-ready_to_execute-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_work_order_key,
+            Some(
+                "release-ticket-handoff-execution-work-order-01-release-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(summary.first_release_blocker_work_order_key, None);
+        assert_eq!(summary.first_operator_handoff_work_order_key, None);
+        assert_eq!(summary.first_review_gate_work_order_key, None);
+        assert_eq!(
+            summary.first_ready_to_execute_work_order_key,
+            Some(
+                "release-ticket-handoff-execution-work-order-01-release-substrate_actions"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            summary.first_severity,
+            Some(
+                IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditSeverity::ReadyToExecute
+            )
+        );
+        assert_eq!(
+            summary.first_handoff_lane,
+            Some(IntegrationMeshReleaseDispatchTicketHandoffLane::Release)
+        );
+        assert_eq!(
+            summary.first_check_kind,
+            Some(IntegrationMeshReleaseReadinessCheckKind::SubstrateActions)
+        );
+        assert_eq!(
+            summary.first_check_status,
+            Some(IntegrationMeshReleaseReadinessStatus::Ready)
+        );
+        assert_eq!(summary.next_execution_slot_key, None);
+        assert_eq!(summary.next_packet_key, None);
+        assert_eq!(summary.next_ticket_key, None);
+        assert!(summary.release_handoff_execution_work_order_guardrail_audit_ready);
+        assert!(summary.has_audit_rows());
+        assert!(!summary.has_release_blockers());
+        assert!(!summary.needs_operator());
+        assert!(!summary.has_review_gates());
+        assert!(summary.has_ready_to_execute_work());
+        assert!(!summary.requires_attention());
+        assert!(audit_rows
+            .iter()
+            .all(IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditRow::ready_to_execute));
     }
 
     #[test]
