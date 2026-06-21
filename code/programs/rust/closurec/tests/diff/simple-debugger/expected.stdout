@@ -1,1 +1,1 @@
-report(1);var x=3;debugger;use(x);
+report(1);var x=3;use(x);

@@ -212,11 +212,32 @@ fn is_pure_leaf(expr: &Expression) -> bool {
 
 fn dce_program(prog: &Program, st: &mut DceState) -> Program {
     st.visit();
-    let new_body = prog
+    let mut new_body: Vec<ProgramItem> = prog
         .body
         .iter()
         .map(|item| dce_program_item(item, st))
         .collect();
+
+    // Strip top-level `debugger;` statements (CLOC24).
+    //
+    // The program body is a list of `ProgramItem`s, not a `BlockStatement`,
+    // so it needs its own sweep separate from `dce_block_statement`'s. Same
+    // rationale: a `debugger` statement is a development-only breakpoint with
+    // no effect on a shipped program, so at SIMPLE/ADVANCED we remove it — and
+    // because this pass never runs at WHITESPACE_ONLY, `debugger` survives
+    // there, matching upstream Closure exactly. See `is_debugger_statement`.
+    let before_debugger_drop = new_body.len();
+    new_body.retain(|item| !is_debugger_program_item(item));
+    let dropped_debuggers = before_debugger_drop - new_body.len();
+    if dropped_debuggers > 0 {
+        st.record(
+            &prog.cv,
+            "removed-debugger",
+            &format!("program with {} top-level items", before_debugger_drop),
+            &format!("dropped {} top-level debugger statements", dropped_debuggers),
+        );
+    }
+
     Program {
         cv: prog.cv.clone(),
         version: prog.version,
@@ -543,8 +564,14 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_)
-        // A `debugger;` statement is a childless leaf with no bindings — like
-        // EmptyStatement, DCE preserves it as-is. (Stripping it is future work.)
+        // A `debugger;` reaching HERE is a non-list child (e.g. a brace-less
+        // `if (c) debugger;` consequent), so it is preserved as-is. The
+        // CLOC24 strip operates on statement *lists* — the block-body sweep in
+        // `dce_block_statement` and the top-level sweep in `dce_program` —
+        // where a `debugger` can be removed without leaving a dangling
+        // single-statement slot. (A bare consequent could be stripped too, but
+        // that is a rarer shape left for future work, consistent with how the
+        // empty-statement sweep is also list-scoped.)
         | TaggedStatement::DebuggerStatement(_) => stmt.clone(),
     }
 }
@@ -661,6 +688,29 @@ fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement 
             "removed-empty-statement",
             &format!("block with {} statements", before_empty_drop),
             &format!("dropped {} empty statements", dropped_empties),
+        );
+    }
+
+    // Strip `debugger;` statements (CLOC24).
+    //
+    // A `debugger` statement is a development-only breakpoint: it pauses
+    // execution ONLY when a debugger is attached and is a no-op otherwise, so
+    // removing it from a shipped program preserves the program's observable
+    // behaviour. At SIMPLE/ADVANCED upstream Closure strips it; we do the same
+    // here (and only here — this pass never runs at WHITESPACE_ONLY, where the
+    // statement is preserved). We sweep it from the statement list exactly like
+    // empty statements; a `debugger` reaching a non-list position (e.g. a
+    // brace-less `if (c) debugger;` consequent) is left intact — see
+    // `dce_tagged_statement`'s leaf arm.
+    let before_debugger_drop = working.len();
+    working.retain(|s| !is_debugger_statement(s));
+    let dropped_debuggers = before_debugger_drop - working.len();
+    if dropped_debuggers > 0 {
+        st.record(
+            &b.cv,
+            "removed-debugger",
+            &format!("block with {} statements", before_debugger_drop),
+            &format!("dropped {} debugger statements", dropped_debuggers),
         );
     }
 
@@ -901,6 +951,27 @@ fn is_empty_statement(stmt: &Statement) -> bool {
     )
 }
 
+/// Is this a `debugger;` statement?
+///
+/// Used by the block-body and top-level sweeps (CLOC24) to strip `debugger`
+/// statements at SIMPLE/ADVANCED — a development-only breakpoint with no effect
+/// on a shipped program, so removing it is a sound size win (this matches
+/// upstream Closure). Because the dce pass runs only inside the typed pipeline,
+/// `debugger` is preserved at WHITESPACE_ONLY, which never reaches here.
+fn is_debugger_statement(stmt: &Statement) -> bool {
+    matches!(
+        stmt,
+        Statement::Tagged(TaggedStatement::DebuggerStatement(_))
+    )
+}
+
+/// Is this top-level program item a `debugger;` statement? The program body is
+/// a list of `ProgramItem`s rather than `Statement`s, so the top-level sweep in
+/// `dce_program` needs this thin wrapper over [`is_debugger_statement`].
+fn is_debugger_program_item(item: &ProgramItem) -> bool {
+    matches!(item, ProgramItem::Statement(s) if is_debugger_statement(s))
+}
+
 // =====================================================================
 // Declarations
 // =====================================================================
@@ -1091,6 +1162,11 @@ mod tests {
     }
     fn empty_stmt() -> Statement {
         Statement::empty_statement(EmptyStatement { cv: None })
+    }
+    fn debugger_stmt() -> Statement {
+        Statement::debugger_statement(
+            coding_adventures_javascript_ast::DebuggerStatement { cv: None },
+        )
     }
     /// `let <name>;` as a block statement — a non-hoisted (block-scoped)
     /// declaration, which the truncation whitelist treats as safe to drop.
@@ -1378,6 +1454,104 @@ mod tests {
         );
         let new_block = extract_function_body(&out);
         assert_eq!(new_block.body.len(), 2, "expected 2 statements; got {:?}", new_block.body);
+    }
+
+    // --- CLOC24: `debugger` stripping -----------------------------------
+
+    #[test]
+    fn strips_debugger_statement_from_block() {
+        // { x; debugger; y; } → { x; y; }
+        let body = vec![
+            expr_stmt(ident("x")),
+            debugger_stmt(),
+            expr_stmt(ident("y")),
+        ];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed, "stripping a debugger must mark the program changed");
+        assert!(
+            contribs.iter().any(|c| c.tag == "removed-debugger"),
+            "expected a removed-debugger contribution; got {:?}",
+            contribs
+        );
+        let new_block = extract_function_body(&out);
+        assert_eq!(
+            new_block.body.len(),
+            2,
+            "the debugger should be gone, leaving x; y;; got {:?}",
+            new_block.body
+        );
+        assert!(
+            !new_block.body.iter().any(is_debugger_statement),
+            "no debugger statement should remain; got {:?}",
+            new_block.body
+        );
+    }
+
+    #[test]
+    fn strips_top_level_debugger_statement() {
+        // top-level: x; debugger; → x;
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(ident("x"))),
+            ProgramItem::Statement(debugger_stmt()),
+        ]);
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed, "stripping a top-level debugger must mark changed");
+        assert!(
+            contribs.iter().any(|c| c.tag == "removed-debugger"),
+            "expected a removed-debugger contribution; got {:?}",
+            contribs
+        );
+        assert_eq!(
+            out.body.len(),
+            1,
+            "only the top-level debugger should be removed; got {:?}",
+            out.body
+        );
+        assert!(
+            !out.body.iter().any(is_debugger_program_item),
+            "no top-level debugger should remain; got {:?}",
+            out.body
+        );
+    }
+
+    #[test]
+    fn block_of_only_debuggers_becomes_empty() {
+        // { debugger; debugger; } → { }
+        let body = vec![debugger_stmt(), debugger_stmt()];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        let new_block = extract_function_body(&out);
+        assert!(
+            new_block.body.is_empty(),
+            "both debuggers should be gone, leaving an empty block; got {:?}",
+            new_block.body
+        );
+    }
+
+    #[test]
+    fn preserves_braceless_if_consequent_debugger() {
+        // `if (x) debugger;` — the debugger is the consequent, NOT in a
+        // statement list, so the list-scoped sweep leaves it intact. This pins
+        // the documented limitation (see `dce_tagged_statement`'s leaf arm).
+        let body = vec![if_stmt(ident("x"), debugger_stmt())];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, contribs, _changed, _) = run_pass(prog);
+        assert!(
+            !contribs.iter().any(|c| c.tag == "removed-debugger"),
+            "a brace-less consequent debugger must NOT be swept; got {:?}",
+            contribs
+        );
+        let new_block = extract_function_body(&out);
+        let Statement::Tagged(TaggedStatement::IfStatement(if_s)) = &new_block.body[0] else {
+            panic!("expected the if statement to survive; got {:?}", new_block.body);
+        };
+        assert!(
+            is_debugger_statement(&if_s.consequent),
+            "the consequent debugger should be preserved; got {:?}",
+            if_s.consequent
+        );
     }
 
     #[test]

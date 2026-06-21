@@ -469,9 +469,10 @@ pub struct EmptyStatement {
 /// is attached and is otherwise a no-op. Like [`EmptyStatement`] it carries no
 /// children. Making it representable lets the typed pipeline optimize the rest
 /// of a program that contains a `debugger` statement (previously any such
-/// program fell back to WHITESPACE_ONLY). v1 preserves the statement verbatim;
-/// stripping it (as the upstream Closure Compiler does at SIMPLE/ADVANCED) is a
-/// future enhancement.
+/// program fell back to WHITESPACE_ONLY). The node itself just preserves the
+/// statement; the `closure-pass-dce` pass strips `debugger` statements from
+/// statement lists at SIMPLE/ADVANCED (CLOC24, matching the upstream Closure
+/// Compiler), while WHITESPACE_ONLY — which never runs that pass — keeps it.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DebuggerStatement {

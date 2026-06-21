@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.15.0] - 2026-06-20
+
+### Added — CLOC24: strip `debugger` statements at SIMPLE/ADVANCED
+
+The pass now removes `debugger;` statements from statement lists, matching the
+upstream Closure Compiler. A `debugger` statement is a development-only
+breakpoint: it pauses execution only when a debugger is attached and is a no-op
+otherwise, so removing it from a shipped program is semantics-preserving. Two
+sweeps cover the two list contexts:
+
+- **block bodies** — `dce_block_statement` retains out `debugger` statements
+  alongside the existing empty-statement sweep (`{ x; debugger; y; }` →
+  `{ x; y; }`; a block of only `debugger`s collapses to `{}`);
+- **program top level** — `dce_program` sweeps `debugger` from the program body
+  (which is a list of `ProgramItem`s, not a `BlockStatement`).
+
+Because the dce pass runs only inside the typed (SIMPLE/ADVANCED) pipeline,
+`debugger` is preserved at WHITESPACE_ONLY — exactly the upstream behaviour. A
+new `removed-debugger` contribution is recorded per sweep (and flips `changed`).
+
+**Documented limitation:** a `debugger` reaching a *non-list* position (e.g. a
+brace-less `if (c) debugger;` consequent) is left intact — the sweep is
+list-scoped, consistent with how the empty-statement sweep already works.
+
+- 4 new tests: block strip, top-level strip, all-`debugger` block → empty, and
+  the preserved brace-less-consequent limitation.
+
 ## [0.14.0] - 2026-06-20
 
 ### Added — CLOC23: DCE inside `for`-`of`
