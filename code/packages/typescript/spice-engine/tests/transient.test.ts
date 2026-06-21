@@ -41,6 +41,9 @@ import {
   formatDcTable,
   formatDeckNoiseTable,
   formatDeckOpTable,
+  formatDeckRawfileArtifactCsv,
+  formatDeckRawfileArtifactJson,
+  formatDeckRawfileArtifactTable,
   formatDeckRunArtifactCsv,
   formatDeckRunArtifactJson,
   formatDeckRunArtifactTable,
@@ -2078,6 +2081,37 @@ let gain = 2
     expect(execution.writeMarkers).toEqual(expectedWriteMarkers);
     expect(execution.rawfileOptionCount).toBe(expectedRawfileOptions.length);
     expect(execution.rawfileOptions).toEqual(expectedRawfileOptions);
+    expect(execution.rawfileArtifactCount).toBe(1);
+    expect(execution.rawfileArtifacts[0]?.target).toBe("out.raw");
+    expect(execution.rawfileArtifacts[0]?.marker).toBe("write out.raw V(in)");
+    expect(execution.rawfileArtifacts[0]?.probeCount).toBe(1);
+    expect(execution.rawfileArtifacts[0]?.probes).toEqual(["V(in)"]);
+    expect(execution.rawfileArtifacts[0]?.optionCount).toBe(expectedRawfileOptions.length);
+    expect(execution.rawfileArtifacts[0]?.options).toEqual(expectedRawfileOptions);
+    expect(execution.rawfileArtifacts[0]?.rawfile).toContain("Title: SPICE deck op result\n");
+    expect(execution.rawfileArtifacts[0]?.rawfile).toContain("No. Variables: 2\n");
+    expect(execution.rawfileArtifacts[0]?.rawfile).toContain(`Options: ${rawfileOptionList}\n`);
+    expect(execution.rawfileArtifacts[0]?.rawfile).toContain("0\t0\t1.000000e+00\n");
+    const rawfileRecord = execution.rawfileArtifactRecords[0]!;
+    expect(rawfileRecord["Target"]).toBe("out.raw");
+    expect(rawfileRecord["Marker"]).toBe("write out.raw V(in)");
+    expect(rawfileRecord["Probes"]).toBe("1");
+    expect(rawfileRecord["ProbeList"]).toBe("V(in)");
+    expect(rawfileRecord["Options"]).toBe(String(expectedRawfileOptions.length));
+    expect(rawfileRecord["RawfileOptionList"]).toBe(rawfileOptionList);
+    expect(rawfileRecord["Bytes"]).toBe(String(execution.rawfileArtifacts[0]?.rawfile.length));
+    expect(execution.rawfileArtifactTable).toBe(
+      formatDeckRawfileArtifactTable(execution.rawfileArtifacts),
+    );
+    expect(execution.rawfileArtifactCsv).toBe(
+      formatDeckRawfileArtifactCsv(execution.rawfileArtifacts),
+    );
+    expect(execution.rawfileArtifactJson).toBe(
+      formatDeckRawfileArtifactJson(execution.rawfileArtifacts),
+    );
+    expect(JSON.parse(execution.rawfileArtifactJson)[0].RawfileOptionList).toBe(
+      rawfileOptionList,
+    );
     expect(execution.diagnosticCount).toBe(expectedCodes.length);
     expect(execution.diagnosticCodes).toEqual(expectedCodes);
     expect(execution.runArtifacts[0]?.controlLineCount).toBe(expectedControlLines.length);

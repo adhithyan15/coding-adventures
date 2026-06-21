@@ -214,6 +214,9 @@ from spice_engine import (
     format_deck_dc_sweep_table,
     format_deck_noise_table,
     format_deck_op_table,
+    format_deck_rawfile_artifact_csv,
+    format_deck_rawfile_artifact_json,
+    format_deck_rawfile_artifact_table,
     format_deck_run_artifact_csv,
     format_deck_run_artifact_json,
     format_deck_run_artifact_table,
@@ -7410,6 +7413,41 @@ let gain = 2
     assert execution.write_markers == expected_write_markers
     assert execution.rawfile_option_count == len(expected_rawfile_options)
     assert execution.rawfile_options == expected_rawfile_options
+    assert execution.rawfile_artifact_count == 1
+    assert execution.rawfile_artifacts[0].target == "out.raw"
+    assert execution.rawfile_artifacts[0].marker == "write out.raw V(in)"
+    assert execution.rawfile_artifacts[0].probe_count == 1
+    assert execution.rawfile_artifacts[0].probes == ["V(in)"]
+    assert execution.rawfile_artifacts[0].option_count == len(
+        expected_rawfile_options
+    )
+    assert execution.rawfile_artifacts[0].options == expected_rawfile_options
+    assert "Title: SPICE deck op result\n" in execution.rawfile_artifacts[0].rawfile
+    assert "No. Variables: 2\n" in execution.rawfile_artifacts[0].rawfile
+    assert "Options: " + rawfile_option_list + "\n" in execution.rawfile_artifacts[0].rawfile
+    assert "0\t0\t1.000000e+00\n" in execution.rawfile_artifacts[0].rawfile
+    rawfile_record = execution.rawfile_artifact_records[0]
+    assert rawfile_record["Target"] == "out.raw"
+    assert rawfile_record["Marker"] == "write out.raw V(in)"
+    assert rawfile_record["Probes"] == "1"
+    assert rawfile_record["ProbeList"] == "V(in)"
+    assert rawfile_record["Options"] == str(len(expected_rawfile_options))
+    assert rawfile_record["RawfileOptionList"] == rawfile_option_list
+    assert rawfile_record["Bytes"] == str(
+        len(execution.rawfile_artifacts[0].rawfile.encode())
+    )
+    assert execution.rawfile_artifact_table == format_deck_rawfile_artifact_table(
+        execution.rawfile_artifacts
+    )
+    assert execution.rawfile_artifact_csv == format_deck_rawfile_artifact_csv(
+        execution.rawfile_artifacts
+    )
+    assert execution.rawfile_artifact_json == format_deck_rawfile_artifact_json(
+        execution.rawfile_artifacts
+    )
+    assert json.loads(execution.rawfile_artifact_json)[0]["RawfileOptionList"] == (
+        rawfile_option_list
+    )
     assert execution.diagnostic_count == len(expected_codes)
     assert execution.diagnostic_codes == expected_codes
     assert execution.run_artifacts[0].control_line_count == len(expected_control_lines)

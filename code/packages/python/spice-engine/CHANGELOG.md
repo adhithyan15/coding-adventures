@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck rawfile ASCII artifacts** —
+  selected `run_deck_analysis()` executions now expose deterministic in-memory
+  ASCII rawfile artifacts for accepted `.control` `write <rawfile> ...`
+  markers as `rawfile_artifact_count`, `rawfile_artifacts`,
+  `rawfile_artifact_table`, `rawfile_artifact_csv`, `rawfile_artifact_json`,
+  and `rawfile_artifact_records`, matching Rust and TypeScript.
+
 - **Deck rawfile option artifacts** —
   `analyze_deck_controls()` and selected `run_deck_analysis()` executions now
   expose normalized accepted `.control` rawfile option inventories as

@@ -3459,6 +3459,17 @@ pub struct DeckTableArtifact {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct DeckRawfileArtifact {
+    pub target: String,
+    pub marker: String,
+    pub probe_count: usize,
+    pub probes: Vec<String>,
+    pub option_count: usize,
+    pub options: Vec<String>,
+    pub rawfile: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct DeckAnalysisExecution {
     pub plan: DeckAnalysisPlan,
     pub result: DeckAnalysisExecutionResult,
@@ -3472,6 +3483,12 @@ pub struct DeckAnalysisExecution {
     pub write_markers: Vec<String>,
     pub rawfile_option_count: usize,
     pub rawfile_options: Vec<String>,
+    pub rawfile_artifact_count: usize,
+    pub rawfile_artifacts: Vec<DeckRawfileArtifact>,
+    pub rawfile_artifact_table: String,
+    pub rawfile_artifact_csv: String,
+    pub rawfile_artifact_json: String,
+    pub rawfile_artifact_records: Vec<BTreeMap<String, String>>,
     pub diagnostic_count: usize,
     pub diagnostic_codes: Vec<String>,
     pub table_count: usize,
@@ -10511,6 +10528,167 @@ fn deck_table_artifacts(
     artifacts
 }
 
+pub fn format_deck_rawfile_ascii(
+    table: &str,
+    analysis: &str,
+    rawfile_options: &[String],
+) -> String {
+    let rows = table.lines().collect::<Vec<_>>();
+    let Some(header) = rows.first() else {
+        return String::new();
+    };
+    let columns = header.split('\t').collect::<Vec<_>>();
+    let data_rows = rows
+        .iter()
+        .skip(1)
+        .map(|row| row.split('\t').collect::<Vec<_>>())
+        .collect::<Vec<_>>();
+    let mut lines = vec![
+        format!("Title: SPICE deck {analysis} result"),
+        "Date: deterministic".to_string(),
+        format!("Plotname: {analysis}"),
+        "Flags: real".to_string(),
+        format!("No. Variables: {}", columns.len()),
+        format!("No. Points: {}", data_rows.len()),
+        format!("Options: {}", rawfile_options.join(";")),
+        "Variables:".to_string(),
+    ];
+    for (index, column) in columns.iter().enumerate() {
+        lines.push(format!("\t{index}\t{column}\treal"));
+    }
+    lines.push("Values:".to_string());
+    for (index, row) in data_rows.iter().enumerate() {
+        let mut padded = row
+            .iter()
+            .map(|value| (*value).to_string())
+            .collect::<Vec<_>>();
+        padded.resize(columns.len(), String::new());
+        lines.push(format!("{index}\t{}", padded.join("\t")));
+    }
+    format!("{}\n", lines.join("\n"))
+}
+
+fn deck_write_marker_parts(marker: &str) -> Option<(String, Vec<String>)> {
+    let parts = marker.split_whitespace().collect::<Vec<_>>();
+    if parts.len() < 2 || parts[0] != "write" {
+        return None;
+    }
+    Some((
+        parts[1].to_string(),
+        parts
+            .iter()
+            .skip(2)
+            .map(|probe| (*probe).to_string())
+            .collect(),
+    ))
+}
+
+fn deck_rawfile_artifacts(
+    plan: &DeckAnalysisPlan,
+    table: &str,
+    write_markers: &[String],
+    rawfile_options: &[String],
+) -> Vec<DeckRawfileArtifact> {
+    let rawfile = format_deck_rawfile_ascii(table, &plan.analysis, rawfile_options);
+    write_markers
+        .iter()
+        .filter_map(|marker| {
+            let (target, probes) = deck_write_marker_parts(marker)?;
+            Some(DeckRawfileArtifact {
+                target,
+                marker: marker.clone(),
+                probe_count: probes.len(),
+                probes,
+                option_count: rawfile_options.len(),
+                options: rawfile_options.to_vec(),
+                rawfile: rawfile.clone(),
+            })
+        })
+        .collect()
+}
+
+const DECK_RAWFILE_ARTIFACT_COLUMNS: &[&str] = &[
+    "Target",
+    "Marker",
+    "Probes",
+    "ProbeList",
+    "Options",
+    "RawfileOptionList",
+    "Bytes",
+];
+
+fn deck_rawfile_artifact_cells(artifact: &DeckRawfileArtifact) -> Vec<String> {
+    vec![
+        artifact.target.clone(),
+        artifact.marker.clone(),
+        artifact.probe_count.to_string(),
+        artifact.probes.join(";"),
+        artifact.option_count.to_string(),
+        artifact.options.join(";"),
+        artifact.rawfile.len().to_string(),
+    ]
+}
+
+pub fn deck_rawfile_artifact_records(
+    artifacts: &[DeckRawfileArtifact],
+) -> Vec<BTreeMap<String, String>> {
+    artifacts
+        .iter()
+        .map(|artifact| {
+            DECK_RAWFILE_ARTIFACT_COLUMNS
+                .iter()
+                .copied()
+                .zip(deck_rawfile_artifact_cells(artifact))
+                .map(|(key, value)| (key.to_string(), value))
+                .collect()
+        })
+        .collect()
+}
+
+pub fn format_deck_rawfile_artifact_table(artifacts: &[DeckRawfileArtifact]) -> String {
+    let mut rows = vec![DECK_RAWFILE_ARTIFACT_COLUMNS.join("\t")];
+    for artifact in artifacts {
+        rows.push(deck_rawfile_artifact_cells(artifact).join("\t"));
+    }
+    format!("{}\n", rows.join("\n"))
+}
+
+pub fn format_deck_rawfile_artifact_csv(artifacts: &[DeckRawfileArtifact]) -> String {
+    let mut rows = vec![DECK_RAWFILE_ARTIFACT_COLUMNS.join(",")];
+    for artifact in artifacts {
+        rows.push(
+            deck_rawfile_artifact_cells(artifact)
+                .iter()
+                .map(|cell| format_csv_cell(cell))
+                .collect::<Vec<_>>()
+                .join(","),
+        );
+    }
+    format!("{}\n", rows.join("\n"))
+}
+
+pub fn format_deck_rawfile_artifact_json(artifacts: &[DeckRawfileArtifact]) -> String {
+    let records = deck_rawfile_artifact_records(artifacts)
+        .into_iter()
+        .map(|record| {
+            let fields = record
+                .into_iter()
+                .map(|(key, value)| {
+                    format!(
+                        "{}:{}",
+                        format_json_string(&key),
+                        format_json_string(&value)
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join(",");
+            format!("{{{}}}", fields)
+        })
+        .collect::<Vec<_>>()
+        .join(",");
+    format!("[{}]\n", records)
+}
+
 pub fn format_deck_run_artifact_csv(artifacts: &[DeckRunArtifact]) -> String {
     let mut rows = vec![DECK_RUN_ARTIFACT_COLUMNS.join(",")];
     for artifact in artifacts {
@@ -10677,6 +10855,12 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
             );
+            let rawfile_artifacts =
+                deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
+            let rawfile_artifact_table = format_deck_rawfile_artifact_table(&rawfile_artifacts);
+            let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
+            let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
+            let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10691,6 +10875,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                rawfile_artifact_count: rawfile_artifacts.len(),
+                rawfile_artifacts,
+                rawfile_artifact_table,
+                rawfile_artifact_csv,
+                rawfile_artifact_json,
+                rawfile_artifact_records,
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10743,6 +10933,12 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
             );
+            let rawfile_artifacts =
+                deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
+            let rawfile_artifact_table = format_deck_rawfile_artifact_table(&rawfile_artifacts);
+            let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
+            let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
+            let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10757,6 +10953,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                rawfile_artifact_count: rawfile_artifacts.len(),
+                rawfile_artifacts,
+                rawfile_artifact_table,
+                rawfile_artifact_csv,
+                rawfile_artifact_json,
+                rawfile_artifact_records,
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10810,6 +11012,12 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
             );
+            let rawfile_artifacts =
+                deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
+            let rawfile_artifact_table = format_deck_rawfile_artifact_table(&rawfile_artifacts);
+            let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
+            let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
+            let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10824,6 +11032,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                rawfile_artifact_count: rawfile_artifacts.len(),
+                rawfile_artifacts,
+                rawfile_artifact_table,
+                rawfile_artifact_csv,
+                rawfile_artifact_json,
+                rawfile_artifact_records,
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10880,6 +11094,12 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
             );
+            let rawfile_artifacts =
+                deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
+            let rawfile_artifact_table = format_deck_rawfile_artifact_table(&rawfile_artifacts);
+            let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
+            let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
+            let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10894,6 +11114,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                rawfile_artifact_count: rawfile_artifacts.len(),
+                rawfile_artifacts,
+                rawfile_artifact_table,
+                rawfile_artifact_csv,
+                rawfile_artifact_json,
+                rawfile_artifact_records,
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -10944,6 +11170,12 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
             );
+            let rawfile_artifacts =
+                deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
+            let rawfile_artifact_table = format_deck_rawfile_artifact_table(&rawfile_artifacts);
+            let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
+            let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
+            let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -10958,6 +11190,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                rawfile_artifact_count: rawfile_artifacts.len(),
+                rawfile_artifacts,
+                rawfile_artifact_table,
+                rawfile_artifact_csv,
+                rawfile_artifact_json,
+                rawfile_artifact_records,
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -11006,6 +11244,12 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
             );
+            let rawfile_artifacts =
+                deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
+            let rawfile_artifact_table = format_deck_rawfile_artifact_table(&rawfile_artifacts);
+            let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
+            let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
+            let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -11020,6 +11264,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                rawfile_artifact_count: rawfile_artifacts.len(),
+                rawfile_artifacts,
+                rawfile_artifact_table,
+                rawfile_artifact_csv,
+                rawfile_artifact_json,
+                rawfile_artifact_records,
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
@@ -11080,6 +11330,12 @@ pub fn run_deck_analysis(
                 &measurements,
                 &fourier,
             );
+            let rawfile_artifacts =
+                deck_rawfile_artifacts(&plan, &table, &write_markers, &rawfile_options);
+            let rawfile_artifact_table = format_deck_rawfile_artifact_table(&rawfile_artifacts);
+            let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
+            let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
+            let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
             let tables = deck_stable_tables(&measurements, &fourier);
             Ok(DeckAnalysisExecution {
                 plan,
@@ -11094,6 +11350,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                rawfile_artifact_count: rawfile_artifacts.len(),
+                rawfile_artifacts,
+                rawfile_artifact_table,
+                rawfile_artifact_csv,
+                rawfile_artifact_json,
+                rawfile_artifact_records,
                 diagnostic_count: diagnostic_codes.len(),
                 diagnostic_codes: diagnostic_codes.clone(),
                 table_count: tables.len(),
