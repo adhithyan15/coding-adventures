@@ -123,6 +123,10 @@ assert_eq!(class_file.this_class_name, "MyClass");
 | `load_byte`      | `getstatic __tape; <idx>; baload; sipush 0xFF; iand` (+`l2i`/`i2l` for i64) — LM-J |
 | `store_byte`     | `getstatic __tape; <idx>; <val>; bastore` (+`l2i` for i64) — LM-J |
 | `call_builtin putchar`/`getchar` | `invokestatic env/BFRuntime.putchar(I)V` / `getchar()I` — Brainfuck `.`/`,` |
+| `alloc_array`    | `<count>; [l2i]; newarray T_<elem>; astore dest` — native `int[]`/`long[]`/`double[]` (E5) |
+| `array_get`      | `aload handle; <idx>; [l2i]; <T>aload; store dest` — native bounds check (E5) |
+| `array_set`      | `aload handle; <idx>; [l2i]; <val>; <T>astore` — native bounds check (E5) |
+| `array_len`      | `aload handle; arraylength; [i2l]; store dest` — E5 |
 
 The byte-tape ops (`alloc_bytes`/`load_byte`/`store_byte`) are how Brainfuck runs on
 the JVM (LANG-MATRIX LM-J): the tape is a host-provided static `byte[]`, `baload`/`bastore`

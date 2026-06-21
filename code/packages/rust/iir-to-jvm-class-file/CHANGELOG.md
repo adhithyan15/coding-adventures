@@ -3,6 +3,38 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.0] — 2026-06-21 (arrays → native JVM `int[]`/`long[]`/`double[]` — LANG-FULL E5 PR-3)
+
+The four E5 array opcodes now lower to **real JVM primitive arrays**, so ALGOL
+1-D arrays run on `java` (not just the VM/JIT):
+
+| IIR op | JVM bytecode |
+|--------|--------------|
+| `alloc_array dest <- count` (`array<T>`) | `<count>; [l2i]; newarray T_<elem>; astore dest` |
+| `array_get dest <- handle, idx` | `aload handle; <idx>; [l2i]; <T>aload; store dest` |
+| `array_set handle, idx, val` | `aload handle; <idx>; [l2i]; <val>; <T>astore` |
+| `array_len dest <- handle` | `aload handle; arraylength; [i2l]; store dest` |
+
+- The element width comes from `T`: `int[]`/`long[]`/`float[]`/`double[]` with the
+  matching `newarray` type code (`T_INT`/`T_LONG`/`T_FLOAT`/`T_DOUBLE`) and typed
+  `*aload`/`*astore`. The **handle** is a reference local (`JvmType::Ref`,
+  `aload`/`astore`, one slot) — `iir_type_to_jvm` now maps `array<T>` → `Ref`.
+- **Bounds-checked for free**: every `*aload`/`*astore` does the JVM's native
+  bounds check, so an out-of-range index throws `ArrayIndexOutOfBoundsException` —
+  exactly E5's trap semantics, no explicit compare/branch emitted.
+- No StackMapTable concern: the backend already targets Java 5 (version 49), which
+  needs no verification frames even with the existing loop branches.
+- Validation: `array<T>` type hints and the four ops already pass (they aren't
+  `str`/`ref<`/`any`, and aren't blocklisted); added a regression test asserting it.
+- 5 new unit tests (handle→Ref typing, element-opcode table, `int[]` emits
+  `newarray`/`iastore`/`iaload`/`arraylength`, `double[]` emits `dastore`/`daload`,
+  validation passes). Verified end to end: the `lang-aot` ALGOL sum-of-squares
+  matrix `Prog` now runs on **real `java`** → exit 55.
+
+Pairs with `lang-aot` 0.101.0, whose `concretize_scalar_any_for_jvm` narrows
+`array<i64>`→`array<i32>` in lockstep with the scalar `i64`→`i32` narrowing so the
+`newarray` element width and the `iaload`/`iastore` element opcodes agree.
+
 ## [0.15.0] — 2026-06-20 (f64 constants + comparisons — LANG-FULL E3; ALGOL reals run on the JVM)
 
 The backend already lowered f64 *arithmetic* (`dadd`/`dmul`/…) and typed `f64`

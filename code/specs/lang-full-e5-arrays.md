@@ -172,12 +172,18 @@ merge before the next:
    `i - lower`. 9 unit tests + a `lang-aot` matrix `Prog` (sum-of-squares) running
    on **VM + JIT** (exit 55). 1-D, integer/real elements; multidim + array params
    are follow-up.
-3. **E5-managed-backends** — JVM, CLR, WASM array lowering (native managed
-   arrays + native bounds checks); extend the matrix Prog's backend list. (May be
-   one PR per backend if they diverge.)
-4. **E5-static-backends** — LLVM, then native x86_64 + aarch64 (length-prefixed
-   flat allocation + explicit guard + trap); extend the matrix Prog to all 7.
-   Native encodings byte-verified vs the system assembler (as for E3-native).
+3. **E5-managed-backends** — native managed arrays + native bounds checks. Split
+   per backend (they diverge):
+   - **3a — JVM** ✅ **done** (`iir-to-jvm-class-file` 0.16.0, `lang-aot` 0.101.0):
+     `alloc_array`→`newarray`, `array_get/set`→`*aload`/`*astore` (int[]/long[]/
+     double[]), `array_len`→`arraylength`; OOB → native `ArrayIndexOutOfBounds`.
+     Handle is a reference local. Matrix Prog runs on **JVM** (exit 55). 7 tests.
+   - **3b — CLR** ☐ (`newarr`/`ldelem`/`stelem`/`ldlen`; native `IndexOutOfRange`).
+   - *(WASM regrouped: its linear-memory length-prefixed model belongs with the
+     static backends in PR-4, not the managed native-array group.)*
+4. **E5-static-backends** — LLVM, WASM (linear memory), then native x86_64 +
+   aarch64 (length-prefixed flat allocation + explicit guard + trap); extend the
+   matrix Prog to all 7. Native encodings byte-verified vs the system assembler.
 5. **E5-bounds-trap-proof** — a matrix program that traps on OOB, asserted to
    abort on every backend.
 6. **(follow-ups, not v1)** real (`array<f64>`) arrays end-to-end; BASIC `DIM`

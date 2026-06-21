@@ -410,6 +410,29 @@ mod tests {
     }
 
     #[test]
+    fn array_ops_and_type_pass_validation() {
+        // LANG-FULL E5: the four array ops carry an `array<T>` (alloc) or element
+        // (`get`/`set`/`len`) type_hint and must NOT be rejected as UnsupportedOp
+        // or UnsupportedType — they lower to native JVM array opcodes.
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i32"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i32>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(9)], "i32"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i".into()), Operand::Var("v".into())], "i32"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i".into())], "i32"),
+            IIRInstr::new("array_len", Some("m".into()), vec![Operand::Var("a".into())], "i32"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "array ops + array<T> type must validate clean, got {errs:?}"
+        );
+    }
+
+    #[test]
     fn empty_function_rejected() {
         let errs = validate_for_jvm(&single_fn_module(vec![]));
         assert!(!errs.is_empty());

@@ -76,6 +76,7 @@
 
 use std::collections::HashMap;
 
+use interpreter_ir::opcodes::{array_elem_type, is_array_type};
 use interpreter_ir::{IIRFunction, IIRModule, Operand};
 use jvm_class_file::{
     JvmClassFile, JvmClassVersion, JvmCodeAttribute, JvmConstantPoolEntry, JvmMethodAttribute,
@@ -283,6 +284,12 @@ const NEWARRAY: u8 = 0xBC;
 /// Type code for `newarray T_LONG` — produces a `long[]`.
 const T_LONG: u8 = 0x0B;
 
+// Primitive-array type codes for `newarray` (JVMS Table 6.5.newarray-A), used by
+// the E5 array primitive (`alloc_array`) to pick the element width.
+const T_INT: u8 = 0x0A; //  int[]
+const T_FLOAT: u8 = 0x06; // float[]
+const T_DOUBLE: u8 = 0x07; // double[]
+
 /// `laload` (0x2F) — load a `long` element from a `long[]`.
 ///
 /// Stack: `arrayref, index (int)` → `long`
@@ -292,6 +299,18 @@ const LALOAD: u8 = 0x2F;
 ///
 /// Stack: `arrayref, index (int), value (long)` → (empty)
 const LASTORE: u8 = 0x50;
+
+// The remaining typed array load/store opcodes + `arraylength`, used by the E5
+// array ops (`array_get`/`array_set`/`array_len`). Each `*aload`/`*astore`
+// performs the JVM's **native bounds check** (a negative or `>= length` index
+// throws `ArrayIndexOutOfBoundsException`), which is exactly E5's trap semantics.
+const IALOAD: u8 = 0x2E; //  int[]   element load
+const IASTORE: u8 = 0x4F; //  int[]   element store
+const FALOAD: u8 = 0x30; //  float[]  element load
+const FASTORE: u8 = 0x51; //  float[]  element store
+const DALOAD: u8 = 0x31; //  double[] element load
+const DASTORE: u8 = 0x52; //  double[] element store
+const ARRAYLENGTH: u8 = 0xBE; // arrayref → length (int)
 
 /// `lcmp` (0x94) — compare two longs.
 ///
@@ -628,8 +647,49 @@ fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
         // LANG36: A closure is a `long[]` array reference.
         // Variables holding closures use aload/astore (Ref = reference type).
         "closure" => Some(JvmType::Ref),
+        // LANG-FULL E5: an `array<T>` handle is a JVM primitive-array reference
+        // (`int[]`/`long[]`/`double[]`/…). Like every reference it occupies one
+        // local slot and uses aload/astore; the *element* opcode (iaload/laload/
+        // daload/…) is chosen per access from `T`. The element type must itself
+        // map to a JVM type (no nested or reference-element arrays yet).
+        h if is_array_type(h) => {
+            let elem = array_elem_type(h)?;
+            iir_type_to_jvm(&elem).map(|_| JvmType::Ref)
+        }
         // Catch-all: return None, let caller decide
         _ => None,
+    }
+}
+
+/// The `newarray` type code + typed load/store opcodes for an array whose
+/// **element** maps to `elem` ([`JvmType`]). Returns `None` for element types
+/// that can't be a primitive-array element here (`Void`, `Ref` — nested arrays
+/// are a future phase). The three opcodes are `(newarray atype, *aload, *astore)`.
+fn array_element_opcodes(elem: JvmType) -> Option<(u8, u8, u8)> {
+    match elem {
+        JvmType::Int => Some((T_INT, IALOAD, IASTORE)),
+        JvmType::Long => Some((T_LONG, LALOAD, LASTORE)),
+        JvmType::Float => Some((T_FLOAT, FALOAD, FASTORE)),
+        JvmType::Double => Some((T_DOUBLE, DALOAD, DASTORE)),
+        JvmType::Void | JvmType::Ref => None,
+    }
+}
+
+/// Extract `srcs[i]` of an array op as a variable name, with a clear error
+/// naming the op and the operand's role (`handle`/`idx`/`val`).
+fn array_var_operand(
+    instr: &interpreter_ir::IIRInstr,
+    i: usize,
+    op: &str,
+    role: &str,
+    fname: &str,
+) -> Result<String, IIRJvmError> {
+    match instr.srcs.get(i) {
+        Some(Operand::Var(s)) => Ok(s.clone()),
+        _ => Err(IIRJvmError::InvalidOperand {
+            function: fname.to_string(),
+            detail: format!("{op} requires Operand::Var({role}) as src[{i}]"),
+        }),
     }
 }
 
@@ -2540,6 +2600,147 @@ fn lower_function(
                 code.push(BASTORE);
             }
 
+            // ── alloc_array (LANG-FULL E5) ───────────────────────────────────
+            //
+            // `alloc_array  dest  <-  count`  (type_hint `array<T>`).  Allocate a
+            // fresh JVM primitive array `new T[count]` and bind `dest` to its
+            // reference.  `newarray` takes an **int** count and a one-byte element
+            // type code (T_INT/T_LONG/T_DOUBLE/…), so an `i64` count is narrowed
+            // with `l2i` first.  JVM arrays are zero-initialised, matching the
+            // reference VM's default-init.  `dest` is a `Ref` local → `astore`.
+            //
+            //   <count>; [l2i]; newarray <atype>; astore dest
+            "alloc_array" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "alloc_array must have a dest".to_string(),
+                    }
+                })?;
+                let count_name = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "alloc_array requires Operand::Var(count) as src[0]".to_string(),
+                    }),
+                };
+                let elem_hint = array_elem_type(&instr.type_hint).ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!("alloc_array type_hint must be array<T>, got {:?}", instr.type_hint),
+                    }
+                })?;
+                let elem_ty = iir_type_to_jvm(&elem_hint).and_then(array_element_opcodes);
+                let (atype, _, _) = elem_ty.ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: format!("alloc_array element type {elem_hint:?} is not a supported JVM array element"),
+                })?;
+                let (count_slot, count_ty) = lookup_var(&count_name)?;
+                let (dest_slot, _dest_ty) = lookup_var(dest_name)?;
+                emit_typed_load(&mut code, count_slot, count_ty);
+                if count_ty == JvmType::Long {
+                    code.push(L2I); // newarray count is an int
+                }
+                code.push(NEWARRAY);
+                code.push(atype);
+                emit_astore(&mut code, dest_slot);
+            }
+
+            // ── array_get (LANG-FULL E5) ─────────────────────────────────────
+            //
+            // `array_get  dest  <-  handle, idx`  (type_hint = element `T`).  Read
+            // `handle[idx]`.  The handle is a `Ref` local (`aload`); the index is
+            // narrowed to `int` if it arrived as `i64`; the typed `*aload` does the
+            // **native bounds check** (OOB → `ArrayIndexOutOfBoundsException`, i.e.
+            // E5's trap).  `dest` shares `T` with the load, so no conversion.
+            //
+            //   aload handle; <idx>; [l2i]; <Taload>; store dest
+            "array_get" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "array_get must have a dest".to_string(),
+                    }
+                })?;
+                let handle_name = array_var_operand(instr, 0, "array_get", "handle", &fname)?;
+                let idx_name = array_var_operand(instr, 1, "array_get", "idx", &fname)?;
+                let (_, aload_op, _) = iir_type_to_jvm(&instr.type_hint)
+                    .and_then(array_element_opcodes)
+                    .ok_or_else(|| IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!("array_get element type {:?} is not a supported JVM array element", instr.type_hint),
+                    })?;
+                let (h_slot, _) = lookup_var(&handle_name)?;
+                let (i_slot, i_ty) = lookup_var(&idx_name)?;
+                let (dest_slot, dest_ty) = lookup_var(dest_name)?;
+                emit_aload(&mut code, h_slot);
+                emit_typed_load(&mut code, i_slot, i_ty);
+                if i_ty == JvmType::Long {
+                    code.push(L2I);
+                }
+                code.push(aload_op);
+                emit_typed_store(&mut code, dest_slot, dest_ty);
+            }
+
+            // ── array_set (LANG-FULL E5) ─────────────────────────────────────
+            //
+            // `array_set  handle, idx, val`  (type_hint = element `T`, no dest).
+            // Write `handle[idx] = val`.  The typed `*astore` bounds-checks the
+            // index natively (OOB → AIOOBE).
+            //
+            //   aload handle; <idx>; [l2i]; <val>; <Tastore>
+            "array_set" => {
+                if instr.dest.is_some() {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "array_set must not have a dest".to_string(),
+                    });
+                }
+                let handle_name = array_var_operand(instr, 0, "array_set", "handle", &fname)?;
+                let idx_name = array_var_operand(instr, 1, "array_set", "idx", &fname)?;
+                let val_name = array_var_operand(instr, 2, "array_set", "val", &fname)?;
+                let (_, _, astore_op) = iir_type_to_jvm(&instr.type_hint)
+                    .and_then(array_element_opcodes)
+                    .ok_or_else(|| IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!("array_set element type {:?} is not a supported JVM array element", instr.type_hint),
+                    })?;
+                let (h_slot, _) = lookup_var(&handle_name)?;
+                let (i_slot, i_ty) = lookup_var(&idx_name)?;
+                let (v_slot, v_ty) = lookup_var(&val_name)?;
+                emit_aload(&mut code, h_slot);
+                emit_typed_load(&mut code, i_slot, i_ty);
+                if i_ty == JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_load(&mut code, v_slot, v_ty);
+                code.push(astore_op);
+            }
+
+            // ── array_len (LANG-FULL E5) ─────────────────────────────────────
+            //
+            // `array_len  dest  <-  handle`.  `arraylength` yields an `int`; widen
+            // to `long` with `i2l` when the dest is `i64`.
+            //
+            //   aload handle; arraylength; [i2l]; store dest
+            "array_len" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "array_len must have a dest".to_string(),
+                    }
+                })?;
+                let handle_name = array_var_operand(instr, 0, "array_len", "handle", &fname)?;
+                let (h_slot, _) = lookup_var(&handle_name)?;
+                let (dest_slot, dest_ty) = lookup_var(dest_name)?;
+                emit_aload(&mut code, h_slot);
+                code.push(ARRAYLENGTH);
+                if dest_ty == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_ty);
+            }
+
             // ── call_builtin (Brainfuck putchar / getchar) ───────────────────
             //
             // The validator (validate.rs) enforces that `srcs[0]` is in
@@ -4323,6 +4524,92 @@ mod tests {
         let module = make_module(void_fn("main"));
         let class = lower_iir_to_jvm(&module, &IIRJvmConfig::new("MyClass")).unwrap();
         assert_eq!(class.this_class_name, "MyClass");
+    }
+
+    // ── LANG-FULL E5 — array opcode lowering ────────────────────────────────
+
+    /// Extract the raw Code bytes of a single-method lowered class.
+    fn code_bytes(module: &IIRModule) -> Vec<u8> {
+        let class = lower_iir_to_jvm(module, &make_cfg()).expect("lowers");
+        let method = &class.methods[0];
+        for attr in &method.attributes {
+            if let JvmMethodAttribute::Code(c) = attr {
+                return c.code.clone();
+            }
+        }
+        panic!("method has no Code attribute");
+    }
+
+    #[test]
+    fn array_handle_maps_to_ref() {
+        // An `array<T>` handle occupies one local slot and uses aload/astore.
+        assert_eq!(iir_type_to_jvm("array<i32>"), Some(JvmType::Ref));
+        assert_eq!(iir_type_to_jvm("array<i64>"), Some(JvmType::Ref));
+        assert_eq!(iir_type_to_jvm("array<f64>"), Some(JvmType::Ref));
+        // A non-mappable element type is rejected (no nested/ref-element arrays).
+        assert_eq!(iir_type_to_jvm("array<str>"), None);
+    }
+
+    #[test]
+    fn array_element_opcodes_by_type() {
+        assert_eq!(array_element_opcodes(JvmType::Int), Some((T_INT, IALOAD, IASTORE)));
+        assert_eq!(array_element_opcodes(JvmType::Long), Some((T_LONG, LALOAD, LASTORE)));
+        assert_eq!(array_element_opcodes(JvmType::Double), Some((T_DOUBLE, DALOAD, DASTORE)));
+        assert_eq!(array_element_opcodes(JvmType::Ref), None);
+    }
+
+    /// `int[]` alloc/set/get/len lower to `newarray T_INT` + `iastore`/`iaload`
+    /// + `arraylength`. The JVM bounds-checks each `*aload`/`*astore` natively.
+    #[test]
+    fn int_array_emits_native_array_opcodes() {
+        // a := new int[3]; a[0] := 7; r := a[0]; n := len(a); ret r
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("const", Some("c3".into()), vec![Operand::Int(3)], "i32"),
+                IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("c3".into())], "array<i32>"),
+                IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("const", Some("v7".into()), vec![Operand::Int(7)], "i32"),
+                IIRInstr::new("array_set", None,
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v7".into())], "i32"),
+                IIRInstr::new("array_get", Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into())], "i32"),
+                IIRInstr::new("array_len", Some("n".into()), vec![Operand::Var("a".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+            ],
+        );
+        let code = code_bytes(&make_module(f));
+        assert!(code.contains(&NEWARRAY) && code.contains(&T_INT), "newarray int[] expected");
+        assert!(code.contains(&IASTORE), "iastore (array_set) expected");
+        assert!(code.contains(&IALOAD), "iaload (array_get) expected");
+        assert!(code.contains(&ARRAYLENGTH), "arraylength (array_len) expected");
+    }
+
+    /// `double[]` uses `newarray T_DOUBLE` + `dastore`/`daload`.
+    #[test]
+    fn double_array_emits_double_opcodes() {
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "f64",
+            vec![
+                IIRInstr::new("const", Some("c2".into()), vec![Operand::Int(2)], "i32"),
+                IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("c2".into())], "array<f64>"),
+                IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Float(2.5)], "f64"),
+                IIRInstr::new("array_set", None,
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "f64"),
+                IIRInstr::new("array_get", Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into())], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+            ],
+        );
+        let code = code_bytes(&make_module(f));
+        assert!(code.contains(&T_DOUBLE), "newarray double[] expected");
+        assert!(code.contains(&DASTORE), "dastore expected");
+        assert!(code.contains(&DALOAD), "daload expected");
     }
 
     #[test]
