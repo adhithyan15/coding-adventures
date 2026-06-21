@@ -2,6 +2,64 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.26.0] - 2026-06-21
+
+### Added
+
+- **Ordering refinements (R-30)** — extensions of the R-29/R-13 ordering builtins,
+  available to both S and R via the shared tree-walker; no new value type, no
+  grammar change. They reuse the existing `as_character` key, `value::index`,
+  `truthy()` (the `na.rm =` boolean reader), and `as_character()` string-keyword
+  reads (the `factor(levels =, labels =)` pattern).
+  - **Multi-key `order(x, y, ...)`** — sort the index permutation lexicographically
+    by the first key, breaking ties by the second, then the next, …; indices still
+    tied after every key keep their **original order** (a stable sort). Each key is
+    coerced independently — numeric keys compare numerically with `NA` sorting last
+    (`na.last = TRUE`), character keys lexicographically — so numeric and character
+    keys may be mixed across positions. All keys must share the first key's length
+    (a mismatch is a graceful error, never an out-of-bounds index). The single-key
+    R-13 form is the arity-1 special case, unchanged.
+    `order(c(2,1,2), c(1,2,1))` → `c(2, 1, 3)`.
+  - **`rank(x, ties.method = ...)`** — adds `"min"` (every tie takes the lowest
+    position in its run), `"max"` (the highest), and `"first"` (consecutive ranks
+    in original order, so ties get distinct ranks) alongside the default
+    `"average"` (unchanged). An unrecognised method is a graceful error. The result
+    stays numeric. `rank(c(1,1,2))` → `c(1.5,1.5,3)` / `c(1,1,3)` / `c(2,2,3)` /
+    `c(1,2,3)` for average / min / max / first.
+  - **`duplicated(x, fromLast = TRUE)`** — runs the duplicate scan right-to-left,
+    so the **last** occurrence of each value is the keeper (`FALSE`) and earlier
+    repeats are flagged. Default (`fromLast = FALSE`) unchanged.
+    `duplicated(c(1,2,1), fromLast = TRUE)` → `c(TRUE, FALSE, FALSE)`.
+  - **`anyDuplicated(x)`** — the 1-based index of the first duplicated element
+    (the first position whose value appeared earlier), or `0` when there are none;
+    agrees with `which(duplicated(x))[1]`. `anyDuplicated(c(1,2,1))` → `3`;
+    `anyDuplicated(c(1,2,3))` → `0`. Numeric and character vectors.
+
+### Security
+
+- **Output-size caps.** No new user-controlled multiplier. `order` allocates one
+  `usize` per element of the first key and sorts `O(n log n)`; the per-key length
+  check rejects mismatched keys before any indexing. `rank` (all methods) and
+  `duplicated` (both directions) emit exactly one entry per input element, and
+  `anyDuplicated` scans once. Every operand is already `MAX_SEQ_LEN`-bounded, so
+  outputs are bounded by the (capped) input lengths; `NA` remains an ordinary
+  matchable key; empty inputs yield empty/`0` results; no path can index out of
+  bounds.
+
+### Deferred to R-31
+
+- `incomparables =` on the set ops / `duplicated` / `anyDuplicated` (needs
+  `NA`-comparison plumbing — a way to mark values "never equal to anything", which
+  the `as_character`-key path does not model), the `fromLast =` set-op argument,
+  and `rank`'s `"random"` tie method (needs an RNG-seed contract).
+
+### Tests
+
+- New `r30_ordering` module: 17 tests covering multi-key `order` (tie-break,
+  stable fallback, character + mixed keys, length-mismatch error), `rank`
+  ties.method (average/min/max/first, numeric + character, unknown-method error),
+  `duplicated(fromLast=)`, and `anyDuplicated` (numeric + character + empty).
+
 ## [0.25.0] - 2026-06-21
 
 ### Added
