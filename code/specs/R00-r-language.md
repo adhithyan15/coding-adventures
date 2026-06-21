@@ -836,7 +836,12 @@ unchanged.
     precision is capped at **`MAX_FIELD = 1 << 20`** (1 MiB) — the same cap the R-5
     `sprintf` already enforced — and `format`/`formatC`/`prettyNum` clamp their
     `width`/`nsmall`/`digits` to that bound (oversize is a clean `BadArgs` error, never a
-    panic or OOM). All field-width arithmetic uses `saturating_*`. There is no `%n`-style
+    panic or OOM). Because the per-field cap alone does **not** bound a *long vector ×
+    wide field* (e.g. `format(rep(0, 1e7), width = 1e6)` would be ≈ 10 TB), the
+    vectorized formatters additionally reject any request whose **product** — common
+    width × element count (or `big.mark` length × count for `prettyNum`) — exceeds
+    **`MAX_TOTAL_OUTPUT = 256 MiB`**, computed with `saturating_mul` so the check itself
+    cannot overflow. All field-width arithmetic uses `saturating_*`. There is no `%n`-style
     conversion (the engine only supports the value-rendering conversions above), so there
     is no write-what-where primitive. A `%`-spec with no matching argument renders from a
     `0`/`""` default rather than panicking; a wrong-typed argument coerces (numbers via

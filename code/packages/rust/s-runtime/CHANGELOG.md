@@ -32,8 +32,12 @@ All notable changes to this project will be documented in this file.
   **hoisted to module scope** and now shared by `format`/`formatC`: a crafted
   `fmt` or a huge `width=`/`nsmall=`/`digits=` is clamped (oversize literal
   `sprintf` widths are a clean error), so no caller-controlled value can trigger
-  a giant allocation. All width arithmetic uses `saturating_*`. There is no
-  `%n`-style conversion, so no write-what-where primitive exists.
+  a giant allocation. Because the per-field cap does not bound a *long vector ×
+  wide field*, `format`/`formatC`/`prettyNum` also enforce a
+  **`MAX_TOTAL_OUTPUT = 256 MiB`** budget on the *product* (common width ×
+  element count), computed with `saturating_mul`. All width arithmetic uses
+  `saturating_*`. There is no `%n`-style conversion, so no write-what-where
+  primitive exists.
 
 ### Deferred
 

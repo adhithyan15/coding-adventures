@@ -2475,6 +2475,26 @@ fn substring(s: &str, start: i64, stop: i64) -> String {
 /// write-what-where primitive to worry about — only allocation size.
 const MAX_FIELD: usize = 1 << 20;
 
+/// Hard cap on the **total** padded output of a single `format`/`formatC` call
+/// (256 MiB). `MAX_FIELD` bounds each *element*, but a long vector formatted to
+/// a wide common field multiplies: `format(rep(0, 1e7), width = 1e6)` would be
+/// ~10 TB. This budget bounds the *product* (`common_width × element_count`) so
+/// no short expression can demand an unbounded allocation. Oversize is a clean
+/// `BadArgs` error, never an OOM abort.
+const MAX_TOTAL_OUTPUT: usize = 256 << 20;
+
+/// Reject a `format`/`formatC` request whose padded output (`per_element`
+/// columns × `count` elements) would exceed [`MAX_TOTAL_OUTPUT`]. Uses
+/// saturating arithmetic so the multiplication itself can never overflow.
+fn check_output_budget(per_element: usize, count: usize) -> SResult<()> {
+    if per_element.saturating_mul(count) > MAX_TOTAL_OUTPUT {
+        return Err(SError::BadArgs(
+            "format: total output size is too large".into(),
+        ));
+    }
+    Ok(())
+}
+
 /// `sprintf(fmt, ...)` — a minimal C-style formatter supporting `%d`/`%i`,
 /// `%s`, `%f`/`%e`/`%g`, and `%%`, with optional width, `.precision`, and the
 /// `-` (left-justify) and `0` (zero-pad) flags. Vectorized: the result has the
@@ -2803,6 +2823,8 @@ fn b_format(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 
     let widest = rendered.iter().map(|s| s.chars().count()).max().unwrap_or(0);
     let target = widest.max(min_width).min(MAX_FIELD);
+    // Bound the *product* (common width × element count), not just each field.
+    check_output_budget(target, rendered.len())?;
 
     // Numeric vectors always right-justify (R lines decimals up on the right);
     // character vectors honour `justify`.
@@ -2873,6 +2895,10 @@ fn b_format_c(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     if n == 0 {
         return Ok(SValue::Character(vec![]));
     }
+    // Bound the *product*: each element is at most `width` columns from padding
+    // plus roughly `digits` columns from a high-precision `%f`/`%e` body, so the
+    // per-element estimate is `max(width, digits)`. Reject before rendering.
+    check_output_budget(width.max(digits.unwrap_or(0)), n)?;
     let chars = x.as_character();
     let doubles = x.as_double().ok();
 
@@ -2938,6 +2964,10 @@ fn format_c_one(
 fn b_pretty_num(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?;
     let big_mark = named_str(args, "big.mark").unwrap_or_else(|| ",".to_string());
+    // Each number's integer part is ≤ ~309 digits, so a long `big.mark` grouped
+    // across a long vector can still amplify (~100 groups × mark.len × count).
+    // Bound the product the same way `format`/`formatC` do.
+    check_output_budget(big_mark.len().saturating_mul(110).max(1), x.length())?;
     let out: Vec<Option<String>> = match peel_structural(x) {
         SValue::Double(_) | SValue::Matrix { .. } => x
             .as_double()?

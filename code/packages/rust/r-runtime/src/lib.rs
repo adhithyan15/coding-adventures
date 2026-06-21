@@ -2625,6 +2625,17 @@ mod tests {
     }
 
     #[test]
+    fn format_total_output_budget_rejected() {
+        // Per-field cap is fine, but width × vector-length must also be bounded:
+        // 100k elements each padded to 1 MiB would be ~100 GB — rejected cleanly,
+        // not OOM. (1:100000 builds a 100k-long vector via the `:` sequence.)
+        assert!(eval_r("formatC(1:100000, width = 1048576)\n").is_err());
+        assert!(eval_r("format(1:100000, width = 1000000)\n").is_err());
+        // A modest request still succeeds.
+        assert_eq!(nums("nchar(formatC(1:3, width = 5))\n"), vec![5.0, 5.0, 5.0]);
+    }
+
+    #[test]
     fn format_na_and_empty() {
         assert_eq!(chr("format(NA)\n"), vec!["NA"]);
         // toString of an empty vector (c() is NULL/length-0) is the empty string.

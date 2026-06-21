@@ -26,7 +26,9 @@ All notable changes to this project will be documented in this file.
     since R-5; R-27 adds the regression coverage.
   - **Security**: all field widths/precisions are capped at 1 MiB
     (`MAX_FIELD`), so a crafted `fmt` or a huge `width=`/`nsmall=`/`digits=`
-    cannot trigger a giant allocation.
+    cannot trigger a giant allocation; the vectorized formatters additionally
+    enforce a 256 MiB total-output budget (width × vector length) so a long
+    vector formatted to a wide field is a clean error, not an OOM.
   - 13 new R-syntax tests.
   - **Deferred to R-28**: exotic `formatC` corners (`format = "g"` rounding,
     the `" "`/`"#"` flags, `scientific=`).
