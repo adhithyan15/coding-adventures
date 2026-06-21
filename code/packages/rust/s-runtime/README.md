@@ -175,7 +175,19 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   collapses a vector to one string. The `MAX_FIELD = 1 MiB` field-width cap is
   shared across all of them, so a crafted `fmt` or a huge `width=`/`nsmall=`/
   `digits=` cannot trigger a giant allocation. (Exotic `formatC` corners —
-  `format = "g"` rounding, `" "`/`"#"` flags, `scientific=` — deferred to R-28.)
+  `format = "g"` rounding, `" "`/`"#"` flags, `scientific=` — deferred to a later
+  formatting pass.)
+- **Apply-family & grouping builtins** (R-28): `outer`, `tapply`, `split`, and
+  `tabulate` — the grouping/table functions that pair the R-10 functional toolkit
+  with R-11 matrices, R-6 lists, and factors. `outer(X, Y, FUN = "*")` builds the
+  `length(X) × length(Y)` column-major matrix of `FUN(X[i], Y[j])` (`FUN` is
+  `"*"`/`"+"` on a fast numeric path, or any callable per `(i, j)` pair);
+  `tapply(X, INDEX, FUN)` groups `X` by `INDEX` and returns a named vector;
+  `split(x, f)` returns a named list partitioning `x` by level; `tabulate(bin,
+  nbins = max(bin))` counts `1..nbins`. `outer` guards `nrow*ncol` with
+  `checked_mul` against `MAX_SEQ_LEN` *before* allocating and `tabulate` clamps
+  `nbins`, so neither is a DoS vector. (`%o%` infix, matrix dimnames, multi-way
+  `tapply`, and `simplify = FALSE` are deferred to R-29.)
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
