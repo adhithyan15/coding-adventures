@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.159.0] - 2026-06-21
+
+### Changed — CLOC26 Phase 1: optimize semicolon-light source via ASI
+
+closurec now applies Automatic Semicolon Insertion (the `}` / end-of-input
+rule) before the typed pipeline runs, so programs that omit a `;` before a `}`
+or at end of input — e.g. `function f(){return 1}` — **parse and get optimized**
+at `SIMPLE`/`ADVANCED` instead of silently degrading to `WHITESPACE_ONLY`. This
+was the single largest reason real-world, semicolon-light code got no
+optimization. ASI lives in the `coding-adventures-javascript-parser` crate
+(bumped to 0.15.0); the change here is the resulting behaviour.
+
+New end-to-end fixture `simple-asi-block`: a function omitting the `;` before
+its closing `}` now folds `1 + 2` to `3` at SIMPLE
+(`function area(w){var s;s=3;return w * s};report(area(10));`). The
+`simple_asi_block_did_not_fall_back_to_whitespace_only` guard asserts the folded
+`s=3` is present and `1+2` is absent — an optimization only reachable because
+ASI made the program parse.
+
+**No regression:** ASI only inserts a `;` when parsing genuinely failed for lack
+of one, so it is a no-op on already-valid input — the entire existing fixture
+suite is byte-for-byte unchanged.
+
 ## [0.158.0] - 2026-06-20
 
 ### Changed — CLOC25: drop a redundant `else` after a terminating `if` consequent

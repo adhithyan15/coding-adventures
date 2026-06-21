@@ -27,6 +27,7 @@ use std::collections::HashMap;
 pub const DEFAULT_ES_VERSION: EsVersion = EsVersion::Es2025;
 
 mod _grammar;
+pub mod asi;
 pub mod bridge;
 
 /// Parse JavaScript source and return a fully typed [`Program`] AST
@@ -94,10 +95,13 @@ pub fn parse_javascript_typed(
     source: &str,
     version: EsVersion,
 ) -> Result<GrammarASTNode, String> {
-    let mut parser = create_javascript_parser_typed(source, version)?;
-    parser
-        .parse()
-        .map_err(|e| format!("JavaScript parse failed: {e}"))
+    // Apply Phase-1 ASI: the parser requires explicit `SEMICOLON` terminals, so
+    // semicolon-light source (`{ a() }`, `return 1}`) would otherwise fail and
+    // closurec would degrade the whole program to WHITESPACE_ONLY. `parse_with_asi`
+    // only inserts a `;` before a `}`/EOF when parsing genuinely failed for lack
+    // of one, so it is a no-op on any input that already parses. See [`asi`].
+    let tokens = tokenize_javascript_typed(source, version)?;
+    asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))
 }
 
 /// A parsed program paired with the correlation-vector ID assigned to its
