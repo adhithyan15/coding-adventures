@@ -83,6 +83,14 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   length are DoS-capped exactly like `Range`/the list ops (§13.3). No grammar
   change — these are ordinary `Head[args]` forms the existing grammar already
   parses.
+- **W-16 — nested/structured list operations: `Transpose`, `Dimensions`,
+  `Partition`, `Take`, `Drop`, `ConstantArray`.** *(implemented — see §19.)* The
+  *shape* vocabulary for nested (matrix-like) lists: transpose a rectangular list
+  of lists, read its dimensions, cut a list into consecutive blocks, take/drop a
+  prefix or suffix, and build a constant-filled list or matrix. All are ordinary
+  `Head[args]` forms reusing the W-9 `list_elements` accessor and the
+  `MAX_LIST_LENGTH` cap; `ConstantArray`/`Partition` outputs are size-capped
+  (with `checked_mul`) before allocation (§19.5). No grammar change.
 - **Future — the `cas-*` function surface under Wolfram names** (`Expand`,
   `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing `cas-*` crates.
 
@@ -1417,6 +1425,142 @@ divides by zero, or relies on debug-mode overflow checks for correctness.
 applications. W-15 touches only `wolfram-runtime`'s builtin handler table; the
 lexer, parser, and grammar files are untouched. `Mod`, `Power`, and `N` are
 reused unchanged.
+
+## §19 W-16 nested/structured list operations — `Transpose`, `Dimensions`, `Partition`, `Take`, `Drop`, `ConstantArray` (implemented)
+
+W-9 (§12) gave the *flat* list-manipulation heads (`Sort`, `Reverse`, `Join`,
+`Flatten`, …). W-16 adds the **structured/nested** vocabulary — the operations a
+user reaches for once a list is treated as a *matrix* (a rectangular list of
+rows) or once they need to slice it into pieces: transpose, dimension-reading,
+block partitioning, prefix/suffix take and drop, and constant-array construction.
+
+Every W-16 head is an ordinary `Head[args]` application, so — like
+W-5/W-9/W-12/W-13/W-14/W-15 — **there is no grammar change**: W-16 touches only
+`wolfram-runtime`'s builtin handler table (`builtins.rs`). All six reuse the W-9
+`list_elements` accessor, the `apply(sym(LIST), …)` constructor, and the
+`MAX_LIST_LENGTH` cap. `Flatten` already exists from W-9 and is **not**
+reimplemented.
+
+> **Take/Drop are the *list* heads, distinct from the W-12 string heads.** W-12
+> shipped `StringTake`/`StringDrop` (which slice characters of a string). W-16's
+> `Take`/`Drop` operate on **lists** and are registered under the bare names
+> `Take`/`Drop`; they leave a non-list first argument unevaluated, so the two
+> families never collide.
+
+### §19.1 What W-16 adds
+
+| Head | Meaning | Example |
+| --- | --- | --- |
+| `Transpose[m]` | transpose a rectangular list of lists (rows ↔ columns) | `Transpose[{{1,2},{3,4}}]` → `{{1,3},{2,4}}` |
+| `Dimensions[e]` | dimensions of a rectangular nested list, as a list | `Dimensions[{{1,2,3},{4,5,6}}]` → `{2,3}`; `Dimensions[5]` → `{}` |
+| `Partition[list, n]` | consecutive non-overlapping length-`n` blocks | `Partition[{1,2,3,4},2]` → `{{1,2},{3,4}}` |
+| `Partition[list, n, d]` | length-`n` blocks stepping by `d` | `Partition[{1,2,3,4,5},2,1]` → `{{1,2},{2,3},{3,4},{4,5}}` |
+| `Take[list, n]` / `Take[list, -n]` | first `n` / last `n` elements | `Take[{1,2,3,4,5},2]` → `{1,2}`; `Take[{1,2,3,4,5},-2]` → `{4,5}` |
+| `Drop[list, n]` / `Drop[list, -n]` | drop first `n` / last `n` elements | `Drop[{1,2,3},1]` → `{2,3}`; `Drop[{1,2,3},-1]` → `{1,2}` |
+| `ConstantArray[c, n]` | length-`n` list of `c` | `ConstantArray[0,3]` → `{0,0,0}` |
+| `ConstantArray[c, {m, n}]` | `m`×`n` nested list of `c` | `ConstantArray[5,{2,2}]` → `{{5,5},{5,5}}` |
+
+### §19.2 `Transpose` and `Dimensions` — the rectangular-matrix contract
+
+`Transpose[m]` treats `m` as a list of equal-length rows and swaps the two
+levels: row `i`, column `j` of the result is row `j`, column `i` of the input.
+It requires a **rectangular** matrix — every row must be a list of the *same*
+length, and there must be at least one row. A ragged matrix (rows of differing
+length), a list whose elements are not all lists, an empty outer list, or a
+non-list argument leaves `Transpose` **unevaluated** (the W-5/W-9 "I can't reduce
+this" contract). The output element count equals the input element count, so
+`Transpose` cannot grow its input and needs no separate cap.
+
+`Dimensions[e]` returns the dimensions of the largest *rectangular* nested
+array at the head of `e`, as a list:
+
+* A scalar (non-list) → `{}` (rank 0).
+* A flat list of `k` scalars → `{k}`.
+* A rectangular `m`×`n` matrix → `{m, n}`; deeper uniform nesting extends the
+  list (`{m, n, p, …}`).
+* Ragged nesting stops the descent at the first non-uniform level — e.g.
+  `Dimensions[{{1,2},{3}}]` → `{2}` (the two rows are not the same length, so
+  the column dimension is not added). This matches Wolfram's behaviour of
+  reporting only the rectangular prefix of the shape.
+
+`Dimensions` reads structure only; it allocates a list at most as long as the
+nesting depth (bounded by the token-capped input), so it has no DoS surface.
+
+### §19.3 `Partition` — consecutive blocks, step `d`, trailing partial dropped
+
+`Partition[list, n]` cuts `list` into consecutive **non-overlapping** sublists
+of length `n` (step `d = n`). `Partition[list, n, d]` steps the window start by
+`d` between blocks, so overlapping (`d < n`) or gapped (`d > n`) partitions are
+expressible:
+
+```
+Partition[{1,2,3,4},2]      (* {{1,2},{3,4}}                  step d = n = 2 *)
+Partition[{1,2,3,4,5},2,1]  (* {{1,2},{2,3},{3,4},{4,5}}      overlapping, d = 1 *)
+Partition[{1,2,3,4,5},2]    (* {{1,2},{3,4}}   — trailing {5} is DROPPED *)
+```
+
+**Wolfram default — no padding.** A trailing block shorter than `n` is
+**dropped** (the no-overflow form; this subset does not implement the padding
+overload `Partition[list, n, d, …]`). `n` and `d` must be **positive integers**;
+`n ≤ 0`, `d ≤ 0`, a non-integer `n`/`d`, or a non-list first argument leaves the
+form unevaluated. The number of full blocks is `floor((len − n) / d) + 1` when
+`len ≥ n`, else `0` (the empty list `{}`).
+
+**Output cap.** The result holds `blocks` sublists of `n` elements each;
+`blocks` (and `blocks × n`, the total element count) is checked against
+`MAX_LIST_LENGTH` with `checked_mul` *before* allocating, so a tiny input cannot
+request an over-cap partition — the form is left unevaluated instead.
+
+### §19.4 `Take` / `Drop` — prefix and suffix slices of a list
+
+`Take[list, n]` returns the first `n` elements; `Take[list, -n]` the last `n`.
+`Drop[list, n]` returns the list with the first `n` removed; `Drop[list, -n]`
+with the last `n` removed:
+
+```
+Take[{1,2,3,4,5},2]   (* {1,2} *)      Take[{1,2,3,4,5},-2]  (* {4,5} *)
+Drop[{1,2,3},1]       (* {2,3} *)      Drop[{1,2,3},-1]      (* {1,2} *)
+Take[{1,2,3},0]       (* {} *)         Drop[{1,2,3},0]       (* {1,2,3} *)
+```
+
+The count is an exact integer; its **magnitude must not exceed the list length**
+(Wolfram errors on `Take[{1,2,3},5]` — out of range). An out-of-range count, a
+non-integer count, or a non-list first argument leaves the form unevaluated.
+Both shrink (or preserve) their input — they never grow it, so no separate cap
+is needed. The count is range-checked in `i128` (so a crafted `i64::MIN` count
+cannot overflow the front/back index arithmetic) and only converted to `usize`
+*after* it is known to lie in `[0, len]`.
+
+### §19.5 `ConstantArray` — the one *growing* head, output-capped before allocation
+
+`ConstantArray[c, n]` builds a length-`n` list of copies of `c`;
+`ConstantArray[c, {m, n}]` builds an `m`×`n` nested list (`m` rows, each a
+length-`n` list of `c`). This is the only W-16 head whose output is **larger**
+than its (tiny) input — the same allocation-amplification surface as `Range`
+(§8.3) and `Table` (§10.3), and the **primary DoS concern** of W-16.
+
+The dimensions must be **non-negative integers**. The total element count is
+guarded *before* any allocation:
+
+* `ConstantArray[c, n]`: `n` is checked against `MAX_LIST_LENGTH` (`n < 0` →
+  unevaluated; `n > MAX_LIST_LENGTH` → unevaluated).
+* `ConstantArray[c, {m, n}]`: the total `m × n` is computed with **`checked_mul`
+  on i128**, and *both* the row count `m` and the total `m × n` are checked
+  against `MAX_LIST_LENGTH`. An overflowing or over-cap product leaves the form
+  unevaluated — **nothing is allocated**. This prevents `ConstantArray[0, {10^6,
+  10^6}]` (a 12-byte input) from requesting a 10¹²-element array.
+
+Negative or non-integer dimensions, the wrong arity, or a dimension spec that is
+neither an integer nor a 2-element integer list leaves the form unevaluated.
+(This subset supports rank-1 and rank-2 `ConstantArray`; higher-rank dimension
+lists are out of scope and left unevaluated.)
+
+### §19.6 No grammar change
+
+`Transpose[…]`, `Dimensions[…]`, `Partition[…]`, `Take[…]`, `Drop[…]`, and
+`ConstantArray[…]` are all ordinary `Head[args]` applications. W-16 touches only
+`wolfram-runtime`'s builtin handler table; the lexer, parser, and grammar files
+are untouched. `Flatten` is reused unchanged from W-9.
 
 ### §6 References
 
