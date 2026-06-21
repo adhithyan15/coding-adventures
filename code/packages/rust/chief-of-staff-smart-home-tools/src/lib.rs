@@ -302,6 +302,10 @@ pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
     "smart_home.list_desired_state_drift_audit";
 pub const SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_desired_state_drift_audit_summary";
+pub const SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID: &str =
+    "smart_home.list_state_transition_audit";
+pub const SMART_HOME_GET_STATE_TRANSITION_AUDIT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_state_transition_audit_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2287,6 +2291,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID => {
                     let query = desired_state_drift_audit_query(&arguments)?;
                     get_desired_state_drift_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID => {
+                    let query = state_transition_audit_query(&arguments)?;
+                    list_state_transition_audit_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_STATE_TRANSITION_AUDIT_SUMMARY_TOOL_ID => {
+                    let query = state_transition_audit_query(&arguments)?;
+                    get_state_transition_audit_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6012,6 +6034,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
         get_desired_state_drift_audit_summary_definition(),
+        list_state_transition_audit_definition(),
+        get_state_transition_audit_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -6686,6 +6710,70 @@ fn get_desired_state_drift_audit_summary_definition() -> ToolDefinition {
         "Summarize Chief-derived desired-state drift risk from D23 desired targets and supervision plans.",
         desired_state_drift_audit_query_schema(),
         desired_state_drift_audit_summary_output_schema(),
+    )
+}
+
+fn state_transition_audit_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("transition_kind", JsonSchema::String),
+            SchemaProperty::new("transition_kinds", string_array_schema()),
+            SchemaProperty::new("bridge_id", JsonSchema::String),
+            SchemaProperty::new("entity_id", JsonSchema::String),
+            SchemaProperty::new("worker_id", JsonSchema::String),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("risk_action", JsonSchema::String),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn state_transition_audit_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "state_transition_audit",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["state_transition_audit", "summary", "count"],
+        false,
+    )
+}
+
+fn state_transition_audit_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_state_transition_audit_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID,
+        "List smart-home state transition audit",
+        "List Chief-derived state transition rows from the D23 supervision plan without mutating the runtime.",
+        state_transition_audit_query_schema(),
+        state_transition_audit_list_output_schema(),
+    )
+}
+
+fn get_state_transition_audit_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_STATE_TRANSITION_AUDIT_SUMMARY_TOOL_ID,
+        "Summarize smart-home state transition audit",
+        "Summarize pending Chief-visible state transitions from the D23 supervision plan.",
+        state_transition_audit_query_schema(),
+        state_transition_audit_summary_output_schema(),
     )
 }
 
@@ -7774,6 +7862,49 @@ fn desired_state_drift_audit_query(
             .collect::<Result<Vec<_>, _>>()?,
         risk_only: optional_bool(arguments, "risk_only")?.unwrap_or(false)
             || optional_bool(arguments, "drift_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum StateTransitionAuditKind {
+    PairingExpiry,
+    StateRefresh,
+    DesiredStateReconciliation,
+    WorkerRestart,
+    DiscoveryWorkerRun,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct StateTransitionAuditQuery {
+    transition_kinds: Vec<StateTransitionAuditKind>,
+    bridge_id: Option<BridgeId>,
+    entity_id: Option<EntityId>,
+    worker_id: Option<DiscoveryWorkerId>,
+    risk_lane: Option<String>,
+    risk_action: Option<String>,
+    requires_attention_only: bool,
+    blocked_only: bool,
+    limit: Option<usize>,
+}
+
+fn state_transition_audit_query(
+    arguments: &JsonValue,
+) -> Result<StateTransitionAuditQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(StateTransitionAuditQuery {
+        transition_kinds: optional_string_list(arguments, "transition_kind", "transition_kinds")?
+            .into_iter()
+            .map(|kind| parse_state_transition_audit_kind(&kind))
+            .collect::<Result<Vec<_>, _>>()?,
+        bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
+        entity_id: optional_string(arguments, "entity_id")?.map(EntityId::trusted),
+        worker_id: optional_string(arguments, "worker_id")?.map(DiscoveryWorkerId::trusted),
+        risk_lane: optional_string(arguments, "risk_lane")?,
+        risk_action: optional_string(arguments, "risk_action")?,
+        requires_attention_only: optional_bool(arguments, "requires_attention_only")?
+            .unwrap_or(false),
+        blocked_only: optional_bool(arguments, "blocked_only")?.unwrap_or(false),
         limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
@@ -32902,6 +33033,462 @@ fn desired_state_drift_reason_rank(reason: Option<ReconciliationReason>) -> u8 {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct StateTransitionAuditRow {
+    audit_id: String,
+    transition_kind: StateTransitionAuditKind,
+    pairing_session_id: Option<RuntimePairingSessionId>,
+    bridge_id: Option<BridgeId>,
+    device_id: Option<DeviceId>,
+    entity_id: Option<EntityId>,
+    worker_id: Option<DiscoveryWorkerId>,
+    integration_id: Option<IntegrationId>,
+    capability_id: Option<CapabilityId>,
+    capability_count: usize,
+    desired_value: Option<Value>,
+    worker_kind: Option<String>,
+    status: Option<String>,
+    reason: &'static str,
+    scheduled_at_ms: Option<u64>,
+    due_at_ms: Option<u64>,
+    overdue_by_ms: Option<u64>,
+    risk_lane: &'static str,
+    risk_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct StateTransitionAuditSummary {
+    total_rows: usize,
+    pairing_expiry_rows: usize,
+    state_refresh_rows: usize,
+    missing_state_refresh_rows: usize,
+    stale_state_refresh_rows: usize,
+    desired_state_reconciliation_rows: usize,
+    desired_missing_state_rows: usize,
+    desired_stale_state_rows: usize,
+    desired_drifted_state_rows: usize,
+    worker_restart_rows: usize,
+    discovery_worker_run_rows: usize,
+    blocked_rows: usize,
+    requires_attention_rows: usize,
+    bridge_count: usize,
+    entity_count: usize,
+    worker_count: usize,
+}
+
+impl StateTransitionAuditSummary {
+    fn from_rows(rows: &[StateTransitionAuditRow]) -> Self {
+        let mut summary = Self::default();
+        let mut bridge_ids = BTreeSet::new();
+        let mut entity_ids = BTreeSet::new();
+        let mut worker_ids = BTreeSet::new();
+
+        for row in rows {
+            summary.total_rows += 1;
+            match row.transition_kind {
+                StateTransitionAuditKind::PairingExpiry => summary.pairing_expiry_rows += 1,
+                StateTransitionAuditKind::StateRefresh => {
+                    summary.state_refresh_rows += 1;
+                    match row.reason {
+                        "missing" => summary.missing_state_refresh_rows += 1,
+                        "stale" => summary.stale_state_refresh_rows += 1,
+                        _ => {}
+                    }
+                }
+                StateTransitionAuditKind::DesiredStateReconciliation => {
+                    summary.desired_state_reconciliation_rows += 1;
+                    match row.reason {
+                        "missing" => summary.desired_missing_state_rows += 1,
+                        "stale" => summary.desired_stale_state_rows += 1,
+                        "drifted" => summary.desired_drifted_state_rows += 1,
+                        _ => {}
+                    }
+                }
+                StateTransitionAuditKind::WorkerRestart => summary.worker_restart_rows += 1,
+                StateTransitionAuditKind::DiscoveryWorkerRun => {
+                    summary.discovery_worker_run_rows += 1;
+                }
+            }
+
+            if row.blocked {
+                summary.blocked_rows += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_rows += 1;
+            }
+            if let Some(bridge_id) = &row.bridge_id {
+                bridge_ids.insert(bridge_id.as_str().to_string());
+            }
+            if let Some(entity_id) = &row.entity_id {
+                entity_ids.insert(entity_id.as_str().to_string());
+            }
+            if let Some(worker_id) = &row.worker_id {
+                worker_ids.insert(worker_id.as_str().to_string());
+            }
+        }
+
+        summary.bridge_count = bridge_ids.len();
+        summary.entity_count = entity_ids.len();
+        summary.worker_count = worker_ids.len();
+        summary
+    }
+
+    fn has_state_transition_work(&self) -> bool {
+        self.requires_attention_rows > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+}
+
+fn list_state_transition_audit_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: StateTransitionAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) = state_transition_audit_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "state_transition_audit",
+            JsonValue::Array(rows.iter().map(state_transition_audit_row_json).collect()),
+        ),
+        ("summary", state_transition_audit_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_state_transition_audit")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            (
+                "state_refresh_rows",
+                integer(summary.state_refresh_rows as i64),
+            ),
+            (
+                "desired_state_reconciliation_rows",
+                integer(summary.desired_state_reconciliation_rows as i64),
+            ),
+            (
+                "worker_restart_rows",
+                integer(summary.worker_restart_rows as i64),
+            ),
+            (
+                "discovery_worker_run_rows",
+                integer(summary.discovery_worker_run_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn get_state_transition_audit_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: StateTransitionAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = state_transition_audit_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        state_transition_audit_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_state_transition_audit_summary")),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            (
+                "state_refresh_rows",
+                integer(summary.state_refresh_rows as i64),
+            ),
+            (
+                "desired_state_reconciliation_rows",
+                integer(summary.desired_state_reconciliation_rows as i64),
+            ),
+            (
+                "worker_restart_rows",
+                integer(summary.worker_restart_rows as i64),
+            ),
+            (
+                "discovery_worker_run_rows",
+                integer(summary.discovery_worker_run_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn state_transition_audit_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &StateTransitionAuditQuery,
+) -> Result<(Vec<StateTransitionAuditRow>, StateTransitionAuditSummary), ToolCallError> {
+    let plan_output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::GetSupervisionPlan,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::SupervisionPlan(plan) = plan_output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "state transition audit expected supervision plan output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let mut rows = state_transition_rows_from_plan(&plan);
+    rows.retain(|row| state_transition_audit_row_matches(row, query));
+    rows.sort_by(|left, right| {
+        right
+            .blocked
+            .cmp(&left.blocked)
+            .then_with(|| right.requires_attention.cmp(&left.requires_attention))
+            .then_with(|| state_transition_row_rank(right).cmp(&state_transition_row_rank(left)))
+            .then_with(|| left.audit_id.cmp(&right.audit_id))
+    });
+    let summary = StateTransitionAuditSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+fn state_transition_rows_from_plan(plan: &RuntimeSupervisionPlan) -> Vec<StateTransitionAuditRow> {
+    let mut rows = Vec::new();
+
+    for session_id in &plan.pairing_sessions_expiring {
+        rows.push(StateTransitionAuditRow {
+            audit_id: format!("pairing_expiry:{}", session_id.as_str()),
+            transition_kind: StateTransitionAuditKind::PairingExpiry,
+            pairing_session_id: Some(session_id.clone()),
+            bridge_id: None,
+            device_id: None,
+            entity_id: None,
+            worker_id: None,
+            integration_id: None,
+            capability_id: None,
+            capability_count: 0,
+            desired_value: None,
+            worker_kind: None,
+            status: None,
+            reason: "expired",
+            scheduled_at_ms: Some(plan.generated_at_ms),
+            due_at_ms: Some(plan.generated_at_ms),
+            overdue_by_ms: Some(0),
+            risk_lane: "pairing",
+            risk_action: "resolve_expired_pairing_session",
+            blocked: true,
+            requires_attention: true,
+        });
+    }
+
+    for target in &plan.state_refresh_plan.targets {
+        let reason = state_refresh_reason_label(target.reason);
+        rows.push(StateTransitionAuditRow {
+            audit_id: format!("state_refresh:{}:{}", target.entity_id.as_str(), reason),
+            transition_kind: StateTransitionAuditKind::StateRefresh,
+            pairing_session_id: None,
+            bridge_id: Some(target.bridge_id.clone()),
+            device_id: Some(target.device_id.clone()),
+            entity_id: Some(target.entity_id.clone()),
+            worker_id: None,
+            integration_id: None,
+            capability_id: None,
+            capability_count: target.capabilities.len(),
+            desired_value: None,
+            worker_kind: None,
+            status: None,
+            reason,
+            scheduled_at_ms: Some(plan.state_refresh_plan.generated_at_ms),
+            due_at_ms: Some(plan.generated_at_ms),
+            overdue_by_ms: Some(0),
+            risk_lane: "state_refresh",
+            risk_action: state_refresh_transition_action(target.reason),
+            blocked: true,
+            requires_attention: true,
+        });
+    }
+
+    for drift in &plan.desired_state_drifts {
+        let (risk_lane, risk_action) = desired_state_drift_lane_action(Some(drift.reason));
+        rows.push(StateTransitionAuditRow {
+            audit_id: format!(
+                "desired_state:{}:{}",
+                drift.entity_id.as_str(),
+                drift.capability_id.as_str()
+            ),
+            transition_kind: StateTransitionAuditKind::DesiredStateReconciliation,
+            pairing_session_id: None,
+            bridge_id: Some(drift.bridge_id.clone()),
+            device_id: None,
+            entity_id: Some(drift.entity_id.clone()),
+            worker_id: None,
+            integration_id: None,
+            capability_id: Some(drift.capability_id.clone()),
+            capability_count: 1,
+            desired_value: Some(drift.desired_value.clone()),
+            worker_kind: None,
+            status: None,
+            reason: reconciliation_reason_label(drift.reason),
+            scheduled_at_ms: Some(plan.generated_at_ms),
+            due_at_ms: Some(plan.generated_at_ms),
+            overdue_by_ms: Some(0),
+            risk_lane,
+            risk_action,
+            blocked: true,
+            requires_attention: true,
+        });
+    }
+
+    for instruction in &plan.worker_restart_plan.instructions {
+        rows.push(StateTransitionAuditRow {
+            audit_id: format!("worker_restart:{}", instruction.bridge_id.as_str()),
+            transition_kind: StateTransitionAuditKind::WorkerRestart,
+            pairing_session_id: None,
+            bridge_id: Some(instruction.bridge_id.clone()),
+            device_id: None,
+            entity_id: None,
+            worker_id: None,
+            integration_id: Some(instruction.integration_id.clone()),
+            capability_id: None,
+            capability_count: 0,
+            desired_value: None,
+            worker_kind: None,
+            status: Some(instruction.status.as_str().to_string()),
+            reason: worker_restart_reason_label(instruction.reason),
+            scheduled_at_ms: Some(instruction.planned_at_ms),
+            due_at_ms: Some(instruction.due_at_ms),
+            overdue_by_ms: Some(instruction.overdue_by_ms()),
+            risk_lane: "worker_supervision",
+            risk_action: "restart_overdue_worker",
+            blocked: true,
+            requires_attention: true,
+        });
+    }
+
+    for instruction in &plan.discovery_worker_run_plan.instructions {
+        rows.push(StateTransitionAuditRow {
+            audit_id: format!("discovery_worker_run:{}", instruction.worker_id.as_str()),
+            transition_kind: StateTransitionAuditKind::DiscoveryWorkerRun,
+            pairing_session_id: None,
+            bridge_id: None,
+            device_id: None,
+            entity_id: None,
+            worker_id: Some(instruction.worker_id.clone()),
+            integration_id: Some(instruction.integration_id.clone()),
+            capability_id: None,
+            capability_count: 0,
+            desired_value: None,
+            worker_kind: Some(instruction.kind.as_str().to_string()),
+            status: Some(instruction.status.as_str().to_string()),
+            reason: "due",
+            scheduled_at_ms: Some(instruction.planned_at_ms),
+            due_at_ms: Some(instruction.due_at_ms),
+            overdue_by_ms: Some(instruction.overdue_by_ms()),
+            risk_lane: "discovery",
+            risk_action: "run_due_discovery_worker",
+            blocked: true,
+            requires_attention: true,
+        });
+    }
+
+    rows
+}
+
+fn state_transition_audit_row_matches(
+    row: &StateTransitionAuditRow,
+    query: &StateTransitionAuditQuery,
+) -> bool {
+    if !query.transition_kinds.is_empty() && !query.transition_kinds.contains(&row.transition_kind)
+    {
+        return false;
+    }
+    if query
+        .bridge_id
+        .as_ref()
+        .is_some_and(|bridge_id| row.bridge_id.as_ref() != Some(bridge_id))
+    {
+        return false;
+    }
+    if query
+        .entity_id
+        .as_ref()
+        .is_some_and(|entity_id| row.entity_id.as_ref() != Some(entity_id))
+    {
+        return false;
+    }
+    if query
+        .worker_id
+        .as_ref()
+        .is_some_and(|worker_id| row.worker_id.as_ref() != Some(worker_id))
+    {
+        return false;
+    }
+    if query
+        .risk_lane
+        .as_ref()
+        .is_some_and(|risk_lane| row.risk_lane != risk_lane.as_str())
+    {
+        return false;
+    }
+    if query
+        .risk_action
+        .as_ref()
+        .is_some_and(|risk_action| row.risk_action != risk_action.as_str())
+    {
+        return false;
+    }
+    if query.requires_attention_only && !row.requires_attention {
+        return false;
+    }
+    if query.blocked_only && !row.blocked {
+        return false;
+    }
+    true
+}
+
+fn state_refresh_transition_action(reason: StateRefreshReason) -> &'static str {
+    match reason {
+        StateRefreshReason::Missing => "refresh_missing_state",
+        StateRefreshReason::Stale => "refresh_stale_state",
+    }
+}
+
+fn state_transition_row_rank(row: &StateTransitionAuditRow) -> u8 {
+    match row.transition_kind {
+        StateTransitionAuditKind::PairingExpiry => 5,
+        StateTransitionAuditKind::WorkerRestart => 4,
+        StateTransitionAuditKind::StateRefresh => match row.reason {
+            "missing" => 3,
+            "stale" => 2,
+            _ => 1,
+        },
+        StateTransitionAuditKind::DesiredStateReconciliation => match row.reason {
+            "missing" => 3,
+            "stale" => 2,
+            "drifted" => 1,
+            _ => 0,
+        },
+        StateTransitionAuditKind::DiscoveryWorkerRun => 1,
+    }
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -56019,6 +56606,172 @@ fn desired_state_drift_audit_summary_json(summary: &DesiredStateDriftAuditSummar
     ])
 }
 
+fn state_transition_audit_row_json(row: &StateTransitionAuditRow) -> JsonValue {
+    object([
+        ("audit_id", string(&row.audit_id)),
+        (
+            "transition_kind",
+            string(state_transition_audit_kind_label(row.transition_kind)),
+        ),
+        (
+            "pairing_session_id",
+            row.pairing_session_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "bridge_id",
+            row.bridge_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "device_id",
+            row.device_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "entity_id",
+            row.entity_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "worker_id",
+            row.worker_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "integration_id",
+            row.integration_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "capability_id",
+            row.capability_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("capability_count", integer(row.capability_count as i64)),
+        (
+            "desired_value",
+            row.desired_value
+                .as_ref()
+                .map(smart_value_to_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "worker_kind",
+            row.worker_kind
+                .as_ref()
+                .map(|value| string(value))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "status",
+            row.status
+                .as_ref()
+                .map(|value| string(value))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("reason", string(row.reason)),
+        (
+            "scheduled_at_ms",
+            row.scheduled_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "due_at_ms",
+            row.due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "overdue_by_ms",
+            row.overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("risk_lane", string(row.risk_lane)),
+        ("risk_action", string(row.risk_action)),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+    ])
+}
+
+fn state_transition_audit_summary_json(summary: &StateTransitionAuditSummary) -> JsonValue {
+    object([
+        ("total_rows", integer(summary.total_rows as i64)),
+        (
+            "pairing_expiry_rows",
+            integer(summary.pairing_expiry_rows as i64),
+        ),
+        (
+            "state_refresh_rows",
+            integer(summary.state_refresh_rows as i64),
+        ),
+        (
+            "missing_state_refresh_rows",
+            integer(summary.missing_state_refresh_rows as i64),
+        ),
+        (
+            "stale_state_refresh_rows",
+            integer(summary.stale_state_refresh_rows as i64),
+        ),
+        (
+            "desired_state_reconciliation_rows",
+            integer(summary.desired_state_reconciliation_rows as i64),
+        ),
+        (
+            "desired_missing_state_rows",
+            integer(summary.desired_missing_state_rows as i64),
+        ),
+        (
+            "desired_stale_state_rows",
+            integer(summary.desired_stale_state_rows as i64),
+        ),
+        (
+            "desired_drifted_state_rows",
+            integer(summary.desired_drifted_state_rows as i64),
+        ),
+        (
+            "worker_restart_rows",
+            integer(summary.worker_restart_rows as i64),
+        ),
+        (
+            "discovery_worker_run_rows",
+            integer(summary.discovery_worker_run_rows as i64),
+        ),
+        ("blocked_rows", integer(summary.blocked_rows as i64)),
+        (
+            "requires_attention_rows",
+            integer(summary.requires_attention_rows as i64),
+        ),
+        ("bridge_count", integer(summary.bridge_count as i64)),
+        ("entity_count", integer(summary.entity_count as i64)),
+        ("worker_count", integer(summary.worker_count as i64)),
+        (
+            "has_state_transition_work",
+            JsonValue::Bool(summary.has_state_transition_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -58762,6 +59515,39 @@ fn state_refresh_reason_label(reason: StateRefreshReason) -> &'static str {
     match reason {
         StateRefreshReason::Missing => "missing",
         StateRefreshReason::Stale => "stale",
+    }
+}
+
+fn state_transition_audit_kind_label(kind: StateTransitionAuditKind) -> &'static str {
+    match kind {
+        StateTransitionAuditKind::PairingExpiry => "pairing_expiry",
+        StateTransitionAuditKind::StateRefresh => "state_refresh",
+        StateTransitionAuditKind::DesiredStateReconciliation => "desired_state_reconciliation",
+        StateTransitionAuditKind::WorkerRestart => "worker_restart",
+        StateTransitionAuditKind::DiscoveryWorkerRun => "discovery_worker_run",
+    }
+}
+
+fn parse_state_transition_audit_kind(
+    value: &str,
+) -> Result<StateTransitionAuditKind, ToolCallError> {
+    match value {
+        "pairing_expiry" | "pairing" | "pairing_session" => {
+            Ok(StateTransitionAuditKind::PairingExpiry)
+        }
+        "state_refresh" | "refresh" | "missing_state" | "stale_state" => {
+            Ok(StateTransitionAuditKind::StateRefresh)
+        }
+        "desired_state_reconciliation" | "desired_state" | "reconciliation" | "drift" => {
+            Ok(StateTransitionAuditKind::DesiredStateReconciliation)
+        }
+        "worker_restart" | "worker" | "restart" => Ok(StateTransitionAuditKind::WorkerRestart),
+        "discovery_worker_run" | "discovery_worker" | "discovery" => {
+            Ok(StateTransitionAuditKind::DiscoveryWorkerRun)
+        }
+        _ => Err(validation_error(format!(
+            "unsupported state transition audit kind `{value}`"
+        ))),
     }
 }
 
@@ -62602,7 +63388,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 248);
+        assert_eq!(definitions.len(), 250);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -62629,6 +63415,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_STATE_TRANSITION_AUDIT_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID));
@@ -63311,7 +64103,7 @@ mod tests {
             .contains(&SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            240
+            242
         );
         assert_eq!(
             export
@@ -64151,11 +64943,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(248))
+            Some(&integer(250))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(240))
+            Some(&integer(242))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -77847,6 +78639,155 @@ mod tests {
         let rollup = field(summary_output, "summary").unwrap();
         assert_eq!(field(rollup, "total_rows"), Some(&integer(1)));
         assert_eq!(field(rollup, "drifted_state_rows"), Some(&integer(1)));
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(set_desired_state_request, set_desired_state_trace);
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 3);
+        assert_eq!(journal_summary.completed_count, 3);
+    }
+
+    #[test]
+    fn state_transition_audit_tools_surface_runtime_supervision_work_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let set_desired_state_request = request(
+            "call-set-desired-state-for-transition-audit",
+            SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                (
+                    "desired",
+                    JsonValue::Array(vec![object([
+                        ("capability_id", string("light.on_off")),
+                        ("value", JsonValue::Bool(false)),
+                    ])]),
+                ),
+                ("requested_by", string("agent:scene-planner")),
+                ("command_timeout_ms", integer(750)),
+            ]),
+            2_000,
+        );
+        let set_desired_state_trace = tool_runtime.invoke_with_events(&set_desired_state_request);
+        assert!(set_desired_state_trace.result.ok);
+
+        let list_request = request(
+            "call-list-state-transition-audit",
+            SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID,
+            object([
+                ("requires_attention_only", JsonValue::Bool(true)),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("limit", integer(10)),
+            ]),
+            2_001,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        let rows = field(list_output, "state_transition_audit").unwrap();
+        assert!(
+            array_len(rows).unwrap() >= 2,
+            "state transition audit should include refresh and reconciliation work"
+        );
+        let summary = field(list_output, "summary").unwrap();
+        assert!(
+            integer_value(field(summary, "total_rows").unwrap()).unwrap() >= 2,
+            "summary should count the untruncated supervision work set"
+        );
+        assert!(
+            integer_value(field(summary, "state_refresh_rows").unwrap()).unwrap() >= 1,
+            "fixture leaves at least one entity without observed state"
+        );
+        assert_eq!(
+            field(summary, "desired_state_reconciliation_rows"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(summary, "desired_drifted_state_rows"),
+            Some(&integer(1))
+        );
+        assert!(
+            integer_value(field(summary, "blocked_rows").unwrap()).unwrap() >= 2,
+            "refresh and reconciliation work are both actionable blockers"
+        );
+        assert_eq!(
+            field(summary, "has_state_transition_work"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(summary, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let JsonValue::Array(rows) = rows else {
+            panic!("state_transition_audit should be an array");
+        };
+        assert!(rows.iter().any(|row| field(row, "transition_kind")
+            == Some(&string("desired_state_reconciliation"))
+            && field(row, "entity_id") == Some(&string("entity-light-1"))
+            && field(row, "capability_id") == Some(&string("light.on_off"))
+            && field(row, "desired_value") == Some(&JsonValue::Bool(false))
+            && field(row, "reason") == Some(&string("drifted"))
+            && field(row, "risk_action") == Some(&string("reconcile_desired_state"))
+            && field(row, "blocked") == Some(&JsonValue::Bool(true))));
+        assert!(rows.iter().any(|row| field(row, "transition_kind")
+            == Some(&string("state_refresh"))
+            && field(row, "entity_id") == Some(&string("entity-sensor-1"))
+            && field(row, "reason") == Some(&string("missing"))
+            && field(row, "risk_action") == Some(&string("refresh_missing_state"))
+            && field(row, "requires_attention") == Some(&JsonValue::Bool(true))));
+
+        let summary_request = request(
+            "call-state-transition-audit-summary",
+            SMART_HOME_GET_STATE_TRANSITION_AUDIT_SUMMARY_TOOL_ID,
+            object([
+                ("transition_kind", string("desired_state_reconciliation")),
+                ("risk_action", string("reconcile_desired_state")),
+            ]),
+            2_002,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_rows"), Some(&integer(1)));
+        assert_eq!(field(rollup, "state_refresh_rows"), Some(&integer(0)));
+        assert_eq!(
+            field(rollup, "desired_state_reconciliation_rows"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(rollup, "desired_drifted_state_rows"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(rollup, "blocked_rows"), Some(&integer(1)));
         assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
 
         let mut journal = ToolExecutionJournal::new();
