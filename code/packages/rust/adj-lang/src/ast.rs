@@ -315,6 +315,10 @@ pub enum Annotation {
     Locator(String),
     /// `trust <tier>` — sets `Provenance::trust_tier`.
     Trust(TrustTierName),
+    /// `cites "<source>" locator "<locator>"` (ADJ-A9) — appends a
+    /// corroborating citation to `Provenance::corroborations`. Repeatable;
+    /// each carries a required locator so the span is re-fetchable.
+    Cites { source: String, locator: String },
 }
 
 /// Surface name for a trust tier — keywords in the language map

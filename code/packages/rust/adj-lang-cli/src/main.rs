@@ -88,17 +88,32 @@ fn trust(t: &TrustTier) -> &'static str {
     }
 }
 
-/// The `"source"/"locator"/"trust"` fields of a clause's provenance.
+/// The `"source"/"locator"/"trust"/"corroborations"` fields of a clause's
+/// provenance. `corroborations` (ADJ-A9) is an array of co-equal citations for
+/// the same fact — empty in the common single-citation case.
 fn prov(p: &Provenance) -> String {
     let loc = match &p.locator {
         Some(l) => format!("\"{}\"", esc(l)),
         None => "null".to_string(),
     };
+    let corro = p
+        .corroborations
+        .iter()
+        .map(|c| {
+            format!(
+                "{{\"source\":\"{}\",\"locator\":\"{}\"}}",
+                esc(&c.source),
+                esc(&c.locator)
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(",");
     format!(
-        "\"source\":\"{}\",\"locator\":{},\"trust\":\"{}\"",
+        "\"source\":\"{}\",\"locator\":{},\"trust\":\"{}\",\"corroborations\":[{}]",
         esc(&p.source),
         loc,
-        trust(&p.trust_tier)
+        trust(&p.trust_tier),
+        corro
     )
 }
 
@@ -124,7 +139,7 @@ fn proof_json(
             match &st.origin {
                 DerivationOrigin::FromPrior { prior_logit, .. } => {
                     let pj = prior.map(|p| prov(&p.provenance)).unwrap_or_else(|| {
-                        "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\"".to_string()
+                        "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]".to_string()
                     });
                     steps.push(format!(
                         "{{\"kind\":\"prior\",\"logit\":{},{}}}",
@@ -191,7 +206,7 @@ fn proof_json(
                         .find(|p| p.id == *clause_id)
                         .map(|p| prov(&p.provenance))
                         .unwrap_or_else(|| {
-                            "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\""
+                            "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]"
                                 .to_string()
                         });
                     steps.push(format!(

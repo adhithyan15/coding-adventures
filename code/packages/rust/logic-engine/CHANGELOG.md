@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.23.0] - 2026-06-21 — multi-source corroboration on `Provenance` (ADJ-A9)
+
+### Added
+
+- **`Citation` { `source`, `locator` }** — a re-fetchable corroborating citation
+  (both fields required).
+- **`Provenance::corroborations: Vec<Citation>`** — co-equal citations that
+  support the *same* clause/LR. Distinct from `source_disagreements`, which
+  compares *different* clauses whose LRs disagree; these are documentary only
+  and carry **no** evidential weight (the LR arithmetic is unchanged — double-
+  counting the same fact would inflate posteriors). Builder
+  `Provenance::with_corroboration(source, locator)` appends one.
+
+### Compatibility
+
+- Fully additive: the new field defaults to empty in every constructor
+  (`new`, `cited`, `consensus`, `empirical`, `unattributed`, `Default`); all
+  existing callers and downstream consumers (`adj-lang`, `adj-constraint-solver`,
+  `adjudication-connector`, `adjudication-pipeline`, `prolog-loader`) compile and
+  pass unchanged.
+
 ## [0.22.0] - 2026-06-17 — mutual precedence is an honest CONFLICT, not silent double-defeat (ADJ73 §4.3)
 
 ### Fixed

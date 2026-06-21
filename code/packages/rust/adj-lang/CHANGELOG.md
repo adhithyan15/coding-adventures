@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.17.0] - 2026-06-21 — multi-source corroboration (`cites … locator …`, ADJ-A9)
+
+### Added
+
+- **`cites "<source>" locator "<locator>"`** — a repeatable annotation that
+  attaches a corroborating citation (a co-equal source for the *same* fact) to
+  any clause (`prior`/`contributes`/`interacts`/`uncertain`/`relate`/rule). Each
+  carries a required locator so the span is re-fetchable. Lowers onto
+  `logic_engine::Provenance::corroborations` (documentary only — no change to the
+  LR arithmetic). New `Annotation::Cites { source, locator }`; one new keyword
+  `cites` (the existing `locator` keyword is reused as the separator, so no short
+  `at` keyword is reserved).
+- New lower tests: `cites_lowers_to_corroborations_in_order`,
+  `cites_repeats_freely_unlike_at_most_once_source`.
+
+### Changed
+
+- `_lexer_grammar.rs` / `_parser_grammar.rs` regenerated (`cites` keyword +
+  `cites_annotation` rule). The at-most-once checks for `source`/`locator`/
+  `trust` are unchanged; only `cites` repeats.
+- README §"awkwardness" updates A9 from "not yet covered" to covered.
+
 ## [0.16.1] - 2026-06-20 — string-literal escape hardening (byte-provenance)
 
 ### Added

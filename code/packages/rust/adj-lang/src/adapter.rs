@@ -954,8 +954,28 @@ fn adapt_annotation(node: &GrammarASTNode) -> Result<Annotation, AdapterError> {
             let tier = trust_tier_from_node(tier_node)?;
             Ok(Annotation::Trust(tier))
         }
+        "cites_annotation" => {
+            // cites_annotation = "cites" STRING "locator" STRING  (ADJ-A9)
+            // Two STRING tokens in source order: [source, locator]. The
+            // `locator` keyword between them is reused purely as a separator.
+            let mut strings = child.children.iter().filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => {
+                    Some(unquote_string(&t.value))
+                }
+                _ => None,
+            });
+            let source = strings.next().ok_or(AdapterError::MissingChild {
+                rule: "cites_annotation".into(),
+                position: "source STRING",
+            })?;
+            let locator = strings.next().ok_or(AdapterError::MissingChild {
+                rule: "cites_annotation".into(),
+                position: "locator STRING",
+            })?;
+            Ok(Annotation::Cites { source, locator })
+        }
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of source_annotation / locator_annotation / trust_annotation",
+            expected: "one of source_annotation / locator_annotation / trust_annotation / cites_annotation",
             actual: other.to_string(),
         }),
     }
@@ -1377,7 +1397,10 @@ mod tests {
                         _ => None,
                     })
                     .expect("a Source annotation");
-                assert_eq!(source, "shows \"Orphan Annie eye\" nuclei and psammoma bodies");
+                assert_eq!(
+                    source,
+                    "shows \"Orphan Annie eye\" nuclei and psammoma bodies"
+                );
                 assert!(source.contains('"'), "the span must carry a real quote");
             }
             other => panic!("expected Contributes, got {other:?}"),
