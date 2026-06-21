@@ -2373,6 +2373,19 @@ class DeckTableArtifact:
 
 
 @dataclass(frozen=True)
+class DeckRawfileArtifact:
+    """In-memory ASCII rawfile content for an accepted control write marker."""
+
+    target: str
+    marker: str
+    probe_count: int
+    probes: list[str]
+    option_count: int
+    options: list[str]
+    rawfile: str
+
+
+@dataclass(frozen=True)
 class DeckAnalysisExecution:
     """A selected deck analysis plan plus its executed solver output."""
 
@@ -2399,6 +2412,44 @@ class DeckAnalysisExecution:
     fourier_table: str
     run_artifacts: list[DeckRunArtifact]
     run_artifact_table: str
+    rawfile_artifact_count: int = 0
+    rawfile_artifacts: list[DeckRawfileArtifact] = field(default_factory=list)
+    rawfile_artifact_table: str = ""
+    rawfile_artifact_csv: str = ""
+    rawfile_artifact_json: str = ""
+    rawfile_artifact_records: list[dict[str, str]] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        artifacts = list(self.rawfile_artifacts) or _deck_rawfile_artifacts(
+            self.plan,
+            self.table,
+            self.write_markers,
+            self.rawfile_options,
+        )
+        object.__setattr__(self, "rawfile_artifact_count", len(artifacts))
+        object.__setattr__(self, "rawfile_artifacts", artifacts)
+        object.__setattr__(
+            self,
+            "rawfile_artifact_table",
+            self.rawfile_artifact_table
+            or format_deck_rawfile_artifact_table(artifacts),
+        )
+        object.__setattr__(
+            self,
+            "rawfile_artifact_csv",
+            self.rawfile_artifact_csv or format_deck_rawfile_artifact_csv(artifacts),
+        )
+        object.__setattr__(
+            self,
+            "rawfile_artifact_json",
+            self.rawfile_artifact_json or format_deck_rawfile_artifact_json(artifacts),
+        )
+        object.__setattr__(
+            self,
+            "rawfile_artifact_records",
+            self.rawfile_artifact_records
+            or deck_rawfile_artifact_records(artifacts),
+        )
 
 
 def _select_deck_measurement_cards_for_analysis(
@@ -2756,6 +2807,150 @@ def _deck_table_artifacts(
         artifacts.append(_deck_table_artifact("fourier", fourier_table))
     artifacts.append(_deck_table_artifact("run-artifact", run_artifact_table))
     return artifacts
+
+
+def format_deck_rawfile_ascii(
+    table: str,
+    analysis: str,
+    rawfile_options: Iterable[str] = (),
+) -> str:
+    """Format a selected deck table as deterministic in-memory ASCII rawfile text."""
+
+    rows = table.splitlines()
+    if not rows:
+        return ""
+    columns = rows[0].split("\t")
+    data_rows = [row.split("\t") for row in rows[1:]]
+    lines = [
+        f"Title: SPICE deck {analysis} result",
+        "Date: deterministic",
+        f"Plotname: {analysis}",
+        "Flags: real",
+        f"No. Variables: {len(columns)}",
+        f"No. Points: {len(data_rows)}",
+        "Options: " + ";".join(rawfile_options),
+        "Variables:",
+    ]
+    for index, column in enumerate(columns):
+        lines.append(f"\t{index}\t{column}\treal")
+    lines.append("Values:")
+    for index, row in enumerate(data_rows):
+        padded = [*row, *([""] * max(0, len(columns) - len(row)))]
+        lines.append(f"{index}\t" + "\t".join(padded[: len(columns)]))
+    return "\n".join(lines) + "\n"
+
+
+def _deck_write_marker_parts(marker: str) -> tuple[str, list[str]] | None:
+    parts = marker.split()
+    if len(parts) < 2 or parts[0] != "write":
+        return None
+    return parts[1], parts[2:]
+
+
+def _deck_rawfile_artifacts(
+    plan: DeckAnalysisPlan,
+    table: str,
+    write_markers: Iterable[str],
+    rawfile_options: Iterable[str],
+) -> list[DeckRawfileArtifact]:
+    options = list(rawfile_options)
+    rawfile = format_deck_rawfile_ascii(table, plan.analysis, options)
+    artifacts: list[DeckRawfileArtifact] = []
+    for marker in write_markers:
+        parts = _deck_write_marker_parts(marker)
+        if parts is None:
+            continue
+        target, probes = parts
+        artifacts.append(
+            DeckRawfileArtifact(
+                target=target,
+                marker=marker,
+                probe_count=len(probes),
+                probes=probes,
+                option_count=len(options),
+                options=list(options),
+                rawfile=rawfile,
+            )
+        )
+    return artifacts
+
+
+_DECK_RAWFILE_ARTIFACT_COLUMNS = [
+    "Target",
+    "Marker",
+    "Probes",
+    "ProbeList",
+    "Options",
+    "RawfileOptionList",
+    "Bytes",
+]
+
+
+def _deck_rawfile_artifact_cells(artifact: DeckRawfileArtifact) -> list[str]:
+    return [
+        artifact.target,
+        artifact.marker,
+        str(artifact.probe_count),
+        ";".join(artifact.probes),
+        str(artifact.option_count),
+        ";".join(artifact.options),
+        str(len(artifact.rawfile.encode())),
+    ]
+
+
+def deck_rawfile_artifact_records(
+    artifacts: Iterable[DeckRawfileArtifact],
+) -> list[dict[str, str]]:
+    """Format selected rawfile artifacts as header-keyed summary records."""
+
+    return [
+        dict(
+            zip(
+                _DECK_RAWFILE_ARTIFACT_COLUMNS,
+                _deck_rawfile_artifact_cells(artifact),
+                strict=True,
+            )
+        )
+        for artifact in artifacts
+    ]
+
+
+def format_deck_rawfile_artifact_table(
+    artifacts: Iterable[DeckRawfileArtifact],
+) -> str:
+    """Format selected rawfile artifacts as a stable summary table."""
+
+    rows = ["\t".join(_DECK_RAWFILE_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append("\t".join(_deck_rawfile_artifact_cells(artifact)))
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_rawfile_artifact_csv(
+    artifacts: Iterable[DeckRawfileArtifact],
+) -> str:
+    """Format selected rawfile artifacts as stable RFC 4180-style CSV."""
+
+    rows = [",".join(_DECK_RAWFILE_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append(
+            ",".join(
+                _format_csv_cell(cell)
+                for cell in _deck_rawfile_artifact_cells(artifact)
+            )
+        )
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_rawfile_artifact_json(
+    artifacts: Iterable[DeckRawfileArtifact],
+) -> str:
+    """Format selected rawfile artifacts as stable compact JSON records."""
+
+    return json.dumps(
+        deck_rawfile_artifact_records(artifacts),
+        separators=(",", ":"),
+    ) + "\n"
 
 
 def format_deck_run_artifact_csv(artifacts: Iterable[DeckRunArtifact]) -> str:

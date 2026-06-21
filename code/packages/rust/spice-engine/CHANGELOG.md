@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expose deterministic in-memory ASCII rawfile artifacts for accepted
+  `.control` `write <rawfile> ...` markers from selected `run_deck_analysis`
+  execution results as `rawfile_artifact_count`, `rawfile_artifacts`,
+  `rawfile_artifact_table`, `rawfile_artifact_csv`, `rawfile_artifact_json`,
+  and `rawfile_artifact_records`, matching Python and TypeScript.
 - Expose accepted `.control` rawfile option inventories from
   `analyze_deck_controls` and selected `run_deck_analysis` execution results as
   `rawfile_option_count` / `rawfile_options`, and carry them through

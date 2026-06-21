@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expose deterministic in-memory ASCII rawfile artifacts for accepted
+  `.control` `write <rawfile> ...` markers from selected `runDeckAnalysis`
+  execution results as `rawfileArtifactCount`, `rawfileArtifacts`,
+  `rawfileArtifactTable`, `rawfileArtifactCsv`, `rawfileArtifactJson`, and
+  `rawfileArtifactRecords`, matching Python and Rust.
 - Expose accepted `.control` rawfile option inventories from
   `analyzeDeckControls` and selected `runDeckAnalysis` execution results as
   `rawfileOptionCount` / `rawfileOptions`, and carry them through selected-run
