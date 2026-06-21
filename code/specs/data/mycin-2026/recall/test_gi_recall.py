@@ -35,6 +35,7 @@ EXPECTED = {
     "absence_of_ganglion_cells": "hirschsprung_disease",
     "eosinophils_15_per_hpf": "eosinophilic_esophagitis",
     "crypt_abscesses": "ulcerative_colitis",            # primary-source backfill (NBK470312)
+    "onion_skin_fibrosis": "primary_sclerosing_cholangitis",  # NBK537181 (PSC abbrev defined on page)
 }
 REL = "biopsy_finding_in"
 VAR = "Disease"
@@ -57,7 +58,7 @@ def test_library_is_pure_adj_and_fully_grounded() -> None:
     text = ADJ.read_text()
     assert "trust consensus" not in text, "GI ships no authored-debt; ground or omit"
     assert "[FLAG:" not in text
-    edge_count = len(EXPECTED)  # 5
+    edge_count = len(EXPECTED)  # 7
     assert text.count("    relate ") == edge_count
     assert text.count("trust authoritative") == edge_count
     assert text.count('\n        locator "') == edge_count

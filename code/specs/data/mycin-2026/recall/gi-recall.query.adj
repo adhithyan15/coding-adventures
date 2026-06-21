@@ -19,3 +19,4 @@ import "gi-edges.adj"
 ? biopsy_finding_in(absence_of_ganglion_cells, $Disease)  % expect hirschsprung_disease
 ? biopsy_finding_in(eosinophils_15_per_hpf, $Disease)     % expect eosinophilic_esophagitis
 ? biopsy_finding_in(crypt_abscesses, $Disease)            % expect ulcerative_colitis (backfill)
+? biopsy_finding_in(onion_skin_fibrosis, $Disease)        % expect primary_sclerosing_cholangitis

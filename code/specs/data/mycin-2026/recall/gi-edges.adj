@@ -86,4 +86,15 @@ rulebook gi_facts {
         source "The histopathology of ulcerative colitis will show involvement only of the mucosa and submucosa, with the formation of cryptic abscesses and mucosal ulcers."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK470312/"
         trust authoritative
+
+    % --- onion-skin periductal fibrosis -> primary sclerosing cholangitis ------
+    % The Histopathology span names the disease (via its page-defined abbreviation "PSC",
+    % expanded at the top of NBK537181 as primary sclerosing cholangitis) AND the board
+    % buzzword "onion-skin" fibrosis together in one clean "X is characterized by Y"
+    % declarative. The abbreviation is noted here for honesty: a reader re-fetching the page
+    % finds "PSC" defined and this exact byte-stable sentence.
+    relate biopsy_finding_in(onion_skin_fibrosis, primary_sclerosing_cholangitis)
+        source "PSC is histologically characterized by concentric, lamellar periductal fibrosis—often referred to as \"onion-skin\" fibrosis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537181/"
+        trust authoritative
 }
