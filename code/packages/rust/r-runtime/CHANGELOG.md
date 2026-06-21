@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.23.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-28 — apply-family & grouping**: a second pivot into the data/utility area,
+  the grouping and table builtins that pair R's functional toolkit (R-10) with
+  matrices (R-11) and factors. All pure builtins in the shared `s-runtime` (no
+  grammar change), reached through ordinary R syntax.
+  - **`outer(X, Y, FUN = "*")`** — `outer(1:3, 1:2)` → the 3×2 column-major
+    product matrix `c(1,2,3,2,4,6)`; `outer(1:2, 1:2, "+")` → the sums;
+    `outer(1:2, 1:2, \(a, b) a*10 + b)` → `c(11,21,12,22)` (an arbitrary
+    function, called per `(i, j)` pair).
+  - **`tapply(X, INDEX, FUN)`** — `tapply(c(1,2,3,4), c("a","b","a","b"), sum)`
+    → the named vector `c(a = 4, b = 6)`; a factor `INDEX` works too.
+  - **`split(x, f)`** — `split(1:4, c("a","b","a","b"))` →
+    `list(a = c(1,3), b = c(2,4))` (a named list, one element per level).
+  - **`tabulate(bin, nbins = max(bin))`** — `tabulate(c(1,2,2,3,3,3))` →
+    `c(1,2,3)`; `tabulate(c(2,3,5), nbins = 5)` → `c(0,1,1,0,1)`.
+  - **`names()`** now reports a named list's element names (so
+    `names(split(...))` returns the levels rather than `NULL`).
+  - **Security**: `outer` guards `nrow*ncol` with `checked_mul` against
+    `MAX_SEQ_LEN` *before* allocating (a crafted `outer(1:1e6, 1:1e6)` is a clean
+    error, not an OOM); `tabulate` clamps `nbins` to `[0, MAX_SEQ_LEN]`. A
+    non-callable `FUN`, a length-mismatched `INDEX`, and empty inputs are all
+    clean errors / empty results, never panics.
+  - 8 new R-syntax tests.
+  - **Deferred to R-29**: the `%o%` infix alias (needs a grammar rule), matrix
+    dimnames, multi-way `tapply`, and `simplify = FALSE`.
+
 ## [0.22.0] - 2026-06-20
 
 ### Added (via the shared `s-runtime`)

@@ -144,7 +144,23 @@ flag = "0")` → `"000042"`. `prettyNum(1234567, big.mark = ",")` → `"1,234,56
 (`sprintf("%d-%s", 1:2, c("a","b"))` → `c("1-a", "2-b")`). Every field width and
 precision is capped at 1 MiB so a crafted `fmt` or a huge `width=` cannot trigger
 a giant allocation. (Exotic `formatC` corners — `format = "g"` rounding, the
-`" "`/`"#"` flags, `scientific=` — are deferred to R-28.)
+`" "`/`"#"` flags, `scientific=` — are deferred to a later formatting pass.)
+
+**Apply-family & grouping (R-28)** — the grouping and table builtins that pair
+R's functional toolkit (R-10) with matrices (R-11) and factors. `outer(X, Y,
+FUN = "*")` builds the `length(X) × length(Y)` column-major matrix of
+`FUN(X[i], Y[j])`: `outer(1:3, 1:2)` → the 3×2 product matrix, and `FUN` may be
+`"*"`/`"+"` or an arbitrary function (`outer(1:2, 1:2, \(a, b) a*10 + b)` →
+`c(11, 21, 12, 22)`). `tapply(X, INDEX, FUN)` groups `X` by `INDEX` and applies
+`FUN` per group, returning a named vector (`tapply(c(1,2,3,4),
+c("a","b","a","b"), sum)` → `c(a = 4, b = 6)`). `split(x, f)` partitions into a
+named list (`split(1:4, c("a","b","a","b"))` → `list(a = c(1,3), b = c(2,4))`),
+and `tabulate(bin, nbins = max(bin))` counts occurrences of `1..nbins`
+(`tabulate(c(2,3,5), nbins = 5)` → `c(0,1,1,0,1)`). `outer` guards its element
+count with `checked_mul` against the sequence cap *before* allocating and
+`tabulate` clamps `nbins`, so neither can be turned into an OOM. (The `%o%`
+infix alias, matrix dimnames, multi-way `tapply`, and `simplify = FALSE` are
+deferred to R-29.)
 
 ## Usage
 

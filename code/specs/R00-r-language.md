@@ -854,6 +854,58 @@ unchanged.
     `big.mark=` on `formatC`, and scientific-notation control on `format()` (`scientific=`)
     — kept out to keep this PR a clean partial rather than a sprawling one.
 
+- **R-28 — apply-family & grouping** *(this PR)*. A second pivot into the data/utility
+  area: the **grouping and table** builtins that pair R's functional toolkit (R-10's
+  `sapply`/`Reduce`/`Map`) with its matrix (R-11) and factor (R's F4) machinery.
+  Everything is a pure builtin in the shared `s-runtime` (R inherits via the
+  tree-walker); **no grammar change**. Four functions:
+  - **`outer(X, Y, FUN = "*")`** — the *outer product* generalised to any binary
+    operation. Builds the `length(X) × length(Y)` matrix whose `(i, j)` entry is
+    `FUN(X[i], Y[j])`, stored **column-major** (reusing the R-11 `SValue::Matrix`
+    representation), so `outer(1:3, 1:2)` is the 3×2 matrix `[[1,2,3],[2,4,6]]`
+    (column-major data `c(1,2,3,2,4,6)`). `FUN` defaults to `"*"` and may be the
+    string `"*"` or `"+"` (taken fast, element-by-element) **or an arbitrary
+    function** — a closure, a builtin, or an R-9 lambda — invoked through
+    `interp.call_value` once per `(i, j)` pair: `outer(1:2, 1:2, \(a, b) a*10 + b)`
+    is `[[11,12],[21,22]]` (column-major `c(11, 21, 12, 22)`). (The `%o%` infix
+    alias is **deferred to R-29** — it needs a grammar rule; the named `outer(...)`
+    form covers the same ground.)
+  - **`tapply(X, INDEX, FUN)`** — *table apply*: split `X` into groups by `INDEX`
+    (a factor, or any vector coerced to its character labels), apply `FUN` to each
+    group, and return a **named** vector — names are the **sorted unique levels**,
+    in lockstep with the per-group results. `tapply(c(1,2,3,4), c("a","b","a","b"),
+    sum)` is the named vector `c(a = 4, b = 6)`. Reuses the R-10 `split_fun` /
+    `call_value` plumbing and the factor-level machinery (F4).
+  - **`split(x, f)`** — partition `x` by the factor (or coerced vector) `f`, returning
+    a **named list** (one element per level, in sorted-unique-level order, names = the
+    levels): `split(1:4, c("a","b","a","b"))` is `list(a = c(1, 3), b = c(2, 4))`.
+    Reuses the R-6 `SValue::List` construction.
+  - **`tabulate(bin, nbins = max(bin))`** — count how many times each of `1..nbins`
+    appears in the integer vector `bin`, returning an integer vector of length
+    `nbins`. Values `< 1` or `> nbins` (and `NA`) are silently ignored, matching R:
+    `tabulate(c(1,2,2,3,3,3))` is `c(1, 2, 3)`; `tabulate(c(2,3,5), nbins = 5)` is
+    `c(0, 1, 1, 0, 1)`.
+  - **Output-size caps (security).** `X`, `Y`, `bin`, `nbins` are all **data** and a
+    crafted call must never trigger a giant allocation or a panic. `outer` is
+    `O(length(X) · length(Y))`: the element count is computed with **`checked_mul`**
+    and rejected (clean `Index` error) when it overflows or exceeds **`MAX_SEQ_LEN`**
+    *before* any `Vec` is allocated. `tabulate` caps `nbins` at `MAX_SEQ_LEN` (a
+    crafted `nbins = 1e18` or a `bin` containing a huge value must not allocate
+    terabytes); a non-finite or negative `nbins` clamps to `0`. `tapply`/`split`
+    allocate at most one slot per input element (already `MAX_SEQ_LEN`-bounded) plus
+    one group per distinct level (≤ element count), so no extra cap is needed. A
+    non-callable `FUN` (to `outer`/`tapply`) is a clean `NotCallable` error; an
+    `INDEX`/`f` whose length differs from `X`/`x` recycles/truncates against the data
+    length rather than panicking; empty groups and an empty input yield empty results,
+    never an index panic.
+  - **Scope outcome / deferred to R-29.** `outer` (with `"*"`, `"+"`, and an
+    arbitrary function), `tapply`, `split`, and `tabulate` ship **solidly**. Deferred
+    to **R-29**: the `%o%` infix alias for `outer` (needs a grammar rule); matrix
+    **dimnames** carried by `outer`/`tapply` (the results are unnamed in the matrix
+    dimension, named only where R-15's vector/list `names` already reach);
+    `tapply` over a *multi-way* `INDEX` (a list of factors → an N-dimensional array);
+    and `simplify = FALSE` (always-list `tapply`).
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -879,7 +931,10 @@ active bindings, and multiple inheritance (`contains = c("A", "B")`) completing
 the R5 system in **R-26**); the output-formatting family (`format`, `formatC`,
 `prettyNum`, `toString`, vectorized `sprintf`) lands in **R-27**, with the exotic
 `formatC` corners (`format = "g"` rounding edges, the `" "`/`"#"` flags,
-`scientific=`) deferred to **R-28**; namespaces and `library()`
+`scientific=`) deferred to a later formatting pass; the apply-family & grouping
+builtins (`outer`, `tapply`, `split`, `tabulate`) land in **R-28**, with the `%o%`
+infix alias, matrix dimnames, multi-way `tapply`, and `simplify = FALSE` deferred to
+**R-29**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.
