@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.158.0] - 2026-06-20
+
+### Changed — CLOC25: drop a redundant `else` after a terminating `if` consequent
+
+At `--compilation_level SIMPLE` / `ADVANCED`, an `if` whose consequent
+unconditionally terminates (`return` / `throw`) now has its `else` removed and
+the `else` body hoisted out after the `if` — upstream Closure's
+`MinimizeExitPoints`. The transform lives in the `fold-control-flow` pass
+(bumped to 0.14.0); `WHITESPACE_ONLY`, which runs no passes, keeps the `else`.
+
+New end-to-end fixture `simple-else-hoist`:
+
+```text
+function classify(n){if(n < 0){return negative(n)}record(n);return positive(n)}
+```
+
+— the `else` body (`record(n); return positive(n);`) is lifted out of the
+`else`. The `simple_else_hoist_did_not_fall_back_to_whitespace_only` guard
+asserts the optimized output contains **no** `else` (a whitespace-only fallback
+would keep it).
+
+Depends on `coding-adventures-closure-pass-fold-control-flow` 0.14.0.
+
 ## [0.157.0] - 2026-06-20
 
 ### Changed — CLOC24: strip `debugger` statements at SIMPLE/ADVANCED
