@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.19 — `defined?(recv.meth)` → "method" (Q10h)
+
+`defined?` over a method-call operand `recv.meth` — the `__method__` dispatch
+envelope — now emits the constant `"method"` (Ruby's category when the method
+resolves) instead of the generic `"expression"`. Purely emit-time shape
+inspection; the non-evaluation contract is unchanged (the receiver, method
+name, and call are never rendered). The runtime respond_to?-presence check that
+would return `nil` for an absent method, and arbitrary built-in/collection
+method dispatch (`arr.each`, `&:sym`'s target, …) which `call_method` returns
+`nil` for, are the documented terminal method-dispatch boundary (see
+`code/specs/sir-runtime.md`). New test `defined_method_call_operand_emits_method_py`.
+
 ## 0.1.18 — lambda marked strict-arity (Q10g)
 
 `make_closure` now produces a **proc-lenient** closure (the runtime's `apply`

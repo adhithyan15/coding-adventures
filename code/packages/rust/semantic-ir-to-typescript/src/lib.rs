@@ -1145,6 +1145,21 @@ mod tests {
     }
 
     #[test]
+    fn defined_method_call_operand_emits_method_ts() {
+        use semantic_ir::Scope;
+        // Q10h: `defined?(recv.meth)` — the `__method__` dispatch envelope —
+        // reports the constant "method", not the generic "expression". The
+        // receiver and method name are never rendered (non-evaluation contract).
+        let recv = Expr::IntLit { value: 5, span: s() };
+        let meth = bc("__method__", vec![recv, Expr::StrLit { value: "foo".into(), span: s() }]);
+        let d = bc("defined?", vec![meth]);
+        let a = compile(&module_with_main_body(vec![], d, &[Feature::Strings])).expect("compile");
+        assert!(a.source.contains("\"method\""), "got:\n{}", a.source);
+        assert!(!a.source.contains("__method__"), "operand was rendered; got:\n{}", a.source);
+        assert!(!a.source.contains("\"foo\""), "operand was rendered; got:\n{}", a.source);
+    }
+
+    #[test]
     fn no_range_import_when_unused_ts() {
         // A module that never builds a range must not gain the range dependency.
         let a = compile(&module_with_main_body(
