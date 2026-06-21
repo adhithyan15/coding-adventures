@@ -2,6 +2,21 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.1.5] - 2026-06-21
+
+### Added (Q10f — call-position `**h` merge helper)
+
+- New `doubleSplatMerge(...maps)` helper. JavaScript has no keyword-argument
+  call form, so the TypeScript backend collapses a contiguous run of `**`
+  markers at a call site into one trailing argument built by this helper
+  (`__Sir.doubleSplatMerge(h1, h2)`) — the conventional JS "options object",
+  except the bag is a SIR `Map<Val, Val>`. It returns a **fresh** `Map`
+  (defensive copy, matching Ruby's `**`), merges left-to-right so later keys
+  win, preserves any `Val` key (symbols, numbers, …), and throws a clear
+  backend-coverage-gap error on a non-map operand. Exported from the package
+  root. v0 cut-line: mixing inline `key: value` pairs with `**h` at one call
+  site is not modelled (see `code/specs/sir-runtime.md`).
+
 ## [0.1.4] - 2026-06-19
 
 ### Added (Q10a — no-block-given `LocalJumpError`)

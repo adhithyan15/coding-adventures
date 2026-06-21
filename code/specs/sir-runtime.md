@@ -113,6 +113,11 @@ The base every emitted program needs.
 - closure-handle helpers (`Closure`, `apply`, `make_closure`) and the global
   store (`global_set`/`global_get`/`global_get_static`) used by `IndirectCall`,
   builtin-as-value, and `Globals`.
+- `doubleSplatMerge(...maps) -> Map` (TypeScript only) — merges call-position
+  `**h` keyword maps into one fresh `Map` (left-to-right, later keys win). JS
+  has no native keyword-argument call, so the TS backend collapses a `**` run
+  into a single trailing options-map argument via this helper; Python uses
+  native `**`. See the call-position cut-line under "Out of scope".
 
 ### `sir-runtime-pairs`
 `Pair`, `cons`, `car`, `cdr`, `is_pair`; Lisp list display via `Pair.__repr__` /
@@ -199,14 +204,18 @@ v0 eight). `TailCalls` and `Intrinsics` remain rejected.
 
 - Go and Rust backends (static typing + Ruby exceptions/OOP make them a separate,
   larger effort).
-- **TypeScript call-position `**h` (double-splat).** Ruby `*x` / `**x` reach the
-  backend as `BuiltinCall("splat"/"double_splat", [x])`; `splat` lowers natively
-  to `*x` (Python) / `...x` (TS), and `double_splat` to `**x` in Python.
-  TypeScript has no faithful form for `**h` in call position — JS has no
-  keyword-argument call form and an SIR map is a `Map` (no object-literal/call
-  spread) — so it is a documented v0 cut-line: it falls through to the eager
-  dispatch, which raises a clear unknown-builtin error rather than emitting
-  silently wrong code.
+- **TypeScript call-position `**h` (double-splat) — implemented via runtime
+  merge helper (Q10f).** Ruby `*x` / `**x` reach the backend as
+  `BuiltinCall("splat"/"double_splat", [x])`; `splat` lowers natively to `*x`
+  (Python) / `...x` (TS), and `double_splat` to `**x` in Python. TypeScript has
+  no keyword-argument call form, so instead of a native `**` the backend
+  collapses each contiguous run of `**` markers at a call site into a **single**
+  trailing argument built by `__Sir.doubleSplatMerge(h1, h2)`
+  (`sir-runtime-core`): a fresh `Map<Val, Val>` merged left-to-right (later keys
+  win), the conventional JS "options object". A callee compiled from
+  `def f(**opts)` receives that map as its last positional parameter. Remaining
+  v0 cut-line: only explicit `**map` operands are merged — mixing inline
+  `key: value` pairs with `**h` at one call site is not modelled.
 - **`defined?` runtime-presence fidelity.** Ruby `defined?(x)` reaches the
   backend as `BuiltinCall("defined?", [operand])` and must never evaluate its
   operand. Both backends inspect the operand's SIR shape at emit time and emit a

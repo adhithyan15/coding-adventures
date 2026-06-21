@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.1.17 — call-position `**h` via runtime merge helper (Q10f)
+
+JavaScript has no keyword-argument call form, so call-position `**h` could not
+be emitted faithfully and previously fell through to the eager dispatch
+(`__Sir.callBuiltin("double_splat", …)`), which raised an unknown-builtin error.
+This release lowers it: a new call-argument layer (`emit_call_args`, used by
+`DirectCall`/`IndirectCall`) collapses each contiguous run of `**` markers into
+a **single** trailing argument built by the runtime helper
+`__Sir.doubleSplatMerge(h1, h2)` — the conventional JS "options object", except
+the bag is a SIR `Map<Val, Val>` so any `Val` key round-trips.  Examples:
+
+| Ruby | TypeScript |
+|---|---|
+| `f(**h)` | `f(__Sir.doubleSplatMerge(h))` |
+| `f(a, **h1, **h2)` | `f(a, __Sir.doubleSplatMerge(h1, h2))` |
+| `f(*b, **h)` | `f(...b, __Sir.doubleSplatMerge(h))` |
+
+Runs collapse *in place*, so a trailing block argument (block-param ABI) stays
+after the merged map.  `splat` (`*a`) still emits native `...a` via `emit_arg`.
+
+New tests `double_splat_call_arg_merges_via_runtime_helper_ts` and
+`double_splat_contiguous_run_collapses_to_single_merge_ts`; the prior
+`…_is_deferred_to_dispatch_ts` test is replaced.  v0 cut-line: mixing inline
+`key: value` pairs with `**h` at one call site is not modelled — only explicit
+`**map` operands are merged (see `code/specs/sir-runtime.md`).  Requires
+`sir-runtime-core` ≥ 0.1.5 (`doubleSplatMerge`).
+
 ## 0.1.16 — emitted-shape proof for the non-empty block capture (RB3)
 
 Mirror of the Python backend's 0.1.17.  RB1/RB2 (Ruby frontend) introduced the

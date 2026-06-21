@@ -1055,12 +1055,13 @@ mod tests {
     }
 
     #[test]
-    fn double_splat_call_arg_is_deferred_to_dispatch_ts() {
+    fn double_splat_call_arg_merges_via_runtime_helper_ts() {
         use semantic_ir::{Scope, Stmt};
-        // TS has no faithful keyword-spread form (no kwargs; SIR maps are
-        // `Map`), so per the v0 cut-line `**h` in call position is deferred: it
-        // falls through to the eager dispatch, which raises a clear
-        // unknown-builtin error rather than emitting silently wrong code.
+        // TS has no keyword-argument call form, so call-position `**h` (Q10f) is
+        // collapsed into ONE trailing argument built by the runtime merge
+        // helper — `__Sir.doubleSplatMerge(h)` — the conventional JS
+        // options-object convention. It is NOT deferred to the eager dispatch
+        // and NOT mistaken for a positional spread.
         let bind = Stmt::LetBinding {
             name: "h".into(),
             sir_type: None,
@@ -1076,9 +1077,43 @@ mod tests {
         };
         let a = compile(&module_with_main_body(vec![bind], call, &[Feature::Maps]))
             .expect("compile");
-        assert!(a.source.contains("__Sir.callBuiltin(\"double_splat\""), "got:\n{}", a.source);
-        // It is NOT mistakenly emitted as a JS spread.
+        assert!(a.source.contains("__Sir.doubleSplatMerge(h)"), "got:\n{}", a.source);
+        // No fall-through to the eager unknown-builtin dispatch.
+        assert!(!a.source.contains("__Sir.callBuiltin(\"double_splat\""), "got:\n{}", a.source);
+        // Not mistakenly emitted as a positional JS spread.
         assert!(!a.source.contains("(...h)"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn double_splat_contiguous_run_collapses_to_single_merge_ts() {
+        use semantic_ir::{Scope, Stmt};
+        // `f(a, **h1, **h2)` → the contiguous `**` run collapses into ONE
+        // merged trailing arg, with the leading positional preserved:
+        // `f(a, __Sir.doubleSplatMerge(h1, h2))`.
+        let bind_a = Stmt::LetBinding {
+            name: "a".into(), sir_type: None,
+            value: Expr::IntLit { value: 1, span: s() }, span: s(),
+        };
+        let bind_h1 = Stmt::LetBinding {
+            name: "h1".into(), sir_type: None,
+            value: Expr::MapLit { entries: vec![], span: s() }, span: s(),
+        };
+        let bind_h2 = Stmt::LetBinding {
+            name: "h2".into(), sir_type: None,
+            value: Expr::MapLit { entries: vec![], span: s() }, span: s(),
+        };
+        let pos = Expr::VarRef { name: "a".into(), scope: Scope::Local, span: s() };
+        let h1 = bc("double_splat", vec![Expr::VarRef { name: "h1".into(), scope: Scope::Local, span: s() }]);
+        let h2 = bc("double_splat", vec![Expr::VarRef { name: "h2".into(), scope: Scope::Local, span: s() }]);
+        let call = Expr::DirectCall {
+            fn_name: "main".into(),
+            args: vec![pos, h1, h2],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let a = compile(&module_with_main_body(vec![bind_a, bind_h1, bind_h2], call, &[Feature::Maps]))
+            .expect("compile");
+        assert!(a.source.contains("main(a, __Sir.doubleSplatMerge(h1, h2))"), "got:\n{}", a.source);
     }
 
     #[test]

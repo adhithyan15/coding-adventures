@@ -755,14 +755,14 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::Block(b) => emit_block_as_expr(out, b, indent),
         Expr::DirectCall { fn_name, args, .. } => {
             let _ = write!(out, "{}(", sanitize_ident(fn_name));
-            emit_args(out, args, indent);
+            emit_call_args(out, args, indent);
             out.push(')');
         }
         Expr::IndirectCall { target, args, .. } => {
             out.push_str("__Sir.apply(");
             emit_expr(out, target, indent);
             out.push_str(", [");
-            emit_args(out, args, indent);
+            emit_call_args(out, args, indent);
             out.push_str("])");
         }
         Expr::BuiltinCall { name, args, .. } => emit_builtin_call(out, name, args, indent),
@@ -903,27 +903,22 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
     }
 }
 
-/// Emit one argument / sequence element, expanding the splat marker into
+/// Emit one argument / sequence element, expanding the `splat` marker into
 /// JavaScript's native spread syntax.
 ///
-/// Ruby `*x` / `**x` reach the backend as `BuiltinCall("splat", [x])` /
-/// `BuiltinCall("double_splat", [x])` — a trailing call argument or an array
-/// element.
+/// Ruby `*x` reaches the backend as `BuiltinCall("splat", [x])` — a trailing
+/// call argument or an array element — and maps cleanly to JS `...` (array /
+/// argument spread).
 ///
 /// | SIR marker (Ruby) | TS emitted | meaning |
 /// |---|---|---|
 /// | `splat` (`f(*a)`, `[1, *a, 3]`) | `...a` | spread an iterable's items |
-/// | `double_splat` (`f(**h)`) | *(deferred)* | no faithful JS form — see below |
 ///
-/// **`splat`** maps cleanly to JS `...` (array/argument spread).
-///
-/// **`double_splat`** has no faithful JS equivalent: JavaScript has no
-/// keyword-argument call form, and an SIR map is a `Map`, which does not spread
-/// into an object literal or a call.  Per the v0 cut-line documented in
-/// `code/specs/sir-runtime.md`, TS call-position `**h` is **deferred** — it
-/// falls through to the eager dispatch (`__Sir.callBuiltin("double_splat", …)`),
-/// which raises a clear unknown-builtin error rather than emitting silently
-/// wrong code.  Python, which *does* have `**`, lowers it natively.
+/// `double_splat` (`**h`) is **not** handled here: it has no per-argument JS
+/// form (JavaScript has no keyword-argument call), so the *call-argument* layer
+/// ([`emit_call_args`]) collapses a contiguous run of `**` markers into one
+/// merged keyword-map argument instead.  Anything that is not a `splat` marker
+/// emits as an ordinary expression.
 fn emit_arg(out: &mut String, a: &Expr, indent: usize) {
     if let Expr::BuiltinCall { name, args, .. } = a {
         if name == "splat" && args.len() == 1 {
@@ -933,6 +928,65 @@ fn emit_arg(out: &mut String, a: &Expr, indent: usize) {
         }
     }
     emit_expr(out, a, indent);
+}
+
+/// Is this argument a `**h` double-splat marker (`BuiltinCall("double_splat",
+/// [operand])`)?
+fn is_double_splat(a: &Expr) -> bool {
+    matches!(a, Expr::BuiltinCall { name, args, .. }
+        if name == "double_splat" && args.len() == 1)
+}
+
+/// Emit a *call's* argument list, collapsing every contiguous run of `**`
+/// double-splat markers into a single merged keyword-map argument.
+///
+/// Ruby `f(**h1, **h2)` splices each map's entries as keyword arguments (later
+/// keys winning).  Python emits a native `**`; **JavaScript has no
+/// keyword-argument call form**, so there is no faithful per-argument spread.
+/// The v0 strategy (see `code/specs/sir-runtime.md`) is the conventional JS
+/// "options object": collapse the trailing/contiguous run of `**` markers into
+/// ONE argument built by the runtime merge helper —
+/// `__Sir.doubleSplatMerge(h1, h2)` — which returns a fresh `Map` with
+/// left-to-right precedence.  A callee compiled from `def f(**opts)` then
+/// receives that map as its final positional parameter.
+///
+/// Plain (`splat`-or-ordinary) arguments pass straight through [`emit_arg`], so
+/// `f(a, *b, **h)` becomes `f(a, ...b, __Sir.doubleSplatMerge(h))`.  Runs are
+/// collapsed *in place*, which keeps a trailing block argument (appended by the
+/// frontend's block-param ABI) after the merged map — e.g. `f(**h) { … }`
+/// emits `f(__Sir.doubleSplatMerge(h), <block>)`.
+///
+/// v0 cut-line: mixing inline `key: value` pairs with `**h` at one call site is
+/// not modelled — only explicit `**map` operands are merged.
+fn emit_call_args(out: &mut String, args: &[Expr], indent: usize) {
+    let mut first = true;
+    let mut i = 0;
+    while i < args.len() {
+        if !first {
+            out.push_str(", ");
+        }
+        first = false;
+        if is_double_splat(&args[i]) {
+            // Gather this maximal contiguous run of `**` markers.
+            let start = i;
+            while i < args.len() && is_double_splat(&args[i]) {
+                i += 1;
+            }
+            out.push_str("__Sir.doubleSplatMerge(");
+            for (j, a) in args[start..i].iter().enumerate() {
+                if j > 0 {
+                    out.push_str(", ");
+                }
+                if let Expr::BuiltinCall { args: inner, .. } = a {
+                    emit_expr(out, &inner[0], indent);
+                }
+            }
+            out.push(')');
+        } else {
+            emit_arg(out, &args[i], indent);
+            i += 1;
+        }
+    }
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
