@@ -522,22 +522,22 @@ const PROGRAMS: &[Prog] = &[
     // The exit code stays an integer, so no float *printing* is needed to verify
     // (the comparison fold is the observable).
     //
-    // **Backends:** LLVM + WASM + JVM + CLR + VM + JIT (**6 of 7**). VM/JIT carry a
-    // real tagged value model; **LLVM** uses `iir-to-llvm` 0.13.0's `double` stack
-    // slots; **WASM** needed no change (typed-local model); **JVM** uses
-    // `iir-to-jvm-class-file` 0.15.0's `CONSTANT_Double` pool + `dcmpl`/`dcmpg`;
-    // **CLR** uses `iir-to-cil-bytecode` 0.22.0's `float64` locals + `ldc.r8`
-    // (the textual `.il`/ilasm path — CIL's `add`/`mul`/`ceq`/`clt` are
-    // stack-type-overloaded, so they need no opcode change for doubles).
-    //   * **E3-native** — the only remaining backend: `x86_64`/`aarch64` reject
-    //     `const_f64`/`CIROperand::Float` (need SSE/AArch64 FP emission).
+    // **Backends:** ALL 7 (**E3 COMPLETE**). VM/JIT carry a real tagged value
+    // model; **LLVM** uses `iir-to-llvm`'s `double` stack slots; **WASM** needed
+    // no change (typed-local model); **JVM** uses `iir-to-jvm-class-file`'s
+    // `CONSTANT_Double` pool + `dcmpl`/`dcmpg`; **CLR** uses `iir-to-cil-bytecode`'s
+    // `float64` locals + `ldc.r8`; and **NativeAot** uses the direct backends'
+    // FP codegen — `aarch64-backend` (`fadd`/`fcmp`+`cset`, executed on this Mac)
+    // and `x86_64-backend` (SSE2 `addsd`/`ucomisd`+`setcc`, executed on the
+    // Linux-x86 CI runner). `run_native` compiles for the host arch, so this cell
+    // exercises aarch64 locally and x86_64 in CI.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real r; integer result; r := 2.5 * 2.0; \
                if r = 5.0 then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
-        backends: &[Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — *real division* (`/`) + an *ordered* real comparison (E3).
     // `r := 7.0 / 2.0` is true division (`3.5`, not integer `div`'s `3`), and
@@ -550,7 +550,7 @@ const PROGRAMS: &[Prog] = &[
         src: "begin real r; integer result; r := 7.0 / 2.0; \
                if r < 4.0 then result := 1 else result := 0 end",
         expect: Expect::Exit(1),
-        backends: &[Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width

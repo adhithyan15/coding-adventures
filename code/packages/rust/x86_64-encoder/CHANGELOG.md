@@ -1,5 +1,25 @@
 # Changelog — `x86_64-encoder`
 
+## 0.4.0 — 2026-06-20 (SSE2 scalar double-precision FP — LANG-FULL E3)
+
+### Added — `movsd`/`addsd`/`subsd`/`mulsd`/`divsd`/`ucomisd` (double)
+
+Scalar double-precision SSE2 instructions, for ALGOL `real` (enabler E3) on the
+native-AOT backend:
+
+- `movsd_load`/`movsd_store` — load/store a 64-bit double (`F2 0F 10`/`F2 0F 11`,
+  `[base + disp32]`). A `float64` value rides its 8-byte stack slot as raw bits.
+- `addsd`/`subsd`/`mulsd`/`divsd xmm_dst, xmm_src` — double arithmetic
+  (`F2 0F 58`/`5C`/`59`/`5E`).
+- `ucomisd xmm_a, xmm_b` — unordered double compare, sets `ZF`/`PF`/`CF`
+  (`66 0F 2E`); read with `setcc` (NaN sets `PF`).
+
+The `Reg` numbers double as XMM numbers (`Rax`→`xmm0`, …) — the mandatory prefix
++ `0F` opcode select the XMM register file; REX is emitted only for high
+registers, always `W=0`. **The reg-reg opcodes are byte-identical to the system
+assembler** (`clang -masm=intel`); the mem forms use the encoder's existing
+`disp32` policy. Exact-encoding unit tests included.
+
 ## 0.3.0 — 2026-05-20 (LANG76 — byte memory primitives)
 
 Two new instruction emitters for `load_byte` / `store_byte` lowering

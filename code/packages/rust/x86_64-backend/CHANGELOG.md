@@ -1,5 +1,29 @@
 # Changelog — `x86_64-backend`
 
+## 0.13.0 — 2026-06-20 — `f64` (ALGOL `real`) SSE2 codegen (LANG-FULL E3) — completes E3
+
+### Added — native double-precision codegen on x86_64
+
+Mirrors the aarch64-backend f64 lowering with SSE2:
+
+- **`const_f64`** materialises the IEEE-754 bits in a GPR and stores them — a
+  double rides its 8-byte stack slot as raw bits (no XMM reg to load a constant).
+- **`add`/`sub`/`mul`/`div_f64`** → `movsd xmm0/xmm1, [slot]`; `addsd`/`subsd`/
+  `mulsd`/`divsd`; `movsd [slot], xmm0`. IEEE division by zero is `±inf`/`NaN`.
+- **`cmp_*_f64`** → `ucomisd` + `setcc`, with operand-order + condition chosen for
+  IEEE-**ordered** semantics: `<`/`<=` compare reversed (`ucomisd b,a` + `seta`/
+  `setae`), `>`/`>=` direct (`seta`/`setae`), `==` = `sete` AND `setnp` (ZF=1 &&
+  PF=0), `!=` = `setne` OR `setp` (ZF=0 || PF=1) — a NaN operand makes ordered
+  compares false (`!=` true), matching every other backend.
+
+**This completes E3-native — ALGOL reals now run on all 7 backends.** x86_64 is
+not locally runnable (no x86 ISA simulator), so this is verified by **structural
+exact-opcode tests** + **byte-for-byte encoding checks against the system
+assembler**, and **executed on the lang-aot matrix `NativeAot` column on the
+Linux-x86 CI runner** (the aarch64 half runs the same matrix cell on Apple
+Silicon). Integer programs are untouched (FP path keys on `ty == "f64"`). Uses
+`x86_64-encoder` 0.4.0's SSE2 instructions.
+
 ## 0.12.0 — 2026-06-15 — narrow-width unsigned masking (LANG-FULL E2, native-AOT leg)
 
 Mirrors the `aarch64-backend` 0.10.0 change so narrow-width wrap is uniform across

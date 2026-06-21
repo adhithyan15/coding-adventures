@@ -149,7 +149,7 @@ multiple languages; close an enabler before the features that depend on it.
       op + `iir-to-cil-bytecode` 0.21.0's textual-`.il` `not` arm). **Oct O2-`~`** ✅ too
       (oct-iir-compiler 0.7.0 — Oct's single integer width makes every int op u8; needed a JVM
       long-model mask fix in iir-to-jvm-class-file 0.14.0). **E2 integration complete.**
-- **E3 — Real / floating-point (`f64`).** ◑ *In progress (phase 1 — VM/JIT execute f64).*
+- **E3 — Real / floating-point (`f64`).** ✅ **COMPLETE — every backend (VM/JIT + all 5 code-gen) executes f64.**
   End-to-end f64 arithmetic, comparison, and literals. Unlocks ALGOL reals and BASIC floats.
   - ✅ **vm-core** (0.6.0) — `add`/`sub`/`mul`/`div`/`neg` + ordered comparisons take a float
     track (`f64` result, IEEE div-by-zero → ±inf to match the code-gen backends' `fdiv`);
@@ -180,18 +180,21 @@ multiple languages; close an enabler before the features that depend on it.
       into the integer `if_icmp` path (mis-reading a two-slot double as an int) — fixed with a
       `Double` branch emitting `dcmpl`/`dcmpg` + a unary `ifXX`. **Executed proof on real `java`**:
       both ALGOL real programs run on the JVM matrix column. **E3-codegen-slots COMPLETE.**
-  - ◑ **E3-native** — the two direct native backends. (`aot-core`'s `infer`/`specialise` already
+  - ✅ **E3-native** — both direct native backends. (`aot-core`'s `infer`/`specialise` already
     allow `f64`.)
     - ✅ **aarch64-backend** (v0.11.0, encoder v0.4.0) — `const_f64` materialises the bit pattern
       into the slot; `add/sub/mul/div_f64` use `ldr_d`/`fadd…`/`str_d` over `D0`/`D1`; `cmp_*_f64`
       use `fcmp` + `cset` with IEEE-ordered condition codes (`Lt`→`MI`, NaN → false). Added 7 FP
-      encoders (`ldr_d`/`str_d`/`fadd`/`fsub`/`fmul`/`fdiv`/`fcmp`), **byte-verified vs the system
-      assembler**. **Executed on real Apple-Silicon** via `jit-loader-macos` (`2.5*2.0`→`5.0` bits,
-      `7.0/2.0`→`3.5`, all six comparisons).
-    - ☐ **x86_64-backend** — needs SSE2 (`movsd`/`addsd`/`subsd`/`mulsd`/`divsd`/`ucomisd` +
-      `setcc`) mirroring the aarch64 lowering; structural tests locally, executed on the lang-aot
-      matrix `NativeAot` column on the Linux-x86 CI runner (no local x86 execution — no x86 ISA
-      simulator; the matrix proof + the host-arch run is the standard, same as E2).
+      encoders, **byte-verified vs the system assembler**. **Executed on real Apple-Silicon** via
+      `jit-loader-macos` (`2.5*2.0`→`5.0` bits, `7.0/2.0`→`3.5`, all six comparisons).
+    - ✅ **x86_64-backend** (v0.13.0, encoder v0.4.0) — mirrors the aarch64 lowering with SSE2:
+      `const_f64` stores the bits; `add/sub/mul/div_f64` = `movsd`/`addsd…`/`movsd`; `cmp_*_f64` =
+      `ucomisd` + `setcc` with operand-order + condition for IEEE-ordered semantics (`<`/`<=`
+      reversed-operand `seta`/`setae`; `==` = `sete`&`setnp`; `!=` = `setne`|`setp`). Added SSE2
+      encoders (`movsd`/`addsd`/`subsd`/`mulsd`/`divsd`/`ucomisd`), reg-reg **byte-verified vs the
+      system assembler**. Structural exact-opcode tests; **executed on the lang-aot matrix
+      `NativeAot` column on the Linux-x86 CI runner** (`run_native` compiles for the host arch — the
+      same matrix cell runs aarch64 locally). **E3 COMPLETE — reals run on all 7 backends.**
   - ✅ **E3-clr** (iir-to-cil-bytecode v0.22.0) — the **textual `.il` emitter** (the real-CLR /
     `ilasm` matrix path) lowers `f64`: `cil_local_type` → `float64` locals, float consts →
     `ldc.r8` (exact LE bytes), comparison result forced to `int32` (CIL `ceq`/`cgt`/`clt` push
@@ -352,15 +355,13 @@ backend immediately) come before the enabler-dependent items.
 - ☐ **BA7** — floating-point (needs **E3**).
 
 ### ALGOL 60
-- ◑ **AL1** — real arithmetic + `/`. **Frontend + VM/JIT done** (algol-iir-compiler 0.4.0):
-  `real` → IIR `f64`, `REAL_LIT` → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit
-  the `f64` hint, `/` is real division, real comparisons compare at `f64` width; `div`/`mod`
-  stay integer-only; no implicit int→real coercion (mixing is a clean error). **Verified by
-  RUNNING** on the VM, JIT, **LLVM, WASM, JVM, and CLR** (`lang_matrix.rs` — real `*`+`=`→42,
-  real `/`+`<`→1) — **6 of 7 backends**. LLVM via `iir-to-llvm` 0.13.0's f64 slots; WASM via its
-  typed-local model (no change); JVM via `iir-to-jvm-class-file` 0.15.0's `CONSTANT_Double` pool
-  + `dcmpl`/`dcmpg`; CLR via `iir-to-cil-bytecode` 0.22.0's `float64` locals + `ldc.r8`. Only
-  remaining: **E3-native** (x86_64/aarch64 reject `Operand::Float`; see enabler E3 above).
+- ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`
+  → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit the `f64` hint, `/` is real
+  division, real comparisons compare at `f64` width; `div`/`mod` stay integer-only; no implicit
+  int→real coercion (mixing is a clean error). **Verified by RUNNING on ALL 7 backends**
+  (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1): VM/JIT (tagged value model), LLVM
+  (`double` slots), WASM (typed locals), JVM (`CONSTANT_Double`+`dcmpl`), CLR (`float64`+`ldc.r8`),
+  and native-AOT (aarch64 `fadd`/`fcmp` executed on Apple Silicon + x86_64 SSE2 on CI). **E3 done.**
 - ☐ **AL2** — arrays with runtime bounds (needs **E5**).
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
