@@ -1,12 +1,12 @@
 //! Integration test for the `tests/diff/simple-debugger/` fixture.
 //!
 //! Exercises `--compilation_level SIMPLE` across a `debugger;` statement
-//! (CLOC21). Before CLOC21, any program containing a `debugger` statement
-//! failed the typed-AST parse and closurec fell back to WHITESPACE_ONLY
-//! (zero optimization). This fixture is the end-to-end oracle proving the
-//! SIMPLE pipeline now runs across a `debugger` statement: `log(1)` is
-//! inlined to `report(1)`, `1 + 2` folds to `3`, and the `debugger;`
-//! statement is preserved verbatim.
+//! (CLOC21 made it representable; CLOC24 strips it). Before CLOC21, any
+//! program containing a `debugger` statement failed the typed-AST parse and
+//! closurec fell back to WHITESPACE_ONLY (zero optimization). This fixture is
+//! the end-to-end oracle proving the SIMPLE pipeline runs across a `debugger`
+//! statement: `log(1)` is inlined to `report(1)`, `1 + 2` folds to `3`, and
+//! the `debugger;` statement is STRIPPED (matching upstream Closure).
 
 use std::process::Command;
 
@@ -51,8 +51,10 @@ fn simple_debugger_fixture_matches_expected_stdout() {
 /// above would still "pass" against a regenerated expected file, so we
 /// additionally assert that an optimization that can ONLY come from the typed
 /// pipeline (the `log` -> `report` inline) is present and the original
-/// `function log` declaration is gone, while the `debugger;` statement
-/// survives verbatim.
+/// `function log` declaration is gone. CLOC24 additionally STRIPS the
+/// `debugger;` statement at SIMPLE — proving the dce pass removed it (a
+/// WHITESPACE_ONLY fallback would have kept `debugger;` verbatim, so its
+/// absence here doubly confirms the typed pipeline ran).
 #[test]
 fn simple_debugger_did_not_fall_back_to_whitespace_only() {
     let out = Command::new(BINARY)
@@ -72,7 +74,8 @@ fn simple_debugger_did_not_fall_back_to_whitespace_only() {
         "expected the inlined `log` declaration to be removed; got:\n{actual}",
     );
     assert!(
-        actual.contains("debugger;"),
-        "expected the `debugger;` statement to be preserved; got:\n{actual}",
+        !actual.contains("debugger"),
+        "expected the `debugger;` statement to be STRIPPED at SIMPLE (CLOC24); \
+         got:\n{actual}",
     );
 }

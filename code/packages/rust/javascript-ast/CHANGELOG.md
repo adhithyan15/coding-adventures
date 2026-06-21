@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.13.0] - 2026-06-20
+
+### Changed — CLOC24: `DebuggerStatement` doc reflects stripping
+
+Doc-comment-only change: the `DebuggerStatement` node doc no longer says
+"stripping it … is a future enhancement". `closure-pass-dce` now strips
+`debugger` statements at SIMPLE/ADVANCED (CLOC24), so the comment is updated to
+describe the live behaviour. No structural or behavioural change to the node.
+
 ## [0.12.0] - 2026-06-20
 
 ### Added — CLOC23: `ForOfStatement` (`for (left of right) body`)

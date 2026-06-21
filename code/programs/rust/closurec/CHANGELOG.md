@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.157.0] - 2026-06-20
+
+### Changed — CLOC24: strip `debugger` statements at SIMPLE/ADVANCED
+
+`debugger;` statements are now **removed** at `--compilation_level SIMPLE` and
+`ADVANCED`, matching the upstream Closure Compiler. A `debugger` statement is a
+development-only breakpoint with no effect on a shipped program, so stripping it
+is a sound size win. The strip lives in the `closure-pass-dce` pass (block-body
+and top-level sweeps), which runs only in the typed pipeline — so `debugger` is
+still preserved at `WHITESPACE_ONLY`.
+
+The `simple-debugger` end-to-end fixture (introduced in CLOC21 to prove
+`debugger` was *representable*) is repurposed as the strip oracle: its expected
+output drops from `report(1);var x=3;debugger;use(x);` to
+`report(1);var x=3;use(x);`, and the whitespace-fallback regression guard now
+asserts the `debugger` is **absent** (its absence doubly confirms the typed
+pipeline ran, since a WHITESPACE_ONLY fallback would have kept it).
+
+Depends on `coding-adventures-closure-pass-dce` 0.15.0 and
+`coding-adventures-javascript-ast` 0.13.0 (doc sync).
+
 ## [0.156.0] - 2026-06-20
 
 ### Added — CLOC23: end-to-end `for`-`of` support
