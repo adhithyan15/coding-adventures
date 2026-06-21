@@ -151,6 +151,16 @@ Brainfuck program's launcher discards the entry result rather than re-printing i
 `brfalse`/`brtrue` test any integer width against zero, so the loop guard needs no
 special i64 handling (unlike the JVM's `lcmp` / wasm's `i64.eqz`).
 
+As of 0.23.0 the **textual `.il` emitter** lowers the **E5 array ops** (LANG-FULL
+enabler E5 — ALGOL 1-D arrays) to native single-dimensional CIL arrays:
+`alloc_array` → `newarr [System.Runtime]System.Int32` (or `…Double`/`…Single`) into
+an `int32[]`/`float64[]` handle local; `array_get` → `ldelem.i4`/`.r8`; `array_set` →
+`stelem.i4`/`.r8`; `array_len` → `ldlen; conv.i4`. CoreCLR bounds-checks every
+`ldelem`/`stelem` natively, so an out-of-range index throws
+`System.IndexOutOfRangeException` (E5's trap) with no explicit guard. `i64` elements
+collapse to `int32[]` (CIL stack ints are 32-bit here, like scalar `i64`). The binary
+`CILProgramArtifact` (`clr-simulator`) emitter doesn't lower the array ops yet.
+
 **Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2, backend 5/6, v0.20.0).
 A CIL arithmetic/bitwise op runs on a full 32-bit `int32` slot, so a narrow unsigned
 value overflows its width unless masked. After a `u4`/`u8`/`u16` `add`/`sub`/`mul`/
