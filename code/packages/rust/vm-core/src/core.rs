@@ -128,6 +128,16 @@ pub struct VMCore {
     /// Flat address-space memory (used by `load_mem` / `store_mem` / I/O).
     memory: HashMap<i64, Value>,
 
+    /// Heap of bounds-checked arrays (LANG-FULL E5). `alloc_array` pushes a new
+    /// `Vec<Value>` and binds its 0-based index as the array *handle* (an
+    /// `i64`); `array_get`/`array_set` index the `Vec` with a range check, and
+    /// `array_len` reads its length. This is the interpreter's representation of
+    /// the representation-agnostic IIR array — the managed backends use a native
+    /// array, the static backends a length-prefixed flat block, but the VM keeps
+    /// it simplest with a per-allocation `Vec` so distinct arrays never alias
+    /// (unlike the single Brainfuck byte-tape, which is one flat space).
+    arrays: Vec<Vec<Value>>,
+
     /// JIT handler registry.  When a `call` instruction names a function
     /// listed here, the handler is called instead of the interpreter.
     jit_handlers: HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
@@ -181,6 +191,7 @@ impl VMCore {
             max_instructions: None, // unlimited — trusted code path
             frames: Vec::new(),
             memory: HashMap::new(),
+            arrays: Vec::new(),
             jit_handlers: HashMap::new(),
             extra_opcodes: HashMap::new(),
             builtins: BuiltinRegistry::new(),
@@ -302,6 +313,7 @@ impl VMCore {
             module_fns: &mut module.functions,
             builtins: &self.builtins,
             memory: &mut self.memory,
+            arrays: &mut self.arrays,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
@@ -374,6 +386,7 @@ impl VMCore {
             module_fns: &mut module.functions,
             builtins: &self.builtins,
             memory: &mut self.memory,
+            arrays: &mut self.arrays,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
@@ -1115,5 +1128,146 @@ mod tests {
         m.add_or_replace(fn_);
         let r = VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap();
         assert_eq!(r, Value::Float(-2.5));
+    }
+
+    // ---- E5: bounds-checked arrays ----
+
+    /// Helper: build `main` from instrs returning `ret_ty`, run, return result.
+    fn run_arr(instrs: Vec<IIRInstr>, ret_ty: &str) -> Result<Option<Value>, crate::errors::VMError> {
+        let fn_ = IIRFunction::new("main", vec![], ret_ty, instrs);
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[])
+    }
+
+    /// `integer array A[3]; A[0]:=10; A[2]:=12; ret A[0]+A[2]` → 22.
+    #[test]
+    fn array_alloc_set_get_roundtrip() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("i2".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("const", Some("v10".into()), vec![Operand::Int(10)], "i64"),
+            IIRInstr::new("const", Some("v12".into()), vec![Operand::Int(12)], "i64"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v10".into())], "array<i64>"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i2".into()), Operand::Var("v12".into())], "array<i64>"),
+            IIRInstr::new("array_get", Some("x".into()), vec![Operand::Var("a".into()), Operand::Var("i0".into())], "i64"),
+            IIRInstr::new("array_get", Some("y".into()), vec![Operand::Var("a".into()), Operand::Var("i2".into())], "i64"),
+            IIRInstr::new("add", Some("r".into()), vec![Operand::Var("x".into()), Operand::Var("y".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert_eq!(r.unwrap(), Some(Value::Int(22)));
+    }
+
+    /// A fresh array is zero-initialised: reading an unset element gives 0.
+    #[test]
+    fn array_default_initialised_to_zero() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("array_get", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("i".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert_eq!(r.unwrap(), Some(Value::Int(0)));
+    }
+
+    /// `array_len` returns the element count.
+    #[test]
+    fn array_len_returns_count() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("array_len", Some("r".into()), vec![Operand::Var("a".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert_eq!(r.unwrap(), Some(Value::Int(7)));
+    }
+
+    /// An `f64` array zero-inits to `0.0` and round-trips a real value.
+    #[test]
+    fn f64_array_roundtrips() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<f64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(2.5)], "f64"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i".into()), Operand::Var("v".into())], "array<f64>"),
+            IIRInstr::new("array_get", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("i".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ], "f64");
+        assert_eq!(r.unwrap(), Some(Value::Float(2.5)));
+    }
+
+    /// An out-of-bounds `array_get` traps (the index check is by-definition).
+    #[test]
+    fn array_get_out_of_bounds_traps() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(5)], "i64"),
+            IIRInstr::new("array_get", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("i".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert!(r.is_err(), "out-of-bounds array_get must trap, got {r:?}");
+    }
+
+    /// A negative index also traps (the lower-bound half of the check).
+    #[test]
+    fn array_set_negative_index_traps() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(-1)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(9)], "i64"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i".into()), Operand::Var("v".into())], "array<i64>"),
+            IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+        ], "i64");
+        assert!(r.is_err(), "negative array_set index must trap, got {r:?}");
+    }
+
+    /// Distinct arrays do not alias (the per-allocation Vec model).
+    #[test]
+    fn distinct_arrays_do_not_alias() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("alloc_array", Some("b".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("va".into()), vec![Operand::Int(11)], "i64"),
+            IIRInstr::new("const", Some("vb".into()), vec![Operand::Int(22)], "i64"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i".into()), Operand::Var("va".into())], "array<i64>"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("b".into()), Operand::Var("i".into()), Operand::Var("vb".into())], "array<i64>"),
+            // a[0] must still be 11 (not clobbered by b[0]=22).
+            IIRInstr::new("array_get", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("i".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert_eq!(r.unwrap(), Some(Value::Int(11)));
+    }
+
+    /// `max_memory_entries` is an **aggregate** ceiling: many small arrays whose
+    /// element counts sum past the cap must trap, not just one oversized array.
+    /// (Defeats an `alloc_array`-in-a-loop OOM, the E5 security-review finding.)
+    #[test]
+    fn aggregate_array_allocation_is_capped() {
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(6)], "i64"),
+                // First 6-element array: fits under a cap of 10.
+                IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+                // Second 6-element array: 6 + 6 = 12 > 10 → must trap.
+                IIRInstr::new("alloc_array", Some("b".into()), vec![Operand::Var("n".into())], "array<i64>"),
+                IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+            ],
+        ));
+        let mut vm = VMCore::new();
+        vm.max_memory_entries = 10;
+        let r = vm.execute(&mut m, "main", &[]);
+        assert!(r.is_err(), "aggregate over-allocation must trap, got {r:?}");
     }
 }

@@ -124,6 +124,71 @@ pub fn make_ref_type(inner: &str) -> String {
 }
 
 // ---------------------------------------------------------------------------
+// Array-type helpers (LANG-FULL E5)
+// ---------------------------------------------------------------------------
+//
+// A bounded, indexable aggregate uses the `"array<T>"` encoding, mirroring
+// `ref<T>`.  The *element* type `T` is any scalar hint — v1 carries `i64` /
+// `f64`.  The model is representation-agnostic (see
+// `code/specs/lang-full-e5-arrays.md`): each backend lowers an `array<T>` to a
+// managed array (JVM/CLR/WasmGC) or a length-prefixed flat block
+// (LLVM/native/vm), but the IIR type string is the same.
+
+const ARRAY_PREFIX: &str = "array<";
+const ARRAY_SUFFIX: &str = ">";
+
+/// Return `true` if `type_hint` is an array type `"array<T>"`.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_array_type;
+/// assert!(is_array_type("array<i64>"));
+/// assert!(!is_array_type("ref<i64>"));
+/// assert!(!is_array_type("i64"));
+/// ```
+pub fn is_array_type(type_hint: &str) -> bool {
+    type_hint.starts_with(ARRAY_PREFIX) && type_hint.ends_with(ARRAY_SUFFIX)
+}
+
+/// Return `Some(T)` for `"array<T>"`, else `None`.
+///
+/// ```
+/// use interpreter_ir::opcodes::array_elem_type;
+/// assert_eq!(array_elem_type("array<i64>"), Some("i64".to_string()));
+/// assert_eq!(array_elem_type("array<array<f64>>"), Some("array<f64>".to_string()));
+/// assert_eq!(array_elem_type("i64"), None);
+/// ```
+pub fn array_elem_type(type_hint: &str) -> Option<String> {
+    if !is_array_type(type_hint) {
+        return None;
+    }
+    Some(type_hint[ARRAY_PREFIX.len()..type_hint.len() - ARRAY_SUFFIX.len()].to_string())
+}
+
+/// Wrap `elem` as an array type string.  Inverse of [`array_elem_type`].
+///
+/// ```
+/// use interpreter_ir::opcodes::make_array_type;
+/// assert_eq!(make_array_type("i64"), "array<i64>");
+/// assert_eq!(make_array_type("f64"), "array<f64>");
+/// ```
+pub fn make_array_type(elem: &str) -> String {
+    format!("{ARRAY_PREFIX}{elem}{ARRAY_SUFFIX}")
+}
+
+/// The four array opcodes (LANG-FULL E5).  `alloc_array`/`array_len`/`array_get`
+/// produce a value; `array_set` does not.  All indexing is bounds-checked —
+/// `array_get`/`array_set` trap on an out-of-range index.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_array_op;
+/// assert!(is_array_op("array_get"));
+/// assert!(!is_array_op("load_byte"));
+/// ```
+pub fn is_array_op(op: &str) -> bool {
+    matches!(op, "alloc_array" | "array_len" | "array_get" | "array_set")
+}
+
+// ---------------------------------------------------------------------------
 // Opcode category predicates
 // ---------------------------------------------------------------------------
 //
@@ -277,6 +342,10 @@ pub fn is_value_producing(op: &str) -> bool {
                 | "unbox"
                 | "field_load"
                 | "is_null"
+                // Array ops that produce a value (LANG-FULL E5)
+                | "alloc_array"
+                | "array_len"
+                | "array_get"
                 // Global variable read (LANG32)
                 | "global_load"
                 // Closure allocation and application (LANG34)
@@ -368,6 +437,8 @@ pub fn is_allocating(op: &str) -> bool {
     matches!(
         op,
         "alloc" | "box" | "safepoint"
+            // Array allocation (LANG-FULL E5)
+            | "alloc_array"
             // Closure allocation (LANG34)
             | "alloc_closure"
             // Concurrency allocators (LANG28)

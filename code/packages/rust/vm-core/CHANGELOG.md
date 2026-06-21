@@ -1,5 +1,27 @@
 # Changelog — vm-core
 
+## [0.7.0] — 2026-06-20 (LANG-FULL E5 — bounds-checked arrays)
+
+### Added — `alloc_array` / `array_len` / `array_get` / `array_set`
+
+The reference-interpreter execution of the E5 array primitive. A new `arrays:
+Vec<Vec<Value>>` heap holds each allocation; `alloc_array count` pushes a fresh
+`count`-element `Vec` (default-initialised — `f64` arrays to `0.0`, else `0`) and
+binds its 0-based index as the array *handle*. `array_get`/`array_set` are
+**bounds-checked**: a negative or `>= len` index returns a `VMError` (the
+interpreter's analogue of the managed runtimes' `IndexOutOfBoundsException` and
+the native backends' trap). `array_len` reads the length.
+
+Per-allocation `Vec`s mean **distinct arrays never alias** (unlike the single
+Brainfuck byte-tape, which is one flat space). `max_memory_entries` is enforced as
+a true **aggregate** ceiling — both the number of arrays and the running total of
+elements across every live array are bounded — so neither a single
+`alloc_array i64::MAX` nor a loop allocating many arrays can OOM the process.
+8 unit tests: round-trip, default-init, length, f64 arrays, out-of-bounds trap,
+negative-index trap, no-alias, and the aggregate allocation cap. Integer/float
+programs are unaffected (`DispatchCtx` gains an `arrays` field; existing handlers
+are untouched). Uses `interpreter-ir` 0.7.0's `array<T>` type + opcodes.
+
 ## [0.6.0] — 2026-06-20 (LANG-FULL E3 — floating-point execution)
 
 ### Added — `f64` arithmetic and ordered comparisons

@@ -54,6 +54,9 @@ pub struct DispatchCtx<'a> {
     pub frames: &'a mut Vec<VMFrame>,
     pub module_fns: &'a mut Vec<interpreter_ir::function::IIRFunction>,
     pub memory: &'a mut HashMap<i64, Value>,
+    /// Heap of bounds-checked arrays (LANG-FULL E5). Indexed by the array
+    /// *handle* (`alloc_array`'s 0-based result). See [`crate::core::VMCore`].
+    pub arrays: &'a mut Vec<Vec<Value>>,
     pub builtins: &'a crate::builtins::BuiltinRegistry,
     pub u8_wrap: bool,
     pub max_frames: usize,
@@ -743,6 +746,135 @@ fn handle_store_byte(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<V
     Ok(None)
 }
 
+// Arrays (LANG-FULL E5) ------------------------------------------------------
+//
+// A bounded, indexable aggregate. `alloc_array count` allocates a fresh
+// `count`-element array (default-initialised by element type) and binds its
+// *handle* — the 0-based index into `ctx.arrays` — to `dest` as an `Int`.
+// `array_get`/`array_set` are **bounds-checked**: an out-of-range (or negative)
+// index is a `VMError` (the interpreter's analogue of the managed runtimes'
+// `IndexOutOfBoundsException` and the native backends' trap). This is the
+// representation-agnostic IIR array's reference implementation; see
+// `code/specs/lang-full-e5-arrays.md`.
+
+/// `alloc_array dest <- count : array<T>` — allocate a `count`-element array,
+/// each element the default for `T` (`f64` → `0.0`, everything else → `0`).
+fn handle_alloc_array(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let count = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?.as_i64()
+            .ok_or_else(|| VMError::Custom("alloc_array count must be an integer".into()))?
+    };
+    if count < 0 {
+        return Err(VMError::Custom(format!("alloc_array negative count {count}")));
+    }
+    // Make `max_memory_entries` a true **aggregate** ceiling for array storage,
+    // so neither a single huge `alloc_array i64::MAX` nor a loop allocating many
+    // arrays can OOM the process. We bound (a) the number of arrays (so an
+    // `alloc_array 0` spam loop can't grow the outer Vec unbounded) and (b) the
+    // running total of elements across every live array. The sum walks at most
+    // `arrays.len()` entries, itself bounded by the cap. (Parallels the byte-tape's
+    // `max_memory_entries` guard, generalised across allocations.)
+    if ctx.arrays.len() >= ctx.max_memory_entries {
+        return Err(VMError::Custom(format!(
+            "array count exceeds the {} allocation cap", ctx.max_memory_entries
+        )));
+    }
+    let live_elems: usize = ctx.arrays.iter().map(|a| a.len()).sum();
+    if live_elems.saturating_add(count as usize) > ctx.max_memory_entries {
+        return Err(VMError::Custom(format!(
+            "array length {count} would exceed the {} total-element cap (live: {live_elems})",
+            ctx.max_memory_entries
+        )));
+    }
+    // The element default: `f64` arrays zero to `0.0`; integer/other to `Int(0)`.
+    let elem = interpreter_ir::opcodes::array_elem_type(&instr.type_hint);
+    let default = if elem.as_deref() == Some("f64") || elem.as_deref() == Some("f32") {
+        Value::Float(0.0)
+    } else {
+        Value::Int(0)
+    };
+    let handle = ctx.arrays.len() as i64;
+    ctx.arrays.push(vec![default; count as usize]);
+    let value = Value::Int(handle);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `array_len dest <- arr` — the element count of array `arr`.
+fn handle_array_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let handle = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_len: arr handle must be an integer".into()))?
+    };
+    let arr = array_ref(ctx, handle)?;
+    let value = Value::Int(arr.len() as i64);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `array_get dest <- arr, idx` — bounds-checked load `dest = arr[idx]`.
+fn handle_array_get(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (handle, idx) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let h = resolve_src(frame, &instr.srcs, 0)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_get: arr handle must be an integer".into()))?;
+        let i = resolve_src(frame, &instr.srcs, 1)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_get: index must be an integer".into()))?;
+        (h, i)
+    };
+    let arr = array_ref(ctx, handle)?;
+    let value = bounds_checked(arr, idx, "array_get")?.clone();
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `array_set arr, idx, val` (no dest) — bounds-checked store `arr[idx] = val`.
+fn handle_array_set(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (handle, idx, val) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let h = resolve_src(frame, &instr.srcs, 0)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_set: arr handle must be an integer".into()))?;
+        let i = resolve_src(frame, &instr.srcs, 1)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_set: index must be an integer".into()))?;
+        let v = resolve_src(frame, &instr.srcs, 2)?;
+        (h, i, v)
+    };
+    // Bounds-check before mutating.
+    {
+        let arr = array_ref(ctx, handle)?;
+        bounds_checked(arr, idx, "array_set")?;
+    }
+    ctx.arrays[handle as usize][idx as usize] = val;
+    Ok(None)
+}
+
+/// Resolve an array handle to its backing `Vec`, or a clean error.
+fn array_ref<'c>(ctx: &'c DispatchCtx, handle: i64) -> Result<&'c Vec<Value>, VMError> {
+    if handle < 0 {
+        return Err(VMError::Custom(format!("invalid array handle {handle}")));
+    }
+    ctx.arrays.get(handle as usize)
+        .ok_or_else(|| VMError::Custom(format!("invalid array handle {handle}")))
+}
+
+/// Range-check `idx` against `arr` and return the element reference, or a trap.
+fn bounds_checked<'c>(arr: &'c [Value], idx: i64, op: &str) -> Result<&'c Value, VMError> {
+    if idx < 0 || idx as usize >= arr.len() {
+        return Err(VMError::Custom(format!(
+            "{op}: index {idx} out of bounds for array of length {}", arr.len()
+        )));
+    }
+    Ok(&arr[idx as usize])
+}
+
 // Function calls ------------------------------------------------------------
 
 /// Handle a `call fn_name arg1 arg2 …` instruction.
@@ -960,6 +1092,10 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "alloc_bytes"  => Some(handle_alloc_bytes),
         "load_byte"    => Some(handle_load_byte),
         "store_byte"   => Some(handle_store_byte),
+        "alloc_array"  => Some(handle_alloc_array),
+        "array_len"    => Some(handle_array_len),
+        "array_get"    => Some(handle_array_get),
+        "array_set"    => Some(handle_array_set),
         "call_builtin" => Some(handle_call_builtin),
         "io_in"        => Some(handle_io_in),
         "io_out"       => Some(handle_io_out),
