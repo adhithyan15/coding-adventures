@@ -795,9 +795,14 @@ unchanged.
   locale, and that choice is documented so the output never surprises a CI run in a
   different locale. Five functions, all vectorized:
   - **`format(x, nsmall=, width=, justify=, big.mark=)`** — the general-purpose
-    formatter. For a **numeric** vector: `nsmall` is the *minimum* number of decimal
-    places (so `format(3.14159, nsmall = 2)` is `"3.14"` but `format(3, nsmall = 2)` is
-    `"3.00"`); `big.mark` inserts a thousands separator into the integer part; then —
+    formatter. For a **numeric** vector: a supplied `nsmall` is the **decimal count** —
+    it pads short values *and* rounds long ones to exactly that many places (so
+    `format(3.14159, nsmall = 2)` is `"3.14"` and `format(3, nsmall = 2)` is `"3.00"`),
+    while `nsmall = 0` (the default) uses R's default rendering untouched. (Real R's
+    `nsmall` is a *minimum* layered on top of significant-digit rounding; this subset
+    uses the simpler, fully deterministic decimal-count reading and defers the
+    `scientific=`/sig-digit corner to R-28.) `big.mark` inserts a thousands separator
+    into the integer part; then —
     crucially — **a numeric vector formats to a *common* width**: R right-pads every
     element to the width of the widest, so `format(c(1, 10, 100))` is
     `c("  1", " 10", "100")`. For a **character** vector, `justify` (`"left"` /

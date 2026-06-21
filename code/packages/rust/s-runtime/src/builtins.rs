@@ -10,7 +10,8 @@ use crate::env::{define, lookup, Env};
 use crate::error::{SError, SResult};
 use crate::eval::{nth_element, Interpreter};
 use crate::value::{
-    bounded_sequence, class_of, combine, index, Arg, SValue, MAX_ATTRIBUTES, MAX_SEQ_LEN,
+    bounded_sequence, class_of, combine, format_number, index, Arg, SValue, MAX_ATTRIBUTES,
+    MAX_SEQ_LEN,
 };
 use r_vector::{is_na_real, na_real, Double};
 use statistics_core::distributions::{dnorm, pnorm, qnorm, rnorm};
@@ -158,6 +159,13 @@ pub fn install(env: &Env) {
     define(env, "tolower", builtin("tolower", b_tolower));
     define(env, "substr", builtin("substr", b_substr));
     define(env, "sprintf", builtin("sprintf", b_sprintf));
+
+    // Output formatting (R-27) — turn numbers and vectors into human-readable
+    // text. Pure builtins, deterministic (locale-free) defaults.
+    define(env, "format", builtin("format", b_format));
+    define(env, "formatC", builtin("formatC", b_format_c));
+    define(env, "prettyNum", builtin("prettyNum", b_pretty_num));
+    define(env, "toString", builtin("toString", b_to_string));
 
     // v2 — apply family.
     define(env, "sapply", builtin("sapply", b_sapply));
@@ -2459,6 +2467,14 @@ fn substring(s: &str, start: i64, stop: i64) -> String {
     s.chars().skip(from).take(count).collect()
 }
 
+/// Hard cap on any single field width or precision (1 MiB). A user-supplied
+/// `fmt`, `width`, `nsmall`, or `digits` is *data*; this bound is what stops a
+/// crafted spec like `%999999999d` or `formatC(x, width = 1e9)` from triggering
+/// a giant allocation (a width-DoS). Shared by `sprintf`, `format`, and
+/// `formatC`. There is no `%n`-style conversion, so there is no
+/// write-what-where primitive to worry about — only allocation size.
+const MAX_FIELD: usize = 1 << 20;
+
 /// `sprintf(fmt, ...)` — a minimal C-style formatter supporting `%d`/`%i`,
 /// `%s`, `%f`/`%e`/`%g`, and `%%`, with optional width, `.precision`, and the
 /// `-` (left-justify) and `0` (zero-pad) flags. Vectorized: the result has the
@@ -2548,7 +2564,6 @@ fn format_one(fmt: &str, args: &[&SValue], row: usize) -> SResult<String> {
         }
         // Cap the field width and precision so a crafted format like
         // `%999999999999d` can't trigger an unbounded allocation in `pad`.
-        const MAX_FIELD: usize = 1 << 20; // 1 MiB per field
         if width > MAX_FIELD || precision.is_some_and(|p| p > MAX_FIELD) {
             return Err(SError::BadArgs(
                 "sprintf: field width or precision is too large".into(),
@@ -2627,6 +2642,354 @@ fn pad(body: &str, width: usize, left: bool, zero: bool) -> String {
     } else {
         format!("{fill}{body}")
     }
+}
+
+// ===========================================================================
+// Output formatting (R-27)
+// ===========================================================================
+//
+// A small family of pure builtins for turning numbers and vectors into
+// human-readable text. The design goal is **determinism**: nothing here reads
+// the clock or the host locale. The default thousands separator is `","` and
+// the decimal point is `"."`, fixed everywhere — so a CI run in a `de_DE`
+// locale (where R's real `format()` would use `.` for thousands and `,` for the
+// decimal) produces exactly the same bytes as a run in `C`/`en_US`.
+//
+//   ┌───────────────┬──────────────────────────────────────────────────────┐
+//   │ format(x,…)   │ general formatter; numeric vectors pad to a COMMON     │
+//   │               │ width (R right-justifies all to the widest element)    │
+//   │ formatC(x,…)  │ C-style printf wrapper: format="d"/"f"/"e"/"g"/"s"/"x" │
+//   │ prettyNum(x)  │ insert a thousands separator into the integer part     │
+//   │ toString(x)   │ collapse a whole vector into ONE comma-joined string   │
+//   └───────────────┴──────────────────────────────────────────────────────┘
+
+/// Read a scalar named argument as a non-negative field count (`width`,
+/// `nsmall`, `digits`). Absent → `None`. Present → the value coerced to a
+/// double, floored, and **clamped to `MAX_FIELD`**; a negative or non-finite
+/// value is treated as `0`. The clamp is the width-DoS guard: a caller asking
+/// for `width = 1e9` gets `MAX_FIELD`, not a 1-GB allocation.
+fn named_count(args: &[Arg], name: &str) -> Option<usize> {
+    let raw = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some(name))?
+        .value
+        .as_double()
+        .ok()?
+        .get_value(0)?;
+    if !raw.is_finite() || raw < 0.0 {
+        return Some(0);
+    }
+    Some((raw as usize).min(MAX_FIELD))
+}
+
+/// Read a scalar named *string* argument (`justify`, `big.mark`, `format`,
+/// `flag`, `sep`). Absent or `NA` → `None`.
+fn named_str(args: &[Arg], name: &str) -> Option<String> {
+    args.iter()
+        .find(|a| a.name.as_deref() == Some(name))?
+        .value
+        .as_character()
+        .into_iter()
+        .next()
+        .flatten()
+}
+
+/// Insert `mark` between every group of three digits of an integer-part string,
+/// counting from the right. `"1234567"` → `"1,234,567"`. A leading sign is
+/// preserved and never grouped. Pure string surgery, no locale.
+fn group_thousands(int_part: &str, mark: &str) -> String {
+    if mark.is_empty() {
+        return int_part.to_string();
+    }
+    // Split off an optional leading sign so we group only the digits.
+    let (sign, digits) = match int_part.strip_prefix('-') {
+        Some(rest) => ("-", rest),
+        None => ("", int_part),
+    };
+    // Group from the RIGHT. The leading group is the remainder (1, 2, or 3
+    // digits); every group after it is exactly 3. `"1234567"` → first = 1 →
+    // "1" | "234" | "567" → "1,234,567".
+    let bytes = digits.as_bytes();
+    let len = bytes.len();
+    let first = if len % 3 == 0 { 3 } else { len % 3 };
+    let mut grouped = String::with_capacity(len + len / 3 * mark.len());
+    let mut idx = 0usize;
+    while idx < len {
+        let take = if idx == 0 { first } else { 3 };
+        if idx != 0 {
+            grouped.push_str(mark);
+        }
+        grouped.push_str(std::str::from_utf8(&bytes[idx..idx + take]).unwrap_or(""));
+        idx += take;
+    }
+    format!("{sign}{grouped}")
+}
+
+/// Format one finite number for `format`/`prettyNum`: when `nsmall > 0`, render
+/// with **exactly** `nsmall` decimal places (so `format(3, nsmall = 2)` is
+/// `"3.00"` and `format(3.14159, nsmall = 2)` is `"3.14"`); when `nsmall == 0`,
+/// use R's default rendering (`format_number`). Then optionally group the
+/// integer part with `big.mark`. Non-finite / NA delegate to `format_number`.
+///
+/// (R's real `nsmall` is a *minimum* applied on top of `getOption("digits")`
+/// significant-digit rounding; this subset treats a supplied `nsmall` as the
+/// decimal count directly — simpler, fully deterministic, and matching the
+/// documented R-27 examples. The `scientific=`/significant-digit corner is
+/// deferred to R-28.)
+fn format_number_nsmall(x: f64, nsmall: usize, big_mark: &str) -> String {
+    if !x.is_finite() {
+        return format_number(x);
+    }
+    let rendered = if nsmall == 0 {
+        format_number(x)
+    } else {
+        format!("{x:.nsmall$}")
+    };
+    if big_mark.is_empty() {
+        return rendered;
+    }
+    // Group only the integer part; leave any fractional part untouched.
+    match rendered.split_once('.') {
+        Some((int, frac)) => format!("{}.{}", group_thousands(int, big_mark), frac),
+        None => group_thousands(&rendered, big_mark),
+    }
+}
+
+/// `format(x, nsmall=, width=, justify=, big.mark=)` — the general formatter.
+///
+/// * **Numeric `x`** — each element is rendered with `nsmall` decimal places and
+///   an optional `big.mark` thousands separator, then **the whole vector is
+///   padded to a common width**: R right-justifies every element to the width of
+///   the widest (so columns line up). `width` raises that common width to at
+///   least its value.
+/// * **Character `x`** — each element is padded to the common width (the max of
+///   `width` and the widest element) honouring `justify`: `"left"` (default),
+///   `"right"`, or `"centre"`.
+/// * **Logical `x`** — coerced to `"TRUE"`/`"FALSE"` strings, then treated as a
+///   character vector.
+///
+/// Returns a character vector the same length as `x` (length-0 in, length-0
+/// out). `NA` renders as the string `"NA"`.
+fn b_format(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let nsmall = named_count(args, "nsmall").unwrap_or(0);
+    let min_width = named_count(args, "width").unwrap_or(0);
+    let big_mark = named_str(args, "big.mark").unwrap_or_default();
+    let justify = named_str(args, "justify").unwrap_or_else(|| "left".to_string());
+
+    // Render each element to its natural string first; common-width padding is
+    // a second pass so we can measure the widest.
+    let is_numeric = matches!(peel_structural(x), SValue::Double(_) | SValue::Matrix { .. });
+    let rendered: Vec<String> = if is_numeric {
+        let d = x.as_double()?;
+        d.iter()
+            .map(|v| {
+                if is_na_real(v) {
+                    "NA".to_string()
+                } else {
+                    format_number_nsmall(v, nsmall, &big_mark)
+                }
+            })
+            .collect()
+    } else {
+        x.as_character()
+            .into_iter()
+            .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+            .collect()
+    };
+    if rendered.is_empty() {
+        return Ok(SValue::Character(vec![]));
+    }
+
+    let widest = rendered.iter().map(|s| s.chars().count()).max().unwrap_or(0);
+    let target = widest.max(min_width).min(MAX_FIELD);
+
+    // Numeric vectors always right-justify (R lines decimals up on the right);
+    // character vectors honour `justify`.
+    let out: Vec<Option<String>> = rendered
+        .into_iter()
+        .map(|s| {
+            let padded = if is_numeric {
+                pad(&s, target, false, false)
+            } else {
+                pad_justify(&s, target, &justify)
+            };
+            Some(padded)
+        })
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+/// Pad `body` to `width` columns honouring an R `justify` keyword. `"right"`
+/// pads on the left; `"centre"`/`"center"` splits the slack (extra on the
+/// right); anything else (including `"left"`) pads on the right.
+fn pad_justify(body: &str, width: usize, justify: &str) -> String {
+    let len = body.chars().count();
+    if len >= width {
+        return body.to_string();
+    }
+    let slack = width - len;
+    match justify {
+        "right" => format!("{}{}", " ".repeat(slack), body),
+        "centre" | "center" => {
+            let left = slack / 2;
+            let right = slack - left;
+            format!("{}{}{}", " ".repeat(left), body, " ".repeat(right))
+        }
+        _ => format!("{}{}", body, " ".repeat(slack)),
+    }
+}
+
+/// `formatC(x, format=, digits=, width=, flag=)` — the C-style formatter, a
+/// thin wrapper over the shared `printf` engine (`render_conversion` + `pad`).
+///
+/// * `format` — `"d"` integer, `"f"` fixed, `"e"` scientific, `"g"` shortest,
+///   `"s"` string, `"x"` hex (integers). Default: `"d"` for numerics, `"s"` for
+///   character `x`.
+/// * `digits` — precision passed to the conversion.
+/// * `width` — minimum field width (clamped to `MAX_FIELD`).
+/// * `flag` — a string of `printf` flags: `"-"` left-justify, `"0"` zero-pad,
+///   `"+"` force a leading sign on numbers.
+///
+/// Vectorized over `x`; returns a character vector of the same length.
+fn b_format_c(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let width = named_count(args, "width").unwrap_or(0);
+    let digits = named_count(args, "digits");
+    let flag = named_str(args, "flag").unwrap_or_default();
+    let left = flag.contains('-');
+    let zero = flag.contains('0');
+    let plus = flag.contains('+');
+
+    let is_char = matches!(
+        peel_structural(x),
+        SValue::Character(_) | SValue::Factor { .. }
+    );
+    let format =
+        named_str(args, "format").unwrap_or_else(|| if is_char { "s".into() } else { "d".into() });
+    let conv = format.chars().next().unwrap_or('s');
+
+    let n = x.length();
+    if n == 0 {
+        return Ok(SValue::Character(vec![]));
+    }
+    let chars = x.as_character();
+    let doubles = x.as_double().ok();
+
+    let mut out = Vec::with_capacity(n);
+    for i in 0..n {
+        // NA renders as the literal "NA" in every conversion.
+        let is_na = match &doubles {
+            Some(d) => d.get_value(i).map(is_na_real).unwrap_or(true),
+            None => chars.get(i).map(|o| o.is_none()).unwrap_or(true),
+        };
+        let body = if is_na && conv != 's' {
+            "NA".to_string()
+        } else {
+            format_c_one(conv, &doubles, &chars, i, digits)?
+        };
+        // A leading `+` forces a sign on non-negative numbers (the printf flag).
+        let signed = if plus && conv != 's' && !body.starts_with('-') && body != "NA" {
+            format!("+{body}")
+        } else {
+            body
+        };
+        out.push(Some(pad(&signed, width, left, zero && !left)));
+    }
+    Ok(SValue::Character(out))
+}
+
+/// Render one element for `formatC` under conversion `conv`. Reuses the
+/// `sprintf` engine for `d`/`f`/`e`/`g`/`s`; adds `x` (hex of an integer).
+fn format_c_one(
+    conv: char,
+    doubles: &Option<Double>,
+    chars: &[Option<String>],
+    i: usize,
+    digits: Option<usize>,
+) -> SResult<String> {
+    if conv == 'x' {
+        // Hex of the integer value; NA/non-finite → "NA".
+        let v = doubles.as_ref().and_then(|d| d.get_value(i));
+        return Ok(match v {
+            Some(x) if x.is_finite() => format!("{:x}", x as i64),
+            _ => "NA".to_string(),
+        });
+    }
+    if conv == 's' {
+        return Ok(chars
+            .get(i)
+            .cloned()
+            .flatten()
+            .unwrap_or_else(|| "NA".to_string()));
+    }
+    // d/f/e/g go through the shared sprintf conversion renderer. Wrap the
+    // element as a one-row SValue so `render_conversion`'s recycling indexes it.
+    let sval = match doubles {
+        Some(d) => SValue::Double(Double::from_values(vec![d.get_value(i).unwrap_or(f64::NAN)])),
+        None => SValue::Character(vec![chars.get(i).cloned().flatten()]),
+    };
+    render_conversion(conv, Some(&sval), 0, digits)
+}
+
+/// `prettyNum(x, big.mark = ",")` — insert a thousands separator into each
+/// number's integer part. A convenience wrapper: `prettyNum(x, big.mark = m)`
+/// is `format(x)` with grouping but no common-width padding and no `nsmall`.
+fn b_pretty_num(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let big_mark = named_str(args, "big.mark").unwrap_or_else(|| ",".to_string());
+    let out: Vec<Option<String>> = match peel_structural(x) {
+        SValue::Double(_) | SValue::Matrix { .. } => x
+            .as_double()?
+            .iter()
+            .map(|v| {
+                if is_na_real(v) {
+                    Some("NA".to_string())
+                } else {
+                    Some(format_number_nsmall(v, 0, &big_mark))
+                }
+            })
+            .collect(),
+        // Non-numeric prettyNum just coerces to character (matching R, which
+        // applies big.mark only to the numeric-looking integer part).
+        _ => x
+            .as_character()
+            .into_iter()
+            .map(|o| match o {
+                Some(s) => Some(group_thousands_if_numeric(&s, &big_mark)),
+                None => Some("NA".to_string()),
+            })
+            .collect(),
+    };
+    Ok(SValue::Character(out))
+}
+
+/// For a character `prettyNum`: if the whole string parses as a number, group
+/// it; otherwise pass it through unchanged.
+fn group_thousands_if_numeric(s: &str, mark: &str) -> String {
+    match s.split_once('.') {
+        Some((int, frac))
+            if int.parse::<i64>().is_ok() && frac.chars().all(|c| c.is_ascii_digit()) =>
+        {
+            format!("{}.{}", group_thousands(int, mark), frac)
+        }
+        None if s.parse::<i64>().is_ok() => group_thousands(s, mark),
+        _ => s.to_string(),
+    }
+}
+
+/// `toString(x, sep = ", ")` — collapse a whole vector into a **single** string,
+/// joining the character-coerced elements with `sep`. `toString(1:3)` is
+/// `"1, 2, 3"`. Always length-1 (an empty vector gives `""`).
+fn b_to_string(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let sep = named_str(args, "sep").unwrap_or_else(|| ", ".to_string());
+    let parts: Vec<String> = x
+        .as_character()
+        .into_iter()
+        .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+        .collect();
+    Ok(SValue::Character(vec![Some(parts.join(&sep))]))
 }
 
 /// Combine the logical coercions of all positional arguments into one vector.

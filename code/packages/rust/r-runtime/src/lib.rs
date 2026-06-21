@@ -2470,4 +2470,166 @@ mod tests {
             a <- Base$new(x = 1)\nb <- a\nb$set(9)\nd <- a$copy()\nd$set(100)\nc(a$x, d$x)\n";
         assert_eq!(nums(src2), vec![9.0, 100.0]);
     }
+
+    // --- R-27: output-formatting functions ------------------------------
+    //
+    // Helper: pull the raw string from a length-1 character result (no `[1]`
+    // prefix, no surrounding quotes — just the bytes).
+    fn chr(src: &str) -> Vec<String> {
+        match eval_r(src).unwrap() {
+            SValue::Character(v) => v.into_iter().map(|o| o.unwrap_or_default()).collect(),
+            other => panic!("expected character, got {}", other.type_name()),
+        }
+    }
+
+    #[test]
+    fn format_nsmall_pads_decimals() {
+        // In this R-27 subset, a supplied `nsmall` is the decimal count: it both
+        // pads short values and rounds long ones to exactly nsmall places.
+        assert_eq!(chr("format(3.14159, nsmall = 2)\n"), vec!["3.14"]);
+        assert_eq!(chr("format(3, nsmall = 2)\n"), vec!["3.00"]);
+        assert_eq!(chr("format(2.5, nsmall = 3)\n"), vec!["2.500"]);
+        // nsmall = 0 (the default) uses R's default rendering, untouched.
+        assert_eq!(chr("format(3.14159)\n"), vec!["3.14159"]);
+    }
+
+    #[test]
+    fn format_width_pads_field() {
+        assert_eq!(chr("format(42, width = 5)\n"), vec!["   42"]);
+    }
+
+    #[test]
+    fn format_numeric_vector_common_width() {
+        // R right-justifies the whole vector to the widest element.
+        assert_eq!(chr("format(c(1, 10, 100))\n"), vec!["  1", " 10", "100"]);
+    }
+
+    #[test]
+    fn format_character_justify() {
+        assert_eq!(
+            chr("format(c(\"a\", \"bb\"), justify = \"left\")\n"),
+            vec!["a ", "bb"]
+        );
+        assert_eq!(
+            chr("format(c(\"a\", \"bb\"), justify = \"right\")\n"),
+            vec![" a", "bb"]
+        );
+        assert_eq!(
+            chr("format(\"x\", width = 5, justify = \"centre\")\n"),
+            vec!["  x  "]
+        );
+    }
+
+    #[test]
+    fn format_big_mark() {
+        assert_eq!(
+            chr("format(1234567, big.mark = \",\")\n"),
+            vec!["1,234,567"]
+        );
+    }
+
+    #[test]
+    fn format_c_fixed_and_zero_pad() {
+        assert_eq!(
+            chr("formatC(3.14159, format = \"f\", digits = 2)\n"),
+            vec!["3.14"]
+        );
+        assert_eq!(chr("formatC(42, width = 6, flag = \"0\")\n"), vec!["000042"]);
+    }
+
+    #[test]
+    fn format_c_left_justify_and_plus_and_hex() {
+        assert_eq!(chr("formatC(7, width = 4, flag = \"-\")\n"), vec!["7   "]);
+        assert_eq!(chr("formatC(7, flag = \"+\")\n"), vec!["+7"]);
+        assert_eq!(chr("formatC(255, format = \"x\")\n"), vec!["ff"]);
+        assert_eq!(chr("formatC(\"hi\", width = 5)\n"), vec!["   hi"]);
+        // e conversion.
+        assert_eq!(
+            chr("formatC(1000, format = \"e\", digits = 2)\n"),
+            vec!["1.00e3"]
+        );
+    }
+
+    #[test]
+    fn format_c_vectorized() {
+        assert_eq!(
+            chr("formatC(c(1, 22, 333), format = \"d\", width = 4)\n"),
+            vec!["   1", "  22", " 333"]
+        );
+    }
+
+    #[test]
+    fn pretty_num_thousands() {
+        assert_eq!(
+            chr("prettyNum(1234567, big.mark = \",\")\n"),
+            vec!["1,234,567"]
+        );
+        // Default big.mark is ",".
+        assert_eq!(chr("prettyNum(1000)\n"), vec!["1,000"]);
+        // Negative sign preserved, not grouped.
+        assert_eq!(chr("prettyNum(-12345, big.mark = \",\")\n"), vec!["-12,345"]);
+    }
+
+    #[test]
+    fn to_string_collapses() {
+        assert_eq!(chr("toString(1:3)\n"), vec!["1, 2, 3"]);
+        assert_eq!(
+            chr("toString(c(\"a\", \"b\"), sep = \"; \")\n"),
+            vec!["a; b"]
+        );
+        // Always length-1.
+        assert_eq!(eval_r("toString(1:3)\n").unwrap().length(), 1);
+    }
+
+    #[test]
+    fn sprintf_vectorized_recycling() {
+        // R-5 added scalar sprintf; R-27 confirms full vector recycling.
+        assert_eq!(
+            chr("sprintf(\"%d-%s\", 1:2, c(\"a\", \"b\"))\n"),
+            vec!["1-a", "2-b"]
+        );
+        // Width + precision + zero-pad on a float.
+        assert_eq!(chr("sprintf(\"%05.2f\", 3.1)\n"), vec!["03.10"]);
+        // Shorter args recycle to the longest.
+        assert_eq!(
+            chr("sprintf(\"%d:%d\", 1:4, 10)\n"),
+            vec!["1:10", "2:10", "3:10", "4:10"]
+        );
+    }
+
+    #[test]
+    fn sprintf_scalar_regression_still_works() {
+        // The R-5 scalar contract must not have regressed.
+        assert_eq!(
+            show("sprintf(\"%s has %d\", \"x\", 3L)\n"),
+            "[1] \"x has 3\""
+        );
+    }
+
+    #[test]
+    fn format_width_dos_capped() {
+        // A crafted huge width is CLAMPED to MAX_FIELD (1 MiB), not turned into a
+        // multi-GB allocation. We measure the result with `nchar` (so the giant
+        // string is never auto-printed) and confirm it is exactly the cap.
+        assert_eq!(
+            nums("nchar(formatC(1, width = 100000000))\n"),
+            vec![(1 << 20) as f64]
+        );
+        // `format`'s width is clamped the same way.
+        assert_eq!(
+            nums("nchar(format(\"x\", width = 1e9))\n"),
+            vec![(1 << 20) as f64]
+        );
+        // sprintf's own cap REJECTS an oversize literal width (clean error).
+        assert!(eval_r("sprintf(\"%99999999999d\", 1)\n").is_err());
+    }
+
+    #[test]
+    fn format_na_and_empty() {
+        assert_eq!(chr("format(NA)\n"), vec!["NA"]);
+        // toString of an empty vector (c() is NULL/length-0) is the empty string.
+        assert_eq!(chr("toString(c())\n"), vec![""]);
+        // An empty (length-0) input formats to a length-0 character vector.
+        assert_eq!(eval_r("format(c())\n").unwrap().length(), 0);
+    }
 }
