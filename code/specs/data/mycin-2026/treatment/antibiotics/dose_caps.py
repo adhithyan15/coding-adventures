@@ -51,18 +51,21 @@ def _safe_risk(tok: str) -> str:
     return tok
 
 
-def derive_dose_caps(cli: Path, active_risks) -> tuple[set[str], dict[str, dict]]:
+def derive_dose_caps(cli: Path, active_risks) -> tuple[set[str], list[dict]]:
     """Run the dose-cap rulebook under the patient's `active_risks` and return
     (derived_risks, caps):
       * derived_risks — the set of COMPOUND risk tokens the engine derives as holding
         (e.g. {"hepatorenal"}); fold these into the COP's risk set so the dose-window
         penalty fires.
-      * caps — {drug: {risk, source, locator, trust}} for every drug the engine derives as
-        dose-capped, each carrying the grounded byte-quote from the cap fact it joined.
-    An empty/falsy `active_risks` short-circuits to (set(), {}) without invoking the engine."""
+      * caps — a list of {drug, risk, source, locator, trust}, ONE per (drug, risk) the engine
+        derives as dose-capped, each carrying the grounded byte-quote from the cap fact it
+        joined. A drug may appear under several risks (e.g. vancomycin under renal_severe AND
+        nephrotoxin_interaction), hence a list rather than a drug-keyed dict. Covers both the
+        COMPOUND caps (risk ∈ derived_risks) and the SINGLE-FACTOR caps (risk ∈ active_risks).
+    An empty/falsy `active_risks` short-circuits to (set(), []) without invoking the engine."""
     toks = sorted({_safe_risk(r) for r in active_risks})
     if not toks:
-        return set(), {}
+        return set(), []
 
     program = RULEBOOK.read_text() + "\n"
     program += "".join(f"relate active_risk({t})\n" for t in toks)
@@ -82,7 +85,8 @@ def derive_dose_caps(cli: Path, active_risks) -> tuple[set[str], dict[str, dict]
         Path(tmp.name).unlink(missing_ok=True)
 
     derived_risks: set[str] = set()
-    caps: dict[str, dict] = {}
+    caps: list[dict] = []
+    seen: set[tuple[str, str]] = set()
     for rec in out.get("recall", []):
         q = rec.get("query", "")
         if q.startswith("derived_risk("):
@@ -94,14 +98,16 @@ def derive_dose_caps(cli: Path, active_risks) -> tuple[set[str], dict[str, dict]
             for ans in rec.get("answers", []):
                 b = ans.get("bindings", {})
                 drug, risk = b.get("D"), b.get("R")
-                if not drug or not risk:
+                if not drug or not risk or (drug, risk) in seen:
                     continue
+                seen.add((drug, risk))
                 # The grounding lives on the dose_capped_under fact the derivation joined;
                 # surface the first cited clause that carries a source (the grounded quote).
                 cite = next((c for c in ans.get("citations", []) if c.get("source")), {})
-                caps.setdefault(drug, {"risk": risk, "source": cite.get("source", ""),
-                                       "locator": cite.get("locator"),
-                                       "trust": cite.get("trust", "unattributed")})
+                caps.append({"drug": drug, "risk": risk, "source": cite.get("source", ""),
+                             "locator": cite.get("locator"),
+                             "trust": cite.get("trust", "unattributed")})
+    caps.sort(key=lambda c: (c["drug"], c["risk"]))
     return derived_risks, caps
 
 
@@ -114,5 +120,5 @@ if __name__ == "__main__":  # tiny demo
     if cli is None:
         print("dose_caps: adj-lang-cli not built", file=sys.stderr)
         raise SystemExit(3)
-    risks_dr, caps = derive_dose_caps(cli, {"hepatic_severe", "renal_moderate"})
+    risks_dr, caps = derive_dose_caps(cli, {"hepatic_severe", "renal_moderate", "nephrotoxin_interaction"})
     print(json.dumps({"derived_risks": sorted(risks_dr), "caps": caps}, indent=2, ensure_ascii=False))

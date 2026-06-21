@@ -403,20 +403,25 @@ def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> di
     surfaced (honest abstention). CC-5: the wait-vs-treat-now decision is computed from
     the chart's culture/clinical status against the disease's grounded time-criticality."""
     cop = compile_cop(facts)
-    # CC-2b: ask the ENGINE which COMPOUND risks the patient's active risk tokens trigger, by
-    # running the grounded dose-cap rulebook (? derived_risk / ? dose_capped). The hepatorenal
-    # conjunction (hepatic ∧ renal) is the engine's, not a Python `if` — a single risk derives
-    # nothing (hepatic alone needs no adjustment). Fold any derived compound risk into the COP's
-    # risk set BEFORE the dose-window solve so its grounded ceiling penalty fires; each capped
-    # drug carries its FDA byte-quote into the provenance.
-    derived_risks, dose_cap_info = dc.derive_dose_caps(cli, cop.risks)
+    # CC-2b/CC-2c: ask the ENGINE which dose caps the patient's active risk tokens trigger, by
+    # running the grounded dose-cap rulebook (? derived_risk / ? dose_capped). Two shapes, one
+    # rulebook: a COMPOUND cap (hepatorenal = hepatic ∧ renal) is the engine's conjunction, not a
+    # Python `if` (a single organ risk derives nothing); a SINGLE-FACTOR cap (vancomycin under
+    # renal/nephrotoxin) fires on one active risk and carries the FDA byte-quote that grounds the
+    # renal/nephrotoxin ceiling penalty. Fold any DERIVED compound risk into the COP's risk set
+    # BEFORE the dose-window solve so its ceiling penalty fires; surface every grounded cap as a
+    # provenance-bearing constraint so the FDA quote reaches the answer.
+    derived_risks, dose_caps_found = dc.derive_dose_caps(cli, cop.risks)
     cop.risks |= derived_risks
-    for drug, info in sorted(dose_cap_info.items()):
-        cop.constraints.append({"type": "dose_risk", "from": f"derived_risk({info['risk']})",
-                                "rule": f"{drug} dose-capped under {info['risk']} "
-                                        "(engine-derived conjunction of patient risk factors)",
-                                "detail": drug, "source": info.get("source"),
-                                "locator": info.get("locator"), "trust": info.get("trust")})
+    for cap in dose_caps_found:
+        compound = cap["risk"] in derived_risks
+        origin = f"derived_risk({cap['risk']})" if compound else f"active_risk({cap['risk']})"
+        kind = "engine-derived conjunction of patient risk factors" if compound \
+            else "engine-derived single-factor cap"
+        cop.constraints.append({"type": "dose_risk", "from": origin,
+                                "rule": f"{cap['drug']} dose-capped under {cap['risk']} ({kind})",
+                                "detail": cap["drug"], "source": cap.get("source"),
+                                "locator": cap.get("locator"), "trust": cap.get("trust")})
     # CC-2: drop drugs that can't be safely + effectively dosed for this patient.
     undosable = dose_infeasible(cli, reg.candidates(cop.exclusions), cop.risks, cop.weight)
     for d, w in undosable.items():

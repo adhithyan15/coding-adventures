@@ -163,8 +163,23 @@ risks Y") — decision support, not a hidden choice.
     direction the `renal_severe`/`renal_moderate`/`nephrotoxin_interaction` ceiling penalties
     encode. As with every dose number, only the DIRECTION is grounded; the per-kg penalty
     magnitudes in `formulary.json` stay the standing **ILLUSTRATIVE** feasibility model (the
-    label gives no closed-form per-kg reduction). Pure ledger/provenance increment — no engine
-    or compiler logic changed, so the regimen output is byte-identical.
+    label gives no closed-form per-kg reduction).
+    - **ADJ-NATIVE (single-factor caps are now ENGINE-QUERYABLE). ✅ DONE.** The `dose_caps.adj`
+      substrate (CC-2b) handled only **compound** (conjunctive) caps; it now also expresses
+      **single-factor** grounded caps via the same `dose_capped_under` relation + a third generic
+      rule (`dose_capped($D,$R) when active_risk($R), dose_capped_under($D,$R)`). The three
+      vancomycin penalties land as grounded facts —
+      `dose_capped_under(vancomycin, renal_severe)`, `(…, renal_moderate)`,
+      `(…, nephrotoxin_interaction)` — each carrying the FDA byte-quote from the records above
+      (`dose_caps_build.py` reads them from `dose-window-grounding.json`). `chart_to_cop.derive()`
+      now surfaces every engine-derived cap (compound *and* single-factor) as a
+      provenance-bearing `dose_risk` constraint, so the renal/nephrotoxin penalties carry their
+      FDA quote **at answer time**, engine-derived — not just in the ledger. `derive_dose_caps`
+      returns a list of `{drug, risk, source, locator, trust}` (a drug may be capped under
+      several risks). The numeric solve is unchanged, so the regimen output — and the board
+      scorecard — stays byte-identical; this only enriches provenance and proves the substrate
+      now covers both cap shapes. Verified by `test_dose_caps.py` (single-factor renal +
+      nephrotoxin caps grounded; compound still requires two categories; 15 tests).
 - **REFACTOR (ADJ-first): every exclusion is now an EXPLICIT engine constraint.** Dose-infeasible
   (CC-2), contraindicated (CC-3), and step-therapy (CC-6) drugs are unified into one
   `forced_zero: {drug → reason}` and emitted as `constrain x_d <= 0   % excluded (reason)` in the

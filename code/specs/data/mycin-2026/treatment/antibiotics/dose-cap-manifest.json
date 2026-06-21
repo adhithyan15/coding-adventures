@@ -50,7 +50,37 @@
       "trust": "authoritative",
       "source": "Patients with hepatic impairment and significant renal impairment should not receive more than 2 grams per day of ceftriaxone.",
       "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=5cd2d96f-83e5-4326-ae87-d0ede4ba493a"
+    },
+    "dose_capped_under__vancomycin__renal_severe": {
+      "relation": "dose_capped_under",
+      "subject": "vancomycin",
+      "risk": "renal_severe",
+      "grounding_id": "dose_penalty_vancomycin_renal",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Vancomycin should be used with caution in patients with renal insufficiency because the risk of toxicity is appreciably increased by high, prolonged blood concentrations. Dosage of vancomycin hydrochloride for injection must be adjusted for patients with renal dysfunction.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce"
+    },
+    "dose_capped_under__vancomycin__renal_moderate": {
+      "relation": "dose_capped_under",
+      "subject": "vancomycin",
+      "risk": "renal_moderate",
+      "grounding_id": "dose_penalty_vancomycin_renal",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Vancomycin should be used with caution in patients with renal insufficiency because the risk of toxicity is appreciably increased by high, prolonged blood concentrations. Dosage of vancomycin hydrochloride for injection must be adjusted for patients with renal dysfunction.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce"
+    },
+    "dose_capped_under__vancomycin__nephrotoxin_interaction": {
+      "relation": "dose_capped_under",
+      "subject": "vancomycin",
+      "risk": "nephrotoxin_interaction",
+      "grounding_id": "dose_penalty_vancomycin_nephrotoxin",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "In order to minimize the risk of nephrotoxicity when treating patients with underlying renal dysfunction or patients receiving concomitant therapy with an aminoglycoside, serial monitoring of renal function should be performed, and particular care should be taken in following appropriate dosing schedules.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce"
     }
   },
-  "hash": "868ee1af5642270e"
+  "hash": "9c3a7c2bf2db2b6f"
 }
