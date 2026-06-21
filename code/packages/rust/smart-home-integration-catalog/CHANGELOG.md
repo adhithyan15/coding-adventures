@@ -170,6 +170,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceRow`
   and summary helpers for turning guardrail audit rows into deterministic
   clear/block, review, and operator handoff decisions.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceAction`
+  and summary helpers for turning clearance decisions into deterministic
+  repair, review, handoff, or release-clearance work.
 - `IntegrationMeshReleaseTicketHandoffWorkOrderGuardrailReadinessSummary` and
   helpers for combining work-order readiness with handoff guardrail state.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditReadinessSummary` and
