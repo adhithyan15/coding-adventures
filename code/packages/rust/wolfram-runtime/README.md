@@ -11,8 +11,8 @@ See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfra
 §7 (W-4 runtime), §8 (W-5 built-ins), §9 (W-6 operator sugar), §10 (W-7
 iteration constructs), §11 (W-8 local scoping), §12 (W-9 list-manipulation
 builtins), §13 (W-10 functional-iteration combinators), §14 (W-11 pure
-functions), §15 (W-12 string builtins), §16 (W-13 list set operations), and §17
-(W-14 conditionals & predicates).
+functions), §15 (W-12 string builtins), §16 (W-13 list set operations), §17
+(W-14 conditionals & predicates), and §18 (W-15 numeric & integer math).
 
 ## What it does
 
@@ -144,6 +144,19 @@ assert_eq!(eval("Switch[2, 1, \"a\", 2, \"b\", _, \"z\"]\n").unwrap(), "Out[1]= 
 assert_eq!(eval("Boole[2 > 1]\n").unwrap(), "Out[1]= 1\n");
 assert_eq!(eval("IntegerQ[3]\n").unwrap(), "Out[1]= True\n");
 assert_eq!(eval("ListQ[{1, 2}]\n").unwrap(), "Out[1]= True\n");
+
+// W-15 numeric & integer math — Abs/Sign, Min/Max, rounding, Quotient, GCD/LCM, Sqrt:
+assert_eq!(eval("Abs[-3]\n").unwrap(), "Out[1]= 3\n");        // exact for integers
+assert_eq!(eval("Sign[-2]\n").unwrap(), "Out[1]= -1\n");
+assert_eq!(eval("Min[3, 1, 2]\n").unwrap(), "Out[1]= 1\n");   // also Min[{3, 1, 2}]
+assert_eq!(eval("Round[2.5]\n").unwrap(), "Out[1]= 2\n");     // half-to-even: 2.5 → 2
+assert_eq!(eval("Round[3.5]\n").unwrap(), "Out[1]= 4\n");     // …and 3.5 → 4
+assert_eq!(eval("GCD[12, 18, 24]\n").unwrap(), "Out[1]= 6\n");
+assert_eq!(eval("LCM[4, 6]\n").unwrap(), "Out[1]= 12\n");
+assert_eq!(eval("Quotient[-7, 2]\n").unwrap(), "Out[1]= -4\n"); // toward −∞
+assert_eq!(eval("Sqrt[16]\n").unwrap(), "Out[1]= 4\n");       // exact perfect square
+// Sqrt[2] stays symbolic; the float is on demand via N:
+assert_eq!(eval("Sqrt[2]\n").unwrap(), "Out[1]= Sqrt[2]\n");
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -420,6 +433,35 @@ non-boolean argument stays unevaluated (`Boole[x]` echoes), matching Wolfram. Th
 held forms evaluate exactly one branch via a single `vm.eval`, so there is no
 double-evaluation, no panic on a malformed pair list, and no new unbounded surface.
 
+**W-15** adds the **numeric & integer math** functions. Integer ops stay
+**exact** (i64, computed in i128 with overflow guards); real ops use f64 —
+mirroring the IR's own `Integer`/`Float` split. `Mod`, `Power`, and `N` already
+existed and are **not** duplicated; `Sqrt` is overridden in the Wolfram table
+(which precedes the inner backend in `handler_for`) to give Wolfram's
+exact-or-symbolic behaviour. All are `Head[args]` forms — no grammar change.
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Abs` | `Abs[-3]` / `Abs[-2.5]` | `3` / `2.5` |
+| `Sign` | `Sign[-2]` / `Sign[0]` | `-1` / `0` |
+| `Min` / `Max` | `Min[3, 1, 2]` / `Max[{3, 1, 2}]` | `1` / `3` |
+| `Floor` / `Ceiling` | `Floor[-2.1]` / `Ceiling[2.1]` | `-3` / `3` |
+| `Round` | `Round[2.5]` / `Round[3.5]` (half-to-even) | `2` / `4` |
+| `Quotient` | `Quotient[7, 2]` / `Quotient[-7, 2]` | `3` / `-4` |
+| `GCD` / `LCM` | `GCD[12, 18, 24]` / `LCM[4, 6]` | `6` / `12` |
+| `Sqrt` | `Sqrt[16]` / `Sqrt[2]` | `4` / `Sqrt[2]` |
+
+Two semantics worth pinning: **`Round` is half-to-even** (banker's rounding), so
+`Round[2.5]` → `2` and `Round[3.5]` → `4` — Rust's `f64::round` rounds half away
+from zero and is *not* used. **`Sqrt` is exact for perfect squares but otherwise
+symbolic** — `Sqrt[2]` stays `Sqrt[2]`, and the float is available on demand via
+`N[Sqrt[2]]` → `1.4142…`. Exact-integer ops are computed in **i128 with overflow
+guards** so `Abs[i64::MIN]`, `Quotient[i64::MIN, -1]`, and an over-i64 `LCM` of
+two large coprime integers all fail **closed** (left unevaluated) rather than
+wrapping or panicking. Every malformed form (wrong arity, non-numeric or
+non-integer argument, division by zero) is left unevaluated — the fail-soft
+contract every head since W-5 follows.
+
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
@@ -475,6 +517,13 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   `same_element` comparator with a `Blank[]` default) plus the eager `Boole` and
   `NumberQ`/`IntegerQ`/`StringQ`/`ListQ`/`TrueQ` type predicates, all thin matches
   over the `IRNode` kind. No grammar change (`EvenQ`/`OddQ` from W-9 unchanged).
+- **W-15** (this crate) — the `Abs`/`Sign`/`Min`/`Max`/`Floor`/`Ceiling`/`Round`/
+  `Quotient`/`GCD`/`LCM`/`Sqrt` numeric & integer math functions. Integer ops
+  stay exact (i64, i128 intermediates with overflow guards that fail closed); real
+  ops use f64. `Round` is half-to-even; `Sqrt` is exact for perfect squares,
+  otherwise symbolic (`N[Sqrt[2]]` for the float). `Mod`/`Power`/`N` reused
+  unchanged; `Sqrt` overrides the inner backend's eager-numericising one. No
+  grammar change.
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 

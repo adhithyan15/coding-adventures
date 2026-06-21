@@ -203,6 +203,25 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("StringQ".to_string(), handler_fn(string_q_handler));
     m.insert("ListQ".to_string(), handler_fn(list_q_handler));
     m.insert("TrueQ".to_string(), handler_fn(true_q_handler));
+
+    // W-15 numeric & integer math (MA04 §18). All ordinary, *eager* `Head[args]`
+    // forms — no grammar change. Integer ops stay EXACT (i64, with i128
+    // intermediates + overflow guards); real ops use f64. `Mod`/`Power`/`N`
+    // already exist and are NOT duplicated; `Sqrt` is overridden here (the
+    // Wolfram table precedes the inner backend in `handler_for`) to give the
+    // Wolfram-exact "exact-for-perfect-squares, else symbolic" behaviour the
+    // inner `SymbolicBackend` does not (it numericises `Sqrt[2]` eagerly).
+    m.insert("Abs".to_string(), handler_fn(abs_handler));
+    m.insert("Sign".to_string(), handler_fn(sign_handler));
+    m.insert("Min".to_string(), handler_fn(min_handler));
+    m.insert("Max".to_string(), handler_fn(max_handler));
+    m.insert("Floor".to_string(), handler_fn(floor_handler));
+    m.insert("Ceiling".to_string(), handler_fn(ceiling_handler));
+    m.insert("Round".to_string(), handler_fn(round_handler));
+    m.insert("Quotient".to_string(), handler_fn(quotient_handler));
+    m.insert("GCD".to_string(), handler_fn(gcd_handler));
+    m.insert("LCM".to_string(), handler_fn(lcm_handler));
+    m.insert("Sqrt".to_string(), handler_fn(sqrt_handler));
     m
 }
 
@@ -813,6 +832,19 @@ fn numericise(node: &IRNode) -> IRNode {
         IRNode::Apply(app) if is_list(&app.head) => {
             let mapped = app.args.iter().map(numericise).collect();
             apply(sym(LIST), mapped)
+        }
+        // `N[Sqrt[x]]` — a symbolic root left by `sqrt_handler` for a
+        // non-perfect-square: numericise the radicand and take the real square
+        // root when it is a non-negative float. A negative radicand has no real
+        // root, so the form is left as `Sqrt[<numericised arg>]` rather than
+        // producing a NaN.
+        IRNode::Apply(app)
+            if matches!(&app.head, IRNode::Symbol(s) if s == "Sqrt") && app.args.len() == 1 =>
+        {
+            match numericise(&app.args[0]) {
+                IRNode::Float(x) if x >= 0.0 => flt(x.sqrt()),
+                other => apply(app.head.clone(), vec![other]),
+            }
         }
         // A free symbol or any other head: leave as-is.
         other => other.clone(),
@@ -1708,6 +1740,392 @@ fn mod_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     }
     // r is now in (-|b|, |b|) with the divisor's sign, hence within i64 range.
     int(r as i64)
+}
+
+// ---------------------------------------------------------------------------
+// W-15 numeric & integer math (MA04 §18)
+// ---------------------------------------------------------------------------
+//
+// The scalar numeric vocabulary: `Abs`/`Sign`, the `Min`/`Max` reductions, the
+// three rounding functions, `Quotient`, `GCD`/`LCM`, and `Sqrt`. Two number
+// kinds drive the dispatch, mirroring the IR's own representation
+// (`IRNode::Integer(i64)` vs `IRNode::Float(f64)`):
+//
+//   * an **integer** argument → an **exact** integer result (`Abs[-3]` → `3`);
+//   * a **real** argument     → an f64 result (`Abs[-2.5]` → `2.5`).
+//
+// Exact integer ops compute in **i128** with explicit **overflow guards**: a
+// crafted pair of large `i64` arguments never wraps (silent corruption) and
+// never panics (debug-mode overflow). Every guard fails **closed** — the
+// offending application echoes unevaluated, the W-5/W-9/W-12/W-13/W-14 "I can't
+// reduce this" contract. `Quotient`/`GCD`/`LCM` are integer-only; `Abs`/`Sign`/
+// `Min`/`Max` accept integers and reals.
+
+/// Read any numeric node (Integer/Rational/Float) as an f64, or `None` for a
+/// non-number. The numeric counterpart of [`as_i64`] — used by the real-valued
+/// branches of `Abs`/`Sign`/`Min`/`Max`/`Sqrt`. Lossy for huge integers, but
+/// the real branches only run when an argument is already a `Float`.
+fn as_f64(node: &IRNode) -> Option<f64> {
+    numeric_magnitude(node)
+}
+
+/// `Abs[x]` — absolute value. Exact for integers, f64 for reals.
+///
+/// `Abs[-3]` → `3`, `Abs[3]` → `3`, `Abs[-2.5]` → `2.5`. The integer branch
+/// computes `(n as i128).abs()` so the one dangerous case — `Abs[i64::MIN]`,
+/// whose magnitude is one past `i64::MAX` and overflows a signed i64 negation —
+/// is detected: if the i128 magnitude does not fit back in i64 the form is left
+/// **unevaluated** rather than wrapping. A non-numeric argument (or wrong arity)
+/// leaves the form unevaluated.
+fn abs_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    match &expr.args[0] {
+        IRNode::Integer(n) => {
+            let m = (*n as i128).abs();
+            match i64::try_from(m) {
+                Ok(v) => int(v),
+                // Only Abs[i64::MIN] can reach here — magnitude exceeds i64.
+                Err(_) => unevaluated(expr),
+            }
+        }
+        IRNode::Float(f) => flt(f.abs()),
+        IRNode::Rational(num, den) => {
+            // Guard the numerator negation: |i64::MIN| overflows i64. The
+            // denominator is already > 0 (a rational invariant), so |q| = |num|/den.
+            match (*num).checked_abs() {
+                Some(n) => IRNode::rational(n, *den),
+                None => unevaluated(expr),
+            }
+        }
+        _ => unevaluated(expr),
+    }
+}
+
+/// `Sign[x]` — −1 / 0 / +1 by the sign of `x`. Always an exact integer result.
+///
+/// `Sign[-2]` → `-1`, `Sign[0]` → `0`, `Sign[5]` → `1`, `Sign[-2.5]` → `-1`,
+/// `Sign[2.5]` → `1`. For a `Float`, `±0.0` → `0` (signed zero is zero). `Sign`
+/// of `NaN` (unproducible by the parser, but a computed intermediate could be)
+/// leaves the form unevaluated rather than guessing. A non-numeric argument (or
+/// wrong arity) leaves the form unevaluated.
+fn sign_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    let Some(v) = as_f64(&expr.args[0]) else {
+        return unevaluated(expr);
+    };
+    if v.is_nan() {
+        return unevaluated(expr);
+    }
+    // partial_cmp against 0.0 classifies negative / zero / positive; -0.0 == 0.0
+    // in IEEE comparison, so signed zero falls into the zero arm.
+    if v < 0.0 {
+        int(-1)
+    } else if v > 0.0 {
+        int(1)
+    } else {
+        int(0)
+    }
+}
+
+/// The argument list a `Min`/`Max` reduction folds over: either the **single
+/// list** `Min[{a, b, …}]` (unwrapped to its elements) or the **variadic** form
+/// `Min[a, b, …]` (the arguments themselves). Returns `None` for an empty fold
+/// (no elements) so the caller can leave the form unevaluated.
+fn minmax_operands(args: &[IRNode]) -> Option<Vec<IRNode>> {
+    match args {
+        // Min[{…}] — fold over the list's elements.
+        [single] if is_list_node(single) => list_elements(single),
+        // Min[] — nothing to fold.
+        [] => None,
+        // Min[a, b, …] — fold over the arguments.
+        _ => Some(args.to_vec()),
+    }
+}
+
+/// True if `node` is a `List[…]` application — the shape `Min[{…}]`/`Max[{…}]`
+/// detect to switch from variadic to list-reduction mode.
+fn is_list_node(node: &IRNode) -> bool {
+    matches!(node, IRNode::Apply(app) if is_list(&app.head))
+}
+
+/// Shared `Min`/`Max` reduction. Every operand must be numeric (Integer/
+/// Rational/Float); a single non-numeric operand leaves the whole form
+/// unevaluated (Wolfram keeps `Min[x, 1]` symbolic). Comparison is by f64
+/// magnitude via [`as_f64`], but the **original node** is returned, so
+/// `Min[3, 1, 2]` → `1` (an exact integer) and `Min[2.5, 1]` → `1`. Ties keep
+/// the first operand (stable). `keep_greater` selects `Max` vs `Min`.
+fn minmax_reduce(expr: IRApply, keep_greater: bool) -> IRNode {
+    let Some(operands) = minmax_operands(&expr.args) else {
+        return unevaluated(expr);
+    };
+    if operands.is_empty() {
+        return unevaluated(expr);
+    }
+    // First operand seeds the fold; it must be numeric or the form is left
+    // unevaluated. (`operands` is non-empty — checked above.)
+    let mut best_val = match as_f64(&operands[0]) {
+        Some(v) => v,
+        None => return unevaluated(expr),
+    };
+    let mut best_node = operands[0].clone();
+    for node in &operands[1..] {
+        let Some(v) = as_f64(node) else {
+            return unevaluated(expr);
+        };
+        let replace = if keep_greater { v > best_val } else { v < best_val };
+        if replace {
+            best_val = v;
+            best_node = node.clone();
+        }
+    }
+    best_node
+}
+
+/// `Min[a, b, …]` / `Min[{a, b, …}]` → the least operand. See [`minmax_reduce`].
+fn min_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    minmax_reduce(expr, false)
+}
+
+/// `Max[a, b, …]` / `Max[{a, b, …}]` → the greatest operand. See [`minmax_reduce`].
+fn max_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    minmax_reduce(expr, true)
+}
+
+/// `Floor[x]` → the greatest integer ≤ x (round toward −∞). Always an integer.
+///
+/// `Floor[2.7]` → `2`, `Floor[-2.1]` → `-3`, `Floor[5]` → `5`. An integer input
+/// is returned unchanged; a real is floored via [`f64_to_i64`] (saturating, so a
+/// huge magnitude clamps rather than producing UB from `as i64`). A non-numeric
+/// argument leaves the form unevaluated.
+fn floor_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    round_with(expr, f64::floor)
+}
+
+/// `Ceiling[x]` → the least integer ≥ x (round toward +∞). Always an integer.
+/// `Ceiling[2.1]` → `3`, `Ceiling[-2.9]` → `-2`, `Ceiling[5]` → `5`.
+fn ceiling_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    round_with(expr, f64::ceil)
+}
+
+/// `Round[x]` → the nearest integer, **half-to-even** (banker's rounding).
+///
+/// Wolfram rounds an exact `.5` tie to the nearest *even* integer, NOT away from
+/// zero: `Round[0.5]` → `0`, `Round[1.5]` → `2`, `Round[2.5]` → `2`,
+/// `Round[3.5]` → `4`. Rust's `f64::round` rounds half *away* from zero
+/// (`2.5_f64.round()` is `3.0`), so it is unusable directly — we implement
+/// half-to-even with [`round_half_to_even`]. Always an integer result.
+fn round_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    round_with(expr, round_half_to_even)
+}
+
+/// Shared body of `Floor`/`Ceiling`/`Round`: apply a real→real rounding rule and
+/// convert to an exact integer (saturating). An integer argument short-circuits
+/// (returned unchanged); a non-numeric argument leaves the form unevaluated.
+fn round_with(expr: IRApply, rule: impl Fn(f64) -> f64) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    match &expr.args[0] {
+        // Floor/Ceiling/Round of an exact integer is itself.
+        IRNode::Integer(n) => int(*n),
+        IRNode::Rational(num, den) => int(f64_to_i64(rule(*num as f64 / *den as f64))),
+        IRNode::Float(f) => {
+            if !f.is_finite() {
+                return unevaluated(expr); // ±∞ / NaN cannot become an integer.
+            }
+            int(f64_to_i64(rule(*f)))
+        }
+        _ => unevaluated(expr),
+    }
+}
+
+/// Round half to even (banker's rounding): the IEEE-754 default. Round to the
+/// nearest integer; on an exact `.5` tie pick the **even** neighbour.
+///
+/// `round_half_to_even(2.5)` = `2`, `(3.5)` = `4`, `(-2.5)` = `-2`, `(0.5)` = `0`.
+/// Non-tie values round to the genuinely nearest integer.
+fn round_half_to_even(x: f64) -> f64 {
+    let floor = x.floor();
+    let diff = x - floor; // fractional part in [0, 1)
+    if diff < 0.5 {
+        floor
+    } else if diff > 0.5 {
+        floor + 1.0
+    } else {
+        // Exact tie: choose the even neighbour of `floor` and `floor + 1`.
+        if (floor as i64) % 2 == 0 {
+            floor
+        } else {
+            floor + 1.0
+        }
+    }
+}
+
+/// Convert a rounding rule's f64 output to an i64, **saturating** at the i64
+/// bounds. `value as i64` in Rust saturates on overflow for finite inputs
+/// (since Rust 1.45 `as` is a saturating cast), so a magnitude past i64 clamps
+/// to `i64::MAX`/`i64::MIN` rather than producing UB — a panic-free, defined
+/// result. (`round_with` filters out non-finite inputs before calling this.)
+fn f64_to_i64(value: f64) -> i64 {
+    value as i64
+}
+
+/// `Quotient[m, n]` → integer division of `m` by `n` **toward −∞** (floor
+/// division), the companion of W-11's `Mod` (`m == n*Quotient[m,n] + Mod[m,n]`).
+///
+/// `Quotient[7, 2]` → `3`, `Quotient[-7, 2]` → `-4` (toward −∞, not toward 0),
+/// `Quotient[7, -2]` → `-4`. Integer-only: a non-integer argument leaves the
+/// form unevaluated. `Quotient[m, 0]` is undefined → unevaluated. Computed in
+/// i128 so `Quotient[i64::MIN, -1]` (true value `i64::MAX + 1`) is detected and
+/// left unevaluated rather than panicking.
+fn quotient_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let (Some(m), Some(n)) = (as_i64(&expr.args[0]), as_i64(&expr.args[1])) else {
+        return unevaluated(expr);
+    };
+    if n == 0 {
+        return unevaluated(expr); // division by zero is undefined.
+    }
+    // Compute floor-division q = floor(m / n) in i128. Rust's `/` truncates
+    // toward zero, so when the exact quotient is negative *and* there is a
+    // remainder we subtract one to round toward −∞ (matching Wolfram's
+    // `Quotient`). i128 width also makes the one overflowing case —
+    // Quotient[i64::MIN, -1], true value i64::MAX + 1 — representable so the
+    // range check below can reject it instead of the `/` panicking.
+    let m = m as i128;
+    let n = n as i128;
+    let mut q = m / n;
+    // Adjust toward −∞ when the truncated quotient rounded the wrong way (the
+    // signs of remainder and divisor disagree).
+    if (m % n != 0) && ((m < 0) != (n < 0)) {
+        q -= 1;
+    }
+    match i64::try_from(q) {
+        Ok(v) => int(v),
+        // Only Quotient[i64::MIN, -1] can overflow i64.
+        Err(_) => unevaluated(expr),
+    }
+}
+
+/// Greatest common divisor of two i128 magnitudes, by the Euclidean algorithm.
+/// Both inputs are taken as non-negative i128 (callers pass `(x as i128).abs()`,
+/// which is always representable — i128 dwarfs i64), so the loop is monotone and
+/// terminates. `gcd128(0, 0) == 0` (the Wolfram convention).
+fn gcd128(mut a: i128, mut b: i128) -> i128 {
+    while b != 0 {
+        let t = a % b;
+        a = b;
+        b = t;
+    }
+    a.abs()
+}
+
+/// `GCD[a, b, …]` → the greatest common divisor of the integer arguments
+/// (non-negative). `GCD[12, 18]` → `6`, `GCD[12, 18, 24]` → `6`, `GCD[0, 5]` → `5`,
+/// `GCD[0, 0]` → `0`. At least one argument is required; a non-integer argument
+/// leaves the form unevaluated. Folded in **i128** so the negation of `i64::MIN`
+/// (taking `|i64::MIN|`) cannot overflow; the only result that can exceed i64 is
+/// `GCD[i64::MIN]`'s magnitude (one past `i64::MAX`), which is left unevaluated.
+fn gcd_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    fold_int_pairwise(expr, 0, |acc, x| gcd128(acc, (x as i128).abs()))
+}
+
+/// `LCM[a, b, …]` → the least common multiple of the integer arguments
+/// (non-negative). `LCM[4, 6]` → `12`, `LCM[3, 4, 5]` → `60`, `LCM[5, 0]` → `0`.
+/// At least one argument is required; a non-integer argument leaves the form
+/// unevaluated.
+///
+/// `lcm(a, b) = |a / gcd(a, b) * b|` is the classic overflow trap (`a * b`
+/// overflows long before the LCM does). Computed in **i128**, dividing by the
+/// gcd **first** (`a / g * b`, never `a * b / g`); the final magnitude is range-
+/// checked against i64 — an over-range LCM (e.g. of two large coprime ints) is
+/// left **unevaluated**, never wrapped. `LCM[…, 0]` is `0`.
+fn lcm_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    fold_int_pairwise(expr, 1, |acc, x| {
+        let x = (x as i128).abs();
+        if acc == 0 || x == 0 {
+            return 0; // lcm with zero is zero.
+        }
+        let g = gcd128(acc, x);
+        // Divide first, then multiply — overflow-resistant. Result is checked
+        // against i64 by the caller; here we work in full i128 width.
+        (acc / g) * x
+    })
+}
+
+/// Shared `GCD`/`LCM` reduction: fold every integer argument with `step`,
+/// starting from `init` (the identity: `0` for `GCD`, `1` for `LCM`). The fold
+/// runs in **i128**; the final accumulator is range-checked against i64 and the
+/// form is left unevaluated on overflow. At least one argument is required; a
+/// non-integer argument leaves the form unevaluated.
+fn fold_int_pairwise(
+    expr: IRApply,
+    init: i128,
+    step: impl Fn(i128, i64) -> i128,
+) -> IRNode {
+    if expr.args.is_empty() {
+        return unevaluated(expr);
+    }
+    let mut acc: i128 = init;
+    for arg in &expr.args {
+        let Some(x) = as_i64(arg) else {
+            return unevaluated(expr);
+        };
+        acc = step(acc, x);
+    }
+    let acc = acc.abs(); // GCD/LCM are non-negative.
+    match i64::try_from(acc) {
+        Ok(v) => int(v),
+        // Over-range (only crafted i64::MIN / large coprime LCM) → fail closed.
+        Err(_) => unevaluated(expr),
+    }
+}
+
+/// `Sqrt[x]` — exact for perfect squares, otherwise symbolic (MA04 §18.4).
+///
+/// * `Sqrt[16]` → `4`, `Sqrt[0]` → `0`, `Sqrt[1]` → `1` — exact integer root for
+///   a perfect-square non-negative integer.
+/// * `Sqrt[2]` → `Sqrt[2]` — a non-perfect-square non-negative integer is left
+///   **symbolic** (the float is available on demand via `N[Sqrt[2]]`).
+/// * `Sqrt[2.0]` → `1.4142…` — a `Float` argument signals "I want a number".
+/// * `Sqrt[-1]` / `Sqrt[x]` → unevaluated — no complex numbers in this subset,
+///   and a non-numeric argument cannot be reduced.
+///
+/// This handler is registered in the Wolfram table (which precedes the inner
+/// `SymbolicBackend` in `handler_for`), overriding the inner backend's eager
+/// numericising `Sqrt` to restore the Wolfram exact-or-symbolic behaviour.
+fn sqrt_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    match &expr.args[0] {
+        IRNode::Integer(n) if *n >= 0 => {
+            let n128 = *n as i128;
+            // Integer square root by the f64 estimate, refined ±1 to dodge any
+            // floating-point rounding error near a perfect square, then verified
+            // exactly in i128 so the squaring (`r * r`) can never overflow.
+            let est = (n128 as f64).sqrt() as i128;
+            for r in [est - 1, est, est + 1] {
+                if r >= 0 && r * r == n128 {
+                    return int(r as i64);
+                }
+            }
+            // Not a perfect square — leave Sqrt[n] symbolic.
+            unevaluated(expr)
+        }
+        // Negative integer: no real root in this subset.
+        IRNode::Integer(_) => unevaluated(expr),
+        IRNode::Float(f) if *f >= 0.0 => flt(f.sqrt()),
+        IRNode::Float(_) => unevaluated(expr), // negative real — no real root.
+        // A rational or any non-numeric head stays symbolic / unevaluated.
+        _ => unevaluated(expr),
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -4149,5 +4567,231 @@ mod tests {
         assert_eq!(run("StringQ", vec![]), apply(sym("StringQ"), vec![]));
         assert_eq!(run("ListQ", vec![]), apply(sym("ListQ"), vec![]));
         assert_eq!(run("TrueQ", vec![]), apply(sym("TrueQ"), vec![]));
+    }
+
+    // -----------------------------------------------------------------------
+    // W-15 numeric & integer math (MA04 §18)
+    // -----------------------------------------------------------------------
+
+    /// Evaluate a whole expression through the full [`WolframBackend`] VM (so
+    /// nested heads like `N[Sqrt[2]]` resolve end-to-end). Distinct from `run`,
+    /// which invokes a single handler over already-evaluated args.
+    fn eval_full(node: IRNode) -> IRNode {
+        use crate::backend::WolframBackend;
+        let mut vm = VM::new(Box::new(WolframBackend::new()));
+        vm.eval(node)
+    }
+
+    #[test]
+    fn abs_is_exact_for_integers_and_f64_for_reals() {
+        assert_eq!(run("Abs", vec![int(-3)]), int(3));
+        assert_eq!(run("Abs", vec![int(3)]), int(3));
+        assert_eq!(run("Abs", vec![int(0)]), int(0));
+        assert_eq!(run("Abs", vec![flt(-2.5)]), flt(2.5));
+        assert_eq!(run("Abs", vec![flt(2.5)]), flt(2.5));
+        assert_eq!(run("Abs", vec![IRNode::rational(-1, 2)]), IRNode::rational(1, 2));
+    }
+
+    #[test]
+    fn abs_of_i64_min_does_not_overflow_stays_unevaluated() {
+        // |i64::MIN| is one past i64::MAX — fail closed rather than wrap/panic.
+        assert_eq!(
+            run("Abs", vec![int(i64::MIN)]),
+            apply(sym("Abs"), vec![int(i64::MIN)])
+        );
+        // The neighbour i64::MIN + 1 IS representable.
+        assert_eq!(run("Abs", vec![int(i64::MIN + 1)]), int(i64::MAX));
+    }
+
+    #[test]
+    fn abs_of_non_numeric_or_wrong_arity_stays_unevaluated() {
+        assert_eq!(run("Abs", vec![sym("x")]), apply(sym("Abs"), vec![sym("x")]));
+        assert_eq!(
+            run("Abs", vec![int(1), int(2)]),
+            apply(sym("Abs"), vec![int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn sign_is_minus_one_zero_one() {
+        assert_eq!(run("Sign", vec![int(-2)]), int(-1));
+        assert_eq!(run("Sign", vec![int(0)]), int(0));
+        assert_eq!(run("Sign", vec![int(5)]), int(1));
+        assert_eq!(run("Sign", vec![flt(-2.5)]), int(-1));
+        assert_eq!(run("Sign", vec![flt(2.5)]), int(1));
+        // Signed zero is zero.
+        assert_eq!(run("Sign", vec![flt(-0.0)]), int(0));
+    }
+
+    #[test]
+    fn sign_of_nan_or_non_numeric_stays_unevaluated() {
+        assert_eq!(
+            run("Sign", vec![flt(f64::NAN)]),
+            apply(sym("Sign"), vec![flt(f64::NAN)])
+        );
+        assert_eq!(run("Sign", vec![sym("x")]), apply(sym("Sign"), vec![sym("x")]));
+    }
+
+    #[test]
+    fn min_and_max_variadic_and_over_a_list() {
+        assert_eq!(run("Min", vec![int(3), int(1), int(2)]), int(1));
+        assert_eq!(run("Max", vec![int(3), int(1), int(2)]), int(3));
+        assert_eq!(run("Min", vec![list(vec![int(3), int(1), int(2)])]), int(1));
+        assert_eq!(run("Max", vec![list(vec![int(3), int(1), int(2)])]), int(3));
+        // Mixed integer/real: the original node is returned (exact int wins here).
+        assert_eq!(run("Min", vec![flt(2.5), int(1)]), int(1));
+        assert_eq!(run("Max", vec![flt(2.5), int(1)]), flt(2.5));
+        // Single operand.
+        assert_eq!(run("Min", vec![int(7)]), int(7));
+    }
+
+    #[test]
+    fn min_max_with_non_numeric_or_empty_stays_unevaluated() {
+        assert_eq!(
+            run("Min", vec![sym("x"), int(1)]),
+            apply(sym("Min"), vec![sym("x"), int(1)])
+        );
+        assert_eq!(run("Max", vec![]), apply(sym("Max"), vec![]));
+        // Min over an empty list.
+        assert_eq!(
+            run("Min", vec![list(vec![])]),
+            apply(sym("Min"), vec![list(vec![])])
+        );
+    }
+
+    #[test]
+    fn floor_and_ceiling() {
+        assert_eq!(run("Floor", vec![flt(2.7)]), int(2));
+        assert_eq!(run("Floor", vec![flt(-2.1)]), int(-3));
+        assert_eq!(run("Ceiling", vec![flt(2.1)]), int(3));
+        assert_eq!(run("Ceiling", vec![flt(-2.9)]), int(-2));
+        // Integer input is returned unchanged (still an integer).
+        assert_eq!(run("Floor", vec![int(5)]), int(5));
+        assert_eq!(run("Ceiling", vec![int(5)]), int(5));
+    }
+
+    #[test]
+    fn round_is_half_to_even() {
+        // The canonical banker's-rounding cases.
+        assert_eq!(run("Round", vec![flt(2.5)]), int(2));
+        assert_eq!(run("Round", vec![flt(3.5)]), int(4));
+        assert_eq!(run("Round", vec![flt(0.5)]), int(0));
+        assert_eq!(run("Round", vec![flt(1.5)]), int(2));
+        assert_eq!(run("Round", vec![flt(-2.5)]), int(-2));
+        // Non-tie values round to the genuinely nearest integer.
+        assert_eq!(run("Round", vec![flt(2.4)]), int(2));
+        assert_eq!(run("Round", vec![flt(2.6)]), int(3));
+        assert_eq!(run("Round", vec![int(5)]), int(5));
+    }
+
+    #[test]
+    fn round_family_of_non_numeric_or_non_finite_stays_unevaluated() {
+        assert_eq!(run("Floor", vec![sym("x")]), apply(sym("Floor"), vec![sym("x")]));
+        assert_eq!(
+            run("Round", vec![flt(f64::INFINITY)]),
+            apply(sym("Round"), vec![flt(f64::INFINITY)])
+        );
+    }
+
+    #[test]
+    fn quotient_is_floor_division_toward_minus_infinity() {
+        assert_eq!(run("Quotient", vec![int(7), int(2)]), int(3));
+        assert_eq!(run("Quotient", vec![int(-7), int(2)]), int(-4));
+        assert_eq!(run("Quotient", vec![int(7), int(-2)]), int(-4));
+        assert_eq!(run("Quotient", vec![int(-7), int(-2)]), int(3));
+        assert_eq!(run("Quotient", vec![int(8), int(2)]), int(4));
+    }
+
+    #[test]
+    fn quotient_by_zero_or_overflow_or_non_integer_stays_unevaluated() {
+        assert_eq!(
+            run("Quotient", vec![int(5), int(0)]),
+            apply(sym("Quotient"), vec![int(5), int(0)])
+        );
+        // i64::MIN / -1 overflows i64 — fail closed.
+        assert_eq!(
+            run("Quotient", vec![int(i64::MIN), int(-1)]),
+            apply(sym("Quotient"), vec![int(i64::MIN), int(-1)])
+        );
+        assert_eq!(
+            run("Quotient", vec![flt(2.5), int(1)]),
+            apply(sym("Quotient"), vec![flt(2.5), int(1)])
+        );
+        assert_eq!(run("Quotient", vec![int(7)]), apply(sym("Quotient"), vec![int(7)]));
+    }
+
+    #[test]
+    fn gcd_and_lcm() {
+        assert_eq!(run("GCD", vec![int(12), int(18)]), int(6));
+        assert_eq!(run("GCD", vec![int(12), int(18), int(24)]), int(6));
+        assert_eq!(run("GCD", vec![int(0), int(5)]), int(5));
+        assert_eq!(run("GCD", vec![int(0), int(0)]), int(0));
+        // GCD ignores sign.
+        assert_eq!(run("GCD", vec![int(-12), int(18)]), int(6));
+        assert_eq!(run("LCM", vec![int(4), int(6)]), int(12));
+        assert_eq!(run("LCM", vec![int(3), int(4), int(5)]), int(60));
+        // LCM with zero is zero.
+        assert_eq!(run("LCM", vec![int(5), int(0)]), int(0));
+    }
+
+    #[test]
+    fn lcm_overflow_is_guarded_not_wrapped() {
+        // Two large coprime integers: the true LCM (≈ their product) exceeds
+        // i64. It must be left UNEVALUATED, never wrapped to a bogus value.
+        let a = 9_223_372_036_854_775_783_i64; // a large prime < i64::MAX
+        let b = 4_611_686_018_427_387_847_i64; // another large prime
+        assert_eq!(
+            run("LCM", vec![int(a), int(b)]),
+            apply(sym("LCM"), vec![int(a), int(b)])
+        );
+    }
+
+    #[test]
+    fn gcd_lcm_of_non_integer_or_empty_stays_unevaluated() {
+        assert_eq!(
+            run("GCD", vec![flt(1.5), int(2)]),
+            apply(sym("GCD"), vec![flt(1.5), int(2)])
+        );
+        assert_eq!(run("GCD", vec![]), apply(sym("GCD"), vec![]));
+        assert_eq!(
+            run("LCM", vec![sym("x"), int(2)]),
+            apply(sym("LCM"), vec![sym("x"), int(2)])
+        );
+    }
+
+    #[test]
+    fn sqrt_is_exact_for_perfect_squares_else_symbolic() {
+        assert_eq!(run("Sqrt", vec![int(16)]), int(4));
+        assert_eq!(run("Sqrt", vec![int(0)]), int(0));
+        assert_eq!(run("Sqrt", vec![int(1)]), int(1));
+        assert_eq!(run("Sqrt", vec![int(144)]), int(12));
+        // Non-perfect square stays symbolic.
+        assert_eq!(run("Sqrt", vec![int(2)]), apply(sym("Sqrt"), vec![int(2)]));
+        assert_eq!(run("Sqrt", vec![int(15)]), apply(sym("Sqrt"), vec![int(15)]));
+        // A float argument numericises.
+        assert_eq!(run("Sqrt", vec![flt(2.0)]), flt(2.0_f64.sqrt()));
+        // Negative integer has no real root in this subset.
+        assert_eq!(run("Sqrt", vec![int(-1)]), apply(sym("Sqrt"), vec![int(-1)]));
+    }
+
+    #[test]
+    fn n_of_symbolic_sqrt_numericises_through_the_full_backend() {
+        // Sqrt[2] stays symbolic, but N[Sqrt[2]] yields the float.
+        let n_sqrt2 = eval_full(apply(sym("N"), vec![apply(sym("Sqrt"), vec![int(2)])]));
+        match n_sqrt2 {
+            IRNode::Float(f) => assert!((f - 2.0_f64.sqrt()).abs() < 1e-12),
+            other => panic!("expected a float from N[Sqrt[2]], got {other:?}"),
+        }
+        // And a perfect square is already exact end-to-end.
+        assert_eq!(eval_full(apply(sym("Sqrt"), vec![int(16)])), int(4));
+    }
+
+    #[test]
+    fn numeric_heads_dispatch_end_to_end_through_the_wolfram_backend() {
+        // Confirm the Wolfram table's Sqrt overrides the inner backend's eager
+        // numericising one (which would return a Float for Sqrt[2]).
+        assert_eq!(eval_full(apply(sym("Sqrt"), vec![int(2)])), apply(sym("Sqrt"), vec![int(2)]));
+        assert_eq!(eval_full(apply(sym("GCD"), vec![int(12), int(18)])), int(6));
+        assert_eq!(eval_full(apply(sym("Round"), vec![flt(2.5)])), int(2));
     }
 }
