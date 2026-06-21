@@ -69,6 +69,16 @@
       "source": "Avoid moxifloxacin hydrochloride in patients with the following risk factors due to the lack of clinical experience with the drug in these patient populations: Known prolongation of the QT interval; Uncorrected hypokalemia or hypomagnesemia; Class IA (for example, quinidine, procainamide) or Class III (for example, amiodarone, sotalol) antiarrhythmic agents.",
       "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687"
     },
+    "class_contraindicated_in__fluoroquinolone__myasthenia_gravis": {
+      "relation": "class_contraindicated_in",
+      "subject": "fluoroquinolone",
+      "context": "myasthenia_gravis",
+      "grounding_id": "ci_fluoroquinolone_myasthenia",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Avoid ciprofloxacin and its fluoroquinolone class in patients with myasthenia gravis because it may exacerbate muscle weaknesses.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK535454/"
+    },
     "drug_contraindicated_in__tmp_smx__pregnancy": {
       "relation": "drug_contraindicated_in",
       "subject": "tmp_smx",
@@ -130,5 +140,5 @@
       "grounding_id": null
     }
   },
-  "hash": "c63c38b0d2e27b31"
+  "hash": "5d46e8fe60c02e13"
 }

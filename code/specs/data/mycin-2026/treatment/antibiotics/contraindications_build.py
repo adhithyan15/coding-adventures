@@ -107,6 +107,11 @@ CLASS_CONTRA: list[tuple[str, str, str, str]] = [
     ("ci_fluoroquinolone_qt", "fluoroquinolone", "qt_prolongation",
      "Fluoroquinolones (e.g. moxifloxacin) prolong the QT interval and should be avoided in "
      "patients with known QT prolongation."),
+    # CC-3c comorbidity family (class route): myasthenia gravis → the fluoroquinolone can
+    # exacerbate muscle weakness (FDA boxed warning). Same generic class rule, new context.
+    ("ci_fluoroquinolone_myasthenia", "fluoroquinolone", "myasthenia_gravis",
+     "Fluoroquinolones (e.g. moxifloxacin) are avoided in myasthenia gravis because they may "
+     "exacerbate muscle weakness."),
 ]
 
 # Drug-level contraindications: (grounding_id, drug, context, authored_fallback_quote).

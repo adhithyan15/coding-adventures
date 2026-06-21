@@ -58,6 +58,10 @@ rulebook contraindications {
         source "Avoid moxifloxacin hydrochloride in patients with the following risk factors due to the lack of clinical experience with the drug in these patient populations: Known prolongation of the QT interval; Uncorrected hypokalemia or hypomagnesemia; Class IA (for example, quinidine, procainamide) or Class III (for example, amiodarone, sotalol) antiarrhythmic agents."
         locator "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687"
         trust authoritative
+    relate class_contraindicated_in(fluoroquinolone, myasthenia_gravis)
+        source "Avoid ciprofloxacin and its fluoroquinolone class in patients with myasthenia gravis because it may exacerbate muscle weaknesses."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535454/"
+        trust authoritative
 
     % --- grounded DRUG-level contraindications ------------------------------
     relate drug_contraindicated_in(tmp_smx, pregnancy)

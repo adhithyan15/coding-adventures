@@ -288,6 +288,33 @@
         "final_verdict": "grounded"
       },
       "spider_status": "grounded"
+    },
+    {
+      "id": "ci_fluoroquinolone_myasthenia",
+      "kind": "contraindication",
+      "claim": "Fluoroquinolones (e.g. moxifloxacin) are contraindicated in patients with myasthenia gravis because they may exacerbate muscle weakness (FDA boxed warning).",
+      "grounded": {
+        "id": "ci_fluoroquinolone_myasthenia",
+        "verdict": "grounded",
+        "direction_correct": true,
+        "byte_quote": "Avoid ciprofloxacin and its fluoroquinolone class in patients with myasthenia gravis because it may exacerbate muscle weaknesses.",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK535454/",
+        "source_title": "Ciprofloxacin — StatPearls (NCBI Bookshelf), Adverse Effects / Contraindications",
+        "value_found": "StatPearls states to avoid ciprofloxacin and its fluoroquinolone class in myasthenia gravis due to risk of exacerbating muscle weakness; mirrors the FDA fluoroquinolone boxed warning (MG exacerbation).",
+        "discards": [
+          "Per-drug fluoroquinolone pages (moxifloxacin NBK599511, levofloxacin NBK545180, ofloxacin NBK549837) also state the MG contraindication, but they name a single drug; the ciprofloxacin page's span names the fluoroquinolone CLASS, which is the right granularity for the class_contraindicated_in fact — one authoritative class-level copy kept.",
+          "Secondary drug-reference/aggregator pages excluded by design (primary StatPearls/FDA only)."
+        ],
+        "note": "ENTAILED. The cited span names the fluoroquinolone CLASS + myasthenia gravis + the harm (exacerbation of muscle weakness) in one declarative, grounding class_contraindicated_in(fluoroquinolone, myasthenia_gravis) directionally. The FDA fluoroquinolone boxed warning lists MG exacerbation, so 'avoid/contraindicated' is label-accurate."
+      },
+      "verify": {
+        "id": "ci_fluoroquinolone_myasthenia",
+        "byte_stable": true,
+        "reextracted_value": "The StatPearls Ciprofloxacin page states verbatim: \"Avoid ciprofloxacin and its fluoroquinolone class in patients with myasthenia gravis because it may exacerbate muscle weaknesses.\"",
+        "refute_attempt": "Attempted refutation: is this only a ciprofloxacin claim, not class-wide? No — the span explicitly says 'and its fluoroquinolone class', and the per-drug moxifloxacin/levofloxacin/ofloxacin pages independently state the same MG contraindication, consistent with the FDA class boxed warning. The class-level fact is supported.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
     }
   ]
 }
