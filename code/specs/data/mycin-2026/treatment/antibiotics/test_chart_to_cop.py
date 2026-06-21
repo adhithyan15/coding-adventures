@@ -18,6 +18,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent.parent / "warm"))
 import chart_to_cop as cc  # noqa: E402
+import dose_caps  # noqa: E402
 import decide as decide_mod  # noqa: E402
 
 
@@ -69,14 +70,16 @@ def test_dose_risk_facts_become_dose_constraints():
 
 def test_hepatic_renal_conjunction_caps_ceftriaxone():
     # CC-2b (ceftriaxone FDA label): hepatic dysfunction ALONE needs no dose adjustment, but
-    # combined hepatic + significant renal impairment caps the dose. The compiler must record
-    # a hepatic risk yet emit the grounded `hepatorenal` token ONLY when renal is also present.
+    # combined hepatic + significant renal impairment caps the dose. ADJ-NATIVE: compile_cop is
+    # now a PURE translation — it records the raw `hepatic_*` risk token but NEVER synthesizes
+    # the `hepatorenal` compound; that conjunction is derived by the ENGINE (dose_caps.adj) in
+    # derive(). So even with both facts present, compile_cop must NOT contain `hepatorenal`.
     hep = cc.compile_cop([cc.ChartFact("hepatic_status", "hepatic_severe", "cirrhosis")])
     assert "hepatic_severe" in hep.risks and "hepatorenal" not in hep.risks, hep.risks
     both = cc.compile_cop([cc.ChartFact("hepatic_status", "hepatic_severe"),
                            cc.ChartFact("renal_status", "renal_moderate")])
-    assert "hepatorenal" in both.risks, both.risks
-    assert any(c.get("from") == "hepatic_status+renal_status" for c in both.constraints)
+    assert {"hepatic_severe", "renal_moderate"} <= both.risks, both.risks
+    assert "hepatorenal" not in both.risks, "conjunction must be engine-derived, not in compile_cop"
     # an unrecognized hepatic value is discarded, not silently turned into a risk.
     bad = cc.compile_cop([cc.ChartFact("hepatic_status", "hepatic_mild")])
     assert not bad.risks and any("hepatic_mild" in d["fact"] for d in bad.discards)
@@ -84,14 +87,24 @@ def test_hepatic_renal_conjunction_caps_ceftriaxone():
     cli = decide_mod.find_cli()
     if cli is None:
         return
-    # End-to-end: the conjunction shrinks ceftriaxone's ceiling but it stays FEASIBLE — a
-    # dose-ADJUSTMENT, not a fabricated INFEASIBLE — so the standard regimen survives.
+    # ENGINE-DERIVED conjunction: hepatic alone derives NO compound risk (faithful: no
+    # hepatic-only adjustment); hepatic + renal derives `hepatorenal` with the FDA byte-quote.
+    hep_only, caps_only = dose_caps.derive_dose_caps(cli, {"hepatic_severe"})
+    assert not hep_only and not caps_only, (hep_only, caps_only)
+    both_risks, both_caps = dose_caps.derive_dose_caps(cli, {"hepatic_severe", "renal_moderate"})
+    assert "hepatorenal" in both_risks, both_risks
+    assert both_caps.get("ceftriaxone", {}).get("trust") == "authoritative", both_caps
+    assert "hepatic impairment and significant renal impairment" in \
+        both_caps["ceftriaxone"]["source"], both_caps
+    # End-to-end through derive(): the conjunction shrinks ceftriaxone's ceiling but it stays
+    # FEASIBLE — a dose-ADJUSTMENT, not a fabricated INFEASIBLE — so the regimen survives, and
+    # the grounded cap surfaces as a provenance-bearing constraint.
     r = cc.derive(cli, [cc.ChartFact("age_band", "adult"),
                         cc.ChartFact("hepatic_status", "hepatic_severe"),
                         cc.ChartFact("renal_status", "renal_moderate")])
     assert r["regimen"] and set(r["regimen"]) == {"ceftriaxone", "vancomycin"}, r
     assert "ceftriaxone" not in r["dose_infeasible"], r["dose_infeasible"]
-    assert any(c.get("from") == "hepatic_status+renal_status" for c in r["constraints"]), r
+    assert any(c.get("from") == "derived_risk(hepatorenal)" for c in r["constraints"]), r
 
 
 def test_dose_infeasibility_folds_into_the_cover():

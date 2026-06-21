@@ -42,6 +42,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent.parent / "warm"))
 import contraindications as ci  # noqa: E402  (ADJ-native: derive_contraindications via the engine)
+import dose_caps as dc  # noqa: E402  (ADJ-native: derive_dose_caps — conjunctive caps via the engine)
 import decide as decide_mod  # noqa: E402  (find_cli)
 import derive_regimen as reg  # noqa: E402  (grounded formulary: SCENARIOS, DRUGS, candidates)
 import native_setcover as nsc  # noqa: E402  (the COP emitter/solver)
@@ -212,9 +213,11 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
                 cop.discards.append({"fact": f"interaction={f.value}",
                                      "reason": "no grounded dose-interaction rule for this interaction yet (CC-3)"})
         elif f.kind == "hepatic_status":
-            # CC-2b: hepatic impairment is tracked, but per the ceftriaxone FDA label
-            # hepatic dysfunction ALONE needs no dose adjustment — only the CONJUNCTION
-            # of hepatic + significant renal impairment caps the dose (handled post-loop).
+            # CC-2b: hepatic impairment is tracked as an active risk token, but per the
+            # ceftriaxone FDA label hepatic dysfunction ALONE needs no dose adjustment — only
+            # the CONJUNCTION of hepatic + significant renal impairment caps the dose. That
+            # conjunction is DERIVED BY THE ENGINE (dose_caps.adj) in derive(), not here: this
+            # handler only asserts the raw risk token, the rulebook owns the reasoning.
             if f.value in ("hepatic_severe", "hepatic_moderate"):
                 cop.risks.add(f.value)
                 cop.constraints.append({"type": "dose_risk", "from": f"hepatic_status={f.value}",
@@ -328,18 +331,9 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
     cop.organisms = list(reg.SCENARIOS[scenario])
     cop.constraints.append({"type": "coverage", "from": "scenario", "rule": scenario,
                             "detail": cop.organisms})
-
-    # CC-2b conjunctive cap: the ceftriaxone FDA label states no hepatic-only adjustment is
-    # needed, but combined hepatic + significant renal impairment caps the dose at 2 g/day.
-    # Emit the grounded `hepatorenal` risk ONLY when both are present, so hepatic-alone leaves
-    # the regimen untouched (faithful) while the conjunction shrinks ceftriaxone's ceiling.
-    has_hepatic = any(r.startswith("hepatic_") for r in cop.risks)
-    has_renal = any(r.startswith("renal_") for r in cop.risks)
-    if has_hepatic and has_renal:
-        cop.risks.add("hepatorenal")
-        cop.constraints.append({"type": "dose_risk", "from": "hepatic_status+renal_status",
-                                "rule": "combined hepatic + significant renal impairment caps "
-                                        "ceftriaxone at 2 g/day (FDA label)"})
+    # NOTE: the CC-2b conjunctive cap (hepatic ∧ renal → `hepatorenal`) is NOT computed here.
+    # It is DERIVED BY THE ENGINE in derive() from dose_caps.adj, so compile_cop stays a pure
+    # chart→COP translation and the conjunction reasoning lives in the language, not Python.
     return cop
 
 
@@ -409,6 +403,20 @@ def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> di
     surfaced (honest abstention). CC-5: the wait-vs-treat-now decision is computed from
     the chart's culture/clinical status against the disease's grounded time-criticality."""
     cop = compile_cop(facts)
+    # CC-2b: ask the ENGINE which COMPOUND risks the patient's active risk tokens trigger, by
+    # running the grounded dose-cap rulebook (? derived_risk / ? dose_capped). The hepatorenal
+    # conjunction (hepatic ∧ renal) is the engine's, not a Python `if` — a single risk derives
+    # nothing (hepatic alone needs no adjustment). Fold any derived compound risk into the COP's
+    # risk set BEFORE the dose-window solve so its grounded ceiling penalty fires; each capped
+    # drug carries its FDA byte-quote into the provenance.
+    derived_risks, dose_cap_info = dc.derive_dose_caps(cli, cop.risks)
+    cop.risks |= derived_risks
+    for drug, info in sorted(dose_cap_info.items()):
+        cop.constraints.append({"type": "dose_risk", "from": f"derived_risk({info['risk']})",
+                                "rule": f"{drug} dose-capped under {info['risk']} "
+                                        "(engine-derived conjunction of patient risk factors)",
+                                "detail": drug, "source": info.get("source"),
+                                "locator": info.get("locator"), "trust": info.get("trust")})
     # CC-2: drop drugs that can't be safely + effectively dosed for this patient.
     undosable = dose_infeasible(cli, reg.candidates(cop.exclusions), cop.risks, cop.weight)
     for d, w in undosable.items():
