@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.20.0] - 2026-06-20
+
+### Added — CLOC23: function inlining across `for`-`of`
+
+Every phase of the pass recurses through `ForOfStatement` (left / right
+expression / body), counting the `left` declaration as the loop-variable
+binding — identical to the `for`-`in` handling.
+
 ## [0.19.0] - 2026-06-20
 
 ### Added — CLOC22: function inlining across `for`-`in`

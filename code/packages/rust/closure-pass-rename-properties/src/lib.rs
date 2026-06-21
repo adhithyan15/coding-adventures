@@ -1042,6 +1042,20 @@ fn classify_stmt(stmt: &Statement, cls: &mut Classify, nodes_touched: &mut u32) 
                 classify_expr(&fs.right, cls);
                 classify_stmt(&fs.body, cls, nodes_touched);
             }
+            TaggedStatement::ForOfStatement(fs) => {
+                match &fs.left {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &vd.declarations {
+                            if let Some(i) = &d.init {
+                                classify_expr(i, cls);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => classify_expr(e, cls),
+                }
+                classify_expr(&fs.right, cls);
+                classify_stmt(&fs.body, cls, nodes_touched);
+            }
             TaggedStatement::ReturnStatement(rs) => {
                 if let Some(a) = &rs.argument {
                     classify_expr(a, cls);
@@ -1241,6 +1255,20 @@ fn rewrite_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
                 rewrite_stmt(&mut fs.body, map);
             }
             TaggedStatement::ForInStatement(fs) => {
+                match &mut fs.left {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &mut vd.declarations {
+                            if let Some(i) = &mut d.init {
+                                rewrite_expr(i, map);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => rewrite_expr(e, map),
+                }
+                rewrite_expr(&mut fs.right, map);
+                rewrite_stmt(&mut fs.body, map);
+            }
+            TaggedStatement::ForOfStatement(fs) => {
                 match &mut fs.left {
                     ForInit::VariableDeclaration(vd) => {
                         for d in &mut vd.declarations {

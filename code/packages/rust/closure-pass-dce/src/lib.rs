@@ -73,6 +73,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BigIntLiteral,
     BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
+    ForOfStatement,
     ForStatement,
     FunctionDeclaration, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
     NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
@@ -292,6 +293,17 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
         // loops, a for-in is NOT a terminator (the body may run zero times),
         // so code after it stays reachable.
         TaggedStatement::ForInStatement(s) => TaggedStatement::ForInStatement(ForInStatement {
+            cv: s.cv.clone(),
+            left: match &s.left {
+                ForInit::VariableDeclaration(v) => {
+                    ForInit::VariableDeclaration(dce_variable_declaration(v, st))
+                }
+                ForInit::Expression(e) => ForInit::Expression(dce_expression(e, st)),
+            },
+            right: dce_expression(&s.right, st),
+            body: Box::new(dce_statement(&s.body, st)),
+        }),
+        TaggedStatement::ForOfStatement(s) => TaggedStatement::ForOfStatement(ForOfStatement {
             cv: s.cv.clone(),
             left: match &s.left {
                 ForInit::VariableDeclaration(v) => {

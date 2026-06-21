@@ -652,6 +652,18 @@ fn walk_tagged_statement(
             walk_expression(&fs.right, ctx, analysis, pending);
             walk_statement(&fs.body, ctx, analysis, pending);
         }
+        TaggedStatement::ForOfStatement(fs) => {
+            // The for-in `left` declares (or targets) the loop variable; walk
+            // it, then the enumerated `right`, then the body.
+            match &fs.left {
+                ForInit::VariableDeclaration(vd) => {
+                    walk_variable_declaration(vd, ctx, analysis, pending);
+                }
+                ForInit::Expression(e) => walk_expression(e, ctx, analysis, pending),
+            }
+            walk_expression(&fs.right, ctx, analysis, pending);
+            walk_statement(&fs.body, ctx, analysis, pending);
+        }
         TaggedStatement::ReturnStatement(rs) => {
             if let Some(arg) = &rs.argument {
                 walk_expression(arg, ctx, analysis, pending);

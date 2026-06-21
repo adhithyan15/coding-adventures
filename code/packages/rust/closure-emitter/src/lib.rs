@@ -68,7 +68,8 @@ use coding_adventures_javascript_ast::{
     BooleanLiteral,
     BreakStatement, CallExpression, CatchClause, ConditionalExpression, ContinueStatement,
     Declaration, DebuggerStatement, DoWhileStatement,
-    EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForStatement,
+    EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
+    ForStatement,
     FunctionDeclaration,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
@@ -295,6 +296,7 @@ impl<'a> Emitter<'a> {
             TaggedStatement::DoWhileStatement(d) => self.emit_do_while(d),
             TaggedStatement::ForStatement(f) => self.emit_for(f),
             TaggedStatement::ForInStatement(f) => self.emit_for_in(f),
+            TaggedStatement::ForOfStatement(f) => self.emit_for_of(f),
             TaggedStatement::ReturnStatement(r) => self.emit_return(r),
             TaggedStatement::BreakStatement(b) => self.emit_break(b),
             TaggedStatement::ContinueStatement(c) => self.emit_continue(c),
@@ -535,6 +537,29 @@ impl<'a> Emitter<'a> {
         }
         self.required_ws();
         self.write_str("in");
+        self.required_ws();
+        self.emit_expression(&f.right);
+        self.write_str(")");
+        self.pretty_ws();
+        self.emit_statement(&f.body);
+    }
+
+    fn emit_for_of(&mut self, f: &ForOfStatement) {
+        // `for ( <left> of <right> ) <body>` — identical to for-in but with the
+        // `of` keyword, spaced on both sides for the same token-separation
+        // reason (the left ends in an identifier and the right starts with one).
+        self.maybe_map(&f.cv);
+        self.write_str("for");
+        self.pretty_ws();
+        self.write_str("(");
+        match &f.left {
+            ForInit::VariableDeclaration(v) => {
+                self.emit_variable_declaration(v, /*top_level=*/ false);
+            }
+            ForInit::Expression(e) => self.emit_expression(e),
+        }
+        self.required_ws();
+        self.write_str("of");
         self.required_ws();
         self.emit_expression(&f.right);
         self.write_str(")");
@@ -2657,6 +2682,43 @@ mod tests {
         assert_eq!(
             emit_default(program().with_body(vec![item])).code,
             "for(k in obj)a;"
+        );
+    }
+
+    // ---- for / of (CLOC23) ------------------------------------
+
+    #[test]
+    fn for_of_var_left_block_body_emits_with_spaced_of() {
+        // `for (var v of it) { a }` — `of` spaced on both sides.
+        let f = ForOfStatement {
+            cv: None,
+            left: for_in_var_left("v", VarKind::Var),
+            right: ident("it"),
+            body: Box::new(Statement::block_statement(block_with("a"))),
+        };
+        let item = ProgramItem::Statement(Statement::for_of_statement(f));
+        assert_eq!(
+            emit_default(program().with_body(vec![item])).code,
+            "for(var v of it){a}"
+        );
+    }
+
+    #[test]
+    fn for_of_expression_left_bare_body_emits() {
+        // `for (v of it) a;` — existing-target left, bare-statement body.
+        let f = ForOfStatement {
+            cv: None,
+            left: ForInit::Expression(ident("v")),
+            right: ident("it"),
+            body: Box::new(Statement::expression_statement(ExpressionStatement {
+                cv: None,
+                expression: ident("a"),
+            })),
+        };
+        let item = ProgramItem::Statement(Statement::for_of_statement(f));
+        assert_eq!(
+            emit_default(program().with_body(vec![item])).code,
+            "for(v of it)a;"
         );
     }
 

@@ -84,7 +84,8 @@ use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
-    Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForStatement,
+    Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
+    ForStatement,
     FunctionDeclaration,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
     ObjectExpression, Program, ProgramItem, Property, PropertyKey, ReturnStatement, Statement,
@@ -288,6 +289,17 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
             body: Box::new(fold_statement(&s.body, st)),
         }),
         TaggedStatement::ForInStatement(s) => TaggedStatement::ForInStatement(ForInStatement {
+            cv: s.cv.clone(),
+            left: match &s.left {
+                ForInit::VariableDeclaration(v) => {
+                    ForInit::VariableDeclaration(fold_variable_declaration(v, st))
+                }
+                ForInit::Expression(e) => ForInit::Expression(fold_expression(e, st)),
+            },
+            right: fold_expression(&s.right, st),
+            body: Box::new(fold_statement(&s.body, st)),
+        }),
+        TaggedStatement::ForOfStatement(s) => TaggedStatement::ForOfStatement(ForOfStatement {
             cv: s.cv.clone(),
             left: match &s.left {
                 ForInit::VariableDeclaration(v) => {

@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.13.0] - 2026-06-20
+
+### Added — CLOC23: fold control flow inside `for`-`of`
+
+New `ForOfStatement` arm recurses control-flow folding into the loop's left,
+right expression, and body. Like the other loops, a for-of is not eliminated and
+is not a terminator (the iterable may be empty, so the body may run zero times).
+
 ## [0.12.0] - 2026-06-20
 
 ### Added — CLOC22: fold control flow inside `for`-`in`
