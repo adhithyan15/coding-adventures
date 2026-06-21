@@ -1928,10 +1928,7 @@ mod r29_set_ops {
     #[test]
     fn is_element_scalar_and_vectorized() {
         assert_eq!(show("is.element(2, c(1, 2, 3))\n"), "[1] TRUE");
-        assert_eq!(
-            show("is.element(c(1, 5), c(1, 2, 3))\n"),
-            "[1]  TRUE FALSE"
-        );
+        assert_eq!(show("is.element(c(1, 5), c(1, 2, 3))\n"), "[1]  TRUE FALSE");
         assert_eq!(show("is.element(\"x\", c(\"a\", \"x\"))\n"), "[1] TRUE");
     }
 
@@ -1971,10 +1968,7 @@ mod r29_set_ops {
     #[test]
     fn rank_character_lexicographic() {
         // "a" < "b" < "c"; the two "a"s share positions 1,2 → 1.5 each.
-        assert_eq!(
-            nums("rank(c(\"b\", \"a\", \"a\"))\n"),
-            vec![3.0, 1.5, 1.5]
-        );
+        assert_eq!(nums("rank(c(\"b\", \"a\", \"a\"))\n"), vec![3.0, 1.5, 1.5]);
     }
 
     // --- degenerate edges ----------------------------------------------
@@ -1992,6 +1986,9 @@ mod r29_set_ops {
 
     #[test]
     fn setdiff_everything_removed_is_empty() {
-        assert_eq!(eval_s("setdiff(c(1, 2), c(1, 2, 3))\n").unwrap().length(), 0);
+        assert_eq!(
+            eval_s("setdiff(c(1, 2), c(1, 2, 3))\n").unwrap().length(),
+            0
+        );
     }
 }

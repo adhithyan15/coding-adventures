@@ -10,8 +10,8 @@ use crate::env::{define, lookup, Env};
 use crate::error::{SError, SResult};
 use crate::eval::{nth_element, Interpreter};
 use crate::value::{
-    bounded_sequence, class_of, combine, format_number, index, Arg, SValue, MAX_ATTRIBUTES,
-    MAX_SEQ_LEN,
+    bounded_sequence, class_of, combine, format_number, index, membership, Arg, SValue,
+    MAX_ATTRIBUTES, MAX_SEQ_LEN,
 };
 use r_vector::{is_na_real, na_real, Double};
 use statistics_core::distributions::{dnorm, pnorm, qnorm, rnorm};
@@ -83,6 +83,13 @@ pub fn install(env: &Env) {
     define(env, "order", builtin("order", b_order));
     define(env, "rep", builtin("rep", b_rep));
     define(env, "unique", builtin("unique", b_unique));
+    // R-29 — vector set operations & ordering.
+    define(env, "union", builtin("union", b_union));
+    define(env, "intersect", builtin("intersect", b_intersect));
+    define(env, "setdiff", builtin("setdiff", b_setdiff));
+    define(env, "is.element", builtin("is.element", b_is_element));
+    define(env, "duplicated", builtin("duplicated", b_duplicated));
+    define(env, "rank", builtin("rank", b_rank));
     define(env, "which", builtin("which", b_which));
     define(env, "any", builtin("any", b_any));
     define(env, "all", builtin("all", b_all));
@@ -1818,6 +1825,218 @@ fn b_unique(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .filter_map(|(i, k)| seen.insert(k.clone()).then_some((i + 1) as f64))
         .collect();
     index(v, &SValue::doubles(keep))
+}
+
+// ─── R-29 — vector set operations & ordering ─────────────────────────────────
+//
+// R treats vectors as *multisets* when you ask for set operations: `union`,
+// `intersect`, and `setdiff` all deduplicate, and — crucially — they preserve
+// **first-occurrence order** rather than sorting (R's `union(c(3,1), c(1,2))`
+// is `c(3, 1, 2)`, not `c(1, 2, 3)`). The comparison key is the same coerced
+// *character* form that `unique` and `%in%` already use (`as_character`), so a
+// single code path handles numeric and character vectors uniformly: two values
+// are "the same element" iff their character renderings match. We never build a
+// new value type — we compute which 1-based positions to keep and hand them to
+// `value::index`, which gathers them while preserving the original element type.
+//
+//     union(x, y)     = unique(c(x, y))                  first-occurrence order
+//     intersect(x, y) = keep x[i] once, if key(x[i]) ∈ keys(y)
+//     setdiff(x, y)   = keep x[i] once, if key(x[i]) ∉ keys(y)
+//
+// Output size is bounded by the inputs (union ≤ |x|+|y|, the others ≤ |x|), and
+// every operand is already `MAX_SEQ_LEN`-bounded, so no fresh cap is needed.
+
+/// Read the **two** positional arguments (`x`, `y`) a binary set op expects.
+/// Missing or surplus named arguments are ignored; the *second positional* (not
+/// merely the second argument) is `y`, matching R's argument matching for these
+/// purely positional builtins.
+fn two_positional(args: &[Arg]) -> SResult<(&SValue, &SValue)> {
+    let mut pos = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value);
+    let x = pos
+        .next()
+        .ok_or_else(|| SError::BadArgs("argument \"x\" is missing".into()))?;
+    let y = pos
+        .next()
+        .ok_or_else(|| SError::BadArgs("argument \"y\" is missing".into()))?;
+    Ok((x, y))
+}
+
+/// `union(x, y)` — the distinct elements of `c(x, y)`, in first-occurrence
+/// order. Implemented as `unique(combine(x, y))`: concatenate (reusing `combine`,
+/// the engine behind `c(...)`), then keep the first sighting of each character
+/// key. The result's element type is whatever `combine` produced (numeric if
+/// both sides are numeric, character if either side is character) — identical to
+/// what `c(x, y)` would yield, then deduplicated.
+fn b_union(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (x, y) = two_positional(args)?;
+    let joined = combine(&[
+        Arg {
+            name: None,
+            value: x.clone(),
+        },
+        Arg {
+            name: None,
+            value: y.clone(),
+        },
+    ]);
+    let keys = joined.as_character();
+    let mut seen: HashSet<Option<String>> = HashSet::new();
+    let keep: Vec<f64> = keys
+        .iter()
+        .enumerate()
+        .filter_map(|(i, k)| seen.insert(k.clone()).then_some((i + 1) as f64))
+        .collect();
+    index(&joined, &SValue::doubles(keep))
+}
+
+/// `intersect(x, y)` — the elements present in **both** `x` and `y`, in `x`'s
+/// order, deduplicated. We build `y`'s key-set once, then walk `x` keeping each
+/// position whose key is in `y` *and* has not already been kept (the `seen` set
+/// enforces the dedup).
+fn b_intersect(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (x, y) = two_positional(args)?;
+    let y_keys: HashSet<Option<String>> = y.as_character().into_iter().collect();
+    let mut seen: HashSet<Option<String>> = HashSet::new();
+    let keep: Vec<f64> = x
+        .as_character()
+        .iter()
+        .enumerate()
+        .filter_map(|(i, k)| {
+            (y_keys.contains(k) && seen.insert(k.clone())).then_some((i + 1) as f64)
+        })
+        .collect();
+    index(x, &SValue::doubles(keep))
+}
+
+/// `setdiff(x, y)` — the elements of `x` **not** in `y`, deduplicated, in `x`'s
+/// order. The mirror of `intersect`: keep a position whose key is *absent* from
+/// `y` and not yet seen.
+fn b_setdiff(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (x, y) = two_positional(args)?;
+    let y_keys: HashSet<Option<String>> = y.as_character().into_iter().collect();
+    let mut seen: HashSet<Option<String>> = HashSet::new();
+    let keep: Vec<f64> = x
+        .as_character()
+        .iter()
+        .enumerate()
+        .filter_map(|(i, k)| {
+            (!y_keys.contains(k) && seen.insert(k.clone())).then_some((i + 1) as f64)
+        })
+        .collect();
+    index(x, &SValue::doubles(keep))
+}
+
+/// `is.element(el, set)` — the function spelling of `el %in% set`: a logical
+/// vector, one entry per element of `el`, `TRUE` where it appears in `set`. A
+/// thin alias over `value::membership` so the two stay bug-for-bug identical
+/// (same coercion, same `NA`-matches-`NA` rule).
+fn b_is_element(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (el, set) = two_positional(args)?;
+    Ok(membership(el, set))
+}
+
+/// `duplicated(x)` — a logical vector, `TRUE` for an element that equals one
+/// seen **earlier** (so the first occurrence of every distinct value is
+/// `FALSE`). Same `as_character`-key + `seen`-set scan as `unique`, but it emits
+/// the flag instead of gathering: `seen.insert(k)` returns `true` the first time
+/// we meet a key (→ not a duplicate) and `false` thereafter (→ a duplicate).
+fn b_duplicated(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let mut seen: HashSet<Option<String>> = HashSet::new();
+    let flags: Vec<Option<bool>> = x
+        .as_character()
+        .into_iter()
+        .map(|k| Some(!seen.insert(k)))
+        .collect();
+    Ok(SValue::Logical(flags))
+}
+
+/// `rank(x)` — **sample ranks** with **average** tie handling (R's default
+/// `ties.method = "average"`). Conceptually: sort the values ascending; an
+/// element's rank is its 1-based position in that order, and a run of equal
+/// values shares the **mean** of the positions it spans.
+///
+/// ```text
+/// x          = c(1, 1, 2)
+/// sorted     =   1   1   2     positions 1   2   3
+/// the two 1s span positions 1,2  -> average (1+2)/2 = 1.5
+/// rank(x)    = c(1.5, 1.5, 3)
+/// ```
+///
+/// Implementation: sort an index permutation `order` (so `order[p]` is the
+/// original index of the value at sorted-position `p`), then walk `order` in
+/// runs of equal keys, assigning every member of a run the average of the
+/// `[run_start+1 ..= run_end+1]` positions. Numeric input compares numerically;
+/// character input lexicographically. The result is always numeric (averages
+/// are fractional), matching R. `O(n log n)` time, one `f64` per element — no
+/// user-controlled multiplier, so no extra allocation cap is required.
+fn b_rank(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    // Compute a totally-ordered comparison and a "same key" test from one coerced
+    // form. For numeric vectors we rank on the f64 values (NA sorts last, like R's
+    // default na.last); for character (or anything else) we rank on the string keys.
+    let n = x.length();
+    if n == 0 {
+        return Ok(SValue::doubles(vec![]));
+    }
+
+    // `keys[i]` is the order-and-equality key for the original element `i`.
+    // We use the character rendering for everything except a pure numeric vector,
+    // where numeric comparison is what R uses (and "10" must rank above "9").
+    enum Keys {
+        Num(Vec<f64>),
+        Str(Vec<Option<String>>),
+    }
+    let keys = match x.strip_names().strip_attrs() {
+        SValue::Character(_) | SValue::Factor { .. } => Keys::Str(x.as_character()),
+        other => Keys::Num(other.as_double()?.iter().collect()),
+    };
+
+    let mut order: Vec<usize> = (0..n).collect();
+    match &keys {
+        Keys::Num(v) => order.sort_by(|&a, &b| {
+            // NA (NaN) sorts last, mirroring R's default `na.last = TRUE`.
+            match (is_na_real(v[a]), is_na_real(v[b])) {
+                (true, true) => std::cmp::Ordering::Equal,
+                (true, false) => std::cmp::Ordering::Greater,
+                (false, true) => std::cmp::Ordering::Less,
+                (false, false) => v[a].partial_cmp(&v[b]).unwrap_or(std::cmp::Ordering::Equal),
+            }
+        }),
+        Keys::Str(v) => order.sort_by(|&a, &b| match (&v[a], &v[b]) {
+            (None, None) => std::cmp::Ordering::Equal,
+            (None, Some(_)) => std::cmp::Ordering::Greater,
+            (Some(_), None) => std::cmp::Ordering::Less,
+            (Some(a), Some(b)) => a.cmp(b),
+        }),
+    }
+
+    // Two sorted neighbours are tied iff their keys are equal.
+    let tied = |a: usize, b: usize| -> bool {
+        match &keys {
+            Keys::Num(v) => v[a] == v[b] || (is_na_real(v[a]) && is_na_real(v[b])),
+            Keys::Str(v) => v[a] == v[b],
+        }
+    };
+
+    // Walk the sorted permutation in runs of equal keys; each run gets the
+    // average of the 1-based positions it occupies.
+    let mut ranks = vec![0.0_f64; n];
+    let mut p = 0usize;
+    while p < n {
+        let mut q = p + 1;
+        while q < n && tied(order[p], order[q]) {
+            q += 1;
+        }
+        // Positions p..q (0-based) are 1-based p+1 ..= q; their average is the
+        // midpoint of the first and last 1-based position.
+        let avg = ((p + 1) as f64 + q as f64) / 2.0;
+        for k in p..q {
+            ranks[order[k]] = avg;
+        }
+        p = q;
+    }
+    Ok(SValue::doubles(ranks))
 }
 
 /// `which(x)` — the 1-based indices where logical `x` is `TRUE`.

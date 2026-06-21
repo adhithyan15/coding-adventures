@@ -2793,10 +2793,7 @@ mod tests {
     #[test]
     fn is_element_matches_in_operator() {
         assert_eq!(show("is.element(2, c(1, 2, 3))\n"), "[1] TRUE");
-        assert_eq!(
-            show("is.element(c(1, 5), c(1, 2, 3))\n"),
-            "[1]  TRUE FALSE"
-        );
+        assert_eq!(show("is.element(c(1, 5), c(1, 2, 3))\n"), "[1]  TRUE FALSE");
     }
 
     #[test]
@@ -2816,9 +2813,6 @@ mod tests {
         assert_eq!(nums("rank(c(3, 1, 2))\n"), vec![3.0, 1.0, 2.0]);
         assert_eq!(nums("rank(c(1, 1, 2))\n"), vec![1.5, 1.5, 3.0]);
         // Character ranks lexicographically; tied "a"s average their positions.
-        assert_eq!(
-            nums("rank(c(\"b\", \"a\", \"a\"))\n"),
-            vec![3.0, 1.5, 1.5]
-        );
+        assert_eq!(nums("rank(c(\"b\", \"a\", \"a\"))\n"), vec![3.0, 1.5, 1.5]);
     }
 }
