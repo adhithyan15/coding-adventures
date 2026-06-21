@@ -60,12 +60,20 @@
 //! instance → method → instance edge never exists *at rest* — there is nothing for
 //! `Rc` to fail to collect.
 //!
-//! The one remaining strong self-reference is `.self` (an `Environment` to the
-//! instance, stored inside the instance). That is exactly the *documented,
-//! pre-existing* R-22 value-binding self-cycle — `assign("self", e, envir = e)` —
-//! which we do not claim to collect but which is *bounded* (not unbounded) by the
-//! `MAX_ENVIRONMENTS` session cap. We inherit that boundary verbatim rather than
-//! widening the ownership model.
+//! The remaining strong self-references are `.self` (an `Environment` to the
+//! instance, stored inside the instance) and — as of R-26 — each **active-binding**
+//! field, which stores an instance-homed `Closure { env: <strong Rc to instance> }`
+//! under the field name *on the instance frame* (so `obj$ab` can call it as a
+//! getter/setter; see [`install_active_bindings`]). Unlike an ordinary method —
+//! which we deliberately never store, rebuilding it lazily on access to avoid this
+//! very edge — an active binding **must** live on the instance, so it forms the same
+//! `instance → closure → instance` self-cycle that `.self` already does. Both are
+//! exactly the *documented, pre-existing* R-22 value-binding self-cycle —
+//! `assign("self", e, envir = e)` — which we do not claim to collect but which is
+//! *bounded* (not unbounded) by the `MAX_ENVIRONMENTS` session cap: an active binding
+//! points only back at the *same* already-charged instance and creates no new
+//! environment, so it widens no leak boundary. We inherit that boundary verbatim
+//! rather than widening the ownership model.
 //!
 //! ## Reference (alias) semantics
 //!
