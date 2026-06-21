@@ -1020,6 +1020,63 @@ unchanged.
     RNG-seed contract); and the `fromLast =` argument on the set ops. The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
 
+- **R-31 — set-op & ordering refinements** *(this PR)*. The follow-up to R-30 that
+  lands the two deferrals which DO have clean, unambiguous semantics on the existing
+  `as_character`-key path, plus the RNG-backed tie method. All three are **extensions
+  of the existing R-29/R-30 handlers** in the shared `s-runtime`; no new value type
+  and no new cap are introduced.
+  - **`incomparables =` on `duplicated`, `anyDuplicated`, and `unique`.** The default
+    is `incomparables = FALSE`, meaning "there are no incomparable values" — identical
+    to the prior behaviour. A **vector** value lists the elements to treat as
+    *incomparable*: a value listed there is **never considered equal to anything**
+    (not even another copy of itself), so it is **never flagged as a duplicate** and
+    **never removed** as one. Mechanically we coerce the `incomparables` vector to the
+    same character key the builtins already use (`as_character`) and build a small
+    `HashSet` of "incomparable keys"; during the dup scan, any element whose key is in
+    that set short-circuits to "not a duplicate" and is **never inserted into the
+    `seen` set** (so it cannot suppress a later genuine duplicate either). Worked
+    examples (numeric and character keys both supported):
+    `duplicated(c(1,1,2,2), incomparables = 1)` is `c(FALSE, FALSE, FALSE, TRUE)` (the
+    1s are never dups; the second 2 still is); `unique(c(1,1,2,2), incomparables = 1)`
+    is `c(1, 1, 2)` (both 1s kept, 2 deduped); `anyDuplicated(c(1,2,1), incomparables = 1)`
+    is `0` (the only repeat is an incomparable), while `anyDuplicated(c(1,2,2),
+    incomparables = 1)` is `3`.
+  - **`unique(x, fromLast = TRUE)`.** R-30 added `fromLast =` to `duplicated`; R-31
+    extends `unique` symmetrically. With `fromLast = TRUE` the dedup keeps the **last**
+    occurrence of each distinct value (scanning right-to-left), versus the default
+    first occurrence. The kept positions are gathered in **ascending index order** so
+    the surviving elements stay in input order (R's behaviour). `incomparables =` and
+    `fromLast =` compose: an incomparable value is kept at every one of its positions
+    regardless of direction.
+  - **`rank(x, ties.method = "random")`.** A run of `m` tied values is assigned the
+    consecutive ranks `lo, lo+1, …, hi` (as in `"first"`), but the **assignment of
+    those ranks to the tied positions is a uniform random permutation** drawn from the
+    **session RNG** — the same generator seeded by `set.seed()` that the R-8
+    distribution family (`runif`/`rnorm`/…) uses (`Interpreter::sample_with`). The
+    permutation is a Fisher–Yates shuffle driven by `RngState::next_u32`, so the result
+    is **fully reproducible** under `set.seed`: `set.seed(s); rank(x, ties.method =
+    "random")` gives the same vector every run. The two 3s in `rank(c(3,1,3),
+    ties.method = "random")` receive ranks `{2, 3}` in a seed-determined order while the
+    lone 1 always gets rank 1. `"average"` remains the default; `"min"/"max"/"first"`
+    are unchanged from R-30.
+  - **Output-size caps (security).** No new user-controlled multiplier. `incomparables`
+    adds one `HashSet` whose size is bounded by the (already-`MAX_SEQ_LEN`-capped)
+    `incomparables` vector; membership tests are `O(1)`. `"random"` does a single
+    `O(m)` Fisher–Yates pass per tie run with **bounded** RNG draws (one `next_u32`
+    per swap, at most `n` total), so RNG use cannot trigger unbounded work. Named-arg
+    readers reject malformed values gracefully (`Err`, never panic): `ties.method` is
+    read as a character scalar (an unknown method is a `BadArgs` error), `fromLast =`
+    via `truthy()` (a non-logical or `NA` is an error), and `incomparables =` is
+    coerced through `as_character` (any vector is acceptable; no path indexes out of
+    bounds).
+  - **Scope outcome / deferred to R-32.** `incomparables =` on `duplicated` /
+    `anyDuplicated` / `unique`, `unique(fromLast =)`, and `rank(ties.method =
+    "random")` ship **solidly**. **Deferred to R-32:** `incomparables =` on the binary
+    set ops (`union`/`intersect`/`setdiff`) — R's semantics there interact with which
+    operand the incomparable belongs to and are ambiguous enough to warrant their own
+    pass — and the `fromLast =` argument on those same binary set ops. The `%o%` infix
+    alias for `outer` remains open for a later grammar pass.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -1052,8 +1109,10 @@ a later pass; the vector set-operation & ranking builtins (`union`, `intersect`,
 `setdiff`, `is.element`, `duplicated`, `rank`) land in **R-29**; the ordering
 refinements (multi-key `order(x, y, ...)`, `rank`'s `ties.method` =
 `average`/`min`/`max`/`first`, `duplicated(fromLast=)`, `anyDuplicated`) land in
-**R-30**, with `incomparables=` on the set ops / `duplicated`, the `fromLast=`
-set-op argument, and `rank`'s `"random"` method deferred to **R-31**; namespaces and `library()`
+**R-30**; the set-op & ordering refinements (`incomparables=` on
+`duplicated`/`anyDuplicated`/`unique`, `unique(fromLast=)`, and `rank`'s `"random"`
+tie method) land in **R-31**, with `incomparables=`/`fromLast=` on the binary set ops
+(`union`/`intersect`/`setdiff`) deferred to **R-32**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.
