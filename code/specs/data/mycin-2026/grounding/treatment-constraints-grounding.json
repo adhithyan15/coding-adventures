@@ -261,6 +261,33 @@
         "final_verdict": "grounded"
       },
       "spider_status": "grounded"
+    },
+    {
+      "id": "ci_tmpsmx_g6pd",
+      "kind": "contraindication",
+      "claim": "Trimethoprim-sulfamethoxazole (a sulfonamide) is contraindicated / cautioned in G6PD (glucose-6-phosphate dehydrogenase) deficiency, where it can precipitate hemolysis / hemolytic anemia.",
+      "grounded": {
+        "id": "ci_tmpsmx_g6pd",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
+        "source_title": "DailyMed — SULFAMETHOXAZOLE AND TRIMETHOPRIM injection (FDA prescribing information), WARNINGS AND PRECAUTIONS (5.12 Hemolysis)",
+        "byte_quote": "In glucose-6-phosphate dehydrogenase deficient individuals, hemolysis may occur.",
+        "value_found": "Directional (relative) contraindication: in G6PD-deficient patients, sulfamethoxazole-trimethoprim can precipitate hemolysis. The FDA label states it as a §5.12 Hemolysis WARNING (avoid / use with caution + monitor), not an absolute 'contraindicated' line — but the direction (G6PD deficiency → don't give the sulfonamide, choose another agent) is unambiguous, which is what the exclusion encodes.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "Framing G6PD-hemolysis as a class-wide effect of ALL the formulary's drugs — the hemolysis warning is specific to the sulfonamide (sulfamethoxazole) component; only tmp_smx is excluded, the β-lactams/vancomycin are not. Encoding it more broadly would misrepresent the label.",
+          "Secondary aggregators (drugs.com, UpToDate G6PD drug lists) — discarded per primary-source-first; the FDA label states the G6PD hemolysis warning directly."
+        ],
+        "note": "DIRECTIONAL contraindication ENTAILED. The verbatim §5.12 sentence ties hemolysis to G6PD deficiency for this sulfonamide; the comorbidity exclusion encodes the direction (a G6PD-deficient patient should not receive tmp_smx — pick another Listeria/coverage agent), exactly the engine-derived contraindication the rulebook joins from active_context(g6pd_deficiency). A contraindication is binary/directional (exclude, not a magnitude), so a directional grounding is sufficient at trust authoritative — consistent with the other contraindication records (e.g. ci_fluoroquinolone_qt)."
+      },
+      "verify": {
+        "id": "ci_tmpsmx_g6pd",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 793c75eb DailyMed sulfamethoxazole-trimethoprim label: WARNINGS AND PRECAUTIONS §5.12 (Hemolysis) states 'In glucose-6-phosphate dehydrogenase deficient individuals, hemolysis may occur.'",
+        "refute_attempt": "Strongest refutation: the label calls this a WARNING, not an absolute CONTRAINDICATION, so modeling it as an exclusion could be too strong. Conceded in framing (it is a relative contraindication) but the DIRECTION is unambiguous — a G6PD-deficient patient should not receive the sulfonamide when an equally-covering non-hemolytic agent exists, which is what the exclusion expresses; in a scenario where tmp_smx is the only option the engine's INFEASIBLE/abstention is the honest result. Second angle: hemolysis is dose/oxidative-stress dependent, not universal — true, but the label states it 'may occur', and avoidance is the standard G6PD precaution. The exclusion is directionally faithful to the label.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
     }
   ]
 }

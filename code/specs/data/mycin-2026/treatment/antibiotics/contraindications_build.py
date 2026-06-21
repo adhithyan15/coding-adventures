@@ -114,6 +114,10 @@ DRUG_CONTRA: list[tuple[str, str, str, str]] = [
     ("ci_tmpsmx_pregnancy", "tmp_smx", "pregnancy",
      "Trimethoprim-sulfamethoxazole is avoided in pregnancy (folate antagonism / risk of "
      "neural tube defects)."),
+    # CC-3c comorbidity family: G6PD deficiency → the sulfonamide can precipitate hemolysis.
+    ("ci_tmpsmx_g6pd", "tmp_smx", "g6pd_deficiency",
+     "In glucose-6-phosphate dehydrogenase (G6PD) deficiency, trimethoprim-sulfamethoxazole "
+     "(a sulfonamide) can precipitate hemolysis; avoid it and choose another agent."),
 ]
 
 # DEFINITIONAL class-contraindications (CC-3b): (class, context). These are tautological —

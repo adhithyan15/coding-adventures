@@ -312,6 +312,24 @@ risks Y") — decision support, not a hidden choice.
       severity dimension can gate anaphylaxis caution). The current cut is subclass-level,
       which is correct for the formulary's drugs (no formulary cephalosporin shares a penicillin
       side chain) but should refine to side-chain identity as the formulary grows.
+- **CC-3c — COMORBIDITY-driven exclusions (new constraint family). ✅ DONE.** A patient
+  COMORBIDITY now activates a clinical context the engine joins against the grounded
+  contraindication rulebook — the same `ist(c, φ)` mechanism as allergy/pregnancy, no new
+  Python rule layer. A `comorbidity` chart fact maps via `_CONTEXT_FROM_FACT` to a context, and
+  `derive()` asks the engine `? contraindicated($D, $C)`. First grounded members:
+  - **G6PD deficiency → tmp_smx** (NEW grounding, `ci_tmpsmx_g6pd` in
+    `treatment-constraints-grounding.json`; FDA sulfamethoxazole-trimethoprim label §5.12
+    Hemolysis: *"In glucose-6-phosphate dehydrogenase deficient individuals, hemolysis may
+    occur."* at `trust authoritative`) — the sulfonamide is engine-excluded for a G6PD patient.
+  - **QT prolongation → moxifloxacin** — the already-grounded `ci_fluoroquinolone_qt` class
+    rule, now REACHABLE from a chart (previously a rulebook-only genericity demo with no chart
+    fact wired to it).
+  The exclusion is engine-derived with its FDA byte-quote; adding a comorbidity = one
+  `_CONTEXT_FROM_FACT` row + a grounded fact, no drug-name logic. Verified by
+  `test_contraindications.test_g6pd_deficiency_excludes_the_sulfonamide`,
+  `test_chart_to_cop.test_comorbidity_activates_a_context`, and a new board item `mgmt_g6pd`
+  (a G6PD-deficient adult correctly gets ceftriaxone+vancomycin with tmp_smx engine-excluded —
+  exercising the comorbidity path end-to-end in CI; board 154 items, management 7/7, 0 wrong).
 - **CC-4 — cost + side-effect objective. ✅ DONE.** The set-cover objective is now the
   weighted blend `minimize Σ (w_cost·tier + w_tox·side_effects)·x_d`, emitted to the engine's
   integer optimizer (coefficients stay integer). A chart `objective_priority` fact selects the

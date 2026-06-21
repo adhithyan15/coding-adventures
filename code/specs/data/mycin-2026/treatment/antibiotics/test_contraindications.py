@@ -100,6 +100,18 @@ def test_generic_rule_also_fires_for_qt_prolongation():
     assert set(out) == {"moxifloxacin"} and out["moxifloxacin"]["context"] == "qt_prolongation"
 
 
+def test_g6pd_deficiency_excludes_the_sulfonamide():
+    cli = _cli_or_skip()
+    # CC-3c comorbidity family: G6PD deficiency excludes the sulfonamide (tmp_smx) — hemolysis —
+    # via the same engine-derived contraindication mechanism, with the grounded FDA byte-quote.
+    out = ci.derive_contraindications(cli, {"g6pd_deficiency"})
+    assert set(out) == {"tmp_smx"}, out
+    info = out["tmp_smx"]
+    assert info["context"] == "g6pd_deficiency"
+    assert info["trust"] == "authoritative" and info["source"]
+    assert "glucose-6-phosphate dehydrogenase" in info["source"]
+
+
 # --------------------------------------------------------------------------
 # CC-3b — β-lactam allergy is SIDE-CHAIN-scoped, not class-wide.
 # --------------------------------------------------------------------------

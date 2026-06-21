@@ -64,6 +64,10 @@ rulebook contraindications {
         source "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular malformations, urinary tract defects, oral clefts, and club foot."
         locator "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7"
         trust authoritative
+    relate drug_contraindicated_in(tmp_smx, g6pd_deficiency)
+        source "In glucose-6-phosphate dehydrogenase deficient individuals, hemolysis may occur."
+        locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7"
+        trust authoritative
 
     % --- DEFINITIONAL allergy class-contraindications (CC-3b) ---------------
     % Tautological (allergy to a class excludes that class) → bare, like has_class.

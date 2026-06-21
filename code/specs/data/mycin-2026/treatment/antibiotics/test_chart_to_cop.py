@@ -49,6 +49,20 @@ def test_allergy_activates_a_context():
     assert len(ctx) == 1 and ctx[0]["from"] == "allergy=penicillin"
 
 
+def test_comorbidity_activates_a_context():
+    # CC-3c: a patient comorbidity activates a clinical CONTEXT (the engine then derives the
+    # contraindicated drug in derive()) — g6pd_deficiency and qt_prolongation are recognized;
+    # an unrecognized comorbidity is discarded with a reason.
+    g6pd = cc.compile_cop([cc.ChartFact("comorbidity", "g6pd_deficiency", "G6PD screen positive")])
+    assert g6pd.active_contexts == {"g6pd_deficiency"}
+    ctx = [c for c in g6pd.constraints if c["type"] == "context" and c["detail"] == "g6pd_deficiency"]
+    assert len(ctx) == 1 and ctx[0]["from"] == "comorbidity=g6pd_deficiency"
+    qt = cc.compile_cop([cc.ChartFact("comorbidity", "qt_prolongation")])
+    assert qt.active_contexts == {"qt_prolongation"}
+    bad = cc.compile_cop([cc.ChartFact("comorbidity", "myasthenia_gravis")])
+    assert not bad.active_contexts and any("myasthenia_gravis" in d["fact"] for d in bad.discards)
+
+
 def test_culture_resistance_becomes_defeated_edge():
     cop = cc.compile_cop([cc.ChartFact("culture_resistance", "ceftriaxone:n_meningitidis", "S/I/R panel")])
     assert ("ceftriaxone", "n_meningitidis") in cop.defeated
@@ -327,6 +341,7 @@ def test_engine_reproduces_existing_regimens():
 def main() -> int:
     test_scenario_selection_and_provenance()
     test_allergy_activates_a_context()
+    test_comorbidity_activates_a_context()
     test_culture_resistance_becomes_defeated_edge()
     test_dose_risk_facts_become_dose_constraints()
     test_hepatic_renal_conjunction_caps_ceftriaxone()

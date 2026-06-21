@@ -76,6 +76,7 @@
     {"id": "mgmt_pregnant_adult",    "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "28-year-old"], ["pregnancy", "present", "G2P1 at 24 weeks"]],            "gold": ["ceftriaxone", "vancomycin"]},
     {"id": "mgmt_betalactam_allergic","domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "adult"], ["allergy", "betalactam", "anaphylaxis to multiple beta-lactams (whole-class)"]],       "gold": "INFEASIBLE"},
     {"id": "mgmt_hepatorenal",       "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "58-year-old"], ["hepatic_status", "hepatic_moderate", "Child-Pugh B cirrhosis"], ["renal_status", "renal_moderate", "CrCl 38 mL/min"]], "gold": ["ceftriaxone", "vancomycin"]},
+    {"id": "mgmt_g6pd",              "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "26-year-old"], ["comorbidity", "g6pd_deficiency", "known G6PD deficiency"]], "gold": ["ceftriaxone", "vancomycin"]},
 
     {"id": "micro_saureus_gram",   "domain": "micro", "tactic": "recall", "relation": "gram_stain", "subject": "staphylococcus_aureus",    "var": "Result",  "gold": "gram_positive"},
     {"id": "micro_saureus_shape",  "domain": "micro", "tactic": "recall", "relation": "morphology", "subject": "staphylococcus_aureus",    "var": "Shape",   "gold": "cocci"},
