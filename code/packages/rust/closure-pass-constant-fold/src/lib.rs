@@ -1257,12 +1257,52 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
         return stamp_literal_cv(value, new_cv);
     }
 
+    // Negation push (upstream Closure's `PeepholeMinimizeConditions`):
+    //   !(a == b)   →  a != b          !(a != b)   →  a == b
+    //   !(a === b)  →  a !== b         !(a !== b)  →  a === b
+    //
+    // Sound for the four (in)equality operators ONLY, because `!=`/`!==` are
+    // *defined* as the boolean negation of `==`/`===` (ECMAScript §13.10): both
+    // `!` and these operators yield booleans, so the rewrite is value-identical
+    // in every context. Relational operators (`<`/`<=`/`>`/`>=`) are deliberately
+    // NOT inverted — `!(a < b)` is NOT `a >= b` when an operand is `NaN`
+    // (`!(NaN < 1)` is `true` but `NaN >= 1` is `false`).
+    if u.operator == UnaryOperator::Not {
+        if let Expression::BinaryExpression(b) = &arg {
+            if let Some(inverted) = invert_equality_operator(b.operator) {
+                let parent = u.cv.clone();
+                let before = format!("!(x {} y)", op_label(b.operator));
+                let after = format!("x {} y", op_label(inverted));
+                let new_cv = st.fork_cv(&parent, &before, &after);
+                return Expression::BinaryExpression(BinaryExpression {
+                    cv: new_cv,
+                    operator: inverted,
+                    left: b.left.clone(),
+                    right: b.right.clone(),
+                });
+            }
+        }
+    }
+
     Expression::UnaryExpression(UnaryExpression {
         cv: u.cv.clone(),
         operator: u.operator,
         prefix: u.prefix,
         argument: Box::new(arg),
     })
+}
+
+/// The negation of an (in)equality operator, or `None` for any operator whose
+/// `!`-negation is NOT a single other operator. Only the four equality forms
+/// qualify; relational operators do not (NaN breaks `!(a<b)` ≡ `a>=b`).
+fn invert_equality_operator(op: BinaryOperator) -> Option<BinaryOperator> {
+    match op {
+        BinaryOperator::Eq => Some(BinaryOperator::NotEq),
+        BinaryOperator::NotEq => Some(BinaryOperator::Eq),
+        BinaryOperator::StrictEq => Some(BinaryOperator::StrictNotEq),
+        BinaryOperator::StrictNotEq => Some(BinaryOperator::StrictEq),
+        _ => None,
+    }
 }
 
 // ---------------------------------------------------------------------
@@ -2500,6 +2540,115 @@ mod tests {
     }
 
     // ------------------- pipeline integration ------------------------
+
+    // ------------------- negation push (`!(a == b)` → `a != b`) ----------
+
+    /// `!( left <op> right )` over two identifiers, traced.
+    fn not_of_binary(op: BinaryOperator) -> Expression {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: Some("not.1".to_string()),
+            operator: UnaryOperator::Not,
+            prefix: true,
+            argument: Box::new(Expression::BinaryExpression(BinaryExpression {
+                cv: Some("bin.1".to_string()),
+                operator: op,
+                left: Box::new(ident("a")),
+                right: Box::new(ident("b")),
+            })),
+        })
+    }
+
+    fn assert_negation_pushes(input_op: BinaryOperator, expected_op: BinaryOperator) {
+        let (out, contribs, changed, _) = run_pass(program_with_expr(not_of_binary(input_op), true));
+        assert!(changed, "negation push should report a change for {input_op:?}");
+        match extract_expr(&out) {
+            Expression::BinaryExpression(b) => {
+                assert_eq!(
+                    b.operator, expected_op,
+                    "{input_op:?} should invert to {expected_op:?}, got {:?}",
+                    b.operator
+                );
+                // Operands are preserved, and the `!` wrapper is gone.
+                assert!(matches!(b.left.as_ref(), Expression::Identifier(i) if i.name == "a"));
+                assert!(matches!(b.right.as_ref(), Expression::Identifier(i) if i.name == "b"));
+            }
+            other => panic!("expected BinaryExpression, got {other:?}"),
+        }
+        // The rewrite must leave a correlation-vector contribution.
+        assert!(
+            contribs.iter().any(|c| c.source == "constant-fold"),
+            "negation push must emit a CV contribution"
+        );
+    }
+
+    #[test]
+    fn negation_pushes_through_loose_equality() {
+        assert_negation_pushes(BinaryOperator::Eq, BinaryOperator::NotEq);
+    }
+
+    #[test]
+    fn negation_pushes_through_loose_inequality() {
+        assert_negation_pushes(BinaryOperator::NotEq, BinaryOperator::Eq);
+    }
+
+    #[test]
+    fn negation_pushes_through_strict_equality() {
+        assert_negation_pushes(BinaryOperator::StrictEq, BinaryOperator::StrictNotEq);
+    }
+
+    #[test]
+    fn negation_pushes_through_strict_inequality() {
+        assert_negation_pushes(BinaryOperator::StrictNotEq, BinaryOperator::StrictEq);
+    }
+
+    #[test]
+    fn negation_does_not_push_through_relational_operators() {
+        // `!(a < b)` must NOT become `a >= b` — they differ when an operand
+        // is NaN (`!(NaN < 1)` is `true`, `NaN >= 1` is `false`). The `!`
+        // wrapper must survive unchanged.
+        for op in [
+            BinaryOperator::Lt,
+            BinaryOperator::LtEq,
+            BinaryOperator::Gt,
+            BinaryOperator::GtEq,
+        ] {
+            let (out, _contribs, _changed, _) =
+                run_pass(program_with_expr(not_of_binary(op), true));
+            match extract_expr(&out) {
+                Expression::UnaryExpression(u) => {
+                    assert_eq!(u.operator, UnaryOperator::Not, "outer `!` must survive for {op:?}");
+                    assert!(
+                        matches!(u.argument.as_ref(), Expression::BinaryExpression(b) if b.operator == op),
+                        "inner relational op {op:?} must be unchanged"
+                    );
+                }
+                other => panic!("expected the `!` to survive for {op:?}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn negation_of_equality_with_foldable_operands_still_folds_to_literal() {
+        // `!(1 == 1)` should fold to the boolean `false` (the literal path),
+        // not push to `1 != 1`. The literal fold runs first.
+        let expr = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("not.1".to_string()),
+            operator: UnaryOperator::Not,
+            prefix: true,
+            argument: Box::new(Expression::BinaryExpression(BinaryExpression {
+                cv: Some("bin.1".to_string()),
+                operator: BinaryOperator::Eq,
+                left: Box::new(num(1.0, None)),
+                right: Box::new(num(1.0, None)),
+            })),
+        });
+        let (out, _contribs, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::BooleanLiteral(b) => assert!(!b.value, "!(1 == 1) is false"),
+            other => panic!("expected BooleanLiteral(false), got {other:?}"),
+        }
+    }
 
     #[test]
     fn integrates_with_pass_pipeline_as_solo_pass() {
