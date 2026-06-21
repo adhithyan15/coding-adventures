@@ -28,37 +28,105 @@
     as base64 in vendor/spreadsheet-engine-wasm.js.
   -->
   <style>
+    /* ── Design tokens ──────────────────────────────────────────────
+       One palette + spacing/typography scale, so the whole demo reads as a
+       single, considered surface (and so the native demos can mirror it). */
     :root {
-      --bg: #1e1e1e; --fg: #cccccc; --muted: #9d9d9d; --line: #3f3f46;
-      --head-bg: #2d2d30; --sel: #264f78; --sel-line: #007acc;
-      --row-h: 22px; --col-w: 80px; --gutter-w: 56px; --head-h: 24px;
+      --bg: #16181d;            /* app background                     */
+      --panel: #1b1e24;         /* sheet + toolbar surface            */
+      --surface: #21252c;       /* buttons, pill                      */
+      --surface-hover: #2b313a; /* button hover                       */
+      --surface-active: #14171c;/* button pressed                     */
+      --line: #2c313a;          /* hairline borders                   */
+      --line-strong: #3a404b;   /* control borders                    */
+      --head-bg: #20242b;       /* row/column headers                 */
+      --head-bg-sel: #2b3340;   /* header of the selected row/column  */
+      --ink: #e8eaed;           /* primary text                       */
+      --muted: #9aa3b2;         /* labels, headers                    */
+      --accent: #4aa3ff;        /* selection + focus                  */
+      --accent-soft: rgba(74,163,255,0.14);
+      --sel: rgba(74,163,255,0.18);
+      --row-alt: rgba(255,255,255,0.022); /* zebra band            */
+      --ok: #4ec9a8;
+      --r: 8px; --r-sm: 5px;    /* radii                              */
+      --mono: ui-monospace, SFMono-Regular, Menlo, "Cascadia Code", monospace;
+      --ui: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --row-h: 26px; --col-w: 88px; --gutter-w: 60px; --head-h: 28px;
     }
     * { box-sizing: border-box; }
     body {
-      margin: 0; background: var(--bg); color: var(--fg);
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: var(--ui); font-size: 13px;
+      -webkit-font-smoothing: antialiased;
     }
-    .wrap { max-width: 960px; margin: 0 auto; padding: 16px; }
-    h1 { font-size: 12px; letter-spacing: 1px; color: var(--muted); font-weight: 400; margin: 0 0 10px; }
-    .bar { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-    .bar .addr { color: var(--muted); min-width: 56px; }
-    .bar input {
-      flex: 1; background: #121212; color: var(--fg); border: 1px solid var(--line);
-      padding: 5px 8px; font: inherit; border-radius: 3px;
-    }
-    .bar button {
-      background: var(--head-bg); color: var(--fg); border: 1px solid var(--line);
-      padding: 5px 10px; font: inherit; border-radius: 3px; cursor: pointer; white-space: nowrap;
-    }
-    .bar button:hover { border-color: var(--sel-line); }
-    .status { color: var(--muted); margin: 8px 0 0; font-size: 11px; }
-    .status b { color: var(--sel-line); font-weight: 600; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 22px 20px 28px; }
 
-    /* The scroll container. Its single child .canvas is sized to the (huge)
-       virtual content, which is what gives the scrollbar its range. */
+    /* Title: a small accent dot + spaced label, like an app header. */
+    h1 {
+      font-size: 12px; letter-spacing: 1.5px; color: var(--muted); font-weight: 600;
+      margin: 0 0 14px; display: flex; align-items: center; gap: 9px; text-transform: uppercase;
+    }
+    h1::before {
+      content: ""; width: 9px; height: 9px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 10px var(--accent-soft);
+    }
+
+    /* ── Toolbar ─────────────────────────────────────────────────────
+       Address pill + fx formula field on the left (the field grows), then
+       segmented button groups pushed to the right, divided by thin rules. */
+    .bar {
+      display: flex; gap: 10px; align-items: center; margin-bottom: 12px;
+      padding: 8px; background: var(--panel);
+      border: 1px solid var(--line); border-radius: var(--r);
+    }
+    .addr {
+      font-family: var(--mono); color: var(--ink); font-weight: 600;
+      min-width: 44px; text-align: center; padding: 6px 8px;
+      background: var(--surface); border: 1px solid var(--line-strong);
+      border-radius: var(--r-sm);
+    }
+    .fx { color: var(--muted); font-style: italic; font-family: var(--mono); padding-left: 2px; }
+    .bar input {
+      flex: 1; min-width: 120px; background: #0f1115; color: var(--ink);
+      border: 1px solid var(--line-strong); padding: 7px 10px;
+      font-family: var(--mono); font-size: 13px; border-radius: var(--r-sm);
+      transition: border-color .12s, box-shadow .12s;
+    }
+    .bar input::placeholder { color: #5f6672; }
+    .bar input:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .sep { width: 1px; align-self: stretch; background: var(--line); margin: 2px 2px; }
+
+    /* Segmented button group: buttons share borders, ends rounded. */
+    .grp { display: inline-flex; }
+    .bar button {
+      background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong);
+      padding: 7px 11px; font-family: var(--ui); font-size: 12px; font-weight: 500;
+      cursor: pointer; white-space: nowrap; border-radius: 0; margin-left: -1px;
+      transition: background .12s, color .12s;
+    }
+    .grp button:first-child { border-top-left-radius: var(--r-sm); border-bottom-left-radius: var(--r-sm); margin-left: 0; }
+    .grp button:last-child { border-top-right-radius: var(--r-sm); border-bottom-right-radius: var(--r-sm); }
+    .bar button:hover:not(:disabled) { background: var(--surface-hover); color: #fff; position: relative; z-index: 1; }
+    .bar button:active:not(:disabled) { background: var(--surface-active); }
+    .bar button:disabled { opacity: .38; cursor: default; }
+
+    /* ── Status line ─────────────────────────────────────────────────*/
+    .status {
+      color: var(--muted); margin: 12px 0 0; font-size: 12px; font-family: var(--mono);
+      padding-top: 10px; border-top: 1px solid var(--line);
+    }
+    .status b { color: var(--ink); font-weight: 600; }
+
+    /* ── Sheet panel ─────────────────────────────────────────────────
+       The scroll container; its single child .canvas is sized to the (huge)
+       virtual content, which gives the scrollbar its range. */
     .sheet {
       position: relative; overflow: auto; height: 62vh;
-      border: 1px solid var(--line); background: var(--bg);
+      border: 1px solid var(--line); border-radius: var(--r); background: var(--panel);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px rgba(0,0,0,0.25);
     }
     .canvas { position: relative; }
 
@@ -67,21 +135,28 @@
     .cell, .colhead, .rowhead, .corner {
       position: absolute; height: var(--row-h); line-height: var(--row-h);
       border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
-      padding: 0 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+      padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
     }
-    .cell { width: var(--col-w); text-align: right; cursor: cell; }
-    .cell.sel { outline: 2px solid var(--sel-line); outline-offset: -2px; background: var(--sel); color: #fff; }
+    .cell { width: var(--col-w); text-align: right; cursor: cell; font-family: var(--mono); }
+    .cell.even { background: var(--row-alt); }      /* zebra banding */
+    .cell.sel {
+      outline: 2px solid var(--accent); outline-offset: -2px;
+      background: var(--sel); color: #fff; font-weight: 600; z-index: 1;
+    }
     .colhead {
       width: var(--col-w); height: var(--head-h); line-height: var(--head-h);
       background: var(--head-bg); color: var(--muted); text-align: center; z-index: 2;
+      font-family: var(--ui); font-size: 11px; font-weight: 600; letter-spacing: .5px;
     }
     .rowhead {
       width: var(--gutter-w); background: var(--head-bg); color: var(--muted);
-      text-align: center; z-index: 2;
+      text-align: center; z-index: 2; font-family: var(--ui); font-size: 11px;
     }
+    /* The header of the selected cell's row/column gets an accent tint. */
+    .colhead.selhdr, .rowhead.selhdr { background: var(--head-bg-sel); color: var(--accent); }
     .corner {
       width: var(--gutter-w); height: var(--head-h); background: var(--head-bg);
-      z-index: 3;
+      z-index: 3; border-right-color: var(--line-strong); border-bottom-color: var(--line-strong);
     }
   </style>
 </head>
@@ -91,15 +166,28 @@
 
     <div class="bar">
       <span class="addr" id="addr">A1</span>
+      <span class="fx">fx</span>
       <input id="formula" placeholder="Enter a value or formula (e.g. =SUM(A1:A4)) and press Enter" />
-      <button id="fillDown" title="Replicate the selected cell into the 10 rows below it (drag-fill)">Fill ↓ 10</button>
-      <button id="copyCell" title="Copy the selected cell to the clipboard">Copy</button>
-      <button id="cutCell" title="Cut the selected cell (cleared when you paste)">Cut</button>
-      <button id="pasteCell" title="Paste the clipboard at the selected cell, shifting relative references">Paste</button>
-      <button id="saveBook" title="Serialize the whole workbook (formulas + formats) to browser storage">Save</button>
-      <button id="loadBook" title="Reload the workbook from the last saved snapshot">Load</button>
-      <button id="undoBtn" title="Undo the last edit">Undo</button>
-      <button id="redoBtn" title="Redo the last undone edit">Redo</button>
+      <span class="sep"></span>
+      <div class="grp">
+        <button id="fillDown" title="Replicate the selected cell into the 10 rows below it (drag-fill)">↓ Fill 10</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Clipboard">
+        <button id="copyCell" title="Copy the selected cell to the clipboard">Copy</button>
+        <button id="cutCell" title="Cut the selected cell (cleared when you paste)">Cut</button>
+        <button id="pasteCell" title="Paste the clipboard at the selected cell, shifting relative references">Paste</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="File">
+        <button id="saveBook" title="Serialize the whole workbook (formulas + formats) to browser storage">Save</button>
+        <button id="loadBook" title="Reload the workbook from the last saved snapshot">Load</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="History">
+        <button id="undoBtn" title="Undo the last edit">↶ Undo</button>
+        <button id="redoBtn" title="Redo the last undone edit">↷ Redo</button>
+      </div>
     </div>
 
     <div class="sheet" id="sheet">
@@ -117,7 +205,7 @@
     "use strict";
 
     // Geometry (must match the CSS variables above).
-    var ROW_H = 22, COL_W = 80, GUTTER_W = 56, HEAD_H = 24, OVERSCAN = 3;
+    var ROW_H = 26, COL_W = 88, GUTTER_W = 60, HEAD_H = 28, OVERSCAN = 3;
 
     var sheet = document.getElementById("sheet");
     var canvas = document.getElementById("canvas");
@@ -173,10 +261,11 @@
       for (var r = firstRow; r <= lastRow; r++) {
         var row = win.cells[r - firstRow];
         var top = HEAD_H + (r - 1) * ROW_H;
+        var band = (r % 2 === 0) ? " even" : ""; // zebra row banding
         for (var c = firstCol; c <= lastCol; c++) {
           var left = GUTTER_W + (c - 1) * COL_W;
           var sel = (r === selRow && c === selCol) ? " sel" : "";
-          cellHtml += '<div class="cell' + sel + '" data-r="' + r + '" data-c="' + c +
+          cellHtml += '<div class="cell' + band + sel + '" data-r="' + r + '" data-c="' + c +
             '" style="top:' + top + 'px;left:' + left + 'px">' +
             esc(row[c - firstCol]) + "</div>";
         }
@@ -186,11 +275,13 @@
       // Frozen chrome: column letters across the top, row numbers down the left.
       var headHtml = '<div class="corner" style="top:' + st + 'px;left:' + sl + 'px"></div>';
       for (var hc = firstCol; hc <= lastCol; hc++) {
-        headHtml += '<div class="colhead" style="top:' + st + 'px;left:' +
+        var colSel = (hc === selCol) ? " selhdr" : ""; // highlight selected column
+        headHtml += '<div class="colhead' + colSel + '" style="top:' + st + 'px;left:' +
           (GUTTER_W + (hc - 1) * COL_W) + 'px">' + esc(workbook.columnLetters(hc)) + "</div>";
       }
       for (var hr = firstRow; hr <= lastRow; hr++) {
-        headHtml += '<div class="rowhead" style="top:' + (HEAD_H + (hr - 1) * ROW_H) +
+        var rowSel = (hr === selRow) ? " selhdr" : ""; // highlight selected row
+        headHtml += '<div class="rowhead' + rowSel + '" style="top:' + (HEAD_H + (hr - 1) * ROW_H) +
           'px;left:' + sl + 'px">' + hr + "</div>";
       }
       headsEl.innerHTML = headHtml;
