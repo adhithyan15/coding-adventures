@@ -1465,3 +1465,86 @@ fn integer_local_still_gets_i64_slot() {
     assert!(!ll.contains("alloca double"),
         "no double slot should appear for an integer program; got:\n{ll}");
 }
+
+// ===========================================================================
+// LANG-FULL E5 — bounds-checked arrays (static length-prefixed model)
+// ===========================================================================
+
+/// `alloc_array`/`array_set`/`array_get`/`array_len` lower to a length-prefixed
+/// `@calloc` block with an explicit `icmp uge`/`llvm.trap` bounds check and a
+/// typed `getelementptr`+`load`/`store`.
+#[test]
+fn array_ops_emit_calloc_trap_and_gep() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "i64"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "i64"),
+            IIRInstr::new("array_len", Some("m".into()), vec![Operand::Var("a".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    // Allocation: length-prefixed calloc block.
+    assert!(ll.contains("declare ptr @calloc(i64, i64)"), "calloc declared; got:\n{ll}");
+    assert!(ll.contains("call ptr @calloc(i64"), "alloc_array uses calloc");
+    // Trap infra + explicit unsigned bounds check (catches negative + >= len).
+    assert!(ll.contains("declare void @llvm.trap()"), "llvm.trap declared");
+    assert!(ll.contains("icmp uge i64"), "explicit bounds compare");
+    assert!(ll.contains("call void @llvm.trap()") && ll.contains("unreachable"),
+        "OOB branches to a trap block");
+    // Typed element access + length header read.
+    assert!(ll.contains("getelementptr i64, ptr"), "typed element GEP");
+    assert!(ll.contains("store i64"), "array_set stores the element");
+}
+
+/// An `f64` array uses `double` element GEPs / loads / stores.
+#[test]
+fn f64_array_uses_double_element() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "f64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<f64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(2.5)], "f64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "f64"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("getelementptr double, ptr"), "double element GEP; got:\n{ll}");
+    assert!(ll.contains("store double"), "array_set stores a double");
+    assert!(ll.contains("load double"), "array_get loads a double");
+}
+
+/// `array<T>` validates (its element type is checked, not the wrapper).
+#[test]
+fn array_type_hint_validates() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("array_len", Some("m".into()), vec![Operand::Var("a".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("m".into())], "i64"),
+        ],
+    );
+    assert!(validate_for_llvm(&module_with(f)).is_empty(),
+        "array<T> ops must validate clean");
+}

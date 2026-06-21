@@ -205,8 +205,8 @@ multiple languages; close an enabler before the features that depend on it.
 - **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
   compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
   ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
-- **E5 — Arrays / linear aggregates.** ◑ *IR + VM + ALGOL frontend + JVM + CLR done (PR-1, PR-2,
-  PR-3a, PR-3b); static backends (PR-4) pending.* An IIR
+- **E5 — Arrays / linear aggregates.** ◑ *IR + VM + ALGOL frontend + JVM + CLR + LLVM done
+  (PR-1..3b, PR-4a); WASM + native static backends (PR-4b/4c) pending.* An IIR
   array model (`alloc_array`/`array_len`/`array_get`/`array_set`, `array<T>` type hint,
   bounds-checked) that is **representation-agnostic** so it lowers to BOTH static-allocation
   (length-prefixed flat memory + explicit guard/trap on the native + LLVM backends, reusing the
@@ -371,8 +371,10 @@ backend immediately) come before the enabler-dependent items.
   `alloc_array` (run-time span); `A[i]` reads/writes → bounds-checked `array_get`/`array_set`
   with the 0-based index `i - lower`. Runs a sum-of-squares `Prog` on **VM + JIT + JVM + CLR**
   (`lang_matrix.rs`, exit 55; JVM native `int[]` — PR-3a, CLR native `int32[]` on real `dotnet`
-  — PR-3b) + 9 unit tests. The static code-gen backends (LLVM/WASM/native) lower in E5 PR-4;
-  multidim + array params are follow-up.
+  — PR-3b) + 9 unit tests; a **straight-line** array `Prog` adds **LLVM** (static `@calloc` +
+  `llvm.trap` bounds-check, exit 42 via `clang` — PR-4a). WASM + native static backends lower in
+  E5 PR-4b/4c; the for-loop array Prog joins LLVM after a separate ALGOL-for-loop→LLVM fix.
+  Multidim + array params are follow-up.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a

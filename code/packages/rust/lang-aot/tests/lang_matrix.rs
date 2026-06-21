@@ -569,8 +569,12 @@ const PROGRAMS: &[Prog] = &[
     // `alloc_array`→`newarr System.Int32`, `array_set`→`stelem.i4`, `array_get`→
     // `ldelem.i4`, `array_len`→`ldlen`+`conv.i4`, with CoreCLR's native bounds check
     // (OOB → `System.IndexOutOfRangeException`). Both managed runtimes give E5's trap
-    // for free. The handle is a reference local. The static code-gen backends
-    // (LLVM/WASM/native) join in E5 PR-4, at which point `backends` grows to all 7.
+    // for free. The handle is a reference local. (This `for`-loop cell stays on the
+    // managed backends; the **LLVM** array proof is the straight-line cell below —
+    // an ALGOL `for` loop hits a *separate*, pre-existing LLVM-only lowering bug in
+    // `iir-to-llvm` — an `i1`-typed loop-guard `icmp` over `i64` operands, emitted
+    // twice — that is unrelated to E5 and tracked as a follow-up.) The native
+    // x86_64/aarch64 static backends join in E5 PR-4b/4c.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -580,6 +584,24 @@ const PROGRAMS: &[Prog] = &[
                for i := 1 step 1 until 5 do result := result + A[i] end",
         expect: Expect::Exit(55),
         backends: &[Vm, Jit, Jvm, Clr],
+    },
+    // ALGOL 60 — *straight-line* 1-D integer array (LANG-FULL E5, the **LLVM**
+    // static-array proof — PR-4a). `A[1] := 40; A[3] := 2; result := A[1] + A[3]`
+    // ⇒ 42, exercising `alloc_array`/`array_set`/`array_get` with no loop. On
+    // **LLVM** (`iir-to-llvm`) this is the *static* array model: a length-prefixed
+    // `@calloc` block `[i64 len][elems…]` with the handle pointing at the payload;
+    // each `array_set`/`array_get` emits an **explicit** `icmp uge idx, len` and a
+    // `br` to a `call void @llvm.trap()` block on out-of-range (the native target
+    // has no managed runtime to bounds-check for it), then a typed `getelementptr`
+    // + `load`/`store`. `clang` compiles the `.ll` and runs it → exit 42. Runs on
+    // every already-supported array backend too (VM/JIT/JVM/CLR), all straight-line.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array A[1:3]; integer result; \
+               A[1] := 40; A[3] := 2; result := A[1] + A[3] end",
+        expect: Expect::Exit(42),
+        backends: &[Vm, Jit, Jvm, Clr, Llvm],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width

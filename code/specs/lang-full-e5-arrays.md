@@ -186,9 +186,15 @@ merge before the next:
      tests. The binary `clr-simulator` emitter path is a follow-up.
    - *(WASM regrouped: its linear-memory length-prefixed model belongs with the
      static backends in PR-4, not the managed native-array group.)*
-4. **E5-static-backends** — LLVM, WASM (linear memory), then native x86_64 +
-   aarch64 (length-prefixed flat allocation + explicit guard + trap); extend the
-   matrix Prog to all 7. Native encodings byte-verified vs the system assembler.
+4. **E5-static-backends** — length-prefixed flat allocation + explicit guard +
+   trap. Split per backend:
+   - **4a — LLVM** ✅ **done** (`iir-to-llvm` 0.14.0): `alloc_array`→`@calloc`
+     `[i64 len][elems…]`, `array_get/set`→`icmp uge`+`br` to `llvm.trap` then typed
+     `getelementptr`+`load`/`store`, `array_len`→load header. A straight-line ALGOL
+     array program runs via `clang` (exit 42). *(The for-loop array Prog awaits a
+     separate ALGOL-for-loop→LLVM fix before joining the LLVM column.)*
+   - **4b — WASM** ☐ (linear memory, same length-prefixed model + `unreachable` trap).
+   - **4c — native x86_64 + aarch64** ☐ (encodings byte-verified vs the assembler).
 5. **E5-bounds-trap-proof** — a matrix program that traps on OOB, asserted to
    abort on every backend.
 6. **(follow-ups, not v1)** real (`array<f64>`) arrays end-to-end; BASIC `DIM`

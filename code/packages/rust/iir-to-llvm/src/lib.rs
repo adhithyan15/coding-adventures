@@ -80,6 +80,7 @@
 //! assert!(ll.contains("ret i64 42"));
 //! ```
 
+use interpreter_ir::opcodes::array_elem_type;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use std::collections::HashMap;
 use std::fmt;
@@ -250,6 +251,12 @@ const SUPPORTED_OPS: &[&str] = &[
     // x86_64 / native AOT backend already supports (LANG76); we add the LLVM
     // lowering so Brainfuck — which builds an implicit byte tape — compiles.
     "alloc_bytes", "load_byte", "store_byte",
+    // LANG-FULL E5 — bounds-checked arrays (the *static* representation:
+    // length-prefixed flat `calloc` block + an explicit compare/trap, vs the
+    // JVM/CLR managed-array native check). `alloc_array` allocates `[i64 len]
+    // [elems…]`; `array_get`/`array_set` bounds-check the index then GEP+load/
+    // store; `array_len` reads the header.
+    "alloc_array", "array_get", "array_set", "array_len",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -354,8 +361,14 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
                 ));
             }
             // `ret_void` carries type_hint "void"; everything else carries a
-            // real type.  Both go through `llvm_type_for`.
-            if llvm_type_for(&instr.type_hint, &func.name).is_err() {
+            // real type.  Both go through `llvm_type_for`. An `alloc_array`
+            // carries an `array<T>` hint (LANG-FULL E5) — not a scalar LLVM type,
+            // so validate its *element* `T` instead (the handle itself is a `ptr`).
+            let type_ok = match array_elem_type(&instr.type_hint) {
+                Some(elem) => llvm_type_for(&elem, &func.name).is_ok(),
+                None => llvm_type_for(&instr.type_hint, &func.name).is_ok(),
+            };
+            if !type_ok {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, instr {:?} type_hint {:?} not supported",
                     func.name, instr.op, instr.type_hint
@@ -433,6 +446,9 @@ pub fn lower_iir_to_llvm(
     let mut used_putchar = false;
     let mut used_getchar = false;
     let mut used_alloc_bytes = false;
+    // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
+    // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
+    let mut used_arrays = false;
     // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
     // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
     let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
@@ -440,6 +456,9 @@ pub fn lower_iir_to_llvm(
         for i in &f.instructions {
             if i.op == "alloc_bytes" {
                 used_alloc_bytes = true;
+            }
+            if interpreter_ir::opcodes::is_array_op(&i.op) {
+                used_arrays = true;
             }
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
@@ -466,10 +485,15 @@ pub fn lower_iir_to_llvm(
     // LLVM05 — libc / allocator declarations for the Brainfuck tape & I/O.
     // `calloc(nmemb, size)` returns a zero-filled buffer (BF cells start at 0);
     // `putchar`/`getchar` are the libc character I/O the BF `.`/`,` map to.
-    if used_alloc_bytes || used_putchar || used_getchar {
+    if used_alloc_bytes || used_arrays || used_putchar || used_getchar {
         out.push('\n');
-        if used_alloc_bytes {
+        if used_alloc_bytes || used_arrays {
             out.push_str("declare ptr @calloc(i64, i64)\n");
+        }
+        if used_arrays {
+            // The out-of-bounds trap target (LANG-FULL E5). `llvm.trap` is an
+            // intrinsic — declaring it is harmless and keeps the module explicit.
+            out.push_str("declare void @llvm.trap()\n");
         }
         if used_putchar {
             out.push_str("declare i32 @putchar(i32)\n");
@@ -983,6 +1007,10 @@ fn lower_instr(
         "alloc_bytes" => lower_alloc_bytes(instr, state, out),
         "load_byte" => lower_load_byte(instr, state, out),
         "store_byte" => lower_store_byte(instr, state, out),
+        "alloc_array" => lower_alloc_array(instr, state, out),
+        "array_get" => lower_array_get(instr, state, out),
+        "array_set" => lower_array_set(instr, state, out),
+        "array_len" => lower_array_len(instr, state, out),
 
         other => Err(IIRLlvmError::UnsupportedOp {
             function: fn_name.into(),
@@ -1083,6 +1111,171 @@ fn lower_store_byte(
     out.push_str(&format!("  {p} = getelementptr i8, ptr {base}, i64 {idx}\n"));
     out.push_str(&format!("  {t} = trunc i64 {val} to i8\n"));
     out.push_str(&format!("  store i8 {t}, ptr {p}\n"));
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// LANG-FULL E5 — bounds-checked arrays (static / length-prefixed model)
+// ---------------------------------------------------------------------------
+//
+// An array is a single `calloc` block laid out as a **length header followed by
+// the elements**:
+//
+//   base ──► [ i64 length | element 0 | element 1 | … ]   (zero-filled)
+//            └─ 8 bytes ──┘
+//
+// The IIR *handle* is a pointer to the **payload** (`base + 8`), so element
+// access is a plain typed GEP (`getelementptr <T>, ptr handle, i64 idx`) and the
+// length lives at `handle − 8`. Unlike the JVM/CLR managed arrays (whose runtime
+// bounds-checks `*aload`/`ldelem` for free), the native/LLVM target has no such
+// check, so every `array_get`/`array_set` emits an **explicit** compare against
+// the stored length and branches to a trap (`llvm.trap`) on an out-of-range
+// index — the static-backend realisation of E5's "OOB → trap" rule. A single
+// **unsigned** compare (`icmp uge`) catches both a `>= len` index and a negative
+// one (a negative `i64` is a huge unsigned value).
+
+/// The LLVM element type + its byte size for an array element type hint.
+fn array_elem_llvm(elem: &str, fn_name: &str) -> Result<(&'static str, u32), IIRLlvmError> {
+    let ty = llvm_type_for(elem, fn_name)?;
+    let size = match ty {
+        "i1" | "i8" => 1,
+        "i16" => 2,
+        "i32" | "float" => 4,
+        "i64" | "double" => 8,
+        other => {
+            return Err(IIRLlvmError::UnsupportedType {
+                function: fn_name.into(),
+                type_hint: format!("array element {other}"),
+            })
+        }
+    };
+    Ok((ty, size))
+}
+
+/// Lower `alloc_array dest <- count : array<T>`.
+///
+/// ```llvm
+/// %sz    = mul i64 <count>, <elemsize>
+/// %total = add i64 %sz, 8
+/// %base  = call ptr @calloc(i64 %total, i64 1)
+/// store i64 <count>, ptr %base                 ; length header
+/// %dest  = getelementptr i8, ptr %base, i64 8  ; handle = payload
+/// ```
+///
+/// **Trust boundary (size overflow).** `count` is a *compiler-produced* operand
+/// (a constant or a bounded length expression from a frontend), not an
+/// end-user-controlled value, so the size `mul`/`add` is left as plain wrapping
+/// i64 arithmetic. A hostile *hand-built* IIR could pass `count ≈ 2⁶¹` so
+/// `count*elemsize + 8` wraps to a small `calloc` while the stored `len` stays
+/// huge — letting later in-bounds-looking indices overrun the undersized block at
+/// runtime. This is the same trust contract the existing `alloc_bytes` lowering
+/// already relies on (its `size` is likewise unchecked), and the array path is
+/// strictly *safer*: it adds the per-access bounds check `alloc_bytes` lacks. A
+/// future hardening could gate the size on `@llvm.umul.with.overflow.i64` and
+/// branch to the same trap; unneeded for the trusted-frontend threat model.
+fn lower_alloc_array(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "alloc_array", state.fn_name)?.to_string();
+    let elem = array_elem_type(&instr.type_hint).ok_or_else(|| IIRLlvmError::InvalidOperand {
+        function: state.fn_name.into(),
+        detail: format!("alloc_array type_hint must be array<T>, got {:?}", instr.type_hint),
+    })?;
+    let (_, elem_size) = array_elem_llvm(&elem, state.fn_name)?;
+    let count = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let sz = state.fresh("asz");
+    let total = state.fresh("atot");
+    let base = state.fresh("abase");
+    out.push_str(&format!("  {sz} = mul i64 {count}, {elem_size}\n"));
+    out.push_str(&format!("  {total} = add i64 {sz}, 8\n"));
+    out.push_str(&format!("  {base} = call ptr @calloc(i64 {total}, i64 1)\n"));
+    out.push_str(&format!("  store i64 {count}, ptr {base}\n"));
+    out.push_str(&format!("  %{dest} = getelementptr i8, ptr {base}, i64 8\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Emit the bounds check shared by `array_get`/`array_set`: load the length from
+/// the header at `handle − 8`, compare the index unsigned, and branch to a trap
+/// block on out-of-range. Leaves the cursor in a fresh "ok" block (still open).
+fn emit_bounds_check(
+    handle: &str,
+    idx: &str,
+    state: &mut FnState,
+    out: &mut String,
+) {
+    let hdr = state.fresh("ahdr");
+    let len = state.fresh("alen");
+    let oob = state.fresh("aoob");
+    state.counter += 1;
+    let trap = format!("__atrap{}", state.counter);
+    state.counter += 1;
+    let ok = format!("__aok{}", state.counter);
+    out.push_str(&format!("  {hdr} = getelementptr i8, ptr {handle}, i64 -8\n"));
+    out.push_str(&format!("  {len} = load i64, ptr {hdr}\n"));
+    out.push_str(&format!("  {oob} = icmp uge i64 {idx}, {len}\n"));
+    out.push_str(&format!("  br i1 {oob}, label %{trap}, label %{ok}\n"));
+    out.push_str(&format!("{trap}:\n"));
+    out.push_str("  call void @llvm.trap()\n");
+    out.push_str("  unreachable\n");
+    out.push_str(&format!("{ok}:\n"));
+}
+
+/// Lower `array_get dest <- handle, idx : T` — bounds-checked element load.
+fn lower_array_get(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "array_get", state.fn_name)?.to_string();
+    let (elem_ty, _) = array_elem_llvm(&instr.type_hint, state.fn_name)?;
+    let handle = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+    emit_bounds_check(&handle, &idx, state, out);
+    let ep = state.fresh("aep");
+    out.push_str(&format!("  {ep} = getelementptr {elem_ty}, ptr {handle}, i64 {idx}\n"));
+    out.push_str(&format!("  %{dest} = load {elem_ty}, ptr {ep}\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `array_set handle, idx, val : T` (no dest) — bounds-checked element store.
+fn lower_array_set(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    if instr.dest.is_some() {
+        return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "array_set must not have a dest".into(),
+        });
+    }
+    let (elem_ty, _) = array_elem_llvm(&instr.type_hint, state.fn_name)?;
+    let handle = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+    let val = resolve_operand(instr.srcs.get(2), &state.env, elem_ty, state.fn_name)?;
+    emit_bounds_check(&handle, &idx, state, out);
+    let ep = state.fresh("aep");
+    out.push_str(&format!("  {ep} = getelementptr {elem_ty}, ptr {handle}, i64 {idx}\n"));
+    out.push_str(&format!("  store {elem_ty} {val}, ptr {ep}\n"));
+    Ok(())
+}
+
+/// Lower `array_len dest <- handle` — read the `i64` length header at `handle − 8`.
+fn lower_array_len(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "array_len", state.fn_name)?.to_string();
+    let handle = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let hdr = state.fresh("ahdr");
+    out.push_str(&format!("  {hdr} = getelementptr i8, ptr {handle}, i64 -8\n"));
+    out.push_str(&format!("  %{dest} = load i64, ptr {hdr}\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
 

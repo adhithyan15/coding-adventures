@@ -92,7 +92,30 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.11.0 | **Narrow unsigned arithmetic wraps mod-2ⁿ** (LANG-FULL E2). A `u4`/`u8`/`u16`/`u32` op computes at i64 then `and i64 …, <mask>` (see below). Adds `u4` to the supported types. |
 | v0.12.0 | **Bitwise `not`** — synthesised as `xor x, -1` (LLVM has no `not`); a narrow width masks the result (`~0u8 = 255`). Unblocks Nib N3-`~` / Oct O2-`~`. |
 | v0.13.0 | **`f64` variable slots** (LANG-FULL E3). An `f64` local gets an `alloca double` slot (`store/load double`); a float `cmp_*` result `zext i1 → i64` (not the invalid `→ double`); `f64` literals render as LLVM's exact hex double `0x…`. **ALGOL 60 reals run on LLVM.** |
+| v0.14.0 | **Bounds-checked arrays** (LANG-FULL E5, static model). `alloc_array`→length-prefixed `@calloc` `[i64 len][elems…]`; `array_get`/`array_set` emit an explicit `icmp uge idx, len` + `br` to a `call void @llvm.trap()` block (OOB → trap), then a typed `getelementptr`+`load`/`store`; `array_len` reads the header. Declares `@calloc`/`@llvm.trap` on demand. |
 | (later) | GC, debug info via `!dbg`. |
+
+### Bounds-checked arrays (v0.14.0)
+
+An IIR array (LANG-FULL E5) is a single `@calloc` block laid out as a length
+header followed by the elements; the **handle** is a `ptr` to the payload
+(`base + 8`), so element access is a typed `getelementptr <T>` and the length
+lives at `handle − 8`:
+
+```
+base ──► [ i64 length | element 0 | element 1 | … ]   (zero-filled)
+         └─ 8 bytes ──┘ ▲ handle
+```
+
+Unlike the JVM/CLR managed-array backends (whose runtime bounds-checks every
+element access for free), the native/LLVM target has no such runtime, so each
+`array_get`/`array_set` emits an **explicit** unsigned compare against the stored
+length (`icmp uge i64 idx, len` — a single check that catches both `>= len` and a
+negative index, since a negative `i64` is a huge unsigned value) and branches to a
+`call void @llvm.trap(); unreachable` block when out of range. This is the
+static-backend realisation of E5's "out-of-bounds → trap" rule. The element type
+(`i64`/`double`/`i32`/`float`) comes from the op's `type_hint`; the index is always
+`i64`.
 
 ### Byte-tape memory (v0.9.0)
 

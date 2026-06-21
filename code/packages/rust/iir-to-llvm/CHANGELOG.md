@@ -3,6 +3,45 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.0] — 2026-06-21 — arrays via length-prefixed `@calloc` + explicit bounds-trap (LANG-FULL E5 PR-4a)
+
+The four E5 array opcodes now lower to the **static** array representation — a
+flat `@calloc` block with the length in a header and an **explicit** out-of-bounds
+trap (the native/LLVM target has no managed runtime to bounds-check for it, unlike
+the JVM/CLR backends). Layout, with the IIR *handle* pointing at the payload:
+
+```
+base ──► [ i64 length | element 0 | element 1 | … ]   (zero-filled by calloc)
+         └─ 8 bytes ──┘ ▲ handle = base + 8
+```
+
+| IIR op | LLVM IR |
+|--------|---------|
+| `alloc_array dest <- count` (`array<T>`) | `mul`+`add` size; `call ptr @calloc`; `store i64 count`; `getelementptr i8 … 8` |
+| `array_get dest <- handle, idx` | load len at `handle−8`; `icmp uge`; `br` to trap; `getelementptr <T>`; `load <T>` |
+| `array_set handle, idx, val` | same bounds check; `getelementptr <T>`; `store <T>` |
+| `array_len dest <- handle` | `getelementptr i8 … -8`; `load i64` |
+
+- **Explicit bounds check**: one **unsigned** compare (`icmp uge i64 idx, len`)
+  catches both a `>= len` index and a negative one (a negative `i64` is a huge
+  unsigned value); out-of-range branches to a block that does `call void
+  @llvm.trap(); unreachable` — the static-backend realisation of E5's "OOB → trap".
+- Element type (`i64`/`double`/`i32`/`float`) comes from `T`; the handle is an
+  opaque `ptr`, and the typed `getelementptr <T>` does the index scaling. The
+  index is always `i64` (LLVM keeps the uniform word model — no `i64`→`i32`).
+- New `declare ptr @calloc` / `declare void @llvm.trap()` emitted only when a
+  module uses an array op. The validator now accepts an `array<T>` `type_hint` by
+  checking its **element** type (the `alloc_array` handle is a `ptr`, not a scalar).
+- 3 new unit tests (calloc+trap+GEP shape, `double` element ops, `array<T>`
+  validates). Verified end to end: a straight-line ALGOL array program assembles
+  with `clang` and runs → exit 42.
+
+Scope note: the ALGOL *for-loop* array program (`lang_matrix.rs`, exit 55) runs on
+VM/JIT/JVM/CLR but **not yet LLVM** — an ALGOL `for` loop hits a *separate*,
+pre-existing LLVM-only lowering bug (an `i1`-typed loop-guard `icmp` over `i64`
+operands, double-emitted) unrelated to E5; the LLVM array proof uses a
+straight-line cell, and the for-loop bug is tracked as a follow-up.
+
 ## [0.13.0] — 2026-06-20 — `f64` variable slots (LANG-FULL enabler E3, code-gen backend 1)
 
 ### Fixed — `real` (f64) variables produced invalid IR
