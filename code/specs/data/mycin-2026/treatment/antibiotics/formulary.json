@@ -29,6 +29,7 @@
                      "source": "IDSA Tunkel 2004 (ampicillin for Listeria)"},
     "cefepime":     {"covers": ["n_meningitidis", "pseudomonas", "gram_negative", "s_pneumoniae_susceptible"], "csf_penetrant": true, "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 2,
                      "dose": {"floor_mg_per_kg": 25, "ceiling_base_mg_per_kg": 50, "ceiling_penalty_mg_per_kg": {"renal_severe": 4}},
+                     "dose_penalty_source": "FDA cefepime label (DailyMed be5f8ca6): adjust dose at CrCl <= 60 mL/min, neurotoxicity if unadjusted in renal impairment — DIRECTION grounded in dose-window-grounding.json (dose_penalty_cefepime_renal); the per-kg magnitude stays the illustrative feasibility model",
                      "source": "IDSA Tunkel 2004 (cefepime for Pseudomonas / nosocomial)"},
     "meropenem":    {"covers": ["n_meningitidis", "listeria", "pseudomonas", "gram_negative", "s_pneumoniae_susceptible"], "csf_penetrant": true, "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 3,
                      "dose": {"floor_mg_per_kg": 20, "ceiling_base_mg_per_kg": 40, "ceiling_penalty_mg_per_kg": {"renal_severe": 3}},

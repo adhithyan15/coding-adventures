@@ -180,6 +180,16 @@ risks Y") — decision support, not a hidden choice.
       scorecard — stays byte-identical; this only enriches provenance and proves the substrate
       now covers both cap shapes. Verified by `test_dose_caps.py` (single-factor renal +
       nephrotoxin caps grounded; compound still requires two categories; 15 tests).
+    - **WRITE-ONCE-USE-MANY (2nd drug, cefepime). ✅ DONE.** The completed substrate now grounds
+      a SECOND drug's renal cap as PURE DATA — a grounding record (`dose_penalty_cefepime_renal`,
+      FDA cefepime label DailyMed `be5f8ca6`: §2.3 *"Adjust the dose of Cefepime Injection in
+      patients with creatinine clearance less than or equal to 60 mL/min …"* + §5.2
+      *"Neurotoxicity: May occur especially in patients with renal impairment administered
+      unadjusted doses."*) + one `SINGLE_FACTOR_CAPS` row → `dose_capped_under(cefepime,
+      renal_severe)`. No engine, compiler, or rulebook-code change; `dose_caps_build.py`
+      regenerates the rulebook from the new row. A `renal_severe` chart now derives BOTH the
+      vancomycin and cefepime renal caps from the one substrate (`test_dose_caps.py`, 16 tests).
+      `verdict direction_only`; the per-kg magnitude stays the illustrative model.
 - **REFACTOR (ADJ-first): every exclusion is now an EXPLICIT engine constraint.** Dose-infeasible
   (CC-2), contraindicated (CC-3), and step-therapy (CC-6) drugs are unified into one
   `forced_zero: {drug → reason}` and emitted as `constrain x_d <= 0   % excluded (reason)` in the

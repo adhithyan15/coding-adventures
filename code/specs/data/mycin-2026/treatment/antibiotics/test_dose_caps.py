@@ -141,6 +141,19 @@ def test_single_factor_nephrotoxin_cap_is_grounded():
     assert "nephrotoxicity" in van["source"].lower()
 
 
+def test_single_factor_cefepime_renal_cap_is_grounded():
+    cli = _cli_or_skip()
+    # write-once-use-many: a SECOND drug (cefepime) is capped under renal_severe via the same
+    # single-factor substrate — pure data (a grounding record + a row), no engine change.
+    risks, caps = dc.derive_dose_caps(cli, {"renal_severe"})
+    assert risks == set()
+    cef = next((c for c in caps if c["drug"] == "cefepime"), None)
+    assert cef and cef["risk"] == "renal_severe" and cef["trust"] == "authoritative", caps
+    assert "renal" in cef["source"].lower()
+    # vancomycin is ALSO capped under renal_severe — the substrate serves many drugs at once.
+    assert any(c["drug"] == "vancomycin" for c in caps), caps
+
+
 def test_unknown_single_risk_caps_nothing():
     cli = _cli_or_skip()
     # A risk token with no dose_capped_under fact and no category → no compound, no cap.

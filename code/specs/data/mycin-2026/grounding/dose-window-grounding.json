@@ -335,6 +335,34 @@
         "final_verdict": "direction_only"
       },
       "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_cefepime_renal",
+      "kind": "dose_penalty",
+      "drug": "cefepime",
+      "claim": "Renal impairment lowers cefepime's safe dose: the dose must be adjusted in patients with CrCl ≤ 60 mL/min because of slower renal elimination, and neurotoxicity occurs especially when renally-impaired patients receive UNADJUSTED doses — i.e. the safe ceiling shrinks as renal function falls (the renal_severe ceiling penalty).",
+      "grounded": {
+        "id": "dose_penalty_cefepime_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=be5f8ca6-7232-423a-a2d5-cccb7abe7921",
+        "source_title": "CEFEPIME for injection — FDA prescribing information (DailyMed / NLM); DOSAGE AND ADMINISTRATION §2.3 + WARNINGS AND PRECAUTIONS §5.2 Neurotoxicity",
+        "byte_quote": "Adjust the dose of Cefepime Injection in patients with creatinine clearance less than or equal to 60 mL/min to compensate for the slower rate of renal elimination. Neurotoxicity: May occur especially in patients with renal impairment administered unadjusted doses.",
+        "value_found": "Cefepime dose must be reduced as renal function falls (CrCl ≤ 60 mL/min), and failure to adjust in renal impairment causes neurotoxicity — i.e. the safe ceiling shrinks with renal impairment. DIRECTION only; the per-kg penalty magnitude in formulary.json stays the illustrative feasibility model (the label's adjustment is a CrCl-banded table, not a single per-kg figure).",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "The CrCl-banded maintenance-dose grid (label Table 2) — a numeric dose-by-CrCl schedule, but it is a multi-row table (not a single per-kg ceiling reduction) and renders as tabular data; the formulary's single renal_severe per-kg penalty is an illustrative approximation of 'shrink the ceiling', not a transcription of Table 2, so the table is not cited for a numeric value.",
+          "Secondary aggregators (drugs.com, Sanford, UpToDate cefepime renal dosing) — discarded per primary-source-first; the FDA label states the adjustment + the neurotoxicity-on-unadjusted-dose warning directly."
+        ],
+        "note": "DIRECTION ENTAILED. Two verbatim sentences jointly establish the direction the dose-window model encodes for cefepime: (a) §2.3 mandates a dose adjustment once CrCl ≤ 60 mL/min (slower elimination → accumulation), and (b) §5.2 warns neurotoxicity occurs ESPECIALLY when renally-impaired patients get UNADJUSTED doses — both say the safe ceiling must shrink as renal function falls. Grounds the EXISTENCE + DIRECTION of cefepime's renal ceiling penalty, not its magnitude (the formulary renal_severe per-kg number stays the standing ILLUSTRATIVE feasibility model). This is the write-once-use-many demonstration: the same dose_caps.adj single-factor substrate now grounds a SECOND drug (cefepime) from a data row + this record, no engine/compiler change."
+      },
+      "verify": {
+        "id": "dose_penalty_cefepime_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the be5f8ca6 DailyMed cefepime label: §2.3 (DOSAGE AND ADMINISTRATION) states 'Adjust the dose of Cefepime Injection in patients with creatinine clearance less than or equal to 60 mL/min to compensate for the slower rate of renal elimination.' and §5.2 (WARNINGS AND PRECAUTIONS / Neurotoxicity, also in Highlights) states 'Neurotoxicity: May occur especially in patients with renal impairment administered unadjusted doses.'",
+        "refute_attempt": "Strongest refutation: §2.3 'adjust the dose' could mean lengthen the INTERVAL rather than lower the per-dose CEILING, so it might not justify a ceiling penalty. Conceded to the extent the verdict is direction_only (not a numeric grounding): the §5.2 neurotoxicity-on-UNADJUSTED-doses warning makes the safety direction unambiguous — an unreduced cefepime exposure in renal impairment is harmful, which is exactly the 'shrink the safe ceiling' direction the model encodes; the precise mechanism (interval vs per-dose) and magnitude are left to the illustrative feasibility model and not over-claimed. Second angle: the quote is generic cefepime PK, not meningitis-specific — but dose feasibility under renal impairment is indication-independent, so the direction holds for the meningitis dose too.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
     }
   ]
 }

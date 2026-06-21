@@ -80,7 +80,17 @@
       "trust": "authoritative",
       "source": "In order to minimize the risk of nephrotoxicity when treating patients with underlying renal dysfunction or patients receiving concomitant therapy with an aminoglycoside, serial monitoring of renal function should be performed, and particular care should be taken in following appropriate dosing schedules.",
       "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce"
+    },
+    "dose_capped_under__cefepime__renal_severe": {
+      "relation": "dose_capped_under",
+      "subject": "cefepime",
+      "risk": "renal_severe",
+      "grounding_id": "dose_penalty_cefepime_renal",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Adjust the dose of Cefepime Injection in patients with creatinine clearance less than or equal to 60 mL/min to compensate for the slower rate of renal elimination. Neurotoxicity: May occur especially in patients with renal impairment administered unadjusted doses.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=be5f8ca6-7232-423a-a2d5-cccb7abe7921"
     }
   },
-  "hash": "9c3a7c2bf2db2b6f"
+  "hash": "e260c9f8b07b8d64"
 }

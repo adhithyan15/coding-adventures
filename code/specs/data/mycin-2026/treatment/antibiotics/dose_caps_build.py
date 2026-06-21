@@ -124,6 +124,11 @@ SINGLE_FACTOR_CAPS: list[tuple[str, str, str, str]] = [
     ("dose_penalty_vancomycin_nephrotoxin", "vancomycin", "nephrotoxin_interaction",
      "Concomitant therapy with another nephrotoxin (e.g. an aminoglycoside) compounds "
      "vancomycin nephrotoxicity, requiring careful/adjusted dosing (FDA label)."),
+    # write-once-use-many: the SAME single-factor substrate grounds a SECOND drug (cefepime)
+    # from a data row + a grounding record — no engine/compiler change.
+    ("dose_penalty_cefepime_renal", "cefepime", "renal_severe",
+     "Cefepime dose must be adjusted in renal impairment (CrCl <= 60 mL/min); neurotoxicity "
+     "occurs especially when renally-impaired patients receive unadjusted doses (FDA label)."),
 ]
 
 
