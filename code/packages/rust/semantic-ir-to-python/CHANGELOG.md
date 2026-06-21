@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.18 — lambda marked strict-arity (Q10g)
+
+`make_closure` now produces a **proc-lenient** closure (the runtime's `apply`
+adjusts a block's arguments to its arity), so a Ruby lambda — which must stay
+**strict** — is wrapped: the `lambda` / `->(){}` builtin arm now emits
+`_sir_as_lambda(_sir_make_closure(…))` instead of the bare closure. The new
+`as_lambda` helper (imported from `sir-runtime-core` ≥ 0.1.4) flips the
+closure's strict flag so an arity mismatch raises rather than being silently
+adjusted. Block / proc closures are unchanged in shape and now adjust arity at
+call time. `lambda_builtin_lowers_to_inner_closure_py` gains a wrapper
+assertion; the runtime-import alias test lists `as_lambda as _sir_as_lambda`.
+
 ## 0.1.17 — execution-proof for the non-empty block capture (RB3)
 
 RB1/RB2 (in the Ruby frontend) introduced the first SIR shape that emits a

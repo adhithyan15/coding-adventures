@@ -1139,12 +1139,14 @@ mod tests {
         // Ruby `lambda { … }` / `->{…}` reach the backend as
         // `BuiltinCall("lambda", [MakeClosure])`.  The lambda *is* its closure,
         // so it must emit the inner `MakeClosure` (→ `_sir_make_closure`)
-        // directly, never route through the eager dispatch table.
+        // directly, never route through the eager dispatch table.  Q10g: it is
+        // wrapped in `_sir_as_lambda(...)` to mark it strict-arity.
         let mc = Expr::MakeClosure { fn_name: "main".into(), captures: vec![], span: s() };
         let lam = bc("lambda", vec![mc]);
         let a = compile(&module_with_main_body(vec![], lam, &[Feature::Closures]))
             .expect("compile");
         assert!(a.source.contains("_sir_make_closure("), "got:\n{}", a.source);
+        assert!(a.source.contains("_sir_as_lambda(_sir_make_closure("), "got:\n{}", a.source);
         assert!(!a.source.contains("_sir_call_builtin(\"lambda\""), "got:\n{}", a.source);
     }
 

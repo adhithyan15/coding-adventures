@@ -195,3 +195,57 @@ def test_call_unknown_builtin_errors() -> None:
 def test_builtin_closure_is_callable_handle() -> None:
     plus = sir.builtin_closure("+")
     assert sir.apply(plus, [4, 5]) == 9
+
+
+# --- proc-vs-lambda arity (Q10g) -------------------------------------------
+
+
+def test_block_drops_extra_args() -> None:
+    # A one-param block yielded two values binds the first, drops the rest
+    # (Ruby proc/block leniency) rather than raising.
+    c = sir.make_closure(lambda x: x, [])
+    assert sir.apply(c, [1, 2, 3]) == 1
+
+
+def test_block_pads_missing_args_with_nil() -> None:
+    # Too few args → the missing trailing params become nil (None).
+    c = sir.make_closure(lambda x, y: (x, y), [])
+    assert sir.apply(c, [7]) == (7, None)
+
+
+def test_block_arity_accounts_for_captures() -> None:
+    # make_closure subtracts the capture count: this block's own arity is 1.
+    c = sir.make_closure(lambda cap, x: (cap, x), [99])
+    assert sir.apply(c, [1, 2, 3]) == (99, 1)
+
+
+def test_variadic_block_is_not_adjusted() -> None:
+    # A *rest block keeps every argument (arity is None → no trimming).
+    c = sir.make_closure(lambda *xs: list(xs), [])
+    assert sir.apply(c, [1, 2, 3]) == [1, 2, 3]
+
+
+def test_lambda_is_strict_on_too_many_args() -> None:
+    # as_lambda marks the closure strict, so a mismatch raises (the analogue
+    # of Ruby's ArgumentError) instead of silently dropping args.
+    c = sir.as_lambda(sir.make_closure(lambda x: x, []))
+    assert sir.apply(c, [5]) == 5
+    with pytest.raises(TypeError):
+        sir.apply(c, [1, 2])
+
+
+def test_lambda_is_strict_on_too_few_args() -> None:
+    c = sir.as_lambda(sir.make_closure(lambda x, y: (x, y), []))
+    with pytest.raises(TypeError):
+        sir.apply(c, [1])
+
+
+def test_as_lambda_returns_same_closure_and_sets_flag() -> None:
+    c = sir.make_closure(lambda x: x, [])
+    assert c.is_lambda is False
+    assert sir.as_lambda(c) is c
+    assert c.is_lambda is True
+
+
+def test_as_lambda_passes_non_closure_through() -> None:
+    assert sir.as_lambda(42) == 42

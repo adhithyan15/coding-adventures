@@ -930,8 +930,16 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // directly (which renders `_sir_make_closure(...)`) rather than routing
     // through the eager `call_builtin` dispatch — there is no separate
     // "lambda" runtime helper to call, the closure already is the result.
+    //
+    // Proc-vs-lambda arity (Q10g): a `MakeClosure` is proc-lenient by default
+    // (`apply` adjusts a block's arguments to its arity), but a Ruby lambda is
+    // **strict**.  Wrap the closure in `_sir_as_lambda(...)`, which flips its
+    // strict flag so `apply` passes arguments through unadjusted (a mismatch
+    // then raises, the analogue of Ruby's `ArgumentError`).
     if name == "lambda" && args.len() == 1 {
+        out.push_str("_sir_as_lambda(");
         emit_expr(out, &args[0], indent);
+        out.push(')');
         return;
     }
     // `defined?(x)` lowers to `BuiltinCall("defined?", [operand])`.  The single
