@@ -198,7 +198,13 @@ merge before the next:
      → `if … unreachable` (the trap) then `i64.load`/`i64.store` at offset 8;
      `array_len` reads the header. Straight-line ALGOL array Prog runs on the in-repo
      `wasm-runtime` (exit 42). 3 tests.
-   - **4c — native x86_64 + aarch64** ☐ (encodings byte-verified vs the assembler).
+   - **4c — native x86_64 + aarch64** ✅ **done** (`x86_64-backend` 0.14.0,
+     `aarch64-backend` 0.12.0): `alloc_array`→`__twig_alloc_bytes` `8+count*8` block
+     + length header; `array_get/set`→explicit unsigned `cmp`+`jb`/`b.lo` over a
+     `ud2`/`udf` trap, then base+idx*8 load/store at offset 8; `array_len`→load
+     header. i64 elements (native is i64-only so far). Reuses only pre-verified
+     encoders. Matrix Prog runs on **NativeAot** — aarch64 locally (exit 42),
+     x86_64 on Linux CI. **E5 now runs on all 7 backends.**
 5. **E5-bounds-trap-proof** — a matrix program that traps on OOB, asserted to
    abort on every backend.
 6. **(follow-ups, not v1)** real (`array<f64>`) arrays end-to-end; BASIC `DIM`

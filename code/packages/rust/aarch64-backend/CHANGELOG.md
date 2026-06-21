@@ -1,5 +1,31 @@
 # Changelog — `aarch64-backend`
 
+## 0.12.0 — 2026-06-21 — bounds-checked arrays (LANG-FULL E5 PR-4c) — completes E5
+
+The four E5 array opcodes now lower to raw aarch64, using the **static**
+length-prefixed model with an **explicit** `udf` bounds trap:
+
+| op | aarch64 |
+|----|---------|
+| `alloc_array dest <- count` | `x0=count; lsl x0,#3; add x0,#8; bl __twig_alloc_bytes; str count,[x0]; dest=x0` |
+| `array_get dest <- handle, idx` | `ldr x2,[base]; cmp idx,x2; b.lo ok; udf #0xDEAD; ok: lsl idx,#3; add base,idx; ldr dest,[base,#8]` |
+| `array_set handle, idx, val` | same bounds check; `str val,[base+idx*8, #8]` |
+| `array_len dest <- handle` | `ldr dest,[base]` |
+
+- Layout `[i64 length][elem 0][elem 1]…`, handle = block base; length at
+  `[base+0]`, elements at `[base + idx*8, #8]`. Allocation reuses the shared
+  `__twig_alloc_bytes` runtime helper (the byte-tape's allocator).
+- **Bounds check**: one **unsigned** `cmp idx, len` + `b.lo` skips a `udf #0xDEAD`
+  trap when in range — `b.lo` (LO = unsigned `<`) catches both `>= len` and a
+  negative index. The aarch64 twin of LLVM's `icmp uge`+`llvm.trap`.
+- Element width fixed at **8 bytes** (the AOT specialiser collapses `array<T>`→
+  `any`; `array_get`/`array_set` validate `i64`/`u64` — native is i64-only so far).
+  Reuses only pre-existing encoders (`lsl_reg`/`add_imm`/`cmp`/`b_cond`/`ldr`/
+  `str_`/`udf`/`bl_external`).
+- 2 new unit tests (≥2 `udf` traps; non-`i64` element refused). The ALGOL array
+  matrix `Prog` runs on **NativeAot** and was executed **locally on this Apple
+  Silicon host → exit 42**. **This completes E5 across all 7 backends.**
+
 ## 0.11.0 — 2026-06-20 — `f64` (ALGOL `real`) arithmetic + comparisons (LANG-FULL E3)
 
 ### Added — native double-precision codegen on aarch64
