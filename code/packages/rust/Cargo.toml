@@ -264,6 +264,7 @@ members = [
     "r-runtime",
     "r-vector",
     "riscv-simulator",
+    "x86-simulator",
     "rom-bios",
     "ruby-lexer",
     "ruby-parser",
