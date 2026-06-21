@@ -1,5 +1,38 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.23.0] — 2026-06-21 — arrays → native CIL `int32[]`/`float64[]` (LANG-FULL E5 PR-3b)
+
+The four E5 array opcodes now lower to **real single-dimensional CIL arrays** in
+the textual `.il` emitter, so ALGOL 1-D arrays run on real CoreCLR (`ilasm` +
+`dotnet`):
+
+| IIR op | CIL (`.il`) |
+|--------|-------------|
+| `alloc_array dest <- count` (`array<T>`) | `ld<count>; newarr <Elem>; st<dest>` |
+| `array_get dest <- handle, idx` | `ld<handle>; ld<idx>; ldelem.<t>; st<dest>` |
+| `array_set handle, idx, val` | `ld<handle>; ld<idx>; ld<val>; stelem.<t>` |
+| `array_len dest <- handle` | `ld<handle>; ldlen; conv.i4; st<dest>` |
+
+- Element type → CIL: `int32[]` (`ldelem.i4`/`stelem.i4`, `newarr System.Int32`),
+  `float64[]` (`.r8`, `System.Double`), `float32[]` (`.r4`, `System.Single`). The
+  handle is a reference local (`cil_local_type("array<T>")` → the array CIL type,
+  the same machinery the Brainfuck byte-tape `unsigned int8[]` already uses).
+- **`i64` collapses to `int32[]`** — `cil_local_type` already maps `i64`→`int32`
+  (CIL stack ints are 32-bit on this slice, exactly as scalar `i64` programs
+  lower), so unlike the JVM backend **no `array<i64>`→`array<i32>` concretization
+  is needed**: the handle, index, and value all land on `int32`/`ldelem.i4`.
+- **Bounds-checked for free**: CoreCLR's native `ldelem`/`stelem` bounds check
+  throws `System.IndexOutOfRangeException` on an out-of-range index — exactly E5's
+  trap, no explicit guard emitted.
+- New helper `cil_array_elem` (element → array type + ldelem/stelem/newarr); 5 new
+  unit tests (handle typing, element-opcode table, `int32[]` and `float64[]` op
+  emission). Verified end to end: the ALGOL sum-of-squares matrix `Prog` now
+  assembles with real `ilasm` and runs on real `dotnet` → exit 55.
+
+Scope: the **textual `.il`** emitter (the real-CoreCLR path the matrix runs on).
+The binary `CILProgramArtifact` emitter (the in-repo `clr-simulator` path) still
+returns `UnsupportedOp` for the array ops — a follow-up.
+
 ## [0.22.0] — 2026-06-20 — `f64` (ALGOL `real`) in the textual `.il` emitter (LANG-FULL E3)
 
 The CLR backend was uniformly `int32` and the validator rejected every float

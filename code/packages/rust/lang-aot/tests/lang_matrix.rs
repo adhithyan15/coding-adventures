@@ -560,17 +560,17 @@ const PROGRAMS: &[Prog] = &[
     // declaration, subscripted stores, and subscripted loads, and `vm-core`
     // executes them on its bounds-checked `Vec<Vec<Value>>` heap.
     //
-    // **Backends:** VM + JIT + **JVM** (E5 PR-1/2/3). The reference interpreter
-    // (`vm-core` 0.7.0) implements the array ops; the JIT cold-interprets them
-    // through the same dispatch. On the **JVM** (`iir-to-jvm-class-file`) the array
-    // lowers to a real `int[]`: `alloc_array`→`newarray T_INT`, `array_set`→
-    // `iastore`, `array_get`→`iaload`, each with the JVM's **native** bounds check
-    // (OOB → `ArrayIndexOutOfBoundsException`, i.e. E5's trap). The handle is a
-    // reference local (`astore`/`aload`); `concretize_scalar_any_for_jvm` narrows
-    // `array<i64>`→`array<i32>` so the `newarray` element width and the `iaload`/
-    // `iastore` element opcodes agree (a `long[]` with `iaload` is a `VerifyError`).
-    // The remaining code-gen backends (LLVM/WASM/CLR/native) join in E5 PR-3b
-    // (CLR) and PR-4 (static), at which point this cell's `backends` grows to all 7.
+    // **Backends:** VM + JIT + **JVM** + **CLR** (E5 PR-1/2/3a/3b). The reference
+    // interpreter (`vm-core` 0.7.0) implements the array ops; the JIT cold-interprets
+    // them. On the **JVM** (`iir-to-jvm-class-file`) the array is a real `int[]`:
+    // `alloc_array`→`newarray T_INT`, `array_set`→`iastore`, `array_get`→`iaload`,
+    // with the JVM's native bounds check (OOB → `ArrayIndexOutOfBoundsException`).
+    // On the **CLR** (`iir-to-cil-bytecode` textual `.il`) it's a real `int32[]`:
+    // `alloc_array`→`newarr System.Int32`, `array_set`→`stelem.i4`, `array_get`→
+    // `ldelem.i4`, `array_len`→`ldlen`+`conv.i4`, with CoreCLR's native bounds check
+    // (OOB → `System.IndexOutOfRangeException`). Both managed runtimes give E5's trap
+    // for free. The handle is a reference local. The static code-gen backends
+    // (LLVM/WASM/native) join in E5 PR-4, at which point `backends` grows to all 7.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -579,7 +579,7 @@ const PROGRAMS: &[Prog] = &[
                result := 0; \
                for i := 1 step 1 until 5 do result := result + A[i] end",
         expect: Expect::Exit(55),
-        backends: &[Vm, Jit, Jvm],
+        backends: &[Vm, Jit, Jvm, Clr],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
