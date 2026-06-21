@@ -552,6 +552,29 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — *one-dimensional integer arrays* (LANG-FULL enabler E5, AL2).
+    // `integer array A[1:5]` lowers to an IIR `alloc_array`; the first `for` loop
+    // fills `A[i] := i*i` (an `array_set` with the 0-based index `i - 1`), the
+    // second sums `result := result + A[i]` (an `array_get`) ⇒ 1+4+9+16+25 = 55.
+    // This RUNS the four E5 array ops end-to-end: `algol-iir-compiler` lowers the
+    // declaration, subscripted stores, and subscripted loads, and `vm-core`
+    // executes them on its bounds-checked `Vec<Vec<Value>>` heap.
+    //
+    // **Backends:** VM + JIT only for now. The reference interpreter (`vm-core`
+    // 0.7.0) implements the array ops; the JIT cold-interprets them through the
+    // same dispatch. The code-gen backends (LLVM/WASM/JVM/CLR/native) don't lower
+    // `alloc_array`/`array_get`/`array_set` yet — those join in E5 PR-3 (managed)
+    // and PR-4 (static), at which point this cell's `backends` grows to all 7.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array A[1:5]; integer i, result; \
+               for i := 1 step 1 until 5 do A[i] := i * i; \
+               result := 0; \
+               for i := 1 step 1 until 5 do result := result + A[i] end",
+        expect: Expect::Exit(55),
+        backends: &[Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)

@@ -17,6 +17,7 @@ use std::cell::Cell;
 use std::collections::{HashMap, HashSet};
 
 use coding_adventures_algol_parser::parse_algol;
+use interpreter_ir::opcodes::make_array_type;
 use interpreter_ir::{FunctionTypeStatus, IIRFunction, IIRInstr, IIRModule, Operand, SourceLoc};
 use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -153,6 +154,25 @@ struct ExprValue {
 struct VarBinding {
     slot: String,
     ty: ScalarType,
+    /// `Some` when this name is an **array** (LANG-FULL enabler E5).  The
+    /// binding's `slot` then holds the array *handle* (the value `alloc_array`
+    /// produced), `ty` is the **element** type, and `array` carries the extra
+    /// state a subscript access needs.  `None` for an ordinary scalar.
+    array: Option<ArrayInfo>,
+}
+
+/// Per-array state recorded at its declaration, so a later `A[i]` access can be
+/// lowered.  ALGOL arrays are declared with an explicit lower bound
+/// (`integer array A[1:10]` ⇒ lower `1`), but the IIR's `array_get`/`array_set`
+/// are **0-based**, so every subscript `i` is translated to `i - lower` before
+/// the access.  The lower bound can be a run-time expression (`A[lo:hi]`), so we
+/// keep the *slot* that holds its evaluated value rather than a constant.
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ArrayInfo {
+    /// Register slot holding the (run-time) lower bound, for `i - lower`.
+    lower_slot: String,
+    /// The array's element type — `array_get` yields it, `array_set` checks it.
+    elem_ty: ScalarType,
 }
 
 /// A procedure heading read off the AST: `(name, value-params, return-type)`,
@@ -343,6 +363,13 @@ impl Compiler {
         if let Some(switch_decl) = first_direct_node(node, "switch_decl") {
             return self.register_switch(switch_decl);
         }
+        // An array declaration (LANG-FULL E5): `integer array A[1:10]`.  Each
+        // segment is lowered to an `alloc_array` whose length is the run-time
+        // span `upper - lower + 1`; the binding records the lower bound so a
+        // later `A[i]` access can translate to the 0-based IIR index `i - lower`.
+        if let Some(array_decl) = first_direct_node(node, "array_decl") {
+            return self.emit_array_decl(array_decl);
+        }
         let Some(type_decl) = first_direct_node(node, "type_decl") else {
             let construct = direct_nodes(node)
                 .first()
@@ -372,6 +399,174 @@ impl Compiler {
             ));
         }
         Ok(())
+    }
+
+    /// Lower an `array_decl` (LANG-FULL E5, 1-D first).
+    ///
+    /// ```text
+    /// integer array A, B[1:10]
+    ///   ^type        ^names ^bound_pair (lower:upper)
+    /// ```
+    ///
+    /// The element type is the leading `type` keyword, defaulting to `real`
+    /// when omitted (ALGOL 60's rule for a bare `array`).  Each `array_segment`
+    /// gives one or more names that share a single set of bounds.  For each
+    /// one-dimensional segment we evaluate the bound expressions, compute the
+    /// length `upper - lower + 1` at run time (ALGOL permits *dynamic* bounds,
+    /// `array A[lo:hi]`), and emit one `alloc_array` per name.  The lower bound
+    /// is kept in the binding so subscripts translate to the 0-based IIR index.
+    ///
+    /// Multidimensional arrays (`B[i, j]`) and non-numeric element types are
+    /// follow-up work — they produce a clear "unsupported" message here.
+    fn emit_array_decl(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
+        let elem_ty = match first_direct_node(node, "type") {
+            Some(type_node) => self.scalar_type(type_node)?,
+            None => ScalarType::Real, // bare `array A[..]` is `real` in ALGOL 60
+        };
+        if !matches!(elem_ty, ScalarType::Integer | ScalarType::Real) {
+            return Err(CompileError::Unsupported(format!(
+                "{} arrays (only integer/real element types so far)",
+                elem_ty.name()
+            )));
+        }
+
+        for segment in direct_nodes(node)
+            .into_iter()
+            .filter(|n| n.rule_name == "array_segment")
+        {
+            let bound_pairs: Vec<&GrammarASTNode> = direct_nodes(segment)
+                .into_iter()
+                .filter(|n| n.rule_name == "bound_pair")
+                .collect();
+            if bound_pairs.len() != 1 {
+                return Err(CompileError::Unsupported(format!(
+                    "multidimensional arrays ({}-D) — only 1-D so far",
+                    bound_pairs.len()
+                )));
+            }
+            // bound_pair = arith_expr COLON arith_expr  →  [lower, upper]
+            let bounds: Vec<&GrammarASTNode> = direct_nodes(bound_pairs[0])
+                .into_iter()
+                .filter(|n| n.rule_name == "arith_expr")
+                .collect();
+            if bounds.len() != 2 {
+                return Err(CompileError::Malformed(
+                    "bound_pair must have exactly two bounds".into(),
+                ));
+            }
+            let lower = self.emit_expr(bounds[0])?;
+            if lower.ty != ScalarType::Integer {
+                return Err(CompileError::Type(
+                    "array lower bound must be an integer".into(),
+                ));
+            }
+            let upper = self.emit_expr(bounds[1])?;
+            if upper.ty != ScalarType::Integer {
+                return Err(CompileError::Type(
+                    "array upper bound must be an integer".into(),
+                ));
+            }
+
+            // length = upper - lower + 1  (the element count `alloc_array` takes).
+            let span = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "sub",
+                Some(span.clone()),
+                vec![
+                    Operand::Var(upper.slot.clone()),
+                    Operand::Var(lower.slot.clone()),
+                ],
+                "i64",
+            ));
+            let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+            let len = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "add",
+                Some(len.clone()),
+                vec![Operand::Var(span), Operand::Var(one)],
+                "i64",
+            ));
+
+            let names: Vec<String> = first_direct_node(segment, "ident_list")
+                .map(ident_list_names)
+                .unwrap_or_default();
+            if names.is_empty() {
+                return Err(CompileError::Malformed(
+                    "array_segment has no names".into(),
+                ));
+            }
+            let array_ty = make_array_type(elem_ty.iir());
+            for name in names {
+                let handle = self.declare_array(&name, elem_ty, lower.slot.clone())?;
+                self.emit(IIRInstr::new(
+                    "alloc_array",
+                    Some(handle),
+                    vec![Operand::Var(len.clone())],
+                    &array_ty,
+                ));
+            }
+        }
+        Ok(())
+    }
+
+    /// Resolve a subscripted `variable` node `A[i]` to the array handle slot,
+    /// a slot holding the **0-based** index `i - lower`, and the element type.
+    /// Shared by the read (`array_get`) and write (`array_set`) paths.
+    fn resolve_array_index(
+        &mut self,
+        var_node: &GrammarASTNode,
+    ) -> Result<(VarBinding, String), CompileError> {
+        let name = direct_tokens(var_node)
+            .into_iter()
+            .find(|t| t.effective_type_name() == "NAME")
+            .map(|t| t.value.clone())
+            .ok_or_else(|| CompileError::Malformed("subscripted variable missing name".into()))?;
+        let binding = self.require_var(&name)?;
+        let Some(info) = binding.array.clone() else {
+            return Err(CompileError::Type(format!(
+                "{name:?} is not an array — cannot subscript it"
+            )));
+        };
+        let subs = array_subscripts(var_node).ok_or_else(|| {
+            CompileError::Malformed("subscripted variable missing subscripts".into())
+        })?;
+        if subs.len() != 1 {
+            return Err(CompileError::Unsupported(format!(
+                "{}-dimensional subscripts — only 1-D so far",
+                subs.len()
+            )));
+        }
+        let idx = self.emit_expr(subs[0])?;
+        if idx.ty != ScalarType::Integer {
+            return Err(CompileError::Type(format!(
+                "array subscript for {name:?} must be an integer"
+            )));
+        }
+        // 0-based IIR index = subscript - lower bound.
+        let zero = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "sub",
+            Some(zero.clone()),
+            vec![Operand::Var(idx.slot), Operand::Var(info.lower_slot)],
+            "i64",
+        ));
+        Ok((binding, zero))
+    }
+
+    /// Lower `A[i]` in an expression to a bounds-checked `array_get` (E5).
+    fn emit_array_read(&mut self, var_node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let (binding, zero) = self.resolve_array_index(var_node)?;
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "array_get",
+            Some(dest.clone()),
+            vec![Operand::Var(binding.slot), Operand::Var(zero)],
+            binding.ty.iir(),
+        ));
+        Ok(ExprValue {
+            slot: dest,
+            ty: binding.ty,
+        })
     }
 
     fn scalar_type(&self, node: &GrammarASTNode) -> Result<ScalarType, CompileError> {
@@ -772,6 +967,30 @@ impl Compiler {
         for left in left_parts {
             let var_node = first_direct_node(left, "variable")
                 .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
+
+            // `A[i] := e` stores into an array element (E5); `x := e` is a mov.
+            if array_subscripts(var_node).is_some() {
+                let (binding, zero) = self.resolve_array_index(var_node)?;
+                if binding.ty != rhs.ty {
+                    return Err(CompileError::Type(format!(
+                        "cannot assign {} expression to {} array element",
+                        rhs.ty.name(),
+                        binding.ty.name()
+                    )));
+                }
+                self.emit(IIRInstr::new(
+                    "array_set",
+                    None,
+                    vec![
+                        Operand::Var(binding.slot),
+                        Operand::Var(zero),
+                        Operand::Var(rhs.slot.clone()),
+                    ],
+                    binding.ty.iir(),
+                ));
+                continue;
+            }
+
             let name = self.simple_variable_name(var_node)?;
             let binding = self.require_var(&name)?;
             if binding.ty != rhs.ty {
@@ -1311,6 +1530,10 @@ impl Compiler {
 
         match node.rule_name.as_str() {
             "variable" => {
+                // `A[i]` reads an array element (E5); a bare `x` reads a scalar.
+                if array_subscripts(node).is_some() {
+                    return self.emit_array_read(node);
+                }
                 let name = self.simple_variable_name(node)?;
                 let binding = self.require_var(&name)?;
                 Ok(ExprValue {
@@ -1939,6 +2162,47 @@ impl Compiler {
             VarBinding {
                 slot: slot.clone(),
                 ty,
+                array: None,
+            },
+        );
+        self.register_names.insert(slot.clone());
+        Ok(slot)
+    }
+
+    /// Declare an **array** variable (LANG-FULL E5).  Like `declare_var` it
+    /// reserves a slot, but that slot holds the array *handle*, the binding's
+    /// `ty` is the element type, and the lower-bound slot is recorded for
+    /// subscript translation.  Returns the handle slot so the caller can emit
+    /// the `alloc_array` that fills it.
+    fn declare_array(
+        &mut self,
+        name: &str,
+        elem_ty: ScalarType,
+        lower_slot: String,
+    ) -> Result<String, CompileError> {
+        let slot = if self.scopes.len() == 1 {
+            name.to_string()
+        } else {
+            format!("__algol_s{}_{}", self.scope_counter, name)
+        };
+        let current = self
+            .scopes
+            .last_mut()
+            .expect("compiler always keeps a root scope");
+        if current.contains_key(name) {
+            return Err(CompileError::Type(format!(
+                "duplicate declaration for {name:?}"
+            )));
+        }
+        current.insert(
+            name.to_string(),
+            VarBinding {
+                slot: slot.clone(),
+                ty: elem_ty,
+                array: Some(ArrayInfo {
+                    lower_slot,
+                    elem_ty,
+                }),
             },
         );
         self.register_names.insert(slot.clone());
@@ -2017,6 +2281,20 @@ fn direct_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
             ASTNodeOrToken::Token(_) => None,
         })
         .collect()
+}
+
+/// The `arith_expr` subscripts of a `variable` node, or `None` when the
+/// variable is an unsubscripted scalar.  `variable = NAME [ LBRACKET subscripts
+/// RBRACKET ]`, and `subscripts = arith_expr { COMMA arith_expr }`, so a present
+/// `subscripts` child means an array access (one expr per dimension).
+fn array_subscripts(var_node: &GrammarASTNode) -> Option<Vec<&GrammarASTNode>> {
+    let subs = first_direct_node(var_node, "subscripts")?;
+    Some(
+        direct_nodes(subs)
+            .into_iter()
+            .filter(|n| n.rule_name == "arith_expr")
+            .collect(),
+    )
 }
 
 fn direct_tokens(node: &GrammarASTNode) -> Vec<&Token> {
@@ -2540,5 +2818,91 @@ mod tests {
             "begin integer result; result := 7 / 2 end", "test").unwrap_err();
         assert!(matches!(err, CompileError::Type(_)),
             "`/` on integers should be a Type error (use div), got {err:?}");
+    }
+
+    // ---------------------------------------------------------------------
+    // LANG-FULL E5 — one-dimensional arrays (AL2)
+    // ---------------------------------------------------------------------
+
+    /// Declare, store into, and read back an element: `A[2]` round-trips.
+    #[test]
+    fn array_store_and_load_roundtrips() {
+        let src = "begin integer array A[1:3]; integer result; \
+                   A[2] := 42; result := A[2] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    /// The 1-based ALGOL lower bound is honoured: writing `A[1]` and reading it
+    /// back proves the `i - lower` translation lands on element 0, not 1.
+    #[test]
+    fn array_lower_bound_is_one_based() {
+        let src = "begin integer array A[1:3]; integer result; \
+                   A[1] := 7; A[3] := 9; result := A[1] + A[3] end";
+        assert_eq!(run_i64(src), 16);
+    }
+
+    /// A non-unit lower bound (`A[5:7]`) still indexes correctly.
+    #[test]
+    fn array_nonunit_lower_bound() {
+        let src = "begin integer array A[5:7]; integer result; \
+                   A[5] := 100; A[7] := 1; result := A[5] + A[7] end";
+        assert_eq!(run_i64(src), 101);
+    }
+
+    /// The headline AL2 proof: fill an array in a `for` loop, sum it in another.
+    /// `A[i] := i*i` then `sum += A[i]` for i=1..5 ⇒ 1+4+9+16+25 = 55.
+    #[test]
+    fn array_filled_and_summed_in_loops() {
+        let src = "begin integer array A[1:5]; integer i, result; \
+                   for i := 1 step 1 until 5 do A[i] := i * i; \
+                   result := 0; \
+                   for i := 1 step 1 until 5 do result := result + A[i] end";
+        assert_eq!(run_i64(src), 55);
+    }
+
+    /// Multiple names in one segment (`A, B[1:2]`) are independent arrays.
+    #[test]
+    fn array_segment_declares_distinct_arrays() {
+        let src = "begin integer array A, B[1:2]; integer result; \
+                   A[1] := 3; B[1] := 100; result := A[1] + B[1] end";
+        assert_eq!(run_i64(src), 103);
+    }
+
+    /// An out-of-bounds subscript traps at run time (bounds-checked by design).
+    #[test]
+    fn array_out_of_bounds_subscript_traps() {
+        let src = "begin integer array A[1:3]; integer result; result := A[9] end";
+        let err = execute_source(src, "test").unwrap_err();
+        assert!(
+            matches!(err, CompileError::Runtime(_)),
+            "out-of-bounds read should trap at run time, got {err:?}"
+        );
+    }
+
+    /// Subscripting a scalar is a compile-time type error.
+    #[test]
+    fn rejects_subscripting_a_scalar() {
+        let err = compile_source(
+            "begin integer x, result; x := 1; result := x[1] end", "test").unwrap_err();
+        assert!(matches!(err, CompileError::Type(_)),
+            "subscripting a scalar should be a Type error, got {err:?}");
+    }
+
+    /// A 2-D declaration is cleanly rejected as follow-up work (1-D only so far).
+    #[test]
+    fn rejects_multidimensional_array() {
+        let err = compile_source(
+            "begin integer array M[1:2, 1:2]; integer result; result := 0 end", "test")
+            .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)),
+            "2-D array should be Unsupported, got {err:?}");
+    }
+
+    /// A `real` array round-trips a double, exercising the f64 element path.
+    #[test]
+    fn real_array_roundtrips() {
+        let src = "begin real array A[1:2]; real result; \
+                   A[1] := 2.5; result := A[1] end";
+        assert_eq!(run_f64(src), 2.5);
     }
 }
