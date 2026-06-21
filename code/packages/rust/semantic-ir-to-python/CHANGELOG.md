@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.1.17 — execution-proof for the non-empty block capture (RB3)
+
+RB1/RB2 (in the Ruby frontend) introduced the first SIR shape that emits a
+**non-empty** `MakeClosure` capture: a block passed to a yielding method whose
+own body yields to the *enclosing* method's block.  The inner block is hoisted
+to a top-level function that closes over the enclosing method's `__sir_block__`
+parameter, and the backend binds that by emitting
+`_sir_make_closure(__block_0, [__sir_block__])` plus a hoisted
+`def __block_0(__sir_block__, x):` (captures are prepended to the parameter
+list).
+
+Until now every Ruby→Python test asserted only the *shape* of the emitted
+source.  This release adds `end_to_end_ruby_block_capture_executes_py`, which
+additionally **runs** the emitted module through a real Python interpreter
+(runtime packages on `PYTHONPATH`) and asserts stdout — proving the captured
+block actually reaches the enclosing caller's block at runtime, not just on
+paper.  The harness probes `python3`/`python` with `-c pass` and **skips the
+execution assertion** when no usable interpreter is present (the Windows Store
+`python3` stub is treated as absent), so hosts without Python never hard-fail;
+a present-but-erroring interpreter still fails the test.
+
+No emitter change — this is verification only.  The receiver-form
+(`recv.each { … }`) of the same capture lowers and emits identically, but its
+*execution* additionally depends on collection-method dispatch in
+`sir-runtime-oop` (`call_method` currently returns `nil` for `each`), which is
+the Q10h method-dispatch boundary and out of scope here.
+
 ## 0.1.16 — `defined?` lowers to a non-evaluating description (Q9d)
 
 Fourth item of the Q9 structural-builtin tranche.  Ruby `defined?(x)` reaches
