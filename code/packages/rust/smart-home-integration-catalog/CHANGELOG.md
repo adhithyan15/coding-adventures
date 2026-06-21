@@ -167,6 +167,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditRow` and
   summary helpers for exposing handoff work-order guardrail audit rows for
   release coordination.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceRow`
+  and summary helpers for turning guardrail audit rows into deterministic
+  clear/block, review, and operator handoff decisions.
 - `IntegrationMeshReleaseTicketHandoffWorkOrderGuardrailReadinessSummary` and
   helpers for combining work-order readiness with handoff guardrail state.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditReadinessSummary` and
