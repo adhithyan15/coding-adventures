@@ -1309,9 +1309,14 @@ fn constant_array_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
             if m < 0 || n < 0 {
                 return unevaluated(expr);
             }
-            // Cap the row count, then the total m×n (checked_mul on i128 so the
-            // product cannot overflow) — BOTH before allocating anything.
-            if m as u128 > MAX_LIST_LENGTH as u128 {
+            // Cap the row count AND the row width independently, then the total
+            // m×n (checked_mul on i128 so the product cannot overflow) — ALL
+            // before allocating anything. Capping `n` on its own (not just the
+            // product) matters for the `m == 0` corner: without it,
+            // `ConstantArray[0, {0, 10^9}]` would build a billion-element inner
+            // row only to discard it when `m == 0` — wasteful even though it is
+            // never observable. With the cap, an over-wide row is refused outright.
+            if m as u128 > MAX_LIST_LENGTH as u128 || n as u128 > MAX_LIST_LENGTH as u128 {
                 return unevaluated(expr);
             }
             let total = match (m as i128).checked_mul(n as i128) {
@@ -1319,9 +1324,15 @@ fn constant_array_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
                 _ => return unevaluated(expr),
             };
             let _ = total; // total is the validated element budget (m*n ≤ cap).
-            // Build m identical rows, each a length-n list of the fill value.
-            let row = apply(sym(LIST), vec![fill.clone(); n as usize]);
-            let rows = vec![row; m as usize];
+            // Build m identical rows, each a length-n list of the fill value. With
+            // m and n each ≤ MAX_LIST_LENGTH and m*n ≤ MAX_LIST_LENGTH, every
+            // allocation below is bounded; an empty matrix (m == 0) builds no rows.
+            let rows = if m == 0 {
+                Vec::new()
+            } else {
+                let row = apply(sym(LIST), vec![fill.clone(); n as usize]);
+                vec![row; m as usize]
+            };
             return apply(sym(LIST), rows);
         }
     }
@@ -5375,6 +5386,18 @@ mod tests {
         assert_eq!(
             run("ConstantArray", vec![int(0), negdims.clone()]),
             apply(sym("ConstantArray"), vec![int(0), negdims])
+        );
+        // An over-wide row width is refused even when the row count is 0 — the
+        // independent `n` cap means no transient billion-element row is built.
+        let widedims = list(vec![int(0), int(1_000_001)]);
+        assert_eq!(
+            run("ConstantArray", vec![int(0), widedims.clone()]),
+            apply(sym("ConstantArray"), vec![int(0), widedims])
+        );
+        // A 0×n matrix with an in-cap width is the empty list (no rows).
+        assert_eq!(
+            run("ConstantArray", vec![int(0), list(vec![int(0), int(5)])]),
+            list(vec![])
         );
     }
 
