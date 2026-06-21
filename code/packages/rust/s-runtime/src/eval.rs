@@ -536,6 +536,23 @@ impl Interpreter {
         let target = self.eval_node(primary, env)?;
         match target {
             SValue::Environment(e) => {
+                // R-26 active binding: `obj$ab <- val` **calls** the binding function
+                // as a setter with `v = val` (so `missing(v)` is FALSE inside it),
+                // rather than overwriting the binding. Invoked through the ordinary
+                // depth-bounded call path (same re-entrancy / borrow protection as the
+                // getter). The assignment expression's value is the RHS (invisible).
+                if let Some(setter) = crate::refclass::active_binding_fn(&e, &field) {
+                    // Passed **positionally** so it binds the setter's single formal
+                    // whatever it is named (`function(v)`, `function(value)`, …); that
+                    // formal then tests FALSE under `missing()`, distinguishing the
+                    // setter direction from the nullary getter.
+                    let arg = [Arg {
+                        name: None,
+                        value: rhs.clone(),
+                    }];
+                    self.call_value(setter, &arg)?;
+                    return self.as_invisible(rhs);
+                }
                 // In-place, by-reference field write. `env::define` takes and
                 // releases the scope's `RefCell` borrow within the call, so a
                 // method mutating a field mid-call never holds two borrows of the
@@ -981,6 +998,9 @@ impl Interpreter {
                         "parent.frame" => self.eval_parent_frame(&raw, env),
                         // R-24 R5 reference classes.
                         "setRefClass" => self.eval_set_ref_class(&raw, env),
+                        // R-26 R5 method helpers.
+                        "missing" => self.eval_missing(&raw, env),
+                        "callSuper" => self.eval_call_super(&raw, env),
                         _ => unreachable!(),
                     };
                 }
@@ -1813,6 +1833,60 @@ impl Interpreter {
         self.as_visible(SValue::Environment(self.caller_frame(n)))
     }
 
+    /// `missing(x)` (R-26) — is the parameter `x` **absent** in the current call
+    /// frame? Its single argument is a bare **name** (never evaluated). We report
+    /// `TRUE` iff that name is not bound in the *immediate* frame `env` — which is
+    /// exactly what distinguishes an R5 active binding's nullary getter call
+    /// (`function(v)` invoked with no arg → `v` unbound → `missing(v)` TRUE) from its
+    /// setter call (`v` supplied → bound → FALSE). A non-name argument is a clean
+    /// error. (This is a faithful subset of R's `missing`: it does not chase default
+    /// expressions or promise state, which this runtime does not model — an unbound
+    /// formal is simply one no argument filled.)
+    fn eval_missing(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        let node = self.positional_nodes(raw).into_iter().next().ok_or_else(|| {
+            SError::BadArgs("missing: an argument name is required".into())
+        })?;
+        let name = lvalue_name(node)
+            .map_err(|_| SError::BadArgs("missing: the argument must be a variable name".into()))?;
+        // Frame-local only: `missing(x)` asks about *this* function's formal, not an
+        // enclosing binding of the same name. `lookup_local` reads exactly this frame.
+        let absent = crate::env::lookup_local(env, &name).is_none();
+        self.as_visible(SValue::Logical(vec![Some(absent)]))
+    }
+
+    /// `callSuper(...)` (R-26) — inside an overriding R5 method, invoke the
+    /// **same-named** method from the parent class. The running method's
+    /// super-context (placed by `refclass::rebuild_method`) is read from the current
+    /// environment to learn the method name and the generator(s) at which to restart
+    /// resolution; the resolved super method is re-homed onto the **instance** (found
+    /// via `.self`) and applied to the forwarded (evaluated) args. **Past-the-root**
+    /// (no super definition of the name) returns `NULL` — R5's behaviour — with no
+    /// recursion and no panic.
+    fn eval_call_super(&self, raw: &[RawArg], env: &Env) -> SResult<SValue> {
+        // The instance is reachable via `.self`, bound on the instance frame which is
+        // an ancestor of the method-body env. Absent (`callSuper()` outside any R5
+        // method) → a clean NULL rather than an error, matching R's lenient handling.
+        let instance = match lookup(env, crate::refclass::KEY_SELF) {
+            Some(SValue::Environment(e)) => e,
+            _ => return self.as_visible(SValue::Null),
+        };
+        let Some(super_closure) = crate::refclass::call_super_method(env, &instance) else {
+            // No super method of this name → NULL (no recursion past the root).
+            return self.as_visible(SValue::Null);
+        };
+        // Forward the call args (evaluated in the *caller* env) to the super method.
+        let mut args: Vec<Arg> = Vec::new();
+        for (name, node) in raw {
+            if let Some(body) = arm_body(node) {
+                args.push(Arg {
+                    name: name.clone(),
+                    value: self.eval_node(body, env)?,
+                });
+            }
+        }
+        self.as_visible(self.call_value(super_closure, &args)?)
+    }
+
     // -----------------------------------------------------------------------
     // R-24 R5 reference classes (setRefClass)
     // -----------------------------------------------------------------------
@@ -1842,56 +1916,66 @@ impl Interpreter {
             .eval_named_arg(raw, "methods", env)?
             .unwrap_or(SValue::Null);
 
-        // R-25: `contains =` (single inheritance). The argument is the parent
-        // **generator** value, or a length-1 character giving the parent class
-        // *name* (resolved by evaluating that name as a variable in the current
-        // env — the generator was bound there by an earlier `setRefClass`). A
+        // R-25/R-26: `contains =`. The argument is a parent **generator** value, a
+        // length-1 character giving a parent class *name* (resolved by evaluating that
+        // name as a variable in the current env — the generator was bound there by an
+        // earlier `setRefClass`), or — for R-26 **multiple inheritance** — a character
+        // vector `c("A", "B")` (each element a parent class name, left-to-right). A
         // missing `contains =` means a root (non-inheriting) class.
-        let parent_env = match self.eval_named_arg(raw, "contains", env)? {
-            None | Some(SValue::Null) => None,
-            Some(value) => Some(self.resolve_contains(&value, env)?),
+        let parents = match self.eval_named_arg(raw, "contains", env)? {
+            None | Some(SValue::Null) => Vec::new(),
+            Some(value) => self.resolve_contains(&value, env)?,
         };
 
         // Reifying the generator environment counts against the session cap, like
         // any `new.env()` — it can equally participate in a value-binding cycle.
         self.account_environment()?;
-        let generator = crate::refclass::make_generator(
-            &class_name,
-            &fields,
-            &methods,
-            parent_env.as_ref(),
-            env,
-        )?;
+        let generator =
+            crate::refclass::make_generator(&class_name, &fields, &methods, &parents, env)?;
         self.as_visible(generator)
     }
 
-    /// Resolve a `contains =` argument to the parent **generator** environment.
-    /// Accepts either the generator value directly (an `SValue::Environment`), or a
-    /// length-1 character naming the parent class — in which case that name is
-    /// looked up as a variable in `env` (where `setRefClass` binds its result). A
-    /// name that is unbound, or bound to a non-environment, is a clean error
-    /// (never a panic). The generator-ness of the resolved env is re-checked inside
-    /// `make_generator`.
-    fn resolve_contains(&self, value: &SValue, env: &Env) -> SResult<Env> {
+    /// Resolve a `contains =` argument to the parent **generator** environments, in
+    /// left-to-right order. Accepts the generator value directly (an
+    /// `SValue::Environment`, single parent), or a **character vector** of one or
+    /// more parent class *names* — each looked up as a variable in `env` (where
+    /// `setRefClass` binds its result). `c("A", "B")` is R-26 multiple inheritance.
+    /// A name that is unbound, or bound to a non-environment, is a clean error (never
+    /// a panic). The generator-ness of each resolved env is re-checked inside
+    /// `make_generator`. An empty character vector yields no parents (a root class).
+    fn resolve_contains(&self, value: &SValue, env: &Env) -> SResult<Vec<Env>> {
         match value {
-            SValue::Environment(e) => Ok(e.clone()),
+            SValue::Environment(e) => Ok(vec![e.clone()]),
             other => {
-                // A character class name → look up the variable of that name.
+                // A character vector of class names → resolve each, in order.
                 let names = other.as_character();
-                let name = names.into_iter().flatten().next().ok_or_else(|| {
-                    SError::TypeError(
-                        "setRefClass: `contains =` must be a generator or a class name".into(),
-                    )
-                })?;
-                match lookup(env, &name) {
-                    Some(SValue::Environment(e)) => Ok(e),
-                    Some(_) => Err(SError::TypeError(format!(
-                        "setRefClass: `contains = \"{name}\"` is not a reference-class generator"
-                    ))),
-                    None => Err(SError::BadArgs(format!(
-                        "setRefClass: `contains = \"{name}\"`: no such reference class in scope"
-                    ))),
+                if names.is_empty() {
+                    return Err(SError::TypeError(
+                        "setRefClass: `contains =` must be a generator or class name(s)".into(),
+                    ));
                 }
+                let mut out = Vec::with_capacity(names.len());
+                for n in names {
+                    let name = n.ok_or_else(|| {
+                        SError::TypeError(
+                            "setRefClass: `contains =` class name may not be NA".into(),
+                        )
+                    })?;
+                    match lookup(env, &name) {
+                        Some(SValue::Environment(e)) => out.push(e),
+                        Some(_) => {
+                            return Err(SError::TypeError(format!(
+                                "setRefClass: `contains = \"{name}\"` is not a reference-class generator"
+                            )))
+                        }
+                        None => {
+                            return Err(SError::BadArgs(format!(
+                                "setRefClass: `contains = \"{name}\"`: no such reference class in scope"
+                            )))
+                        }
+                    }
+                }
+                Ok(out)
             }
         }
     }
@@ -1934,6 +2018,14 @@ impl Interpreter {
     /// behaviour.
     fn dollar_read(&self, target: &SValue, name: &str) -> SResult<SValue> {
         if let SValue::Environment(e) = target {
+            // R-26 active binding: reading `obj$ab` **calls** the binding function as
+            // a getter (no argument — so `missing(v)` is TRUE inside it). Invoked
+            // through the ordinary depth-bounded call path, so a getter that reads
+            // its *own* binding recurses and hits `MAX_EVAL_DEPTH` with a clean error
+            // rather than a borrow panic or a hang.
+            if let Some(getter) = crate::refclass::active_binding_fn(e, name) {
+                return self.call_value(getter, &[]);
+            }
             if let Some(v) = crate::refclass::dollar_access(e, name) {
                 return Ok(v);
             }
@@ -2119,6 +2211,13 @@ fn special_form_name(primary: &GrammarASTNode) -> Option<&'static str> {
         // ordinary eager builtin receives neither the current env nor control over
         // argument evaluation.
         [("NAME", "setRefClass")] => Some("setRefClass"),
+        // R-26 R5 method helpers. `missing(x)` must inspect whether the *named
+        // parameter* `x` was supplied in the **current** call frame — it never
+        // evaluates `x`, so it cannot be an eager builtin. `callSuper(...)` must read
+        // the running method's super-context markers from the *current* environment
+        // and forward its (evaluated) args to the resolved super method.
+        [("NAME", "missing")] => Some("missing"),
+        [("NAME", "callSuper")] => Some("callSuper"),
         _ => None,
     }
 }
