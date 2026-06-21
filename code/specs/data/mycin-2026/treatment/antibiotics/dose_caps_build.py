@@ -129,6 +129,16 @@ SINGLE_FACTOR_CAPS: list[tuple[str, str, str, str]] = [
     ("dose_penalty_cefepime_renal", "cefepime", "renal_severe",
      "Cefepime dose must be adjusted in renal impairment (CrCl <= 60 mL/min); neurotoxicity "
      "occurs especially when renally-impaired patients receive unadjusted doses (FDA label)."),
+    # Completing dose-penalty grounding coverage: the remaining renal-cleared formulary drugs.
+    ("dose_penalty_meropenem_renal", "meropenem", "renal_severe",
+     "Meropenem dosage must be reduced at CrCl <= 50 mL/min (substantially renally excreted, "
+     "so it accumulates in renal impairment) (FDA label)."),
+    ("dose_penalty_aztreonam_renal", "aztreonam", "renal_severe",
+     "Aztreonam dosage must be reduced in renal impairment (halved at CrCl 10-30 mL/min/1.73 m2 "
+     "after a loading dose) (FDA label)."),
+    ("dose_penalty_tmp_smx_renal", "tmp_smx", "renal_severe",
+     "Trimethoprim-sulfamethoxazole requires a reduced dosage when renal function is impaired "
+     "(FDA label)."),
 ]
 
 

@@ -190,6 +190,18 @@ risks Y") — decision support, not a hidden choice.
       regenerates the rulebook from the new row. A `renal_severe` chart now derives BOTH the
       vancomycin and cefepime renal caps from the one substrate (`test_dose_caps.py`, 16 tests).
       `verdict direction_only`; the per-kg magnitude stays the illustrative model.
+    - **DOSE-PENALTY GROUNDING COMPLETE (all renally-cleared drugs). ✅ DONE.** The remaining
+      formulary drugs with a renal ceiling penalty are now grounded the same way — pure data
+      rows + grounding records, no code change: `meropenem` (FDA DailyMed `a456013b`, *"Dosage
+      should be reduced in patients with creatinine clearance of 50 mL/min or less."*),
+      `aztreonam` (AZACTAM DailyMed `9a105eaf`, *"the dosage of AZACTAM should be halved in
+      patients with estimated creatinine clearances between 10 and 30 mL/min/1.73 m2 …"*), and
+      `tmp_smx` (DailyMed `793c75eb`, *"When renal function is impaired, a reduced dosage should
+      be employed, as shown in Table 2."*). So **every** drug carrying a `renal_severe` ceiling
+      penalty (vancomycin, cefepime, meropenem, aztreonam, tmp_smx) now has an engine-queryable,
+      FDA-grounded single-factor cap (`test_renal_severe_caps_every_renally_cleared_drug`, 17
+      tests). All `verdict direction_only`; per-kg magnitudes stay the illustrative model. The
+      dose-penalty authored-debt in the dose-window layer is fully retired.
 - **REFACTOR (ADJ-first): every exclusion is now an EXPLICIT engine constraint.** Dose-infeasible
   (CC-2), contraindicated (CC-3), and step-therapy (CC-6) drugs are unified into one
   `forced_zero: {drug → reason}` and emitted as `constrain x_d <= 0   % excluded (reason)` in the
