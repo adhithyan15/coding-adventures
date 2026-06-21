@@ -18,3 +18,4 @@ import "cardio-edges.adj"
 ? murmur_indicates(late_systolic_click, $Lesion)               % expect mitral_valve_prolapse
 ? murmur_indicates(holosystolic_left_lower_sternal, $Lesion)   % expect tricuspid_regurgitation
 ? murmur_indicates(decrescendo_diastolic, $Lesion)             % expect aortic_regurgitation
+? murmur_indicates(diastolic_apical, $Lesion)                  % expect mitral_stenosis

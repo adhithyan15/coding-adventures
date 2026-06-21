@@ -29,10 +29,13 @@
 % check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 %
 % Honest scope: only murmurs whose page states the association in a clean self-contained
-% span (both murmur AND lesion named) are included. Deferred — mitral stenosis: its page
-% describes the opening snap and the "low-pitched, middiastolic rumbling murmur" in
-% separate sentences, neither of which names "mitral stenosis" in the same span, so no
-% both-endpoints-named declarative defends a murmur_indicates edge yet.
+% span (both murmur AND lesion named) are included. Mitral stenosis (previously deferred —
+% its lesion-specific page splits the opening snap and the "low-pitched, middiastolic
+% rumbling murmur" across separate sentences) is now GROUNDED from the murmurs-overview page,
+% which names the lesion and its diastolic murmur in one span. Still deferred — pulmonic
+% stenosis: the overview names it as "the main murmur ... in Tetralogy of Fallot" in one
+% sentence and describes the crescendo-decrescendo ejection murmur in the next ("It is
+% described as ..."), so no single span names both the lesion and its murmur yet.
 % ============================================================================
 
 dictionary cardio_vocab {
@@ -73,5 +76,17 @@ rulebook cardio_facts {
     relate murmur_indicates(decrescendo_diastolic, aortic_regurgitation)
         source "Patients with chronic aortic insufficiency will have a widened pulse pressure, may likely have a laterally and inferiorly displaced apical impulse, a high-frequency decrescendo diastolic murmur best heard at the 3rd or 4th intercostal space at the left sternal border, Austin Flint murmur, diminished S1, soft S2."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK557428/"
+        trust authoritative
+
+    % --- diastolic murmur at the apex (left 5th midclavicular line) -> mitral stenosis -----
+    % The two DIASTOLIC murmurs disambiguate by SITE, exactly as at the bedside: aortic
+    % regurgitation at the left sternal border (above) vs mitral stenosis at the apex / left
+    % 5th midclavicular line (here). The lesion-specific MS page describes the opening snap and
+    % the mid-diastolic rumble in SEPARATE sentences (neither naming "mitral stenosis" in the
+    % same span — see the deferral note above); the murmurs-overview page instead states the
+    % lesion AND its diastolic murmur in ONE self-contained span, which is what grounds this edge.
+    relate murmur_indicates(diastolic_apical, mitral_stenosis)
+        source "Mitral stenosis is a diastolic murmur, best heard at the left 5th midclavicular line."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK525958/"
         trust authoritative
 }
