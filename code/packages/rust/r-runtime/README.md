@@ -184,9 +184,20 @@ default `"average"` (`rank(c(1,1,2))` → `c(1.5,1.5,3)` / `c(1,1,3)` / `c(2,2,3
 `c(1,2,3)`). `duplicated(x, fromLast=TRUE)` keeps the *last* occurrence
 (`duplicated(c(1,2,1), fromLast=TRUE)` → `c(TRUE, FALSE, FALSE)`).
 `anyDuplicated(x)` returns the 1-based index of the first duplicated element, or
-`0` if none (`anyDuplicated(c(1,2,1))` → `3`). (`incomparables=` on the set ops /
-`duplicated` / `anyDuplicated`, the `fromLast=` set-op argument, and `rank`'s
-`"random"` method are deferred to R-31.)
+`0` if none (`anyDuplicated(c(1,2,1))` → `3`).
+
+**Set-op & ordering refinements (R-31)** — extensions of the R-29/R-30 dedup &
+ranking builtins. `incomparables=` on `duplicated`, `anyDuplicated`, and `unique`:
+the default `FALSE` means "no incomparables"; a vector lists values that are
+**never equal to anything**, so they are never flagged/removed as duplicates
+(`duplicated(c(1,1,2,2), incomparables=1)` → `c(F,F,F,T)`; `unique(c(1,1,2,2),
+incomparables=1)` → `c(1,1,2)`; `anyDuplicated(c(1,2,1), incomparables=1)` → `0`).
+`unique(x, fromLast=TRUE)` keeps the *last* occurrence in input order, mirroring
+`duplicated(fromLast=)`. `rank(x, ties.method="random")` breaks ties with a
+Fisher–Yates shuffle over the `set.seed`-seeded session RNG, so it is reproducible
+under `set.seed`. Numeric and character vectors; bounded RNG draws; malformed named
+args error gracefully. (`incomparables=`/`fromLast=` on the binary set ops
+`union`/`intersect`/`setdiff` are deferred to R-32.)
 
 ## Usage
 

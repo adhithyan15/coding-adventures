@@ -213,8 +213,18 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   returns the 1-based index of the first duplicated element, or `0` if none
   (`anyDuplicated(c(1,2,1))` → `3`). Outputs stay bounded by the (capped) inputs;
   the per-key length check guards `order` against out-of-bounds indexing.
-  (`incomparables=` on the set ops / `duplicated` / `anyDuplicated`, the `fromLast=`
-  set-op argument, and `rank`'s `"random"` method are deferred to R-31.)
+- **Set-op & ordering refinements** (R-31): extensions of the R-29/R-30 dedup &
+  ranking builtins. **`incomparables=`** on `duplicated`, `anyDuplicated`, and
+  `unique` — default `FALSE` means "no incomparables"; a vector lists values that
+  are **never equal to anything**, so they are never flagged/removed as duplicates
+  (`duplicated(c(1,1,2,2), incomparables=1)` → `c(F,F,F,T)`; `unique(c(1,1,2,2),
+  incomparables=1)` → `c(1,1,2)`; `anyDuplicated(c(1,2,1), incomparables=1)` → `0`).
+  **`unique(x, fromLast=TRUE)`** keeps the *last* occurrence in input order,
+  mirroring `duplicated(fromLast=)`. **`rank(x, ties.method="random")`** breaks ties
+  with a Fisher–Yates shuffle over the `set.seed`-seeded session RNG, so it is
+  reproducible under `set.seed`. Numeric and character vectors; bounded RNG draws;
+  malformed named args error gracefully. (`incomparables=`/`fromLast=` on the binary
+  set ops `union`/`intersect`/`setdiff` are deferred to R-32.)
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

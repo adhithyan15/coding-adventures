@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.26.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-31 — set-op & ordering refinements**: the R-30 deferrals with clean
+  semantics on the shared `as_character`-key path, plus the RNG-backed tie method.
+  All extensions of the R-29/R-30 dedup & ranking handlers (no grammar change),
+  reached through ordinary R syntax, numeric- and character-aware.
+  - **`incomparables =` on `duplicated` / `anyDuplicated` / `unique`** — default
+    `FALSE` means "no incomparables"; a vector lists elements that are **never
+    equal to anything**, so they are never flagged/removed as duplicates (and never
+    suppress a later real one). `duplicated(c(1,1,2,2), incomparables = 1)` →
+    `c(FALSE, FALSE, FALSE, TRUE)`; `unique(c(1,1,2,2), incomparables = 1)` →
+    `c(1, 1, 2)`; `anyDuplicated(c(1,2,1), incomparables = 1)` → `0`;
+    `anyDuplicated(c(1,2,2), incomparables = 1)` → `3`.
+  - **`unique(x, fromLast = TRUE)`** — keeps the **last** occurrence of each value,
+    in input order. Mirrors R-30's `duplicated(fromLast =)`; composes with
+    `incomparables =`. `unique(c(1,2,1), fromLast = TRUE)` → `c(2, 1)`.
+  - **`rank(x, ties.method = "random")`** — tied positions get consecutive ranks in
+    a uniform random order from the `set.seed`-seeded session RNG (a Fisher–Yates
+    shuffle), so `set.seed(s); rank(x, ties.method = "random")` is reproducible.
+    `"average"` stays the default; `"min"/"max"/"first"` unchanged.
+  - **Security**: no new user-controlled multiplier; `incomparables` adds one
+    bounded `HashSet`; `"random"` draws ≤ `n` `u32`s total; named-arg readers
+    reject malformed `ties.method` / `fromLast =` / `incomparables =` gracefully
+    (`Err`, never panic); no path indexes out of bounds.
+  - 4 new R-syntax tests (numeric + character; seed-reproducibility for `"random"`).
+  - **Deferred to R-32**: `incomparables =` / `fromLast =` on the binary set ops
+    (`union` / `intersect` / `setdiff`) — ambiguous R semantics, own pass.
+
 ## [0.25.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)
