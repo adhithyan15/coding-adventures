@@ -162,17 +162,38 @@ risks Y") — decision support, not a hidden choice.
   means **not** treating hepatic impairment as its own dose cap: a `hepatic_status` chart fact
   alone adds an audit-only risk marker but **no** dose penalty (the same label says hepatic
   impairment alone needs no adjustment). Only when a `hepatic_*` risk and a `renal_*` risk
-  co-occur does `chart_to_cop.derive()` synthesize a derived **`hepatorenal`** risk, which then
-  applies ceftriaxone's `ceiling_penalty_mg_per_kg.hepatorenal` reduction (50 → 38 mg/kg in the
-  feasibility model — still ≥ the 25 mg/kg floor, so the regimen stays FEASIBLE but
-  dose-adjusted, mirroring "cap, don't forbid"). This is the first constraint family whose
-  *trigger* is a conjunction of two chart facts rather than a single fact, exercising the
-  derived-risk path. As with every dose number in `formulary.json`, the **mechanism**
-  (conjunction → shrink the ceiling, on ceftriaxone) is grounded; the precise mg/kg shrink is the
-  standing **ILLUSTRATIVE** feasibility model (the label's cap is an absolute 2 g/day), not
-  validated PK/PD. Verified by `test_hepatic_renal_conjunction_caps_ceftriaxone` (hepatic-alone →
-  no `hepatorenal`; hepatic + renal_moderate → `hepatorenal` present and regimen still feasible;
-  unrecognized hepatic value discarded).
+  co-occur is a derived **`hepatorenal`** risk synthesized, which then applies ceftriaxone's
+  `ceiling_penalty_mg_per_kg.hepatorenal` reduction (50 → 38 mg/kg in the feasibility model —
+  still ≥ the 25 mg/kg floor, so the regimen stays FEASIBLE but dose-adjusted, mirroring "cap,
+  don't forbid"). This is the first constraint family whose *trigger* is a conjunction of two
+  chart facts rather than a single fact. As with every dose number in `formulary.json`, the
+  **mechanism** (conjunction → shrink the ceiling, on ceftriaxone) is grounded; the precise mg/kg
+  shrink is the standing **ILLUSTRATIVE** feasibility model (the label's cap is an absolute
+  2 g/day), not validated PK/PD.
+  - **ADJ-NATIVE (the conjunction is the ENGINE'S, not Python's). ✅ DONE.** The conjunction
+    first landed as a Python post-loop block in `chart_to_cop.py`
+    (`if has_hepatic and has_renal: cop.risks.add("hepatorenal")`) — the same "Python rule layer
+    in the middle" CC-3 removed. It is now an ADJ rulebook, `treatment/antibiotics/dose_caps.adj`,
+    **generated** by `dose_caps_build.py` from `dose-window-grounding.json`: definitional
+    `risk_in_category` facts (`hepatic_severe`/`hepatic_moderate` ∈ hepatic; `renal_severe`/
+    `renal_moderate` ∈ renal), the compound's two component categories
+    (`compound_first(hepatorenal, hepatic)`, `compound_second(hepatorenal, renal)`), the
+    **grounded** `dose_capped_under(ceftriaxone, hepatorenal)` fact (carrying the FDA byte-quote
+    + DailyMed locator at `trust authoritative`), and **two generic conjunction rules**
+    (`derived_risk($C) when compound_first($C,$A), risk_in_category($Ra,$A), active_risk($Ra),
+    compound_second($C,$B), risk_in_category($Rb,$B), active_risk($Rb)` + the analogous
+    `dose_capped($D,$C)`). `chart_to_cop` now only asserts the patient's raw `active_risk` tokens;
+    `derive()` asks the engine `? derived_risk` / `? dose_capped`
+    (`dose_caps.derive_dose_caps`, 0 model calls) and folds the derived compound risk into the
+    COP before the dose-window solve. **The conjunction reasoning moved out of Python and into the
+    language.** Because the rule keys on *categories*, ANY two-factor compound risk (and any drug
+    capped under it) is added as a grounded row, with no new Python branch — the same domain-neutral
+    substrate as `contraindications.adj`. A single active risk derives nothing (engine-verified),
+    so hepatic-alone still changes nothing. Verified by `test_dose_caps.py` (generator `--check`,
+    injection guard, both-categories-required, grounded-quote-flows-through) and
+    `test_hepatic_renal_conjunction_caps_ceftriaxone` (now asserting `compile_cop` is pure and the
+    `hepatorenal` risk + `derived_risk(hepatorenal)` constraint are engine-derived in `derive()`);
+    the board's `mgmt_hepatorenal` item exercises the full engine path end-to-end (0 wrong).
 - **CC-3 — contraindication / interaction grounding.** `contraindication-grounding.json` +
   `interaction-grounding.json` via the harness (pregnancy, QT, G6PD, allergy classes,
   drug–drug); gate → CAS; new "treatment constraints" ledger artifact.
