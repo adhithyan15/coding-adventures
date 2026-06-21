@@ -264,6 +264,18 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   paste paste0`. (No underscore-named helpers like R's `seq_len`/`seq_along`:
   in historical S `_` is assignment, so such names cannot be written — `seq()`
   and `1:n` cover the need.)
+- **Set operations & ranking** *(R-29)*: `union(x, y)` (distinct elements of
+  `c(x, y)`, first-occurrence order — i.e. `unique(c(x, y))`), `intersect(x, y)`
+  (elements in both, in `x`'s order, deduplicated), `setdiff(x, y)` (elements of
+  `x` not in `y`, deduplicated), `is.element(el, set)` (the function spelling of
+  `el %in% set`), `duplicated(x)` (a logical vector, `TRUE` where an element
+  repeats an earlier one), and `rank(x)` (sample ranks with **average** tie
+  handling — `rank(c(1,1,2))` is `c(1.5, 1.5, 3)`). All are pure, numeric- and
+  character-aware (they key on the same coerced-character form as `unique`/`%in%`)
+  and reuse the existing `as_character` / `index` / `membership` / `combine`
+  machinery. Other `ties.method` options for `rank`, the `incomparables=` /
+  `fromLast=` set-op arguments, `anyDuplicated`, and multi-key `order` are deferred
+  to a later pass (R-30).
 - **Apply family:** `sapply(x, f)` / `lapply(x, f)` map a function over elements
   (`sapply` simplifies length-1 atomic results to a vector).
 

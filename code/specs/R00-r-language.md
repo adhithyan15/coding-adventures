@@ -906,6 +906,60 @@ unchanged.
     `tapply` over a *multi-way* `INDEX` (a list of factors → an N-dimensional array);
     and `simplify = FALSE` (always-list `tapply`).
 
+- **R-29 — vector set operations & ordering** *(this PR)*. A pivot into the
+  **set-theory and ranking** corner of R's base toolkit: the small, pure builtins
+  R users reach for when treating vectors as multisets (`union`/`intersect`/`setdiff`),
+  testing membership (`is.element`), spotting repeats (`duplicated`), or assigning
+  sample ranks (`rank`). All ship as pure builtins in the shared `s-runtime` (R
+  inherits via the tree-walker); **no grammar change** (none is an operator). They
+  reuse the existing vector machinery wholesale — `as_character` (the order-preserving
+  string key used by `unique`/`%in%`), `value::index` (the 1-based gather that
+  preserves element type), `value::membership` (the `%in%` engine), `combine` (for
+  `c(x, y)`), and `first_positional`. Six functions:
+  - **`union(x, y)`** — the distinct elements of `c(x, y)`, in **first-occurrence
+    order** (R's order-preserving union, *not* a sorted set). Implemented as
+    `unique(c(x, y))`: concatenate with `combine`, then keep the first sighting of
+    each `as_character` key. `union(c(1,2), c(2,3))` is `c(1, 2, 3)`. Works on numeric
+    and character vectors (the comparison key is the coerced character form, exactly
+    as `unique`/`%in%` already do).
+  - **`intersect(x, y)`** — the elements present in **both** `x` and `y`, in `x`'s
+    order, **deduplicated** (each distinct value appears once). A value of `x` is kept
+    iff its key is in `y`'s key-set *and* it has not already been kept.
+    `intersect(c(1,2,3), c(2,3,4))` is `c(2, 3)`.
+  - **`setdiff(x, y)`** — the elements of `x` **not** in `y`, deduplicated,
+    order-preserving by `x`. `setdiff(c(1,2,3,4), c(2,4))` is `c(1, 3)`.
+  - **`is.element(el, set)`** — exactly `el %in% set` (a vectorized logical, one entry
+    per element of `el`). `is.element(2, c(1,2,3))` is `TRUE`. A thin alias over
+    `value::membership` so the two stay bug-for-bug identical.
+  - **`duplicated(x)`** — a logical vector, `TRUE` where an element equals one that
+    appeared **earlier** (first occurrence is always `FALSE`).
+    `duplicated(c(1,1,2,3,3))` is `c(FALSE, TRUE, FALSE, FALSE, TRUE)`. Uses the same
+    `as_character`-key + "seen" set as `unique`, but emits the flag instead of gathering.
+  - **`rank(x)`** — **sample ranks** with **average tie handling** (R's default
+    `ties.method = "average"`). Each element's rank is its 1-based position in
+    ascending order; tied values share the **mean** of the positions they span.
+    `rank(c(3,1,2))` is `c(3, 1, 2)`; `rank(c(1,1,2))` is `c(1.5, 1.5, 3)` (the two
+    1s occupy positions 1 and 2, averaging to 1.5). Numeric ranks numerically;
+    character ranks lexicographically. The output is always numeric (averages are
+    fractional), matching R.
+  - **Output-size caps (security).** Every input is **data**, so a crafted call must
+    not allocate unboundedly or panic. The set ops produce **at most** `length(x) +
+    length(y)` (union) or `length(x)` (intersect/setdiff) elements — each operand is
+    already `MAX_SEQ_LEN`-bounded, and `union` routes through `combine` (whose result
+    is itself a vector subject to the same limit), so no result can exceed what the
+    inputs already permit; no separate cap is introduced. `duplicated`/`is.element`
+    emit exactly one logical per input element. `rank` allocates one `f64` per element
+    and sorts the index permutation in `O(n log n)`; there is no quadratic blowup and
+    no user-controlled multiplier. Empty inputs yield empty results; `NA` is treated
+    as an ordinary (matchable) key via `as_character`'s `None`, never an index panic.
+  - **Scope outcome / deferred to R-30.** `union`, `intersect`, `setdiff`,
+    `is.element`, `duplicated`, and `rank` (average ties) ship **solidly**. Deferred
+    to **R-30**: `rank`'s other `ties.method` options (`"first"`, `"min"`, `"max"`,
+    `"random"`); the `incomparables =`/`fromLast =` arguments of the set ops and
+    `duplicated`; `anyDuplicated`; and **multi-key `order(x, y, ...)`** (the single-key
+    `order` from R-13 is unchanged). The `%o%` infix alias for `outer` carried over
+    from R-28's deferral list also remains open for a later grammar pass.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -934,7 +988,10 @@ the R5 system in **R-26**); the output-formatting family (`format`, `formatC`,
 `scientific=`) deferred to a later formatting pass; the apply-family & grouping
 builtins (`outer`, `tapply`, `split`, `tabulate`) land in **R-28**, with the `%o%`
 infix alias, matrix dimnames, multi-way `tapply`, and `simplify = FALSE` deferred to
-**R-29**; namespaces and `library()`
+a later pass; the vector set-operation & ranking builtins (`union`, `intersect`,
+`setdiff`, `is.element`, `duplicated`, `rank`) land in **R-29**, with `rank`'s other
+`ties.method` options, the `incomparables=`/`fromLast=` set-op arguments,
+`anyDuplicated`, and multi-key `order` deferred to **R-30**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.
