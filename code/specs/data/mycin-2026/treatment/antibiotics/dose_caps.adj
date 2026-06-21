@@ -81,6 +81,10 @@ rulebook dose_caps {
         source "In order to minimize the risk of nephrotoxicity when treating patients with underlying renal dysfunction or patients receiving concomitant therapy with an aminoglycoside, serial monitoring of renal function should be performed, and particular care should be taken in following appropriate dosing schedules."
         locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce"
         trust authoritative
+    relate dose_capped_under(cefepime, renal_severe)
+        source "Adjust the dose of Cefepime Injection in patients with creatinine clearance less than or equal to 60 mL/min to compensate for the slower rate of renal elimination. Neurotoxicity: May occur especially in patients with renal impairment administered unadjusted doses."
+        locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=be5f8ca6-7232-423a-a2d5-cccb7abe7921"
+        trust authoritative
 
     % --- the GENERIC conjunction rules ---------------------------------------
     % a compound risk holds when an active risk is in its first category AND a
