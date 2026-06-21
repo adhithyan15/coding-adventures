@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.22.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-27 — output-formatting functions**: a pivot off the R5/OOP lane into a
+  fresh data/utility area. All pure builtins in the shared `s-runtime` (no
+  grammar change), reached through ordinary R syntax. Deterministic, locale-free
+  output (fixed `","` thousands separator and `"."` decimal point).
+  - **`format`** — `format(3.14159, nsmall = 2)` → `"3.14"`;
+    `format(42, width = 5)` → `"   42"`; `format(c(1, 10, 100))` →
+    `c("  1", " 10", "100")` (a numeric vector pads to a common width);
+    `format(c("a","bb"), justify = "right")` → `c(" a", "bb")`;
+    `format(1234567, big.mark = ",")` → `"1,234,567"`.
+  - **`formatC`** — `formatC(3.14159, format = "f", digits = 2)` → `"3.14"`;
+    `formatC(42, width = 6, flag = "0")` → `"000042"`; `formatC(255, format =
+    "x")` → `"ff"`; vectorized over `x`.
+  - **`prettyNum`** — `prettyNum(1234567, big.mark = ",")` → `"1,234,567"`.
+  - **`toString`** — `toString(1:3)` → `"1, 2, 3"`;
+    `toString(c("a","b"), sep = "; ")` → `"a; b"`.
+  - **`sprintf`** (vectorized) — `sprintf("%d-%s", 1:2, c("a","b"))` →
+    `c("1-a", "2-b")`; `sprintf("%05.2f", 3.1)` → `"03.10"`. Already vectorized
+    since R-5; R-27 adds the regression coverage.
+  - **Security**: all field widths/precisions are capped at 1 MiB
+    (`MAX_FIELD`), so a crafted `fmt` or a huge `width=`/`nsmall=`/`digits=`
+    cannot trigger a giant allocation; the vectorized formatters additionally
+    enforce a 256 MiB total-output budget (width × vector length) so a long
+    vector formatted to a wide field is a clean error, not an OOM.
+  - 13 new R-syntax tests.
+  - **Deferred to R-28**: exotic `formatC` corners (`format = "g"` rounding,
+    the `" "`/`"#"` flags, `scientific=`).
+
 ## [0.21.0] - 2026-06-20
 
 ### Added (via the shared `s-runtime`)
