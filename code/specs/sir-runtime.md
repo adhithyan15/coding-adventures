@@ -239,9 +239,26 @@ v0 eight). `TailCalls` and `Intrinsics` remain rejected.
   contract is honoured for every shape**. v0 simplifications: an instance/class/
   global variable reports its static description rather than the runtime
   `nil`-when-unset Ruby would give (no presence predicate in the per-concern
-  runtimes yet), and a general/method-call operand reports the generic
-  `"expression"` rather than Ruby's exact category (`"method"`, `"assignment"`,
-  …). Both are non-evaluating and documented.
+  runtimes yet). Q10h: a method-call operand `recv.meth` (the `__method__`
+  dispatch envelope) now reports `"method"` (Ruby's category when the method
+  resolves); the respond_to?-presence check that returns `nil` for an absent
+  method is the method-dispatch boundary below. A still-general operand
+  (assignment, etc.) reports `"expression"`. All shapes are non-evaluating.
+- **Ruby method-dispatch boundary (Q10h) — terminal v0 cut-line.** A receiver
+  call `recv.meth(args…)` lowers to `BuiltinCall("__method__", [recv, "meth",
+  …])`, dispatched at runtime by `sir-runtime-oop`'s `call_method`/`callMethod`.
+  That dispatcher resolves only `is_a?`/`kind_of?`/`instance_of?`/`class` and a
+  user `define_method` table; **any other method returns `nil`** (it does not
+  raise). So built-in/collection methods (`arr.each`, `arr.map`, `obj.to_s`, …)
+  evaluate to `nil` rather than running. Consequently `&:sym` symbol-to-proc —
+  which lowers `&:m` to a `block_pass` of a `SymLit` and would need
+  `recv.send(:m)` semantics — is **not** modelled: a bare `SymLit` threaded as a
+  block reaches `apply` as a non-closure (raising), and even a `Symbol#to_proc`
+  shim would bottom out at the same `nil`-returning dispatch. Faithfully
+  executing arbitrary built-in method dispatch (mapping each collection/string
+  method to its native operation) is the larger effort deferred past v0; the
+  structural `defined?(recv.meth)` → `"method"` answer above is the implemented
+  half, and this nil-dispatch behaviour is the surfaced, un-faked boundary.
 - Idiomatic-quality / style-transfer of emitted code (correct + readable, not
   hand-written-equivalent).
 - Changes to `semantic-ir` core or any frontend — this is purely backend

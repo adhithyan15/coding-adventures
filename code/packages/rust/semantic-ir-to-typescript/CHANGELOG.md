@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.18 — `defined?(recv.meth)` → "method" (Q10h)
+
+`defined?` over a method-call operand `recv.meth` — the `__method__` dispatch
+envelope — now emits the constant `"method"` (Ruby's category when the method
+resolves) instead of the generic `"expression"`. Purely emit-time shape
+inspection; the non-evaluation contract is unchanged. The runtime
+respond_to?-presence check, and arbitrary built-in/collection method dispatch
+(`arr.each`, `&:sym`'s target, …) which `callMethod` returns `nil` for, are the
+documented terminal method-dispatch boundary (see `code/specs/sir-runtime.md`).
+New test `defined_method_call_operand_emits_method_ts`.
+
 ## 0.1.17 — call-position `**h` via runtime merge helper (Q10f)
 
 JavaScript has no keyword-argument call form, so call-position `**h` could not

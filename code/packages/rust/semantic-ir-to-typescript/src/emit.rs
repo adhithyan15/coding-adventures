@@ -1121,9 +1121,12 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // the operand is never rendered, so it cannot run.  Same shape→description
     // table and v0 simplifications as the Python backend (see its comment and
     // `code/specs/sir-runtime.md`): instance/class/global vars report their
-    // static description rather than the runtime nil-when-unset; general/method
-    // operands report the generic `"expression"`.  The non-evaluation contract
-    // holds for every shape.
+    // static description rather than the runtime nil-when-unset.  Q10h: a
+    // method-call operand `recv.meth` (the `__method__` dispatch envelope)
+    // reports `"method"` — Ruby's category when the method resolves — instead of
+    // the generic `"expression"`; the respond_to?-presence check that would
+    // return `nil` for an absent method is the documented method-dispatch
+    // boundary.  The non-evaluation contract holds for every shape.
     if name == "defined?" && args.len() == 1 {
         let desc = match &args[0] {
             Expr::VarRef { scope, .. } => match scope {
@@ -1134,6 +1137,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                 Scope::Global => "global-variable",
                 Scope::Builtin => "method",
             },
+            Expr::BuiltinCall { name: inner, .. } if inner == "__method__" => "method",
             _ => "expression",
         };
         out.push_str(&quote_ts_string(desc));
