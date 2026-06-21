@@ -164,6 +164,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrail` and summary
   helpers for classifying handoff work-order lanes into release blockers,
   operator handoffs, review gates, and ready-to-execute checks.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditRow` and
+  summary helpers for exposing handoff work-order guardrail audit rows for
+  release coordination.
 - `IntegrationMeshReleaseTicketHandoffWorkOrderGuardrailReadinessSummary` and
   helpers for combining work-order readiness with handoff guardrail state.
 - Primitive backlog planning helpers for ranking the shared primitive families

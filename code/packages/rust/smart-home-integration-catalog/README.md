@@ -136,6 +136,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - low-level mesh release ticket handoff execution work-order guardrails that
   classify lane work into release blockers, operator handoffs, review gates,
   and ready-to-execute checks
+- low-level mesh release ticket handoff execution work-order guardrail audit
+  rows that expose release blockers, operator handoffs, review gates, and
+  ready-to-execute checks for audit/release coordination
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work
