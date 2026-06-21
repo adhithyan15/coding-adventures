@@ -193,6 +193,12 @@ quit
       "write out.raw V(out)",
       "wrdata out.dat V(out)",
     ]);
+    expect(summary.rawfileOptions).toStrictEqual([
+      "set filetype=ascii",
+      "set wr_vecnames",
+      "set wr_singlescale",
+      "set appendwrite",
+    ]);
     expect(summary.diagnostics.map(({ directive, lineNumber, severity }) => [
       directive,
       lineNumber,

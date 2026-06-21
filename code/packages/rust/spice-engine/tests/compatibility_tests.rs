@@ -216,6 +216,15 @@ quit
             "wrdata out.dat V(out)".to_string(),
         ]
     );
+    assert_eq!(
+        summary.rawfile_options,
+        &[
+            "set filetype=ascii".to_string(),
+            "set wr_vecnames".to_string(),
+            "set wr_singlescale".to_string(),
+            "set appendwrite".to_string(),
+        ]
+    );
     let diagnostics = summary
         .diagnostics
         .iter()

@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck rawfile option artifacts** —
+  `analyze_deck_controls()` and selected `run_deck_analysis()` executions now
+  expose normalized accepted `.control` rawfile option inventories as
+  `rawfile_option_count` / `rawfile_options`, and selected-run artifacts carry
+  stable `RawfileOptions` / `RawfileOptionList` columns through tables,
+  CSV/JSON, and ordered `table_artifacts`, matching Rust and TypeScript.
+
 - **Deck rawfile write marker artifacts** —
   `analyze_deck_controls()` and selected `run_deck_analysis()` executions now
   expose normalized accepted `.control` `write` / `wrdata` marker inventories

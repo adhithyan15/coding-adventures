@@ -58,6 +58,7 @@ class DeckControlSummary:
     active_lines: tuple[str, ...]
     control_lines: tuple[str, ...]
     write_markers: tuple[str, ...]
+    rawfile_options: tuple[str, ...]
     terminated: bool
     end_line_number: int | None
     diagnostics: tuple[DeckControlDiagnostic, ...]
@@ -550,8 +551,11 @@ _NOOP_CONTROL_BLOCK_COMMANDS = frozenset(
 )
 _NOOP_CONTROL_BLOCK_ARGUMENT_COMMANDS = frozenset({"write", ".write"})
 _NOOP_CONTROL_BLOCK_VECTOR_ARGUMENT_COMMANDS = frozenset({"wrdata", ".wrdata"})
-_NOOP_CONTROL_BLOCK_SET_OPTIONS = frozenset(
-    {"noaskquit", "filetype=ascii", "wr_vecnames", "wr_singlescale", "appendwrite"}
+_NOOP_CONTROL_BLOCK_RAWFILE_OPTIONS = frozenset(
+    {"filetype=ascii", "wr_vecnames", "wr_singlescale", "appendwrite"}
+)
+_NOOP_CONTROL_BLOCK_SET_OPTIONS = (
+    frozenset({"noaskquit"}) | _NOOP_CONTROL_BLOCK_RAWFILE_OPTIONS
 )
 _SCRIPT_CONTROL_BLOCK_COMMANDS = frozenset({"source", ".source", "shell", ".shell"})
 _WORKDIR_CONTROL_BLOCK_COMMANDS = frozenset({"cd", ".cd"})
@@ -611,6 +615,7 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
     active_lines: list[str] = []
     control_lines: list[str] = []
     write_markers: list[str] = []
+    rawfile_options: list[str] = []
     diagnostics: list[DeckControlDiagnostic] = []
     end_line_number: int | None = None
     in_control_block = False
@@ -632,6 +637,10 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
             write_marker = _control_block_write_marker(stripped)
             if write_marker is not None:
                 write_markers.append(write_marker)
+                continue
+            rawfile_option = _control_block_rawfile_option(stripped)
+            if rawfile_option is not None:
+                rawfile_options.append(rawfile_option)
                 continue
             if _is_noop_control_block_command(stripped):
                 continue
@@ -717,6 +726,7 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
         active_lines=tuple(active_lines),
         control_lines=tuple(control_lines),
         write_markers=tuple(write_markers),
+        rawfile_options=tuple(rawfile_options),
         terminated=end_line_number is not None,
         end_line_number=end_line_number,
         diagnostics=tuple(diagnostics),
@@ -3744,6 +3754,19 @@ def _control_block_write_marker(line: str) -> str | None:
         vector_parts = parts[1].split()
         if len(vector_parts) >= 2:
             return f"{command.removeprefix('.')} {parts[1]}"
+    return None
+
+
+def _control_block_rawfile_option(line: str) -> str | None:
+    parts = line.split()
+    if len(parts) != 2:
+        return None
+    command = parts[0].lower()
+    if command not in {"set", ".set"}:
+        return None
+    option = parts[1].lower()
+    if option in _NOOP_CONTROL_BLOCK_RAWFILE_OPTIONS:
+        return f"set {option}"
     return None
 
 
