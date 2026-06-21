@@ -156,6 +156,8 @@ All notable changes to this package will be documented in this file.
   sequencing dispatch handoff packets into deterministic lane execution slots.
 - `IntegrationMeshReleaseTicketHandoffExecutionReadinessSummary` and helpers
   for combining handoff readiness with execution slot state.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrder` and summary helpers
+  for turning release handoff execution slots into lane-scoped work orders.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
