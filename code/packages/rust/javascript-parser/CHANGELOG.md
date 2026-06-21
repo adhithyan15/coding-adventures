@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.16.0] - 2026-06-21
+
+### Added — CLOC26 Phase 2: ASI line-terminator rule (Rule 1)
+
+`asi` now also inserts a `;` before an offending token that is **preceded by a
+line terminator** (ECMAScript §12.10 Rule 1), not just before a `}`/EOF
+(Rule 2). So `a = 1` ⏎ `b = 2` parses as two statements.
+
+The lexer discards newlines as trivia and does **not** populate the
+`TOKEN_PRECEDED_BY_NEWLINE` flag, so detection is derived from the `line` field
+the lexer records on every token: a line terminator sits between `tokens[idx-1]`
+and `tokens[idx]` exactly when the offending token starts on a *higher line*
+than its predecessor **and** that predecessor is single-line (its own text
+contains no newline — a multi-line predecessor such as a template literal makes
+the comparison ambiguous, so we conservatively decline). This needs **no change
+to the shared lexer/parser crates**.
+
+Soundness is unchanged from Phase 1: insertion happens only on a genuine parse
+*failure*, so any program that already parses is byte-for-byte untouched.
+Requiring an actual line terminator for the non-`}`/EOF case is what keeps a
+true one-line error (`a = 1 b = 2`) from being silently "recovered" — it still
+fails and the caller degrades exactly as before.
+
+`is_asi_recoverable` is replaced by `asi_applies_at(tokens, idx)`, which the
+retry loop consults after locating the offending token's index (Rule 1 needs the
+predecessor).
+
+- 5 new tests: newline-separated statements recovered; one-line two-statements
+  NOT recovered; a multi-statement no-semicolon program; a valid multi-line
+  program is a no-op; a binary expression continued on the next line is not split.
+
 ## [0.15.0] - 2026-06-21
 
 ### Added — CLOC26 Phase 1: Automatic Semicolon Insertion (`}` / EOF rule)

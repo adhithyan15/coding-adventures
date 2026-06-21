@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE
+--js
+tests/diff/simple-asi-newline/input/a.js

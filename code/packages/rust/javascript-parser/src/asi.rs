@@ -1,4 +1,5 @@
-//! Automatic Semicolon Insertion (ASI) — Phase 1: the `}` / end-of-input rule.
+//! Automatic Semicolon Insertion (ASI) — the `}` / end-of-input rule (Rule 2)
+//! and the line-terminator rule (Rule 1).
 //!
 //! # Why this module exists
 //!
@@ -17,19 +18,24 @@
 //!
 //! # The approach: retry-on-parse-error (byte-identical by construction)
 //!
-//! Phase 1 implements only ASI **Rule 2** — a `;` is inserted before a `}` (or
-//! at end of input) that would otherwise be a syntax error. This rule does *not*
-//! depend on line terminators, which is convenient because the lexer discards
-//! newlines as trivia (the line-terminator rule is Phase 2, using the
-//! `TOKEN_PRECEDED_BY_NEWLINE` flag the lexer already records).
+//! Two ASI rules are implemented (§12.10):
+//!
+//! * **Rule 2** (`}` / end-of-input) — a `;` is inserted before a `}` (or at end
+//!   of input) that would otherwise be a syntax error. No line terminator needed.
+//! * **Rule 1** (line terminator) — a `;` is inserted before an offending token
+//!   that is **preceded by a line terminator**. The lexer discards newlines as
+//!   trivia, but each token records the `line` it starts on, so a line
+//!   terminator sits between two tokens exactly when the later one starts on a
+//!   higher line (and its single-line predecessor did not itself span lines —
+//!   see [`asi_applies_at`]). No shared-lexer change is required.
 //!
 //! Rather than guess insertion points from a lookahead table (the approach the
 //! design spec first sketched), we drive insertion from the parser itself:
 //!
 //! 1. Parse the token stream.
 //! 2. If it parses, we are done — **nothing is inserted**.
-//! 3. If it fails *specifically because a `SEMICOLON` was expected before a `}`
-//!    or end-of-input*, synthesize a `;` at that position and re-parse.
+//! 3. If it fails *specifically because a `SEMICOLON` was expected* at a point
+//!    where Rule 1 or Rule 2 applies, synthesize a `;` there and re-parse.
 //! 4. Any other failure is returned unchanged (closurec then degrades as before).
 //!
 //! The decisive property: a semicolon is inserted **only when parsing genuinely
@@ -77,7 +83,20 @@ pub fn parse_with_asi(
         match parser.parse() {
             Ok(ast) => return Ok(ast),
             Err(e) => {
-                if !is_asi_recoverable(&e) {
+                // A `;` must be among what the parser expected here, or this is
+                // not a missing-semicolon situation at all.
+                if !e.message.contains("SEMICOLON") {
+                    return Err(e);
+                }
+                // Locate the offending token so we can inspect its predecessor
+                // (the line-terminator rule needs it).
+                let idx = match find_token_index(&tokens, &e.token) {
+                    Some(i) => i,
+                    // Not locatable (should not happen — full-identity match is
+                    // unique); bail safely.
+                    None => return Err(e),
+                };
+                if !asi_applies_at(&tokens, idx) {
                     return Err(e);
                 }
                 let fail_pos = (e.token.line, e.token.column);
@@ -86,12 +105,7 @@ pub fn parse_with_asi(
                     // fails here — give up with the real error.
                     return Err(e);
                 }
-                match find_token_index(&tokens, &e.token) {
-                    Some(idx) => tokens.insert(idx, synthetic_semicolon(&e.token)),
-                    // The offending token isn't locatable in our stream (should
-                    // not happen — full-identity match is unique); bail safely.
-                    None => return Err(e),
-                }
+                tokens.insert(idx, synthetic_semicolon(&e.token));
             }
         }
     }
@@ -101,19 +115,72 @@ pub fn parse_with_asi(
     GrammarParser::new(tokens, grammar).parse()
 }
 
-/// Is this parse failure one that inserting a `;` before a `}` / end-of-input
-/// could plausibly fix? We require BOTH that a `SEMICOLON` was among the
-/// expected tokens AND that the offending token is a closing brace or EOF —
-/// the only positions ASI Rule 2 applies. Anything else is a genuine syntax
-/// error we must not paper over.
-fn is_asi_recoverable(e: &GrammarParseError) -> bool {
-    let expects_semicolon = e.message.contains("SEMICOLON");
-    let off = &e.token;
-    let is_close_brace = off.type_ == TokenType::RBrace
+/// Does an ASI insertion apply *before the token at `idx`* (which the parser
+/// rejected while expecting a `SEMICOLON`)? Two ECMAScript §12.10 rules:
+///
+/// * **Rule 2** — the offending token is a `}` or end-of-input. A statement may
+///   always be terminated there; no line terminator is required.
+/// * **Rule 1** — the offending token is **preceded by a line terminator**.
+///   The lexer discards newlines as trivia, but every token still records the
+///   `line` it starts on, so a line terminator sits between `tokens[idx-1]` and
+///   `tokens[idx]` exactly when the offending token starts on a *later line*
+///   than its predecessor. We only trust that comparison when the predecessor
+///   is **single-line** (its own text contains no newline); a multi-line
+///   predecessor — e.g. a template literal spanning lines — makes the
+///   start-line comparison ambiguous, so we conservatively decline (a missed
+///   optimization, never a miscompile).
+///
+/// Soundness: this is only ever consulted on a genuine parse *failure*, so a
+/// program that already parses is untouched. Requiring an actual line
+/// terminator for the non-`}`/EOF case is what keeps a true one-line syntax
+/// error (`a=1 b=2`) from being silently "recovered".
+fn asi_applies_at(tokens: &[Token], idx: usize) -> bool {
+    let off = &tokens[idx];
+
+    // Rule 2: before a `}` or EOF.
+    if off.type_ == TokenType::RBrace
         || off.type_name.as_deref() == Some("RBRACE")
-        || off.value == "}";
-    let is_eof = off.type_ == TokenType::Eof;
-    expects_semicolon && (is_close_brace || is_eof)
+        || off.value == "}"
+        || off.type_ == TokenType::Eof
+    {
+        return true;
+    }
+
+    // Rule 1: a line terminator between the predecessor and this token.
+    if idx == 0 {
+        return false;
+    }
+    let prev = &tokens[idx - 1];
+    off.line > prev.line && !token_may_span_lines(prev)
+}
+
+/// Could this token's lexeme cross source lines *without that being visible in
+/// its `value`* — making the start-line comparison in [`asi_applies_at`]
+/// unreliable?
+///
+/// The lexer stores the **cooked** text in `value` (escapes resolved), so a
+/// token can span multiple source lines while `value` contains no raw newline:
+///
+/// * a **string** can use a backslash line-continuation (`"a\<LF>b"` → `"ab"`),
+/// * **template literals** and **regex** can embed or escape newlines.
+///
+/// For any such kind we cannot conclude from `off.line > prev.line` that a real
+/// line terminator separates the two tokens (the higher line may just be the
+/// predecessor's own continuation), so we treat it as line-spanning and decline
+/// Rule 1 — a missed optimization, never a miscompile. (A token whose `value`
+/// already contains a raw newline is obviously multi-line and likewise
+/// declined.) Identifiers, numbers, punctuators, and keywords are always
+/// single-line, so the start-line comparison is exact for them.
+///
+/// MAINTENANCE: this enumerates the lexer's only multi-line-capable token
+/// kinds. If a future grammar adds another (e.g. a token-preserving multi-line
+/// comment, or a heredoc/raw-string variant), it MUST be added here or Rule 1
+/// could wrongly fire across it.
+fn token_may_span_lines(t: &Token) -> bool {
+    matches!(t.type_, TokenType::String)
+        || matches!(t.type_name.as_deref(), Some("STRING") | Some("REGEX"))
+        || t.type_name.as_deref().is_some_and(|n| n.starts_with("TEMPLATE"))
+        || t.value.contains('\n')
 }
 
 /// A synthesized `;` token positioned at the offending token. The parser matches
@@ -224,5 +291,69 @@ mod tests {
         let src = "function f(){}";
         assert!(parses_without_asi(src));
         assert!(parses_with_asi(src));
+    }
+
+    // --- Phase 2: the line-terminator rule (ECMAScript Rule 1) ------------
+
+    #[test]
+    fn statements_separated_by_a_newline_are_recovered() {
+        // `a = 1` then `b = 2` on the next line: the offending token `b` is
+        // preceded by a line terminator, so ASI inserts a `;` after `1`.
+        let src = "a = 1\nb = 2";
+        assert!(!parses_without_asi(src), "precondition: should fail raw");
+        assert!(parses_with_asi(src), "ASI Rule 1 should split across the newline");
+    }
+
+    #[test]
+    fn two_statements_on_one_line_are_not_recovered() {
+        // No line terminator between `1` and `b`: this is a genuine syntax
+        // error (ASI does NOT apply mid-line), so it must stay a failure — we
+        // must not paper it over.
+        let src = "a = 1 b = 2";
+        assert!(!parses_with_asi(src), "one-line `a=1 b=2` is a real error, not ASI");
+    }
+
+    #[test]
+    fn newline_after_assignment_keyword_call() {
+        // A multi-line sequence of statements with no semicolons anywhere.
+        let src = "var x = f()\nvar y = g()\nh(x, y)";
+        assert!(!parses_without_asi(src));
+        assert!(parses_with_asi(src));
+    }
+
+    #[test]
+    fn valid_multiline_program_is_a_noop() {
+        // Already valid (explicit semicolons), spanning lines: ASI must not
+        // change the parse — it succeeds on the first try.
+        let src = "var x = 1;\nvar y = 2;\nh(x, y);";
+        assert!(parses_without_asi(src), "precondition: valid as-is");
+        assert!(parses_with_asi(src));
+    }
+
+    #[test]
+    fn continuation_on_next_line_is_not_split() {
+        // A binary expression continued on the next line is ONE statement; the
+        // `+` can continue it, so the parser does not fail at `b` and ASI never
+        // fires. (`a + b` is a single expression statement.) This guards against
+        // wrongly splitting a legal multi-line expression.
+        let src = "var a = 1, b = 2;\nvar c = a\n+ b;";
+        assert!(parses_with_asi(src));
+    }
+
+    #[test]
+    fn statement_ending_in_a_string_before_a_newline_is_declined() {
+        // Documented Phase-2 limitation: when the token before the newline is a
+        // STRING (a kind that *could* span source lines while its cooked value
+        // hides it), `asi_applies_at` conservatively declines Rule 1 rather than
+        // trust the start-line comparison. So this does NOT recover — a missed
+        // optimization, never a miscompile. (Recoverable later with token
+        // end-position tracking.) `token_may_span_lines` is what makes the
+        // line-terminator heuristic sound regardless of lexer escape handling.
+        let src = "var s = \"x\"\nlog(s)";
+        assert!(!parses_without_asi(src), "precondition: should fail raw");
+        assert!(
+            !parses_with_asi(src),
+            "string predecessor is conservatively declined for Rule 1"
+        );
     }
 }

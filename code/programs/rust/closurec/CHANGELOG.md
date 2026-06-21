@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.160.0] - 2026-06-21
+
+### Changed — CLOC26 Phase 2: optimize newline-separated, semicolon-free source
+
+closurec now applies ASI Rule 1 (insert a `;` before a token preceded by a line
+terminator) in addition to the Phase 1 `}`/EOF rule, so a program that uses
+newlines instead of semicolons — e.g.
+
+```js
+var w = 4
+var s = 1 + 2
+report(w * s)
+```
+
+— **parses and gets optimized** at `SIMPLE`/`ADVANCED` (`1 + 2` folds to `3`)
+instead of degrading to `WHITESPACE_ONLY`. ASI lives in the
+`coding-adventures-javascript-parser` crate (bumped to 0.16.0).
+
+New end-to-end fixture `simple-asi-newline`; the
+`simple_asi_newline_did_not_fall_back_to_whitespace_only` guard asserts the
+folded `s=3` is present and `1+2` absent. Two statements on the *same* line
+(`a = 1 b = 2`) remain a genuine error and still degrade, and the full existing
+fixture suite stays byte-for-byte unchanged (ASI only acts on real parse
+failures).
+
 ## [0.159.0] - 2026-06-21
 
 ### Changed — CLOC26 Phase 1: optimize semicolon-light source via ASI
