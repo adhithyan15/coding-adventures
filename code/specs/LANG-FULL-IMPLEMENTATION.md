@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, arrays, `DEF FN`, `READ`/`DATA`, `^`; loops/IF/GOTO execute only on the VM/JIT |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2); intrinsics + `static` remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | scalar `integer`/`boolean` only: no arrays, procedures, call-by-name, reals, strings, switches, `own` |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, and 1-D arrays (arrays + reals run on VM/JIT only so far); no call-by-name, strings, multidim arrays, `own` |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -205,7 +205,8 @@ multiple languages; close an enabler before the features that depend on it.
 - **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
   compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
   ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
-- **E5 — Arrays / linear aggregates.** ⚠ ◑ *Design pass written — pending sign-off.* An IIR
+- **E5 — Arrays / linear aggregates.** ◑ *IR + VM + ALGOL frontend done (PR-1, PR-2);
+  code-gen backends pending (PR-3 managed, PR-4 static).* An IIR
   array model (`alloc_array`/`array_len`/`array_get`/`array_set`, `array<T>` type hint,
   bounds-checked) that is **representation-agnostic** so it lowers to BOTH static-allocation
   (length-prefixed flat memory + explicit guard/trap on the native + LLVM backends, reusing the
@@ -366,7 +367,11 @@ backend immediately) come before the enabler-dependent items.
   (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1): VM/JIT (tagged value model), LLVM
   (`double` slots), WASM (typed locals), JVM (`CONSTANT_Double`+`dcmpl`), CLR (`float64`+`ldc.r8`),
   and native-AOT (aarch64 `fadd`/`fcmp` executed on Apple Silicon + x86_64 SSE2 on CI). **E3 done.**
-- ☐ **AL2** — arrays with runtime bounds (needs **E5**).
+- ◑ **AL2** — 1-D arrays with runtime bounds (E5). `integer`/`real array A[lo:hi]` →
+  `alloc_array` (run-time span); `A[i]` reads/writes → bounds-checked `array_get`/`array_set`
+  with the 0-based index `i - lower`. Runs a sum-of-squares `Prog` on **VM + JIT** (`lang_matrix.rs`,
+  exit 55) + 9 unit tests. Code-gen backends lower the array ops in E5 PR-3/PR-4; multidim +
+  array params are follow-up.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a

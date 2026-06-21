@@ -166,8 +166,12 @@ merge before the next:
    7 unit tests incl. out-of-bounds + negative-index traps and no-alias. (jit-core
    array execution deferred to a later slice — it has no byte-tape either; the
    matrix Jit column joins with the frontend PR.)
-2. **E5-algol-frontend** — `algol-iir-compiler` lowers `integer array` decls +
-   subscripts (AL2, 1-D first); a matrix `Prog` runs on VM + JIT.
+2. **E5-algol-frontend** — ✅ **done** (`algol-iir-compiler` 0.5.0).
+   `integer`/`real array A[lo:hi]` decls lower to `alloc_array` (run-time span);
+   `A[i]` reads/writes lower to `array_get`/`array_set` with the 0-based index
+   `i - lower`. 9 unit tests + a `lang-aot` matrix `Prog` (sum-of-squares) running
+   on **VM + JIT** (exit 55). 1-D, integer/real elements; multidim + array params
+   are follow-up.
 3. **E5-managed-backends** — JVM, CLR, WASM array lowering (native managed
    arrays + native bounds checks); extend the matrix Prog's backend list. (May be
    one PR per backend if they diverge.)
