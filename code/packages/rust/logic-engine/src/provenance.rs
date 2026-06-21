@@ -38,6 +38,38 @@ pub struct Provenance {
     pub locator: Option<String>,
     /// How much weight a reviewer should place on this clause.
     pub trust_tier: TrustTier,
+    /// **Corroborating** citations (ADJ-A9): additional independent sources
+    /// that support the *same* clause/LR. Distinct from the engine's
+    /// `source_disagreements` machinery, which compares *different* clauses
+    /// whose LRs **disagree**; these are co-equal citations for the same
+    /// fact, recorded so the audit trail can list every span a reader can
+    /// re-fetch. They are **documentary only** — they carry no extra
+    /// evidential weight and never enter the LR arithmetic (double-counting
+    /// the same fact would inflate posteriors). Empty for the common
+    /// single-citation case; defaults to empty everywhere.
+    pub corroborations: Vec<Citation>,
+}
+
+/// One corroborating citation (ADJ-A9). Both fields are required: a
+/// corroboration with no locator is not re-checkable, and the whole point is
+/// that an auditor can re-fetch the span. Co-equal with the clause's primary
+/// `source`/`locator`; inherits the clause's [`TrustTier`].
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Citation {
+    /// Human-readable citation span — the verbatim quote or reference.
+    pub source: String,
+    /// Where the span can be re-fetched — URL, page, section.
+    pub locator: String,
+}
+
+impl Citation {
+    /// Construct a corroborating citation from a source span + locator.
+    pub fn new(source: impl Into<String>, locator: impl Into<String>) -> Self {
+        Self {
+            source: source.into(),
+            locator: locator.into(),
+        }
+    }
 }
 
 /// A coarse trust-tier rank. The variants are ordered from highest
@@ -75,15 +107,12 @@ pub enum TrustTier {
 
 impl Provenance {
     /// Construct a `Provenance` with all three fields explicit.
-    pub fn new(
-        source: impl Into<String>,
-        locator: Option<String>,
-        trust_tier: TrustTier,
-    ) -> Self {
+    pub fn new(source: impl Into<String>, locator: Option<String>, trust_tier: TrustTier) -> Self {
         Self {
             source: source.into(),
             locator,
             trust_tier,
+            corroborations: Vec::new(),
         }
     }
 
@@ -116,6 +145,18 @@ impl Provenance {
     /// Returns a new value, leaves the receiver unchanged.
     pub fn with_locator(mut self, locator: impl Into<String>) -> Self {
         self.locator = Some(locator.into());
+        self
+    }
+
+    /// ADJ-A9: append a corroborating citation (a co-equal source for the
+    /// *same* fact). Documentary only — does not affect the LR arithmetic.
+    /// Returns a new value, leaves the receiver unchanged.
+    pub fn with_corroboration(
+        mut self,
+        source: impl Into<String>,
+        locator: impl Into<String>,
+    ) -> Self {
+        self.corroborations.push(Citation::new(source, locator));
         self
     }
 }
@@ -176,5 +217,30 @@ mod tests {
     #[test]
     fn default_is_unattributed() {
         assert_eq!(Provenance::default(), Provenance::unattributed());
+    }
+
+    #[test]
+    fn corroborations_default_empty_and_append_in_order() {
+        // ADJ-A9: the common case carries no corroborations.
+        let p = Provenance::cited("Tunkel 2004");
+        assert!(p.corroborations.is_empty());
+
+        // Two corroborating citations accumulate in call order, each carrying
+        // a required locator, and the primary citation is untouched.
+        let q = Provenance::cited("Tunkel 2004")
+            .with_locator("§3.2")
+            .with_corroboration("van de Beek 2006", "https://nejm.org/a")
+            .with_corroboration("Brouwer 2010", "https://asm.org/b");
+        assert_eq!(q.source, "Tunkel 2004");
+        assert_eq!(q.locator.as_deref(), Some("§3.2"));
+        assert_eq!(q.corroborations.len(), 2);
+        assert_eq!(
+            q.corroborations[0],
+            Citation::new("van de Beek 2006", "https://nejm.org/a")
+        );
+        assert_eq!(q.corroborations[1].source, "Brouwer 2010");
+        assert_eq!(q.corroborations[1].locator, "https://asm.org/b");
+        // Corroborations are documentary: trust tier is unchanged.
+        assert_eq!(q.trust_tier, TrustTier::Authoritative);
     }
 }

@@ -236,18 +236,24 @@ import_decl   = "import" STRING ;
 
 # ----------------------------------------------------------------
 # Annotations attach a citation / locator / trust tier to the
-# preceding clause. The lowerer accepts at most one of each kind
-# per statement.
+# preceding clause. The lowerer accepts at most one of each of
+# source / locator / trust per statement. `cites` (ADJ-A9) is the
+# exception: it is REPEATABLE — each one records a corroborating
+# citation (a co-equal source for the same fact) with its own
+# required locator, reusing the `locator` keyword as the separator
+# so no new short keyword (`at`) has to be reserved.
 # ----------------------------------------------------------------
 
 annotation = source_annotation
            | locator_annotation
            | trust_annotation
+           | cites_annotation
            ;
 
 source_annotation  = "source" STRING ;
 locator_annotation = "locator" STRING ;
 trust_annotation   = "trust" trust_tier ;
+cites_annotation   = "cites" STRING "locator" STRING ;
 
 trust_tier = "consensus"
            | "authoritative"

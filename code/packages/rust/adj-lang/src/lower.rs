@@ -23,9 +23,10 @@ use logic_core::{
     atom as core_atom, compound, float as core_float, var as core_var, LogicVar, Term as CoreTerm,
 };
 use logic_engine::{
-    compute, BodyLiteral, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContributionClause, Fact,
-    JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause, PriorClause,
-    Priority, Provenance, Rule, TrustTier, UncertaintyMarker,
+    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp,
+    ContributionClause, Fact, JointContributionClause, KbError, KnowledgeBase,
+    PredicateContributionClause, PriorClause, Priority, Provenance, Rule, TrustTier,
+    UncertaintyMarker,
 };
 
 use std::collections::HashMap;
@@ -742,6 +743,9 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
     let mut source: Option<String> = None;
     let mut locator: Option<String> = None;
     let mut trust: Option<TrustTier> = None;
+    // ADJ-A9: corroborating citations are REPEATABLE — accumulate in source
+    // order rather than rejecting duplicates.
+    let mut corroborations: Vec<Citation> = Vec::new();
 
     for a in annotations {
         match a {
@@ -769,6 +773,9 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
                     TrustTierName::Unattributed => TrustTier::Unattributed,
                 });
             }
+            Annotation::Cites { source, locator } => {
+                corroborations.push(Citation::new(source.clone(), locator.clone()));
+            }
         }
     }
 
@@ -783,11 +790,11 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
         }
     });
 
-    Ok(Provenance::new(
-        source.unwrap_or_default(),
-        locator,
-        trust_tier,
-    ))
+    let mut prov = Provenance::new(source.unwrap_or_default(), locator, trust_tier);
+    // ADJ-A9: attach any corroborating citations (documentary only — they do
+    // not change the LR arithmetic, only what the audit trail can list).
+    prov.corroborations = corroborations;
+    Ok(prov)
 }
 
 // ---------------------------------------------------------------------------
@@ -1104,6 +1111,53 @@ mod tests {
         let lowered = compile(src).unwrap();
         let contribs = lowered.kb.contributions_for(&core_atom("y"));
         assert_eq!(contribs[0].provenance.trust_tier, TrustTier::Unattributed);
+    }
+
+    #[test]
+    fn cites_lowers_to_corroborations_in_order() {
+        // ADJ-A9: `cites "<src>" locator "<loc>"` is repeatable and accumulates
+        // onto the clause's Provenance::corroborations without disturbing the
+        // primary source/locator/trust.
+        let src = r#"
+            contributes 2.5 from neutrophilia to bacterial_meningitis
+              source "Tunkel 2004"
+              locator "IDSA §3.2"
+              trust authoritative
+              cites "van de Beek 2006" locator "https://nejm.org/a"
+              cites "Brouwer 2010" locator "https://asm.org/b"
+        "#;
+        let lowered = compile(src).unwrap();
+        let contribs = lowered
+            .kb
+            .contributions_for(&core_atom("bacterial_meningitis"));
+        assert_eq!(contribs.len(), 1);
+        let p = &contribs[0].provenance;
+        // Primary citation untouched.
+        assert_eq!(p.source, "Tunkel 2004");
+        assert_eq!(p.locator.as_deref(), Some("IDSA §3.2"));
+        assert_eq!(p.trust_tier, TrustTier::Authoritative);
+        // Corroborations accumulate in source order, each with its locator.
+        assert_eq!(p.corroborations.len(), 2);
+        assert_eq!(p.corroborations[0].source, "van de Beek 2006");
+        assert_eq!(p.corroborations[0].locator, "https://nejm.org/a");
+        assert_eq!(p.corroborations[1].source, "Brouwer 2010");
+        assert_eq!(p.corroborations[1].locator, "https://asm.org/b");
+    }
+
+    #[test]
+    fn cites_repeats_freely_unlike_at_most_once_source() {
+        // A clause with NO corroborations still lowers (the common case).
+        let plain = compile("contributes 1.5 from x to y\n  source \"p\"").unwrap();
+        assert!(plain.kb.contributions_for(&core_atom("y"))[0]
+            .provenance
+            .corroborations
+            .is_empty());
+        // But a SECOND `source` is still rejected — only `cites` repeats.
+        let err = compile("prior 0.1 for y\n  source \"a\"\n  source \"b\"").unwrap_err();
+        assert!(matches!(
+            err,
+            crate::CompileError::Lower(LowerError::DuplicateAnnotation { name: "source" })
+        ));
     }
 
     #[test]

@@ -331,13 +331,31 @@ Adj-Lang dissolves ADJ46 awkwardness items **A4** (joint
 contributions syntactically distinct from atomic, via the `interacts`
 keyword) and **A10** (rulebook surface is hand-written Rust).
 
+**A9** — multi-source corroboration — is covered as of the ADJ-A9 change. A
+clause may carry one or more **corroborating** citations, each a co-equal source
+for the *same* fact, via a repeatable annotation:
+
+```
+contributes 2.5 from neutrophil_predominance to bacterial_meningitis
+    source  "Tunkel et al., IDSA 2004"   locator "https://…/cid/39/9/1267"   trust authoritative
+    cites   "van de Beek et al., NEJM 2006"   locator "https://www.nejm.org/…/NEJMra052116"
+    cites   "Brouwer et al., Clin Microbiol Rev 2010"   locator "https://…/CMR.00070-09"
+```
+
+`cites "<source>" locator "<locator>"` is repeatable (the primary
+`source`/`locator`/`trust` remain at-most-once); the `locator` keyword is reused
+as the separator so no short keyword (`at`) is reserved. Corroborations are
+**documentary only** — they record extra spans an auditor can re-fetch and do
+**not** enter the LR arithmetic (double-counting the same fact would inflate
+posteriors). They lower onto `logic_engine::Provenance::corroborations` and
+render in the CLI's clause provenance as a `"corroborations":[…]` array. See
+[ADJ-A9 spec](../../../specs/ADJ-A9-multi-source-corroboration.md).
+
 Not yet covered (all language-layer follow-ups):
 
 - **A5** — uncertainty markers (`uncertain X over {a,b,c}`).
 - **A7** — kickback as a query-result variant.
 - **A8** — counterfactual queries (`? acs given pmh(htn)=true`).
-- **A9** — source-disagreement aggregation (multiple `via "<source>"`
-  clauses per `(conclusion, evidence)`).
 
 These are small additive extensions of the grammar; each adds one or
 two arms to `parser::parse_statement` and one new variant to the

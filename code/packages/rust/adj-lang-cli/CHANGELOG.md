@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.0] - 2026-06-21 — render corroborating citations (ADJ-A9)
+
+### Added
+
+- Each clause's provenance JSON now carries a **`"corroborations"`** array —
+  `[{ "source": …, "locator": … }]` — listing the co-equal citations attached to
+  the clause via `cites … locator …`. Empty in the common single-citation case.
+  Existing `"source"/"locator"/"trust"` fields are unchanged, so existing
+  recall/proof consumers keep working.
+
 ## [0.8.0] - 2026-06-17 — governing answers carry their grounded `context` (ADJ73 PR-B-3)
 
 ### Added
