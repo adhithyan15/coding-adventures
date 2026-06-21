@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.163.0] - 2026-06-21
+
+### Changed — ASI Rule 1 now handles string/template-ending statements
+
+The Phase-2 limitation is gone: a semicolon-free statement that ends in a
+string/template/regex literal immediately before a newline now parses and gets
+optimized at SIMPLE/ADVANCED, where it previously degraded to WHITESPACE_ONLY.
+This rides on the `lexer` crate populating `TOKEN_PRECEDED_BY_NEWLINE` (0.6.0)
+and `javascript-parser` reading it (0.18.0).
+
+New end-to-end fixture `simple-asi-string-newline`:
+`var label = "total"` ⏎ `var n = 1 + 2` ⏎ `show(label, n)` →
+`var label="total";var n=3;show(label,n);` (`1 + 2` folds). The full existing
+fixture suite remains byte-for-byte unchanged.
+
 ## [0.162.0] - 2026-06-21
 
 ### Added — negation push (`!(a == b)` → `a != b`) at SIMPLE/ADVANCED

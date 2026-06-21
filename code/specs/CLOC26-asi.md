@@ -185,16 +185,20 @@ legal multi-line expression (`var c = a` ⏎ `+ b`) simply parses on the first
 try, so ASI never fires. Tests cover `a=1`⏎`b=2` (recovered), one-line
 `a=1 b=2` (a real error, NOT recovered), and the continued-expression no-op.
 
-**Soundness guard (`token_may_span_lines`).** Because `value` holds the *cooked*
-text, a predecessor that can span source lines while its value hides it (a
-string, template, or regex) would make `off.line > prev.line` an unreliable
-signal. Such predecessor kinds are therefore excluded — Rule 1 fires only when
-the predecessor is provably single-line (identifier, number, punctuator,
-keyword) or its value already contains a raw newline. **Documented limitation:**
-a statement ending in a string/template/regex literal immediately before a
-newline is conservatively *not* recovered (it degrades, as before). This is a
-missed optimization, never a miscompile, and is recoverable in a follow-up by
-tracking each token's end position. (Surfaced by the Phase-2 security review.)
+**Line-terminator detection — now flag-based (limitation removed).** Phase 2
+originally detected Rule 1 with start-line arithmetic
+(`off.line > prev.line`), which forced a conservative `token_may_span_lines`
+guard (a multi-line string/template predecessor whose *cooked* `value` hid the
+newline made the comparison unreliable), and a documented limitation: a
+statement ending in a string/template/regex literal before a newline was *not*
+recovered. The **lexer** now sets `TOKEN_PRECEDED_BY_NEWLINE` directly on a
+token when a line terminator was consumed *as trivia* before it (a newline
+*inside* a string/template is consumed by token matching, not trivia, so it
+never trips the flag). `asi_applies_at`'s Rule 1 reads that flag, which is
+robust regardless of the predecessor's lexeme — so the `token_may_span_lines`
+workaround and the string-predecessor limitation are both gone. (Shipped with
+`lexer` 0.6.0 / `javascript-parser` 0.17.0; fixture
+`closurec/tests/diff/simple-asi-string-newline`.)
 
 **Phase 3 — restricted productions (Rule 3).** Force ASI after
 `return`/`throw`/`break`/`continue`/`yield` + newline, and around postfix
