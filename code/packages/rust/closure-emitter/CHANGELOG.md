@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.17.0] - 2026-06-20
+
+### Added — CLOC23: emit `for (… of …)`
+
+New `emit_for_of` writes `for ( <left> of <right> ) <body>` — identical to
+`emit_for_in` but with the `of` keyword, spaced on both sides for the same
+token-separation reason (the left ends in an identifier and the right starts
+with one). Added emitter unit tests for the `var` declaration-left and
+expression-left forms.
+
 ## [0.16.0] - 2026-06-20
 
 ### Added — CLOC22: emit `for (… in …)`

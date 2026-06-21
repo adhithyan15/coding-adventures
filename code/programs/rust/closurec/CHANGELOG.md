@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.156.0] - 2026-06-20
+
+### Added — CLOC23: end-to-end `for`-`of` support
+
+Programs containing a `for`-`of` loop now route through the full typed-AST
+optimization pipeline at both SIMPLE and ADVANCED levels. Previously any
+`for`-`of` made the parse/bridge step decline, and closurec silently fell back
+to WHITESPACE_ONLY (no real optimization). Now inlining, constant folding, DCE,
+and (under ADVANCED) local/global/property renaming all run inside the loop body
+and recurse into the iterable expression. All the common left forms are
+supported (`for (var/let/const v of it)` and `for (v of it)`); `using` bindings
+and destructuring left-hand sides decline to WHITESPACE_ONLY. The loop variable
+renames consistently under ADVANCED (e.g. `for (var entry of values)` with
+`sum + entry` → `for (var c of a)` with `b + c`).
+
+With for-of, every common Phase-2 statement is now representable; only the
+`with` statement (renaming-unsafe, a deliberate non-target) remains
+bridge-unsupported. The `simple_level_unsupported_syntax_degrades_gracefully`
+test accordingly now uses a `with` statement for its example.
+
+The end-to-end `simple-for-of` diff fixture pins the behaviour, with a
+regression guard that the output is NOT the whitespace fallback.
+
 ## [0.155.0] - 2026-06-20
 
 ### Added — CLOC22: end-to-end `for`-`in` support

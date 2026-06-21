@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.14.0] - 2026-06-20
+
+### Added — CLOC23: DCE inside `for`-`of`
+
+New `ForOfStatement` arm recurses dead-code elimination into the loop's left,
+right expression, and body. Like the other loops, a for-of is NOT a terminator
+(the iterable may be empty), so code after it stays reachable.
+
 ## [0.13.0] - 2026-06-20
 
 ### Added — CLOC22: DCE inside `for`-`in`

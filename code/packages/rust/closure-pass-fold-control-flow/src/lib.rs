@@ -58,7 +58,8 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
-    ForInStatement, ForStatement, FunctionDeclaration, Identifier, IfStatement, LogicalExpression,
+    ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, Identifier, IfStatement,
+    LogicalExpression,
     LogicalOperator,
     MemberExpression, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, UnaryExpression, UnaryOperator, VarKind, VariableDeclaration,
@@ -244,6 +245,19 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
         }
         TaggedStatement::ForInStatement(s) => {
             Statement::Tagged(TaggedStatement::ForInStatement(ForInStatement {
+                cv: s.cv.clone(),
+                left: match &s.left {
+                    ForInit::VariableDeclaration(v) => {
+                        ForInit::VariableDeclaration(fold_variable_declaration(v, st))
+                    }
+                    ForInit::Expression(e) => ForInit::Expression(fold_expression(e, st)),
+                },
+                right: fold_expression(&s.right, st),
+                body: Box::new(fold_statement(&s.body, st)),
+            }))
+        }
+        TaggedStatement::ForOfStatement(s) => {
+            Statement::Tagged(TaggedStatement::ForOfStatement(ForOfStatement {
                 cv: s.cv.clone(),
                 left: match &s.left {
                     ForInit::VariableDeclaration(v) => {

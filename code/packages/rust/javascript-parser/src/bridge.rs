@@ -63,8 +63,8 @@ use coding_adventures_javascript_ast::{
     statement::{
         BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
         DoWhileStatement, EmptyStatement, ExpressionStatement, ForInStatement, ForInit,
-        ForStatement, IfStatement, LabeledStatement, ReturnStatement, Statement, SwitchCase,
-        SwitchStatement, ThrowStatement, TryStatement, WhileStatement,
+        ForOfStatement, ForStatement, IfStatement, LabeledStatement, ReturnStatement, Statement,
+        SwitchCase, SwitchStatement, ThrowStatement, TryStatement, WhileStatement,
     },
     Program, ProgramItem, SourceType,
 };
@@ -271,6 +271,7 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         }
         "for_statement" => convert_for_statement(child).map(Statement::for_statement),
         "for_in_statement" => convert_for_in_statement(child).map(Statement::for_in_statement),
+        "for_of_statement" => convert_for_of_statement(child).map(Statement::for_of_statement),
         "continue_statement" => convert_continue_statement(child).map(Statement::continue_statement),
         "break_statement" => convert_break_statement(child).map(Statement::break_statement),
         "return_statement" => convert_return_statement(child).map(Statement::return_statement),
@@ -282,8 +283,8 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         // typed node is a bare marker. (CLOC21.)
         "debugger_statement" => Ok(Statement::debugger_statement(DebuggerStatement { cv: None })),
         // Phase 2+ — not yet in the typed AST
-        "for_of_statement" | "for_await_of_statement" | "with_statement"
-        | "using_declaration" | "await_using_declaration" => Err(unsupported(child)),
+        "for_await_of_statement" | "with_statement" | "using_declaration"
+        | "await_using_declaration" => Err(unsupported(child)),
         other => Err(BridgeError::InternalError {
             msg: format!("unknown statement child rule '{other}'"),
             rule: node.rule_name.clone(),
@@ -516,6 +517,82 @@ fn convert_for_in_statement(node: &GrammarASTNode) -> Result<ForInStatement, Bri
     let body = Box::new(convert_statement(body_node)?);
 
     Ok(ForInStatement {
+        cv: None,
+        left,
+        right,
+        body,
+    })
+}
+
+fn convert_for_of_statement(node: &GrammarASTNode) -> Result<ForOfStatement, BridgeError> {
+    // for_of_statement = "for" LPAREN
+    //   ( "var" variable_declaration | "let" binding_element
+    //   | "const" binding_element | "using" binding_element
+    //   | left_hand_side_expression )
+    //   "of" assignment_expression RPAREN statement ;
+    //
+    // Structurally identical to for_in_statement, but the phase delimiter is
+    // the `of` token (not `in`). A `using` binding declaration is not
+    // represented — we decline it (graceful WHITESPACE_ONLY fallback).
+    let mut phase = 0usize;
+    let mut left_kind: Option<VarKind> = None;
+    let mut saw_using = false;
+    let mut phase_nodes: [Vec<&GrammarASTNode>; 3] = [vec![], vec![], vec![]];
+
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(t) if phase == 0 && t.value == "of" => phase = 1,
+            ASTNodeOrToken::Token(t) if phase == 1 && t.value == ")" => phase = 2,
+            ASTNodeOrToken::Token(t) if phase == 0 => match t.value.as_str() {
+                "var" => left_kind = Some(VarKind::Var),
+                "let" => left_kind = Some(VarKind::Let),
+                "const" => left_kind = Some(VarKind::Const),
+                "using" => saw_using = true,
+                _ => {}
+            },
+            ASTNodeOrToken::Node(n) => phase_nodes[phase.min(2)].push(n),
+            ASTNodeOrToken::Token(_) => {}
+        }
+    }
+
+    // `using` declarations are not modelled — decline gracefully.
+    if saw_using {
+        return Err(unsupported(node));
+    }
+
+    // Left: a binding (var/let/const) or an existing assignment target.
+    let left_node = *phase_nodes[0]
+        .first()
+        .ok_or_else(|| internal(node, "for_of_statement: missing left"))?;
+    let left = match left_kind {
+        Some(kind) => {
+            // A single declarator with no initializer. `convert_variable_declarator`
+            // declines destructuring; any other unrepresentable shape is mapped
+            // to a graceful decline rather than a hard error.
+            let declarator =
+                convert_variable_declarator(left_node).map_err(|_| unsupported(left_node))?;
+            ForInit::VariableDeclaration(VariableDeclaration {
+                cv: None,
+                kind,
+                declarations: vec![declarator],
+            })
+        }
+        None => ForInit::Expression(convert_expression(left_node)?),
+    };
+
+    // Right: the iterable expression (an assignment_expression).
+    let right_node = *phase_nodes[1]
+        .first()
+        .ok_or_else(|| internal(node, "for_of_statement: missing right expression"))?;
+    let right = convert_expression(right_node)?;
+
+    // Body.
+    let body_node = *phase_nodes[2]
+        .first()
+        .ok_or_else(|| internal(node, "for_of_statement: missing body"))?;
+    let body = Box::new(convert_statement(body_node)?);
+
+    Ok(ForOfStatement {
         cv: None,
         left,
         right,
@@ -2382,6 +2459,80 @@ mod tests {
                 continue; // parse declined — sound fallback
             };
             let _ = grammar_to_program(&node, DEFAULT_ES_VERSION); // must not panic
+        }
+    }
+
+    /// Pull the single `ForOfStatement` out of a one-statement program.
+    fn bridge_for_of(src: &str) -> ForOfStatement {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ForOfStatement(f),
+            )) => f.clone(),
+            other => panic!("expected a ForOfStatement, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_of_bridge_shapes() {
+        // CLOC23: all the binding-kind left forms plus the expression left.
+        for (src, want) in [
+            ("for (var v of it) { f(v); }", VarKind::Var),
+            ("for (let v of it) { f(v); }", VarKind::Let),
+            ("for (const v of it) { f(v); }", VarKind::Const),
+        ] {
+            let f = bridge_for_of(src);
+            match &f.left {
+                ForInit::VariableDeclaration(vd) => {
+                    assert_eq!(vd.kind, want, "kind mismatch for {src}");
+                    assert_eq!(vd.declarations.len(), 1);
+                    assert!(vd.declarations[0].init.is_none());
+                }
+                other => panic!("expected a declaration left for {src}, got {other:?}"),
+            }
+            assert!(
+                matches!(&f.right, Expression::Identifier(id) if id.name == "it"),
+                "expected right = `it` for {src}, got {:?}",
+                f.right
+            );
+        }
+        // Expression left.
+        let f = bridge_for_of("for (v of it) { f(v); }");
+        assert!(
+            matches!(&f.left, ForInit::Expression(Expression::Identifier(id)) if id.name == "v"),
+            "expected expression left `v`, got {:?}",
+            f.left
+        );
+    }
+
+    #[test]
+    fn for_of_using_or_destructuring_left_does_not_hard_error() {
+        // A `using` binding (`for (using v of it)`) and destructuring lefts are
+        // not modelled; they must DECLINE gracefully (parse-error or
+        // UnsupportedSyntax → WHITESPACE_ONLY), never hard-error or mis-bind.
+        for src in [
+            "for (using v of it) { f(); }",
+            "for (var [a] of it) { f(); }",
+            "for (const {a} of it) { f(); }",
+        ] {
+            let Ok(node) = parse_javascript_typed(src, DEFAULT_ES_VERSION) else {
+                continue; // parse declined — sound fallback
+            };
+            // Must not panic. If a ForOfStatement is produced at all, its left
+            // must be a plain (non-destructuring) binding.
+            if let Ok(p) = grammar_to_program(&node, DEFAULT_ES_VERSION) {
+                if let Some(ProgramItem::Statement(Statement::Tagged(
+                    coding_adventures_javascript_ast::statement::TaggedStatement::ForOfStatement(f),
+                ))) = p.body.first()
+                {
+                    if let ForInit::VariableDeclaration(vd) = &f.left {
+                        for d in &vd.declarations {
+                            let coding_adventures_javascript_ast::BindingTarget::Identifier(_) =
+                                &d.id;
+                        }
+                    }
+                }
+            }
         }
     }
 

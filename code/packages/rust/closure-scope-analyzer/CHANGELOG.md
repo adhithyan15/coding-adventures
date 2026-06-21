@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-20
+
+### Added — CLOC23: scope analysis for `for`-`of`
+
+`walk_tagged_statement` now handles `ForOfStatement`: it walks the `left` (a
+loop-variable binding or assignment target), the iterable `right`, then the
+body — identical to the `for`-`in` handling.
+
 ## [0.8.0] - 2026-06-20
 
 ### Added — CLOC22: scope analysis for `for`-`in`

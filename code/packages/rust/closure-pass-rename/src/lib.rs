@@ -280,6 +280,9 @@ fn process_tagged(t: &mut TaggedStatement, nodes_touched: &mut u32) -> bool {
         TaggedStatement::ForInStatement(fs) => {
             changed |= process_stmt(&mut fs.body, nodes_touched);
         }
+        TaggedStatement::ForOfStatement(fs) => {
+            changed |= process_stmt(&mut fs.body, nodes_touched);
+        }
         TaggedStatement::LabeledStatement(ls) => {
             changed |= process_stmt(&mut ls.body, nodes_touched);
         }
@@ -372,6 +375,7 @@ fn stmt_has_function(stmt: &Statement) -> bool {
             TaggedStatement::DoWhileStatement(ds) => stmt_has_function(&ds.body),
             TaggedStatement::ForStatement(fs) => stmt_has_function(&fs.body),
             TaggedStatement::ForInStatement(fs) => stmt_has_function(&fs.body),
+            TaggedStatement::ForOfStatement(fs) => stmt_has_function(&fs.body),
             TaggedStatement::LabeledStatement(ls) => stmt_has_function(&ls.body),
             TaggedStatement::SwitchStatement(ss) => ss
                 .cases
@@ -600,6 +604,14 @@ fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>
                 }
                 collect_decl_occurrences_stmt(&fs.body, out, true);
             }
+            TaggedStatement::ForOfStatement(fs) => {
+                // The for-in `left` binding (`for (var/let/const k in o)`) is the
+                // loop variable — a rename target scoped to the loop.
+                if let ForInit::VariableDeclaration(vd) = &fs.left {
+                    push_var_occurrences(vd, out, true);
+                }
+                collect_decl_occurrences_stmt(&fs.body, out, true);
+            }
             // A label does not introduce a variable scope; keep `nested`.
             TaggedStatement::LabeledStatement(ls) => {
                 collect_decl_occurrences_stmt(&ls.body, out, nested)
@@ -731,6 +743,22 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                 collect_all_idents_stmt(&fs.body, out);
             }
             TaggedStatement::ForInStatement(fs) => {
+                match &fs.left {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &vd.declarations {
+                            let BindingTarget::Identifier(id) = &d.id;
+                            out.insert(id.name.clone());
+                            if let Some(i) = &d.init {
+                                collect_all_idents_expr(i, out);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => collect_all_idents_expr(e, out),
+                }
+                collect_all_idents_expr(&fs.right, out);
+                collect_all_idents_stmt(&fs.body, out);
+            }
+            TaggedStatement::ForOfStatement(fs) => {
                 match &fs.left {
                     ForInit::VariableDeclaration(vd) => {
                         for d in &vd.declarations {
@@ -957,6 +985,27 @@ fn rewrite_uses_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
             rewrite_uses_stmt(&mut fs.body, map);
         }
         TaggedStatement::ForInStatement(fs) => {
+            // Rewrite the loop-variable binding name (for the declaration form)
+            // or the assignment-target uses (for the expression form), then the
+            // enumerated expression and the body.
+            match &mut fs.left {
+                ForInit::VariableDeclaration(vd) => {
+                    for d in &mut vd.declarations {
+                        let BindingTarget::Identifier(id) = &mut d.id;
+                        if let Some(new) = map.get(&id.name) {
+                            id.name = new.clone();
+                        }
+                        if let Some(i) = &mut d.init {
+                            rewrite_uses_expr(i, map);
+                        }
+                    }
+                }
+                ForInit::Expression(e) => rewrite_uses_expr(e, map),
+            }
+            rewrite_uses_expr(&mut fs.right, map);
+            rewrite_uses_stmt(&mut fs.body, map);
+        }
+        TaggedStatement::ForOfStatement(fs) => {
             // Rewrite the loop-variable binding name (for the declaration form)
             // or the assignment-target uses (for the expression form), then the
             // enumerated expression and the body.

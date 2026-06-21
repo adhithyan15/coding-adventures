@@ -37,7 +37,10 @@
 //! - [`ForInStatement`] (CLOC22 — `for (left in right) body`, the
 //!   property-enumerating loop)
 //!
-//! Phase 2 will add `ForOfStatement` and `WithStatement`.
+//! - [`ForOfStatement`] (CLOC23 — `for (left of right) body`, the iterator
+//!   loop)
+//!
+//! Phase 2 will add `WithStatement`.
 
 use crate::declaration::{Declaration, VariableDeclaration};
 use crate::expression::{Expression, Identifier};
@@ -77,6 +80,7 @@ pub enum TaggedStatement {
     DoWhileStatement(DoWhileStatement),
     ForStatement(ForStatement),
     ForInStatement(ForInStatement),
+    ForOfStatement(ForOfStatement),
     ReturnStatement(ReturnStatement),
     BreakStatement(BreakStatement),
     ContinueStatement(ContinueStatement),
@@ -111,6 +115,9 @@ impl Statement {
     }
     pub fn for_in_statement(s: ForInStatement) -> Self {
         Self::Tagged(TaggedStatement::ForInStatement(s))
+    }
+    pub fn for_of_statement(s: ForOfStatement) -> Self {
+        Self::Tagged(TaggedStatement::ForOfStatement(s))
     }
     pub fn return_statement(s: ReturnStatement) -> Self {
         Self::Tagged(TaggedStatement::ReturnStatement(s))
@@ -251,6 +258,30 @@ pub enum ForInit {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ForInStatement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub left: ForInit,
+    pub right: Expression,
+    pub body: Box<Statement>,
+}
+
+/// `for (left of right) body` (CLOC23). The iterator loop: `right` is evaluated
+/// to an iterable, and `body` runs with `left` bound to each yielded value in
+/// turn. Structurally identical to [`ForInStatement`] — only the keyword (`of`
+/// vs `in`) and the iteration protocol differ — so it reuses [`ForInit`] for the
+/// left in exactly the same way:
+/// - `ForInit::VariableDeclaration` for `for (var/let/const v of it)`.
+/// - `ForInit::Expression` for `for (v of it)` / `for (o.p of it)`.
+///
+/// Destructuring left-hand sides and `using` bindings are not represented; the
+/// bridge declines them (sound whitespace-only fallback). `for await (… of …)`
+/// is a distinct grammar production and is likewise not handled here.
+///
+/// Like the other loops, a `for`-`of` is NOT a terminator — the iterable may be
+/// empty, so the body can run zero times and control can fall through.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ForOfStatement {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
     pub left: ForInit,
@@ -642,6 +673,52 @@ mod tests {
         });
         assert_eq!(s.clone(), roundtrip(s.clone()));
         assert_eq!(type_tag(&s), "ForInStatement");
+    }
+
+    #[test]
+    fn for_of_statement_with_declaration_left_roundtrips() {
+        // for (const v of it) {}
+        let s = Statement::for_of_statement(ForOfStatement {
+            cv: Some("forof.1".to_string()),
+            left: ForInit::VariableDeclaration(VariableDeclaration {
+                cv: None,
+                kind: VarKind::Const,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(Identifier {
+                        cv: None,
+                        name: "v".to_string(),
+                    }),
+                    init: None,
+                }],
+            }),
+            right: Expression::Identifier(Identifier {
+                cv: None,
+                name: "it".to_string(),
+            }),
+            body: Box::new(Statement::empty_statement(EmptyStatement { cv: None })),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "ForOfStatement");
+    }
+
+    #[test]
+    fn for_of_statement_with_expression_left_roundtrips() {
+        // for (v of it) {}  — an existing assignment target as the left.
+        let s = Statement::for_of_statement(ForOfStatement {
+            cv: None,
+            left: ForInit::Expression(Expression::Identifier(Identifier {
+                cv: None,
+                name: "v".to_string(),
+            })),
+            right: Expression::Identifier(Identifier {
+                cv: None,
+                name: "it".to_string(),
+            }),
+            body: Box::new(Statement::empty_statement(EmptyStatement { cv: None })),
+        });
+        assert_eq!(s.clone(), roundtrip(s.clone()));
+        assert_eq!(type_tag(&s), "ForOfStatement");
     }
 
     #[test]

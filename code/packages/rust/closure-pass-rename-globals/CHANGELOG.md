@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-20
+
+### Added — CLOC23: global renaming across `for`-`of`
+
+`count_decl_names_stmt`, `collect_all_idents_stmt`, and `rename_apply_tagged`
+recurse through `ForOfStatement` (left / right / body), mirroring the `for`-`in`
+handling so the loop variable and uses inside the body rename consistently.
+
 ## [0.5.0] - 2026-06-20
 
 ### Added — CLOC22: global renaming across `for`-`in`

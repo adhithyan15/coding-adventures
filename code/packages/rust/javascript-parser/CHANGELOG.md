@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.14.0] - 2026-06-20
+
+### Added — CLOC23: bridge `for_of_statement` → `ForOfStatement`
+
+`for_of_statement` no longer lands in the unsupported arm. New
+`convert_for_of_statement` mirrors `convert_for_in_statement` but phase-splits on
+the `of` token; it detects `var`/`let`/`const` for the binding kind and
+**declines** the `using` binding form (scans for a `using` token →
+`UnsupportedSyntax`). Destructuring and other unrepresentable lefts decline
+gracefully (whitespace-only fallback). `for await (… of …)` is a distinct
+grammar production and remains unsupported.
+
 ## [0.13.0] - 2026-06-20
 
 ### Added — CLOC22: bridge `for_in_statement` → `ForInStatement`

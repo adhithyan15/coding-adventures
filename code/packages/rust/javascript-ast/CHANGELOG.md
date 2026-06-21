@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.12.0] - 2026-06-20
+
+### Added — CLOC23: `ForOfStatement` (`for (left of right) body`)
+
+Adds `ForOfStatement { cv, left: ForInit, right: Expression, body: Box<Statement> }`,
+a new `TaggedStatement::ForOfStatement` variant, and a
+`Statement::for_of_statement` constructor. Structurally identical to
+`ForInStatement` (only the `of` vs `in` keyword and the iteration protocol
+differ), so the `left` reuses [`ForInit`] the same way. Making it representable
+lets the closurec CLI optimize for-of loops; previously any such program fell
+back to WHITESPACE_ONLY. (Destructuring left-hand sides and `using` bindings are
+not represented — the bridge declines them.)
+
 ## [0.11.0] - 2026-06-20
 
 ### Added — CLOC22: `ForInStatement` (`for (left in right) body`)
