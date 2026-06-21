@@ -717,10 +717,74 @@ unchanged.
     inputs — a `contains =` naming a non-generator / undefined class, a cyclic
     `contains =`, `$copy()` called on a generator rather than an instance — are clean
     `BadArgs`/`TypeError` results, never panics.
-  - **Deferred to R-26.** Multiple inheritance (`contains = c("A", "B")`) and
-    active bindings remain out of scope. R-25 ships single-`contains=` inheritance +
-    `$copy()` + `is`/`inherits` over the R5 class chain + `$fields()`/`$methods()`,
-    solidly. A clean partial beats a sprawling one.
+  - **Deferred to R-26.** Multiple inheritance (`contains = c("A", "B")`),
+    `callSuper()`, and active bindings remain out of scope. R-25 ships
+    single-`contains=` inheritance + `$copy()` + `is`/`inherits` over the R5 class
+    chain + `$fields()`/`$methods()`, solidly. A clean partial beats a sprawling one.
+
+- **R-26 — R5 `callSuper()`, active bindings, and multiple inheritance** *(this PR)*.
+  Completes the R5 reference-class system on top of R-24/R-25's generator/instance
+  model in `refclass.rs`; no grammar change.
+  - **`callSuper(...)`** — inside an overriding method, invoke the **same-named**
+    method from the parent class. The challenge is method-identity: when `Sub$describe`
+    overrides `Base$describe`, a `callSuper()` inside the running `describe` must reach
+    `Base`'s `describe`, *not* re-enter `Sub`'s (infinite recursion). We solve it by
+    making `rebuild_method` — which already materialises a fresh instance-bound closure
+    on each `obj$method` access — record **which class defined the method version it is
+    about to run** and wrap the closure's captured environment in a thin *super-context*
+    scope binding two private markers: `.refSuperGen` (the defining class's **parent**
+    generator, where same-name resolution should *restart*) and `.refMethodName` (the
+    method's name). The method body runs in a child of that super-context scope, so a
+    `callSuper()` call inside it finds both markers by ordinary lexical lookup. `callSuper`
+    itself is a **lazy special form** (it must read the markers from the *calling*
+    environment, and forward the call args): it resolves the same method name starting at
+    `.refSuperGen`, re-homes that closure onto the instance with a *fresh* super-context
+    pointing one level further up (so a chain `C→B→A` of `callSuper()` walks all the way
+    to the root), and applies it to the forwarded args. **Past-the-root safety:** a
+    `callSuper()` in a method that has no parent definition of that name is a clean,
+    no-recursion `NULL` (matching R5, which silently returns `NULL` when there is no
+    super method) — never a panic and never an unbounded walk.
+  - **Active bindings** — a field whose declared *type* is a `function(v)` becomes an
+    **active binding**: reading `obj$ab` **calls** the function as a getter (with no
+    argument, so `missing(v)` is `TRUE`), and `obj$ab <- val` **calls** it as a setter
+    with `v = val`. In `setRefClass(…, fields = list(celsius = "numeric", fahrenheit =
+    function(v) …))` the function-valued field *is* the active binding; a string-valued
+    field stays an ordinary data field. The active-binding function is stored on the
+    instance frame under the field name (re-homed onto the instance so it reads sibling
+    fields and writes them with `<<-`). The `$` read path detects a callable field value
+    and invokes it nullary; the `$<-` path detects it and invokes it with the new value.
+    `missing(v)` is added as a special form that reports whether the named parameter was
+    actually supplied at the call site — `TRUE` in the getter (no arg), `FALSE` in the
+    setter (`v` supplied) — which is exactly how a single `function(v)` serves both
+    directions. **Re-entrancy / borrow safety:** the getter/setter is invoked through
+    the ordinary depth-bounded call path (`MAX_EVAL_DEPTH`), so a getter that reads its
+    *own* binding (`obj$ab` inside the `ab` getter) recurses through the call path and
+    hits the depth cap with a clean error rather than a borrow panic or a hang; field
+    reads/writes inside the body use the existing per-operation `env::define`/`lookup`
+    borrows (each takes-and-releases the scope `RefCell` within the call), so a setter
+    that mutates a sibling field never holds two borrows of the same scope at once.
+  - **Multiple inheritance** — `contains = c("A", "B")`. A subclass generator now
+    carries a **list** of parent generators (`.refParents`) rather than a single
+    `.refParent`. The **linearization** is a simple **left-to-right depth-first**
+    pre-order walk: the class itself, then A and all of A's ancestors, then B and all
+    of B's ancestors (skipping any already seen). C3 is *not* implemented — the simple
+    DFS order is documented and sufficient for the union semantics. The **effective
+    field set** is the union over the linearization in first-seen order (so A's fields
+    precede B's, both precede the class's own only where re-declared — own declarations
+    extend the set); the **effective method set** is the union with **left-to-right,
+    most-derived-first precedence** (the class's own methods override A's, which override
+    B's, which override their ancestors'). `is`/`inherits` see every class in the
+    linearization. **Cycle / Rc safety:** the `.refParents` edges are all DAG edges
+    (child → parent); a `contains =` that names a class already in *any* prospective
+    parent's chain (the `A ↔ B` mutual-inheritance case, or self-inheritance) is
+    **rejected** at `setRefClass` time by the same name-in-ancestry check, now run over
+    *each* listed parent — so the multi-parent graph stays a DAG and every chain walk is
+    bounded by `MAX_CHAIN_DEPTH`. Diamond inheritance (`C` contains `A` and `B`, both
+    containing a common base `Z`) is fine: the DFS de-dups `Z`, so it appears once.
+  - **Scope outcome.** All three shipped solidly in this PR; nothing deferred to R-27.
+    The two highest-value pieces (`callSuper()` + active bindings) and multiple
+    inheritance all reuse the existing chain-walk + lazy-method-rebuild machinery, so
+    the change stayed contained.
 
 ## §4 Reuse strategy
 
@@ -742,8 +806,9 @@ Pipes (`|>`) and backslash lambdas (`\(x)`). The `SValue::Environment` value,
 `sys.call`/`sys.function`/`match.call` and the rest of the call-introspection
 family; S4 and R6 OO (R5 reference classes land in **R-24**; single-`contains=`
 inheritance, `$copy()`, `is`/`inherits` over the class chain, and
-`$methods()`/`$fields()` introspection land in **R-25**, with multiple
-inheritance and active bindings deferred to **R-26**); namespaces and `library()`
+`$methods()`/`$fields()` introspection land in **R-25**, with `callSuper()`,
+active bindings, and multiple inheritance (`contains = c("A", "B")`) completing
+the R5 system in **R-26**); namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.
