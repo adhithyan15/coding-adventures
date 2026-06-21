@@ -173,8 +173,20 @@ function spelling of `el %in% set`. `duplicated(c(1,1,2,3,3))` →
 gives sample ranks with **average** tie handling (R's default): `rank(c(3,1,2))`
 → `c(3, 1, 2)` and `rank(c(1,1,2))` → `c(1.5, 1.5, 3)`. Outputs are bounded by
 the inputs (each already sequence-capped) and `rank` is `O(n log n)`, so none is
-a DoS vector. (Other `ties.method` options, `incomparables=`/`fromLast=`,
-`anyDuplicated`, and multi-key `order` are deferred to R-30.)
+a DoS vector.
+
+**Ordering refinements (R-30)** — extensions of the R-29/R-13 builtins. Multi-key
+`order(x, y, ...)` sorts lexicographically by the first key, breaking ties by the
+next, remaining ties kept in original order (`order(c(2,1,2), c(1,2,1))` →
+`c(2, 1, 3)`; keys may mix numeric and character, and all must share the first
+key's length). `rank(x, ties.method=)` adds `"min"`, `"max"`, and `"first"` to the
+default `"average"` (`rank(c(1,1,2))` → `c(1.5,1.5,3)` / `c(1,1,3)` / `c(2,2,3)` /
+`c(1,2,3)`). `duplicated(x, fromLast=TRUE)` keeps the *last* occurrence
+(`duplicated(c(1,2,1), fromLast=TRUE)` → `c(TRUE, FALSE, FALSE)`).
+`anyDuplicated(x)` returns the 1-based index of the first duplicated element, or
+`0` if none (`anyDuplicated(c(1,2,1))` → `3`). (`incomparables=` on the set ops /
+`duplicated` / `anyDuplicated`, the `fromLast=` set-op argument, and `rank`'s
+`"random"` method are deferred to R-31.)
 
 ## Usage
 

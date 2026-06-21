@@ -89,6 +89,8 @@ pub fn install(env: &Env) {
     define(env, "setdiff", builtin("setdiff", b_setdiff));
     define(env, "is.element", builtin("is.element", b_is_element));
     define(env, "duplicated", builtin("duplicated", b_duplicated));
+    // R-30 — first-duplicate index (ordering refinements).
+    define(env, "anyDuplicated", builtin("anyDuplicated", b_any_duplicated));
     define(env, "rank", builtin("rank", b_rank));
     define(env, "which", builtin("which", b_which));
     define(env, "any", builtin("any", b_any));
@@ -1768,15 +1770,89 @@ fn b_sort(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 }
 
 /// `order(x)` — the 1-based permutation that sorts `x` ascending.
+/// `order(x, y, ...)` — the permutation of 1-based indices that sorts `x`
+/// ascending, **breaking ties by `y`, then the next key, …**, lexicographically.
+/// Indices still tied after every key are kept in their **original order** (a
+/// *stable* sort), exactly as R does.
+///
+/// ```text
+/// order(c(2, 1, 2), c(1, 2, 1))
+///   element (idx : key1, key2):  1:(2,1)  2:(1,2)  3:(2,1)
+///   sort by key1:                idx2 (1) first; idx1 & idx3 (both 2) tie
+///   break by key2:               idx1 (1) and idx3 (1) STILL tie
+///   stable fallback:             original order → idx1 before idx3
+///   result:                      c(2, 1, 3)
+/// ```
+///
+/// Each key is coerced to a comparison form **independently**: a pure-numeric key
+/// compares numerically (with `NA`/`NaN` sorting **last**, mirroring R's default
+/// `na.last = TRUE`); any other key compares on its character rendering
+/// (lexicographically). That lets numeric and character keys be mixed across
+/// positions. The single-key R-13 form is simply the one-key case.
+///
+/// Every key must have the **same length** as the first; a mismatched length is a
+/// graceful error, never an out-of-bounds index. The only allocation is one
+/// `usize` per element of the first key, sorted in `O(n log n)` — no
+/// user-controlled multiplier, so no extra cap beyond the inputs' own
+/// `MAX_SEQ_LEN` bound.
 fn b_order(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    let d = first_positional(args)?.as_double()?;
-    let data = d.data();
-    let mut idx: Vec<usize> = (0..data.len()).collect();
-    idx.sort_by(|&a, &b| {
-        data[a]
-            .partial_cmp(&data[b])
-            .unwrap_or(std::cmp::Ordering::Equal)
-    });
+    // Collect the sort keys, in order, from the positional arguments. Each key is
+    // pre-coerced once into a totally-ordered comparison form (numeric or string),
+    // so the comparator below is a cheap lookup rather than a re-coercion.
+    enum Key {
+        Num(Vec<f64>),
+        Str(Vec<Option<String>>),
+    }
+    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
+    let first = *positional
+        .first()
+        .ok_or_else(|| SError::BadArgs("argument \"x\" is missing".into()))?;
+    let n = first.length();
+
+    let mut keys: Vec<Key> = Vec::with_capacity(positional.len());
+    for v in &positional {
+        // A length mismatch between keys is an error in R ("argument lengths
+        // differ"); we reject it before any indexing can go out of bounds.
+        if v.length() != n {
+            return Err(SError::BadArgs(
+                "argument lengths differ in order()".into(),
+            ));
+        }
+        let key = match v.strip_names().strip_attrs() {
+            SValue::Character(_) | SValue::Factor { .. } => Key::Str(v.as_character()),
+            other => Key::Num(other.as_double()?.iter().collect()),
+        };
+        keys.push(key);
+    }
+
+    // Compare two original indices `a`, `b` by walking the keys left-to-right; the
+    // first key that distinguishes them decides. NA sorts last within a key.
+    let cmp = |a: usize, b: usize| -> std::cmp::Ordering {
+        for key in &keys {
+            let ord = match key {
+                Key::Num(v) => match (is_na_real(v[a]), is_na_real(v[b])) {
+                    (true, true) => std::cmp::Ordering::Equal,
+                    (true, false) => std::cmp::Ordering::Greater,
+                    (false, true) => std::cmp::Ordering::Less,
+                    (false, false) => v[a].partial_cmp(&v[b]).unwrap_or(std::cmp::Ordering::Equal),
+                },
+                Key::Str(v) => match (&v[a], &v[b]) {
+                    (None, None) => std::cmp::Ordering::Equal,
+                    (None, Some(_)) => std::cmp::Ordering::Greater,
+                    (Some(_), None) => std::cmp::Ordering::Less,
+                    (Some(x), Some(y)) => x.cmp(y),
+                },
+            };
+            if ord != std::cmp::Ordering::Equal {
+                return ord;
+            }
+        }
+        std::cmp::Ordering::Equal
+    };
+
+    let mut idx: Vec<usize> = (0..n).collect();
+    // `sort_by` is stable, so indices equal under every key keep original order.
+    idx.sort_by(|&a, &b| cmp(a, b));
     Ok(SValue::doubles(
         idx.iter().map(|i| (i + 1) as f64).collect(),
     ))
@@ -1940,15 +2016,60 @@ fn b_is_element(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// `FALSE`). Same `as_character`-key + `seen`-set scan as `unique`, but it emits
 /// the flag instead of gathering: `seen.insert(k)` returns `true` the first time
 /// we meet a key (→ not a duplicate) and `false` thereafter (→ a duplicate).
+///
+/// With **`fromLast = TRUE`** the scan runs **right-to-left** instead, so the
+/// *last* occurrence of each value is the keeper (`FALSE`) and the *earlier*
+/// copies are flagged. We scan in reverse, recording the flag at the element's
+/// real position, so the output stays aligned with the input:
+///
+/// ```text
+/// duplicated(c(1, 2, 1))                 = c(FALSE, FALSE, TRUE)   (keep first 1)
+/// duplicated(c(1, 2, 1), fromLast=TRUE)  = c(TRUE,  FALSE, FALSE)  (keep last  1)
+/// ```
 fn b_duplicated(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?;
+    let from_last = match args.iter().find(|a| a.name.as_deref() == Some("fromLast")) {
+        Some(arg) => arg.value.truthy()?,
+        None => false,
+    };
+    let keys = x.as_character();
+    let n = keys.len();
     let mut seen: HashSet<Option<String>> = HashSet::new();
-    let flags: Vec<Option<bool>> = x
-        .as_character()
-        .into_iter()
-        .map(|k| Some(!seen.insert(k)))
-        .collect();
+    let mut flags: Vec<Option<bool>> = vec![Some(false); n];
+    if from_last {
+        // Right-to-left: the first key seen (from the right) is the last
+        // occurrence and is NOT a duplicate; earlier ones are.
+        for i in (0..n).rev() {
+            flags[i] = Some(!seen.insert(keys[i].clone()));
+        }
+    } else {
+        for (i, k) in keys.into_iter().enumerate() {
+            flags[i] = Some(!seen.insert(k));
+        }
+    }
     Ok(SValue::Logical(flags))
+}
+
+/// `anyDuplicated(x)` — the **1-based index of the first duplicated element**
+/// (the first position whose value already appeared earlier), or `0` when `x` has
+/// no duplicates. Defined to agree with `which(duplicated(x))[1]` (and `0` when
+/// that is empty). One forward pass over the shared character keys; numeric and
+/// character vectors alike. The result is a scalar numeric, matching the other
+/// index-returning builtins.
+///
+/// ```text
+/// anyDuplicated(c(1, 2, 1)) = 3   (the second 1, at position 3, is the first dup)
+/// anyDuplicated(c(1, 2, 3)) = 0   (no repeats)
+/// ```
+fn b_any_duplicated(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let mut seen: HashSet<Option<String>> = HashSet::new();
+    for (i, k) in x.as_character().into_iter().enumerate() {
+        if !seen.insert(k) {
+            return Ok(SValue::scalar((i + 1) as f64));
+        }
+    }
+    Ok(SValue::scalar(0.0))
 }
 
 /// `rank(x)` — **sample ranks** with **average** tie handling (R's default
@@ -1965,13 +2086,60 @@ fn b_duplicated(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 ///
 /// Implementation: sort an index permutation `order` (so `order[p]` is the
 /// original index of the value at sorted-position `p`), then walk `order` in
-/// runs of equal keys, assigning every member of a run the average of the
-/// `[run_start+1 ..= run_end+1]` positions. Numeric input compares numerically;
-/// character input lexicographically. The result is always numeric (averages
-/// are fractional), matching R. `O(n log n)` time, one `f64` per element — no
-/// user-controlled multiplier, so no extra allocation cap is required.
+/// runs of equal keys, assigning every member of a run a rank determined by the
+/// `ties.method`. Numeric input compares numerically; character input
+/// lexicographically. The result is always numeric, matching R. `O(n log n)`
+/// time, one `f64` per element — no user-controlled multiplier, so no extra
+/// allocation cap is required.
+///
+/// **`ties.method`** (R-30) selects how a run of `m` equal values spanning the
+/// 1-based positions `lo ..= hi` is scored:
+///
+/// ```text
+/// values   c(1, 1, 2)       run of two 1s spans positions 1,2
+/// "average"  (lo+hi)/2       → 1.5, 1.5, 3   (the default — R-29 behaviour)
+/// "min"      lo              → 1,   1,   3
+/// "max"      hi              → 2,   2,   3
+/// "first"    lo, lo+1, …     → 1,   2,   3   (consecutive, in original order)
+/// ```
+///
+/// For `"first"` the run members are scored in **original-index order** (the
+/// sort is stable, so `order` already lists tied indices smallest-first), giving
+/// distinct consecutive ranks. An unrecognised method is a graceful error.
 fn b_rank(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?;
+
+    // The tie rule. R's default is "average"; we additionally support "min",
+    // "max", and "first" (the "random" jitter rule needs an RNG seed contract and
+    // is deferred). The keyword is read as a character scalar, mirroring how
+    // `factor(levels=, labels=)` reads its string arguments.
+    enum Ties {
+        Average,
+        Min,
+        Max,
+        First,
+    }
+    let ties = match args.iter().find(|a| a.name.as_deref() == Some("ties.method")) {
+        Some(arg) => match arg
+            .value
+            .as_character()
+            .into_iter()
+            .next()
+            .flatten()
+            .as_deref()
+        {
+            Some("average") | None => Ties::Average,
+            Some("min") => Ties::Min,
+            Some("max") => Ties::Max,
+            Some("first") => Ties::First,
+            Some(other) => {
+                return Err(SError::BadArgs(format!(
+                    "unknown ties.method {other:?} (expected \"average\", \"min\", \"max\", or \"first\")"
+                )));
+            }
+        },
+        None => Ties::Average,
+    };
     // Compute a totally-ordered comparison and a "same key" test from one coerced
     // form. For numeric vectors we rank on the f64 values (NA sorts last, like R's
     // default na.last); for character (or anything else) we rank on the string keys.
@@ -2019,8 +2187,8 @@ fn b_rank(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         }
     };
 
-    // Walk the sorted permutation in runs of equal keys; each run gets the
-    // average of the 1-based positions it occupies.
+    // Walk the sorted permutation in runs of equal keys; each run is scored per
+    // the chosen `ties.method`. A run occupies the 1-based positions `lo ..= hi`.
     let mut ranks = vec![0.0_f64; n];
     let mut p = 0usize;
     while p < n {
@@ -2028,11 +2196,33 @@ fn b_rank(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         while q < n && tied(order[p], order[q]) {
             q += 1;
         }
-        // Positions p..q (0-based) are 1-based p+1 ..= q; their average is the
-        // midpoint of the first and last 1-based position.
-        let avg = ((p + 1) as f64 + q as f64) / 2.0;
-        for k in p..q {
-            ranks[order[k]] = avg;
+        let lo = (p + 1) as f64; // first 1-based position in the run
+        let hi = q as f64; // last 1-based position in the run
+        match ties {
+            Ties::Average => {
+                let avg = (lo + hi) / 2.0;
+                for k in p..q {
+                    ranks[order[k]] = avg;
+                }
+            }
+            Ties::Min => {
+                for k in p..q {
+                    ranks[order[k]] = lo;
+                }
+            }
+            Ties::Max => {
+                for k in p..q {
+                    ranks[order[k]] = hi;
+                }
+            }
+            Ties::First => {
+                // `order` lists tied indices in original order (stable sort), so
+                // walking the run assigns consecutive ranks lo, lo+1, … in that
+                // order — distinct ranks, no ties.
+                for (offset, k) in (p..q).enumerate() {
+                    ranks[order[k]] = lo + offset as f64;
+                }
+            }
         }
         p = q;
     }

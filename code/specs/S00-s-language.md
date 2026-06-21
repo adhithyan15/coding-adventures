@@ -273,9 +273,26 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   handling — `rank(c(1,1,2))` is `c(1.5, 1.5, 3)`). All are pure, numeric- and
   character-aware (they key on the same coerced-character form as `unique`/`%in%`)
   and reuse the existing `as_character` / `index` / `membership` / `combine`
-  machinery. Other `ties.method` options for `rank`, the `incomparables=` /
-  `fromLast=` set-op arguments, `anyDuplicated`, and multi-key `order` are deferred
-  to a later pass (R-30).
+  machinery.
+- **Ordering refinements** *(R-30)*: extensions of the R-29/R-13 ordering builtins
+  (no new value type, no grammar change). **Multi-key `order(x, y, ...)`** sorts the
+  index permutation lexicographically by the first key, breaking ties by the second,
+  etc., with remaining ties kept in original order (stable); each key is coerced
+  independently (numeric compares numerically with `NA` last, character
+  lexicographically), all keys must share the first key's length, and the single-key
+  R-13 form is the arity-1 special case (`order(c(2,1,2), c(1,2,1))` is `c(2,1,3)`).
+  **`rank(x, ties.method=)`** gains `"min"` (lowest position in a tie run), `"max"`
+  (highest), and `"first"` (consecutive ranks in original order) alongside the default
+  `"average"` (`rank(c(1,1,2))` → `c(1.5,1.5,3)`/`c(1,1,3)`/`c(2,2,3)`/`c(1,2,3)`);
+  the result is always numeric. **`duplicated(x, fromLast=TRUE)`** runs the dup scan
+  right-to-left, so the **last** occurrence is the keeper and the earlier repeats are
+  `TRUE` (`duplicated(c(1,2,1), fromLast=TRUE)` is `c(TRUE,FALSE,FALSE)`).
+  **`anyDuplicated(x)`** returns the 1-based index of the first duplicated element, or
+  `0` if none (`anyDuplicated(c(1,2,1))` is `3`). The keyword args reuse the existing
+  readers (`truthy()` for `fromLast=`, `as_character()` for `ties.method=`). Deferred
+  to **R-31**: `incomparables=` on the set ops / `duplicated` / `anyDuplicated` (needs
+  `NA`-comparison plumbing), the `fromLast=` set-op argument, and `rank`'s `"random"`
+  method (needs an RNG-seed contract).
 - **Apply family:** `sapply(x, f)` / `lapply(x, f)` map a function over elements
   (`sapply` simplifies length-1 atomic results to a vector).
 

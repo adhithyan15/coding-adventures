@@ -199,8 +199,22 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   `c(F,T,F,F,T)`); and `rank(x)` gives sample ranks with **average** ties
   (`rank(c(1,1,2))` → `c(1.5, 1.5, 3)`). Outputs are bounded by the inputs (each
   already `MAX_SEQ_LEN`-bounded) and `rank` is `O(n log n)`, so none is a DoS
-  vector. (Other `ties.method` options, `incomparables=`/`fromLast=`,
-  `anyDuplicated`, and multi-key `order` are deferred to R-30.)
+  vector.
+- **Ordering refinements** (R-30): extensions of the R-29/R-13 ordering builtins.
+  **Multi-key `order(x, y, ...)`** sorts the index permutation lexicographically by
+  the first key, breaking ties by the next, with remaining ties kept in original
+  order (stable); keys are coerced independently (numeric: `NA` last; character:
+  lexicographic) and may be mixed, and all must share the first key's length
+  (`order(c(2,1,2), c(1,2,1))` → `c(2, 1, 3)`). **`rank(x, ties.method=)`** adds
+  `"min"`, `"max"`, and `"first"` to the default `"average"` (`rank(c(1,1,2))` →
+  `c(1.5,1.5,3)` / `c(1,1,3)` / `c(2,2,3)` / `c(1,2,3)`). **`duplicated(x,
+  fromLast=TRUE)`** scans right-to-left so the *last* occurrence is the keeper
+  (`duplicated(c(1,2,1), fromLast=TRUE)` → `c(T,F,F)`). **`anyDuplicated(x)`**
+  returns the 1-based index of the first duplicated element, or `0` if none
+  (`anyDuplicated(c(1,2,1))` → `3`). Outputs stay bounded by the (capped) inputs;
+  the per-key length check guards `order` against out-of-bounds indexing.
+  (`incomparables=` on the set ops / `duplicated` / `anyDuplicated`, the `fromLast=`
+  set-op argument, and `rank`'s `"random"` method are deferred to R-31.)
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

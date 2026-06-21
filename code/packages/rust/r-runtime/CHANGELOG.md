@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.25.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-30 — ordering refinements**: the follow-up to R-29, filling in the ties,
+  direction, and multi-key corners of the ordering builtins. All extensions of
+  the existing R-29/R-13 handlers in the shared `s-runtime` (no grammar change),
+  reached through ordinary R syntax, numeric- and character-aware.
+  - **Multi-key `order(x, y, ...)`** — sorts the index permutation lexicographically
+    by the first key, breaking ties by the next, with remaining ties kept in
+    original order (stable). Keys coerced independently (numeric: `NA` last;
+    character: lexicographic), so they may be mixed; all keys must share the first
+    key's length (mismatch → graceful error). The R-13 single-key form is unchanged.
+    `order(c(2,1,2), c(1,2,1))` → `c(2, 1, 3)`.
+  - **`rank(x, ties.method = ...)`** — `"min"`, `"max"`, and `"first"` join the
+    default `"average"`. `rank(c(1,1,2))` → `c(1.5,1.5,3)` / `c(1,1,3)` / `c(2,2,3)`
+    / `c(1,2,3)`. Result stays numeric; unknown method → graceful error.
+  - **`duplicated(x, fromLast = TRUE)`** — right-to-left scan keeps the **last**
+    occurrence; earlier repeats are flagged. Default unchanged.
+    `duplicated(c(1,2,1), fromLast = TRUE)` → `c(TRUE, FALSE, FALSE)`.
+  - **`anyDuplicated(x)`** — the 1-based index of the first duplicated element, or
+    `0` if none. `anyDuplicated(c(1,2,1))` → `3`; `anyDuplicated(c(1,2,3))` → `0`.
+  - **Security**: no new user-controlled multiplier; outputs bounded by the
+    already-`MAX_SEQ_LEN`-capped inputs; the per-key length check guards `order`
+    against out-of-bounds indexing; `NA` stays an ordinary matchable key; empty
+    inputs yield empty/`0`.
+  - 5 new R-syntax tests (numeric + character).
+  - **Deferred to R-31**: `incomparables=` on the set ops / `duplicated` /
+    `anyDuplicated` (needs `NA`-comparison plumbing), the `fromLast=` set-op
+    argument, and `rank`'s `"random"` tie method.
+
 ## [0.24.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)
