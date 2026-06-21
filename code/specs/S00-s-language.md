@@ -290,9 +290,28 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   **`anyDuplicated(x)`** returns the 1-based index of the first duplicated element, or
   `0` if none (`anyDuplicated(c(1,2,1))` is `3`). The keyword args reuse the existing
   readers (`truthy()` for `fromLast=`, `as_character()` for `ties.method=`). Deferred
-  to **R-31**: `incomparables=` on the set ops / `duplicated` / `anyDuplicated` (needs
-  `NA`-comparison plumbing), the `fromLast=` set-op argument, and `rank`'s `"random"`
-  method (needs an RNG-seed contract).
+  to **R-31**: `incomparables=` on `duplicated` / `anyDuplicated` / `unique`,
+  `unique(fromLast=)`, and `rank`'s `"random"` method (needs an RNG-seed contract).
+- **Set-op & ordering refinements** *(R-31)*: extensions of the R-29/R-30 dedup &
+  ranking builtins (no new value type, no grammar change). **`incomparables=`** on
+  `duplicated(x, incomparables=)`, `anyDuplicated(x, incomparables=)`, and
+  `unique(x, incomparables=)`: the default `FALSE` means "no incomparables", while a
+  **vector** lists the elements to treat as *incomparable* — such a value is **never
+  equal to anything**, so it is never flagged as a duplicate and never removed as one.
+  We coerce the `incomparables` vector to the same `as_character` key and short-circuit
+  any element whose key is in that set to "not a duplicate" (and never insert it into
+  `seen`). `duplicated(c(1,1,2,2), incomparables=1)` is `c(FALSE,FALSE,FALSE,TRUE)`;
+  `unique(c(1,1,2,2), incomparables=1)` is `c(1,1,2)`; `anyDuplicated(c(1,2,1),
+  incomparables=1)` is `0`. **`unique(x, fromLast=TRUE)`** keeps the **last** occurrence
+  of each distinct value (gathered in ascending index order), mirroring R-30's
+  `duplicated(fromLast=)`. **`rank(x, ties.method="random")`** assigns a run of tied
+  values the consecutive ranks `lo..=hi` but permutes them with a Fisher–Yates shuffle
+  driven by the **session RNG** (the `set.seed`-seeded generator shared with the R-8
+  distribution family via `Interpreter::sample_with`/`RngState::next_u32`), so the
+  result is fully reproducible under `set.seed`. Numeric and character vectors are both
+  supported. Deferred to **R-32**: `incomparables=`/`fromLast=` on the binary set ops
+  (`union`/`intersect`/`setdiff`), whose R semantics are ambiguous enough to warrant
+  their own pass.
 - **Apply family:** `sapply(x, f)` / `lapply(x, f)` map a function over elements
   (`sapply` simplifies length-1 atomic results to a vector).
 

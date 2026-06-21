@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.27.0] - 2026-06-21
+
+### Added
+
+- **Set-op & ordering refinements (R-31)** — the two R-30 deferrals that have
+  clean, unambiguous semantics on the existing `as_character`-key path, plus the
+  RNG-backed tie method. All extensions of the R-29/R-30 dedup & ranking handlers
+  (no new value type, no grammar change), available to both S and R.
+  - **`incomparables =` on `duplicated`, `anyDuplicated`, and `unique`** — the
+    default `FALSE` means "no incomparables" (prior behaviour); a **vector** lists
+    the elements to treat as *incomparable*. An incomparable value is **never equal
+    to anything**, so it is never flagged as a duplicate and never removed as one,
+    and it is never recorded in the `seen` set (so it cannot suppress a later
+    genuine duplicate either). Modelled on the same `as_character` key the set-op
+    family already uses, via a shared `incomparables_keys` reader, so numeric and
+    character incomparables both work. `duplicated(c(1,1,2,2), incomparables = 1)` →
+    `c(FALSE, FALSE, FALSE, TRUE)`; `unique(c(1,1,2,2), incomparables = 1)` →
+    `c(1, 1, 2)`; `anyDuplicated(c(1,2,1), incomparables = 1)` → `0`, while
+    `anyDuplicated(c(1,2,2), incomparables = 1)` → `3`.
+  - **`unique(x, fromLast = TRUE)`** — keeps the **last** occurrence of each
+    distinct value (right-to-left scan), gathered in ascending index order so the
+    survivors stay in input order. Mirrors R-30's `duplicated(fromLast =)`, and
+    composes with `incomparables =`. `unique(c(1,2,1), fromLast = TRUE)` →
+    `c(2, 1)`.
+  - **`rank(x, ties.method = "random")`** — scores a tie run as the consecutive
+    ranks `lo..=hi` (like `"first"`) but assigns them to the tied positions in a
+    **uniform random order** drawn from the session RNG (the `set.seed`-seeded
+    generator shared with the R-8 distribution family, via
+    `Interpreter::sample_with` + `RngState::next_u32`). A Fisher–Yates shuffle makes
+    the result **fully reproducible** under `set.seed`. `"average"` remains the
+    default; `"min"/"max"/"first"` are unchanged. Numeric and character vectors.
+
+### Security
+
+- **Bounded work, graceful parsing.** `incomparables =` adds one `HashSet` whose
+  size is bounded by the already-`MAX_SEQ_LEN`-capped `incomparables` vector;
+  membership tests are `O(1)`. `"random"` does one `O(m)` Fisher–Yates pass per
+  tie run with at most one `next_u32` per swap (≤ `n` draws total), so RNG use
+  cannot trigger unbounded work. Named-arg readers reject malformed values
+  gracefully (`Err`, never panic): `ties.method` as a character scalar (unknown →
+  `BadArgs`), `fromLast =` via `truthy()` (non-logical / `NA` → error), and
+  `incomparables =` coerced through the total `as_character`; no path indexes out
+  of bounds.
+
+### Deferred to R-32
+
+- `incomparables =` / `fromLast =` on the binary set ops
+  (`union` / `intersect` / `setdiff`) — their R semantics are ambiguous enough to
+  warrant a separate pass.
+
 ## [0.26.0] - 2026-06-21
 
 ### Added

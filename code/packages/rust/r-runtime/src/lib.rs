@@ -2878,4 +2878,49 @@ mod tests {
         assert_eq!(nums("anyDuplicated(c(1, 2, 3))\n"), vec![0.0]);
         assert_eq!(nums("anyDuplicated(c(\"a\", \"b\", \"a\"))\n"), vec![3.0]);
     }
+
+    // --- R-31: incomparables=, unique fromLast, rank random (R syntax) --
+
+    #[test]
+    fn duplicated_incomparables() {
+        // 1 is incomparable → never a dup; the second 2 still is.
+        assert_eq!(
+            show("duplicated(c(1, 1, 2, 2), incomparables = 1)\n"),
+            "[1] FALSE FALSE FALSE  TRUE"
+        );
+        // Character incomparables work too.
+        assert_eq!(
+            show("duplicated(c(\"a\", \"a\", \"b\", \"b\"), incomparables = \"a\")\n"),
+            "[1] FALSE FALSE FALSE  TRUE"
+        );
+    }
+
+    #[test]
+    fn unique_incomparables_and_from_last() {
+        // Both 1s kept (incomparable); 2 deduped.
+        assert_eq!(nums("unique(c(1, 1, 2, 2), incomparables = 1)\n"), vec![1.0, 1.0, 2.0]);
+        // fromLast keeps the last occurrence, in input order.
+        assert_eq!(nums("unique(c(1, 2, 1), fromLast = TRUE)\n"), vec![2.0, 1.0]);
+    }
+
+    #[test]
+    fn any_duplicated_incomparables() {
+        // Only repeat is the incomparable 1 → 0.
+        assert_eq!(nums("anyDuplicated(c(1, 2, 1), incomparables = 1)\n"), vec![0.0]);
+        // The repeated 2 at position 3 is comparable → 3.
+        assert_eq!(nums("anyDuplicated(c(1, 2, 2), incomparables = 1)\n"), vec![3.0]);
+    }
+
+    #[test]
+    fn rank_random_ties_reproducible_under_seed() {
+        // The two 3s get {2, 3} in some seed-determined order; the lone 1 gets 1.
+        let a = nums("set.seed(1)\nrank(c(3, 1, 3), ties.method = \"random\")\n");
+        assert_eq!(a[1], 1.0);
+        let mut tied = vec![a[0], a[2]];
+        tied.sort_by(|x, y| x.partial_cmp(y).unwrap());
+        assert_eq!(tied, vec![2.0, 3.0]);
+        // Same seed → identical result.
+        let b = nums("set.seed(1)\nrank(c(3, 1, 3), ties.method = \"random\")\n");
+        assert_eq!(a, b);
+    }
 }
