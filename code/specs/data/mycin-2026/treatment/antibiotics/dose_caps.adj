@@ -85,6 +85,18 @@ rulebook dose_caps {
         source "Adjust the dose of Cefepime Injection in patients with creatinine clearance less than or equal to 60 mL/min to compensate for the slower rate of renal elimination. Neurotoxicity: May occur especially in patients with renal impairment administered unadjusted doses."
         locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=be5f8ca6-7232-423a-a2d5-cccb7abe7921"
         trust authoritative
+    relate dose_capped_under(meropenem, renal_severe)
+        source "Dosage should be reduced in patients with creatinine clearance of 50 mL/min or less."
+        locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=a456013b-b20e-4b29-b2f9-06f18f1ea6bd"
+        trust authoritative
+    relate dose_capped_under(aztreonam, renal_severe)
+        source "Therefore, the dosage of AZACTAM should be halved in patients with estimated creatinine clearances between 10 and 30 mL/min/1.73 m2 after an initial loading dose of 1g or 2 g."
+        locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2"
+        trust authoritative
+    relate dose_capped_under(tmp_smx, renal_severe)
+        source "When renal function is impaired, a reduced dosage should be employed, as shown in Table 2."
+        locator "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7"
+        trust authoritative
 
     % --- the GENERIC conjunction rules ---------------------------------------
     % a compound risk holds when an active risk is in its first category AND a

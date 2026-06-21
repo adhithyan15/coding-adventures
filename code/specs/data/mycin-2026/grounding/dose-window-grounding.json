@@ -363,6 +363,91 @@
         "final_verdict": "direction_only"
       },
       "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_meropenem_renal",
+      "kind": "dose_penalty",
+      "drug": "meropenem",
+      "claim": "Renal impairment lowers meropenem's safe dose: the dose must be reduced at CrCl <= 50 mL/min (meropenem is substantially renally excreted, so it accumulates) — i.e. the safe ceiling shrinks as renal function falls (the renal_severe ceiling penalty).",
+      "grounded": {
+        "id": "dose_penalty_meropenem_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=a456013b-b20e-4b29-b2f9-06f18f1ea6bd",
+        "source_title": "MEROPENEM for injection — FDA prescribing information (DailyMed / NLM), DOSAGE AND ADMINISTRATION",
+        "byte_quote": "Dosage should be reduced in patients with creatinine clearance of 50 mL/min or less.",
+        "value_found": "Meropenem dose must be reduced at CrCl <= 50 mL/min — the safe ceiling shrinks with renal impairment. DIRECTION only; the per-kg penalty magnitude stays the illustrative feasibility model (the label's adjustment is a CrCl-banded table, not a single per-kg figure).",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "The CrCl-banded dose-reduction table — a multi-row schedule, not a single per-kg ceiling reduction; the formulary's renal_severe per-kg penalty approximates 'shrink the ceiling', not a transcription of the table.",
+          "Secondary aggregators (drugs.com, Sanford) — discarded per primary-source-first; the FDA label states the reduction directly."
+        ],
+        "note": "DIRECTION ENTAILED. The verbatim DOSAGE AND ADMINISTRATION sentence mandates a dose reduction once CrCl <= 50 mL/min (meropenem is substantially renally excreted and accumulates), which is the direction the renal_severe ceiling penalty encodes. Grounds existence + direction of the cap, not its magnitude (the per-kg number stays the standing ILLUSTRATIVE feasibility model)."
+      },
+      "verify": {
+        "id": "dose_penalty_meropenem_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the a456013b DailyMed meropenem label: DOSAGE AND ADMINISTRATION states 'Dosage should be reduced in patients with creatinine clearance of 50 mL/min or less.'",
+        "refute_attempt": "Strongest refutation: 'reduced' could mean a longer interval rather than a lower per-dose ceiling. Conceded to the extent the verdict is direction_only: the label, plus its WARNINGS note that meropenem is 'substantially excreted by the kidney' and adverse reactions (seizure, renal/heart failure) rise in renal impairment, make the safety direction unambiguous (shrink the safe exposure); mechanism/magnitude are left to the illustrative model. Generic vs meningitis: dose feasibility under renal impairment is indication-independent.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_aztreonam_renal",
+      "kind": "dose_penalty",
+      "drug": "aztreonam",
+      "claim": "Renal impairment lowers aztreonam's safe dose: the dose must be reduced (halved at CrCl 10–30 mL/min/1.73 m2 after a loading dose) as renal function falls — i.e. the safe ceiling shrinks (the renal_severe ceiling penalty).",
+      "grounded": {
+        "id": "dose_penalty_aztreonam_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2",
+        "source_title": "AZACTAM (aztreonam for injection) — FDA prescribing information (DailyMed / NLM), DOSAGE AND ADMINISTRATION (Renal Impairment in Adult Patients)",
+        "byte_quote": "Therefore, the dosage of AZACTAM should be halved in patients with estimated creatinine clearances between 10 and 30 mL/min/1.73 m2 after an initial loading dose of 1g or 2 g.",
+        "value_found": "Aztreonam dose halved at CrCl 10–30 mL/min/1.73 m2 (after a loading dose) — the maintenance ceiling shrinks with renal impairment. DIRECTION (and, here, the halving factor) grounded; the formulary per-kg penalty stays the illustrative model.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "Mapping the label's CrCl 10–30 band exactly onto the model's renal_severe token — the model's single renal_severe penalty is a coarse stand-in for 'significant renal impairment'; the label's banded schedule (halve at 10–30) is the basis for the DIRECTION, not a per-band per-kg transcription.",
+          "Secondary aggregators — discarded per primary-source-first; the FDA label states the halving directly."
+        ],
+        "note": "DIRECTION ENTAILED (with a concrete halving factor at the 10–30 band). The verbatim DOSAGE AND ADMINISTRATION sentence reduces the aztreonam maintenance dose in renal impairment, which is the direction the renal_severe ceiling penalty encodes. Grounds existence + direction; the model's single per-kg penalty number stays the standing ILLUSTRATIVE feasibility model rather than transcribing the banded schedule."
+      },
+      "verify": {
+        "id": "dose_penalty_aztreonam_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 9a105eaf DailyMed AZACTAM label: under DOSAGE AND ADMINISTRATION / 'Renal Impairment in Adult Patients' it states 'Therefore, the dosage of AZACTAM should be halved in patients with estimated creatinine clearances between 10 and 30 mL/min/1.73 m2 after an initial loading dose of 1g or 2 g.'",
+        "refute_attempt": "Strongest refutation: the quote specifies a particular CrCl band (10–30), so mapping it to the model's coarse renal_severe token is approximate. Conceded: the model uses a single renal_severe penalty as a stand-in for significant renal impairment; the label unambiguously establishes the DIRECTION (reduce/halve the maintenance dose as renal function falls), which is what is grounded. The exact per-kg magnitude and CrCl banding stay the illustrative feasibility model.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_tmp_smx_renal",
+      "kind": "dose_penalty",
+      "drug": "tmp_smx",
+      "claim": "Renal impairment lowers the safe trimethoprim-sulfamethoxazole dose: a reduced dosage must be used when renal function is impaired — i.e. the safe ceiling shrinks (the renal_severe ceiling penalty).",
+      "grounded": {
+        "id": "dose_penalty_tmp_smx_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
+        "source_title": "SULFAMETHOXAZOLE AND TRIMETHOPRIM injection — FDA prescribing information (DailyMed / NLM), DOSAGE AND ADMINISTRATION",
+        "byte_quote": "When renal function is impaired, a reduced dosage should be employed, as shown in Table 2.",
+        "value_found": "Trimethoprim-sulfamethoxazole dose must be reduced when renal function is impaired — the safe ceiling shrinks with renal impairment. DIRECTION only; the per-kg penalty magnitude stays the illustrative feasibility model (Table 2 is a CrCl-banded schedule).",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "Table 2's CrCl-banded reduced-dose schedule — a multi-row table, not a single per-kg ceiling reduction; the formulary's renal_severe per-kg penalty approximates 'shrink the ceiling', not a transcription of Table 2.",
+          "The adjacent 'avoid ... in patients with impaired renal function' caution — the dose-window model expresses graded shrink (penalty) rather than a hard exclusion, consistent with the label's primary instruction to use a REDUCED dosage; not modeled as a contraindication here.",
+          "Secondary aggregators — discarded per primary-source-first; the FDA label states the reduction directly."
+        ],
+        "note": "DIRECTION ENTAILED. The verbatim DOSAGE AND ADMINISTRATION sentence prescribes a reduced dosage in renal impairment, the direction the renal_severe ceiling penalty encodes. Grounds existence + direction of the cap, not its magnitude (the per-kg number stays the standing ILLUSTRATIVE feasibility model)."
+      },
+      "verify": {
+        "id": "dose_penalty_tmp_smx_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 793c75eb DailyMed sulfamethoxazole-trimethoprim label: DOSAGE AND ADMINISTRATION states 'When renal function is impaired, a reduced dosage should be employed, as shown in Table 2.'",
+        "refute_attempt": "Strongest refutation: the same label elsewhere says to AVOID the drug in impaired renal function, which could argue for an exclusion rather than a dose penalty. The primary dosing instruction, however, is to EMPLOY A REDUCED DOSAGE (Table 2) — a graded shrink, which is exactly the renal_severe ceiling penalty; the avoid-caution is a relative one and the dose-window's shrink (which can still go UNSAT if floor>ceiling) faithfully represents 'use less, and not at all if no safe dose exists'. Direction grounded; magnitude illustrative.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
     }
   ]
 }

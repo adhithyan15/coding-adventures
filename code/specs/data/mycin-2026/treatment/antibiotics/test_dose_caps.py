@@ -154,6 +154,18 @@ def test_single_factor_cefepime_renal_cap_is_grounded():
     assert any(c["drug"] == "vancomycin" for c in caps), caps
 
 
+def test_renal_severe_caps_every_renally_cleared_drug():
+    cli = _cli_or_skip()
+    # Dose-penalty grounding is COMPLETE: every formulary drug with a renal_severe ceiling
+    # penalty now has an engine-queryable, FDA-grounded single-factor cap. A renal_severe chart
+    # derives the cap for all of them, each at authoritative trust.
+    _, caps = dc.derive_dose_caps(cli, {"renal_severe"})
+    capped = {c["drug"] for c in caps if c["risk"] == "renal_severe"}
+    assert capped == {"vancomycin", "cefepime", "meropenem", "aztreonam", "tmp_smx"}, capped
+    assert all(c["trust"] == "authoritative" and c["source"]
+               for c in caps if c["risk"] == "renal_severe"), caps
+
+
 def test_unknown_single_risk_caps_nothing():
     cli = _cli_or_skip()
     # A risk token with no dose_capped_under fact and no category → no compound, no cap.

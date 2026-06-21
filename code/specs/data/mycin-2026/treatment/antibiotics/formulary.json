@@ -33,15 +33,18 @@
                      "source": "IDSA Tunkel 2004 (cefepime for Pseudomonas / nosocomial)"},
     "meropenem":    {"covers": ["n_meningitidis", "listeria", "pseudomonas", "gram_negative", "s_pneumoniae_susceptible"], "csf_penetrant": true, "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 3,
                      "dose": {"floor_mg_per_kg": 20, "ceiling_base_mg_per_kg": 40, "ceiling_penalty_mg_per_kg": {"renal_severe": 3}},
+                     "dose_penalty_source": "FDA meropenem label (DailyMed a456013b): reduce dose at CrCl <= 50 mL/min — DIRECTION grounded in dose-window-grounding.json (dose_penalty_meropenem_renal); per-kg magnitude is the illustrative feasibility model",
                      "source": "IDSA Tunkel 2004 (meropenem; covers Listeria + Pseudomonas)"},
     "moxifloxacin": {"covers": ["s_pneumoniae_resistant", "n_meningitidis"], "csf_penetrant": true, "betalactam": false, "contraindications": [], "tier": 4,
                      "dose": {"floor_mg_per_kg": 5, "ceiling_base_mg_per_kg": 8, "ceiling_penalty_mg_per_kg": {}},
                      "source": "Beta-lactam-sparing pneumococcal/meningococcal option (IDSA 2004 alt)"},
     "aztreonam":    {"covers": ["n_meningitidis", "gram_negative", "pseudomonas"], "csf_penetrant": true, "betalactam": false, "contraindications": [], "tier": 4,
                      "dose": {"floor_mg_per_kg": 20, "ceiling_base_mg_per_kg": 40, "ceiling_penalty_mg_per_kg": {"renal_severe": 4}},
+                     "dose_penalty_source": "FDA AZACTAM (aztreonam) label (DailyMed 9a105eaf): halve dose at CrCl 10-30 mL/min/1.73 m2 after a loading dose — DIRECTION grounded in dose-window-grounding.json (dose_penalty_aztreonam_renal); per-kg magnitude is the illustrative feasibility model",
                      "source": "Monobactam; safe in penicillin allergy (no cross-reactivity)"},
     "tmp_smx":      {"covers": ["listeria"], "csf_penetrant": true, "betalactam": false, "contraindications": [], "tier": 3,
                      "dose": {"floor_mg_per_kg": 5, "ceiling_base_mg_per_kg": 10, "ceiling_penalty_mg_per_kg": {"renal_severe": 3}},
+                     "dose_penalty_source": "FDA sulfamethoxazole-trimethoprim label (DailyMed 793c75eb): reduced dosage when renal function is impaired — DIRECTION grounded in dose-window-grounding.json (dose_penalty_tmp_smx_renal); per-kg magnitude is the illustrative feasibility model",
                      "source": "TMP-SMX for Listeria when ampicillin contraindicated"}
   }
 }
