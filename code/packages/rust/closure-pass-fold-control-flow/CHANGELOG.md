@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.14.0] - 2026-06-20
+
+### Added — CLOC25: drop a redundant `else` after a terminating consequent
+
+`fold_block_statement` now removes the `else` from an `if` whose consequent
+unconditionally terminates, hoisting the `else` body into the enclosing block —
+upstream Closure's `MinimizeExitPoints`:
+
+```text
+if (c) { …; return x; } else { B }   →   if (c) { …; return x; } B
+if (bad) throw e; else use(v);        →   if (bad) throw e; use(v);
+```
+
+When `c` is true the consequent exits (`return`/`throw`), so control reaches the
+`else` body only when `c` was false — exactly the `else` semantics. Removing the
+`else` deletes a keyword and (for a block) a pair of braces, and un-nests
+`else if` chains.
+
+- New helpers: `consequent_definitely_terminates` (accepts `return`/`throw`, and
+  a block whose last statement does — it is broader than the return-only
+  `is_terminator` that still gates the dead-code-after-terminator drop);
+  `block_is_scope_safe_to_hoist` / `alternate_is_hoistable`.
+- **Soundness — scope safety.** The `else` body is hoisted only when splicing it
+  into the enclosing block changes no binding's scope: a block containing a
+  block-scoped `let`/`const`/`function` declaration is **not** hoisted (it would
+  leak the binding or cause a TDZ collision); plain `var` is function-scoped and
+  hoists harmlessly. A bare (non-block) `else` body that is a `Declaration` is
+  likewise declined. Mirrors `closure-pass-dce`'s `block_is_scope_safe_to_flatten`.
+- When the hoisted tail itself ends in a terminator, the existing
+  dead-code-after-terminator drop then removes any statements that followed the
+  original `if`. A `removed-`-style `hoisted-else-after-terminator` contribution
+  is recorded (and flips `changed`).
+- 5 new tests: block-`else` hoist after `return`; bare-`else` hoist after
+  `throw`; a `let` in the `else` block blocks the hoist; a non-terminating
+  consequent is left alone; and the hoisted-tail dead-code drop.
+
 ## [0.13.0] - 2026-06-20
 
 ### Added — CLOC23: fold control flow inside `for`-`of`

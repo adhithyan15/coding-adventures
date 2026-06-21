@@ -371,6 +371,56 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
             continue;
         }
         let folded = fold_statement(s, st);
+
+        // CLOC25 — drop a redundant `else` after a terminating consequent.
+        //
+        // `if (C) <T-that-terminates> else <E>` is equivalent to
+        // `if (C) <T>` followed by `E`: when `C` is true the consequent exits
+        // (return/throw), so control reaches `E` only when `C` was false —
+        // exactly the `else` semantics. Removing the `else` deletes a keyword
+        // and (for a block) a pair of braces, and un-nests `else if` chains.
+        // We only hoist when `E` is scope-safe to splice into this block (no
+        // block-scoped declarations leaking out). See
+        // `consequent_definitely_terminates` / `alternate_is_hoistable`.
+        if let Statement::Tagged(TaggedStatement::IfStatement(if_s)) = &folded {
+            if let Some(alt) = &if_s.alternate {
+                if consequent_definitely_terminates(&if_s.consequent)
+                    && alternate_is_hoistable(alt)
+                {
+                    // Push `if (C) T` with the `else` stripped.
+                    new_body.push(Statement::if_statement(IfStatement {
+                        cv: if_s.cv.clone(),
+                        test: if_s.test.clone(),
+                        consequent: if_s.consequent.clone(),
+                        alternate: None,
+                    }));
+                    // Splice the former `else` body into this block.
+                    match alt.as_ref() {
+                        Statement::Tagged(TaggedStatement::BlockStatement(eb)) => {
+                            for inner in &eb.body {
+                                new_body.push(inner.clone());
+                            }
+                        }
+                        other => new_body.push(other.clone()),
+                    }
+                    st.record_fold(
+                        &if_s.cv,
+                        "hoisted-else-after-terminator",
+                        "if (C) <terminates> else <E>",
+                        "if (C) <terminates> followed by <E>",
+                    );
+                    // The trimmed `if` is NOT itself a terminator (a false test
+                    // falls through), but the hoisted tail might end in one —
+                    // if so, mark it so the dead-code-after-terminator drop
+                    // applies to any following statements.
+                    if new_body.last().map(is_terminator).unwrap_or(false) {
+                        hit_terminator = true;
+                    }
+                    continue;
+                }
+            }
+        }
+
         let terminates = is_terminator(&folded);
         new_body.push(folded);
         if terminates {
@@ -395,11 +445,84 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
 /// enclosing block. In Phase 1, only `ReturnStatement` qualifies
 /// — Phase 2 adds `ThrowStatement`, and `BreakStatement` /
 /// `ContinueStatement` qualify in their enclosing loop scope.
+///
+/// NOTE: this gates the dead-code-after-terminator drop in
+/// [`fold_block_statement`]; keeping it return-only preserves that pass's
+/// long-standing behaviour. The `else`-hoist (CLOC25) uses the broader
+/// [`consequent_definitely_terminates`] instead, which also accepts `throw`.
 fn is_terminator(stmt: &Statement) -> bool {
     matches!(
         stmt,
         Statement::Tagged(TaggedStatement::ReturnStatement(_))
     )
+}
+
+/// Does this statement, used as an `if` **consequent**, unconditionally leave
+/// the enclosing block — so that the matching `else` branch only runs when the
+/// consequent did NOT, and can therefore be hoisted out after the `if`?
+/// (CLOC25, upstream Closure's `MinimizeExitPoints`.)
+///
+/// `return` and `throw` both qualify. A `BlockStatement` qualifies when its
+/// LAST statement does. We deliberately do NOT look inside nested
+/// `if`/loops/`try` (a conservative check — declining merely forgoes an
+/// optimization and is never a miscompile).
+///
+/// ```text
+///   if (c) { …; return x; } else { B }   →   if (c) { …; return x; } B
+///   if (bad) throw e; else use(v);        →   if (bad) throw e; use(v);
+/// ```
+fn consequent_definitely_terminates(stmt: &Statement) -> bool {
+    match stmt {
+        Statement::Tagged(TaggedStatement::ReturnStatement(_))
+        | Statement::Tagged(TaggedStatement::ThrowStatement(_)) => true,
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) => b
+            .body
+            .last()
+            .map(consequent_definitely_terminates)
+            .unwrap_or(false),
+        _ => false,
+    }
+}
+
+/// Can an `else` block's statements be spliced into the enclosing block
+/// without changing any binding's scope? Block-scoped declarations
+/// (`let`/`const`/`function`) would leak upward or collide if moved out, so
+/// they make the block unsafe to hoist; a plain `var` is function-scoped and
+/// hoists harmlessly. Mirrors `closure-pass-dce`'s
+/// `block_is_scope_safe_to_flatten`.
+fn block_is_scope_safe_to_hoist(b: &BlockStatement) -> bool {
+    b.body.iter().all(|s| match s {
+        Statement::Declaration(Declaration::VariableDeclaration(v)) => {
+            matches!(v.kind, VarKind::Var)
+        }
+        Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
+        // Tagged statements introduce no lexical binding of their own.
+        Statement::Tagged(_) => true,
+    })
+}
+
+/// Is this `else` branch safe to hoist into the enclosing block (CLOC25)?
+///
+/// - A `BlockStatement` is gated on [`block_is_scope_safe_to_hoist`].
+/// - A non-block single statement cannot be a bare lexical/`function`
+///   declaration in valid JS (those require braces), so any single *tagged*
+///   statement is safe to hoist as-is.
+/// - A bare `Declaration` (e.g. `else var x;` / Annex-B `else function f(){}`)
+///   is declined — moving it could change its scope.
+///
+/// INVARIANT (load-bearing for soundness): every binding-introducing form —
+/// `var`/`let`/`const` and `function` declarations — is represented as
+/// `Statement::Declaration(..)`, never wrapped in a `TaggedStatement`. The
+/// `Tagged(_) => true` arm therefore admits only non-declaration statements. If
+/// the parser ever wrapped a declaration in `TaggedStatement`, this arm would
+/// start leaking a block-scoped binding into the outer scope — so that
+/// representation invariant must hold.
+fn alternate_is_hoistable(alt: &Statement) -> bool {
+    match alt {
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) => block_is_scope_safe_to_hoist(b),
+        Statement::Tagged(_) => true,
+        Statement::Declaration(_) => false,
+    }
 }
 
 /// Fold an `IfStatement`. When `test` is a known-truthy/falsy
@@ -1830,6 +1953,217 @@ mod tests {
                 init,
             }],
         }))
+    }
+
+    // ---------------- CLOC25: else-hoist after terminating consequent ----
+
+    /// `function f(x){ if(x){return 1;} else { g; } }`
+    /// → `function f(x){ if(x){return 1;} g; }` — the `else` is hoisted.
+    #[test]
+    fn else_block_hoisted_after_returning_consequent() {
+        let consequent = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![Statement::return_statement(ReturnStatement {
+                cv: None,
+                argument: Some(num(1.0, None)),
+            })],
+        });
+        let alternate = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![expr_stmt(ident("g"), None)],
+        });
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: ident("x"),
+            consequent: Box::new(consequent),
+            alternate: Some(Box::new(alternate)),
+        });
+        let prog = fdecl_with_body(vec![if_stmt]);
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(
+            contribs
+                .iter()
+                .any(|c| c.tag == "hoisted-else-after-terminator"),
+            "expected hoisted-else-after-terminator; got {:?}",
+            contribs
+        );
+        let body = extract_fn_body(&out);
+        assert_eq!(
+            body.body.len(),
+            2,
+            "expected [if(x){{return 1}}, g]; got {:?}",
+            body.body
+        );
+        let Statement::Tagged(TaggedStatement::IfStatement(if_out)) = &body.body[0] else {
+            panic!("expected if; got {:?}", body.body[0]);
+        };
+        assert!(if_out.alternate.is_none(), "the else must be removed");
+        assert!(matches!(
+            &body.body[1],
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+        ));
+    }
+
+    /// A bare `throw` consequent with a bare `else` body also hoists:
+    /// `if(bad) throw e; else use;` → `if(bad) throw e; use;`.
+    #[test]
+    fn else_hoisted_after_throwing_consequent() {
+        let consequent =
+            Statement::throw_statement(coding_adventures_javascript_ast::ThrowStatement {
+                cv: None,
+                argument: ident("e"),
+            });
+        let alternate = expr_stmt(ident("use"), None);
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("bad"),
+            consequent: Box::new(consequent),
+            alternate: Some(Box::new(alternate)),
+        });
+        let prog = fdecl_with_body(vec![if_stmt]);
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        let body = extract_fn_body(&out);
+        assert_eq!(body.body.len(), 2, "got {:?}", body.body);
+        let Statement::Tagged(TaggedStatement::IfStatement(if_out)) = &body.body[0] else {
+            panic!("expected if; got {:?}", body.body[0]);
+        };
+        assert!(if_out.alternate.is_none());
+        assert!(matches!(
+            &body.body[1],
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+        ));
+    }
+
+    /// An `else` block that declares a `let` is NOT hoisted — moving the
+    /// binding out of its block would leak it / risk a TDZ collision.
+    #[test]
+    fn else_block_with_let_is_not_hoisted() {
+        let consequent = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![Statement::return_statement(ReturnStatement {
+                cv: None,
+                argument: None,
+            })],
+        });
+        let alternate = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![make_let_decl("y", Some(num(1.0, None))), expr_stmt(ident("g"), None)],
+        });
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("x"),
+            consequent: Box::new(consequent),
+            alternate: Some(Box::new(alternate)),
+        });
+        let prog = fdecl_with_body(vec![if_stmt]);
+        let (out, contribs, _changed, _) = run_pass(prog);
+        assert!(
+            !contribs
+                .iter()
+                .any(|c| c.tag == "hoisted-else-after-terminator"),
+            "a let in the else block must block the hoist; got {:?}",
+            contribs
+        );
+        let body = extract_fn_body(&out);
+        assert_eq!(body.body.len(), 1, "if-else stays a single statement; got {:?}", body.body);
+        let Statement::Tagged(TaggedStatement::IfStatement(if_out)) = &body.body[0] else {
+            panic!("expected if; got {:?}", body.body[0]);
+        };
+        assert!(if_out.alternate.is_some(), "the else must be preserved");
+    }
+
+    /// When the consequent does NOT unconditionally terminate, the `else`
+    /// stays: `if(x){g; m} else {h}` is unchanged. (The consequent has two
+    /// statements so the if-else→ternary fold also does not apply — isolating
+    /// the else-hoist's terminator gate as the reason it stays.)
+    #[test]
+    fn else_not_hoisted_when_consequent_falls_through() {
+        let consequent = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![expr_stmt(ident("g"), None), expr_stmt(ident("m"), None)],
+        });
+        let alternate = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![expr_stmt(ident("h"), None)],
+        });
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("x"),
+            consequent: Box::new(consequent),
+            alternate: Some(Box::new(alternate)),
+        });
+        let prog = fdecl_with_body(vec![if_stmt]);
+        let (out, contribs, _changed, _) = run_pass(prog);
+        assert!(
+            !contribs
+                .iter()
+                .any(|c| c.tag == "hoisted-else-after-terminator"),
+            "a non-terminating consequent must NOT hoist; got {:?}",
+            contribs
+        );
+        let body = extract_fn_body(&out);
+        assert_eq!(body.body.len(), 1);
+        let Statement::Tagged(TaggedStatement::IfStatement(if_out)) = &body.body[0] else {
+            panic!("expected if; got {:?}", body.body[0]);
+        };
+        assert!(if_out.alternate.is_some());
+    }
+
+    /// After hoisting an `else` whose body itself ends in a terminator, code
+    /// following the original `if` becomes dead and is dropped in the same
+    /// pass: `if(x){return 1} else {cleanup; return 2} after;`
+    /// → `if(x){return 1} cleanup; return 2;` (`after` gone). (The else has
+    /// two statements, so the if-else→ternary fold does not apply — the
+    /// else-hoist does.)
+    #[test]
+    fn hoisted_returning_else_drops_following_dead_code() {
+        let consequent = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![Statement::return_statement(ReturnStatement {
+                cv: None,
+                argument: Some(num(1.0, None)),
+            })],
+        });
+        let alternate = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![
+                expr_stmt(ident("cleanup"), None),
+                Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(num(2.0, None)),
+                }),
+            ],
+        });
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: ident("x"),
+            consequent: Box::new(consequent),
+            alternate: Some(Box::new(alternate)),
+        });
+        let prog = fdecl_with_body(vec![if_stmt, expr_stmt(ident("after"), None)]);
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(
+            contribs
+                .iter()
+                .any(|c| c.tag == "hoisted-else-after-terminator"),
+            "got {:?}",
+            contribs
+        );
+        let body = extract_fn_body(&out);
+        // [if(x){return 1}, cleanup, return 2] — `after` dropped as dead code.
+        assert_eq!(
+            body.body.len(),
+            3,
+            "expected `after` to be dropped; got {:?}",
+            body.body
+        );
+        assert!(matches!(
+            &body.body[2],
+            Statement::Tagged(TaggedStatement::ReturnStatement(_))
+        ));
     }
 
     /// `function f() { if (cond) { var y = 1; } }` →
