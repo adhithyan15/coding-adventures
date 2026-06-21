@@ -178,7 +178,12 @@ merge before the next:
      `alloc_array`→`newarray`, `array_get/set`→`*aload`/`*astore` (int[]/long[]/
      double[]), `array_len`→`arraylength`; OOB → native `ArrayIndexOutOfBounds`.
      Handle is a reference local. Matrix Prog runs on **JVM** (exit 55). 7 tests.
-   - **3b — CLR** ☐ (`newarr`/`ldelem`/`stelem`/`ldlen`; native `IndexOutOfRange`).
+   - **3b — CLR** ✅ **done** (`iir-to-cil-bytecode` 0.23.0, textual `.il`):
+     `alloc_array`→`newarr`, `array_get/set`→`ldelem.i4`/`stelem.i4` (int32[]) or
+     `.r8` (float64[]), `array_len`→`ldlen`+`conv.i4`; OOB → native
+     `IndexOutOfRangeException`. No concretize change (`cil_local_type` already
+     collapses `i64`→`int32[]`). Matrix Prog runs on real `dotnet` (exit 55). 5
+     tests. The binary `clr-simulator` emitter path is a follow-up.
    - *(WASM regrouped: its linear-memory length-prefixed model belongs with the
      static backends in PR-4, not the managed native-array group.)*
 4. **E5-static-backends** — LLVM, WASM (linear memory), then native x86_64 +

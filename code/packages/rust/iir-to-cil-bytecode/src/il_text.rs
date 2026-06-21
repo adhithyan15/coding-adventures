@@ -44,6 +44,7 @@
 //! metadata each emitted construct needs.
 
 use crate::lower::{IIRClrConfig, IIRClrError};
+use interpreter_ir::opcodes::{array_elem_type, is_array_type};
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use std::collections::HashMap;
 use std::fmt::Write as _;
@@ -119,6 +120,17 @@ fn cil_local_type(type_hint: &str) -> &'static str {
         "object[]"
     } else if type_hint.starts_with("ref<") {
         "object"
+    } else if is_array_type(type_hint) {
+        // LANG-FULL E5: an `array<T>` handle is a CIL single-dimensional array
+        // (`int32[]`/`float64[]`/…). Like the Brainfuck byte-tape (`unsigned int8[]`)
+        // it's a reference-typed local loaded/stored with the ordinary `ldloc`/
+        // `stloc`; the element op (`ldelem.i4`/`stelem.r8`/…) is chosen per access.
+        // The element name comes from `cil_array_elem`; an unsupported element
+        // falls back to `object[]` (the validator rejects it before lowering).
+        match array_elem_type(type_hint).and_then(|e| cil_array_elem(&e)) {
+            Some((cil_array_ty, _, _, _)) => cil_array_ty,
+            None => "object[]",
+        }
     } else if type_hint == "f64" {
         // ALGOL `real` (LANG-FULL E3): an IEEE-754 double. The `.locals`
         // declaration carries `float64`, and an `f64`-typed register is loaded/
@@ -131,6 +143,24 @@ fn cil_local_type(type_hint: &str) -> &'static str {
         "float32"
     } else {
         "int32"
+    }
+}
+
+/// For an `array<T>` element type `elem`, the CIL pieces needed to lower the E5
+/// array ops: `(array-local type, ldelem op, stelem op, newarr element type)`.
+///
+/// The element is collapsed through [`cil_local_type`], so `i64` and `i32` both
+/// land on `int32[]` (CIL stack ints are 32-bit here, exactly as scalar `i64`
+/// programs already lower — no separate `int64[]` needed for the LANG-FULL slice).
+/// `f64`/`f32` map to `float64[]`/`float32[]`. Returns `None` for an element type
+/// that can't be a primitive CIL array element here (`object`/nested arrays — a
+/// future phase; the validator rejects them before lowering).
+fn cil_array_elem(elem: &str) -> Option<(&'static str, &'static str, &'static str, &'static str)> {
+    match cil_local_type(elem) {
+        "int32" => Some(("int32[]", "ldelem.i4", "stelem.i4", "[System.Runtime]System.Int32")),
+        "float64" => Some(("float64[]", "ldelem.r8", "stelem.r8", "[System.Runtime]System.Double")),
+        "float32" => Some(("float32[]", "ldelem.r4", "stelem.r4", "[System.Runtime]System.Single")),
+        _ => None,
     }
 }
 
@@ -577,6 +607,93 @@ fn emit_method(
                 load_var(il, &regs, val)?;
                 let _ = writeln!(il, "    stelem.i1");
             }
+            // ── alloc_array <dest> <- <count>  : array<T>  (LANG-FULL E5) ─────
+            //
+            // A fresh single-dimensional CIL array `new T[count]`, zero-filled by
+            // `newarr`, bound to `dest` (an array-typed local — see `FnRegs::build`
+            // via `cil_local_type`). The element System type comes from `T`.
+            //   ld<count>; newarr <Elem>; st<dest>
+            "alloc_array" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "alloc_array must have a dest".to_string(),
+                })?;
+                let count = var_src(f, instr, 0, "alloc_array")?;
+                let elem = array_elem_type(&instr.type_hint).ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("alloc_array type_hint must be array<T>, got {:?}", instr.type_hint),
+                })?;
+                let (_, _, _, newarr_elem) = cil_array_elem(&elem).ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("alloc_array element type {elem:?} is not a supported CIL array element"),
+                })?;
+                load_var(il, &regs, count)?;
+                let _ = writeln!(il, "    newarr {newarr_elem}");
+                store_var(il, &regs, dest)?;
+            }
+            // ── array_get <dest> <- <handle>, <idx>  : T  (LANG-FULL E5) ──────
+            //
+            // Read `handle[idx]`. The element op is chosen from `T` (the
+            // instruction's type_hint). CoreCLR bounds-checks `ldelem` natively —
+            // an out-of-range index throws `System.IndexOutOfRangeException`, which
+            // is E5's trap, so no explicit guard is emitted.
+            //   ld<handle>; ld<idx>; ldelem.<t>; st<dest>
+            "array_get" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "array_get must have a dest".to_string(),
+                })?;
+                let handle = var_src(f, instr, 0, "array_get")?;
+                let idx = var_src(f, instr, 1, "array_get")?;
+                let (_, ldelem, _, _) = cil_array_elem(&instr.type_hint).ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("array_get element type {:?} is not a supported CIL array element", instr.type_hint),
+                })?;
+                load_var(il, &regs, handle)?;
+                load_var(il, &regs, idx)?;
+                let _ = writeln!(il, "    {ldelem}");
+                store_var(il, &regs, dest)?;
+            }
+            // ── array_set <handle>, <idx>, <val>  : T  (no dest; E5) ──────────
+            //
+            // Write `handle[idx] = val`. `stelem.<t>` bounds-checks natively
+            // (OOB → `IndexOutOfRangeException`).
+            //   ld<handle>; ld<idx>; ld<val>; stelem.<t>
+            "array_set" => {
+                if instr.dest.is_some() {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: "array_set must not have a dest".to_string(),
+                    });
+                }
+                let handle = var_src(f, instr, 0, "array_set")?;
+                let idx = var_src(f, instr, 1, "array_set")?;
+                let val = var_src(f, instr, 2, "array_set")?;
+                let (_, _, stelem, _) = cil_array_elem(&instr.type_hint).ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("array_set element type {:?} is not a supported CIL array element", instr.type_hint),
+                })?;
+                load_var(il, &regs, handle)?;
+                load_var(il, &regs, idx)?;
+                load_var(il, &regs, val)?;
+                let _ = writeln!(il, "    {stelem}");
+            }
+            // ── array_len <dest> <- <handle>  (LANG-FULL E5) ──────────────────
+            //
+            // `ldlen` pushes the array length as a `native uint`; `conv.i4` brings
+            // it to the `int32` dest.
+            //   ld<handle>; ldlen; conv.i4; st<dest>
+            "array_len" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "array_len must have a dest".to_string(),
+                })?;
+                let handle = var_src(f, instr, 0, "array_len")?;
+                load_var(il, &regs, handle)?;
+                let _ = writeln!(il, "    ldlen");
+                let _ = writeln!(il, "    conv.i4");
+                store_var(il, &regs, dest)?;
+            }
             // box <dest> = <src>  →  ld<src>; box [System.Runtime]System.Int32; st<dest>
             "box" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
@@ -984,6 +1101,75 @@ mod tests {
         assert!(il.contains("int32 MccarthyEntry()"), "entry method returns int32");
         assert!(il.contains("ldc.i4 42"), "loads the literal 42; got:\n{il}");
         assert!(il.contains("System.Console]System.Console::WriteLine(int32)"));
+    }
+
+    // ── LANG-FULL E5 — array opcode lowering ────────────────────────────────
+
+    #[test]
+    fn array_handle_local_typing() {
+        assert_eq!(cil_local_type("array<i32>"), "int32[]");
+        // i64 collapses to int32[] (CIL stack ints are 32-bit here, like scalars).
+        assert_eq!(cil_local_type("array<i64>"), "int32[]");
+        assert_eq!(cil_local_type("array<f64>"), "float64[]");
+    }
+
+    #[test]
+    fn array_element_opcode_table() {
+        assert_eq!(cil_array_elem("i32").map(|t| (t.1, t.2)), Some(("ldelem.i4", "stelem.i4")));
+        assert_eq!(cil_array_elem("i64").map(|t| (t.1, t.2)), Some(("ldelem.i4", "stelem.i4")));
+        assert_eq!(cil_array_elem("f64").map(|t| (t.1, t.2)), Some(("ldelem.r8", "stelem.r8")));
+        assert_eq!(cil_array_elem("ref<LispyPair>"), None);
+    }
+
+    /// `int32[]` alloc/set/get/len lower to `newarr System.Int32` + `stelem.i4`/
+    /// `ldelem.i4` + `ldlen`; CoreCLR bounds-checks every element access natively.
+    #[test]
+    fn int_array_emits_cil_array_ops() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("c3".into()), vec![Operand::Int(3)], "i32"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("c3".into())], "array<i32>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("const", Some("v7".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v7".into())], "i32"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "i32"),
+            IIRInstr::new("array_len", Some("n".into()), vec![Operand::Var("a".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "algol60");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("newarr [System.Runtime]System.Int32"), "alloc_array → newarr int32; got:\n{il}");
+        assert!(il.contains("stelem.i4"), "array_set → stelem.i4");
+        assert!(il.contains("ldelem.i4"), "array_get → ldelem.i4");
+        assert!(il.contains("ldlen") && il.contains("conv.i4"), "array_len → ldlen; conv.i4");
+        assert!(il.contains("int32[]"), "handle local declared int32[]");
+    }
+
+    /// `float64[]` uses `newarr System.Double` + `stelem.r8`/`ldelem.r8`.
+    #[test]
+    fn double_array_emits_r8_ops() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("c2".into()), vec![Operand::Int(2)], "i32"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("c2".into())], "array<f64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(2.5)], "f64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "f64"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ];
+        let mut m = IIRModule::new("Main", "algol60");
+        m.functions.push(IIRFunction::new("main", vec![], "f64", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("newarr [System.Runtime]System.Double"), "newarr double; got:\n{il}");
+        assert!(il.contains("stelem.r8"), "array_set → stelem.r8");
+        assert!(il.contains("ldelem.r8"), "array_get → ldelem.r8");
+        assert!(il.contains("float64[]"), "handle local declared float64[]");
     }
 
     /// Build a one-function module `c = <op>(a, b); ret c` over two `i32` constants.
