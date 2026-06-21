@@ -573,6 +573,13 @@ fn count_decl_names_stmt(
                 }
                 count_decl_names_stmt(&fs.body, out, nodes_touched);
             }
+            TaggedStatement::ForInStatement(fs) => {
+                // The for-in `left`, when a declaration, binds the loop variable.
+                if let ForInit::VariableDeclaration(vd) = &fs.left {
+                    count_decl_names_var(vd, out);
+                }
+                count_decl_names_stmt(&fs.body, out, nodes_touched);
+            }
             TaggedStatement::LabeledStatement(ls) => {
                 count_decl_names_stmt(&ls.body, out, nodes_touched)
             }
@@ -787,6 +794,20 @@ fn tally_stmt(stmt: &Statement, cand: &InlineCandidate, t: &mut Tally) {
                 if let Some(update) = &fs.update {
                     tally_expr(update, cand, t);
                 }
+                tally_stmt(&fs.body, cand, t);
+            }
+            TaggedStatement::ForInStatement(fs) => {
+                match &fs.left {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &vd.declarations {
+                            if let Some(i) = &d.init {
+                                tally_expr(i, cand, t);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => tally_expr(e, cand, t),
+                }
+                tally_expr(&fs.right, cand, t);
                 tally_stmt(&fs.body, cand, t);
             }
             TaggedStatement::ReturnStatement(rs) => {
@@ -1013,6 +1034,20 @@ fn inline_in_stmt(stmt: &mut Statement, cand: &InlineCandidate) -> bool {
                 if let Some(update) = &mut fs.update {
                     changed |= inline_in_expr(update, cand);
                 }
+                changed |= inline_in_stmt(&mut fs.body, cand);
+            }
+            TaggedStatement::ForInStatement(fs) => {
+                match &mut fs.left {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &mut vd.declarations {
+                            if let Some(i) = &mut d.init {
+                                changed |= inline_in_expr(i, cand);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => changed |= inline_in_expr(e, cand),
+                }
+                changed |= inline_in_expr(&mut fs.right, cand);
                 changed |= inline_in_stmt(&mut fs.body, cand);
             }
             TaggedStatement::ReturnStatement(rs) => {
@@ -1915,6 +1950,9 @@ fn splice_void_in_stmt(
             TaggedStatement::ForStatement(fs) => {
                 splice_void_in_slot(&mut fs.body, cand, avoid, nodes_touched)
             }
+            TaggedStatement::ForInStatement(fs) => {
+                splice_void_in_slot(&mut fs.body, cand, avoid, nodes_touched)
+            }
             TaggedStatement::LabeledStatement(ls) => {
                 splice_void_in_slot(&mut ls.body, cand, avoid, nodes_touched)
             }
@@ -2754,6 +2792,9 @@ fn splice_valued_in_stmt(
             TaggedStatement::ForStatement(fs) => {
                 splice_valued_in_stmt(&mut fs.body, cand, avoid, nodes_touched)
             }
+            TaggedStatement::ForInStatement(fs) => {
+                splice_valued_in_stmt(&mut fs.body, cand, avoid, nodes_touched)
+            }
             TaggedStatement::LabeledStatement(ls) => {
                 splice_valued_in_stmt(&mut ls.body, cand, avoid, nodes_touched)
             }
@@ -3062,6 +3103,20 @@ fn collect_used_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                 if let Some(update) = &fs.update {
                     collect_binding_idents_expr(update, out);
                 }
+                collect_used_idents_stmt(&fs.body, out);
+            }
+            TaggedStatement::ForInStatement(fs) => {
+                match &fs.left {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &vd.declarations {
+                            if let Some(i) = &d.init {
+                                collect_binding_idents_expr(i, out);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => collect_binding_idents_expr(e, out),
+                }
+                collect_binding_idents_expr(&fs.right, out);
                 collect_used_idents_stmt(&fs.body, out);
             }
             TaggedStatement::ReturnStatement(rs) => {

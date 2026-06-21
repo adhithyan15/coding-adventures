@@ -141,9 +141,9 @@ pub use expression::{
 };
 pub use statement::{
     BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
-    DoWhileStatement, EmptyStatement, ExpressionStatement, ForInit, ForStatement, IfStatement,
-    LabeledStatement, ReturnStatement, Statement, SwitchCase, SwitchStatement, ThrowStatement,
-    TryStatement, WhileStatement,
+    DoWhileStatement, EmptyStatement, ExpressionStatement, ForInStatement, ForInit, ForStatement,
+    IfStatement, LabeledStatement, ReturnStatement, Statement, SwitchCase, SwitchStatement,
+    ThrowStatement, TryStatement, WhileStatement,
 };
 
 /// A correlation-vector identifier. Aliased to `String` for v1 to match

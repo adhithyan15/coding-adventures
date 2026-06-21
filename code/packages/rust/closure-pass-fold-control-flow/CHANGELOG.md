@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.12.0] - 2026-06-20
+
+### Added — CLOC22: fold control flow inside `for`-`in`
+
+New `ForInStatement` arm recurses control-flow folding into the loop's left,
+right expression, and body. Like the other loops, a for-in is not eliminated and
+is not a terminator (the body may run zero times).
+
 ## [0.11.0] - 2026-06-20
 
 ### Added — CLOC21: handle `DebuggerStatement`

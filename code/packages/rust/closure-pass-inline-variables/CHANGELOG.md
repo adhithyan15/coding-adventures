@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-20
+
+### Added — CLOC22: variable inlining inside `for`-`in`
+
+`count_decl_names_stmt`, `count_uses_stmt`, and `propagate_in_stmt` now recurse
+through `ForInStatement`. The for-in `left`, when a declaration, is counted as a
+binding (the loop variable), mirroring the for-statement init handling.
+
 ## [0.4.0] - 2026-06-20
 
 ### Added — CLOC21: handle `DebuggerStatement`

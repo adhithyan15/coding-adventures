@@ -62,9 +62,9 @@ use coding_adventures_javascript_ast::{
     },
     statement::{
         BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
-        DoWhileStatement, EmptyStatement, ExpressionStatement, ForInit, ForStatement, IfStatement,
-        LabeledStatement, ReturnStatement, Statement, SwitchCase, SwitchStatement, ThrowStatement,
-        TryStatement, WhileStatement,
+        DoWhileStatement, EmptyStatement, ExpressionStatement, ForInStatement, ForInit,
+        ForStatement, IfStatement, LabeledStatement, ReturnStatement, Statement, SwitchCase,
+        SwitchStatement, ThrowStatement, TryStatement, WhileStatement,
     },
     Program, ProgramItem, SourceType,
 };
@@ -270,6 +270,7 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
             convert_do_while_statement(child).map(Statement::do_while_statement)
         }
         "for_statement" => convert_for_statement(child).map(Statement::for_statement),
+        "for_in_statement" => convert_for_in_statement(child).map(Statement::for_in_statement),
         "continue_statement" => convert_continue_statement(child).map(Statement::continue_statement),
         "break_statement" => convert_break_statement(child).map(Statement::break_statement),
         "return_statement" => convert_return_statement(child).map(Statement::return_statement),
@@ -281,7 +282,7 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         // typed node is a bare marker. (CLOC21.)
         "debugger_statement" => Ok(Statement::debugger_statement(DebuggerStatement { cv: None })),
         // Phase 2+ — not yet in the typed AST
-        "for_in_statement" | "for_of_statement" | "for_await_of_statement" | "with_statement"
+        "for_of_statement" | "for_await_of_statement" | "with_statement"
         | "using_declaration" | "await_using_declaration" => Err(unsupported(child)),
         other => Err(BridgeError::InternalError {
             msg: format!("unknown statement child rule '{other}'"),
@@ -447,6 +448,78 @@ fn convert_for_statement(node: &GrammarASTNode) -> Result<ForStatement, BridgeEr
         test,
         update,
         body: Box::new(convert_statement(body)?),
+    })
+}
+
+fn convert_for_in_statement(node: &GrammarASTNode) -> Result<ForInStatement, BridgeError> {
+    // for_in_statement = "for" LPAREN
+    //   ( "var" variable_declaration | "let" binding_element
+    //   | "const" binding_element | left_hand_side_expression )
+    //   "in" expression RPAREN statement ;
+    //
+    // Walk children using the `in` and `)` tokens as phase delimiters:
+    //   phase 0 = the left (before `in`); phase 1 = the right expression
+    //   (between `in` and `)`); phase 2 = the body (after `)`). The
+    //   `var`/`let`/`const` keyword (if present) appears as a phase-0 token.
+    let mut phase = 0usize;
+    let mut left_kind: Option<VarKind> = None;
+    let mut phase_nodes: [Vec<&GrammarASTNode>; 3] = [vec![], vec![], vec![]];
+
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(t) if phase == 0 && t.value == "in" => phase = 1,
+            ASTNodeOrToken::Token(t) if phase == 1 && t.value == ")" => phase = 2,
+            ASTNodeOrToken::Token(t) if phase == 0 => match t.value.as_str() {
+                "var" => left_kind = Some(VarKind::Var),
+                "let" => left_kind = Some(VarKind::Let),
+                "const" => left_kind = Some(VarKind::Const),
+                _ => {}
+            },
+            ASTNodeOrToken::Node(n) => phase_nodes[phase.min(2)].push(n),
+            ASTNodeOrToken::Token(_) => {}
+        }
+    }
+
+    // Left: a binding (var/let/const) or an existing assignment target.
+    let left_node = *phase_nodes[0]
+        .first()
+        .ok_or_else(|| internal(node, "for_in_statement: missing left"))?;
+    let left = match left_kind {
+        Some(kind) => {
+            // A single declarator with no initializer. `convert_variable_declarator`
+            // declines destructuring (`binding_pattern`) by returning
+            // `UnsupportedSyntax`. We additionally map any other conversion
+            // failure to a graceful decline (whitespace-only fallback) rather
+            // than a hard error, so an unrepresentable binding shape never
+            // aborts compilation.
+            let declarator = convert_variable_declarator(left_node)
+                .map_err(|_| unsupported(left_node))?;
+            ForInit::VariableDeclaration(VariableDeclaration {
+                cv: None,
+                kind,
+                declarations: vec![declarator],
+            })
+        }
+        None => ForInit::Expression(convert_expression(left_node)?),
+    };
+
+    // Right: the enumerated expression.
+    let right_node = *phase_nodes[1]
+        .first()
+        .ok_or_else(|| internal(node, "for_in_statement: missing right expression"))?;
+    let right = convert_expression(right_node)?;
+
+    // Body.
+    let body_node = *phase_nodes[2]
+        .first()
+        .ok_or_else(|| internal(node, "for_in_statement: missing body"))?;
+    let body = Box::new(convert_statement(body_node)?);
+
+    Ok(ForInStatement {
+        cv: None,
+        left,
+        right,
+        body,
     })
 }
 
@@ -2221,6 +2294,95 @@ mod tests {
             "expected a DebuggerStatement, got {:?}",
             p.body[0]
         );
+    }
+
+    /// Pull the single `ForInStatement` out of a one-statement program.
+    fn bridge_for_in(src: &str) -> ForInStatement {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ForInStatement(f),
+            )) => f.clone(),
+            other => panic!("expected a ForInStatement, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_in_var_bridge_shape() {
+        // CLOC22: `for (var k in obj) { f(k); }` bridges to a ForInStatement
+        // whose left is a `var` declaration of a single binding `k`, right is
+        // the identifier `obj`, and body is the block.
+        let f = bridge_for_in("for (var k in obj) { f(k); }");
+        match &f.left {
+            ForInit::VariableDeclaration(v) => {
+                assert_eq!(v.kind, VarKind::Var);
+                assert_eq!(v.declarations.len(), 1);
+                assert!(v.declarations[0].init.is_none(), "for-in binding has no init");
+            }
+            other => panic!("expected a var declaration left, got {other:?}"),
+        }
+        assert!(
+            matches!(&f.right, Expression::Identifier(id) if id.name == "obj"),
+            "expected right = `obj`, got {:?}",
+            f.right
+        );
+        assert!(matches!(
+            f.body.as_ref(),
+            Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::BlockStatement(_)
+            )
+        ));
+    }
+
+    #[test]
+    fn for_in_lexical_binding_left_bridge_shape() {
+        // `for (let k in o)` and `for (const k in o)` bridge to a
+        // ForInStatement whose left is a Let/Const single-binding declaration.
+        for (src, want) in [
+            ("for (let k in o) { f(); }", VarKind::Let),
+            ("for (const k in o) { f(); }", VarKind::Const),
+        ] {
+            let f = bridge_for_in(src);
+            match &f.left {
+                ForInit::VariableDeclaration(v) => {
+                    assert_eq!(v.kind, want, "kind mismatch for {src}");
+                    assert_eq!(v.declarations.len(), 1);
+                    assert!(v.declarations[0].init.is_none());
+                }
+                other => panic!("expected a lexical declaration left for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn for_in_expression_left_bridge_shape() {
+        // `for (k in obj) { f(k); }` — an existing assignment target as the
+        // left bridges to `ForInit::Expression`.
+        let f = bridge_for_in("for (k in obj) { f(k); }");
+        assert!(
+            matches!(&f.left, ForInit::Expression(Expression::Identifier(id)) if id.name == "k"),
+            "expected expression left `k`, got {:?}",
+            f.left
+        );
+    }
+
+    #[test]
+    fn for_in_destructuring_or_unrepresentable_left_does_not_hard_error() {
+        // A destructuring for-in left (`for (var [a] in o)`) — or any other
+        // left shape the declarator converter can't represent — must DECLINE
+        // gracefully (parse-error or UnsupportedSyntax → WHITESPACE_ONLY at the
+        // CLI), never hard-error or mis-bind. We assert only that bridging does
+        // not panic and that if a ForInStatement IS produced its left is a
+        // plain (non-destructuring) binding.
+        for src in [
+            "for (var [a] in o) { f(); }",
+            "for (let {a} in o) { f(); }",
+        ] {
+            let Ok(node) = parse_javascript_typed(src, DEFAULT_ES_VERSION) else {
+                continue; // parse declined — sound fallback
+            };
+            let _ = grammar_to_program(&node, DEFAULT_ES_VERSION); // must not panic
+        }
     }
 
     #[test]

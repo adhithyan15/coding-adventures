@@ -352,6 +352,12 @@ fn count_decl_names_stmt(
                 }
                 count_decl_names_stmt(&fs.body, out, nodes_touched);
             }
+            TaggedStatement::ForInStatement(fs) => {
+                if let ForInit::VariableDeclaration(vd) = &fs.left {
+                    count_decl_names_var(vd, out);
+                }
+                count_decl_names_stmt(&fs.body, out, nodes_touched);
+            }
             TaggedStatement::LabeledStatement(ls) => {
                 count_decl_names_stmt(&ls.body, out, nodes_touched)
             }
@@ -480,6 +486,22 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                 if let Some(update) = &fs.update {
                     collect_all_idents_expr(update, out);
                 }
+                collect_all_idents_stmt(&fs.body, out);
+            }
+            TaggedStatement::ForInStatement(fs) => {
+                match &fs.left {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &vd.declarations {
+                            let BindingTarget::Identifier(id) = &d.id;
+                            out.insert(id.name.clone());
+                            if let Some(i) = &d.init {
+                                collect_all_idents_expr(i, out);
+                            }
+                        }
+                    }
+                    ForInit::Expression(e) => collect_all_idents_expr(e, out),
+                }
+                collect_all_idents_expr(&fs.right, out);
                 collect_all_idents_stmt(&fs.body, out);
             }
             TaggedStatement::ReturnStatement(rs) => {
@@ -712,6 +734,24 @@ fn rename_apply_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
             if let Some(update) = &mut fs.update {
                 rename_apply_expr(update, map);
             }
+            rename_apply_stmt(&mut fs.body, map);
+        }
+        TaggedStatement::ForInStatement(fs) => {
+            match &mut fs.left {
+                ForInit::VariableDeclaration(vd) => {
+                    for d in &mut vd.declarations {
+                        let BindingTarget::Identifier(id) = &mut d.id;
+                        if let Some(new) = map.get(&id.name) {
+                            id.name = new.clone();
+                        }
+                        if let Some(i) = &mut d.init {
+                            rename_apply_expr(i, map);
+                        }
+                    }
+                }
+                ForInit::Expression(e) => rename_apply_expr(e, map),
+            }
+            rename_apply_expr(&mut fs.right, map);
             rename_apply_stmt(&mut fs.body, map);
         }
         TaggedStatement::ReturnStatement(rs) => {

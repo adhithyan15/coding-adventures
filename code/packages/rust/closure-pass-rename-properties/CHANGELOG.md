@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-20
+
+### Added — CLOC22: property renaming recurses through `for`-`in`
+
+`classify_stmt` and `rewrite_stmt` recurse through `ForInStatement` (left / right
+/ body) so property accesses inside a for-in loop — including `obj[key]` member
+reads in the body and the enumerated right-hand expression — are renamed
+consistently.
+
 ## [0.6.0] - 2026-06-20
 
 ### Added — CLOC21: handle `DebuggerStatement`

@@ -68,7 +68,8 @@ use coding_adventures_javascript_ast::{
     BooleanLiteral,
     BreakStatement, CallExpression, CatchClause, ConditionalExpression, ContinueStatement,
     Declaration, DebuggerStatement, DoWhileStatement,
-    EmptyStatement, Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration,
+    EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForStatement,
+    FunctionDeclaration,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
@@ -293,6 +294,7 @@ impl<'a> Emitter<'a> {
             TaggedStatement::WhileStatement(w) => self.emit_while(w),
             TaggedStatement::DoWhileStatement(d) => self.emit_do_while(d),
             TaggedStatement::ForStatement(f) => self.emit_for(f),
+            TaggedStatement::ForInStatement(f) => self.emit_for_in(f),
             TaggedStatement::ReturnStatement(r) => self.emit_return(r),
             TaggedStatement::BreakStatement(b) => self.emit_break(b),
             TaggedStatement::ContinueStatement(c) => self.emit_continue(c),
@@ -507,6 +509,34 @@ impl<'a> Emitter<'a> {
             self.pretty_ws();
             self.emit_expression(u);
         }
+        self.write_str(")");
+        self.pretty_ws();
+        self.emit_statement(&f.body);
+    }
+
+    fn emit_for_in(&mut self, f: &ForInStatement) {
+        // `for ( <left> in <right> ) <body>`
+        //
+        // The `in` keyword needs a separator on BOTH sides: the left ends in an
+        // identifier (`var k` / `k` / `o.p`) and the right starts with one, so
+        // `kin` / `inobj` would mis-lex. `required_ws` is always inserted (a
+        // single space) — in the rare `a[b] in` / `in (x)` cases the space is
+        // one redundant byte but never wrong, matching upstream Closure's
+        // spacing around `in`.
+        self.maybe_map(&f.cv);
+        self.write_str("for");
+        self.pretty_ws();
+        self.write_str("(");
+        match &f.left {
+            ForInit::VariableDeclaration(v) => {
+                self.emit_variable_declaration(v, /*top_level=*/ false);
+            }
+            ForInit::Expression(e) => self.emit_expression(e),
+        }
+        self.required_ws();
+        self.write_str("in");
+        self.required_ws();
+        self.emit_expression(&f.right);
         self.write_str(")");
         self.pretty_ws();
         self.emit_statement(&f.body);
@@ -2560,6 +2590,74 @@ mod tests {
         let item = ProgramItem::Statement(Statement::block_statement(outer));
         let code = emit_default(program().with_body(vec![item])).code;
         assert_eq!(code, "{debugger;a}");
+    }
+
+    // ---- for / in (CLOC22) ------------------------------------
+
+    fn for_in_var_left(name: &str, kind: VarKind) -> ForInit {
+        ForInit::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: name.to_string(),
+                }),
+                init: None,
+            }],
+        })
+    }
+
+    #[test]
+    fn for_in_var_left_block_body_emits_with_spaced_in() {
+        // `for (var k in obj) { a }` — `in` is spaced on both sides so `k in`
+        // and `in obj` don't mis-lex.
+        let f = ForInStatement {
+            cv: None,
+            left: for_in_var_left("k", VarKind::Var),
+            right: ident("obj"),
+            body: Box::new(Statement::block_statement(block_with("a"))),
+        };
+        let item = ProgramItem::Statement(Statement::for_in_statement(f));
+        assert_eq!(
+            emit_default(program().with_body(vec![item])).code,
+            "for(var k in obj){a}"
+        );
+    }
+
+    #[test]
+    fn for_in_const_left_emits() {
+        let f = ForInStatement {
+            cv: None,
+            left: for_in_var_left("k", VarKind::Const),
+            right: ident("obj"),
+            body: Box::new(Statement::block_statement(block_with("a"))),
+        };
+        let item = ProgramItem::Statement(Statement::for_in_statement(f));
+        assert_eq!(
+            emit_default(program().with_body(vec![item])).code,
+            "for(const k in obj){a}"
+        );
+    }
+
+    #[test]
+    fn for_in_expression_left_bare_body_emits() {
+        // `for (k in obj) a;` — existing-target left, bare-statement body.
+        let f = ForInStatement {
+            cv: None,
+            left: ForInit::Expression(ident("k")),
+            right: ident("obj"),
+            body: Box::new(Statement::expression_statement(ExpressionStatement {
+                cv: None,
+                expression: ident("a"),
+            })),
+        };
+        let item = ProgramItem::Statement(Statement::for_in_statement(f));
+        assert_eq!(
+            emit_default(program().with_body(vec![item])).code,
+            "for(k in obj)a;"
+        );
     }
 
     #[test]

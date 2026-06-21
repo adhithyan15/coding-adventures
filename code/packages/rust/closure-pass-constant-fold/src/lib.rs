@@ -84,7 +84,8 @@ use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
-    Declaration, Expression, ExpressionStatement, ForInit, ForStatement, FunctionDeclaration,
+    Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForStatement,
+    FunctionDeclaration,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
     ObjectExpression, Program, ProgramItem, Property, PropertyKey, ReturnStatement, Statement,
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, VariableDeclaration,
@@ -284,6 +285,17 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
             }),
             test: s.test.as_ref().map(|e| fold_expression(e, st)),
             update: s.update.as_ref().map(|e| fold_expression(e, st)),
+            body: Box::new(fold_statement(&s.body, st)),
+        }),
+        TaggedStatement::ForInStatement(s) => TaggedStatement::ForInStatement(ForInStatement {
+            cv: s.cv.clone(),
+            left: match &s.left {
+                ForInit::VariableDeclaration(v) => {
+                    ForInit::VariableDeclaration(fold_variable_declaration(v, st))
+                }
+                ForInit::Expression(e) => ForInit::Expression(fold_expression(e, st)),
+            },
+            right: fold_expression(&s.right, st),
             body: Box::new(fold_statement(&s.body, st)),
         }),
         TaggedStatement::ReturnStatement(s) => TaggedStatement::ReturnStatement(ReturnStatement {

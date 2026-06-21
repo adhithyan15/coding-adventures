@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.11.0] - 2026-06-20
+
+### Added — CLOC22: `ForInStatement` (`for (left in right) body`)
+
+Adds `ForInStatement { cv, left: ForInit, right: Expression, body: Box<Statement> }`,
+a new `TaggedStatement::ForInStatement` variant, and a
+`Statement::for_in_statement` constructor. The `left` reuses [`ForInit`]:
+`VariableDeclaration` for `for (var/let/const k in o)` (a single-declarator
+binding, no initializer) and `Expression` for `for (k in o)` (an existing
+assignment target). ESTree wire format:
+`{ "type": "ForInStatement", "left": …, "right": <Expression>, "body": <Statement> }`.
+Making it representable lets the closurec CLI optimize for-in loops;
+previously any such program fell back to WHITESPACE_ONLY. (Destructuring
+left-hand sides are not represented — the bridge declines them.)
+
 ## [0.10.0] - 2026-06-20
 
 ### Added — CLOC21: `DebuggerStatement` (`debugger;`)
