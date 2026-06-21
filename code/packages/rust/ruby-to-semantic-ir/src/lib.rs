@@ -5475,6 +5475,99 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
+    // RB2 — `yield` inside a hoisted block captures the enclosing method's
+    // `__sir_block__`.  The enclosing `def` gains the trailing block param,
+    // the hoisted block fn declares a `__sir_block__` capture, and the
+    // in-block `yield` becomes an `IndirectCall` through that capture.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn yield_inside_block_captures_enclosing_block() {
+        // `outer` passes a block to `helper`; that block `yield`s, which in
+        // Ruby invokes `outer`'s own block. So `outer` must take a block,
+        // and the hoisted block must capture it.
+        let m = lower("def helper(x)\n  x + 1\nend\ndef outer\n  helper(2) { yield 99 }\nend\n");
+        let outer = func(&m, "outer");
+        assert_eq!(
+            outer.params.last().map(|p| p.name.as_str()),
+            Some("__sir_block__"),
+            "outer must gain the trailing block param, got {:?}",
+            outer.params
+        );
+        // The hoisted block fn declares the capture and yields through it.
+        let blk = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("__block"))
+            .expect("hoisted block fn present");
+        assert!(
+            blk.captures.iter().any(|c| c.name == "__sir_block__"),
+            "block fn must capture __sir_block__, got {:?}",
+            blk.captures
+        );
+        let yields_via_capture = blk.body.stmts.iter().any(|s| matches!(s,
+            Stmt::ExprStmt { expr: Expr::IndirectCall { target, .. }, .. }
+                if matches!(target.as_ref(),
+                    Expr::VarRef { name, scope, .. }
+                        if name == "__sir_block__" && *scope == Scope::Capture)))
+            || matches!(&blk.body.value, Expr::IndirectCall { target, .. }
+                if matches!(target.as_ref(),
+                    Expr::VarRef { name, scope, .. }
+                        if name == "__sir_block__" && *scope == Scope::Capture));
+        assert!(yields_via_capture, "in-block yield must call through the captured block");
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn yield_inside_receiver_block_captures_enclosing_block() {
+        // Same, via the RB1 receiver-block path (`recv.each { … }`).
+        let m = lower("def outer\n  [1, 2].each { yield 7 }\nend\n");
+        let outer = func(&m, "outer");
+        assert_eq!(outer.params.last().map(|p| p.name.as_str()), Some("__sir_block__"));
+        let blk = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("__block"))
+            .expect("hoisted block fn present");
+        assert!(blk.captures.iter().any(|c| c.name == "__sir_block__"));
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    #[test]
+    fn nested_block_yield_still_validates() {
+        // A block nested inside another block, with the inner block
+        // `yield`ing, must NOT emit an invalid cross-level capture. v0
+        // cut-line: only a block directly in the method body threads the
+        // capture; the nested inner block keeps its raw `yield` (valid
+        // SIR), so the module still validates.
+        let m = lower("def outer\n  [1].each { [2].each { yield 9 } }\nend\n");
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "nested block yield must still produce a valid module: {:?}",
+            semantic_ir::validate(&m)
+        );
+    }
+
+    #[test]
+    fn top_level_block_yield_is_not_captured() {
+        // At the top level there is no enclosing method, so a block that
+        // `yield`s keeps its raw `yield` (no spurious capture / no dangling
+        // __sir_block__ reference).
+        let m = lower("def helper(x)\n  x + 1\nend\nhelper(2) { yield 1 }\n");
+        let blk = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("__block"))
+            .expect("hoisted block fn present");
+        assert!(
+            blk.captures.is_empty(),
+            "top-level block must NOT capture an enclosing block, got {:?}",
+            blk.captures
+        );
+        assert!(semantic_ir::validate(&m).is_ok(), "validates: {:?}", semantic_ir::validate(&m));
+    }
+
+    // -----------------------------------------------------------------------
     // Phase Q10b — block_given? → not(null?(__sir_block__))
     // -----------------------------------------------------------------------
 
