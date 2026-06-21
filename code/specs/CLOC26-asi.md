@@ -1,8 +1,9 @@
 # CLOC26 — Automatic Semicolon Insertion (ASI)
 
-> **Status:** **Phase 1 shipped** (the `}` / EOF rule, in
-> `javascript-parser/src/asi.rs`); Phases 2–3 pending. This document was
-> committed *before* any implementation code, per the repo standard.
+> **Status:** **Phases 1 and 2 shipped** (the `}` / EOF rule and the
+> line-terminator rule, in `javascript-parser/src/asi.rs`); Phase 3 (restricted
+> productions) pending. This document was committed *before* any implementation
+> code, per the repo standard.
 >
 > **Implementation refinement (Phase 1):** the shipped implementation uses the
 > **retry-on-parse-error** strategy, not the lookahead table this spec first
@@ -173,10 +174,27 @@ etc. Unit tests for the transform + closurec e2e fixtures (`simple-asi-block`)
 that previously degraded now optimize. **Regression guard: every existing
 fixture is byte-identical.**
 
-**Phase 2 — line-terminator rule (Rule 1).** Extend the transform to insert
-before an offending token preceded by a newline, using the continuation-token
-denylist. Requires the newline-survival answer from Phase 1. Tests:
-`a=1\n b=2`, and negative cases (`a\n .b`, `a\n +b` stay single statements).
+**Phase 2 — line-terminator rule (Rule 1). ✅ SHIPPED.** The retry harness now
+also inserts before an offending token preceded by a line terminator. Because
+the lexer discards newlines as trivia and does **not** set
+`TOKEN_PRECEDED_BY_NEWLINE`, "preceded by a line terminator" is derived from the
+per-token `line` field: the offending token starts on a higher line than its
+*single-line* predecessor (a multi-line predecessor is declined as ambiguous).
+The retry-on-error design means no continuation-token denylist is needed — a
+legal multi-line expression (`var c = a` ⏎ `+ b`) simply parses on the first
+try, so ASI never fires. Tests cover `a=1`⏎`b=2` (recovered), one-line
+`a=1 b=2` (a real error, NOT recovered), and the continued-expression no-op.
+
+**Soundness guard (`token_may_span_lines`).** Because `value` holds the *cooked*
+text, a predecessor that can span source lines while its value hides it (a
+string, template, or regex) would make `off.line > prev.line` an unreliable
+signal. Such predecessor kinds are therefore excluded — Rule 1 fires only when
+the predecessor is provably single-line (identifier, number, punctuator,
+keyword) or its value already contains a raw newline. **Documented limitation:**
+a statement ending in a string/template/regex literal immediately before a
+newline is conservatively *not* recovered (it degrades, as before). This is a
+missed optimization, never a miscompile, and is recoverable in a follow-up by
+tracking each token's end position. (Surfaced by the Phase-2 security review.)
 
 **Phase 3 — restricted productions (Rule 3).** Force ASI after
 `return`/`throw`/`break`/`continue`/`yield` + newline, and around postfix
