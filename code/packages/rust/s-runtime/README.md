@@ -187,7 +187,20 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   nbins = max(bin))` counts `1..nbins`. `outer` guards `nrow*ncol` with
   `checked_mul` against `MAX_SEQ_LEN` *before* allocating and `tabulate` clamps
   `nbins`, so neither is a DoS vector. (`%o%` infix, matrix dimnames, multi-way
-  `tapply`, and `simplify = FALSE` are deferred to R-29.)
+  `tapply`, and `simplify = FALSE` are deferred to a later pass.)
+- **Vector set operations & ordering** (R-29): `union`, `intersect`, `setdiff`,
+  `is.element`, `duplicated`, and `rank` — vectors treated as multisets, all
+  numeric- and character-aware (they key on the same coerced-character form as
+  `unique`/`%in%`). `union(x, y)` is the distinct elements of `c(x, y)` in
+  first-occurrence order (`union(c(1,2), c(2,3))` → `c(1,2,3)`); `intersect`/
+  `setdiff` keep the elements in/not-in `y`, deduplicated and in `x`'s order;
+  `is.element(el, set)` is the function spelling of `el %in% set`; `duplicated(x)`
+  flags repeats of earlier elements (`duplicated(c(1,1,2,3,3))` →
+  `c(F,T,F,F,T)`); and `rank(x)` gives sample ranks with **average** ties
+  (`rank(c(1,1,2))` → `c(1.5, 1.5, 3)`). Outputs are bounded by the inputs (each
+  already `MAX_SEQ_LEN`-bounded) and `rank` is `O(n log n)`, so none is a DoS
+  vector. (Other `ties.method` options, `incomparables=`/`fromLast=`,
+  `anyDuplicated`, and multi-key `order` are deferred to R-30.)
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

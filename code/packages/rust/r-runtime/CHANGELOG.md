@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.24.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-29 — vector set operations & ordering**: the set-theory and ranking corner
+  of R's base toolkit. All pure builtins in the shared `s-runtime` (no grammar
+  change), reached through ordinary R syntax, numeric- and character-aware.
+  - **`union(x, y)`** — `union(c(1,2), c(2,3))` → `c(1, 2, 3)` (distinct elements
+    of `c(x, y)`, first-occurrence order).
+  - **`intersect(x, y)`** — `intersect(c(1,2,3), c(2,3,4))` → `c(2, 3)` (elements
+    in both, in `x`'s order, deduplicated).
+  - **`setdiff(x, y)`** — `setdiff(c(1,2,3,4), c(2,4))` → `c(1, 3)` (elements of
+    `x` not in `y`, deduplicated).
+  - **`is.element(el, set)`** — `is.element(2, c(1,2,3))` → `TRUE` (the function
+    spelling of `el %in% set`, vectorized over `el`).
+  - **`duplicated(x)`** — `duplicated(c(1,1,2,3,3))` →
+    `c(FALSE, TRUE, FALSE, FALSE, TRUE)` (TRUE where an element repeats an earlier
+    one).
+  - **`rank(x)`** — sample ranks with **average** tie handling (R's default):
+    `rank(c(3,1,2))` → `c(3, 1, 2)`; `rank(c(1,1,2))` → `c(1.5, 1.5, 3)`. Numeric
+    ranks numerically, character lexicographically; result is always numeric.
+  - **Security**: outputs are bounded by the inputs (union ≤ `|x|+|y|`, others ≤
+    `|x|`, each already `MAX_SEQ_LEN`-bounded), so no fresh cap is needed;
+    `rank` is `O(n log n)` with one `f64` per element and no user multiplier;
+    empty inputs yield empty results, `NA` is an ordinary matchable key.
+  - 5 new R-syntax tests (numeric + character).
+  - **Deferred to R-30**: `rank`'s other `ties.method` options, the
+    `incomparables=`/`fromLast=` set-op arguments, `anyDuplicated`, and multi-key
+    `order`.
+
 ## [0.23.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)
