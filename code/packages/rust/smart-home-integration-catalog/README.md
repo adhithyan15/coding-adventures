@@ -148,6 +148,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - mesh release ticket handoff guardrail audit readiness summaries that combine
   work-order guardrail readiness with audit-row counts and first actionable
   audit lineage
+- mesh release ticket handoff guardrail audit clearance readiness summaries
+  that combine audit readiness with deterministic clearance rows and first
+  clearance lineage
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and
