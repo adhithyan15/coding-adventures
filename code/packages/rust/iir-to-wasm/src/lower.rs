@@ -135,7 +135,7 @@
 
 use std::collections::{HashMap, HashSet};
 
-use interpreter_ir::{IIRFunction, IIRModule, Operand};
+use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use wasm_module_encoder::{GcInstruction, encode_gc_instruction};
 use wasm_types::{
     ExternalKind, Export, FieldType, FuncType, FunctionBody, Global, GlobalType, Import,
@@ -144,17 +144,24 @@ use wasm_types::{
 
 use crate::codegen::{
     encode_br, encode_br_table, encode_call, encode_f32_const, encode_f64_const,
+    encode_f64_load, encode_f64_store, encode_i64_load, encode_i64_store,
     encode_i32_const, encode_i64_const, encode_local_get, encode_local_set, BLOCK, BLOCK_EMPTY,
     DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
     F32_NE, F32_SUB, F64_ADD, F64_DIV, F64_EQ, F64_GE, F64_GT, F64_LE, F64_LT, F64_MUL,
     F64_NEG, F64_NE, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
-    I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GT_S, I64_LE_S, I64_LT_S, I64_MUL,
-    I64_NE, I64_OR, I64_REM_S, I64_REM_U, I64_SHL, I64_SHR_S, I64_SHR_U, I64_SUB, I64_XOR,
-    LOOP, RETURN,
+    I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GE_U, I64_GT_S, I64_LE_S, I64_LT_S,
+    I64_MUL, I64_NE, I64_OR, I64_REM_S, I64_REM_U, I64_SHL, I64_SHR_S, I64_SHR_U, I64_SUB,
+    I64_XOR, IF, LOOP, RETURN, UNREACHABLE,
 };
 use crate::validate::validate_for_wasm;
+
+/// The synthetic module-level global that holds the E5 array bump pointer (the
+/// next free byte offset in linear memory). Injected into `global_names` when a
+/// module uses any array op; the `__` prefix keeps it out of any frontend's name
+/// space.
+const ARRAY_BUMP_GLOBAL: &str = "__array_bump";
 
 // ---------------------------------------------------------------------------
 // Global opcode helpers (LANG32)
@@ -410,6 +417,11 @@ pub fn hint_to_value_type(hint: &str) -> Option<ValueType> {
         "i64" | "u64" => Some(ValueType::I64),
         "f32" => Some(ValueType::F32),
         "f64" => Some(ValueType::F64),
+        // LANG-FULL E5: an `array<T>` handle is a byte offset into linear memory,
+        // carried in an `i64` register (like the Brainfuck tape base) and wrapped
+        // to `i32` when used as a WASM address. The *element* type drives the
+        // per-access `i64.load`/`f64.load`/… and is validated separately.
+        _ if interpreter_ir::opcodes::is_array_type(hint) => Some(ValueType::I64),
         _ if hint.starts_with("ref<") => {
             // Any GC reference type (validated by validate.rs to be supported)
             // is held in a WASM local of type `anyref` — the GC reference
@@ -419,6 +431,39 @@ pub fn hint_to_value_type(hint: &str) -> Option<ValueType> {
             Some(ValueType::Anyref)
         }
         _ => None,
+    }
+}
+
+/// The WASM value type + byte size for an E5 array element type hint. Only the
+/// 64-bit elements (`i64` / `f64`) are supported on this backend so far — the
+/// ALGOL frontend's `integer` and `real` arrays — so a narrower element produces
+/// a clear error rather than a silently wrong store width.
+fn wasm_array_elem(elem: &str, fn_name: &str) -> Result<(ValueType, u32), IIRWasmError> {
+    match hint_to_value_type(elem) {
+        Some(ValueType::I64) => Ok((ValueType::I64, 8)),
+        Some(ValueType::F64) => Ok((ValueType::F64, 8)),
+        _ => Err(IIRWasmError::UnsupportedType {
+            function: fn_name.to_string(),
+            type_hint: format!("array element {elem:?} (only i64/f64 elements on WASM so far)"),
+        }),
+    }
+}
+
+/// Extract `srcs[i]` of an array op as a variable name, with a clear error
+/// naming the op and the operand's role (`handle`/`idx`/`val`).
+fn array_var<'a>(
+    instr: &'a IIRInstr,
+    i: usize,
+    op: &str,
+    role: &str,
+    fn_name: &str,
+) -> Result<&'a str, IIRWasmError> {
+    match instr.srcs.get(i) {
+        Some(Operand::Var(v)) => Ok(v.as_str()),
+        _ => Err(IIRWasmError::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!("{op} requires Operand::Var({role}) as src[{i}]"),
+        }),
     }
 }
 
@@ -1978,6 +2023,163 @@ fn emit_instr(
             code.extend(encode_i32_store8());
         }
 
+        // ── alloc_array → bump-allocate a length-prefixed block (E5) ─────────
+        //
+        // `alloc_array dest <- count : array<T>`. Linear memory holds, per array,
+        // `[i64 length][elem 0][elem 1]…`; the handle (`dest`) is the byte offset
+        // of the block, taken from the `__array_bump` global, which is then
+        // advanced by `8 + count*elemsize` so the next array gets a fresh region.
+        // The length is written into the header. The wasm twin of the LLVM
+        // `@calloc [i64 len][elems…]` + `store i64 count` lowering.
+        //
+        // Trust boundary: `count` is a compiler-produced operand, so the bump
+        // arithmetic is plain wrapping i64. A hand-built IIR with `count ≈ 2⁶¹`
+        // could overflow the size and the stored length; the worst case is still a
+        // wasm trap or a clobber *confined to the 64 KiB linear-memory sandbox*
+        // (every access is bounds-checked by the runtime), never host memory —
+        // strictly safer than the unchecked `alloc_bytes` byte-tape.
+        "alloc_array" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "alloc_array must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let count_var = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "alloc_array requires Operand::Var(count) as src[0]".to_string(),
+                }),
+            };
+            let count_slot = get_reg(count_var)?;
+            let elem = interpreter_ir::opcodes::array_elem_type(&instr.type_hint).ok_or_else(|| {
+                IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: format!("alloc_array type_hint must be array<T>, got {:?}", instr.type_hint),
+                }
+            })?;
+            let (_, elem_size) = wasm_array_elem(&elem, fn_name)?;
+            let bump = *global_map.get(ARRAY_BUMP_GLOBAL).ok_or_else(|| IIRWasmError::UnsupportedOp {
+                function: fn_name.to_string(),
+                op: "alloc_array (missing __array_bump global)".to_string(),
+            })?;
+            // handle (dest) = current bump.
+            code.extend(encode_global_get(bump));
+            code.extend(encode_local_set(rd));
+            // bump = handle + 8 + count*elemsize.
+            code.extend(encode_local_get(rd));
+            code.extend(encode_local_get(count_slot));
+            code.extend(encode_i64_const(elem_size as i64));
+            code.push(I64_MUL);
+            code.extend(encode_i64_const(8));
+            code.push(I64_ADD);
+            code.push(I64_ADD);
+            code.extend(encode_global_set(bump));
+            // mem[wrap(handle) + 0] = count   (i64 length header).
+            code.extend(encode_local_get(rd));
+            code.extend(encode_i32_wrap_i64());
+            code.extend(encode_local_get(count_slot));
+            code.extend(encode_i64_store(0));
+        }
+
+        // ── array_get → bounds-checked element load (E5) ─────────────────────
+        //
+        // `array_get dest <- handle, idx : T`. A single **unsigned** compare
+        // `idx >=u len` traps (`unreachable`) on both a `>= len` index and a
+        // negative one (a negative i64 is a huge unsigned value) — the wasm twin
+        // of LLVM's `icmp uge` + `llvm.trap`. Then load the element at
+        // `wrap(handle) + idx*elemsize`, offset 8 past the length header.
+        "array_get" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "array_get must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let handle_slot = get_reg(array_var(instr, 0, "array_get", "handle", fn_name)?)?;
+            let idx_slot = get_reg(array_var(instr, 1, "array_get", "idx", fn_name)?)?;
+            let (vt, elem_size) = wasm_array_elem(&instr.type_hint, fn_name)?;
+            // bounds: idx >=u len  →  unreachable
+            code.extend(encode_local_get(idx_slot));
+            code.extend(encode_local_get(handle_slot));
+            code.extend(encode_i32_wrap_i64());
+            code.extend(encode_i64_load(0)); // length header
+            code.push(I64_GE_U);
+            code.push(IF);
+            code.push(BLOCK_EMPTY);
+            code.push(UNREACHABLE);
+            code.push(END);
+            // addr = wrap(handle) + wrap(idx)*elemsize ; load at offset 8
+            code.extend(encode_local_get(handle_slot));
+            code.extend(encode_i32_wrap_i64());
+            code.extend(encode_local_get(idx_slot));
+            code.extend(encode_i32_wrap_i64());
+            code.extend(encode_i32_const(elem_size as i32));
+            code.push(I32_MUL);
+            code.push(I32_ADD);
+            match vt {
+                ValueType::F64 => code.extend(encode_f64_load(8)),
+                _ => code.extend(encode_i64_load(8)),
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── array_set → bounds-checked element store (E5) ────────────────────
+        //
+        // `array_set handle, idx, val : T` (no dest). Same `idx >=u len` →
+        // `unreachable` guard, then store `val` at `wrap(handle) + idx*elemsize`,
+        // offset 8.
+        "array_set" => {
+            if instr.dest.is_some() {
+                return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "array_set must not have a dest".to_string(),
+                });
+            }
+            let handle_slot = get_reg(array_var(instr, 0, "array_set", "handle", fn_name)?)?;
+            let idx_slot = get_reg(array_var(instr, 1, "array_set", "idx", fn_name)?)?;
+            let val_slot = get_reg(array_var(instr, 2, "array_set", "val", fn_name)?)?;
+            let (vt, elem_size) = wasm_array_elem(&instr.type_hint, fn_name)?;
+            // bounds: idx >=u len  →  unreachable
+            code.extend(encode_local_get(idx_slot));
+            code.extend(encode_local_get(handle_slot));
+            code.extend(encode_i32_wrap_i64());
+            code.extend(encode_i64_load(0));
+            code.push(I64_GE_U);
+            code.push(IF);
+            code.push(BLOCK_EMPTY);
+            code.push(UNREACHABLE);
+            code.push(END);
+            // addr = wrap(handle) + wrap(idx)*elemsize ; store at offset 8
+            code.extend(encode_local_get(handle_slot));
+            code.extend(encode_i32_wrap_i64());
+            code.extend(encode_local_get(idx_slot));
+            code.extend(encode_i32_wrap_i64());
+            code.extend(encode_i32_const(elem_size as i32));
+            code.push(I32_MUL);
+            code.push(I32_ADD);
+            code.extend(encode_local_get(val_slot));
+            match vt {
+                ValueType::F64 => code.extend(encode_f64_store(8)),
+                _ => code.extend(encode_i64_store(8)),
+            }
+        }
+
+        // ── array_len → load the i64 length header (E5) ──────────────────────
+        //
+        // `array_len dest <- handle`. The length lives at `wrap(handle) + 0`.
+        "array_len" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "array_len must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let handle_slot = get_reg(array_var(instr, 0, "array_len", "handle", fn_name)?)?;
+            code.extend(encode_local_get(handle_slot));
+            code.extend(encode_i32_wrap_i64());
+            code.extend(encode_i64_load(0));
+            code.extend(encode_local_set(rd));
+        }
+
         // ── call_builtin → call $env.<name> ──────────────────────────────────
         //
         // Dispatch on `srcs[0]` (the builtin name, carried as Var) to the
@@ -2488,6 +2690,19 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                 "load_mem" | "store_mem" | "alloc_bytes" | "load_byte" | "store_byte" => {
                     uses_memory = true;
                 }
+                // LANG-FULL E5: array ops live in linear memory too, and they need
+                // a module-level **bump pointer** so successive `alloc_array`s get
+                // distinct bases. We model it as one extra mutable i64 global,
+                // `__array_bump` (init 0 — arrays start at memory offset 0; an ALGOL
+                // array program never also drives the Brainfuck byte-tape). It is
+                // injected into `global_names` here so it gets a global slot and a
+                // `global_map` index the lowering can look up.
+                s if interpreter_ir::opcodes::is_array_op(s) => {
+                    uses_memory = true;
+                    if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
+                        global_names.push(ARRAY_BUMP_GLOBAL.to_string());
+                    }
+                }
                 "call_builtin" => {
                     // The builtin name is in srcs[0] as Var.
                     if let Some(Operand::Var(name)) = instr.srcs.first() {
@@ -2946,5 +3161,68 @@ mod tests {
         assert_eq!(wm.exports[0].name, "my_fn");
         assert_eq!(wm.exports[0].kind, ExternalKind::Function);
         assert_eq!(wm.exports[0].index, 0);
+    }
+
+    // ── LANG-FULL E5 — bounds-checked arrays (linear-memory static model) ────
+
+    fn array_fn() -> IIRModule {
+        // a := new i64[3]; a[0] := 42; r := a[0]; n := len(a); ret r
+        single_fn("main", vec![], "i64", vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "i64"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "i64"),
+            IIRInstr::new("array_len", Some("m".into()), vec![Operand::Var("a".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ])
+    }
+
+    #[test]
+    fn array_ops_emit_memory_bump_and_trap() {
+        let wm = lower_iir_to_wasm(&array_fn(), &IIRWasmConfig::default()).unwrap();
+        // A linear memory is declared (arrays live in it) ...
+        assert_eq!(wm.memories.len(), 1, "array module needs a linear memory");
+        // ... and the synthetic `__array_bump` global is injected.
+        assert!(!wm.globals.is_empty(), "array module needs the bump-pointer global");
+        let code = &wm.code[0].code;
+        // The bounds check: `i64.ge_u` (0x5A) + `if` (0x04) + `unreachable` (0x00).
+        assert!(code.contains(&0x5A), "i64.ge_u bounds compare; code: {code:02X?}");
+        assert!(code.contains(&0x04), "if for the trap branch");
+        assert!(code.contains(&0x00), "unreachable trap");
+        // Length header + element store/load: i64.store (0x37) + i64.load (0x29).
+        assert!(code.contains(&0x37), "i64.store (header + element)");
+        assert!(code.contains(&0x29), "i64.load (element + length)");
+        // Bump pointer is read/written: global.get (0x23) + global.set (0x24).
+        assert!(code.contains(&0x23) && code.contains(&0x24), "global.get/set for the bump");
+    }
+
+    #[test]
+    fn array_handle_is_i64() {
+        // The `array<T>` handle rides an i64 register (a byte offset).
+        assert_eq!(hint_to_value_type("array<i64>"), Some(ValueType::I64));
+        assert_eq!(hint_to_value_type("array<f64>"), Some(ValueType::I64));
+    }
+
+    #[test]
+    fn f64_array_uses_f64_store_load() {
+        let m = single_fn("main", vec![], "f64", vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<f64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(2.5)], "f64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "f64"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ]);
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        let code = &wm.code[0].code;
+        assert!(code.contains(&0x39), "f64.store for array<f64> element");
+        assert!(code.contains(&0x2B), "f64.load for array<f64> element");
     }
 }
