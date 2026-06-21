@@ -16,6 +16,7 @@ that SIR-emitted Python calls into.
 
 from __future__ import annotations
 
+import inspect
 from collections.abc import Callable
 from typing import Any
 
@@ -42,12 +43,32 @@ class LocalJumpError(Exception):
 
 
 class Closure:
-    """A callable handle wrapping a Python function."""
+    """A callable handle wrapping a Python function.
 
-    __slots__ = ("fn",)
+    Carries two extra facets used for **proc-vs-lambda arity** (Q10g):
 
-    def __init__(self, fn: Callable[..., Any]) -> None:
+    - ``arity`` — the number of *fixed positional* parameters the closure's
+      block declares (after the captured values are bound), or ``None`` when
+      the block is variadic (a ``*rest`` parameter) or its arity could not be
+      introspected.  Used by :func:`apply` to adjust call arguments for
+      proc/block leniency.
+    - ``is_lambda`` — ``True`` for a Ruby lambda (``->(){}`` / ``lambda{}``),
+      which enforces **strict** arity (Ruby raises ``ArgumentError`` on a
+      mismatch); ``False`` for a block / proc, which **adjusts** arity (extra
+      args dropped, missing args become ``nil``).  Set via :func:`as_lambda`.
+    """
+
+    __slots__ = ("fn", "arity", "is_lambda")
+
+    def __init__(
+        self,
+        fn: Callable[..., Any],
+        arity: int | None = None,
+        is_lambda: bool = False,
+    ) -> None:
         self.fn = fn
+        self.arity = arity
+        self.is_lambda = is_lambda
 
 
 def apply(c: Any, args: list[Any]) -> Any:
@@ -57,18 +78,84 @@ def apply(c: Any, args: list[Any]) -> Any:
     :class:`LocalJumpError`): a ``yield`` reached through a nil block
     parameter.  It is reported distinctly from other non-closures (a
     genuine type error) so the two failures don't read alike.
+
+    **Proc-vs-lambda arity (Q10g).**  A *block / proc* adjusts its arguments
+    to its declared arity the way Ruby does — extra positional arguments are
+    dropped and missing ones become ``nil`` (``None``) — so e.g. a one-param
+    block yielded two values (``each_with_index``-style) binds the first and
+    ignores the rest instead of raising.  A *lambda* (``is_lambda``) is left
+    **strict**: arguments pass through unadjusted, so a genuine mismatch
+    surfaces as Python's native ``TypeError`` (the analogue of Ruby's
+    ``ArgumentError``).  A variadic block (``arity is None``) is also passed
+    through unadjusted.
     """
     if c is None:
         raise LocalJumpError("no block given (yield)")
     if not isinstance(c, Closure):
         raise TypeError("apply on non-closure")
-    return c.fn(*args)
+    if c.is_lambda or c.arity is None:
+        return c.fn(*args)
+    # Block / proc leniency: reshape args to exactly the declared arity.
+    n = c.arity
+    if len(args) > n:
+        adjusted: list[Any] = list(args[:n])
+    elif len(args) < n:
+        adjusted = list(args) + [None] * (n - len(args))
+    else:
+        adjusted = list(args)
+    return c.fn(*adjusted)
+
+
+def _positional_arity(fn: Callable[..., Any]) -> int | None:
+    """Count ``fn``'s fixed positional parameters, or ``None`` if variadic.
+
+    Returns ``None`` when ``fn`` accepts ``*args`` (a variadic block — Ruby
+    never trims arguments for ``|*rest|``) or when the signature cannot be
+    introspected, signalling :func:`apply` to leave arguments untouched.
+    """
+    try:
+        params = inspect.signature(fn).parameters.values()
+    except (TypeError, ValueError):
+        return None
+    count = 0
+    for p in params:
+        if p.kind in (
+            inspect.Parameter.POSITIONAL_ONLY,
+            inspect.Parameter.POSITIONAL_OR_KEYWORD,
+        ):
+            count += 1
+        elif p.kind == inspect.Parameter.VAR_POSITIONAL:
+            return None
+    return count
 
 
 def make_closure(fn: Callable[..., Any], captures: list[Any]) -> Closure:
     """Build a closure that prepends the captured values to each call's
-    arguments."""
-    return Closure(lambda *args: fn(*captures, *args))
+    arguments.
+
+    Records the block's own arity (``fn``'s fixed positional parameters minus
+    the captured values) so :func:`apply` can apply proc/block leniency.  The
+    closure is **not** a lambda by default; the ``lambda`` builtin marks its
+    result strict via :func:`as_lambda`.
+    """
+    arity = _positional_arity(fn)
+    if arity is not None:
+        arity = max(0, arity - len(captures))
+    return Closure(lambda *args: fn(*captures, *args), arity=arity)
+
+
+def as_lambda(c: Any) -> Any:
+    """Mark a closure as a Ruby **lambda** (strict arity); return it.
+
+    The ``lambda`` / ``->(){}`` builtin lowers to a `MakeClosure`, which by
+    default yields a proc-lenient closure.  Wrapping that result here flips it
+    to strict so :func:`apply` does not silently drop/pad its arguments — Ruby
+    lambdas raise on an arity mismatch.  A non-closure passes through unchanged
+    (defensive; the emitter only wraps a `MakeClosure`).
+    """
+    if isinstance(c, Closure):
+        c.is_lambda = True
+    return c
 
 
 # --- Global store ----------------------------------------------------------

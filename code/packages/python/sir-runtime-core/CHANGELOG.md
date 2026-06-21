@@ -2,6 +2,22 @@
 
 All notable changes to `coding-adventures-sir-runtime-core` are documented here.
 
+## [0.1.4] - 2026-06-21
+
+### Added (Q10g — proc-vs-lambda arity)
+
+- `Closure` now carries `arity` (fixed positional params after captures, or
+  `None` if variadic) and `is_lambda`. `make_closure` introspects the wrapped
+  function to record the block's arity; `apply` uses it to give **proc/block
+  leniency** — extra arguments dropped, missing ones become `nil` (`None`),
+  matching Ruby (e.g. a one-param block yielded two values binds the first).
+- New `as_lambda(c)` marks a closure **strict** and returns it. The `lambda` /
+  `->(){}` builtin wraps its closure with it so a lambda's arity mismatch
+  raises (the analogue of Ruby's `ArgumentError`) instead of being adjusted.
+- A variadic block (`|*rest|`, `arity is None`) is passed through unadjusted.
+  v0 cut-line: optional/keyword block params are counted as required positions
+  (see `code/specs/sir-runtime.md`).
+
 ## [0.1.3] - 2026-06-19
 
 ### Added (Q10a — no-block-given `LocalJumpError`)
