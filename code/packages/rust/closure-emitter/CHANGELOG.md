@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.0] - 2026-06-21
+
+### Fixed — prefix-unary precedence and `--`/`++` token fusion
+
+`emit_unary` emitted its argument with `emit_expression` (parent precedence 0),
+so a lower-precedence operand was never parenthesised: `!(a == b)` printed as
+`!a == b`, which JS reparses as `(!a) == b` — a **different program**. The
+argument is now emitted at `PREC_UNARY`, so binary / logical / conditional /
+assignment operands are wrapped:
+
+| AST            | before    | after       |
+|----------------|-----------|-------------|
+| `!(a == b)`    | `!a == b` | `!(a == b)` |
+| `-(a + b)`     | `-a + b`  | `-(a + b)`  |
+| `~(a \| b)`    | `~a \| b` | `~(a \| b)` |
+| `!(a ? b : c)` | `!a?b:c`  | `!(a?b:c)`  |
+
+A second fusion hazard is now handled too: a sign operator (`-`/`+`) directly
+followed by a same-sign operand fused into the decrement/increment token —
+`-(-a)` printed `--a` (pre-decrement of `a`), `+(+a)` printed `++a`. `emit_unary`
+now inserts a separating space in exactly those cases (`- -a`, `+ +a`, `- -5`),
+via the new `sign_op_char` / `arg_starts_with_sign` helpers. `!`/`~` never fuse,
+and equal-precedence nests like `!!a` are left paren-free.
+
+These miscompiles were latent until the `javascript-parser` bridge stopped
+dropping prefix operators (it had been emitting the bare operand); this change
+ships alongside that fix. Added 10 emitter unit tests.
+
 ## [0.17.0] - 2026-06-20
 
 ### Added — CLOC23: emit `for (… of …)`

@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.17.0] - 2026-06-21
+
+### Fixed — prefix unary operators were silently dropped by the bridge
+
+`convert_unary_expression` discriminated the two `unary_expression` grammar
+alternatives —
+
+```text
+unary_expression = postfix_expression
+                 | ("delete"|"void"|"typeof"|PLUS|MINUS|TILDE|BANG) unary_expression
+```
+
+— by counting AST **child nodes** (`if node_children(node).len() == 1 { …
+pass-through … }`). But the prefix operator is a **token** child, and
+`node_children` deliberately returns only `ASTNodeOrToken::Node`s, so *both*
+alternatives expose exactly one AST child node. Every prefix-operator form was
+therefore mis-classified as a pass-through and the bridge returned the bare
+operand:
+
+| source | bridged AST (before) | bridged AST (after) |
+|--------|----------------------|---------------------|
+| `!a`   | `a`                  | `!a`                |
+| `-b`   | `b`                  | `-b`                |
+| `~c`   | `c`                  | `~c`                |
+| `typeof x` | `x`              | `typeof x`          |
+
+This was a **miscompile** at SIMPLE/ADVANCED (the levels that run the bridge),
+not a missed optimization — WHITESPACE_ONLY kept the operators because it never
+builds the typed AST.
+
+The discriminator is now the **presence of a recognized prefix-operator token**
+(new `unary_operator_from_str` helper), independent of the child-node count.
+Added bridge regression tests for each operator, double-negation nesting, and
+the pass-through (no-operator) case.
+
 ## [0.16.0] - 2026-06-21
 
 ### Added — CLOC26 Phase 2: ASI line-terminator rule (Rule 1)

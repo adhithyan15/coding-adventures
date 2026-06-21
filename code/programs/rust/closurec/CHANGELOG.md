@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.161.0] - 2026-06-21
+
+### Fixed — prefix unary operators no longer dropped at SIMPLE/ADVANCED
+
+A program whose statements used a prefix unary operator on a non-foldable
+operand — `!a`, `-b`, `~c`, `typeof x`, etc. — was **miscompiled** at SIMPLE
+and ADVANCED: the operator silently vanished (`report(!a, -b, ~c)` became
+`report(a, b, c)`). The root cause was in the `javascript-parser` bridge, which
+mis-classified every prefix-operator form as a grammar pass-through and returned
+the bare operand. WHITESPACE_ONLY was unaffected (it runs no typed pipeline).
+
+Fixing the bridge unmasked two emitter precedence/printing bugs that this
+release also fixes (`coding-adventures-closure-emitter` 0.18.0): `!(a == b)`
+now keeps its parentheses (was `!a == b`, a different program), and `-(-a)` /
+`+(+a)` print with a separating space (`- -a` / `+ +a`) instead of fusing into
+the `--` / `++` decrement/increment token.
+
+New end-to-end fixture `tests/diff/simple-unary-preserve` proves all prefix
+operators survive the SIMPLE pipeline (with a whitespace-fallback guard and an
+explicit `!(a == b)` parenthesisation check). Pulls in
+`coding-adventures-javascript-parser` 0.17.0 and
+`coding-adventures-closure-emitter` 0.18.0.
+
 ## [0.160.0] - 2026-06-21
 
 ### Changed — CLOC26 Phase 2: optimize newline-separated, semicolon-free source
