@@ -2,6 +2,47 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.95.0] - 2026-06-21
+
+### Added (RB2 — `yield` inside a hoisted block captures the enclosing block)
+
+- A `yield` lexically inside a block literal belongs to the *enclosing
+  method* (`def outer; helper(2) { yield 99 }; end` — the block, when
+  called, invokes `outer`'s block). This is now lowered faithfully, for
+  both bare-name (`foo { … }`) and receiver (`recv.each { … }`, RB1)
+  blocks:
+  - The hoisted block `Function` declares a `__sir_block__` **capture**,
+    and each in-block `yield` becomes an `IndirectCall` through
+    `VarRef("__sir_block__", Scope::Capture)`.
+  - The enclosing `def` gains the trailing `__sir_block__` parameter (via
+    `thread_block_param`, now also keyed on a new
+    `block_captures_enclosing` signal) and is registered in
+    `block_param_methods` so Q9f threads the block at its call sites.
+  - The block's `MakeClosure` carries a `CaptureValue { "__sir_block__"
+    → VarRef("__sir_block__", Param) }`, binding the enclosing method's
+    block into the closure.
+- The yield-rewrite walk (`rewrite_yields_in_*`) is now parameterized by
+  the target `Scope` (`Param` for method bodies, `Capture` for hoisted
+  blocks). `hoist_block_to_function` runs it (scope `Capture`) only when
+  inside a method body (new `in_def_body` flag); at the top level the raw
+  `yield` is preserved (no enclosing block exists) — `top_level_block_yield_is_not_captured`.
+- New tests: `yield_inside_block_captures_enclosing_block`,
+  `yield_inside_receiver_block_captures_enclosing_block`,
+  `top_level_block_yield_is_not_captured`. Each validates. This reopens
+  and resolves the earlier Q10d v0 cut-line (now genuinely reachable
+  after RB1's grammar fix). v0: block bodies referencing *other* outer
+  locals still aren't captured.
+
+### Notes / v0 cut-lines
+
+- Capture threading fires only for a block lowered **directly** in the
+  method body. A `yield` inside a block **nested within another block**
+  (`[1].each { [2].each { yield } }`) is *not* threaded — that would need
+  the intermediate block to re-capture `__sir_block__` (capture chaining).
+  Instead the inner block keeps its raw `yield`, which is valid SIR, so
+  the module still validates (`nested_block_yield_still_validates`) rather
+  than emitting an invalid cross-level reference.
+
 ## [0.94.0] - 2026-06-19
 
 ### Added (RB1 — hoist a trailing block on a receiver/dotted method call)

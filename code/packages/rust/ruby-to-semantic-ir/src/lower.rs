@@ -13,8 +13,8 @@ use std::collections::HashSet;
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, Effect, EffectSet, ExportName, Expr, Feature, FeatureManifest, Function, Metadata,
-    Module, Param, RescueClause, Scope, Span, Stmt,
+    Block, Capture, CaptureValue, Effect, EffectSet, ExportName, Expr, Feature, FeatureManifest,
+    Function, Metadata, Module, Param, RescueClause, Scope, Span, Stmt,
 };
 
 /// A failure encountered during Ruby → SIR lowering.
@@ -73,6 +73,9 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         multi_assign_counter: 0,
         interp_depth: 0,
         block_param_methods: HashSet::new(),
+        in_def_body: false,
+        block_captures_enclosing: false,
+        in_block_body: false,
     };
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
@@ -628,6 +631,29 @@ struct Lowerer {
     /// (Q9f) thread the matching block argument at every call to such a
     /// method.  See [`Lowerer::thread_block_param`].
     block_param_methods: HashSet<String>,
+    /// Phase RB2 (FC) — true while lowering a method (`def`) body.  A
+    /// `yield` inside a block literal belongs to the *enclosing method*,
+    /// so [`Lowerer::hoist_block_to_function`] only threads the enclosing
+    /// block-param capture when this is set (at the top level there is no
+    /// enclosing method to provide a block, so the block keeps its raw
+    /// `yield` — the pre-RB2 behaviour). Saved/restored across nested defs.
+    in_def_body: bool,
+    /// Phase RB2 (FC) — set by `hoist_block_to_function` when a block it
+    /// hoisted captured the enclosing method's `__sir_block__` (its body
+    /// `yield`ed).  The enclosing `def` reads this in
+    /// [`Lowerer::thread_block_param`] so it gains the trailing
+    /// `__sir_block__` parameter even though the `yield` is lexically
+    /// inside the block, not the method body.  Reset per def body.
+    block_captures_enclosing: bool,
+    /// Phase RB2 (FC) — true while lowering a *block* body (set by
+    /// `hoist_block_to_function` around its body lowering).  RB2 only
+    /// threads the enclosing-block capture for a block lowered **directly**
+    /// in a method body, not one nested inside another block: capturing
+    /// across two block levels would need the intermediate block to also
+    /// re-capture `__sir_block__` (capture chaining), which v0 does not do.
+    /// A nested block therefore keeps its raw `yield` (valid SIR) rather
+    /// than emitting an invalid cross-level `Param` reference.
+    in_block_body: bool,
 }
 
 /// Phase Q9e (FC) — the reserved name of the synthesized trailing block
@@ -2984,8 +3010,15 @@ impl Lowerer {
     /// `yield` (the common case), so non-yielding methods keep their
     /// original arity and shape exactly.
     fn thread_block_param(&mut self, mut func: Function) -> Function {
-        let found = Self::rewrite_yields_in_block(&mut func.body);
-        if found {
+        // In the method body, `yield` resolves to the method's own
+        // trailing block parameter (`Scope::Param`).
+        let found = Self::rewrite_yields_in_block(&mut func.body, Scope::Param);
+        // Phase RB2 — a block literal lowered within this method's body may
+        // itself have `yield`ed; `hoist_block_to_function` set the flag and
+        // captured the enclosing block.  Either signal means this method
+        // must gain the trailing `__sir_block__` parameter.
+        let needs = found || self.block_captures_enclosing;
+        if needs {
             let span = func.span.clone();
             func.params.push(Param {
                 name: BLOCK_PARAM_NAME.to_string(),
@@ -3003,25 +3036,46 @@ impl Lowerer {
         func
     }
 
+    /// Phase RB2 — build the `MakeClosure` capture list for a hoisted
+    /// block.  When the block body `yield`ed (`captured` true), thread a
+    /// single `__sir_block__` capture whose value reads the enclosing
+    /// method's `__sir_block__` parameter (which `thread_block_param`
+    /// appends to that method).  Otherwise no captures (the v0 baseline:
+    /// block bodies referencing other outer locals are not yet captured).
+    fn block_capture_values(&self, captured: bool, span: Span) -> Vec<CaptureValue> {
+        if captured {
+            vec![CaptureValue {
+                name: BLOCK_PARAM_NAME.to_string(),
+                value: Expr::VarRef {
+                    name: BLOCK_PARAM_NAME.to_string(),
+                    scope: Scope::Param,
+                    span,
+                },
+            }]
+        } else {
+            Vec::new()
+        }
+    }
+
     /// Rewrite every direct-in-body `yield` within a [`Block`], returning
     /// whether at least one was found.  Recurses through the block's
     /// statements and its trailing value expression.
-    fn rewrite_yields_in_block(block: &mut Block) -> bool {
+    fn rewrite_yields_in_block(block: &mut Block, block_scope: Scope) -> bool {
         let mut found = false;
         for s in &mut block.stmts {
-            found |= Self::rewrite_yields_in_stmt(s);
+            found |= Self::rewrite_yields_in_stmt(s, block_scope);
         }
-        found |= Self::rewrite_yields_in_expr(&mut block.value);
+        found |= Self::rewrite_yields_in_expr(&mut block.value, block_scope);
         found
     }
 
     /// Rewrite a bare statement list (used by `Stmt::TryCatch` bodies and
     /// rescue/ensure clause bodies, which carry `Vec<Stmt>` with no
     /// trailing value slot).
-    fn rewrite_yields_in_stmts(stmts: &mut [Stmt]) -> bool {
+    fn rewrite_yields_in_stmts(stmts: &mut [Stmt], block_scope: Scope) -> bool {
         let mut found = false;
         for s in stmts {
-            found |= Self::rewrite_yields_in_stmt(s);
+            found |= Self::rewrite_yields_in_stmt(s, block_scope);
         }
         found
     }
@@ -3031,48 +3085,48 @@ impl Lowerer {
     /// regions, but NOT into class/module/singleton declaration bodies
     /// (whose `def`s — and any `yield`s therein — belong to their own
     /// methods, hoisted separately).
-    fn rewrite_yields_in_stmt(stmt: &mut Stmt) -> bool {
+    fn rewrite_yields_in_stmt(stmt: &mut Stmt, block_scope: Scope) -> bool {
         match stmt {
             Stmt::LetBinding { value, .. }
             | Stmt::LetStarBinding { value, .. }
             | Stmt::Assign { value, .. }
-            | Stmt::ExprStmt { expr: value, .. } => Self::rewrite_yields_in_expr(value),
+            | Stmt::ExprStmt { expr: value, .. } => Self::rewrite_yields_in_expr(value, block_scope),
             Stmt::While { cond, body, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(cond);
-                found |= Self::rewrite_yields_in_block(body);
+                let mut found = Self::rewrite_yields_in_expr(cond, block_scope);
+                found |= Self::rewrite_yields_in_block(body, block_scope);
                 found
             }
             Stmt::ForRange { start, stop, step, body, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(start);
-                found |= Self::rewrite_yields_in_expr(stop);
-                found |= Self::rewrite_yields_in_expr(step);
-                found |= Self::rewrite_yields_in_block(body);
+                let mut found = Self::rewrite_yields_in_expr(start, block_scope);
+                found |= Self::rewrite_yields_in_expr(stop, block_scope);
+                found |= Self::rewrite_yields_in_expr(step, block_scope);
+                found |= Self::rewrite_yields_in_block(body, block_scope);
                 found
             }
             Stmt::ForEach { iter, body, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(iter);
-                found |= Self::rewrite_yields_in_block(body);
+                let mut found = Self::rewrite_yields_in_expr(iter, block_scope);
+                found |= Self::rewrite_yields_in_block(body, block_scope);
                 found
             }
             Stmt::SeqSet { seq, index, value, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(seq);
-                found |= Self::rewrite_yields_in_expr(index);
-                found |= Self::rewrite_yields_in_expr(value);
+                let mut found = Self::rewrite_yields_in_expr(seq, block_scope);
+                found |= Self::rewrite_yields_in_expr(index, block_scope);
+                found |= Self::rewrite_yields_in_expr(value, block_scope);
                 found
             }
             Stmt::MapSet { map, key, value, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(map);
-                found |= Self::rewrite_yields_in_expr(key);
-                found |= Self::rewrite_yields_in_expr(value);
+                let mut found = Self::rewrite_yields_in_expr(map, block_scope);
+                found |= Self::rewrite_yields_in_expr(key, block_scope);
+                found |= Self::rewrite_yields_in_expr(value, block_scope);
                 found
             }
             Stmt::TryCatch { body, rescues, ensure_body, .. } => {
-                let mut found = Self::rewrite_yields_in_stmts(body);
+                let mut found = Self::rewrite_yields_in_stmts(body, block_scope);
                 for r in rescues {
-                    found |= Self::rewrite_yields_in_stmts(&mut r.body);
+                    found |= Self::rewrite_yields_in_stmts(&mut r.body, block_scope);
                 }
                 if let Some(eb) = ensure_body {
-                    found |= Self::rewrite_yields_in_stmts(eb);
+                    found |= Self::rewrite_yields_in_stmts(eb, block_scope);
                 }
                 found
             }
@@ -3092,7 +3146,7 @@ impl Lowerer {
     /// expression variants recurse into their children — except
     /// [`Expr::MakeClosure`], which is intentionally NOT descended (a
     /// `yield` inside a block literal belongs to the enclosing method).
-    fn rewrite_yields_in_expr(expr: &mut Expr) -> bool {
+    fn rewrite_yields_in_expr(expr: &mut Expr, block_scope: Scope) -> bool {
         match expr {
             Expr::BuiltinCall { name, args, effects, span } if name == "yield" => {
                 // Rewrite any yields nested within this yield's own
@@ -3100,13 +3154,13 @@ impl Lowerer {
                 // the whole node with the indirect call.
                 let mut found = false;
                 for a in args.iter_mut() {
-                    found |= Self::rewrite_yields_in_expr(a);
+                    found |= Self::rewrite_yields_in_expr(a, block_scope);
                 }
                 let _ = found; // a nested rewrite still counts as "found"
                 let span = span.clone();
                 let target = Box::new(Expr::VarRef {
                     name: BLOCK_PARAM_NAME.to_string(),
-                    scope: Scope::Param,
+                    scope: block_scope,
                     span: span.clone(),
                 });
                 *expr = Expr::IndirectCall {
@@ -3122,59 +3176,59 @@ impl Lowerer {
             | Expr::Intrinsic { args, .. } => {
                 let mut found = false;
                 for a in args.iter_mut() {
-                    found |= Self::rewrite_yields_in_expr(a);
+                    found |= Self::rewrite_yields_in_expr(a, block_scope);
                 }
                 found
             }
             Expr::IndirectCall { target, args, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(target);
+                let mut found = Self::rewrite_yields_in_expr(target, block_scope);
                 for a in args.iter_mut() {
-                    found |= Self::rewrite_yields_in_expr(a);
+                    found |= Self::rewrite_yields_in_expr(a, block_scope);
                 }
                 found
             }
             Expr::If { cond, then_branch, else_branch, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(cond);
-                found |= Self::rewrite_yields_in_block(then_branch);
-                found |= Self::rewrite_yields_in_block(else_branch);
+                let mut found = Self::rewrite_yields_in_expr(cond, block_scope);
+                found |= Self::rewrite_yields_in_block(then_branch, block_scope);
+                found |= Self::rewrite_yields_in_block(else_branch, block_scope);
                 found
             }
-            Expr::Block(b) => Self::rewrite_yields_in_block(b),
+            Expr::Block(b) => Self::rewrite_yields_in_block(b, block_scope),
             Expr::SeqLit { items, .. } => {
                 let mut found = false;
                 for i in items.iter_mut() {
-                    found |= Self::rewrite_yields_in_expr(i);
+                    found |= Self::rewrite_yields_in_expr(i, block_scope);
                 }
                 found
             }
             Expr::SeqIndex { seq, index, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(seq);
-                found |= Self::rewrite_yields_in_expr(index);
+                let mut found = Self::rewrite_yields_in_expr(seq, block_scope);
+                found |= Self::rewrite_yields_in_expr(index, block_scope);
                 found
             }
-            Expr::SeqLen { seq, .. } => Self::rewrite_yields_in_expr(seq),
+            Expr::SeqLen { seq, .. } => Self::rewrite_yields_in_expr(seq, block_scope),
             Expr::MapLit { entries, .. } => {
                 let mut found = false;
                 for e in entries.iter_mut() {
-                    found |= Self::rewrite_yields_in_expr(&mut e.key);
-                    found |= Self::rewrite_yields_in_expr(&mut e.value);
+                    found |= Self::rewrite_yields_in_expr(&mut e.key, block_scope);
+                    found |= Self::rewrite_yields_in_expr(&mut e.value, block_scope);
                 }
                 found
             }
             Expr::MapGet { map, key, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(map);
-                found |= Self::rewrite_yields_in_expr(key);
+                let mut found = Self::rewrite_yields_in_expr(map, block_scope);
+                found |= Self::rewrite_yields_in_expr(key, block_scope);
                 found
             }
             Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
-                let mut found = Self::rewrite_yields_in_expr(lhs);
-                found |= Self::rewrite_yields_in_expr(rhs);
+                let mut found = Self::rewrite_yields_in_expr(lhs, block_scope);
+                found |= Self::rewrite_yields_in_expr(rhs, block_scope);
                 found
             }
             Expr::StrConcat { parts, .. } => {
                 let mut found = false;
                 for p in parts.iter_mut() {
-                    found |= Self::rewrite_yields_in_expr(p);
+                    found |= Self::rewrite_yields_in_expr(p, block_scope);
                 }
                 found
             }
@@ -3192,7 +3246,7 @@ impl Lowerer {
                 let span = span.clone();
                 let block_ref = Expr::VarRef {
                     name: BLOCK_PARAM_NAME.to_string(),
-                    scope: Scope::Param,
+                    scope: block_scope,
                     span: span.clone(),
                 };
                 let is_nil = Expr::BuiltinCall {
@@ -3653,6 +3707,12 @@ impl Lowerer {
         // parameter inside the expression resolves as `Scope::Param`.
         let saved_locals = std::mem::take(&mut self.declared_locals);
         let saved_params = std::mem::take(&mut self.current_params);
+        // Phase RB2 — mark that we are inside a method body so a block
+        // literal that `yield`s captures *this* method's block.
+        let saved_in_def = self.in_def_body;
+        let saved_block_cap = self.block_captures_enclosing;
+        self.in_def_body = true;
+        self.block_captures_enclosing = false;
         for p in &params {
             self.declared_locals.insert(p.name.clone());
             self.current_params.insert(p.name.clone());
@@ -3695,7 +3755,11 @@ impl Lowerer {
             metadata: Metadata::new(),
             span: self.span_of(node),
         };
-        Ok(self.thread_block_param(func))
+        let threaded = self.thread_block_param(func);
+        // Phase RB2 — restore the enclosing method's block-context flags.
+        self.in_def_body = saved_in_def;
+        self.block_captures_enclosing = saved_block_cap;
+        Ok(threaded)
     }
 
     fn lower_def_statement(
@@ -3789,6 +3853,12 @@ impl Lowerer {
         // them inside the body gets `Scope::Param` (validator-correct).
         let saved_locals = std::mem::take(&mut self.declared_locals);
         let saved_params = std::mem::take(&mut self.current_params);
+        // Phase RB2 — mark that we are inside a method body so a block
+        // literal that `yield`s captures *this* method's block.
+        let saved_in_def = self.in_def_body;
+        let saved_block_cap = self.block_captures_enclosing;
+        self.in_def_body = true;
+        self.block_captures_enclosing = false;
         for p in &params {
             self.declared_locals.insert(p.name.clone());
             self.current_params.insert(p.name.clone());
@@ -3902,7 +3972,11 @@ impl Lowerer {
             metadata: Metadata::new(),
             span: self.span_of(node),
         };
-        Ok(self.thread_block_param(func))
+        let threaded = self.thread_block_param(func);
+        // Phase RB2 — restore the enclosing method's block-context flags.
+        self.in_def_body = saved_in_def;
+        self.block_captures_enclosing = saved_block_cap;
+        Ok(threaded)
     }
 
     // -------------------------------------------------------------------
@@ -5298,15 +5372,18 @@ impl Lowerer {
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
             })?;
-        let fn_name = self.hoist_block_to_function(block_node)?;
+        let (fn_name, captured_block) = self.hoist_block_to_function(block_node)?;
 
-        // Append `MakeClosure` as the trailing arg.  Captures are
-        // empty in v0 (block bodies that reference outer locals are
-        // a known limitation).
+        // Append `MakeClosure` as the trailing arg.  Captures are empty in
+        // v0 EXCEPT the RB2 enclosing-block capture: when the block body
+        // `yield`s, it captures the enclosing method's `__sir_block__`
+        // (block bodies referencing other outer locals remain a known
+        // limitation).
+        let bspan = self.span_of(block_node);
         let make_closure = Expr::MakeClosure {
             fn_name: fn_name.clone(),
-            captures: Vec::new(),
-            span: self.span_of(block_node),
+            captures: self.block_capture_values(captured_block, bspan.clone()),
+            span: bspan,
         };
         self.features_used.insert(Feature::Closures);
 
@@ -5338,7 +5415,7 @@ impl Lowerer {
     fn hoist_block_to_function(
         &mut self,
         block_node: &GrammarASTNode,
-    ) -> Result<String, RubyLowerError> {
+    ) -> Result<(String, bool), RubyLowerError> {
         // Drill into the do_block / brace_block child.
         let inner = self.first_node_child(block_node).ok_or_else(|| RubyLowerError {
             message: "block missing do_block/brace_block child".to_string(),
@@ -5432,6 +5509,13 @@ impl Lowerer {
         // `lower_def_statement`).
         let saved_locals = std::mem::take(&mut self.declared_locals);
         let saved_params = std::mem::take(&mut self.current_params);
+        // Phase RB2 — whether THIS block is being hoisted while already
+        // inside another block.  Captured before we mark ourselves as a
+        // block body, so an inner block (hoisted during our body lowering)
+        // sees `in_block_body == true` and skips the cross-level capture.
+        let nested_in_block = self.in_block_body;
+        let saved_in_block = self.in_block_body;
+        self.in_block_body = true;
         for p in &params {
             self.declared_locals.insert(p.name.clone());
             self.current_params.insert(p.name.clone());
@@ -5521,6 +5605,48 @@ impl Lowerer {
         // Restore outer scope.
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
+        self.in_block_body = saved_in_block;
+
+        // Assemble the block body so the RB2 yield-capture rewrite can run
+        // over it as a unit.
+        let mut body = Block {
+            stmts: stmts_out,
+            value,
+            span: self.span_of(inner),
+        };
+
+        // Phase RB2 (FC) — a `yield` lexically inside this block belongs to
+        // the *enclosing method*, not the block.  When we are lowering a
+        // method body (`in_def_body`), rewrite each in-block `yield` to an
+        // `IndirectCall` through a captured `__sir_block__` (scope
+        // `Capture`, since inside the hoisted function it is a capture, not
+        // a parameter), record it as a capture on the hoisted function, and
+        // signal the enclosing `def` (via `block_captures_enclosing`) to
+        // gain the trailing `__sir_block__` parameter and thread the
+        // matching `CaptureValue` at the `MakeClosure`.  At the top level
+        // there is no enclosing method, so we leave the raw `yield` (the
+        // pre-RB2 behaviour) rather than synthesize a dangling capture.
+        // v0 cut-line: only a block lowered *directly* in the method body
+        // (not nested inside another block) threads the capture.  Capturing
+        // across two block levels would require the intermediate block to
+        // re-capture `__sir_block__`; until that chaining exists, a nested
+        // block keeps its raw `yield` (valid SIR) rather than emit an
+        // invalid cross-level `Param` reference.
+        let mut captures: Vec<Capture> = Vec::new();
+        let mut captured_enclosing_block = false;
+        if self.in_def_body
+            && !nested_in_block
+            && Self::rewrite_yields_in_block(&mut body, Scope::Capture)
+        {
+            captures.push(Capture {
+                name: BLOCK_PARAM_NAME.to_string(),
+                sir_type: None,
+            });
+            self.block_captures_enclosing = true;
+            captured_enclosing_block = true;
+            self.features_used.insert(Feature::Closures);
+            self.features_used.insert(Feature::DynamicTyping);
+        }
 
         // Mint the synthetic function name and push the hoisted
         // Function onto user_functions.  Underscore-prefixed names
@@ -5535,18 +5661,14 @@ impl Lowerer {
             name: fn_name.clone(),
             params,
             return_type: None,
-            captures: Vec::new(),
-            body: Block {
-                stmts: stmts_out,
-                value,
-                span: self.span_of(inner),
-            },
+            captures,
+            body,
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: self.span_of(block_node),
         });
 
-        Ok(fn_name)
+        Ok((fn_name, captured_enclosing_block))
     }
 
     // -------------------------------------------------------------------
@@ -7551,11 +7673,12 @@ impl Lowerer {
         // (block bodies referencing outer locals remain a known
         // limitation, shared with `method_with_block`).
         if let Some(block_node) = self.find_node_child(dot_node, "block") {
-            let fn_name = self.hoist_block_to_function(block_node)?;
+            let (fn_name, captured_block) = self.hoist_block_to_function(block_node)?;
+            let bspan = self.span_of(block_node);
             full_args.push(Expr::MakeClosure {
                 fn_name,
-                captures: Vec::new(),
-                span: self.span_of(block_node),
+                captures: self.block_capture_values(captured_block, bspan.clone()),
+                span: bspan,
             });
             self.features_used.insert(Feature::Closures);
         }
