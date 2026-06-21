@@ -1,0 +1,318 @@
+//! A decoder for the 64-bit x86 subset the in-repo `x86_64-encoder` emits.
+//!
+//! This is **not** a full x86 decoder — it covers the instructions our backend
+//! generates (and grows as the backend grows). Anything else is a clean
+//! [`Trap::DecodeError`] (fail-closed). All operations are 64-bit operand size
+//! (REX.W), the only width the backend uses for register values, plus the byte
+//! loads/stores the byte-tape/array element headers use.
+//!
+//! ## Instruction encoding (the parts we need)
+//!
+//! ```text
+//!   [REX] opcode [ModRM [SIB] [disp]] [imm]
+//! ```
+//! - **REX** (`0x40..=0x4F`): `0100 WRXB`. `W`=64-bit operand, `R`=ModRM.reg
+//!   bit 3, `X`=SIB.index bit 3, `B`=ModRM.rm / opcode-reg bit 3.
+//! - **ModRM**: `mod(2) reg(3) rm(3)`. `mod==11` ⇒ rm is a register; otherwise a
+//!   memory operand (`[base + disp]`, with `rm==101 && mod==00` meaning RIP-rel,
+//!   `rm==100` meaning a SIB byte follows).
+
+use crate::state::Reg;
+use crate::trap::Trap;
+
+/// A decoded source/destination location.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Operand {
+    /// A register.
+    Reg(Reg),
+    /// `[base + index*scale + disp]`. `index == None` for no index; `rip` true
+    /// for RIP-relative (`disp` is relative to the *next* instruction).
+    Mem { base: Option<Reg>, index: Option<Reg>, scale: u8, disp: i64, rip: bool },
+}
+
+/// A decoded instruction (the subset we execute — see [`super::execute`]).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Instr {
+    Push(Reg),
+    Pop(Reg),
+    /// `mov dst, src` — 64-bit. Exactly one of dst/src is memory (or both reg).
+    Mov { dst: Operand, src: Operand },
+    /// `mov reg, imm` (imm sign-extended to 64).
+    MovImm { dst: Operand, imm: i64 },
+    /// `movzx reg64, byte [mem]`.
+    Movzx { dst: Reg, src: Operand },
+    /// `lea reg, mem`.
+    Lea { dst: Reg, src: Operand },
+    /// Integer ALU `op dst, src` (dst is reg or mem, src reg/mem/imm).
+    Alu { op: AluOp, dst: Operand, src: Operand },
+    /// `op dst, imm` (imm sign-extended).
+    AluImm { op: AluOp, dst: Operand, imm: i64 },
+    /// `shl/shr/sar dst, imm8`.
+    Shift { op: ShiftOp, dst: Operand, amount: u8 },
+    /// `imul reg, rm` (two-operand).
+    Imul { dst: Reg, src: Operand },
+    /// `jmp rel` (absolute target already resolved from rip+rel).
+    Jmp(i64),
+    /// `jcc rel` — relative displacement; the condition nibble is `cond`.
+    Jcc { cond: u8, rel: i64 },
+    /// `call rel` — relative displacement (resolved to a target at execute time).
+    Call(i64),
+    Ret,
+    /// `ud2` — illegal-instruction trap.
+    Ud2,
+    /// `nop`.
+    Nop,
+}
+
+/// Integer ALU ops we decode (all set flags).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[allow(missing_docs)]
+pub enum AluOp { Add, Sub, Cmp, And, Or, Xor, Test }
+
+/// Shift ops.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[allow(missing_docs)]
+pub enum ShiftOp { Shl, Shr, Sar }
+
+/// One decoded instruction plus its byte length.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Decoded {
+    pub instr: Instr,
+    pub len: usize,
+}
+
+/// Decode the instruction at `code[off..]`. `off` is the byte offset *within the
+/// code region*; RIP-relative displacements are resolved against `off + len`.
+pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
+    let mut p = off;
+    let at = |p: usize| -> Result<u8, Trap> {
+        code.get(p).copied().ok_or(Trap::DecodeError { offset: p as u64, opcode: 0 })
+    };
+
+    // ── REX prefix ──────────────────────────────────────────────────────────
+    let mut rex_w = false;
+    let mut rex_r = false;
+    let mut rex_x = false;
+    let mut rex_b = false;
+    let b0 = at(p)?;
+    if (0x40..=0x4F).contains(&b0) {
+        rex_w = b0 & 0x8 != 0;
+        rex_r = b0 & 0x4 != 0;
+        rex_x = b0 & 0x2 != 0;
+        rex_b = b0 & 0x1 != 0;
+        p += 1;
+    }
+    let _ = rex_w; // every op we handle is 64-bit; tracked for future widths
+    let _ = rex_x;
+
+    let op = at(p)?;
+    p += 1;
+
+    // push/pop r64 (REX.B extends the register).
+    if (0x50..=0x57).contains(&op) {
+        let r = Reg::from_index((op - 0x50) | ((rex_b as u8) << 3));
+        return Ok(Decoded { instr: Instr::Push(r), len: p - off });
+    }
+    if (0x58..=0x5F).contains(&op) {
+        let r = Reg::from_index((op - 0x58) | ((rex_b as u8) << 3));
+        return Ok(Decoded { instr: Instr::Pop(r), len: p - off });
+    }
+
+    match op {
+        0xC3 => return Ok(Decoded { instr: Instr::Ret, len: p - off }),
+        0x90 => return Ok(Decoded { instr: Instr::Nop, len: p - off }),
+        // jmp rel8 / rel32
+        0xEB => { let r = at(p)? as i8 as i64; p += 1; return Ok(Decoded { instr: Instr::Jmp(rel_target(p, r)), len: p - off }); }
+        0xE9 => { let r = read_i32(code, p)? as i64; p += 4; return Ok(Decoded { instr: Instr::Jmp(rel_target(p, r)), len: p - off }); }
+        0xE8 => { let r = read_i32(code, p)? as i64; p += 4; return Ok(Decoded { instr: Instr::Call(rel_target(p, r)), len: p - off }); }
+        // jcc rel8 (0x70..0x7F)
+        0x70..=0x7F => { let r = at(p)? as i8 as i64; p += 1; return Ok(Decoded { instr: Instr::Jcc { cond: op - 0x70, rel: rel_target(p, r) }, len: p - off }); }
+        _ => {}
+    }
+
+    // Two-byte 0F opcodes.
+    if op == 0x0F {
+        let op2 = at(p)?; p += 1;
+        match op2 {
+            0x0B => return Ok(Decoded { instr: Instr::Ud2, len: p - off }),
+            0xAF => { // imul r64, r/m64
+                let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; p = np;
+                let dst = reg_of(m.reg);
+                return Ok(Decoded { instr: Instr::Imul { dst, src: m.rm }, len: p - off });
+            }
+            0xB6 => { // movzx r64, r/m8
+                let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; p = np;
+                return Ok(Decoded { instr: Instr::Movzx { dst: reg_of(m.reg), src: m.rm }, len: p - off });
+            }
+            0x80..=0x8F => { // jcc rel32
+                let r = read_i32(code, p)? as i64; p += 4;
+                return Ok(Decoded { instr: Instr::Jcc { cond: op2 - 0x80, rel: rel_target(p, r) }, len: p - off });
+            }
+            other => return Err(Trap::DecodeError { offset: (p - 1) as u64, opcode: other }),
+        }
+    }
+
+    // ModRM-based one-byte opcodes.
+    match op {
+        0x89 => { let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; Ok(Decoded { instr: Instr::Mov { dst: m.rm, src: Operand::Reg(reg_of(m.reg)) }, len: np - off }) }
+        0x8B => { let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; Ok(Decoded { instr: Instr::Mov { dst: Operand::Reg(reg_of(m.reg)), src: m.rm }, len: np - off }) }
+        0x8D => { let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; Ok(Decoded { instr: Instr::Lea { dst: reg_of(m.reg), src: m.rm }, len: np - off }) }
+        0x01 => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::Add, true),
+        0x03 => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::Add, false),
+        0x29 => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::Sub, true),
+        0x2B => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::Sub, false),
+        0x39 => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::Cmp, true),
+        0x3B => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::Cmp, false),
+        0x21 => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::And, true),
+        0x09 => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::Or, true),
+        0x31 => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::Xor, true),
+        0x85 => alu_rr(code, p, rex_r, rex_x, rex_b, off, AluOp::Test, true),
+        // group1: op r/m64, imm32 (0x81) or imm8 (0x83); /reg selects the op.
+        0x81 | 0x83 => {
+            let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?;
+            let mut p2 = np;
+            let imm = if op == 0x81 { let v = read_i32(code, p2)? as i64; p2 += 4; v }
+                      else { let v = code.get(p2).copied().ok_or(Trap::DecodeError { offset: p2 as u64, opcode: 0 })? as i8 as i64; p2 += 1; v };
+            let aop = match m.reg & 0x7 {
+                0 => AluOp::Add, 1 => AluOp::Or, 4 => AluOp::And, 5 => AluOp::Sub, 7 => AluOp::Cmp, 6 => AluOp::Xor,
+                other => return Err(Trap::DecodeError { offset: off as u64, opcode: 0x80 | other }),
+            };
+            Ok(Decoded { instr: Instr::AluImm { op: aop, dst: m.rm, imm }, len: p2 - off })
+        }
+        // mov r/m64, imm32  (0xC7 /0)
+        0xC7 => {
+            let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?;
+            let imm = read_i32(code, np)? as i64;
+            Ok(Decoded { instr: Instr::MovImm { dst: m.rm, imm }, len: np + 4 - off })
+        }
+        // shift r/m64, imm8 (0xC1 /4=shl /5=shr /7=sar)
+        0xC1 => {
+            let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?;
+            let amt = code.get(np).copied().ok_or(Trap::DecodeError { offset: np as u64, opcode: 0 })?;
+            let sop = match m.reg & 0x7 { 4 => ShiftOp::Shl, 5 => ShiftOp::Shr, 7 => ShiftOp::Sar,
+                other => return Err(Trap::DecodeError { offset: off as u64, opcode: 0xC0 | other }) };
+            Ok(Decoded { instr: Instr::Shift { op: sop, dst: m.rm, amount: amt }, len: np + 1 - off })
+        }
+        other => Err(Trap::DecodeError { offset: (p - 1) as u64, opcode: other }),
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn alu_rr(code: &[u8], p: usize, r: bool, x: bool, b: bool, off: usize, op: AluOp, rm_is_dst: bool) -> Result<Decoded, Trap> {
+    let (m, np) = modrm(code, p, r, x, b)?;
+    let (dst, src) = if rm_is_dst { (m.rm, Operand::Reg(reg_of(m.reg))) }
+                     else { (Operand::Reg(reg_of(m.reg)), m.rm) };
+    Ok(Decoded { instr: Instr::Alu { op, dst, src }, len: np - off })
+}
+
+/// Resolve a relative branch to an absolute *code-region* offset. `cursor` is
+/// the byte offset just past the instruction (= rip-relative base), so the
+/// target is `cursor + rel`.
+fn rel_target(cursor: usize, rel: i64) -> i64 { cursor as i64 + rel }
+
+fn reg_of(i: u8) -> Reg { Reg::from_index(i) }
+
+struct ModRm { reg: u8, rm: Operand }
+
+/// Decode a ModRM byte (and any SIB/displacement). Returns the parsed operand
+/// info and the new cursor position.
+fn modrm(code: &[u8], p: usize, rex_r: bool, rex_x: bool, rex_b: bool) -> Result<(ModRm, usize), Trap> {
+    let byte = code.get(p).copied().ok_or(Trap::DecodeError { offset: p as u64, opcode: 0 })?;
+    let mut cur = p + 1;
+    let md = byte >> 6;
+    let reg = (byte >> 3 & 0x7) | ((rex_r as u8) << 3);
+    let rm_field = byte & 0x7;
+
+    if md == 0b11 {
+        let r = Reg::from_index(rm_field | ((rex_b as u8) << 3));
+        return Ok((ModRm { reg, rm: Operand::Reg(r) }, cur));
+    }
+
+    // Memory operand.
+    let mut base: Option<Reg> = None;
+    let mut index: Option<Reg> = None;
+    let mut scale = 1u8;
+    let mut rip = false;
+
+    if rm_field == 0b100 {
+        // SIB byte.
+        let sib = code.get(cur).copied().ok_or(Trap::DecodeError { offset: cur as u64, opcode: 0 })?;
+        cur += 1;
+        scale = 1 << (sib >> 6);
+        let idx = (sib >> 3 & 0x7) | ((rex_x as u8) << 3);
+        if idx != 0b100 { index = Some(Reg::from_index(idx)); } // index==100 (no REX.X) → none
+        let bas = (sib & 0x7) | ((rex_b as u8) << 3);
+        // base==101 with mod==00 means disp32 with no base; otherwise a register.
+        if (sib & 0x7) == 0b101 && md == 0b00 { base = None; } else { base = Some(Reg::from_index(bas)); }
+    } else if rm_field == 0b101 && md == 0b00 {
+        rip = true; // RIP-relative
+    } else {
+        base = Some(Reg::from_index(rm_field | ((rex_b as u8) << 3)));
+    }
+
+    let disp: i64 = match md {
+        0b00 => if rip || (rm_field == 0b100 && base.is_none()) { let d = read_i32(code, cur)? as i64; cur += 4; d } else { 0 },
+        0b01 => { let d = code.get(cur).copied().ok_or(Trap::DecodeError { offset: cur as u64, opcode: 0 })? as i8 as i64; cur += 1; d }
+        0b10 => { let d = read_i32(code, cur)? as i64; cur += 4; d }
+        _ => 0,
+    };
+
+    Ok((ModRm { reg, rm: Operand::Mem { base, index, scale, disp, rip } }, cur))
+}
+
+fn read_i32(code: &[u8], p: usize) -> Result<i32, Trap> {
+    let b = code.get(p..p + 4).ok_or(Trap::DecodeError { offset: p as u64, opcode: 0 })?;
+    Ok(i32::from_le_bytes([b[0], b[1], b[2], b[3]]))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // The exact prologue/const/ret bytes the x86_64-backend emits for
+    // `const_u64 v=42; ret_u64 v` (captured from compile_function_with_relocs).
+    const MIN_FN: &[u8] = &[
+        0x55,                                     // push rbp
+        0x48, 0x89, 0xE5,                         // mov rbp, rsp
+        0x48, 0x81, 0xEC, 0x10, 0x00, 0x00, 0x00, // sub rsp, 0x10
+        0x48, 0xC7, 0xC0, 0x2A, 0x00, 0x00, 0x00, // mov rax, 42
+        0x48, 0x89, 0x85, 0xF8, 0xFF, 0xFF, 0xFF, // mov [rbp-8], rax
+        0x48, 0x8B, 0x85, 0xF8, 0xFF, 0xFF, 0xFF, // mov rax, [rbp-8]
+        0x48, 0x89, 0xEC,                         // mov rsp, rbp
+        0x5D,                                     // pop rbp
+        0xC3,                                     // ret
+    ];
+
+    fn decode_all(code: &[u8]) -> Vec<Instr> {
+        let mut out = Vec::new();
+        let mut off = 0;
+        while off < code.len() {
+            let d = decode(code, off).unwrap_or_else(|e| panic!("decode at {off}: {e}"));
+            out.push(d.instr.clone());
+            off += d.len;
+        }
+        out
+    }
+
+    #[test]
+    fn decodes_the_backend_prologue_const_ret() {
+        let instrs = decode_all(MIN_FN);
+        assert_eq!(instrs[0], Instr::Push(Reg::Rbp));
+        assert_eq!(instrs[1], Instr::Mov { dst: Operand::Reg(Reg::Rbp), src: Operand::Reg(Reg::Rsp) });
+        assert_eq!(instrs[2], Instr::AluImm { op: AluOp::Sub, dst: Operand::Reg(Reg::Rsp), imm: 0x10 });
+        assert_eq!(instrs[3], Instr::MovImm { dst: Operand::Reg(Reg::Rax), imm: 42 });
+        // mov [rbp-8], rax
+        assert_eq!(instrs[4], Instr::Mov {
+            dst: Operand::Mem { base: Some(Reg::Rbp), index: None, scale: 1, disp: -8, rip: false },
+            src: Operand::Reg(Reg::Rax) });
+        assert_eq!(instrs.last(), Some(&Instr::Ret));
+    }
+
+    #[test]
+    fn ud2_and_jcc_decode() {
+        assert_eq!(decode(&[0x0F, 0x0B], 0).unwrap().instr, Instr::Ud2);
+        // jb rel8 +5  (0x72 0x05)
+        let d = decode(&[0x72, 0x05], 0).unwrap();
+        assert_eq!(d.instr, Instr::Jcc { cond: 0x2, rel: 7 }); // 2 (len) + 5
+    }
+}

@@ -1,0 +1,12 @@
+[package]
+name = "x86-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "x86/x86-64 runtime simulator — decode + execute machine code, and run the x86_64-backend's emitted code locally (host-arch-independent)"
+
+[dependencies]
+x86_64-encoder = { path = "../x86_64-encoder" }
+
+[dev-dependencies]
+x86_64-backend = { path = "../x86_64-backend" }
+jit-core = { path = "../jit-core" }
