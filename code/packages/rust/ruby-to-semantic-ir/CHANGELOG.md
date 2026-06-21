@@ -2,6 +2,28 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.94.0] - 2026-06-19
+
+### Added (RB1 — hoist a trailing block on a receiver/dotted method call)
+
+- `fold_one_dot_call` now detects the optional trailing `block` the
+  grammar admits on a `dot_call` (`recv.each { … }` / `recv.each do …
+  end`), hoists it to a top-level Function via `hoist_block_to_function`,
+  and appends the resulting `MakeClosure` as the `__method__` envelope's
+  trailing argument — mirroring `method_with_block` for bare-name calls.
+  Previously the block was silently dropped (lowered as a plain
+  `__method__(recv, "each")`). Captures remain empty in v0 (shared
+  block-closure limitation).
+- New tests: `receiver_method_brace_block_is_hoisted_and_attached`,
+  `receiver_method_do_end_block_is_hoisted_and_attached`,
+  `receiver_method_without_block_has_no_closure`. Each validates.
+
+### Notes
+
+- This is RB1 of the receiver-block series. Threading the block as the
+  enclosing method's implicit block when its body `yield`s (RB2 / the
+  reopened Q10d) and backend execution-proof (RB3) follow as separate PRs.
+
 ## [0.93.0] - 2026-06-19
 
 ### Added (Q10c — parenless/argless call to a yielding method)

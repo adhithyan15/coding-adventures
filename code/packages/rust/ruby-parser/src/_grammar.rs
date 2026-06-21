@@ -759,6 +759,7 @@ pub fn parser_grammar() -> ParserGrammar {
                             ] }) },
                         GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                     ] }) },
+                GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"block"#.to_string() }) },
             ] },
             line_number: 427,
         },

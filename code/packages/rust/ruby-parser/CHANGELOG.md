@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.79.0] - 2026-06-19
+
+### Added (RB1 — trailing block on receiver/dotted method calls)
+
+- `dot_call` now accepts an optional trailing `block`:
+  `dot_call = "." (NAME|KEYWORD) [ LPAREN [args] RPAREN ] [ block ] ;`.
+  This makes the dominant Ruby iterator idiom parse — `[1, 2].each { |x|
+  … }` and `foo.bar do … end` — which previously parse-panicked because a
+  block could only follow a *bare-name* call (`method_with_block`), never
+  a receiver/dotted call. `_grammar.rs` regenerated from `ruby.grammar`
+  via `grammar-tools`. Full parser suite unchanged (268 tests); the new
+  optional block is greedy but does not regress existing hash-literal or
+  chain parses.
+
 ## [0.78.0] - 2026-06-03
 
 ### Added (FC — array splat and find patterns)

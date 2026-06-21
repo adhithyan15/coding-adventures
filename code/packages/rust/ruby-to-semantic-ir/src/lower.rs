@@ -7533,13 +7533,33 @@ impl Lowerer {
         // The synthetic StrLit triggers the Strings feature, which the
         // post-pass adds to the manifest unconditionally.
         self.features_used.insert(Feature::Strings);
-        let mut full_args = Vec::with_capacity(args.len() + 2);
+        let mut full_args = Vec::with_capacity(args.len() + 3);
         full_args.push(receiver);
         full_args.push(Expr::StrLit {
             value: method_name,
             span: name_span,
         });
         full_args.extend(args);
+
+        // RB1 (FC) — a trailing block on a receiver/dotted method call
+        // (`recv.each { … }` / `recv.each do … end`).  The grammar now
+        // admits an optional `block` after the dot_call's argument list;
+        // hoist it to a top-level Function and append the resulting
+        // `MakeClosure` as the call's trailing argument, exactly as
+        // `method_with_block` does for bare-name calls.  Without this the
+        // block would be silently dropped.  Captures are empty in v0
+        // (block bodies referencing outer locals remain a known
+        // limitation, shared with `method_with_block`).
+        if let Some(block_node) = self.find_node_child(dot_node, "block") {
+            let fn_name = self.hoist_block_to_function(block_node)?;
+            full_args.push(Expr::MakeClosure {
+                fn_name,
+                captures: Vec::new(),
+                span: self.span_of(block_node),
+            });
+            self.features_used.insert(Feature::Closures);
+        }
+
         Ok(Expr::BuiltinCall {
             name: "__method__".to_string(),
             args: full_args,

@@ -424,7 +424,7 @@ rightward_assignment = expression "=>" NAME ;
 # Setter calls (`foo.bar = 1`) and bracket access (`arr[0]`) are
 # deliberately out of scope for this chunk — they get their own phases.
 method_call  = ( NAME | KEYWORD ) LPAREN [ call_arg { COMMA call_arg } ] RPAREN { dot_call } ;
-dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg { COMMA call_arg } ] RPAREN ] ;
+dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg { COMMA call_arg } ] RPAREN ] [ block ] ;
 # Phase 15d (FC) — scope-resolution operator `Foo::Bar` (and chains
 # `A::B::C`).  The lexer emits `::` as a `Colon` token whose VALUE is
 # "::", so the grammar literal `"::"` matches it by value.  A
