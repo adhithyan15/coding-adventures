@@ -151,3 +151,48 @@ export function callBuiltin(name: string, args: Val[]): Val {
 export function builtinClosure(name: string): Closure {
   return new Closure((...args: Val[]) => callBuiltin(name, args));
 }
+
+// --- Keyword-argument splat (call-position `**h`) ---------------------------
+
+/**
+ * Merge double-splatted maps into a single keyword-argument map.
+ *
+ * Ruby `f(**h1, **h2)` splices each map's entries into the call's keyword
+ * arguments, later entries winning on key collision. Python has a native
+ * `**` for exactly this; **JavaScript has no keyword-argument call form**, so
+ * the TypeScript backend cannot emit a faithful native `**`. Instead it
+ * collapses the trailing run of `**` arguments at a call site into ONE
+ * trailing argument built by this helper — the conventional JS "options
+ * object" convention, except the option bag is a SIR `Map<Val, Val>` so any
+ * `Val` key (symbol, number, string, …) round-trips.
+ *
+ * Semantics (matching Ruby's `**` merge):
+ *   - returns a **fresh** `Map` (callers may mutate it without aliasing a
+ *     source map — a defensive copy is what Ruby's `**` produces);
+ *   - maps are merged left-to-right, so a key present in a later map
+ *     **overwrites** the earlier value;
+ *   - every argument must be a `Map` (a SIR map); anything else is a backend
+ *     bug (the emitter only routes `**` over map operands), so we throw a
+ *     clear error rather than silently coercing.
+ *
+ * v0 cut-line (see `code/specs/sir-runtime.md`): this models keyword args as a
+ * single trailing options map. A callee compiled from `def f(**opts)` receives
+ * that map as its last positional parameter; mixing inline `key: value` pairs
+ * with `**h` at one call site is a further documented cut-line.
+ */
+export function doubleSplatMerge(...maps: Val[]): Map<Val, Val> {
+  const merged = new Map<Val, Val>();
+  for (const m of maps) {
+    if (!(m instanceof Map)) {
+      throw new Error(
+        `double-splat (\`**\`) expects a map operand, got ${toDisplay(m)}. ` +
+          `The TypeScript backend only routes \`**\` over SIR maps; reaching ` +
+          `this with a non-map is a backend coverage gap.`,
+      );
+    }
+    for (const [k, v] of m) {
+      merged.set(k, v);
+    }
+  }
+  return merged;
+}

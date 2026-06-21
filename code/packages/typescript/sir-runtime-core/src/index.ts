@@ -33,6 +33,7 @@ export {
   print,
   callBuiltin,
   builtinClosure,
+  doubleSplatMerge,
 } from "./runtime.js";
 
 // Inject core's richer `toDisplay` into the (dependency-free) pairs package so

@@ -143,3 +143,42 @@ describe("closures, globals, dispatch", () => {
     expect(sir.apply(plus, [4, 5])).toBe(9);
   });
 });
+
+describe("doubleSplatMerge (call-position **h)", () => {
+  it("merges maps left-to-right, later keys win", () => {
+    const h1 = new Map<sir.Val, sir.Val>([
+      ["a", 1],
+      ["b", 2],
+    ]);
+    const h2 = new Map<sir.Val, sir.Val>([
+      ["b", 3],
+      ["c", 4],
+    ]);
+    const merged = sir.doubleSplatMerge(h1, h2);
+    expect(merged.get("a")).toBe(1);
+    expect(merged.get("b")).toBe(3); // h2 overwrites h1
+    expect(merged.get("c")).toBe(4);
+  });
+
+  it("returns a fresh map (no aliasing of inputs)", () => {
+    const h = new Map<sir.Val, sir.Val>([["k", 1]]);
+    const merged = sir.doubleSplatMerge(h);
+    merged.set("k", 99);
+    expect(h.get("k")).toBe(1); // source untouched
+  });
+
+  it("merges zero maps into an empty map", () => {
+    expect(sir.doubleSplatMerge().size).toBe(0);
+  });
+
+  it("preserves non-string Val keys (symbols)", () => {
+    const sym = sir.intern("opt");
+    const h = new Map<sir.Val, sir.Val>([[sym, 7]]);
+    const merged = sir.doubleSplatMerge(h);
+    expect(merged.get(sym)).toBe(7);
+  });
+
+  it("throws on a non-map operand (backend coverage gap)", () => {
+    expect(() => sir.doubleSplatMerge(5 as unknown as sir.Val)).toThrow();
+  });
+});
