@@ -18,3 +18,4 @@ import "neuro-edges.adj"
 ? lesion_causes(arcuate_fasciculus, $Deficit)   % expect conduction_aphasia
 ? lesion_causes(substantia_nigra, $Deficit)     % expect parkinson_disease
 ? lesion_causes(subthalamic_nucleus, $Deficit)  % expect hemiballismus
+? lesion_causes(caudate_nucleus, $Deficit)      % expect huntington_disease
