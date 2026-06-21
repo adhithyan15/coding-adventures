@@ -160,10 +160,12 @@ E5 is large, so it ships as a sequence, each a `feat(lang-full): …` PR babysat
 merge before the next:
 
 0. **E5-spec** (this document) — committed specs-first, for design sign-off.
-1. **E5-ir + vm** — define the 4 ops + `array<T>` type helpers in `interpreter-ir`;
-   implement bounds-checked execution in `vm-core` (+ jit-core). Unit tests:
-   alloc/len/get/set, and an out-of-bounds trap. *No matrix Prog yet (needs a
-   frontend), but a direct IIR unit test proves it runs.*
+1. **E5-ir + vm** — ✅ **done** (interpreter-ir 0.7.0, vm-core 0.7.0). The 4 ops +
+   `array<T>` type helpers in `interpreter-ir`; bounds-checked execution in
+   `vm-core` (per-allocation `Vec<Value>` heap, default-init, OOB → `VMError`).
+   7 unit tests incl. out-of-bounds + negative-index traps and no-alias. (jit-core
+   array execution deferred to a later slice — it has no byte-tape either; the
+   matrix Jit column joins with the frontend PR.)
 2. **E5-algol-frontend** — `algol-iir-compiler` lowers `integer array` decls +
    subscripts (AL2, 1-D first); a matrix `Prog` runs on VM + JIT.
 3. **E5-managed-backends** — JVM, CLR, WASM array lowering (native managed

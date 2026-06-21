@@ -1,5 +1,24 @@
 # Changelog — interpreter-ir
 
+## [0.7.0] — 2026-06-20 (LANG-FULL E5 — array primitive)
+
+### Added — `array<T>` type + four array opcodes
+
+The IIR surface for bounded, indexable aggregates (enabler E5 — ALGOL/BASIC
+arrays, Twig lists). Representation-agnostic by design (see
+`code/specs/lang-full-e5-arrays.md`):
+
+- **Type helpers** `make_array_type`/`is_array_type`/`array_elem_type` mirror the
+  existing `ref<T>` helpers, encoding the element type as `"array<T>"`.
+- **Opcodes** `alloc_array` (→ `array<T>`), `array_len` (→ `i64`), `array_get`
+  (bounds-checked load → `T`), `array_set` (bounds-checked store) — `is_array_op`
+  predicate; the value-producing three join `is_value_producing`, `alloc_array`
+  joins `is_allocating`. `array_get`/`array_set` are bounds-checked *by
+  definition* (out-of-range index → trap).
+
+No backend lowers these yet except `vm-core` 0.7.0 (the reference interpreter);
+backends and frontends follow in the E5 PR sequence.
+
 ## [0.6.0] — 2026-05-12
 
 ### Added (LANG34 — First-Class Closure Opcodes)
