@@ -72,4 +72,14 @@ rulebook neuro_facts {
         source "Damage to the subthalamic nucleus can result in a disorder of movement called hemiballismus."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK559002/"
         trust authoritative
+
+    % --- caudate nucleus (striatal) atrophy -> Huntington disease -------------
+    % Parallels the substantia-nigra -> Parkinson edge: the disease is characterized by
+    % degeneration at the named site. The HD page states the lesion site AND the disease in
+    % one self-contained span (its other pathophysiology sentences mention the caudate and HD
+    % separately, so this declarative is the clean both-endpoints source).
+    relate lesion_causes(caudate_nucleus, huntington_disease)
+        source "Adult-onset Huntington disease is typically characterized by early striatal atrophy in the caudate."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559166/"
+        trust authoritative
 }
