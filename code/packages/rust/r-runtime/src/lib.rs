@@ -2266,4 +2266,208 @@ mod tests {
             c1 <- Counter$new(n = 0)\nc1$bump_twice()\nc1$n\n";
         assert_eq!(nums(selfcall), vec![2.0]);
     }
+
+    // --------------------------------------------------------------------
+    // R-26 — R5 callSuper(), active bindings, multiple inheritance
+    // --------------------------------------------------------------------
+
+    #[test]
+    fn refclass_call_super_chains_to_base() {
+        // The headline callSuper() case: Sub$describe overrides Base$describe and
+        // re-uses it via callSuper().
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            methods = list(describe = function() \"base\"))\n\
+            Sub <- setRefClass(\"Sub\", contains = \"Base\",\n  \
+            methods = list(describe = function() paste(callSuper(), \"sub\")))\n\
+            Sub$new()$describe()\n";
+        assert_eq!(show(src), "[1] \"base sub\"");
+    }
+
+    #[test]
+    fn refclass_call_super_forwards_args() {
+        // callSuper(x) forwards its evaluated argument to the parent method.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            methods = list(twice = function(x) x * 2))\n\
+            Sub <- setRefClass(\"Sub\", contains = \"Base\",\n  \
+            methods = list(twice = function(x) callSuper(x) + 1))\n\
+            Sub$new()$twice(10)\n";
+        assert_eq!(nums(src), vec![21.0]);
+    }
+
+    #[test]
+    fn refclass_call_super_three_levels() {
+        // C -> B -> A: each describe() chains one level up, walking to the root.
+        let src = "A <- setRefClass(\"A\",\n  \
+            methods = list(d = function() \"a\"))\n\
+            B <- setRefClass(\"B\", contains = \"A\",\n  \
+            methods = list(d = function() paste(callSuper(), \"b\")))\n\
+            C <- setRefClass(\"C\", contains = \"B\",\n  \
+            methods = list(d = function() paste(callSuper(), \"c\")))\n\
+            C$new()$d()\n";
+        assert_eq!(show(src), "[1] \"a b c\"");
+    }
+
+    #[test]
+    fn refclass_call_super_past_root_is_null() {
+        // A callSuper() in a root-class method (no parent definition) is a clean
+        // NULL — no recursion, no panic.
+        // `length(NULL)` is 0, so a past-root callSuper() yields length 0 (no error,
+        // no recursion).
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            methods = list(f = function() length(callSuper())))\n\
+            Base$new()$f()\n";
+        assert_eq!(nums(src), vec![0.0]);
+    }
+
+    #[test]
+    fn refclass_call_super_can_mutate_via_field() {
+        // The super method runs against the instance, so it can read/write fields.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(n = \"numeric\"),\n  \
+            methods = list(bump = function() { n <<- n + 1 }))\n\
+            Sub <- setRefClass(\"Sub\", contains = \"Base\",\n  \
+            methods = list(bump = function() { callSuper(); n <<- n + 10 }))\n\
+            s <- Sub$new(n = 0)\ns$bump()\ns$n\n";
+        assert_eq!(nums(src), vec![11.0]);
+    }
+
+    #[test]
+    fn refclass_active_binding_getter() {
+        // Reading t$fahrenheit calls the getter (missing(v) TRUE branch).
+        let src = "Temp <- setRefClass(\"Temp\",\n  \
+            fields = list(celsius = \"numeric\",\n    \
+            fahrenheit = function(v) { if (missing(v)) celsius * 9 / 5 + 32 else celsius <<- (v - 32) * 5 / 9 }))\n\
+            t <- Temp$new(celsius = 100)\nt$fahrenheit\n";
+        assert_eq!(nums(src), vec![212.0]);
+    }
+
+    #[test]
+    fn refclass_active_binding_setter() {
+        // Assigning to t$fahrenheit calls the setter (missing(v) FALSE branch),
+        // which writes the celsius field.
+        let src = "Temp <- setRefClass(\"Temp\",\n  \
+            fields = list(celsius = \"numeric\",\n    \
+            fahrenheit = function(v) { if (missing(v)) celsius * 9 / 5 + 32 else celsius <<- (v - 32) * 5 / 9 }))\n\
+            t <- Temp$new(celsius = 100)\nt$fahrenheit <- 32\nt$celsius\n";
+        assert_eq!(nums(src), vec![0.0]);
+    }
+
+    #[test]
+    fn refclass_active_binding_roundtrip() {
+        // Set then get should be consistent.
+        let src = "Temp <- setRefClass(\"Temp\",\n  \
+            fields = list(celsius = \"numeric\",\n    \
+            fahrenheit = function(v) { if (missing(v)) celsius * 9 / 5 + 32 else celsius <<- (v - 32) * 5 / 9 }))\n\
+            t <- Temp$new(celsius = 0)\nt$fahrenheit <- 212\nc(t$celsius, t$fahrenheit)\n";
+        assert_eq!(nums(src), vec![100.0, 212.0]);
+    }
+
+    #[test]
+    fn refclass_active_binding_inherited() {
+        // An active binding declared on a base class works on a Sub instance.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(celsius = \"numeric\",\n    \
+            fahrenheit = function(v) { if (missing(v)) celsius * 9 / 5 + 32 else celsius <<- (v - 32) * 5 / 9 }))\n\
+            Sub <- setRefClass(\"Sub\", contains = \"Base\")\n\
+            s <- Sub$new(celsius = 100)\ns$fahrenheit\n";
+        assert_eq!(nums(src), vec![212.0]);
+    }
+
+    #[test]
+    fn refclass_active_binding_copy_is_independent() {
+        // $copy() re-homes the active binding onto the copy; mutating the copy's
+        // binding must not touch the original.
+        let src = "Temp <- setRefClass(\"Temp\",\n  \
+            fields = list(celsius = \"numeric\",\n    \
+            fahrenheit = function(v) { if (missing(v)) celsius * 9 / 5 + 32 else celsius <<- (v - 32) * 5 / 9 }))\n\
+            a <- Temp$new(celsius = 100)\nb <- a$copy()\nb$fahrenheit <- 32\nc(a$celsius, b$celsius)\n";
+        assert_eq!(nums(src), vec![100.0, 0.0]);
+    }
+
+    #[test]
+    fn refclass_multiple_inheritance_unions_methods() {
+        // contains = c("A", "B"): C unions A's and B's fields and methods.
+        let src = "A <- setRefClass(\"A\", fields = list(a = \"numeric\"),\n  \
+            methods = list(fa = function() a))\n\
+            B <- setRefClass(\"B\", fields = list(b = \"numeric\"),\n  \
+            methods = list(fb = function() b))\n\
+            C <- setRefClass(\"C\", contains = c(\"A\", \"B\"))\n\
+            o <- C$new(a = 1, b = 2)\nc(o$fa(), o$fb())\n";
+        assert_eq!(nums(src), vec![1.0, 2.0]);
+    }
+
+    #[test]
+    fn refclass_multiple_inheritance_left_to_right_precedence() {
+        // Both A and B define `who`; left-to-right precedence means A wins.
+        let src = "A <- setRefClass(\"A\", methods = list(who = function() \"A\"))\n\
+            B <- setRefClass(\"B\", methods = list(who = function() \"B\"))\n\
+            C <- setRefClass(\"C\", contains = c(\"A\", \"B\"))\n\
+            C$new()$who()\n";
+        assert_eq!(show(src), "[1] \"A\"");
+    }
+
+    #[test]
+    fn refclass_multiple_inheritance_is_and_inherits() {
+        // C is an A and a B.
+        let src = "A <- setRefClass(\"A\")\nB <- setRefClass(\"B\")\n\
+            C <- setRefClass(\"C\", contains = c(\"A\", \"B\"))\n\
+            o <- C$new()\nc(is(o, \"A\"), is(o, \"B\"), inherits(o, \"C\"))\n";
+        assert_eq!(show(src), "[1] TRUE TRUE TRUE");
+    }
+
+    #[test]
+    fn refclass_multiple_inheritance_diamond_dedups() {
+        // Z is a common base of A and B; the DFS linearization lists it once.
+        let src = "Z <- setRefClass(\"Z\", fields = list(z = \"numeric\"),\n  \
+            methods = list(fz = function() z))\n\
+            A <- setRefClass(\"A\", contains = \"Z\")\n\
+            B <- setRefClass(\"B\", contains = \"Z\")\n\
+            C <- setRefClass(\"C\", contains = c(\"A\", \"B\"))\n\
+            o <- C$new(z = 7)\no$fz()\n";
+        assert_eq!(nums(src), vec![7.0]);
+    }
+
+    #[test]
+    fn refclass_multiple_inheritance_class_chain() {
+        let src = "A <- setRefClass(\"A\")\nB <- setRefClass(\"B\")\n\
+            C <- setRefClass(\"C\", contains = c(\"A\", \"B\"))\n\
+            class(C$new())\n";
+        assert_eq!(
+            show(src),
+            "[1]           \"C\"           \"A\"           \"B\" \"envRefClass\" \"environment\""
+        );
+    }
+
+    #[test]
+    fn refclass_multiple_inheritance_cycle_rejected() {
+        // A contains B, then making B contain A across multiple parents is a cycle.
+        let src = "A <- setRefClass(\"A\")\n\
+            B <- setRefClass(\"B\", contains = \"A\")\n\
+            A2 <- setRefClass(\"A\", contains = c(\"B\", \"A\"))\n";
+        assert!(eval_r(src).is_err());
+    }
+
+    #[test]
+    fn refclass_missing_outside_method_reports_unbound() {
+        // missing(x) is a faithful subset: TRUE when the formal was not supplied.
+        let src = "f <- function(x) missing(x)\nc(f(), f(5))\n";
+        assert_eq!(show(src), "[1]  TRUE FALSE");
+    }
+
+    #[test]
+    fn refclass_r24_r25_regressions_still_hold() {
+        // Single inheritance + override + $copy still work after the R-26 refactor.
+        let src = "Base <- setRefClass(\"Base\",\n  \
+            fields = list(x = \"numeric\"),\n  \
+            methods = list(get = function() x, label = function() \"base\"))\n\
+            Sub <- setRefClass(\"Sub\", contains = \"Base\",\n  \
+            methods = list(label = function() \"sub\"))\n\
+            s <- Sub$new(x = 3)\nc(s$get(), if (s$label() == \"sub\") 1 else 0)\n";
+        assert_eq!(nums(src), vec![3.0, 1.0]);
+        // Alias still shares; copy is independent.
+        let src2 = "Base <- setRefClass(\"Base\", fields = list(x = \"numeric\"),\n  \
+            methods = list(set = function(v) { x <<- v }))\n\
+            a <- Base$new(x = 1)\nb <- a\nb$set(9)\nd <- a$copy()\nd$set(100)\nc(a$x, d$x)\n";
+        assert_eq!(nums(src2), vec![9.0, 100.0]);
+    }
 }
