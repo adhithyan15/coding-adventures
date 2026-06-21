@@ -2815,4 +2815,67 @@ mod tests {
         // Character ranks lexicographically; tied "a"s average their positions.
         assert_eq!(nums("rank(c(\"b\", \"a\", \"a\"))\n"), vec![3.0, 1.5, 1.5]);
     }
+
+    // --- R-30: ordering refinements (R syntax) --------------------------
+
+    #[test]
+    fn order_multi_key_breaks_ties_by_second() {
+        // order(c(2,1,2), c(1,2,1)) → c(2, 1, 3): the lone 1 first, then the two
+        // 2s tied on both keys, kept in original order (idx 1 before idx 3).
+        assert_eq!(nums("order(c(2, 1, 2), c(1, 2, 1))\n"), vec![2.0, 1.0, 3.0]);
+        // A discriminating secondary key actually reorders the tie.
+        assert_eq!(nums("order(c(2, 1, 2), c(5, 2, 1))\n"), vec![2.0, 3.0, 1.0]);
+    }
+
+    #[test]
+    fn order_single_key_still_works() {
+        assert_eq!(nums("order(c(3, 1, 2))\n"), vec![2.0, 3.0, 1.0]);
+        assert_eq!(nums("order(c(\"b\", \"a\", \"c\"))\n"), vec![2.0, 1.0, 3.0]);
+    }
+
+    #[test]
+    fn rank_ties_method_variants() {
+        assert_eq!(nums("rank(c(1, 1, 2))\n"), vec![1.5, 1.5, 3.0]); // average default
+        assert_eq!(
+            nums("rank(c(1, 1, 2), ties.method = \"min\")\n"),
+            vec![1.0, 1.0, 3.0]
+        );
+        assert_eq!(
+            nums("rank(c(1, 1, 2), ties.method = \"max\")\n"),
+            vec![2.0, 2.0, 3.0]
+        );
+        assert_eq!(
+            nums("rank(c(1, 1, 2), ties.method = \"first\")\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+        // Character vectors honour ties.method too.
+        assert_eq!(
+            nums("rank(c(\"b\", \"a\", \"a\"), ties.method = \"first\")\n"),
+            vec![3.0, 1.0, 2.0]
+        );
+    }
+
+    #[test]
+    fn duplicated_from_last() {
+        // Default keeps the FIRST occurrence; fromLast keeps the LAST.
+        assert_eq!(
+            show("duplicated(c(1, 2, 1))\n"),
+            "[1] FALSE FALSE  TRUE"
+        );
+        assert_eq!(
+            show("duplicated(c(1, 2, 1), fromLast = TRUE)\n"),
+            "[1]  TRUE FALSE FALSE"
+        );
+        assert_eq!(
+            show("duplicated(c(\"a\", \"b\", \"a\"), fromLast = TRUE)\n"),
+            "[1]  TRUE FALSE FALSE"
+        );
+    }
+
+    #[test]
+    fn any_duplicated_index_or_zero() {
+        assert_eq!(nums("anyDuplicated(c(1, 2, 1))\n"), vec![3.0]);
+        assert_eq!(nums("anyDuplicated(c(1, 2, 3))\n"), vec![0.0]);
+        assert_eq!(nums("anyDuplicated(c(\"a\", \"b\", \"a\"))\n"), vec![3.0]);
+    }
 }

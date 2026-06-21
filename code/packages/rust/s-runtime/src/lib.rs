@@ -1992,3 +1992,173 @@ mod r29_set_ops {
         );
     }
 }
+
+#[cfg(test)]
+mod r30_ordering {
+    //! R-30 ordering refinements (exercised through **S** syntax — the shared
+    //! tree-walker is language-neutral, so R inherits the same behaviour).
+    //! Covers multi-key `order`, `rank` ties.method, `duplicated(fromLast=)`, and
+    //! `anyDuplicated` over both numeric and character vectors.
+    use super::*;
+
+    fn show(src: &str) -> String {
+        format_value(&eval_s(src).unwrap()).join("\n")
+    }
+
+    fn nums(src: &str) -> Vec<f64> {
+        match eval_s(src).unwrap().strip_names() {
+            SValue::Double(d) => d.data().to_vec(),
+            other => panic!("expected double, got {}", other.type_name()),
+        }
+    }
+
+    // --- multi-key order ------------------------------------------------
+
+    #[test]
+    fn order_single_key_unchanged() {
+        // The R-13 single-key form is the arity-1 special case.
+        assert_eq!(nums("order(c(3, 1, 2))\n"), vec![2.0, 3.0, 1.0]);
+    }
+
+    #[test]
+    fn order_two_keys_breaks_ties_by_second() {
+        // values (idx:key1,key2): 1:(2,1) 2:(1,2) 3:(2,1). Sort by key1: idx2
+        // (key1=1) first; then the two key1=2 elements (idx1, idx3) tie on key1
+        // AND key2 → kept in original order: idx1 then idx3. → c(2, 1, 3).
+        assert_eq!(nums("order(c(2, 1, 2), c(1, 2, 1))\n"), vec![2.0, 1.0, 3.0]);
+    }
+
+    #[test]
+    fn order_secondary_actually_separates_ties() {
+        // key1 ties idx1 & idx3 (both 2); key2 breaks them: idx3 (sec=1) before
+        // idx1 (sec=5). → idx2 (key1=1) first, then idx3, then idx1 → c(2, 3, 1).
+        assert_eq!(nums("order(c(2, 1, 2), c(5, 2, 1))\n"), vec![2.0, 3.0, 1.0]);
+    }
+
+    #[test]
+    fn order_character_key() {
+        // Lexicographic by the (single) character key.
+        assert_eq!(
+            nums("order(c(\"b\", \"a\", \"c\"))\n"),
+            vec![2.0, 1.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn order_mixed_numeric_and_character_keys() {
+        // First key numeric (ties idx1 & idx3 at 1), broken by a character second
+        // key: "a" < "b" → idx3 before idx1. idx2 (key1=2) last. → c(3, 1, 2).
+        assert_eq!(
+            nums("order(c(1, 2, 1), c(\"b\", \"z\", \"a\"))\n"),
+            vec![3.0, 1.0, 2.0]
+        );
+    }
+
+    #[test]
+    fn order_length_mismatch_is_graceful_error() {
+        // A secondary key of the wrong length is an error, never a panic.
+        assert!(eval_s("order(c(1, 2, 3), c(1, 2))\n").is_err());
+    }
+
+    // --- rank ties.method -----------------------------------------------
+
+    #[test]
+    fn rank_average_is_default() {
+        assert_eq!(nums("rank(c(1, 1, 2))\n"), vec![1.5, 1.5, 3.0]);
+        assert_eq!(
+            nums("rank(c(1, 1, 2), ties.method = \"average\")\n"),
+            vec![1.5, 1.5, 3.0]
+        );
+    }
+
+    #[test]
+    fn rank_min_max_first() {
+        assert_eq!(
+            nums("rank(c(1, 1, 2), ties.method = \"min\")\n"),
+            vec![1.0, 1.0, 3.0]
+        );
+        assert_eq!(
+            nums("rank(c(1, 1, 2), ties.method = \"max\")\n"),
+            vec![2.0, 2.0, 3.0]
+        );
+        assert_eq!(
+            nums("rank(c(1, 1, 2), ties.method = \"first\")\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn rank_first_keeps_original_order_within_run() {
+        // Three tied values get consecutive ranks in their original positions.
+        assert_eq!(
+            nums("rank(c(5, 5, 5), ties.method = \"first\")\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn rank_character_ties_method() {
+        // "a" < "b"; the two "a"s tie at sorted positions 1,2.
+        assert_eq!(
+            nums("rank(c(\"b\", \"a\", \"a\"), ties.method = \"min\")\n"),
+            vec![3.0, 1.0, 1.0]
+        );
+        assert_eq!(
+            nums("rank(c(\"b\", \"a\", \"a\"), ties.method = \"first\")\n"),
+            vec![3.0, 1.0, 2.0]
+        );
+    }
+
+    #[test]
+    fn rank_unknown_ties_method_is_graceful_error() {
+        assert!(eval_s("rank(c(1, 2), ties.method = \"bogus\")\n").is_err());
+    }
+
+    // --- duplicated fromLast --------------------------------------------
+
+    #[test]
+    fn duplicated_default_unchanged() {
+        assert_eq!(
+            show("duplicated(c(1, 1, 2, 3, 3))\n"),
+            "[1] FALSE  TRUE FALSE FALSE  TRUE"
+        );
+    }
+
+    #[test]
+    fn duplicated_from_last_numeric() {
+        // Scanning right-to-left, the LAST occurrence is the keeper; earlier
+        // repeats are the duplicates.
+        assert_eq!(
+            show("duplicated(c(1, 2, 1), fromLast = TRUE)\n"),
+            "[1]  TRUE FALSE FALSE"
+        );
+    }
+
+    #[test]
+    fn duplicated_from_last_character() {
+        assert_eq!(
+            show("duplicated(c(\"a\", \"b\", \"a\"), fromLast = TRUE)\n"),
+            "[1]  TRUE FALSE FALSE"
+        );
+    }
+
+    // --- anyDuplicated --------------------------------------------------
+
+    #[test]
+    fn any_duplicated_returns_first_dup_index() {
+        assert_eq!(nums("anyDuplicated(c(1, 2, 1))\n"), vec![3.0]);
+        assert_eq!(nums("anyDuplicated(c(5, 5, 5))\n"), vec![2.0]);
+    }
+
+    #[test]
+    fn any_duplicated_zero_when_no_dups() {
+        assert_eq!(nums("anyDuplicated(c(1, 2, 3))\n"), vec![0.0]);
+        assert_eq!(nums("anyDuplicated(c())\n"), vec![0.0]);
+    }
+
+    #[test]
+    fn any_duplicated_character() {
+        assert_eq!(nums("anyDuplicated(c(\"a\", \"b\", \"a\"))\n"), vec![3.0]);
+        assert_eq!(nums("anyDuplicated(c(\"x\", \"y\"))\n"), vec![0.0]);
+    }
+}
