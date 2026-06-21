@@ -1851,3 +1851,144 @@ mod r24_reference_classes {
         assert_eq!(nums(src), vec![10.0, 2.0]);
     }
 }
+
+#[cfg(test)]
+mod r29_set_ops {
+    //! R-29 vector set operations & ordering, exercised through **S** syntax
+    //! (the shared tree-walker is language-neutral; R inherits the same
+    //! behaviour). Covers `union`/`intersect`/`setdiff`/`is.element`/
+    //! `duplicated`/`rank` over both numeric and character vectors, plus the
+    //! degenerate (empty / all-tied) edges.
+    use super::*;
+
+    fn show(src: &str) -> String {
+        format_value(&eval_s(src).unwrap()).join("\n")
+    }
+
+    fn nums(src: &str) -> Vec<f64> {
+        match eval_s(src).unwrap().strip_names() {
+            SValue::Double(d) => d.data().to_vec(),
+            other => panic!("expected double, got {}", other.type_name()),
+        }
+    }
+
+    // --- union ----------------------------------------------------------
+
+    #[test]
+    fn union_numeric_first_occurrence_order() {
+        assert_eq!(nums("union(c(1, 2), c(2, 3))\n"), vec![1.0, 2.0, 3.0]);
+        // Dedup within each side and across: order follows first sighting.
+        assert_eq!(nums("union(c(3, 3, 1), c(1, 2))\n"), vec![3.0, 1.0, 2.0]);
+    }
+
+    #[test]
+    fn union_character() {
+        assert_eq!(
+            show("union(c(\"a\", \"b\"), c(\"b\", \"c\"))\n"),
+            "[1] \"a\" \"b\" \"c\""
+        );
+    }
+
+    // --- intersect ------------------------------------------------------
+
+    #[test]
+    fn intersect_numeric_order_by_x_dedup() {
+        assert_eq!(nums("intersect(c(1, 2, 3), c(2, 3, 4))\n"), vec![2.0, 3.0]);
+        // A repeated common value appears once, in x's order.
+        assert_eq!(nums("intersect(c(2, 2, 1), c(1, 2))\n"), vec![2.0, 1.0]);
+    }
+
+    #[test]
+    fn intersect_character() {
+        assert_eq!(
+            show("intersect(c(\"a\", \"b\", \"c\"), c(\"c\", \"a\"))\n"),
+            "[1] \"a\" \"c\""
+        );
+    }
+
+    // --- setdiff --------------------------------------------------------
+
+    #[test]
+    fn setdiff_numeric_dedup_order_preserving() {
+        assert_eq!(nums("setdiff(c(1, 2, 3, 4), c(2, 4))\n"), vec![1.0, 3.0]);
+        // Duplicates in x collapse; order follows x.
+        assert_eq!(nums("setdiff(c(1, 1, 2, 3), c(2))\n"), vec![1.0, 3.0]);
+    }
+
+    #[test]
+    fn setdiff_character() {
+        assert_eq!(
+            show("setdiff(c(\"a\", \"b\", \"c\"), c(\"b\"))\n"),
+            "[1] \"a\" \"c\""
+        );
+    }
+
+    // --- is.element -----------------------------------------------------
+
+    #[test]
+    fn is_element_scalar_and_vectorized() {
+        assert_eq!(show("is.element(2, c(1, 2, 3))\n"), "[1] TRUE");
+        assert_eq!(show("is.element(c(1, 5), c(1, 2, 3))\n"), "[1]  TRUE FALSE");
+        assert_eq!(show("is.element(\"x\", c(\"a\", \"x\"))\n"), "[1] TRUE");
+    }
+
+    // --- duplicated -----------------------------------------------------
+
+    #[test]
+    fn duplicated_numeric() {
+        assert_eq!(
+            show("duplicated(c(1, 1, 2, 3, 3))\n"),
+            "[1] FALSE  TRUE FALSE FALSE  TRUE"
+        );
+    }
+
+    #[test]
+    fn duplicated_character() {
+        assert_eq!(
+            show("duplicated(c(\"a\", \"b\", \"a\"))\n"),
+            "[1] FALSE FALSE  TRUE"
+        );
+    }
+
+    // --- rank (average ties) --------------------------------------------
+
+    #[test]
+    fn rank_no_ties() {
+        assert_eq!(nums("rank(c(3, 1, 2))\n"), vec![3.0, 1.0, 2.0]);
+    }
+
+    #[test]
+    fn rank_average_ties() {
+        // The two 1s occupy positions 1 and 2 → average 1.5; the 2 is at 3.
+        assert_eq!(nums("rank(c(1, 1, 2))\n"), vec![1.5, 1.5, 3.0]);
+        // A triple tie shares the mean of positions 1,2,3 = 2.
+        assert_eq!(nums("rank(c(5, 5, 5))\n"), vec![2.0, 2.0, 2.0]);
+    }
+
+    #[test]
+    fn rank_character_lexicographic() {
+        // "a" < "b" < "c"; the two "a"s share positions 1,2 → 1.5 each.
+        assert_eq!(nums("rank(c(\"b\", \"a\", \"a\"))\n"), vec![3.0, 1.5, 1.5]);
+    }
+
+    // --- degenerate edges ----------------------------------------------
+
+    #[test]
+    fn empty_inputs_yield_empty_results() {
+        assert_eq!(eval_s("union(c(), c())\n").unwrap().length(), 0);
+        assert_eq!(eval_s("intersect(c(), c(1))\n").unwrap().length(), 0);
+        assert_eq!(eval_s("setdiff(c(), c(1))\n").unwrap().length(), 0);
+        assert_eq!(eval_s("duplicated(c())\n").unwrap().length(), 0);
+        assert_eq!(eval_s("rank(c())\n").unwrap().length(), 0);
+        // is.element over an empty `el` is an empty logical.
+        assert_eq!(eval_s("is.element(c(), c(1))\n").unwrap().length(), 0);
+    }
+
+    #[test]
+    fn setdiff_everything_removed_is_empty() {
+        assert_eq!(
+            eval_s("setdiff(c(1, 2), c(1, 2, 3))\n").unwrap().length(),
+            0
+        );
+    }
+}

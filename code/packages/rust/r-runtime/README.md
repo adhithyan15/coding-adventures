@@ -160,7 +160,21 @@ and `tabulate(bin, nbins = max(bin))` counts occurrences of `1..nbins`
 count with `checked_mul` against the sequence cap *before* allocating and
 `tabulate` clamps `nbins`, so neither can be turned into an OOM. (The `%o%`
 infix alias, matrix dimnames, multi-way `tapply`, and `simplify = FALSE` are
-deferred to R-29.)
+deferred to a later pass.)
+
+**Vector set operations & ordering (R-29)** — the set-theory and ranking corner
+of R's base toolkit, all numeric- and character-aware. `union(x, y)` is the
+distinct elements of `c(x, y)` in first-occurrence order (`union(c(1,2),
+c(2,3))` → `c(1, 2, 3)`); `intersect(c(1,2,3), c(2,3,4))` → `c(2, 3)` and
+`setdiff(c(1,2,3,4), c(2,4))` → `c(1, 3)` keep the elements in / not-in `y`,
+deduplicated and in `x`'s order. `is.element(2, c(1,2,3))` → `TRUE` is the
+function spelling of `el %in% set`. `duplicated(c(1,1,2,3,3))` →
+`c(FALSE, TRUE, FALSE, FALSE, TRUE)` flags repeats of earlier elements. `rank(x)`
+gives sample ranks with **average** tie handling (R's default): `rank(c(3,1,2))`
+→ `c(3, 1, 2)` and `rank(c(1,1,2))` → `c(1.5, 1.5, 3)`. Outputs are bounded by
+the inputs (each already sequence-capped) and `rank` is `O(n log n)`, so none is
+a DoS vector. (Other `ties.method` options, `incomparables=`/`fromLast=`,
+`anyDuplicated`, and multi-key `order` are deferred to R-30.)
 
 ## Usage
 

@@ -2764,4 +2764,55 @@ mod tests {
         // A modest outer still succeeds (sanity: the guard is not over-eager).
         assert_eq!(nums("dim(outer(1:10, 1:10))\n"), vec![10.0, 10.0]);
     }
+
+    // --- R-29: vector set operations & ordering (R syntax) --------------
+
+    #[test]
+    fn union_intersect_setdiff_numeric() {
+        assert_eq!(nums("union(c(1, 2), c(2, 3))\n"), vec![1.0, 2.0, 3.0]);
+        assert_eq!(nums("intersect(c(1, 2, 3), c(2, 3, 4))\n"), vec![2.0, 3.0]);
+        assert_eq!(nums("setdiff(c(1, 2, 3, 4), c(2, 4))\n"), vec![1.0, 3.0]);
+    }
+
+    #[test]
+    fn union_intersect_setdiff_character() {
+        assert_eq!(
+            show("union(c(\"a\", \"b\"), c(\"b\", \"c\"))\n"),
+            "[1] \"a\" \"b\" \"c\""
+        );
+        assert_eq!(
+            show("intersect(c(\"a\", \"b\", \"c\"), c(\"c\", \"a\"))\n"),
+            "[1] \"a\" \"c\""
+        );
+        assert_eq!(
+            show("setdiff(c(\"a\", \"b\", \"c\"), c(\"b\"))\n"),
+            "[1] \"a\" \"c\""
+        );
+    }
+
+    #[test]
+    fn is_element_matches_in_operator() {
+        assert_eq!(show("is.element(2, c(1, 2, 3))\n"), "[1] TRUE");
+        assert_eq!(show("is.element(c(1, 5), c(1, 2, 3))\n"), "[1]  TRUE FALSE");
+    }
+
+    #[test]
+    fn duplicated_flags_repeats() {
+        assert_eq!(
+            show("duplicated(c(1, 1, 2, 3, 3))\n"),
+            "[1] FALSE  TRUE FALSE FALSE  TRUE"
+        );
+        assert_eq!(
+            show("duplicated(c(\"a\", \"b\", \"a\"))\n"),
+            "[1] FALSE FALSE  TRUE"
+        );
+    }
+
+    #[test]
+    fn rank_average_ties() {
+        assert_eq!(nums("rank(c(3, 1, 2))\n"), vec![3.0, 1.0, 2.0]);
+        assert_eq!(nums("rank(c(1, 1, 2))\n"), vec![1.5, 1.5, 3.0]);
+        // Character ranks lexicographically; tied "a"s average their positions.
+        assert_eq!(nums("rank(c(\"b\", \"a\", \"a\"))\n"), vec![3.0, 1.5, 1.5]);
+    }
 }

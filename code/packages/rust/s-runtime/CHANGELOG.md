@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.25.0] - 2026-06-21
+
+### Added
+
+- **Vector set operations & ordering (R-29)** — pure builtins available to both
+  S and R via the shared tree-walker; no grammar change. They treat vectors as
+  multisets and reuse the existing `as_character` key, `value::index`,
+  `value::membership`, and `combine` machinery. Numeric and character vectors are
+  handled uniformly (the comparison key is the coerced character form, exactly as
+  `unique`/`%in%` already do).
+  - **`union(x, y)`** — the distinct elements of `c(x, y)` in **first-occurrence
+    order** (i.e. `unique(c(x, y))`, *not* a sorted set). `union(c(1,2), c(2,3))`
+    → `c(1, 2, 3)`.
+  - **`intersect(x, y)`** — the elements present in both, in `x`'s order,
+    deduplicated. `intersect(c(1,2,3), c(2,3,4))` → `c(2, 3)`.
+  - **`setdiff(x, y)`** — the elements of `x` not in `y`, deduplicated,
+    order-preserving by `x`. `setdiff(c(1,2,3,4), c(2,4))` → `c(1, 3)`.
+  - **`is.element(el, set)`** — the function spelling of `el %in% set` (a
+    vectorized logical, one entry per element of `el`); a thin alias over
+    `value::membership`. `is.element(2, c(1,2,3))` → `TRUE`.
+  - **`duplicated(x)`** — a logical vector, `TRUE` where an element repeats one
+    seen earlier (first occurrence is `FALSE`). `duplicated(c(1,1,2,3,3))` →
+    `c(FALSE, TRUE, FALSE, FALSE, TRUE)`.
+  - **`rank(x)`** — sample ranks with **average** tie handling (R's default
+    `ties.method = "average"`): each element's rank is its 1-based position in
+    ascending order, and a run of equal values shares the mean of the positions
+    it spans. `rank(c(3,1,2))` → `c(3, 1, 2)`; `rank(c(1,1,2))` → `c(1.5, 1.5, 3)`.
+    Numeric ranks numerically, character lexicographically; result is always
+    numeric, `NA` sorts last.
+
+### Security
+
+- **Output-size caps.** Every input is data. The set ops produce at most
+  `length(x) + length(y)` (union) or `length(x)` (intersect/setdiff) elements —
+  each operand already `MAX_SEQ_LEN`-bounded and `union` routes through `combine`
+  (itself bounded), so no result can exceed what the inputs already permit; no
+  fresh cap is introduced. `duplicated`/`is.element` emit one logical per input
+  element; `rank` allocates one `f64` per element and sorts in `O(n log n)` with
+  no user-controlled multiplier. Empty inputs yield empty results and `NA` is an
+  ordinary matchable key, never an index panic.
+
+### Tests
+
+- A `r29_set_ops` module: union/intersect/setdiff (numeric + character;
+  first-occurrence / x-order / dedup), is.element (scalar + vectorized),
+  duplicated, rank (no-ties / average-ties / character), and the empty /
+  all-removed degenerate edges.
+
+### Deferred to R-30
+
+- `rank`'s other `ties.method` options (`"first"`/`"min"`/`"max"`/`"random"`);
+  the `incomparables=`/`fromLast=` set-op arguments; `anyDuplicated`; and
+  multi-key `order(x, y, …)` (single-key `order` from R-13 is unchanged).
+
 ## [0.24.0] - 2026-06-21
 
 ### Added
