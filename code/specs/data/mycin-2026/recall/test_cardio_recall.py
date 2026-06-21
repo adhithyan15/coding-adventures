@@ -34,6 +34,7 @@ EXPECTED = {
     "late_systolic_click": "mitral_valve_prolapse",
     "holosystolic_left_lower_sternal": "tricuspid_regurgitation",
     "decrescendo_diastolic": "aortic_regurgitation",
+    "diastolic_apical": "mitral_stenosis",
 }
 REL = "murmur_indicates"
 VAR = "Lesion"
@@ -56,7 +57,7 @@ def test_library_is_pure_adj_and_fully_grounded() -> None:
     text = ADJ.read_text()
     assert "trust consensus" not in text, "CARDIO ships no authored-debt; ground or omit"
     assert "[FLAG:" not in text
-    edge_count = len(EXPECTED)  # 5
+    edge_count = len(EXPECTED)  # 6
     assert text.count("    relate ") == edge_count
     assert text.count("trust authoritative") == edge_count
     assert text.count('\n        locator "') == edge_count
