@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.23.0] - 2026-06-20
+
+### Added
+
+- **Output-formatting builtins (R-27)** — a family of pure, deterministic
+  (locale-free) string formatters, available to both S and R via the shared
+  tree-walker; no grammar change.
+  - **`format(x, nsmall=, width=, justify=, big.mark=)`** — the general
+    formatter. A **numeric** vector formats to a *common* width (every element is
+    right-justified to the width of the widest, so columns line up); a
+    **character** vector pads to `max(width, widest)` honouring `justify`
+    (`"left"` / `"right"` / `"centre"`). A supplied `nsmall` is the decimal count
+    (`format(3, nsmall = 2)` → `"3.00"`); `big.mark` inserts a thousands
+    separator. Returns a character vector the length of `x`.
+  - **`formatC(x, format=, digits=, width=, flag=)`** — C-style: `format` one of
+    `"d"`/`"f"`/`"e"`/`"g"`/`"s"`/`"x"`, `digits` precision, `width` minimum field
+    width, `flag` a string of `printf` flags (`"-"` left, `"0"` zero-pad, `"+"`
+    force sign). Reuses the `sprintf` conversion engine.
+  - **`prettyNum(x, big.mark = ",")`** — insert a thousands separator (sign
+    preserved, never grouped).
+  - **`toString(x, sep = ", ")`** — collapse a whole vector to one string.
+  - **`sprintf`** stays fully vectorized (it was since R-5); R-27 adds regression
+    coverage and shares the `printf` core with `formatC`.
+
+### Security
+
+- The `MAX_FIELD = 1 MiB` field-width/precision cap that `sprintf` enforced is
+  **hoisted to module scope** and now shared by `format`/`formatC`: a crafted
+  `fmt` or a huge `width=`/`nsmall=`/`digits=` is clamped (oversize literal
+  `sprintf` widths are a clean error), so no caller-controlled value can trigger
+  a giant allocation. All width arithmetic uses `saturating_*`. There is no
+  `%n`-style conversion, so no write-what-where primitive exists.
+
+### Deferred
+
+- Exotic `formatC` corners — `format = "g"` exact-rounding edge cases, the `" "`
+  and `"#"` flags, and `format()`'s `scientific=` — are left for **R-28**.
+
 ## [0.22.0] - 2026-06-20
 
 ### Added

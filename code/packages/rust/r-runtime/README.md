@@ -129,6 +129,23 @@ celsius*9/5+32 else celsius <<- (v-32)*5/9 }` makes `t$fahrenheit` compute and
 and B's fields/methods (left-to-right precedence), with `is`/`inherits`/`class`
 seeing every base, diamonds de-duplicated, and mutual-inheritance cycles rejected.
 
+**Output formatting (R-27)** — a pivot off the R5/OOP lane into a fresh
+data/utility area, with deterministic, locale-free output (fixed `","` thousands
+separator and `"."` decimal point). `format(x, nsmall=, width=, justify=,
+big.mark=)` formats numbers and character vectors — a numeric vector pads to a
+*common* width (`format(c(1, 10, 100))` → `c("  1", " 10", "100")`),
+`format(3.14159, nsmall = 2)` → `"3.14"`, `format(42, width = 5)` → `"   42"`,
+character `justify` is `"left"`/`"right"`/`"centre"`, and `big.mark` groups
+thousands. `formatC(x, format=, digits=, width=, flag=)` is the C-style
+formatter (`format` `"d"`/`"f"`/`"e"`/`"g"`/`"s"`/`"x"`, `flag` `"-"`/`"0"`/`"+"`):
+`formatC(3.14159, format = "f", digits = 2)` → `"3.14"`, `formatC(42, width = 6,
+flag = "0")` → `"000042"`. `prettyNum(1234567, big.mark = ",")` → `"1,234,567"`,
+`toString(1:3)` → `"1, 2, 3"`, and `sprintf` recycles over vector arguments
+(`sprintf("%d-%s", 1:2, c("a","b"))` → `c("1-a", "2-b")`). Every field width and
+precision is capped at 1 MiB so a crafted `fmt` or a huge `width=` cannot trigger
+a giant allocation. (Exotic `formatC` corners — `format = "g"` rounding, the
+`" "`/`"#"` flags, `scientific=` — are deferred to R-28.)
+
 ## Usage
 
 ```rust

@@ -164,6 +164,18 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   DFS `linearization` (de-duping diamonds; C3 not implemented) drives all
   effective-set/class-chain walks with most-derived-first precedence, and the cycle
   check runs over every parent so the multi-parent graph stays a DAG.
+- **Output-formatting builtins** (R-27): `format`, `formatC`, `prettyNum`,
+  `toString`, and the (already vectorized) `sprintf` — pure, deterministic,
+  locale-free string formatters. `format(x, nsmall=, width=, justify=,
+  big.mark=)` formats a **numeric** vector to a *common* width (right-justified
+  to the widest, so columns line up) or a **character** vector with `justify`;
+  `formatC(x, format=, digits=, width=, flag=)` is the C-style wrapper over the
+  `sprintf` `render_conversion` engine (`"d"`/`"f"`/`"e"`/`"g"`/`"s"`/`"x"`,
+  flags `"-"`/`"0"`/`"+"`); `prettyNum` inserts a thousands separator; `toString`
+  collapses a vector to one string. The `MAX_FIELD = 1 MiB` field-width cap is
+  shared across all of them, so a crafted `fmt` or a huge `width=`/`nsmall=`/
+  `digits=` cannot trigger a giant allocation. (Exotic `formatC` corners —
+  `format = "g"` rounding, `" "`/`"#"` flags, `scientific=` — deferred to R-28.)
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.
