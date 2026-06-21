@@ -60,12 +60,20 @@
 //! instance → method → instance edge never exists *at rest* — there is nothing for
 //! `Rc` to fail to collect.
 //!
-//! The one remaining strong self-reference is `.self` (an `Environment` to the
-//! instance, stored inside the instance). That is exactly the *documented,
-//! pre-existing* R-22 value-binding self-cycle — `assign("self", e, envir = e)` —
-//! which we do not claim to collect but which is *bounded* (not unbounded) by the
-//! `MAX_ENVIRONMENTS` session cap. We inherit that boundary verbatim rather than
-//! widening the ownership model.
+//! The remaining strong self-references are `.self` (an `Environment` to the
+//! instance, stored inside the instance) and — as of R-26 — each **active-binding**
+//! field, which stores an instance-homed `Closure { env: <strong Rc to instance> }`
+//! under the field name *on the instance frame* (so `obj$ab` can call it as a
+//! getter/setter; see [`install_active_bindings`]). Unlike an ordinary method —
+//! which we deliberately never store, rebuilding it lazily on access to avoid this
+//! very edge — an active binding **must** live on the instance, so it forms the same
+//! `instance → closure → instance` self-cycle that `.self` already does. Both are
+//! exactly the *documented, pre-existing* R-22 value-binding self-cycle —
+//! `assign("self", e, envir = e)` — which we do not claim to collect but which is
+//! *bounded* (not unbounded) by the `MAX_ENVIRONMENTS` session cap: an active binding
+//! points only back at the *same* already-charged instance and creates no new
+//! environment, so it widens no leak boundary. We inherit that boundary verbatim
+//! rather than widening the ownership model.
 //!
 //! ## Reference (alias) semantics
 //!
@@ -87,6 +95,15 @@ pub const KEY_CLASS_NAME: &str = ".refClassName";
 /// carried on the generator. Used by `$new` to know which fields to bind.
 pub const KEY_FIELDS: &str = ".refFields";
 
+/// Private binding (R-26): the original `fields =` **list value** as passed to
+/// `setRefClass`, carried on the generator so `$new` can recover which fields are
+/// **active bindings** — a field whose declared "type" is a `function(v)` closure
+/// rather than a character type string. The names live in [`KEY_FIELDS`]; this
+/// keeps the *values* (the binding functions) so they can be re-homed onto each
+/// instance. A bare character-vector `fields` carries no function values, so this
+/// degenerates to a plain character vector with no active bindings.
+pub const KEY_FIELD_SPEC: &str = ".refFieldSpec";
+
 /// Private binding: the **methods** (an `SValue::List` of closures *as written*,
 /// each closing over the generator's defining scope), carried on **both** the
 /// generator and every instance. The instance copy is what `obj$method` consults
@@ -99,15 +116,37 @@ pub const KEY_METHODS: &str = ".refMethods";
 /// as `.self$other(...)`.
 pub const KEY_SELF: &str = ".self";
 
-/// Private binding (R-25): the **parent generator** for a subclass defined with
-/// `contains = "Base"`, stored on the subclass generator as an
-/// [`SValue::Environment`] pointing at the parent generator. Absent on a root
-/// (non-inheriting) class. This single link is what makes the class an inheritance
-/// **chain**: walking `.refParent` from a generator yields its ancestors in order.
-/// The edge is a strict child → parent **DAG** edge — a cyclic `contains =` is
-/// rejected at [`make_generator`] time (see [`would_form_cycle`]) — so it can never
-/// create an `Rc` cycle through the generators.
-pub const KEY_PARENT: &str = ".refParent";
+/// Private binding (R-25/R-26): the **parent generators** for a subclass defined
+/// with `contains = "Base"` (single) or `contains = c("A", "B")` (multiple),
+/// stored on the subclass generator as an [`SValue::List`] of [`SValue::Environment`]
+/// values, one per parent in **left-to-right** declaration order. Absent on a root
+/// (non-inheriting) class. This list is what makes the class an inheritance
+/// **DAG**: a depth-first walk from a generator over its `.refParents` (and each
+/// parent's `.refParents`) yields all its ancestors. Every edge is a strict
+/// child → parent **DAG** edge — a cyclic `contains =` (`A ↔ B`, self-inheritance)
+/// is rejected at [`make_generator`] time (see [`would_form_cycle`]) over *each*
+/// listed parent — so it can never create an `Rc` cycle through the generators.
+///
+/// R-25 stored a single parent under `.refParent`; R-26 generalises to a list under
+/// `.refParents`. The reader [`parent_generators`] returns a `Vec<Env>`, so a single
+/// `contains =` is just the one-element case and all the chain walks below are
+/// uniform DFS over a possibly-branching ancestry.
+pub const KEY_PARENTS: &str = ".refParents";
+
+/// Private binding (R-26): on a **materialised, instance-bound method closure's**
+/// super-context scope — the generator at which a `callSuper()` inside that method
+/// should *restart* same-name resolution (i.e. the **parent** of the class that
+/// defined the method version currently running). See [`rebuild_method`] and the
+/// module note on `callSuper`. Stored as an [`SValue::List`] of parent generators
+/// (so multiple inheritance super-resolution can try each parent left-to-right),
+/// or absent/`Null` when the defining class is a root (no super → `callSuper()`
+/// is a clean `NULL`).
+pub const KEY_SUPER_GENS: &str = ".refSuperGens";
+
+/// Private binding (R-26): on a materialised method's super-context scope — the
+/// **name** of the method currently running, so `callSuper()` knows which name to
+/// resolve in the super class(es). Paired with [`KEY_SUPER_GENS`].
+pub const KEY_METHOD_NAME: &str = ".refMethodName";
 
 /// Private binding (R-25): the **generator** an instance was built from, stored on
 /// the instance as a strong [`SValue::Environment`]. R-24 instances had no need to
@@ -177,6 +216,52 @@ fn field_names(env: &Env) -> Vec<String> {
     }
 }
 
+/// The **active-binding functions** declared *directly* on `generator` (its
+/// `.refFieldSpec`), as `(field_name, closure)` pairs — i.e. the entries of the
+/// `fields = list(...)` value whose value is a `function(v)` closure rather than a
+/// character type string. An ordinary data field (a character type) is skipped, as
+/// is a bare-character-vector `fields` (which has no function values). This reads
+/// only this class's own spec; the effective set across inheritance is assembled by
+/// [`effective_active_bindings`].
+fn own_active_bindings(generator: &Env) -> Vec<(String, SValue)> {
+    match env::lookup_local(generator, KEY_FIELD_SPEC) {
+        Some(SValue::List { names, items }) => names
+            .into_iter()
+            .zip(items)
+            .filter_map(|(n, v)| match (n, &v) {
+                (Some(name), SValue::Closure { .. }) => Some((name, v)),
+                _ => None,
+            })
+            .collect(),
+        _ => Vec::new(),
+    }
+}
+
+/// The **effective active bindings** of a generator: the union of this class's own
+/// active-binding functions with every ancestor's, with a **more-derived class
+/// overriding** a same-named ancestor binding (and overriding/over­ridden by an
+/// ordinary field of the same name — last writer in the linearization wins). Built
+/// by walking the [`linearization`] ancestors-first so the most-derived definition
+/// wins, exactly like [`effective_methods`]. Returns `(name, closure)` pairs.
+fn effective_active_bindings(generator: &Env) -> Vec<(String, SValue)> {
+    let mut chain = linearization(generator);
+    chain.reverse(); // ancestors first
+    let mut order: Vec<String> = Vec::new();
+    let mut map: std::collections::HashMap<String, SValue> = std::collections::HashMap::new();
+    for g in &chain {
+        for (name, closure) in own_active_bindings(g) {
+            if !map.contains_key(&name) {
+                order.push(name.clone());
+            }
+            map.insert(name, closure);
+        }
+    }
+    order
+        .into_iter()
+        .filter_map(|n| map.get(&n).cloned().map(|v| (n, v)))
+        .collect()
+}
+
 /// The **effective field names** of a generator: the union of this class's own
 /// fields with every ancestor's, in **base-first declaration order** (a field
 /// inherited from the base precedes a field newly declared on the subclass), with
@@ -186,19 +271,14 @@ fn field_names(env: &Env) -> Vec<String> {
 /// then de-duplicating while preserving first-seen order. Bounded by
 /// [`MAX_CHAIN_DEPTH`].
 pub fn effective_fields(generator: &Env) -> Vec<String> {
-    // Walk root → self by collecting the chain self → root then reversing.
-    let mut chain: Vec<Env> = Vec::new();
-    let mut cur = Some(generator.clone());
-    let mut depth = 0usize;
-    while let Some(g) = cur {
-        if depth >= MAX_CHAIN_DEPTH {
-            break;
-        }
-        chain.push(g.clone());
-        cur = parent_generator(&g);
-        depth += 1;
-    }
-    chain.reverse(); // root first
+    // Collect each class's own `.refFields` from the **root(s) up to this class** so
+    // base fields precede sub fields: take the linearization (self-first) and reverse
+    // it (so ancestors come first), then de-duplicate while preserving first-seen
+    // order. For multiple inheritance the reversed-DFS order lists A's ancestors,
+    // then A, then B's ancestors, then B, then self — i.e. inherited fields (A before
+    // B) precede the subclass's own newly-declared fields.
+    let mut chain = linearization(generator);
+    chain.reverse(); // ancestors first
 
     let mut out: Vec<String> = Vec::new();
     for g in &chain {
@@ -219,18 +299,12 @@ pub fn effective_fields(generator: &Env) -> Vec<String> {
 /// order (base methods first, then sub-only methods). Bounded by
 /// [`MAX_CHAIN_DEPTH`].
 fn effective_methods(generator: &Env) -> Vec<(String, SValue)> {
-    let mut chain: Vec<Env> = Vec::new();
-    let mut cur = Some(generator.clone());
-    let mut depth = 0usize;
-    while let Some(g) = cur {
-        if depth >= MAX_CHAIN_DEPTH {
-            break;
-        }
-        chain.push(g.clone());
-        cur = parent_generator(&g);
-        depth += 1;
-    }
-    chain.reverse(); // root first
+    // Same linearization as `effective_fields`, reversed so ancestors come first:
+    // iterating ancestors-first and letting a more-derived class *replace* the
+    // closure bound to an already-seen name gives left-to-right, most-derived-first
+    // precedence (self overrides A overrides B overrides their ancestors).
+    let mut chain = linearization(generator);
+    chain.reverse(); // ancestors first
 
     // Preserve first-declaration order for names, but let a more-derived class
     // *replace* the closure bound to an already-seen name (override semantics).
@@ -262,20 +336,17 @@ fn effective_methods(generator: &Env) -> Vec<(String, SValue)> {
 /// object `is()` an `envRefClass` and an `environment`. Bounded by
 /// [`MAX_CHAIN_DEPTH`]. This is what `is()`/`inherits()` consult.
 pub fn class_chain(generator: &Env) -> Vec<String> {
+    // The [`linearization`] is already most-derived-first (self, then parents
+    // left-to-right, then their ancestors), de-duplicated — exactly the class-chain
+    // order. Map each generator to its name and append the two synthetic tail
+    // classes every reference object `is()`.
     let mut out: Vec<String> = Vec::new();
-    let mut cur = Some(generator.clone());
-    let mut depth = 0usize;
-    while let Some(g) = cur {
-        if depth >= MAX_CHAIN_DEPTH {
-            break;
-        }
+    for g in linearization(generator) {
         if let Some(name) = generator_name(&g) {
             if !out.contains(&name) {
                 out.push(name);
             }
         }
-        cur = parent_generator(&g);
-        depth += 1;
     }
     out.push("envRefClass".to_string());
     out.push("environment".to_string());
@@ -331,19 +402,29 @@ fn instance_generator(instance: &Env) -> Option<Env> {
 /// never a panic. The generator is returned as an [`SValue::Environment`]; the
 /// caller is responsible for charging it against `MAX_ENVIRONMENTS`.
 ///
-/// **R-25 inheritance.** When `parent` is `Some(base_generator)`, the new class
-/// is a *subclass*: its own (declared) fields and methods are stored exactly as
-/// for a root class, plus a `.refParent` link to the base generator. The *effective*
-/// field/method union (base ∪ sub) is **not** flattened into the subclass here —
-/// it is computed lazily by walking `.refParent` at `$new`/introspection time
+/// **R-25/R-26 inheritance.** When `parents` is non-empty, the new class is a
+/// *subclass*: its own (declared) fields and methods are stored exactly as for a
+/// root class, plus a `.refParents` list linking the base generator(s). With one
+/// parent this is single inheritance (R-25); with several (`contains = c("A","B")`)
+/// it is multiple inheritance (R-26). The *effective* field/method union is **not**
+/// flattened into the subclass here — it is computed lazily by the DFS
+/// [`linearization`] at `$new`/introspection time
 /// ([`effective_fields`]/[`effective_methods`]). A `contains =` that would close a
-/// cycle (`A contains B contains A`, or self-inheritance by name) is **rejected**
-/// up front via [`would_form_cycle`], so the `.refParent` edges always form a DAG.
+/// cycle (`A contains B contains A`, self-inheritance, or an `A ↔ B` pair across
+/// multiple parents) is **rejected** up front via [`would_form_cycle`] over *every*
+/// listed parent, so the `.refParents` edges always form a DAG.
+///
+/// **Active bindings (R-26).** A `fields = list(x = "numeric", ab = function(v) …)`
+/// entry whose *value* is a closure declares `ab` as an **active binding** rather
+/// than a data field — but at the generator level both are simply field *names*
+/// (the active-binding function is applied per-instance at `$new` time, see
+/// [`instantiate`]). The function bodies travel inside the `fields` list value,
+/// which we record alongside the names so `$new` can install them.
 pub fn make_generator(
     class_name: &str,
     fields: &SValue,
     methods: &SValue,
-    parent: Option<&Env>,
+    parents: &[Env],
     defining_env: &Env,
 ) -> SResult<SValue> {
     // The field NAMES come from the `fields = list(x = "numeric", …)` argument's
@@ -355,21 +436,22 @@ pub fn make_generator(
     // closures. Anything else is a clean error.
     let method_list = validate_methods(methods)?;
 
-    // `contains = parent`: the parent must itself be a reference-class generator,
-    // and the chain must stay acyclic (no `A contains B contains A`, no class
-    // inheriting from one that already bears its name). Reject both up front so the
-    // `.refParent` edges form a strict DAG and every later chain walk terminates.
-    if let Some(p) = parent {
+    // `contains = parents`: every parent must itself be a reference-class generator,
+    // and the hierarchy must stay acyclic (no `A contains B contains A`, no class
+    // inheriting from one that already bears its name, no `A ↔ B` mutual pair).
+    // Reject up front so the `.refParents` edges form a strict DAG and every later
+    // chain walk terminates.
+    for p in parents {
         if !is_generator(p) {
             return Err(SError::TypeError(
-                "setRefClass: `contains =` must name a reference-class generator".into(),
+                "setRefClass: `contains =` must name reference-class generator(s)".into(),
             ));
         }
-        if would_form_cycle(class_name, p) {
-            return Err(SError::BadArgs(format!(
-                "setRefClass: `contains =` would make class '{class_name}' inherit from itself (cyclic hierarchy)"
-            )));
-        }
+    }
+    if would_form_cycle(class_name, parents) {
+        return Err(SError::BadArgs(format!(
+            "setRefClass: `contains =` would make class '{class_name}' inherit from itself (cyclic hierarchy)"
+        )));
     }
 
     let scope = env::Scope::child(defining_env);
@@ -384,33 +466,49 @@ pub fn make_generator(
         SValue::Character(field_vec.into_iter().map(Some).collect()),
     );
     env::define(&scope, KEY_METHODS, method_list);
-    if let Some(p) = parent {
-        env::define(&scope, KEY_PARENT, SValue::Environment(p.clone()));
+    // Record the field *values* (the `fields = list(...)` value), so `$new` can tell
+    // an active-binding (function-valued) field from an ordinary data field and
+    // install the binding function per instance. Stored as the original list value;
+    // a bare character-vector `fields` carries no function values, so this is then
+    // just the names with no bindings.
+    env::define(&scope, KEY_FIELD_SPEC, fields.clone());
+    if !parents.is_empty() {
+        let items: Vec<SValue> = parents
+            .iter()
+            .map(|p| SValue::Environment(p.clone()))
+            .collect();
+        env::define(
+            &scope,
+            KEY_PARENTS,
+            SValue::List {
+                names: vec![None; items.len()],
+                items,
+            },
+        );
     }
     Ok(SValue::Environment(scope))
 }
 
-/// Would making `class_name` a subclass of generator `parent` close a cycle? A
-/// hierarchy is cyclic if the new class's name already appears anywhere in the
-/// prospective parent's own class chain (including the parent itself) — e.g.
-/// `A <- setRefClass("A", contains = B)` where `B`'s chain already contains `"A"`.
-/// Walks `.refParent` from `parent` up to the root, bounded by [`MAX_CHAIN_DEPTH`]
-/// (so even a pre-existing corrupt loop terminates the check). Returns `true` to
-/// **reject** the class.
-fn would_form_cycle(class_name: &str, parent: &Env) -> bool {
-    let mut cur = Some(parent.clone());
-    let mut depth = 0usize;
-    while let Some(g) = cur {
-        if depth >= MAX_CHAIN_DEPTH {
-            // A chain this deep is already pathological; treat it as cyclic and
-            // refuse rather than risk a non-terminating walk.
+/// Would making `class_name` a subclass of the generators `parents` close a cycle?
+/// A hierarchy is cyclic if the new class's name already appears anywhere in **any**
+/// prospective parent's own linearization (including the parent itself) — e.g.
+/// `A <- setRefClass("A", contains = B)` where `B`'s chain already contains `"A"`,
+/// or `contains = c("A", "B")` where `A` (transitively) contains `"B"` and we are
+/// about to name the new class `"B"`. Walks each parent's [`linearization`]
+/// (DFS, bounded by [`MAX_CHAIN_DEPTH`], so even a pre-existing corrupt loop
+/// terminates the check). Returns `true` to **reject** the class.
+fn would_form_cycle(class_name: &str, parents: &[Env]) -> bool {
+    for parent in parents {
+        for g in linearization(parent) {
+            if generator_name(&g).as_deref() == Some(class_name) {
+                return true;
+            }
+        }
+        // A linearization truncated at the depth bound is already pathological;
+        // treat it as cyclic and refuse rather than risk admitting a loop.
+        if linearization(parent).len() >= MAX_CHAIN_DEPTH {
             return true;
         }
-        if generator_name(&g).as_deref() == Some(class_name) {
-            return true;
-        }
-        cur = parent_generator(&g);
-        depth += 1;
     }
     false
 }
@@ -424,14 +522,57 @@ fn generator_name(generator: &Env) -> Option<String> {
     }
 }
 
-/// The parent **generator** of `generator` (its `.refParent` link), or `None` for
-/// a root class. Only an actual generator environment is returned — a malformed
-/// marker yields `None` (defensive, never a panic).
-fn parent_generator(generator: &Env) -> Option<Env> {
-    match env::lookup_local(generator, KEY_PARENT) {
-        Some(SValue::Environment(e)) if is_generator(&e) => Some(e),
-        _ => None,
+/// The parent **generators** of `generator` (its `.refParents` list), in
+/// left-to-right declaration order, or an empty vector for a root class. Only
+/// actual generator environments are returned — a malformed entry is skipped
+/// (defensive, never a panic). A single `contains =` yields a one-element vector,
+/// so every chain walk is uniform DFS over a possibly-branching ancestry.
+fn parent_generators(generator: &Env) -> Vec<Env> {
+    match env::lookup_local(generator, KEY_PARENTS) {
+        Some(SValue::List { items, .. }) => items
+            .into_iter()
+            .filter_map(|v| match v {
+                SValue::Environment(e) if is_generator(&e) => Some(e),
+                _ => None,
+            })
+            .collect(),
+        _ => Vec::new(),
     }
+}
+
+/// The **linearization** of a class hierarchy: a left-to-right **depth-first
+/// pre-order** walk over `.refParents`, listing `generator` first, then each parent
+/// and all of that parent's ancestors before moving to the next parent, **skipping
+/// any generator already seen** (so a diamond's shared base appears once). This is
+/// the order all the "effective" set computations and [`class_chain`] consult.
+///
+/// Simple DFS — **not** C3 linearization. For single inheritance it degenerates to
+/// the straight base-to-derived chain R-25 used. For multiple inheritance it gives
+/// the documented "A before B before their ancestors" precedence. Bounded by
+/// [`MAX_CHAIN_DEPTH`] *nodes visited* — even a (rejected-at-construction, but
+/// belt-and-braces) corrupt cycle terminates because each generator is recorded once
+/// and the visited-set short-circuits re-entry.
+fn linearization(generator: &Env) -> Vec<Env> {
+    let mut out: Vec<Env> = Vec::new();
+    let mut stack: Vec<Env> = vec![generator.clone()];
+    // DFS with an explicit stack; `out` doubles as the visited set (membership by
+    // `Rc` pointer identity via `same_env`). The stack is pushed in reverse so the
+    // first parent is processed first (left-to-right pre-order).
+    while let Some(g) = stack.pop() {
+        if out.len() >= MAX_CHAIN_DEPTH {
+            break;
+        }
+        if out.iter().any(|seen| env::same_env(seen, &g)) {
+            continue;
+        }
+        out.push(g.clone());
+        // Push parents in reverse so the left-most is popped (visited) first.
+        let parents = parent_generators(&g);
+        for p in parents.into_iter().rev() {
+            stack.push(p);
+        }
+    }
+    out
 }
 
 /// Extract field names from the `fields =` argument. Two shapes are accepted:
@@ -593,7 +734,41 @@ pub fn instantiate(generator: &Env, init_args: &[(Option<String>, SValue)]) -> S
     // bounded) R-22 value-binding self-cycle; see the module note.
     env::define(&scope, KEY_SELF, SValue::Environment(scope.clone()));
 
+    // R-26: install **active bindings**. An active-binding field's *value* on the
+    // instance frame is the binding **function re-homed onto the instance** (its
+    // `env` swapped to the instance, exactly like a method) — so its body reads
+    // sibling fields and writes them with `<<-`. The `$` read path (`dollar_access`)
+    // detects a callable field value and invokes it nullary (getter); the `$<-` path
+    // invokes it with the new value (setter). This runs **after** the field loop so
+    // it overwrites the NULL/`new`-supplied default with the binding function.
+    install_active_bindings(generator, &scope);
+
     Ok(SValue::Environment(scope))
+}
+
+/// Bind every **active-binding** field of `generator` (effective, across the whole
+/// inheritance linearization) onto `instance` as a closure **re-homed** onto the
+/// instance — i.e. a fresh `Closure` with the same params/body but `env = instance`,
+/// so its body sees the instance's sibling fields and writes them with `<<-`. The
+/// instance-frame value of such a field is therefore the binding function itself;
+/// `dollar_access`/`$<-` recognise a callable field value and call it as a
+/// getter/setter. An active binding whose name was *also* supplied as a `$new`
+/// argument still ends up as the binding function (R does not pre-set an active
+/// binding from `new`), matching R5.
+fn install_active_bindings(generator: &Env, instance: &Env) {
+    for (name, closure) in effective_active_bindings(generator) {
+        if let SValue::Closure { params, body, .. } = closure {
+            env::define(
+                instance,
+                &name,
+                SValue::Closure {
+                    params,
+                    body,
+                    env: instance.clone(),
+                },
+            );
+        }
+    }
 }
 
 /// The effective methods of `generator` packaged as an `SValue::List` of named
@@ -633,7 +808,18 @@ pub fn copy_instance(instance: &Env) -> SResult<SValue> {
     // Build the fresh sibling scope and re-bind the private markers, mirroring
     // `instantiate` (but copying field *values* rather than reading `new` args).
     let scope = env::Scope::child(&generator);
+    // The names that are **active bindings** must NOT be copied as values (the
+    // source instance's binding closure closes over the *source* — copying it would
+    // make the copy's getter/setter mutate the original). They are re-installed
+    // below via `install_active_bindings`, re-homed onto the new scope.
+    let active: Vec<String> = effective_active_bindings(&generator)
+        .into_iter()
+        .map(|(n, _)| n)
+        .collect();
     for field in effective_fields(&generator) {
+        if active.iter().any(|a| a == &field) {
+            continue; // re-installed below, not value-copied
+        }
         // `env::lookup_local` reads the source instance's *own* field binding; the
         // value is cloned (a shallow `SValue` clone — a nested instance is aliased,
         // not recursed) and bound into the new scope. An absent field defaults to
@@ -642,8 +828,11 @@ pub fn copy_instance(instance: &Env) -> SResult<SValue> {
         env::define(&scope, &field, value);
     }
     env::define(&scope, KEY_METHODS, methods_list_value(&generator));
-    env::define(&scope, KEY_GENERATOR, SValue::Environment(generator));
+    env::define(&scope, KEY_GENERATOR, SValue::Environment(generator.clone()));
     env::define(&scope, KEY_SELF, SValue::Environment(scope.clone()));
+    // R-26: re-home the active bindings onto the *copy* (not the source), so the
+    // copy's getter/setter operate on the copy's own fields.
+    install_active_bindings(&generator, &scope);
     Ok(SValue::Environment(scope))
 }
 
@@ -705,23 +894,146 @@ pub fn dollar_access(obj: &Env, name: &str) -> Option<SValue> {
     None
 }
 
+/// Is `name` an **active binding** of `instance` (a function-valued field declared
+/// in the class spec, across the inheritance linearization)? Used by the `$`
+/// read/write dispatch to decide whether `obj$name` / `obj$name <- v` calls a
+/// getter/setter rather than reading/writing a plain data field. Returns `false`
+/// for a non-instance or an ordinary field. Detected from the class spec (not from
+/// "the instance value happens to be a closure") so a data field that a user
+/// assigned a function to is *not* mistaken for an active binding.
+pub fn is_active_binding(instance: &Env, name: &str) -> bool {
+    match instance_generator(instance) {
+        Some(generator) => effective_active_bindings(&generator)
+            .iter()
+            .any(|(n, _)| n == name),
+        None => false,
+    }
+}
+
+/// The **active-binding function** for `name`, as stored (re-homed) on `instance`'s
+/// own frame — the closure the `$` read/write path calls as a getter (no args) or
+/// setter (`v = value`). Returns `None` if `name` is not an active binding on this
+/// instance. The closure's `env` is the instance, so its body reads sibling fields
+/// and writes them with `<<-`.
+pub fn active_binding_fn(instance: &Env, name: &str) -> Option<SValue> {
+    if !is_active_binding(instance, name) {
+        return None;
+    }
+    match env::lookup_local(instance, name) {
+        Some(c @ SValue::Closure { .. }) => Some(c),
+        _ => None,
+    }
+}
+
 /// Rebuild a fresh **instance-bound** closure for method `name`: take the method
 /// closure as written (which closes over the *generator* scope) and return a new
-/// `Closure` with the same params/body but its `env` swapped to the **instance**.
-/// The body then sees the instance's fields as free variables and writes them
-/// back with `<<-`. Returns `None` if `name` is not a method. **Never stored** —
-/// this lives only for the call that triggered it, so it forms no lasting
-/// instance⇄method `Rc` cycle (see the module note).
+/// `Closure` with the same params/body but its `env` swapped to a thin
+/// **super-context** scope whose parent is the **instance**. The super-context binds
+/// two private markers — [`KEY_SUPER_GENS`] (the parent generators of the class that
+/// *defined this method version*, where a `callSuper()` should restart same-name
+/// resolution) and [`KEY_METHOD_NAME`] — so a `callSuper()` inside the body finds
+/// them by ordinary lexical lookup. The body still reads/writes the instance's
+/// fields because the super-context's parent *is* the instance (and the markers are
+/// dotted, so they never collide with a user field). Returns `None` if `name` is not
+/// a method. **Never stored** — this lives only for the call that triggered it, so it
+/// forms no lasting instance⇄method `Rc` cycle (see the module note).
 fn rebuild_method(instance: &Env, name: &str) -> Option<SValue> {
-    for (mname, m) in methods_of(instance) {
-        if mname == name {
-            if let SValue::Closure { params, body, .. } = m {
-                return Some(SValue::Closure {
-                    params,
-                    body,
-                    env: instance.clone(),
-                });
+    let generator = instance_generator(instance)?;
+    rebuild_method_from(instance, &generator, name)
+}
+
+/// The shared core of [`rebuild_method`] and `callSuper`: materialise the closure
+/// for `name` as resolved **starting at `start_gen`** (the instance's own generator
+/// for a plain `obj$method`; a *super* generator for `callSuper`). The method's
+/// *defining class* is the first generator in `start_gen`'s [`linearization`] that
+/// declares `name` directly; the super-context records **that class's parents** so a
+/// nested `callSuper()` walks one level further up. Returns `None` when no class at
+/// or above `start_gen` defines `name` (a `callSuper()` past the root → clean `None`,
+/// no recursion).
+fn rebuild_method_from(instance: &Env, start_gen: &Env, name: &str) -> Option<SValue> {
+    // Find the defining class (most-derived from `start_gen` that declares `name`)
+    // and its method closure.
+    let mut defining: Option<Env> = None;
+    let mut found: Option<SValue> = None;
+    for g in linearization(start_gen) {
+        // `methods_of` reads a generator's *own* declared `.refMethods`, so the first
+        // class in the linearization that binds `name` is its defining class.
+        for (mname, m) in methods_of(&g) {
+            if mname == name {
+                defining = Some(g.clone());
+                found = Some(m);
+                break;
             }
+        }
+        if found.is_some() {
+            break;
+        }
+    }
+    let (defining, closure) = (defining?, found?);
+    if let SValue::Closure { params, body, .. } = closure {
+        // The super-context parents are the *defining class's* parents — where a
+        // `callSuper()` inside this method restarts same-name resolution.
+        let super_gens = parent_generators(&defining);
+        let ctx = env::Scope::child(instance);
+        let items: Vec<SValue> = super_gens
+            .iter()
+            .map(|g| SValue::Environment(g.clone()))
+            .collect();
+        env::define(
+            &ctx,
+            KEY_SUPER_GENS,
+            SValue::List {
+                names: vec![None; items.len()],
+                items,
+            },
+        );
+        env::define(
+            &ctx,
+            KEY_METHOD_NAME,
+            SValue::Character(vec![Some(name.to_string())]),
+        );
+        return Some(SValue::Closure {
+            params,
+            body,
+            env: ctx,
+        });
+    }
+    None
+}
+
+/// `callSuper(...)` engine (R-26). Resolve the **same-named** method one level up
+/// the inheritance chain from the method currently running, re-home it onto
+/// `instance`, and return it ready to apply to the forwarded args. `caller_env` is
+/// the environment the `callSuper()` call is being evaluated in — it carries the
+/// super-context markers [`KEY_SUPER_GENS`] / [`KEY_METHOD_NAME`] placed by
+/// [`rebuild_method_from`] (found by walking up the lexical chain). Returns:
+///
+/// * `Some(closure)` — the super method, re-homed, with a *fresh* super-context one
+///   level further up (so chained `callSuper()` walks `C → B → A`).
+/// * `None` — there is no super definition (the markers are absent, or no class at or
+///   above the super generators defines the name). The caller treats this as R5's
+///   "no super method" → a clean `NULL`, never recursion or a panic.
+pub fn call_super_method(caller_env: &Env, instance: &Env) -> Option<SValue> {
+    // The method name is read from the nearest enclosing super-context.
+    let name = match env::lookup(caller_env, KEY_METHOD_NAME) {
+        Some(SValue::Character(v)) => v.into_iter().next().flatten()?,
+        _ => return None,
+    };
+    // The super generators to restart resolution at (the defining class's parents).
+    let super_gens: Vec<Env> = match env::lookup(caller_env, KEY_SUPER_GENS) {
+        Some(SValue::List { items, .. }) => items
+            .into_iter()
+            .filter_map(|v| match v {
+                SValue::Environment(e) if is_generator(&e) => Some(e),
+                _ => None,
+            })
+            .collect(),
+        _ => Vec::new(),
+    };
+    // Try each super generator left-to-right; the first that defines `name` wins.
+    for g in &super_gens {
+        if let Some(closure) = rebuild_method_from(instance, g, &name) {
+            return Some(closure);
         }
     }
     None

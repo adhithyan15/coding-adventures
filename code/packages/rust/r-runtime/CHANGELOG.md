@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.21.0] - 2026-06-20
+
+### Added (via the shared `s-runtime`)
+
+- **R-26 — R5 `callSuper()`, active bindings, and multiple inheritance**:
+  completes the R5 system through the shared evaluator (all logic in
+  `s-runtime/src/refclass.rs`; no grammar change). In R syntax:
+  - **`callSuper()`** — an overriding method re-uses its parent's same-named method:
+    `Sub <- setRefClass("Sub", contains = "Base", methods = list(describe =
+    function() paste(callSuper(), "sub")))` → `Sub$new()$describe()` is
+    `"base sub"`. Chains across levels (`C→B→A`), forwards args, runs against the
+    instance (can read/write fields), and returns `NULL` past the root.
+  - **Active bindings** — a function-valued field is a getter/setter:
+    `Temp <- setRefClass("Temp", fields = list(celsius = "numeric", fahrenheit =
+    function(v) { if (missing(v)) celsius*9/5+32 else celsius <<- (v-32)*5/9 }))`
+    → `t$fahrenheit` computes `212`; `t$fahrenheit <- 32` sets `t$celsius` to `0`.
+    Inherited and `$copy()`-independent.
+  - **Multiple inheritance** — `contains = c("A", "B")`: a `C` unions A's and B's
+    fields and methods (`o$fa()`, `o$fb()`), with left-to-right precedence;
+    `is`/`inherits`/`class` see every base; diamonds de-dup the shared ancestor;
+    mutual-inheritance cycles are rejected.
+  - 16 new R-syntax tests.
+
 ## [0.20.0] - 2026-06-20
 
 ### Added (via the shared `s-runtime`)

@@ -114,8 +114,20 @@ same-named base method. `b <- a$copy()` is a **deep, independent** copy —
 aliases. `is(s, "Base")`, `inherits(s, "Base")`, and `class(s)` walk the class
 chain `c("Sub", "Base", "envRefClass", "environment")`; `Sub$fields()` and
 `Sub$methods()` return the sorted field/method names including inherited ones. A
-cyclic or unknown `contains =` is a clean error. Multiple inheritance and active
-bindings are deferred to R-26.
+cyclic or unknown `contains =` is a clean error.
+
+**R5 `callSuper()`, active bindings, and multiple inheritance (R-26)** — completes
+the R5 system. `callSuper()` inside an overriding method invokes the parent's
+same-named method (`Sub <- setRefClass("Sub", contains = "Base", methods =
+list(describe = function() paste(callSuper(), "sub")))` → `Sub$new()$describe()`
+is `"base sub"`); it chains across levels, forwards args, runs against the
+instance, and returns `NULL` past the root. A **function-valued field** is an
+**active binding** — a getter/setter: `fahrenheit = function(v) { if (missing(v))
+celsius*9/5+32 else celsius <<- (v-32)*5/9 }` makes `t$fahrenheit` compute and
+`t$fahrenheit <- 32` assign `t$celsius`; active bindings are inherited and
+`$copy()`-independent. **Multiple inheritance** `contains = c("A", "B")` unions A's
+and B's fields/methods (left-to-right precedence), with `is`/`inherits`/`class`
+seeing every base, diamonds de-duplicated, and mutual-inheritance cycles rejected.
 
 ## Usage
 
