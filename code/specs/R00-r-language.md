@@ -960,6 +960,66 @@ unchanged.
     `order` from R-13 is unchanged). The `%o%` infix alias for `outer` carried over
     from R-28's deferral list also remains open for a later grammar pass.
 
+- **R-30 — ordering refinements** *(this PR)*. The follow-up to R-29 that fills
+  in the *ties, direction, and multi-key* corners of the ordering builtins. All
+  changes are **extensions of the existing R-29/R-13 handlers** in the shared
+  `s-runtime` (no new value type, no grammar change); R inherits them through the
+  tree-walker. They reuse the same machinery: `as_character` (the order-and-equality
+  key shared by `unique`/`%in%`/the set ops), `value::index` (the type-preserving
+  1-based gather), `first_positional`, `arg.value.truthy()` (the `na.rm =` boolean
+  reader pattern), and `arg.value.as_character()` (the string keyword reader the
+  `factor(levels =, labels =)` builtin uses).
+  - **Multi-key `order(x, y, ...)`** — sort the index permutation by the **first**
+    key, breaking ties by the **second**, and so on, lexicographically; remaining
+    ties keep their **original order** (a *stable* sort). The R-13 single-key form is
+    the `...`-arity-1 special case, unchanged. Each key is coerced to its comparison
+    form independently (numeric keys compare numerically with `NA` last, mirroring
+    `na.last = TRUE`; character keys compare lexicographically), so a numeric key and
+    a character key can be mixed across positions. Every key must have the **same
+    length** as the first; a length mismatch is a graceful error, never a panic.
+    `order(c(2,1,2), c(1,2,1))` is `c(2, 1, 3)` (the lone `1` first, then the two `2`s
+    tied on both keys, kept in original order: index 1 before index 3).
+  - **`rank(x, ties.method = ...)`** — the R-29 `rank` gains the **four exact** tie
+    rules (the `"random"` jitter rule stays deferred, as it needs an RNG seed
+    contract): `"average"` (the default, unchanged — tied values share the **mean**
+    of the positions they span); `"min"` (every tie takes the **lowest** position in
+    its run); `"max"` (the **highest**); `"first"` (positions assigned in **original
+    order** within the run, so ties get distinct consecutive ranks). The keyword is
+    read with `arg.value.as_character()`; an unrecognised method is a graceful error.
+    `rank(c(1,1,2))` is `c(1.5,1.5,3)` (average), `c(1,1,3)` (min), `c(2,2,3)` (max),
+    `c(1,2,3)` (first). Min/max/first are **integer-valued** but still returned as
+    numeric (R's `rank` always yields a double), matching the existing return type.
+  - **`duplicated(x, fromLast = TRUE)`** — the R-29 `duplicated` gains the
+    direction flag. By default the **first** occurrence of each value is `FALSE` and
+    later repeats are `TRUE`; with `fromLast = TRUE` the scan runs **right-to-left**,
+    so the **last** occurrence is the keeper (`FALSE`) and the **earlier** repeats are
+    `TRUE`. `duplicated(c(1,2,1))` is `c(FALSE, FALSE, TRUE)`;
+    `duplicated(c(1,2,1), fromLast = TRUE)` is `c(TRUE, FALSE, FALSE)`. The flag is
+    read with `arg.value.truthy()`.
+  - **`anyDuplicated(x)`** — a **scalar integer**: the 1-based index of the **first
+    element that is itself a duplicate** (i.e. the first position whose value was seen
+    earlier), or `0` when `x` has no duplicates. Defined to agree exactly with
+    `which(duplicated(x))[1]` (and `0L` when that is empty). `anyDuplicated(c(1,2,1))`
+    is `3`; `anyDuplicated(c(1,2,3))` is `0`. Works on numeric and character vectors
+    via the shared character key.
+  - **Output-size caps (security).** No new user-controlled multiplier is
+    introduced. `order` allocates one `usize` per element of the first key and sorts
+    `O(n log n)`; the per-key length check rejects mismatched keys before any indexing.
+    `rank` (all methods) allocates one `f64` per element. `duplicated` (both
+    directions) and `anyDuplicated` emit/scan exactly one entry per input element.
+    Every operand is already `MAX_SEQ_LEN`-bounded; outputs are bounded by the
+    (already-capped) input lengths, so no separate cap is added. `NA` remains an
+    ordinary matchable key (`as_character`'s `None`); empty inputs yield empty/`0`
+    results; no path can index out of bounds.
+  - **Scope outcome / deferred to R-31.** Multi-key `order`, `rank`'s
+    `average`/`min`/`max`/`first` tie methods, `duplicated(fromLast =)`, and
+    `anyDuplicated` ship **solidly**. **Deferred to R-31:** `incomparables =` on the
+    set ops / `duplicated` / `anyDuplicated` (it needs `NA`-comparison plumbing — a
+    way to mark certain values as "never equal to anything", which the current
+    `as_character`-key path does not model); `rank`'s `"random"` tie method (needs the
+    RNG-seed contract); and the `fromLast =` argument on the set ops. The `%o%` infix
+    alias for `outer` remains open for a later grammar pass.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -989,9 +1049,11 @@ the R5 system in **R-26**); the output-formatting family (`format`, `formatC`,
 builtins (`outer`, `tapply`, `split`, `tabulate`) land in **R-28**, with the `%o%`
 infix alias, matrix dimnames, multi-way `tapply`, and `simplify = FALSE` deferred to
 a later pass; the vector set-operation & ranking builtins (`union`, `intersect`,
-`setdiff`, `is.element`, `duplicated`, `rank`) land in **R-29**, with `rank`'s other
-`ties.method` options, the `incomparables=`/`fromLast=` set-op arguments,
-`anyDuplicated`, and multi-key `order` deferred to **R-30**; namespaces and `library()`
+`setdiff`, `is.element`, `duplicated`, `rank`) land in **R-29**; the ordering
+refinements (multi-key `order(x, y, ...)`, `rank`'s `ties.method` =
+`average`/`min`/`max`/`first`, `duplicated(fromLast=)`, `anyDuplicated`) land in
+**R-30**, with `incomparables=` on the set ops / `duplicated`, the `fromLast=`
+set-op argument, and `rank`'s `"random"` method deferred to **R-31**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.
