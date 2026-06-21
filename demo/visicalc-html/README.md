@@ -47,6 +47,27 @@ it through a C ABI.)
 > workbook (formulas recompute live; garbage input is rejected), and an
 > undo/redo walk reverses two edits then replays them with the formula live.
 
+## Design language
+
+`infinite.html` is the **reference UI** for the VisiCalc demos — the visual
+language the native demos (Qt/Flutter/Compose/XAML/SwiftUI) mirror. It keeps a
+dark, modern-spreadsheet look, defined by a small set of CSS tokens in the
+page's `:root` so the whole surface reads as one considered panel:
+
+- **Palette + scale** — one set of custom properties (`--bg`/`--panel`/
+  `--surface`/`--line`/`--ink`/`--muted`/`--accent`, radii, a mono + a UI font)
+  rather than scattered hex values. The chrome uses the UI font; cells and the
+  formula field use the mono font.
+- **Toolbar** — an address **pill**, an `fx` marker, then a grown formula field
+  with an accent **focus ring**; actions are **segmented button groups**
+  (drag-fill · clipboard · file · history) separated by thin rules, each with
+  hover/active/disabled states.
+- **Grid** — subtle **zebra** row banding, a 2-px **accent selection ring**, and
+  the selected cell's **row + column headers tint to the accent** so the
+  cursor's position reads at a glance.
+- **Status line** — a footer, hairline-separated, showing the live virtual-grid
+  size, materialized-cell count, and revision.
+
 ## What it shows
 
 A cross-footing budget: columns A–D hold numbers, column E totals each
