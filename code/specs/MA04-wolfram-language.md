@@ -1279,6 +1279,145 @@ the W-4 fuel/`If` machinery already bounds.
 touches only `wolfram-runtime`'s builtin handler table and the `WolframBackend`
 held set; the lexer, parser, and grammar files are untouched.
 
+## §18 W-15 numeric & integer math — `Abs`, `Sign`, `Min`/`Max`, `Floor`/`Ceiling`/`Round`, `Quotient`, `GCD`/`LCM`, `Sqrt` (implemented)
+
+W-4..W-14 gave the M-expression core, the arithmetic bridge (`Add`/`Sub`/`Mul`/
+`Div`/`Pow`/`Mod`/`Power`/`N`, inherited from the shared `SymbolicBackend`),
+operator sugar, iteration, scoping, list manipulation and set ops, functional
+combinators, pure functions, string functions, and conditionals/predicates.
+W-15 adds the **numeric & integer math vocabulary** — the scalar functions a
+beginner reaches for first: absolute value and sign, the min/max reductions,
+the three rounding functions, integer division and `GCD`/`LCM`, and `Sqrt`.
+
+Every W-15 head is an ordinary `Head[args]` application, so — like W-5/W-9/
+W-12/W-13/W-14 — **there is no grammar change**: W-15 touches only
+`wolfram-runtime`'s builtin handler table (`builtins.rs`). `Mod`, `Power`, and
+`N` already exist (the inner `SymbolicBackend`'s arithmetic and the W-6 `N`
+handler); W-15 does **not** duplicate them. `Sqrt` *is* overridden in the
+Wolfram table (it precedes the inner backend in `handler_for`) so it gets
+Wolfram-exact semantics — see §18.4.
+
+### §18.1 What W-15 adds
+
+| Head | Meaning | Example |
+| --- | --- | --- |
+| `Abs[x]` | absolute value (exact for integers, f64 for reals) | `Abs[-3]` → `3`, `Abs[-2.5]` → `2.5` |
+| `Sign[x]` | −1 / 0 / +1 by sign | `Sign[-2]` → `-1`, `Sign[0]` → `0`, `Sign[2.5]` → `1` |
+| `Min[a, b, …]` / `Min[{…}]` | least argument (or least list element) | `Min[3, 1, 2]` → `1`, `Min[{3, 1, 2}]` → `1` |
+| `Max[a, b, …]` / `Max[{…}]` | greatest argument (or greatest list element) | `Max[3, 1, 2]` → `3`, `Max[{3, 1, 2}]` → `3` |
+| `Floor[x]` | greatest integer ≤ x | `Floor[2.7]` → `2`, `Floor[-2.1]` → `-3` |
+| `Ceiling[x]` | least integer ≥ x | `Ceiling[2.1]` → `3` |
+| `Round[x]` | nearest integer, **half-to-even** | `Round[2.5]` → `2`, `Round[3.5]` → `4` |
+| `Quotient[m, n]` | integer division toward −∞ | `Quotient[7, 2]` → `3`, `Quotient[-7, 2]` → `-4` |
+| `GCD[a, b, …]` | greatest common divisor (≥ 0) | `GCD[12, 18]` → `6`, `GCD[12, 18, 24]` → `6` |
+| `LCM[a, b, …]` | least common multiple (≥ 0) | `LCM[4, 6]` → `12` |
+| `Sqrt[x]` | exact for perfect squares, else symbolic | `Sqrt[16]` → `4`, `Sqrt[2]` → `Sqrt[2]` |
+
+### §18.2 Integer ops stay exact; real ops use f64
+
+The single design rule mirrors the IR's own number representation
+(`IRNode::Integer(i64)` vs `IRNode::Float(f64)`):
+
+* If the argument(s) are **integers**, the result is exact (`IRNode::Integer`).
+  `Abs[-3]` → `3`, `Min[3, 1, 2]` → `1`, `GCD[12, 18]` → `6` — never a float.
+* If any argument is a **real** (`Float`), the result is computed in f64.
+  `Abs[-2.5]` → `2.5`, `Min[2.5, 1.0]` → `1.0`.
+* `Floor`/`Ceiling`/`Round` always return an **integer** (that is their job),
+  whether the input is a real or already an integer; `Floor[5]` → `5`.
+
+`Quotient`, `GCD`, and `LCM` are **integer-only** (Wolfram defines them over
+integers in this subset); a non-integer argument leaves the form unevaluated.
+`Abs`, `Sign`, `Min`, `Max` accept both integers and reals.
+
+`Sign` is total: negative → `-1`, zero → `0`, positive → `1`. For a `Float`,
+`Sign[-0.0]` → `0` (signed zero is treated as zero) and `Sign` of `NaN` (which
+the parser cannot produce, but a computed intermediate could) leaves the form
+unevaluated rather than guessing.
+
+### §18.3 `Round` is half-to-even (banker's rounding)
+
+Wolfram's `Round` rounds a tie (exactly `.5`) to the **nearest even integer**,
+not always up:
+
+```
+Round[0.5] → 0     Round[1.5] → 2     Round[2.5] → 2     Round[3.5] → 4
+```
+
+This is the IEEE-754 "round half to even" / banker's rounding rule, chosen
+because it has no upward bias over a stream of ties. Rust's `f64::round` rounds
+half **away from zero** (`2.5_f64.round()` is `3.0`), so it is **not** usable
+directly. W-15 implements half-to-even explicitly: round to nearest, and on an
+exact tie pick the even neighbour. The implementation and its tests pin the
+canonical cases `Round[2.5]` → `2` and `Round[3.5]` → `4`.
+
+### §18.4 `Sqrt` — exact for perfect squares, otherwise symbolic
+
+W-15 chooses the **symbolic** branch for non-perfect-squares (rather than
+numericising eagerly):
+
+* `Sqrt[n]` for a non-negative integer `n` that is a perfect square returns the
+  exact integer root: `Sqrt[16]` → `4`, `Sqrt[0]` → `0`, `Sqrt[1]` → `1`.
+* `Sqrt[n]` for a non-perfect-square non-negative integer is left **symbolic**:
+  `Sqrt[2]` → `Sqrt[2]` (unevaluated). The float value is available on demand
+  via `N[Sqrt[2]]` → `1.4142…` (the W-6 `N` handler numericises the wrapped
+  `Sqrt`, which the inner `SymbolicBackend` then evaluates to a float).
+* `Sqrt[x]` for a `Float` argument returns the f64 root (`Sqrt[2.0]` →
+  `1.4142…`) — a real input already signals "I want a numeric answer".
+* `Sqrt` of a negative integer or any non-numeric argument is left unevaluated
+  (this subset has no complex numbers).
+
+This override is necessary because the inner `SymbolicBackend`'s `Sqrt`
+numericises `Sqrt[2]` to a float eagerly; the Wolfram table's handler precedes
+it (per `handler_for`), restoring the exact-or-symbolic behaviour a Wolfram user
+expects. The perfect-square test computes the integer `isqrt` and checks
+`r * r == n`, with `r` taken in i128 so the squaring cannot overflow.
+
+### §18.5 Overflow is guarded — exact integer math never wraps or panics
+
+Exact integer ops are computed with **i128 intermediates and overflow guards**
+so a crafted pair of large `i64` arguments can never wrap (silent corruption) or
+panic (`overflow` in debug builds):
+
+* **`Abs[i64::MIN]`** — `(-i64::MIN)` overflows i64 (its magnitude is one past
+  `i64::MAX`). Computed as `(n as i128).abs()`; if the result does not fit back
+  in i64 the form is left **unevaluated** rather than wrapping.
+* **`Quotient[m, n]`** — floor-division `m.div_euclid` toward −∞, computed in
+  i128 (so `Quotient[i64::MIN, -1]`, whose true value overflows i64, is refused
+  / unevaluated rather than panicking); `Quotient[m, 0]` is undefined and stays
+  unevaluated.
+* **`GCD`** — computed in i128 with `unsigned_abs`-style magnitude handling so
+  `GCD[i64::MIN, 0]` does not overflow on negation; the Euclidean loop is
+  monotone-decreasing and terminates. The result is non-negative; if it does
+  not fit in i64 (only `GCD[i64::MIN, …]` can produce a magnitude one past
+  `i64::MAX`) the form is left unevaluated.
+* **`LCM`** — `lcm(a, b) = |a / gcd(a, b) * b|` is the classic overflow trap
+  (`a * b` overflows long before the LCM does). W-15 computes it in **i128**,
+  divides by the gcd *first* (`a / g * b`, never `a * b / g`), and checks the
+  product against the i64 range: an over-range LCM (`LCM` of two large coprime
+  ints) is left **unevaluated** — it never wraps or panics. `LCM[…, 0]` is `0`
+  (the Wolfram convention).
+
+Every guard fails **closed**: the offending application echoes unevaluated,
+exactly the W-5/W-9/W-12/W-13/W-14 "I can't reduce this" contract.
+
+### §18.6 The "I can't reduce this" contract — malformed input stays unevaluated
+
+Following the established convention, every W-15 handler returns the application
+**unchanged** (echoed, never panicking) when its arguments are the wrong shape:
+wrong arity (`Abs[1, 2]`, `Quotient[7]`), a non-numeric argument
+(`Abs[x]`, `Min[x, 1]`, `GCD[x, 2]`), a non-integer where an integer is required
+(`Quotient[2.5, 1]`, `GCD[1.5, 2]`), `Quotient`/`Mod` by zero, `Sqrt` of a
+negative, or an overflow guard tripping (§18.5). No W-15 head ever panics,
+divides by zero, or relies on debug-mode overflow checks for correctness.
+
+### §18.7 No grammar change
+
+`Abs[…]`, `Sign[…]`, `Min[…]`, `Max[…]`, `Floor[…]`, `Ceiling[…]`, `Round[…]`,
+`Quotient[…]`, `GCD[…]`, `LCM[…]`, and `Sqrt[…]` are all ordinary `Head[args]`
+applications. W-15 touches only `wolfram-runtime`'s builtin handler table; the
+lexer, parser, and grammar files are untouched. `Mod`, `Power`, and `N` are
+reused unchanged.
+
 ### §6 References
 
 Internal: [`HML00`](HML00-historical-math-languages-roadmap.md),
