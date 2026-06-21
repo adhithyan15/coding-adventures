@@ -4,11 +4,30 @@
 //! result; the other ALU ops write back. Control-flow instructions return a
 //! [`Flow`] the step loop acts on.
 
-use crate::decode::{AluOp, Instr, Operand, ShiftOp};
+use crate::decode::{AluOp, Instr, Operand, ShiftOp, SseOp, XmmRm};
 use crate::flags::{add_with_flags, logic_flags, sub_with_flags};
-use crate::state::{CpuState, Reg};
+use crate::state::{CpuState, Flags, Reg};
 use crate::memory::Memory;
 use crate::trap::Trap;
+
+/// Read the scalar `f64` in the low lane of XMM register `n`.
+fn read_xmm(st: &CpuState, n: u8) -> f64 {
+    f64::from_bits(st.xmm[n as usize] as u64)
+}
+
+/// Write a scalar `f64` into the low lane of XMM register `n` (high lane kept).
+fn write_xmm(st: &mut CpuState, n: u8, v: f64) {
+    let hi = st.xmm[n as usize] & (!0u128 << 64);
+    st.xmm[n as usize] = hi | (v.to_bits() as u128);
+}
+
+/// Read an XMM-or-memory source as an `f64`.
+fn read_xmmrm(st: &CpuState, mem: &Memory, src: &XmmRm, next_ip: u64) -> Result<f64, Trap> {
+    match src {
+        XmmRm::Xmm(n) => Ok(read_xmm(st, *n)),
+        XmmRm::Mem(op) => Ok(f64::from_bits(mem.load(effective_addr(st, op, next_ip), 8)?)),
+    }
+}
 
 /// What the step loop should do after an instruction.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -129,6 +148,61 @@ pub fn exec_one(
             let a = st.get(*dst);
             let b = read_op(st, mem, src, next_ip, 8)?;
             st.set(*dst, a.wrapping_mul(b));
+            Ok(Flow::Next)
+        }
+        // ── SSE2 scalar double ────────────────────────────────────────────────
+        Instr::MovsdLoad { xmm, src } => {
+            let v = f64::from_bits(read_op(st, mem, src, next_ip, 8)?);
+            write_xmm(st, *xmm, v);
+            Ok(Flow::Next)
+        }
+        Instr::MovsdStore { dst, xmm } => {
+            let bits = read_xmm(st, *xmm).to_bits();
+            write_op(st, mem, dst, next_ip, 8, bits)?;
+            Ok(Flow::Next)
+        }
+        Instr::MovsdRr { dst, src } => {
+            let v = read_xmm(st, *src);
+            write_xmm(st, *dst, v);
+            Ok(Flow::Next)
+        }
+        Instr::SseArith { op, dst, src } => {
+            let a = read_xmm(st, *dst);
+            let b = read_xmmrm(st, mem, src, next_ip)?;
+            let r = match op {
+                SseOp::Add => a + b,
+                SseOp::Sub => a - b,
+                SseOp::Mul => a * b,
+                SseOp::Div => a / b,
+            };
+            write_xmm(st, *dst, r);
+            Ok(Flow::Next)
+        }
+        Instr::Ucomisd { a, b } => {
+            let x = read_xmm(st, *a);
+            let y = read_xmmrm(st, mem, b, next_ip)?;
+            // x86 `ucomisd` sets ZF/PF/CF; OF/SF/AF cleared. Unordered (NaN) sets
+            // ZF=PF=CF=1; otherwise PF=0 and ZF/CF encode the ordering.
+            st.flags = if x.is_nan() || y.is_nan() {
+                Flags { zf: true, pf: true, cf: true, ..Flags::default() }
+            } else if x < y {
+                Flags { cf: true, ..Flags::default() }
+            } else if x > y {
+                Flags::default()
+            } else {
+                Flags { zf: true, ..Flags::default() }
+            };
+            Ok(Flow::Next)
+        }
+        Instr::Setcc { cond, dst } => {
+            let c = crate::flags::Cond::from_nibble(*cond);
+            let bit = crate::flags::condition_holds(c, &st.flags) as u64;
+            // setcc writes only the low byte; keep the upper bits (a `movzx`
+            // typically follows). For a register dst that means a masked write.
+            match dst {
+                Operand::Reg(r) => { let v = (st.get(*r) & !0xFF) | bit; st.set(*r, v); }
+                Operand::Mem { .. } => write_op(st, mem, dst, next_ip, 1, bit)?,
+            }
             Ok(Flow::Next)
         }
         Instr::Jmp(t) => Ok(Flow::Jump(code_base.wrapping_add(*t as u64))),

@@ -90,7 +90,7 @@ impl MachineCodeHarness {
             code.extend_from_slice(bytes);
             for r in rs {
                 // The rel32 site must lie within this function's bytes.
-                if r.patch_offset.checked_add(4).map_or(true, |e| e > bytes.len()) {
+                if r.patch_offset.checked_add(4).is_none_or(|e| e > bytes.len()) {
                     return Err(BuildError::BadReloc {
                         symbol: r.symbol.clone(),
                         patch_offset: r.patch_offset,

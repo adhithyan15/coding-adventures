@@ -1,5 +1,29 @@
 # Changelog — x86-simulator
 
+## 0.2.0 — 2026-06-21 — SSE2 scalar doubles + `movabs`/`setcc` (x86-sim PR-S2)
+
+Runs the x86_64-backend's **floating-point** (ALGOL `real` / LANG-FULL E3) output
+locally, on top of the S1 integer core.
+
+### Added
+- **XMM scalar-double SSE2**: `movsd` (load `F2 0F 10` / store `F2 0F 11` / reg-reg),
+  `addsd`/`subsd`/`mulsd`/`divsd` (`F2 0F 58/5C/59/5E`), and `ucomisd`
+  (`66 0F 2E`) with the x86 ZF/PF/CF flag semantics (unordered/NaN → ZF=PF=CF=1).
+  Computed in `f64` over the low lane of the `xmm` register file.
+- **`movabs r64, imm64`** (`0xB8+rd` REX.W) — the full 64-bit immediate the backend
+  uses to materialise an `f64` constant's bit pattern before `movsd`-ing it into XMM
+  (missed by S1, which only handled the `imm32` `mov`).
+- **`setcc r/m8`** (`0F 90..9F`) — the byte-setting half of a comparison; an `f64`
+  `=` lowers to `ucomisd; sete; movzx; setnp; movzx; and` (ordered-equal), all of
+  which the simulator now executes.
+- The mandatory-prefix (`F2`/`F3`/`66`) decode path that precedes `0F` for SSE.
+
+### Verified
+- Decodes `movabs`/`movsd`/`mulsd`/`ucomisd`/`sete` from real backend bytes.
+- **End-to-end**: compiles `2.5 * 2.0 == 5.0` and `7.0 / 2.0 < 4.0` with the real
+  `x86_64-backend` and runs the SSE2 machine code → exit **1** (true), locally on
+  aarch64. 20 tests.
+
 ## 0.1.0 — 2026-06-21 — integer core + MachineCodeHarness (x86-sim PR-S1)
 
 The first runnable slice: a Rust runtime simulator that decodes and executes the

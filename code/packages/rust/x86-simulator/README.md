@@ -20,11 +20,14 @@ The subset the `x86_64-encoder` emits (and growing):
 - **Integer ALU**: `add` / `sub` / `cmp` / `and` / `or` / `xor` / `test` (reg and
   imm forms), `shl` / `shr` / `sar`, `imul` — all with full CF/ZF/SF/OF/PF flags.
 - **Control flow**: `jmp`, `jcc` (all 16 conditions), `call` / `ret`, `push` /
-  `pop`, and `ud2` → an illegal-instruction **trap** (how an E5 out-of-bounds
-  array access aborts).
+  `pop`, `setcc`, and `ud2` → an illegal-instruction **trap** (how an E5
+  out-of-bounds array access aborts).
+- **SSE2 scalar double** (ALGOL `real` / E3): `movsd` (load/store/reg), `addsd` /
+  `subsd` / `mulsd` / `divsd`, `ucomisd`, and `movabs r64, imm64` — enough to run
+  the backend's `f64` arithmetic + comparison output.
 
-Pending phases: SSE2 scalar doubles (`movsd`/`addsd`/`ucomisd`/`cvt*`, for E3
-ALGOL `real`), and 32-bit x86. Anything unimplemented is a clean `DecodeError`.
+Pending phases: `cvtsi2sd` / `cvttsd2si` (int↔float), and 32-bit x86. Anything
+unimplemented is a clean `DecodeError`.
 
 ## How to use it
 
