@@ -4,6 +4,61 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.12.0] — 2026-06-20
+
+The **W-15** deliverable (MA04 §18): Wolfram's **numeric & integer math**
+functions, lowered onto the same substrate as the rest of the lane. All ordinary
+eager `Head[args]` forms — **no grammar change**; only the `wolfram-runtime`
+builtin handler table grows. Integer ops stay **exact** (i64, computed in i128
+with overflow guards); real ops use f64, mirroring the IR's own
+`Integer`/`Float` split. `Mod`, `Power`, and `N` already existed and are **not**
+duplicated. `Sqrt` is overridden in the Wolfram table (which precedes the inner
+`SymbolicBackend` in `handler_for`) to give Wolfram-exact semantics.
+
+### Added (numeric & integer math)
+
+- **`Abs[x]`** — absolute value; exact for integers, f64 for reals.
+  `Abs[-3]` → `3`, `Abs[-2.5]` → `2.5`. `Abs[i64::MIN]` (magnitude one past
+  `i64::MAX`) is left **unevaluated** rather than overflowing.
+- **`Sign[x]`** — `−1` / `0` / `1` by sign; always an exact integer.
+  `Sign[-2]` → `-1`, `Sign[0]` → `0`. Signed zero is zero; `Sign[NaN]` is left
+  unevaluated.
+- **`Min[a, b, …]` / `Max[a, b, …]`** — also over a single list `Min[{…}]`. The
+  original node (exact integer where applicable) is returned: `Min[3, 1, 2]` →
+  `1`, `Max[{3, 1, 2}]` → `3`. A non-numeric operand or empty fold is left
+  unevaluated.
+- **`Floor[x]` / `Ceiling[x]` / `Round[x]`** — always an integer result.
+  `Floor[2.7]` → `2`, `Floor[-2.1]` → `-3`, `Ceiling[2.1]` → `3`. **`Round` is
+  half-to-even** (banker's rounding), matching Wolfram: `Round[2.5]` → `2`,
+  `Round[3.5]` → `4` (Rust's `f64::round` rounds half away from zero, so it is
+  not used). `f64 → i64` conversion saturates; non-finite inputs are left
+  unevaluated.
+- **`Quotient[m, n]`** — integer division toward −∞ (floor division).
+  `Quotient[7, 2]` → `3`, `Quotient[-7, 2]` → `-4`. Computed in i128 so
+  `Quotient[i64::MIN, -1]` is left unevaluated rather than panicking;
+  `Quotient[m, 0]` is undefined → unevaluated.
+- **`GCD[a, b, …]` / `LCM[a, b, …]`** — non-negative, integer-only. `GCD[12, 18]`
+  → `6`, `GCD[12, 18, 24]` → `6`, `LCM[4, 6]` → `12`, `LCM[…, 0]` → `0`. Folded
+  in **i128**; `LCM` divides by the gcd first (`a / g * b`, never `a * b / g`)
+  and range-checks the result — an over-i64 LCM (e.g. of two large coprime ints)
+  is left **unevaluated**, never wrapped or panicked.
+- **`Sqrt[x]`** — exact integer for perfect squares (`Sqrt[16]` → `4`,
+  `Sqrt[0]` → `0`); a non-perfect-square non-negative integer is left **symbolic**
+  (`Sqrt[2]` → `Sqrt[2]`, with the float available via `N[Sqrt[2]]`). A `Float`
+  argument numericises (`Sqrt[2.0]` → `1.4142…`); a negative argument is left
+  unevaluated (no complex numbers). The perfect-square test squares the candidate
+  root in i128 so it cannot overflow.
+
+### Security / robustness
+
+- All exact-integer ops compute with **i128 intermediates and explicit overflow
+  guards** that fail **closed** (echo the application unevaluated) rather than
+  wrapping or panicking — `Abs[i64::MIN]`, `Quotient[i64::MIN, -1]`, `GCD` of
+  `i64::MIN`, and `LCM` of large coprime integers are all covered by tests.
+- Every handler follows the W-5/W-9/W-12/W-13/W-14 fail-soft contract: wrong
+  arity, a non-numeric (or non-integer where required) argument, division by
+  zero, or a tripped overflow guard leaves the form unevaluated. No panics.
+
 ## [0.11.0] — 2026-06-20
 
 The **W-14** deliverable (MA04 §17): Wolfram's **conditionals** and **type
