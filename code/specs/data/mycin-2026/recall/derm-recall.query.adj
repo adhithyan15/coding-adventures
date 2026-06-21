@@ -19,3 +19,4 @@ import "derm-edges.adj"
 ? skin_finding_in(herald_patch, $Disease)         % expect pityriasis_rosea
 ? skin_finding_in(nikolsky_sign, $Disease)        % expect pemphigus_vulgaris (expand)
 ? skin_finding_in(sandpaper_rash, $Disease)       % expect scarlet_fever (expand)
+? skin_finding_in(erythema_migrans, $Disease)     % expect lyme_disease (expand)

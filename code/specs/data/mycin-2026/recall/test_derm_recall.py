@@ -36,6 +36,7 @@ EXPECTED = {
     "herald_patch": "pityriasis_rosea",
     "nikolsky_sign": "pemphigus_vulgaris",   # expand (NBK560860)
     "sandpaper_rash": "scarlet_fever",       # expand (NBK507889)
+    "erythema_migrans": "lyme_disease",      # expand (NBK431066)
 }
 REL = "skin_finding_in"
 VAR = "Disease"
@@ -58,7 +59,7 @@ def test_library_is_pure_adj_and_fully_grounded() -> None:
     text = ADJ.read_text()
     assert "trust consensus" not in text, "DERM ships no authored-debt; ground or omit"
     assert "[FLAG:" not in text
-    edge_count = len(EXPECTED)  # 4
+    edge_count = len(EXPECTED)  # 7
     assert text.count("    relate ") == edge_count
     assert text.count("trust authoritative") == edge_count
     assert text.count('\n        locator "') == edge_count

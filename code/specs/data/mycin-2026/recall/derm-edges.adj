@@ -83,4 +83,12 @@ rulebook derm_facts {
         source "Scarlet fever is a syndrome characterized by a blanching, erythematous, maculopapular rash often described as sandpaper-like, strawberry tongue, and exudative pharyngitis"
         locator "https://www.ncbi.nlm.nih.gov/books/NBK507889/"
         trust authoritative
+
+    % --- EXPAND: erythema migrans -> Lyme disease ------------------------------
+    % The Lyme Disease page states the lesion and the disease in one declarative:
+    % erythema migrans is the most common initial manifestation of Lyme disease.
+    relate skin_finding_in(erythema_migrans, lyme_disease)
+        source "In most cases, however, patients develop symptoms of Lyme disease, with erythema migrans being the most common initial manifestation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK431066/"
+        trust authoritative
 }
