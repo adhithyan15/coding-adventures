@@ -560,7 +560,11 @@ fn emit_instr(
         let imm: u64 = match src {
             CIROperand::Int(n)   => *n as u64,
             CIROperand::Bool(b)  => if *b { 1 } else { 0 },
-            CIROperand::Float(_) => return Err(BackendError::UnsupportedOp("const_f64".into())),
+            // An `f64` (ALGOL `real`, LANG-FULL E3) rides its 8-byte stack slot
+            // as raw IEEE-754 bits — identical to an integer slot — so we
+            // materialise the bit pattern in a GPR and store it. No XMM register
+            // is needed to load a *constant*; only arithmetic/compare use SSE.
+            CIROperand::Float(f) => f.to_bits(),
             CIROperand::Var(_)   => return Err(BackendError::MalformedInstr(format!("{op} needs literal source"))),
         };
         // Prefer the shorter `mov r/m64, imm32` (sign-extended) when it
@@ -584,6 +588,11 @@ fn emit_instr(
     if let Some(rest) = op.strip_prefix("cmp_") {
         let (rel, signed) = parse_cmp_suffix(rest)
             .ok_or_else(|| BackendError::MalformedInstr(format!("bad cmp mnemonic: {op}")))?;
+        // A `cmp_*_f64` (ALGOL `real`, LANG-FULL E3) uses `ucomisd` + `setcc`,
+        // not the integer `cmp` path.
+        if rest.ends_with("_f64") {
+            return emit_fp_cmp(asm, alloc, instr, rel);
+        }
         return emit_cmp(asm, alloc, instr, rel, signed);
     }
 
@@ -1030,6 +1039,13 @@ fn emit_divmod(
     ty: &str,
     is_mod: bool,
 ) -> Result<(), BackendError> {
+    if ty == "f64" {
+        // ALGOL `real` division (LANG-FULL E3). `mod` is integer-only.
+        if is_mod {
+            return Err(BackendError::UnsupportedOp("mod_f64 (real modulo is undefined)".into()));
+        }
+        return emit_fp_binop(asm, alloc, instr, FpBin::Div);
+    }
     let dest = require_dest(instr)?;
     let lhs = instr.srcs.first()
         .ok_or_else(|| BackendError::MalformedInstr("div/mod needs srcs[0]".into()))?;
@@ -1173,6 +1189,14 @@ fn emit_binop(
     op: BinOp,
     ty: &str,
 ) -> Result<(), BackendError> {
+    if ty == "f64" {
+        let fk = match op {
+            BinOp::Add => FpBin::Add,
+            BinOp::Sub => FpBin::Sub,
+            BinOp::Mul => FpBin::Mul,
+        };
+        return emit_fp_binop(asm, alloc, instr, fk);
+    }
     let dest = require_dest(instr)?;
     let lhs = instr.srcs.first()
         .ok_or_else(|| BackendError::MalformedInstr(format!("{:?} needs srcs[0]", op)))?;
@@ -1186,6 +1210,123 @@ fn emit_binop(
         BinOp::Mul => asm.imul(Reg::Rax, Reg::Rcx),
     }
     mask_narrow(asm, Reg::Rax, ty); // E2: wrap u8/u16/u32 results mod 2ⁿ
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
+}
+
+/// Which floating-point binary op (LANG-FULL E3).
+#[derive(Debug, Clone, Copy)]
+enum FpBin { Add, Sub, Mul, Div }
+
+/// Load an `f64` operand into an XMM register (`Reg`'s number names the XMM
+/// slot: `Rax`→`xmm0`, `Rcx`→`xmm1`). Frontends materialise constants into
+/// stack slots first, so an arithmetic/compare operand is a `Var`.
+fn load_fp_operand(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    xmm: Reg,
+    op: &CIROperand,
+) -> Result<(), BackendError> {
+    match op {
+        CIROperand::Var(name) => {
+            let slot = alloc.slot_of(name);
+            asm.movsd_load(xmm, Reg::Rbp, RegAlloc::rbp_offset(slot));
+            Ok(())
+        }
+        other => Err(BackendError::UnsupportedOp(format!(
+            "f64 operand must be a Var (materialise the constant first), got {other:?}"
+        ))),
+    }
+}
+
+/// Emit an `f64` `add`/`sub`/`mul`/`div`: `movsd xmm0,[a]; movsd xmm1,[b];
+/// <op>sd xmm0,xmm1; movsd [dest],xmm0` (LANG-FULL E3). IEEE division by zero is
+/// `±inf`/`NaN` (no trap), matching every other backend.
+fn emit_fp_binop(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    kind: FpBin,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("f64 binop needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("f64 binop needs srcs[1]".into()))?;
+    load_fp_operand(asm, alloc, Reg::Rax, lhs)?; // xmm0
+    load_fp_operand(asm, alloc, Reg::Rcx, rhs)?; // xmm1
+    match kind {
+        FpBin::Add => asm.addsd(Reg::Rax, Reg::Rcx),
+        FpBin::Sub => asm.subsd(Reg::Rax, Reg::Rcx),
+        FpBin::Mul => asm.mulsd(Reg::Rax, Reg::Rcx),
+        FpBin::Div => asm.divsd(Reg::Rax, Reg::Rcx),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
+}
+
+/// Emit an `f64` comparison via `ucomisd` + `setcc` (LANG-FULL E3). The boolean
+/// result is an `int` 0/1. `ucomisd` sets ZF/PF/CF like an *unsigned* compare,
+/// and a NaN operand sets PF (and ZF, CF). We pick operand order + condition so
+/// every relation has **IEEE-ordered** semantics (a NaN makes `<`/`<=`/`>`/`>=`
+/// and `==` false; `!=` true):
+///
+/// | rel | `ucomisd` | setcc | why                                          |
+/// |-----|-----------|-------|----------------------------------------------|
+/// | `<` | `b, a`    | `A`   | ordered `b > a` ⇒ `a < b`; NaN → CF/ZF set → false |
+/// | `<=`| `b, a`    | `AE`  | ordered `b >= a`; NaN → CF set → false       |
+/// | `>` | `a, b`    | `A`   | ordered `a > b`                              |
+/// | `>=`| `a, b`    | `AE`  | ordered `a >= b`                             |
+/// | `==`| `a, b`    | `E && NP` | ZF=1 (equal **or** NaN) **and** PF=0 (not NaN) |
+/// | `!=`| `a, b`    | `NE || P` | ZF=0 **or** PF=1 (NaN)                    |
+fn emit_fp_cmp(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    rel: CmpRel,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("f64 cmp needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("f64 cmp needs srcs[1]".into()))?;
+    // Load a→xmm0, b→xmm1.
+    load_fp_operand(asm, alloc, Reg::Rax, lhs)?; // xmm0 = a
+    load_fp_operand(asm, alloc, Reg::Rcx, rhs)?; // xmm1 = b
+
+    match rel {
+        CmpRel::Lt | CmpRel::Le => {
+            // Compare b to a (reversed), so a single `seta`/`setae` is ordered.
+            asm.ucomisd(Reg::Rcx, Reg::Rax); // ucomisd xmm1(b), xmm0(a)
+            asm.setcc(if rel == CmpRel::Lt { Cond::A } else { Cond::Ae }, Reg::Rax);
+            asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+        }
+        CmpRel::Gt | CmpRel::Ge => {
+            asm.ucomisd(Reg::Rax, Reg::Rcx); // ucomisd xmm0(a), xmm1(b)
+            asm.setcc(if rel == CmpRel::Gt { Cond::A } else { Cond::Ae }, Reg::Rax);
+            asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+        }
+        CmpRel::Eq => {
+            // ZF=1 AND PF=0 → equal and ordered. `sete`(Rax) & `setnp`(Rcx).
+            asm.ucomisd(Reg::Rax, Reg::Rcx);
+            asm.setcc(Cond::E, Reg::Rax);
+            asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+            asm.setcc(Cond::Np, Reg::Rcx);
+            asm.movzx_r64_r8(Reg::Rcx, Reg::Rcx);
+            asm.and_(Reg::Rax, Reg::Rcx);
+        }
+        CmpRel::Ne => {
+            // ZF=0 OR PF=1 → not-equal or unordered. `setne` | `setp`.
+            asm.ucomisd(Reg::Rax, Reg::Rcx);
+            asm.setcc(Cond::Ne, Reg::Rax);
+            asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+            asm.setcc(Cond::P, Reg::Rcx);
+            asm.movzx_r64_r8(Reg::Rcx, Reg::Rcx);
+            asm.or_(Reg::Rax, Reg::Rcx);
+        }
+    }
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
     Ok(())
@@ -2421,5 +2562,65 @@ mod tests {
             narrow_binop_len("add_i64", "i64"),
             narrow_binop_len("add_u64", "u64"),
         );
+    }
+
+    // ---- f64 (ALGOL `real`) SSE2 — LANG-FULL E3 ----
+    //
+    // x86_64 is not locally runnable (no x86 ISA simulator); these are
+    // structural exact-opcode checks. The encodings were verified byte-for-byte
+    // against the system assembler, and the *executed* cross-backend proof is
+    // the lang-aot matrix `NativeAot` column on the Linux-x86 CI runner.
+
+    fn finstr(op: &str, dest: Option<&str>, srcs: Vec<Op>) -> CIRInstr {
+        CIRInstr { op: op.into(), dest: dest.map(str::to_string), srcs, ty: "f64".into(), deopt_to: None }
+    }
+
+    /// `r := 2.5 * 2.0` lowers to `movsd` loads (F2 0F 10), `mulsd` (F2 0F 59),
+    /// and a `movsd` store (F2 0F 11) — no integer `imul`.
+    #[test]
+    fn f64_multiply_emits_sse() {
+        let ir = vec![
+            finstr("const_f64", Some("a"), vec![Op::Float(2.5)]),
+            finstr("const_f64", Some("b"), vec![Op::Float(2.0)]),
+            finstr("mul_f64", Some("r"), vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let b = compile_function(&fn_ctx("fmul", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("f64 multiply must lower");
+        assert!(contains_seq(&b, &[0xF2, 0x0F, 0x59]), "expected mulsd (F2 0F 59)");
+        assert!(contains_seq(&b, &[0xF2, 0x0F, 0x10]), "expected movsd load (F2 0F 10)");
+        assert!(contains_seq(&b, &[0xF2, 0x0F, 0x11]), "expected movsd store (F2 0F 11)");
+    }
+
+    /// `7.0 / 2.0` uses `divsd` (F2 0F 5E), not the integer `idiv` path.
+    #[test]
+    fn f64_divide_emits_divsd() {
+        let ir = vec![
+            finstr("const_f64", Some("a"), vec![Op::Float(7.0)]),
+            finstr("const_f64", Some("b"), vec![Op::Float(2.0)]),
+            finstr("div_f64", Some("r"), vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let b = compile_function(&fn_ctx("fdiv", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("f64 divide must lower");
+        assert!(contains_seq(&b, &[0xF2, 0x0F, 0x5E]), "expected divsd (F2 0F 5E)");
+    }
+
+    /// `r < 4.0` uses `ucomisd` (66 0F 2E) + `setcc`, not integer `cmp`.
+    #[test]
+    fn f64_compare_emits_ucomisd() {
+        let ir = vec![
+            finstr("const_f64", Some("a"), vec![Op::Float(3.5)]),
+            finstr("const_f64", Some("b"), vec![Op::Float(4.0)]),
+            finstr("cmp_lt_f64", Some("r"), vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let b = compile_function(&fn_ctx("fcmp", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("f64 compare must lower");
+        assert!(contains_seq(&b, &[0x66, 0x0F, 0x2E]), "expected ucomisd (66 0F 2E)");
+    }
+
+    fn contains_seq(hay: &[u8], needle: &[u8]) -> bool {
+        hay.windows(needle.len()).any(|w| w == needle)
     }
 }
