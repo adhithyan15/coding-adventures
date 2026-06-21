@@ -146,6 +146,25 @@ risks Y") — decision support, not a hidden choice.
 - **CC-2 — dose feasibility + renal/interaction caps as constraints.** Fold the dose-window
   solve into the COP (`floor ≤ dose ≤ ceiling(renal, interactions)`); UNSAT path returns the
   conflict. Ground the renal-adjustment + additive-nephrotoxicity rules (spider).
+  - **CC-2c — the vancomycin renal + nephrotoxin penalty DIRECTIONS are grounded. ✅ DONE.**
+    The renal and additive-nephrotoxicity ceiling penalties previously had no grounding record
+    (only the trough target `dose_vancomycin` did). The FDA vancomycin label now backs their
+    DIRECTION: *"Vancomycin should be used with caution in patients with renal insufficiency
+    because the risk of toxicity is appreciably increased by high, prolonged blood
+    concentrations. Dosage of vancomycin hydrochloride for injection must be adjusted for
+    patients with renal dysfunction."* (WARNINGS) and *"In order to minimize the risk of
+    nephrotoxicity when treating patients with underlying renal dysfunction or patients
+    receiving concomitant therapy with an aminoglycoside, … particular care should be taken in
+    following appropriate dosing schedules."* (PRECAUTIONS) — DailyMed setid
+    `75a6a873-21b9-4f48-89a9-c1476294c0ce`, records `dose_penalty_vancomycin_renal` /
+    `dose_penalty_vancomycin_nephrotoxin` in `dose-window-grounding.json` (`spider_status:
+    direction_only`). The label grounds that renal dysfunction and concurrent nephrotoxins
+    REQUIRE a downward dose adjustment (the safe ceiling shrinks), which is exactly the
+    direction the `renal_severe`/`renal_moderate`/`nephrotoxin_interaction` ceiling penalties
+    encode. As with every dose number, only the DIRECTION is grounded; the per-kg penalty
+    magnitudes in `formulary.json` stay the standing **ILLUSTRATIVE** feasibility model (the
+    label gives no closed-form per-kg reduction). Pure ledger/provenance increment — no engine
+    or compiler logic changed, so the regimen output is byte-identical.
 - **REFACTOR (ADJ-first): every exclusion is now an EXPLICIT engine constraint.** Dose-infeasible
   (CC-2), contraindicated (CC-3), and step-therapy (CC-6) drugs are unified into one
   `forced_zero: {drug → reason}` and emitted as `constrain x_d <= 0   % excluded (reason)` in the

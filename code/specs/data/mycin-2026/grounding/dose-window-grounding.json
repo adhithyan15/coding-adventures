@@ -278,6 +278,63 @@
         "final_verdict": "grounded"
       },
       "spider_status": "grounded"
+    },
+    {
+      "id": "dose_penalty_vancomycin_renal",
+      "kind": "dose_penalty",
+      "drug": "vancomycin",
+      "claim": "Renal impairment lowers vancomycin's safe dose ceiling: because toxicity risk rises with high, prolonged blood concentrations and the dose must be adjusted for renal dysfunction, the feasible dose ceiling shrinks as renal function falls (the renal_severe / renal_moderate ceiling penalties).",
+      "grounded": {
+        "id": "dose_penalty_vancomycin_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce",
+        "source_title": "VANCOMYCIN HYDROCHLORIDE for injection — FDA prescribing information (DailyMed / NLM), WARNINGS",
+        "byte_quote": "Vancomycin should be used with caution in patients with renal insufficiency because the risk of toxicity is appreciably increased by high, prolonged blood concentrations. Dosage of vancomycin hydrochloride for injection must be adjusted for patients with renal dysfunction.",
+        "value_found": "Renal dysfunction mandates a vancomycin dose adjustment because toxicity risk rises with high, prolonged blood concentrations — i.e. the safe ceiling shrinks as renal function falls. DIRECTION only; the label gives no single mg/kg ceiling-reduction figure, so the per-kg penalty magnitude in formulary.json stays the illustrative feasibility model.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "Numeric mg/kg ceiling-reduction per CrCl band — the label states the dose 'must be adjusted' and toxicity rises with concentration, but gives no closed-form per-kg ceiling formula in extractable text; reporting a specific mg/kg shrink would be a LEAP, so the formulary penalty magnitude stays explicitly illustrative.",
+          "The Table 1 maintenance-dose-by-CrCl grid — present in some vancomycin labels but rendered as a non-extractable table image here; not verbatim-grounded, so not cited for a numeric value.",
+          "Secondary aggregators (drugs.com, sanford) restating renal dose adjustment — discarded per primary-source-first; the FDA label states it directly."
+        ],
+        "note": "DIRECTION ENTAILED. The two verbatim WARNINGS sentences jointly establish that (a) vancomycin toxicity rises with high, prolonged blood concentrations and (b) the dose MUST be adjusted in renal dysfunction — which is exactly the direction the dose-window model encodes: as renal function falls, the safe ceiling shrinks (renal_severe penalty > renal_moderate penalty > 0). The grounded facts are the EXISTENCE and DIRECTION of the renal ceiling penalty, not its magnitude; the per-kg numbers in formulary.json remain the project's standing ILLUSTRATIVE feasibility model (same disclaimer as dose_vancomycin)."
+      },
+      "verify": {
+        "id": "dose_penalty_vancomycin_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 75a6a873 DailyMed vancomycin label: both sentences appear verbatim under WARNINGS — 'Vancomycin should be used with caution in patients with renal insufficiency because the risk of toxicity is appreciably increased by high, prolonged blood concentrations.' and 'Dosage of vancomycin hydrochloride for injection must be adjusted for patients with renal dysfunction.'",
+        "refute_attempt": "Strongest refutation: 'must be adjusted' could mean adjust the INTERVAL (less frequent dosing) rather than lower the per-dose CEILING, so it might not justify a ceiling penalty. This is partially conceded and is exactly why the verdict is direction_only, not a numeric grounding: the label grounds that renal dysfunction REQUIRES a downward dose adjustment because toxicity tracks blood concentration, which is the DIRECTION the feasibility model encodes (shrink the safe ceiling); the precise mechanism (per-dose vs interval) and magnitude are left to the illustrative model and not over-claimed. Second angle: the sentence is generic vancomycin PK, not meningitis-specific — but dose feasibility under renal impairment is indication-independent, so the direction holds for the meningitis dose too.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_vancomycin_nephrotoxin",
+      "kind": "dose_penalty",
+      "drug": "vancomycin",
+      "claim": "Concomitant therapy with another nephrotoxin (e.g. an aminoglycoside) compounds vancomycin nephrotoxicity, requiring careful dosing — i.e. the additive-nephrotoxicity interaction further lowers the safe ceiling (the nephrotoxin_interaction penalty).",
+      "grounded": {
+        "id": "dose_penalty_vancomycin_nephrotoxin",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce",
+        "source_title": "VANCOMYCIN HYDROCHLORIDE for injection — FDA prescribing information (DailyMed / NLM), PRECAUTIONS",
+        "byte_quote": "In order to minimize the risk of nephrotoxicity when treating patients with underlying renal dysfunction or patients receiving concomitant therapy with an aminoglycoside, serial monitoring of renal function should be performed, and particular care should be taken in following appropriate dosing schedules.",
+        "value_found": "Concomitant aminoglycoside (a nephrotoxin) raises vancomycin nephrotoxicity risk, calling for careful/adjusted dosing — i.e. the additive-toxicity interaction lowers the safe ceiling. DIRECTION only; no numeric per-kg reduction is stated.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "A numeric ceiling-reduction for the interaction — the label says to take 'particular care ... in following appropriate dosing schedules', not a quantified reduction; the formulary's nephrotoxin_interaction penalty magnitude stays illustrative.",
+          "Extending the interaction to ALL concomitant drugs — the quote names the aminoglycoside / nephrotoxin class specifically; the model's nephrotoxin_interaction token is scoped to additive nephrotoxins, matching the quote (not a generic any-drug penalty)."
+        ],
+        "note": "DIRECTION ENTAILED. The PRECAUTIONS sentence names the additive-nephrotoxicity scenario (vancomycin + an aminoglycoside, or underlying renal dysfunction) and prescribes careful dosing + renal monitoring to MINIMIZE nephrotoxicity — the direction the model encodes as the nephrotoxin_interaction ceiling penalty (an extra downward shrink when a concurrent nephrotoxin is on the chart). Grounds the existence + direction of the interaction penalty, not its magnitude."
+      },
+      "verify": {
+        "id": "dose_penalty_vancomycin_nephrotoxin",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched: the sentence appears verbatim under PRECAUTIONS — 'In order to minimize the risk of nephrotoxicity when treating patients with underlying renal dysfunction or patients receiving concomitant therapy with an aminoglycoside, serial monitoring of renal function should be performed, and particular care should be taken in following appropriate dosing schedules.'",
+        "refute_attempt": "Strongest refutation: the sentence prescribes MONITORING, not a dose reduction, so it might not justify a ceiling penalty. Conceded to the extent that the verdict is direction_only: the label couples 'minimize the risk of nephrotoxicity' with 'particular care ... in following appropriate dosing schedules' for the aminoglycoside-co-administration case, which is the additive-toxicity direction the model encodes (shrink the safe ceiling when a concurrent nephrotoxin is present); the magnitude is illustrative, not claimed. The quote explicitly names the aminoglycoside/nephrotoxin co-administration, so the interaction scope is grounded, not invented.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
     }
   ]
 }
