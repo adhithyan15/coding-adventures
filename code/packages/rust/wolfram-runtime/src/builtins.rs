@@ -45,6 +45,11 @@ use symbolic_vm::VM;
 
 use symbolic_ir::{apply, flt, int, str_node, sym, IRApply, IRNode, ADD, ASSIGN, LIST, MUL};
 
+// `Blank` is the head a bare `_` lowers to (see `lower.rs`); W-14's `Switch`
+// recognises it as the catch-all default form. Imported from the shared pattern
+// vocabulary so the constant is never duplicated.
+use cas_pattern_matching::nodes::BLANK;
+
 use cas_pattern_matching::nodes::RULE as PM_RULE;
 
 use crate::lower::build_canonical_application;
@@ -183,6 +188,21 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     );
     m.insert("MemberQ".to_string(), handler_fn(member_q_handler));
     m.insert("Tally".to_string(), handler_fn(tally_handler));
+
+    // W-14 conditionals. `Which`/`Switch` are **held** (see [`CONDITIONAL_HEADS`]):
+    // only the selected branch is ever evaluated, so a non-taken branch — which
+    // might error or have a side effect — must not run. `Boole` is eager.
+    m.insert("Which".to_string(), handler_fn(which_handler));
+    m.insert("Switch".to_string(), handler_fn(switch_handler));
+    m.insert("Boole".to_string(), handler_fn(boole_handler));
+
+    // W-14 eager type predicates. Each is a thin match over the IRNode kind; the
+    // single argument is pre-evaluated by the VM before the handler runs.
+    m.insert("NumberQ".to_string(), handler_fn(number_q_handler));
+    m.insert("IntegerQ".to_string(), handler_fn(integer_q_handler));
+    m.insert("StringQ".to_string(), handler_fn(string_q_handler));
+    m.insert("ListQ".to_string(), handler_fn(list_q_handler));
+    m.insert("TrueQ".to_string(), handler_fn(true_q_handler));
     m
 }
 
@@ -212,6 +232,22 @@ pub const ITERATION_HEADS: [&str; 4] = ["Table", "Do", "Sum", "Product"];
 /// literal; the handler then evaluates each declaration's RHS itself and
 /// substitutes the locals into the body per scope entry.
 pub const SCOPING_HEADS: [&str; 3] = ["With", "Module", "Block"];
+
+/// The W-14 conditional heads, which must be **held** (args not pre-evaluated) so
+/// that only the *selected* branch is ever evaluated. The
+/// [`WolframBackend`](crate::backend::WolframBackend) folds these into its
+/// `hold_heads` set (union with the inner held set, [`ITERATION_HEADS`], and
+/// [`SCOPING_HEADS`]).
+///
+/// Why held? `Which[x > 0, 1/x, True, 0]` must *not* evaluate `1/x` up front —
+/// were `Which` eager, the false branch's `1/x` would run even when `x ≤ 0`.
+/// Holding keeps every condition and value literal; the handler evaluates
+/// conditions left-to-right itself and calls `vm.eval` on exactly one value (the
+/// one paired with the first true condition). `Switch` is held for the same
+/// reason: its `expr` is evaluated once, the `form`s are matched *literally*
+/// (unevaluated), and only the selected value is evaluated. `If` already lives in
+/// the inner backend's held set, so it is not repeated here. (MA04 §17.2.)
+pub const CONDITIONAL_HEADS: [&str; 2] = ["Which", "Switch"];
 
 // ---------------------------------------------------------------------------
 // List inspection — Length / First / Last / Part
@@ -1444,6 +1480,193 @@ fn parity_q(expr: IRApply, want_even: bool) -> IRNode {
         _ => return sym("False"),
     };
     if is_even == want_even {
+        sym("True")
+    } else {
+        sym("False")
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Conditionals — Which / Switch (W-14, HELD) and Boole (W-14, eager)
+// ---------------------------------------------------------------------------
+//
+// `Which` and `Switch` are HELD heads (see [`CONDITIONAL_HEADS`]): their args
+// arrive *unevaluated*, the handler makes a decision, and it calls `vm.eval` on
+// exactly ONE branch — the selected value. Holding is load-bearing for
+// correctness: a non-selected branch (which might error, or have a side effect)
+// must never run. This mirrors the inner `If` handler, which likewise evaluates
+// its predicate and then only the taken branch.
+
+/// `Which[c1, v1, c2, v2, …]` → the value `vi` paired with the FIRST condition
+/// `ci` that evaluates to the `True` symbol.
+///
+/// Semantics (MA04 §17.2):
+/// - Conditions are evaluated **left to right** through the VM and the scan
+///   **stops at the first `True`** — later conditions and every non-selected
+///   value are never evaluated.
+/// - A condition that reduces to `True` selects its value, which is then
+///   evaluated (once) and returned.
+/// - A condition that reduces to `False` (or to anything that is not the literal
+///   `True` symbol — e.g. an unresolved symbolic relation) is skipped and the
+///   scan continues.
+/// - If **no** condition is `True`, `Which` returns `Null` (a bare symbol,
+///   exactly how Wolfram prints it). This is the *evaluated* answer, not the
+///   unevaluated form.
+///
+/// Malformed input (an **odd** argument count — a dangling final condition with
+/// no paired value) leaves the whole `Which` unevaluated. Zero arguments is a
+/// well-formed empty `Which` and returns `Null`.
+fn which_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    // A well-formed Which has condition/value PAIRS: the arg count must be even.
+    if !expr.args.len().is_multiple_of(2) {
+        return unevaluated(expr);
+    }
+    // Walk the (condition, value) pairs left to right; the FIRST condition that
+    // evaluates to True selects — and is the only branch we evaluate the value of.
+    for pair in expr.args.chunks_exact(2) {
+        let condition = vm.eval(pair[0].clone());
+        if is_true_symbol(&condition) {
+            return vm.eval(pair[1].clone());
+        }
+        // Not (yet) true — skip this value entirely and try the next condition.
+    }
+    // No condition was true.
+    sym("Null")
+}
+
+/// `Switch[expr, form1, v1, form2, v2, …]` → the value `vi` paired with the first
+/// `formi` that matches the evaluated `expr`.
+///
+/// Semantics (MA04 §17.2–§17.3):
+/// - `expr` is evaluated **once**, up front.
+/// - Each `formi` is matched **literally** — the forms are NOT evaluated, so
+///   `Switch[2, 1 + 1, "a"]` does not match (the literal form is `Plus[1, 1]`),
+///   matching Wolfram's held-form semantics.
+/// - A form matches when it is **structurally equal** to the evaluated `expr`
+///   (reusing the W-13 [`same_element`] comparator), OR when it is a `Blank[]`
+///   (the lowering of `_`), which matches anything. A `Blank[h]` with a head
+///   constraint is treated as a plain catch-all in this subset.
+/// - The first matching form selects its value, which is then evaluated (once)
+///   and returned. Only the selected value is evaluated.
+/// - If **no** form matches, `Switch` is left unevaluated (Wolfram echoes it).
+///
+/// Malformed input (an **even** argument count — `expr` with a final unpaired
+/// form, or a missing `expr`) leaves the whole `Switch` unevaluated. A
+/// well-formed `Switch` needs `expr` plus at least one `(form, value)` pair, so
+/// arity must be **odd and ≥ 3**.
+fn switch_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    // expr + k*(form, value) pairs ⇒ arity must be odd and at least 3.
+    if expr.args.len() < 3 || expr.args.len().is_multiple_of(2) {
+        return unevaluated(expr);
+    }
+    let subject = vm.eval(expr.args[0].clone());
+    // The remaining args are (form, value) pairs; `chunks_exact(2)` over them is
+    // exact because the total arity (minus the leading subject) is even.
+    for pair in expr.args[1..].chunks_exact(2) {
+        if form_matches(&pair[0], &subject) {
+            return vm.eval(pair[1].clone());
+        }
+    }
+    // No form matched — leave the whole Switch unevaluated.
+    unevaluated(expr)
+}
+
+/// True if the literal `form` matches the evaluated `subject`: either `form` is
+/// `Blank[…]` (the catch-all `_`), or it is structurally equal to `subject` under
+/// the W-13 [`same_element`] comparator.
+fn form_matches(form: &IRNode, subject: &IRNode) -> bool {
+    is_blank(form) || same_element(form, subject)
+}
+
+/// True if `node` is a `Blank[]` / `Blank[h]` — the lowering of a bare `_` (or
+/// `_h`), which `Switch` treats as the catch-all default form. A head constraint
+/// `h` is accepted but not enforced in this subset (MA04 §17.3).
+fn is_blank(node: &IRNode) -> bool {
+    matches!(node, IRNode::Apply(app) if matches!(&app.head, IRNode::Symbol(s) if s == BLANK))
+}
+
+/// `Boole[True]` → `1`, `Boole[False]` → `0`; anything else (a non-boolean
+/// argument, or the wrong arity) is left **unevaluated**, so `Boole[x]` echoes —
+/// matching Wolfram. Eager: the argument is pre-evaluated by the VM.
+fn boole_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    match &expr.args[0] {
+        IRNode::Symbol(s) if s == "True" => int(1),
+        IRNode::Symbol(s) if s == "False" => int(0),
+        // A non-boolean argument: leave Boole unevaluated rather than guessing.
+        _ => unevaluated(expr),
+    }
+}
+
+/// True iff `node` is the literal `True` symbol — the single notion of "this
+/// condition is taken" shared by `Which` (and matching the inner `If`).
+fn is_true_symbol(node: &IRNode) -> bool {
+    matches!(node, IRNode::Symbol(s) if s == "True")
+}
+
+// ---------------------------------------------------------------------------
+// Type predicates — NumberQ / IntegerQ / StringQ / ListQ / TrueQ (W-14, eager)
+// ---------------------------------------------------------------------------
+//
+// Each predicate is a thin match over the `IRNode` kind. They are EAGER (not
+// held), so the single argument is already evaluated when the handler runs:
+// `IntegerQ[1 + 2]` sees `Integer(3)`. Wrong arity stays unevaluated. With the
+// exception of `Boole`, these predicates are TOTAL over their (arity-1) input —
+// they always answer `True` or `False`, never staying unevaluated on a symbol.
+// `EvenQ`/`OddQ` shipped in W-9 and are unchanged.
+
+/// `NumberQ[x]` → `True` if `x` is a real number (`Integer`, `Rational`, or
+/// `Float`), else `False`. Wrong arity stays unevaluated.
+fn number_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    predicate_q(expr, |node| {
+        matches!(
+            node,
+            IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_)
+        )
+    })
+}
+
+/// `IntegerQ[x]` → `True` if `x` is an exact integer, else `False`. Wrong arity
+/// stays unevaluated. Note `IntegerQ[2.0]` is `False` — a `Float` is not an exact
+/// integer, matching Wolfram.
+fn integer_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    predicate_q(expr, |node| matches!(node, IRNode::Integer(_)))
+}
+
+/// `StringQ[x]` → `True` if `x` is a string literal, else `False`. Wrong arity
+/// stays unevaluated.
+fn string_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    predicate_q(expr, |node| matches!(node, IRNode::Str(_)))
+}
+
+/// `ListQ[x]` → `True` if `x` is a `List[…]`, else `False`. Wrong arity stays
+/// unevaluated. Reuses [`is_list`] so the notion of "is a list" matches every
+/// other list builtin.
+fn list_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    predicate_q(expr, |node| {
+        matches!(node, IRNode::Apply(app) if is_list(&app.head))
+    })
+}
+
+/// `TrueQ[x]` → `True` **only** if `x` is literally the `True` symbol; `False`
+/// for everything else (including `False`, an unresolved relation, or a free
+/// symbol). Unlike the other predicates, `TrueQ` is the total "is this definitely
+/// true?" test, so `TrueQ[x]` is `False`, never unevaluated. Wrong arity stays
+/// unevaluated.
+fn true_q_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    predicate_q(expr, is_true_symbol)
+}
+
+/// Shared core of the W-14 type predicates: arity-1 guard, then apply the
+/// node-kind `test` and return the `True`/`False` symbol. Wrong arity leaves the
+/// predicate unevaluated (the W-5/W-9 fail-soft convention).
+fn predicate_q(expr: IRApply, test: impl Fn(&IRNode) -> bool) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    if test(&expr.args[0]) {
         sym("True")
     } else {
         sym("False")
@@ -3678,5 +3901,253 @@ mod tests {
             run_wolfram("Tally", vec![list(vec![int(5), int(5)])]),
             list(vec![list(vec![int(5), int(2)])])
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-14 — conditionals (Which / Switch / Boole) and type predicates
+    // -----------------------------------------------------------------------
+
+    /// `2 > 1` as an IR comparison node — evaluates to the `True` symbol over a
+    /// WolframBackend. A test helper so the conditional tests read declaratively.
+    fn greater(a: IRNode, b: IRNode) -> IRNode {
+        apply(sym(symbolic_ir::GREATER), vec![a, b])
+    }
+
+    /// A bare `_` (Blank[]) — the Switch catch-all default form.
+    fn blank() -> IRNode {
+        apply(sym(BLANK), vec![])
+    }
+
+    #[test]
+    fn which_returns_the_first_true_branch_value() {
+        // Which[False, 1, True, 2] → 2.
+        assert_eq!(
+            run_wolfram(
+                "Which",
+                vec![sym("False"), int(1), sym("True"), int(2)]
+            ),
+            int(2)
+        );
+    }
+
+    #[test]
+    fn which_evaluates_conditions_before_testing_them() {
+        // Which[2 > 1, "a"] → "a": the condition is an unevaluated comparison that
+        // the handler must eval to True before selecting.
+        assert_eq!(
+            run_wolfram("Which", vec![greater(int(2), int(1)), str_node("a")]),
+            str_node("a")
+        );
+    }
+
+    #[test]
+    fn which_with_no_true_condition_returns_null() {
+        // Which[False, 1] → Null (a well-formed Which whose conditions are all
+        // false is the *evaluated* answer Null, not the unevaluated form).
+        assert_eq!(run_wolfram("Which", vec![sym("False"), int(1)]), sym("Null"));
+        // An empty Which is well-formed and also Null.
+        assert_eq!(run_wolfram("Which", vec![]), sym("Null"));
+    }
+
+    #[test]
+    fn which_only_evaluates_the_selected_branch() {
+        // Which[True, 1, True, Pow[1, 0, 0]] → 1. The SECOND value is a malformed
+        // Pow (3 args) that would otherwise stay an unevaluated application; the
+        // point is the handler must NOT touch it at all — the first True wins and
+        // its value (1) is returned. We assert the result is exactly `1`, proving
+        // the non-selected branch never contributed.
+        assert_eq!(
+            run_wolfram(
+                "Which",
+                vec![
+                    sym("True"),
+                    int(1),
+                    sym("True"),
+                    apply(sym("Pow"), vec![int(1), int(0), int(0)]),
+                ],
+            ),
+            int(1)
+        );
+    }
+
+    #[test]
+    fn which_skips_an_unresolved_condition() {
+        // Which[x, 1, True, 2] → 2: a bare symbol `x` is not the True symbol, so
+        // it is skipped and the scan continues to the True branch.
+        assert_eq!(
+            run_wolfram("Which", vec![sym("x"), int(1), sym("True"), int(2)]),
+            int(2)
+        );
+    }
+
+    #[test]
+    fn which_with_odd_arity_is_unevaluated() {
+        // A dangling final condition with no paired value is malformed.
+        assert_eq!(
+            run_wolfram("Which", vec![sym("True"), int(1), sym("False")]),
+            apply(sym("Which"), vec![sym("True"), int(1), sym("False")])
+        );
+    }
+
+    #[test]
+    fn switch_matches_a_literal_form() {
+        // Switch[2, 1, "a", 2, "b", _, "z"] → "b".
+        assert_eq!(
+            run_wolfram(
+                "Switch",
+                vec![
+                    int(2),
+                    int(1),
+                    str_node("a"),
+                    int(2),
+                    str_node("b"),
+                    blank(),
+                    str_node("z"),
+                ],
+            ),
+            str_node("b")
+        );
+    }
+
+    #[test]
+    fn switch_falls_through_to_the_blank_default() {
+        // Switch[5, 1, "a", _, "z"] → "z": no literal form matches 5, the Blank
+        // default catches it.
+        assert_eq!(
+            run_wolfram(
+                "Switch",
+                vec![int(5), int(1), str_node("a"), blank(), str_node("z")],
+            ),
+            str_node("z")
+        );
+    }
+
+    #[test]
+    fn switch_evaluates_its_subject_once() {
+        // Switch[1 + 1, 2, "matched"] → "matched": the subject `1 + 1` is evaluated
+        // to 2, then matched against the literal form 2.
+        assert_eq!(
+            run_wolfram(
+                "Switch",
+                vec![
+                    apply(sym(ADD), vec![int(1), int(1)]),
+                    int(2),
+                    str_node("matched"),
+                ],
+            ),
+            str_node("matched")
+        );
+    }
+
+    #[test]
+    fn switch_only_evaluates_the_selected_value() {
+        // Switch[1, 1, 7, _, Pow[1, 0, 0]] → 7. The default value is a malformed
+        // Pow that must never be evaluated; the first form (1) matches and returns
+        // its value 7.
+        assert_eq!(
+            run_wolfram(
+                "Switch",
+                vec![
+                    int(1),
+                    int(1),
+                    int(7),
+                    blank(),
+                    apply(sym("Pow"), vec![int(1), int(0), int(0)]),
+                ],
+            ),
+            int(7)
+        );
+    }
+
+    #[test]
+    fn switch_with_no_match_is_unevaluated() {
+        // Switch[5, 1, "a"] → unevaluated (no form matches, no Blank default).
+        assert_eq!(
+            run_wolfram("Switch", vec![int(5), int(1), str_node("a")]),
+            apply(sym("Switch"), vec![int(5), int(1), str_node("a")])
+        );
+    }
+
+    #[test]
+    fn switch_with_even_arity_is_unevaluated() {
+        // expr + a dangling unpaired form (arity 2, even) is malformed.
+        assert_eq!(
+            run_wolfram("Switch", vec![int(2), int(2)]),
+            apply(sym("Switch"), vec![int(2), int(2)])
+        );
+        // A lone subject (arity 1) is also malformed (needs at least one pair).
+        assert_eq!(
+            run_wolfram("Switch", vec![int(2)]),
+            apply(sym("Switch"), vec![int(2)])
+        );
+    }
+
+    #[test]
+    fn boole_maps_booleans_to_integers() {
+        assert_eq!(run("Boole", vec![sym("True")]), int(1));
+        assert_eq!(run("Boole", vec![sym("False")]), int(0));
+    }
+
+    #[test]
+    fn boole_of_a_non_boolean_stays_unevaluated() {
+        assert_eq!(run("Boole", vec![sym("x")]), apply(sym("Boole"), vec![sym("x")]));
+        assert_eq!(run("Boole", vec![int(3)]), apply(sym("Boole"), vec![int(3)]));
+        // Wrong arity also stays unevaluated.
+        assert_eq!(run("Boole", vec![]), apply(sym("Boole"), vec![]));
+    }
+
+    #[test]
+    fn number_q_recognises_every_numeric_kind() {
+        assert_eq!(run("NumberQ", vec![int(3)]), sym("True"));
+        assert_eq!(run("NumberQ", vec![flt(2.5)]), sym("True"));
+        assert_eq!(run("NumberQ", vec![IRNode::Rational(1, 2)]), sym("True"));
+        assert_eq!(run("NumberQ", vec![str_node("x")]), sym("False"));
+        assert_eq!(run("NumberQ", vec![sym("x")]), sym("False"));
+        assert_eq!(run("NumberQ", vec![list(vec![int(1)])]), sym("False"));
+    }
+
+    #[test]
+    fn integer_q_is_exact_integers_only() {
+        assert_eq!(run("IntegerQ", vec![int(3)]), sym("True"));
+        // A float that is mathematically integral is still not an exact integer.
+        assert_eq!(run("IntegerQ", vec![flt(3.0)]), sym("False"));
+        assert_eq!(run("IntegerQ", vec![str_node("3")]), sym("False"));
+    }
+
+    #[test]
+    fn string_q_recognises_string_literals() {
+        assert_eq!(run("StringQ", vec![str_node("x")]), sym("True"));
+        assert_eq!(run("StringQ", vec![int(3)]), sym("False"));
+        assert_eq!(run("StringQ", vec![sym("x")]), sym("False"));
+    }
+
+    #[test]
+    fn list_q_recognises_lists() {
+        assert_eq!(run("ListQ", vec![list(vec![int(1), int(2)])]), sym("True"));
+        assert_eq!(run("ListQ", vec![list(vec![])]), sym("True"));
+        assert_eq!(run("ListQ", vec![int(3)]), sym("False"));
+        // A non-List head is not a list.
+        assert_eq!(run("ListQ", vec![apply(sym("f"), vec![int(1)])]), sym("False"));
+    }
+
+    #[test]
+    fn true_q_is_total_and_only_true_for_true() {
+        assert_eq!(run("TrueQ", vec![sym("True")]), sym("True"));
+        assert_eq!(run("TrueQ", vec![sym("False")]), sym("False"));
+        assert_eq!(run("TrueQ", vec![int(5)]), sym("False"));
+        // Unlike the other predicates, TrueQ of a free symbol is False, not unevaluated.
+        assert_eq!(run("TrueQ", vec![sym("x")]), sym("False"));
+    }
+
+    #[test]
+    fn predicates_with_wrong_arity_stay_unevaluated() {
+        assert_eq!(run("NumberQ", vec![]), apply(sym("NumberQ"), vec![]));
+        assert_eq!(
+            run("IntegerQ", vec![int(1), int(2)]),
+            apply(sym("IntegerQ"), vec![int(1), int(2)])
+        );
+        assert_eq!(run("StringQ", vec![]), apply(sym("StringQ"), vec![]));
+        assert_eq!(run("ListQ", vec![]), apply(sym("ListQ"), vec![]));
+        assert_eq!(run("TrueQ", vec![]), apply(sym("TrueQ"), vec![]));
     }
 }

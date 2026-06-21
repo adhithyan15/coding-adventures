@@ -224,6 +224,69 @@ mod tests {
     }
 
     #[test]
+    fn w14_conditionals_and_predicates_evaluate_end_to_end() {
+        // Held Which/Switch select exactly one branch; Boole bridges to integers;
+        // the type predicates answer True/False — all parsed from real source.
+        let mut r = WolframRepl::new();
+        assert!(matches!(
+            r.feed("Which[False, 1, True, 2]"),
+            ReplResponse::Output(t) if t.contains('2')
+        ));
+        assert!(matches!(
+            r.feed("Which[2 > 1, \"a\"]"),
+            ReplResponse::Output(t) if t.contains('a')
+        ));
+        assert!(matches!(
+            r.feed("Switch[2, 1, \"a\", 2, \"b\", _, \"z\"]"),
+            ReplResponse::Output(t) if t.contains('b')
+        ));
+        assert!(matches!(
+            r.feed("Switch[5, 1, \"a\", _, \"z\"]"),
+            ReplResponse::Output(t) if t.contains('z')
+        ));
+        assert!(matches!(
+            r.feed("Boole[2 > 1]"),
+            ReplResponse::Output(t) if t.contains('1')
+        ));
+        assert!(matches!(
+            r.feed("Boole[1 > 2]"),
+            ReplResponse::Output(t) if t.contains('0')
+        ));
+        assert!(matches!(
+            r.feed("NumberQ[3]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("NumberQ[\"x\"]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+        assert!(matches!(
+            r.feed("IntegerQ[3]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("StringQ[\"x\"]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("ListQ[{1, 2}]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("ListQ[3]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+        assert!(matches!(
+            r.feed("TrueQ[True]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("TrueQ[5]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+    }
+
+    #[test]
     fn continues_while_a_bracket_is_open() {
         let mut r = WolframRepl::new();
         assert_eq!(r.feed("f[1,"), ReplResponse::NeedMore); // open bracket

@@ -1143,6 +1143,142 @@ crash or a wrong answer. `MemberQ[3, 2]` (non-list first argument) → unevaluat
 touches only `wolfram-runtime`'s builtin handler table; the lexer, parser, and
 grammar files are untouched.
 
+## §17 W-14 conditionals & predicates — `Which`, `Switch`, `Boole`, `NumberQ`/`IntegerQ`/`StringQ`/`ListQ`/`TrueQ` (implemented)
+
+W-4..W-13 gave the M-expression core, the arithmetic bridge, operator sugar,
+iteration, local scoping, the list/functional/string/set-operation builtins, and
+pure functions. The one control structure that shipped early was the held `If`
+(inherited unchanged from the shared `SymbolicBackend`). W-14 rounds out the
+**conditional** vocabulary every introductory Wolfram tutorial reaches for —
+multi-branch `Which`, structural `Switch`, the boolean-to-integer bridge `Boole` —
+and the **type-predicate** family (`NumberQ`, `IntegerQ`, `StringQ`, `ListQ`,
+`TrueQ`) that those conditionals are usually built on top of.
+
+Like every head since W-5 these are all ordinary `Head[args]` applications, so
+**there is no grammar change**: W-14 touches only `wolfram-runtime`'s builtin
+handler table (`builtins.rs`) and the `WolframBackend` held set (`backend.rs`).
+
+### §17.1 What W-14 adds
+
+| Head        | Arity        | Held? | Result                                                                 |
+|-------------|--------------|-------|------------------------------------------------------------------------|
+| `Which`     | `2k` (k≥0)   | yes   | the value paired with the FIRST condition that evaluates to `True`     |
+| `Switch`    | `2k+1` (k≥1) | yes   | the value paired with the first `form` that matches `expr` structurally |
+| `Boole`     | 1            | no    | `1` for `True`, `0` for `False`, else unevaluated                       |
+| `NumberQ`   | 1            | no    | `True` if the argument is a real/integer/rational/float number         |
+| `IntegerQ`  | 1            | no    | `True` if the argument is an exact integer                             |
+| `StringQ`   | 1            | no    | `True` if the argument is a string literal                             |
+| `ListQ`     | 1            | no    | `True` if the argument is a `List[…]`                                   |
+| `TrueQ`     | 1            | no    | `True` only if the argument is literally `True`; `False` for anything else |
+
+Worked examples (the W-14 acceptance tests):
+
+```
+Which[False, 1, True, 2]            (* → 2  — first True condition's value      *)
+Which[False, 1]                     (* → Null — no condition true              *)
+Which[2 > 1, "a"]                   (* → "a"                                   *)
+Switch[2, 1, "a", 2, "b", _, "z"]   (* → "b" — literal form 2 matches          *)
+Switch[5, 1, "a", _, "z"]           (* → "z" — Blank default matches anything  *)
+Boole[2 > 1]                        (* → 1                                     *)
+Boole[1 > 2]                        (* → 0                                     *)
+NumberQ[3]                          (* → True                                  *)
+NumberQ["x"]                        (* → False                                 *)
+IntegerQ[3]                         (* → True                                  *)
+StringQ["x"]                        (* → True                                  *)
+ListQ[{1, 2}]                       (* → True                                  *)
+ListQ[3]                            (* → False                                 *)
+TrueQ[True]                         (* → True                                  *)
+TrueQ[5]                            (* → False                                 *)
+```
+
+### §17.2 Laziness — `Which`/`Switch` are HELD, only the selected branch evaluates
+
+`Which` and `Switch` join the `WolframBackend` held set (alongside `If`, the W-7
+iteration heads, and the W-8 scoping heads). Holding is **load-bearing for
+correctness, not just efficiency**: a non-selected branch must never run.
+
+* `Which[c1, v1, c2, v2, …]` — the handler evaluates `c1` through `vm.eval`; the
+  first condition that reduces to the `True` symbol returns *its* `vi` (evaluated
+  once, through the VM). Conditions are evaluated left-to-right and **stop at the
+  first `True`** — later conditions and every non-selected `vi` are never touched.
+  A condition that reduces to neither `True` nor `False` (an unresolved symbolic
+  relation) is treated as not-yet-true and the scan continues; if no condition is
+  `True`, `Which` returns `Null` (matching Wolfram). This mirrors the held `If`
+  contract exactly: were `Which` eager, a guard like
+  `Which[x > 0, 1/x, True, 0]` would evaluate `1/x` even when the guard is false.
+
+* `Switch[expr, form1, v1, form2, v2, …]` — the handler evaluates `expr` once,
+  then compares it against each **literal** `formi` (the forms are NOT evaluated:
+  `Switch[2, 1+1, "a"]` does not match because the literal form is `Plus[1, 1]`,
+  matching Wolfram's held-form semantics). The first `formi` that is structurally
+  equal to the evaluated `expr` — or is a `Blank[]` (`_`), which matches anything —
+  selects `vi`, which is then evaluated through the VM and returned. Only the
+  selected `vi` is evaluated.
+
+Held-head double-evaluation is avoided by construction: the args arrive
+unevaluated, the handler chooses, and it calls `vm.eval` on exactly one branch.
+
+### §17.3 Structural matching in `Switch` — reusing the W-13 element comparator
+
+`Switch`'s form matching needs "is this evaluated `expr` the same as this literal
+`form`?". Rather than introduce a third notion of equality, W-14 reuses the W-13
+`same_element` comparator (built on the W-9 `canonical_cmp`), so `Switch` agrees
+with `MemberQ`/`Union` on what "the same" means: `2` and `2.0` are distinct,
+compound forms (`f[1]` vs `f[1]`) match recursively. The one extra rule is the
+`Blank[]` default: a form that is `Blank[]` (the lowering of `_`) matches any
+`expr`. A `Blank[h]` with a head constraint is treated as a plain catch-all in
+this subset (the simple VM does not enforce head types) — the honest subset
+behaviour, consistent with how W-4 dropped the blank's type constraint on
+`SetDelayed` parameters.
+
+### §17.4 Eager predicates — type tests over the IR node kinds
+
+`Boole` and the five `…Q` predicates are **eager** (non-held): their single
+argument is pre-evaluated by the VM before the handler runs, so
+`IntegerQ[1 + 2]` sees `Integer(3)` and answers `True`. Each predicate is a thin
+match over the `IRNode` kind:
+
+* `NumberQ` — `Integer | Rational | Float` → `True`, else `False`.
+* `IntegerQ` — `Integer` → `True`, else `False`.
+* `StringQ` — `Str` → `True`, else `False`.
+* `ListQ` — an `Apply` whose head is the `List` symbol → `True`, else `False`.
+* `TrueQ` — the `True` symbol → `True`; **everything else** (including an
+  unevaluated relation or `False`) → `False`. `TrueQ` is the total
+  "is this definitely true?" test, so unlike the other predicates it never stays
+  unevaluated on a symbol — `TrueQ[x]` is `False`.
+* `Boole` — the `True` symbol → `1`, the `False` symbol → `0`, **anything else**
+  → unevaluated (so `Boole[x]` echoes, matching Wolfram). This is the one W-14
+  head that can stay unevaluated on a well-typed-but-non-boolean argument.
+
+`EvenQ`/`OddQ` already shipped in W-9 and are left unchanged.
+
+### §17.5 The "I can't reduce this" contract — malformed input stays unevaluated
+
+Following the W-5/W-9/W-12/W-13 convention, every W-14 handler returns the
+application **unchanged** rather than panicking when it cannot make progress:
+
+* `Which` with an **odd** argument count (a dangling final condition with no
+  paired value) is malformed → left unevaluated. (A well-formed `Which` whose
+  conditions are all false/unresolved returns `Null`, which is the *evaluated*
+  answer, not the unevaluated form.)
+* `Switch` with an **even** argument count (a final `form` with no paired value,
+  or a missing `expr`) is malformed → left unevaluated. `Switch` needs at least
+  `expr` plus one `form, value` pair (arity ≥ 3, odd).
+* The predicates and `Boole` with arity ≠ 1 → left unevaluated.
+
+No W-14 head ever indexes past the end of its argument list, recurses without a
+structural decrease, or evaluates a branch more than once, so there is no panic,
+no unbounded recursion, and no double-evaluation surface. The held forms add no
+new growth source beyond the single `vm.eval` of the one selected branch, which
+the W-4 fuel/`If` machinery already bounds.
+
+### §17.6 No grammar change
+
+`Which[…]`, `Switch[…]`, `Boole[…]`, `NumberQ[…]`, `IntegerQ[…]`, `StringQ[…]`,
+`ListQ[…]`, and `TrueQ[…]` are all ordinary `Head[args]` applications. W-14
+touches only `wolfram-runtime`'s builtin handler table and the `WolframBackend`
+held set; the lexer, parser, and grammar files are untouched.
+
 ### §6 References
 
 Internal: [`HML00`](HML00-historical-math-languages-roadmap.md),
