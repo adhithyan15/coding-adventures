@@ -48,11 +48,62 @@ Item {
     property string savedSnapshot: ""
 
     // Cell geometry (pixels). The gutter and body share rowH so their two
-    // ListViews scroll in lockstep.
-    readonly property int rowH: 24
-    readonly property int colW: 90
+    // ListViews scroll in lockstep. (Roomier to match the web reference.)
+    readonly property int rowH: 26
+    readonly property int colW: 92
     readonly property int gutterW: 64
-    readonly property int headH: 26
+    readonly property int headH: 28
+
+    // ── Design tokens ────────────────────────────────────────────────
+    // Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc
+    // backend reads as one considered surface (dark modern spreadsheet).
+    readonly property color cBg:          "#16181d"  // app / base cell
+    readonly property color cPanel:       "#1b1e24"  // toolbar + zebra band
+    readonly property color cSurface:     "#21252c"  // buttons, pill
+    readonly property color cSurfaceHover:"#2b313a"
+    readonly property color cSurfaceDown: "#14171c"
+    readonly property color cLine:        "#2c313a"  // hairline borders
+    readonly property color cLineStrong:  "#3a404b"  // control borders
+    readonly property color cHead:        "#20242b"  // row/col headers
+    readonly property color cHeadSel:     "#2b3340"  // header of selected row/col
+    readonly property color cInk:         "#e8eaed"  // primary text
+    readonly property color cMuted:       "#9aa3b2"  // labels, headers
+    readonly property color cAccent:      "#4aa3ff"  // selection + focus
+    readonly property color cSel:         "#21344a"  // selected-cell fill
+
+    // Cells and the formula field use a monospace face so digits column-align.
+    // The generic "monospace" alias only resolves on Linux (fontconfig); macOS
+    // and Windows need a concrete family, else Qt warns and falls back to the
+    // proportional UI font (digits stop aligning). Pick a real face per OS.
+    readonly property string monoFamily:
+        Qt.platform.os === "osx"     ? "Menlo" :
+        Qt.platform.os === "windows" ? "Consolas" :
+                                       "monospace"
+
+    // A compact, modern toolbar button (rounded chip with hover/down/disabled
+    // states) — the QML analog of the web demo's segmented controls.
+    component ToolButton: Button {
+        id: tb
+        hoverEnabled: true
+        implicitHeight: 30
+        leftPadding: 11; rightPadding: 11
+        font.pixelSize: 12
+        background: Rectangle {
+            radius: 5
+            color: tb.down ? sheet.cSurfaceDown : (tb.hovered && tb.enabled ? sheet.cSurfaceHover : sheet.cSurface)
+            border.color: sheet.cLineStrong
+            border.width: 1
+            opacity: tb.enabled ? 1.0 : 0.4
+        }
+        contentItem: Text {
+            text: tb.text
+            font: tb.font
+            color: tb.hovered && tb.enabled ? "#ffffff" : sheet.cInk
+            opacity: tb.enabled ? 1.0 : 0.4
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -63,107 +114,135 @@ Item {
         // line. Enter commits through `doc.commitInf`, which writes to the
         // engine, recomputes dependents, regrows the extent, and bumps
         // `doc.revision` so the visible rows re-fetch.
-        RowLayout {
+        Rectangle {                          // toolbar panel
             Layout.fillWidth: true
-            Layout.leftMargin: 8
-            Layout.rightMargin: 8
-            Layout.topMargin: 8
-            spacing: 8
+            Layout.leftMargin: 10
+            Layout.rightMargin: 10
+            Layout.topMargin: 10
+            Layout.preferredHeight: 48
+            color: sheet.cPanel
+            border.color: sheet.cLine
+            radius: 8
 
-            Text {
-                text: doc ? doc.infAddress : ""
-                color: "#9D9D9D"
-                font.pixelSize: 12
-                font.family: "monospace"
-                Layout.preferredWidth: sheet.gutterW
-            }
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 28
-                color: "#2D2D30"
-                border.color: "#3F3F46"
-                TextInput {
-                    id: formula
-                    anchors.fill: parent
-                    anchors.leftMargin: 6
-                    anchors.rightMargin: 6
-                    verticalAlignment: TextInput.AlignVCenter
-                    color: "#CCCCCC"
-                    font.pixelSize: 13
-                    font.family: "monospace"
-                    clip: true
-                    selectByMouse: true
-                    // Re-seed from the model on selection change; the user's
-                    // edits live here until they press Enter.
-                    text: doc ? doc.infFormula : ""
-                    onAccepted: if (doc) doc.commitInf(text)
+            RowLayout {
+                anchors.fill: parent
+                anchors.margins: 8
+                spacing: 6
+
+                // Address pill.
+                Rectangle {
+                    Layout.preferredWidth: 46
+                    Layout.preferredHeight: 30
+                    color: sheet.cSurface
+                    border.color: sheet.cLineStrong
+                    radius: 5
+                    Text {
+                        anchors.centerIn: parent
+                        text: doc ? doc.infAddress : ""
+                        color: sheet.cInk
+                        font.pixelSize: 12
+                        font.bold: true
+                        font.family: sheet.monoFamily
+                    }
                 }
-            }
-            // Drag-fill: replicate the selected cell into the 10 rows below it.
-            // The engine shifts each copy's relative refs, pins absolute ($) refs,
-            // and carries the format — one doc.fill call.
-            Button {
-                text: "Fill ↓ 10"
-                ToolTip.visible: hovered
-                ToolTip.text: "Replicate the selected cell into the 10 rows below it"
-                onClicked: if (doc) {
-                    var first = doc.columnLetters(doc.infCol) + (doc.infRow + 1);
-                    var last = doc.columnLetters(doc.infCol) + (doc.infRow + 10);
-                    doc.fill(doc.infAddress, first, last);
+                Text {
+                    text: "fx"
+                    color: sheet.cMuted
+                    font.pixelSize: 12
+                    font.italic: true
+                    font.family: sheet.monoFamily
                 }
-            }
-            // Clipboard: copy/cut the selected cell, paste at the selection. The
-            // engine shifts the pasted formula's relative refs by the offset,
-            // pins absolute ($) refs, carries the format; a cut clears on paste.
-            Button {
-                text: "Copy"
-                ToolTip.visible: hovered
-                ToolTip.text: "Copy the selected cell to the clipboard"
-                onClicked: if (doc) doc.copy(doc.infAddress, doc.infAddress)
-            }
-            Button {
-                text: "Cut"
-                ToolTip.visible: hovered
-                ToolTip.text: "Cut the selected cell (cleared when you paste)"
-                onClicked: if (doc) doc.cut(doc.infAddress, doc.infAddress)
-            }
-            Button {
-                text: "Paste"
-                ToolTip.visible: hovered
-                ToolTip.text: "Paste the clipboard at the selected cell, shifting relative references"
-                onClicked: if (doc) doc.paste(doc.infAddress)
-            }
-            // Save / load: serialize the whole workbook (formulas + formats) to a
-            // JSON document and restore it. The document stores only the source —
-            // computed values recompute on load, so a loaded formula stays live.
-            Button {
-                text: "Save"
-                ToolTip.visible: hovered
-                ToolTip.text: "Serialize the whole workbook to memory"
-                onClicked: if (doc) sheet.savedSnapshot = doc.serialize()
-            }
-            Button {
-                text: "Load"
-                enabled: sheet.savedSnapshot.length > 0
-                ToolTip.visible: hovered
-                ToolTip.text: "Restore the workbook from the last save"
-                onClicked: if (doc) doc.deserialize(sheet.savedSnapshot)
-            }
-            // Undo / redo: walk the engine's snapshot history. The buttons enable
-            // off the model's canUndo/canRedo (which notify on every edit).
-            Button {
-                text: "Undo"
-                enabled: doc ? doc.canUndo : false
-                ToolTip.visible: hovered
-                ToolTip.text: "Undo the last edit"
-                onClicked: if (doc) doc.undo()
-            }
-            Button {
-                text: "Redo"
-                enabled: doc ? doc.canRedo : false
-                ToolTip.visible: hovered
-                ToolTip.text: "Redo the last undone edit"
-                onClicked: if (doc) doc.redo()
+                // Formula field — accent focus ring on edit.
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 30
+                    color: "#0f1115"
+                    radius: 5
+                    border.color: formula.activeFocus ? sheet.cAccent : sheet.cLineStrong
+                    border.width: formula.activeFocus ? 2 : 1
+                    TextInput {
+                        id: formula
+                        anchors.fill: parent
+                        anchors.leftMargin: 8
+                        anchors.rightMargin: 8
+                        verticalAlignment: TextInput.AlignVCenter
+                        color: sheet.cInk
+                        font.pixelSize: 13
+                        font.family: sheet.monoFamily
+                        clip: true
+                        selectByMouse: true
+                        // Re-seed from the model on selection change; the user's
+                        // edits live here until they press Enter.
+                        text: doc ? doc.infFormula : ""
+                        onAccepted: if (doc) doc.commitInf(text)
+                    }
+                }
+
+                // ── Drag-fill ──
+                ToolButton {
+                    text: "↓ Fill 10"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Replicate the selected cell into the 10 rows below it"
+                    onClicked: if (doc) {
+                        var first = doc.columnLetters(doc.infCol) + (doc.infRow + 1);
+                        var last = doc.columnLetters(doc.infCol) + (doc.infRow + 10);
+                        doc.fill(doc.infAddress, first, last);
+                    }
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
+                // ── Clipboard ──
+                ToolButton {
+                    text: "Copy"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Copy the selected cell to the clipboard"
+                    onClicked: if (doc) doc.copy(doc.infAddress, doc.infAddress)
+                }
+                ToolButton {
+                    text: "Cut"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Cut the selected cell (cleared when you paste)"
+                    onClicked: if (doc) doc.cut(doc.infAddress, doc.infAddress)
+                }
+                ToolButton {
+                    text: "Paste"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Paste the clipboard at the selected cell, shifting relative references"
+                    onClicked: if (doc) doc.paste(doc.infAddress)
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
+                // ── File (save / load) ──
+                ToolButton {
+                    text: "Save"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Serialize the whole workbook to memory"
+                    onClicked: if (doc) sheet.savedSnapshot = doc.serialize()
+                }
+                ToolButton {
+                    text: "Load"
+                    enabled: sheet.savedSnapshot.length > 0
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Restore the workbook from the last save"
+                    onClicked: if (doc) doc.deserialize(sheet.savedSnapshot)
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
+                // ── History (undo / redo) ──
+                ToolButton {
+                    text: "↶ Undo"
+                    enabled: doc ? doc.canUndo : false
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Undo the last edit"
+                    onClicked: if (doc) doc.undo()
+                }
+                ToolButton {
+                    text: "↷ Redo"
+                    enabled: doc ? doc.canRedo : false
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Redo the last undone edit"
+                    onClicked: if (doc) doc.redo()
+                }
             }
         }
 
@@ -179,8 +258,8 @@ Item {
             Rectangle {
                 Layout.preferredWidth: sheet.gutterW
                 Layout.preferredHeight: sheet.headH
-                color: "#2D2D30"
-                border.color: "#3F3F46"
+                color: sheet.cHead
+                border.color: sheet.cLineStrong
             }
             Flickable {
                 id: header
@@ -195,16 +274,17 @@ Item {
                     Repeater {
                         model: doc ? doc.totalCols : 0
                         delegate: Rectangle {
+                            readonly property bool selHdr: doc && doc.infCol === index + 1
                             width: sheet.colW
                             height: sheet.headH
-                            color: "#2D2D30"
-                            border.color: "#3F3F46"
+                            color: selHdr ? sheet.cHeadSel : sheet.cHead
+                            border.color: sheet.cLine
                             Text {
                                 anchors.centerIn: parent
                                 text: doc ? doc.columnLetters(index + 1) : ""
-                                color: "#9D9D9D"
-                                font.pixelSize: 12
-                                font.family: "monospace"
+                                color: selHdr ? sheet.cAccent : sheet.cMuted
+                                font.pixelSize: 11
+                                font.bold: true
                             }
                         }
                     }
@@ -233,16 +313,16 @@ Item {
                 contentY: body.contentY
                 boundsBehavior: Flickable.StopAtBounds
                 delegate: Rectangle {
+                    readonly property bool selHdr: doc && doc.infRow === index + 1
                     width: sheet.gutterW
                     height: sheet.rowH
-                    color: "#2D2D30"
-                    border.color: "#3F3F46"
+                    color: selHdr ? sheet.cHeadSel : sheet.cHead
+                    border.color: sheet.cLine
                     Text {
                         anchors.centerIn: parent
                         text: index + 1
-                        color: "#9D9D9D"
-                        font.pixelSize: 12
-                        font.family: "monospace"
+                        color: selHdr ? sheet.cAccent : sheet.cMuted
+                        font.pixelSize: 11
                     }
                 }
             }
@@ -285,24 +365,28 @@ Item {
                             delegate: Rectangle {
                                 id: cell
                                 readonly property int colNum: index + 1
+                                readonly property bool selected: doc && doc.infRow === rowItem.rowNum
+                                                                 && doc.infCol === colNum
                                 width: sheet.colW
                                 height: sheet.rowH
-                                color: (doc && doc.infRow === rowItem.rowNum
-                                        && doc.infCol === colNum)
-                                       ? "#094771" : "#1E1E1E"
-                                border.color: "#3F3F46"
-                                border.width: 1
+                                // Selected → accent fill; else zebra band on even rows.
+                                color: selected ? sheet.cSel
+                                       : (rowItem.rowNum % 2 === 0 ? sheet.cPanel : sheet.cBg)
+                                border.color: selected ? sheet.cAccent : sheet.cLine
+                                border.width: selected ? 2 : 1
+                                z: selected ? 1 : 0
                                 Text {
                                     anchors.fill: parent
-                                    anchors.rightMargin: 4
+                                    anchors.rightMargin: 6
                                     horizontalAlignment: Text.AlignRight
                                     verticalAlignment: Text.AlignVCenter
                                     elide: Text.ElideRight
                                     text: (colNum - 1) < rowItem.cells.length
                                           ? rowItem.cells[colNum - 1] : ""
-                                    color: "#CCCCCC"
+                                    color: selected ? "#ffffff" : sheet.cInk
                                     font.pixelSize: 12
-                                    font.family: "monospace"
+                                    font.bold: selected
+                                    font.family: sheet.monoFamily
                                 }
                                 MouseArea {
                                     anchors.fill: parent
@@ -313,6 +397,31 @@ Item {
                     }
                 }
             }
+        }
+
+        // ── Status line ──────────────────────────────────────────────
+        // A hairline-separated footer echoing the live virtual-grid size and
+        // the per-edit revision clock (mirrors the web demo's status line).
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.leftMargin: 10
+            Layout.rightMargin: 10
+            Layout.bottomMargin: 10
+            Layout.preferredHeight: 1
+            color: sheet.cLine
+        }
+        Text {
+            Layout.fillWidth: true
+            Layout.leftMargin: 10
+            Layout.rightMargin: 10
+            Layout.bottomMargin: 10
+            color: sheet.cMuted
+            font.pixelSize: 12
+            font.family: sheet.monoFamily
+            text: doc
+                  ? "Virtual grid: " + doc.totalRows + " rows × " + doc.totalCols
+                    + " cols  ·  revision " + doc.revision
+                  : ""
         }
     }
 }

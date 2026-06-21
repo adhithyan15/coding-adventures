@@ -8,7 +8,10 @@
 #   bash scripts/build.sh   # regenerate QML + build & vendor the engine
 #   qmake && make && ./visicalc_qt_app
 
-QT       += core gui qml quick
+# quickcontrols2 is needed for QQuickStyle (main.cpp forces the Basic style so
+# the demo's custom Button chrome in InfiniteSheet.qml renders — the macOS
+# native style ignores Button background/contentItem customization).
+QT       += core gui qml quick quickcontrols2
 CONFIG   += c++17
 TEMPLATE  = app
 TARGET    = visicalc_qt_app
