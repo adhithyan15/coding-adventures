@@ -2,6 +2,44 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.15.0] - 2026-06-21
+
+### Added — CLOC26 Phase 1: Automatic Semicolon Insertion (`}` / EOF rule)
+
+New `asi` module implementing ECMAScript ASI **Rule 2** — a `;` is inserted
+before a `}` (or at end of input) that would otherwise be a syntax error. The
+grammar spells `SEMICOLON` out as a required terminal in every statement, so
+semicolon-light source (`function f(){return 1}`, `{ g() }`) previously failed
+to parse — and closurec degraded the whole program to WHITESPACE_ONLY.
+
+`asi::parse_with_asi(tokens, version)` drives insertion **from the parser**:
+parse the stream; only if it fails *specifically because a `SEMICOLON` was
+expected before a `}`/EOF* (`GrammarParseError` carries both the message and the
+offending token), synthesize a `;` at that position and re-parse; bounded loop
+with a same-position guard against non-progress. Any non-ASI error is returned
+unchanged (caller degrades as before).
+
+**The load-bearing property: a `;` is inserted only when parsing genuinely
+failed for lack of one, so ASI is a no-op on any input that already parses** —
+it can never change a valid program's parse. (This *retry-on-error* design was
+chosen over the lookahead-table the design spec first sketched, precisely
+because it guarantees byte-identical output on already-valid input — verified
+by the full closurec fixture suite staying byte-for-byte unchanged.)
+
+Wired into `parse_javascript_typed` (the entry closurec uses); other entry
+points are unchanged for now. Implemented entirely within this crate — **no
+changes to the shared `grammar-tools`/`parser` crates or to any `.grammar`
+file** (semicolons stay mandatory in the grammar; ASI supplies them in the
+token stream).
+
+Phases 2 (line-terminator rule, via the lexer's existing
+`TOKEN_PRECEDED_BY_NEWLINE` flag) and 3 (restricted productions) are follow-ups
+per `code/specs/CLOC26-asi.md`.
+
+- 7 unit tests: `}`/EOF recovery, no-op on already-valid input, idempotence on
+  recovered input, a genuine syntax error is not papered over, and an empty
+  block is not given a semicolon.
+
 ## [0.14.0] - 2026-06-20
 
 ### Added — CLOC23: bridge `for_of_statement` → `ForOfStatement`

@@ -1,8 +1,23 @@
 # CLOC26 — Automatic Semicolon Insertion (ASI)
 
-> **Status:** Design spec (specs-first). This document is committed *before* any
-> implementation code, per the repo standard. It defines the architecture and a
-> phased implementation plan; each phase below lands as its own follow-up PR.
+> **Status:** **Phase 1 shipped** (the `}` / EOF rule, in
+> `javascript-parser/src/asi.rs`); Phases 2–3 pending. This document was
+> committed *before* any implementation code, per the repo standard.
+>
+> **Implementation refinement (Phase 1):** the shipped implementation uses the
+> **retry-on-parse-error** strategy, not the lookahead table this spec first
+> sketched under "What counts as an offending token". The two reach the same
+> insertion points for the `}`/EOF rule, but retry-on-error has a decisive
+> safety advantage: it inserts a `;` *only when parsing genuinely failed for
+> lack of one*, so it is **byte-identical-by-construction** on any input that
+> already parses — it cannot over-insert. (The "parser-feedback" option this
+> spec had rejected was about mutating the shared `GrammarParser` mid-parse;
+> the shipped approach instead re-parses from scratch with a fresh parser after
+> inserting a token, so it stays entirely within `javascript-parser` and the
+> packrat-memo concern does not apply.) The full closurec fixture suite stays
+> byte-for-byte unchanged, confirming the no-regression property. Phases 2–3
+> (which depend on line-terminator info) will reuse the same retry harness,
+> extending the "is this failure ASI-recoverable?" predicate.
 
 ## The problem this solves
 
@@ -56,7 +71,18 @@ The parsing framework was built ASI-ready:
 ASI supplies them in the token stream). This is the load-bearing reason ASI is
 safe to add: it cannot regress any other language.
 
-### Open design question (resolve in Phase 1)
+### Open design question — RESOLVED in Phase 1
+
+**Answer:** newlines do **not** reach the parser as tokens. The `.tokens`
+grammar lists `WHITESPACE` (whose regex `/[ \t\r\n\v\f]+/` includes `\n`) under
+`skip:`, so the lexer discards all trivia — the parser's stream is
+significant-tokens-only plus one trailing `EOF`. The `}`/EOF rule (Phase 1)
+needs no newline info, so it ships now. For Phases 2–3, line-terminator
+information is still available **per token** via the lexer's
+`TOKEN_PRECEDED_BY_NEWLINE` flag (`lexer::token::Token.flags`), so those phases
+do not need newline *tokens* either — they read the flag on the offending token.
+
+<details><summary>Original open question (for the record)</summary>
 
 The hook receives whatever token stream `tokenize_javascript_typed` produces.
 `Newline` is classified as trivia (`is_trivia()` groups
@@ -76,6 +102,8 @@ so it may already be filtered out before `GrammarParser::new`. Two sub-cases:
 Phase 1 begins by confirming which case holds (a 5-line probe test) and pins the
 hook location accordingly. The `}`/EOF rules (Phase 1) do **not** need newlines,
 so Phase 1 can proceed regardless; only Phases 2–3 depend on the answer.
+
+</details>
 
 ## The three ASI rules (ECMAScript §12.10)
 
@@ -134,7 +162,7 @@ therefore isolated to Phase 3 with dedicated adversarial tests
 
 ## Phased implementation plan (one PR per phase)
 
-**Phase 1 — `}` and EOF insertion (the high-value, newline-free slice).**
+**Phase 1 — `}` and EOF insertion (the high-value, newline-free slice). ✅ SHIPPED.**
 New `javascript-parser/src/asi.rs` with
 `fn insert_automatic_semicolons(tokens: Vec<Token>) -> Vec<Token>` implementing
 Rule 2 only: insert `;` before a `}` / EOF when the preceding significant token
