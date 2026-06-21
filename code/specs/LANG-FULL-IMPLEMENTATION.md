@@ -205,10 +205,14 @@ multiple languages; close an enabler before the features that depend on it.
 - **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
   compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
   ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
-- **E5 — Arrays / linear aggregates.** ⚠ An IIR array/aggregate model (alloc, bounds-checked
-  index, multidim) on every backend. Unlocks ALGOL arrays, BASIC `DIM`, Twig lists/cons.
-  **Architectural fork — design pass first** (relates to Brainfuck's flat-memory byte-tape
-  and the existing `alloc_bytes`/`load_byte`/`store_byte`).
+- **E5 — Arrays / linear aggregates.** ⚠ ◑ *Design pass written — pending sign-off.* An IIR
+  array model (`alloc_array`/`array_len`/`array_get`/`array_set`, `array<T>` type hint,
+  bounds-checked) that is **representation-agnostic** so it lowers to BOTH static-allocation
+  (length-prefixed flat memory + explicit guard/trap on the native + LLVM backends, reusing the
+  byte-tape allocator) AND garbage-collected targets (native managed arrays with native bounds
+  checks on JVM/CLR/WasmGC). Bounds-checked from the start (OOB → trap). Full design + PR
+  breakdown in **[`lang-full-e5-arrays.md`](lang-full-e5-arrays.md)**. Unlocks ALGOL arrays (AL2),
+  BASIC `DIM` (BA3), Twig lists (TW3).
 - **E6 — General `call_builtin` / closures / dynamic dispatch on code-gen backends.** ⚠
   Today the IIR-to-{wasm,jvm,clr,llvm} validators reject `call_builtin`/`type_hint="any"`,
   which is why most of Twig only runs on the VM. Closing this is the biggest single unlock
