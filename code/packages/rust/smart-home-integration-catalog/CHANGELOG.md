@@ -169,6 +169,8 @@ All notable changes to this package will be documented in this file.
   release coordination.
 - `IntegrationMeshReleaseTicketHandoffWorkOrderGuardrailReadinessSummary` and
   helpers for combining work-order readiness with handoff guardrail state.
+- `IntegrationMeshReleaseTicketHandoffGuardrailAuditReadinessSummary` and
+  helpers for combining work-order guardrail readiness with audit-row state.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
