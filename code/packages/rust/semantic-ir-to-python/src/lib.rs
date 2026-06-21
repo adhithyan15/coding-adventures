@@ -169,6 +169,96 @@ mod tests {
         }
     }
 
+    // ── Execution-proof: block-capture round-trip actually *runs* ──────
+    //
+    // Every other Ruby→Python test above asserts the *shape* of the emitted
+    // source.  This one additionally executes it through a real interpreter,
+    // because RB1/RB2 introduced the first SIR shape that emits a **non-empty**
+    // `MakeClosure` capture — a hoisted block that closes over the enclosing
+    // method's block parameter — and we want proof the backend binds that
+    // capture correctly at runtime, not just on paper.
+
+    /// Probe whether `exe` is a usable Python interpreter by running `-c pass`.
+    /// This distinguishes a genuinely-absent interpreter (and the Windows Store
+    /// `python3` stub, which refuses to run and exits non-zero) from a real one,
+    /// so the caller can *skip* cleanly rather than mistaking "no Python" for a
+    /// test failure.
+    fn python_is_runnable(exe: &str) -> bool {
+        std::process::Command::new(exe)
+            .args(["-c", "pass"])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+    }
+
+    /// Run emitted Python `source` with the local SIR runtime packages on
+    /// `PYTHONPATH`, returning captured stdout with newlines normalised.
+    /// Returns `None` (⇒ skip the execution assertion) when no usable
+    /// interpreter exists, so CI hosts without Python never hard-fail.  A
+    /// present-but-erroring interpreter panics with the captured stderr — that
+    /// is a real regression, not a skip.
+    fn run_emitted_python(source: &str) -> Option<String> {
+        let exe = ["python3", "python"].into_iter().find(|e| python_is_runnable(e))?;
+
+        // Runtime packages live at <crate>/../../python/<pkg>/src (src layout).
+        let py_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../python");
+        let pythonpath = std::env::join_paths([
+            py_root.join("sir-runtime-core/src"),
+            py_root.join("sir-runtime-pairs/src"),
+        ])
+        .expect("join PYTHONPATH");
+
+        let file = std::env::temp_dir().join(format!("sir_rb3_{}.py", std::process::id()));
+        std::fs::write(&file, source).expect("write temp python");
+        let out = std::process::Command::new(exe)
+            .arg(&file)
+            .env("PYTHONPATH", &pythonpath)
+            .output()
+            .expect("spawn python");
+        let _ = std::fs::remove_file(&file);
+
+        assert!(
+            out.status.success(),
+            "emitted Python failed under {exe}:\n{}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        Some(String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n"))
+    }
+
+    #[test]
+    fn end_to_end_ruby_block_capture_executes_py() {
+        // `outer`'s block `{ |x| yield x }` is hoisted to `__block_0` and its
+        // `yield x` re-targets the *enclosing* method's block — so `__block_0`
+        // closes over `outer`'s `__sir_block__`.  That is the first non-empty
+        // `MakeClosure` capture in the pipeline.  `print` is one of the few
+        // builtins `sir-runtime-core` implements natively, so the whole chain
+        // (`outer` → `twice` → captured block → enclosing block) is runnable.
+        let src = "def twice\n  yield 1\n  yield 2\nend\n\
+                   def outer\n  twice { |x| yield x }\nend\n\
+                   outer { |n| print n }\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+
+        // Shape: the capture is threaded into the hoisted block, and the block
+        // receives it as a prepended parameter (make_closure prepends captures).
+        assert!(
+            a.source.contains("def __block_0(__sir_block__, x):"),
+            "hoisted block must take the captured block first; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("twice(_sir_make_closure(__block_0, [__sir_block__]))"),
+            "enclosing block must be threaded into the non-empty capture; got:\n{}",
+            a.source
+        );
+
+        // Execution-proof: running it prints the two yielded values, proving the
+        // captured block reaches `outer`'s caller block at runtime.
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "1\n2\n", "emitted python printed unexpected output");
+        }
+    }
+
     #[test]
     fn compiles_minimal_module() {
         let m = minimal_module();

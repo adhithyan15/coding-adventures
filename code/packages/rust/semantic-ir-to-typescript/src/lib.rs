@@ -208,6 +208,43 @@ mod tests {
     }
 
     #[test]
+    fn end_to_end_ruby_block_capture_emits_native_capture_ts() {
+        // RB1/RB2 mirror of the Python execution-proof: `outer`'s block
+        // `{ |x| yield x }` is hoisted to `__block_0` whose `yield x` re-targets
+        // the *enclosing* method's block, so the block closes over `outer`'s
+        // `__sir_block__` — the first non-empty `MakeClosure` capture.  Node
+        // cannot run the emitted *TypeScript* directly (it carries type
+        // annotations and the runtime package ships as `.ts`), so unlike the
+        // Python sibling this proves the binding by shape: TS captures via a
+        // native closure that forwards the captured block as the first argument.
+        let src = "def twice\n  yield 1\n  yield 2\nend\n\
+                   def outer\n  twice { |x| yield x }\nend\n\
+                   outer { |n| print n }\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+
+        // The hoisted block declares the captured block as its first parameter.
+        assert!(
+            a.source.contains("function __block_0(__sir_block__: __Sir.Val, x: __Sir.Val)"),
+            "hoisted block must take the captured block first; got:\n{}",
+            a.source
+        );
+        // The enclosing block is closed over and forwarded as the first arg via
+        // a native closure (TS has no positional-capture array; it uses scope).
+        assert!(
+            a.source.contains("__block_0(__sir_block__, ..._a)"),
+            "captured block must be forwarded into the hoisted block; got:\n{}",
+            a.source
+        );
+        // And it is threaded into `twice` as that block's value.
+        assert!(
+            a.source.contains("twice(new __Sir.Closure((..._a: __Sir.Val[]) => __block_0(__sir_block__, ..._a)))"),
+            "enclosing block must be threaded through the non-empty capture; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
     fn compiles_minimal_module() {
         let m = minimal_module();
         let a = compile(&m).expect("compile");

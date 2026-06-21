@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.16 — emitted-shape proof for the non-empty block capture (RB3)
+
+Mirror of the Python backend's 0.1.17.  RB1/RB2 (Ruby frontend) introduced the
+first SIR shape with a **non-empty** `MakeClosure` capture: a hoisted block that
+closes over the enclosing method's `__sir_block__`.  TypeScript captures by
+native lexical closure rather than a positional array, so the binding emits as
+`twice(new __Sir.Closure((..._a) => __block_0(__sir_block__, ..._a)))` with the
+hoisted `function __block_0(__sir_block__: __Sir.Val, x: __Sir.Val)` taking the
+captured block as its first parameter.
+
+New test `end_to_end_ruby_block_capture_emits_native_capture_ts` asserts that
+binding.  Unlike the Python sibling it does **not** execute: Node cannot run the
+emitted *TypeScript* directly (type annotations; the runtime package ships as
+`.ts` with no `dist/`), so this proves the capture by shape.  No emitter change
+— verification only.
+
 ## 0.1.15 — `defined?` lowers to a non-evaluating description (Q9d)
 
 Fourth item of the Q9 structural-builtin tranche.  Ruby `defined?(x)` reaches
