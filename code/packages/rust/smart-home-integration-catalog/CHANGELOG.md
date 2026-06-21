@@ -161,6 +161,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffWorkOrderReadinessSummary` and helpers
   for combining handoff execution readiness with deterministic work-order lane
   state.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrail` and summary
+  helpers for classifying handoff work-order lanes into release blockers,
+  operator handoffs, review gates, and ready-to-execute checks.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
