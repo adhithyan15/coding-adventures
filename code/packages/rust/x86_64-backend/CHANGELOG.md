@@ -1,5 +1,35 @@
 # Changelog — `x86_64-backend`
 
+## 0.14.0 — 2026-06-21 — bounds-checked arrays (LANG-FULL E5 PR-4c) — completes E5
+
+The four E5 array opcodes now lower to raw x86_64, using the **static**
+length-prefixed model with an **explicit** `ud2` bounds trap (the native target
+has no managed runtime to bounds-check for it, unlike JVM/CLR):
+
+| op | x86_64 |
+|----|--------|
+| `alloc_array dest <- count` | `mov rdi,count; shl rdi,3; add rdi,8; call __twig_alloc_bytes; mov [rax],count; dest=rax` |
+| `array_get dest <- handle, idx` | `mov rdx,[base]; cmp idx,rdx; jb ok; ud2; ok: shl idx,3; add base,idx; mov dest,[base+8]` |
+| `array_set handle, idx, val` | same bounds check; `mov [base+idx*8+8], val` |
+| `array_len dest <- handle` | `mov dest,[base]` |
+
+- Layout `[i64 length][elem 0][elem 1]…`, handle = block base; the length header
+  is at `[base+0]`, elements at `[base + 8 + idx*8]`. Allocation reuses the same
+  `__twig_alloc_bytes` runtime helper the Brainfuck byte-tape calls.
+- **Bounds check**: one **unsigned** `cmp idx, len` + `jb` skips a `ud2` trap when
+  in range — `jb` (below = unsigned `<`) catches both `>= len` and a negative
+  index. The x86_64 twin of LLVM's `icmp uge`+`llvm.trap` / WASM's `i64.ge_u`+
+  `unreachable`.
+- Element width is a fixed **8 bytes** (the AOT specialiser drops the `array<T>`
+  result type to `any`, so the stride isn't on `instr.ty`; `array_get`/`array_set`
+  validate the element is `i64`/`u64` — native is i64-only; `f64` arrays need SSE
+  element moves, a follow-up). Only **pre-existing, byte-verified encoders** are
+  reused (`shl_imm8`/`add_imm32`/`cmp`/`jcc`/`mov_*`/`ud2`/`call_rel32`) — no new
+  encodings.
+- 2 new unit tests (≥2 `ud2` traps emitted; non-`i64` element refused). The ALGOL
+  array matrix `Prog` runs on **NativeAot** — aarch64 locally, **x86_64 on the
+  Linux CI runner** → exit 42. **This completes E5 across all 7 backends.**
+
 ## 0.13.0 — 2026-06-20 — `f64` (ALGOL `real`) SSE2 codegen (LANG-FULL E3) — completes E3
 
 ### Added — native double-precision codegen on x86_64

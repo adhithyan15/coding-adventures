@@ -988,6 +988,116 @@ fn emit_instr(
         return Ok(());
     }
 
+    // ── LANG-FULL E5 — bounds-checked arrays (static, length-prefixed) ─────────
+    //
+    // An array is a single `__twig_alloc_bytes` block laid out as `[i64 length]
+    // [elem 0][elem 1]…`; the IIR *handle* is the block base. The native target
+    // has no managed runtime, so `array_get`/`array_set` emit an EXPLICIT
+    // unsigned bounds compare and trap with `udf` — the aarch64 twin of the LLVM
+    // `icmp uge`+`llvm.trap` and WASM `i64.ge_u`+`unreachable` lowerings.
+
+    // `alloc_array <count> -> <dest>` (ty = `array<i64>`). Allocate `8 + count*8`
+    // bytes via the shared runtime helper, store the length header, return base.
+    //   x0 = count ; x0 = count<<3 ; x0 += 8 ; bl __twig_alloc_bytes ; [x0]=count
+    if op == "alloc_array" {
+        let dest = require_dest(instr)?;
+        let count_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("alloc_array: needs srcs[0]=count".into())
+        })?;
+        // The AOT specialiser collapses the `array<T>` result type to `any` (it
+        // is not in the scalar allowlist), so `instr.ty` no longer carries the
+        // element type here. The native backend only supports 8-byte elements
+        // (`i64`; `f64` is also 8 bytes, and `array_get`/`array_set` reject the
+        // float element *moves* it can't do), so the stride is a fixed 8 — the
+        // per-access ops validate the element width.
+        let elem_size: i32 = 8;
+        load_operand(asm, alloc, Reg::X0, count_src)?;
+        // total = count*8 + 8 → count<<3, then +8.
+        asm.mov_imm64(Reg::X1, elem_size.trailing_zeros() as u64); // log2(8)=3
+        asm.lsl_reg(Reg::X0, Reg::X0, Reg::X1);
+        asm.add_imm(Reg::X0, Reg::X0, 8)?;
+        asm.bl_external("__twig_alloc_bytes");
+        // dest = base (x0); then write the length header [base+0] = count.
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        load_operand(asm, alloc, Reg::X1, count_src)?; // reload count (call clobbered regs)
+        asm.str_(Reg::X1, Reg::X0, 0)?;
+        return Ok(());
+    }
+
+    // `array_len <handle> -> <dest>` — load the i64 length header at `[base+0]`.
+    if op == "array_len" {
+        let dest = require_dest(instr)?;
+        let h_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("array_len: needs srcs[0]=handle".into())
+        })?;
+        load_operand(asm, alloc, Reg::X0, h_src)?;
+        asm.ldr(Reg::X0, Reg::X0, 0)?;
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // `array_get <handle>, <idx> -> <dest>` (ty = element). Bounds-check then load.
+    //   x0=base ; x1=idx ; x2=[base] (len) ; cmp idx,len ; b.lo ok ; udf ; ok:
+    //   x1 = idx<<3 ; x0 = base+x1 ; ldr x0,[x0,#8] ; str x0,[sp,dest]
+    if op == "array_get" {
+        let dest = require_dest(instr)?;
+        let h_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("array_get: needs srcs[0]=handle".into())
+        })?;
+        let i_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("array_get: needs srcs[1]=idx".into())
+        })?;
+        let elem_size = native_array_elem_size(&instr.ty)?;
+        load_operand(asm, alloc, Reg::X0, h_src)?;
+        load_operand(asm, alloc, Reg::X1, i_src)?;
+        asm.ldr(Reg::X2, Reg::X0, 0)?; // length
+        asm.cmp(Reg::X1, Reg::X2); // idx - len
+        let ok = asm.create_label();
+        asm.b_cond(Cond::Lo, ok); // idx <u len → in bounds, skip trap
+        asm.udf(0xDEAD);
+        asm.bind(ok).map_err(BackendError::from)?;
+        asm.mov_imm64(Reg::X3, elem_size.trailing_zeros() as u64);
+        asm.lsl_reg(Reg::X1, Reg::X1, Reg::X3); // idx*elem_size
+        asm.add(Reg::X0, Reg::X0, Reg::X1); // base + idx*size
+        asm.ldr(Reg::X0, Reg::X0, 8)?; // element (past the 8-byte header)
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // `array_set <handle>, <idx>, <val>` (no dest, ty = element). Bounds-check, store.
+    if op == "array_set" {
+        if instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr("array_set: must not have a dest".into()));
+        }
+        let h_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("array_set: needs srcs[0]=handle".into())
+        })?;
+        let i_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("array_set: needs srcs[1]=idx".into())
+        })?;
+        let v_src = instr.srcs.get(2).ok_or_else(|| {
+            BackendError::MalformedInstr("array_set: needs srcs[2]=val".into())
+        })?;
+        let elem_size = native_array_elem_size(&instr.ty)?;
+        load_operand(asm, alloc, Reg::X0, h_src)?;
+        load_operand(asm, alloc, Reg::X1, i_src)?;
+        asm.ldr(Reg::X2, Reg::X0, 0)?; // length
+        asm.cmp(Reg::X1, Reg::X2);
+        let ok = asm.create_label();
+        asm.b_cond(Cond::Lo, ok);
+        asm.udf(0xDEAD);
+        asm.bind(ok).map_err(BackendError::from)?;
+        asm.mov_imm64(Reg::X3, elem_size.trailing_zeros() as u64);
+        asm.lsl_reg(Reg::X1, Reg::X1, Reg::X3); // idx*elem_size
+        asm.add(Reg::X0, Reg::X0, Reg::X1); // base + idx*size
+        load_operand(asm, alloc, Reg::X2, v_src)?;
+        asm.str_(Reg::X2, Reg::X0, 8)?; // store past the header
+        return Ok(());
+    }
+
     // ---- Heap cons cells (lispy `ref<LispyPair>`) — L3b -------------------
     //
     // `iir_builtin_lowering::lower_heap_builtins` rewrites a Lisp frontend's
@@ -1437,6 +1547,19 @@ fn require_dest(instr: &CIRInstr) -> Result<&str, BackendError> {
     instr.dest.as_deref().ok_or_else(|| BackendError::MalformedInstr(format!("{} requires dest", instr.op)))
 }
 
+/// The byte size of an E5 array element type on the native backend. Only 64-bit
+/// integer elements are supported here (the ALGOL `integer` array — `f64` arrays
+/// need SSE/NEON element moves the V1 native path doesn't carry), so a non-`i64`
+/// element produces a clear error rather than a silently wrong stride.
+fn native_array_elem_size(elem: &str) -> Result<i32, BackendError> {
+    match elem {
+        "i64" | "u64" => Ok(8),
+        other => Err(BackendError::MalformedInstr(format!(
+            "array element {other:?} not supported on the native backend (i64 only so far)"
+        ))),
+    }
+}
+
 fn arg_reg(i: usize) -> Reg {
     match i {
         0 => Reg::X0, 1 => Reg::X1, 2 => Reg::X2, 3 => Reg::X3,
@@ -1523,6 +1646,46 @@ mod tests {
 
     // L3b: the cons heap ops (`alloc`/`field_store`/`field_load`/`is_null`)
     // that `lower_heap_builtins` produces from `cons`/`car`/`cdr`/`null?`.
+
+    // LANG-FULL E5 — bounds-checked arrays lower to a `__twig_alloc_bytes` call,
+    // an explicit `cmp`+`b.lo`+`udf` bounds trap, and base+idx*8 loads/stores.
+    #[test]
+    fn array_ops_lower_with_bounds_trap() {
+        let cir = vec![
+            const_u64("n", 3),
+            heap("alloc_array", Some("a"), vec![CIROperand::Var("n".into())], "any"),
+            const_u64("i", 0),
+            const_u64("v", 42),
+            heap("array_set", None,
+                 vec![CIROperand::Var("a".into()), CIROperand::Var("i".into()), CIROperand::Var("v".into())], "i64"),
+            heap("array_get", Some("r"),
+                 vec![CIROperand::Var("a".into()), CIROperand::Var("i".into())], "i64"),
+            heap("array_len", Some("m"), vec![CIROperand::Var("a".into())], "i64"),
+            ret_u64("r"),
+        ];
+        let bytes = compile(&ctx("arr", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("array ops must lower: {e}"));
+        let words: Vec<u32> = bytes.chunks(4).map(|c| u32::from_le_bytes([c[0], c[1], c[2], c[3]])).collect();
+        // Two bounds checks (array_get + array_set) ⇒ at least two `udf #0xDEAD` traps.
+        let traps = words.iter().filter(|&&w| w == 0x0000DEAD).count();
+        assert!(traps >= 2, "expected ≥2 udf bounds traps, got {traps} in {words:?}");
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+    }
+
+    /// A non-`i64` array element is cleanly rejected (native is i64-only so far).
+    #[test]
+    fn array_get_rejects_non_i64_element() {
+        let cir = vec![
+            const_u64("n", 1),
+            heap("alloc_array", Some("a"), vec![CIROperand::Var("n".into())], "any"),
+            const_u64("i", 0),
+            heap("array_get", Some("r"),
+                 vec![CIROperand::Var("a".into()), CIROperand::Var("i".into())], "f64"),
+            ret_u64("r"),
+        ];
+        assert!(compile(&ctx("arr", &[], "u64"), &cir).is_err(),
+            "f64 array element should be refused on the native backend");
+    }
 
     #[test]
     fn cons_car_heap_ops_lower() {

@@ -205,8 +205,8 @@ multiple languages; close an enabler before the features that depend on it.
 - **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
   compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
   ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
-- **E5 — Arrays / linear aggregates.** ◑ *IR + VM + ALGOL frontend + JVM + CLR + LLVM + WASM
-  done (PR-1..3b, PR-4a/4b); native x86_64/aarch64 (PR-4c) pending.* An IIR
+- **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
+  VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
   array model (`alloc_array`/`array_len`/`array_get`/`array_set`, `array<T>` type hint,
   bounds-checked) that is **representation-agnostic** so it lowers to BOTH static-allocation
   (length-prefixed flat memory + explicit guard/trap on the native + LLVM backends, reusing the
@@ -367,15 +367,15 @@ backend immediately) come before the enabler-dependent items.
   (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1): VM/JIT (tagged value model), LLVM
   (`double` slots), WASM (typed locals), JVM (`CONSTANT_Double`+`dcmpl`), CLR (`float64`+`ldc.r8`),
   and native-AOT (aarch64 `fadd`/`fcmp` executed on Apple Silicon + x86_64 SSE2 on CI). **E3 done.**
-- ◑ **AL2** — 1-D arrays with runtime bounds (E5). `integer`/`real array A[lo:hi]` →
+- ✅ **AL2** — 1-D arrays with runtime bounds (E5). `integer`/`real array A[lo:hi]` →
   `alloc_array` (run-time span); `A[i]` reads/writes → bounds-checked `array_get`/`array_set`
-  with the 0-based index `i - lower`. Runs a sum-of-squares `Prog` on **VM + JIT + JVM + CLR**
-  (`lang_matrix.rs`, exit 55; JVM native `int[]` — PR-3a, CLR native `int32[]` on real `dotnet`
-  — PR-3b) + 9 unit tests; a **straight-line** array `Prog` adds **LLVM** (static `@calloc` +
-  `llvm.trap` bounds-check, exit 42 via `clang` — PR-4a) and **WASM** (linear-memory
-  length-prefixed + `i64.ge_u`/`unreachable` trap, exit 42 via `wasm-runtime` — PR-4b). Native
-  x86_64/aarch64 arrays lower in E5 PR-4c; the for-loop array Prog joins LLVM after a separate
-  ALGOL-for-loop→LLVM fix. Multidim + array params are follow-up.
+  with the 0-based index `i - lower`. A sum-of-squares `Prog` runs on VM/JIT/JVM/CLR (exit 55)
+  + 9 unit tests; a **straight-line** array `Prog` runs on **all 7 backends** (exit 42) — VM/JIT,
+  JVM native `int[]` (PR-3a), CLR native `int32[]` on real `dotnet` (PR-3b), LLVM static `@calloc`+
+  `llvm.trap` via `clang` (PR-4a), WASM linear-memory+`unreachable` via `wasm-runtime` (PR-4b),
+  and **native** x86_64/aarch64 `__twig_alloc_bytes`+`ud2`/`udf` trap (PR-4c — aarch64 local,
+  x86_64 CI). The for-loop array Prog joins LLVM after a separate ALGOL-for-loop→LLVM fix.
+  Multidim + array params + `f64` native elements are follow-up.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a
