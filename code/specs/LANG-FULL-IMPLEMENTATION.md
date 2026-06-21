@@ -180,9 +180,18 @@ multiple languages; close an enabler before the features that depend on it.
       into the integer `if_icmp` path (mis-reading a two-slot double as an int) — fixed with a
       `Double` branch emitting `dcmpl`/`dcmpg` + a unary `ifXX`. **Executed proof on real `java`**:
       both ALGOL real programs run on the JVM matrix column. **E3-codegen-slots COMPLETE.**
-  - ☐ **E3-native** — `x86_64-backend`/`aarch64-backend` reject `const_f64`/`CIROperand::Float`;
-    need SSE (`addsd`/`mulsd`/`comisd`) and AArch64 FP (`fadd`/`fcmp`) emission. (`aot-core`'s
-    `infer`/`specialise` already allow `f64`.)
+  - ◑ **E3-native** — the two direct native backends. (`aot-core`'s `infer`/`specialise` already
+    allow `f64`.)
+    - ✅ **aarch64-backend** (v0.11.0, encoder v0.4.0) — `const_f64` materialises the bit pattern
+      into the slot; `add/sub/mul/div_f64` use `ldr_d`/`fadd…`/`str_d` over `D0`/`D1`; `cmp_*_f64`
+      use `fcmp` + `cset` with IEEE-ordered condition codes (`Lt`→`MI`, NaN → false). Added 7 FP
+      encoders (`ldr_d`/`str_d`/`fadd`/`fsub`/`fmul`/`fdiv`/`fcmp`), **byte-verified vs the system
+      assembler**. **Executed on real Apple-Silicon** via `jit-loader-macos` (`2.5*2.0`→`5.0` bits,
+      `7.0/2.0`→`3.5`, all six comparisons).
+    - ☐ **x86_64-backend** — needs SSE2 (`movsd`/`addsd`/`subsd`/`mulsd`/`divsd`/`ucomisd` +
+      `setcc`) mirroring the aarch64 lowering; structural tests locally, executed on the lang-aot
+      matrix `NativeAot` column on the Linux-x86 CI runner (no local x86 execution — no x86 ISA
+      simulator; the matrix proof + the host-arch run is the standard, same as E2).
   - ✅ **E3-clr** (iir-to-cil-bytecode v0.22.0) — the **textual `.il` emitter** (the real-CLR /
     `ilasm` matrix path) lowers `f64`: `cil_local_type` → `float64` locals, float consts →
     `ldc.r8` (exact LE bytes), comparison result forced to `int32` (CIL `ceq`/`cgt`/`clt` push

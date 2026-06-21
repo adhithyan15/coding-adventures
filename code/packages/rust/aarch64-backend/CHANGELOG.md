@@ -1,5 +1,31 @@
 # Changelog — `aarch64-backend`
 
+## 0.11.0 — 2026-06-20 — `f64` (ALGOL `real`) arithmetic + comparisons (LANG-FULL E3)
+
+### Added — native double-precision codegen on aarch64
+
+The backend rejected `const_f64`/float operands. It now lowers `f64` (enabler
+E3 — ALGOL `real`):
+
+- **`const_f64`** materialises the IEEE-754 bit pattern in `X0` and `str`s it —
+  a double rides its 8-byte stack slot as raw bits, identical to an integer
+  slot, so loading a *constant* needs no FP register.
+- **`add_f64`/`sub_f64`/`mul_f64`/`div_f64`** load both operands into `D0`/`D1`
+  (`ldr_d`), run `fadd`/`fsub`/`fmul`/`fdiv`, and `str_d` the result. IEEE
+  division by zero is `±inf`/`NaN` (no trap) — matching every other backend.
+- **`cmp_*_f64`** load `D0`/`D1`, `fcmp`, then `cset X0, <cond>` (the boolean is
+  an `int` 0/1). The condition codes give IEEE **ordered** semantics: a NaN
+  operand makes `<`/`<=`/`>`/`>=`/`==` false (`!=` true) — `Lt`→`MI`, `Le`→`LS`,
+  `Gt`→`GT`, `Ge`→`GE`, `Eq`→`EQ`, `Ne`→`NE`.
+
+**Verified by RUNNING on real Apple-Silicon hardware** (`jit-loader-macos`
+installs the generated code and *calls* it): `2.5 * 2.0` → the bits of `5.0`,
+`7.0 / 2.0` → `3.5`, and all six comparisons return the right 0/1. Plus a
+host-agnostic structural test (compiles on the x86 CI box). Integer programs are
+untouched (the FP path keys on `ty == "f64"`). Uses `aarch64-encoder` 0.4.0's FP
+instructions. (x86_64 SSE + the lang-aot matrix `NativeAot` proof are the E3-native
+follow-up.)
+
 ## 0.10.0 — 2026-06-15 — narrow-width unsigned masking (LANG-FULL E2, native-AOT leg)
 
 Native registers are 64-bit, so a `u8` add of `200 + 100` previously computed
