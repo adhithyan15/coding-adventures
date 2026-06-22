@@ -595,6 +595,101 @@ mod tests {
         );
     }
 
+    // --- R-34: string utilities (startsWith/endsWith/trimws/chartr/strtoi) ---
+
+    #[test]
+    fn starts_ends_with_basic_and_recycled() {
+        assert_eq!(
+            show("startsWith(c(\"apple\", \"banana\"), \"a\")\n"),
+            "[1]  TRUE FALSE"
+        );
+        assert_eq!(
+            show("endsWith(c(\"file.txt\", \"file.csv\"), \".txt\")\n"),
+            "[1]  TRUE FALSE"
+        );
+        // Recycled prefix over a length-3 x.
+        assert_eq!(
+            show("startsWith(c(\"ab\", \"cd\", \"ae\"), \"a\")\n"),
+            "[1]  TRUE FALSE  TRUE"
+        );
+        // Recycled the other way: a length-1 x against a length-2 prefix.
+        assert_eq!(
+            show("startsWith(\"abc\", c(\"a\", \"b\"))\n"),
+            "[1]  TRUE FALSE"
+        );
+    }
+
+    #[test]
+    fn starts_ends_with_na_propagates() {
+        assert_eq!(show("startsWith(NA, \"a\")\n"), "[1] NA");
+        assert_eq!(show("startsWith(\"abc\", NA)\n"), "[1] NA");
+        assert_eq!(show("endsWith(NA, \"z\")\n"), "[1] NA");
+    }
+
+    #[test]
+    fn trimws_which_variants_and_na() {
+        assert_eq!(show("trimws(\"  hi  \")\n"), "[1] \"hi\"");
+        assert_eq!(show("trimws(\"  hi  \", \"left\")\n"), "[1] \"hi  \"");
+        assert_eq!(show("trimws(\"  hi  \", \"right\")\n"), "[1] \"  hi\"");
+        assert_eq!(show("trimws(\"\\t hi \\n\")\n"), "[1] \"hi\"");
+        assert_eq!(show("trimws(NA)\n"), "[1] NA");
+        // which = via named argument.
+        assert_eq!(show("trimws(\"  hi  \", which = \"left\")\n"), "[1] \"hi  \"");
+    }
+
+    #[test]
+    fn trimws_bad_which_errors() {
+        assert!(eval_s("trimws(\"x\", \"middle\")\n").is_err());
+    }
+
+    #[test]
+    fn chartr_translates_and_is_utf8_safe() {
+        assert_eq!(show("chartr(\"abc\", \"xyz\", \"cab\")\n"), "[1] \"zxy\"");
+        // Vectorized over x with an NA element.
+        assert_eq!(
+            show("chartr(\"abc\", \"xyz\", c(\"cab\", NA))\n"),
+            "[1] \"zxy\"    NA"
+        );
+        // Multibyte input must not panic and must translate by code point.
+        assert_eq!(show("chartr(\"é\", \"e\", \"café\")\n"), "[1] \"cafe\"");
+    }
+
+    #[test]
+    fn chartr_length_mismatch_errors() {
+        assert!(eval_s("chartr(\"ab\", \"xyz\", \"x\")\n").is_err());
+    }
+
+    #[test]
+    fn strtoi_bases_and_na() {
+        assert_eq!(nums("strtoi(\"FF\", 16L)\n"), vec![255.0]);
+        assert_eq!(nums("strtoi(\"10\", 2L)\n"), vec![2.0]);
+        assert_eq!(nums("strtoi(\"077\", 8L)\n"), vec![63.0]);
+        // Default base 10.
+        assert_eq!(nums("strtoi(\"42\")\n"), vec![42.0]);
+        // base = via named arg.
+        assert_eq!(nums("strtoi(\"FF\", base = 16L)\n"), vec![255.0]);
+        // 0x prefix accepted for base 16.
+        assert_eq!(nums("strtoi(\"0xFF\", 16L)\n"), vec![255.0]);
+        // Negative sign honored.
+        assert_eq!(nums("strtoi(\"-10\", 10L)\n"), vec![-10.0]);
+    }
+
+    #[test]
+    fn strtoi_edges_become_na() {
+        // 8 is not a base-8 digit; second element NA.
+        assert_eq!(show("strtoi(c(\"7\", \"8\"), 8L)\n"), "[1]  7 NA");
+        // Out-of-base char.
+        assert_eq!(show("strtoi(\"z\", 16L)\n"), "[1] NA");
+        // Empty string.
+        assert_eq!(show("strtoi(\"\")\n"), "[1] NA");
+        // Trailing garbage / trailing whitespace -> NA.
+        assert_eq!(show("strtoi(\"12x\")\n"), "[1] NA");
+        assert_eq!(show("strtoi(\"12 \")\n"), "[1] NA");
+        // Base out of 2..36 -> every element NA (matches base R).
+        assert_eq!(show("strtoi(\"10\", 40L)\n"), "[1] NA");
+        assert_eq!(show("strtoi(\"10\", 1L)\n"), "[1] NA");
+    }
+
     #[test]
     fn sprintf_formatting() {
         assert_eq!(show("sprintf(\"%d apples\", 3)\n"), "[1] \"3 apples\"");
