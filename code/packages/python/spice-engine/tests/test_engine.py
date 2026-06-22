@@ -214,6 +214,9 @@ from spice_engine import (
     format_deck_control_policy_artifact_csv,
     format_deck_control_policy_artifact_json,
     format_deck_control_policy_artifact_table,
+    format_deck_control_policy_summary_artifact_csv,
+    format_deck_control_policy_summary_artifact_json,
+    format_deck_control_policy_summary_artifact_table,
     format_deck_dc_sweep_table,
     format_deck_noise_table,
     format_deck_op_table,
@@ -7592,6 +7595,51 @@ let gain = 2
     policy_json = json.loads(execution.control_policy_artifact_json)
     assert policy_json[2]["Category"] == "control-flow"
     assert policy_json[3]["Command"] == "let gain = 2"
+    assert execution.control_policy_summary_artifact_count == len(
+        expected_policy_categories
+    )
+    assert [
+        artifact.category for artifact in execution.control_policy_summary_artifacts
+    ] == expected_policy_categories
+    assert [
+        artifact.artifact_count
+        for artifact in execution.control_policy_summary_artifacts
+    ] == [1, 1, 1, 1]
+    assert [
+        artifact.line_numbers
+        for artifact in execution.control_policy_summary_artifacts
+    ] == [[line] for line in expected_policy_lines]
+    assert [
+        artifact.commands for artifact in execution.control_policy_summary_artifacts
+    ] == [[command] for command in expected_policy_commands]
+    assert [
+        artifact.codes for artifact in execution.control_policy_summary_artifacts
+    ] == [[code] for code in expected_codes]
+    summary_record = execution.control_policy_summary_artifact_records[0]
+    assert summary_record["Category"] == "script"
+    assert summary_record["Artifacts"] == "1"
+    assert summary_record["LineList"] == "13"
+    assert summary_record["CommandList"] == "source other.cir"
+    assert summary_record["CodeList"] == "SPICE_DECK_CONTROL_SCRIPT_COMMAND"
+    assert summary_record["SeverityList"] == "error"
+    assert execution.control_policy_summary_artifact_table == (
+        format_deck_control_policy_summary_artifact_table(
+            execution.control_policy_summary_artifacts
+        )
+    )
+    assert execution.control_policy_summary_artifact_csv == (
+        format_deck_control_policy_summary_artifact_csv(
+            execution.control_policy_summary_artifacts
+        )
+    )
+    assert execution.control_policy_summary_artifact_json == (
+        format_deck_control_policy_summary_artifact_json(
+            execution.control_policy_summary_artifacts
+        )
+    )
+    summary_json = json.loads(execution.control_policy_summary_artifact_json)
+    assert summary_json[2]["Category"] == "control-flow"
+    assert summary_json[3]["CommandList"] == "let gain = 2"
     assert execution.diagnostic_count == len(expected_codes)
     assert execution.diagnostic_codes == expected_codes
     assert execution.run_artifacts[0].control_line_count == len(expected_control_lines)
