@@ -140,6 +140,23 @@ recomputes live. `InfiniteSheetModel`
 there's something to scroll to, and derives the extent from `usedRange()` + a
 margin.
 
+#### Visual design
+
+`lib/infinite_grid.dart` mirrors the **reference visual language** defined by the
+web demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend reads as
+one considered dark, modern-spreadsheet surface — the same token set the Qt port
+uses. The palette lives in a small set of `Color` design constants at the top of
+the file (`_cBg`/`_cPanel`/`_cSurface`/`_cLine`/`_cInk`/`_cMuted`/`_cAccent`…),
+echoing the web demo's CSS custom properties rather than scattering ARGB values.
+From those it builds: a panel-wrapped **toolbar** with an address **pill**, an
+italic `fx` marker, then a grown formula field with an accent **focus ring**
+(driven by a `FocusNode`); the actions are **segmented button groups** (drag-fill
+· clipboard · file · history) — a reusable `_ToolButton` chip with hover/pressed/
+disabled states — separated by thin rules. The grid gets subtle **zebra** row
+banding, a 2-px **accent selection ring**, and the selected cell's **row + column
+headers tint to the accent**; a hairline-separated **status footer** echoes the
+live virtual-grid size and revision.
+
 ### Headless proof
 
 `test/window_test.dart` seeds far-flung sparse cells and asserts the window is

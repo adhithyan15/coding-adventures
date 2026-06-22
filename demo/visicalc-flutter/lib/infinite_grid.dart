@@ -31,18 +31,30 @@ import 'package:flutter/material.dart';
 import 'engine.dart';
 
 /// Cell geometry (logical pixels). Shared by the header, gutter, and body so
-/// their scroll offsets line up.
-const double _rowH = 24;
-const double _colW = 90;
+/// their scroll offsets line up. (Roomier, to match the web reference.)
+const double _rowH = 26;
+const double _colW = 92;
 const double _gutterW = 64;
-const double _headH = 26;
+const double _headH = 28;
 
-const _bg = Color(0xFF1E1E1E);
-const _chrome = Color(0xFF2D2D30);
-const _border = Color(0xFF3F3F46);
-const _ink = Color(0xFFCCCCCC);
-const _dim = Color(0xFF9D9D9D);
-const _sel = Color(0xFF094771);
+// ── Design tokens ──────────────────────────────────────────────────────────
+// Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc backend
+// reads as one considered surface (dark modern spreadsheet). Same token set as
+// the Qt InfiniteSheet.qml port.
+const _cBg = Color(0xFF16181D); // app / base cell
+const _cPanel = Color(0xFF1B1E24); // toolbar + zebra band
+const _cSurface = Color(0xFF21252C); // buttons, pill
+const _cSurfaceHover = Color(0xFF2B313A);
+const _cSurfaceDown = Color(0xFF14171C);
+const _cField = Color(0xFF0F1115); // formula input well
+const _cLine = Color(0xFF2C313A); // hairline borders
+const _cLineStrong = Color(0xFF3A404B); // control borders
+const _cHead = Color(0xFF20242B); // row/col headers
+const _cHeadSel = Color(0xFF2B3340); // header of selected row/col
+const _cInk = Color(0xFFE8EAED); // primary text
+const _cMuted = Color(0xFF9AA3B2); // labels, headers
+const _cAccent = Color(0xFF4AA3FF); // selection + focus
+const _cSel = Color(0xFF21344A); // selected-cell fill
 const _mono = 'monospace';
 
 /// The infinite-sheet view. Owns its [InfiniteSheetModel] and four scroll
@@ -64,6 +76,8 @@ class _InfiniteGridState extends State<InfiniteGrid> {
   final _headerH = ScrollController();
 
   final _formulaCtrl = TextEditingController();
+  // Drives the formula field's accent focus ring (rebuild on focus changes).
+  final _formulaFocus = FocusNode();
 
   // In-memory "saved file" slot for the Save / Load buttons: Save stows the
   // serialized workbook here, Load restores from it. (A real app would write
@@ -86,6 +100,8 @@ class _InfiniteGridState extends State<InfiniteGrid> {
       }
     });
     _formulaCtrl.text = _model.formula;
+    // Repaint the accent focus ring when the formula field gains/loses focus.
+    _formulaFocus.addListener(() => setState(() {}));
   }
 
   @override
@@ -95,6 +111,7 @@ class _InfiniteGridState extends State<InfiniteGrid> {
     _gutterV.dispose();
     _headerH.dispose();
     _formulaCtrl.dispose();
+    _formulaFocus.dispose();
     _model.dispose();
     super.dispose();
   }
@@ -150,74 +167,106 @@ class _InfiniteGridState extends State<InfiniteGrid> {
     setState(() => _formulaCtrl.text = _model.formula);
   }
 
-  // A clipboard-style button that disables when `enabled` is false (Undo/Redo).
-  Widget _gatedButton(String label, String tip, bool enabled, VoidCallback onPressed) {
-    return Tooltip(
-      message: tip,
-      child: OutlinedButton(
-        onPressed: enabled ? onPressed : null,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: _ink,
-          side: const BorderSide(color: _border),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        ),
-        child: Text(label, style: const TextStyle(fontFamily: _mono, fontSize: 12)),
-      ),
+  // A compact, modern toolbar button (rounded chip with hover/down/disabled
+  // states) — the Flutter analog of the web demo's segmented controls and the
+  // Qt port's `component ToolButton`. `enabled: null` disables it (Undo/Redo/
+  // Load gate on model/snapshot state).
+  Widget _toolButton(String label, String tip, VoidCallback onPressed,
+      {bool enabled = true}) {
+    return _ToolButton(
+      label: label,
+      tip: tip,
+      enabled: enabled,
+      onPressed: onPressed,
     );
   }
 
-  // A compact outlined button for the clipboard controls, matching "Fill ↓ 10".
-  Widget _clipButton(String label, String tip, VoidCallback onPressed) {
-    return Tooltip(
-      message: tip,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: _ink,
-          side: const BorderSide(color: _border),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        ),
-        child: Text(label, style: const TextStyle(fontFamily: _mono, fontSize: 12)),
-      ),
-    );
-  }
+  // A thin vertical rule between toolbar button groups.
+  Widget _toolSep() => Container(
+        width: 1,
+        height: 22,
+        margin: const EdgeInsets.symmetric(horizontal: 6),
+        color: _cLine,
+      );
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _formulaBar(),
-        _header(),
-        Expanded(child: _bodyRow()),
-      ],
+    return Container(
+      color: _cBg,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _formulaBar(),
+          _header(),
+          Expanded(child: _bodyRow()),
+          _statusBar(),
+        ],
+      ),
     );
   }
 
-  // ── Formula bar: the selected cell's address + an editable source line ──
+  // ── Formula bar: a panel holding the address pill, an `fx` marker, the
+  // editable source line (with an accent focus ring), and segmented button
+  // groups (drag-fill · clipboard · file · history) divided by thin rules. ──
   Widget _formulaBar() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 6),
+    final focused = _formulaFocus.hasFocus;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(10, 10, 10, 6),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: _cPanel,
+        border: Border.all(color: _cLine),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Row(
         children: [
-          SizedBox(
-            width: _gutterW,
+          // Address pill.
+          Container(
+            width: 46,
+            height: 30,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _cSurface,
+              border: Border.all(color: _cLineStrong),
+              borderRadius: BorderRadius.circular(5),
+            ),
             child: Text(
               _model.infAddress,
-              style: const TextStyle(color: _dim, fontSize: 12, fontFamily: _mono),
+              style: const TextStyle(
+                  color: _cInk,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: _mono),
             ),
           ),
+          const SizedBox(width: 6),
+          const Text('fx',
+              style: TextStyle(
+                  color: _cMuted,
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: _mono)),
+          const SizedBox(width: 6),
+          // Formula field — accent focus ring on edit.
           Expanded(
             child: Container(
-              height: 28,
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              decoration: BoxDecoration(color: _chrome, border: Border.all(color: _border)),
+              height: 30,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                color: _cField,
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                  color: focused ? _cAccent : _cLineStrong,
+                  width: focused ? 2 : 1,
+                ),
+              ),
               alignment: Alignment.centerLeft,
               child: TextField(
                 controller: _formulaCtrl,
+                focusNode: _formulaFocus,
                 onSubmitted: (_) => _commit(),
-                style: const TextStyle(color: _ink, fontSize: 13, fontFamily: _mono),
-                cursorColor: _ink,
+                style: const TextStyle(color: _cInk, fontSize: 13, fontFamily: _mono),
+                cursorColor: _cAccent,
                 decoration: const InputDecoration(
                   isCollapsed: true,
                   border: InputBorder.none,
@@ -225,46 +274,62 @@ class _InfiniteGridState extends State<InfiniteGrid> {
               ),
             ),
           ),
-          const SizedBox(width: 8),
-          // Drag-fill: replicate the selected cell into the 10 rows below it.
-          Tooltip(
-            message: 'Replicate the selected cell into the 10 rows below it',
-            child: OutlinedButton(
-              onPressed: _fillDown,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: _ink,
-                side: const BorderSide(color: _border),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              ),
-              child: const Text('Fill ↓ 10', style: TextStyle(fontFamily: _mono, fontSize: 12)),
-            ),
-          ),
-          const SizedBox(width: 8),
-          // Clipboard: copy/cut the selected cell, paste at the selection.
-          _clipButton('Copy', 'Copy the selected cell to the clipboard', _copy),
-          const SizedBox(width: 8),
-          _clipButton('Cut', 'Cut the selected cell (cleared when you paste)', _cut),
-          const SizedBox(width: 8),
-          _clipButton('Paste', 'Paste the clipboard at the selected cell, shifting relative references', _paste),
-          const SizedBox(width: 8),
-          // Save / load: serialize the whole workbook to memory, and restore it.
-          _clipButton('Save', 'Serialize the whole workbook to memory', _save),
-          const SizedBox(width: 8),
-          _clipButton('Load', 'Restore the workbook from the last save', _load),
-          const SizedBox(width: 8),
-          // Undo / redo: walk the engine's snapshot history.
-          _gatedButton('Undo', 'Undo the last edit', _model.canUndo, _undo),
-          const SizedBox(width: 8),
-          _gatedButton('Redo', 'Redo the last undone edit', _model.canRedo, _redo),
+          const SizedBox(width: 6),
+          // ── Drag-fill ──
+          _toolButton('↓ Fill 10',
+              'Replicate the selected cell into the 10 rows below it', _fillDown),
+          _toolSep(),
+          // ── Clipboard ──
+          _toolButton('Copy', 'Copy the selected cell to the clipboard', _copy),
+          const SizedBox(width: 6),
+          _toolButton('Cut', 'Cut the selected cell (cleared when you paste)', _cut),
+          const SizedBox(width: 6),
+          _toolButton('Paste',
+              'Paste the clipboard at the selected cell, shifting relative references',
+              _paste),
+          _toolSep(),
+          // ── File (save / load) ──
+          _toolButton('Save', 'Serialize the whole workbook to memory', _save),
+          const SizedBox(width: 6),
+          _toolButton('Load', 'Restore the workbook from the last save', _load,
+              enabled: _savedSnapshot.isNotEmpty),
+          _toolSep(),
+          // ── History (undo / redo) ──
+          _toolButton('↶ Undo', 'Undo the last edit', _undo,
+              enabled: _model.canUndo),
+          const SizedBox(width: 6),
+          _toolButton('↷ Redo', 'Redo the last undone edit', _redo,
+              enabled: _model.canRedo),
         ],
       ),
     );
   }
 
+  // ── Status line: a hairline-separated footer echoing the live virtual-grid
+  // size and the per-edit revision clock (mirrors the web/Qt demos). ──
+  Widget _statusBar() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(height: 1, margin: const EdgeInsets.symmetric(horizontal: 10), color: _cLine),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 6, 10, 10),
+          child: Text(
+            'Virtual grid: ${_model.totalRows} rows × ${_model.totalCols} cols'
+            '  ·  revision ${_model.revision}',
+            style: const TextStyle(color: _cMuted, fontSize: 12, fontFamily: _mono),
+          ),
+        ),
+      ],
+    );
+  }
+
   // ── Column-letter header (frozen vertically, follows horizontal scroll) ──
+  // The selected column's header tints to the accent so the cursor's column
+  // reads at a glance.
   Widget _header() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         children: [
           _chromeCell(_gutterW, _headH, ''), // corner
@@ -276,8 +341,9 @@ class _InfiniteGridState extends State<InfiniteGrid> {
                 scrollDirection: Axis.horizontal,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _model.totalCols,
-                itemBuilder: (_, i) =>
-                    _chromeCell(_colW, _headH, _model.columnLetters(i + 1)),
+                itemBuilder: (_, i) => _chromeCell(
+                    _colW, _headH, _model.columnLetters(i + 1),
+                    selected: _model.selCol == i + 1),
               ),
             ),
           ),
@@ -289,12 +355,12 @@ class _InfiniteGridState extends State<InfiniteGrid> {
   // ── Body: row-number gutter + virtualized cell grid ──
   Widget _bodyRow() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Gutter: its own virtualized ListView, non-interactive, slaved to
-          // the body's vertical scroll.
+          // the body's vertical scroll. The selected row's label tints to accent.
           SizedBox(
             width: _gutterW,
             child: ListView.builder(
@@ -302,7 +368,8 @@ class _InfiniteGridState extends State<InfiniteGrid> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: _model.totalRows,
               itemExtent: _rowH,
-              itemBuilder: (_, i) => _chromeCell(_gutterW, _rowH, '${i + 1}'),
+              itemBuilder: (_, i) => _chromeCell(_gutterW, _rowH, '${i + 1}',
+                  selected: _model.selRow == i + 1),
             ),
           ),
           // Cells: a horizontal scroll view supplies left/right pan; the
@@ -332,6 +399,8 @@ class _InfiniteGridState extends State<InfiniteGrid> {
   /// [InfiniteSheetModel.rowCells]; each cell is tap-to-select.
   Widget _dataRow(int rowNum) {
     final cells = _model.rowCells(rowNum);
+    // Zebra: even rows take the panel tint, odd rows the base cell color.
+    final band = rowNum.isEven ? _cPanel : _cBg;
     return Row(
       children: List.generate(_model.totalCols, (i) {
         final colNum = i + 1;
@@ -343,16 +412,25 @@ class _InfiniteGridState extends State<InfiniteGrid> {
             width: _colW,
             height: _rowH,
             alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 4),
+            padding: const EdgeInsets.only(right: 6),
             decoration: BoxDecoration(
-              color: selected ? _sel : _bg,
-              border: Border.all(color: _border, width: 0.5),
+              // Selected → accent fill + 2px accent ring; else zebra band.
+              color: selected ? _cSel : band,
+              border: Border.all(
+                color: selected ? _cAccent : _cLine,
+                width: selected ? 2 : 0.5,
+              ),
             ),
             child: Text(
               text,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: _ink, fontSize: 12, fontFamily: _mono),
+              style: TextStyle(
+                color: selected ? Colors.white : _cInk,
+                fontSize: 12,
+                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                fontFamily: _mono,
+              ),
             ),
           ),
         );
@@ -361,15 +439,99 @@ class _InfiniteGridState extends State<InfiniteGrid> {
   }
 
   /// A frozen header/gutter cell (column letter, row number, or the corner).
-  Widget _chromeCell(double w, double h, String text) {
+  /// When [selected] (its row/column holds the cursor) it tints to the accent.
+  Widget _chromeCell(double w, double h, String text, {bool selected = false}) {
     return Container(
       width: w,
       height: h,
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: _chrome, border: Border.all(color: _border, width: 0.5)),
+      decoration: BoxDecoration(
+        color: selected ? _cHeadSel : _cHead,
+        border: Border.all(color: _cLine, width: 0.5),
+      ),
       child: Text(
         text,
-        style: const TextStyle(color: _dim, fontSize: 12, fontFamily: _mono),
+        style: TextStyle(
+          color: selected ? _cAccent : _cMuted,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          fontFamily: _mono,
+        ),
+      ),
+    );
+  }
+}
+
+/// A compact, modern toolbar button — a rounded chip with hover / pressed /
+/// disabled states, the Flutter analog of the web demo's segmented controls and
+/// the Qt port's `component ToolButton`. Stateful only to track hover/press so
+/// the chip can lift on hover and sink on press, like the other backends.
+class _ToolButton extends StatefulWidget {
+  const _ToolButton({
+    required this.label,
+    required this.tip,
+    required this.enabled,
+    required this.onPressed,
+  });
+
+  final String label;
+  final String tip;
+  final bool enabled;
+  final VoidCallback onPressed;
+
+  @override
+  State<_ToolButton> createState() => _ToolButtonState();
+}
+
+class _ToolButtonState extends State<_ToolButton> {
+  bool _hover = false;
+  bool _down = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = widget.enabled;
+    final bg = !enabled
+        ? _cSurface
+        : _down
+            ? _cSurfaceDown
+            : _hover
+                ? _cSurfaceHover
+                : _cSurface;
+    // Disabled chips read dimmer; the wrapping Opacity adds the rest.
+    final fg = enabled ? (_hover ? Colors.white : _cInk) : _cMuted;
+
+    return Tooltip(
+      message: widget.tip,
+      child: MouseRegion(
+        cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+        onEnter: (_) => setState(() => _hover = true),
+        onExit: (_) => setState(() {
+          _hover = false;
+          _down = false;
+        }),
+        child: GestureDetector(
+          onTapDown: enabled ? (_) => setState(() => _down = true) : null,
+          onTapUp: enabled ? (_) => setState(() => _down = false) : null,
+          onTapCancel: enabled ? () => setState(() => _down = false) : null,
+          onTap: enabled ? widget.onPressed : null,
+          child: Opacity(
+            opacity: enabled ? 1.0 : 0.6,
+            child: Container(
+              height: 30,
+              padding: const EdgeInsets.symmetric(horizontal: 11),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: bg,
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: _cLineStrong),
+              ),
+              child: Text(
+                widget.label,
+                style: TextStyle(color: fg, fontSize: 12, fontFamily: _mono),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
