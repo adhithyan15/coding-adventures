@@ -12,7 +12,8 @@ See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfra
 iteration constructs), §11 (W-8 local scoping), §12 (W-9 list-manipulation
 builtins), §13 (W-10 functional-iteration combinators), §14 (W-11 pure
 functions), §15 (W-12 string builtins), §16 (W-13 list set operations), §17
-(W-14 conditionals & predicates), and §18 (W-15 numeric & integer math).
+(W-14 conditionals & predicates), §18 (W-15 numeric & integer math), and §19
+(W-18 pattern-matching predicates).
 
 ## What it does
 
@@ -157,6 +158,13 @@ assert_eq!(eval("Quotient[-7, 2]\n").unwrap(), "Out[1]= -4\n"); // toward −∞
 assert_eq!(eval("Sqrt[16]\n").unwrap(), "Out[1]= 4\n");       // exact perfect square
 // Sqrt[2] stays symbolic; the float is on demand via N:
 assert_eq!(eval("Sqrt[2]\n").unwrap(), "Out[1]= Sqrt[2]\n");
+
+// W-18 pattern matching — MatchQ/Cases/FreeQ (held: the pattern stays literal):
+assert_eq!(eval("MatchQ[2, _Integer]\n").unwrap(), "Out[1]= True\n");
+assert_eq!(eval("MatchQ[2.0, _Integer]\n").unwrap(), "Out[1]= False\n"); // a float is _Real
+assert_eq!(eval("Cases[{1, 2.0, 3}, _Integer]\n").unwrap(), "Out[1]= {1, 3}\n");
+assert_eq!(eval("FreeQ[f[g[2]], g]\n").unwrap(), "Out[1]= False\n");     // g occurs nested
+assert_eq!(eval("FreeQ[{1, 2, 3}, 5]\n").unwrap(), "Out[1]= True\n");
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -462,6 +470,41 @@ wrapping or panicking. Every malformed form (wrong arity, non-numeric or
 non-integer argument, division by zero) is left unevaluated — the fail-soft
 contract every head since W-5 follows.
 
+**W-18** adds the **pattern-matching predicates** `MatchQ`, `Cases`, and `FreeQ`.
+They are **held** (a new `PATTERN_HEADS` set folded into the `WolframBackend`
+held set, alongside the W-7/W-8/W-14 held heads) so the **pattern** argument
+arrives **literal** — a pattern is a *form*, not a value, exactly as `Switch`
+relies on. Each handler evaluates **only its subject** and matches against the
+literal pattern through a single panic-free `pattern_matches` primitive that
+extends the W-14 `Switch` matcher by **enforcing** the `Blank[h]` head
+constraint, reusing the W-13 `same_element` comparator for literals.
+
+| Head | Example | Result |
+|------|---------|--------|
+| `MatchQ` | `MatchQ[2, _]` / `MatchQ[2, _Integer]` | `True` / `True` |
+| `MatchQ` | `MatchQ[2, 3]` / `MatchQ[2.0, _Integer]` | `False` / `False` |
+| `Cases` | `Cases[{1, 2, 3, 4}, _]` | `{1, 2, 3, 4}` |
+| `Cases` | `Cases[{1, 2, 3}, 2]` / `Cases[{1, 2.0, 3}, _Integer]` | `{2}` / `{1, 3}` |
+| `FreeQ` | `FreeQ[{1, 2, 3}, 2]` / `FreeQ[{1, 2, 3}, 5]` | `False` / `True` |
+| `FreeQ` | `FreeQ[f[g[2]], g]` / `FreeQ[f[g[2]], h]` | `False` / `True` |
+
+The **supported pattern subset** is deliberately small: a literal (structural
+equality), `_` (`Blank[]`, the catch-all), and a head-typed `_h` (`Blank[h]`,
+matching iff the subject's Wolfram head is `h`). The lowerer turns `_Integer` →
+`Blank[Integer]`, `_Real` → `Blank[Real]`, `_Symbol` → `Blank[Symbol]`, and the
+matcher's head map sends an `Integer` atom to head `Integer`, a `Float` atom to
+head `Real`, and a symbol to head `Symbol` — so `MatchQ[2.0, _Integer]` is
+`False` (a float is `_Real`, not `_Integer`). `FreeQ` recurses the whole
+expression tree (the root, every `Apply` head, every argument) **depth-bounded**
+(`FREEQ_MAX_DEPTH`) so a crafted over-deep input yields a safe bounded answer
+rather than overflowing the stack; heterogeneous atom comparison is total and
+never panics; result lists inherit the input's `MAX_LIST_LENGTH` bound. Wrong
+arity, and a non-list first argument to `Cases`, are left **unevaluated**.
+
+The richer pattern algebra — named patterns `x_`, alternatives `a | b`,
+conditions `patt /; t`, `PatternTest`, sequences `__`, and replacement
+`/.` / `Replace` — is **deferred to W-19** (MA04 §19.6).
+
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
@@ -524,6 +567,14 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   otherwise symbolic (`N[Sqrt[2]]` for the float). `Mod`/`Power`/`N` reused
   unchanged; `Sqrt` overrides the inner backend's eager-numericising one. No
   grammar change.
+- **W-18** (this crate) — the `MatchQ`/`Cases`/`FreeQ` pattern-matching
+  predicates (held — the pattern argument stays literal), built on a single
+  panic-free `pattern_matches` primitive that extends the W-14 `Switch` matcher
+  to enforce `Blank[h]` head constraints and reuses the W-13 `same_element`
+  comparator for literals. Supported subset: literal, `_` (`Blank[]`), head-typed
+  `_h` (`Blank[h]`); `FreeQ`'s recursive tree walk is depth-bounded. Named
+  patterns / alternatives / conditions / sequences / replacement deferred to
+  W-19. No grammar change.
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 
