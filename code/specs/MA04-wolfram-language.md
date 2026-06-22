@@ -1759,6 +1759,14 @@ vocabulary, with binding:
 This is a strict superset of the old behaviour, so `MatchQ`/`Cases`/`FreeQ` gain
 named patterns for free and keep all W-18 results.
 
+**One head-name convention is reconciled.** Wolfram's `_Real` lowers to
+`Blank[Real]`, but the shared (CAS-native) matcher names a floating-point node's
+head `Float`. Before delegating, the wrapper rewrites a pattern's `Blank[Real]`
+constraint to `Blank[Float]` (a pure structural copy, `wolfram_to_cas_pattern`),
+so `MatchQ[2.0, _Real] → True` still holds. Every other head name — `Integer`,
+`Rational`, `String`, `Symbol`, and any compound head `f` — already agrees
+between the two crates, so `Real`/`Float` is the only translation.
+
 ### §21.3 `ReplaceAll` / `/.` — single top-down leftmost-outermost pass
 
 The crux of W-19's *semantic* fix. Wolfram's `/.` does **one** top-down pass: at

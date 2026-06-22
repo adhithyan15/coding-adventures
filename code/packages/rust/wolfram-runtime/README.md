@@ -12,8 +12,10 @@ See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfra
 iteration constructs), §11 (W-8 local scoping), §12 (W-9 list-manipulation
 builtins), §13 (W-10 functional-iteration combinators), §14 (W-11 pure
 functions), §15 (W-12 string builtins), §16 (W-13 list set operations), §17
-(W-14 conditionals & predicates), §18 (W-15 numeric & integer math), and §19
-(W-16 nested/structured list operations + W-18 pattern-matching predicates).
+(W-14 conditionals & predicates), §18 (W-15 numeric & integer math), §19
+(W-16 nested/structured list operations + W-18 pattern-matching predicates), and
+§21 (W-19 named patterns & replacement rules — `ReplaceAll`/`/.`, `Replace`,
+`Rule`/`RuleDelayed`).
 
 ## What it does
 
@@ -23,7 +25,7 @@ functions), §15 (W-12 string builtins), §16 (W-13 list set operations), §17
   GrammarASTNode  (additive, power, postfix, list, …)
        │  this crate: lower
   symbolic_ir::IRNode  (Add, Mul, Pow, List, Rule, …)
-       │  ├─ ReplaceAll? → cas-pattern-matching::rewrite
+       │  ├─ ReplaceAll? → single top-down pass (cas-pattern-matching matcher)
        │  symbolic_vm::VM over SymbolicBackend
   symbolic_ir::IRNode  (evaluated)
        │  this crate: print
@@ -58,8 +60,8 @@ evaluate identically.
 `Sin`/`Cos`/`Exp`/`Log`/`Sqrt`/… are already IR head names and pass through; an
 unknown `f[…]` also passes through unevaluated (Mathematica semantics). Patterns
 (`_`, `x_`, `_h`, `x_h`) and rules (`->`, `:>`) lower to the
-[`cas-pattern-matching`](../cas-pattern-matching) node shapes, and `expr /. rules`
-is run through that crate's `rewrite`.
+[`cas-pattern-matching`](../cas-pattern-matching) node shapes; `expr /. rules` is
+applied by a single top-down pass over that crate's binding matcher (W-19).
 
 ## Usage
 
@@ -175,6 +177,14 @@ assert_eq!(eval("MatchQ[2.0, _Integer]\n").unwrap(), "Out[1]= False\n"); // a fl
 assert_eq!(eval("Cases[{1, 2.0, 3}, _Integer]\n").unwrap(), "Out[1]= {1, 3}\n");
 assert_eq!(eval("FreeQ[f[g[2]], g]\n").unwrap(), "Out[1]= False\n");     // g occurs nested
 assert_eq!(eval("FreeQ[{1, 2, 3}, 5]\n").unwrap(), "Out[1]= True\n");
+
+// W-19 named patterns & replacement — x_ binds, /. and Replace rewrite:
+assert_eq!(eval("MatchQ[2, x_]\n").unwrap(), "Out[1]= True\n");           // a named blank matches anything
+assert_eq!(eval("f[2] /. f[x_] -> x\n").unwrap(), "Out[1]= 2\n");        // bind x=2, substitute the RHS
+assert_eq!(eval("g[1, 2] /. g[a_, b_] -> a + b\n").unwrap(), "Out[1]= 3\n");
+assert_eq!(eval("ReplaceAll[{1, 2, 3}, x_Integer -> x^2]\n").unwrap(), "Out[1]= {1, 4, 9}\n");
+assert_eq!(eval("Replace[5, x_ -> x + 1]\n").unwrap(), "Out[1]= 6\n");    // Replace matches the whole expr
+assert_eq!(eval("h[3] /. h[n_] :> n + 1\n").unwrap(), "Out[1]= 4\n");     // RuleDelayed: RHS held
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -511,9 +521,30 @@ rather than overflowing the stack; heterogeneous atom comparison is total and
 never panics; result lists inherit the input's `MAX_LIST_LENGTH` bound. Wrong
 arity, and a non-list first argument to `Cases`, are left **unevaluated**.
 
-The richer pattern algebra — named patterns `x_`, alternatives `a | b`,
-conditions `patt /; t`, `PatternTest`, sequences `__`, and replacement
-`/.` / `Replace` — is **deferred to W-19** (MA04 §19.6).
+**W-19** adds **named patterns** and **replacement**. The matcher gains capture
+binding by delegating `pattern_matches` to `cas_pattern_matching::match_pattern`,
+so `x_` (`Pattern[x, Blank[]]`) and `x_Integer` bind whatever they match — and
+`MatchQ`/`Cases`/`FreeQ` honour them (`MatchQ[2, x_]` → `True`). Replacement
+applies `Rule`/`RuleDelayed` rules: `ReplaceAll` (`/.`) does a single **top-down
+leftmost-outermost** pass (the new `replace_all_once`, replacing the prior
+fixed-point rewriter that looped on rules like `x_Integer -> x^2`), while the new
+held `Replace` head matches the **whole expression** only.
+
+| Head / op | Example | Result |
+|-----------|---------|--------|
+| `MatchQ` (named) | `MatchQ[2, x_]` | `True` |
+| `/.` (`ReplaceAll`) | `f[2] /. f[x_] -> x` | `2` |
+| `/.` per element | `ReplaceAll[{1,2,3}, x_Integer -> x^2]` | `{1, 4, 9}` |
+| `/.` two captures | `g[1, 2] /. g[a_, b_] -> a + b` | `3` |
+| `Replace` (whole) | `Replace[5, x_ -> x + 1]` | `6` |
+| `:>` (`RuleDelayed`) | `h[3] /. h[n_] :> n + 1` | `4` |
+
+`ReplaceAll` recurses depth-bounded by `REPLACE_MAX_DEPTH`; the single pass cannot
+expand unboundedly or loop, an unbound RHS capture is left in place (no panic),
+and a non-rule operand returns the subject unchanged. The richer pattern algebra —
+alternatives `a | b`, conditions `patt /; t`, `PatternTest`, sequences `__`/`___`,
+`Repeated`, `Replace` **level specs**, and `ReplaceRepeated` (`//.`) — is
+**deferred to W-20** (MA04 §21.7).
 
 **W-16** adds the **nested/structured list operations** — the *shape* vocabulary
 for matrix-like nested lists, on top of the W-9 flat-list heads. All reuse the
@@ -611,9 +642,17 @@ session-rebuild so a panic becomes a clean `Err` rather than a crash.
   panic-free `pattern_matches` primitive that extends the W-14 `Switch` matcher
   to enforce `Blank[h]` head constraints and reuses the W-13 `same_element`
   comparator for literals. Supported subset: literal, `_` (`Blank[]`), head-typed
-  `_h` (`Blank[h]`); `FreeQ`'s recursive tree walk is depth-bounded. Named
-  patterns / alternatives / conditions / sequences / replacement deferred to
-  W-19. No grammar change.
+  `_h` (`Blank[h]`); `FreeQ`'s recursive tree walk is depth-bounded. No grammar
+  change.
+- **W-19** (this crate) — **named patterns** (`x_`, `x_h`, *binding*) and
+  **replacement** (`ReplaceAll`/`/.`, `Replace`, `Rule`/`RuleDelayed`). The
+  matcher delegates to `cas-pattern-matching::match_pattern` for capture binding
+  (so `MatchQ`/`Cases`/`FreeQ` gain named patterns); `/.` does a single top-down
+  leftmost-outermost pass (`replace_all_once`, fixing the prior fixed-point
+  rewriter that looped on `x_Integer -> x^2`); the held `Replace` head matches the
+  whole expression only. Depth-bounded, loop-free, panic-free. Alternatives /
+  conditions / `PatternTest` / sequences / `Repeated` / `Replace` level specs /
+  `ReplaceRepeated` (`//.`) deferred to W-20. No grammar change.
 - **Future** — the full `cas-*` function surface under Wolfram names
   (`Simplify`, `Expand`, `Factor`, `Solve`, …).
 
