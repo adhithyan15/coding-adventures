@@ -31,6 +31,7 @@
 //! 0     ?? expr      →  0                       (zero is not nullish)
 //! true  ? a : b      →  a                       (ConditionalExpression with literal test)
 //! "hi".length        →  2                       (string-literal .length, UTF-16 units)
+//! "ab".toUpperCase() →  "AB"                     (ASCII string casing methods)
 //! ```
 //!
 //! And recurses through every child node, so `1 + (2 * 3) → 1 + 6 → 7`
@@ -468,11 +469,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 right: Box::new(fold_expression(&a.right, st)),
             })
         }
-        Expression::CallExpression(c) => Expression::CallExpression(CallExpression {
-            cv: c.cv.clone(),
-            callee: Box::new(fold_expression(&c.callee, st)),
-            arguments: c.arguments.iter().map(|a| fold_expression(a, st)).collect(),
-        }),
+        Expression::CallExpression(c) => fold_call(c, st),
         Expression::MemberExpression(m) => fold_member(m, st),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
             cv: a.cv.clone(),
@@ -507,6 +504,66 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 .collect(),
         }),
     }
+}
+
+// ---------------------------------------------------------------------
+// Method calls
+// ---------------------------------------------------------------------
+
+/// Folds the no-argument string-casing methods on a string literal:
+///
+/// ```text
+///   "abc".toUpperCase()   →  "ABC"
+///   "ABC".toLowerCase()   →  "abc"
+///   "".toUpperCase()      →  ""
+/// ```
+///
+/// **ASCII-only.** We fold only when the literal `is_ascii()`, using Rust's
+/// `to_ascii_uppercase`/`to_ascii_lowercase`. ASCII case mapping is
+/// locale-independent and byte-for-byte identical between Rust and JavaScript,
+/// so the fold is exactly sound. Non-ASCII strings are deliberately left
+/// alone: JS `toUpperCase`/`toLowerCase` use full Unicode default case
+/// mapping with context-sensitive special cases (final sigma `ς`, German `ß`
+/// → `SS`, locale-independent but length-changing) that a conservative
+/// fold-set shouldn't try to reproduce here — `"é".toUpperCase()` stays a call.
+///
+/// Only the dotted, zero-argument form on a string literal folds. An argument
+/// (`"x".toUpperCase(1)` — ignored by the runtime but we stay conservative),
+/// the computed form `"x"["toUpperCase"]()`, and a method on a non-literal
+/// (`s.toUpperCase()`) all pass through unchanged. We still recurse into the
+/// callee and arguments so nested constants inside them fold.
+fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
+    let callee = fold_expression(&c.callee, st);
+    let arguments: Vec<Expression> = c.arguments.iter().map(|a| fold_expression(a, st)).collect();
+
+    if arguments.is_empty() {
+        if let Expression::MemberExpression(m) = &callee {
+            if !m.computed {
+                if let (Expression::StringLiteral(s), Expression::Identifier(id)) =
+                    (m.object.as_ref(), m.property.as_ref())
+                {
+                    let cased = match id.name.as_str() {
+                        "toUpperCase" if s.value.is_ascii() => Some(s.value.to_ascii_uppercase()),
+                        "toLowerCase" if s.value.is_ascii() => Some(s.value.to_ascii_lowercase()),
+                        _ => None,
+                    };
+                    if let Some(result) = cased {
+                        let parent = c.cv.clone();
+                        let before = format!("\"{}\".{}()", s.value, id.name);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+            }
+        }
+    }
+
+    Expression::CallExpression(CallExpression {
+        cv: c.cv.clone(),
+        callee: Box::new(callee),
+        arguments,
+    })
 }
 
 // ---------------------------------------------------------------------
@@ -2495,6 +2552,107 @@ mod tests {
             extract_expr(&out),
             Expression::MemberExpression(_)
         ));
+    }
+
+    // ------------------- string casing methods -----------------------
+
+    /// Build a zero-argument method call `<object>.<name>()`.
+    fn call0(object: Expression, name: &str) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(object, name)),
+            arguments: vec![],
+        })
+    }
+
+    #[test]
+    fn fold_ascii_string_to_upper_and_lower_case() {
+        // "abc".toUpperCase() → "ABC"
+        let up = call0(string("abc", None), "toUpperCase");
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(changed, "\"abc\".toUpperCase() should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "ABC"),
+            other => panic!("expected \"ABC\"; got {:?}", other),
+        }
+
+        // "ABC".toLowerCase() → "abc"
+        let lo = call0(string("ABC", None), "toLowerCase");
+        let (out, _, _, _) = run_pass(program_with_expr(lo, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "abc"),
+            other => panic!("expected \"abc\"; got {:?}", other),
+        }
+
+        // "".toUpperCase() → ""
+        let empty = call0(string("", None), "toUpperCase");
+        let (out, _, _, _) = run_pass(program_with_expr(empty, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, ""),
+            other => panic!("expected empty string; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn non_ascii_string_casing_does_not_fold() {
+        // JS toUpperCase on non-ASCII uses full Unicode case mapping (e.g.
+        // "é" → "É", "ß" → "SS"); we conservatively leave non-ASCII to a later
+        // phase, so the call must survive untouched.
+        let up = call0(string("é", None), "toUpperCase");
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(!changed, "non-ASCII \"é\".toUpperCase() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn string_casing_on_identifier_does_not_fold() {
+        // `s.toUpperCase()` needs the runtime value of `s`.
+        let up = call0(ident("s"), "toUpperCase");
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(!changed, "s.toUpperCase() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn string_casing_with_argument_does_not_fold() {
+        // An argument makes us stay conservative (the runtime ignores it, but
+        // we don't model that): `"abc".toUpperCase(1)` survives.
+        let up = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abc", None), "toUpperCase")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(!changed, "\"abc\".toUpperCase(1) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn computed_string_casing_does_not_fold() {
+        // `"abc"["toUpperCase"]()` is the computed form — left alone.
+        let callee = Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(string("abc", None)),
+            property: Box::new(string("toUpperCase", None)),
+            computed: true,
+        });
+        let up = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(callee),
+            arguments: vec![],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(up, true));
+        assert!(!changed, "computed casing call must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn unknown_string_method_does_not_fold() {
+        // `"abc".trim()` is not a casing method we model — pass through.
+        let t = call0(string("  abc  ", None), "trim");
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(!changed, "\"...\".trim() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
     // ------------------- logical (short-circuit) ---------------------
