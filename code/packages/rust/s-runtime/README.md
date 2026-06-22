@@ -266,8 +266,14 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   bases 2..36 (`strtol`-style: leading whitespace + sign, `0x` prefix for base 16,
   full-consume, `NA` for garbage / out-of-range digit / base outside 2..36), with
   checked `i64` accumulation (overflow → `NA`, never a panic).
-  (`strtoi(base=0L)` auto-detection and a custom `trimws(whitespace=)` are deferred
-  to R-36.)
+- **String-utility completeness** (R-37): `strtoi(x, base=0L)` auto-detects each
+  string's radix from its prefix, C `strtol`-style — `0x`/`0X` → hex, a leading `0`
+  + digit → octal, a lone `"0"` → zero, else decimal (`strtoi("0x1F", 0L)` → `31`;
+  `strtoi("010", 0L)` → `8`; `strtoi("08", 0L)` → `NA`). `trimws(x, whitespace=)`
+  gains a keyword-only `whitespace=` argument, interpreted as a **regex** (default
+  `"[ \t\r\n]"`, base-R faithful) via the same RE2 engine `grepl`/`gsub` use,
+  anchored to the trimmed edge (`trimws("xxhixx", whitespace="x")` → `"hi"`). RE2's
+  linear-time matching rules out ReDoS; slicing is on `char`-boundary offsets.
 - **Ordered factors & `cut()` label polish** (R-35): an *ordered* factor is a factor
   whose levels carry a meaningful order — `SValue::Factor` gains an `ordered: bool`
   field, so `class()` reports `c("ordered", "factor")` when set (and the `Levels:`

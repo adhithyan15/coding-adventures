@@ -261,8 +261,17 @@ base=10L)` parses integers in bases 2..36 the way C `strtol` does — leading
 whitespace and a sign, a `0x` prefix for base 16, the whole string consumed, and
 `NA` for an empty string, garbage, an out-of-range digit, or a base outside 2..36
 (`strtoi("FF", 16L)` → `255`; `strtoi(c("7","8"), 8L)` → `c(7, NA)`). Parsing uses
-checked `i64` arithmetic, so overflow yields `NA` rather than a panic. (`strtoi`'s
-`base=0L` auto-detection and a custom `trimws(whitespace=)` are deferred to R-36.)
+checked `i64` arithmetic, so overflow yields `NA` rather than a panic.
+
+**R-37 — string-utility completeness** finishes the family. `strtoi(x, base=0L)`
+auto-detects each string's radix from its prefix, C `strtol`-style — `0x`/`0X` →
+hex, a leading `0` + digit → octal, a lone `"0"` → zero, else decimal
+(`strtoi("0x1F", 0L)` → `31`; `strtoi("010", 0L)` → `8`; `strtoi("12", 0L)` → `12`;
+`strtoi("08", 0L)` → `NA`). `trimws(x, whitespace=)` adds a keyword-only
+`whitespace=` argument, interpreted as a **regex** (default `"[ \t\r\n]"`, faithful
+to base R ≥ 3.6) via the same RE2 engine `grepl`/`gsub` use, anchored to the trimmed
+edge (`trimws("xxhixx", whitespace="x")` → `"hi"`). RE2's linear-time matching rules
+out ReDoS, and slicing is on `char`-boundary offsets (UTF-8 safe).
 
 **R-36 — matrix cross products** add `crossprod` and `tcrossprod`, again through the
 shared `s-runtime`. An independent matrix-algebra item, defined entirely in terms of
