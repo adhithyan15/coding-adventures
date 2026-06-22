@@ -4,7 +4,7 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
-## [0.13.0] — 2026-06-21
+## [0.14.0] — 2026-06-21
 
 The **W-18** deliverable (MA04 §19): Wolfram's **pattern-matching predicates**
 `MatchQ`, `Cases`, and `FreeQ`, lowered onto the same substrate as the rest of
@@ -73,6 +73,57 @@ behaviour until W-19 adds capture binding.
   heterogeneous no-panic case, wrong-arity-unevaluated for `MatchQ`/`FreeQ`).
 - 1 end-to-end `wolfram-repl` test exercising the real `_Integer` / `_Real`
   lowering through parse → lower → eval.
+
+## [0.13.0] — 2026-06-21
+
+The **W-16** deliverable (MA04 §19): Wolfram's **nested/structured list
+operations** — the *shape* vocabulary for matrix-like nested lists, layered on
+top of the W-9 flat-list heads. All ordinary eager `Head[args]` forms — **no
+grammar change**; only the `wolfram-runtime` builtin handler table grows. Every
+head reuses the W-9 list machinery (`list_elements`, `apply(sym(LIST), …)`, the
+`MAX_LIST_LENGTH` cap). `Flatten` already existed (W-9) and is **not**
+reimplemented.
+
+### Added (nested/structured list operations)
+
+- **`Transpose[m]`** — transpose a rectangular list of lists (rows ↔ columns).
+  `Transpose[{{1,2},{3,4}}]` → `{{1,3},{2,4}}`. A ragged matrix, a list of
+  non-lists, an empty list, or a non-list argument is left **unevaluated**. The
+  output element count equals the input's — no new DoS surface.
+- **`Dimensions[expr]`** — the dimensions of the largest rectangular nested
+  array, as a list. `Dimensions[{{1,2,3},{4,5,6}}]` → `{2,3}`; a scalar → `{}`;
+  ragged nesting reports only the rectangular prefix (`Dimensions[{{1,2},{3}}]`
+  → `{2}`).
+- **`Partition[list, n]` / `Partition[list, n, d]`** — consecutive length-`n`
+  sublists stepping by `d` (default `d = n`). `Partition[{1,2,3,4},2]` →
+  `{{1,2},{3,4}}`; `Partition[{1,2,3,4,5},2,1]` → `{{1,2},{2,3},{3,4},{4,5}}`. A
+  trailing partial block is **dropped** (Wolfram default — no padding). `n`/`d`
+  must be positive integers. **Output-capped**: the block count and total
+  element count (`blocks × n`, via `checked_mul`) are checked against
+  `MAX_LIST_LENGTH` before allocating.
+- **`Take[list, n]` / `Take[list, -n]`** — first `n` / last `n` elements. The
+  **list** `Take` (distinct from W-12's `StringTake`). `Take[{1,2,3,4,5},2]` →
+  `{1,2}`; `Take[{1,2,3,4,5},-2]` → `{4,5}`. An out-of-range/non-integer count or
+  non-list argument is left unevaluated; the count is range-checked in `i128` so
+  a crafted `i64::MIN` cannot overflow.
+- **`Drop[list, n]` / `Drop[list, -n]`** — drop first `n` / last `n` elements.
+  The **list** `Drop` (distinct from W-12's `StringDrop`). `Drop[{1,2,3},1]` →
+  `{2,3}`; `Drop[{1,2,3},-1]` → `{1,2}`. Same validation/no-overflow contract as
+  `Take`.
+- **`ConstantArray[c, n]` / `ConstantArray[c, {m, n}]`** — a length-`n` list, or
+  an `m`×`n` nested list, of copies of `c`. `ConstantArray[0,3]` → `{0,0,0}`;
+  `ConstantArray[5,{2,2}]` → `{{5,5},{5,5}}`. **The primary W-16 DoS surface**:
+  the total element count is guarded *before* any allocation — 1-D `n` is capped
+  at `MAX_LIST_LENGTH`; 2-D `m × n` is computed with **`checked_mul` on i128**
+  and both `m` and `m × n` are capped, so a tiny spec like
+  `ConstantArray[0,{10^6,10^6}]` is refused (unevaluated) rather than allocated.
+
+### Notes
+
+- Take/Drop are the **list** heads; W-12's `StringTake`/`StringDrop` keep
+  operating on strings — the two families never collide.
+- Spec: MA04 §19 (and the §2 pieces list) documents the new builtins, the
+  Partition step/partial-drop rule, and the ConstantArray output-cap behaviour.
 
 ## [0.12.0] — 2026-06-20
 

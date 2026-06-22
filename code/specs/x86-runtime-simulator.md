@@ -138,15 +138,25 @@ This harness is what `lang_matrix.rs` calls to run the x86_64 column locally.
 
 ## PR sequence
 
-0. **S0 — this spec** (specs-first), committed for sign-off.
+0. **S0 — this spec** (specs-first), committed for sign-off. ✅ done (#6406).
 1. **S1 — integer core + harness**: `CpuState`/`Memory`/`flags`/`decode`/`execute`
    for the priority-1 integer subset + the `MachineCodeHarness`. Proof: run a
    simple `x86_64-backend`-compiled function locally → correct exit code.
+   ✅ done (#6412).
 2. **S2 — SSE2 scalar doubles**: XMM file + `movsd`/`addsd`/…/`ucomisd`/`cvt*`.
-   Proof: run an E3 ALGOL `real` program's x86_64 output locally.
-3. **S3 — wire into the matrix**: a `run_x86_sim` path so `lang_matrix.rs`
-   executes the x86_64 column locally on aarch64; retro-verify E5 native arrays
-   and E3 floats. (CI still runs real x86_64 as the independent check.)
+   Proof: run an E3 ALGOL `real` program's x86_64 output locally. ✅ done (#6416).
+3. **S3 — wire into the matrix**: ✅ done. `tests/lang_matrix_x86.rs` replicates
+   `twig-aot`'s native per-function pipeline (`compile_source_to_iir` →
+   `infer_types` → `aot_specialise` → `compile_function_with_relocs`) and runs
+   the emitted x86_64 machine code on the simulator — so the matrix's x86_64
+   column executes **locally on aarch64**. Seven cells (Twig arithmetic, an ALGOL
+   procedure call exercising internal `call` relocations, E3 `real` SSE2 floats,
+   and an E5 native bounded array) retro-verify E5 native arrays and E3 floats on
+   the x86_64 backend. (CI still runs real x86_64 as the independent check.)
+   *Implementation note:* rather than adding a `run_x86_sim` arm inside
+   `lang_matrix.rs` (which would couple the matrix harness to a dev-dep on this
+   crate), the run path lives in this crate's own integration test, keeping the
+   "run our x86_64 codegen" capability self-contained where the simulator is.
 4. **S4 — 32-bit x86 (i386)**: operand/address-size handling + 32-bit decode, as
    educational coverage (not on the run-our-codegen critical path).
 

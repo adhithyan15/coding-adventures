@@ -784,6 +784,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("49"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — *one-dimensional integer arrays* (LANG-FULL BA3, enabler
+    // **E5**). `DIM A(3)` lowers to an IIR `alloc_array` (element count `3 + 1`,
+    // since BASIC arrays are **0-based and inclusive**: `A(0)..A(3)`). `LET
+    // A(1) := 40` / `A(2) := 2` are `array_set`s and `PRINT A(1) + A(2)` reads
+    // them back with two `array_get`s ⇒ prints 42.  These are the *same* IIR
+    // array ops ALGOL's E5 arrays emit, so BASIC arrays run on every backend E5
+    // already supports — straight-line (no loop), so the JVM's BA-JVM-1
+    // loop+print StackMapTable follow-up doesn't apply, and all 7 backends run:
+    // the managed runtimes (JVM `int[]`/`iastore`/`iaload`, CLR `int32[]`/
+    // `stelem`/`ldelem`) bounds-check natively, while the static backends
+    // (LLVM/WASM/NativeAot) use the length-prefixed `[i64 len][elems…]` block
+    // with an explicit bounds `cmp`+trap.  `dartmouth-basic-iir-compiler` lowers
+    // `DIM`/subscripted-`LET`/subscripted-read; the subscript is used directly
+    // as the 0-based index (no lower-bound subtraction, unlike ALGOL `[lo:hi]`).
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DIM A(3)\n20 LET A(1) = 40\n30 LET A(2) = 2\n40 PRINT A(1) + A(2)\n50 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

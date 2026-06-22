@@ -50,6 +50,17 @@ bump heap, `putchar` / `print_i64` via captured I/O) to host shims, sets up a
 stack with a return sentinel, and runs from the entry — returning `rax & 0xFF`
 as the exit code (the same convention as `run_native` / `run_wasm`).
 
+## Running the LANG-FULL matrix's x86_64 column locally
+
+`tests/lang_matrix_x86.rs` drives the **real** language frontends through the
+**real** AOT pipeline (`compile_source_to_iir` → `infer_types` → `aot_specialise`
+→ `x86_64-backend`) and *runs the emitted x86_64 machine code* on this simulator.
+On an Apple-Silicon host the matrix's `NativeAot` cell only ever builds+runs the
+*aarch64* backend; this test exercises the **x86_64** column end-to-end — Twig
+arithmetic, an ALGOL procedure call (internal `call` relocations), E3 `real`
+SSE2 floats, and an E5 native bounded array — **locally on aarch64**, retro-
+verifying the two columns the matrix could previously execute only on x86 CI.
+
 ## Safety
 
 The simulator is a sandbox: every memory access is bounds-checked and every

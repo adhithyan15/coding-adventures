@@ -776,3 +776,112 @@ fn w10_does_not_disturb_existing_forms() {
     assert_eq!(eval("Total[{1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
     assert_eq!(eval("With[{x = 3}, x^2]\n").unwrap(), "Out[1]= 9\n");
 }
+
+// ---------------------------------------------------------------------------
+// W-16 nested/structured list operations — Transpose, Dimensions, Partition,
+// Take, Drop, ConstantArray
+// ---------------------------------------------------------------------------
+
+/// `Transpose` swaps rows and columns of a rectangular matrix.
+#[test]
+fn w16_transpose_end_to_end() {
+    assert_eq!(
+        eval("Transpose[{{1, 2}, {3, 4}}]\n").unwrap(),
+        "Out[1]= {{1, 3}, {2, 4}}\n"
+    );
+    // A ragged matrix stays unevaluated.
+    assert_eq!(
+        eval("Transpose[{{1, 2}, {3}}]\n").unwrap(),
+        "Out[1]= Transpose[{{1, 2}, {3}}]\n"
+    );
+}
+
+/// `Dimensions` reports the rectangular shape as a list.
+#[test]
+fn w16_dimensions_end_to_end() {
+    assert_eq!(
+        eval("Dimensions[{{1, 2, 3}, {4, 5, 6}}]\n").unwrap(),
+        "Out[1]= {2, 3}\n"
+    );
+    // A scalar has no dimensions.
+    assert_eq!(eval("Dimensions[5]\n").unwrap(), "Out[1]= {}\n");
+}
+
+/// `Partition` cuts a list into consecutive blocks; the step `d` form overlaps.
+#[test]
+fn w16_partition_end_to_end() {
+    assert_eq!(
+        eval("Partition[{1, 2, 3, 4}, 2]\n").unwrap(),
+        "Out[1]= {{1, 2}, {3, 4}}\n"
+    );
+    // Step d = 1 — overlapping windows.
+    assert_eq!(
+        eval("Partition[{1, 2, 3, 4, 5}, 2, 1]\n").unwrap(),
+        "Out[1]= {{1, 2}, {2, 3}, {3, 4}, {4, 5}}\n"
+    );
+    // A trailing partial block is dropped (Wolfram default — no padding).
+    assert_eq!(
+        eval("Partition[{1, 2, 3, 4, 5}, 2]\n").unwrap(),
+        "Out[1]= {{1, 2}, {3, 4}}\n"
+    );
+}
+
+/// `Take` returns a prefix (n) or suffix (-n) of a list.
+#[test]
+fn w16_take_end_to_end() {
+    assert_eq!(eval("Take[{1, 2, 3, 4, 5}, 2]\n").unwrap(), "Out[1]= {1, 2}\n");
+    assert_eq!(eval("Take[{1, 2, 3, 4, 5}, -2]\n").unwrap(), "Out[1]= {4, 5}\n");
+}
+
+/// `Drop` removes a prefix (n) or suffix (-n) of a list.
+#[test]
+fn w16_drop_end_to_end() {
+    assert_eq!(eval("Drop[{1, 2, 3}, 1]\n").unwrap(), "Out[1]= {2, 3}\n");
+    assert_eq!(eval("Drop[{1, 2, 3}, -1]\n").unwrap(), "Out[1]= {1, 2}\n");
+}
+
+/// `ConstantArray` builds a constant-filled vector or matrix.
+#[test]
+fn w16_constant_array_end_to_end() {
+    assert_eq!(eval("ConstantArray[0, 3]\n").unwrap(), "Out[1]= {0, 0, 0}\n");
+    assert_eq!(
+        eval("ConstantArray[5, {2, 2}]\n").unwrap(),
+        "Out[1]= {{5, 5}, {5, 5}}\n"
+    );
+}
+
+/// The W-16 DoS guard: a tiny `ConstantArray` dimension spec whose product would
+/// blow past `MAX_LIST_LENGTH` is refused (left unevaluated) — never allocated.
+#[test]
+fn w16_constant_array_over_cap_is_refused() {
+    // 10^6 * 10^6 = 10^12 elements from a 12-byte input.
+    assert_eq!(
+        eval("ConstantArray[0, {1000000, 1000000}]\n").unwrap(),
+        "Out[1]= ConstantArray[0, {1000000, 1000000}]\n"
+    );
+    // A 1-D length past the cap is likewise refused.
+    assert_eq!(
+        eval("ConstantArray[0, 1000001]\n").unwrap(),
+        "Out[1]= ConstantArray[0, 1000001]\n"
+    );
+}
+
+/// The W-16 `Take`/`Drop` are the *list* heads — distinct from W-12's
+/// `StringTake`/`StringDrop`, which still slice strings. Both families coexist.
+#[test]
+fn w16_take_drop_do_not_collide_with_string_take_drop() {
+    assert_eq!(eval("Take[{1, 2, 3}, 2]\n").unwrap(), "Out[1]= {1, 2}\n");
+    assert_eq!(
+        eval("StringTake[\"hello\", 2]\n").unwrap(),
+        "Out[1]= \"he\"\n"
+    );
+}
+
+/// W-4..W-15 behaviour is unchanged by the W-16 handlers (regression guard).
+#[test]
+fn w16_does_not_disturb_existing_forms() {
+    assert_eq!(eval("1 + 2*3\n").unwrap(), "Out[1]= 7\n");
+    assert_eq!(eval("Flatten[{{1, 2}, {3}}]\n").unwrap(), "Out[1]= {1, 2, 3}\n");
+    assert_eq!(eval("Total[{1, 2, 3}]\n").unwrap(), "Out[1]= 6\n");
+    assert_eq!(eval("GCD[12, 18]\n").unwrap(), "Out[1]= 6\n");
+}

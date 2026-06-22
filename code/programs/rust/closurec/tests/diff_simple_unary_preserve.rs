@@ -12,7 +12,7 @@
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=first();var b=second();var c=third();report(!a,-b,~c,!(a == b));
+//! var a=first();var b=second();var c=third();report(!a,-b,~c,!(a < b));
 //! ```
 
 use std::process::Command;
@@ -67,11 +67,11 @@ fn simple_unary_preserve_keeps_every_prefix_operator() {
     assert!(actual.contains("!a"), "logical-not operator dropped; got:\n{actual}");
     assert!(actual.contains("-b"), "unary-minus operator dropped; got:\n{actual}");
     assert!(actual.contains("~c"), "bitwise-not operator dropped; got:\n{actual}");
-    // `!(a == b)` must keep its parens — `!a == b` would reparse as
-    // `(!a) == b`, a different program.
+    // `!(a < b)` must keep its parens — `!a < b` would reparse as
+    // `(!a) < b`, a different program.
     assert!(
-        actual.contains("!(a == b)"),
-        "negated-equality lost its parentheses (precedence miscompile); got:\n{actual}",
+        actual.contains("!(a < b)"),
+        "negated-relational lost its parentheses (precedence miscompile); got:\n{actual}",
     );
 }
 

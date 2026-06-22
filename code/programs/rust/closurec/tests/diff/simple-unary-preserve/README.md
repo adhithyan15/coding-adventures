@@ -6,11 +6,11 @@ End-to-end oracle for the **prefix-unary-operator-drop miscompile** fix
 | File | Role |
 |------|------|
 | `flags.txt` | CLI args: `--compilation_level SIMPLE --js input/a.js` |
-| `input/a.js` | Side-effecting `var` inits + a `report(...)` call using `!`, `-`, `~`, and `!(a == b)` |
+| `input/a.js` | Side-effecting `var` inits + a `report(...)` call using `!`, `-`, `~`, and `!(a < b)` |
 | `expected.stdout` | The optimized output (see below) |
 
 ```text
-var a=first();var b=second();var c=third();report(!a,-b,~c,!(a == b));
+var a=first();var b=second();var c=third();report(!a,-b,~c,!(a < b));
 ```
 
 ## What this proves
@@ -22,8 +22,8 @@ var a=first();var b=second();var c=third();report(!a,-b,~c,!(a == b));
   the operator was silently dropped — `!a` → `a`, `-b` → `b`, `~c` → `c`. That
   is a **miscompile** at SIMPLE/ADVANCED. The operators now round-trip.
 
-* **Precedence is preserved.** `!(a == b)` keeps its parentheses. Emitting
-  `!a == b` would reparse as `(!a) == b` — a different program. `emit_unary`
+* **Precedence is preserved.** `!(a < b)` keeps its parentheses. Emitting
+  `!a < b` would reparse as `(!a) < b` — a different program. `emit_unary`
   now emits its argument at unary binding strength so any lower-precedence
   operand is parenthesised.
 

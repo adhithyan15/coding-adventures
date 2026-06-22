@@ -21,3 +21,7 @@ import "pharm-edges.adj"
 ? antidote_for(acetaminophen_poisoning, $Antidote)  % expect acetylcysteine
 ? antidote_for(opioid_toxicity, $Antidote)       % expect naloxone
 ? antidote_for(heparin_overdose, $Antidote)      % expect protamine (expand)
+? antidote_for(digoxin_toxicity, $Antidote)      % expect digoxin_immune_fab (expand)
+? antidote_for(warfarin_toxicity, $Antidote)     % expect vitamin_k (expand)
+? antidote_for(organophosphate_poisoning, $Antidote)  % expect atropine (expand)
+? antidote_for(toxic_alcohol_poisoning, $Antidote)    % expect fomepizole (expand)
