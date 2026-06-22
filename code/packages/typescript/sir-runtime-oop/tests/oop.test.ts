@@ -483,3 +483,126 @@ describe("built-in method catalog: String (M1c)", () => {
     expect(callMethod("x", "class")).toBe("String");
   });
 });
+
+describe("built-in method catalog: Numeric (Integer/Float) (M1c)", () => {
+  it("predicates and sign", () => {
+    expect(callMethod(4, "even?")).toBe(true);
+    expect(callMethod(3, "odd?")).toBe(true);
+    expect(callMethod(0, "zero?")).toBe(true);
+    expect(callMethod(5, "positive?")).toBe(true);
+    expect(callMethod(-5, "negative?")).toBe(true);
+    expect(callMethod(-7, "abs")).toBe(7);
+    expect(callMethod(-3.5, "abs")).toBe(3.5);
+  });
+
+  it("conversions and succ/pred", () => {
+    expect(callMethod(3.9, "to_i")).toBe(3);
+    expect(callMethod(4, "to_f")).toBe(4);
+    expect(callMethod(5, "succ")).toBe(6);
+    expect(callMethod(5, "next")).toBe(6);
+    expect(callMethod(5, "pred")).toBe(4);
+  });
+
+  it("floor / ceil / round (half away from zero)", () => {
+    expect(callMethod(3.2, "floor")).toBe(3);
+    expect(callMethod(3.2, "ceil")).toBe(4);
+    expect(callMethod(7, "floor")).toBe(7);
+    expect(callMethod(2.5, "round")).toBe(3);
+    expect(callMethod(-2.5, "round")).toBe(-3);
+    expect(callMethod(5, "round")).toBe(5);
+  });
+
+  it("gcd / pow / digits", () => {
+    expect(callMethod(12, "gcd", 18)).toBe(6);
+    expect(callMethod(2, "**", 10)).toBe(1024);
+    expect(callMethod(2, "pow", 5)).toBe(32);
+    expect(callMethod(123, "digits")).toEqual([3, 2, 1]);
+    expect(callMethod(0, "digits")).toEqual([0]);
+  });
+
+  it("to_s / inspect", () => {
+    expect(callMethod(42, "to_s")).toBe("42");
+    expect(callMethod(3.14, "to_s")).toBe("3.14");
+    expect(callMethod(7, "inspect")).toBe("7");
+  });
+
+  it("block times / upto / downto / step", () => {
+    const seen: Val[] = [];
+    expect(callMethod(3, "times", new Closure((i: Val) => seen.push(i)))).toBe(3);
+    expect(seen).toEqual([0, 1, 2]);
+    const up: Val[] = [];
+    callMethod(1, "upto", 4, new Closure((i: Val) => up.push(i)));
+    expect(up).toEqual([1, 2, 3, 4]);
+    const down: Val[] = [];
+    callMethod(3, "downto", 1, new Closure((i: Val) => down.push(i)));
+    expect(down).toEqual([3, 2, 1]);
+    const step: Val[] = [];
+    callMethod(0, "step", 10, 5, new Closure((i: Val) => step.push(i)));
+    expect(step).toEqual([0, 5, 10]);
+  });
+
+  it("respond_to? honesty + nil floor", () => {
+    expect(callMethod(5, "respond_to?", "even?")).toBe(true);
+    expect(callMethod(5, "respond_to?", "times")).toBe(true);
+    expect(callMethod(5, "respond_to?", "bit_length")).toBe(false);
+    expect(callMethod(5, "bit_length")).toBeNull();
+    expect(callMethod(5, "times")).toBeNull(); // block method without a block
+  });
+});
+
+describe("built-in method catalog: Symbol (M1c)", () => {
+  it("to_s / length / inspect / upcase / downcase", () => {
+    const sym = callMethod("hello", "to_sym");
+    expect(callMethod(sym, "to_s")).toBe("hello");
+    expect(callMethod(sym, "length")).toBe(5);
+    expect(callMethod(sym, "size")).toBe(5);
+    expect(callMethod(sym, "inspect")).toBe(":hello");
+    expect(callMethod(sym, "empty?")).toBe(false);
+    expect((callMethod(sym, "upcase") as { name: string }).name).toBe("HELLO");
+    const abc = callMethod("ABC", "to_sym");
+    expect((callMethod(abc, "downcase") as { name: string }).name).toBe("abc");
+    expect(callMethod(sym, "to_sym")).toBe(sym);
+  });
+});
+
+describe("nil / true / false + Object to_s/inspect (M1c)", () => {
+  it("nil / true / false display", () => {
+    expect(callMethod(null, "to_s")).toBe("");
+    expect(callMethod(null, "inspect")).toBe("nil");
+    expect(callMethod(null, "to_a")).toEqual([]);
+    expect(callMethod(true, "to_s")).toBe("true");
+    expect(callMethod(false, "to_s")).toBe("false");
+    expect(callMethod(true, "inspect")).toBe("true");
+    // boolean resolves only Object methods, never the numeric catalog.
+    expect(callMethod(true, "respond_to?", "even?")).toBe(false);
+    expect(callMethod(true, "even?")).toBeNull();
+  });
+
+  it("Object to_s / inspect on collections and strings", () => {
+    expect(callMethod([1, 2, 3], "to_s")).toBe("[1, 2, 3]");
+    expect(callMethod(["a", "b"], "inspect")).toBe('["a", "b"]');
+    expect(callMethod("hi", "inspect")).toBe('"hi"');
+    expect(callMethod("hi", "to_s")).toBe("hi");
+  });
+
+  it("Array#join", () => {
+    expect(callMethod([1, 2, 3], "join")).toBe("123");
+    expect(callMethod([1, 2, 3], "join", "-")).toBe("1-2-3");
+    expect(callMethod(["a", "b"], "join", ", ")).toBe("a, b");
+  });
+
+  it("digits on a non-finite number does not hang", () => {
+    // `2 ** 1e9` saturates to Infinity in JS; digits must not spin forever.
+    expect(callMethod(2 ** 1e9, "digits")).toEqual([0]);
+    expect(callMethod(123, "digits")).toEqual([3, 2, 1]);
+  });
+
+  it("inspect handles cycles without overflowing the stack", () => {
+    const a: Val[] = [];
+    a.push(a); // self-referential array
+    expect(callMethod(a, "inspect")).toBe("[[...]]");
+    const m = new Map<Val, Val>();
+    m.set("self", m);
+    expect(callMethod(m, "inspect")).toBe('{"self"=>{...}}');
+  });
+});
