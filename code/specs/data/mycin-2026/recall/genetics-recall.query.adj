@@ -23,3 +23,6 @@ import "genetics-edges.adj"
 ? inheritance(cystic_fibrosis, $Pattern)               % expect autosomal_recessive (expand)
 ? gene_defect(cystic_fibrosis, $Gene)                  % expect cftr (expand)
 ? gene_defect(duchenne_muscular_dystrophy, $Gene)      % expect dystrophin (expand)
+? trinucleotide_repeat(myotonic_dystrophy, $Repeat)    % expect ctg (expand)
+? gene_defect(myotonic_dystrophy, $Gene)               % expect dmpk (expand)
+? gene_defect(friedreich_ataxia, $Gene)                % expect fxn (expand)
