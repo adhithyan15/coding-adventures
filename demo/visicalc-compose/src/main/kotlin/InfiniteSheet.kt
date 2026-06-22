@@ -196,6 +196,10 @@ fun InfiniteSheet() {
     // only — bump rev so the visible rows re-read and show the formatted string.
     fun applyFormat(code: String) { model.applyFormat(code); rev++ }
 
+    // Range sort: reorder the budget block A1:E4 by the selected column,
+    // ascending/descending. Bump rev so the reordered rows re-read.
+    fun sortBlock(ascending: Boolean) { model.sortBlock(ascending); rev++ }
+
     Column(modifier = Modifier.fillMaxSize().background(BG)) {
         // ── Formula bar: a panel holding the address pill, an `fx` marker, the
         // editable source line (with an accent focus ring), and segmented button
@@ -297,6 +301,11 @@ fun InfiniteSheet() {
             toolButton("$") { applyFormat("\$#,##0.00") }
             Spacer(Modifier.width(6.dp))
             toolButton("Gen") { applyFormat("") }
+            toolSep()
+            // ── Sort (reorder the budget block A1:E4 by the selected column) ──
+            toolButton("▲ Sort") { sortBlock(true) }
+            Spacer(Modifier.width(6.dp))
+            toolButton("▼ Sort") { sortBlock(false) }
             toolSep()
             // ── History (undo / redo). Reading `rev` re-evaluates canUndo/canRedo
             // on every edit so the buttons gate live.
