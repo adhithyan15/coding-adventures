@@ -287,3 +287,40 @@ fn brainfuck_putchar_runs_on_x86_sim() {
     let (_code, out) = run_capturing_stdout(Language::Brainfuck, "++++++++[>++++++++<-]>+.");
     assert_eq!(out, "A");
 }
+
+/// Like [`run_capturing_stdout`] but feeds `input` to the program's `getchar`
+/// (the harness stdin buffer) — for the Brainfuck `,` programs.
+fn run_with_stdin(lang: Language, src: &str, input: &[u8]) -> String {
+    let (funcs, entry) = compile_to_x86_functions(lang, src);
+    let mut builder = MachineCodeHarness::new().stdin(input);
+    for f in &funcs {
+        builder = builder.function(&f.name, &f.bytes, &f.relocs);
+    }
+    let mut sim = builder
+        .build(&entry)
+        .expect("harness should lay out + link the matrix program");
+    sim.run().expect("x86_64 machine code should run to a clean ret");
+    String::from_utf8(sim.stdout.clone()).expect("stdout should be valid UTF-8")
+}
+
+/// Brainfuck — **read a byte from stdin**, `+`, print (`,+.` with input `A` ⇒
+/// `B`).  Exercises the `getchar` host shim consuming a real input byte.
+#[test]
+fn brainfuck_stdin_increment_runs_on_x86_sim() {
+    assert_eq!(run_with_stdin(Language::Brainfuck, ",+.", b"A"), "B");
+}
+
+/// Brainfuck — **echo two bytes** (`,.,.` with input `Hi` ⇒ `Hi`).
+#[test]
+fn brainfuck_stdin_echo_runs_on_x86_sim() {
+    assert_eq!(run_with_stdin(Language::Brainfuck, ",.,.", b"Hi"), "Hi");
+}
+
+/// Brainfuck — **cat until EOF** (`,[.,]` with input `Hi` ⇒ `Hi`).  The `[...]`
+/// loop reads+prints until `getchar` returns EOF, which the Brainfuck IIR clamps
+/// to a 0 cell so the loop halts — so this also checks the simulator's EOF (`-1`)
+/// convention threads correctly through the backend's clamp.
+#[test]
+fn brainfuck_cat_runs_on_x86_sim() {
+    assert_eq!(run_with_stdin(Language::Brainfuck, ",[.,]", b"Hi"), "Hi");
+}
