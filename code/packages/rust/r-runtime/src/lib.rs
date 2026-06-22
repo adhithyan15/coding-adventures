@@ -3232,6 +3232,69 @@ mod tests {
         );
     }
 
+    // --- R-40: chol (Cholesky factorization, R syntax) ------------------
+
+    /// Largest absolute difference between two same-length slices (tolerance
+    /// yard-stick for the irrational sqrt entries of a Cholesky factor).
+    fn chol_max_abs_diff(a: &[f64], b: &[f64]) -> f64 {
+        assert_eq!(a.len(), b.len());
+        a.iter()
+            .zip(b)
+            .map(|(x, y)| (x - y).abs())
+            .fold(0.0, f64::max)
+    }
+
+    #[test]
+    fn chol_two_by_two_through_r_syntax() {
+        // chol(matrix(c(4,2,2,3), nrow=2)) -> upper-triangular [[2,1],[0,sqrt(2)]].
+        let (data, nrow, ncol) = matrix_data("chol(matrix(c(4,2,2,3), nrow = 2))\n");
+        assert_eq!((nrow, ncol), (2, 2));
+        let at = |r: usize, c: usize| data[c * 2 + r];
+        assert!((at(0, 0) - 2.0).abs() < 1e-9);
+        assert!((at(0, 1) - 1.0).abs() < 1e-9);
+        assert_eq!(at(1, 0), 0.0);
+        assert!((at(1, 1) - 2.0_f64.sqrt()).abs() < 1e-9);
+    }
+
+    #[test]
+    fn chol_reconstructs_through_r_syntax() {
+        // t(R) %*% R reconstructs X within tolerance (R's R'R = X convention).
+        let (recon, _, _) =
+            matrix_data("X <- matrix(c(4,2,2,3), nrow = 2)\nR <- chol(X)\nt(R) %*% R\n");
+        assert!(chol_max_abs_diff(&recon, &[4.0, 2.0, 2.0, 3.0]) < 1e-9);
+    }
+
+    #[test]
+    fn chol_identity_through_r_syntax() {
+        let (data, nrow, ncol) = matrix_data("chol(diag(3))\n");
+        assert_eq!((nrow, ncol), (3, 3));
+        assert!(chol_max_abs_diff(&data, &[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]) < 1e-9);
+    }
+
+    #[test]
+    fn chol_three_by_three_through_r_syntax() {
+        // Classic 3x3 SPD: t(R) %*% R reconstructs X; R is upper-triangular.
+        let src = "X <- matrix(c(4,12,-16, 12,37,-43, -16,-43,98), nrow = 3)\n";
+        let (xdata, _, _) = matrix_data(&format!("{src}X\n"));
+        let (recon, nrow, ncol) = matrix_data(&format!("{src}t(chol(X)) %*% chol(X)\n"));
+        assert_eq!((nrow, ncol), (3, 3));
+        assert!(chol_max_abs_diff(&recon, &xdata) < 1e-9);
+    }
+
+    #[test]
+    fn chol_non_spd_errors_through_r_syntax() {
+        // [[1,2],[2,1]] (eigenvalues 3, -1) is not positive definite -> error,
+        // never NaN or panic.
+        let err = eval_r("chol(matrix(c(1,2,2,1), nrow = 2))\n").unwrap_err();
+        assert!(format!("{err}").contains("positive definite"));
+    }
+
+    #[test]
+    fn chol_non_square_errors_through_r_syntax() {
+        let err = eval_r("chol(matrix(1:6, nrow = 2))\n").unwrap_err();
+        assert!(format!("{err}").to_lowercase().contains("square"));
+    }
+
     // --- R-35: ordered factors & cut() label polish (R syntax) ----------
 
     #[test]
