@@ -41,6 +41,10 @@ pub enum Instr {
     MovImm { dst: Operand, imm: i64 },
     /// `movzx reg64, byte [mem]`.
     Movzx { dst: Reg, src: Operand },
+    /// `mov r/m8, r8` (`0x88`) — store the low byte of `src` into `dst` (the
+    /// byte-tape `store_byte`; e.g. Brainfuck cells). A register `dst` keeps its
+    /// upper bytes.
+    MovByteStore { dst: Operand, src: Reg },
     /// `lea reg, mem`.
     Lea { dst: Reg, src: Operand },
     /// Integer ALU `op dst, src` (dst is reg or mem, src reg/mem/imm).
@@ -245,6 +249,8 @@ pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
 
     // ModRM-based one-byte opcodes.
     match op {
+        // mov r/m8, r8 — store the low byte of the reg-field register into r/m.
+        0x88 => { let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; Ok(Decoded { instr: Instr::MovByteStore { dst: m.rm, src: reg_of(m.reg) }, len: np - off }) }
         0x89 => { let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; Ok(Decoded { instr: Instr::Mov { dst: m.rm, src: Operand::Reg(reg_of(m.reg)) }, len: np - off }) }
         0x8B => { let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; Ok(Decoded { instr: Instr::Mov { dst: Operand::Reg(reg_of(m.reg)), src: m.rm }, len: np - off }) }
         0x8D => { let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; Ok(Decoded { instr: Instr::Lea { dst: reg_of(m.reg), src: m.rm }, len: np - off }) }
@@ -431,6 +437,17 @@ mod tests {
                    Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: true });
         // cqo      = 48 99
         assert_eq!(decode(&[0x48, 0x99], 0).unwrap().instr, Instr::Cqo);
+    }
+
+    #[test]
+    fn byte_store_decodes() {
+        // The encoder emits `REX(0x40) 88 ModRM(mod=00, reg=src, rm=base)`.
+        // 0x40 0x88 0x08 = mov byte [rax], cl  (reg=cl=1, rm=rax=0, mod=00).
+        assert_eq!(decode(&[0x40, 0x88, 0x08], 0).unwrap().instr,
+                   Instr::MovByteStore {
+                       dst: Operand::Mem { base: Some(Reg::Rax), index: None, scale: 1, disp: 0, rip: false },
+                       src: Reg::Rcx,
+                   });
     }
 
     #[test]

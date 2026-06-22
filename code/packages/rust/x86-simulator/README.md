@@ -16,7 +16,8 @@ shape) and uses the ISA semantics in
 The subset the `x86_64-encoder` emits (and growing):
 
 - **Moves / addressing**: `mov` reg↔reg, reg↔`[base+disp]`, `mov reg,imm32`,
-  `movzx reg,byte[mem]`, `lea reg,[mem]` (incl. RIP-relative); REX/ModRM/SIB.
+  `movzx reg,byte[mem]`, `mov byte[mem],reg8` (`0x88` — the byte-tape store),
+  `lea reg,[mem]` (incl. RIP-relative); REX/ModRM/SIB.
 - **Integer ALU**: `add` / `sub` / `cmp` / `and` / `or` / `xor` / `test` (reg and
   imm forms), `shl` / `shr` / `sar`, `imul` — all with full CF/ZF/SF/OF/PF flags.
 - **Group-3 + division**: `not` / `neg` (`0xF7 /2`,`/3`), `div` / `idiv`
@@ -61,12 +62,14 @@ as the exit code (the same convention as `run_native` / `run_wasm`).
 On an Apple-Silicon host the matrix's `NativeAot` cell only ever builds+runs the
 *aarch64* backend; this test exercises the **x86_64** column end-to-end —
 **locally on aarch64**, retro-verifying columns the matrix could previously
-execute only on x86 CI. The 17 cells span Twig (const/arithmetic/`define`),
+execute only on x86 CI. The 18 cells span Twig (const/arithmetic/`define`),
 Nib (u8 wrap, `~` complement, unsigned division), ALGOL (procedure call,
 switch/computed-goto, signed `div`, E3 `real` SSE2 floats, E5 arrays straight-
-line and in a `for` loop), Oct (`out`, `~`), and Dartmouth BASIC (`PRINT`,
-`FOR`/`NEXT` — stdout-captured via the host shims). Adding the Nib/Oct `~` cells
-is what surfaced the missing group-3 `0xF7` opcode that this crate now decodes.
+line and in a `for` loop), Oct (`out`, `~`), Dartmouth BASIC (`PRINT`,
+`FOR`/`NEXT` — stdout-captured via the host shims), and Brainfuck (`.` over a
+byte tape). Each new language exposed a missing opcode — the Nib/Oct `~` cells
+surfaced group-3 `0xF7`, and the Brainfuck cell surfaced the `0x88` byte store —
+which this crate now decodes.
 
 ## Safety
 
