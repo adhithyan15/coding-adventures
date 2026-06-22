@@ -154,6 +154,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - low-level mesh release ticket handoff execution work-order guardrail audit
   clearance action evidence review disposition rows that route reviewed
   evidence into repair, operator, review, lineage, and release-ready outcomes
+- low-level mesh release ticket handoff execution work-order guardrail audit
+  clearance action evidence review disposition action rows that turn review
+  dispositions into repair, operator, review, lineage, and release handoff work
 - mesh release ticket handoff guardrail audit clearance action evidence
   readiness summaries that combine clearance action readiness with evidence
   lineage state and first actionable evidence pointers
