@@ -48,6 +48,8 @@ EXPECTED = [
     ("helicobacter_pylori", "gram_stain", "gram_negative"),          # expand (NBK534233)
     ("helicobacter_pylori", "morphology", "spiral"),                 # expand (NBK534233)
     ("helicobacter_pylori", "causes", "peptic_ulcer_disease"),       # expand (NBK534233)
+    ("clostridioides_difficile", "gram_stain", "gram_positive"),      # expand (NBK431054)
+    ("clostridioides_difficile", "causes", "pseudomembranous_colitis"),  # expand (NBK431054)
 ]
 
 
