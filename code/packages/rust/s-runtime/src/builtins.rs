@@ -4520,11 +4520,10 @@ fn equal_width_breaks(x: &Double, n_f: f64) -> SResult<Vec<f64>> {
 ///
 /// **R-33 options** (all layered onto the same scan, none changing the default):
 ///
-/// - **`right = FALSE`** — left-closed intervals `[lo, hi)`. Where the default
-///   counts breaks `<= x` (so `x == break` lands in the bin it *closes*), the
-///   left-closed scan counts breaks `< x` (so `x == break` lands in the bin it
-///   *opens*). We get this by negating each value (`-x` against `-breaks`,
-///   reversed) — but more simply, by adjusting the interval lookup below.
+/// - **`right = FALSE`** — left-closed intervals `[lo, hi)`. The default
+///   right-closed `(lo, hi]` lookup counts breaks strictly `< x` (so `x == break`
+///   lands in the bin it *closes*); the left-closed lookup counts breaks `<= x`
+///   (so `x == break` lands in the bin it *opens*). See [`cut_code`].
 /// - **`include.lowest = TRUE`** — fold the extreme break into the adjacent
 ///   interval. Right-closed: an `x` equal to `breaks[0]` (which would otherwise be
 ///   "below the first interval") is pulled into interval 1. Left-closed: an `x`
