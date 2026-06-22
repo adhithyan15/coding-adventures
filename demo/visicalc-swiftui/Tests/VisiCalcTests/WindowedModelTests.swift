@@ -75,6 +75,50 @@ final class WindowedModelTests: XCTestCase {
         XCTAssertEqual(m.rowCells(1)[8], "20") // I1 source untouched
     }
 
+    /// Structural edits (the + Row / − Row / + Col / − Col buttons drive
+    /// insertRow/deleteRow/insertCol/deleteCol): inserting and deleting
+    /// rows/columns shifts every formula reference across the band, and deleting a
+    /// referenced band turns that reference into #REF!.
+    func testStructuralInsertDeleteShiftsReferences() {
+        let m = WindowedSheetModel()
+        // The engine parenthesizes binary ops on re-emit ("=(H1+H3)"), so strip
+        // parens before comparing the source the formula bar shows.
+        func bare(_ s: String) -> String { s.replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "") }
+        m.setCell("H1", "10")
+        m.setCell("H2", "20")
+        m.setCell("H3", "=H1+H2") // 30
+        XCTAssertEqual(m.rowCells(3)[7], "30")
+
+        // Insert a row at row 2: H2/H3 shift down to H3/H4, row 2 is blank, and
+        // the formula's refs shift with their cells (=H1+H2 → =H1+H3).
+        m.select(row: 2, col: 8); m.insertRow()
+        XCTAssertEqual(m.rowCells(2)[7], "")    // inserted row blank
+        XCTAssertEqual(m.rowCells(4)[7], "30")  // formula at H4
+        m.select(row: 4, col: 8)
+        XCTAssertEqual(bare(m.formulaText), "=H1+H3")
+
+        // Delete that inserted row: everything shifts back.
+        m.select(row: 2, col: 8); m.deleteRow()
+        XCTAssertEqual(m.rowCells(3)[7], "30")
+        m.select(row: 3, col: 8)
+        XCTAssertEqual(bare(m.formulaText), "=H1+H2")
+
+        // Delete row 1 (referenced by the formula): H2 shifts up to H1, the formula
+        // shifts up to H2, and its destroyed H1 reference becomes #REF!.
+        m.select(row: 1, col: 8); m.deleteRow()
+        XCTAssertEqual(m.rowCells(2)[7], "#REF!")
+
+        // Columns shift the same way: K1=5, L1 = K1*3 = 15; insert a column at K
+        // and the formula (now at M1) keeps pointing at its precedent (now L1).
+        let c = WindowedSheetModel()
+        c.setCell("K1", "5")
+        c.setCell("L1", "=K1*3")
+        c.select(row: 1, col: 11); c.insertCol() // col 11 = K
+        XCTAssertEqual(c.rowCells(1)[12], "15")  // M1 (col 13 → index 12)
+        c.select(row: 1, col: 13)
+        XCTAssertEqual(bare(c.formulaText), "=L1*3")
+    }
+
     /// Clipboard copy/cut/paste shifts a formula and moves a cut.
     func testClipboardCopyCutPaste() {
         let m = WindowedSheetModel()
