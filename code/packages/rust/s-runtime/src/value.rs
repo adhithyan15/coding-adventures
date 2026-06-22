@@ -72,10 +72,19 @@ pub enum SValue {
     Negated(Box<SValue>),
 
     /// A factor: integer `codes` (1-based into `levels`, `None` = `NA`) plus the
-    /// ordered `levels`. Implicit class `"factor"`.
+    /// `levels` character vector. Implicit class `"factor"`.
+    ///
+    /// **R-35 — the `ordered` flag.** An *ordered* factor is a factor whose levels
+    /// carry a meaningful order (R models it as class `c("ordered", "factor")`).
+    /// Rather than introduce a parallel value type, we carry one boolean here:
+    /// when `ordered` is `true`, `class()` reports `c("ordered", "factor")` and the
+    /// relational operators (`<`, `<=`, …) compare elements **by level index**
+    /// (their 1-based `code`), not by label string. `ordered` defaults to `false`
+    /// for every pre-R-35 construction, so ordinary factors are unchanged.
     Factor {
         codes: Vec<Option<u32>>,
         levels: Vec<String>,
+        ordered: bool,
     },
 
     /// A data frame: equal-length `columns` with their `names`. Implicit class
@@ -279,6 +288,11 @@ impl SValue {
 pub fn class_of(value: &SValue) -> Vec<String> {
     match value {
         SValue::Classed { class, .. } => class.clone(),
+        // R-35: an ordered factor's class is `c("ordered", "factor")`; a plain
+        // factor is just `"factor"`.
+        SValue::Factor { ordered: true, .. } => {
+            vec!["ordered".to_string(), "factor".to_string()]
+        }
         SValue::Factor { .. } => vec!["factor".to_string()],
         SValue::DataFrame { .. } => vec!["data.frame".to_string()],
         SValue::List { .. } => vec!["list".to_string()],
@@ -315,8 +329,13 @@ impl std::fmt::Debug for SValue {
             }
             SValue::Builtin { name, .. } => write!(f, "Builtin({name})"),
             SValue::Negated(inner) => write!(f, "Negated({inner:?})"),
-            SValue::Factor { codes, levels } => {
-                write!(f, "Factor({} codes, {} levels)", codes.len(), levels.len())
+            SValue::Factor {
+                codes,
+                levels,
+                ordered,
+            } => {
+                let kind = if *ordered { "Ordered" } else { "Factor" };
+                write!(f, "{kind}({} codes, {} levels)", codes.len(), levels.len())
             }
             SValue::DataFrame { names, columns } => {
                 write!(f, "DataFrame({} cols: {:?})", columns.len(), names)
@@ -495,7 +514,7 @@ impl SValue {
                 .map(|o| o.map(|b| if b { "TRUE".into() } else { "FALSE".into() }))
                 .collect(),
             SValue::Null => vec![],
-            SValue::Factor { codes, levels } => SValue::factor_labels(codes, levels),
+            SValue::Factor { codes, levels, .. } => SValue::factor_labels(codes, levels),
             SValue::Classed { inner, .. } => inner.as_character(),
             SValue::Named { values, .. } => values.as_character(),
             SValue::Attributed { inner, .. } => inner.as_character(),
@@ -788,6 +807,16 @@ pub fn compare(op: &str, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
         lhs.strip_names().strip_attrs(),
         rhs.strip_names().strip_attrs(),
     );
+
+    // R-35: relational operators on factors. The interesting case is the *ordered*
+    // factor, whose elements compare by **level index** (their 1-based `code`),
+    // not by label string. This branch runs *before* the numeric/character
+    // coercion below (which would otherwise reject a factor — it is neither a
+    // `Double` nor a `Character`).
+    if matches!(lhs, SValue::Factor { .. }) || matches!(rhs, SValue::Factor { .. }) {
+        return compare_factors(op, lhs, rhs);
+    }
+
     let either_char = matches!(lhs, SValue::Character(_)) || matches!(rhs, SValue::Character(_));
 
     if either_char {
@@ -825,6 +854,90 @@ pub fn compare(op: &str, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
             } else {
                 Some(compare_f64(op, x, y))
             }
+        })
+        .collect();
+    Ok(SValue::Logical(out))
+}
+
+/// R-35 — relational comparison where at least one operand is a factor.
+///
+/// * **Two ordered factors** compare element-wise by **level index** (the 1-based
+///   `code`), recycling the shorter operand. An `NA` code on either side yields
+///   `NA`. The two factors must share the **same level set** (`levels` vectors
+///   equal); a mismatch is a clean error, faithful to base R's
+///   `"level sets of factors are different"`. All six operators are supported.
+/// * **`==` / `!=` with at least one unordered factor** fall back to comparing the
+///   **label strings** (an `NA` code → `NA`), which is exactly R's behaviour for
+///   unordered factors and for an (ordered or unordered) factor against a bare
+///   character/numeric vector.
+/// * **An order operator (`<`/`>`/`<=`/`>=`) on an unordered factor** is **not
+///   meaningful** in R and raises an error rather than silently coercing.
+///
+/// The comparison only ever reads the integer `codes`, so an out-of-range or `NA`
+/// code can never index out of bounds — it simply maps to `NA`.
+fn compare_factors(op: &str, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
+    let is_order_op = matches!(op, "<" | ">" | "<=" | ">=");
+
+    // The ordered-by-level-index path: BOTH sides ordered factors.
+    if let (
+        SValue::Factor {
+            codes: ca,
+            levels: la,
+            ordered: true,
+        },
+        SValue::Factor {
+            codes: cb,
+            levels: lb,
+            ordered: true,
+        },
+    ) = (lhs, rhs)
+    {
+        // Comparing ordered factors with different level sets is an error in R —
+        // the level indices would not be on the same scale.
+        if la != lb {
+            return Err(SError::TypeError(
+                "level sets of factors are different".to_string(),
+            ));
+        }
+        if ca.is_empty() || cb.is_empty() {
+            return Ok(SValue::Logical(vec![]));
+        }
+        let n = ca.len().max(cb.len());
+        let out = (0..n)
+            .map(|i| match (ca[i % ca.len()], cb[i % cb.len()]) {
+                // Compare the level indices numerically (codes are 1-based u32).
+                (Some(x), Some(y)) => Some(compare_f64(op, x as f64, y as f64)),
+                // An NA code on either side → NA, never a panic.
+                _ => None,
+            })
+            .collect();
+        return Ok(SValue::Logical(out));
+    }
+
+    // From here at least one side is an *unordered* factor (or an ordered factor
+    // against a non-factor). Order operators are not meaningful on unordered
+    // factors — R errors rather than guessing an order.
+    let unordered_factor_present = matches!(lhs, SValue::Factor { ordered: false, .. })
+        || matches!(rhs, SValue::Factor { ordered: false, .. });
+    if is_order_op && unordered_factor_present {
+        return Err(SError::TypeError(format!(
+            "'{op}' not meaningful for factors"
+        )));
+    }
+
+    // `==` / `!=` (and order ops between an ordered factor and a bare vector):
+    // fall back to comparing the character labels, NA-propagating. This reuses
+    // the ordinary character comparison by coercing both sides to their labels.
+    let a = lhs.as_character();
+    let b = rhs.as_character();
+    if a.is_empty() || b.is_empty() {
+        return Ok(SValue::Logical(vec![]));
+    }
+    let n = a.len().max(b.len());
+    let out = (0..n)
+        .map(|i| match (&a[i % a.len()], &b[i % b.len()]) {
+            (Some(x), Some(y)) => Some(compare_ord(op, x.cmp(y))),
+            _ => None,
         })
         .collect();
     Ok(SValue::Logical(out))
@@ -1048,9 +1161,16 @@ pub fn index(base: &SValue, idx: &SValue) -> SResult<SValue> {
             SValue::Character(picks.iter().map(|p| p.and_then(|i| v[i].clone())).collect())
         }
         SValue::Null => SValue::Null,
-        SValue::Factor { codes, levels } => SValue::Factor {
+        SValue::Factor {
+            codes,
+            levels,
+            ordered,
+        } => SValue::Factor {
             codes: picks.iter().map(|p| p.and_then(|i| codes[i])).collect(),
             levels: levels.clone(),
+            // Subscripting preserves ordered-ness: `f[i]` of an ordered factor is
+            // still ordered (so `f[1] < f[2]` keeps comparing by level index).
+            ordered: *ordered,
         },
         SValue::Classed { inner, .. } => index(inner, idx)?,
         // Single-bracket on a list returns a *sub-list* (NA index → a NULL slot).
@@ -1371,19 +1491,25 @@ pub fn format_value(value: &SValue) -> Vec<String> {
             // R prints `Negate(f)` as the generated wrapper `function (...) !f(...)`.
             return vec!["function (...) !f(...)".to_string()];
         }
-        SValue::Factor { codes, levels } => {
+        SValue::Factor {
+            codes,
+            levels,
+            ordered,
+        } => {
+            // R-35: an ordered factor lists its levels with `<` between them
+            // (`Levels: lo < mid < hi`) to advertise the order; a plain factor
+            // separates them with a single space.
+            let level_sep = if *ordered { " < " } else { " " };
+            let levels_line = format!("Levels: {}", levels.join(level_sep));
             if codes.is_empty() {
-                return vec![
-                    "factor(0)".to_string(),
-                    format!("Levels: {}", levels.join(" ")),
-                ];
+                return vec!["factor(0)".to_string(), levels_line];
             }
             let labels: Vec<String> = factor_labels(codes, levels)
                 .into_iter()
                 .map(|o| o.unwrap_or_else(|| "<NA>".to_string()))
                 .collect();
             let mut lines = format_vector(&labels);
-            lines.push(format!("Levels: {}", levels.join(" ")));
+            lines.push(levels_line);
             return lines;
         }
         SValue::DataFrame { names, columns } => return format_data_frame(names, columns),
@@ -1555,7 +1681,7 @@ pub fn element_string(value: &SValue, i: usize) -> String {
             .get(i)
             .and_then(|o| o.clone())
             .unwrap_or_else(|| "NA".into()),
-        SValue::Factor { codes, levels } => codes
+        SValue::Factor { codes, levels, .. } => codes
             .get(i)
             .and_then(|c| *c)
             .and_then(|k| levels.get((k as usize).wrapping_sub(1)).cloned())
@@ -1835,7 +1961,10 @@ mod tests {
         assert_eq!(neg.type_name(), "closure");
         assert_eq!(neg.length(), 1);
         assert_eq!(class_of(&neg), vec!["function".to_string()]);
-        assert_eq!(format_value(&neg), vec!["function (...) !f(...)".to_string()]);
+        assert_eq!(
+            format_value(&neg),
+            vec!["function (...) !f(...)".to_string()]
+        );
     }
 
     // --- comparison -----------------------------------------------------
@@ -2021,8 +2150,16 @@ mod tests {
         let f = SValue::Factor {
             codes: vec![],
             levels: vec![],
+            ordered: false,
         };
         assert_eq!(class_of(&f), vec!["factor"]);
+        // R-35: an ordered factor reports c("ordered", "factor").
+        let of = SValue::Factor {
+            codes: vec![],
+            levels: vec![],
+            ordered: true,
+        };
+        assert_eq!(class_of(&of), vec!["ordered", "factor"]);
         let c = SValue::Classed {
             inner: Box::new(SValue::scalar(1.0)),
             class: vec!["myc".into()],
@@ -2035,6 +2172,7 @@ mod tests {
         let f = SValue::Factor {
             codes: vec![Some(2), Some(1)],
             levels: vec!["a".into(), "b".into()],
+            ordered: false,
         };
         assert_eq!(format_value(&f), vec!["[1] b a", "Levels: a b"]);
 

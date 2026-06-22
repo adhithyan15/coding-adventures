@@ -2435,9 +2435,16 @@ pub(crate) fn nth_element(value: &SValue, i: usize) -> SValue {
             .unwrap_or_else(na_real)])),
         SValue::Logical(v) => SValue::Logical(vec![v.get(i).copied().flatten()]),
         SValue::Character(v) => SValue::Character(vec![v.get(i).cloned().flatten()]),
-        SValue::Factor { codes, levels } => SValue::Factor {
+        SValue::Factor {
+            codes,
+            levels,
+            ordered,
+        } => SValue::Factor {
             codes: vec![codes.get(i).copied().flatten()],
             levels: levels.clone(),
+            // Extracting an element keeps the factor ordered (R-35), so the
+            // single-element factor still compares by level index.
+            ordered: *ordered,
         },
         SValue::Classed { inner, .. } => nth_element(inner, i),
         SValue::Named { values, .. } => nth_element(values, i),

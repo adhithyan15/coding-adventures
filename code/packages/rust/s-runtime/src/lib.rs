@@ -2509,7 +2509,7 @@ mod r33_cut_options {
     /// The logical (`Option<bool>`) elements of a result; `None` (NA) → `None`.
     fn bools(src: &str) -> Vec<Option<bool>> {
         match eval_s(src).unwrap().strip_names() {
-            SValue::Logical(v) => v,
+            SValue::Logical(v) => v.to_vec(),
             other => panic!("expected logical, got {}", other.type_name()),
         }
     }
@@ -2616,31 +2616,20 @@ mod r33_cut_options {
     }
 
     // --- R-35: cut(ordered_result=, dig.lab=) --------------------------
+    //
+    // NB: `ordered_result` is NOT expressible in *S* source — the S lexer reads
+    // `_` as the assignment operator (the iconic S detail), so `ordered_result`
+    // tokenises as `ordered <- result`. The `ordered_result =` named argument is
+    // therefore exercised through the **R** grammar in the `r-runtime` tests
+    // (`cut_ordered_result_through_r_syntax`); here we only cover the `dig.lab`
+    // option and the default-unordered behaviour, both of which are S-expressible.
 
     #[test]
-    fn cut_ordered_result_makes_an_ordered_factor() {
-        // ordered_result=TRUE makes the cut() factor an ordered factor.
-        assert_eq!(
-            bools(
-                "is.ordered(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), ordered_result = TRUE))\n"
-            ),
-            vec![Some(true)]
-        );
-        // Default is an ordinary (unordered) factor.
+    fn cut_default_result_is_unordered_factor() {
+        // Without ordered_result, cut() returns an ordinary (unordered) factor.
         assert_eq!(
             bools("is.ordered(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
             vec![Some(false)]
-        );
-    }
-
-    #[test]
-    fn cut_ordered_result_bins_compare_by_interval_order() {
-        // The first value (bin 1) is < the third value (bin 3) by interval order.
-        assert_eq!(
-            bools(
-                "g <- cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), ordered_result = TRUE)\ng[1] < g[3]\n"
-            ),
-            vec![Some(true)]
         );
     }
 
