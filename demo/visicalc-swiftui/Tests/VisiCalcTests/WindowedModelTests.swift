@@ -227,4 +227,26 @@ final class WindowedModelTests: XCTestCase {
         m.applyFormat("")
         XCTAssertEqual(m.rowCells(1)[7], "1234")
     }
+
+    /// Range sort (the ▲/▼ Sort buttons drive sortBlock): reorder the seeded
+    /// budget block A1:E4 by the selected column. The default seed has column A =
+    /// 15,8,12,4 (rows 1..4, unformatted) and each E cell = SUM(row) formatted
+    /// "#,##0.00". Sorting by column A ascending moves each row as a record — col
+    /// A becomes 4,8,12,15 and every E total travels with its row (the engine
+    /// shifts the moved SUM formulas' refs). Descending reverses it.
+    func testSortRangeReordersRowsByKeyColumn() {
+        let m = WindowedSheetModel()
+        // Pre-sort: column A rows 1..4 = 15,8,12,4 (selection defaults to A1).
+        XCTAssertEqual(m.window(rows: 1...4, cols: 1...1).map { $0[0] }, ["15", "8", "12", "4"])
+        // Ascending by column A → 4,8,12,15.
+        XCTAssertTrue(m.sortBlock(true))
+        XCTAssertEqual(m.window(rows: 1...4, cols: 1...1).map { $0[0] }, ["4", "8", "12", "15"])
+        // Each row's E total tracked its row (formatted "#,##0.00").
+        XCTAssertEqual(m.window(rows: 1...1, cols: 5...5)[0][0], "35.00")  // 4+11+3+17
+        XCTAssertEqual(m.window(rows: 4...4, cols: 5...5)[0][0], "38.00")  // 15+3+12+8
+        // Descending reverses the key order.
+        XCTAssertTrue(m.sortBlock(false))
+        XCTAssertEqual(m.window(rows: 1...1, cols: 1...1)[0][0], "15")
+        XCTAssertEqual(m.window(rows: 4...4, cols: 1...1)[0][0], "4")
+    }
 }

@@ -48,6 +48,17 @@ final class SpreadsheetSession {
         sc_fill(handle, src, dstStart, dstEnd)
     }
 
+    /// Range sort: reorder the rows of the rectangle `start`..`end` by the
+    /// computed values in `keyCol` (1-based, inside the rectangle), ascending or
+    /// descending. Each row moves as a record; the engine shifts moved formulas'
+    /// references with their row and carries formats. Returns true when a sort was
+    /// applied (or the range was already sorted), false for a no-op (malformed
+    /// address / out-of-range key / oversized range). Reaches `sc_sort_range` —
+    /// the same path every backend drives.
+    func sortRange(_ start: String, _ end: String, _ keyCol: UInt32, _ ascending: Bool) -> Bool {
+        sc_sort_range(handle, start, end, keyCol, ascending ? 1 : 0) != 0
+    }
+
     /// Structural edits: insert / delete `count` rows or columns at the 1-based
     /// position `at`. The engine shifts every formula reference at or after the
     /// band (a reference whose whole band is deleted becomes `#REF!`), then
