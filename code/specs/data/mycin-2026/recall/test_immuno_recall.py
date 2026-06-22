@@ -44,6 +44,7 @@ EXPECTED = [
     ("wiskott_aldrich_syndrome", "gene_defect", "was"),              # expand (NBK539838)
     ("hereditary_angioedema", "deficiency_of", "c1_inhibitor"),      # expand (NBK482266)
     ("chediak_higashi_syndrome", "gene_defect", "lyst"),             # expand (NBK507881)
+    ("job_syndrome", "gene_defect", "stat3"),                        # expand (NBK525947)
 ]
 VAR = {"mediated_by": "Mediator", "associated_hla": "HLA",
        "gene_defect": "Gene", "deficiency_of": "Component"}
