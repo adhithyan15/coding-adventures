@@ -143,6 +143,24 @@
                             ToolTipService.ToolTip="Restore the workbook from the last save"
                             Click="LoadButton_Click"/>
                     <Border Width="1" Height="22" Margin="6,0,6,0" Background="#2C313A"/>
+                    <!-- Structure (insert / delete the selected row or column) -->
+                    <Button x:Name="InsRowButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content="+ Row"
+                            ToolTipService.ToolTip="Insert a row above the selected cell (references shift down)"
+                            Click="InsRowButton_Click"/>
+                    <Button x:Name="DelRowButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content="− Row"
+                            ToolTipService.ToolTip="Delete the selected cell's row (references shift up; refs into it become #REF!)"
+                            Click="DelRowButton_Click"/>
+                    <Button x:Name="InsColButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content="+ Col"
+                            ToolTipService.ToolTip="Insert a column left of the selected cell (references shift right)"
+                            Click="InsColButton_Click"/>
+                    <Button x:Name="DelColButton" Style="{StaticResource ToolChip}"
+                            Content="− Col"
+                            ToolTipService.ToolTip="Delete the selected cell's column (references shift left; refs into it become #REF!)"
+                            Click="DelColButton_Click"/>
+                    <Border Width="1" Height="22" Margin="6,0,6,0" Background="#2C313A"/>
                     <!-- History (undo / redo) -->
                     <Button x:Name="UndoButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
                             Content="↶ Undo"

@@ -80,6 +80,13 @@ internal static class ScNative
     [DllImport("spreadsheet_capi")]
     internal static extern int sc_paste(IntPtr s,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string dstStart);
+    // sc_insert_rows / sc_delete_rows / sc_insert_cols / sc_delete_cols(session,
+    // at, count) → void. Structural edits at a 1-based position; the engine
+    // shifts every formula reference across the band.
+    [DllImport("spreadsheet_capi")] internal static extern void sc_insert_rows(IntPtr s, uint at, uint count);
+    [DllImport("spreadsheet_capi")] internal static extern void sc_delete_rows(IntPtr s, uint at, uint count);
+    [DllImport("spreadsheet_capi")] internal static extern void sc_insert_cols(IntPtr s, uint at, uint count);
+    [DllImport("spreadsheet_capi")] internal static extern void sc_delete_cols(IntPtr s, uint at, uint count);
     // sc_serialize(session) → char* (workbook source + formats as JSON);
     // sc_deserialize(session, data) → int (1 loaded, 0 malformed/unsupported).
     [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_serialize(IntPtr s);
@@ -156,6 +163,20 @@ public sealed class SpreadsheetSession : IDisposable
     /// every dependent. Reaches sc_fill — the same path every other backend drives.
     public void Fill(string src, string dstStart, string dstEnd) =>
         ScNative.sc_fill(_handle, src, dstStart, dstEnd);
+
+    /// Structural edits: insert / delete `count` rows or columns at the 1-based
+    /// position `at`. The engine shifts every formula reference at or after the
+    /// band (a reference whose whole band is deleted becomes `#REF!`), then
+    /// recomputes. `at`/`count` are clamped to ≥ 0 before the uint cast so a
+    /// negative can't wrap to a huge unsigned band.
+    public void InsertRows(int at, int count) =>
+        ScNative.sc_insert_rows(_handle, (uint)Math.Max(0, at), (uint)Math.Max(0, count));
+    public void DeleteRows(int at, int count) =>
+        ScNative.sc_delete_rows(_handle, (uint)Math.Max(0, at), (uint)Math.Max(0, count));
+    public void InsertCols(int at, int count) =>
+        ScNative.sc_insert_cols(_handle, (uint)Math.Max(0, at), (uint)Math.Max(0, count));
+    public void DeleteCols(int at, int count) =>
+        ScNative.sc_delete_cols(_handle, (uint)Math.Max(0, at), (uint)Math.Max(0, count));
 
     /// Copy the inclusive rectangle `start`..`end` into the clipboard — a
     /// whole-block copy that pastes as a unit. The source is untouched; the
@@ -529,6 +550,15 @@ public sealed class InfiniteSheetModel : IDisposable
         _session.Fill(InfAddress, $"{col}{first}", $"{col}{last}");
         ComputeExtent();
     }
+
+    /// Structural edits: insert / delete the selected cell's row or column. The
+    /// engine shifts every formula reference at or after the band (a reference
+    /// whose whole band is deleted becomes `#REF!`) and recomputes; regrow the
+    /// extent so the view re-reads. Operate on a single row/column at the cursor.
+    public void InsertRow() { _session.InsertRows(SelRow, 1); ComputeExtent(); }
+    public void DeleteRow() { _session.DeleteRows(SelRow, 1); ComputeExtent(); }
+    public void InsertCol() { _session.InsertCols(SelCol, 1); ComputeExtent(); }
+    public void DeleteCol() { _session.DeleteCols(SelCol, 1); ComputeExtent(); }
 
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative references by the destination's
