@@ -97,4 +97,38 @@ rulebook gi_facts {
         source "PSC is histologically characterized by concentric, lamellar periductal fibrosis—often referred to as \"onion-skin\" fibrosis."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK537181/"
         trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield GI/hepatobiliary biopsy findings, each grounded to a
+    % self-contained verbatim NCBI Bookshelf span naming both the finding and
+    % the disease. (Declined — no single NBK self-contained span: noncaseating
+    % granulomas->Crohn [NBK says "Nonnecrotic" when naming Crohn], PAS-positive
+    % macrophages->Whipple [split sentences], ground-glass hepatocytes->HBV
+    % [no NBK uses "ground glass"]. Backlog, not stretched.)
+    % ------------------------------------------------------------------------
+
+    % Signet ring cells — diffuse-type gastric cancer.
+    relate biopsy_finding_in(signet_ring_cells, gastric_cancer)
+        source "Diffuse-type tumors exhibit markedly aberrant cells with little or no gland formation and occasionally contain signet ring cells (see Image. Diffuse Carcinoma of the Stomach) characterized by cytoplasmic mucin with an eccentrically placed nucleus (see Images. Diffuse Gastric Cancer and Signet Ring Carcinoma)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459142/"
+        trust authoritative
+
+    % Florid duct lesion — primary biliary cholangitis (page uses the former
+    % name "primary biliary cirrhosis").
+    relate biopsy_finding_in(florid_duct_lesion, primary_biliary_cholangitis)
+        source "Histopathological evidence of primary biliary cirrhosis (nonsuppurative destructive cholangitis or \"florid duct lesion\" and destruction of interlobular bile ducts with a predominance of lymphocytic infiltration)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459209/"
+        trust authoritative
+
+    % Cowdry type A intranuclear inclusions — HSV esophagitis (pathognomonic).
+    relate biopsy_finding_in(cowdry_a_inclusions, herpes_esophagitis)
+        source "Multinucleated giant cells with ballooning and degeneration of squamous cells with Cowdry type A inclusion is pathognomonic diagnosis finding for HSV esophagitis and Large cells with both intracytoplasmic inclusions and amphophilic intranuclear inclusions are seen in CMV esophagitis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK442012/"
+        trust authoritative
+
+    % Pseudomembranes — pseudomembranous (C difficile) colitis.
+    relate biopsy_finding_in(pseudomembranes, pseudomembranous_colitis)
+        source "Colonoscopies of patients with pseudomembranous colitis demonstrate inflamed colonic mucosa characterized by raised yellowish, occasionally hemorrhagic nodules or plaques that congregate into widespread, pseudomembranes on the surface of the colonic mucosa."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470319/"
+        trust authoritative
 }
