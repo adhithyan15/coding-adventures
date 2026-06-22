@@ -3475,6 +3475,8 @@ pub struct DeckWrdataArtifact {
     pub marker: String,
     pub probe_count: usize,
     pub probes: Vec<String>,
+    pub option_count: usize,
+    pub options: Vec<String>,
     pub datafile: String,
 }
 
@@ -10704,16 +10706,43 @@ pub fn format_deck_rawfile_artifact_json(artifacts: &[DeckRawfileArtifact]) -> S
     format!("[{}]\n", records)
 }
 
-pub fn format_deck_wrdata_ascii(table: &str, probes: &[String]) -> String {
+pub fn format_deck_wrdata_ascii(
+    table: &str,
+    probes: &[String],
+    rawfile_options: &[String],
+) -> String {
     let rows = table.lines().collect::<Vec<_>>();
     if rows.is_empty() {
         return String::new();
     }
-    format!(
-        "# SPICE deck wrdata artifact\nProbes: {}\n{}\n",
-        probes.join(";"),
-        rows.join("\n")
-    )
+    let columns = rows[0].split('\t').collect::<Vec<_>>();
+    let mut lines = vec![
+        "# SPICE deck wrdata artifact".to_string(),
+        format!("Probes: {}", probes.join(";")),
+    ];
+    if !rawfile_options.is_empty() {
+        lines.push(format!("Options: {}", rawfile_options.join(";")));
+    }
+    let normalized_options = rawfile_options
+        .iter()
+        .map(|option| option.to_ascii_lowercase())
+        .collect::<Vec<_>>();
+    if normalized_options
+        .iter()
+        .any(|option| option == "set wr_vecnames")
+    {
+        lines.push(format!("VectorNames: {}", columns.join(";")));
+    }
+    if normalized_options
+        .iter()
+        .any(|option| option == "set wr_singlescale")
+    {
+        if let Some(scale) = columns.first() {
+            lines.push(format!("Scale: {scale}"));
+        }
+    }
+    lines.extend(rows.iter().map(|row| (*row).to_string()));
+    format!("{}\n", lines.join("\n"))
 }
 
 fn deck_wrdata_marker_parts(marker: &str) -> Option<(String, Vec<String>)> {
@@ -10731,7 +10760,11 @@ fn deck_wrdata_marker_parts(marker: &str) -> Option<(String, Vec<String>)> {
     ))
 }
 
-fn deck_wrdata_artifacts(table: &str, write_markers: &[String]) -> Vec<DeckWrdataArtifact> {
+fn deck_wrdata_artifacts(
+    table: &str,
+    write_markers: &[String],
+    rawfile_options: &[String],
+) -> Vec<DeckWrdataArtifact> {
     write_markers
         .iter()
         .filter_map(|marker| {
@@ -10740,14 +10773,24 @@ fn deck_wrdata_artifacts(table: &str, write_markers: &[String]) -> Vec<DeckWrdat
                 target,
                 marker: marker.clone(),
                 probe_count: probes.len(),
-                datafile: format_deck_wrdata_ascii(table, &probes),
+                option_count: rawfile_options.len(),
+                options: rawfile_options.to_vec(),
+                datafile: format_deck_wrdata_ascii(table, &probes, rawfile_options),
                 probes,
             })
         })
         .collect()
 }
 
-const DECK_WRDATA_ARTIFACT_COLUMNS: &[&str] = &["Target", "Marker", "Probes", "ProbeList", "Bytes"];
+const DECK_WRDATA_ARTIFACT_COLUMNS: &[&str] = &[
+    "Target",
+    "Marker",
+    "Probes",
+    "ProbeList",
+    "Options",
+    "RawfileOptionList",
+    "Bytes",
+];
 
 fn deck_wrdata_artifact_cells(artifact: &DeckWrdataArtifact) -> Vec<String> {
     vec![
@@ -10755,6 +10798,8 @@ fn deck_wrdata_artifact_cells(artifact: &DeckWrdataArtifact) -> Vec<String> {
         artifact.marker.clone(),
         artifact.probe_count.to_string(),
         artifact.probes.join(";"),
+        artifact.option_count.to_string(),
+        artifact.options.join(";"),
         artifact.datafile.len().to_string(),
     ]
 }
@@ -10991,7 +11036,7 @@ pub fn run_deck_analysis(
             let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
             let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
             let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
-            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers);
+            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers, &rawfile_options);
             let wrdata_artifact_table = format_deck_wrdata_artifact_table(&wrdata_artifacts);
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
@@ -11080,7 +11125,7 @@ pub fn run_deck_analysis(
             let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
             let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
             let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
-            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers);
+            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers, &rawfile_options);
             let wrdata_artifact_table = format_deck_wrdata_artifact_table(&wrdata_artifacts);
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
@@ -11170,7 +11215,7 @@ pub fn run_deck_analysis(
             let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
             let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
             let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
-            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers);
+            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers, &rawfile_options);
             let wrdata_artifact_table = format_deck_wrdata_artifact_table(&wrdata_artifacts);
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
@@ -11263,7 +11308,7 @@ pub fn run_deck_analysis(
             let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
             let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
             let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
-            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers);
+            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers, &rawfile_options);
             let wrdata_artifact_table = format_deck_wrdata_artifact_table(&wrdata_artifacts);
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
@@ -11350,7 +11395,7 @@ pub fn run_deck_analysis(
             let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
             let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
             let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
-            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers);
+            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers, &rawfile_options);
             let wrdata_artifact_table = format_deck_wrdata_artifact_table(&wrdata_artifacts);
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
@@ -11435,7 +11480,7 @@ pub fn run_deck_analysis(
             let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
             let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
             let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
-            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers);
+            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers, &rawfile_options);
             let wrdata_artifact_table = format_deck_wrdata_artifact_table(&wrdata_artifacts);
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);
@@ -11532,7 +11577,7 @@ pub fn run_deck_analysis(
             let rawfile_artifact_csv = format_deck_rawfile_artifact_csv(&rawfile_artifacts);
             let rawfile_artifact_json = format_deck_rawfile_artifact_json(&rawfile_artifacts);
             let rawfile_artifact_records = deck_rawfile_artifact_records(&rawfile_artifacts);
-            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers);
+            let wrdata_artifacts = deck_wrdata_artifacts(&table, &write_markers, &rawfile_options);
             let wrdata_artifact_table = format_deck_wrdata_artifact_table(&wrdata_artifacts);
             let wrdata_artifact_csv = format_deck_wrdata_artifact_csv(&wrdata_artifacts);
             let wrdata_artifact_json = format_deck_wrdata_artifact_json(&wrdata_artifacts);

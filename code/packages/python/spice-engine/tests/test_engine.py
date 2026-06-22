@@ -7456,8 +7456,15 @@ let gain = 2
     assert execution.wrdata_artifacts[0].marker == "wrdata out.dat V(in)"
     assert execution.wrdata_artifacts[0].probe_count == 1
     assert execution.wrdata_artifacts[0].probes == ["V(in)"]
+    assert execution.wrdata_artifacts[0].option_count == len(
+        expected_rawfile_options
+    )
+    assert execution.wrdata_artifacts[0].options == expected_rawfile_options
     assert "# SPICE deck wrdata artifact\n" in execution.wrdata_artifacts[0].datafile
     assert "Probes: V(in)\n" in execution.wrdata_artifacts[0].datafile
+    assert "Options: " + rawfile_option_list + "\n" in execution.wrdata_artifacts[0].datafile
+    assert "VectorNames: Index;V(in)\n" in execution.wrdata_artifacts[0].datafile
+    assert "Scale: Index\n" in execution.wrdata_artifacts[0].datafile
     assert "Index\tV(in)\n" in execution.wrdata_artifacts[0].datafile
     assert "0\t1.000000e+00\n" in execution.wrdata_artifacts[0].datafile
     wrdata_record = execution.wrdata_artifact_records[0]
@@ -7465,6 +7472,8 @@ let gain = 2
     assert wrdata_record["Marker"] == "wrdata out.dat V(in)"
     assert wrdata_record["Probes"] == "1"
     assert wrdata_record["ProbeList"] == "V(in)"
+    assert wrdata_record["Options"] == str(len(expected_rawfile_options))
+    assert wrdata_record["RawfileOptionList"] == rawfile_option_list
     assert wrdata_record["Bytes"] == str(
         len(execution.wrdata_artifacts[0].datafile.encode())
     )
@@ -7478,6 +7487,9 @@ let gain = 2
         execution.wrdata_artifacts
     )
     assert json.loads(execution.wrdata_artifact_json)[0]["ProbeList"] == "V(in)"
+    assert json.loads(execution.wrdata_artifact_json)[0]["RawfileOptionList"] == (
+        rawfile_option_list
+    )
     assert execution.diagnostic_count == len(expected_codes)
     assert execution.diagnostic_codes == expected_codes
     assert execution.run_artifacts[0].control_line_count == len(expected_control_lines)

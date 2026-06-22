@@ -121,8 +121,10 @@ downstream tools to compare.
      table, CSV, compact JSON, and host-native record summaries, and accepted
      `.control` `wrdata <file> ...` markers now produce deterministic
      in-memory ASCII data-file artifacts with matching stable table, CSV,
-     compact JSON, and host-native record summaries while filesystem writes
-     remain metadata-only.
+     compact JSON, and host-native record summaries, and WRDATA artifacts now
+     carry accepted rawfile/data-write option inventories plus deterministic
+     `wr_vecnames` / `wr_singlescale` rendering metadata while filesystem
+     writes remain metadata-only.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1048,6 +1050,16 @@ downstream tools to compare.
     - Each selected execution exposes WRDATA artifact count/list metadata plus
       stable WRDATA artifact table, CSV, compact JSON, and host-native record
       summaries while filesystem writes remain metadata-only.
+
+96. Deck WRDATA rawfile option rendering artifacts.
+    - Status: completed in this deck WRDATA rawfile option rendering artifact
+      slice.
+    - Python, Rust, and TypeScript WRDATA artifacts now carry accepted
+      rawfile/data-write option inventories through stable `Options` /
+      `RawfileOptionList` summary fields.
+    - In-memory WRDATA data files now render deterministic `VectorNames` and
+      `Scale` metadata when accepted `set wr_vecnames` and `set wr_singlescale`
+      controls are present, while filesystem writes remain metadata-only.
 
 ## Backlog
 

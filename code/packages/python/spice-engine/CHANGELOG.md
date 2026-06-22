@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck WRDATA rawfile option rendering artifacts** —
+  selected `run_deck_analysis()` WRDATA artifacts now carry accepted
+  `.control` rawfile/data-write option inventories through stable
+  `Options` / `RawfileOptionList` summary columns and render
+  `wr_vecnames` / `wr_singlescale` intent as deterministic `VectorNames` /
+  `Scale` metadata in the in-memory data file, matching Rust and TypeScript.
+
 - **Deck WRDATA ASCII artifacts** —
   selected `run_deck_analysis()` executions now expose deterministic in-memory
   ASCII data-file artifacts for accepted `.control` `wrdata <file> ...`

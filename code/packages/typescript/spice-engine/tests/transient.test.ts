@@ -2120,10 +2120,19 @@ let gain = 2
     expect(execution.wrdataArtifacts[0]?.marker).toBe("wrdata out.dat V(in)");
     expect(execution.wrdataArtifacts[0]?.probeCount).toBe(1);
     expect(execution.wrdataArtifacts[0]?.probes).toEqual(["V(in)"]);
+    expect(execution.wrdataArtifacts[0]?.optionCount).toBe(expectedRawfileOptions.length);
+    expect(execution.wrdataArtifacts[0]?.options).toEqual(expectedRawfileOptions);
     expect(execution.wrdataArtifacts[0]?.datafile).toContain(
       "# SPICE deck wrdata artifact\n",
     );
     expect(execution.wrdataArtifacts[0]?.datafile).toContain("Probes: V(in)\n");
+    expect(execution.wrdataArtifacts[0]?.datafile).toContain(
+      `Options: ${rawfileOptionList}\n`,
+    );
+    expect(execution.wrdataArtifacts[0]?.datafile).toContain(
+      "VectorNames: Index;V(in)\n",
+    );
+    expect(execution.wrdataArtifacts[0]?.datafile).toContain("Scale: Index\n");
     expect(execution.wrdataArtifacts[0]?.datafile).toContain("Index\tV(in)\n");
     expect(execution.wrdataArtifacts[0]?.datafile).toContain("0\t1.000000e+00\n");
     const wrdataRecord = execution.wrdataArtifactRecords[0]!;
@@ -2131,6 +2140,8 @@ let gain = 2
     expect(wrdataRecord["Marker"]).toBe("wrdata out.dat V(in)");
     expect(wrdataRecord["Probes"]).toBe("1");
     expect(wrdataRecord["ProbeList"]).toBe("V(in)");
+    expect(wrdataRecord["Options"]).toBe(String(expectedRawfileOptions.length));
+    expect(wrdataRecord["RawfileOptionList"]).toBe(rawfileOptionList);
     expect(wrdataRecord["Bytes"]).toBe(String(execution.wrdataArtifacts[0]?.datafile.length));
     expect(execution.wrdataArtifactTable).toBe(
       formatDeckWrdataArtifactTable(execution.wrdataArtifacts),
@@ -2142,6 +2153,9 @@ let gain = 2
       formatDeckWrdataArtifactJson(execution.wrdataArtifacts),
     );
     expect(JSON.parse(execution.wrdataArtifactJson)[0].ProbeList).toBe("V(in)");
+    expect(JSON.parse(execution.wrdataArtifactJson)[0].RawfileOptionList).toBe(
+      rawfileOptionList,
+    );
     expect(execution.diagnosticCount).toBe(expectedCodes.length);
     expect(execution.diagnosticCodes).toEqual(expectedCodes);
     expect(execution.runArtifacts[0]?.controlLineCount).toBe(expectedControlLines.length);

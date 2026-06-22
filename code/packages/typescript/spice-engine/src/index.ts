@@ -727,6 +727,8 @@ export interface DeckWrdataArtifact {
   readonly marker: string;
   readonly probeCount: number;
   readonly probes: readonly string[];
+  readonly optionCount: number;
+  readonly options: readonly string[];
   readonly datafile: string;
 }
 
@@ -8429,12 +8431,29 @@ export function formatDeckRawfileArtifactJson(
 export function formatDeckWrdataAscii(
   table: string,
   probes: readonly string[] = [],
+  rawfileOptions: readonly string[] = [],
 ): string {
   const rows = deckTableRows(table);
   if (rows.length === 0) {
     return "";
   }
-  return `# SPICE deck wrdata artifact\nProbes: ${probes.join(";")}\n${rows.join("\n")}\n`;
+  const columns = rows[0]!.split("\t");
+  const lines = [
+    "# SPICE deck wrdata artifact",
+    `Probes: ${probes.join(";")}`,
+  ];
+  if (rawfileOptions.length > 0) {
+    lines.push(`Options: ${rawfileOptions.join(";")}`);
+  }
+  const normalizedOptions = new Set(rawfileOptions.map((option) => option.toLowerCase()));
+  if (normalizedOptions.has("set wr_vecnames")) {
+    lines.push(`VectorNames: ${columns.join(";")}`);
+  }
+  if (normalizedOptions.has("set wr_singlescale") && columns.length > 0) {
+    lines.push(`Scale: ${columns[0]}`);
+  }
+  lines.push(...rows);
+  return `${lines.join("\n")}\n`;
 }
 
 function deckWrdataMarkerParts(marker: string): { target: string; probes: string[] } | undefined {
@@ -8451,6 +8470,7 @@ function deckWrdataMarkerParts(marker: string): { target: string; probes: string
 function deckWrdataArtifacts(
   table: string,
   writeMarkers: readonly string[],
+  rawfileOptions: readonly string[],
 ): DeckWrdataArtifact[] {
   return writeMarkers.flatMap((marker) => {
     const parts = deckWrdataMarkerParts(marker);
@@ -8462,7 +8482,9 @@ function deckWrdataArtifacts(
       marker,
       probeCount: parts.probes.length,
       probes: [...parts.probes],
-      datafile: formatDeckWrdataAscii(table, parts.probes),
+      optionCount: rawfileOptions.length,
+      options: [...rawfileOptions],
+      datafile: formatDeckWrdataAscii(table, parts.probes, rawfileOptions),
     }];
   });
 }
@@ -8472,6 +8494,8 @@ const DECK_WRDATA_ARTIFACT_COLUMNS = [
   "Marker",
   "Probes",
   "ProbeList",
+  "Options",
+  "RawfileOptionList",
   "Bytes",
 ] as const;
 
@@ -8481,6 +8505,8 @@ function deckWrdataArtifactCells(artifact: DeckWrdataArtifact): string[] {
     artifact.marker,
     String(artifact.probeCount),
     artifact.probes.join(";"),
+    String(artifact.optionCount),
+    artifact.options.join(";"),
     String(artifact.datafile.length),
   ];
 }
@@ -8617,7 +8643,7 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
-    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
     const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
     const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
     const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
@@ -8705,7 +8731,7 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
-    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
     const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
     const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
     const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
@@ -8804,7 +8830,7 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
-    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
     const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
     const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
     const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
@@ -8898,7 +8924,7 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
-    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
     const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
     const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
     const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
@@ -8982,7 +9008,7 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
-    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
     const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
     const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
     const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
@@ -9065,7 +9091,7 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
-    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
     const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
     const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
     const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
@@ -9158,7 +9184,7 @@ export function runDeckAnalysis(
     const rawfileArtifactCsv = formatDeckRawfileArtifactCsv(rawfileArtifacts);
     const rawfileArtifactJson = formatDeckRawfileArtifactJson(rawfileArtifacts);
     const rawfileArtifactRecords = deckRawfileArtifactRecords(rawfileArtifacts);
-    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers);
+    const wrdataArtifacts = deckWrdataArtifacts(table, writeMarkers, rawfileOptions);
     const wrdataArtifactTable = formatDeckWrdataArtifactTable(wrdataArtifacts);
     const wrdataArtifactCsv = formatDeckWrdataArtifactCsv(wrdataArtifacts);
     const wrdataArtifactJson = formatDeckWrdataArtifactJson(wrdataArtifacts);
