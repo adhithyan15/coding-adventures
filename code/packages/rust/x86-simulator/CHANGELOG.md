@@ -1,5 +1,14 @@
 # Changelog — x86-simulator
 
+## 0.7.3 — 2026-06-22 — Dartmouth BASIC `DIM` array cell (LANG-FULL BA3 follow-up)
+
+Adds an executed matrix cell `basic_array_runs_on_x86_sim`: a Dartmouth BASIC
+`DIM A(3)` array (LANG-FULL BA3, merged) filled by `LET A(i) = …` and summed
+back via `A(i)` reads ⇒ stdout `42`. Runs the real BASIC frontend's x86_64
+output on the simulator, exercising the shared `alloc_array`/`array_set`/
+`array_get` ops (E5) through the **BASIC** lowering path — the BASIC counterpart
+to `algol_static_array_runs_on_x86_sim`. Test-only; no library change.
+
 ## 0.7.2 — 2026-06-22 — ALGOL `own` global cell (LANG-FULL AL6 follow-up)
 
 Adds the executed matrix cell `algol_own_variable_runs_on_x86_sim`: an ALGOL

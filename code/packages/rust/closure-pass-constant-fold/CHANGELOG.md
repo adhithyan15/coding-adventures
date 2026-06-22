@@ -23,6 +23,23 @@ and a variable radix all pass through unchanged. 7 new unit tests.
 > Version note: bumped to 0.23.0 (skipping 0.22.0, reserved by the concurrently
 > -developed `indexOf` fold) so the parallel branches don't collide on the
 > version line.
+## [0.22.0] - 2026-06-22
+
+### Added — fold `"haystack".indexOf("needle")` on string literals
+
+The single-argument `String#indexOf` (ECMAScript §22.1.3.8) now folds to a
+numeric literal when both receiver and needle are string literals:
+`"abcabc".indexOf("b")` → `1`, an absent needle → `-1`, and the empty needle →
+`0`. The result is the **UTF-16 code-unit** index, not a byte or scalar index:
+Rust's `str::find` returns a UTF-8 byte offset, so the matched prefix is
+re-measured with `encode_utf16().count()` — `"💩x".indexOf("x")` → `2`
+(matching V8), where a naive byte index would be `4` and a char index `1`. For
+ASCII the indices coincide.
+
+Conservative scope: only the single-argument form folds. The two-argument
+`fromIndex` overload (`"abc".indexOf("b", 1)`) and an identifier/expression
+receiver pass through unchanged. 5 new unit tests (found/not-found, empty
+needle, UTF-16 counting, two-arg passthrough, identifier-receiver passthrough).
 
 ## [0.21.0] - 2026-06-22
 

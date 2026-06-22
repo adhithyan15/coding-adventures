@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.172.0] - 2026-06-22
+
+### Added — numeric `toString([radix])` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.23.0, which folds
+`Number.prototype.toString` on a non-negative integer literal with a known radix
+to a string literal: `(255).toString()` → `"255"`, `(255).toString(16)` →
+`"ff"`, `(255).toString(2)` → `"11111111"`. The radix is the default 10 or a
+single integer literal in `2..=36`; a fractional receiver, an out-of-range
+radix, and a variable radix pass through.
+
+New e2e fixture `tests/diff/simple-fold-radix` (and integration test
+`diff_simple_fold_radix.rs`): `var s = (255).toString(16); report(s);` →
+`var s="ff";report(s);`, with a whitespace-fallback guard proving the fold comes
+from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.172.0 to sit above the concurrently-developed
+> `indexOf` fold (closurec 0.171.0), so the parallel branches never collide on
+> the version line.
+
+## [0.171.0] - 2026-06-22
+
+### Added — string `indexOf` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.22.0, which folds the
+single-argument `String#indexOf` on two string literals to a numeric literal:
+`"abcabc".indexOf("b")` → `1` (the UTF-16 code-unit index of the first
+occurrence), an absent needle → `-1`, the empty needle → `0`. Only the
+one-argument form folds; the `fromIndex` overload and a non-literal receiver
+pass through.
+
+New e2e fixture `tests/diff/simple-fold-indexof` (and integration test
+`diff_simple_fold_indexof.rs`): `var i = "abcabc".indexOf("b"); report(i);` →
+`var i=1;report(i);`, with a whitespace-fallback guard proving the fold comes
+from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.171.0 to sit above the concurrently-developed ASI
+> Phase-3 branch (closurec 0.170.0) and the merged charat fold (0.169.0), so the
+> parallel branches never collide on the version line.
 ## [0.170.0] - 2026-06-22
 
 ### Added — ASI Phase 3: restricted productions (Rule 3) end-to-end
