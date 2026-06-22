@@ -8,10 +8,11 @@
 //
 // Finder note: a data cell's value and a row-number in the gutter can be the
 // same string (e.g. "15" is both A1 and the row-15 label), and a virtualized
-// ListView keeps cached-but-offscreen rows in the tree. So we (a) assert on
-// values that can't also be a low row number (38, 169, 138…) and (b) target a
-// cell for tapping via its GestureDetector ancestor — the chrome cells have
-// none, so the match is unambiguous.
+// ListView keeps cached-but-offscreen rows in the tree. So we (a) assert on the
+// cross-foot totals, which carry a "#,##0.00" format and so render as "38.00",
+// "169.00", … — strings a bare integer row label can never collide with — and
+// (b) target a cell for tapping via its GestureDetector ancestor — the chrome
+// cells have none, so the match is unambiguous.
 //
 // Run (after `bash scripts/build.sh` vendors native/libspreadsheet_capi.*):
 //   flutter test test/infinite_grid_test.dart
@@ -45,9 +46,10 @@ void main() {
     expect(find.text('B'), findsOneWidget);
     expect(find.text('E'), findsOneWidget);
 
-    // Engine-computed seeded values that can't also be a built row number.
-    expect(find.text('38'), findsOneWidget); // E1 = SUM(A1:D1)
-    expect(find.text('169'), findsOneWidget); // E5 grand total
+    // Engine-computed seeded totals, rendered through their "#,##0.00" format
+    // (so "38.00", not "38") — values a bare row-number label can't collide with.
+    expect(find.text('38.00'), findsOneWidget); // E1 = SUM(A1:D1)
+    expect(find.text('169.00'), findsOneWidget); // E5 grand total
 
     // The formula bar starts on A1 showing its source.
     expect(find.text('A1'), findsOneWidget); // address label
@@ -78,9 +80,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // Dependents recompute live: E1 = 115+3+12+8 = 138, A5 = 115+8+12+4 = 139,
-    // E5 = 138+51+45+35 = 269 (none of which is a built row number).
-    expect(find.text('138'), findsOneWidget); // E1
-    expect(find.text('139'), findsOneWidget); // A5
-    expect(find.text('269'), findsOneWidget); // E5
+    // E5 = 138+51+45+35 = 269 — all carry "#,##0.00", so they render with the
+    // ".00" suffix (and none collides with a bare row-number label).
+    expect(find.text('138.00'), findsOneWidget); // E1
+    expect(find.text('139.00'), findsOneWidget); // A5
+    expect(find.text('269.00'), findsOneWidget); // E5
   });
 }

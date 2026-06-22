@@ -565,6 +565,10 @@ class InfiniteSheetModel {
   /// The A1 address of the selected cell (e.g. `"Z1000"`).
   String get infAddress => '${_session.columnLetters(selCol)}$selRow';
 
+  /// The engine's per-edit revision clock — bumps on every mutation. The
+  /// status footer shows it so the live recompute is visible while scrolling.
+  int get revision => _session.currentRevision();
+
   /// One row's display strings (columns 1..totalCols) — what a virtualized
   /// `ListView` delegate renders. A single engine `get_window` over a 1×N strip;
   /// returns an empty list if the request was rejected/oversized.
