@@ -28,18 +28,36 @@ ADJ = HERE / "resp-edges.adj"
 QUERY = HERE / "resp-recall.query.adj"
 CLI = HERE.parents[3] / "packages" / "rust" / "target" / "debug" / "adj-lang-cli"
 
-# Every grounded edge: occupational exposure -> the pneumoconiosis the library binds.
+# Every grounded edge: inhaled occupational/environmental exposure -> the lung disease
+# the library binds. The domain began as classic dust/fiber pneumoconioses and now spans
+# the broader board topic (hypersensitivity pneumonitis, inhalational airway/parenchymal
+# injury, an inhaled metal deposition disease, and an inhaled carcinogen).
 EXPECTED = {
     "silica": "silicosis",
     "asbestos": "asbestosis",
     "beryllium": "berylliosis",
     "cotton_dust": "byssinosis",
     "coal_dust": "coal_workers_pneumoconiosis",
+    # --- BATCH: occupational/environmental lung disease beyond pneumoconioses ---
+    "thermophilic_actinomycetes": "farmers_lung",        # expand (NBK557580)
+    "bird_antigens": "bird_fanciers_lung",               # expand (NBK499918)
+    "bagasse": "bagassosis",                             # expand (NBK554444)
+    "nitrogen_dioxide": "silo_fillers_disease",          # expand (NBK554539)
+    "diacetyl": "bronchiolitis_obliterans",              # expand (NBK441865)
+    "diisocyanates": "occupational_asthma",              # expand (NBK430901)
+    "iron": "siderosis",                                 # expand (PMC12832015)
+    "radon": "lung_cancer",                              # expand (NBK562321)
 }
 # Every edge cites a primary authority; we accept any of the recognized authoritative
-# hosts (NCBI StatPearls/Bookshelf and CDC/NIOSH), not a single hardcoded domain — the
-# primary-source-first policy grounds an edge wherever the clean both-endpoints span lives.
-_AUTH_HOSTS = ("https://www.ncbi.nlm.nih.gov/", "https://www.cdc.gov/")
+# NCBI/federal hosts (StatPearls/Bookshelf, PubMed Central, and CDC/NIOSH), not a single
+# hardcoded domain — the primary-source-first policy grounds an edge wherever the clean
+# both-endpoints span lives. PMC (pmc.ncbi.nlm.nih.gov) is the home of the one edge
+# (siderosis/welder's lung) that has no StatPearls chapter.
+_AUTH_HOSTS = (
+    "https://www.ncbi.nlm.nih.gov/",
+    "https://pmc.ncbi.nlm.nih.gov/",
+    "https://www.cdc.gov/",
+)
 REL = "inhalation_causes"
 VAR = "Disease"
 
@@ -61,7 +79,7 @@ def test_library_is_pure_adj_and_fully_grounded() -> None:
     text = ADJ.read_text()
     assert "trust consensus" not in text, "RESP ships no authored-debt; ground or omit"
     assert "[FLAG:" not in text
-    edge_count = len(EXPECTED)  # 4
+    edge_count = len(EXPECTED)  # 13
     assert text.count("    relate ") == edge_count
     assert text.count("trust authoritative") == edge_count
     assert text.count('\n        locator "') == edge_count

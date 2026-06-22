@@ -569,6 +569,28 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                     }
                 }
+                // ---- repeat(count) → the string concatenated `count` times ----
+                //
+                // `"ab".repeat(3)` → `"ababab"` (ECMAScript §22.1.3.18). The
+                // count must be a non-negative integer literal; `fold_string_repeat`
+                // declines (leaves the call) for a negative count (JS throws a
+                // `RangeError`), a fractional/non-literal count, or a result
+                // whose length would exceed a fixed cap — the cap keeps the
+                // optimizer from materializing a megabyte string at compile time
+                // (an algorithmic-blowup / DoS guard).
+                else if id.name == "repeat" {
+                    if let Some(result) = fold_string_repeat(&s.value, &arguments) {
+                        let parent = c.cv.clone();
+                        let count_src = match arguments.first() {
+                            Some(Expression::NumericLiteral(n)) => format_js_number(n.value),
+                            _ => "?".to_string(),
+                        };
+                        let before = format!("\"{}\".repeat({})", s.value, count_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
                 // ---- zero-argument casing methods (ASCII-only) ----
                 else if arguments.is_empty() {
                     let cased = match id.name.as_str() {
@@ -817,6 +839,45 @@ fn fold_string_slice(value: &str, args: &[Expression]) -> Option<String> {
     }
     // A lone surrogate (split pair) can't be a Rust String — decline.
     String::from_utf16(&units[lo..hi]).ok()
+}
+
+/// Compute `value.repeat(count)` at compile time, or `None` when it cannot be
+/// folded soundly (ECMAScript §22.1.3.18, `String.prototype.repeat`).
+///
+/// `repeat` concatenates the whole receiver `count` times, so — unlike `slice`
+/// — it never splits a surrogate pair: the UTF-8 string is simply duplicated.
+/// We require exactly one **non-negative integer literal** argument:
+/// `"ab".repeat(3)` → `"ababab"`, `"x".repeat(0)` → `""`.
+///
+/// We decline (return `None`, leaving the call for the runtime) when:
+/// - the argument is missing, fractional, non-finite, or not a numeric literal
+///   (we don't model `ToInteger` coercion of arbitrary values);
+/// - the count is negative — JS throws a `RangeError`, which we must not erase
+///   by folding to a value; or
+/// - the materialized result would exceed `MAX_REPEAT_UNITS` UTF-16 code units.
+///   `"x".repeat(1e9)` is a valid program, but expanding it at compile time
+///   would balloon the output (and the optimizer's memory) — an
+///   algorithmic-blowup / DoS guard. `checked_mul` also stops the length
+///   computation itself from overflowing.
+fn fold_string_repeat(value: &str, args: &[Expression]) -> Option<String> {
+    /// Cap on the folded result's length, in UTF-16 code units. Past this we
+    /// leave `repeat` for the runtime rather than materialize a huge literal.
+    const MAX_REPEAT_UNITS: u64 = 100_000;
+
+    let n = match args {
+        [Expression::NumericLiteral(n)] => n,
+        _ => return None,
+    };
+    if !(n.value.is_finite() && n.value.fract() == 0.0 && n.value >= 0.0) {
+        return None;
+    }
+    let count = n.value as u64;
+    let unit_len = value.encode_utf16().count() as u64;
+    // Decline on overflow (None from checked_mul) or when over the cap.
+    match unit_len.checked_mul(count) {
+        Some(total) if total <= MAX_REPEAT_UNITS => Some(value.repeat(count as usize)),
+        _ => None,
+    }
 }
 
 // ---------------------------------------------------------------------
@@ -3255,6 +3316,97 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.slice(1) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- repeat (concatenation) ----------------------
+
+    /// Build `"<recv>".repeat(<count>)`.
+    fn repeat_call(recv: &str, count: f64) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), "repeat")),
+            arguments: vec![num(count, None)],
+        })
+    }
+
+    #[test]
+    fn fold_string_repeat_basic() {
+        for (recv, count, expect) in [
+            ("ab", 3.0, "ababab"),
+            ("x", 5.0, "xxxxx"),
+            ("ab", 0.0, ""),  // count 0 → empty
+            ("", 9.0, ""),    // empty receiver → empty
+            ("é", 2.0, "éé"), // multibyte char duplicated whole, never split
+        ] {
+            let c = repeat_call(recv, count);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{recv}\".repeat({count}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => {
+                    assert_eq!(s.value, expect, "\"{recv}\".repeat({count})")
+                }
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn repeat_negative_count_does_not_fold() {
+        // JS `"ab".repeat(-1)` throws RangeError — folding would erase the throw.
+        let c = repeat_call("ab", -1.0);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "negative repeat count must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn repeat_fractional_count_does_not_fold() {
+        // We don't model ToInteger coercion (`"ab".repeat(2.5)` → 2 in JS).
+        let c = repeat_call("ab", 2.5);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "fractional repeat count must not fold");
+    }
+
+    #[test]
+    fn repeat_over_size_cap_does_not_fold() {
+        // 10-unit string * 50_000 = 500_000 units > 100_000 cap — DoS guard
+        // declines rather than materialize a half-megabyte literal at compile
+        // time. Just under the cap folds.
+        let over = repeat_call("0123456789", 50_000.0);
+        let (out, _, changed, _) = run_pass(program_with_expr(over, true));
+        assert!(!changed, "repeat over the size cap must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+
+        let under = repeat_call("0123456789", 10_000.0); // 100_000 units, == cap
+        let (out2, _, changed2, _) = run_pass(program_with_expr(under, true));
+        assert!(changed2, "repeat exactly at the cap should fold");
+        match extract_expr(&out2) {
+            Expression::StringLiteral(s) => assert_eq!(s.value.len(), 100_000),
+            other => panic!("expected a 100_000-byte literal; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn repeat_huge_count_does_not_overflow_or_fold() {
+        // `"x".repeat(1e18)` — checked_mul keeps the length math from
+        // overflowing; the call is left for the runtime.
+        let c = repeat_call("x", 1e18);
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "huge repeat count must not fold (no overflow)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn repeat_on_identifier_receiver_does_not_fold() {
+        // `s.repeat(3)` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "repeat")),
+            arguments: vec![num(3.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.repeat(3) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

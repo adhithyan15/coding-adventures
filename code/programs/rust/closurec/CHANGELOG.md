@@ -2,11 +2,11 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
-## [0.174.0] - 2026-06-22
+## [0.176.0] - 2026-06-22
 
 ### Added — numeric `toString([radix])` fold at SIMPLE/ADVANCED
 
-Pulls in `coding-adventures-closure-pass-constant-fold` 0.25.0, which folds
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.27.0, which folds
 `Number.prototype.toString` on a non-negative integer literal with a known radix
 to a string literal: `(255).toString()` → `"255"`, `(255).toString(16)` →
 `"ff"`, `(255).toString(2)` → `"11111111"`. The radix is the default 10 or a
@@ -19,9 +19,30 @@ New e2e fixture `tests/diff/simple-fold-radix` (and integration test
 from the SIMPLE typed pipeline. The full existing fixture suite remains
 byte-for-byte unchanged.
 
-> Version note: bumped to 0.174.0 to sit above main (closurec 0.171.0), the
-> merged `slice` fold (0.173.0), and the `indexOf` fold (0.171.0), so the
+> Version note: bumped to 0.176.0 to sit above main (closurec 0.173.0), the
+> merged `repeat` fold (0.175.0), and the merged `slice` fold (0.173.0), so the
 > parallel branches never collide on the version line.
+
+## [0.175.0] - 2026-06-22
+
+### Added — string `repeat` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.26.0, which folds
+`String#repeat` on a string literal with a non-negative integer-literal count
+to a string literal: `"ab".repeat(3)` → `"ababab"`, `"x".repeat(0)` → `""`. A
+negative count (JS `RangeError`), a fractional/non-literal count, and a result
+over the optimizer's 100 000-code-unit cap (a denial-of-service guard against
+materializing a huge literal at compile time) all pass through unfolded.
+
+New e2e fixture `tests/diff/simple-fold-repeat` (and integration test
+`diff_simple_fold_repeat.rs`): `var s = "ab".repeat(3); report(s);` →
+`var s="ababab";report(s);`, with a whitespace-fallback guard proving the fold
+comes from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.175.0 to sit above main (closurec 0.173.0) and the
+> concurrently-open numeric `toString([radix])` fold branch (closurec 0.174.0,
+> PR #6560), so the parallel branches never collide on the version line.
 
 ## [0.173.0] - 2026-06-22
 

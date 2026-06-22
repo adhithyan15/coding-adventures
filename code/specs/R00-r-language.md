@@ -1182,6 +1182,47 @@ unchanged.
     **Deferred to R-34:** `dig.lab =` (significant-digit control of auto-label
     formatting) and `ordered_result =` (an ordered factor result). The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
+- **R-40 — `chol()` (Cholesky factorization)** *(this PR)*. An **independent
+  matrix-algebra item** in the same family as R-36/R-38, landed in the shared
+  `s-runtime` (R reuses it verbatim through the shared tree-walker). For a real
+  symmetric positive-definite `n×n` matrix `X`, `chol(X)` returns the
+  **upper-triangular** matrix `R` with `t(R) %*% R == X` (R's convention: `chol`
+  returns the upper-triangular Cholesky factor `R`, so `R'R = X`).
+  - **Algorithm (Cholesky–Banachiewicz, upper form).** Walk columns `i = 1..n`:
+    the diagonal is `R[i,i] = sqrt(X[i,i] − Σ_{k<i} R[k,i]²)` and the off-diagonal
+    (for `j > i`) is `R[i,j] = (X[i,j] − Σ_{k<i} R[k,i]·R[k,j]) / R[i,i]`; entries
+    below the diagonal (`i > j`) are `0`. This is `O(n³)/3` flops, half a full LU.
+  - **Which triangle is read.** Like R's default `chol`, the factorization reads
+    **only the upper triangle** of `X` (`X[i,j]` for `i ≤ j`); the strictly-lower
+    entries are ignored, so a matrix whose upper triangle is SPD factors even if
+    its lower triangle is asymmetric. (R itself does not symmetrize either.)
+  - **Error conditions (faithful to R).**
+    * **Non-square** `X` → error (`'a' must be square`), checked *before* any
+      indexing so a `2×3` input never reads out of bounds.
+    * **Non-numeric** `X` → error (the operand must be a numeric matrix).
+    * **`NA` in the upper triangle** → error (`NA` cannot be factored), never a
+      silent `NaN`.
+    * **Not positive-definite** — if at column `i` the pivot
+      `X[i,i] − Σ_{k<i} R[k,i]²` is `≤ 0` (or non-finite), the matrix is not SPD:
+      the function returns the error *"the leading minor of order i is not
+      positive definite"* (R's exact message). The `≤ 0` test runs **before** the
+      `sqrt`, so we never take `sqrt` of a negative number — no `NaN`, no panic.
+  - **Reuse of matrix machinery.** The implementation pulls the square matrix out
+    with the **existing `square_matrix` helper** (the same one `det`/`solve` use —
+    it already rejects non-matrix, non-square, and over-`MAX_SOLVE_DIM` inputs and
+    returns column-major data + order `n`), indexes column-major (`X[i,j]` at
+    `j·n + i`), and emits an `SValue::Matrix` directly (the constructor
+    `matrix()`/`solve`/`kronecker` share). Allocation is the single `n×n` result
+    buffer, bounded by the `MAX_SOLVE_DIM` order cap (so `n² ≤ 10⁶`).
+  - **Worked example (column-major).** `X = matrix(c(4,2,2,3), nrow=2)` is the
+    SPD matrix `[[4,2],[2,3]]`. `chol(X)` is `R = [[2,1],[0,√2]]`
+    (`R[1,1]=√4=2`, `R[1,2]=2/2=1`, `R[2,2]=√(3−1²)=√2`), and `t(R) %*% R`
+    reconstructs `X`. `chol(diag(3))` is the identity.
+  - **Deferred to R-41.** `pivot = TRUE` (pivoted Cholesky for
+    positive-*semi*-definite matrices, with the `attr(,"pivot")` permutation and
+    `rank` attributes), the `chol2inv()` companion (inverse from a Cholesky
+    factor), and complex (Hermitian) matrices are all **out of scope here** and
+    explicitly deferred to **R-41**. This item ships the real-SPD dense core only.
 - **R-38 — `kronecker()` (Kronecker product)** *(this PR)*. An **independent
   matrix-algebra item** in the same family as R-36, landed in the shared
   `s-runtime` (R reuses it verbatim through the shared tree-walker). The
