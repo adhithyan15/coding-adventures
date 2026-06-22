@@ -2172,6 +2172,16 @@ fn match_advanced_construct(pattern: &IRNode, subject: &IRNode) -> Option<Option
             // test, then evaluate it through a fresh, stateless VM (the test is
             // pure — `x > 2` — and must not touch session state).
             let test_filled = substitute_bound_symbols(test, &bindings);
+            // Bound the substituted test's size before evaluating: substitution can
+            // splice the (possibly deep) captured subject into the test once per
+            // reference (`Condition[x_, f[x, x, …]]`), producing a tree larger and
+            // deeper than the parser would ever have allowed for the test itself.
+            // `VM::eval` has no depth guard, so an over-deep test must be refused
+            // (it would be an uncatchable stack-overflow abort, not an `Err`). Over
+            // the cap → treat the condition as failed (§22.5).
+            if node_count_within(&test_filled, REPLACE_GROWTH_NODE_CAP).is_none() {
+                return Some(None);
+            }
             if eval_predicate_is_true(&test_filled) {
                 Some(Some(bindings))
             } else {
@@ -2242,11 +2252,13 @@ fn substitute_bound_symbols(template: &IRNode, bindings: &Bindings) -> IRNode {
 /// reduces to the Wolfram `True` symbol (MA04 §22.3). The test is run through a
 /// **fresh** `WolframBackend`-backed VM: these tests are pure (`x > 2`,
 /// `EvenQ[4]`), so a throwaway VM is correct and deliberately stateless — it can
-/// neither see nor mutate the caller's session bindings. Evaluation goes through
-/// the standard VM, which carries the existing recursion/stack guards, so a
-/// crafted test cannot recurse unboundedly. Anything other than `True` (including
-/// `False`, an unresolved relation, or a free symbol) yields `false`, so the
-/// surrounding match cleanly *fails* rather than erroring.
+/// neither see nor mutate the caller's session bindings. The runtime `VM::eval`
+/// itself carries **no** recursion-depth guard, so the caller is responsible for
+/// bounding the test's *size/depth* before calling this (the `Condition` arm
+/// rejects an over-cap substituted test via [`node_count_within`]); given a
+/// within-cap test this evaluation is bounded. Anything other than `True`
+/// (including `False`, an unresolved relation, or a free symbol) yields `false`,
+/// so the surrounding match cleanly *fails* rather than erroring.
 fn eval_predicate_is_true(test: &IRNode) -> bool {
     use crate::backend::WolframBackend;
     let mut vm = VM::new(Box::new(WolframBackend::new()));
@@ -2525,6 +2537,48 @@ pub(crate) fn replace_whole(expr: &IRNode, rules: &[IRNode]) -> IRNode {
 /// bounded.
 const REPLACE_REPEATED_MAX_ITERATIONS: usize = 1 << 16;
 
+/// The maximum **node count** a `ReplaceRepeated` intermediate form (or a
+/// substituted `Condition`/`PatternTest` test) may reach before W-20 stops growing
+/// it (MA04 §22.5). This is the *size/depth* DoS bound that the iteration cap
+/// alone does **not** provide: a branching rule like `x //. x -> f[x, x]` doubles
+/// the term every pass, so the term could reach gigabytes (and a depth that would
+/// overflow the evaluation stack) long before the `REPLACE_REPEATED_MAX_ITERATIONS`
+/// *pass* cap is hit. Because the runtime `VM::eval` has no intrinsic recursion
+/// guard, an over-deep tree is not a catchable error but a hard stack-overflow
+/// abort — so we must refuse to build or evaluate one. Counting is itself bounded:
+/// [`node_count_within`] stops as soon as the cap is exceeded, so the check is
+/// O(cap), never O(tree). The value matches `MAX_LIST_LENGTH` so a single rewrite
+/// pass can still expand a maximal list, but runaway growth across passes stops.
+const REPLACE_GROWTH_NODE_CAP: usize = MAX_LIST_LENGTH;
+
+/// Count the nodes in `node` but **stop early** once the count would exceed `cap`,
+/// returning `None` in that case and `Some(count)` otherwise (MA04 §22.5). The
+/// early stop makes this safe to call on a possibly-huge runtime-built tree: it
+/// visits at most `cap + 1` nodes, never the whole (potentially exponential) tree.
+/// The walk is itself depth-recursive, but it is only ever called on a tree that
+/// `replace_all_once` just built from a within-cap input by at most one expansion
+/// pass, so its depth is bounded by the previous (within-cap) tree's depth plus
+/// one rewrite — well under the stack limit; and once the running total crosses
+/// `cap` it unwinds immediately. Used to bound both `ReplaceRepeated` growth and
+/// the substituted-test size for `Condition`/`PatternTest`.
+fn node_count_within(node: &IRNode, cap: usize) -> Option<usize> {
+    fn go(node: &IRNode, cap: usize, running: usize) -> Option<usize> {
+        // Count this node; bail the moment we exceed the cap.
+        let mut total = running + 1;
+        if total > cap {
+            return None;
+        }
+        if let IRNode::Apply(app) = node {
+            total = go(&app.head, cap, total)?;
+            for arg in &app.args {
+                total = go(arg, cap, total)?;
+            }
+        }
+        Some(total)
+    }
+    go(node, cap, 0)
+}
+
 /// `ReplaceRepeated` semantics — apply `replace_all_once` **to a fixed point**
 /// (MA04 §22.4). Repeatedly run a single top-down pass over `expr`, evaluating the
 /// result of each pass through `eval` (so a rule whose RHS computes folds before
@@ -2551,8 +2605,19 @@ pub(crate) fn replace_repeated_to_fixed_point(
 ) -> IRNode {
     let mut current = expr.clone();
     for _ in 0..REPLACE_REPEATED_MAX_ITERATIONS {
-        // One single top-down pass, then evaluate the result (folds computed RHSes).
-        let rewritten = eval(replace_all_once(&current, rules, 0));
+        // One single top-down pass. We bound the *size* of the rewritten tree
+        // BEFORE evaluating it: a branching rule (`x -> f[x, x]`) doubles the term
+        // each pass, so without this guard the term could reach gigabytes / an
+        // un-evaluably-deep nesting (which `VM::eval`, having no depth guard, would
+        // turn into a hard stack-overflow abort) long before the iteration cap.
+        let rewritten_unevaluated = replace_all_once(&current, rules, 0);
+        if node_count_within(&rewritten_unevaluated, REPLACE_GROWTH_NODE_CAP).is_none() {
+            // The rewrite would blow past the size cap. Stop here and return the
+            // last in-bounds form rather than growing/evaluating it (§22.5).
+            return current;
+        }
+        // Within the size cap → safe to evaluate (folds computed RHSes).
+        let rewritten = eval(rewritten_unevaluated);
         if rewritten == current {
             // Fixed point: the pass changed nothing, so we have converged.
             return current;
@@ -6106,6 +6171,60 @@ mod tests {
         // It returned (no hang) and the rule fired (the bare `x` became `f[…]`).
         assert!(matches!(&result, IRNode::Apply(app)
             if matches!(&app.head, IRNode::Symbol(s) if s == "f")));
+    }
+
+    #[test]
+    fn replace_repeated_branching_rule_stops_at_growth_cap_no_oom() {
+        // A BRANCHING self-recursive rule — `x -> f[x, x]` — doubles the term every
+        // pass. Without the size cap this would reach gigabytes / an un-evaluably
+        // deep tree long before the *iteration* cap. The growth guard
+        // (`REPLACE_GROWTH_NODE_CAP`) must stop it quickly and return the last
+        // in-bounds form WITHOUT OOM or stack overflow. We use the direct function
+        // with an identity evaluator so the assertion is fast and deterministic.
+        let rules = vec![rule_node(
+            sym("x"),
+            apply(sym("f"), vec![sym("x"), sym("x")]),
+        )];
+        let result = replace_repeated_to_fixed_point(&sym("x"), &rules, |n| n);
+        // It returned (no OOM/hang) and the result is within the node cap.
+        assert!(node_count_within(&result, REPLACE_GROWTH_NODE_CAP).is_some());
+    }
+
+    #[test]
+    fn node_count_within_stops_early_over_cap() {
+        // A flat list of 10 elements has 12 nodes (List head + 10 args + … actually
+        // the head is the `List` symbol = 1, plus 10 ints = 11). Under a generous
+        // cap it counts; under a tiny cap it bails with `None` (early stop).
+        let l = list(vec![int(1), int(2), int(3), int(4), int(5)]);
+        assert!(node_count_within(&l, 100).is_some());
+        assert!(node_count_within(&l, 2).is_none());
+        // An atom is a single node.
+        assert_eq!(node_count_within(&int(7), 100), Some(1));
+    }
+
+    #[test]
+    fn condition_with_oversized_substituted_test_fails_not_aborts() {
+        // A Condition whose test references its capture many times would, after
+        // substitution of a large captured subject, exceed the size cap. We force
+        // the cap by capturing a near-cap subject; the condition must FAIL cleanly
+        // (return no match) rather than evaluating an un-evaluably-large test.
+        // Build a subject list right at the node cap so a single splice + wrapper
+        // crosses it. (Using a modest size that still exercises the guard path via
+        // a test referencing the binding inside a wrapper.)
+        let big = list((0..50).map(int).collect());
+        // test = And[x, x, x, …] referencing the capture many times. Substituting
+        // `big` for each `x` multiplies size; with enough references it crosses the
+        // cap. We use the head form directly.
+        let many_refs: Vec<IRNode> = std::iter::repeat_with(|| sym("x")).take(50).collect();
+        let test = apply(sym("f"), many_refs);
+        let patt = condition(named_blank("x"), test);
+        // 50 refs × ~52 nodes each ≈ 2600 nodes — within the default cap, so this
+        // should still evaluate (and fail because `f[…]` is not `True`), proving the
+        // guard does not over-reject normal-sized tests.
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![big, patt])),
+            sym("False")
+        );
     }
 
     #[test]

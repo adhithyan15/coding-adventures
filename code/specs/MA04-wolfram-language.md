@@ -1936,10 +1936,22 @@ inner (per-pass tree depth) and outer (number of passes) loops are bounded.
 * **Bounded backtracking.** Alternatives tries each branch once, left to right;
   there is no exponential cross-product. The recursive matcher calls reuse the
   same depth discipline as §21.
-* **Bounded test evaluation.** Condition/PatternTest evaluate through the standard
-  VM with its existing guards; the fresh VM has no session state to corrupt.
-* **Hard iteration cap.** `ReplaceRepeated` cannot loop forever — it stops at
-  `REPLACE_REPEATED_MAX_ITERATIONS` and returns the last form.
+* **Bounded test evaluation.** Condition/PatternTest evaluate through a fresh,
+  stateless VM (no session state to corrupt). The runtime `VM::eval` has **no**
+  intrinsic recursion-depth guard, so before evaluating a `Condition` test we
+  bound its *size* with `node_count_within` against `REPLACE_GROWTH_NODE_CAP`:
+  substitution can splice a captured (possibly deep) subject into the test once
+  per reference (`Condition[x_, f[x, x, …]]`), building a tree deeper than the
+  parser would ever have allowed — and an over-deep `VM::eval` is an *uncatchable*
+  stack-overflow abort, not an `Err`. An over-cap test makes the condition fail.
+* **Hard iteration cap AND growth cap.** `ReplaceRepeated` cannot loop forever
+  (the `REPLACE_REPEATED_MAX_ITERATIONS` *pass* cap), **nor** grow without bound:
+  each pass's rewritten tree is size-checked with `node_count_within` against
+  `REPLACE_GROWTH_NODE_CAP` *before* it is evaluated. A branching rule like
+  `x //. x -> f[x, x]` doubles the term per pass and would reach gigabytes / an
+  un-evaluably-deep nesting long before the iteration cap; the growth cap stops it
+  and returns the last in-bounds form. The size check is itself O(cap) — it stops
+  counting the moment the cap is exceeded, never walking the whole exploding tree.
 * **No panic on malformed nodes.** The `pattern_tree_well_formed` guard (§21.2)
   still rejects malformed `Pattern[…]` before any indexing; a malformed
   `Alternatives`/`Condition`/`PatternTest` (wrong arity) simply fails to match
