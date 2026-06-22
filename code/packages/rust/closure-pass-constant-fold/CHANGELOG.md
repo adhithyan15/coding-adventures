@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.29.0] - 2026-06-22
+
+### Added — fold `"  x  ".trim()` / `trimStart()` / `trimEnd()` on string literals
+
+`String.prototype.trim` / `trimStart` / `trimEnd` (ECMAScript §22.1.3.32/.34/.33)
+now fold to a string literal when the receiver is a string literal:
+`"  abc  ".trim()` → `"abc"`, `.trimStart()` → `"abc  "`, `.trimEnd()` →
+`"  abc"`. Trimming works on whole Unicode scalars, so — unlike `slice` — it
+can never split a surrogate pair.
+
+**Soundness note:** the stripped set is hard-coded as the exact ECMAScript
+white-space + line-terminator set (`is_js_trim_whitespace`), *not* Rust's
+`char::is_whitespace`, because the two disagree: Rust treats U+0085 (NEL) as
+whitespace but JS does not, and JS treats U+FEFF (BOM) as whitespace but Rust
+does not. Folding with the wrong set would silently miscompile. The set is
+U+0009–000D, U+0020, U+00A0, U+1680, U+2000–200A, U+2028, U+2029, U+202F,
+U+205F, U+3000, U+FEFF.
+
+8 new unit tests (basic/mixed/empty/interior cases, the full non-ASCII JS set,
+explicit exclusion of U+200B/U+2060, identifier-receiver and argument
+declines), with V8-derived oracle values. The pre-existing
+`unknown_string_method_does_not_fold` test (which used `trim` as its example)
+now uses `normalize`.
+
+> Version note: bumped to 0.29.0 — above the merged `repeat` fold (0.26.0), the
+> open numeric `toString(radix)` fold (0.27.0, PR #6560), and the open
+> `padStart/padEnd` fold (0.28.0, PR #6571) — so the parallel branches don't
+> collide on the version line.
+
 ## [0.26.0] - 2026-06-22
 
 ### Added — fold `"ab".repeat(count)` on string literals
