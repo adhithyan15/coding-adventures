@@ -14,6 +14,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickStyle>
 #include <QUrl>
 #include <QDir>
 
@@ -29,6 +30,12 @@
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
+
+    // Use the Basic Controls style so the demo's custom button styling (rounded
+    // chips in InfiniteSheet.qml) is honored — the macOS *native* style ignores
+    // Button background/contentItem customization. Must be set before the engine
+    // loads any QML.
+    QQuickStyle::setStyle(QStringLiteral("Basic"));
 
     SpreadsheetModel model;
 

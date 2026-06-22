@@ -24,7 +24,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Qt 6 — adjust the find_package version if you have Qt 5.
-find_package(Qt6 6.2 COMPONENTS Core Gui Qml Quick REQUIRED)
+# QuickControls2 is needed for QQuickStyle (main.cpp forces the Basic style so
+# the demo's custom Button chrome in InfiniteSheet.qml renders).
+find_package(Qt6 6.2 COMPONENTS Core Gui Qml Quick QuickControls2 REQUIRED)
 
 add_executable(visicalc_qt_app
     src/main.cpp
@@ -44,7 +46,7 @@ target_include_directories(visicalc_qt_app PRIVATE
 )
 
 target_link_libraries(visicalc_qt_app
-    PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick
+    PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2
 )
 
 # Link the Rust engine's C ABI static library, vendored by scripts/build.sh.

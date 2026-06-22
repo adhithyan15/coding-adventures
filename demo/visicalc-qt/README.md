@@ -127,6 +127,27 @@ The model seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) on top of the
 budget so there's something to scroll to; the extent (`totalRows`/`totalCols`)
 is derived from `usedRange()` plus a margin.
 
+#### Visual design
+
+`InfiniteSheet.qml` mirrors the **reference visual language** defined by the web
+demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend reads as one
+considered dark, modern-spreadsheet surface. The palette lives in a small set of
+`readonly property color` design tokens at the top of the file (`cBg`/`cPanel`/
+`cSurface`/`cLine`/`cInk`/`cMuted`/`cAccent`…), echoing the web demo's CSS custom
+properties rather than scattering hex values. From those tokens it builds: a
+panel-wrapped **toolbar** with an address **pill**, an `fx` marker, then a grown
+formula field with an accent **focus ring**; the actions are **segmented button
+groups** (drag-fill · clipboard · file · history) — a reusable
+`component ToolButton: Button` with hover/down/disabled chrome — separated by
+thin rules. The grid gets subtle **zebra** row banding, a 2-px **accent
+selection ring**, and the selected cell's **row + column headers tint to the
+accent**; a hairline-separated **status footer** echoes the live virtual-grid
+size and revision. Cells and the formula field use a real monospace face
+(`Menlo` on macOS, `Consolas` on Windows, `monospace` elsewhere) so digits
+column-align. `src/main.cpp` calls `QQuickStyle::setStyle("Basic")` before
+loading any QML, because the macOS *native* Controls style ignores `Button`
+`background`/`contentItem` customization (the Basic style honors it).
+
 ### Headless proof
 
 `test/tst_window.cpp` (qmake) seeds far-flung sparse cells and asserts the
