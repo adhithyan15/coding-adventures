@@ -12,7 +12,7 @@ use spice_engine::{
     format_deck_rawfile_artifact_table, format_deck_run_artifact_csv,
     format_deck_run_artifact_json, format_deck_run_artifact_table, format_deck_table_csv,
     format_deck_table_json, format_deck_transient_table, format_deck_wrdata_artifact_csv,
-    format_deck_wrdata_artifact_json, format_deck_wrdata_artifact_table,
+    format_deck_wrdata_artifact_json, format_deck_wrdata_artifact_table, format_deck_wrdata_ascii,
     format_digital_bridge_schedule_table, format_digital_event_stream_table,
     format_digital_event_table, format_distortion_table, format_fourier_table,
     format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
@@ -1664,6 +1664,30 @@ fn text_output_tables_are_stable_for_dc_and_transient_results() {
     assert_eq!(
         format_transient_table(&points, &["V(vin)", "V(mid)", "I(V1)"]).unwrap(),
         "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+    );
+}
+
+#[test]
+fn deck_wrdata_ascii_selects_marker_probe_columns() {
+    let table =
+        "Index\tV(in)\tI(V1)\n0\t1.000000e+00\t-1.000000e-03\n1\t2.000000e+00\t-2.000000e-03\n";
+    assert_eq!(
+        format_deck_wrdata_ascii(
+            table,
+            &["I(V1)".to_string()],
+            &[
+                "set wr_vecnames".to_string(),
+                "set wr_singlescale".to_string()
+            ],
+        ),
+        "# SPICE deck wrdata artifact\n\
+Probes: I(V1)\n\
+Options: set wr_vecnames;set wr_singlescale\n\
+VectorNames: Index;I(V1)\n\
+Scale: Index\n\
+Index\tI(V1)\n\
+0\t-1.000000e-03\n\
+1\t-2.000000e-03\n"
     );
 }
 

@@ -10715,7 +10715,8 @@ pub fn format_deck_wrdata_ascii(
     if rows.is_empty() {
         return String::new();
     }
-    let columns = rows[0].split('\t').collect::<Vec<_>>();
+    let projected_rows = deck_wrdata_project_rows(&rows, probes);
+    let columns = projected_rows[0].split('\t').collect::<Vec<_>>();
     let mut lines = vec![
         "# SPICE deck wrdata artifact".to_string(),
         format!("Probes: {}", probes.join(";")),
@@ -10741,8 +10742,39 @@ pub fn format_deck_wrdata_ascii(
             lines.push(format!("Scale: {scale}"));
         }
     }
-    lines.extend(rows.iter().map(|row| (*row).to_string()));
+    lines.extend(projected_rows);
     format!("{}\n", lines.join("\n"))
+}
+
+fn deck_wrdata_project_rows(rows: &[&str], probes: &[String]) -> Vec<String> {
+    let columns = rows[0].split('\t').collect::<Vec<_>>();
+    if probes.is_empty() {
+        return rows.iter().map(|row| (*row).to_string()).collect();
+    }
+    let mut selected_indices = Vec::new();
+    if !columns.is_empty() {
+        selected_indices.push(0);
+    }
+    for probe in probes {
+        if let Some(index) = columns
+            .iter()
+            .position(|column| column.eq_ignore_ascii_case(probe))
+        {
+            if !selected_indices.contains(&index) {
+                selected_indices.push(index);
+            }
+        }
+    }
+    rows.iter()
+        .map(|row| {
+            let cells = row.split('\t').collect::<Vec<_>>();
+            selected_indices
+                .iter()
+                .map(|index| cells.get(*index).copied().unwrap_or(""))
+                .collect::<Vec<_>>()
+                .join("\t")
+        })
+        .collect()
 }
 
 fn deck_wrdata_marker_parts(marker: &str) -> Option<(String, Vec<String>)> {

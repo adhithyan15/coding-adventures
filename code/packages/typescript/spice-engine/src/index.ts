@@ -8437,7 +8437,8 @@ export function formatDeckWrdataAscii(
   if (rows.length === 0) {
     return "";
   }
-  const columns = rows[0]!.split("\t");
+  const projectedRows = deckWrdataProjectRows(rows, probes);
+  const columns = projectedRows[0]!.split("\t");
   const lines = [
     "# SPICE deck wrdata artifact",
     `Probes: ${probes.join(";")}`,
@@ -8452,8 +8453,30 @@ export function formatDeckWrdataAscii(
   if (normalizedOptions.has("set wr_singlescale") && columns.length > 0) {
     lines.push(`Scale: ${columns[0]}`);
   }
-  lines.push(...rows);
+  lines.push(...projectedRows);
   return `${lines.join("\n")}\n`;
+}
+
+function deckWrdataProjectRows(rows: readonly string[], probes: readonly string[]): string[] {
+  const columns = rows[0]!.split("\t");
+  if (probes.length === 0) {
+    return [...rows];
+  }
+  const selectedIndices: number[] = [];
+  if (columns.length > 0) {
+    selectedIndices.push(0);
+  }
+  const normalizedColumns = columns.map((column) => column.toLowerCase());
+  for (const probe of probes) {
+    const index = normalizedColumns.indexOf(probe.toLowerCase());
+    if (index !== -1 && !selectedIndices.includes(index)) {
+      selectedIndices.push(index);
+    }
+  }
+  return rows.map((row) => {
+    const cells = row.split("\t");
+    return selectedIndices.map((index) => cells[index] ?? "").join("\t");
+  });
 }
 
 function deckWrdataMarkerParts(marker: string): { target: string; probes: string[] } | undefined {

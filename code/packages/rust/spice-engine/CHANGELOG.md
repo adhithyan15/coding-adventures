@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Treat explicit `wrdata <file> <probes...>` probe lists as in-memory data-file
+  column selectors in `format_deck_wrdata_ascii`, preserving the scale column
+  plus requested matching probe columns in deterministic WRDATA output,
+  matching Python and TypeScript.
 - Carry accepted `.control` rawfile/data-write option inventories through
   WRDATA artifact `Options` / `RawfileOptionList` summary columns, and render
   `wr_vecnames` / `wr_singlescale` intent as deterministic `VectorNames` /
