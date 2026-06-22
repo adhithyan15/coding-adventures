@@ -2380,6 +2380,10 @@ class DeckRawfileArtifact:
     marker: str
     probe_count: int
     probes: list[str]
+    matched_probe_count: int
+    matched_probes: list[str]
+    unmatched_probe_count: int
+    unmatched_probes: list[str]
     option_count: int
     options: list[str]
     rawfile: str
@@ -2876,11 +2880,22 @@ def format_deck_rawfile_ascii(
 ) -> str:
     """Format a selected deck table as deterministic in-memory ASCII rawfile text."""
 
+    return _format_deck_rawfile_ascii(table, analysis, rawfile_options, ())
+
+
+def _format_deck_rawfile_ascii(
+    table: str,
+    analysis: str,
+    rawfile_options: Iterable[str],
+    probes: Iterable[str],
+) -> str:
     rows = table.splitlines()
     if not rows:
         return ""
-    columns = rows[0].split("\t")
-    data_rows = [row.split("\t") for row in rows[1:]]
+    probe_list = list(probes)
+    projected_rows = _deck_rawfile_project_rows(rows, probe_list)
+    columns = projected_rows[0].split("\t")
+    data_rows = [row.split("\t") for row in projected_rows[1:]]
     lines = [
         f"Title: SPICE deck {analysis} result",
         "Date: deterministic",
@@ -2900,6 +2915,45 @@ def format_deck_rawfile_ascii(
     return "\n".join(lines) + "\n"
 
 
+def _deck_rawfile_project_rows(rows: list[str], probes: list[str]) -> list[str]:
+    columns = rows[0].split("\t")
+    if not probes:
+        return rows
+    selected_indices, _, _ = _deck_rawfile_probe_inventory(columns, probes)
+    projected_rows: list[str] = []
+    for row in rows:
+        cells = row.split("\t")
+        projected_rows.append(
+            "\t".join(
+                cells[index] if index < len(cells) else ""
+                for index in selected_indices
+            )
+        )
+    return projected_rows
+
+
+def _deck_rawfile_probe_inventory(
+    columns: list[str],
+    probes: list[str],
+) -> tuple[list[int], list[str], list[str]]:
+    selected_indices: list[int] = []
+    matched_probes: list[str] = []
+    unmatched_probes: list[str] = []
+    if columns:
+        selected_indices.append(0)
+    normalized_columns = [column.casefold() for column in columns]
+    for probe in probes:
+        normalized_probe = probe.casefold()
+        if normalized_probe not in normalized_columns:
+            unmatched_probes.append(probe)
+            continue
+        index = normalized_columns.index(normalized_probe)
+        if index not in selected_indices:
+            selected_indices.append(index)
+            matched_probes.append(columns[index])
+    return selected_indices, matched_probes, unmatched_probes
+
+
 def _deck_write_marker_parts(marker: str) -> tuple[str, list[str]] | None:
     parts = marker.split()
     if len(parts) < 2 or parts[0] != "write":
@@ -2914,22 +2968,30 @@ def _deck_rawfile_artifacts(
     rawfile_options: Iterable[str],
 ) -> list[DeckRawfileArtifact]:
     options = list(rawfile_options)
-    rawfile = format_deck_rawfile_ascii(table, plan.analysis, options)
+    rows = table.splitlines()
+    columns = rows[0].split("\t") if rows else []
     artifacts: list[DeckRawfileArtifact] = []
     for marker in write_markers:
         parts = _deck_write_marker_parts(marker)
         if parts is None:
             continue
         target, probes = parts
+        _, matched_probes, unmatched_probes = _deck_rawfile_probe_inventory(
+            columns, probes
+        )
         artifacts.append(
             DeckRawfileArtifact(
                 target=target,
                 marker=marker,
                 probe_count=len(probes),
                 probes=probes,
+                matched_probe_count=len(matched_probes),
+                matched_probes=matched_probes,
+                unmatched_probe_count=len(unmatched_probes),
+                unmatched_probes=unmatched_probes,
                 option_count=len(options),
                 options=list(options),
-                rawfile=rawfile,
+                rawfile=_format_deck_rawfile_ascii(table, plan.analysis, options, probes),
             )
         )
     return artifacts
@@ -2940,6 +3002,10 @@ _DECK_RAWFILE_ARTIFACT_COLUMNS = [
     "Marker",
     "Probes",
     "ProbeList",
+    "MatchedProbes",
+    "MatchedProbeList",
+    "UnmatchedProbes",
+    "UnmatchedProbeList",
     "Options",
     "RawfileOptionList",
     "Bytes",
@@ -2952,6 +3018,10 @@ def _deck_rawfile_artifact_cells(artifact: DeckRawfileArtifact) -> list[str]:
         artifact.marker,
         str(artifact.probe_count),
         ";".join(artifact.probes),
+        str(artifact.matched_probe_count),
+        ";".join(artifact.matched_probes),
+        str(artifact.unmatched_probe_count),
+        ";".join(artifact.unmatched_probes),
         str(artifact.option_count),
         ";".join(artifact.options),
         str(len(artifact.rawfile.encode())),

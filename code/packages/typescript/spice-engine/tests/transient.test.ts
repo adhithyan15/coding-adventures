@@ -2071,7 +2071,7 @@ set wr_vecnames
 set wr_singlescale
 set appendwrite
 .set WR_VECNAMES
-write out.raw V(in)
+write out.raw V(in) V(missing)
 wrdata out.dat V(in) V(missing)
 source other.cir
 cd /tmp
@@ -2093,7 +2093,7 @@ let gain = 2
     const expectedControlLines = [".save V(in)", ".probe V(in)"];
     const controlLineList = expectedControlLines.join(";");
     const expectedWriteMarkers = [
-      "write out.raw V(in)",
+      "write out.raw V(in) V(missing)",
       "wrdata out.dat V(in) V(missing)",
     ];
     const writeMarkerList = expectedWriteMarkers.join(";");
@@ -2114,9 +2114,13 @@ let gain = 2
     expect(execution.rawfileOptions).toEqual(expectedRawfileOptions);
     expect(execution.rawfileArtifactCount).toBe(1);
     expect(execution.rawfileArtifacts[0]?.target).toBe("out.raw");
-    expect(execution.rawfileArtifacts[0]?.marker).toBe("write out.raw V(in)");
-    expect(execution.rawfileArtifacts[0]?.probeCount).toBe(1);
-    expect(execution.rawfileArtifacts[0]?.probes).toEqual(["V(in)"]);
+    expect(execution.rawfileArtifacts[0]?.marker).toBe("write out.raw V(in) V(missing)");
+    expect(execution.rawfileArtifacts[0]?.probeCount).toBe(2);
+    expect(execution.rawfileArtifacts[0]?.probes).toEqual(["V(in)", "V(missing)"]);
+    expect(execution.rawfileArtifacts[0]?.matchedProbeCount).toBe(1);
+    expect(execution.rawfileArtifacts[0]?.matchedProbes).toEqual(["V(in)"]);
+    expect(execution.rawfileArtifacts[0]?.unmatchedProbeCount).toBe(1);
+    expect(execution.rawfileArtifacts[0]?.unmatchedProbes).toEqual(["V(missing)"]);
     expect(execution.rawfileArtifacts[0]?.optionCount).toBe(expectedRawfileOptions.length);
     expect(execution.rawfileArtifacts[0]?.options).toEqual(expectedRawfileOptions);
     expect(execution.rawfileArtifacts[0]?.rawfile).toContain("Title: SPICE deck op result\n");
@@ -2125,9 +2129,13 @@ let gain = 2
     expect(execution.rawfileArtifacts[0]?.rawfile).toContain("0\t0\t1.000000e+00\n");
     const rawfileRecord = execution.rawfileArtifactRecords[0]!;
     expect(rawfileRecord["Target"]).toBe("out.raw");
-    expect(rawfileRecord["Marker"]).toBe("write out.raw V(in)");
-    expect(rawfileRecord["Probes"]).toBe("1");
-    expect(rawfileRecord["ProbeList"]).toBe("V(in)");
+    expect(rawfileRecord["Marker"]).toBe("write out.raw V(in) V(missing)");
+    expect(rawfileRecord["Probes"]).toBe("2");
+    expect(rawfileRecord["ProbeList"]).toBe("V(in);V(missing)");
+    expect(rawfileRecord["MatchedProbes"]).toBe("1");
+    expect(rawfileRecord["MatchedProbeList"]).toBe("V(in)");
+    expect(rawfileRecord["UnmatchedProbes"]).toBe("1");
+    expect(rawfileRecord["UnmatchedProbeList"]).toBe("V(missing)");
     expect(rawfileRecord["Options"]).toBe(String(expectedRawfileOptions.length));
     expect(rawfileRecord["RawfileOptionList"]).toBe(rawfileOptionList);
     expect(rawfileRecord["Bytes"]).toBe(String(execution.rawfileArtifacts[0]?.rawfile.length));
@@ -2143,6 +2151,10 @@ let gain = 2
     expect(JSON.parse(execution.rawfileArtifactJson)[0].RawfileOptionList).toBe(
       rawfileOptionList,
     );
+    const rawfileJson = JSON.parse(execution.rawfileArtifactJson)[0];
+    expect(rawfileJson.ProbeList).toBe("V(in);V(missing)");
+    expect(rawfileJson.MatchedProbeList).toBe("V(in)");
+    expect(rawfileJson.UnmatchedProbeList).toBe("V(missing)");
     expect(execution.wrdataArtifactCount).toBe(1);
     expect(execution.wrdataArtifacts[0]?.target).toBe("out.dat");
     expect(execution.wrdataArtifacts[0]?.marker).toBe(

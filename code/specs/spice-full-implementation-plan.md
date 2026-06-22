@@ -118,7 +118,9 @@ downstream tools to compare.
      through the same direct selected-execution fields and selected-run
      artifact exports; accepted `.control` `write <rawfile> ...` markers now
      also produce deterministic in-memory ASCII rawfile artifacts with stable
-     table, CSV, compact JSON, and host-native record summaries, and accepted
+     table, CSV, compact JSON, and host-native record summaries, and explicit
+     `write` probe lists now select the emitted in-memory rawfile vector
+     columns and carry matched/unmatched probe inventories, and accepted
      `.control` `wrdata <file> ...` markers now produce deterministic
      in-memory ASCII data-file artifacts with matching stable table, CSV,
      compact JSON, and host-native record summaries, and WRDATA artifacts now
@@ -1079,6 +1081,15 @@ downstream tools to compare.
     - Stable WRDATA artifact table, CSV, compact JSON, and host-native record
       exports make ignored `wrdata` probe names auditable while keeping
       filesystem writes metadata-only.
+
+99. Deck rawfile write probe artifact inventories.
+    - Status: completed in this deck rawfile write probe artifact slice.
+    - Python, Rust, and TypeScript rawfile artifact summaries now expose stable
+      matched and unmatched probe counts/lists beside the requested `write`
+      probe list.
+    - In-memory ASCII rawfile artifacts now keep the scale column plus matching
+      requested vector columns, while stable table, CSV, compact JSON, and
+      host-native record exports make ignored `write` probe names auditable.
 
 ## Backlog
 

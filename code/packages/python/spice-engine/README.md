@@ -66,7 +66,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 | `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json`, `deck_table_records` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON/record conversion |
 | `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, table, analysis-directive, output-probe, output-directive, measurement, Fourier, control-command, and diagnostic count/name lists |
-| `format_deck_rawfile_ascii`, `format_deck_rawfile_artifact_table`, `format_deck_rawfile_artifact_csv`, `format_deck_rawfile_artifact_json` | `.control write` artifact | Deterministic in-memory ASCII rawfile text plus stable rawfile artifact table/CSV/JSON exports |
+| `format_deck_rawfile_ascii`, `format_deck_rawfile_artifact_table`, `format_deck_rawfile_artifact_csv`, `format_deck_rawfile_artifact_json` | `.control write` artifact | Deterministic in-memory ASCII rawfile text plus stable probe-aware rawfile artifact table/CSV/JSON exports |
 | `format_deck_wrdata_ascii`, `format_deck_wrdata_artifact_table`, `format_deck_wrdata_artifact_csv`, `format_deck_wrdata_artifact_json` | `.control wrdata` artifact | Deterministic in-memory ASCII data-file text plus stable option-aware WRDATA artifact table/CSV/JSON exports |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
@@ -125,8 +125,8 @@ Accepted `.control` `write` / `wrdata` rawfile/data-write markers are surfaced
 as `write_marker_count` / `write_markers` execution fields and as
 `WriteMarkers` / `WriteMarkerList` artifact fields without serializing files.
 Accepted `write <rawfile> ...` markers also produce deterministic in-memory
-ASCII rawfile artifacts on `rawfile_artifacts`, with stable table, CSV, JSON,
-and header-keyed record summaries. Accepted `wrdata <file> ...` markers
+ASCII rawfile artifacts on `rawfile_artifacts`, with stable probe-aware table,
+CSV, JSON, and header-keyed record summaries. Accepted `wrdata <file> ...` markers
 produce deterministic in-memory ASCII data-file artifacts on
 `wrdata_artifacts`, with stable table, CSV, JSON, and header-keyed record
 summaries; filesystem writes remain metadata-only.
@@ -136,10 +136,10 @@ Accepted `.control` rawfile output options (`set filetype=ascii`,
 `RawfileOptions` / `RawfileOptionList` artifact fields. WRDATA artifacts also
 carry the same option inventories and render `wr_vecnames` / `wr_singlescale`
 intent as stable `VectorNames` / `Scale` metadata in the in-memory data file.
-When a `wrdata` marker names probes, its data file keeps the scale column plus
-only the requested matching probe columns, while WRDATA artifact summaries keep
-matched and unmatched probe inventories in stable table, CSV, JSON, and record
-exports.
+When a `write` or `wrdata` marker names probes, its in-memory artifact keeps
+the scale column plus only the requested matching probe columns, while artifact
+summaries keep matched and unmatched probe inventories in stable table, CSV,
+JSON, and record exports.
 Existing `.control` body policy diagnostics flow into those selected-run
 artifact `Diagnostics` / `DiagnosticCodeList` fields and through the same
 run-artifact table, CSV, JSON, and `table_artifacts` records.

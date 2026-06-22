@@ -198,8 +198,8 @@ Accepted `.control` `write` / `wrdata` rawfile/data-write markers are surfaced
 as `write_marker_count` / `write_markers` execution fields and as
 `WriteMarkers` / `WriteMarkerList` artifact fields without serializing files.
 Accepted `write <rawfile> ...` markers also produce deterministic in-memory
-ASCII rawfile artifacts on `rawfile_artifacts`, with stable table, CSV, JSON,
-and header-keyed record summaries. Accepted `wrdata <file> ...` markers
+ASCII rawfile artifacts on `rawfile_artifacts`, with stable probe-aware table,
+CSV, JSON, and header-keyed record summaries. Accepted `wrdata <file> ...` markers
 produce deterministic in-memory ASCII data-file artifacts on
 `wrdata_artifacts`, with stable table, CSV, JSON, and header-keyed record
 summaries; filesystem writes remain metadata-only.
@@ -209,10 +209,10 @@ Accepted `.control` rawfile output options (`set filetype=ascii`,
 `RawfileOptions` / `RawfileOptionList` artifact fields. WRDATA artifacts also
 carry the same option inventories and render `wr_vecnames` / `wr_singlescale`
 intent as stable `VectorNames` / `Scale` metadata in the in-memory data file.
-When a `wrdata` marker names probes, its data file keeps the scale column plus
-only the requested matching probe columns, while WRDATA artifact summaries keep
-matched and unmatched probe inventories in stable table, CSV, JSON, and record
-exports.
+When a `write` or `wrdata` marker names probes, its in-memory artifact keeps
+the scale column plus only the requested matching probe columns, while artifact
+summaries keep matched and unmatched probe inventories in stable table, CSV,
+JSON, and record exports.
 Existing `.control` body policy diagnostics flow into those selected-run artifact `Diagnostics` /
 `DiagnosticCodeList` fields and through the same run-artifact table, CSV, JSON,
 and `table_artifacts` records. `format_deck_table_csv` also converts any stable

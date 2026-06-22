@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck rawfile probe inventory artifacts** —
+  selected `run_deck_analysis()` rawfile artifact summaries now carry
+  `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /
+  `UnmatchedProbeList` columns, and `write <rawfile> <probes...>` artifacts now
+  keep only requested matching vector columns in deterministic in-memory
+  rawfile output, matching Rust and TypeScript.
+
 - **Deck WRDATA unmatched probe artifacts** —
   selected `run_deck_analysis()` WRDATA artifact summaries now carry
   `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /
