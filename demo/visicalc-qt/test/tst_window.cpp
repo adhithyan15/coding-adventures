@@ -28,6 +28,7 @@ private slots:
     void undoRedoWalksHistory();
     void structuralInsertDeleteShiftsReferences();
     void numberFormatAppliesToSelectedCell();
+    void sortRangeReordersRowsByKeyColumn();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -305,6 +306,39 @@ void TstWindow::numberFormatAppliesToSelectedCell() {
     // The format is display-only: the stored source never changed.
     m.selectInf(1, 8);
     QCOMPARE(m.infFormula(), QStringLiteral("1234"));
+}
+
+// Range sort (the ▲/▼ Sort buttons): reorder the budget block A1:E4 by a key
+// column. The default seed has column A = 15,8,12,4 (rows 1..4) and each E cell
+// is =SUM(A:D) for its row. Sorting by column A ascending moves each row as a
+// record — column A becomes 4,8,12,15 and every E total travels with its row
+// (the engine shifts the moved SUM formulas' refs). Descending reverses it.
+void TstWindow::sortRangeReordersRowsByKeyColumn() {
+    SpreadsheetModel m;
+    auto colA = [&m](int row) { return m.window(row, 1, row, 1).at(0).toList().at(0).toString(); };
+    auto colE = [&m](int row) { return m.window(row, 5, row, 5).at(0).toList().at(0).toString(); };
+    // Pre-sort seed order.
+    QCOMPARE(colA(1), QStringLiteral("15"));
+    QCOMPARE(colA(4), QStringLiteral("4"));
+
+    // Ascending by column A (keyCol = 1): rows reorder to 4,8,12,15.
+    QVERIFY(m.sortRange("A1", "E4", 1, true));
+    QCOMPARE(colA(1), QStringLiteral("4"));
+    QCOMPARE(colA(2), QStringLiteral("8"));
+    QCOMPARE(colA(3), QStringLiteral("12"));
+    QCOMPARE(colA(4), QStringLiteral("15"));
+    // Each row's E total tracked its row (E = SUM of that row's A..D), formatted.
+    QCOMPARE(colE(1), QStringLiteral("35.00"));  // 4+11+3+17
+    QCOMPARE(colE(4), QStringLiteral("38.00"));  // 15+3+12+8
+
+    // Descending reverses the key order.
+    QVERIFY(m.sortRange("A1", "E4", 1, false));
+    QCOMPARE(colA(1), QStringLiteral("15"));
+    QCOMPARE(colA(4), QStringLiteral("4"));
+
+    // Bad args are a no-op returning false (no crash).
+    QVERIFY(!m.sortRange("A1", "A1", 1, true));   // single-row range
+    QVERIFY(!m.sortRange("A1", "E4", 9, true));   // key column outside the range
 }
 
 QTEST_MAIN(TstWindow)
