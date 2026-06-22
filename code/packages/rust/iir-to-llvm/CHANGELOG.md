@@ -3,6 +3,33 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.15.0] — 2026-06-22 — typed module globals (LANG-FULL E6 layer 1)
+
+`global_load` / `global_store` were the last of the `LANG32b`-deferred
+rejections on this backend (the validator's `SUPPORTED_OPS` whitelist excluded
+them). They now lower, so a **function can read/write a module-level global** in
+compiled LLVM IR.
+
+### Added
+- **`global_load` / `global_store`** in `SUPPORTED_OPS` + lowering:
+  - Every distinct global name (read or written, in first-seen order) becomes a
+    module-level **`@__twig_global_N = internal global i64 0`** — index-based
+    symbols (not name-based) so an arbitrary source identifier can never form an
+    invalid or colliding LLVM global, and zero-initialised to match every other
+    backend's never-written-global-reads-0 convention.
+  - `global_load "g" -> %d` → `%d = load i64, ptr @__twig_global_N`.
+  - `global_store "g", %v` → `store i64 %v, ptr @__twig_global_N`.
+  - The name is an `Operand::Str` literal (never a register); a non-string or
+    uncollected name is an `InvalidOperand` error.
+  - `collect_global_syms` builds the name→symbol map once per module; threaded
+    through `FnState`.
+
+### Verified
+- `tests/test_backend.rs`: the emitted `.ll` carries the `internal global` def +
+  the load/store targeting it, and `validate_for_llvm` now accepts the ops.
+- **End-to-end on real `clang`**: a cross-function program (`main` seeds `g`; a
+  separate `bump` reads/increments/writes it) compiles and runs to **exit 42**.
+
 ## [0.14.0] — 2026-06-21 — arrays via length-prefixed `@calloc` + explicit bounds-trap (LANG-FULL E5 PR-4a)
 
 The four E5 array opcodes now lower to the **static** array representation — a
