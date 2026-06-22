@@ -110,4 +110,12 @@ rulebook genetics_facts {
         source "Friedreich ataxia results from loss-of-function mutations in the frataxin (FXN) gene, located in the centromeric region of chromosome 9q (9q13 to 21.1)."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
         trust authoritative
+
+    % --- EXPAND: Marfan syndrome gene (FBN1) — rounds out the existing AD edge -------
+    % The page's defined abbreviation MFS = Marfan syndrome; this declarative names the
+    % FBN1 gene as the de-novo-mutation cause, grounding the gene_defect edge.
+    relate gene_defect(marfan_syndrome, fbn1)
+        source "While most individuals with MFS have an affected parent, 25% of patients develop the disease due to a de novo mutation involving the gene (FBN1) encoding the connective tissue protein fibrillin-1."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537339/"
+        trust authoritative
 }
