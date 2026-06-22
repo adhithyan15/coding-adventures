@@ -25,3 +25,6 @@ import "pharm-edges.adj"
 ? antidote_for(warfarin_toxicity, $Antidote)     % expect vitamin_k (expand)
 ? antidote_for(organophosphate_poisoning, $Antidote)  % expect atropine (expand)
 ? antidote_for(toxic_alcohol_poisoning, $Antidote)    % expect fomepizole (expand)
+? antidote_for(cyanide_poisoning, $Antidote)          % expect hydroxocobalamin (expand)
+? antidote_for(methotrexate_toxicity, $Antidote)      % expect leucovorin (expand)
+? antidote_for(iron_toxicity, $Antidote)              % expect deferoxamine (expand)

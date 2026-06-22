@@ -122,4 +122,22 @@ rulebook pharm_facts {
         source "Fomepizole is the antidote of choice for patients who present early after toxic alcohol exposure."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK482121/"
         trust authoritative
+
+    % --- EXPAND: hydroxocobalamin is the antidote for cyanide poisoning ------------
+    relate antidote_for(cyanide_poisoning, hydroxocobalamin)
+        source "Hydroxocobalamin can serve as an antidote for cyanide poisoning."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557632/"
+        trust authoritative
+
+    % --- EXPAND: leucovorin (folinic acid) rescues methotrexate toxicity -----------
+    relate antidote_for(methotrexate_toxicity, leucovorin)
+        source "Leucovorin is FDA indicated after high dose methotrexate therapy in osteosarcoma to decrease the toxic effects of methotrexate or counter the toxic effects of folate antagonists."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553114/"
+        trust authoritative
+
+    % --- EXPAND: deferoxamine chelates iron in iron toxicity -----------------------
+    relate antidote_for(iron_toxicity, deferoxamine)
+        source "Deferoxamine, a chelating agent that can remove iron from tissues and free iron from plasma, is indicated in patients with systemic toxicity, metabolic acidosis, worsening symptoms, or a serum iron level predictive of moderate or severe toxicity."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459224/"
+        trust authoritative
 }

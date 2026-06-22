@@ -44,6 +44,9 @@ EXPECTED = [
     ("warfarin_toxicity", "antidote_for", "vitamin_k"),           # expand (NBK557622)
     ("organophosphate_poisoning", "antidote_for", "atropine"),    # expand (NBK470430)
     ("toxic_alcohol_poisoning", "antidote_for", "fomepizole"),    # expand (NBK482121)
+    ("cyanide_poisoning", "antidote_for", "hydroxocobalamin"),    # expand (NBK557632)
+    ("methotrexate_toxicity", "antidote_for", "leucovorin"),      # expand (NBK553114)
+    ("iron_toxicity", "antidote_for", "deferoxamine"),            # expand (NBK459224)
 ]
 VAR = {"drug_class": "Class", "mechanism": "MOA", "adverse_effect": "Effect",
        "antidote_for": "Antidote"}
