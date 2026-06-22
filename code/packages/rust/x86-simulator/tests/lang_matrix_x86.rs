@@ -259,3 +259,21 @@ fn oct_complement_runs_on_x86_sim() {
     let (_code, out) = run_capturing_stdout(Language::Oct, "fn main() { out(1, ~0); }");
     assert_eq!(out, "255");
 }
+
+/// Nib — **unsigned division** (`84 / 2` ⇒ exit 42).  The `div` op lowers to the
+/// x86 unsigned-division sequence `xor rdx,rdx; div rcx` — exercising the
+/// group-3 `0xF7 /6` end-to-end (S4's unit tests cover `div` in isolation; this
+/// runs it from real backend output).
+#[test]
+fn nib_unsigned_division_runs_on_x86_sim() {
+    assert_eq!(run_on_x86_sim(Language::Nib, "fn main() -> u8 { return 84 / 2; }"), 42);
+}
+
+/// ALGOL — **signed integer division** (`85 div 2` ⇒ exit 42).  ALGOL's `div`
+/// lowers to the signed sequence `cqo; idiv rcx` — exercising `0xF7 /7` + `cqo`
+/// end-to-end (the `idiv`/`cqo` path S4 otherwise only unit-tests).
+#[test]
+fn algol_signed_division_runs_on_x86_sim() {
+    let src = "begin integer result; result := 85 div 2 end";
+    assert_eq!(run_on_x86_sim(Language::Algol60, src), 42);
+}

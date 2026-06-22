@@ -61,12 +61,12 @@ as the exit code (the same convention as `run_native` / `run_wasm`).
 On an Apple-Silicon host the matrix's `NativeAot` cell only ever builds+runs the
 *aarch64* backend; this test exercises the **x86_64** column end-to-end —
 **locally on aarch64**, retro-verifying columns the matrix could previously
-execute only on x86 CI. The 15 cells span Twig (const/arithmetic/`define`),
-Nib (u8 wrap, `~` complement), ALGOL (procedure call, switch/computed-goto, E3
-`real` SSE2 floats, E5 arrays straight-line and in a `for` loop), Oct (`out`,
-`~`), and Dartmouth BASIC (`PRINT`, `FOR`/`NEXT` — stdout-captured via the host
-shims). Adding the Nib/Oct `~` cells is what surfaced the missing group-3
-`0xF7` opcode that this crate now decodes.
+execute only on x86 CI. The 17 cells span Twig (const/arithmetic/`define`),
+Nib (u8 wrap, `~` complement, unsigned division), ALGOL (procedure call,
+switch/computed-goto, signed `div`, E3 `real` SSE2 floats, E5 arrays straight-
+line and in a `for` loop), Oct (`out`, `~`), and Dartmouth BASIC (`PRINT`,
+`FOR`/`NEXT` — stdout-captured via the host shims). Adding the Nib/Oct `~` cells
+is what surfaced the missing group-3 `0xF7` opcode that this crate now decodes.
 
 ## Safety
 

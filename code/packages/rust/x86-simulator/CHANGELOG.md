@@ -2,7 +2,7 @@
 
 ## 0.4.0 — 2026-06-21 — group-3 (`not`/`neg`/`div`/`idiv`) + broader matrix coverage (x86-sim PR-S4)
 
-Broadens the **local** LANG-FULL x86_64 coverage from S3's 7 cells to 15 by
+Broadens the **local** LANG-FULL x86_64 coverage from S3's 7 cells to 17 by
 running more matrix programs through the simulator — which surfaced a real
 missing opcode and added it.
 
@@ -23,11 +23,16 @@ missing opcode and added it.
   `for`-loop sum-of-squares array; Dartmouth BASIC `PRINT` and `FOR`/`NEXT`
   (stdout-captured via the host shims); Oct `out(1, ~0)` (the cell that exposed
   the `0xF7` gap). New `run_capturing_stdout` helper for the print programs.
+- **Division end-to-end** — a Nib unsigned `84 / 2` (lowers to `xor rdx,rdx;
+  div rcx`) and an ALGOL signed `85 div 2` (`cqo; idiv rcx`), both ⇒ 42, so the
+  group-3 division path is exercised from real backend output, not just the unit
+  tests.
 
 ### Verified
-- The `not` op now runs end-to-end (Nib + Oct); `neg`/`div`/`idiv`/`cqo` get
-  direct decode + execute unit tests (quotient/remainder, signed negatives,
-  div-by-zero and signed-overflow traps). 39 tests (24 unit + 15 matrix).
+- The `not` and `div`/`idiv` ops now run end-to-end (Nib + Oct + ALGOL);
+  `neg`/`cqo` and the division corner cases get direct decode + execute unit
+  tests (quotient/remainder, signed negatives, div-by-zero, signed-overflow, and
+  the crafted `i128::MIN / -1`). 42 tests (25 unit + 17 matrix).
 
 ## 0.3.0 — 2026-06-21 — local LANG-FULL x86_64 matrix column (x86-sim PR-S3)
 
