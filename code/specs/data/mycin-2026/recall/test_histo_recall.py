@@ -36,6 +36,14 @@ EXPECTED = {
     "auer_rods": {"acute_promyelocytic_leukemia"},        # primary-source backfill (NBK507875)
     "psammoma_bodies": {"meningioma"},                    # primary-source backfill (NBK560538)
     "negri_bodies": {"rabies"},                           # expand (NBK448076)
+    # --- BATCH: high-yield histology buzzwords ---
+    "lewy_bodies": {"parkinson_disease"},                 # expand (NBK470193)
+    "neurofibrillary_tangles": {"alzheimer_disease"},     # expand (NBK499922)
+    "mallory_bodies": {"alcoholic_hepatitis"},            # expand (NBK545300)
+    "aschoff_bodies": {"rheumatic_fever"},                # expand (NBK538286)
+    "owl_eye_inclusions": {"cytomegalovirus"},            # expand (NBK459185)
+    "ferruginous_bodies": {"asbestosis"},                 # expand (NBK555985)
+    "zellballen": {"pheochromocytoma"},                   # expand (NBK589700)
 }
 REL = "seen_in"
 VAR = "Condition"
