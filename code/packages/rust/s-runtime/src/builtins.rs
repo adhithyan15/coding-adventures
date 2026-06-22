@@ -90,22 +90,14 @@ pub fn install(env: &Env) {
     define(env, "is.element", builtin("is.element", b_is_element));
     define(env, "duplicated", builtin("duplicated", b_duplicated));
     // R-30 — first-duplicate index (ordering refinements).
-    define(
-        env,
-        "anyDuplicated",
-        builtin("anyDuplicated", b_any_duplicated),
-    );
+    define(env, "anyDuplicated", builtin("anyDuplicated", b_any_duplicated));
     define(env, "rank", builtin("rank", b_rank));
     define(env, "which", builtin("which", b_which));
     define(env, "any", builtin("any", b_any));
     define(env, "all", builtin("all", b_all));
     define(env, "is.na", builtin("is.na", b_is_na));
     // R-23 — environment predicate + the `environment(f) <- e` replacement.
-    define(
-        env,
-        "is.environment",
-        builtin("is.environment", b_is_environment),
-    );
+    define(env, "is.environment", builtin("is.environment", b_is_environment));
     define(
         env,
         "environment<-",
@@ -1982,11 +1974,7 @@ fn b_order(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         Num(Vec<f64>),
         Str(Vec<Option<String>>),
     }
-    let positional: Vec<&SValue> = args
-        .iter()
-        .filter(|a| a.name.is_none())
-        .map(|a| &a.value)
-        .collect();
+    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
     let first = *positional
         .first()
         .ok_or_else(|| SError::BadArgs("argument \"x\" is missing".into()))?;
@@ -1997,7 +1985,9 @@ fn b_order(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         // A length mismatch between keys is an error in R ("argument lengths
         // differ"); we reject it before any indexing can go out of bounds.
         if v.length() != n {
-            return Err(SError::BadArgs("argument lengths differ in order()".into()));
+            return Err(SError::BadArgs(
+                "argument lengths differ in order()".into(),
+            ));
         }
         let key = match v.strip_names().strip_attrs() {
             SValue::Character(_) | SValue::Factor { .. } => Key::Str(v.as_character()),
@@ -2091,10 +2081,7 @@ fn b_rep(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// `as_character` is total, and the result is just a `HashSet` whose size is bounded
 /// by the (already-`MAX_SEQ_LEN`-capped) `incomparables` vector.
 fn incomparables_keys(args: &[Arg]) -> HashSet<Option<String>> {
-    let Some(arg) = args
-        .iter()
-        .find(|a| a.name.as_deref() == Some("incomparables"))
-    else {
+    let Some(arg) = args.iter().find(|a| a.name.as_deref() == Some("incomparables")) else {
         return HashSet::new();
     };
     // The default `FALSE` means "no incomparables" — treat it as the empty set.
@@ -2417,10 +2404,7 @@ fn b_rank(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         First,
         Random,
     }
-    let ties = match args
-        .iter()
-        .find(|a| a.name.as_deref() == Some("ties.method"))
-    {
+    let ties = match args.iter().find(|a| a.name.as_deref() == Some("ties.method")) {
         Some(arg) => match arg
             .value
             .as_character()
@@ -2977,11 +2961,7 @@ fn as_list(value: &SValue) -> Option<(&[Option<String>], &[SValue])> {
 /// a direct call: `do.call(paste, list("a", "b", sep = "-"))` is `paste("a",
 /// "b", sep = "-")` → `"a-b"`.
 fn b_do_call(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    let positional: Vec<&SValue> = args
-        .iter()
-        .filter(|a| a.name.is_none())
-        .map(|a| &a.value)
-        .collect();
+    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
     let what = positional
         .first()
         .ok_or_else(|| SError::BadArgs("do.call: missing 'what' argument".into()))?;
@@ -3043,8 +3023,8 @@ fn resolve_callable(interp: &Interpreter, what: &SValue) -> SResult<SValue> {
             .first()
             .and_then(|o| o.clone())
             .ok_or_else(|| SError::BadArgs("do.call: 'what' name is NA".into()))?;
-        let found =
-            lookup(interp.global(), &name).ok_or_else(|| SError::Undefined(name.clone()))?;
+        let found = lookup(interp.global(), &name)
+            .ok_or_else(|| SError::Undefined(name.clone()))?;
         if !found.is_callable() {
             return Err(SError::NotCallable(found.type_name().to_string()));
         }
@@ -3060,11 +3040,8 @@ fn resolve_callable(interp: &Interpreter, what: &SValue) -> SResult<SValue> {
 /// follows `x` (with removals dropped) and then `val`'s new names in `val`
 /// order. Both arguments must be lists.
 fn b_modify_list(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    let positional: Vec<&SValue> = args
-        .iter()
-        .filter(|a| a.name.is_none())
-        .map(|a| &a.value)
-        .collect();
+    let positional: Vec<&SValue> =
+        args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
     let x = positional
         .first()
         .ok_or_else(|| SError::BadArgs("modifyList: missing 'x' argument".into()))?;
@@ -3072,18 +3049,10 @@ fn b_modify_list(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .get(1)
         .ok_or_else(|| SError::BadArgs("modifyList: missing 'val' argument".into()))?;
 
-    let (x_names, x_items) = as_list(x).ok_or_else(|| {
-        SError::BadArgs(format!(
-            "modifyList: 'x' must be a list, got {}",
-            x.type_name()
-        ))
-    })?;
-    let (v_names, v_items) = as_list(val).ok_or_else(|| {
-        SError::BadArgs(format!(
-            "modifyList: 'val' must be a list, got {}",
-            val.type_name()
-        ))
-    })?;
+    let (x_names, x_items) = as_list(x)
+        .ok_or_else(|| SError::BadArgs(format!("modifyList: 'x' must be a list, got {}", x.type_name())))?;
+    let (v_names, v_items) = as_list(val)
+        .ok_or_else(|| SError::BadArgs(format!("modifyList: 'val' must be a list, got {}", val.type_name())))?;
 
     // Every element of `val` must be named (R errors on an unnamed overlay
     // element — there is no positional notion of "modify"). A names vector
@@ -3110,10 +3079,7 @@ fn b_modify_list(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     // `v_items` are the same length — a missing name is treated as unnamed,
     // which the all-named check below already rejects).
     for (i, new_value) in v_items.iter().enumerate() {
-        let name = v_names
-            .get(i)
-            .and_then(|n| n.as_deref())
-            .unwrap_or_default();
+        let name = v_names.get(i).and_then(|n| n.as_deref()).unwrap_or_default();
         let pos = names.iter().position(|n| n.as_deref() == Some(name));
         match (pos, matches!(new_value, SValue::Null)) {
             // Existing name, NULL value → remove (record the index).
@@ -3566,10 +3532,7 @@ fn b_format(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 
     // Render each element to its natural string first; common-width padding is
     // a second pass so we can measure the widest.
-    let is_numeric = matches!(
-        peel_structural(x),
-        SValue::Double(_) | SValue::Matrix { .. }
-    );
+    let is_numeric = matches!(peel_structural(x), SValue::Double(_) | SValue::Matrix { .. });
     let rendered: Vec<String> = if is_numeric {
         let d = x.as_double()?;
         d.iter()
@@ -3591,11 +3554,7 @@ fn b_format(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         return Ok(SValue::Character(vec![]));
     }
 
-    let widest = rendered
-        .iter()
-        .map(|s| s.chars().count())
-        .max()
-        .unwrap_or(0);
+    let widest = rendered.iter().map(|s| s.chars().count()).max().unwrap_or(0);
     let target = widest.max(min_width).min(MAX_FIELD);
     // Bound the *product* (common width × element count), not just each field.
     check_output_budget(target, rendered.len())?;
@@ -3726,9 +3685,7 @@ fn format_c_one(
     // d/f/e/g go through the shared sprintf conversion renderer. Wrap the
     // element as a one-row SValue so `render_conversion`'s recycling indexes it.
     let sval = match doubles {
-        Some(d) => SValue::Double(Double::from_values(vec![d
-            .get_value(i)
-            .unwrap_or(f64::NAN)])),
+        Some(d) => SValue::Double(Double::from_values(vec![d.get_value(i).unwrap_or(f64::NAN)])),
         None => SValue::Character(vec![chars.get(i).cloned().flatten()]),
     };
     render_conversion(conv, Some(&sval), 0, digits)
@@ -3973,10 +3930,7 @@ fn b_reduce(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .map(|a| a.value.clone())
         .or_else(|| data.get(1).cloned());
     // `accumulate =` (named only; defaults to FALSE) selects running-fold output.
-    let accumulate = match args
-        .iter()
-        .find(|a| a.name.as_deref() == Some("accumulate"))
-    {
+    let accumulate = match args.iter().find(|a| a.name.as_deref() == Some("accumulate")) {
         Some(a) => a.value.truthy()?,
         None => false,
     };
@@ -4256,14 +4210,9 @@ fn b_outer(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let nrow = x.length();
     let ncol = y.length();
     // Guard the product BEFORE allocating: refuse overflow or > MAX_SEQ_LEN.
-    let total = nrow
-        .checked_mul(ncol)
-        .filter(|&t| t <= MAX_SEQ_LEN)
-        .ok_or_else(|| {
-            SError::Index(format!(
-                "outer: result too large (limit {MAX_SEQ_LEN} elements)"
-            ))
-        })?;
+    let total = nrow.checked_mul(ncol).filter(|&t| t <= MAX_SEQ_LEN).ok_or_else(|| {
+        SError::Index(format!("outer: result too large (limit {MAX_SEQ_LEN} elements)"))
+    })?;
 
     // Fast numeric paths for the two arithmetic primitives, identified by the
     // string forms "*" / "+". Anything else (including a function value) goes
@@ -4314,10 +4263,7 @@ fn b_outer(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             let r = interp.call_value(
                 fun.clone(),
                 &[
-                    Arg {
-                        name: None,
-                        value: xi,
-                    },
+                    Arg { name: None, value: xi },
                     Arg {
                         name: None,
                         value: yj.clone(),
@@ -4625,7 +4571,7 @@ fn b_find_interval(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 ///   zeros trimmed, so `3.14159` at `dig_lab = 2` → `"3.1"` and at the default
 ///   `dig_lab = 3` → `"3.14"`.
 ///
-/// `dig_lab` is already clamped to `1..=22` by [`dig_lab_value`], so the `{:.*e}`
+/// `dig_lab` is already clamped to `1..=22` by [`dig_lab_value`], so the fixed
 /// precision below is bounded — no caller-controlled value can force a huge width.
 fn format_break(b: f64, dig_lab: usize) -> String {
     // Non-finite (shouldn't reach here for real breaks) → plain fallback.
@@ -4640,9 +4586,9 @@ fn format_break(b: f64, dig_lab: usize) -> String {
     format_sig(b, dig_lab)
 }
 
-/// Round `x` to `sig` significant digits and render it without an exponent where
-/// reasonable, trimming trailing zeros. `sig` is bounded (`1..=22`) by the caller,
-/// so the formatting widths here are bounded too.
+/// Round `x` to `sig` significant digits and render it without an exponent,
+/// trimming trailing zeros. `sig` is bounded (`1..=22`) by the caller, so the
+/// formatting width here is bounded too (no caller-driven huge allocation).
 fn format_sig(x: f64, sig: usize) -> String {
     if x == 0.0 {
         return "0".to_string();
@@ -4650,12 +4596,10 @@ fn format_sig(x: f64, sig: usize) -> String {
     // Decimal places needed for `sig` significant figures = sig - 1 - floor(log10|x|).
     let exp = x.abs().log10().floor() as i32;
     let decimals = (sig as i32 - 1 - exp).max(0) as usize;
-    // `decimals` is bounded: sig <= 22 and exp >= small-negative for our inputs, so
-    // this width stays small. Render with fixed precision, then trim trailing zeros.
+    // `decimals` is bounded: `sig <= 22`, so the fixed-precision width stays small.
     let s = format!("{x:.decimals$}");
     if s.contains('.') {
-        let trimmed = s.trim_end_matches('0').trim_end_matches('.');
-        trimmed.to_string()
+        s.trim_end_matches('0').trim_end_matches('.').to_string()
     } else {
         s
     }
@@ -4873,7 +4817,7 @@ fn dig_lab_value(args: &[Arg]) -> SResult<usize> {
         Some(arg) => {
             let d = arg.value.as_double()?;
             match d.get_value(0) {
-                Some(x) if x.is_finite() && x >= 1.0 => Ok((x.trunc() as usize).min(MAX).max(1)),
+                Some(x) if x.is_finite() && x >= 1.0 => Ok((x.trunc() as usize).clamp(1, MAX)),
                 // NA / non-finite / < 1 → fall back to the default (no panic).
                 _ => Ok(DEFAULT),
             }

@@ -1961,10 +1961,7 @@ mod tests {
         assert_eq!(neg.type_name(), "closure");
         assert_eq!(neg.length(), 1);
         assert_eq!(class_of(&neg), vec!["function".to_string()]);
-        assert_eq!(
-            format_value(&neg),
-            vec!["function (...) !f(...)".to_string()]
-        );
+        assert_eq!(format_value(&neg), vec!["function (...) !f(...)".to_string()]);
     }
 
     // --- comparison -----------------------------------------------------
