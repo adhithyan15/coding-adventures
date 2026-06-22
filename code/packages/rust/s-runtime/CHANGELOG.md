@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.28.0] - 2026-06-21
+
+### Added
+
+- **Binning & cross-product utilities (R-32)** — the numeric-binning family,
+  available to both S and R through the shared tree-walker. A pivot away from the
+  thin R-31 deferral of `incomparables=`/`fromLast=` on the binary set ops
+  (`union`/`intersect`/`setdiff`): base R does not accept those arguments there, so
+  implementing them would be non-faithful. All build on existing machinery
+  (`as_double`, `na_real`/`is_na_real`, `first_positional`, and the existing
+  `SValue::Factor { codes, levels }` constructor) — no new value type, no new cap.
+  - **`findInterval(x, vec)`** — for each element of the non-decreasing breakpoint
+    vector `vec`, the 1-based index of the last break not exceeding `x`: `0` below
+    the first, `length(vec)` at/above the last; `NA`/non-finite `x` → `NA`.
+    `findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))` → `c(0, 1, 2)`;
+    `findInterval(5, c(1, 2, 3))` → `3`. A linear scan over the (short, sorted)
+    breaks; a non-finite/NA/out-of-order break stops the count, so it never indexes
+    out of bounds.
+  - **`cut(x, breaks)`** — bins `x` into the `k-1` right-closed `(lo,hi]` intervals
+    of the sorted `breaks`, returning a real **`Factor`** whose `levels` are the
+    auto-generated `"(lo,hi]"` labels. Built directly on `findInterval`: the
+    interval index is the 1-based level code when it lies in `1..=k-1`; boundary
+    indices `0`/`k` and `NA` `x` map to a `<NA>` code. So `levels()`,
+    `as.integer()`, `as.character()`, and `nlevels()` are all factor-aware on the
+    result. `cut(c(1, 5, 10), breaks = c(0, 3, 6, 11))` → a factor with levels
+    `c("(0,3]", "(3,6]", "(6,11]")` and values `(0,3]`, `(3,6]`, `(6,11]`;
+    `cut(c(-1, 20), breaks = c(0, 3, 6, 11))` → both `NA`. `saturating_sub` guards
+    the interval count when fewer than two breaks are supplied (→ all `NA`).
+  - **Security**: no new user-controlled multiplier. `cut` allocates one code per
+    input element (length already `MAX_SEQ_LEN`-bounded) and `k-1` level strings
+    (bounded by the capped `breaks` length); `findInterval` is `O(len(x)·len(vec))`
+    with both lengths capped; the existing `tabulate` `nbins`-vs-`MAX_SEQ_LEN`
+    checked guard is unchanged. The `vec=`/`breaks=` readers (shared `second_arg`
+    helper) return a clean `BadArgs` error when absent; no path indexes out of
+    bounds.
+  - **Deferred to R-33**: `cut`'s `labels=` (custom labels), `right=FALSE`
+    (left-closed `[lo,hi)`), `include.lowest=`, and integer `breaks` (equal-width
+    bin count).
+
 ## [0.27.0] - 2026-06-21
 
 ### Added

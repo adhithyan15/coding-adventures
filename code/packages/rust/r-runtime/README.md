@@ -199,6 +199,23 @@ under `set.seed`. Numeric and character vectors; bounded RNG draws; malformed na
 args error gracefully. (`incomparables=`/`fromLast=` on the binary set ops
 `union`/`intersect`/`setdiff` are deferred to R-32.)
 
+**Binning & cross-product utilities (R-32)** — the numeric-binning family,
+reached through ordinary R syntax. A pivot away from the R-31 deferral of
+`incomparables=`/`fromLast=` on the binary set ops, which base R does not accept
+there (so implementing them would be non-faithful). `findInterval(x, vec)` returns,
+for each `x`, the 1-based index of the last break in the non-decreasing `vec` not
+exceeding it — `0` below the first, `length(vec)` at/above the last, `NA` propagates
+(`findInterval(c(0.5,1.5,2.5), c(1,2,3))` → `c(0,1,2)`; `findInterval(5, c(1,2,3))`
+→ `3`). `cut(x, breaks)` bins `x` into the right-closed `(lo,hi]` intervals of the
+sorted `breaks` and returns a real **factor**: `class(cut(...))` is `"factor"`,
+`levels()` are the `"(lo,hi]"` labels, and `as.character()`/`as.integer()`/
+`nlevels()` all see through to it (`cut(c(1,5,10), breaks=c(0,3,6,11))` → a factor
+with levels `"(0,3]","(3,6]","(6,11]"` and values `(0,3]`,`(3,6]`,`(6,11]`); values
+outside all breaks → `NA`. Built on `findInterval`; allocations bounded by the
+already-capped input/breaks lengths; missing operands error gracefully. (`cut`'s
+`labels=`/`right=FALSE`/`include.lowest=` and integer `breaks` are deferred to
+R-33.)
+
 ## Usage
 
 ```rust
