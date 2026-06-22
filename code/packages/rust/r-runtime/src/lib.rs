@@ -2823,9 +2823,11 @@ mod tests {
         // Empty inputs yield empty results, not panics.
         assert_eq!(eval_r("findInterval(c(), c(1, 2))\n").unwrap().length(), 0);
         assert_eq!(eval_r("cut(c(), breaks = c(0, 1, 2))\n").unwrap().length(), 0);
-        // Fewer than two breaks means zero intervals: every value is NA.
+        // A single-element `breaks` is the equal-width-bin form (R-33): breaks = 5
+        // means 5 bins over the range of x, so both values get a non-NA code.
         let v = nums("as.integer(cut(c(1, 2), breaks = c(5)))\n");
-        assert!(v.iter().all(|x| x.is_nan()));
+        assert_eq!(v.len(), 2);
+        assert!(v.iter().all(|x| !x.is_nan()));
     }
 
     // --- R-33: cut() option completeness --------------------------------
@@ -2854,13 +2856,15 @@ mod tests {
 
     #[test]
     fn r33_cut_labels_false_returns_integer_codes() {
-        // labels=FALSE returns the plain integer bin codes c(1,1,2) — NOT a factor.
+        // labels=FALSE returns the plain integer bin codes — NOT a factor.
+        // 1,2 ∈ (0,3] (code 1); 5 ∈ (3,6] (code 2). (Right-closed: 3 itself would
+        // also be code 1, so we use 5 to demonstrate a second bin.)
         assert_eq!(
-            nums("cut(c(1, 2, 3), breaks = c(0, 3, 6), labels = FALSE)\n"),
+            nums("cut(c(1, 2, 5), breaks = c(0, 3, 6), labels = FALSE)\n"),
             vec![1.0, 1.0, 2.0]
         );
         assert_eq!(
-            show("class(cut(c(1, 2, 3), breaks = c(0, 3, 6), labels = FALSE))\n"),
+            show("class(cut(c(1, 2, 5), breaks = c(0, 3, 6), labels = FALSE))\n"),
             "[1] \"numeric\""
         );
     }

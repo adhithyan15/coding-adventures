@@ -4412,6 +4412,90 @@ fn format_break(b: f64) -> String {
     }
 }
 
+/// Build the auto-generated interval label for the `i`-th interval (0-based) of
+/// `breaks`, respecting `right`: right-closed intervals print `"(lo,hi]"`,
+/// left-closed `[lo,hi)`. (R-33 — extends the R-32 right-closed-only formatter.)
+fn cut_interval_label(breaks: &[f64], i: usize, right: bool) -> String {
+    let lo = format_break(breaks[i]);
+    let hi = format_break(breaks[i + 1]);
+    if right {
+        format!("({lo},{hi}]")
+    } else {
+        format!("[{lo},{hi})")
+    }
+}
+
+/// Derive the `breaks` vector when `cut` is called with a **single number** `n`
+/// (the number of equal-width bins). Mirrors R's `cut.default`: take the range of
+/// the finite values of `x`, extend it by `dx/1000` on each side so the extreme
+/// data points sit strictly inside the outer bins, then lay down `n + 1` equally
+/// spaced breakpoints. Returns a `BadArgs`/`Index` error (never panics or
+/// allocates a giant vector) when `n` is non-finite, `< 1`, or would exceed
+/// `MAX_SEQ_LEN`, or when `x` has no finite values.
+///
+/// ```text
+///   rx = (min, max) over the finite x          dx = max - min
+///   if dx == 0: dx = |min|; if still 0: dx = 1   (degenerate all-equal x)
+///   lo = min - dx/1000      hi = max + dx/1000
+///   breaks[j] = lo + j * (hi - lo)/n   for j in 0..=n
+/// ```
+fn equal_width_breaks(x: &Double, n_f: f64) -> SResult<Vec<f64>> {
+    // `n` must be a finite, positive whole number. R rounds the requested bin
+    // count toward the nearest integer; we require it to be at least 1.
+    if !n_f.is_finite() || n_f < 1.0 {
+        return Err(SError::BadArgs(
+            "cut: invalid number of intervals".to_string(),
+        ));
+    }
+    // Guard the bin count BEFORE building any vector: a huge `n` would otherwise
+    // allocate `n + 1` breaks and `n` level strings. `MAX_SEQ_LEN` is the same cap
+    // every other length-amplifying builtin honours.
+    if n_f > MAX_SEQ_LEN as f64 {
+        return Err(SError::Index(format!(
+            "cut: number of intervals too large (limit {MAX_SEQ_LEN})"
+        )));
+    }
+    let n = n_f as usize;
+
+    // The range over the finite (non-NA, non-infinite) values of `x`.
+    let mut lo = f64::INFINITY;
+    let mut hi = f64::NEG_INFINITY;
+    for v in x.iter() {
+        if v.is_finite() {
+            lo = lo.min(v);
+            hi = hi.max(v);
+        }
+    }
+    if !lo.is_finite() || !hi.is_finite() {
+        return Err(SError::BadArgs(
+            "cut: 'x' has no finite values to bin".to_string(),
+        ));
+    }
+
+    // Extend the range by 0.1% on each side. A degenerate (all-equal) range has
+    // `dx == 0`; R falls back to `abs(min)`, then to `1`, so the bins stay finite
+    // and we never divide by zero when computing the step.
+    let mut dx = hi - lo;
+    if dx == 0.0 {
+        dx = lo.abs();
+        if dx == 0.0 {
+            dx = 1.0;
+        }
+    }
+    let pad = dx / 1000.0;
+    let lo = lo - pad;
+    let hi = hi + pad;
+
+    // `n + 1` equally spaced breakpoints. `n >= 1` so the step denominator is
+    // non-zero and finite (lo/hi are finite by construction).
+    let step = (hi - lo) / n as f64;
+    let mut breaks = Vec::with_capacity(n + 1);
+    for j in 0..=n {
+        breaks.push(lo + j as f64 * step);
+    }
+    Ok(breaks)
+}
+
 /// `cut(x, breaks)` — bin the numeric vector `x` into the intervals delimited by
 /// the **sorted** breakpoint vector `breaks`, returning a **factor**.
 ///
@@ -4432,44 +4516,187 @@ fn format_break(b: f64) -> String {
 /// The whole job reduces to `findInterval`: the interval index `i` is the 1-based
 /// factor code precisely when `1 <= i <= k-1`; the boundary indices `0` (below the
 /// first break) and `k` (at/above the last) — and any `NA` `x` — map to a `NA`
-/// code. `labels=`, `right=FALSE`, `include.lowest=`, and integer `breaks` are
-/// deferred to R-33.
+/// code.
+///
+/// **R-33 options** (all layered onto the same scan, none changing the default):
+///
+/// - **`right = FALSE`** — left-closed intervals `[lo, hi)`. Where the default
+///   counts breaks `<= x` (so `x == break` lands in the bin it *closes*), the
+///   left-closed scan counts breaks `< x` (so `x == break` lands in the bin it
+///   *opens*). We get this by negating each value (`-x` against `-breaks`,
+///   reversed) — but more simply, by adjusting the interval lookup below.
+/// - **`include.lowest = TRUE`** — fold the extreme break into the adjacent
+///   interval. Right-closed: an `x` equal to `breaks[0]` (which would otherwise be
+///   "below the first interval") is pulled into interval 1. Left-closed: an `x`
+///   equal to `breaks[k-1]` (otherwise "at/above the last") is pulled into the
+///   last interval.
+/// - **`labels = FALSE`** — return the **integer bin codes** as a plain numeric
+///   vector (not a factor). `labels = <character>` — use those strings as the
+///   factor levels (length must equal the number of intervals).
+/// - **integer `breaks`** — a single number `N` requests `N` equal-width bins over
+///   the (slightly extended) range of `x` (see [`equal_width_breaks`]).
 fn b_cut(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?.as_double()?;
-    let breaks: Vec<f64> = second_arg(args, "breaks", "cut")?
-        .as_double()?
-        .iter()
-        .collect();
+
+    // `right` (default TRUE) and `include.lowest` (default FALSE) are read as
+    // logical flags; a malformed value is a clean error via `truthy`.
+    let right = named_flag(args, "right", true)?;
+    let include_lowest = named_flag(args, "include.lowest", false)?;
+
+    // `breaks` may be the usual breakpoint vector OR a single number `N` (number
+    // of equal-width bins). R treats `length(breaks) == 1` as the bin-count form.
+    let breaks_val = second_arg(args, "breaks", "cut")?;
+    let breaks_double = breaks_val.as_double()?;
+    let breaks: Vec<f64> = if breaks_double.len() == 1 {
+        // Single number → derive equal-width breakpoints over the range of `x`.
+        // (Honours the MAX_SEQ_LEN cap and degenerate-range fallback internally.)
+        let n = breaks_double.get_value(0).unwrap_or(na_real());
+        equal_width_breaks(&x, n)?
+    } else {
+        breaks_double.iter().collect()
+    };
 
     // `k - 1` intervals; with fewer than two breaks there are none, so every
     // value is unbinned (NA). `saturating_sub` keeps this from underflowing.
     let n_intervals = breaks.len().saturating_sub(1);
 
-    // The level labels are "(lo,hi]" for each adjacent break pair.
-    let levels: Vec<String> = (0..n_intervals)
-        .map(|i| {
-            format!(
-                "({},{}]",
-                format_break(breaks[i]),
-                format_break(breaks[i + 1])
-            )
-        })
-        .collect();
-
-    // Each value's 1-based interval index (via the shared kernel, binary-searching
-    // the leading non-NA run of `breaks`) is its factor code when it lands in
-    // `1..=n_intervals`; otherwise (below the first break, at/above the last, or
-    // NA) the code is `None` → a `<NA>` factor element.
+    // Each value's 1-based interval code (or `None` for out-of-range / NA).
     let prefix = &breaks[..break_prefix_len(&breaks)];
     let codes: Vec<Option<u32>> = x
         .iter()
-        .map(|xi| match find_interval_index(xi, prefix) {
-            Some(i) if i >= 1 && i <= n_intervals => Some(i as u32),
-            _ => None,
-        })
+        .map(|xi| cut_code(xi, prefix, &breaks, n_intervals, right, include_lowest))
         .collect();
 
+    // `labels = FALSE` short-circuits to the bare integer codes — no factor.
+    if let Some(arg) = args.iter().find(|a| a.name.as_deref() == Some("labels")) {
+        if let SValue::Logical(v) = strip_wrappers(&arg.value) {
+            if matches!(v.first(), Some(Some(false))) {
+                let out: Vec<f64> = codes
+                    .iter()
+                    .map(|c| c.map(|k| k as f64).unwrap_or_else(na_real))
+                    .collect();
+                return Ok(SValue::doubles(out));
+            }
+        }
+    }
+
+    // Otherwise build the factor levels: custom `labels` (validated length) or the
+    // auto-generated interval strings (respecting `right`).
+    let levels = cut_levels(args, &breaks, n_intervals, right)?;
+
     Ok(SValue::Factor { codes, levels })
+}
+
+/// The 1-based factor code for a single value under `cut`'s interval rules, or
+/// `None` (→ `<NA>`) when the value falls in no interval. Centralises the
+/// `right` / `include.lowest` logic shared by the factor and `labels=FALSE`
+/// paths.
+fn cut_code(
+    xi: f64,
+    prefix: &[f64],
+    breaks: &[f64],
+    n_intervals: usize,
+    right: bool,
+    include_lowest: bool,
+) -> Option<u32> {
+    if n_intervals == 0 || is_na_real(xi) || !xi.is_finite() {
+        return None;
+    }
+    // The 1-based interval index is a count of breakpoints below `xi`, with the
+    // comparison decided by which end is closed:
+    //
+    //   right = TRUE   (lo, hi]  →  interval i contains `breaks[i-1] < x <= breaks[i]`
+    //                              →  index = #{breaks strictly < x}
+    //   right = FALSE  [lo, hi)  →  interval i contains `breaks[i-1] <= x < breaks[i]`
+    //                              →  index = #{breaks <= x}
+    //
+    // (Both are `partition_point` binary searches over the sorted non-NA prefix.)
+    // For an `x` exactly on an *interior* break the two rules disagree by one,
+    // which is precisely the `(lo,hi]` vs `[lo,hi)` boundary convention.
+    let idx = if right {
+        prefix.partition_point(|&b| b < xi)
+    } else {
+        prefix.partition_point(|&b| b <= xi)
+    };
+
+    if idx >= 1 && idx <= n_intervals {
+        return Some(idx as u32);
+    }
+
+    // `include.lowest`: fold the single extreme boundary value into the adjacent
+    // interval (the only point that the strict end-convention leaves unbinned).
+    if include_lowest {
+        if right {
+            // Right-closed: `x == breaks[0]` gives index 0 (below the first
+            // interval) — pull it into interval 1, making the first bin `[lo,hi]`.
+            if xi == breaks[0] {
+                return Some(1);
+            }
+        } else {
+            // Left-closed: `x == breaks[k]` gives index k = n_intervals + 1 (at/above
+            // the last) — pull it into the last interval, making it `[lo,hi]`.
+            if xi == breaks[n_intervals] {
+                return Some(n_intervals as u32);
+            }
+        }
+    }
+    None
+}
+
+/// Build the factor levels for `cut`: a custom `labels = <character>` vector
+/// (whose length must equal `n_intervals`) when supplied, otherwise the
+/// auto-generated `"(lo,hi]"` / `"[lo,hi)"` interval strings.
+fn cut_levels(
+    args: &[Arg],
+    breaks: &[f64],
+    n_intervals: usize,
+    right: bool,
+) -> SResult<Vec<String>> {
+    if let Some(arg) = args.iter().find(|a| a.name.as_deref() == Some("labels")) {
+        let stripped = strip_wrappers(&arg.value);
+        // `labels = TRUE` (or absent) means "use the auto labels"; only a non-
+        // logical value is taken as a custom label vector. `labels = FALSE` is
+        // handled by the caller before we ever get here.
+        let is_logical_flag = matches!(stripped, SValue::Logical(_));
+        if !is_logical_flag && !matches!(stripped, SValue::Null) {
+            let labels: Vec<String> = arg
+                .value
+                .as_character()
+                .into_iter()
+                .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+                .collect();
+            if labels.len() != n_intervals {
+                return Err(SError::BadArgs(
+                    "lengths of 'breaks' and 'labels' differ".to_string(),
+                ));
+            }
+            return Ok(labels);
+        }
+    }
+    Ok((0..n_intervals)
+        .map(|i| cut_interval_label(breaks, i, right))
+        .collect())
+}
+
+/// Read a named logical flag (`right`, `include.lowest`) with a default. A
+/// malformed value surfaces as a clean error via `truthy` rather than a panic.
+fn named_flag(args: &[Arg], name: &str, default: bool) -> SResult<bool> {
+    match args.iter().find(|a| a.name.as_deref() == Some(name)) {
+        Some(arg) => arg.value.truthy(),
+        None => Ok(default),
+    }
+}
+
+/// Peel `Classed` / `Named` / `Attributed` wrappers off a value so we can inspect
+/// its underlying variant (used to tell `labels = FALSE`/`TRUE` from a character
+/// label vector).
+fn strip_wrappers(v: &SValue) -> &SValue {
+    match v {
+        SValue::Classed { inner, .. }
+        | SValue::Named { values: inner, .. }
+        | SValue::Attributed { inner, .. } => strip_wrappers(inner),
+        other => other,
+    }
 }
 
 fn builtin(name: &str, func: fn(&Interpreter, &[Arg]) -> SResult<SValue>) -> SValue {

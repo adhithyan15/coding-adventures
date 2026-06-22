@@ -2301,14 +2301,15 @@ mod r33_cut_options {
 
     #[test]
     fn labels_false_returns_integer_codes_not_a_factor() {
-        // labels=FALSE yields the plain integer bin codes c(1,1,2).
+        // labels=FALSE yields the plain integer bin codes. 1,2 ∈ (0,3] (code 1);
+        // 5 ∈ (3,6] (code 2). (Right-closed, so 3 itself is code 1; use 5 here.)
         assert_eq!(
-            codes("cut(c(1, 2, 3), breaks = c(0, 3, 6), labels = FALSE)\n"),
+            codes("cut(c(1, 2, 5), breaks = c(0, 3, 6), labels = FALSE)\n"),
             vec![1.0, 1.0, 2.0]
         );
         // The result is a bare numeric vector — class() is "numeric", not "factor".
         assert_eq!(
-            strs("class(cut(c(1, 2, 3), breaks = c(0, 3, 6), labels = FALSE))\n"),
+            strs("class(cut(c(1, 2, 5), breaks = c(0, 3, 6), labels = FALSE))\n"),
             vec!["numeric"]
         );
     }
