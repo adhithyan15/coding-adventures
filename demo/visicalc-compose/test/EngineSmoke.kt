@@ -196,6 +196,31 @@ fun main() {
     check("fresh edit clears redo", ur.canRedo().toString(), "false")
     ur.close()
 
+    // Structural edits (the + Row / − Row / + Col / − Col buttons drive
+    // insertRows/deleteRows/insertCols/deleteCols): inserting and deleting
+    // rows/columns shifts every formula reference across the band, and deleting a
+    // referenced band turns that reference into #REF!. The engine parenthesizes
+    // binary ops on re-emit ("=(A1+A3)"), so compare with parens stripped.
+    val st = SpreadsheetSession()
+    st.setCell("A1", "10"); st.setCell("A2", "20"); st.setCell("A3", "=A1+A2") // 30
+    check("struct A3 before", st.window(3, 1, 3, 1)[0][0], "30")
+    st.insertRows(2, 1)
+    check("struct inserted row blank", st.window(2, 1, 2, 1)[0][0], "")
+    check("struct formula at A4", st.window(4, 1, 4, 1)[0][0], "30")
+    check("struct insert shifted refs", st.getRaw("A4").replace("(", "").replace(")", ""), "=A1+A3")
+    st.deleteRows(2, 1)
+    check("struct delete shifted back", st.getRaw("A3").replace("(", "").replace(")", ""), "=A1+A2")
+    st.deleteRows(1, 1) // delete the referenced row 1 → A1 ref destroyed
+    check("struct deleted ref is #REF!", st.window(2, 1, 2, 1)[0][0], "#REF!")
+    st.close()
+    // Columns shift the same way: K1=5, L1 = K1*3 = 15; insert a col at K → M1.
+    val sc = SpreadsheetSession()
+    sc.setCell("K1", "5"); sc.setCell("L1", "=K1*3")
+    sc.insertCols(11, 1) // col 11 = K
+    check("struct insertCol value", sc.window(1, 13, 1, 13)[0][0], "15") // M1
+    check("struct insertCol shifted refs", sc.getRaw("M1").replace("(", "").replace(")", ""), "=L1*3")
+    sc.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }
