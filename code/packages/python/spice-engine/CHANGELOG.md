@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck WRDATA ASCII artifacts** —
+  selected `run_deck_analysis()` executions now expose deterministic in-memory
+  ASCII data-file artifacts for accepted `.control` `wrdata <file> ...`
+  markers as `wrdata_artifact_count`, `wrdata_artifacts`,
+  `wrdata_artifact_table`, `wrdata_artifact_csv`, `wrdata_artifact_json`, and
+  `wrdata_artifact_records`, matching Rust and TypeScript.
+
 - **Deck rawfile ASCII artifacts** —
   selected `run_deck_analysis()` executions now expose deterministic in-memory
   ASCII rawfile artifacts for accepted `.control` `write <rawfile> ...`

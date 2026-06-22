@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expose deterministic in-memory ASCII data-file artifacts for accepted
+  `.control` `wrdata <file> ...` markers from selected `runDeckAnalysis`
+  execution results as `wrdataArtifactCount`, `wrdataArtifacts`,
+  `wrdataArtifactTable`, `wrdataArtifactCsv`, `wrdataArtifactJson`, and
+  `wrdataArtifactRecords`, matching Python and Rust.
 - Expose deterministic in-memory ASCII rawfile artifacts for accepted
   `.control` `write <rawfile> ...` markers from selected `runDeckAnalysis`
   execution results as `rawfileArtifactCount`, `rawfileArtifacts`,

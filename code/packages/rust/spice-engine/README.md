@@ -199,8 +199,10 @@ as `write_marker_count` / `write_markers` execution fields and as
 `WriteMarkers` / `WriteMarkerList` artifact fields without serializing files.
 Accepted `write <rawfile> ...` markers also produce deterministic in-memory
 ASCII rawfile artifacts on `rawfile_artifacts`, with stable table, CSV, JSON,
-and header-keyed record summaries; `wrdata` markers and filesystem writes
-remain metadata-only.
+and header-keyed record summaries. Accepted `wrdata <file> ...` markers
+produce deterministic in-memory ASCII data-file artifacts on
+`wrdata_artifacts`, with stable table, CSV, JSON, and header-keyed record
+summaries; filesystem writes remain metadata-only.
 Accepted `.control` rawfile output options (`set filetype=ascii`,
 `set wr_vecnames`, `set wr_singlescale`, and `set appendwrite`) are surfaced as
 `rawfile_option_count` / `rawfile_options` execution fields and as

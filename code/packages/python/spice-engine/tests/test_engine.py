@@ -223,6 +223,9 @@ from spice_engine import (
     format_deck_table_csv,
     format_deck_table_json,
     format_deck_transient_table,
+    format_deck_wrdata_artifact_csv,
+    format_deck_wrdata_artifact_json,
+    format_deck_wrdata_artifact_table,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
     format_digital_event_stream_vcd,
@@ -7448,6 +7451,33 @@ let gain = 2
     assert json.loads(execution.rawfile_artifact_json)[0]["RawfileOptionList"] == (
         rawfile_option_list
     )
+    assert execution.wrdata_artifact_count == 1
+    assert execution.wrdata_artifacts[0].target == "out.dat"
+    assert execution.wrdata_artifacts[0].marker == "wrdata out.dat V(in)"
+    assert execution.wrdata_artifacts[0].probe_count == 1
+    assert execution.wrdata_artifacts[0].probes == ["V(in)"]
+    assert "# SPICE deck wrdata artifact\n" in execution.wrdata_artifacts[0].datafile
+    assert "Probes: V(in)\n" in execution.wrdata_artifacts[0].datafile
+    assert "Index\tV(in)\n" in execution.wrdata_artifacts[0].datafile
+    assert "0\t1.000000e+00\n" in execution.wrdata_artifacts[0].datafile
+    wrdata_record = execution.wrdata_artifact_records[0]
+    assert wrdata_record["Target"] == "out.dat"
+    assert wrdata_record["Marker"] == "wrdata out.dat V(in)"
+    assert wrdata_record["Probes"] == "1"
+    assert wrdata_record["ProbeList"] == "V(in)"
+    assert wrdata_record["Bytes"] == str(
+        len(execution.wrdata_artifacts[0].datafile.encode())
+    )
+    assert execution.wrdata_artifact_table == format_deck_wrdata_artifact_table(
+        execution.wrdata_artifacts
+    )
+    assert execution.wrdata_artifact_csv == format_deck_wrdata_artifact_csv(
+        execution.wrdata_artifacts
+    )
+    assert execution.wrdata_artifact_json == format_deck_wrdata_artifact_json(
+        execution.wrdata_artifacts
+    )
+    assert json.loads(execution.wrdata_artifact_json)[0]["ProbeList"] == "V(in)"
     assert execution.diagnostic_count == len(expected_codes)
     assert execution.diagnostic_codes == expected_codes
     assert execution.run_artifacts[0].control_line_count == len(expected_control_lines)
