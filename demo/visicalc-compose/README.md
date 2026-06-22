@@ -111,6 +111,11 @@ or delete the selected cell's row/column, and the engine shifts every formula
 reference at or after the band so dependents keep pointing at their precedents
 (`=A1+A2` with a row inserted above becomes `=A1+A3`); a reference whose whole band
 is deleted becomes `#REF!`.
+The **.00 / % / $ / Gen** buttons apply a number **format** to the selected cell
+(`InfiniteSheetModel.applyFormat` over the C ABI's `sc_set_format`, with the code
+`#,##0.00`, `0.0%`, `$#,##0.00`, or `""` to clear). The format is display-only —
+the engine renders the stored value through the code, so the underlying number is
+unchanged.
 `InfiniteSheetModel` (in `Engine.kt`) seeds far-flung
 sparse cells (`Z1000`, `BA50`, `BB50`) and derives the extent from `usedRange()`
 + a margin.
