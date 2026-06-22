@@ -75,6 +75,11 @@ EXPECTED = [
     ("alpha_1_antitrypsin_deficiency", "inheritance", "autosomal_codominant"),  # expand (NBK442030)
     ("tuberous_sclerosis", "gene_defect", "tsc1_tsc2"),              # expand (NBK538492)
     ("tuberous_sclerosis", "inheritance", "autosomal_dominant"),     # expand (NBK538492)
+    # --- RECOVERED deferrals (re-grounded against alternate authoritative pages) ---
+    ("niemann_pick_disease", "gene_defect", "smpd1"),                # recovered (NBK556129)
+    ("niemann_pick_disease", "inheritance", "autosomal_recessive"),  # recovered (NBK1370)
+    ("pompe_disease", "gene_defect", "gaa"),                         # recovered (NBK1261)
+    ("sickle_cell_disease", "inheritance", "autosomal_recessive"),   # recovered (NBK1377)
 ]
 VAR = {"inheritance": "Pattern", "gene_defect": "Gene",
        "trinucleotide_repeat": "Repeat", "imprinting": "Parent"}

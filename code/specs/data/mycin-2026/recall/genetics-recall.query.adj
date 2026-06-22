@@ -55,3 +55,7 @@ import "genetics-edges.adj"
 ? inheritance(alpha_1_antitrypsin_deficiency, $Pattern) % expect autosomal_codominant (expand)
 ? gene_defect(tuberous_sclerosis, $Gene)               % expect tsc1_tsc2 (expand)
 ? inheritance(tuberous_sclerosis, $Pattern)            % expect autosomal_dominant (expand)
+? gene_defect(niemann_pick_disease, $Gene)             % expect smpd1 (recovered)
+? inheritance(niemann_pick_disease, $Pattern)          % expect autosomal_recessive (recovered)
+? gene_defect(pompe_disease, $Gene)                    % expect gaa (recovered)
+? inheritance(sickle_cell_disease, $Pattern)           % expect autosomal_recessive (recovered)

@@ -216,13 +216,13 @@ rulebook genetics_facts {
         locator "https://www.ncbi.nlm.nih.gov/books/NBK435996/"
         trust authoritative
 
-    % --- Pompe disease (autosomal recessive) — gene edge declined (anaphoric) -----
+    % --- Pompe disease (autosomal recessive); gene_defect recovered below (GeneReviews)
     relate inheritance(pompe_disease, autosomal_recessive)
         source "Glycogen storage disease type II, also known as Pompe disease, is a rare and progressive neuromuscular disorder inherited in an autosomal recessive manner."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK470558/"
         trust authoritative
 
-    % --- Sickle cell disease (HBB) — inheritance edge declined (codominant/anaphoric)
+    % --- Sickle cell disease (HBB); inheritance recovered below (GeneReviews AR)
     relate gene_defect(sickle_cell_disease, hbb)
         source "Sickle cell disease (SCD) refers to a group of hemoglobinopathies that include mutations in the gene encoding the beta subunit of hemoglobin."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK482164/"
@@ -273,5 +273,34 @@ rulebook genetics_facts {
     relate inheritance(tuberous_sclerosis, autosomal_dominant)
         source "Tuberous sclerosis complex (TSC) is a genetic disorder inherited in an autosomal dominant fashion and is characterized by an increased predisposition to hamartoma formation."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK538492/"
+        trust authoritative
+
+    % --- RECOVERED deferrals (re-grounded against alternate authoritative pages) --
+    % These were declined in the first pass because the first page used only an
+    % abbreviation/anaphor; the facts are board-relevant and DO ground against another
+    % NCBI Bookshelf source (StatPearls or GeneReviews). A deferral is a backlog item to
+    % clear, not a drop. (Only alpha-1 antitrypsin gene_defect remains deferred — its
+    % disease name and SERPINA1 never co-occur in one sentence across NBK442030 + NBK1519.)
+
+    % Niemann-Pick disease — SMPD1 (NPD = page-defined abbrev on NBK556129) + AR (GeneReviews)
+    relate gene_defect(niemann_pick_disease, smpd1)
+        source "NPD types A and B are caused by missense mutations in the sphingomyelin phosphodiesterase 1 (SMPD1) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556129/"
+        trust authoritative
+    relate inheritance(niemann_pick_disease, autosomal_recessive)
+        source "All forms of acid sphingomyelinase deficiency (ASMD), including infantile neurovisceral ASMD (Niemann-Pick disease type A, or NPD-A), chronic neurovisceral ASMD (NPD-A/B), and chronic visceral ASMD (Niemann-Pick disease type B, or NPD-B), are inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1370/"
+        trust authoritative
+
+    % Pompe disease — GAA gene (GeneReviews names "Pompe" + GAA in one diagnosis sentence)
+    relate gene_defect(pompe_disease, gaa)
+        source "The diagnosis of Pompe disease is established in a proband who has deficiency of acid alpha-glucosidase (GAA) enzyme activity in isolated lymphocytes or mixed leukocytes and/or by identification of biallelic pathogenic (or likely pathogenic) variants in GAA by molecular genetic testing in a proband with an out-of-range newborn screening result and/or suggestive clinical features."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1261/"
+        trust authoritative
+
+    % Sickle cell disease — autosomal recessive (GeneReviews; the StatPearls "codominant" phrasing was the deferral source)
+    relate inheritance(sickle_cell_disease, autosomal_recessive)
+        source "Sickle cell disease (SCD) is inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1377/"
         trust authoritative
 }
