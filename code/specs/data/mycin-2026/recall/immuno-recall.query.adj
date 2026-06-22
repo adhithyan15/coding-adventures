@@ -26,3 +26,4 @@ import "immuno-edges.adj"
 ? gene_defect(x_linked_scid, $Gene)                    % expect il2rg (expand)
 ? gene_defect(wiskott_aldrich_syndrome, $Gene)         % expect was (expand)
 ? deficiency_of(hereditary_angioedema, $Component)     % expect c1_inhibitor (expand)
+? gene_defect(chediak_higashi_syndrome, $Gene)         % expect lyst (expand)
