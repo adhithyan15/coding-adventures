@@ -2,6 +2,46 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.5] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 5 — the **`Integer`/`Float`**, **`Symbol`**, and
+**`nil`/`true`/`false`** catalogs (per `code/specs/sir-method-dispatch.md`, item
+M1c), completing the M1c primitive surface:
+
+- **Numeric** (`int`/`float`): `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`,
+  `positive?`, `negative?`, `succ`/`next`, `pred`, `floor`, `ceil`, `round`
+  (half **away from zero**, unlike Python's banker's rounding), `gcd`, `pow`/`**`,
+  `digits`; block forms `times`, `upto`, `downto`, `step`.
+- **Symbol** (`sir-runtime-core` `Symbol`): `to_s`, `to_sym`, `length`/`size`,
+  `upcase`/`downcase` (return a new interned symbol), `inspect`, `empty?`.
+- **`to_s`/`inspect` are now universal `Object` methods** (Ruby display forms):
+  `nil.to_s == ""` / `nil.inspect == "nil"`, `true.to_s == "true"`, numbers and
+  symbols print faithfully, and an `Array`/`Hash` renders `"[1, 2]"` / `"{:k=>v}"`.
+  This means **`nil`/`true`/`false` need no catalog of their own** (`nil.to_a`
+  already returns `[]`). Added **`Array#join`** (elements via `to_s`, default sep
+  `""`).
+- Dispatch orders the `bool` check **before** `int` (a Python `bool` is an `int`
+  subclass) so `True`/`False` resolve only the `Object` methods, never the numeric
+  catalog.
+
+`respond_to?` reports each new catalog honestly; out-of-catalog stays `nil`.
+
+### Security / robustness
+
+- **`**`/`pow` and `digits` bound hostile bignums.** A repeat/exponent count can
+  come from untrusted input; Python ints are arbitrary precision, so
+  `2 ** (10 ** 9)` would allocate ~125 MB. `**` now refuses an integer result
+  past a ~1M-bit budget (returns `0`); `digits` refuses an over-budget bignum;
+  float overflow returns `inf` instead of raising.
+- **`to_s`/`inspect`/`join` are cycle- and depth-safe.** A self-referential
+  `Array`/`Hash` renders `[...]`/`{...}` (Ruby's behaviour) and depth is capped,
+  so a cyclic or deeply-nested structure can no longer raise `RecursionError`.
+- **Numeric methods never raise on `inf`/`nan`.** `to_i`/`even?`/`odd?`/`gcd`/
+  `floor`/`ceil`/`round`/`digits` degrade gracefully rather than raising
+  `OverflowError`, upholding the never-raise-on-the-OO-surface invariant.
+
 ## [0.1.4] - 2026-06-22
 
 ### Added

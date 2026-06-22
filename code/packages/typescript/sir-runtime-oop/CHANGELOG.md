@@ -2,6 +2,47 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.5] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 5 — the **`Integer`/`Float`**, **`Symbol`**, and
+**`nil`/`true`/`false`** catalogs (per `code/specs/sir-method-dispatch.md`, item
+M1c), completing the M1c primitive surface:
+
+- **Numeric** (`number`): `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`,
+  `positive?`, `negative?`, `succ`/`next`, `pred`, `floor`, `ceil`, `round`
+  (half **away from zero**, unlike JS `Math.round`), `gcd`, `pow`/`**`, `digits`;
+  block forms `times`, `upto`, `downto`, `step`.
+- **Symbol** (`sir-runtime-core` `Sym`): `to_s`, `to_sym`, `length`/`size`,
+  `upcase`/`downcase` (return a new interned symbol), `inspect`, `empty?`.
+- **`to_s`/`inspect` are now universal `Object` methods** (Ruby display forms):
+  `nil.to_s == ""` / `nil.inspect == "nil"`, `true.to_s == "true"`, numbers and
+  symbols print faithfully, and an `Array`/`Map` renders `"[1, 2]"` / `"{:k=>v}"`.
+  This means **`null`/`true`/`false` need no catalog of their own** (`nil.to_a`
+  already returns `[]`). Added **`Array#join`** (elements via `to_s`, default sep
+  `""`).
+- `boolean` is a distinct `typeof` from `number`, so `true`/`false` resolve only
+  the `Object` methods, never the numeric catalog.
+
+`respond_to?` reports each new catalog honestly; out-of-catalog stays `null`.
+
+### Security / robustness
+
+- **`digits` guards a non-finite receiver.** `2 ** 1e9` saturates to `Infinity`
+  in IEEE-754; `digits(Infinity)` would otherwise spin forever, so it now returns
+  `[0]`. (Integer `**`/`pow` saturate to `Infinity` in O(1) — no bignum DoS as in
+  the Python backend.)
+- **`to_s`/`inspect`/`join` are cycle- and depth-safe.** A self-referential
+  `Array`/`Map` renders `[...]`/`{...}` (Ruby's behaviour) and depth is capped, so
+  a cyclic or deeply-nested structure can no longer overflow the stack.
+
+### Known v0 limitation
+
+JavaScript cannot distinguish `3.0` from `3` (both `number`), so a whole-valued
+Ruby `Float` prints as an integer via `to_s`/`inspect` — documented, matching the
+existing `classOf` `Integer`/`Float` split.
+
 ## [0.1.4] - 2026-06-22
 
 ### Added
