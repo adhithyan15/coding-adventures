@@ -32,6 +32,8 @@
 //! true  ? a : b      →  a                       (ConditionalExpression with literal test)
 //! "hi".length        →  2                       (string-literal .length, UTF-16 units)
 //! "ab".toUpperCase() →  "AB"                     (ASCII string casing methods)
+//! "abc".charCodeAt(0)→  97                        (string-literal indexing methods)
+//! "abc".charAt(1)    →  "b"
 //! ```
 //!
 //! And recurses through every child node, so `1 + (2 * 3) → 1 + 6 → 7`
@@ -536,12 +538,13 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
     let callee = fold_expression(&c.callee, st);
     let arguments: Vec<Expression> = c.arguments.iter().map(|a| fold_expression(a, st)).collect();
 
-    if arguments.is_empty() {
-        if let Expression::MemberExpression(m) = &callee {
-            if !m.computed {
-                if let (Expression::StringLiteral(s), Expression::Identifier(id)) =
-                    (m.object.as_ref(), m.property.as_ref())
-                {
+    if let Expression::MemberExpression(m) = &callee {
+        if !m.computed {
+            if let (Expression::StringLiteral(s), Expression::Identifier(id)) =
+                (m.object.as_ref(), m.property.as_ref())
+            {
+                // ---- zero-argument casing methods (ASCII-only) ----
+                if arguments.is_empty() {
                     let cased = match id.name.as_str() {
                         "toUpperCase" if s.value.is_ascii() => Some(s.value.to_ascii_uppercase()),
                         "toLowerCase" if s.value.is_ascii() => Some(s.value.to_ascii_lowercase()),
@@ -553,6 +556,59 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         let after = format!("\"{}\"", result);
                         let new_cv = st.fork_cv(&parent, &before, &after);
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
+                // ---- single-integer-index methods: charCodeAt / charAt ----
+                //
+                // JS indexes a string by UTF-16 *code unit*, so we index into
+                // `encode_utf16()` (an astral char occupies two units). The
+                // index argument must be a non-negative integer literal; a
+                // fractional, negative, or non-literal index is left for the
+                // runtime (we stay conservative rather than model `ToInteger`
+                // coercion and the NaN/"" out-of-range edge cases for those).
+                else if arguments.len() == 1 {
+                    if let Expression::NumericLiteral(n) = &arguments[0] {
+                        if n.value.is_finite() && n.value >= 0.0 && n.value.fract() == 0.0 {
+                            let units: Vec<u16> = s.value.encode_utf16().collect();
+                            let i = n.value as usize;
+                            match id.name.as_str() {
+                                // `"abc".charCodeAt(i)` → the code unit at `i`.
+                                // Out of range is JS `NaN`, for which there is
+                                // no literal — so we simply don't fold it.
+                                "charCodeAt" if i < units.len() => {
+                                    let value = units[i] as f64;
+                                    let parent = c.cv.clone();
+                                    let before = format!("\"{}\".charCodeAt({})", s.value, i);
+                                    let after = format_js_number(value);
+                                    let new_cv = st.fork_cv(&parent, &before, &after);
+                                    return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
+                                }
+                                // `"abc".charAt(i)` → the 1-code-unit string at
+                                // `i`, or `""` when out of range. A lone
+                                // surrogate (e.g. `"💩".charAt(0)`) is a valid
+                                // length-1 JS string but cannot be a Rust
+                                // `String`, so `from_utf16` fails and we leave
+                                // that call unfolded (conservative, still sound).
+                                "charAt" => {
+                                    let result = if i < units.len() {
+                                        String::from_utf16(&units[i..i + 1]).ok()
+                                    } else {
+                                        Some(String::new())
+                                    };
+                                    if let Some(result) = result {
+                                        let parent = c.cv.clone();
+                                        let before = format!("\"{}\".charAt({})", s.value, i);
+                                        let after = format!("\"{}\"", result);
+                                        let new_cv = st.fork_cv(&parent, &before, &after);
+                                        return stamp_literal_cv(
+                                            FoldedLiteral::String(result),
+                                            new_cv,
+                                        );
+                                    }
+                                }
+                                _ => {}
+                            }
+                        }
                     }
                 }
             }
@@ -2652,6 +2708,107 @@ mod tests {
         let t = call0(string("  abc  ", None), "trim");
         let (out, _, changed, _) = run_pass(program_with_expr(t, true));
         assert!(!changed, "\"...\".trim() must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- string indexing (charCodeAt / charAt) -------
+
+    /// Build a one-argument method call `<object>.<name>(<arg>)`.
+    fn call1(object: Expression, name: &str, arg: Expression) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(object, name)),
+            arguments: vec![arg],
+        })
+    }
+
+    #[test]
+    fn fold_char_code_at_in_range() {
+        // "abc".charCodeAt(0) → 97, .charCodeAt(2) → 99
+        for (idx, expect) in [(0.0, 97.0), (2.0, 99.0)] {
+            let c = call1(string("abc", None), "charCodeAt", num(idx, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"abc\".charCodeAt({idx}) should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expect),
+                other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn char_code_at_out_of_range_does_not_fold() {
+        // JS `"abc".charCodeAt(5)` is NaN — no literal, so don't fold.
+        let c = call1(string("abc", None), "charCodeAt", num(5.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "out-of-range charCodeAt must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn fold_char_code_at_counts_utf16_units() {
+        // "💩" is the surrogate pair [0xD83D, 0xDCA9]; charCodeAt(0) is the
+        // high surrogate 55357, proving we index UTF-16 code units (not scalars).
+        let c = call1(string("💩", None), "charCodeAt", num(0.0, None));
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 55357.0),
+            other => panic!("expected 55357 (high surrogate); got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_char_at_in_and_out_of_range() {
+        // "abc".charAt(1) → "b"
+        let c = call1(string("abc", None), "charAt", num(1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "\"abc\".charAt(1) should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "b"),
+            other => panic!("expected \"b\"; got {:?}", other),
+        }
+
+        // out of range → "" (JS semantics)
+        let c = call1(string("abc", None), "charAt", num(9.0, None));
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, ""),
+            other => panic!("expected empty string; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn char_at_on_lone_surrogate_does_not_fold() {
+        // "💩".charAt(0) is a length-1 JS string holding a lone high surrogate,
+        // which a Rust `String` can't represent — so we leave the call alone.
+        let c = call1(string("💩", None), "charAt", num(0.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "charAt yielding a lone surrogate must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn non_integer_or_negative_index_does_not_fold() {
+        // Fractional index: leave for the runtime (ToInteger coercion).
+        let frac = call1(string("abc", None), "charCodeAt", num(0.5, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(frac, true));
+        assert!(!changed, "fractional index must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+
+        // Negative index: charCodeAt(-1) is NaN, charAt(-1) is "" — stay
+        // conservative and don't fold either.
+        let neg = call1(string("abc", None), "charCodeAt", num(-1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(neg, true));
+        assert!(!changed, "negative index must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn char_index_on_identifier_does_not_fold() {
+        // `s.charCodeAt(0)` needs the runtime value of `s`.
+        let c = call1(ident("s"), "charCodeAt", num(0.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.charCodeAt(0) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

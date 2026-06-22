@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.21.0] - 2026-06-22
+
+### Added — string indexing folds (`"abc".charCodeAt(0)` → `97`, `"abc".charAt(1)` → `"b"`)
+
+`fold_call` now folds the single-integer-index string methods on a string
+literal with an integer-literal index:
+
+| before                  | after | reasoning                                  |
+|-------------------------|-------|--------------------------------------------|
+| `"abc".charCodeAt(0)`   | `97`  | UTF-16 code unit at index 0                |
+| `"abc".charCodeAt(2)`   | `99`  | code unit at index 2                       |
+| `"💩".charCodeAt(0)`    | `55357` | high surrogate — JS indexes UTF-16 units |
+| `"abc".charAt(1)`       | `"b"` | 1-code-unit substring                      |
+| `"abc".charAt(9)`       | `""`  | out of range → empty string (JS semantics) |
+
+JS indexes a string by **UTF-16 code unit**, so the fold indexes into
+`encode_utf16()` (an astral char occupies two units). The index must be a
+**non-negative integer literal**; fractional, negative, or non-literal indices
+are left for the runtime (we don't model `ToInteger` coercion or the NaN/`""`
+out-of-range cases for those). For `charCodeAt`, an out-of-range index is JS
+`NaN` — no literal exists, so it isn't folded. For `charAt`, an out-of-range
+index folds to `""`; an in-range index that would yield a **lone surrogate**
+(e.g. `"💩".charAt(0)`) isn't folded, because a Rust `String` can't hold a lone
+surrogate (`String::from_utf16` fails) — conservative and still sound.
+
+Only the dotted form on a string literal folds; identifier receivers, the
+computed form, and other arities pass through. Emits a CV contribution. Seven
+new unit tests (in-range/out-of-range/astral/lone-surrogate/fractional/negative/
+identifier).
+
 ## [0.20.0] - 2026-06-22
 
 ### Added — ASCII string-casing folds (`"abc".toUpperCase()` → `"ABC"`)
