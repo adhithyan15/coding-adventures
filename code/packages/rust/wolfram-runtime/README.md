@@ -12,7 +12,8 @@ See the spec: [`code/specs/MA04-wolfram-language.md`](../../../specs/MA04-wolfra
 iteration constructs), §11 (W-8 local scoping), §12 (W-9 list-manipulation
 builtins), §13 (W-10 functional-iteration combinators), §14 (W-11 pure
 functions), §15 (W-12 string builtins), §16 (W-13 list set operations), §17
-(W-14 conditionals & predicates), and §18 (W-15 numeric & integer math).
+(W-14 conditionals & predicates), §18 (W-15 numeric & integer math), and §19
+(W-16 nested/structured list operations).
 
 ## What it does
 
@@ -157,6 +158,16 @@ assert_eq!(eval("Quotient[-7, 2]\n").unwrap(), "Out[1]= -4\n"); // toward −∞
 assert_eq!(eval("Sqrt[16]\n").unwrap(), "Out[1]= 4\n");       // exact perfect square
 // Sqrt[2] stays symbolic; the float is on demand via N:
 assert_eq!(eval("Sqrt[2]\n").unwrap(), "Out[1]= Sqrt[2]\n");
+
+// W-16 nested/structured list ops — transpose, dimensions, partition, take/drop, fill:
+assert_eq!(eval("Transpose[{{1, 2}, {3, 4}}]\n").unwrap(), "Out[1]= {{1, 3}, {2, 4}}\n");
+assert_eq!(eval("Dimensions[{{1, 2, 3}, {4, 5, 6}}]\n").unwrap(), "Out[1]= {2, 3}\n");
+assert_eq!(eval("Partition[{1, 2, 3, 4}, 2]\n").unwrap(), "Out[1]= {{1, 2}, {3, 4}}\n");
+assert_eq!(eval("Partition[{1, 2, 3, 4, 5}, 2, 1]\n").unwrap(),
+    "Out[1]= {{1, 2}, {2, 3}, {3, 4}, {4, 5}}\n");  // step d = 1, overlapping
+assert_eq!(eval("Take[{1, 2, 3, 4, 5}, -2]\n").unwrap(), "Out[1]= {4, 5}\n"); // last 2
+assert_eq!(eval("Drop[{1, 2, 3}, 1]\n").unwrap(), "Out[1]= {2, 3}\n");        // drop first
+assert_eq!(eval("ConstantArray[5, {2, 2}]\n").unwrap(), "Out[1]= {{5, 5}, {5, 5}}\n");
 
 // Stateful (bindings and definitions persist):
 let mut s = WolframSession::new();
@@ -461,6 +472,35 @@ two large coprime integers all fail **closed** (left unevaluated) rather than
 wrapping or panicking. Every malformed form (wrong arity, non-numeric or
 non-integer argument, division by zero) is left unevaluated — the fail-soft
 contract every head since W-5 follows.
+
+**W-16** adds the **nested/structured list operations** — the *shape* vocabulary
+for matrix-like nested lists, on top of the W-9 flat-list heads. All reuse the
+W-9 list machinery (`list_elements`, `apply(sym(LIST), …)`, `MAX_LIST_LENGTH`).
+`Take`/`Drop` here are the **list** heads — distinct from W-12's
+`StringTake`/`StringDrop`, which keep operating on strings. `Flatten` already
+exists (W-9) and is reused unchanged. All are `Head[args]` forms — no grammar
+change.
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Transpose` | `Transpose[{{1, 2}, {3, 4}}]` | `{{1, 3}, {2, 4}}` |
+| `Dimensions` | `Dimensions[{{1, 2, 3}, {4, 5, 6}}]` / `Dimensions[5]` | `{2, 3}` / `{}` |
+| `Partition` | `Partition[{1, 2, 3, 4}, 2]` | `{{1, 2}, {3, 4}}` |
+| `Partition` | `Partition[{1, 2, 3, 4, 5}, 2, 1]` | `{{1, 2}, {2, 3}, {3, 4}, {4, 5}}` |
+| `Take` | `Take[{1, 2, 3, 4, 5}, 2]` / `Take[…, -2]` | `{1, 2}` / `{4, 5}` |
+| `Drop` | `Drop[{1, 2, 3}, 1]` / `Drop[…, -1]` | `{2, 3}` / `{1, 2}` |
+| `ConstantArray` | `ConstantArray[0, 3]` / `ConstantArray[5, {2, 2}]` | `{0, 0, 0}` / `{{5, 5}, {5, 5}}` |
+
+`Transpose` requires a **rectangular** matrix (a ragged or non-matrix argument is
+left unevaluated). `Partition` drops a trailing partial block (Wolfram default —
+no padding) and steps the window by `d` (default `d = n`). `ConstantArray` is the
+only **output-growing** head: its total element count is guarded *before*
+allocation — 1-D `n` and 2-D `m × n` (computed with **`checked_mul`** on i128)
+are both capped at `MAX_LIST_LENGTH`, so a tiny spec like
+`ConstantArray[0, {10^6, 10^6}]` is refused rather than allocated. `Take`/`Drop`
+range-check their (possibly negative) count in `i128` so a crafted `i64::MIN`
+cannot overflow, and leave an out-of-range count unevaluated. Every malformed
+form is left unevaluated — the fail-soft contract every head since W-5 follows.
 
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
