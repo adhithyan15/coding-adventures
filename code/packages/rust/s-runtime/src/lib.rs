@@ -1728,8 +1728,9 @@ mod tests {
 
     #[test]
     fn seq_date_length_capped_not_oom() {
-        // A from/to/by implying billions of dates must error (cap), never OOM.
-        let out = eval_s("seq(as.Date(\"1970-01-01\"), as.Date(\"3000-01-01\"), by = 1)\n");
+        // A from/to/by implying tens of millions of dates must error (cap), never
+        // OOM. Year 99999 is ~36M days past the epoch, well over MAX_SEQ_LEN (16.7M).
+        let out = eval_s("seq(as.Date(\"1970-01-01\"), as.Date(\"99999-01-01\"), by = 1)\n");
         assert!(out.is_err(), "huge seq.Date should error, got {out:?}");
     }
 

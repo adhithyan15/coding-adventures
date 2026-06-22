@@ -3497,9 +3497,10 @@ mod tests {
 
     #[test]
     fn seq_date_length_capped_through_r_syntax() {
-        // A huge span must error (cap), never OOM.
+        // A span of tens of millions of days exceeds MAX_SEQ_LEN → error (cap),
+        // never OOM.
         assert!(
-            eval_r("seq(as.Date(\"1970-01-01\"), as.Date(\"3000-01-01\"), by = 1)\n").is_err()
+            eval_r("seq(as.Date(\"1970-01-01\"), as.Date(\"99999-01-01\"), by = 1)\n").is_err()
         );
     }
 }
