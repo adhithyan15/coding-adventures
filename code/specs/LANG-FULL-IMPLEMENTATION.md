@@ -202,9 +202,16 @@ multiple languages; close an enabler before the features that depend on it.
     opcode change. **Executed proof on real `ilasm` + `dotnet`**: both ALGOL real programs run
     on the CLR matrix column. (The structured **bytecode** emitter keeps its own f64 guard — a
     later follow-up; the real-CLR path is textual.)
-- **E4 — Strings.** ⚠ An IIR string value model + core ops (length, concat, index,
-  compare, print) with backend support (heap/host). Unlocks BASIC strings, Twig strings,
-  ALGOL strings/I-O. **Architectural fork — needs a design pass before implementation.**
+- **E4 — Strings.** ◑ *Design pass complete — see
+  **[`lang-full-e4-strings.md`](lang-full-e4-strings.md)**; implementation gated on
+  sign-off.* An IIR string value model (six ops: `str_const`, `str_len`, `str_index`,
+  `str_concat`, `str_eq`, `print_str`) + per-backend support, lowered to all 7 backends and
+  verified by RUNNING (observable via **stdout**). A v1 string is an **immutable,
+  length-counted byte buffer** — it reuses the E5 array substrate (length-prefixed flat
+  buffer on the static backends; native `String` / managed `(array i8)` on the managed
+  backends), so E4 is the *byte-aggregate sibling of E5*, not a new allocator. The one new
+  host primitive is `__print_str`/`printStr` (the string sibling of `print_i64`). Unlocks
+  BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
   array model (`alloc_array`/`array_len`/`array_get`/`array_set`, `array<T>` type hint,
