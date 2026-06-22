@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.170.0] - 2026-06-22
+
+### Added — ASI Phase 3: restricted productions (Rule 3) end-to-end
+
+Pulls in `coding-adventures-javascript-parser` 0.19.0, whose new
+`force_restricted_semicolons` pre-pass forces an automatic semicolon after a
+restricted keyword (`return`/`throw`/`break`/`continue`/`yield`) whose argument
+is pushed to the next line — the ECMAScript §12.10.1 "no LineTerminator here"
+rule. Because closurec's grammar is newline-blind, `return` ⏎ `42` previously
+parsed (and re-emitted) as `return 42`, a silent **miscompile**; it is now
+correctly `return; 42` (the `42` becoming a dead statement the SIMPLE pipeline
+drops).
+
+New e2e fixture `tests/diff/simple-asi-restricted` (and integration test
+`diff_simple_asi_restricted.rs`): `function f(){return` ⏎ `42}` ⏎ `report(f())`
+→ `function f(){return};report(f());`. The absence of `42` is the double proof —
+the restricted production was honored *and* the SIMPLE typed pipeline ran (the
+`WHITESPACE_ONLY` re-stitcher would emit `function f(){return 42}`). The full
+existing fixture suite remains byte-for-byte unchanged.
+
+Context guards keep a `return` that is really a property name (`a.return`,
+`{return: 1}`) from being mis-split; postfix `++`/`--` restricted productions
+are a documented follow-up.
+
+> Version note: bumped to 0.170.0 to sit above the concurrently-developed
+> `simple-fold-charat` branch (0.169.0) and the merged ASI Rule-1 release
+> (0.168.0), so the parallel branches never collide on the version line.
+
 ## [0.168.0] - 2026-06-22
 
 ### Changed — ASI Rule 1 now handles string/template-ending statements
