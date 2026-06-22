@@ -1,5 +1,36 @@
 # Changelog — x86-simulator
 
+## 0.3.0 — 2026-06-21 — local LANG-FULL x86_64 matrix column (x86-sim PR-S3)
+
+Wires the simulator into the LANG-FULL matrix: a new integration test drives the
+**real** language frontends through the **real** AOT pipeline and *runs the
+emitted x86_64 machine code* on this simulator — so the matrix's `NativeAot`
+**x86_64** column is now exercised **locally, on aarch64**, with no Intel hardware
+and no CI round-trip.
+
+### Added
+- **`tests/lang_matrix_x86.rs`** — `compile_to_x86_functions` replicates
+  `twig-aot`'s native per-function pipeline (`compile_source_to_iir` →
+  `infer_types` → `aot_specialise` → `x86_64-backend::compile_function_with_relocs`),
+  hands the per-function blobs + relocations to `MachineCodeHarness`, and runs the
+  machine code. Seven cells, each a verbatim copy of a `lang_matrix.rs` `NativeAot`
+  program asserting the **same** exit code — but obtained by running the *x86_64*
+  bytes, not the host's aarch64 bytes:
+  - Twig `42` and `(+ 10 20 12)` ⇒ 42 (const/add, no relocs);
+  - ALGOL integer arithmetic ⇒ 2;
+  - ALGOL `procedure sq(x)` ⇒ 49 — the first **multi-function** program, exercising
+    the harness's internal `call` relocation patching (`main`→`sq`);
+  - ALGOL **E3 real** `2.5 * 2.0 == 5.0` ⇒ 42 and `7.0 / 2.0 < 4.0` ⇒ 1 — runs the
+    SSE2 (`movabs`/`movsd`/`mulsd`/`divsd`/`ucomisd`/`setcc`) output **locally**;
+  - ALGOL **E5 static array** `A[1]:=40; A[3]:=2; A[1]+A[3]` ⇒ 42 — runs the native
+    bump-heap `__twig_alloc_bytes` + bounds-`cmp`/`jb`-over-`ud2` array model.
+- **dev-deps**: `lang-aot` + `aot-core` (drive the frontends + AOT specialiser).
+
+### Verified
+- **Retro-verifies E3 native floats and E5 native arrays on the x86_64 backend,
+  on aarch64** — the two columns the matrix previously executed only on the Linux
+  x86 CI runner. 23 tests (16 unit + 7 matrix).
+
 ## 0.2.0 — 2026-06-21 — SSE2 scalar doubles + `movabs`/`setcc` (x86-sim PR-S2)
 
 Runs the x86_64-backend's **floating-point** (ALGOL `real` / LANG-FULL E3) output
