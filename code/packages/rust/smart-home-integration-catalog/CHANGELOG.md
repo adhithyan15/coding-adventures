@@ -191,6 +191,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReviewDispositionActionReadinessSummary`
   and helpers for combining disposition readiness with disposition-action
   counts and next action pointers.
+- `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotReadinessSummary`
+  and helpers for combining disposition-action readiness with slot counts and
+  next slot pointers.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReviewDispositionReadinessSummary`
   and helpers for combining clearance evidence-review readiness with
   disposition outcomes.

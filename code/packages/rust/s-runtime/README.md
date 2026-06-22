@@ -253,6 +253,21 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   finite/checked arithmetic, so a huge `N` or a degenerate range is rejected/handled
   rather than over-allocating or dividing by zero. (`dig.lab=` and `ordered_result=`
   land in R-35, below.)
+- **String utilities** (R-34): an independent string-utility family that reuses the
+  existing string machinery (`as_character`, the `Option<String>`-as-`NA`
+  convention, `SValue::Character`/`SValue::Logical`) and operates on Unicode
+  `char`s throughout — never raw byte indices — so multibyte UTF-8 input is always
+  safe. **`startsWith(x, prefix)`** / **`endsWith(x, suffix)`** are logical, recycled
+  over *both* args (`NA` → `NA`); `startsWith(c("apple","banana"),"a")` →
+  `c(TRUE,FALSE)`. **`trimws(x, which="both")`** strips leading/trailing whitespace
+  (`[ \t\r\n]`), `which ∈ {both,left,right}` (else an error). **`chartr(old,new,x)`**
+  translates characters (`old`/`new` equal `nchar`, else an error);
+  `chartr("é","e","café")` → `"cafe"`. **`strtoi(x, base=10L)`** parses integers in
+  bases 2..36 (`strtol`-style: leading whitespace + sign, `0x` prefix for base 16,
+  full-consume, `NA` for garbage / out-of-range digit / base outside 2..36), with
+  checked `i64` accumulation (overflow → `NA`, never a panic).
+  (`strtoi(base=0L)` auto-detection and a custom `trimws(whitespace=)` are deferred
+  to R-36.)
 - **Ordered factors & `cut()` label polish** (R-35): an *ordered* factor is a factor
   whose levels carry a meaningful order — `SValue::Factor` gains an `ordered: bool`
   field, so `class()` reports `c("ordered", "factor")` when set (and the `Levels:`

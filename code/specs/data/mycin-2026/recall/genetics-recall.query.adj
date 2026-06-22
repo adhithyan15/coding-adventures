@@ -35,3 +35,5 @@ import "genetics-edges.adj"
 ? gene_defect(wilson_disease, $Gene)                   % expect atp7b (expand)
 ? inheritance(hereditary_hemochromatosis, $Pattern)    % expect autosomal_recessive (expand)
 ? gene_defect(hereditary_hemochromatosis, $Gene)       % expect hfe (expand)
+? inheritance(tay_sachs_disease, $Pattern)             % expect autosomal_recessive (expand)
+? gene_defect(tay_sachs_disease, $Gene)                % expect hexa (expand)

@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.33.0] - 2026-06-21
+## [0.34.0] - 2026-06-21
 
 ### Added
 
@@ -34,6 +34,55 @@ All notable changes to this project will be documented in this file.
   - **Deferred to R-41:** `pivot=TRUE` (pivoted Cholesky for positive-*semi*-
     definite matrices), the `chol2inv()` companion, and complex (Hermitian)
     matrices. This release ships the real-SPD dense core only.
+
+## [0.33.0] - 2026-06-21
+
+### Added
+
+- **String utilities (R-34)** — an independent string-utility family available to
+  both S and R through the shared tree-walker. Not part of the in-flight
+  cut/set-ops chain. All five reuse the existing string machinery (the
+  `as_character` coercion, the `Option<String>`-as-`NA` convention, and the
+  `SValue::Character`/`SValue::Logical` constructors), add no new value type, and
+  operate on Unicode `char`s throughout — never raw byte indices — so multibyte
+  UTF-8 input can never split a code point or panic.
+  - **`startsWith(x, prefix)`** / **`endsWith(x, suffix)`** — logical vectors,
+    `TRUE` where `x[i]` begins/ends with the recycled `prefix[i]`/`suffix[i]`.
+    Vectorized and recycled over *both* arguments to the longer length; `NA` in
+    either operand → `NA`; an empty operand → a length-0 result. Implemented with
+    `str::starts_with`/`ends_with`, which compare whole code points.
+    `startsWith(c("apple","banana"), "a")` → `c(TRUE, FALSE)`;
+    `startsWith(c("ab","cd","ae"), "a")` → `c(TRUE, FALSE, TRUE)`.
+  - **`trimws(x, which = "both")`** — strip leading and/or trailing whitespace
+    (`[ \t\r\n]`) from each element. `which ∈ {"both","left","right"}`, read as the
+    second positional or the `which =` named arg; any other value is a clean error.
+    `NA` passes through. `trimws("  hi  ")` → `"hi"`; `trimws("  hi  ", "left")` →
+    `"hi  "`. Char-based (`trim_start_matches`/`trim_end_matches`), UTF-8 safe.
+  - **`chartr(old, new, x)`** — translate each char of `x` found at position *i* of
+    `old` to the char at position *i* of `new`. `old`/`new` are length-one scalars
+    of **equal `nchar`** (else an error); the table is built by zipping their code
+    points (first mapping wins), so multibyte `old`/`new`/`x` translate as whole
+    units. Vectorized over `x`, `NA` → `NA`. `chartr("abc","xyz","cab")` → `"zxy"`;
+    `chartr("é","e","café")` → `"cafe"`.
+  - **`strtoi(x, base = 10L)`** — parse each string as an integer in the given
+    `base` (an integer in **2..36**, read as the second positional or `base =`),
+    returning a `Double` vector with `NA` for anything unparseable. Follows C
+    `strtol`: leading ASCII whitespace and an optional `+`/`-` sign are honored,
+    base 16 accepts an optional `0x`/`0X` prefix, the whole remaining string must be
+    consumed (trailing garbage/whitespace → `NA`), an empty string → `NA`, an
+    out-of-range digit → `NA`, and a `base` outside 2..36 makes **every** element
+    `NA`. `strtoi("FF", 16L)` → `255`; `strtoi("10", 2L)` → `2`;
+    `strtoi(c("7","8"), 8L)` → `c(7, NA)`; `strtoi("z", 16L)` → `NA`.
+  - **Security / robustness**: `strtoi` accumulates into an `i64` with
+    `checked_mul`/`checked_add`/`checked_neg`, so a long all-digits string overflows
+    to `NA` rather than panicking, and the base is bounded to 2..36 before any
+    `char::to_digit`. `chartr`/`trimws` iterate `char`s (no byte-index slicing), so
+    a multibyte boundary can never be split. `startsWith`/`endsWith` recycle to the
+    `max` of the (already-bounded) input lengths, short-circuiting to length 0 when
+    either operand is empty — no unbounded length math.
+  - **Deferred to R-36**: `strtoi`'s `base = 0L` auto-detection (C `strtol`'s
+    `0x`→base-16 / leading-`0`→base-8 convention) and `trimws`'s custom
+    `whitespace =` regex argument.
 
 ## [0.32.0] - 2026-06-21
 

@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.32.0] - 2026-06-21
+## [0.33.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)
 
@@ -25,6 +25,42 @@ All notable changes to this project will be documented in this file.
     upper triangle errors; allocation is bounded by the `MAX_SOLVE_DIM` order cap.
   - **Deferred to R-41**: `pivot=TRUE` (pivoted Cholesky), `chol2inv()`, and
     complex (Hermitian) matrices; this item ships the real-SPD dense core only.
+
+## [0.32.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-34 — string utilities**: an independent string-utility family reached
+  through ordinary R syntax (not part of the in-flight cut/set-ops chain). Five
+  base-R builtins, all reusing the existing string machinery (`as_character`,
+  the `Option<String>`-as-`NA` convention, `SValue::Character`/`SValue::Logical`)
+  and operating on Unicode `char`s — never raw byte indices — so multibyte UTF-8
+  input is always safe.
+  - **`startsWith(x, prefix)`** / **`endsWith(x, suffix)`** — logical vectors,
+    recycled over *both* arguments to the longer length; `NA` in either operand →
+    `NA`. `startsWith(c("apple","banana"), "a")` → `c(TRUE, FALSE)`;
+    `endsWith(c("file.txt","file.csv"), ".txt")` → `c(TRUE, FALSE)`.
+  - **`trimws(x, which = "both")`** — strip leading/trailing whitespace
+    (`[ \t\r\n]`); `which ∈ {"both","left","right"}` (second positional or
+    `which =`), invalid value → error; `NA` passes through. `trimws("  hi  ")` →
+    `"hi"`; `trimws("  hi  ", "left")` → `"hi  "`.
+  - **`chartr(old, new, x)`** — character translation; `old`/`new` must have equal
+    `nchar` (else an error). Vectorized over `x`, `NA` → `NA`, multibyte safe.
+    `chartr("abc","xyz","cab")` → `"zxy"`; `chartr("é","e","café")` → `"cafe"`.
+  - **`strtoi(x, base = 10L)`** — parse strings as integers in bases 2..36,
+    returning a numeric vector with `NA` for unparseable input. Honors leading
+    whitespace and a sign, accepts a `0x`/`0X` prefix for base 16, requires the
+    whole string to be consumed (trailing garbage → `NA`), and yields `NA` for an
+    empty string, an out-of-range digit, or a base outside 2..36.
+    `strtoi("FF", 16L)` → `255`; `strtoi("10", 2L)` → `2`;
+    `strtoi(c("7","8"), 8L)` → `c(7, NA)`.
+  - **Security**: `strtoi` parses with checked `i64` arithmetic (overflow → `NA`,
+    never a panic) and a base bounded to 2..36; `chartr`/`trimws` iterate `char`s
+    so no multibyte boundary can be split; recycling length is the bounded `max` of
+    the input lengths (length 0 when either operand is empty). No grammar change,
+    no new value type.
+  - **Deferred to R-36**: `strtoi` `base = 0L` auto-detection and a custom
+    `trimws(whitespace =)` argument.
 
 ## [0.31.0] - 2026-06-21
 

@@ -212,6 +212,52 @@ mod tests {
         );
     }
 
+    // --- R-34: string utilities through R syntax ------------------------
+
+    #[test]
+    fn r34_starts_ends_with() {
+        assert_eq!(
+            show("startsWith(c(\"apple\", \"banana\"), \"a\")\n"),
+            "[1]  TRUE FALSE"
+        );
+        assert_eq!(
+            show("endsWith(c(\"file.txt\", \"file.csv\"), \".txt\")\n"),
+            "[1]  TRUE FALSE"
+        );
+        assert_eq!(
+            show("startsWith(c(\"ab\", \"cd\", \"ae\"), \"a\")\n"),
+            "[1]  TRUE FALSE  TRUE"
+        );
+        assert_eq!(show("startsWith(NA, \"a\")\n"), "[1] NA");
+    }
+
+    #[test]
+    fn r34_trimws() {
+        assert_eq!(show("trimws(\"  hi  \")\n"), "[1] \"hi\"");
+        assert_eq!(show("trimws(\"  hi  \", \"left\")\n"), "[1] \"hi  \"");
+        assert_eq!(show("trimws(\"  hi  \", which = \"right\")\n"), "[1] \"  hi\"");
+        assert_eq!(show("trimws(NA)\n"), "[1] NA");
+    }
+
+    #[test]
+    fn r34_chartr() {
+        assert_eq!(show("chartr(\"abc\", \"xyz\", \"cab\")\n"), "[1] \"zxy\"");
+        // Multibyte input is UTF-8 safe.
+        assert_eq!(show("chartr(\"é\", \"e\", \"café\")\n"), "[1] \"cafe\"");
+        assert!(eval_r("chartr(\"ab\", \"xyz\", \"x\")\n").is_err());
+    }
+
+    #[test]
+    fn r34_strtoi() {
+        assert_eq!(nums("strtoi(\"FF\", 16L)\n"), vec![255.0]);
+        assert_eq!(nums("strtoi(\"10\", 2L)\n"), vec![2.0]);
+        assert_eq!(nums("strtoi(\"42\")\n"), vec![42.0]);
+        assert_eq!(show("strtoi(\"z\", 16L)\n"), "[1] NA");
+        assert_eq!(show("strtoi(c(\"7\", \"8\"), 8L)\n"), "[1]  7 NA");
+        // Composes with other builtins.
+        assert_eq!(nums("strtoi(\"FF\", 16L) + 1\n"), vec![256.0]);
+    }
+
     #[test]
     fn lists_through_r_syntax() {
         // list() with $ access; lapply -> list; strsplit -> list of char vectors.
