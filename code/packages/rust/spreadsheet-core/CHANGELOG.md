@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.10.0
+
+**Range sort — `Workbook::sort_range` (Data ▸ Sort).** Reorders the **rows** of a
+rectangular range by the computed values in one **key column** — the third member
+of the range-operation family (after `fill` and the clipboard), built on the same
+`FormulaAst::shift` machinery.
+
+- `Workbook::sort_range(sheet, range, key_col, ascending) -> bool` (`workbook.rs`):
+  each row of `range` is a record spanning the range's columns; the rows are
+  permuted into key order while every record's cells stay together. The sort key
+  is the cell's **computed value** at `(row, key_col)` (a formula sorts by what it
+  evaluates to, not its text).
+- **Total order** over values, so any mix of types is deterministic: blanks always
+  sort last (both directions, Excel's rule); otherwise by type — Number < Text <
+  Boolean < Error — then within a type (numeric, **case-insensitive** text with a
+  case-sensitive tiebreak, `FALSE`<`TRUE`, fixed error order). `ascending = false`
+  reverses only the non-empty comparison. The sort is **stable** (equal keys keep
+  their original relative order).
+- Because the rows physically move, a moved cell's formula has its references
+  **shifted by that row's displacement** (`Δrow`, `Δcol = 0`) via `FormulaAst::shift`
+  — relative refs track, absolute (`$`) refs pin, an off-grid ref collapses to
+  `#REF!` — exactly as if each row were cut and pasted. Display **formats** ride
+  with their cells. Cells in the sorted rows but outside the column band, and all
+  cells outside the range, are untouched.
+- Returns `false` (a no-op) for an unknown sheet, a `key_col` outside the range, an
+  empty/inverted/single-row range, or a range over `MAX_RANGE_CELLS` (the shared
+  DoS guard). Returns `true` once a real permutation is applied; an already-sorted
+  range is detected and left untouched (no revision bump), also `true`. One recalc
+  transaction; every cell in the range is logged for `changed_since`.
+- *Divergence from Excel* (documented, same class as `cut`): a sort shifts each
+  moved formula's own refs by its row displacement and does not rewrite refs that
+  pointed into the range from outside. Plain-data columns — the common case — sort
+  exactly as expected.
+- 12 unit tests (numbers asc/desc, text case-insensitive, stable equal keys, blanks
+  last both directions, cross-type order, record+format carry, relative-ref shift,
+  outside-band untouched, bad-args rejection, already-sorted no-op, change logging).
+  Spec §4 "Range sort". No new public types; `spreadsheet-core` → 0.10.0.
+
 ## 0.9.0
 
 **Persistence — serialize / deserialize (save / load).** `Workbook::serialize`
