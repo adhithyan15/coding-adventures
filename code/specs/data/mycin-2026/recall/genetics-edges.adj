@@ -138,4 +138,14 @@ rulebook genetics_facts {
         source "Friedreich ataxia is an autosomal recessive neurodegenerative disorder caused by guanine-adenine-adenine repeat expansion in the frataxin gene, leading to mitochondrial dysfunction."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
         trust authoritative
+
+    % --- EXPAND: Wilson disease (autosomal recessive; ATP7B) — one span names both ----
+    relate inheritance(wilson_disease, autosomal_recessive)
+        source "Wilson disease is an autosomal recessive condition caused by 1 of several mutations in ATP7B gene which encodes the ATP7B protein transporter on the long arm of chromosome 13 (13q) responsible for excreting excess copper into bile and out of the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441990/"
+        trust authoritative
+    relate gene_defect(wilson_disease, atp7b)
+        source "Wilson disease is an autosomal recessive condition caused by 1 of several mutations in ATP7B gene which encodes the ATP7B protein transporter on the long arm of chromosome 13 (13q) responsible for excreting excess copper into bile and out of the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441990/"
+        trust authoritative
 }
