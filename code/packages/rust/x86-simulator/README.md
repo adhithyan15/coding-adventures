@@ -62,13 +62,15 @@ as the exit code (the same convention as `run_native` / `run_wasm`).
 On an Apple-Silicon host the matrix's `NativeAot` cell only ever builds+runs the
 *aarch64* backend; this test exercises the **x86_64** column end-to-end —
 **locally on aarch64**, retro-verifying columns the matrix could previously
-execute only on x86 CI. The 18 cells span Twig (const/arithmetic/`define`),
+execute only on x86 CI. The 21 cells span Twig (const/arithmetic/`define`),
 Nib (u8 wrap, `~` complement, unsigned division), ALGOL (procedure call,
 switch/computed-goto, signed `div`, E3 `real` SSE2 floats, E5 arrays straight-
 line and in a `for` loop), Oct (`out`, `~`), Dartmouth BASIC (`PRINT`,
 `FOR`/`NEXT` — stdout-captured via the host shims), and Brainfuck (`.` over a
-byte tape). Each new language exposed a missing opcode — the Nib/Oct `~` cells
-surfaced group-3 `0xF7`, and the Brainfuck cell surfaced the `0x88` byte store —
+byte tape, plus `,`-driven stdin: increment, echo, and cat — fed via
+`MachineCodeHarness::stdin`). Each new language exposed a missing opcode — the
+Nib/Oct `~` cells surfaced group-3 `0xF7`, and the Brainfuck cell surfaced the
+`0x88` byte store —
 which this crate now decodes.
 
 ## Safety

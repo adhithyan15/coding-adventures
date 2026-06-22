@@ -1123,12 +1123,65 @@ unchanged.
     when absent.
   - **Scope outcome / deferred to R-33.** `findInterval`, `tabulate`, and `cut`
     (default right-closed `(lo,hi]` intervals with auto-generated labels) ship
-    **solidly**. **Deferred to R-33:** `cut`'s `labels =` (custom level labels),
-    `right = FALSE` (left-closed `[lo,hi)` intervals), `include.lowest =` (fold the
-    extreme endpoint into the adjacent interval), and `breaks` given as a single
-    integer (number of equal-width bins). These are pure extensions of the same
-    `findInterval`-backed core. The `%o%` infix alias for `outer` remains open for a
-    later grammar pass.
+    **solidly** in R-32.
+
+- **R-33 — `cut()` option completeness**. Extends the R-32 `cut`
+  handler in place (same `findInterval`-backed kernel, same factor builder) with
+  the four deferred options. None of them change the default behaviour; they are
+  pure refinements layered onto the existing interval scan.
+  - **`labels =`** — three forms:
+    - **absent / `labels = TRUE`** — the auto-generated interval strings (the
+      R-32 default), `"(lo,hi]"` (or `"[lo,hi)"` when `right = FALSE`).
+    - **a character vector** — used verbatim as the factor levels. Its length
+      **must equal the number of intervals** (`length(breaks) - 1`); otherwise
+      `cut` raises an error (`"lengths of 'breaks' and 'labels' differ"`).
+      `cut(c(1,5,10), breaks=c(0,3,6,11), labels=c("lo","mid","hi"))` → a factor
+      with levels `c("lo","mid","hi")`.
+    - **`labels = FALSE`** — return the **integer bin codes** (a plain numeric
+      vector, *not* a factor). Out-of-range / `NA` values become `NA`.
+      `cut(c(1,2,3), breaks=c(0,3,6), labels=FALSE)` → `c(1,1,2)`.
+  - **`right = FALSE`** — left-closed intervals `[lo, hi)` rather than the
+    default right-closed `(lo, hi]`. The bin scan switches from "largest break
+    `<= x`" to "number of breaks `< x`", and the auto-labels become `"[lo,hi)"`.
+    `cut(c(1,3), breaks=c(0,3,6), right=FALSE)` → `1 ∈ "[0,3)"`, `3 ∈ "[3,6)"`.
+  - **`include.lowest = TRUE`** — include the extreme boundary value in the
+    closest interval. With `right = TRUE` (default) the **lowest** break is folded
+    into the first interval (so `x == breaks[1]` lands in interval 1 instead of
+    `NA`); with `right = FALSE` the **highest** break is folded into the last
+    interval (so `x == breaks[k]` lands in interval `k-1`). Default `FALSE`.
+    `cut(c(0,1,2), breaks=c(0,1,2), include.lowest=TRUE)` → `0` lands in the first
+    interval rather than `NA`.
+  - **integer `breaks` (a single number `N`)** — divide the **range of `x`** into
+    `N` equal-width intervals. R's `cut.default` extends the range by 0.1 % on each
+    side so the extreme data points sit strictly inside the outer bins; we
+    replicate that exactly:
+    ```text
+      rx = range(x, na.rm = TRUE)         # = (min, max) over finite x
+      dx = rx.max - rx.min
+      if dx == 0:                          # degenerate (all x equal)
+          dx = abs(rx.min)                 # R: abs(rx[1L]); if still 0, dx = 1
+          if dx == 0: dx = 1
+      lo = rx.min - dx/1000
+      hi = rx.max + dx/1000
+      breaks = N+1 equally spaced points from lo to hi   # N equal-width bins
+    ```
+    `N` is bounded by `MAX_SEQ_LEN` (a huge `N` → huge levels vector is rejected,
+    not allocated) and the spacing is computed with checked/finite arithmetic so a
+    degenerate range never divides by zero. `cut(0:10, breaks=5)` → a factor with
+    5 levels spanning the slightly-extended `0..10` range; every value gets a
+    non-`NA` bin.
+  - **Security.** `N` for integer breaks is capped at `MAX_SEQ_LEN` before any
+    allocation; the equal-width break vector is built with finite/checked
+    arithmetic (degenerate all-equal `x` is handled without divide-by-zero);
+    `labels` length validation returns a clean `Err` (never panics); `labels =
+    FALSE` returns a numeric vector with no factor allocation. No new
+    user-controlled multiplier beyond the existing `MAX_SEQ_LEN`-bounded input and
+    break lengths.
+  - **Scope outcome / deferred to R-34.** `labels =` (incl. `FALSE`),
+    `right = FALSE`, `include.lowest =`, and integer `breaks` ship **solidly**.
+    **Deferred to R-34:** `dig.lab =` (significant-digit control of auto-label
+    formatting) and `ordered_result =` (an ordered factor result). The `%o%` infix
+    alias for `outer` remains open for a later grammar pass.
 - **R-36 — `crossprod` / `tcrossprod` (matrix cross products)** *(this PR)*. An
   **independent matrix-algebra item** (not part of the binning/cut/set-op chains):
   the two cross-product convenience functions that statistics code reaches for

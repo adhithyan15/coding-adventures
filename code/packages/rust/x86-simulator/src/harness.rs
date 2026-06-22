@@ -55,6 +55,8 @@ impl std::error::Error for BuildError {}
 #[derive(Default)]
 pub struct MachineCodeHarness {
     funcs: Vec<(String, Vec<u8>, Vec<Reloc>)>,
+    /// Bytes the built `Simulator` will hand to `getchar`, in order.
+    input: Vec<u8>,
 }
 
 // Layout constants for the flat address space.
@@ -74,6 +76,14 @@ impl MachineCodeHarness {
     /// Add a compiled function (name, machine-code bytes, relocations).
     pub fn function(mut self, name: &str, bytes: &[u8], relocs: &[Reloc]) -> Self {
         self.funcs.push((name.to_string(), bytes.to_vec(), relocs.to_vec()));
+        self
+    }
+
+    /// Supply the bytes the program will read via `getchar` (e.g. a Brainfuck
+    /// `,` program's stdin).  Consumed in order; once drained, `getchar` returns
+    /// EOF.  Defaults to empty (every `getchar` sees EOF) when not called.
+    pub fn stdin(mut self, input: &[u8]) -> Self {
+        self.input = input.to_vec();
         self
     }
 
@@ -140,6 +150,8 @@ impl MachineCodeHarness {
             state,
             mem,
             stdout: Vec::new(),
+            input: self.input,
+            input_pos: 0,
             code,
             code_base: CODE_BASE,
             externals,

@@ -238,8 +238,21 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   (`cut(c(1,5,10), breaks=c(0,3,6,11))` → levels `"(0,3]","(3,6]","(6,11]"` with
   values `(0,3]`,`(3,6]`,`(6,11]`); values outside all breaks → `NA`. Built on
   `findInterval`; allocations bounded by the already-capped input/breaks lengths;
-  missing operands error gracefully. (`cut`'s `labels=`/`right=FALSE`/
-  `include.lowest=` and integer `breaks` are deferred to R-33.)
+  missing operands error gracefully.
+- **`cut()` option completeness** (R-33): the four options deferred from R-32, all
+  layered onto the same interval scan. `labels=FALSE` returns the **integer bin
+  codes** as a plain numeric vector (not a factor); a character `labels` vector
+  becomes the levels and must match `length(breaks)-1` (else an error); absent /
+  `TRUE` keeps the auto labels. `right=FALSE` gives left-closed `[lo,hi)` intervals
+  (`"[lo,hi)"` labels), and the default `right=TRUE` scan now honours the `(lo,hi]`
+  boundary convention exactly. `include.lowest=TRUE` folds the extreme break (lowest
+  for `right=TRUE`, highest for `right=FALSE`) into the adjacent interval. A
+  single-number `breaks` is the **equal-width** form: `N` bins over the range of `x`,
+  extended by `dx/1000` each side (`dx=max-min`; degenerate `dx=0` → `abs(min)`, then
+  `1`). `N` is capped at `MAX_SEQ_LEN` before any allocation and the breaks use
+  finite/checked arithmetic, so a huge `N` or a degenerate range is rejected/handled
+  rather than over-allocating or dividing by zero. (`dig.lab=` and `ordered_result=`
+  are deferred to R-34.)
 - **Matrix cross products** (R-36): **`crossprod(x, y)`** = `t(x) %*% y` and
   **`crossprod(x)`** = `t(x) %*% x` (the Gram matrix `X'X`); **`tcrossprod(x, y)`** =
   `x %*% t(y)` and **`tcrossprod(x)`** = `x %*% t(x)` (`XX'`). The second argument

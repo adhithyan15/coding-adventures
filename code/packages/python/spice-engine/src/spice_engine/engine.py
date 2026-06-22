@@ -3019,11 +3019,13 @@ def format_deck_wrdata_ascii(
     rows = table.splitlines()
     if not rows:
         return ""
-    columns = rows[0].split("\t")
+    probe_list = list(probes)
+    projected_rows = _deck_wrdata_project_rows(rows, probe_list)
+    columns = projected_rows[0].split("\t")
     options = list(rawfile_options)
     lines = [
         "# SPICE deck wrdata artifact",
-        "Probes: " + ";".join(probes),
+        "Probes: " + ";".join(probe_list),
     ]
     if options:
         lines.append("Options: " + ";".join(options))
@@ -3032,8 +3034,35 @@ def format_deck_wrdata_ascii(
         lines.append("VectorNames: " + ";".join(columns))
     if "set wr_singlescale" in normalized_options and columns:
         lines.append("Scale: " + columns[0])
-    lines.extend(rows)
+    lines.extend(projected_rows)
     return "\n".join(lines) + "\n"
+
+
+def _deck_wrdata_project_rows(rows: list[str], probes: list[str]) -> list[str]:
+    columns = rows[0].split("\t")
+    if not probes:
+        return rows
+    selected_indices: list[int] = []
+    if columns:
+        selected_indices.append(0)
+    normalized_columns = [column.casefold() for column in columns]
+    for probe in probes:
+        normalized_probe = probe.casefold()
+        if normalized_probe not in normalized_columns:
+            continue
+        index = normalized_columns.index(normalized_probe)
+        if index not in selected_indices:
+            selected_indices.append(index)
+    projected_rows: list[str] = []
+    for row in rows:
+        cells = row.split("\t")
+        projected_rows.append(
+            "\t".join(
+                cells[index] if index < len(cells) else ""
+                for index in selected_indices
+            )
+        )
+    return projected_rows
 
 
 def _deck_wrdata_marker_parts(marker: str) -> tuple[str, list[str]] | None:

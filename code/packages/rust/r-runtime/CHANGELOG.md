@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.28.0] - 2026-06-21
+## [0.29.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)
 
@@ -24,6 +24,46 @@ All notable changes to this project will be documented in this file.
     handler's existing `MAX_SEQ_LEN` allocation guard and conformability check, so
     there is no unchecked `nrow*ncol` multiply and no out-of-bounds path; the new
     code is just two argument-shuffling wrappers.
+
+## [0.28.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-33 — `cut()` option completeness**: the four options deferred from R-32,
+  reached through ordinary R syntax. All extend the R-32 `cut` handler in place
+  (same `findInterval`-backed scan, same factor builder); no new value type, no
+  grammar change.
+  - **`labels =`** — `labels = FALSE` returns the **integer bin codes** as a plain
+    numeric vector (NOT a factor): `cut(c(1, 2, 5), breaks = c(0, 3, 6), labels =
+    FALSE)` → `c(1, 1, 2)`, `class(...)` is `"numeric"`. A character `labels`
+    vector is used verbatim as the factor levels and **must** have length
+    `length(breaks) - 1`, else a clean error (`lengths of 'breaks' and 'labels'
+    differ`): `cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c("lo", "mid",
+    "hi"))` → a factor with levels `c("lo", "mid", "hi")`. Absent / `labels = TRUE`
+    keeps the auto-generated interval labels.
+  - **`right = FALSE`** — left-closed `[lo, hi)` intervals instead of the default
+    right-closed `(lo, hi]`; auto-labels become `"[lo,hi)"`. `cut(c(1, 3), breaks =
+    c(0, 3, 6), right = FALSE)` → `1 ∈ [0,3)`, `3 ∈ [3,6)`. (The interval scan also
+    now honours the boundary convention exactly: under the default `right = TRUE`,
+    `x` equal to an interior break lands in the *lower* `(lo,hi]` interval.)
+  - **`include.lowest = TRUE`** — fold the extreme break into the adjacent interval:
+    the lowest break (`right = TRUE`) or the highest (`right = FALSE`), so that
+    boundary value bins instead of going `NA`. `cut(c(0, 1, 2), breaks = c(0, 1, 2),
+    include.lowest = TRUE)` → `0` lands in the first interval.
+  - **integer `breaks`** — a single number `N` requests `N` equal-width bins over
+    the range of `x`, with the range extended by `dx/1000` on each side
+    (`dx = max - min`; a degenerate all-equal `x` falls back to `abs(min)`, then
+    `1`). `cut(0:10, breaks = 5)` → a factor with 5 levels covering the extended
+    `0..10` range; every value gets a non-`NA` bin. (Note: `cut(x, breaks = c(5))`
+    is now this equal-width form, matching base R, rather than "fewer than two
+    breaks → all `NA`".)
+  - **Security**: `N` is capped at `MAX_SEQ_LEN` **before** any break/level vector
+    is built (a huge `N` errors, not allocates); the equal-width breaks use
+    finite/checked arithmetic so a degenerate range never divides by zero; the
+    `labels` length check returns a clean `Err` (never panics); `labels = FALSE`
+    allocates no factor. No new user-controlled multiplier.
+  - **Deferred to R-34**: `dig.lab=` (auto-label significant digits) and
+    `ordered_result=` (an ordered factor result).
 
 ## [0.27.0] - 2026-06-21
 

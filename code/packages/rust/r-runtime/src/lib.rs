@@ -2823,9 +2823,86 @@ mod tests {
         // Empty inputs yield empty results, not panics.
         assert_eq!(eval_r("findInterval(c(), c(1, 2))\n").unwrap().length(), 0);
         assert_eq!(eval_r("cut(c(), breaks = c(0, 1, 2))\n").unwrap().length(), 0);
-        // Fewer than two breaks means zero intervals: every value is NA.
+        // A single-element `breaks` is the equal-width-bin form (R-33): breaks = 5
+        // means 5 bins over the range of x, so both values get a non-NA code.
         let v = nums("as.integer(cut(c(1, 2), breaks = c(5)))\n");
-        assert!(v.iter().all(|x| x.is_nan()));
+        assert_eq!(v.len(), 2);
+        assert!(v.iter().all(|x| !x.is_nan()));
+    }
+
+    // --- R-33: cut() option completeness --------------------------------
+
+    #[test]
+    fn r33_cut_custom_labels_replace_interval_strings() {
+        // labels= supplies the level names verbatim (length must match #intervals).
+        assert_eq!(
+            names_of(
+                "levels(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"mid\", \"hi\")))\n"
+            ),
+            vec!["lo", "mid", "hi"]
+        );
+        assert_eq!(
+            names_of(
+                "as.character(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"mid\", \"hi\")))\n"
+            ),
+            vec!["lo", "mid", "hi"]
+        );
+        // A labels vector of the wrong length is an error, not a panic.
+        assert!(eval_r(
+            "cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"hi\"))\n"
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn r33_cut_labels_false_returns_integer_codes() {
+        // labels=FALSE returns the plain integer bin codes — NOT a factor.
+        // 1,2 ∈ (0,3] (code 1); 5 ∈ (3,6] (code 2). (Right-closed: 3 itself would
+        // also be code 1, so we use 5 to demonstrate a second bin.)
+        assert_eq!(
+            nums("cut(c(1, 2, 5), breaks = c(0, 3, 6), labels = FALSE)\n"),
+            vec![1.0, 1.0, 2.0]
+        );
+        assert_eq!(
+            show("class(cut(c(1, 2, 5), breaks = c(0, 3, 6), labels = FALSE))\n"),
+            "[1] \"numeric\""
+        );
+    }
+
+    #[test]
+    fn r33_cut_right_false_is_left_closed() {
+        // right=FALSE → [lo,hi): 1 ∈ [0,3), 3 ∈ [3,6).
+        assert_eq!(
+            names_of("levels(cut(c(1, 3), breaks = c(0, 3, 6), right = FALSE))\n"),
+            vec!["[0,3)", "[3,6)"]
+        );
+        assert_eq!(
+            names_of("as.character(cut(c(1, 3), breaks = c(0, 3, 6), right = FALSE))\n"),
+            vec!["[0,3)", "[3,6)"]
+        );
+    }
+
+    #[test]
+    fn r33_cut_include_lowest_folds_boundary() {
+        // include.lowest=TRUE folds breaks[1] (0) into the first interval instead
+        // of leaving it NA.
+        let v = nums(
+            "as.integer(cut(c(0, 1, 2), breaks = c(0, 1, 2), include.lowest = TRUE))\n",
+        );
+        assert_eq!(v[0], 1.0); // 0 folded into (0,1]
+        assert!(!v[0].is_nan());
+    }
+
+    #[test]
+    fn r33_cut_integer_breaks_makes_n_bins() {
+        // cut(0:10, breaks=5): a factor with 5 levels covering the extended range,
+        // every value binned (non-NA).
+        assert_eq!(nums("nlevels(cut(0:10, breaks = 5))\n"), vec![5.0]);
+        let v = nums("as.integer(cut(0:10, breaks = 5))\n");
+        assert_eq!(v.len(), 11);
+        assert!(v.iter().all(|x| !x.is_nan()));
+        // A huge N is rejected (MAX_SEQ_LEN guard), not allocated.
+        assert!(eval_r("cut(0:10, breaks = 1e9)\n").is_err());
     }
 
     #[test]

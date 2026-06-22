@@ -21,8 +21,9 @@
 % Honest scope: relations chosen so the cited span NAMES both endpoints. gene_defect
 % reuses the same relation the IMMUNO library uses (the engine binds any grounded
 % `relate(rel, args)`); the disorders here are disjoint from immunology's. Edges with
-% no clean self-contained span (e.g. Marfan→FBN1, where the page's FBN1 mentions are
-% citation titles or negative-finding clauses) are deferred rather than over-claimed.
+% no clean self-contained span are deferred rather than over-claimed — currently the
+% Duchenne→X-linked-recessive inheritance edge (the page states the inheritance in a
+% separate anaphoric "It is inherited..." sentence, not alongside the disease name).
 % ============================================================================
 
 dictionary genetics_vocab {
@@ -117,5 +118,24 @@ rulebook genetics_facts {
     relate gene_defect(marfan_syndrome, fbn1)
         source "While most individuals with MFS have an affected parent, 25% of patients develop the disease due to a de novo mutation involving the gene (FBN1) encoding the connective tissue protein fibrillin-1."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK537339/"
+        trust authoritative
+    % --- EXPAND: Angelman syndrome (maternal imprinting; UBE3A) — PWS counterpart ---
+    relate imprinting(angelman_syndrome, maternal)
+        source "Angelman syndrome is a rare neurodevelopmental disorder caused by loss of maternal UBE3A expression on chromosome 15q11.2–q13"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560870/"
+        trust authoritative
+    relate gene_defect(angelman_syndrome, ube3a)
+        source "Angelman syndrome is a rare neurodevelopmental disorder caused by loss of maternal UBE3A expression on chromosome 15q11.2–q13"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560870/"
+        trust authoritative
+
+    % --- EXPAND: Friedreich ataxia inheritance + GAA repeat (one span names both) ----
+    relate inheritance(friedreich_ataxia, autosomal_recessive)
+        source "Friedreich ataxia is an autosomal recessive neurodegenerative disorder caused by guanine-adenine-adenine repeat expansion in the frataxin gene, leading to mitochondrial dysfunction."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
+        trust authoritative
+    relate trinucleotide_repeat(friedreich_ataxia, gaa)
+        source "Friedreich ataxia is an autosomal recessive neurodegenerative disorder caused by guanine-adenine-adenine repeat expansion in the frataxin gene, leading to mitochondrial dysfunction."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
         trust authoritative
 }

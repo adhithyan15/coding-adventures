@@ -17,7 +17,7 @@ use coding_adventures_json_value::{JsonNumber, JsonValue};
 use smart_home_core::{
     canonical_integration_catalog_summary, smart_home_tool_catalog_summary, AgentId,
     AuthorizationDecision, AuthorizationDecisionLogSummary, AuthorizationOutcome,
-    AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant,
+    AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant, CapabilityGrantId,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceCommand,
     DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId, Health,
@@ -293,6 +293,10 @@ pub const SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID: &str =
 pub const SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID: &str = "smart_home.list_command_risk_audit";
 pub const SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_command_risk_audit_summary";
+pub const SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID: &str =
+    "smart_home.list_authorization_gap_audit";
+pub const SMART_HOME_GET_AUTHORIZATION_GAP_AUDIT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_authorization_gap_audit_summary";
 pub const SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID: &str =
     "smart_home.list_authorization_decisions";
 pub const SMART_HOME_GET_AUTHORIZATION_SUMMARY_TOOL_ID: &str =
@@ -2214,6 +2218,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID => {
                     let query = command_risk_audit_query(&arguments)?;
                     get_command_risk_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID => {
+                    let query = authorization_gap_audit_query(&arguments)?;
+                    list_authorization_gap_audit_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_AUTHORIZATION_GAP_AUDIT_SUMMARY_TOOL_ID => {
+                    let query = authorization_gap_audit_query(&arguments)?;
+                    get_authorization_gap_audit_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6050,6 +6072,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_command_result_summary_definition(),
         list_command_risk_audit_definition(),
         get_command_risk_audit_summary_definition(),
+        list_authorization_gap_audit_definition(),
+        get_authorization_gap_audit_summary_definition(),
         list_authorization_decisions_definition(),
         get_authorization_summary_definition(),
         list_capability_grants_definition(),
@@ -6537,6 +6561,75 @@ fn get_command_risk_audit_summary_definition() -> ToolDefinition {
         "Summarize Chief-derived command risk signals from D23 command results and authorization decisions.",
         command_risk_audit_query_schema(),
         command_risk_audit_summary_output_schema(),
+    )
+}
+
+fn authorization_gap_audit_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("principal_id", JsonSchema::String),
+            SchemaProperty::new("outcome", JsonSchema::String),
+            SchemaProperty::new("grant_status", JsonSchema::String),
+            SchemaProperty::new("scope_kind", JsonSchema::String),
+            SchemaProperty::new("capability_id", JsonSchema::String),
+            SchemaProperty::new("entity_id", JsonSchema::String),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("risk_action", JsonSchema::String),
+            SchemaProperty::new("denials_only", JsonSchema::Boolean),
+            SchemaProperty::new("missing_capabilities_only", JsonSchema::Boolean),
+            SchemaProperty::new("approval_gated_only", JsonSchema::Boolean),
+            SchemaProperty::new("review_needed_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("sort", JsonSchema::String),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn authorization_gap_audit_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "authorization_gap_audit",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["authorization_gap_audit", "summary", "count"],
+        false,
+    )
+}
+
+fn authorization_gap_audit_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_authorization_gap_audit_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID,
+        "List smart-home authorization gap audit",
+        "List Chief-derived authorization gap rows from D23 authorization decisions and capability grants without mutating runtime policy.",
+        authorization_gap_audit_query_schema(),
+        authorization_gap_audit_list_output_schema(),
+    )
+}
+
+fn get_authorization_gap_audit_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_AUTHORIZATION_GAP_AUDIT_SUMMARY_TOOL_ID,
+        "Summarize smart-home authorization gap audit",
+        "Summarize Chief-visible authorization denials, missing capability gaps, approval gates, and grant review pressure from D23 runtime policy records.",
+        authorization_gap_audit_query_schema(),
+        authorization_gap_audit_summary_output_schema(),
     )
 }
 
@@ -7967,6 +8060,78 @@ fn command_risk_audit_query(arguments: &JsonValue) -> Result<CommandRiskAuditQue
         failures_only: optional_bool(arguments, "failures_only")?.unwrap_or(false),
         denials_only: optional_bool(arguments, "denials_only")?.unwrap_or(false),
         approval_gated_only: optional_bool(arguments, "approval_gated_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum AuthorizationGapAuditSort {
+    RiskDesc,
+    DecidedAtDesc,
+    DecidedAtAsc,
+    PrincipalId,
+}
+
+impl Default for AuthorizationGapAuditSort {
+    fn default() -> Self {
+        Self::RiskDesc
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct AuthorizationGapAuditQuery {
+    principal_id: Option<AgentId>,
+    outcome: Option<AuthorizationOutcome>,
+    grant_status: Option<CapabilityGrantStatus>,
+    scope_kind: Option<RuntimeCapabilityGrantScopeKind>,
+    capability_id: Option<CapabilityId>,
+    entity_id: Option<EntityId>,
+    risk_lane: Option<String>,
+    risk_action: Option<String>,
+    denials_only: bool,
+    missing_capabilities_only: bool,
+    approval_gated_only: bool,
+    review_needed_only: bool,
+    requires_attention_only: bool,
+    sort: AuthorizationGapAuditSort,
+    limit: Option<usize>,
+}
+
+fn authorization_gap_audit_query(
+    arguments: &JsonValue,
+) -> Result<AuthorizationGapAuditQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let denials_only = optional_bool(arguments, "denials_only")?.unwrap_or(false);
+    let missing_capabilities_only =
+        optional_bool(arguments, "missing_capabilities_only")?.unwrap_or(false);
+    let approval_gated_only = optional_bool(arguments, "approval_gated_only")?.unwrap_or(false);
+    let review_needed_only = optional_bool(arguments, "review_needed_only")?.unwrap_or(false);
+    let requires_attention_only =
+        optional_bool(arguments, "requires_attention_only")?.unwrap_or(false);
+    Ok(AuthorizationGapAuditQuery {
+        principal_id: optional_string(arguments, "principal_id")?.map(AgentId::trusted),
+        outcome: optional_string(arguments, "outcome")?
+            .map(|outcome| parse_authorization_outcome(&outcome))
+            .transpose()?,
+        grant_status: optional_string(arguments, "grant_status")?
+            .map(|status| parse_capability_grant_status(&status))
+            .transpose()?,
+        scope_kind: optional_string(arguments, "scope_kind")?
+            .map(|scope_kind| parse_capability_grant_scope_kind(&scope_kind))
+            .transpose()?,
+        capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
+        entity_id: optional_string(arguments, "entity_id")?.map(EntityId::trusted),
+        risk_lane: optional_string(arguments, "risk_lane")?,
+        risk_action: optional_string(arguments, "risk_action")?,
+        denials_only,
+        missing_capabilities_only,
+        approval_gated_only,
+        review_needed_only,
+        requires_attention_only,
+        sort: optional_string(arguments, "sort")?
+            .map(|sort| parse_authorization_gap_audit_sort(&sort))
+            .transpose()?
+            .unwrap_or_default(),
         limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
@@ -32831,6 +32996,563 @@ fn command_risk_is_approval_gated(tier: PrivilegeTier) -> bool {
     matches!(tier, PrivilegeTier::HumanApproval | PrivilegeTier::HighRisk)
 }
 
+const AUTHORIZATION_GAP_EXPIRING_SOON_MS: u64 = 7 * 24 * 60 * 60 * 1_000;
+
+#[derive(Debug, Clone, PartialEq)]
+struct AuthorizationGapAuditRow {
+    audit_id: String,
+    source: &'static str,
+    principal_id: AgentId,
+    subject: Option<AuthorizationSubject>,
+    grant_id: Option<CapabilityGrantId>,
+    grant_scope: Option<CapabilityGrantScope>,
+    grant_status: Option<CapabilityGrantStatus>,
+    outcome: Option<AuthorizationOutcome>,
+    required_tier: Option<PrivilegeTier>,
+    max_tier: Option<PrivilegeTier>,
+    required_capabilities: Vec<CapabilityId>,
+    matched_grants: Vec<CapabilityGrantId>,
+    missing_capabilities: Vec<CapabilityId>,
+    decided_at_ms: Option<u64>,
+    granted_at_ms: Option<u64>,
+    expires_at_ms: Option<u64>,
+    risk_lane: &'static str,
+    risk_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+impl AuthorizationGapAuditRow {
+    fn from_decision(decision: &AuthorizationDecision) -> Self {
+        let missing_capability_count = decision.missing_capabilities.len();
+        let approval_gated = command_risk_is_approval_gated(decision.required_tier);
+        let blocked = !decision.is_allowed() || missing_capability_count > 0;
+        let requires_attention = blocked || approval_gated;
+        let (risk_lane, risk_action) = if blocked {
+            ("authorization_gap", "grant_missing_capabilities")
+        } else if approval_gated {
+            ("approval_gate", "review_authorization_gate")
+        } else {
+            ("authorization", "monitor_authorization")
+        };
+
+        Self {
+            audit_id: format!(
+                "authorization:{}:{}",
+                decision.decided_at_ms,
+                authorization_subject_audit_key(&decision.subject)
+            ),
+            source: "authorization_decision",
+            principal_id: decision.principal_id.clone(),
+            subject: Some(decision.subject.clone()),
+            grant_id: None,
+            grant_scope: None,
+            grant_status: None,
+            outcome: Some(decision.outcome),
+            required_tier: Some(decision.required_tier),
+            max_tier: None,
+            required_capabilities: decision.required_capabilities.clone(),
+            matched_grants: decision.matched_grants.clone(),
+            missing_capabilities: decision.missing_capabilities.clone(),
+            decided_at_ms: Some(decision.decided_at_ms),
+            granted_at_ms: None,
+            expires_at_ms: None,
+            risk_lane,
+            risk_action,
+            blocked,
+            requires_attention,
+        }
+    }
+
+    fn from_grant(grant: &CapabilityGrant, now_ms: u64) -> Self {
+        let status = grant.status_at(now_ms);
+        let expiring_soon = grant.expires_at_ms.is_some_and(|expires| {
+            expires >= now_ms && expires <= now_ms + AUTHORIZATION_GAP_EXPIRING_SOON_MS
+        });
+        let (risk_lane, risk_action, blocked, requires_attention) = match status {
+            CapabilityGrantStatus::Pending => ("grant_review", "approve_pending_grant", true, true),
+            CapabilityGrantStatus::Revoked => ("grant_review", "replace_revoked_grant", true, true),
+            CapabilityGrantStatus::Expired => ("grant_review", "renew_expired_grant", true, true),
+            CapabilityGrantStatus::Active if expiring_soon => {
+                ("grant_expiry", "renew_expiring_grant", false, true)
+            }
+            CapabilityGrantStatus::Active => ("authorization", "monitor_grant", false, false),
+        };
+
+        Self {
+            audit_id: format!("capability_grant:{}", grant.grant_id.as_str()),
+            source: "capability_grant",
+            principal_id: grant.principal_id.clone(),
+            subject: None,
+            grant_id: Some(grant.grant_id.clone()),
+            grant_scope: Some(grant.scope.clone()),
+            grant_status: Some(status),
+            outcome: None,
+            required_tier: None,
+            max_tier: Some(grant.max_tier),
+            required_capabilities: Vec::new(),
+            matched_grants: Vec::new(),
+            missing_capabilities: Vec::new(),
+            decided_at_ms: None,
+            granted_at_ms: Some(grant.granted_at_ms),
+            expires_at_ms: grant.expires_at_ms,
+            risk_lane,
+            risk_action,
+            blocked,
+            requires_attention,
+        }
+    }
+
+    fn is_denial(&self) -> bool {
+        self.outcome == Some(AuthorizationOutcome::Denied)
+    }
+
+    fn has_missing_capabilities(&self) -> bool {
+        !self.missing_capabilities.is_empty()
+    }
+
+    fn is_approval_gated(&self) -> bool {
+        self.required_tier
+            .or(self.max_tier)
+            .is_some_and(command_risk_is_approval_gated)
+    }
+
+    fn needs_review(&self) -> bool {
+        self.requires_attention
+            && (self.source == "capability_grant"
+                || self.risk_lane == "approval_gate"
+                || self.risk_lane == "authorization_gap")
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct AuthorizationGapAuditSummary {
+    total_rows: usize,
+    authorization_decision_rows: usize,
+    capability_grant_rows: usize,
+    denied_decision_rows: usize,
+    allowed_decision_rows: usize,
+    missing_capability_rows: usize,
+    total_missing_capabilities: usize,
+    approval_gated_rows: usize,
+    grant_review_rows: usize,
+    pending_grant_rows: usize,
+    revoked_grant_rows: usize,
+    expired_grant_rows: usize,
+    expiring_grant_rows: usize,
+    blocked_rows: usize,
+    requires_attention_rows: usize,
+    unique_principals: usize,
+}
+
+impl AuthorizationGapAuditSummary {
+    fn from_rows(rows: &[AuthorizationGapAuditRow]) -> Self {
+        let mut summary = Self::default();
+        let mut principals = BTreeSet::new();
+        for row in rows {
+            summary.total_rows += 1;
+            principals.insert(row.principal_id.as_str().to_string());
+            match row.source {
+                "authorization_decision" => {
+                    summary.authorization_decision_rows += 1;
+                    match row.outcome {
+                        Some(AuthorizationOutcome::Allowed) => summary.allowed_decision_rows += 1,
+                        Some(AuthorizationOutcome::Denied) => summary.denied_decision_rows += 1,
+                        None => {}
+                    }
+                }
+                "capability_grant" => {
+                    summary.capability_grant_rows += 1;
+                    match row.grant_status {
+                        Some(CapabilityGrantStatus::Pending) => {
+                            summary.pending_grant_rows += 1;
+                            summary.grant_review_rows += 1;
+                        }
+                        Some(CapabilityGrantStatus::Revoked) => {
+                            summary.revoked_grant_rows += 1;
+                            summary.grant_review_rows += 1;
+                        }
+                        Some(CapabilityGrantStatus::Expired) => {
+                            summary.expired_grant_rows += 1;
+                            summary.grant_review_rows += 1;
+                        }
+                        Some(CapabilityGrantStatus::Active) if row.risk_lane == "grant_expiry" => {
+                            summary.expiring_grant_rows += 1;
+                            summary.grant_review_rows += 1;
+                        }
+                        Some(CapabilityGrantStatus::Active) | None => {}
+                    }
+                }
+                _ => {}
+            }
+            if row.has_missing_capabilities() {
+                summary.missing_capability_rows += 1;
+                summary.total_missing_capabilities += row.missing_capabilities.len();
+            }
+            if row.is_approval_gated() {
+                summary.approval_gated_rows += 1;
+            }
+            if row.blocked {
+                summary.blocked_rows += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_rows += 1;
+            }
+        }
+        summary.unique_principals = principals.len();
+        summary
+    }
+
+    fn has_authorization_gaps(&self) -> bool {
+        self.requires_attention_rows > 0
+    }
+
+    fn has_missing_capability_gaps(&self) -> bool {
+        self.total_missing_capabilities > 0
+    }
+
+    fn has_grant_review_pressure(&self) -> bool {
+        self.grant_review_rows > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+}
+
+fn list_authorization_gap_audit_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: AuthorizationGapAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) = authorization_gap_audit_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "authorization_gap_audit",
+            JsonValue::Array(rows.iter().map(authorization_gap_audit_row_json).collect()),
+        ),
+        ("summary", authorization_gap_audit_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_authorization_gap_audit")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            (
+                "missing_capability_rows",
+                integer(summary.missing_capability_rows as i64),
+            ),
+            (
+                "grant_review_rows",
+                integer(summary.grant_review_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn get_authorization_gap_audit_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: AuthorizationGapAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = authorization_gap_audit_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        authorization_gap_audit_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_authorization_gap_audit_summary")),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            (
+                "missing_capability_rows",
+                integer(summary.missing_capability_rows as i64),
+            ),
+            (
+                "grant_review_rows",
+                integer(summary.grant_review_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn authorization_gap_audit_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &AuthorizationGapAuditQuery,
+) -> Result<(Vec<AuthorizationGapAuditRow>, AuthorizationGapAuditSummary), ToolCallError> {
+    let mut authorization_query =
+        RuntimeAuthorizationDecisionQuery::new().sorted_by(match query.sort {
+            AuthorizationGapAuditSort::DecidedAtAsc => {
+                RuntimeAuthorizationDecisionSort::DecidedAtAsc
+            }
+            _ => RuntimeAuthorizationDecisionSort::DecidedAtDesc,
+        });
+    if let Some(principal_id) = query.principal_id.clone() {
+        authorization_query = authorization_query.for_principal(principal_id);
+    }
+    if let Some(outcome) = query.outcome.or(if query.denials_only {
+        Some(AuthorizationOutcome::Denied)
+    } else {
+        None
+    }) {
+        authorization_query = authorization_query.with_outcome(outcome);
+    }
+
+    let authorization_output = runtime
+        .execute_read_tool(
+            principal_id.clone(),
+            RuntimeReadToolRequest::ListAuthorizationDecisions {
+                query: authorization_query,
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::AuthorizationDecisions { decisions, .. } = authorization_output
+    else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "authorization gap audit expected authorization decision output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let mut grant_query = RuntimeCapabilityGrantQuery::new().sorted_by(match query.sort {
+        AuthorizationGapAuditSort::PrincipalId => RuntimeCapabilityGrantSort::PrincipalId,
+        _ if query.review_needed_only => RuntimeCapabilityGrantSort::ExpiresAtAsc,
+        _ => RuntimeCapabilityGrantSort::PrincipalId,
+    });
+    if let Some(principal_id) = query.principal_id.clone() {
+        grant_query = grant_query.for_principal(principal_id);
+    }
+    if let Some(status) = query.grant_status {
+        grant_query = grant_query.with_status(status);
+    }
+    if let Some(scope_kind) = query.scope_kind {
+        grant_query = grant_query.with_scope_kind(scope_kind);
+    }
+    if let Some(capability_id) = query.capability_id.clone() {
+        grant_query = grant_query.with_capability(capability_id);
+    }
+    if let Some(entity_id) = query.entity_id.clone() {
+        grant_query = grant_query.for_entity(entity_id);
+    }
+
+    let grant_output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::ListCapabilityGrants { query: grant_query },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::CapabilityGrants { grants, .. } = grant_output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "authorization gap audit expected capability grant output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let mut rows = decisions
+        .iter()
+        .map(AuthorizationGapAuditRow::from_decision)
+        .chain(
+            grants
+                .iter()
+                .map(|grant| AuthorizationGapAuditRow::from_grant(grant, now_ms)),
+        )
+        .filter(|row| authorization_gap_audit_row_matches(row, query))
+        .collect::<Vec<_>>();
+    rows.sort_by(|left, right| authorization_gap_row_cmp(left, right, query.sort));
+    let summary = AuthorizationGapAuditSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+fn authorization_gap_audit_row_matches(
+    row: &AuthorizationGapAuditRow,
+    query: &AuthorizationGapAuditQuery,
+) -> bool {
+    if query.denials_only && !row.is_denial() {
+        return false;
+    }
+    if query.missing_capabilities_only && !row.has_missing_capabilities() {
+        return false;
+    }
+    if query.approval_gated_only && !row.is_approval_gated() {
+        return false;
+    }
+    if query.review_needed_only && !row.needs_review() {
+        return false;
+    }
+    if query.requires_attention_only && !row.requires_attention {
+        return false;
+    }
+    if query
+        .outcome
+        .is_some_and(|outcome| row.outcome != Some(outcome))
+    {
+        return false;
+    }
+    if query
+        .grant_status
+        .is_some_and(|status| row.grant_status != Some(status))
+    {
+        return false;
+    }
+    if query
+        .scope_kind
+        .is_some_and(|scope_kind| authorization_gap_row_scope_kind(row) != Some(scope_kind))
+    {
+        return false;
+    }
+    if query
+        .capability_id
+        .as_ref()
+        .is_some_and(|capability_id| !authorization_gap_row_has_capability(row, capability_id))
+    {
+        return false;
+    }
+    if query
+        .entity_id
+        .as_ref()
+        .is_some_and(|entity_id| authorization_gap_row_entity_id(row) != Some(entity_id))
+    {
+        return false;
+    }
+    if query
+        .risk_lane
+        .as_ref()
+        .is_some_and(|risk_lane| row.risk_lane != risk_lane.as_str())
+    {
+        return false;
+    }
+    if query
+        .risk_action
+        .as_ref()
+        .is_some_and(|risk_action| row.risk_action != risk_action.as_str())
+    {
+        return false;
+    }
+    true
+}
+
+fn authorization_gap_row_cmp(
+    left: &AuthorizationGapAuditRow,
+    right: &AuthorizationGapAuditRow,
+    sort: AuthorizationGapAuditSort,
+) -> std::cmp::Ordering {
+    match sort {
+        AuthorizationGapAuditSort::DecidedAtAsc => authorization_gap_row_time(left)
+            .cmp(&authorization_gap_row_time(right))
+            .then_with(|| left.audit_id.cmp(&right.audit_id)),
+        AuthorizationGapAuditSort::DecidedAtDesc => authorization_gap_row_time(right)
+            .cmp(&authorization_gap_row_time(left))
+            .then_with(|| left.audit_id.cmp(&right.audit_id)),
+        AuthorizationGapAuditSort::PrincipalId => left
+            .principal_id
+            .cmp(&right.principal_id)
+            .then_with(|| authorization_gap_row_rank(right).cmp(&authorization_gap_row_rank(left)))
+            .then_with(|| left.audit_id.cmp(&right.audit_id)),
+        AuthorizationGapAuditSort::RiskDesc => authorization_gap_row_rank(right)
+            .cmp(&authorization_gap_row_rank(left))
+            .then_with(|| authorization_gap_row_time(right).cmp(&authorization_gap_row_time(left)))
+            .then_with(|| left.audit_id.cmp(&right.audit_id)),
+    }
+}
+
+fn authorization_gap_row_rank(row: &AuthorizationGapAuditRow) -> u8 {
+    if row.has_missing_capabilities() || row.is_denial() {
+        5
+    } else if matches!(
+        row.grant_status,
+        Some(CapabilityGrantStatus::Expired | CapabilityGrantStatus::Revoked)
+    ) {
+        4
+    } else if row.grant_status == Some(CapabilityGrantStatus::Pending) {
+        3
+    } else if row.risk_lane == "grant_expiry" || row.is_approval_gated() {
+        2
+    } else if row.requires_attention {
+        1
+    } else {
+        0
+    }
+}
+
+fn authorization_gap_row_time(row: &AuthorizationGapAuditRow) -> u64 {
+    row.decided_at_ms
+        .or(row.expires_at_ms)
+        .or(row.granted_at_ms)
+        .unwrap_or(0)
+}
+
+fn authorization_subject_audit_key(subject: &AuthorizationSubject) -> String {
+    match subject {
+        AuthorizationSubject::Tool(tool) => tool.descriptor().tool_id.to_string(),
+        AuthorizationSubject::Command { command_id, .. } => command_id.as_str().to_string(),
+    }
+}
+
+fn authorization_gap_row_scope_kind(
+    row: &AuthorizationGapAuditRow,
+) -> Option<RuntimeCapabilityGrantScopeKind> {
+    match row.grant_scope.as_ref()? {
+        CapabilityGrantScope::Tool(_) => Some(RuntimeCapabilityGrantScopeKind::Tool),
+        CapabilityGrantScope::Capability(_) => Some(RuntimeCapabilityGrantScopeKind::Capability),
+        CapabilityGrantScope::EntityCapability { .. } => {
+            Some(RuntimeCapabilityGrantScopeKind::EntityCapability)
+        }
+        CapabilityGrantScope::AllSmartHome => Some(RuntimeCapabilityGrantScopeKind::AllSmartHome),
+    }
+}
+
+fn authorization_gap_row_has_capability(
+    row: &AuthorizationGapAuditRow,
+    capability_id: &CapabilityId,
+) -> bool {
+    row.required_capabilities
+        .iter()
+        .chain(row.missing_capabilities.iter())
+        .any(|candidate| candidate == capability_id)
+        || row.grant_scope.as_ref().is_some_and(|scope| match scope {
+            CapabilityGrantScope::Capability(granted) => granted == capability_id,
+            CapabilityGrantScope::EntityCapability {
+                capability_id: granted,
+                ..
+            } => granted == capability_id,
+            CapabilityGrantScope::AllSmartHome | CapabilityGrantScope::Tool(_) => false,
+        })
+}
+
+fn authorization_gap_row_entity_id(row: &AuthorizationGapAuditRow) -> Option<&EntityId> {
+    if let Some(AuthorizationSubject::Command { entity_id, .. }) = &row.subject {
+        return Some(entity_id);
+    }
+    match row.grant_scope.as_ref() {
+        Some(CapabilityGrantScope::EntityCapability { entity_id, .. }) => Some(entity_id),
+        _ => None,
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 struct DesiredStateDriftAuditRow {
     audit_id: String,
@@ -57118,6 +57840,205 @@ fn command_risk_audit_summary_json(summary: &CommandRiskAuditSummary) -> JsonVal
     ])
 }
 
+fn authorization_gap_audit_row_json(row: &AuthorizationGapAuditRow) -> JsonValue {
+    object([
+        ("audit_id", string(&row.audit_id)),
+        ("source", string(row.source)),
+        ("principal_id", string(row.principal_id.as_str())),
+        (
+            "subject_kind",
+            row.subject
+                .as_ref()
+                .map(|subject| string(authorization_subject_label(subject)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "subject",
+            row.subject
+                .as_ref()
+                .map(authorization_subject_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "grant_id",
+            row.grant_id
+                .as_ref()
+                .map(|grant_id| string(grant_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "grant_scope_kind",
+            row.grant_scope
+                .as_ref()
+                .map(|scope| string(capability_grant_scope_label(scope)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "grant_scope",
+            row.grant_scope
+                .as_ref()
+                .map(capability_grant_scope_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "grant_status",
+            row.grant_status
+                .map(|status| string(capability_grant_status_label(status)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "outcome",
+            row.outcome
+                .map(|outcome| string(authorization_outcome_label(outcome)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "required_tier",
+            row.required_tier
+                .map(|tier| string(privilege_tier_label(tier)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_tier",
+            row.max_tier
+                .map(|tier| string(privilege_tier_label(tier)))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "required_capabilities",
+            JsonValue::Array(
+                row.required_capabilities
+                    .iter()
+                    .map(|capability_id| string(capability_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "matched_grants",
+            JsonValue::Array(
+                row.matched_grants
+                    .iter()
+                    .map(|grant_id| string(grant_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "missing_capabilities",
+            JsonValue::Array(
+                row.missing_capabilities
+                    .iter()
+                    .map(|capability_id| string(capability_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "missing_capability_count",
+            integer(row.missing_capabilities.len() as i64),
+        ),
+        (
+            "decided_at_ms",
+            row.decided_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "granted_at_ms",
+            row.granted_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "expires_at_ms",
+            row.expires_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("risk_lane", string(row.risk_lane)),
+        ("risk_action", string(row.risk_action)),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+    ])
+}
+
+fn authorization_gap_audit_summary_json(summary: &AuthorizationGapAuditSummary) -> JsonValue {
+    object([
+        ("total_rows", integer(summary.total_rows as i64)),
+        (
+            "authorization_decision_rows",
+            integer(summary.authorization_decision_rows as i64),
+        ),
+        (
+            "capability_grant_rows",
+            integer(summary.capability_grant_rows as i64),
+        ),
+        (
+            "denied_decision_rows",
+            integer(summary.denied_decision_rows as i64),
+        ),
+        (
+            "allowed_decision_rows",
+            integer(summary.allowed_decision_rows as i64),
+        ),
+        (
+            "missing_capability_rows",
+            integer(summary.missing_capability_rows as i64),
+        ),
+        (
+            "total_missing_capabilities",
+            integer(summary.total_missing_capabilities as i64),
+        ),
+        (
+            "approval_gated_rows",
+            integer(summary.approval_gated_rows as i64),
+        ),
+        (
+            "grant_review_rows",
+            integer(summary.grant_review_rows as i64),
+        ),
+        (
+            "pending_grant_rows",
+            integer(summary.pending_grant_rows as i64),
+        ),
+        (
+            "revoked_grant_rows",
+            integer(summary.revoked_grant_rows as i64),
+        ),
+        (
+            "expired_grant_rows",
+            integer(summary.expired_grant_rows as i64),
+        ),
+        (
+            "expiring_grant_rows",
+            integer(summary.expiring_grant_rows as i64),
+        ),
+        ("blocked_rows", integer(summary.blocked_rows as i64)),
+        (
+            "requires_attention_rows",
+            integer(summary.requires_attention_rows as i64),
+        ),
+        (
+            "unique_principals",
+            integer(summary.unique_principals as i64),
+        ),
+        (
+            "has_authorization_gaps",
+            JsonValue::Bool(summary.has_authorization_gaps()),
+        ),
+        (
+            "has_missing_capability_gaps",
+            JsonValue::Bool(summary.has_missing_capability_gaps()),
+        ),
+        (
+            "has_grant_review_pressure",
+            JsonValue::Bool(summary.has_grant_review_pressure()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+    ])
+}
+
 fn desired_state_drift_audit_row_json(row: &DesiredStateDriftAuditRow) -> JsonValue {
     object([
         ("audit_id", string(&row.audit_id)),
@@ -57953,6 +58874,20 @@ fn parse_authorization_decision_sort(
         "decided_at_desc" | "newest_first" => Ok(RuntimeAuthorizationDecisionSort::DecidedAtDesc),
         _ => Err(validation_error(format!(
             "unknown authorization decision sort `{label}`"
+        ))),
+    }
+}
+
+fn parse_authorization_gap_audit_sort(
+    label: &str,
+) -> Result<AuthorizationGapAuditSort, ToolCallError> {
+    match label {
+        "risk_desc" | "risk" => Ok(AuthorizationGapAuditSort::RiskDesc),
+        "decided_at_desc" | "newest_first" => Ok(AuthorizationGapAuditSort::DecidedAtDesc),
+        "decided_at_asc" | "oldest_first" => Ok(AuthorizationGapAuditSort::DecidedAtAsc),
+        "principal_id" | "principal" => Ok(AuthorizationGapAuditSort::PrincipalId),
+        _ => Err(validation_error(format!(
+            "unknown authorization gap audit sort `{label}`"
         ))),
     }
 }
@@ -63969,7 +64904,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 252);
+        assert_eq!(definitions.len(), 254);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -63993,6 +64928,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_AUTHORIZATION_GAP_AUDIT_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID));
@@ -64690,7 +65631,7 @@ mod tests {
             .contains(&SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            244
+            246
         );
         assert_eq!(
             export
@@ -65530,11 +66471,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(252))
+            Some(&integer(254))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(244))
+            Some(&integer(246))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -79104,6 +80045,178 @@ mod tests {
             6,
             "denied command records tool and command authorization; each audit call performs two runtime read authorizations"
         );
+    }
+
+    #[test]
+    fn authorization_gap_audit_tools_surface_runtime_policy_gaps_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        {
+            let mut runtime = runtime.borrow_mut();
+            let registry = runtime.registry_mut();
+            registry.upsert_capability_grant(CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "user:test",
+                1_000,
+            ));
+            registry.upsert_capability_grant(
+                CapabilityGrant::for_capability(
+                    CapabilityGrantId::trusted("grant-command-pending"),
+                    AgentId::trusted(AGENT_ID),
+                    CapabilityId::trusted("smart_home.command.light"),
+                    PrivilegeTier::LowRisk,
+                    "user:test",
+                    1_000,
+                )
+                .with_status(CapabilityGrantStatus::Pending),
+            );
+            registry.upsert_capability_grant(
+                CapabilityGrant::for_capability(
+                    CapabilityGrantId::trusted("grant-command-revoked"),
+                    AgentId::trusted(AGENT_ID),
+                    CapabilityId::trusted("smart_home.command.lock"),
+                    PrivilegeTier::HumanApproval,
+                    "user:test",
+                    1_000,
+                )
+                .with_status(CapabilityGrantStatus::Revoked),
+            );
+            registry.upsert_capability_grant(
+                CapabilityGrant::for_capability(
+                    CapabilityGrantId::trusted("grant-ingest-expired"),
+                    AgentId::trusted(AGENT_ID),
+                    CapabilityId::trusted("smart_home.ingest"),
+                    PrivilegeTier::LowRisk,
+                    "user:test",
+                    1_000,
+                )
+                .with_expiry(1_500),
+            );
+        }
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command_request = request(
+            "call-denied-command-for-authorization-gap-audit",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+                ("idempotency_key", string("denied-gap-command")),
+            ]),
+            2_000,
+        );
+        let denied_command_trace = tool_runtime.invoke_with_events(&denied_command_request);
+        assert!(!denied_command_trace.result.ok);
+
+        let list_request = request(
+            "call-list-authorization-gap-audit",
+            SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID,
+            object([
+                ("requires_attention_only", JsonValue::Bool(true)),
+                ("sort", string("risk_desc")),
+                ("limit", integer(10)),
+            ]),
+            3_000,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        let rows = field(list_output, "authorization_gap_audit").unwrap();
+        let JsonValue::Array(rows) = rows else {
+            panic!("authorization_gap_audit should be an array");
+        };
+        assert!(
+            rows.len() >= 4,
+            "audit should include denied authorization and grant review rows"
+        );
+        assert!(rows.iter().any(|row| field(row, "source")
+            == Some(&string("authorization_decision"))
+            && field(row, "risk_lane") == Some(&string("authorization_gap"))
+            && field(row, "risk_action") == Some(&string("grant_missing_capabilities"))
+            && field(row, "outcome") == Some(&string("denied"))
+            && integer_value(field(row, "missing_capability_count").unwrap()).unwrap() >= 1));
+        assert!(rows.iter().any(|row| field(row, "grant_id")
+            == Some(&string("grant-command-pending"))
+            && field(row, "grant_status") == Some(&string("pending"))
+            && field(row, "risk_action") == Some(&string("approve_pending_grant"))));
+        assert!(rows.iter().any(|row| field(row, "grant_id")
+            == Some(&string("grant-command-revoked"))
+            && field(row, "grant_status") == Some(&string("revoked"))
+            && field(row, "risk_action") == Some(&string("replace_revoked_grant"))));
+        assert!(rows.iter().any(|row| field(row, "grant_id")
+            == Some(&string("grant-ingest-expired"))
+            && field(row, "grant_status") == Some(&string("expired"))
+            && field(row, "risk_action") == Some(&string("renew_expired_grant"))));
+        let summary = field(list_output, "summary").unwrap();
+        assert!(integer_value(field(summary, "requires_attention_rows").unwrap()).unwrap() >= 4);
+        assert_eq!(
+            field(summary, "has_authorization_gaps"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(summary, "has_missing_capability_gaps"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(summary, "has_grant_review_pressure"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let pending_summary_request = request(
+            "call-pending-authorization-gap-summary",
+            SMART_HOME_GET_AUTHORIZATION_GAP_AUDIT_SUMMARY_TOOL_ID,
+            object([
+                ("grant_status", string("pending")),
+                ("requires_attention_only", JsonValue::Bool(true)),
+            ]),
+            3_001,
+        );
+        let pending_summary_trace = tool_runtime.invoke_with_events(&pending_summary_request);
+        assert!(pending_summary_trace.result.ok);
+        assert_eq!(pending_summary_trace.summary().progress_event_count, 1);
+        let pending_output = pending_summary_trace.result.output.as_ref().unwrap();
+        let pending_summary = field(pending_output, "summary").unwrap();
+        assert_eq!(field(pending_summary, "total_rows"), Some(&integer(1)));
+        assert_eq!(
+            field(pending_summary, "pending_grant_rows"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(pending_summary, "has_grant_review_pressure"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let missing_summary_request = request(
+            "call-missing-capability-authorization-gap-summary",
+            SMART_HOME_GET_AUTHORIZATION_GAP_AUDIT_SUMMARY_TOOL_ID,
+            object([("missing_capabilities_only", JsonValue::Bool(true))]),
+            3_002,
+        );
+        let missing_summary_trace = tool_runtime.invoke_with_events(&missing_summary_request);
+        assert!(missing_summary_trace.result.ok);
+        let missing_summary_output = missing_summary_trace.result.output.as_ref().unwrap();
+        let missing_summary = field(missing_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(missing_summary, "authorization_decision_rows").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(missing_summary, "has_missing_capability_gaps"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(pending_summary_request, pending_summary_trace);
+        journal.record_trace(missing_summary_request, missing_summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 3);
+        assert_eq!(journal_summary.completed_count, 3);
     }
 
     #[test]

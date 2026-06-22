@@ -171,8 +171,15 @@ This harness is what `lang_matrix.rs` calls to run the x86_64 column locally.
    (`0x88`)** the byte-tape `store_byte` emits (S1–S4 only had the `movzx` load
    side), plus the `__twig_putchar`/`__twig_getchar` host-shim aliases. Added
    both; Brainfuck now runs on the x86_64 column locally. (Stdin-driven cat
-   `,[.,]` still pends an input buffer in the harness.) (x86-simulator 0.5.0.)
-6. **S6 — 32-bit x86 (i386)**: operand/address-size handling + 32-bit decode, as
+   `,[.,]` still pends an input buffer in the harness — added in S6.)
+   (x86-simulator 0.5.0.)
+6. **S6 — stdin (`getchar`) + Brainfuck cat**: ✅ done. The `Simulator` gains an
+   `input` buffer (`MachineCodeHarness::stdin`); `getchar` consumes it and returns
+   EOF (`-1`) when drained — matching the libc/native convention, so the
+   Brainfuck IIR's negative-clamp halts a `,[.,]` cat at end-of-input. Three
+   stdin Brainfuck cells (`,+.`/`,.,.`/`,[.,]`) run on the x86_64 column locally.
+   No new opcode needed. (x86-simulator 0.6.0.)
+7. **S7 — 32-bit x86 (i386)**: operand/address-size handling + 32-bit decode, as
    educational coverage (not on the run-our-codegen critical path — no matrix
    program emits 32-bit x86, so it's unit-tested against hand-assembled bytes).
 
