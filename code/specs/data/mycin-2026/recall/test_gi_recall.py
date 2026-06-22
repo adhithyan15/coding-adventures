@@ -36,6 +36,11 @@ EXPECTED = {
     "eosinophils_15_per_hpf": "eosinophilic_esophagitis",
     "crypt_abscesses": "ulcerative_colitis",            # primary-source backfill (NBK470312)
     "onion_skin_fibrosis": "primary_sclerosing_cholangitis",  # NBK537181 (PSC abbrev defined on page)
+    # --- BATCH: high-yield GI/hepatobiliary biopsy findings ---
+    "signet_ring_cells": "gastric_cancer",                # expand (NBK459142)
+    "florid_duct_lesion": "primary_biliary_cholangitis",  # expand (NBK459209)
+    "cowdry_a_inclusions": "herpes_esophagitis",          # expand (NBK442012)
+    "pseudomembranes": "pseudomembranous_colitis",        # expand (NBK470319)
 }
 REL = "biopsy_finding_in"
 VAR = "Disease"
@@ -99,8 +104,8 @@ def test_unknown_finding_abstains() -> None:
     fd, path = tempfile.mkstemp(suffix=".adj", prefix=".gi_q_", dir=HERE)
     try:
         with os.fdopen(fd, "w") as fh:
-            # signet_ring_cells is not in the library → must abstain
-            fh.write(f'import "gi-edges.adj"\n? {REL}(signet_ring_cells, ${VAR})\n')
+            # cobblestone_mucosa is not in the library → must abstain
+            fh.write(f'import "gi-edges.adj"\n? {REL}(cobblestone_mucosa, ${VAR})\n')
         res = _run(Path(path))
         r = res["recall"][0] if res["recall"] else None
         assert r is not None and r["abstained"], "an ungrounded finding must abstain"
