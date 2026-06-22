@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck control policy diagnostic artifacts** —
+  selected `run_deck_analysis()` executions now expose policy-blocked
+  `.control` commands as `control_policy_artifacts` with stable line,
+  category, command, code, severity, and message metadata plus table, CSV,
+  compact JSON, and header-keyed record exports, matching Rust and TypeScript.
+
 - **Deck rawfile probe inventory artifacts** —
   selected `run_deck_analysis()` rawfile artifact summaries now carry
   `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /

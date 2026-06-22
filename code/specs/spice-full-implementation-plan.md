@@ -128,7 +128,10 @@ downstream tools to compare.
      `wr_vecnames` / `wr_singlescale` rendering metadata, and explicit
      `wrdata` probe lists now select the emitted in-memory data-file columns
      and carry matched/unmatched probe inventories while filesystem writes
-     remain metadata-only.
+     remain metadata-only, and policy-blocked `.control` commands now have
+     direct selected-execution artifacts with line, category, command, code,
+     severity, message, stable table, CSV, compact JSON, and host-native record
+     exports.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1090,6 +1093,15 @@ downstream tools to compare.
     - In-memory ASCII rawfile artifacts now keep the scale column plus matching
       requested vector columns, while stable table, CSV, compact JSON, and
       host-native record exports make ignored `write` probe names auditable.
+
+100. Deck control policy diagnostic artifacts.
+    - Status: completed in this deck control policy artifact slice.
+    - Python, Rust, and TypeScript selected executions now expose
+      policy-blocked `.control` commands as stable artifacts with line,
+      category, command, code, severity, and message fields.
+    - Stable table, CSV, compact JSON, and host-native record exports make
+      `source` / `shell`, `cd`, control-flow, and variable/state policy
+      diagnostics auditable while preserving explicit non-execution behavior.
 
 ## Backlog
 

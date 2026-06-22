@@ -7,8 +7,9 @@ use spice_engine::{
     format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
     format_corner_digital_event_stream_table, format_corner_distortion_table,
     format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
-    format_corner_transient_table, format_dc_table, format_deck_noise_table,
-    format_deck_rawfile_artifact_csv, format_deck_rawfile_artifact_json,
+    format_corner_transient_table, format_dc_table, format_deck_control_policy_artifact_csv,
+    format_deck_control_policy_artifact_json, format_deck_control_policy_artifact_table,
+    format_deck_noise_table, format_deck_rawfile_artifact_csv, format_deck_rawfile_artifact_json,
     format_deck_rawfile_artifact_table, format_deck_run_artifact_csv,
     format_deck_run_artifact_json, format_deck_run_artifact_table, format_deck_table_csv,
     format_deck_table_json, format_deck_transient_table, format_deck_wrdata_artifact_csv,
@@ -2796,6 +2797,19 @@ let gain = 2
     ];
     let rawfile_option_list = expected_rawfile_options.join(";");
     let rawfile_option_count = expected_rawfile_options.len().to_string();
+    let expected_policy_lines = vec![13, 14, 15, 16];
+    let expected_policy_categories = vec![
+        "script".to_string(),
+        "workdir".to_string(),
+        "control-flow".to_string(),
+        "variable".to_string(),
+    ];
+    let expected_policy_commands = vec![
+        "source other.cir".to_string(),
+        "cd /tmp".to_string(),
+        "if v(in) > 0".to_string(),
+        "let gain = 2".to_string(),
+    ];
 
     assert_eq!(execution.control_line_count, expected_control_lines.len());
     assert_eq!(execution.control_lines, expected_control_lines);
@@ -3037,6 +3051,98 @@ let gain = 2
         execution.wrdata_artifact_json,
         format_deck_wrdata_artifact_json(&execution.wrdata_artifacts)
     );
+    assert_eq!(
+        execution.control_policy_artifact_count,
+        expected_codes.len()
+    );
+    assert_eq!(
+        execution
+            .control_policy_artifacts
+            .iter()
+            .map(|artifact| artifact.line_number)
+            .collect::<Vec<_>>(),
+        expected_policy_lines
+    );
+    assert_eq!(
+        execution
+            .control_policy_artifacts
+            .iter()
+            .map(|artifact| artifact.category.clone())
+            .collect::<Vec<_>>(),
+        expected_policy_categories
+    );
+    assert_eq!(
+        execution
+            .control_policy_artifacts
+            .iter()
+            .map(|artifact| artifact.command.clone())
+            .collect::<Vec<_>>(),
+        expected_policy_commands
+    );
+    assert_eq!(
+        execution
+            .control_policy_artifacts
+            .iter()
+            .map(|artifact| artifact.code.clone())
+            .collect::<Vec<_>>(),
+        expected_codes
+    );
+    assert_eq!(
+        execution
+            .control_policy_artifacts
+            .iter()
+            .map(|artifact| artifact.severity.clone())
+            .collect::<Vec<_>>(),
+        vec!["error".to_string(); expected_codes.len()]
+    );
+    assert!(execution.control_policy_artifacts[0]
+        .message
+        .contains("external script and shell commands are disabled"));
+    assert_eq!(
+        execution.control_policy_artifact_records[0]
+            .get("Line")
+            .map(String::as_str),
+        Some("13")
+    );
+    assert_eq!(
+        execution.control_policy_artifact_records[0]
+            .get("Category")
+            .map(String::as_str),
+        Some("script")
+    );
+    assert_eq!(
+        execution.control_policy_artifact_records[0]
+            .get("Command")
+            .map(String::as_str),
+        Some("source other.cir")
+    );
+    assert_eq!(
+        execution.control_policy_artifact_records[0]
+            .get("Code")
+            .map(String::as_str),
+        Some("SPICE_DECK_CONTROL_SCRIPT_COMMAND")
+    );
+    assert_eq!(
+        execution.control_policy_artifact_records[0]
+            .get("Severity")
+            .map(String::as_str),
+        Some("error")
+    );
+    assert_eq!(
+        execution.control_policy_artifact_table,
+        format_deck_control_policy_artifact_table(&execution.control_policy_artifacts)
+    );
+    assert_eq!(
+        execution.control_policy_artifact_csv,
+        format_deck_control_policy_artifact_csv(&execution.control_policy_artifacts)
+    );
+    assert_eq!(
+        execution.control_policy_artifact_json,
+        format_deck_control_policy_artifact_json(&execution.control_policy_artifacts)
+    );
+    assert!(execution
+        .control_policy_artifact_json
+        .contains("\"Command\":\"let gain = 2\""));
     assert_eq!(execution.diagnostic_count, expected_codes.len());
     assert_eq!(execution.diagnostic_codes, expected_codes);
     assert_eq!(

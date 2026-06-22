@@ -712,6 +712,15 @@ export interface DeckTableArtifact {
   readonly records: ReadonlyArray<Record<string, string>>;
 }
 
+export interface DeckControlPolicyArtifact {
+  readonly lineNumber: number;
+  readonly category: "script" | "workdir" | "control-flow" | "variable";
+  readonly command: string;
+  readonly code: string;
+  readonly severity: DeckControlDiagnostic["severity"];
+  readonly message: string;
+}
+
 export interface DeckRawfileArtifact {
   readonly target: string;
   readonly marker: string;
@@ -753,6 +762,12 @@ export interface DeckAnalysisExecution {
   readonly writeMarkers: readonly string[];
   readonly rawfileOptionCount: number;
   readonly rawfileOptions: readonly string[];
+  readonly controlPolicyArtifactCount: number;
+  readonly controlPolicyArtifacts: readonly DeckControlPolicyArtifact[];
+  readonly controlPolicyArtifactTable: string;
+  readonly controlPolicyArtifactCsv: string;
+  readonly controlPolicyArtifactJson: string;
+  readonly controlPolicyArtifactRecords: ReadonlyArray<Record<string, string>>;
   readonly rawfileArtifactCount: number;
   readonly rawfileArtifacts: readonly DeckRawfileArtifact[];
   readonly rawfileArtifactTable: string;
@@ -8402,6 +8417,95 @@ function deckWriteMarkerParts(marker: string): { target: string; probes: string[
   };
 }
 
+const DECK_CONTROL_POLICY_CATEGORIES: Record<
+  string,
+  DeckControlPolicyArtifact["category"]
+> = {
+  SPICE_DECK_CONTROL_SCRIPT_COMMAND: "script",
+  SPICE_DECK_CONTROL_WORKDIR_COMMAND: "workdir",
+  SPICE_DECK_CONTROL_FLOW_COMMAND: "control-flow",
+  SPICE_DECK_CONTROL_VARIABLE_COMMAND: "variable",
+};
+
+function deckControlPolicyArtifacts(netlist: string): DeckControlPolicyArtifact[] {
+  const summary = analyzeDeckControls(netlist);
+  const lines = netlist.split(/\r?\n/u);
+  return summary.diagnostics.flatMap((diagnostic) => {
+    const category = DECK_CONTROL_POLICY_CATEGORIES[diagnostic.code];
+    if (category === undefined) {
+      return [];
+    }
+    return [{
+      lineNumber: diagnostic.lineNumber,
+      category,
+      command: lines[diagnostic.lineNumber - 1]?.trim() ?? "",
+      code: diagnostic.code,
+      severity: diagnostic.severity,
+      message: diagnostic.message,
+    }];
+  });
+}
+
+const DECK_CONTROL_POLICY_ARTIFACT_COLUMNS = [
+  "Line",
+  "Category",
+  "Command",
+  "Code",
+  "Severity",
+  "Message",
+] as const;
+
+function deckControlPolicyArtifactCells(artifact: DeckControlPolicyArtifact): string[] {
+  return [
+    String(artifact.lineNumber),
+    artifact.category,
+    artifact.command,
+    artifact.code,
+    artifact.severity,
+    artifact.message,
+  ];
+}
+
+export function deckControlPolicyArtifactRecords(
+  artifacts: readonly DeckControlPolicyArtifact[],
+): Array<Record<string, string>> {
+  return artifacts.map((artifact) => {
+    const cells = deckControlPolicyArtifactCells(artifact);
+    return Object.fromEntries(
+      DECK_CONTROL_POLICY_ARTIFACT_COLUMNS.map((column, index) => [
+        column,
+        cells[index] ?? "",
+      ]),
+    );
+  });
+}
+
+export function formatDeckControlPolicyArtifactTable(
+  artifacts: readonly DeckControlPolicyArtifact[],
+): string {
+  const rows = [DECK_CONTROL_POLICY_ARTIFACT_COLUMNS.join("\t")];
+  for (const artifact of artifacts) {
+    rows.push(deckControlPolicyArtifactCells(artifact).join("\t"));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckControlPolicyArtifactCsv(
+  artifacts: readonly DeckControlPolicyArtifact[],
+): string {
+  const rows = [DECK_CONTROL_POLICY_ARTIFACT_COLUMNS.join(",")];
+  for (const artifact of artifacts) {
+    rows.push(deckControlPolicyArtifactCells(artifact).map(formatCsvCell).join(","));
+  }
+  return `${rows.join("\n")}\n`;
+}
+
+export function formatDeckControlPolicyArtifactJson(
+  artifacts: readonly DeckControlPolicyArtifact[],
+): string {
+  return `${JSON.stringify(deckControlPolicyArtifactRecords(artifacts))}\n`;
+}
+
 function deckRawfileArtifacts(
   plan: DeckAnalysisPlan,
   table: string,
@@ -8740,6 +8844,11 @@ export function runDeckAnalysis(
   const controlLines = deckControlLines(netlist);
   const writeMarkers = deckControlWriteMarkers(netlist);
   const rawfileOptions = deckControlRawfileOptions(netlist);
+  const controlPolicyArtifacts = deckControlPolicyArtifacts(netlist);
+  const controlPolicyArtifactTable = formatDeckControlPolicyArtifactTable(controlPolicyArtifacts);
+  const controlPolicyArtifactCsv = formatDeckControlPolicyArtifactCsv(controlPolicyArtifacts);
+  const controlPolicyArtifactJson = formatDeckControlPolicyArtifactJson(controlPolicyArtifacts);
+  const controlPolicyArtifactRecords = deckControlPolicyArtifactRecords(controlPolicyArtifacts);
   const analysisDirectives = deckAnalysisDirectives(plan);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
@@ -8798,6 +8907,12 @@ export function runDeckAnalysis(
       writeMarkers: [...writeMarkers],
       rawfileOptionCount: rawfileOptions.length,
       rawfileOptions: [...rawfileOptions],
+      controlPolicyArtifactCount: controlPolicyArtifacts.length,
+      controlPolicyArtifacts,
+      controlPolicyArtifactTable,
+      controlPolicyArtifactCsv,
+      controlPolicyArtifactJson,
+      controlPolicyArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -8886,6 +9001,12 @@ export function runDeckAnalysis(
       writeMarkers: [...writeMarkers],
       rawfileOptionCount: rawfileOptions.length,
       rawfileOptions: [...rawfileOptions],
+      controlPolicyArtifactCount: controlPolicyArtifacts.length,
+      controlPolicyArtifacts,
+      controlPolicyArtifactTable,
+      controlPolicyArtifactCsv,
+      controlPolicyArtifactJson,
+      controlPolicyArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -8985,6 +9106,12 @@ export function runDeckAnalysis(
       writeMarkers: [...writeMarkers],
       rawfileOptionCount: rawfileOptions.length,
       rawfileOptions: [...rawfileOptions],
+      controlPolicyArtifactCount: controlPolicyArtifacts.length,
+      controlPolicyArtifacts,
+      controlPolicyArtifactTable,
+      controlPolicyArtifactCsv,
+      controlPolicyArtifactJson,
+      controlPolicyArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9079,6 +9206,12 @@ export function runDeckAnalysis(
       writeMarkers: [...writeMarkers],
       rawfileOptionCount: rawfileOptions.length,
       rawfileOptions: [...rawfileOptions],
+      controlPolicyArtifactCount: controlPolicyArtifacts.length,
+      controlPolicyArtifacts,
+      controlPolicyArtifactTable,
+      controlPolicyArtifactCsv,
+      controlPolicyArtifactJson,
+      controlPolicyArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9163,6 +9296,12 @@ export function runDeckAnalysis(
       writeMarkers: [...writeMarkers],
       rawfileOptionCount: rawfileOptions.length,
       rawfileOptions: [...rawfileOptions],
+      controlPolicyArtifactCount: controlPolicyArtifacts.length,
+      controlPolicyArtifacts,
+      controlPolicyArtifactTable,
+      controlPolicyArtifactCsv,
+      controlPolicyArtifactJson,
+      controlPolicyArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9246,6 +9385,12 @@ export function runDeckAnalysis(
       writeMarkers: [...writeMarkers],
       rawfileOptionCount: rawfileOptions.length,
       rawfileOptions: [...rawfileOptions],
+      controlPolicyArtifactCount: controlPolicyArtifacts.length,
+      controlPolicyArtifacts,
+      controlPolicyArtifactTable,
+      controlPolicyArtifactCsv,
+      controlPolicyArtifactJson,
+      controlPolicyArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
@@ -9339,6 +9484,12 @@ export function runDeckAnalysis(
       writeMarkers: [...writeMarkers],
       rawfileOptionCount: rawfileOptions.length,
       rawfileOptions: [...rawfileOptions],
+      controlPolicyArtifactCount: controlPolicyArtifacts.length,
+      controlPolicyArtifacts,
+      controlPolicyArtifactTable,
+      controlPolicyArtifactCsv,
+      controlPolicyArtifactJson,
+      controlPolicyArtifactRecords,
       rawfileArtifactCount: rawfileArtifacts.length,
       rawfileArtifacts,
       rawfileArtifactTable,
