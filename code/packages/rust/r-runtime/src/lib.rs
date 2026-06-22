@@ -2732,6 +2732,102 @@ mod tests {
         assert_eq!(nums("tabulate(c(0, 1, 2, 99), nbins = 2)\n"), vec![1.0, 1.0]);
     }
 
+    // --- R-32: binning & cross-product utilities ------------------------
+
+    #[test]
+    fn r32_tabulate_binning_family_examples() {
+        // The canonical R-32 example: counts of 1..5 across c(1,2,2,3,5).
+        assert_eq!(
+            nums("tabulate(c(1, 2, 2, 3, 5), nbins = 5)\n"),
+            vec![1.0, 2.0, 1.0, 0.0, 1.0]
+        );
+        // Without nbins, the default is max(bin) = 5, so the trailing 0 stays.
+        assert_eq!(
+            nums("tabulate(c(1, 2, 2, 3, 5))\n"),
+            vec![1.0, 2.0, 1.0, 0.0, 1.0]
+        );
+    }
+
+    #[test]
+    fn r32_find_interval_indexes_breakpoints() {
+        // 0.5 is below the first break (→ 0); 1.5 is in [1,2) (→ 1); 2.5 in [2,3) (→ 2).
+        assert_eq!(
+            nums("findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))\n"),
+            vec![0.0, 1.0, 2.0]
+        );
+        // At or above the last break the index is length(vec).
+        assert_eq!(nums("findInterval(5, c(1, 2, 3))\n"), vec![3.0]);
+        // Exact hits land at their own index (right-open from below): 2 → index 2.
+        assert_eq!(
+            nums("findInterval(c(1, 2, 3), c(1, 2, 3))\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn r32_find_interval_na_propagates() {
+        // NA / non-finite x propagate to NA without panicking.
+        let v = nums("findInterval(c(NA, 2), c(1, 2, 3))\n");
+        assert!(v[0].is_nan());
+        assert_eq!(v[1], 2.0);
+    }
+
+    #[test]
+    fn r32_cut_returns_a_factor_with_interval_levels() {
+        // cut produces a real factor (class "factor").
+        assert_eq!(
+            show("class(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            "[1] \"factor\""
+        );
+        // The levels are the auto-generated right-closed interval labels.
+        assert_eq!(
+            names_of("levels(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            vec!["(0,3]", "(3,6]", "(6,11]"]
+        );
+        // as.character of the binned values: 1∈(0,3], 5∈(3,6], 10∈(6,11].
+        assert_eq!(
+            names_of("as.character(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            vec!["(0,3]", "(3,6]", "(6,11]"]
+        );
+        // as.integer recovers the 1-based interval codes.
+        assert_eq!(
+            nums("as.integer(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn r32_cut_values_outside_breaks_are_na() {
+        // -1 is below break[1]; 20 is above break[k] → both NA codes.
+        let v = nums("as.integer(cut(c(-1, 20), breaks = c(0, 3, 6, 11)))\n");
+        assert!(v[0].is_nan());
+        assert!(v[1].is_nan());
+        // The factor still carries the three interval levels.
+        assert_eq!(
+            names_of("levels(cut(c(-1, 20), breaks = c(0, 3, 6, 11)))\n"),
+            vec!["(0,3]", "(3,6]", "(6,11]"]
+        );
+    }
+
+    #[test]
+    fn r32_cut_factor_integrates_with_nlevels() {
+        // nlevels sees the factor's three interval levels (a factor-aware path).
+        assert_eq!(
+            nums("nlevels(cut(c(1, 2, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            vec![3.0]
+        );
+    }
+
+    #[test]
+    fn r32_binning_malformed_inputs_do_not_panic() {
+        // Empty inputs yield empty results, not panics.
+        assert_eq!(eval_r("findInterval(c(), c(1, 2))\n").unwrap().length(), 0);
+        assert_eq!(eval_r("cut(c(), breaks = c(0, 1, 2))\n").unwrap().length(), 0);
+        // Fewer than two breaks means zero intervals: every value is NA.
+        let v = nums("as.integer(cut(c(1, 2), breaks = c(5)))\n");
+        assert!(v.iter().all(|x| x.is_nan()));
+    }
+
     #[test]
     fn r28_malformed_inputs_do_not_panic() {
         // outer with a non-callable FUN → clean error, no panic.
