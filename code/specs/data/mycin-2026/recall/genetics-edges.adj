@@ -177,4 +177,130 @@ rulebook genetics_facts {
         source "Phenylketonuria, also known as phenylalanine hydroxylase deficiency, is an inborn error of metabolism most commonly caused by pathogenic or pathogenic variants in the gene encoding phenylalanine hydroxylase—the hepatic enzyme that converts phenylalanine to tyrosine."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK535378/"
         trust authoritative
+
+    % ============================================================================
+    % BATCH: high-yield single-gene disorders + lysosomal storage diseases.
+    % Each edge is grounded from its disease's StatPearls page by a self-contained
+    % span naming BOTH the disease and the gene/inheritance. Edges with only an
+    % anaphoric span (Niemann-Pick "NPD"; Pompe gene; sickle-cell inheritance;
+    % alpha-1 gene) were declined — honest scope.
+    % ============================================================================
+
+    % --- Achondroplasia (autosomal dominant; FGFR3) ------------------------------
+    relate gene_defect(achondroplasia, fgfr3)
+        source "Achondroplasia results from a point mutation in the gene coding for the transmembrane portion of fibroblast growth factor receptor-3 (FGFR3), which resides on the short arm of chromosome 4."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559263/"
+        trust authoritative
+    relate inheritance(achondroplasia, autosomal_dominant)
+        source "Achondroplasia is inherited in an autosomal dominant manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559263/"
+        trust authoritative
+
+    % --- Gaucher disease (autosomal recessive; GBA1) -----------------------------
+    relate gene_defect(gaucher_disease, gba1)
+        source "Gaucher disease results from mutations in the GBA1 gene, leading to deficient glucocerebrosidase activity within lysosomes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448080/"
+        trust authoritative
+    relate inheritance(gaucher_disease, autosomal_recessive)
+        source "Gaucher disease (pronounced as GO-SHEY) is an autosomal recessive inborn error of metabolism caused by mutations in the glucocerebrosidase (GBA1) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448080/"
+        trust authoritative
+
+    % --- Fabry disease (X-linked; GLA / alpha-galactosidase A) -------------------
+    relate inheritance(fabry_disease, x_linked)
+        source "Fabry disease represents an X-linked, multisystem lysosomal storage disorder caused by defective function of the enzyme alpha-galactosidase A (α-Gal A)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK435996/"
+        trust authoritative
+    relate gene_defect(fabry_disease, gla)
+        source "Researchers have identified hundreds of mutations in the gene encoding α-Gal A on the X chromosome that cause Fabry disease."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK435996/"
+        trust authoritative
+
+    % --- Pompe disease (autosomal recessive); gene_defect recovered below (GeneReviews)
+    relate inheritance(pompe_disease, autosomal_recessive)
+        source "Glycogen storage disease type II, also known as Pompe disease, is a rare and progressive neuromuscular disorder inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470558/"
+        trust authoritative
+
+    % --- Sickle cell disease (HBB); inheritance recovered below (GeneReviews AR)
+    relate gene_defect(sickle_cell_disease, hbb)
+        source "Sickle cell disease (SCD) refers to a group of hemoglobinopathies that include mutations in the gene encoding the beta subunit of hemoglobin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482164/"
+        trust authoritative
+
+    % --- Retinoblastoma (autosomal dominant familial; RB1 tumor suppressor) -------
+    relate gene_defect(retinoblastoma, rb1)
+        source "Retinoblastoma is primarily caused by mutations in the RB1 tumor suppressor gene located on chromosome 13q14."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545276/"
+        trust authoritative
+    relate inheritance(retinoblastoma, autosomal_dominant)
+        source "Familial retinoblastoma follows an autosomal dominant inheritance pattern with high penetrance."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545276/"
+        trust authoritative
+
+    % --- Von Hippel-Lindau (autosomal dominant; VHL tumor suppressor) ------------
+    relate gene_defect(von_hippel_lindau, vhl)
+        source "Mutations in the VHL tumor suppressor gene located on chromosome 3 cause VHL."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459242/"
+        trust authoritative
+    relate inheritance(von_hippel_lindau, autosomal_dominant)
+        source "Von Hippel-Lindau (VHL) syndrome is a hereditary autosomal dominant disease affecting several organ systems."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459242/"
+        trust authoritative
+
+    % --- Hemophilia A (X-linked recessive; factor VIII / F8) ---------------------
+    relate gene_defect(hemophilia_a, factor_viii)
+        source "A hereditary hemorrhagic disorder resulting from a congenital deficit or scarcity of factor VIII, hemophilia A, which is known as classical hemophilia, manifests as protracted and excessive bleeding either spontaneously or secondary to trauma."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470265/"
+        trust authoritative
+    relate inheritance(hemophilia_a, x_linked)
+        source "An X-linked, recessive hemorrhagic trait or gene induces Hemophilia A."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470265/"
+        trust authoritative
+
+    % --- Alpha-1 antitrypsin deficiency (autosomal codominant) — gene edge declined
+    % AAT = alpha-1 antitrypsin (page-defined abbreviation).
+    relate inheritance(alpha_1_antitrypsin_deficiency, autosomal_codominant)
+        source "AAT deficiency is inherited through autosomal codominant transmission, which indicates that affected individuals have inherited an abnormal AAT gene from both parents."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK442030/"
+        trust authoritative
+
+    % --- Tuberous sclerosis complex (autosomal dominant; TSC1/TSC2) --------------
+    relate gene_defect(tuberous_sclerosis, tsc1_tsc2)
+        source "Tuberous sclerosis complex arises from mutations in the genes TSC1 (9q34) or TSC2 (16p13.3), encoding hamartin and tuberin, respectively."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538492/"
+        trust authoritative
+    relate inheritance(tuberous_sclerosis, autosomal_dominant)
+        source "Tuberous sclerosis complex (TSC) is a genetic disorder inherited in an autosomal dominant fashion and is characterized by an increased predisposition to hamartoma formation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538492/"
+        trust authoritative
+
+    % --- RECOVERED deferrals (re-grounded against alternate authoritative pages) --
+    % These were declined in the first pass because the first page used only an
+    % abbreviation/anaphor; the facts are board-relevant and DO ground against another
+    % NCBI Bookshelf source (StatPearls or GeneReviews). A deferral is a backlog item to
+    % clear, not a drop. (Only alpha-1 antitrypsin gene_defect remains deferred — its
+    % disease name and SERPINA1 never co-occur in one sentence across NBK442030 + NBK1519.)
+
+    % Niemann-Pick disease — SMPD1 (NPD = page-defined abbrev on NBK556129) + AR (GeneReviews)
+    relate gene_defect(niemann_pick_disease, smpd1)
+        source "NPD types A and B are caused by missense mutations in the sphingomyelin phosphodiesterase 1 (SMPD1) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556129/"
+        trust authoritative
+    relate inheritance(niemann_pick_disease, autosomal_recessive)
+        source "All forms of acid sphingomyelinase deficiency (ASMD), including infantile neurovisceral ASMD (Niemann-Pick disease type A, or NPD-A), chronic neurovisceral ASMD (NPD-A/B), and chronic visceral ASMD (Niemann-Pick disease type B, or NPD-B), are inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1370/"
+        trust authoritative
+
+    % Pompe disease — GAA gene (GeneReviews names "Pompe" + GAA in one diagnosis sentence)
+    relate gene_defect(pompe_disease, gaa)
+        source "The diagnosis of Pompe disease is established in a proband who has deficiency of acid alpha-glucosidase (GAA) enzyme activity in isolated lymphocytes or mixed leukocytes and/or by identification of biallelic pathogenic (or likely pathogenic) variants in GAA by molecular genetic testing in a proband with an out-of-range newborn screening result and/or suggestive clinical features."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1261/"
+        trust authoritative
+
+    % Sickle cell disease — autosomal recessive (GeneReviews; the StatPearls "codominant" phrasing was the deferral source)
+    relate inheritance(sickle_cell_disease, autosomal_recessive)
+        source "Sickle cell disease (SCD) is inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1377/"
+        trust authoritative
 }
