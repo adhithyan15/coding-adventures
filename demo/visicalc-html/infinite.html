@@ -191,6 +191,13 @@
         <button id="delCol" title="Delete the selected cell's column (references shift left; refs into it become #REF!)">− Col</button>
       </div>
       <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Format">
+        <button id="fmtDecimal" title="Format the selected cell with thousands separators + 2 decimals (#,##0.00)">.00</button>
+        <button id="fmtPercent" title="Format the selected cell as a percent (0.0%)">%</button>
+        <button id="fmtCurrency" title="Format the selected cell as currency ($#,##0.00)">$</button>
+        <button id="fmtGeneral" title="Clear the selected cell's format (General)">Gen</button>
+      </div>
+      <span class="sep"></span>
       <div class="grp" role="group" aria-label="History">
         <button id="undoBtn" title="Undo the last edit">↶ Undo</button>
         <button id="redoBtn" title="Redo the last undone edit">↷ Redo</button>
@@ -405,6 +412,20 @@
       render();
       statusEl.innerHTML += " &nbsp;·&nbsp; deleted column " + esc(workbook.columnLetters(selCol));
     });
+
+    // Number formatting: attach an Excel-style format code to the selected cell.
+    // The code is display-only — the stored value is unchanged, the engine just
+    // renders it differently (getDisplayWindow applies the code). "" clears it.
+    function applyFormat(code, label) {
+      var a = a1(selRow, selCol);
+      workbook.setFormat(a, code);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; formatted " + esc(a) + " as " + esc(label);
+    }
+    document.getElementById("fmtDecimal").addEventListener("click", function () { applyFormat("#,##0.00", "#,##0.00"); });
+    document.getElementById("fmtPercent").addEventListener("click", function () { applyFormat("0.0%", "0.0%"); });
+    document.getElementById("fmtCurrency").addEventListener("click", function () { applyFormat("$#,##0.00", "$#,##0.00"); });
+    document.getElementById("fmtGeneral").addEventListener("click", function () { applyFormat("", "General"); });
 
     // Save / load: serialize the whole workbook to a single JSON document and
     // stash it in the browser's localStorage; Load deserializes it back. The
