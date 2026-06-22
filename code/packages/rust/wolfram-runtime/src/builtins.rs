@@ -251,6 +251,13 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("Cases".to_string(), handler_fn(cases_handler));
     m.insert("FreeQ".to_string(), handler_fn(free_q_handler));
     m.insert("Replace".to_string(), handler_fn(replace_handler));
+    // W-20 fixed-point replacement (MA04 §22.4). HELD (in `PATTERN_HEADS`) so the
+    // rules survive literally; the handler evaluates only the subject, then
+    // iterates `ReplaceAll` to a fixed point with a hard iteration cap.
+    m.insert(
+        "ReplaceRepeated".to_string(),
+        handler_fn(replace_repeated_handler),
+    );
 
     // W-16 nested/structured list operations (MA04 §19). All ordinary, *eager*
     // `Head[args]` forms — no grammar change. They reuse the W-9 list machinery
@@ -337,7 +344,7 @@ pub const CONDITIONAL_HEADS: [&str; 2] = ["Which", "Switch"];
 /// re-evaluates the substituted result. `ReplaceAll` (`/.`) is NOT here because it
 /// is not a VM handler at all — it is rewritten by the `lib.rs` pre-pass before
 /// evaluation (MA04 §21.4–§21.5).
-pub const PATTERN_HEADS: [&str; 4] = ["MatchQ", "Cases", "FreeQ", "Replace"];
+pub const PATTERN_HEADS: [&str; 5] = ["MatchQ", "Cases", "FreeQ", "Replace", "ReplaceRepeated"];
 
 // ---------------------------------------------------------------------------
 // List inspection — Length / First / Last / Part
@@ -2101,8 +2108,149 @@ fn pattern_match_bindings(pattern: &IRNode, subject: &IRNode) -> Option<Bindings
     if !pattern_tree_well_formed(pattern) {
         return None;
     }
+    // W-20 advanced constructs (`Alternatives`/`Condition`/`PatternTest`) are
+    // dispatched *before* the shared cas matcher, which does not know them — they
+    // would otherwise fall through to the literal branch and (correctly but
+    // uselessly) only match an identical `Alternatives[…]`/… subject. Bounded by
+    // the parser's per-statement token cap (every recursion consumes a node) and
+    // running inside the `catch_unwind` worker, so the recursion is safe.
+    if let Some(result) = match_advanced_construct(pattern, subject) {
+        return result;
+    }
     let normalized = wolfram_to_cas_pattern(pattern);
     match_pattern(&normalized, subject, Bindings::empty())
+}
+
+/// The head a Wolfram `a | b | c` lowers to — the *Alternatives* construct
+/// (MA04 §22.2). Matches the subject against each alternative in turn.
+const ALTERNATIVES_HEAD: &str = "Alternatives";
+/// The head a Wolfram `patt /; test` lowers to — the *Condition* construct
+/// (MA04 §22.3). Matches `patt`, then accepts only if `test` (with the captured
+/// bindings substituted) evaluates to `True`.
+const CONDITION_HEAD: &str = "Condition";
+/// The head a Wolfram `patt ? fn` lowers to — the *PatternTest* construct
+/// (MA04 §22.3). Matches `patt`, then accepts only if `fn[subject]` is `True`.
+const PATTERN_TEST_HEAD: &str = "PatternTest";
+
+/// Dispatch the **W-20 advanced pattern constructs** (MA04 §22). Returns
+/// `Some(result)` when `pattern`'s head is one of `Alternatives` / `Condition` /
+/// `PatternTest` (the inner `result` being `Some(bindings)` on a successful match
+/// or `None` on a clean failure), and `None` when `pattern` is *not* one of these
+/// heads — in which case the caller falls through to the shared cas matcher. This
+/// two-level option keeps "not my construct" distinct from "my construct, but it
+/// failed to match", so a non-matching `Condition` does **not** leak through to a
+/// literal `Condition[…]` comparison.
+///
+/// Each construct delegates back into [`pattern_match_bindings`] for its inner
+/// pattern, so they nest freely (`Alternatives[x_ /; x > 0, _String]` works), and
+/// a malformed shape (wrong arity) simply fails to match rather than panicking.
+fn match_advanced_construct(pattern: &IRNode, subject: &IRNode) -> Option<Option<Bindings>> {
+    let IRNode::Apply(app) = pattern else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &app.head else {
+        return None;
+    };
+    match head.as_str() {
+        // `Alternatives[a, b, …]` — first alternative that matches wins. An empty
+        // `Alternatives[]` matches nothing (no alternative succeeds).
+        ALTERNATIVES_HEAD => Some(
+            app.args
+                .iter()
+                .find_map(|alt| pattern_match_bindings(alt, subject)),
+        ),
+        // `Condition[patt, test]` — match `patt`, substitute its captures into
+        // `test`, accept iff `test` evaluates to `True`. Wrong arity fails.
+        CONDITION_HEAD => {
+            let [inner, test] = app.args.as_slice() else {
+                return Some(None);
+            };
+            let Some(bindings) = pattern_match_bindings(inner, subject) else {
+                return Some(None);
+            };
+            // Substitute the *named bindings* (bare symbols, e.g. `x`) into the
+            // test, then evaluate it through a fresh, stateless VM (the test is
+            // pure — `x > 2` — and must not touch session state).
+            let test_filled = substitute_bound_symbols(test, &bindings);
+            if eval_predicate_is_true(&test_filled) {
+                Some(Some(bindings))
+            } else {
+                Some(None)
+            }
+        }
+        // `PatternTest[patt, fn]` — match `patt`, accept iff `fn[subject]` is
+        // `True`. The test is applied to the *original subject*, not a binding.
+        // Wrong arity fails.
+        PATTERN_TEST_HEAD => {
+            let [inner, test_fn] = app.args.as_slice() else {
+                return Some(None);
+            };
+            let Some(bindings) = pattern_match_bindings(inner, subject) else {
+                return Some(None);
+            };
+            let applied = apply_node(test_fn.clone(), vec![subject.clone()]);
+            if eval_predicate_is_true(&applied) {
+                Some(Some(bindings))
+            } else {
+                Some(None)
+            }
+        }
+        _ => None,
+    }
+}
+
+/// Build `head[args…]` — a small constructor used by `PatternTest` to form
+/// `fn[subject]`. (`apply` from `symbolic_ir` takes a head `IRNode` and an arg
+/// vector; this thin wrapper documents the intent at the call site.)
+fn apply_node(head: IRNode, args: Vec<IRNode>) -> IRNode {
+    apply(head, args)
+}
+
+/// Substitute every captured **named binding** into `template` by replacing any
+/// bare `Symbol(name)` whose `name` is bound with that binding's value (MA04
+/// §22.3). This is distinct from `cas-pattern-matching`'s `substitute`, which
+/// only rewrites `Pattern[name, …]` *nodes*: a `Condition` test references its
+/// captures as ordinary symbols (`x > 2`, not `Pattern[x,…] > 2`), so we walk the
+/// tree and swap matching atoms. Pure structural copy; total and panic-free, and
+/// depth-bounded by the parser's per-statement token cap.
+fn substitute_bound_symbols(template: &IRNode, bindings: &Bindings) -> IRNode {
+    match template {
+        IRNode::Symbol(name) => {
+            if let Some(value) = bindings.get(name) {
+                value.clone()
+            } else {
+                template.clone()
+            }
+        }
+        IRNode::Apply(app) => {
+            let new_head = substitute_bound_symbols(&app.head, bindings);
+            let new_args: Vec<IRNode> = app
+                .args
+                .iter()
+                .map(|a| substitute_bound_symbols(a, bindings))
+                .collect();
+            IRNode::Apply(Box::new(IRApply {
+                head: new_head,
+                args: new_args,
+            }))
+        }
+        atom => atom.clone(),
+    }
+}
+
+/// Evaluate a `Condition`/`PatternTest` test expression and return `true` iff it
+/// reduces to the Wolfram `True` symbol (MA04 §22.3). The test is run through a
+/// **fresh** `WolframBackend`-backed VM: these tests are pure (`x > 2`,
+/// `EvenQ[4]`), so a throwaway VM is correct and deliberately stateless — it can
+/// neither see nor mutate the caller's session bindings. Evaluation goes through
+/// the standard VM, which carries the existing recursion/stack guards, so a
+/// crafted test cannot recurse unboundedly. Anything other than `True` (including
+/// `False`, an unresolved relation, or a free symbol) yields `false`, so the
+/// surrounding match cleanly *fails* rather than erroring.
+fn eval_predicate_is_true(test: &IRNode) -> bool {
+    use crate::backend::WolframBackend;
+    let mut vm = VM::new(Box::new(WolframBackend::new()));
+    is_true_symbol(&vm.eval(test.clone()))
 }
 
 /// True iff every `Pattern[…]` node anywhere in `node` is **well-formed** —
@@ -2366,6 +2514,56 @@ pub(crate) fn replace_whole(expr: &IRNode, rules: &[IRNode]) -> IRNode {
     try_rules_at_node(rules, expr).unwrap_or_else(|| expr.clone())
 }
 
+/// The **hard cap** on how many `ReplaceAll` passes `ReplaceRepeated` (`//.`) will
+/// run before stopping unconditionally (MA04 §22.4). This is the DoS bound: a
+/// self-recursive rule such as `x -> f[x]` never reaches a fixed point, so without
+/// this cap `ReplaceRepeated` would rewrite forever and grow the term without
+/// bound. At the cap we return the last form computed — no panic, no unbounded
+/// memory. Wolfram's own default `MaxIterations` is `2^16`; we use the same order
+/// of magnitude. Each pass is *also* depth-guarded by `REPLACE_MAX_DEPTH`
+/// (§21.6), so both the inner (tree depth) and outer (pass count) loops are
+/// bounded.
+const REPLACE_REPEATED_MAX_ITERATIONS: usize = 1 << 16;
+
+/// `ReplaceRepeated` semantics — apply `replace_all_once` **to a fixed point**
+/// (MA04 §22.4). Repeatedly run a single top-down pass over `expr`, evaluating the
+/// result of each pass through `eval` (so a rule whose RHS computes folds before
+/// the next pass), until either:
+///
+///   * a pass produces a result **structurally identical** to its input
+///     (convergence — the fixed point), or
+///   * the pass count reaches [`REPLACE_REPEATED_MAX_ITERATIONS`] (the hard cap),
+///
+/// at which point the last form is returned. The cap guarantees termination even
+/// for a non-converging rule like `x -> f[x]`: such a rule changes the term every
+/// pass, so the equality check never fires, but the counter still stops the loop
+/// — bounded time and (because each pass is itself bounded) bounded memory. Total
+/// and panic-free; an empty or all-non-matching rule set converges on pass one.
+///
+/// `eval` is the VM-evaluation step threaded in by the caller (the pre-pass in
+/// `lib.rs` passes `|n| vm.eval(n)`); evaluation between passes mirrors how
+/// `Replace`/`ReplaceAll` re-evaluate their substituted result, so e.g.
+/// `{1,2,3} //. 2 -> 99` reaches `{1,99,3}` and the next pass leaves it unchanged.
+pub(crate) fn replace_repeated_to_fixed_point(
+    expr: &IRNode,
+    rules: &[IRNode],
+    mut eval: impl FnMut(IRNode) -> IRNode,
+) -> IRNode {
+    let mut current = expr.clone();
+    for _ in 0..REPLACE_REPEATED_MAX_ITERATIONS {
+        // One single top-down pass, then evaluate the result (folds computed RHSes).
+        let rewritten = eval(replace_all_once(&current, rules, 0));
+        if rewritten == current {
+            // Fixed point: the pass changed nothing, so we have converged.
+            return current;
+        }
+        current = rewritten;
+    }
+    // Hit the hard cap without converging (e.g. a self-recursive rule). Return the
+    // last form rather than looping forever or panicking (the DoS bound, §22.4).
+    current
+}
+
 /// Collect the `Rule`/`RuleDelayed` nodes a replacement's second argument carries.
 /// A single rule (`x /. a -> b`) becomes a one-element slice; a `List` of rules
 /// (`x /. {a -> b, c -> d}`) is flattened, keeping only the well-formed rules so a
@@ -2400,6 +2598,24 @@ fn replace_handler(vm: &mut VM, expr: IRApply) -> IRNode {
     let rules = collect_rule_list(&expr.args[1]);
     let replaced = replace_whole(&subject, &rules);
     vm.eval(replaced)
+}
+
+/// `ReplaceRepeated[expr, rules]` (`//.`) → apply `ReplaceAll` repeatedly to a
+/// **fixed point**, capped at [`REPLACE_REPEATED_MAX_ITERATIONS`] (MA04 §22.4).
+/// HELD: only the *subject* (`args[0]`) is evaluated here; the *rules* (`args[1]`)
+/// stay literal so their `Blank`/`Pattern`/`Rule` nodes survive. A two-argument
+/// call always reduces (to the converged form, or — for a non-terminating rule —
+/// the last form computed at the cap); any other arity leaves the form
+/// unevaluated. Each pass is evaluated through `vm`, so a rule whose RHS computes
+/// folds between passes; the hard cap guarantees termination even when the rule
+/// never converges (e.g. `x //. x -> f[x]`).
+fn replace_repeated_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let subject = vm.eval(expr.args[0].clone());
+    let rules = collect_rule_list(&expr.args[1]);
+    replace_repeated_to_fixed_point(&subject, &rules, |n| vm.eval(n))
 }
 
 /// Map a Rust `bool` to the Wolfram `True`/`False` symbol — the single
@@ -5686,6 +5902,228 @@ mod tests {
             eval_full(apply(sym("Cases"), vec![int(5), blank()])),
             apply(sym("Cases"), vec![int(5), blank()])
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // W-20 advanced pattern constructs (MA04 §22)
+    // -----------------------------------------------------------------------
+
+    /// `Alternatives[a, b, …]` — build the construct from its head form.
+    fn alternatives(alts: Vec<IRNode>) -> IRNode {
+        apply(sym("Alternatives"), alts)
+    }
+    /// `Condition[patt, test]`.
+    fn condition(patt: IRNode, test: IRNode) -> IRNode {
+        apply(sym("Condition"), vec![patt, test])
+    }
+    /// `PatternTest[patt, fn]`.
+    fn pattern_test(patt: IRNode, test_fn: IRNode) -> IRNode {
+        apply(sym("PatternTest"), vec![patt, test_fn])
+    }
+    /// `x > n` as a `Greater[x, n]` IR node (the runtime's comparison head).
+    fn greater_cond(lhs: IRNode, rhs: IRNode) -> IRNode {
+        apply(sym("Greater"), vec![lhs, rhs])
+    }
+
+    #[test]
+    fn alternatives_matches_any_branch() {
+        // MatchQ[2, 1|2|3] → True; MatchQ[5, 1|2|3] → False.
+        let alts = alternatives(vec![int(1), int(2), int(3)]);
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(2), alts.clone()])),
+            sym("True")
+        );
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(5), alts])),
+            sym("False")
+        );
+    }
+
+    #[test]
+    fn alternatives_empty_matches_nothing_and_nests() {
+        // An empty `Alternatives[]` has no branch to succeed → never matches.
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(1), alternatives(vec![])])),
+            sym("False")
+        );
+        // Alternatives nests other constructs: `_String | _Integer`.
+        let alts = alternatives(vec![blank_h("String"), blank_h("Integer")]);
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(7), alts.clone()])),
+            sym("True")
+        );
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![str_node("hi"), alts.clone()])),
+            sym("True")
+        );
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![flt(1.0), alts])),
+            sym("False")
+        );
+    }
+
+    #[test]
+    fn alternatives_in_cases_filters_union() {
+        // Cases[{1, "a", 2, 3.0}, _Integer | _String] → {1, "a", 2}.
+        let l = list(vec![int(1), str_node("a"), int(2), flt(3.0)]);
+        let alts = alternatives(vec![blank_h("Integer"), blank_h("String")]);
+        assert_eq!(
+            eval_full(apply(sym("Cases"), vec![l, alts])),
+            list(vec![int(1), str_node("a"), int(2)])
+        );
+    }
+
+    #[test]
+    fn condition_filters_with_named_binding() {
+        // Cases[{1,2,3,4}, x_ /; x > 2] → {3, 4}. The test sees the binding `x`.
+        let patt = condition(named_blank("x"), greater_cond(sym("x"), int(2)));
+        let l = list(vec![int(1), int(2), int(3), int(4)]);
+        assert_eq!(
+            eval_full(apply(sym("Cases"), vec![l, patt])),
+            list(vec![int(3), int(4)])
+        );
+    }
+
+    #[test]
+    fn condition_match_q_true_and_false() {
+        // MatchQ[5, x_ /; x > 2] → True; MatchQ[1, x_ /; x > 2] → False.
+        let patt = condition(named_blank("x"), greater_cond(sym("x"), int(2)));
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(5), patt.clone()])),
+            sym("True")
+        );
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(1), patt])),
+            sym("False")
+        );
+    }
+
+    #[test]
+    fn condition_failing_inner_pattern_short_circuits() {
+        // A Condition whose inner pattern itself fails to match never evaluates the
+        // test: `MatchQ[5, _String /; True]` → False (inner `_String` fails).
+        let patt = condition(blank_h("String"), sym("True"));
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(5), patt])),
+            sym("False")
+        );
+    }
+
+    #[test]
+    fn condition_wrong_arity_fails_cleanly() {
+        // A malformed `Condition[x_]` (one arg) must fail to match, not panic.
+        let patt = apply(sym("Condition"), vec![named_blank("x")]);
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(5), patt])),
+            sym("False")
+        );
+    }
+
+    #[test]
+    fn pattern_test_uses_predicate_on_subject() {
+        // MatchQ[4, _?EvenQ] → True; MatchQ[3, _?EvenQ] → False (W-9 EvenQ).
+        let even = pattern_test(blank(), sym("EvenQ"));
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(4), even.clone()])),
+            sym("True")
+        );
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(3), even])),
+            sym("False")
+        );
+    }
+
+    #[test]
+    fn pattern_test_in_cases_keeps_passing_elements() {
+        // Cases[{1,2,3,4,5,6}, _?EvenQ] → {2, 4, 6}.
+        let l = list(vec![int(1), int(2), int(3), int(4), int(5), int(6)]);
+        let even = pattern_test(blank(), sym("EvenQ"));
+        assert_eq!(
+            eval_full(apply(sym("Cases"), vec![l, even])),
+            list(vec![int(2), int(4), int(6)])
+        );
+    }
+
+    #[test]
+    fn pattern_test_failing_inner_pattern_short_circuits() {
+        // For an INTEGER subject the inner `_Integer` matches, but `EvenQ[3]` is
+        // False → overall no match; `EvenQ[2]` is True → match. This confirms the
+        // test runs on the subject only AFTER the inner pattern accepts it.
+        let patt = pattern_test(blank_h("Integer"), sym("EvenQ"));
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(2), patt.clone()])),
+            sym("True")
+        );
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(3), patt.clone()])),
+            sym("False")
+        );
+        // A subject the inner `_Integer` rejects (a string) fails the match WITHOUT
+        // the predicate erroring on a non-integer — `EvenQ` never runs.
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![str_node("hi"), patt])),
+            sym("False")
+        );
+    }
+
+    #[test]
+    fn replace_repeated_reaches_fixed_point() {
+        // ReplaceRepeated[{1,2,3}, 2 -> 99] → {1, 99, 3} and converges (idempotent
+        // after the first pass — 99 does not re-match the rule).
+        let l = list(vec![int(1), int(2), int(3)]);
+        let r = rule_node(int(2), int(99));
+        assert_eq!(
+            eval_full(apply(sym("ReplaceRepeated"), vec![l, r])),
+            list(vec![int(1), int(99), int(3)])
+        );
+    }
+
+    #[test]
+    fn replace_repeated_iterates_until_no_match() {
+        // A multi-step fixed point: {1, 2} with rules {1 -> 2, 2 -> 3}. The first
+        // pass rewrites 1 -> 2 (and the existing 2 -> 3) giving {2, 3}; the next
+        // rewrites that lone 2 -> 3 giving {3, 3}; then it converges. Demonstrates
+        // genuine iteration (more than one pass) to a stable form.
+        let l = list(vec![int(1), int(2)]);
+        let rules = list(vec![rule_node(int(1), int(2)), rule_node(int(2), int(3))]);
+        assert_eq!(
+            eval_full(apply(sym("ReplaceRepeated"), vec![l, rules])),
+            list(vec![int(3), int(3)])
+        );
+    }
+
+    #[test]
+    fn replace_repeated_self_recursive_rule_stops_at_cap_no_hang() {
+        // A rule that ALWAYS re-matches — `x -> f[x]` — never converges. The hard
+        // iteration cap must stop the loop and return the last form WITHOUT
+        // hanging, panicking, or OOMing. We use the *direct* fixed-point function
+        // with an identity evaluator so the test is fast and deterministic: the
+        // term grows each pass, so equality never fires and the counter is what
+        // terminates. We only assert it returns (does not hang) and produced *some*
+        // nested form (the rule fired at least once).
+        let rules = vec![rule_node(sym("x"), apply(sym("f"), vec![sym("x")]))];
+        let result = replace_repeated_to_fixed_point(&sym("x"), &rules, |n| n);
+        // It returned (no hang) and the rule fired (the bare `x` became `f[…]`).
+        assert!(matches!(&result, IRNode::Apply(app)
+            if matches!(&app.head, IRNode::Symbol(s) if s == "f")));
+    }
+
+    #[test]
+    fn replace_repeated_no_matching_rule_is_identity() {
+        // No rule matches → converges on pass one, returns the subject unchanged.
+        let l = list(vec![int(1), int(2), int(3)]);
+        let r = rule_node(int(9), int(0));
+        assert_eq!(
+            eval_full(apply(sym("ReplaceRepeated"), vec![l.clone(), r])),
+            l
+        );
+    }
+
+    #[test]
+    fn replace_repeated_wrong_arity_stays_unevaluated() {
+        // One argument is not a valid call → echoes unevaluated.
+        let one = apply(sym("ReplaceRepeated"), vec![int(2)]);
+        assert_eq!(eval_full(one.clone()), one);
     }
 
     #[test]
