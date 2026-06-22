@@ -26,3 +26,4 @@ import "genetics-edges.adj"
 ? trinucleotide_repeat(myotonic_dystrophy, $Repeat)    % expect ctg (expand)
 ? gene_defect(myotonic_dystrophy, $Gene)               % expect dmpk (expand)
 ? gene_defect(friedreich_ataxia, $Gene)                % expect fxn (expand)
+? gene_defect(marfan_syndrome, $Gene)                  % expect fbn1 (expand)
