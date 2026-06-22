@@ -31,6 +31,7 @@ receivers into method bodies (out of scope for the backend).  See
 
 from __future__ import annotations
 
+import math
 import re
 from collections.abc import Callable
 from typing import Any
@@ -39,8 +40,8 @@ from typing import Any
 # reaches us as a trailing ``Closure`` from ``sir-runtime-core``; ``apply`` calls
 # it with proc-lenient arity, and ``truthy`` applies SIR truthiness (only
 # ``False``/``nil`` are falsy) to predicate results.  ``intern`` mints the
-# :class:`Symbol` that ``String#to_sym`` returns.
-from coding_adventures_sir_runtime_core import Closure, apply, intern, truthy
+# :class:`Symbol` that ``String#to_sym`` / ``Symbol#upcase`` return.
+from coding_adventures_sir_runtime_core import Closure, Symbol, apply, intern, truthy
 
 # The SIR universal value type at this package's boundary.
 Val = Any
@@ -237,6 +238,10 @@ def _class_name_arg(arg: Val) -> str:
 _MISS = object()
 
 # Universal methods available on *every* receiver (Ruby's ``Object``/``Kernel``).
+# ``to_s``/``inspect`` render Ruby display forms (see :func:`_ruby_to_s` /
+# :func:`_ruby_inspect`); they live here so ``nil``/``true``/``false`` need no
+# catalog of their own (``nil.to_s == ""``, ``true.to_s == "true"``,
+# ``nil.inspect == "nil"``), and ``nil.to_a == []`` is handled below.
 _OBJECT_METHODS = frozenset(
     {
         "nil?",
@@ -250,6 +255,8 @@ _OBJECT_METHODS = frozenset(
         "clone",
         "itself",
         "to_a",
+        "to_s",
+        "inspect",
     }
 )
 
@@ -281,6 +288,7 @@ _ARRAY_METHODS = frozenset(
         "compact",
         "empty?",
         "to_a",
+        "join",
     }
 )
 
@@ -387,6 +395,51 @@ _STRING_METHODS = frozenset(
 # Block-taking ``String`` methods (M1c); ``each_char`` yields one character.
 _STRING_BLOCK_METHODS = frozenset({"each_char"})
 
+# Non-block ``Integer`` / ``Float`` methods (M1c).  A Ruby ``Integer`` is a
+# Python ``int`` and ``Float`` a ``float`` — but ``bool`` is a subclass of
+# ``int`` in Python, so :func:`call_method` routes ``True``/``False`` to the
+# universal ``Object`` methods (``true.to_s == "true"``) *before* this catalog.
+_NUMERIC_METHODS = frozenset(
+    {
+        "abs",
+        "to_i",
+        "to_f",
+        "even?",
+        "odd?",
+        "zero?",
+        "positive?",
+        "negative?",
+        "succ",
+        "next",
+        "pred",
+        "floor",
+        "ceil",
+        "round",
+        "gcd",
+        "pow",
+        "**",
+        "digits",
+    }
+)
+
+# Block-taking ``Integer`` methods (M1c): each invokes the block N times.
+_NUMERIC_BLOCK_METHODS = frozenset({"times", "upto", "downto", "step"})
+
+# ``Symbol`` methods (M1c).  A Ruby ``Symbol`` is a ``sir-runtime-core``
+# :class:`Symbol`; ``upcase``/``downcase`` return a *new* interned symbol.
+_SYMBOL_METHODS = frozenset(
+    {
+        "to_s",
+        "to_sym",
+        "length",
+        "size",
+        "upcase",
+        "downcase",
+        "inspect",
+        "empty?",
+    }
+)
+
 
 def _method_name(arg: Val) -> str:
     """Coerce a ``respond_to?`` argument (a :class:`Symbol`, ``":m"``-ish string,
@@ -404,10 +457,17 @@ def _responds_to(recv: Val, name: str) -> bool:
         return True
     if name in _OBJECT_METHODS:
         return True
-    # ``str`` is checked before ``list``/``dict`` would be irrelevant (a str is
-    # neither), but note bools are ints — order vs Array/Hash does not collide.
+    # ``str`` is checked before ``list``/``dict`` (a str is neither).  ``bool`` is
+    # a subclass of ``int`` so it is excluded from the numeric check — bools only
+    # resolve the universal ``Object`` methods (handled above).
     if isinstance(recv, str):
         return name in _STRING_METHODS or name in _STRING_BLOCK_METHODS
+    if isinstance(recv, Symbol):
+        return name in _SYMBOL_METHODS
+    if isinstance(recv, bool):
+        return False
+    if isinstance(recv, (int, float)):
+        return name in _NUMERIC_METHODS or name in _NUMERIC_BLOCK_METHODS
     if isinstance(recv, list):
         return name in _ARRAY_METHODS or name in _ARRAY_BLOCK_METHODS
     if isinstance(recv, dict):
@@ -470,6 +530,10 @@ def _object_method(recv: Val, name: str, args: list[Val]) -> Val:
         if isinstance(recv, list):
             return recv
         return _MISS
+    if name == "to_s":
+        return _ruby_to_s(recv)
+    if name == "inspect":
+        return _ruby_inspect(recv)
     return _MISS
 
 
@@ -528,6 +592,10 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
         return len(recv) == 0
     if name == "to_a":
         return recv
+    if name == "join":
+        # Ruby ``Array#join``: elements rendered with ``to_s`` (default sep "").
+        sep = args[0] if args else ""
+        return sep.join(_ruby_to_s(item) for item in recv)
     return _MISS
 
 
@@ -783,6 +851,231 @@ def _string_block_method(recv: str, name: str, block: Closure) -> Val:
     return _MISS
 
 
+# ── Ruby display forms (to_s / inspect) ──────────────────────────────────────
+#
+# ``sir-runtime-core``'s ``to_display`` renders *Lisp* forms (``nil``, ``#t``,
+# ``#f``), so it is wrong for Ruby's ``to_s``/``inspect``.  These two helpers
+# implement Ruby's surface: ``nil.to_s == ""`` but ``nil.inspect == "nil"``;
+# booleans print ``true``/``false``; a symbol's ``to_s`` is its bare name and
+# ``inspect`` prefixes ``:``; an ``Array``'s ``to_s`` equals its ``inspect``
+# (``"[1, 2]"``); a ``Hash`` renders ``{:k=>v}``.  String escaping in ``inspect``
+# is the v0 naive form (wrap in quotes; no backslash escaping yet).
+
+
+def _ruby_to_s(v: Val) -> str:
+    """Ruby ``to_s`` display form of ``v``."""
+    if v is None:
+        return ""
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, Symbol):
+        return v.name
+    if isinstance(v, str):
+        return v
+    if isinstance(v, (list, dict)):
+        return _ruby_inspect(v)
+    return str(v)
+
+
+def _ruby_inspect(v: Val, seen: set[int] | None = None, depth: int = 0) -> str:
+    """Ruby ``inspect`` display form of ``v``.
+
+    ``seen`` (a set of container ``id``s) and ``depth`` make this safe on
+    self-referential or deeply-nested structures: a cycle renders ``[...]`` /
+    ``{...}`` (matching Ruby) instead of recursing forever, and depth is capped
+    at :data:`_MAX_DISPLAY_DEPTH` so a deep acyclic structure cannot blow the
+    stack.  Both keep the never-raise invariant."""
+    if seen is None:
+        seen = set()
+    if v is None:
+        return "nil"
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, Symbol):
+        return ":" + v.name
+    if isinstance(v, str):
+        return '"' + v + '"'
+    if isinstance(v, list):
+        if id(v) in seen or depth > _MAX_DISPLAY_DEPTH:
+            return "[...]"
+        seen.add(id(v))
+        body = ", ".join(_ruby_inspect(item, seen, depth + 1) for item in v)
+        seen.discard(id(v))
+        return "[" + body + "]"
+    if isinstance(v, dict):
+        if id(v) in seen or depth > _MAX_DISPLAY_DEPTH:
+            return "{...}"
+        seen.add(id(v))
+        body = ", ".join(
+            f"{_ruby_inspect(k, seen, depth + 1)}=>{_ruby_inspect(val, seen, depth + 1)}"
+            for k, val in v.items()
+        )
+        seen.discard(id(v))
+        return "{" + body + "}"
+    return str(v)
+
+
+# ── Numeric (Integer / Float) catalog ────────────────────────────────────────
+
+
+# Bit-length budget bounding the size of values ``**``/``pow`` will materialise
+# and ``digits`` will walk.  Exponents come from untrusted input (e.g.
+# ``gets.to_i``), and Python ints are arbitrary precision, so ``2 ** (10 ** 9)``
+# would allocate ~125 MB and block the interpreter.  ~1M bits (~128 KB / ~315k
+# decimal digits) is far above any legitimate use yet bounds a hostile operand.
+# Mirrors the ``String#*`` ``_MAX_REPEAT_LEN`` precedent.
+_MAX_POW_BITS = 1 << 20
+
+# Recursion bound for ``to_s``/``inspect``/``join`` on nested containers; a
+# deeply-nested (or — caught separately by identity tracking — cyclic) structure
+# would otherwise blow the Python stack (``RecursionError`` reaches the OO
+# surface, violating the never-raise invariant).
+_MAX_DISPLAY_DEPTH = 100
+
+
+def _ruby_round(x: float) -> int:
+    """Ruby ``Float#round`` (no digits): round half **away from zero** — unlike
+    Python's banker's rounding, ``2.5.round == 3`` and ``-2.5.round == -3``."""
+    return math.floor(x + 0.5) if x >= 0 else math.ceil(x - 0.5)
+
+
+def _safe_pow(base: Val, exp: Val) -> Val:
+    """``base ** exp`` with a bignum guard.  An integer result whose approximate
+    bit-length exceeds :data:`_MAX_POW_BITS` is refused (returns ``0``) rather
+    than allocating gigabytes; a float overflow returns ``inf`` instead of
+    raising — both honour the never-raise-on-the-OO-surface invariant."""
+    if isinstance(base, int) and isinstance(exp, int):
+        if exp > 0 and base not in (0, 1, -1) and exp * base.bit_length() > _MAX_POW_BITS:
+            return 0
+        return base ** exp
+    try:
+        return base ** exp
+    except OverflowError:
+        return math.inf
+
+
+def _digits(n: int) -> list[int]:
+    """Ruby ``Integer#digits``: base-10 digits, least-significant first.  A
+    hostile bignum past :data:`_MAX_POW_BITS` is refused (``[0]``) so it cannot
+    build a multi-hundred-megabyte list."""
+    n = abs(n)
+    if n == 0 or n.bit_length() > _MAX_POW_BITS:
+        return [0]
+    out: list[int] = []
+    while n > 0:
+        out.append(n % 10)
+        n //= 10
+    return out
+
+
+def _numeric_method(recv: Val, name: str, args: list[Val]) -> Val:
+    """Non-block ``Integer``/``Float`` methods.  Returns :data:`_MISS` if ``name``
+    is not a catalogued numeric method."""
+    # ``int()`` raises ``OverflowError``/``ValueError`` on ``inf``/``nan``; the
+    # int-coercing methods below degrade to a safe value there rather than
+    # raising (never-raise-on-the-OO-surface invariant).
+    if isinstance(recv, float) and not math.isfinite(recv):
+        if name == "to_i":
+            return 0
+        if name in ("even?", "odd?"):
+            return False
+        if name == "gcd":
+            return 0
+    if name == "abs":
+        return abs(recv)
+    if name == "to_i":
+        return int(recv)
+    if name == "to_f":
+        return float(recv)
+    if name == "even?":
+        return int(recv) % 2 == 0
+    if name == "odd?":
+        return int(recv) % 2 != 0
+    if name == "zero?":
+        return recv == 0
+    if name == "positive?":
+        return recv > 0
+    if name == "negative?":
+        return recv < 0
+    if name in ("succ", "next"):
+        return recv + 1
+    if name == "pred":
+        return recv - 1
+    # ``floor``/``ceil``/``round`` raise on a non-finite float in Python; return
+    # the receiver unchanged there (never-raise floor for ``inf``/``nan``).
+    if name == "floor":
+        return recv if isinstance(recv, float) and not math.isfinite(recv) else math.floor(recv)
+    if name == "ceil":
+        return recv if isinstance(recv, float) and not math.isfinite(recv) else math.ceil(recv)
+    if name == "round":
+        if isinstance(recv, int) or (isinstance(recv, float) and not math.isfinite(recv)):
+            return recv
+        return _ruby_round(recv)
+    if name == "gcd":
+        return math.gcd(int(recv), int(args[0]))
+    if name in ("pow", "**"):
+        return _safe_pow(recv, args[0])
+    if name == "digits":
+        if isinstance(recv, float) and not math.isfinite(recv):
+            return [0]
+        return _digits(int(recv))
+    return _MISS
+
+
+def _numeric_block_method(recv: Val, name: str, args: list[Val], block: Closure) -> Val:
+    """Block-taking ``Integer`` methods (``times``/``upto``/``downto``/``step``);
+    each returns the receiver.  Returns :data:`_MISS` otherwise."""
+    if name == "times":
+        for i in range(int(recv)):
+            apply(block, [i])
+        return recv
+    if name == "upto":
+        for i in range(int(recv), int(args[0]) + 1):
+            apply(block, [i])
+        return recv
+    if name == "downto":
+        for i in range(int(recv), int(args[0]) - 1, -1):
+            apply(block, [i])
+        return recv
+    if name == "step":
+        limit = args[0]
+        stride = args[1] if len(args) > 1 else 1
+        value = recv
+        if stride > 0:
+            while value <= limit:
+                apply(block, [value])
+                value += stride
+        elif stride < 0:
+            while value >= limit:
+                apply(block, [value])
+                value += stride
+        return recv
+    return _MISS
+
+
+# ── Symbol catalog ───────────────────────────────────────────────────────────
+
+
+def _symbol_method(recv: Symbol, name: str, args: list[Val]) -> Val:
+    """``Symbol`` methods.  Returns :data:`_MISS` if ``name`` is not catalogued.
+    ``upcase``/``downcase`` return a *new* interned symbol (Ruby semantics)."""
+    if name == "to_s":
+        return recv.name
+    if name == "to_sym":
+        return recv
+    if name in ("length", "size"):
+        return len(recv.name)
+    if name == "upcase":
+        return intern(recv.name.upper())
+    if name == "downcase":
+        return intern(recv.name.lower())
+    if name == "inspect":
+        return ":" + recv.name
+    if name == "empty?":
+        return len(recv.name) == 0
+    return _MISS
+
+
 def call_method(recv: Val, name: str, *args: Val) -> Val:
     """Dispatch method ``name`` on ``recv``.
 
@@ -821,6 +1114,22 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
             if result is not _MISS:
                 return result
         result = _string_method(recv, name, arg_list)
+        if result is not _MISS:
+            return result
+    elif isinstance(recv, Symbol):
+        result = _symbol_method(recv, name, arg_list)
+        if result is not _MISS:
+            return result
+    elif isinstance(recv, bool):
+        # bool is a subclass of int — skip the numeric catalog so True/False
+        # resolve only the universal Object methods (true.to_s == "true").
+        pass
+    elif isinstance(recv, (int, float)):
+        if name in _NUMERIC_BLOCK_METHODS and arg_list and isinstance(arg_list[-1], Closure):
+            result = _numeric_block_method(recv, name, arg_list[:-1], arg_list[-1])
+            if result is not _MISS:
+                return result
+        result = _numeric_method(recv, name, arg_list)
         if result is not _MISS:
             return result
     elif isinstance(recv, list):

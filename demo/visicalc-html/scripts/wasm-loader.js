@@ -148,6 +148,31 @@
             return ok === 1;
           },
 
+          // Structural edits: insert / delete `count` rows or columns at a
+          // 1-based position. The engine shifts every formula reference at or
+          // after the band (a ref inside a deleted band becomes #REF!), then
+          // recomputes. Re-read the window afterwards.
+          insertRows: (at, count) => ex.insert_rows(at >>> 0, count >>> 0),
+          deleteRows: (at, count) => ex.delete_rows(at >>> 0, count >>> 0),
+          insertCols: (at, count) => ex.insert_cols(at >>> 0, count >>> 0),
+          deleteCols: (at, count) => ex.delete_cols(at >>> 0, count >>> 0),
+
+          // Sort the rows of the inclusive rectangle start..end by the computed
+          // values in keyCol (a 1-based absolute column index inside the
+          // rectangle). ascending defaults to true. Each row moves as a record;
+          // moved formulas shift their relative refs with the row, formats ride
+          // along. Returns true when applied (or already sorted), false for a
+          // malformed address / out-of-range keyCol / empty-single-row /
+          // oversized range. Re-read via getDisplayWindow afterwards.
+          sortRange: (start, end, keyCol, ascending = true) => {
+            const [sp, sl] = writeStr(String(start));
+            const [ep, el] = writeStr(String(end));
+            const ok = ex.sort_range(sp, sl, ep, el, keyCol >>> 0, ascending ? 1 : 0);
+            freeInput(sp, sl);
+            freeInput(ep, el);
+            return ok === 1;
+          },
+
           // Save / load: serialize the workbook's SOURCE (formula text + typed
           // literals) + formats to a JSON string, and restore from one. Computed
           // values recompute on load, so a loaded formula stays live.

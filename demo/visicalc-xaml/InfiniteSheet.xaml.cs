@@ -251,6 +251,14 @@ public sealed partial class InfiniteSheet : UserControl
         RepaintRealizedRows();
     }
 
+    /// Number formatting: apply an Excel-style code to the selected cell. The
+    /// format is display-only — the stored value is unchanged; repaint the
+    /// realized rows so the formatted string shows.
+    private void FmtDecimalButton_Click(object sender, RoutedEventArgs e) { _model.ApplyFormat("#,##0.00"); RepaintRealizedRows(); }
+    private void FmtPercentButton_Click(object sender, RoutedEventArgs e) { _model.ApplyFormat("0.0%"); RepaintRealizedRows(); }
+    private void FmtCurrencyButton_Click(object sender, RoutedEventArgs e) { _model.ApplyFormat("$#,##0.00"); RepaintRealizedRows(); }
+    private void FmtGeneralButton_Click(object sender, RoutedEventArgs e) { _model.ApplyFormat(""); RepaintRealizedRows(); }
+
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative refs by the destination's
     /// offset, pins absolute ($) refs, carries the format; a cut clears the source

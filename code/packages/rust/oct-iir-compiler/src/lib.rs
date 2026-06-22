@@ -181,6 +181,31 @@ struct Compiler {
     /// `Cell` so `emit(&self, ...)` can stay non-mutable for the
     /// callers that already pass `&self`.
     current_loc: std::cell::Cell<SourceLoc>,
+    /// Names of top-level `static` declarations (LANG-FULL O3).
+    ///
+    /// Oct keeps locals in registers keyed by their source name (a
+    /// `let x` lowers to a register literally called `x`).  A `static`
+    /// must instead outlive the frame that touches it and be visible to
+    /// *every* function, so it lowers to a **module global** — the IIR
+    /// `global_load "x"` / `global_store "x"` ops (LANG32, the same path
+    /// ALGOL's enclosing-block scalars use).  This set lets the read site
+    /// (`compile_token_primary`) and the write site (`compile_assign`)
+    /// recognise a name as a static and emit the global op instead of a
+    /// register move.  Populated by a pre-pass in `compile_program`
+    /// before any function body is lowered.
+    statics: std::collections::HashSet<String>,
+    /// Names of user functions declared with **no return type** (`void`).
+    ///
+    /// A call to a void function must NOT bind a result register: the IIR
+    /// `call` instruction's `dest` has to be `None`, otherwise a strict
+    /// backend rejects it (LLVM: "instructions returning void cannot have a
+    /// name" — `%t = call void @f()` is malformed).  `compile_call_expr`
+    /// consults this set to decide whether to bind a `dest`.  Populated by the
+    /// same pre-pass that collects [`statics`], so a call can be classified
+    /// even when the callee is declared *after* the call site.  (`main` is
+    /// materialised as `i64` for the AOT exit-code convention and is never
+    /// user-called, so its membership here is harmless.)
+    void_fns: std::collections::HashSet<String>,
 }
 
 impl Default for Compiler {
@@ -192,6 +217,8 @@ impl Default for Compiler {
             label_counter: 0,
             source_map: Vec::new(),
             current_loc: std::cell::Cell::new(SourceLoc::SYNTHETIC),
+            statics: std::collections::HashSet::new(),
+            void_fns: std::collections::HashSet::new(),
         }
     }
 }
@@ -238,29 +265,81 @@ impl Compiler {
             return Err(OctError::Malformed(format!(
                 "expected root `program`, got `{}`", ast.rule_name)));
         }
-        // Statics: V1 leaves them out for now — the type checker recorded
-        // them but most Oct programs the AOT chain will see use locals.
-        // A future revision could route `static_decl` to LANG39 globals.
+        // ── Pass 1 — statics (LANG-FULL O3) ────────────────────────────────
         //
-        // For now: collect every `fn_decl` and lower each one.
+        // A top-level `static counter: u8 = 40;` becomes a **module global**,
+        // not a register: it must be readable and writable from *every*
+        // function and must survive across calls.  We collect the static
+        // names here (so the per-function read/write sites recognise them and
+        // emit `global_load`/`global_store`) and remember each one's
+        // initialiser expression so `main` can run it once at start-up.
+        //
+        // Why initialise in `main` rather than at "module load"?  The AOT
+        // backends have no module-init hook; `main` is the single entry every
+        // backend runs first, so emitting `global_store "name", <init>` at the
+        // top of `main` gives the static its declared value before any other
+        // code observes it.  (`global_load` of an unwritten global already
+        // reads 0 on every backend, so a static with a literal-0 initialiser
+        // would even be correct without this — but we always emit the store so
+        // non-zero initialisers like `= 40` work.)
+        //
+        // `static_inits` borrows the initialiser nodes out of `ast`, which
+        // outlives this whole function, so the references stay valid until the
+        // second pass consumes them.
+        let mut static_inits: Vec<(String, &GrammarASTNode)> = Vec::new();
         for top in child_nodes(ast) {
             if top.rule_name != "top_decl" { continue; }
             for inner in child_nodes(top) {
-                match inner.rule_name.as_str() {
-                    "fn_decl"     => self.compile_fn(inner)?,
-                    "static_decl" => {
-                        // V1: silently ignore at IIR-gen time.  The type
-                        // checker has already verified the declaration.
-                        // Lowering globals is a follow-up.
+                // Record void-returning functions so calls to them omit a
+                // result register (see `void_fns`).  Forward references work
+                // because this pre-pass sees every declaration first.
+                if inner.rule_name == "fn_decl" {
+                    if let Some(fname) = first_name_token(inner) {
+                        if extract_return_type(inner).is_none() {
+                            self.void_fns.insert(fname);
+                        }
                     }
-                    _ => {}
+                    continue;
+                }
+                if inner.rule_name != "static_decl" { continue; }
+                let name = first_name_token(inner).ok_or_else(|| {
+                    OctError::Malformed("static_decl missing NAME".into())
+                })?;
+                // `static_decl = "static" NAME COLON type EQ expr SEMICOLON`.
+                // The single non-`type` child node is the initialiser expr.
+                let init = child_nodes(inner)
+                    .into_iter()
+                    .find(|n| n.rule_name != "type")
+                    .ok_or_else(|| {
+                        OctError::Malformed(
+                            "static_decl missing initialiser".into(),
+                        )
+                    })?;
+                self.statics.insert(name.clone());
+                static_inits.push((name, init));
+            }
+        }
+
+        // ── Pass 2 — lower every function ──────────────────────────────────
+        //
+        // `main` receives the static initialiser list so it can emit the
+        // start-up stores; every other function ignores it.
+        for top in child_nodes(ast) {
+            if top.rule_name != "top_decl" { continue; }
+            for inner in child_nodes(top) {
+                if inner.rule_name == "fn_decl" {
+                    self.compile_fn(inner, &static_inits)?;
                 }
             }
         }
         Ok(())
     }
 
-    fn compile_fn(&mut self, fn_decl: &GrammarASTNode) -> Result<(), OctError> {
+    fn compile_fn(
+        &mut self,
+        fn_decl: &GrammarASTNode,
+        static_inits: &[(String, &GrammarASTNode)],
+    ) -> Result<(), OctError> {
         // Reset per-function counters for stable register naming.
         self.tmp_counter = 0;
         self.label_counter = 0;
@@ -282,6 +361,24 @@ impl Compiler {
         let return_type = extract_return_type(fn_decl);
 
         let mut body: Vec<IIRInstr> = Vec::new();
+
+        // Static initialisers run once, at the very top of `main`, before any
+        // user statement (LANG-FULL O3 — see `compile_program` for the
+        // rationale).  Each `static counter: u8 = <expr>;` lowers to
+        // "evaluate <expr>, then `global_store "counter", <value>`".
+        if name == "main" {
+            for (sname, init_node) in static_inits {
+                let v = self.compile_expr(init_node, &mut body)?;
+                self.emit(
+                    &mut body,
+                    "global_store",
+                    None,
+                    vec![Operand::Str(sname.clone()), Operand::Var(v)],
+                    "i64",
+                );
+            }
+        }
+
         if let Some(block) = child_nodes(fn_decl).into_iter()
             .find(|n| n.rule_name == "block")
         {
@@ -433,7 +530,15 @@ impl Compiler {
         let expr = child_nodes(node).into_iter().next()
             .ok_or_else(|| OctError::Malformed("assign_stmt missing expr".into()))?;
         let v = self.compile_expr(expr, out)?;
-        self.emit(out, "mov", Some(&name), vec![Operand::Var(v)], "i64");
+        if self.statics.contains(&name) {
+            // Assigning a `static` (LANG-FULL O3) — write the module global,
+            // not a register, so the new value is visible to other functions
+            // and the next call.
+            self.emit(out, "global_store", None,
+                      vec![Operand::Str(name), Operand::Var(v)], "i64");
+        } else {
+            self.emit(out, "mov", Some(&name), vec![Operand::Var(v)], "i64");
+        }
         Ok(())
     }
 
@@ -767,7 +872,15 @@ impl Compiler {
             "true"    => 1,
             "false"   => 0,
             "NAME"    => {
-                // Bare identifier — already in a register slot keyed
+                // A `static` (LANG-FULL O3) lives in a module global, not a
+                // register, so reading it means `global_load "name" -> tmp`.
+                if self.statics.contains(&tok.value) {
+                    let dest = self.fresh_tmp();
+                    self.emit(out, "global_load", Some(&dest),
+                              vec![Operand::Str(tok.value.clone())], "i64");
+                    return Ok(dest);
+                }
+                // Bare local identifier — already in a register slot keyed
                 // by name (see compile_let / compile_assign / fn param).
                 return Ok(tok.value.clone());
             }
@@ -793,6 +906,7 @@ impl Compiler {
     {
         let name = first_name_token(node)
             .ok_or_else(|| OctError::Malformed("call_expr missing NAME".into()))?;
+        let is_void = self.void_fns.contains(&name);
         let mut srcs = vec![Operand::Var(name)];
         if let Some(arg_list) = child_nodes(node).into_iter()
             .find(|n| n.rule_name == "arg_list")
@@ -802,9 +916,19 @@ impl Compiler {
                 srcs.push(Operand::Var(v));
             }
         }
-        let dest = self.fresh_tmp();
-        self.emit(out, "call", Some(&dest), srcs, "i64");
-        Ok(dest)
+        if is_void {
+            // A void function call binds NO result — the IIR `call`'s `dest`
+            // must be `None` (LLVM rejects `%t = call void @f()`).  The value
+            // is never read (the type checker forbids using a void call as an
+            // operand), so we return an empty placeholder for the discarding
+            // statement context.
+            self.emit(out, "call", None, srcs, "void");
+            Ok(String::new())
+        } else {
+            let dest = self.fresh_tmp();
+            self.emit(out, "call", Some(&dest), srcs, "i64");
+            Ok(dest)
+        }
     }
 
     fn compile_intrinsic(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
@@ -978,6 +1102,100 @@ mod tests {
         let oh = op_hints(&m, "main");
         assert!(oh.iter().any(|(op, h)| op == "not" && h == "u8"),
             "Oct `~` must lower to a u8-hinted `not`; got: {oh:?}");
+    }
+
+    #[test]
+    fn o3_static_read_lowers_to_global_load() {
+        // LANG-FULL O3: reading a top-level `static` must emit `global_load`
+        // (a module global), never a bare register reference.
+        let src = "static counter: u8 = 40; \
+                   fn main() { out(1, counter); }";
+        let m = compile_source(src, "test").expect("ok");
+        let o = ops(&m, "main");
+        assert!(o.contains(&"global_load".to_string()),
+            "reading a static must lower to global_load; got: {o:?}");
+    }
+
+    #[test]
+    fn o3_static_write_lowers_to_global_store() {
+        // LANG-FULL O3: assigning a `static` must emit `global_store`, not a
+        // register `mov` (which would be invisible to other functions).
+        let src = "static counter: u8 = 0; \
+                   fn bump() { counter = counter + 1; } \
+                   fn main() { }";
+        let m = compile_source(src, "test").expect("ok");
+        let o = ops(&m, "bump");
+        assert!(o.contains(&"global_store".to_string()),
+            "assigning a static must lower to global_store; got: {o:?}");
+        // The read inside `counter + 1` is also a global_load.
+        assert!(o.contains(&"global_load".to_string()),
+            "reading a static inside bump must lower to global_load; got: {o:?}");
+    }
+
+    #[test]
+    fn o3_main_initialises_statics_first() {
+        // The static's declared initialiser runs once at the top of `main`,
+        // before any user statement — so `main`'s FIRST emitted op for a
+        // `static counter: u8 = 40;` program is the const, immediately
+        // followed by the `global_store` that seeds the global.
+        let src = "static counter: u8 = 40; \
+                   fn main() { out(1, counter); }";
+        let m = compile_source(src, "test").expect("ok");
+        let o = ops(&m, "main");
+        assert_eq!(o.first().map(String::as_str), Some("const"),
+            "main must start by materialising the static initialiser; got: {o:?}");
+        // The init store precedes the first read of the static.
+        let store_idx = o.iter().position(|op| op == "global_store");
+        let load_idx = o.iter().position(|op| op == "global_load");
+        assert!(store_idx.is_some() && load_idx.is_some(),
+            "main must both seed (store) and read (load) the static; got: {o:?}");
+        assert!(store_idx < load_idx,
+            "the initialiser store must precede any read of the static; got: {o:?}");
+    }
+
+    #[test]
+    fn void_call_binds_no_result_register() {
+        // A call to a void-returning user function must emit a `call` whose
+        // `dest` is `None`.  Binding a result (`%t = call void @f()`) is
+        // malformed LLVM ("instructions returning void cannot have a name");
+        // this was a latent bug the O3 proof's `bump()` surfaced — every prior
+        // Oct program only ever called the non-void `side()`.
+        let src = "fn act() { let x: u8 = 1; } \
+                   fn main() { act(); }";
+        let m = compile_source(src, "test").expect("ok");
+        let call = m.functions.iter().find(|f| f.name == "main").unwrap()
+            .instructions.iter().find(|i| i.op == "call")
+            .expect("main must contain a call to act()");
+        assert!(call.dest.is_none(),
+            "a void call must not bind a result register; got dest={:?}", call.dest);
+        assert_eq!(call.type_hint, "void");
+    }
+
+    #[test]
+    fn non_void_call_still_binds_result() {
+        // The void fix must not regress value-returning calls: `side()`
+        // returns u8, so its call keeps a `dest` (its result feeds `let v`).
+        let src = "fn side() -> u8 { return 5; } \
+                   fn main() { let v: u8 = side(); }";
+        let m = compile_source(src, "test").expect("ok");
+        let call = m.functions.iter().find(|f| f.name == "main").unwrap()
+            .instructions.iter().find(|i| i.op == "call")
+            .expect("main must contain a call to side()");
+        assert!(call.dest.is_some(),
+            "a value-returning call must bind a result register; got dest=None");
+    }
+
+    #[test]
+    fn o3_locals_are_unaffected_by_statics() {
+        // A `let` local must still lower to a register `mov` — only declared
+        // statics route through globals. (Guards against the read site
+        // mis-classifying every NAME as a global.)
+        let src = "static s: u8 = 1; \
+                   fn main() { let x: u8 = 5; x = x + 1; }";
+        let m = compile_source(src, "test").expect("ok");
+        let o = ops(&m, "main");
+        assert!(o.contains(&"mov".to_string()),
+            "a plain local `let`/assign must still use mov; got: {o:?}");
     }
 
     #[test]

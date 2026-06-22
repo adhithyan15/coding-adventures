@@ -475,6 +475,12 @@ class InfiniteSheetModel(
     fun insertCol() { session.insertCols(selCol, 1); computeExtent() }
     fun deleteCol() { session.deleteCols(selCol, 1); computeExtent() }
 
+    /// Number formatting: attach an Excel-style format code to the selected cell
+    /// ("#,##0.00", "0.0%", "$#,##0.00", or "" to clear). Display-only — the
+    /// stored value is unchanged; the engine renders it through the code, so a
+    /// fresh rowCells read shows the formatted string.
+    fun applyFormat(code: String) = session.setFormat(infAddress(), code)
+
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative references by the
     /// destination's offset, pins absolute (`$`) refs, carries the format; a cut

@@ -49,10 +49,14 @@ let exit_code = sim.run()?;   // executes the real x86_64 machine code
 ```
 
 The harness lays the function bytes into a flat sandboxed address space, patches
-internal `call` relocations, routes external calls (`__twig_alloc_bytes` via a
-bump heap, `putchar` / `print_i64` via captured I/O) to host shims, sets up a
-stack with a return sentinel, and runs from the entry — returning `rax & 0xFF`
-as the exit code (the same convention as `run_native` / `run_wasm`).
+internal `call` relocations, resolves the **`_twig_globals` data symbol** (a
+zeroed 512-slot region between the code and heap — the `PcRel32` `lea` to it is
+patched the same way the real linker would), routes external calls
+(`__twig_alloc_bytes` via a bump heap, `putchar` / `print_i64` via captured I/O)
+to host shims, sets up a stack with a return sentinel, and runs from the entry —
+returning `rax & 0xFF` as the exit code (the same convention as `run_native` /
+`run_wasm`). With `_twig_globals` support, programs that use **module globals**
+(LANG-FULL E6 captured scalars, O3 Oct `static`, AL6 ALGOL `own`) run locally.
 
 ## Running the LANG-FULL matrix's x86_64 column locally
 
@@ -62,10 +66,10 @@ as the exit code (the same convention as `run_native` / `run_wasm`).
 On an Apple-Silicon host the matrix's `NativeAot` cell only ever builds+runs the
 *aarch64* backend; this test exercises the **x86_64** column end-to-end —
 **locally on aarch64**, retro-verifying columns the matrix could previously
-execute only on x86 CI. The 21 cells span Twig (const/arithmetic/`define`),
+execute only on x86 CI. The cells span Twig (const/arithmetic/`define`),
 Nib (u8 wrap, `~` complement, unsigned division), ALGOL (procedure call,
 switch/computed-goto, signed `div`, E3 `real` SSE2 floats, E5 arrays straight-
-line and in a `for` loop), Oct (`out`, `~`), Dartmouth BASIC (`PRINT`,
+line and in a `for` loop, **E6 module globals**), Oct (`out`, `~`), Dartmouth BASIC (`PRINT`,
 `FOR`/`NEXT` — stdout-captured via the host shims), and Brainfuck (`.` over a
 byte tape, plus `,`-driven stdin: increment, echo, and cat — fed via
 `MachineCodeHarness::stdin`). Each new language exposed a missing opcode — the

@@ -225,5 +225,24 @@ using (var sc = new SpreadsheetSession())
     Check("struct insertCol shifted refs", Bare(sc.GetRaw("M1")), "=L1*3");
 }
 
+// ── Number formatting (the .00 / % / $ / Gen buttons drive SetFormat): applying
+// a format code changes only how the cell DISPLAYS; the stored value is
+// unchanged. An empty code clears the format back to General.
+using (var fmt = new SpreadsheetSession())
+{
+    fmt.SetCell("A1", "1234");
+    string Disp() => fmt.Window(1, 1, 1, 1)[0][0];
+    Check("fmt unformatted", Disp(), "1234");
+    fmt.SetFormat("A1", "#,##0.00");
+    Check("fmt #,##0.00", Disp(), "1,234.00");
+    fmt.SetFormat("A1", "0.0%");
+    Check("fmt 0.0%", Disp(), "123400.0%");
+    fmt.SetFormat("A1", "$#,##0.00");
+    Check("fmt $", Disp(), "$1,234.00");
+    fmt.SetFormat("A1", "");
+    Check("fmt cleared", Disp(), "1234");
+    Check("fmt raw untouched", fmt.GetRaw("A1"), "1234"); // display-only
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;

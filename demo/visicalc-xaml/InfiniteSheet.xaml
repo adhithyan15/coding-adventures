@@ -161,6 +161,24 @@
                             ToolTipService.ToolTip="Delete the selected cell's column (references shift left; refs into it become #REF!)"
                             Click="DelColButton_Click"/>
                     <Border Width="1" Height="22" Margin="6,0,6,0" Background="#2C313A"/>
+                    <!-- Format (apply a number format to the selected cell) -->
+                    <Button x:Name="FmtDecimalButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content=".00"
+                            ToolTipService.ToolTip="Format the selected cell with thousands separators + 2 decimals (#,##0.00)"
+                            Click="FmtDecimalButton_Click"/>
+                    <Button x:Name="FmtPercentButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content="%"
+                            ToolTipService.ToolTip="Format the selected cell as a percent (0.0%)"
+                            Click="FmtPercentButton_Click"/>
+                    <Button x:Name="FmtCurrencyButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content="$"
+                            ToolTipService.ToolTip="Format the selected cell as currency ($#,##0.00)"
+                            Click="FmtCurrencyButton_Click"/>
+                    <Button x:Name="FmtGeneralButton" Style="{StaticResource ToolChip}"
+                            Content="Gen"
+                            ToolTipService.ToolTip="Clear the selected cell's format (General)"
+                            Click="FmtGeneralButton_Click"/>
+                    <Border Width="1" Height="22" Margin="6,0,6,0" Background="#2C313A"/>
                     <!-- History (undo / redo) -->
                     <Button x:Name="UndoButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
                             Content="↶ Undo"

@@ -161,6 +161,19 @@ final class WindowedSheetModel: ObservableObject {
         revision += 1
     }
 
+    /// Number format: apply an Excel-style format code to the selected cell's
+    /// DISPLAY only — the stored value is untouched, so `getRaw` still returns
+    /// the original source and dependent formulas keep computing on the real
+    /// number. An empty code clears the format (back to General). The engine's
+    /// display window then renders the cell through the code (`1234` + `#,##0.00`
+    /// → `"1,234.00"`). Bump `revision` so the visible rows re-fetch. The SwiftUI
+    /// sibling of the web demo's "Format" group and the Qt/Flutter/Compose/XAML
+    /// `applyFormat`.
+    func applyFormat(_ code: String) {
+        session.setFormat(address(selectedRow, selectedCol), code)
+        revision += 1
+    }
+
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative references by the
     /// destination's offset, pins absolute (`$`) refs, carries the format; a cut
@@ -375,6 +388,18 @@ struct InfiniteGridView: View {
                 .help("Insert a column left of the selected cell (references shift right)")
             Button("− Col") { model.deleteCol() }
                 .help("Delete the selected cell's column (references shift left; refs into it become #REF!)")
+            toolSep
+            // ── Format (apply an Excel-style number-format code to the selected
+            // cell's DISPLAY; the stored value is untouched). Fixed codes:
+            // thousands+2dp, percent, currency, and General (clears).
+            Button(".00") { model.applyFormat("#,##0.00") }
+                .help("Format the selected cell as 1,234.00 (display only)")
+            Button("%") { model.applyFormat("0.0%") }
+                .help("Format the selected cell as a percentage (display only)")
+            Button("$") { model.applyFormat("$#,##0.00") }
+                .help("Format the selected cell as currency (display only)")
+            Button("Gen") { model.applyFormat("") }
+                .help("Clear the number format (back to General)")
             toolSep
             // ── History (undo / redo). The buttons gate off canUndo/canRedo,
             // re-evaluated whenever `revision` (a @Published) bumps after an edit.

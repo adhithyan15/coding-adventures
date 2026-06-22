@@ -20,6 +20,25 @@ whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
 > Version note: bumped to 0.169.0 (skipping 0.168.0, reserved by the
 > concurrently-developed ASI Rule-1 string-newline branch) so the parallel
 > branches don't collide on the version line.
+## [0.168.0] - 2026-06-22
+
+### Changed — ASI Rule 1 now handles string/template-ending statements
+
+The Phase-2 limitation is gone: a semicolon-free statement that ends in a
+string/template/regex literal immediately before a newline now parses and gets
+optimized at SIMPLE/ADVANCED, where it previously degraded to WHITESPACE_ONLY.
+This rides on the `lexer` crate populating `TOKEN_PRECEDED_BY_NEWLINE` (0.6.0)
+and `javascript-parser` reading it (0.18.0).
+
+New end-to-end fixture `simple-asi-string-newline`:
+`var label = "total"` ⏎ `var n = 1 + 2` ⏎ `show(label, n)` →
+`var label="total";var n=3;show(label,n);` (`1 + 2` folds). The full existing
+fixture suite remains byte-for-byte unchanged.
+
+> Version note: bumped to 0.168.0 to sit above the three concurrently-developed
+> constant-fold releases that merged first — `simple-fold-bitnot` (0.163.0),
+> `simple-fold-strlen` (0.165.0), and `simple-fold-strcase` (0.167.0) — so the
+> parallel branches never collide on the version line.
 
 ## [0.167.0] - 2026-06-22
 

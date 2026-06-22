@@ -87,4 +87,51 @@ rulebook onco_facts {
         source "In addition, hCG testing can aid in the diagnosis of certain cancers, such as choriocarcinoma and some extra-uterine malignancies."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK532950/"
         trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield tumor markers, each grounded to a self-contained verbatim
+    % NCBI Bookshelf span naming both the neoplasm and the marker. (breast_cancer
+    % -> CA 15-3 and multiple_myeloma -> beta-2-microglobulin declined: no single
+    % NBK span names the spelled-out disease with the marker — backlog, not stretched.)
+    % ------------------------------------------------------------------------
+
+    % Pancreatic cancer — CA 19-9 and CEA (one span names both markers).
+    relate tumor_marker(pancreatic_cancer, ca_19_9)
+        source "Tumor markers associated with pancreatic cancer include CEA and CA 19-9."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK518996/"
+        trust authoritative
+    relate tumor_marker(pancreatic_cancer, cea)
+        source "Tumor markers associated with pancreatic cancer include CEA and CA 19-9."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK518996/"
+        trust authoritative
+
+    % Small cell lung cancer — neuron-specific enolase (NSE).
+    relate tumor_marker(small_cell_lung_cancer, neuron_specific_enolase)
+        source "This study aims to evaluate the association of serum neuron-specific enolase (NSE) levels with the prognosis of small cell lung cancer (SCLC)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK153280/"
+        trust authoritative
+
+    % Neuroendocrine tumors — chromogranin A.
+    relate tumor_marker(neuroendocrine_tumor, chromogranin_a)
+        source "Chromogranin A is a widely used neuroendocrine tumor marker."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537344/"
+        trust authoritative
+
+    % Melanoma — S100 (immunohistochemical marker of melanocytic differentiation).
+    relate tumor_marker(melanoma, s100)
+        source "Immunohistochemical stains, such as S100, Melan-A, and human melanoma black-45 (HMB-45), aid in confirming melanocytic differentiation and distinguishing melanoma from other tumors."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459367/"
+        trust authoritative
+
+    % Yolk sac tumor (endodermal sinus tumor) — alpha-fetoprotein.
+    relate tumor_marker(yolk_sac_tumor, alpha_fetoprotein)
+        source "Immunohistochemical staining can support the diagnosis of yolk sac tumors, as almost all cases stain positively for alpha-fetoprotein (AFP)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563163/"
+        trust authoritative
+
+    % Gastrointestinal stromal tumor (GIST) — CD117 (KIT).
+    relate tumor_marker(gastrointestinal_stromal_tumor, cd117)
+        source "Immunohistochemically, GISTs typically express KIT (CD117), which is a highly sensitive and specific diagnostic marker."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554541/"
+        trust authoritative
 }

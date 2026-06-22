@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-21 — newline-precedence flag (via `lexer` 0.6.0)
+
+JS tokens now carry `TOKEN_PRECEDED_BY_NEWLINE` when a line terminator preceded
+them (the underlying `lexer` crate now populates the flag). No API change here;
+3 tests pin the behaviour: a token after a newline is flagged, same-line tokens
+are not, and a newline *inside* a template does not flag the following token.
+
 ## [0.8.0] - 2026-06-15 — gap-044b: complex template substitutions
 
 ### Fixed

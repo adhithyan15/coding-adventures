@@ -60,8 +60,13 @@ the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 **M1c**) the **`String`** catalog (`length`, `upcase`/`downcase`/`capitalize`,
 `reverse`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`/`bytes`, `split`,
 `include?`/`start_with?`/`end_with?`/`index`, `replace`, `sub`/`gsub` *literal*,
-`to_i`/`to_f`/`to_sym`, `empty?`, `*`/`+`, `each_char`). The Numeric/Symbol
-catalogs land in follow-up releases.
+`to_i`/`to_f`/`to_sym`, `empty?`, `*`/`+`, `each_char`); and (item **M1c**) the
+**`Integer`/`Float`** catalog (`abs`, `to_i`/`to_f`, `even?`/`odd?`/`zero?`/
+`positive?`/`negative?`, `succ`/`pred`, `floor`/`ceil`/`round`, `gcd`, `pow`/`**`,
+`digits`, and block `times`/`upto`/`downto`/`step`), the **`Symbol`** catalog
+(`to_s`/`to_sym`/`length`/`upcase`/`downcase`/`inspect`), and universal
+**`to_s`/`inspect`** Ruby display forms (so `nil`/`true`/`false` need no catalog)
+plus **`Array#join`**.
 
 ## Honest v0 limitation
 

@@ -221,6 +221,23 @@ fun main() {
     check("struct insertCol shifted refs", sc.getRaw("M1").replace("(", "").replace(")", ""), "=L1*3")
     sc.close()
 
+    // Number formatting (the .00 / % / $ / Gen buttons drive setFormat): applying
+    // a format code changes only how the cell DISPLAYS; the stored value is
+    // unchanged. An empty code clears the format back to General.
+    val fmt = SpreadsheetSession()
+    fmt.setCell("A1", "1234")
+    check("fmt unformatted", fmt.window(1, 1, 1, 1)[0][0], "1234")
+    fmt.setFormat("A1", "#,##0.00")
+    check("fmt #,##0.00", fmt.window(1, 1, 1, 1)[0][0], "1,234.00")
+    fmt.setFormat("A1", "0.0%")
+    check("fmt 0.0%", fmt.window(1, 1, 1, 1)[0][0], "123400.0%")
+    fmt.setFormat("A1", "\$#,##0.00")
+    check("fmt $", fmt.window(1, 1, 1, 1)[0][0], "\$1,234.00")
+    fmt.setFormat("A1", "")
+    check("fmt cleared", fmt.window(1, 1, 1, 1)[0][0], "1234")
+    check("fmt raw untouched", fmt.getRaw("A1"), "1234") // display-only
+    fmt.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }

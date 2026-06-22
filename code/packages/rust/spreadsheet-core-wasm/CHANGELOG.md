@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.10.0
+
+**Range sort facade — `sort_range`.** Wraps `Workbook::sort_range` (spreadsheet-core
+0.10.0): `sort_range(start_a1, end_a1, key_col, ascending) -> bool` reorders the rows
+of the rectangle by the computed values in `key_col`, returning `true` when applied
+(or already sorted), `false` for a malformed address / out-of-range `key_col` /
+empty-single-row / oversized range. Routes through `mutate` for undo/redo. Keeps the
+`raw` echo map in step the way `fill` does: it replays the **permutation the engine
+returns** onto the stored sources (shifting each moved formula's references by its
+row displacement via `rewrite_raw_for_fill`), so the formula bar shows each moved
+cell's reference-shifted source. 2 tests (reorder + raw echo; bad-args rejection).
+
 ## 0.9.0
 
 **Undo / redo (session history).** New `undo() -> bool`, `redo() -> bool`, `can_undo() -> bool`, `can_redo() -> bool`. History is snapshot-based: every mutating edit runs through a new private `mutate` helper that captures the document (via `serialize`) before the edit and — only if the edit actually changed something — pushes that pre-state onto an undo stack and clears the redo stack. So undo/redo is automatically correct for *every* edit (set, fill, clipboard paste, structural insert/delete, format, load) and any future one, with no per-op inverse bookkeeping; no-ops (a failed `set_cell`, a `copy` that only touches the clipboard, an empty→empty `fill`, a re-set to the same value) add nothing to history. `undo`/`redo` swap snapshots between the two stacks and restore through the same machinery `deserialize` uses (refactored into a private `load_snapshot`), so they rebuild the formula-bar echo and recompute every dependent — a restored formula stays live. History is bounded to `MAX_HISTORY` (100) snapshots, oldest dropped. The clipboard buffer is transient editing state and deliberately not captured. 3 tests (history walk + live recompute + redo-fork; no-op gating; empty-history safety).

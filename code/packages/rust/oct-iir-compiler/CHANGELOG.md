@@ -1,5 +1,31 @@
 # Changelog — `oct-iir-compiler`
 
+## 0.8.0 — 2026-06-22 — `static` module globals + void calls (LANG-FULL O3)
+
+Top-level `static` declarations were collected by the type checker but **silently
+dropped** at IIR-gen — Oct programs could only use function-local registers. They now
+lower to the IIR module-global ops (`global_load` / `global_store`, LANG32 — the same
+path ALGOL's enclosing-block scalars use for E6 globals), so a `static` is shared across
+every function and survives across calls.
+
+- **`static counter: u8 = 40;`** → the initialiser runs once at the top of `main`
+  (`const 40; global_store "counter", …`), and every read/write of the name routes
+  through `global_load`/`global_store` instead of a register. A `let` local with a
+  different name is unaffected; the read site only treats *declared statics* as globals.
+- Proven by **running** on all 7 backends (`lang_matrix.rs`): a `static counter`
+  initialised to 40, incremented twice by a *separate* `bump()` function, printed via
+  `out` → `42`. A per-function register model would print `40`; getting `42` proves the
+  value lives in one shared module global. Also a JIT e2e test asserts the same shared
+  mutable global accumulates to 42 across `run()`/`bump()`.
+- **Void-call fix (latent bug surfaced by the O3 proof's `bump()`):** a call to a
+  void-returning user function now emits the IIR `call` with **no `dest`**. Previously it
+  always bound a result register (`%t = call void @f()`), which is malformed LLVM
+  ("instructions returning void cannot have a name"). Every prior Oct program only ever
+  called the non-void `side()`, so this never fired. A `void_fns` pre-pass records each
+  void function (forward references work) and `compile_call_expr` consults it.
+- **Limitation:** a body-level `static` (a static-lifetime *local*, ALGOL-`own`-like) is
+  still ignored — only top-level statics lower. A local `let` may not shadow a static.
+
 ## 0.7.0 — 2026-06-16 — u8 width & wrap: bitwise `~` and wrapping arithmetic (LANG-FULL O2)
 
 Oct's only integer type is `u8` (the 8008 byte; `bool` is the only other type), and the

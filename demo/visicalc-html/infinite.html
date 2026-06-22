@@ -198,6 +198,11 @@
         <button id="fmtGeneral" title="Clear the selected cell's format (General)">Gen</button>
       </div>
       <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Sort">
+        <button id="sortAsc" title="Sort the budget block A1:E4 by the selected column, ascending (rows move as records; formulas track)">▲ Sort</button>
+        <button id="sortDesc" title="Sort the budget block A1:E4 by the selected column, descending">▼ Sort</button>
+      </div>
+      <span class="sep"></span>
       <div class="grp" role="group" aria-label="History">
         <button id="undoBtn" title="Undo the last edit">↶ Undo</button>
         <button id="redoBtn" title="Redo the last undone edit">↷ Redo</button>
@@ -426,6 +431,28 @@
     document.getElementById("fmtPercent").addEventListener("click", function () { applyFormat("0.0%", "0.0%"); });
     document.getElementById("fmtCurrency").addEventListener("click", function () { applyFormat("$#,##0.00", "$#,##0.00"); });
     document.getElementById("fmtGeneral").addEventListener("click", function () { applyFormat("", "General"); });
+
+    // Range sort: reorder the rows of the seeded budget block A1:E4 by the
+    // SELECTED column (clamped into the block's columns A..E; defaults to A).
+    // Each row moves as a record — the E-column SUM formulas travel with their
+    // row and have their relative refs shifted, so every total stays correct.
+    // The stored values are unchanged; only the row order (and the dependent
+    // recompute) changes. sortRange returns false for a no-op (already sorted /
+    // bad range), which we surface in the status line.
+    function sortBlock(asc) {
+      var keyCol = Math.min(5, Math.max(1, selCol)); // clamp into A..E
+      var rev = workbook.currentRevision();
+      var ok = workbook.sortRange("A1", "E4", keyCol, asc);
+      var diff = workbook.changedSince(rev);
+      var note = diff.stale ? "(stale — full refresh)" :
+        diff.changed.length + " cell(s) moved";
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; sorted A1:E4 by column " +
+        esc(workbook.columnLetters(keyCol)) + (asc ? " ▲" : " ▼") +
+        (ok ? " → " + esc(note) : " (no-op)");
+    }
+    document.getElementById("sortAsc").addEventListener("click", function () { sortBlock(true); });
+    document.getElementById("sortDesc").addEventListener("click", function () { sortBlock(false); });
 
     // Save / load: serialize the whole workbook to a single JSON document and
     // stash it in the browser's localStorage; Load deserializes it back. The

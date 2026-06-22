@@ -248,5 +248,26 @@ ok(fmtDisp() === "1234", `cleared (General) → ${fmtDisp()}`);
 // The format is display-only: the raw stored value never changed.
 ok(wbf.getRaw("A1") === "1234", `raw value untouched by formatting: ${wbf.getRaw("A1")}`);
 
+// Range sort (Data ▸ Sort): reorder the rows of a rectangle by a key column's
+// computed value. A = key, B = a formula on its own row's A; sorting by A moves
+// each row as a record and shifts the moved formulas' relative refs with the row.
+const wbo = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+wbo.setCell("A1", "30"); wbo.setCell("A2", "10"); wbo.setCell("A3", "20");
+wbo.setCell("B1", "=A1*2"); wbo.setCell("B2", "=A2*2"); wbo.setCell("B3", "=A3*2");
+ok(wbo.sortRange("A1", "B3", 1, true), "sortRange A1:B3 by col 1 ascending applied");
+const sd = (r, c) => wbo.getDisplayWindow(r, c, r, c).cells[0][0];
+ok(sd(1, 1) === "10" && sd(2, 1) === "20" && sd(3, 1) === "30",
+  `keys sorted ascending: ${sd(1, 1)},${sd(2, 1)},${sd(3, 1)}`);
+ok(sd(1, 2) === "20" && sd(2, 2) === "40" && sd(3, 2) === "60",
+  `each B = its row's A*2 (moved formula ref shifted): ${sd(1, 2)},${sd(2, 2)},${sd(3, 2)}`);
+ok(wbo.getRaw("B1").replace(/[()]/g, "") === "=A1*2",
+  `sorted B1 source tracked its row: ${wbo.getRaw("B1")}`);
+// Descending reverses it; blanks (none here) would always sink last.
+ok(wbo.sortRange("A1", "B3", 1, false), "sortRange descending applied");
+ok(sd(1, 1) === "30" && sd(3, 1) === "10", `keys sorted descending: ${sd(1, 1)},…,${sd(3, 1)}`);
+// Bad args are a no-op returning false (no throw).
+ok(!wbo.sortRange("A1", "A1", 1, true), "single-row range rejected");
+ok(!wbo.sortRange("A1", "B3", 9, true), "out-of-range key column rejected");
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);
