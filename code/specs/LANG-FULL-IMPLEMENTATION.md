@@ -12,7 +12,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, arrays, `DEF FN`, `READ`/`DATA`, `^`; loops/IF/GOTO execute only on the VM/JIT |
+| Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `READ`/`DATA`, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3) — all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2); intrinsics + `static` remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, and 1-D arrays (arrays + reals run on VM/JIT only so far); no call-by-name, strings, multidim arrays, `own` |
 
@@ -341,7 +341,14 @@ backend immediately) come before the enabler-dependent items.
   to the matrix JVM column.
 - ☐ **BA1** — `GOSUB` / `RETURN` (needs **E7**).
 - ☐ **BA2** — multi-item `PRINT`, `;`/`,` separators, more relops.
-- ☐ **BA3** — arrays / `DIM` (needs **E5**).
+- ✅ **BA3** — arrays / `DIM` (enabler **E5**). `DIM A(n)` lowers to `alloc_array`
+  (BASIC arrays are 0-based + inclusive, so `n + 1` elements); `LET A(i) = e` →
+  `array_set` and `A(i)` rvalues → `array_get`, with the subscript used directly as
+  the 0-based index (no lower-bound subtraction, unlike ALGOL `[lo:hi]`). These are
+  the same shared array ops ALGOL's E5 arrays use, so BASIC arrays RUN on all 7
+  backends — verified by a straight-line array program (`DIM A(3); A(1)=40; A(2)=2;
+  PRINT A(1)+A(2)` ⇒ `42`) in `lang-aot/tests/lang_matrix.rs`. (`dartmouth-basic-iir-compiler`
+  0.7.0.) Undeclared subscript use is a clean `Unsupported` error.
 - ☐ **BA4** — strings + string PRINT (needs **E4**).
 - ✅ **BA5** — `DEF FN` single-line user functions. `DEF FNx(P) = expr` lowers to a
   sibling `IIRFunction` (one numeric param, `FullyTyped`) and `FNx(arg)` lowers to the

@@ -36,18 +36,21 @@ just use `lang-aot foo.bas`, which does the routing for you).
 
 ## V1 scope
 
-Integer-only programs.  Floats truncate to i64; strings, GOSUB,
-arrays, and READ/DATA are deferred to V2.  See
-[CHANGELOG.md](CHANGELOG.md) for the full table.
+Integer-only programs.  Floats truncate to i64; strings, GOSUB, and
+READ/DATA are deferred to V2.  See [CHANGELOG.md](CHANGELOG.md) for the
+full table.
 
-`LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, and `DEF FN`
-single-line user functions lower to the shared IIR and RUN on
-native / LLVM / WASM / JVM / CLR / VM / JIT.  LANG-FULL BA0 fixed the comparison
-operand-width hint that had broken control flow on LLVM/WASM; BA5 added
-`DEF FNx(X) = expr` (lowered to a sibling `IIRFunction` + `call`, like ALGOL's
-value procedures).  A `DEF` body may reference only its own parameter — global
-access from inside a function needs enabler E6 (see
-`code/specs/LANG-FULL-IMPLEMENTATION.md`).
+`LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
+single-line user functions, and `DIM` arrays lower to the shared IIR and
+RUN on native / LLVM / WASM / JVM / CLR / VM / JIT.  LANG-FULL BA0 fixed the
+comparison operand-width hint that had broken control flow on LLVM/WASM; BA5
+added `DEF FNx(X) = expr` (lowered to a sibling `IIRFunction` + `call`, like
+ALGOL's value procedures); **BA3** added one-dimensional integer arrays —
+`DIM A(n)` → `alloc_array` (0-based and inclusive, so `n + 1` elements),
+`LET A(i) = e` → `array_set`, and `A(i)` in an expression → `array_get`, the
+same shared array ops ALGOL's E5 arrays run on every backend.  A `DEF` body may
+reference only its own parameter — global access from inside a function needs
+enabler E6 (see `code/specs/LANG-FULL-IMPLEMENTATION.md`).
 
 ## Spec
 

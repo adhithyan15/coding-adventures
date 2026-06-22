@@ -1,5 +1,47 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.7.0 — 2026-06-21 — `DIM` arrays (LANG-FULL BA3, enabler E5)
+
+### Added — one-dimensional integer arrays (`DIM A(n)` + subscripted `A(i)`)
+
+`DIM` was previously an `UnsupportedStatement` and a subscripted variable `A(I)`
+was a deferred `Unsupported` error. BASIC arrays now lower to the shared IIR
+array ops (the *same* `alloc_array` / `array_set` / `array_get` ALGOL's E5 arrays
+use), so they run on every backend E5 already supports:
+
+```basic
+10 DIM A(3)
+20 LET A(1) = 40
+30 LET A(2) = 2
+40 PRINT A(1) + A(2)
+50 END
+```
+
+⇒ `alloc_array A = 4` (see below) then `array_set A, 1, 40` / `array_set A, 2, 2`
+and two `array_get`s feeding the `add`, printing `42`.
+
+- **`DIM A(n)` → `alloc_array`** — Dartmouth BASIC arrays are **0-based and
+  inclusive**: `DIM A(3)` declares `A(0)..A(3)`, so the element count is
+  `n + 1` (here `4`). `DIM A(3), B(2)` declares both in one statement. The
+  handle lives in the register named after the array.
+- **`LET A(i) = e` → `array_set`** and **`A(i)` in an expression → `array_get`**.
+  The subscript is used **directly** as the 0-based IIR index — no lower-bound
+  subtraction (contrast ALGOL's `array A[lo:hi]`, which subtracts `lo`).
+- **Undeclared use is a clean error**: subscripting a name that was never
+  `DIM`med returns `Unsupported` rather than miscompiling against an undefined
+  handle register.
+- **Bounded + panic-free**: a `DIM` bound is validated against `MAX_DIM_BOUND`
+  (2^24) *before* the `f64`→`i64` cast, so an oversized or non-finite literal
+  (e.g. `DIM A(1E30)`, which a bare `as i64` cast would saturate to `i64::MAX`
+  and then overflow on the `+ 1` element count) is a clean `Unsupported` error,
+  never a debug-build panic or a release-build wrapped/garbage length. The
+  element-count `+ 1` also uses `checked_add` as a second guard.
+- **Verified by RUNNING** the straight-line array program across the matrix
+  (`lang-aot` `tests/lang_matrix.rs`): the managed runtimes bounds-check natively
+  (JVM `int[]`/`iastore`/`iaload`, CLR `int32[]`/`stelem`/`ldelem`), the static
+  backends use the length-prefixed block + explicit bounds-trap (LLVM/WASM/
+  NativeAot). 7 new unit tests cover the lowering shape + the error paths.
+
 ## 0.6.0 — 2026-06-20 — `DEF FN` user-defined functions (LANG-FULL BA5)
 
 ### Added — single-line user-defined functions (`DEF FNx(P) = expr`)
