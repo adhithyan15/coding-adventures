@@ -112,4 +112,19 @@ rulebook micro_facts {
         source "Streptococcus pneumoniae is a gram-positive, lancet-shaped bacterium and a cause of community-acquired pneumonia"
         locator "https://www.ncbi.nlm.nih.gov/books/NBK470537/"
         trust authoritative
+
+    % --- Helicobacter pylori (gram-negative, spiral; causes peptic ulcer) -------
+    % One span names the gram reaction AND the spiral shape; a second names the disease.
+    relate gram_stain(helicobacter_pylori, gram_negative)
+        source "Helicobacter pylori (H. pylori) is a gram-negative spiral-shaped bacterium"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534233/"
+        trust authoritative
+    relate morphology(helicobacter_pylori, spiral)
+        source "Helicobacter pylori (H. pylori) is a gram-negative spiral-shaped bacterium"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534233/"
+        trust authoritative
+    relate causes(helicobacter_pylori, peptic_ulcer_disease)
+        source "H. pylori is the most important cause for chronic or atrophic gastritis, peptic ulcer, gastric lymphoma, and gastric carcinoma"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534233/"
+        trust authoritative
 }
