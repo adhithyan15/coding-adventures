@@ -67,6 +67,13 @@ internal static class ScNative
         [MarshalAs(UnmanagedType.LPUTF8Str)] string src,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string dstStart,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string dstEnd);
+    // sc_sort_range(session, start, end, key_col, ascending) → int (1 applied /
+    // already sorted, 0 no-op). Two A1 strings + a 1-based key column + a flag.
+    [DllImport("spreadsheet_capi")]
+    internal static extern int sc_sort_range(IntPtr s,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string start,
+        [MarshalAs(UnmanagedType.LPUTF8Str)] string end,
+        uint keyCol, int ascending);
     // sc_copy / sc_cut(session, start, end) → void (clipboard capture; two A1 strings).
     [DllImport("spreadsheet_capi")]
     internal static extern void sc_copy(IntPtr s,
@@ -163,6 +170,16 @@ public sealed class SpreadsheetSession : IDisposable
     /// every dependent. Reaches sc_fill — the same path every other backend drives.
     public void Fill(string src, string dstStart, string dstEnd) =>
         ScNative.sc_fill(_handle, src, dstStart, dstEnd);
+
+    /// Range sort: reorder the rows of the rectangle `start`..`end` by the
+    /// computed values in `keyCol` (1-based, inside the rectangle), ascending or
+    /// descending. Each row moves as a record; the engine shifts moved formulas'
+    /// references with their row and carries formats. Returns true when a sort was
+    /// applied (or the range was already sorted), false for a no-op. `keyCol` is
+    /// clamped to ≥ 0 before the uint cast; the engine validates it lies inside
+    /// the rectangle. Reaches sc_sort_range — the same path every backend drives.
+    public bool SortRange(string start, string end, int keyCol, bool ascending) =>
+        ScNative.sc_sort_range(_handle, start, end, (uint)Math.Max(0, keyCol), ascending ? 1 : 0) != 0;
 
     /// Structural edits: insert / delete `count` rows or columns at the 1-based
     /// position `at`. The engine shifts every formula reference at or after the
@@ -565,6 +582,19 @@ public sealed class InfiniteSheetModel : IDisposable
     /// stored value is unchanged; the engine renders it through the code, so a
     /// fresh RowCells read shows the formatted string.
     public void ApplyFormat(string code) => _session.SetFormat(InfAddress, code);
+
+    /// Range sort: reorder the rows of the seeded budget block A1:E4 by the
+    /// SELECTED column (clamped into the block's columns A..E = 1..5), ascending
+    /// or descending. Each row moves as a record; the E-column SUM formulas travel
+    /// with their row (the engine shifts their refs), so every total stays correct.
+    /// Returns false for a no-op (already sorted / bad args). Regrows the extent.
+    public bool SortBlock(bool ascending)
+    {
+        int keyCol = Math.Clamp(SelCol, 1, 5);
+        bool ok = _session.SortRange("A1", "E4", keyCol, ascending);
+        ComputeExtent();
+        return ok;
+    }
 
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative references by the destination's

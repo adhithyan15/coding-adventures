@@ -179,6 +179,16 @@
                             ToolTipService.ToolTip="Clear the selected cell's format (General)"
                             Click="FmtGeneralButton_Click"/>
                     <Border Width="1" Height="22" Margin="6,0,6,0" Background="#2C313A"/>
+                    <!-- Sort (reorder the budget block A1:E4 by the selected column) -->
+                    <Button x:Name="SortAscButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
+                            Content="▲ Sort"
+                            ToolTipService.ToolTip="Sort the budget block A1:E4 by the selected column, ascending (rows move as records; formulas track)"
+                            Click="SortAscButton_Click"/>
+                    <Button x:Name="SortDescButton" Style="{StaticResource ToolChip}"
+                            Content="▼ Sort"
+                            ToolTipService.ToolTip="Sort the budget block A1:E4 by the selected column, descending"
+                            Click="SortDescButton_Click"/>
+                    <Border Width="1" Height="22" Margin="6,0,6,0" Background="#2C313A"/>
                     <!-- History (undo / redo) -->
                     <Button x:Name="UndoButton" Style="{StaticResource ToolChip}" Margin="0,0,6,0"
                             Content="↶ Undo"
