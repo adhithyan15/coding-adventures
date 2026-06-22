@@ -367,6 +367,79 @@ impl SpreadsheetSession {
         }
     }
 
+    /// Sort the rows of the inclusive rectangle `start_a1`..`end_a1` by the
+    /// computed values in `key_col` (a 1-based absolute column index that must lie
+    /// inside the rectangle) — *Data ▸ Sort*. Each row moves as a record; the sort
+    /// key is the cell's computed value at the key column (a formula sorts by its
+    /// result), under a fixed total order (blanks last both directions; Number <
+    /// Text < Boolean < Error; case-insensitive text; stable). `ascending = false`
+    /// reverses only the non-empty comparison. Moved formulas have their relative
+    /// references shifted by the row displacement (absolute `$` refs pinned,
+    /// off-grid → `#REF!`), and formats ride along — exactly as the engine does.
+    ///
+    /// Returns `true` once a valid sort is applied (or the range was already
+    /// sorted), `false` for a malformed address, an out-of-range `key_col`, an
+    /// empty/single-row range, or a rectangle over `MAX_RANGE_CELLS`. Mirrors
+    /// [`fill`](Self::fill) in keeping the `raw` echo map honest: it replays the
+    /// engine's permutation onto the stored sources so the formula bar shows each
+    /// moved cell's (reference-shifted) source.
+    pub fn sort_range(&mut self, start_a1: &str, end_a1: &str, key_col: u32, ascending: bool) -> bool {
+        self.mutate(|s| s.sort_range_inner(start_a1, end_a1, key_col, ascending))
+    }
+
+    fn sort_range_inner(&mut self, start_a1: &str, end_a1: &str, key_col: u32, ascending: bool) -> bool {
+        let (Ok(start), Ok(end)) = (CellAddress::parse(start_a1), CellAddress::parse(end_a1)) else {
+            return false;
+        };
+        let range = CellRange::new(start, end);
+        // Mirror the engine's DoS guard so the raw-map replay below stays bounded.
+        if range.cell_count() > MAX_RANGE_CELLS {
+            return false;
+        }
+
+        // The engine permutes cell content + formats and hands back the row
+        // permutation it applied (`order[new_offset] = old_offset`); `None` is a
+        // rejected/empty sort. We replay that exact permutation onto the `raw`
+        // echo map so the formula bar stays in step.
+        let Some(order) = self.wb.sort_range(self.sheet, range, key_col, ascending) else {
+            return false;
+        };
+
+        // Snapshot the range's raw sources before rewriting (a permutation
+        // overwrites entries in place), keyed by (row offset, col).
+        let first = range.start.row;
+        let mut snap: HashMap<(u32, u32), String> = HashMap::new();
+        for (i, _) in order.iter().enumerate() {
+            let row = first + i as u32;
+            for col in range.start.col..=range.end.col {
+                if let Some(raw) = self.raw.get(&CellAddress::new(row, col)) {
+                    snap.insert((i as u32, col), raw.clone());
+                }
+            }
+        }
+        // Rewrite each destination row from its source row, shifting formula
+        // sources by the row displacement (Δcol = 0) — the same arithmetic the
+        // engine applied to the cells, via `rewrite_raw_for_fill`.
+        for (new_i, &old_i) in order.iter().enumerate() {
+            let dest_row = first + new_i as u32;
+            let src_row = first + old_i;
+            let d_row =
+                (dest_row as i64 - src_row as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+            for col in range.start.col..=range.end.col {
+                let dest = CellAddress::new(dest_row, col);
+                match snap.get(&(old_i, col)) {
+                    Some(raw) => {
+                        self.raw.insert(dest, rewrite_raw_for_fill(raw, d_row, 0));
+                    }
+                    None => {
+                        self.raw.remove(&dest);
+                    }
+                }
+            }
+        }
+        true
+    }
+
     /// Copy the inclusive rectangle `start_a1`..`end_a1` into the clipboard — a
     /// whole-block copy that pastes as a unit (the sibling of [`fill`](Self::fill),
     /// which replicates one cell). Content + format are captured by the engine;
@@ -1324,5 +1397,43 @@ mod tests {
         assert!(out.contains("\"A1\""));
         assert!(out.contains("\"B1\""));
         assert!(!out.contains("\"stale\""));
+    }
+
+    #[test]
+    fn sort_range_reorders_rows_and_keeps_the_raw_echo_in_step() {
+        let mut s = SpreadsheetSession::new();
+        // A = key, B = a formula on its own row's A. Sort by A ascending; rows
+        // move and B's relative ref must shift with each row.
+        s.set_cell("A1", "30");
+        s.set_cell("A2", "10");
+        s.set_cell("A3", "20");
+        s.set_cell("B1", "=A1*2");
+        s.set_cell("B2", "=A2*2");
+        s.set_cell("B3", "=A3*2");
+        assert!(s.sort_range("A1", "B3", 1, true));
+        // Keys sorted 10,20,30.
+        assert!(s.get_value("A1").contains("10"));
+        assert!(s.get_value("A2").contains("20"));
+        assert!(s.get_value("A3").contains("30"));
+        // Each B is its row's A*2 (the moved formula's ref shifted with its row).
+        assert!(s.get_value("B1").contains("20"));
+        assert!(s.get_value("B2").contains("40"));
+        assert!(s.get_value("B3").contains("60"));
+        // The raw echo moved too: selecting B1 shows the shifted source. The
+        // printer fully-parenthesizes binary ops on re-emit (like fill's echo),
+        // so strip parens before comparing to the logical source.
+        let bare = |raw: String| raw.replace(['(', ')'], "");
+        assert_eq!(bare(s.get_raw("B1")), "=A1*2");
+        assert_eq!(bare(s.get_raw("B3")), "=A3*2");
+    }
+
+    #[test]
+    fn sort_range_rejects_bad_args() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "2");
+        s.set_cell("A2", "1");
+        assert!(!s.sort_range("nope", "A2", 1, true)); // malformed address
+        assert!(!s.sort_range("A1", "A1", 1, true)); // single-row range
+        assert!(!s.sort_range("A1", "A2", 9, true)); // key_col outside range
     }
 }

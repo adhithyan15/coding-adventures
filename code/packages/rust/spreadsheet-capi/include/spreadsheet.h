@@ -75,6 +75,16 @@ void  sc_copy(ScSession *s, const char *start, const char *end);
 void  sc_cut(ScSession *s, const char *start, const char *end);
 int   sc_paste(ScSession *s, const char *dst_start);
 
+/* Sort the rows of the inclusive rectangle start..end by the computed values in
+   key_col (a 1-based absolute column index inside the rectangle). ascending is a
+   flag (0 = descending, non-zero = ascending). Each row moves as a record; moved
+   formulas have their relative references shifted with their row, formats ride
+   along. Returns 1 when a valid sort is applied (or the range was already sorted),
+   0 for a malformed address, an out-of-range key_col, an empty/single-row range,
+   or an oversized rectangle. The host re-reads via sc_get_window afterwards. */
+int   sc_sort_range(ScSession *s, const char *start, const char *end,
+                    uint32_t key_col, int ascending);
+
 /* Save / load. sc_serialize() returns a self-contained JSON document holding the
    workbook's SOURCE (formula text + typed literals) and per-cell formats — not the
    computed values, which recompute on load (small file, can't disagree with itself).
