@@ -308,10 +308,15 @@ position. Display **formats** ride with their cells. Cells in the sorted rows bu
 After permuting, the engine rebuilds the dependency graph and recalcs the whole
 workbook in one transaction (one revision bump), logging every cell in the range
 so a viewport `changed_since` snapshot taken before the sort sees the moves. The
-range is capped at `MAX_RANGE_CELLS` (the shared DoS guard); an unknown sheet, an
-out-of-range `key_col`, or an empty/inverted/single-row range returns `false`
-(nothing to reorder). A real permutation returns `true`; an already-sorted range
-is detected and left untouched, also returning `true`.
+range is capped at `MAX_RANGE_CELLS` (the shared DoS guard).
+
+`sort_range` returns the **permutation** it applied — `Some(order)` where
+`order[new_row_offset] = old_row_offset` (0-based from `range.start.row`). This
+lets a caller that keeps its own per-cell side-table (the wasm facade's
+raw-source echo map) replay the exact row move with `rewrite_raw_for_fill`,
+rather than re-deriving the comparator. `None` is the no-op rejection (unknown
+sheet, out-of-range `key_col`, or an empty/inverted/single-row range); an
+already-sorted range returns `Some(identity)` and is left untouched.
 
 > Divergence from Excel: like `cut`, a sort shifts each moved formula's *own*
 > references by its row displacement and does **not** rewrite references that

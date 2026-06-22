@@ -918,11 +918,16 @@ impl Workbook {
     /// pasted to its new position. Display **formats** ride with their cells.
     /// Cells in the sorted rows but *outside* the column band are untouched.
     ///
-    /// Returns `false` (a no-op) for an unknown `sheet`, a `key_col` outside the
-    /// range, an empty/inverted/single-row range, or a range larger than
-    /// [`MAX_RANGE_CELLS`] (the shared DoS guard). Returns `true` once a real
-    /// permutation is applied; an already-sorted range is detected and left
-    /// untouched (no revision bump), also `true`. One recalc transaction.
+    /// Returns the **permutation** it applied: `Some(order)` where
+    /// `order[new_row_offset] = old_row_offset` (offsets are 0-based from
+    /// `range.start.row`), so a caller that keeps its own per-cell side-table —
+    /// like the wasm facade's raw-source echo map — can replay the exact same row
+    /// move with `rewrite_raw_for_fill` instead of re-deriving the comparator.
+    /// `None` is the no-op rejection (unknown `sheet`, `key_col` outside the
+    /// range, an empty/inverted/single-row range, or a range over
+    /// [`MAX_RANGE_CELLS`] — the shared DoS guard). An already-sorted range
+    /// returns `Some(identity)` and is left untouched (no revision bump). One
+    /// recalc transaction.
     ///
     /// [`fill`]: Workbook::fill
     /// [`FormulaAst::shift`]: crate::ast::FormulaAst::shift
@@ -932,20 +937,20 @@ impl Workbook {
         range: CellRange,
         key_col: u32,
         ascending: bool,
-    ) -> bool {
+    ) -> Option<Vec<u32>> {
         // Guards: unknown sheet, oversized range (DoS), key column outside the
         // range, or nothing to reorder (empty/inverted/single row).
         if self.sheets.get(sheet.0 as usize).is_none() {
-            return false;
+            return None;
         }
         if range.cell_count() > MAX_RANGE_CELLS {
-            return false;
+            return None;
         }
         if key_col < range.start.col || key_col > range.end.col {
-            return false;
+            return None;
         }
         if range.end.row <= range.start.row {
-            return false;
+            return None;
         }
 
         let first = range.start.row;
@@ -960,9 +965,10 @@ impl Workbook {
         let mut order: Vec<usize> = (0..nrows).collect();
         order.sort_by(|&a, &b| Self::compare_sort_keys(&keys[a], &keys[b], ascending));
 
-        // 2. Already in order → don't bump the revision for a no-op.
+        // 2. Already in order → don't bump the revision for a no-op, but still
+        //    report the (identity) permutation so callers branch uniformly.
         if order.iter().enumerate().all(|(new_i, &old_i)| new_i == old_i) {
-            return true;
+            return Some(order.iter().map(|&i| i as u32).collect());
         }
 
         // 3. Snapshot the whole block before writing — a permutation overwrites
@@ -1040,7 +1046,7 @@ impl Workbook {
                 self.log_change(sheet, CellAddress::new(row, col));
             }
         }
-        true
+        Some(order.iter().map(|&i| i as u32).collect())
     }
 
     /// Total order over cell values for [`sort_range`](Workbook::sort_range):
@@ -2363,7 +2369,7 @@ mod tests {
         for (r, v) in [(1, 30.0), (2, 10.0), (3, 20.0)] {
             wb.set_value(s, cell(r, 1), CellValue::Number(v));
         }
-        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true).is_some());
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(10.0)));
         assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(20.0)));
         assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(30.0)));
@@ -2376,7 +2382,7 @@ mod tests {
         for (r, v) in [(1, 1.0), (2, 3.0), (3, 2.0)] {
             wb.set_value(s, cell(r, 1), CellValue::Number(v));
         }
-        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, false));
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, false).is_some());
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(3.0)));
         assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(2.0)));
         assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(1.0)));
@@ -2394,7 +2400,7 @@ mod tests {
         wb.set_value(s, cell(2, 2), CellValue::Number(100.0)); // B2 payload
         wb.set_format(s, cell(1, 2), "#,##0.00"); // format rides with B1's record
 
-        assert!(wb.sort_range(s, rng(1, 1, 2, 2), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 2, 2), 1, true).is_some());
         // Row that had key 1 (originally row 2) is now first.
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
         assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(100.0)));
@@ -2416,7 +2422,7 @@ mod tests {
             wb.set_value(s, cell(r, 1), CellValue::Number(v));
             wb.set_formula(s, cell(r, 2), &format!("=A{r}*10")).unwrap();
         }
-        assert!(wb.sort_range(s, rng(1, 1, 3, 2), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 3, 2), 1, true).is_some());
         // Keys sorted to 1,2,3; each B is its row's A*10.
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
         assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(10.0)));
@@ -2444,7 +2450,7 @@ mod tests {
         wb.set_value(s, cell(2, 2), CellValue::Text("second".into()));
         wb.set_value(s, cell(3, 1), CellValue::Number(0.0));
         wb.set_value(s, cell(3, 2), CellValue::Text("zero".into()));
-        assert!(wb.sort_range(s, rng(1, 1, 3, 2), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 3, 2), 1, true).is_some());
         // key 0 first, then the two key-1 rows in their original order.
         assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Text("zero".into())));
         assert_eq!(wb.get_value(s, cell(2, 2)), Some(CellValue::Text("first".into())));
@@ -2458,7 +2464,7 @@ mod tests {
         for (r, t) in [(1, "banana"), (2, "Apple"), (3, "cherry")] {
             wb.set_value(s, cell(r, 1), CellValue::Text(t.into()));
         }
-        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true).is_some());
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Text("Apple".into())));
         assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Text("banana".into())));
         assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Text("cherry".into())));
@@ -2472,12 +2478,12 @@ mod tests {
         // row 2 left blank
         wb.set_value(s, cell(3, 1), CellValue::Number(1.0));
         // Ascending: 1, 5, blank.
-        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true).is_some());
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
         assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(5.0)));
         assert_eq!(wb.cell_value(s, cell(3, 1)), CellValue::Empty);
         // Descending: 5, 1, blank — the blank STILL sinks last.
-        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, false));
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 1, false).is_some());
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(5.0)));
         assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(1.0)));
         assert_eq!(wb.cell_value(s, cell(3, 1)), CellValue::Empty);
@@ -2489,7 +2495,7 @@ mod tests {
         let s = wb.add_sheet("S");
         wb.set_value(s, cell(1, 1), CellValue::Text("zzz".into()));
         wb.set_value(s, cell(2, 1), CellValue::Number(99.0));
-        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true).is_some());
         // Numbers (rank 0) sort before text (rank 1).
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(99.0)));
         assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Text("zzz".into())));
@@ -2503,7 +2509,7 @@ mod tests {
         wb.set_value(s, cell(1, 1), CellValue::Number(2.0));
         wb.set_value(s, cell(2, 1), CellValue::Number(1.0));
         wb.set_value(s, cell(1, 2), CellValue::Text("stay".into())); // B1, outside range
-        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true).is_some());
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
         assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(2.0)));
         // B1 did not move.
@@ -2517,11 +2523,11 @@ mod tests {
         let s = wb.add_sheet("S");
         wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
         // key_col outside the range → false (no-op).
-        assert!(!wb.sort_range(s, rng(1, 1, 3, 1), 5, true));
+        assert!(wb.sort_range(s, rng(1, 1, 3, 1), 5, true).is_none());
         // Single-row range → false (nothing to reorder).
-        assert!(!wb.sort_range(s, rng(1, 1, 1, 1), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 1, 1), 1, true).is_none());
         // Unknown sheet → false.
-        assert!(!wb.sort_range(SheetId(99), rng(1, 1, 3, 1), 1, true));
+        assert!(wb.sort_range(SheetId(99), rng(1, 1, 3, 1), 1, true).is_none());
     }
 
     #[test]
@@ -2532,7 +2538,7 @@ mod tests {
         wb.set_value(s, cell(2, 1), CellValue::Number(2.0));
         let before = wb.current_revision();
         // Already ascending → returns true, but makes no change / no revision bump.
-        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true).is_some());
         assert_eq!(wb.current_revision(), before);
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
         assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(2.0)));
@@ -2545,7 +2551,7 @@ mod tests {
         wb.set_value(s, cell(1, 1), CellValue::Number(2.0));
         wb.set_value(s, cell(2, 1), CellValue::Number(1.0));
         let rev = wb.current_revision();
-        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true));
+        assert!(wb.sort_range(s, rng(1, 1, 2, 1), 1, true).is_some());
         match wb.changed_since(s, rev) {
             ChangeSet::Delta { changed, .. } => {
                 assert!(changed.contains(&cell(1, 1)), "A1 moved");
@@ -2553,5 +2559,22 @@ mod tests {
             }
             ChangeSet::Stale { .. } => panic!("should be a Delta"),
         }
+    }
+
+    #[test]
+    fn sort_returns_the_applied_permutation() {
+        // Keys 30,10,20 → ascending order is the rows originally at offsets 1,2,0
+        // (values 10,20,30). The returned permutation lets a caller replay the
+        // exact move on its own side-table (the wasm facade's raw echo map).
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        for (r, v) in [(1, 30.0), (2, 10.0), (3, 20.0)] {
+            wb.set_value(s, cell(r, 1), CellValue::Number(v));
+        }
+        assert_eq!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true), Some(vec![1, 2, 0]));
+        // An already-sorted range reports the identity permutation (no change).
+        assert_eq!(wb.sort_range(s, rng(1, 1, 3, 1), 1, true), Some(vec![0, 1, 2]));
+        // A rejected sort reports None.
+        assert_eq!(wb.sort_range(s, rng(1, 1, 3, 1), 9, true), None);
     }
 }

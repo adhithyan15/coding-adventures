@@ -24,19 +24,24 @@ of the range-operation family (after `fill` and the clipboard), built on the sam
   `#REF!` — exactly as if each row were cut and pasted. Display **formats** ride
   with their cells. Cells in the sorted rows but outside the column band, and all
   cells outside the range, are untouched.
-- Returns `false` (a no-op) for an unknown sheet, a `key_col` outside the range, an
-  empty/inverted/single-row range, or a range over `MAX_RANGE_CELLS` (the shared
-  DoS guard). Returns `true` once a real permutation is applied; an already-sorted
-  range is detected and left untouched (no revision bump), also `true`. One recalc
+- Returns the **permutation** it applied — `Some(order)` where
+  `order[new_row_offset] = old_row_offset` (0-based from `range.start.row`), so a
+  caller that keeps its own per-cell side-table (the wasm facade's raw-source echo
+  map) can replay the exact row move with `rewrite_raw_for_fill` instead of
+  re-deriving the comparator. `None` is the no-op rejection (unknown sheet,
+  out-of-range `key_col`, empty/inverted/single-row range, or a range over
+  `MAX_RANGE_CELLS` — the shared DoS guard); an already-sorted range returns
+  `Some(identity)` and is left untouched (no revision bump). One recalc
   transaction; every cell in the range is logged for `changed_since`.
 - *Divergence from Excel* (documented, same class as `cut`): a sort shifts each
   moved formula's own refs by its row displacement and does not rewrite refs that
   pointed into the range from outside. Plain-data columns — the common case — sort
   exactly as expected.
-- 12 unit tests (numbers asc/desc, text case-insensitive, stable equal keys, blanks
+- 13 unit tests (numbers asc/desc, text case-insensitive, stable equal keys, blanks
   last both directions, cross-type order, record+format carry, relative-ref shift,
-  outside-band untouched, bad-args rejection, already-sorted no-op, change logging).
-  Spec §4 "Range sort". No new public types; `spreadsheet-core` → 0.10.0.
+  outside-band untouched, bad-args rejection, already-sorted no-op, change logging,
+  returned-permutation). Spec §4 "Range sort". No new public types;
+  `spreadsheet-core` → 0.10.0.
 
 ## 0.9.0
 
