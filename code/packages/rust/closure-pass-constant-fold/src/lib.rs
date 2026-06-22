@@ -558,7 +558,13 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                     }
                 }
-                // ---- single-integer-index methods: charCodeAt / charAt ----
+                // ---- single-argument string methods ----
+                //
+                // Two shapes share the one-argument arm, dispatched on the
+                // argument's literal kind:
+                //
+                //   * a NUMERIC index   → `charCodeAt` / `charAt` (below);
+                //   * a STRING needle   → `indexOf` (the `else if` further down).
                 //
                 // JS indexes a string by UTF-16 *code unit*, so we index into
                 // `encode_utf16()` (an astral char occupies two units). The
@@ -608,6 +614,39 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                                 }
                                 _ => {}
                             }
+                        }
+                    }
+                    // ---- substring search: indexOf ----
+                    //
+                    // `"haystack".indexOf("needle")` → the UTF-16 code-unit
+                    // index of the first occurrence, or `-1` when absent
+                    // (ECMAScript §22.1.3.8, the one-argument form). Both
+                    // receiver and needle must be string literals.
+                    //
+                    // Rust's `str::find` returns a *byte* offset into the UTF-8
+                    // haystack; JS reports the index in *UTF-16 code units*, so
+                    // we re-measure the matched prefix with `encode_utf16()`
+                    // (an astral char before the hit counts as two units). For
+                    // ASCII the two indices coincide; the conversion keeps
+                    // `"💩x".indexOf("x")` → `2`, matching V8. An empty needle
+                    // yields `0` (`"abc".indexOf("")` is `0`), exactly as
+                    // `str::find("")` returns `Some(0)`.
+                    //
+                    // Only the single-argument form folds; the `fromIndex`
+                    // overload (`"abc".indexOf("b", 1)`) lands in the 2-arg
+                    // arm and passes through unchanged.
+                    else if let Expression::StringLiteral(needle) = &arguments[0] {
+                        if id.name == "indexOf" {
+                            let value = match s.value.find(&needle.value) {
+                                Some(byte) => s.value[..byte].encode_utf16().count() as f64,
+                                None => -1.0,
+                            };
+                            let parent = c.cv.clone();
+                            let before =
+                                format!("\"{}\".indexOf(\"{}\")", s.value, needle.value);
+                            let after = format_js_number(value);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::Number(value), new_cv);
                         }
                     }
                 }
@@ -2809,6 +2848,71 @@ mod tests {
         let c = call1(ident("s"), "charCodeAt", num(0.0, None));
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.charCodeAt(0) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- indexOf (substring search) ------------------
+
+    #[test]
+    fn fold_index_of_found_and_not_found() {
+        // `"abcabc".indexOf("b")` → 1 (first occurrence); absent needle → -1.
+        for (hay, needle, expect) in [("abcabc", "b", 1.0), ("abc", "z", -1.0)] {
+            let c = call1(string(hay, None), "indexOf", string(needle, None));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{hay}\".indexOf(\"{needle}\") should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expect),
+                other => panic!("expected {expect}; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_index_of_empty_needle_is_zero() {
+        // JS `"abc".indexOf("")` is 0, matching Rust `str::find("")` → Some(0).
+        let c = call1(string("abc", None), "indexOf", string("", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "indexOf of the empty string should fold to 0");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_index_of_counts_utf16_units_not_bytes() {
+        // "💩" is one astral char = two UTF-16 code units (and four UTF-8
+        // bytes). `"💩x".indexOf("x")` must be 2 (UTF-16 index), NOT 1 (char
+        // index) or 4 (byte index) — proving we re-measure the prefix in
+        // UTF-16, exactly like V8.
+        let c = call1(string("💩x", None), "indexOf", string("x", None));
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (UTF-16 index); got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn index_of_with_from_index_arg_does_not_fold() {
+        // The two-argument `fromIndex` overload lands in the 2-arg arm and is
+        // left for the runtime (we only fold the single-argument form).
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abcabc", None), "indexOf")),
+            arguments: vec![string("b", None), num(2.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "two-arg indexOf(needle, fromIndex) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn index_of_on_identifier_receiver_does_not_fold() {
+        // `s.indexOf("x")` needs the runtime value of `s`.
+        let c = call1(ident("s"), "indexOf", string("x", None));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.indexOf(\"x\") must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 
