@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { Closure } from "@coding-adventures/sir-runtime-core";
+import type { Val } from "../src/index.js";
 import {
   callMethod,
   classOf,
@@ -245,12 +247,68 @@ describe("respond_to? honesty + nil floor (M1a)", () => {
     expect(callMethod([1], "respond_to?", "reverse")).toBe(true);
     expect(callMethod([1], "respond_to?", "nil?")).toBe(true);
     expect(callMethod([1], "respond_to?", "is_a?")).toBe(true);
-    expect(callMethod([1], "respond_to?", "map")).toBe(false);
+    expect(callMethod([1], "respond_to?", "map")).toBe(true); // block method (M1b)
+    expect(callMethod([1], "respond_to?", "each_slice")).toBe(false);
   });
 
   it("unknown method returns nil, never throws", () => {
+    // A block method called WITHOUT a block bottoms out at nil (v0 floor).
     expect(callMethod([1, 2, 3], "map")).toBeNull();
     expect(callMethod("hi", "upcase")).toBeNull();
     expect(callMethod(5, "times")).toBeNull();
+  });
+});
+
+describe("built-in method catalog: block-taking Array/Enumerable (M1b)", () => {
+  it("each runs the block and returns the receiver", () => {
+    const seen: Val[] = [];
+    const a = [1, 2, 3];
+    const result = callMethod(a, "each", new Closure((x: Val) => seen.push(x)));
+    expect(seen).toEqual([1, 2, 3]);
+    expect(result).toBe(a);
+  });
+
+  it("each_with_index", () => {
+    const pairs: Val[] = [];
+    callMethod(["a", "b"], "each_with_index", new Closure((x: Val, i: Val) => pairs.push([x, i])));
+    expect(pairs).toEqual([
+      ["a", 0],
+      ["b", 1],
+    ]);
+  });
+
+  it("map/collect, select/filter, reject", () => {
+    expect(callMethod([1, 2, 3], "map", new Closure((x: Val) => x * 2))).toEqual([2, 4, 6]);
+    expect(callMethod([1, 2, 3], "collect", new Closure((x: Val) => x + 1))).toEqual([2, 3, 4]);
+    expect(callMethod([1, 2, 3, 4], "select", new Closure((x: Val) => x % 2 === 0))).toEqual([2, 4]);
+    expect(callMethod([1, 2, 3, 4], "filter", new Closure((x: Val) => x > 2))).toEqual([3, 4]);
+    expect(callMethod([1, 2, 3, 4], "reject", new Closure((x: Val) => x % 2 === 0))).toEqual([1, 3]);
+  });
+
+  it("reduce/inject with and without initial", () => {
+    expect(callMethod([1, 2, 3, 4], "reduce", new Closure((a: Val, b: Val) => a + b))).toBe(10);
+    expect(callMethod([1, 2, 3], "inject", 100, new Closure((a: Val, b: Val) => a + b))).toBe(106);
+    expect(callMethod([], "reduce", new Closure((a: Val, b: Val) => a + b))).toBeNull();
+  });
+
+  it("find/detect and flat_map", () => {
+    expect(callMethod([1, 2, 3, 4], "find", new Closure((x: Val) => x > 2))).toBe(3);
+    expect(callMethod([1, 2], "detect", new Closure((x: Val) => x > 9))).toBeNull();
+    expect(callMethod([1, 2, 3], "flat_map", new Closure((x: Val) => [x, x * 10]))).toEqual([
+      1, 10, 2, 20, 3, 30,
+    ]);
+  });
+
+  it("any?/all?/none? use SIR truthiness", () => {
+    expect(callMethod([1, 2, 3], "any?", new Closure((x: Val) => x > 2))).toBe(true);
+    expect(callMethod([1, 2, 3], "any?", new Closure((x: Val) => x > 9))).toBe(false);
+    expect(callMethod([2, 4, 6], "all?", new Closure((x: Val) => x % 2 === 0))).toBe(true);
+    expect(callMethod([2, 3], "all?", new Closure((x: Val) => x % 2 === 0))).toBe(false);
+    expect(callMethod([1, 2, 3], "none?", new Closure((x: Val) => x > 9))).toBe(true);
+    expect(callMethod([1, 2, 3], "none?", new Closure((x: Val) => x > 2))).toBe(false);
+  });
+
+  it("select uses SIR truthiness (0 and '' are truthy)", () => {
+    expect(callMethod([0, 1, null, 2], "select", new Closure((x: Val) => x))).toEqual([0, 1, 2]);
   });
 });

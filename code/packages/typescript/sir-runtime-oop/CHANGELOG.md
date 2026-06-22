@@ -2,6 +2,27 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.2] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 2 — **block-taking `Array`/`Enumerable` methods**
+(per `code/specs/sir-method-dispatch.md`, item M1b):
+`each`, `each_with_index`, `map`/`collect`, `select`/`filter`, `reject`,
+`reduce`/`inject` (with/without initial), `find`/`detect`, `flat_map`,
+`any?`/`all?`/`none?`. A trailing `Closure` block is applied via
+`@coding-adventures/sir-runtime-core`'s `apply` (proc-lenient arity); predicate
+results route through SIR `truthy` (only `false`/`nil` are falsy, so `0`/`""` are
+kept). `respond_to?` now reports these method names.
+
+### Changed
+
+- Adds a dependency on **`@coding-adventures/sir-runtime-core`** (for `apply`,
+  `Closure`, `truthy`). Its transitive `sir-runtime-pairs` dep is also listed as a
+  direct dep (npm does not recursively install file deps' own file deps).
+- A block method invoked **without** a block still bottoms out at `null` (Ruby
+  returns an `Enumerator`; v0 floor, documented).
+
 ## [0.1.1] - 2026-06-22
 
 ### Added
