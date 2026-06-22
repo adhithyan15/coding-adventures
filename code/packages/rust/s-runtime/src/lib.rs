@@ -1534,6 +1534,21 @@ mod tests {
     }
 
     #[test]
+    fn date_extreme_numeric_is_na_not_overflow() {
+        // A huge / non-finite day count must become NA (the numeric counterpart to
+        // the string digit cap) — never an i64-overflow panic in the civil kernel.
+        assert_eq!(show("as.numeric(as.Date(1e300))\n"), "[1] NA");
+        assert_eq!(show("format(as.Date(1e300))\n"), "[1] NA");
+        assert_eq!(show("weekdays(as.Date(1e300))\n"), "[1] NA");
+        assert_eq!(show("format(as.Date(-1e300), \"%j\")\n"), "[1] NA");
+        // A hand-built classed "Date" with an out-of-range raw count is also safe.
+        assert_eq!(
+            show("weekdays(structure(1e300, class = \"Date\"))\n"),
+            "[1] NA"
+        );
+    }
+
+    #[test]
     fn sys_date_structure_only() {
         // Non-deterministic value: assert only its class and that it is a single
         // finite numeric — never an exact day.

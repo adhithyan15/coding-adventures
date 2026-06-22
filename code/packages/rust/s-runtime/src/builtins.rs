@@ -1629,6 +1629,33 @@ fn civil_from_days(z: i64) -> (i64, i64, i64) {
 /// far from overflow while still admitting any realistic year.
 const MAX_DATE_DIGITS: usize = 9;
 
+/// The largest magnitude (in days) we admit for a `Date`'s day count. Beyond this
+/// the civil-date kernel's internal multiplications/additions (`z + 719468`,
+/// `era * 146097`, `z - days_from_civil(y, 1, 1)`) could approach `i64` overflow,
+/// and a `weekdays`/`format` call would panic (debug) or wrap to a nonsense date
+/// (release). ±1e11 days is year ≈ ±270 million — astronomically beyond any real
+/// use — yet keeps every kernel operation comfortably inside `i64`. This is the
+/// numeric counterpart to [`MAX_DATE_DIGITS`]: the string parser caps the *year*,
+/// this caps a directly-supplied *day count* (`as.Date(1e300)`), so **neither**
+/// untrusted path can drive an out-of-range `z` into the kernel.
+const MAX_DATE_DAYS: i64 = 100_000_000_000;
+
+/// Clamp-or-reject a raw day count: `Some(z)` if it is finite and within
+/// [`MAX_DATE_DAYS`], else `None` (→ NA). Used at every boundary where an
+/// untrusted `f64` becomes a Date day count, so the civil kernel only ever sees
+/// in-range values and can never overflow.
+fn checked_date_days(v: f64) -> Option<i64> {
+    if is_na_real(v) || !v.is_finite() {
+        return None;
+    }
+    let z = v.trunc();
+    if z.abs() > MAX_DATE_DAYS as f64 {
+        None
+    } else {
+        Some(z as i64)
+    }
+}
+
 /// Is `x` a Date — a value whose (explicit) class vector contains "Date"?
 fn is_date(x: &SValue) -> bool {
     class_of(x).iter().any(|c| c == "Date")
@@ -1784,10 +1811,17 @@ fn b_as_date(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             .collect(),
         other => {
             // Numeric (or coercible) input → days since epoch, truncated to whole
-            // days (R stores Dates as doubles but they are integral here).
+            // days (R stores Dates as doubles but they are integral here). An
+            // out-of-range or non-finite count (e.g. `as.Date(1e300)`) becomes NA
+            // rather than saturating to `i64::MAX` and overflowing the kernel — the
+            // numeric counterpart to the string parser's digit cap.
             let d = other.as_double()?;
             d.iter()
-                .map(|v| if is_na_real(v) { na_real() } else { v.trunc() })
+                .map(|v| {
+                    checked_date_days(v)
+                        .map(|z| z as f64)
+                        .unwrap_or_else(na_real)
+                })
                 .collect()
         }
     };
@@ -1830,13 +1864,10 @@ fn b_format_date(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let days = x.as_double()?;
     let out: Vec<Option<String>> = days
         .iter()
-        .map(|v| {
-            if is_na_real(v) {
-                None
-            } else {
-                Some(format_date_days(v.trunc() as i64, &format))
-            }
-        })
+        // `checked_date_days` rejects NA / non-finite / out-of-range counts → NA,
+        // so an out-of-range day (e.g. a hand-built `structure(1e300, class="Date")`)
+        // can never overflow the civil kernel in `format_date_days`.
+        .map(|v| checked_date_days(v).map(|z| format_date_days(z, &format)))
         .collect();
     Ok(SValue::Character(out))
 }
@@ -1877,15 +1908,14 @@ fn b_weekdays(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let out: Vec<Option<String>> = days
         .iter()
         .map(|v| {
-            if is_na_real(v) {
-                None
-            } else {
-                let z = v.trunc() as i64;
+            // `checked_date_days` rejects NA / non-finite / out-of-range counts → NA,
+            // so `z + 4` below can never overflow (which would panic for i64::MAX).
+            checked_date_days(v).map(|z| {
                 // Day 0 = Thursday = index 4 (Sunday-based). rem_euclid keeps the
                 // index in 0..7 even for negative z (pre-epoch).
                 let idx = (z + 4).rem_euclid(7) as usize;
-                Some(NAMES[idx].to_string())
-            }
+                NAMES[idx].to_string()
+            })
         })
         .collect();
     Ok(SValue::Character(out))

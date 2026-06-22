@@ -41,9 +41,13 @@ All notable changes to this project will be documented in this file.
     era/year-of-era/day-of-era algorithms (leap years and negative dates handled).
   - **Security**: untrusted date strings parse with **bounded `i64`** digit
     accumulation (a digit cap rejects absurd years before the day arithmetic can
-    overflow); impossible days are rejected via a civil round-trip; malformed
-    input → `NA`. All weekday / day-of-year modulo uses `rem_euclid` (Rust `%`
-    can go negative on pre-epoch counts).
+    overflow); a directly-supplied numeric day count is clamped to ±1e11 days
+    (→ `NA` if out of range), so `as.Date(1e300)` cannot saturate to `i64::MAX`
+    and overflow the civil kernel — `format`/`weekdays` defend the same bound, so
+    a hand-built `structure(1e300, class="Date")` is also safe. Impossible days
+    are rejected via a civil round-trip; malformed input → `NA`. All weekday /
+    day-of-year modulo uses `rem_euclid` (Rust `%` can go negative on pre-epoch
+    counts).
   - **Deferred to R-45**: full `strptime`/`strftime` fields (`%B`/`%A`/`%H`/…);
     `POSIXct`/`POSIXlt` date-times and timezones; `seq.Date`;
     `months()`/`quarters()`; `difftime` units other than days.
