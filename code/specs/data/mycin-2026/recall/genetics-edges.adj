@@ -92,4 +92,22 @@ rulebook genetics_facts {
         source "Mutations in the dystrophin gene result in diseases known as dystrophinopathies, which encompass Duchenne muscular dystrophy, Becker muscular dystrophy, and an intermediate form."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK482346/"
         trust authoritative
+
+    % --- EXPAND: myotonic dystrophy (CTG expansion in DMPK) — one span names both --
+    % The page's defined abbreviation DM1 = myotonic dystrophy type 1; one declarative
+    % names the CTG repeat AND the DMPK gene, grounding both edges.
+    relate trinucleotide_repeat(myotonic_dystrophy, ctg)
+        source "DM1 is caused by expansion of cytosine-thymine-guanine (CTG) repeat in the 3'-untranslated region of the DM1 protein kinase (DMPK) gene on chromosome 19q13.3."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557446/"
+        trust authoritative
+    relate gene_defect(myotonic_dystrophy, dmpk)
+        source "DM1 is caused by expansion of cytosine-thymine-guanine (CTG) repeat in the 3'-untranslated region of the DM1 protein kinase (DMPK) gene on chromosome 19q13.3."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557446/"
+        trust authoritative
+
+    % --- EXPAND: Friedreich ataxia (FXN gene) ---------------------------
+    relate gene_defect(friedreich_ataxia, fxn)
+        source "Friedreich ataxia results from loss-of-function mutations in the frataxin (FXN) gene, located in the centromeric region of chromosome 9q (9q13 to 21.1)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
+        trust authoritative
 }
