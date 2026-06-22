@@ -231,14 +231,31 @@ struct InfiniteGridView: View {
     // serialized workbook here, Load restores from it. (A real app would write it
     // to a file; the demo keeps the round trip self-contained.)
     @State private var savedSnapshot = ""
+    // Drives the formula field's accent focus ring.
+    @FocusState private var formulaFocused: Bool
 
-    static let rowH: CGFloat = 22
-    static let colW: CGFloat = 80
-    static let gutterW: CGFloat = 56
-    static let headH: CGFloat = 24
+    // Roomier geometry, to match the web reference.
+    static let rowH: CGFloat = 26
+    static let colW: CGFloat = 92
+    static let gutterW: CGFloat = 64
+    static let headH: CGFloat = 28
 
-    private let line = Color(hex: 0x3F3F46)
-    private let headBg = Color(hex: 0x2D2D30)
+    // ── Design tokens ──────────────────────────────────────────────────
+    // Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc backend
+    // reads as one considered surface (dark modern spreadsheet). Same token set as
+    // the Qt / Flutter / Compose / XAML ports.
+    private let cBg = Color(hex: 0x16181D) // app / base cell
+    private let cPanel = Color(hex: 0x1B1E24) // toolbar + zebra band
+    private let cSurface = Color(hex: 0x21252C) // pill
+    private let cField = Color(hex: 0x0F1115) // formula input well
+    private let line = Color(hex: 0x2C313A) // hairline borders
+    private let lineStrong = Color(hex: 0x3A404B) // control borders
+    private let headBg = Color(hex: 0x20242B) // row/col headers
+    private let headSel = Color(hex: 0x2B3340) // header of selected row/col
+    private let ink = Color(hex: 0xE8EAED) // primary text
+    private let muted = Color(hex: 0x9AA3B2) // labels, headers
+    private let accent = Color(hex: 0x4AA3FF) // selection + focus
+    private let sel = Color(hex: 0x21344A) // selected-cell fill
 
     var body: some View {
         VStack(spacing: 0) {
@@ -256,79 +273,121 @@ struct InfiniteGridView: View {
                     }
                 }
             }
-            .background(Color(hex: 0x1E1E1E))
+            .background(cBg)
+            statusBar
+        }
+        .background(cBg)
+    }
+
+    // Hairline-separated footer: the live virtual-grid size + per-edit revision
+    // clock (mirrors the web/Qt/Flutter/Compose/XAML status lines).
+    private var statusBar: some View {
+        VStack(spacing: 0) {
+            Rectangle().fill(line).frame(height: 1)
+            HStack {
+                Text("Virtual grid: \(model.totalRows) rows × \(model.totalCols) cols  ·  revision \(model.revision)")
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundColor(muted)
+                Spacer()
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
         }
     }
 
-    // The editable formula bar for the selected cell.
+    // The editable formula bar for the selected cell: a panel holding the address
+    // pill, an `fx` marker, the source line (with an accent focus ring), and
+    // segmented button groups (drag-fill · clipboard · file · history) divided by
+    // thin rules.
     private var formulaBar: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
+            // Address pill.
             Text(model.address(model.selectedRow, model.selectedCol))
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundColor(Color(hex: 0x9D9D9D))
-                .frame(width: 56, alignment: .leading)
+                .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                .foregroundColor(ink)
+                .frame(width: 46, height: 30)
+                .background(cSurface)
+                .overlay(RoundedRectangle(cornerRadius: 5).stroke(lineStrong, lineWidth: 1))
+                .cornerRadius(5)
+            // fx marker.
+            Text("fx")
+                .font(.system(size: 12, design: .monospaced)).italic()
+                .foregroundColor(muted)
+            // Formula field — accent focus ring on edit.
             TextField("value or =SUM(A1:A4)", text: $model.formulaText)
                 .textFieldStyle(.plain)
-                .font(.system(size: 12, design: .monospaced))
-                .foregroundColor(Color(hex: 0xCCCCCC))
-                .padding(6)
-                .background(Color(hex: 0x121212))
-                .cornerRadius(3)
+                .font(.system(size: 13, design: .monospaced))
+                .foregroundColor(ink)
+                .focused($formulaFocused)
+                .padding(.horizontal, 8)
+                .frame(height: 30)
+                .frame(maxWidth: .infinity)
+                .background(cField)
+                .overlay(RoundedRectangle(cornerRadius: 5)
+                    .stroke(formulaFocused ? accent : lineStrong, lineWidth: formulaFocused ? 2 : 1))
+                .cornerRadius(5)
                 .onSubmit { model.commitFormula() }
-            // Drag-fill: replicate the selected cell into the 10 rows below it.
-            Button("Fill ↓ 10") { model.fillDown(10) }
-                .font(.system(size: 11, design: .monospaced))
+            // ── Drag-fill ──
+            Button("↓ Fill 10") { model.fillDown(10) }
                 .help("Replicate the selected cell into the 10 rows below it")
-            // Clipboard: copy/cut the selected cell, paste at the selection. The
-            // engine shifts the pasted formula's relative refs by the offset.
+            toolSep
+            // ── Clipboard ──
             Button("Copy") { model.copyCell() }
-                .font(.system(size: 11, design: .monospaced))
                 .help("Copy the selected cell to the clipboard")
             Button("Cut") { model.cutCell() }
-                .font(.system(size: 11, design: .monospaced))
                 .help("Cut the selected cell (cleared when you paste)")
             Button("Paste") { model.pasteCell() }
-                .font(.system(size: 11, design: .monospaced))
                 .help("Paste the clipboard at the selected cell, shifting relative references")
-            // Save / load: serialize the whole workbook to memory, and restore it.
+            toolSep
+            // ── File (save / load) ──
             Button("Save") { savedSnapshot = model.saveBook() }
-                .font(.system(size: 11, design: .monospaced))
                 .help("Serialize the whole workbook to memory")
             Button("Load") { if !savedSnapshot.isEmpty { model.loadBook(savedSnapshot) } }
-                .font(.system(size: 11, design: .monospaced))
                 .disabled(savedSnapshot.isEmpty)
                 .help("Restore the workbook from the last save")
-            // Undo / redo: walk the engine's snapshot history. The buttons gate
-            // off canUndo/canRedo, re-evaluated whenever `revision` (a @Published)
-            // bumps after an edit.
-            Button("Undo") { model.undoEdit() }
-                .font(.system(size: 11, design: .monospaced))
+            toolSep
+            // ── History (undo / redo). The buttons gate off canUndo/canRedo,
+            // re-evaluated whenever `revision` (a @Published) bumps after an edit.
+            Button("↶ Undo") { model.undoEdit() }
                 .disabled(!model.canUndo())
                 .help("Undo the last edit")
-            Button("Redo") { model.redoEdit() }
-                .font(.system(size: 11, design: .monospaced))
+            Button("↷ Redo") { model.redoEdit() }
                 .disabled(!model.canRedo())
                 .help("Redo the last undone edit")
         }
-        .padding(.bottom, 8)
+        .buttonStyle(ChipButtonStyle())
+        .padding(8)
+        .background(cPanel)
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(line, lineWidth: 1))
+        .cornerRadius(8)
+        .padding(.horizontal, 10)
+        .padding(.top, 10)
+        .padding(.bottom, 6)
     }
 
-    // Frozen column-letter header (pinned to the top of the scroll view).
+    // A thin vertical rule between toolbar button groups.
+    private var toolSep: some View {
+        Rectangle().fill(line).frame(width: 1, height: 22)
+    }
+
+    // Frozen column-letter header (pinned to the top of the scroll view). The
+    // selected column's header tints to the accent.
     private var headerRow: some View {
         HStack(spacing: 0) {
-            headerCell("", width: Self.gutterW)
+            headerCell("", width: Self.gutterW, selected: false)
             ForEach(1...Int(model.totalCols), id: \.self) { c in
-                headerCell(model.columnLetters(UInt32(c)), width: Self.colW)
+                headerCell(model.columnLetters(UInt32(c)), width: Self.colW,
+                           selected: c == model.selectedCol)
             }
         }
     }
 
-    private func headerCell(_ text: String, width: CGFloat) -> some View {
+    private func headerCell(_ text: String, width: CGFloat, selected: Bool) -> some View {
         Text(text)
-            .font(.system(size: 12, design: .monospaced))
-            .foregroundColor(Color(hex: 0x9D9D9D))
+            .font(.system(size: 11, weight: .semibold, design: .monospaced))
+            .foregroundColor(selected ? accent : muted)
             .frame(width: width, height: Self.headH)
-            .background(headBg)
+            .background(selected ? headSel : headBg)
             .border(line, width: 0.5)
     }
 
@@ -336,12 +395,14 @@ struct InfiniteGridView: View {
         // One engine read for the whole row; re-fetched when `revision` changes
         // (this view observes the model, so an edit re-runs it).
         let cells = model.rowCells(r)
+        let rowSelected = r == model.selectedRow
         return HStack(spacing: 0) {
+            // Gutter — the selected row's label tints to the accent.
             Text("\(r)")
-                .font(.system(size: 12, design: .monospaced))
-                .foregroundColor(Color(hex: 0x9D9D9D))
+                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                .foregroundColor(rowSelected ? accent : muted)
                 .frame(width: Self.gutterW, height: Self.rowH)
-                .background(headBg)
+                .background(rowSelected ? headSel : headBg)
                 .border(line, width: 0.5)
             ForEach(1...Int(model.totalCols), id: \.self) { c in
                 dataCell(text: c - 1 < cells.count ? cells[c - 1] : "", r: r, c: c)
@@ -351,14 +412,50 @@ struct InfiniteGridView: View {
 
     private func dataCell(text: String, r: Int, c: Int) -> some View {
         let selected = r == model.selectedRow && c == model.selectedCol
+        // Zebra: even rows take the panel tint, odd rows the base cell color.
+        let band = r % 2 == 0 ? cPanel : cBg
         return Text(text)
-            .font(.system(size: 12, design: .monospaced))
-            .foregroundColor(selected ? .white : Color(hex: 0xCCCCCC))
+            .font(.system(size: 12, weight: selected ? .semibold : .regular, design: .monospaced))
+            .foregroundColor(selected ? .white : ink)
             .frame(width: Self.colW, height: Self.rowH, alignment: .trailing)
-            .padding(.trailing, 4)
-            .background(selected ? Color(hex: 0x264F78) : Color(hex: 0x1E1E1E))
-            .border(selected ? Color(hex: 0x007ACC) : line, width: selected ? 1 : 0.5)
+            .padding(.trailing, 6)
+            .background(selected ? sel : band)
+            .border(selected ? accent : line, width: selected ? 2 : 0.5)
             .contentShape(Rectangle())
             .onTapGesture { model.select(row: r, col: c) }
+    }
+}
+
+/// A compact, modern toolbar button — a rounded chip with hover / pressed /
+/// disabled states, the SwiftUI analog of the web demo's segmented controls and
+/// the Qt port's `component ToolButton`.
+struct ChipButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        ChipLabel(configuration: configuration)
+    }
+
+    // A nested view so the chip can hold @State for hover and read @Environment
+    // for the enabled flag (a ButtonStyle struct itself can't observe either).
+    private struct ChipLabel: View {
+        let configuration: Configuration
+        @Environment(\.isEnabled) private var isEnabled
+        @State private var hover = false
+
+        var body: some View {
+            let bg: Color = configuration.isPressed ? Color(hex: 0x14171C)
+                : (hover && isEnabled ? Color(hex: 0x2B313A) : Color(hex: 0x21252C))
+            let fg: Color = !isEnabled ? Color(hex: 0x9AA3B2)
+                : (hover ? .white : Color(hex: 0xE8EAED))
+            return configuration.label
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundColor(fg)
+                .padding(.horizontal, 11)
+                .frame(height: 30)
+                .background(bg)
+                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color(hex: 0x3A404B), lineWidth: 1))
+                .cornerRadius(5)
+                .opacity(isEnabled ? 1 : 0.6)
+                .onHover { hover = $0 }
+        }
     }
 }

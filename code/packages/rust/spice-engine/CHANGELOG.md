@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+- Carry matched and unmatched `write <rawfile> <probes...>` probe inventories
+  through rawfile artifact `MatchedProbes` / `MatchedProbeList` and
+  `UnmatchedProbes` / `UnmatchedProbeList` summary columns, and keep only
+  requested matching vector columns in deterministic in-memory rawfile output,
+  matching Python and TypeScript.
+- Carry matched and unmatched `wrdata <file> <probes...>` probe inventories
+  through WRDATA artifact `MatchedProbes` / `MatchedProbeList` and
+  `UnmatchedProbes` / `UnmatchedProbeList` summary columns, matching Python and
+  TypeScript.
+- Treat explicit `wrdata <file> <probes...>` probe lists as in-memory data-file
+  column selectors in `format_deck_wrdata_ascii`, preserving the scale column
+  plus requested matching probe columns in deterministic WRDATA output,
+  matching Python and TypeScript.
+- Carry accepted `.control` rawfile/data-write option inventories through
+  WRDATA artifact `Options` / `RawfileOptionList` summary columns, and render
+  `wr_vecnames` / `wr_singlescale` intent as deterministic `VectorNames` /
+  `Scale` metadata in in-memory WRDATA data files, matching Python and
+  TypeScript.
+- Expose deterministic in-memory ASCII data-file artifacts for accepted
+  `.control` `wrdata <file> ...` markers from selected `run_deck_analysis`
+  execution results as `wrdata_artifact_count`, `wrdata_artifacts`,
+  `wrdata_artifact_table`, `wrdata_artifact_csv`, `wrdata_artifact_json`, and
+  `wrdata_artifact_records`, matching Python and TypeScript.
 - Expose deterministic in-memory ASCII rawfile artifacts for accepted
   `.control` `write <rawfile> ...` markers from selected `run_deck_analysis`
   execution results as `rawfile_artifact_count`, `rawfile_artifacts`,

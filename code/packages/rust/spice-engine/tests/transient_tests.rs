@@ -11,21 +11,22 @@ use spice_engine::{
     format_deck_rawfile_artifact_csv, format_deck_rawfile_artifact_json,
     format_deck_rawfile_artifact_table, format_deck_run_artifact_csv,
     format_deck_run_artifact_json, format_deck_run_artifact_table, format_deck_table_csv,
-    format_deck_table_json, format_deck_transient_table, format_digital_bridge_schedule_table,
-    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
-    format_fourier_table, format_measurement_table, format_pole_zero_table, format_pss_table,
-    format_transient_table, fourier, fourier_corners, fourier_transient_deck,
-    measure_transient_deck, measure_transient_delay_between_probes,
-    measure_transient_find_at_probe, measure_transient_probe, measure_transient_when_probe,
-    measure_transient_when_probe_counted, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, run_deck_analysis,
-    sample_transient_probe_as_digital_events, sample_transient_probes_as_digital_event_streams,
-    transient, transient_adaptive, transient_adaptive_corners,
-    transient_adaptive_with_digital_event_streams,
+    format_deck_table_json, format_deck_transient_table, format_deck_wrdata_artifact_csv,
+    format_deck_wrdata_artifact_json, format_deck_wrdata_artifact_table, format_deck_wrdata_ascii,
+    format_digital_bridge_schedule_table, format_digital_event_stream_table,
+    format_digital_event_table, format_distortion_table, format_fourier_table,
+    format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
+    fourier, fourier_corners, fourier_transient_deck, measure_transient_deck,
+    measure_transient_delay_between_probes, measure_transient_find_at_probe,
+    measure_transient_probe, measure_transient_when_probe, measure_transient_when_probe_counted,
+    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, run_deck_analysis, sample_transient_probe_as_digital_events,
+    sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
+    transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
     transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
     transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
@@ -1667,6 +1668,30 @@ fn text_output_tables_are_stable_for_dc_and_transient_results() {
 }
 
 #[test]
+fn deck_wrdata_ascii_selects_marker_probe_columns() {
+    let table =
+        "Index\tV(in)\tI(V1)\n0\t1.000000e+00\t-1.000000e-03\n1\t2.000000e+00\t-2.000000e-03\n";
+    assert_eq!(
+        format_deck_wrdata_ascii(
+            table,
+            &["I(V1)".to_string()],
+            &[
+                "set wr_vecnames".to_string(),
+                "set wr_singlescale".to_string()
+            ],
+        ),
+        "# SPICE deck wrdata artifact\n\
+Probes: I(V1)\n\
+Options: set wr_vecnames;set wr_singlescale\n\
+VectorNames: Index;I(V1)\n\
+Scale: Index\n\
+Index\tI(V1)\n\
+0\t-1.000000e-03\n\
+1\t-2.000000e-03\n"
+    );
+}
+
+#[test]
 fn transient_probe_measurements_are_stable() {
     let points = vec![
         TransientPoint {
@@ -2736,8 +2761,8 @@ set wr_vecnames
 set wr_singlescale
 set appendwrite
 .set WR_VECNAMES
-write out.raw V(in)
-wrdata out.dat V(in)
+write out.raw V(in) V(missing)
+wrdata out.dat V(in) V(missing)
 source other.cir
 cd /tmp
 if v(in) > 0
@@ -2758,8 +2783,8 @@ let gain = 2
     let expected_control_lines = vec![".save V(in)".to_string(), ".probe V(in)".to_string()];
     let control_line_list = expected_control_lines.join(";");
     let expected_write_markers = vec![
-        "write out.raw V(in)".to_string(),
-        "wrdata out.dat V(in)".to_string(),
+        "write out.raw V(in) V(missing)".to_string(),
+        "wrdata out.dat V(in) V(missing)".to_string(),
     ];
     let write_marker_list = expected_write_markers.join(";");
     let expected_rawfile_options = vec![
@@ -2770,6 +2795,7 @@ let gain = 2
         "set wr_vecnames".to_string(),
     ];
     let rawfile_option_list = expected_rawfile_options.join(";");
+    let rawfile_option_count = expected_rawfile_options.len().to_string();
 
     assert_eq!(execution.control_line_count, expected_control_lines.len());
     assert_eq!(execution.control_lines, expected_control_lines);
@@ -2782,9 +2808,22 @@ let gain = 2
     assert_eq!(execution.rawfile_options, expected_rawfile_options);
     assert_eq!(execution.rawfile_artifact_count, 1);
     assert_eq!(execution.rawfile_artifacts[0].target, "out.raw");
-    assert_eq!(execution.rawfile_artifacts[0].marker, "write out.raw V(in)");
-    assert_eq!(execution.rawfile_artifacts[0].probe_count, 1);
-    assert_eq!(execution.rawfile_artifacts[0].probes, vec!["V(in)"]);
+    assert_eq!(
+        execution.rawfile_artifacts[0].marker,
+        "write out.raw V(in) V(missing)"
+    );
+    assert_eq!(execution.rawfile_artifacts[0].probe_count, 2);
+    assert_eq!(
+        execution.rawfile_artifacts[0].probes,
+        vec!["V(in)", "V(missing)"]
+    );
+    assert_eq!(execution.rawfile_artifacts[0].matched_probe_count, 1);
+    assert_eq!(execution.rawfile_artifacts[0].matched_probes, vec!["V(in)"]);
+    assert_eq!(execution.rawfile_artifacts[0].unmatched_probe_count, 1);
+    assert_eq!(
+        execution.rawfile_artifacts[0].unmatched_probes,
+        vec!["V(missing)"]
+    );
     assert_eq!(
         execution.rawfile_artifacts[0].option_count,
         expected_rawfile_options.len()
@@ -2815,7 +2854,43 @@ let gain = 2
         execution.rawfile_artifact_records[0]
             .get("Marker")
             .map(String::as_str),
-        Some("write out.raw V(in)")
+        Some("write out.raw V(in) V(missing)")
+    );
+    assert_eq!(
+        execution.rawfile_artifact_records[0]
+            .get("Probes")
+            .map(String::as_str),
+        Some("2")
+    );
+    assert_eq!(
+        execution.rawfile_artifact_records[0]
+            .get("ProbeList")
+            .map(String::as_str),
+        Some("V(in);V(missing)")
+    );
+    assert_eq!(
+        execution.rawfile_artifact_records[0]
+            .get("MatchedProbes")
+            .map(String::as_str),
+        Some("1")
+    );
+    assert_eq!(
+        execution.rawfile_artifact_records[0]
+            .get("MatchedProbeList")
+            .map(String::as_str),
+        Some("V(in)")
+    );
+    assert_eq!(
+        execution.rawfile_artifact_records[0]
+            .get("UnmatchedProbes")
+            .map(String::as_str),
+        Some("1")
+    );
+    assert_eq!(
+        execution.rawfile_artifact_records[0]
+            .get("UnmatchedProbeList")
+            .map(String::as_str),
+        Some("V(missing)")
     );
     assert_eq!(
         execution.rawfile_artifact_records[0]
@@ -2841,6 +2916,126 @@ let gain = 2
     assert_eq!(
         execution.rawfile_artifact_json,
         format_deck_rawfile_artifact_json(&execution.rawfile_artifacts)
+    );
+    assert_eq!(execution.wrdata_artifact_count, 1);
+    assert_eq!(execution.wrdata_artifacts[0].target, "out.dat");
+    assert_eq!(
+        execution.wrdata_artifacts[0].marker,
+        "wrdata out.dat V(in) V(missing)"
+    );
+    assert_eq!(execution.wrdata_artifacts[0].probe_count, 2);
+    assert_eq!(
+        execution.wrdata_artifacts[0].probes,
+        vec!["V(in)", "V(missing)"]
+    );
+    assert_eq!(execution.wrdata_artifacts[0].matched_probe_count, 1);
+    assert_eq!(execution.wrdata_artifacts[0].matched_probes, vec!["V(in)"]);
+    assert_eq!(execution.wrdata_artifacts[0].unmatched_probe_count, 1);
+    assert_eq!(
+        execution.wrdata_artifacts[0].unmatched_probes,
+        vec!["V(missing)"]
+    );
+    assert_eq!(
+        execution.wrdata_artifacts[0].option_count,
+        expected_rawfile_options.len()
+    );
+    assert_eq!(
+        execution.wrdata_artifacts[0].options,
+        expected_rawfile_options
+    );
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("# SPICE deck wrdata artifact\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("Probes: V(in);V(missing)\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains(&format!("Options: {rawfile_option_list}\n")));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("VectorNames: Index;V(in)\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("Scale: Index\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("Index\tV(in)\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("0\t1.000000e+00\n"));
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("Target")
+            .map(String::as_str),
+        Some("out.dat")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("Marker")
+            .map(String::as_str),
+        Some("wrdata out.dat V(in) V(missing)")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("ProbeList")
+            .map(String::as_str),
+        Some("V(in);V(missing)")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("MatchedProbes")
+            .map(String::as_str),
+        Some("1")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("MatchedProbeList")
+            .map(String::as_str),
+        Some("V(in)")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("UnmatchedProbes")
+            .map(String::as_str),
+        Some("1")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("UnmatchedProbeList")
+            .map(String::as_str),
+        Some("V(missing)")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("Options")
+            .map(String::as_str),
+        Some(rawfile_option_count.as_str())
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("RawfileOptionList")
+            .map(String::as_str),
+        Some(rawfile_option_list.as_str())
+    );
+    let wrdata_bytes = execution.wrdata_artifacts[0].datafile.len().to_string();
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("Bytes")
+            .map(String::as_str),
+        Some(wrdata_bytes.as_str())
+    );
+    assert_eq!(
+        execution.wrdata_artifact_table,
+        format_deck_wrdata_artifact_table(&execution.wrdata_artifacts)
+    );
+    assert_eq!(
+        execution.wrdata_artifact_csv,
+        format_deck_wrdata_artifact_csv(&execution.wrdata_artifacts)
+    );
+    assert_eq!(
+        execution.wrdata_artifact_json,
+        format_deck_wrdata_artifact_json(&execution.wrdata_artifacts)
     );
     assert_eq!(execution.diagnostic_count, expected_codes.len());
     assert_eq!(execution.diagnostic_codes, expected_codes);

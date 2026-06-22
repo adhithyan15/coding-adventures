@@ -225,6 +225,84 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   reproducible under `set.seed`. Numeric and character vectors; bounded RNG draws;
   malformed named args error gracefully. (`incomparables=`/`fromLast=` on the binary
   set ops `union`/`intersect`/`setdiff` are deferred to R-32.)
+- **Binning & cross-product utilities** (R-32): the numeric-binning family, a
+  pivot away from the non-faithful R-31 deferral (base R's
+  `union`/`intersect`/`setdiff` don't take `incomparables=`/`fromLast=`).
+  **`findInterval(x, vec)`** returns, for each `x`, the 1-based index of the last
+  break in the non-decreasing `vec` not exceeding it (`0` below the first,
+  `length(vec)` at/above the last; `NA` propagates): `findInterval(c(0.5,1.5,2.5),
+  c(1,2,3))` → `c(0,1,2)`, `findInterval(5, c(1,2,3))` → `3`. **`cut(x, breaks)`**
+  bins `x` into the right-closed `(lo,hi]` intervals of the sorted `breaks` and
+  returns a real **factor** with auto-generated `"(lo,hi]"` levels, so
+  `levels()`/`as.integer()`/`as.character()`/`nlevels()` all work on the result
+  (`cut(c(1,5,10), breaks=c(0,3,6,11))` → levels `"(0,3]","(3,6]","(6,11]"` with
+  values `(0,3]`,`(3,6]`,`(6,11]`); values outside all breaks → `NA`. Built on
+  `findInterval`; allocations bounded by the already-capped input/breaks lengths;
+  missing operands error gracefully.
+- **`cut()` option completeness** (R-33): the four options deferred from R-32, all
+  layered onto the same interval scan. `labels=FALSE` returns the **integer bin
+  codes** as a plain numeric vector (not a factor); a character `labels` vector
+  becomes the levels and must match `length(breaks)-1` (else an error); absent /
+  `TRUE` keeps the auto labels. `right=FALSE` gives left-closed `[lo,hi)` intervals
+  (`"[lo,hi)"` labels), and the default `right=TRUE` scan now honours the `(lo,hi]`
+  boundary convention exactly. `include.lowest=TRUE` folds the extreme break (lowest
+  for `right=TRUE`, highest for `right=FALSE`) into the adjacent interval. A
+  single-number `breaks` is the **equal-width** form: `N` bins over the range of `x`,
+  extended by `dx/1000` each side (`dx=max-min`; degenerate `dx=0` → `abs(min)`, then
+  `1`). `N` is capped at `MAX_SEQ_LEN` before any allocation and the breaks use
+  finite/checked arithmetic, so a huge `N` or a degenerate range is rejected/handled
+  rather than over-allocating or dividing by zero. (`dig.lab=` and `ordered_result=`
+  land in R-35, below.)
+- **String utilities** (R-34): an independent string-utility family that reuses the
+  existing string machinery (`as_character`, the `Option<String>`-as-`NA`
+  convention, `SValue::Character`/`SValue::Logical`) and operates on Unicode
+  `char`s throughout — never raw byte indices — so multibyte UTF-8 input is always
+  safe. **`startsWith(x, prefix)`** / **`endsWith(x, suffix)`** are logical, recycled
+  over *both* args (`NA` → `NA`); `startsWith(c("apple","banana"),"a")` →
+  `c(TRUE,FALSE)`. **`trimws(x, which="both")`** strips leading/trailing whitespace
+  (`[ \t\r\n]`), `which ∈ {both,left,right}` (else an error). **`chartr(old,new,x)`**
+  translates characters (`old`/`new` equal `nchar`, else an error);
+  `chartr("é","e","café")` → `"cafe"`. **`strtoi(x, base=10L)`** parses integers in
+  bases 2..36 (`strtol`-style: leading whitespace + sign, `0x` prefix for base 16,
+  full-consume, `NA` for garbage / out-of-range digit / base outside 2..36), with
+  checked `i64` accumulation (overflow → `NA`, never a panic).
+  (`strtoi(base=0L)` auto-detection and a custom `trimws(whitespace=)` are deferred
+  to R-36.)
+- **Ordered factors & `cut()` label polish** (R-35): an *ordered* factor is a factor
+  whose levels carry a meaningful order — `SValue::Factor` gains an `ordered: bool`
+  field, so `class()` reports `c("ordered", "factor")` when set (and the `Levels:`
+  line prints with `<` separators). **`ordered(x, levels=, labels=)`** /
+  **`factor(x, ordered=TRUE)`** build one; **`as.ordered(x)`** coerces;
+  **`is.ordered(x)`** tests for it. The relational operators
+  (`<`, `<=`, `>`, `>=`, `==`, `!=`) between two ordered factors compare **by level
+  index** (the 1-based code), so with `levels=c("lo","mid","hi")` the element `"hi"`
+  is `>` the element `"lo"`; an `NA` code → `NA`, and differing level sets is a clean
+  error. `cut(..., ordered_result=TRUE)` makes the binned factor ordered, and
+  `cut(..., dig.lab=k)` formats break labels to `k` significant digits (default 3,
+  clamped to `1..=22` for safety — no extreme value can over-allocate or panic).
+  (Ordered-factor `sort`/`max`/`min`/`range` and `Ops.ordered` dispatch are deferred
+  to R-39.)
+- **Matrix cross products** (R-36): **`crossprod(x, y)`** = `t(x) %*% y` and
+  **`crossprod(x)`** = `t(x) %*% x` (the Gram matrix `X'X`); **`tcrossprod(x, y)`** =
+  `x %*% t(y)` and **`tcrossprod(x)`** = `x %*% t(x)` (`XX'`). The second argument
+  defaults to the first. Defined purely in terms of the existing R-11 `t()` and
+  `%*%` — the implementation calls the public `t()` builtin and the evaluator's
+  `matrix_multiply`, so it inherits that handler's `MAX_SEQ_LEN` allocation guard
+  and `"non-conformable arguments"` error (no new linear algebra, no unchecked
+  `nrow*ncol` multiply). `crossprod(matrix(c(1,2,3,4), nrow=2))` →
+  `[[5,11],[11,25]]`; `tcrossprod` of the same → `[[10,14],[14,20]]`; non-square
+  `matrix(1:6, nrow=2)` gives a 3×3 `crossprod` and 2×2 `tcrossprod`.
+- **Kronecker product** (R-38): **`kronecker(X, Y)`** — the `(m·p)×(n·q)`
+  block-outer product of an `m×n` `X` and a `p×q` `Y`, where block `(i, j)` is
+  `X[i,j] · Y` and `result[(i-1)·p+k, (j-1)·q+l] = X[i,j] · Y[k,l]`
+  (column-major). Reuses the existing matrix accessor and `SValue::Matrix`
+  constructor; a bare vector promotes to an `n×1` column. The output is
+  *quadratic* in the inputs, so the result row count `m·p`, column count `n·q`,
+  and their product are each formed with `checked_mul` and bounded by the same
+  `MAX_SEQ_LEN` cap (an over-large product errors instead of OOMing; `0×n`/`m×0`
+  inputs give an empty result, no OOB). `kronecker(matrix(c(1,2,3,4), nrow=2),
+  matrix(c(0,1,1,0), nrow=2))` is a 4×4 block matrix; `kronecker(matrix(5), Y)`
+  is `5·Y`. The R `%x%` infix alias is deferred to R-40 (grammar work).
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

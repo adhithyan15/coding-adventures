@@ -21,6 +21,9 @@ pub enum Trap {
     UnresolvedExternal(String),
     /// Execution ran longer than the step budget (runaway-loop backstop).
     StepLimitExceeded,
+    /// `div`/`idiv` by zero, or a quotient that overflows the destination — the
+    /// `#DE` divide-error fault on real hardware (carries the instruction offset).
+    DivideError(u64),
 }
 
 impl std::fmt::Display for Trap {
@@ -32,6 +35,7 @@ impl std::fmt::Display for Trap {
                 write!(f, "undecoded opcode {opcode:#04x} at {offset:#x}"),
             Trap::UnresolvedExternal(s) => write!(f, "unresolved external symbol {s:?}"),
             Trap::StepLimitExceeded => write!(f, "step limit exceeded"),
+            Trap::DivideError(a) => write!(f, "divide error (#DE) at {a:#x}"),
         }
     }
 }

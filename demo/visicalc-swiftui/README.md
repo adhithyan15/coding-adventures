@@ -104,6 +104,23 @@ they disable at the history ends via `canUndo`/`canRedo` (re-evaluated whenever
 `revision`, a `@Published`, bumps). Every edit is reversible and a restored
 formula recomputes live.
 
+### Visual design
+
+`InfiniteGridView` mirrors the **reference visual language** defined by the web
+demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend reads as one
+considered dark, modern-spreadsheet surface — the same token set the Qt, Flutter,
+Compose, and XAML ports use. The palette lives in a small set of `Color` design
+tokens at the top of the view (`cBg`/`cPanel`/`cSurface`/`line`/`ink`/`muted`/
+`accent`…), echoing the web demo's CSS custom properties. From those it builds: a
+panel-wrapped **toolbar** with an address **pill**, an italic `fx` marker, then a
+grown formula field with an accent **focus ring** (a `@FocusState`-driven 2-px
+overlay stroke); the actions are **segmented button groups** (drag-fill ·
+clipboard · file · history) — a reusable `ChipButtonStyle` with hover/pressed/
+disabled states — separated by thin rules. The grid gets subtle **zebra** row
+banding, a 2-px **accent selection ring**, and the selected cell's **row + column
+headers tint to the accent**; a hairline-separated **status footer** echoes the
+live virtual-grid size and revision.
+
 Headless proof: `Tests/VisiCalcTests/WindowedModelTests.swift` asserts the
 window is engine-computed and dense, a formula 1000 rows down (`Z1000` = 39) is
 reachable, the gaps are empty (sparse), column letters run AA/BA/BB, editing

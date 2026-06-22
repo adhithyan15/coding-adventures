@@ -2,6 +2,186 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.32.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-34 — string utilities**: an independent string-utility family reached
+  through ordinary R syntax (not part of the in-flight cut/set-ops chain). Five
+  base-R builtins, all reusing the existing string machinery (`as_character`,
+  the `Option<String>`-as-`NA` convention, `SValue::Character`/`SValue::Logical`)
+  and operating on Unicode `char`s — never raw byte indices — so multibyte UTF-8
+  input is always safe.
+  - **`startsWith(x, prefix)`** / **`endsWith(x, suffix)`** — logical vectors,
+    recycled over *both* arguments to the longer length; `NA` in either operand →
+    `NA`. `startsWith(c("apple","banana"), "a")` → `c(TRUE, FALSE)`;
+    `endsWith(c("file.txt","file.csv"), ".txt")` → `c(TRUE, FALSE)`.
+  - **`trimws(x, which = "both")`** — strip leading/trailing whitespace
+    (`[ \t\r\n]`); `which ∈ {"both","left","right"}` (second positional or
+    `which =`), invalid value → error; `NA` passes through. `trimws("  hi  ")` →
+    `"hi"`; `trimws("  hi  ", "left")` → `"hi  "`.
+  - **`chartr(old, new, x)`** — character translation; `old`/`new` must have equal
+    `nchar` (else an error). Vectorized over `x`, `NA` → `NA`, multibyte safe.
+    `chartr("abc","xyz","cab")` → `"zxy"`; `chartr("é","e","café")` → `"cafe"`.
+  - **`strtoi(x, base = 10L)`** — parse strings as integers in bases 2..36,
+    returning a numeric vector with `NA` for unparseable input. Honors leading
+    whitespace and a sign, accepts a `0x`/`0X` prefix for base 16, requires the
+    whole string to be consumed (trailing garbage → `NA`), and yields `NA` for an
+    empty string, an out-of-range digit, or a base outside 2..36.
+    `strtoi("FF", 16L)` → `255`; `strtoi("10", 2L)` → `2`;
+    `strtoi(c("7","8"), 8L)` → `c(7, NA)`.
+  - **Security**: `strtoi` parses with checked `i64` arithmetic (overflow → `NA`,
+    never a panic) and a base bounded to 2..36; `chartr`/`trimws` iterate `char`s
+    so no multibyte boundary can be split; recycling length is the bounded `max` of
+    the input lengths (length 0 when either operand is empty). No grammar change,
+    no new value type.
+  - **Deferred to R-36**: `strtoi` `base = 0L` auto-detection and a custom
+    `trimws(whitespace =)` argument.
+
+## [0.31.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-38 — `kronecker(X, Y)` (Kronecker product)**, reached through ordinary R
+  syntax. The block-outer product: for an `m×n` `X` and a `p×q` `Y`,
+  `kronecker(X, Y)` is the `(m·p)×(n·q)` matrix whose block `(i, j)` is the
+  scalar `X[i, j]` times the whole of `Y`, with
+  `result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]` (column-major).
+  - `dim(kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2)))` is
+    `c(4, 4)`; `kronecker(matrix(5), matrix(c(1,2,3,4), nrow=2))` is `5·Y` (2×2);
+    a 2×3 ⊗ 1×2 gives a 2×6 matrix. The result is a real matrix —
+    `dim()`/`nrow()`/`ncol()` work and it composes with `%*%`.
+  - **Security**: the result is quadratic in the inputs, so the row count `m·p`,
+    column count `n·q`, and their product are each formed with `checked_mul` and
+    bounded by the existing `MAX_SEQ_LEN` cap before allocating — an over-large
+    Kronecker product raises a clean "result too large" error rather than OOMing.
+    Degenerate `0×n` / `m×0` inputs give an empty result with the right zero
+    dimension and never index out of bounds.
+  - **Deferred to R-40**: the R `%x%` infix operator (`X %x% Y`) needs
+    lexer/grammar work; this item ships the `kronecker(X, Y)` function form only.
+
+## [0.30.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-35 — ordered factors & `cut()` label polish**, reached through ordinary R
+  syntax. Completes the R-33 deferral of `ordered_result =` / `dig.lab =` and adds
+  the ordered-factor family.
+  - **`ordered(x, levels =, labels =)`** / **`factor(x, ordered = TRUE)`** build an
+    ordered factor; **`as.ordered(x)`** coerces; **`is.ordered(x)`** tests for it.
+    `class(ordered(c("a","b")))` is `c("ordered", "factor")`.
+  - **Ordered comparison by level index**: with
+    `f <- ordered(c("lo","hi","mid"), levels = c("lo","mid","hi"))`,
+    `f[1] < f[2]` (lo < hi) is `TRUE` and `f[2] < f[3]` (hi < mid) is `FALSE` —
+    comparison is by the level position, not the label string. All six relational
+    operators are supported; an `NA` code yields `NA`; comparing ordered factors
+    with different level sets is an error.
+  - **`cut(..., ordered_result = TRUE)`** returns an ordered factor (its bins
+    compare by interval order); **`cut(..., dig.lab = k)`** formats break labels to
+    `k` significant digits (default 3), e.g.
+    `levels(cut(c(1.23456, 5.6789), breaks = c(0, 3.14159, 10), dig.lab = 2))` →
+    `c("(0,3.1]", "(3.1,10]")`. (`ordered_result` is an R-only spelling — the S
+    lexer reads `_` as assignment.)
+  - **Security**: ordered comparison works on integer codes only (out-of-range / NA
+    → NA, never a panic) and rejects differing level sets; `dig.lab` is clamped to
+    `1..=22` before formatting, so no extreme value can over-allocate or panic. No
+    new unbounded multiplier.
+  - **Deferred to R-39**: `Ops.ordered` group-generic dispatch and ordered-factor
+    `sort`/`max`/`min`/`range`.
+
+## [0.29.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-36 — matrix cross products**: `crossprod` and `tcrossprod`, reached through
+  ordinary R syntax. An independent matrix-algebra item, defined **entirely in
+  terms of the existing R-11 `t()` transpose and `%*%` matrix product** — no new
+  linear algebra, no new value type, no grammar change.
+  - **`crossprod(x, y)`** = `t(x) %*% y`; **`crossprod(x)`** = `t(x) %*% x`
+    (the Gram matrix `X'X`). **`tcrossprod(x, y)`** = `x %*% t(y)`;
+    **`tcrossprod(x)`** = `x %*% t(x)` (`XX'`). The second argument defaults to the
+    first.
+  - `crossprod(matrix(c(1,2,3,4), nrow=2))` → `[[5,11],[11,25]]`;
+    `tcrossprod(...)` of the same → `[[10,14],[14,20]]`. Non-square
+    `B = matrix(1:6, nrow=2)`: `dim(crossprod(B))` is `c(3,3)`,
+    `dim(tcrossprod(B))` is `c(2,2)`. A non-conformable pair (e.g.
+    `crossprod(A, matrix(1:6, nrow=3))`) raises the same `"non-conformable
+    arguments"` error `%*%` raises.
+  - **Security**: no new user-controlled multiplier — the impl reuses the `%*%`
+    handler's existing `MAX_SEQ_LEN` allocation guard and conformability check, so
+    there is no unchecked `nrow*ncol` multiply and no out-of-bounds path; the new
+    code is just two argument-shuffling wrappers.
+
+## [0.28.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-33 — `cut()` option completeness**: the four options deferred from R-32,
+  reached through ordinary R syntax. All extend the R-32 `cut` handler in place
+  (same `findInterval`-backed scan, same factor builder); no new value type, no
+  grammar change.
+  - **`labels =`** — `labels = FALSE` returns the **integer bin codes** as a plain
+    numeric vector (NOT a factor): `cut(c(1, 2, 5), breaks = c(0, 3, 6), labels =
+    FALSE)` → `c(1, 1, 2)`, `class(...)` is `"numeric"`. A character `labels`
+    vector is used verbatim as the factor levels and **must** have length
+    `length(breaks) - 1`, else a clean error (`lengths of 'breaks' and 'labels'
+    differ`): `cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c("lo", "mid",
+    "hi"))` → a factor with levels `c("lo", "mid", "hi")`. Absent / `labels = TRUE`
+    keeps the auto-generated interval labels.
+  - **`right = FALSE`** — left-closed `[lo, hi)` intervals instead of the default
+    right-closed `(lo, hi]`; auto-labels become `"[lo,hi)"`. `cut(c(1, 3), breaks =
+    c(0, 3, 6), right = FALSE)` → `1 ∈ [0,3)`, `3 ∈ [3,6)`. (The interval scan also
+    now honours the boundary convention exactly: under the default `right = TRUE`,
+    `x` equal to an interior break lands in the *lower* `(lo,hi]` interval.)
+  - **`include.lowest = TRUE`** — fold the extreme break into the adjacent interval:
+    the lowest break (`right = TRUE`) or the highest (`right = FALSE`), so that
+    boundary value bins instead of going `NA`. `cut(c(0, 1, 2), breaks = c(0, 1, 2),
+    include.lowest = TRUE)` → `0` lands in the first interval.
+  - **integer `breaks`** — a single number `N` requests `N` equal-width bins over
+    the range of `x`, with the range extended by `dx/1000` on each side
+    (`dx = max - min`; a degenerate all-equal `x` falls back to `abs(min)`, then
+    `1`). `cut(0:10, breaks = 5)` → a factor with 5 levels covering the extended
+    `0..10` range; every value gets a non-`NA` bin. (Note: `cut(x, breaks = c(5))`
+    is now this equal-width form, matching base R, rather than "fewer than two
+    breaks → all `NA`".)
+  - **Security**: `N` is capped at `MAX_SEQ_LEN` **before** any break/level vector
+    is built (a huge `N` errors, not allocates); the equal-width breaks use
+    finite/checked arithmetic so a degenerate range never divides by zero; the
+    `labels` length check returns a clean `Err` (never panics); `labels = FALSE`
+    allocates no factor. No new user-controlled multiplier.
+  - **Deferred to R-34**: `dig.lab=` (auto-label significant digits) and
+    `ordered_result=` (an ordered factor result).
+
+## [0.27.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-32 — binning & cross-product utilities**: the numeric-binning family,
+  reached through ordinary R syntax. A pivot away from the thin R-31 deferral of
+  `incomparables=`/`fromLast=` on the binary set ops (`union`/`intersect`/`setdiff`)
+  — base R does not accept those arguments there, so implementing them would be
+  non-faithful. All build on the existing factor value and `MAX_SEQ_LEN` cap; no new
+  value type, no grammar change.
+  - **`findInterval(x, vec)`** — 1-based index of the last break in the
+    non-decreasing `vec` not exceeding each `x`; `0` below the first,
+    `length(vec)` at/above the last; `NA`/non-finite `x` → `NA`.
+    `findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))` → `c(0, 1, 2)`;
+    `findInterval(5, c(1, 2, 3))` → `3`.
+  - **`cut(x, breaks)`** — bins `x` into the right-closed `(lo,hi]` intervals of
+    the sorted `breaks`, returning a real **factor**. `class(cut(...))` is
+    `"factor"`, `levels()` are the `"(lo,hi]"` labels, and `as.character()` /
+    `as.integer()` / `nlevels()` all see through to it. Values outside all breaks
+    (or `NA`) become `NA` factor codes. `cut(c(1, 5, 10), breaks = c(0, 3, 6, 11))`
+    → a factor with levels `c("(0,3]", "(3,6]", "(6,11]")` and values `(0,3]`,
+    `(3,6]`, `(6,11]`; `cut(c(-1, 20), breaks = c(0, 3, 6, 11))` → both `NA`.
+  - **Security**: no new user-controlled multiplier; `cut` allocations are bounded
+    by the already-capped input/breaks lengths; `findInterval` is `O(len(x)·len(vec))`
+    with both capped; `tabulate`'s `nbins` cap is unchanged; the `vec=`/`breaks=`
+    readers reject a missing operand with a clean error (never panic); no path
+    indexes out of bounds.
+  - **Deferred to R-33**: `cut`'s `labels=`, `right=FALSE`, `include.lowest=`, and
+    integer `breaks`.
+
 ## [0.26.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)

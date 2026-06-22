@@ -116,6 +116,17 @@ pub fn exec_one(
             st.set(*dst, v & 0xFF);
             Ok(Flow::Next)
         }
+        Instr::MovByteStore { dst, src } => {
+            // Store the low byte of `src` into `dst`.  For a register `dst` only
+            // the low 8 bits change (the rest are preserved); for memory it is a
+            // single-byte store.
+            let b = st.get(*src) & 0xFF;
+            match dst {
+                Operand::Reg(r) => { let v = (st.get(*r) & !0xFF) | b; st.set(*r, v); }
+                Operand::Mem { .. } => write_op(st, mem, dst, next_ip, 1, b)?,
+            }
+            Ok(Flow::Next)
+        }
         Instr::Lea { dst, src } => {
             let a = effective_addr(st, src, next_ip);
             st.set(*dst, a);
@@ -148,6 +159,69 @@ pub fn exec_one(
             let a = st.get(*dst);
             let b = read_op(st, mem, src, next_ip, 8)?;
             st.set(*dst, a.wrapping_mul(b));
+            Ok(Flow::Next)
+        }
+        Instr::Not { dst } => {
+            // Bitwise complement; `not` does NOT touch flags (unlike `neg`).
+            let v = read_op(st, mem, dst, next_ip, 8)?;
+            write_op(st, mem, dst, next_ip, 8, !v)?;
+            Ok(Flow::Next)
+        }
+        Instr::Neg { dst } => {
+            // Two's-complement negate == `sub 0, dst`, including its flag effects.
+            let v = read_op(st, mem, dst, next_ip, 8)?;
+            let (res, flags) = sub_with_flags(0, v);
+            st.flags = flags;
+            write_op(st, mem, dst, next_ip, 8, res)?;
+            Ok(Flow::Next)
+        }
+        Instr::Cqo => {
+            // Sign-extend rax into rdx: rdx becomes all-ones iff rax is negative.
+            let hi = if (st.get(Reg::Rax) as i64) < 0 { u64::MAX } else { 0 };
+            st.set(Reg::Rdx, hi);
+            Ok(Flow::Next)
+        }
+        Instr::Div { divisor, signed } => {
+            let d = read_op(st, mem, divisor, next_ip, 8)?;
+            if d == 0 {
+                return Err(Trap::DivideError(instr_off as u64));
+            }
+            let lo = st.get(Reg::Rax);
+            let hi = st.get(Reg::Rdx);
+            // The dividend is the 128-bit `rdx:rax` pair.
+            let dividend = ((hi as u128) << 64) | (lo as u128);
+            let (quot, rem) = if *signed {
+                // The 128-bit `rdx:rax` pattern interpreted as a signed integer.
+                let n = dividend as i128;
+                let divisor_i = d as i64 as i128;
+                // `checked_div`/`checked_rem` return `None` exactly on the one
+                // overflowing case `i128::MIN / -1` (divide-by-zero is already
+                // excluded above).  That case is unreachable from real backend
+                // output (it always `cqo`s, so `rdx:rax` sign-extends a 64-bit
+                // value), but a crafted register state could hit it — so trap
+                // rather than panic, keeping the sandbox fail-closed.
+                let (q, r) = match (n.checked_div(divisor_i), n.checked_rem(divisor_i)) {
+                    (Some(q), Some(r)) => (q, r),
+                    _ => return Err(Trap::DivideError(instr_off as u64)),
+                };
+                // x86 also raises `#DE` when the quotient doesn't fit the 64-bit
+                // dest (e.g. `i64::MIN / -1` ⇒ +2^63).
+                if q < i64::MIN as i128 || q > i64::MAX as i128 {
+                    return Err(Trap::DivideError(instr_off as u64));
+                }
+                (q as u64, r as u64)
+            } else {
+                let divisor_u = d as u128;
+                let q = dividend / divisor_u;
+                let r = dividend % divisor_u;
+                // Unsigned `#DE` when the quotient overflows 64 bits.
+                if q > u64::MAX as u128 {
+                    return Err(Trap::DivideError(instr_off as u64));
+                }
+                (q as u64, r as u64)
+            };
+            st.set(Reg::Rax, quot);
+            st.set(Reg::Rdx, rem);
             Ok(Flow::Next)
         }
         // ── SSE2 scalar double ────────────────────────────────────────────────
@@ -239,4 +313,135 @@ fn apply_alu(st: &mut CpuState, mem: &mut Memory, op: AluOp, dst: &Operand, next
         write_op(st, mem, dst, next_ip, 8, res)?;
     }
     Ok(Flow::Next)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Run a single register-only instruction against a fresh CPU and return the
+    /// mutated state.  A tiny scratch `Memory` satisfies the signature; these ops
+    /// never touch it.
+    fn exec(st: &mut CpuState, ins: &Instr) -> Result<Flow, Trap> {
+        let mut mem = Memory::new(64, 0, 0);
+        exec_one(st, &mut mem, ins, 0, 0, 0)
+    }
+
+    #[test]
+    fn not_complements_without_touching_flags() {
+        let mut st = CpuState::default();
+        st.set(Reg::Rax, 0);
+        st.flags = Flags { zf: true, cf: true, ..Flags::default() };
+        exec(&mut st, &Instr::Not { dst: Operand::Reg(Reg::Rax) }).unwrap();
+        assert_eq!(st.get(Reg::Rax), u64::MAX); // ~0
+        // `not` must leave flags untouched (unlike `neg`).
+        assert!(st.flags.zf && st.flags.cf);
+    }
+
+    #[test]
+    fn neg_negates_and_sets_flags() {
+        let mut st = CpuState::default();
+        st.set(Reg::Rax, 5);
+        exec(&mut st, &Instr::Neg { dst: Operand::Reg(Reg::Rax) }).unwrap();
+        assert_eq!(st.get(Reg::Rax) as i64, -5);
+        // neg of a non-zero value sets CF (it is `sub 0, x`).
+        assert!(st.flags.cf);
+        // neg 0 ⇒ 0, ZF set, CF clear.
+        st.set(Reg::Rax, 0);
+        exec(&mut st, &Instr::Neg { dst: Operand::Reg(Reg::Rax) }).unwrap();
+        assert_eq!(st.get(Reg::Rax), 0);
+        assert!(st.flags.zf && !st.flags.cf);
+    }
+
+    #[test]
+    fn cqo_sign_extends_rax_into_rdx() {
+        let mut st = CpuState::default();
+        st.set(Reg::Rax, (-7i64) as u64);
+        exec(&mut st, &Instr::Cqo).unwrap();
+        assert_eq!(st.get(Reg::Rdx), u64::MAX); // negative ⇒ all ones
+        st.set(Reg::Rax, 7);
+        exec(&mut st, &Instr::Cqo).unwrap();
+        assert_eq!(st.get(Reg::Rdx), 0); // non-negative ⇒ zero
+    }
+
+    #[test]
+    fn unsigned_div_yields_quotient_and_remainder() {
+        // rdx:rax = 17, rcx = 5 ⇒ rax=3, rdx=2.
+        let mut st = CpuState::default();
+        st.set(Reg::Rdx, 0);
+        st.set(Reg::Rax, 17);
+        st.set(Reg::Rcx, 5);
+        exec(&mut st, &Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: false }).unwrap();
+        assert_eq!(st.get(Reg::Rax), 3);
+        assert_eq!(st.get(Reg::Rdx), 2);
+    }
+
+    #[test]
+    fn signed_idiv_handles_negatives() {
+        // -17 / 5 ⇒ quotient -3, remainder -2 (truncated toward zero).
+        let mut st = CpuState::default();
+        st.set(Reg::Rax, (-17i64) as u64);
+        exec(&mut st, &Instr::Cqo).unwrap(); // sign-extend into rdx
+        st.set(Reg::Rcx, 5);
+        exec(&mut st, &Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: true }).unwrap();
+        assert_eq!(st.get(Reg::Rax) as i64, -3);
+        assert_eq!(st.get(Reg::Rdx) as i64, -2);
+    }
+
+    #[test]
+    fn divide_by_zero_traps() {
+        let mut st = CpuState::default();
+        st.set(Reg::Rax, 1);
+        st.set(Reg::Rcx, 0);
+        let err = exec(&mut st, &Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: false }).unwrap_err();
+        assert!(matches!(err, Trap::DivideError(_)));
+    }
+
+    #[test]
+    fn signed_overflow_div_traps() {
+        // i64::MIN / -1 overflows the quotient ⇒ #DE, like real hardware.
+        let mut st = CpuState::default();
+        st.set(Reg::Rax, i64::MIN as u64);
+        exec(&mut st, &Instr::Cqo).unwrap();
+        st.set(Reg::Rcx, (-1i64) as u64);
+        let err = exec(&mut st, &Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: true }).unwrap_err();
+        assert!(matches!(err, Trap::DivideError(_)));
+    }
+
+    #[test]
+    fn i128_min_dividend_div_neg1_traps_not_panics() {
+        // A *crafted* rdx:rax = i128::MIN (rdx top bit set, rax = 0) divided by
+        // -1 overflows the i128 division itself — must trap, never panic. (Real
+        // backend output can't reach this because it always `cqo`s first; this
+        // guards the sandbox against arbitrary register state.)
+        let mut st = CpuState::default();
+        st.set(Reg::Rdx, 0x8000_0000_0000_0000);
+        st.set(Reg::Rax, 0);
+        st.set(Reg::Rcx, (-1i64) as u64);
+        let err = exec(&mut st, &Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: true }).unwrap_err();
+        assert!(matches!(err, Trap::DivideError(_)));
+    }
+
+    #[test]
+    fn byte_store_to_register_keeps_upper_bytes() {
+        // `mov r/m8, r8` into a register touches only the low byte.
+        let mut st = CpuState::default();
+        st.set(Reg::Rax, 0xDEAD_BEEF_0000_00FF);
+        st.set(Reg::Rcx, 0x42);
+        exec(&mut st, &Instr::MovByteStore { dst: Operand::Reg(Reg::Rax), src: Reg::Rcx }).unwrap();
+        assert_eq!(st.get(Reg::Rax), 0xDEAD_BEEF_0000_0042); // only low byte changed
+    }
+
+    #[test]
+    fn byte_store_to_memory_writes_one_byte() {
+        let mut st = CpuState::default();
+        let mut mem = Memory::new(64, 0, 0);
+        st.set(Reg::Rax, 8); // address
+        st.set(Reg::Rcx, 0x1_2345); // only 0x45 should land
+        mem.store(8, 8, 0xFFFF_FFFF_FFFF_FFFF).unwrap(); // pre-fill the word
+        let dst = Operand::Mem { base: Some(Reg::Rax), index: None, scale: 1, disp: 0, rip: false };
+        exec_one(&mut st, &mut mem, &Instr::MovByteStore { dst, src: Reg::Rcx }, 0, 0, 0).unwrap();
+        assert_eq!(mem.load(8, 1).unwrap(), 0x45); // single byte written
+        assert_eq!(mem.load(9, 1).unwrap(), 0xFF); // neighbour untouched
+    }
 }

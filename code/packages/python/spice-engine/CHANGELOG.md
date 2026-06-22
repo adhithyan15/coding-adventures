@@ -4,6 +4,40 @@
 
 ### Added
 
+- **Deck rawfile probe inventory artifacts** —
+  selected `run_deck_analysis()` rawfile artifact summaries now carry
+  `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /
+  `UnmatchedProbeList` columns, and `write <rawfile> <probes...>` artifacts now
+  keep only requested matching vector columns in deterministic in-memory
+  rawfile output, matching Rust and TypeScript.
+
+- **Deck WRDATA unmatched probe artifacts** —
+  selected `run_deck_analysis()` WRDATA artifact summaries now carry
+  `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /
+  `UnmatchedProbeList` columns so ignored `wrdata` probe names remain
+  auditable in stable table, CSV, JSON, and record exports, matching Rust and
+  TypeScript.
+
+- **Deck WRDATA probe column artifacts** —
+  `format_deck_wrdata_ascii()` now treats explicit `wrdata <file> <probes...>`
+  probe lists as data-file column selectors, preserving the scale column plus
+  requested matching probe columns in deterministic WRDATA output, matching
+  Rust and TypeScript.
+
+- **Deck WRDATA rawfile option rendering artifacts** —
+  selected `run_deck_analysis()` WRDATA artifacts now carry accepted
+  `.control` rawfile/data-write option inventories through stable
+  `Options` / `RawfileOptionList` summary columns and render
+  `wr_vecnames` / `wr_singlescale` intent as deterministic `VectorNames` /
+  `Scale` metadata in the in-memory data file, matching Rust and TypeScript.
+
+- **Deck WRDATA ASCII artifacts** —
+  selected `run_deck_analysis()` executions now expose deterministic in-memory
+  ASCII data-file artifacts for accepted `.control` `wrdata <file> ...`
+  markers as `wrdata_artifact_count`, `wrdata_artifacts`,
+  `wrdata_artifact_table`, `wrdata_artifact_csv`, `wrdata_artifact_json`, and
+  `wrdata_artifact_records`, matching Rust and TypeScript.
+
 - **Deck rawfile ASCII artifacts** —
   selected `run_deck_analysis()` executions now expose deterministic in-memory
   ASCII rawfile artifacts for accepted `.control` `write <rawfile> ...`

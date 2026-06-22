@@ -1668,11 +1668,15 @@ pub enum SmartHomeTool {
     PollEvents,
     Unsubscribe,
     ListSubscriptions,
+    ListEventDeliveryAudit,
+    GetEventDeliveryAuditSummary,
     InspectEventLog,
     ListCommandResults,
     GetCommandResultSummary,
     ListCommandRiskAudit,
     GetCommandRiskAuditSummary,
+    ListAuthorizationGapAudit,
+    GetAuthorizationGapAuditSummary,
     ListAuthorizationDecisions,
     GetAuthorizationSummary,
     ListCapabilityGrants,
@@ -1682,6 +1686,12 @@ pub enum SmartHomeTool {
     ListDesiredStates,
     ListDesiredStateDriftAudit,
     GetDesiredStateDriftAuditSummary,
+    ListStateTransitionAudit,
+    GetStateTransitionAuditSummary,
+    ListSupervisionRemediation,
+    GetSupervisionRemediationSummary,
+    ListRuntimeMaintenanceWindows,
+    GetRuntimeMaintenanceWindowSummary,
     SetDesiredState,
     ClearDesiredState,
     ListPairingSessions,
@@ -2347,6 +2357,12 @@ impl SmartHomeTool {
             Self::GetCommandRiskAuditSummary => {
                 read_tool("smart_home.get_command_risk_audit_summary")
             }
+            Self::ListAuthorizationGapAudit => {
+                read_tool("smart_home.list_authorization_gap_audit")
+            }
+            Self::GetAuthorizationGapAuditSummary => {
+                read_tool("smart_home.get_authorization_gap_audit_summary")
+            }
             Self::ListAuthorizationDecisions => {
                 read_tool("smart_home.list_authorization_decisions")
             }
@@ -2361,6 +2377,26 @@ impl SmartHomeTool {
             }
             Self::GetDesiredStateDriftAuditSummary => {
                 read_tool("smart_home.get_desired_state_drift_audit_summary")
+            }
+            Self::ListEventDeliveryAudit => read_tool("smart_home.list_event_delivery_audit"),
+            Self::GetEventDeliveryAuditSummary => {
+                read_tool("smart_home.get_event_delivery_audit_summary")
+            }
+            Self::ListStateTransitionAudit => read_tool("smart_home.list_state_transition_audit"),
+            Self::GetStateTransitionAuditSummary => {
+                read_tool("smart_home.get_state_transition_audit_summary")
+            }
+            Self::ListSupervisionRemediation => {
+                read_tool("smart_home.list_supervision_remediation")
+            }
+            Self::GetSupervisionRemediationSummary => {
+                read_tool("smart_home.get_supervision_remediation_summary")
+            }
+            Self::ListRuntimeMaintenanceWindows => {
+                read_tool("smart_home.list_runtime_maintenance_windows")
+            }
+            Self::GetRuntimeMaintenanceWindowSummary => {
+                read_tool("smart_home.get_runtime_maintenance_window_summary")
             }
             Self::SetDesiredState => ToolDescriptor {
                 tool_id: "smart_home.set_desired_state",
@@ -3140,6 +3176,8 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetCommandResultSummary,
         SmartHomeTool::ListCommandRiskAudit,
         SmartHomeTool::GetCommandRiskAuditSummary,
+        SmartHomeTool::ListAuthorizationGapAudit,
+        SmartHomeTool::GetAuthorizationGapAuditSummary,
         SmartHomeTool::ListAuthorizationDecisions,
         SmartHomeTool::GetAuthorizationSummary,
         SmartHomeTool::ListCapabilityGrants,
@@ -3149,6 +3187,14 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::ListDesiredStates,
         SmartHomeTool::ListDesiredStateDriftAudit,
         SmartHomeTool::GetDesiredStateDriftAuditSummary,
+        SmartHomeTool::ListEventDeliveryAudit,
+        SmartHomeTool::GetEventDeliveryAuditSummary,
+        SmartHomeTool::ListStateTransitionAudit,
+        SmartHomeTool::GetStateTransitionAuditSummary,
+        SmartHomeTool::ListSupervisionRemediation,
+        SmartHomeTool::GetSupervisionRemediationSummary,
+        SmartHomeTool::ListRuntimeMaintenanceWindows,
+        SmartHomeTool::GetRuntimeMaintenanceWindowSummary,
         SmartHomeTool::SetDesiredState,
         SmartHomeTool::ClearDesiredState,
         SmartHomeTool::ListPairingSessions,
@@ -3955,7 +4001,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 248);
+        assert_eq!(catalog.len(), 258);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_command_risk_audit"
@@ -3963,6 +4009,47 @@ mod tests {
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
             == "smart_home.list_desired_state_drift_audit"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(
+            |tool| tool.tool_id == "smart_home.list_event_delivery_audit"
+                && tool.side_effects == ToolSideEffects::Read
+                && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]
+        ));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_event_delivery_audit_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_state_transition_audit"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_state_transition_audit_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_authorization_gap_audit"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_authorization_gap_audit_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_supervision_remediation"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_supervision_remediation_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_runtime_maintenance_windows"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_runtime_maintenance_window_summary"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog
@@ -4931,15 +5018,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 248);
-        assert_eq!(summary.read_tools, 240);
+        assert_eq!(summary.total_tools, 258);
+        assert_eq!(summary.read_tools, 250);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 240);
+        assert_eq!(summary.read_only_tier_tools, 250);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 248);
+        assert_eq!(summary.total_required_capabilities, 258);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());

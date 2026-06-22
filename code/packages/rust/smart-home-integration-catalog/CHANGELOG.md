@@ -176,6 +176,33 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidence`
   and summary helpers for preserving clearance action evidence lineage across
   blocker, operator, review, and release lanes.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReview`
+  and summary helpers for classifying clearance action evidence into blocker,
+  operator, review, lineage, and release-ready outcomes.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDisposition`
+  and summary helpers for routing clearance action evidence reviews into
+  repair, operator, review, lineage, and release-ready disposition rows.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionAction`
+  and summary helpers for turning clearance evidence-review dispositions into
+  repair, operator, review, lineage, and release handoff actions.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlot`
+  and summary helpers for sequencing disposition actions into release handoff
+  execution slots.
+- `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReviewDispositionActionReadinessSummary`
+  and helpers for combining disposition readiness with disposition-action
+  counts and next action pointers.
+- `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlotReadinessSummary`
+  and helpers for combining disposition-action readiness with slot counts and
+  next slot pointers.
+- `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReviewDispositionReadinessSummary`
+  and helpers for combining clearance evidence-review readiness with
+  disposition outcomes.
+- `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReadinessSummary`
+  and helpers for combining clearance action readiness with evidence lineage
+  state.
+- `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReviewReadinessSummary`
+  and helpers for combining clearance action evidence readiness with
+  evidence-review outcomes.
 - `IntegrationMeshReleaseTicketHandoffWorkOrderGuardrailReadinessSummary` and
   helpers for combining work-order readiness with handoff guardrail state.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditReadinessSummary` and

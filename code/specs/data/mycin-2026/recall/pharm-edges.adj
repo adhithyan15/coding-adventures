@@ -110,4 +110,71 @@ rulebook pharm_facts {
         source "Oral vitamin K lowers the international normalized ratio more rapidly than subcutaneous vitamin K in the treatment of warfarin-associated coagulopathy."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK557622/"
         trust authoritative
+
+    % --- EXPAND: atropine is the primary treatment for organophosphate poisoning ----
+    relate antidote_for(organophosphate_poisoning, atropine)
+        source "The primary treatment for organophosphate poisoning involves atropine, which competes with acetylcholine at the muscarinic receptors."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470430/"
+        trust authoritative
+
+    % --- EXPAND: fomepizole is the antidote of choice for toxic alcohol poisoning --
+    relate antidote_for(toxic_alcohol_poisoning, fomepizole)
+        source "Fomepizole is the antidote of choice for patients who present early after toxic alcohol exposure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482121/"
+        trust authoritative
+
+    % --- EXPAND: hydroxocobalamin is the antidote for cyanide poisoning ------------
+    relate antidote_for(cyanide_poisoning, hydroxocobalamin)
+        source "Hydroxocobalamin can serve as an antidote for cyanide poisoning."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557632/"
+        trust authoritative
+
+    % --- EXPAND: leucovorin (folinic acid) rescues methotrexate toxicity -----------
+    relate antidote_for(methotrexate_toxicity, leucovorin)
+        source "Leucovorin is FDA indicated after high dose methotrexate therapy in osteosarcoma to decrease the toxic effects of methotrexate or counter the toxic effects of folate antagonists."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553114/"
+        trust authoritative
+
+    % --- EXPAND: deferoxamine chelates iron in iron toxicity -----------------------
+    relate antidote_for(iron_toxicity, deferoxamine)
+        source "Deferoxamine, a chelating agent that can remove iron from tissues and free iron from plasma, is indicated in patients with systemic toxicity, metabolic acidosis, worsening symptoms, or a serum iron level predictive of moderate or severe toxicity."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459224/"
+        trust authoritative
+    % --- EXPAND: glucagon is the treatment of choice for beta-blocker overdose -----
+    relate antidote_for(beta_blocker_overdose, glucagon)
+        source "Although there have been no controlled trials to prove the efficacy of glucagon in poisoning beta-blocker overdose, glucagon is considered as a useful treatment of choice."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448097/"
+        trust authoritative
+
+    % --- EXPAND: methylene blue is the FDA-approved treatment for methemoglobinemia -
+    relate antidote_for(methemoglobinemia, methylene_blue)
+        source "Methylene blue is approved by the Food and Drug Administration (FDA) as a treatment for acquired methemoglobinemia, a condition in which hemoglobin iron is oxidized from the ferrous (Fe2+) to ferric (Fe3+) state."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557593/"
+        trust authoritative
+
+    % --- EXPAND: succimer (DMSA) chelates lead in lead poisoning -------------------
+    relate antidote_for(lead_poisoning, succimer)
+        source "A variety of chelating agents alone or in combination can be used depending on the severity of clinical presentation and the patient's blood lead concentration, including succimer, calcium disodium ethylenediaminetetraacetic acid (EDTA), and British anti-Lewisite (BAL, also known as dimercaprol)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541097/"
+        trust authoritative
+    % --- EXPAND: penicillamine chelates copper (copper overload / Wilson disease) --
+    relate antidote_for(copper_toxicity, penicillamine)
+        source "Penicillamine is a copper chelator derived from penicillin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK513316/"
+        trust authoritative
+    % --- EXPAND: idarucizumab reverses the anticoagulant dabigatran --------------
+    relate antidote_for(dabigatran_toxicity, idarucizumab)
+        source "Idarucizumab is an anti-dabigatran monoclonal antibody fragment used in patients treated with dabigatran presenting with life-threatening bleeding."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560651/"
+        trust authoritative
+    % --- EXPAND: dimercaprol (BAL) chelates arsenic / heavy metals ---------------
+    relate antidote_for(arsenic_poisoning, dimercaprol)
+        source "Dimercaprol is a medication used to treat toxic exposure to arsenic, mercury, gold, and lead."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549804/"
+        trust authoritative
+    % --- EXPAND: pyridoxine (vitamin B6) is the antidote for isoniazid overdose --
+    relate antidote_for(isoniazid_toxicity, pyridoxine)
+        source "In cases of poisoning resulting from ingesting more than 10 grams of isoniazid (INH), an equal amount of pyridoxine (vitamin B6) should be administered as an antidote."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557436/"
+        trust authoritative
 }

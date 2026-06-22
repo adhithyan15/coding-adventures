@@ -56,6 +56,11 @@ pub struct Simulator {
     pub mem: Memory,
     /// Captured bytes written by host I/O shims (`putchar`/`print_i64`).
     pub stdout: Vec<u8>,
+    /// Bytes the program reads via `getchar`, consumed front-to-back; once
+    /// exhausted, `getchar` returns EOF (`-1`). Empty by default.
+    input: Vec<u8>,
+    /// How many `input` bytes have been consumed so far.
+    input_pos: usize,
     /// The concatenated code bytes (relocations already patched).
     code: Vec<u8>,
     /// Where the code region begins in `mem`.
@@ -127,14 +132,25 @@ impl Simulator {
                 let ptr = self.mem.alloc(n)?;
                 self.state.set(Reg::Rax, ptr);
             }
-            // `int putchar(int c)` — capture the byte.
-            "putchar" => {
+            // `int putchar(int c)` — capture the byte.  The backend emits the
+            // runtime-prefixed `__twig_putchar`; libc-style `putchar` is accepted
+            // too (same shim, like the `print_i64` aliases below).
+            "__twig_putchar" | "putchar" => {
                 let c = self.state.get(Reg::Rdi) as u8;
                 self.stdout.push(c);
                 self.state.set(Reg::Rax, c as u64);
             }
-            // `int getchar()` — no stdin in v1; returns EOF (-1).
-            "getchar" => { self.state.set(Reg::Rax, u64::MAX); }
+            // `int getchar()` — consume the next input byte, or EOF (`-1`) once
+            // the buffer is drained.  Returning `-1` (not 0) matches the libc /
+            // native convention; the Brainfuck IIR clamps a negative `getchar`
+            // to 0 itself, so a `,[.,]` cat loop halts at end-of-input.
+            "__twig_getchar" | "getchar" => {
+                let r = match self.input.get(self.input_pos) {
+                    Some(&b) => { self.input_pos += 1; b as u64 }
+                    None => u64::MAX, // EOF (-1)
+                };
+                self.state.set(Reg::Rax, r);
+            }
             // `void __twig_print_i64(i64)` — print the decimal value.
             "__twig_print_i64" | "__print_i64" | "print_i64" => {
                 let v = self.state.get(Reg::Rdi) as i64;

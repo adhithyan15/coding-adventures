@@ -783,7 +783,12 @@ impl Interpreter {
     /// `a %*% b` — the matrix product (column-major). A bare vector on the left
     /// is taken as a `1×n` row; on the right as an `n×1` column (so `v %*% w` is
     /// the dot product), matching R's conformability rules. NA propagates.
-    fn matrix_multiply(&self, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
+    ///
+    /// Exposed `pub(crate)` so the `crossprod`/`tcrossprod` builtins (R-36) can
+    /// reuse the *same* product — including its allocation guard (`MAX_SEQ_LEN`),
+    /// its conformability error, and its `array_runtime` fast path — instead of
+    /// reimplementing the inner loops.
+    pub(crate) fn matrix_multiply(&self, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
         let (ad, am, ak) = match lhs {
             SValue::Matrix { data, nrow, ncol } => (data.clone(), *nrow, *ncol),
             other => {
@@ -2430,9 +2435,16 @@ pub(crate) fn nth_element(value: &SValue, i: usize) -> SValue {
             .unwrap_or_else(na_real)])),
         SValue::Logical(v) => SValue::Logical(vec![v.get(i).copied().flatten()]),
         SValue::Character(v) => SValue::Character(vec![v.get(i).cloned().flatten()]),
-        SValue::Factor { codes, levels } => SValue::Factor {
+        SValue::Factor {
+            codes,
+            levels,
+            ordered,
+        } => SValue::Factor {
             codes: vec![codes.get(i).copied().flatten()],
             levels: levels.clone(),
+            // Extracting an element keeps the factor ordered (R-35), so the
+            // single-element factor still compares by level index.
+            ordered: *ordered,
         },
         SValue::Classed { inner, .. } => nth_element(inner, i),
         SValue::Named { values, .. } => nth_element(values, i),

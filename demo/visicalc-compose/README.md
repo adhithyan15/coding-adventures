@@ -108,6 +108,23 @@ reversible and a restored formula recomputes live.
 sparse cells (`Z1000`, `BA50`, `BB50`) and derives the extent from `usedRange()`
 + a margin.
 
+#### Visual design
+
+`InfiniteSheet.kt` mirrors the **reference visual language** defined by the web
+demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend reads as one
+considered dark, modern-spreadsheet surface — the same token set the Qt and
+Flutter ports use. The palette lives in a small set of `Color` design tokens at
+the top of the file (`BG`/`PANEL`/`SURFACE`/`LINE`/`INK`/`MUTED`/`ACCENT`…),
+echoing the web demo's CSS custom properties. From those it builds: a
+panel-wrapped **toolbar** with an address **pill**, an italic `fx` marker, then a
+grown formula field with an accent **focus ring** (driven by the field's
+`MutableInteractionSource` focus state); the actions are **segmented button
+groups** (drag-fill · clipboard · file · history) — a reusable `toolButton`
+composable with hover/pressed/disabled states — separated by thin rules. The grid
+gets subtle **zebra** row banding, a 2-px **accent selection ring**, and the
+selected cell's **row + column headers tint to the accent**; a hairline-separated
+**status footer** echoes the live virtual-grid size and revision.
+
 ### Verification
 
 Headless proof: `scripts/verify.sh` (kotlinc + FFM) seeds far-flung sparse cells

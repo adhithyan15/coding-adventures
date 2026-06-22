@@ -16,9 +16,13 @@ shape) and uses the ISA semantics in
 The subset the `x86_64-encoder` emits (and growing):
 
 - **Moves / addressing**: `mov` reg↔reg, reg↔`[base+disp]`, `mov reg,imm32`,
-  `movzx reg,byte[mem]`, `lea reg,[mem]` (incl. RIP-relative); REX/ModRM/SIB.
+  `movzx reg,byte[mem]`, `mov byte[mem],reg8` (`0x88` — the byte-tape store),
+  `lea reg,[mem]` (incl. RIP-relative); REX/ModRM/SIB.
 - **Integer ALU**: `add` / `sub` / `cmp` / `and` / `or` / `xor` / `test` (reg and
   imm forms), `shl` / `shr` / `sar`, `imul` — all with full CF/ZF/SF/OF/PF flags.
+- **Group-3 + division**: `not` / `neg` (`0xF7 /2`,`/3`), `div` / `idiv`
+  (`0xF7 /6`,`/7`, dividing the 128-bit `rdx:rax` pair), and `cqo` (`rax`→`rdx:rax`
+  sign-extend). Divide-by-zero / quotient-overflow raise a `#DE` **trap**.
 - **Control flow**: `jmp`, `jcc` (all 16 conditions), `call` / `ret`, `push` /
   `pop`, `setcc`, and `ud2` → an illegal-instruction **trap** (how an E5
   out-of-bounds array access aborts).
@@ -56,10 +60,18 @@ as the exit code (the same convention as `run_native` / `run_wasm`).
 **real** AOT pipeline (`compile_source_to_iir` → `infer_types` → `aot_specialise`
 → `x86_64-backend`) and *runs the emitted x86_64 machine code* on this simulator.
 On an Apple-Silicon host the matrix's `NativeAot` cell only ever builds+runs the
-*aarch64* backend; this test exercises the **x86_64** column end-to-end — Twig
-arithmetic, an ALGOL procedure call (internal `call` relocations), E3 `real`
-SSE2 floats, and an E5 native bounded array — **locally on aarch64**, retro-
-verifying the two columns the matrix could previously execute only on x86 CI.
+*aarch64* backend; this test exercises the **x86_64** column end-to-end —
+**locally on aarch64**, retro-verifying columns the matrix could previously
+execute only on x86 CI. The 21 cells span Twig (const/arithmetic/`define`),
+Nib (u8 wrap, `~` complement, unsigned division), ALGOL (procedure call,
+switch/computed-goto, signed `div`, E3 `real` SSE2 floats, E5 arrays straight-
+line and in a `for` loop), Oct (`out`, `~`), Dartmouth BASIC (`PRINT`,
+`FOR`/`NEXT` — stdout-captured via the host shims), and Brainfuck (`.` over a
+byte tape, plus `,`-driven stdin: increment, echo, and cat — fed via
+`MachineCodeHarness::stdin`). Each new language exposed a missing opcode — the
+Nib/Oct `~` cells surfaced group-3 `0xF7`, and the Brainfuck cell surfaced the
+`0x88` byte store —
+which this crate now decodes.
 
 ## Safety
 

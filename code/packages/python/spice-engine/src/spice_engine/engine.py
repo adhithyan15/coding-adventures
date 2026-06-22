@@ -2380,9 +2380,30 @@ class DeckRawfileArtifact:
     marker: str
     probe_count: int
     probes: list[str]
+    matched_probe_count: int
+    matched_probes: list[str]
+    unmatched_probe_count: int
+    unmatched_probes: list[str]
     option_count: int
     options: list[str]
     rawfile: str
+
+
+@dataclass(frozen=True)
+class DeckWrdataArtifact:
+    """In-memory ASCII data-file content for an accepted control wrdata marker."""
+
+    target: str
+    marker: str
+    probe_count: int
+    probes: list[str]
+    matched_probe_count: int
+    matched_probes: list[str]
+    unmatched_probe_count: int
+    unmatched_probes: list[str]
+    option_count: int
+    options: list[str]
+    datafile: str
 
 
 @dataclass(frozen=True)
@@ -2418,37 +2439,80 @@ class DeckAnalysisExecution:
     rawfile_artifact_csv: str = ""
     rawfile_artifact_json: str = ""
     rawfile_artifact_records: list[dict[str, str]] = field(default_factory=list)
+    wrdata_artifact_count: int = 0
+    wrdata_artifacts: list[DeckWrdataArtifact] = field(default_factory=list)
+    wrdata_artifact_table: str = ""
+    wrdata_artifact_csv: str = ""
+    wrdata_artifact_json: str = ""
+    wrdata_artifact_records: list[dict[str, str]] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        artifacts = list(self.rawfile_artifacts) or _deck_rawfile_artifacts(
+        rawfile_artifacts = list(self.rawfile_artifacts) or _deck_rawfile_artifacts(
             self.plan,
             self.table,
             self.write_markers,
             self.rawfile_options,
         )
-        object.__setattr__(self, "rawfile_artifact_count", len(artifacts))
-        object.__setattr__(self, "rawfile_artifacts", artifacts)
+        object.__setattr__(
+            self, "rawfile_artifact_count", len(rawfile_artifacts)
+        )
+        object.__setattr__(self, "rawfile_artifacts", rawfile_artifacts)
         object.__setattr__(
             self,
             "rawfile_artifact_table",
             self.rawfile_artifact_table
-            or format_deck_rawfile_artifact_table(artifacts),
+            or format_deck_rawfile_artifact_table(rawfile_artifacts),
         )
         object.__setattr__(
             self,
             "rawfile_artifact_csv",
-            self.rawfile_artifact_csv or format_deck_rawfile_artifact_csv(artifacts),
+            self.rawfile_artifact_csv
+            or format_deck_rawfile_artifact_csv(rawfile_artifacts),
         )
         object.__setattr__(
             self,
             "rawfile_artifact_json",
-            self.rawfile_artifact_json or format_deck_rawfile_artifact_json(artifacts),
+            self.rawfile_artifact_json
+            or format_deck_rawfile_artifact_json(rawfile_artifacts),
         )
         object.__setattr__(
             self,
             "rawfile_artifact_records",
             self.rawfile_artifact_records
-            or deck_rawfile_artifact_records(artifacts),
+            or deck_rawfile_artifact_records(rawfile_artifacts),
+        )
+        wrdata_artifacts = list(self.wrdata_artifacts) or _deck_wrdata_artifacts(
+            self.table,
+            self.write_markers,
+            self.rawfile_options,
+        )
+        object.__setattr__(
+            self, "wrdata_artifact_count", len(wrdata_artifacts)
+        )
+        object.__setattr__(self, "wrdata_artifacts", wrdata_artifacts)
+        object.__setattr__(
+            self,
+            "wrdata_artifact_table",
+            self.wrdata_artifact_table
+            or format_deck_wrdata_artifact_table(wrdata_artifacts),
+        )
+        object.__setattr__(
+            self,
+            "wrdata_artifact_csv",
+            self.wrdata_artifact_csv
+            or format_deck_wrdata_artifact_csv(wrdata_artifacts),
+        )
+        object.__setattr__(
+            self,
+            "wrdata_artifact_json",
+            self.wrdata_artifact_json
+            or format_deck_wrdata_artifact_json(wrdata_artifacts),
+        )
+        object.__setattr__(
+            self,
+            "wrdata_artifact_records",
+            self.wrdata_artifact_records
+            or deck_wrdata_artifact_records(wrdata_artifacts),
         )
 
 
@@ -2816,11 +2880,22 @@ def format_deck_rawfile_ascii(
 ) -> str:
     """Format a selected deck table as deterministic in-memory ASCII rawfile text."""
 
+    return _format_deck_rawfile_ascii(table, analysis, rawfile_options, ())
+
+
+def _format_deck_rawfile_ascii(
+    table: str,
+    analysis: str,
+    rawfile_options: Iterable[str],
+    probes: Iterable[str],
+) -> str:
     rows = table.splitlines()
     if not rows:
         return ""
-    columns = rows[0].split("\t")
-    data_rows = [row.split("\t") for row in rows[1:]]
+    probe_list = list(probes)
+    projected_rows = _deck_rawfile_project_rows(rows, probe_list)
+    columns = projected_rows[0].split("\t")
+    data_rows = [row.split("\t") for row in projected_rows[1:]]
     lines = [
         f"Title: SPICE deck {analysis} result",
         "Date: deterministic",
@@ -2840,6 +2915,45 @@ def format_deck_rawfile_ascii(
     return "\n".join(lines) + "\n"
 
 
+def _deck_rawfile_project_rows(rows: list[str], probes: list[str]) -> list[str]:
+    columns = rows[0].split("\t")
+    if not probes:
+        return rows
+    selected_indices, _, _ = _deck_rawfile_probe_inventory(columns, probes)
+    projected_rows: list[str] = []
+    for row in rows:
+        cells = row.split("\t")
+        projected_rows.append(
+            "\t".join(
+                cells[index] if index < len(cells) else ""
+                for index in selected_indices
+            )
+        )
+    return projected_rows
+
+
+def _deck_rawfile_probe_inventory(
+    columns: list[str],
+    probes: list[str],
+) -> tuple[list[int], list[str], list[str]]:
+    selected_indices: list[int] = []
+    matched_probes: list[str] = []
+    unmatched_probes: list[str] = []
+    if columns:
+        selected_indices.append(0)
+    normalized_columns = [column.casefold() for column in columns]
+    for probe in probes:
+        normalized_probe = probe.casefold()
+        if normalized_probe not in normalized_columns:
+            unmatched_probes.append(probe)
+            continue
+        index = normalized_columns.index(normalized_probe)
+        if index not in selected_indices:
+            selected_indices.append(index)
+            matched_probes.append(columns[index])
+    return selected_indices, matched_probes, unmatched_probes
+
+
 def _deck_write_marker_parts(marker: str) -> tuple[str, list[str]] | None:
     parts = marker.split()
     if len(parts) < 2 or parts[0] != "write":
@@ -2854,22 +2968,30 @@ def _deck_rawfile_artifacts(
     rawfile_options: Iterable[str],
 ) -> list[DeckRawfileArtifact]:
     options = list(rawfile_options)
-    rawfile = format_deck_rawfile_ascii(table, plan.analysis, options)
+    rows = table.splitlines()
+    columns = rows[0].split("\t") if rows else []
     artifacts: list[DeckRawfileArtifact] = []
     for marker in write_markers:
         parts = _deck_write_marker_parts(marker)
         if parts is None:
             continue
         target, probes = parts
+        _, matched_probes, unmatched_probes = _deck_rawfile_probe_inventory(
+            columns, probes
+        )
         artifacts.append(
             DeckRawfileArtifact(
                 target=target,
                 marker=marker,
                 probe_count=len(probes),
                 probes=probes,
+                matched_probe_count=len(matched_probes),
+                matched_probes=matched_probes,
+                unmatched_probe_count=len(unmatched_probes),
+                unmatched_probes=unmatched_probes,
                 option_count=len(options),
                 options=list(options),
-                rawfile=rawfile,
+                rawfile=_format_deck_rawfile_ascii(table, plan.analysis, options, probes),
             )
         )
     return artifacts
@@ -2880,6 +3002,10 @@ _DECK_RAWFILE_ARTIFACT_COLUMNS = [
     "Marker",
     "Probes",
     "ProbeList",
+    "MatchedProbes",
+    "MatchedProbeList",
+    "UnmatchedProbes",
+    "UnmatchedProbeList",
     "Options",
     "RawfileOptionList",
     "Bytes",
@@ -2892,6 +3018,10 @@ def _deck_rawfile_artifact_cells(artifact: DeckRawfileArtifact) -> list[str]:
         artifact.marker,
         str(artifact.probe_count),
         ";".join(artifact.probes),
+        str(artifact.matched_probe_count),
+        ";".join(artifact.matched_probes),
+        str(artifact.unmatched_probe_count),
+        ";".join(artifact.unmatched_probes),
         str(artifact.option_count),
         ";".join(artifact.options),
         str(len(artifact.rawfile.encode())),
@@ -2949,6 +3079,200 @@ def format_deck_rawfile_artifact_json(
 
     return json.dumps(
         deck_rawfile_artifact_records(artifacts),
+        separators=(",", ":"),
+    ) + "\n"
+
+
+def format_deck_wrdata_ascii(
+    table: str,
+    probes: Iterable[str] = (),
+    rawfile_options: Iterable[str] = (),
+) -> str:
+    """Format a selected deck table as deterministic in-memory WRDATA text."""
+
+    rows = table.splitlines()
+    if not rows:
+        return ""
+    probe_list = list(probes)
+    projected_rows = _deck_wrdata_project_rows(rows, probe_list)
+    columns = projected_rows[0].split("\t")
+    options = list(rawfile_options)
+    lines = [
+        "# SPICE deck wrdata artifact",
+        "Probes: " + ";".join(probe_list),
+    ]
+    if options:
+        lines.append("Options: " + ";".join(options))
+    normalized_options = {option.casefold() for option in options}
+    if "set wr_vecnames" in normalized_options:
+        lines.append("VectorNames: " + ";".join(columns))
+    if "set wr_singlescale" in normalized_options and columns:
+        lines.append("Scale: " + columns[0])
+    lines.extend(projected_rows)
+    return "\n".join(lines) + "\n"
+
+
+def _deck_wrdata_project_rows(rows: list[str], probes: list[str]) -> list[str]:
+    columns = rows[0].split("\t")
+    if not probes:
+        return rows
+    selected_indices, _, _ = _deck_wrdata_probe_inventory(columns, probes)
+    projected_rows: list[str] = []
+    for row in rows:
+        cells = row.split("\t")
+        projected_rows.append(
+            "\t".join(
+                cells[index] if index < len(cells) else ""
+                for index in selected_indices
+            )
+        )
+    return projected_rows
+
+
+def _deck_wrdata_probe_inventory(
+    columns: list[str],
+    probes: list[str],
+) -> tuple[list[int], list[str], list[str]]:
+    selected_indices: list[int] = []
+    matched_probes: list[str] = []
+    unmatched_probes: list[str] = []
+    if columns:
+        selected_indices.append(0)
+    normalized_columns = [column.casefold() for column in columns]
+    for probe in probes:
+        normalized_probe = probe.casefold()
+        if normalized_probe not in normalized_columns:
+            unmatched_probes.append(probe)
+            continue
+        index = normalized_columns.index(normalized_probe)
+        if index not in selected_indices:
+            selected_indices.append(index)
+            matched_probes.append(columns[index])
+    return selected_indices, matched_probes, unmatched_probes
+
+
+def _deck_wrdata_marker_parts(marker: str) -> tuple[str, list[str]] | None:
+    parts = marker.split()
+    if len(parts) < 2 or parts[0] != "wrdata":
+        return None
+    return parts[1], parts[2:]
+
+
+def _deck_wrdata_artifacts(
+    table: str,
+    write_markers: Iterable[str],
+    rawfile_options: Iterable[str] = (),
+) -> list[DeckWrdataArtifact]:
+    artifacts: list[DeckWrdataArtifact] = []
+    options = list(rawfile_options)
+    rows = table.splitlines()
+    columns = rows[0].split("\t") if rows else []
+    for marker in write_markers:
+        parts = _deck_wrdata_marker_parts(marker)
+        if parts is None:
+            continue
+        target, probes = parts
+        _, matched_probes, unmatched_probes = _deck_wrdata_probe_inventory(columns, probes)
+        artifacts.append(
+            DeckWrdataArtifact(
+                target=target,
+                marker=marker,
+                probe_count=len(probes),
+                probes=probes,
+                matched_probe_count=len(matched_probes),
+                matched_probes=matched_probes,
+                unmatched_probe_count=len(unmatched_probes),
+                unmatched_probes=unmatched_probes,
+                option_count=len(options),
+                options=list(options),
+                datafile=format_deck_wrdata_ascii(table, probes, options),
+            )
+        )
+    return artifacts
+
+
+_DECK_WRDATA_ARTIFACT_COLUMNS = [
+    "Target",
+    "Marker",
+    "Probes",
+    "ProbeList",
+    "MatchedProbes",
+    "MatchedProbeList",
+    "UnmatchedProbes",
+    "UnmatchedProbeList",
+    "Options",
+    "RawfileOptionList",
+    "Bytes",
+]
+
+
+def _deck_wrdata_artifact_cells(artifact: DeckWrdataArtifact) -> list[str]:
+    return [
+        artifact.target,
+        artifact.marker,
+        str(artifact.probe_count),
+        ";".join(artifact.probes),
+        str(artifact.matched_probe_count),
+        ";".join(artifact.matched_probes),
+        str(artifact.unmatched_probe_count),
+        ";".join(artifact.unmatched_probes),
+        str(artifact.option_count),
+        ";".join(artifact.options),
+        str(len(artifact.datafile.encode())),
+    ]
+
+
+def deck_wrdata_artifact_records(
+    artifacts: Iterable[DeckWrdataArtifact],
+) -> list[dict[str, str]]:
+    """Format selected WRDATA artifacts as header-keyed summary records."""
+
+    return [
+        dict(
+            zip(
+                _DECK_WRDATA_ARTIFACT_COLUMNS,
+                _deck_wrdata_artifact_cells(artifact),
+                strict=True,
+            )
+        )
+        for artifact in artifacts
+    ]
+
+
+def format_deck_wrdata_artifact_table(
+    artifacts: Iterable[DeckWrdataArtifact],
+) -> str:
+    """Format selected WRDATA artifacts as a stable summary table."""
+
+    rows = ["\t".join(_DECK_WRDATA_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append("\t".join(_deck_wrdata_artifact_cells(artifact)))
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_wrdata_artifact_csv(
+    artifacts: Iterable[DeckWrdataArtifact],
+) -> str:
+    """Format selected WRDATA artifacts as stable RFC 4180-style CSV."""
+
+    rows = [",".join(_DECK_WRDATA_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append(
+            ",".join(
+                _format_csv_cell(cell)
+                for cell in _deck_wrdata_artifact_cells(artifact)
+            )
+        )
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_wrdata_artifact_json(
+    artifacts: Iterable[DeckWrdataArtifact],
+) -> str:
+    """Format selected WRDATA artifacts as stable compact JSON records."""
+
+    return json.dumps(
+        deck_wrdata_artifact_records(artifacts),
         separators=(",", ":"),
     ) + "\n"
 

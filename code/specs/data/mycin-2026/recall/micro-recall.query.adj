@@ -20,3 +20,10 @@ import "micro-edges.adj"
 ? causes(vibrio_cholerae, $Disease)                 % expect cholera
 ? gram_stain(escherichia_coli, $Result)             % expect gram_negative
 ? causes(streptococcus_pneumoniae, $Disease)        % expect community_acquired_pneumonia
+? gram_stain(helicobacter_pylori, $Result)             % expect gram_negative (expand)
+? morphology(helicobacter_pylori, $Shape)              % expect spiral (expand)
+? causes(helicobacter_pylori, $Disease)                % expect peptic_ulcer_disease (expand)
+? gram_stain(clostridioides_difficile, $Result)        % expect gram_positive (expand)
+? causes(clostridioides_difficile, $Disease)           % expect pseudomembranous_colitis (expand)
+? gram_stain(listeria_monocytogenes, $Result)          % expect gram_positive (expand)
+? morphology(listeria_monocytogenes, $Shape)           % expect bacilli (expand)
