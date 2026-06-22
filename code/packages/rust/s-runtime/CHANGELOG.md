@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.32.0] - 2026-06-21
+## [0.33.0] - 2026-06-21
 
 ### Added
 
@@ -50,6 +50,37 @@ All notable changes to this project will be documented in this file.
   - **Deferred to R-36**: `strtoi`'s `base = 0L` auto-detection (C `strtol`'s
     `0x`→base-16 / leading-`0`→base-8 convention) and `trimws`'s custom
     `whitespace =` regex argument.
+
+## [0.32.0] - 2026-06-21
+
+### Added
+
+- **`kronecker(X, Y)` — the Kronecker product (R-38)** — available to both S and
+  R through the shared tree-walker. The block-outer product of two matrices: for
+  an `m×n` matrix `X` and a `p×q` matrix `Y`, the result is the `(m·p)×(n·q)`
+  matrix whose block `(i, j)` is the scalar `X[i, j]` times the whole of `Y`,
+  i.e. `result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]` (1-based,
+  column-major to match `SValue::Matrix`).
+  - **Reuse, not reimplementation.** A new `matrix_or_column` helper pulls
+    `(data, nrow, ncol)` out of an `SValue::Matrix`, promoting a bare numeric
+    vector to an `n×1` column exactly like `matrix(v)`; the result is emitted via
+    the same `SValue::Matrix` constructor `matrix()`/`crossprod` use. NA is
+    propagated through the product (`na_mul`), matching R arithmetic.
+  - **Examples.** `kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0),
+    nrow=2))` is a 4×4 block matrix; `kronecker(matrix(5), Y)` is `5·Y`; a 2×3 ⊗
+    1×2 is 2×6. The result is a real matrix — `dim()`/`nrow()`/`ncol()` see it and
+    it composes with `%*%`.
+  - **Security — quadratic output-size guard.** The result has `(m·p)·(n·q)`
+    elements, quadratic in the inputs, so before allocating the result row count
+    `m·p`, column count `n·q`, and their product are each formed with
+    `checked_mul` and bounded by the existing `MAX_SEQ_LEN` cap (the same bound
+    `matrix()`/`matrix_multiply` enforce). Overflow or over-cap returns a clean
+    "result too large" error and never allocates. Degenerate `0×n` / `m×0` inputs
+    yield an empty result with the correct zero dimension; the loops do not
+    execute, so there is no out-of-bounds access. No new unbounded multiplier.
+  - **Deferred.** The R `%x%` infix alias (`X %x% Y`) needs lexer/grammar work and
+    is deferred to **R-40**, along with any `outer`-style custom-`FUN`
+    generalization. This release ships the `kronecker(X, Y)` function form only.
 
 ## [0.31.0] - 2026-06-21
 

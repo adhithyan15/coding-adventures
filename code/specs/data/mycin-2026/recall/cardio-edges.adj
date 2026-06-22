@@ -89,4 +89,12 @@ rulebook cardio_facts {
         source "Mitral stenosis is a diastolic murmur, best heard at the left 5th midclavicular line."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK525958/"
         trust authoritative
+
+    % --- EXPAND: continuous "machinery" murmur -> patent ductus arteriosus -----------
+    % PDA = patent ductus arteriosus (page-defined abbreviation). One self-contained span
+    % names the lesion's murmur as a continuous "machinery" murmur, grounding this edge.
+    relate murmur_indicates(continuous_machinery, patent_ductus_arteriosus)
+        source "The classic PDA murmur is a continuous, \"machinery\" murmur below the clavicle, radiating to the back, although it can also manifest as a systolic or holosystolic murmur."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430758/"
+        trust authoritative
 }

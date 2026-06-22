@@ -2426,6 +2426,117 @@ mod r30_ordering {
             "expected a conformability error, got: {err}"
         );
     }
+
+    // --- R-38: kronecker (Kronecker product) ----------------------------
+
+    #[test]
+    fn kronecker_two_by_two_blocks() {
+        // X = matrix(c(1,2,3,4), nrow=2) = col-major [[1,3],[2,4]].
+        // Y = matrix(c(0,1,1,0), nrow=2) = [[0,1],[1,0]].
+        // Result is 4x4; block (i,j) = X[i,j] * Y.
+        //   block(1,1)=1*Y, block(1,2)=3*Y, block(2,1)=2*Y, block(2,2)=4*Y.
+        let (data, nrow, ncol) = matrix_data(
+            "kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2))\n",
+        );
+        assert_eq!((nrow, ncol), (4, 4));
+        // Helper: column-major index for (row r, col c) 0-based in a 4-row matrix.
+        let at = |r: usize, c: usize| data[c * 4 + r];
+        // result[(i-1)*2+k, (j-1)*2+l] = X[i,j]*Y[k,l] (1-based).
+        // (1,1): X[1,1]=1, Y[1,1]=0 → 0; X[1,1]*Y[2,1]=1*1=1 at row (0*2+1)=1.
+        assert_eq!(at(0, 0), 0.0); // i=1,k=1,j=1,l=1: 1*0
+        assert_eq!(at(1, 0), 1.0); // i=1,k=2,j=1,l=1: 1*Y[2,1]=1*1
+        assert_eq!(at(0, 1), 1.0); // i=1,k=1,j=1,l=2: 1*Y[1,2]=1*1
+        // block(1,2) = 3*Y → top-right 2x2 (rows 0-1, cols 2-3).
+        assert_eq!(at(1, 2), 3.0); // X[1,2]=3, Y[2,1]=1 → 3
+        assert_eq!(at(0, 3), 3.0); // X[1,2]=3, Y[1,2]=1 → 3
+        // block(2,2) = 4*Y → bottom-right (rows 2-3, cols 2-3).
+        assert_eq!(at(3, 2), 4.0); // X[2,2]=4, Y[2,1]=1 → 4
+        assert_eq!(at(2, 3), 4.0); // X[2,2]=4, Y[1,2]=1 → 4
+        // diagonal of each block is 0 (Y has 0 on its diagonal).
+        assert_eq!(at(2, 2), 0.0);
+        assert_eq!(at(3, 3), 0.0);
+    }
+
+    #[test]
+    fn kronecker_nonsquare_dims() {
+        // X = matrix(1:6, nrow=2) is 2x3, Y = matrix(c(1,1), nrow=1) is 1x2.
+        // Result is (2*1)x(3*2) = 2x6.
+        let (data, nrow, ncol) =
+            matrix_data("kronecker(matrix(1:6, nrow=2), matrix(c(1,1), nrow=1))\n");
+        assert_eq!((nrow, ncol), (2, 6));
+        // Y is all ones, so each X[i,j] is copied into a 1x2 block, i.e. the
+        // result is X with every column duplicated. X col-major = 1,2,3,4,5,6
+        // i.e. [[1,3,5],[2,4,6]]. Result row r, col c: X[r, c div 2].
+        let at = |r: usize, c: usize| data[c * 2 + r];
+        // X[1,1]=1 at (0,0) and (0,1); X[1,2]=3 at (0,2),(0,3); X[1,3]=5 at (0,4),(0,5).
+        assert_eq!(at(0, 0), 1.0);
+        assert_eq!(at(0, 1), 1.0);
+        assert_eq!(at(0, 2), 3.0);
+        assert_eq!(at(0, 3), 3.0);
+        assert_eq!(at(1, 4), 6.0); // X[2,3]=6
+        assert_eq!(at(1, 5), 6.0);
+    }
+
+    #[test]
+    fn kronecker_identity_block_structure() {
+        // kronecker(I2, M) reproduces M in the diagonal blocks, zeros off-diagonal.
+        // I2 = matrix(c(1,0,0,1), nrow=2); M = matrix(c(7,8,9,10), nrow=2).
+        let (data, nrow, ncol) = matrix_data(
+            "kronecker(matrix(c(1,0,0,1), nrow=2), matrix(c(7,8,9,10), nrow=2))\n",
+        );
+        assert_eq!((nrow, ncol), (4, 4));
+        let at = |r: usize, c: usize| data[c * 4 + r];
+        // top-left block = 1*M = M col-major [[7,9],[8,10]].
+        assert_eq!(at(0, 0), 7.0);
+        assert_eq!(at(1, 0), 8.0);
+        assert_eq!(at(0, 1), 9.0);
+        assert_eq!(at(1, 1), 10.0);
+        // bottom-right block = 1*M.
+        assert_eq!(at(2, 2), 7.0);
+        assert_eq!(at(3, 3), 10.0);
+        // off-diagonal blocks are all zero (X off-diagonal entries are 0).
+        assert_eq!(at(0, 2), 0.0);
+        assert_eq!(at(2, 0), 0.0);
+    }
+
+    #[test]
+    fn kronecker_one_by_one_x_is_scalar_times_y() {
+        // X = matrix(5) is 1x1; result = 5 * Y, same shape as Y (2x2).
+        let (data, nrow, ncol) =
+            matrix_data("kronecker(matrix(5), matrix(c(1,2,3,4), nrow=2))\n");
+        assert_eq!((nrow, ncol), (2, 2));
+        assert_eq!(data, vec![5.0, 10.0, 15.0, 20.0]);
+    }
+
+    #[test]
+    fn kronecker_result_is_a_real_matrix() {
+        // dim()/nrow()/ncol() see the result; it composes with %*%.
+        assert_eq!(
+            nums("dim(kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2)))\n"),
+            vec![4.0, 4.0]
+        );
+        assert_eq!(
+            nums("nrow(kronecker(matrix(1:6, nrow=2), matrix(c(1,1), nrow=1)))\n"),
+            vec![2.0]
+        );
+        assert_eq!(
+            nums("ncol(kronecker(matrix(1:6, nrow=2), matrix(c(1,1), nrow=1)))\n"),
+            vec![6.0]
+        );
+        // %x%-composable: K %*% a conformable matrix runs without error.
+        assert_eq!(
+            nums("K <- kronecker(matrix(c(1,0,0,1), nrow=2), matrix(c(2,0,0,2), nrow=2))\nc(K %*% matrix(c(1,1,1,1), nrow=4))\n").len(),
+            4
+        );
+    }
+
+    #[test]
+    fn kronecker_scalar_times_scalar() {
+        // 1x1 ⊗ 1x1 → 1x1 with the product of the two scalars.
+        let (data, nrow, ncol) = matrix_data("kronecker(matrix(3), matrix(4))\n");
+        assert_eq!((nrow, ncol), (1, 1));
+        assert_eq!(data, vec![12.0]);
+    }
 }
 
 #[cfg(test)]

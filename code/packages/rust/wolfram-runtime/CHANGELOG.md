@@ -4,6 +4,76 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.14.0] — 2026-06-21
+
+The **W-18** deliverable (MA04 §19): Wolfram's **pattern-matching predicates**
+`MatchQ`, `Cases`, and `FreeQ`, lowered onto the same substrate as the rest of
+the lane. All ordinary `Head[args]` forms — **no grammar change**; only the
+`wolfram-runtime` builtin handler table grows. The three heads are **held** (a
+new `PATTERN_HEADS` set folded into the `WolframBackend` hold set alongside the
+W-7/W-8/W-14 held heads) so the **pattern** argument arrives **literal** — a
+pattern is a *form*, not a value, exactly as `Switch` relies on. Each handler
+evaluates **only its subject**.
+
+### Added (pattern-matching predicates)
+
+- **`MatchQ[expr, patt]`** — `True` iff `expr` matches `patt`, else `False`.
+  `MatchQ[2, _]` → `True`, `MatchQ[2, _Integer]` → `True`, `MatchQ[2, 2]` →
+  `True`, `MatchQ[2, 3]` → `False`. The subject is evaluated; the pattern stays
+  literal. Wrong arity is left **unevaluated**.
+- **`Cases[list, patt]`** — the `List` of `list`'s elements that match `patt`,
+  dropping non-matches. `Cases[{1, 2, 3, 4}, _]` → `{1, 2, 3, 4}`,
+  `Cases[{1, 2, 3}, 2]` → `{2}`, `Cases[{1, 2.0, 3}, _Integer]` → `{1, 3}`. A
+  **non-list** first argument (or wrong arity) is left unevaluated. The result
+  inherits the input's `MAX_LIST_LENGTH` bound.
+- **`FreeQ[expr, form]`** — `True` iff `form` occurs **nowhere** within `expr`
+  (recursively — the root, every `Apply` head, and every argument), else
+  `False`. `FreeQ[{1, 2, 3}, 2]` → `False`, `FreeQ[{1, 2, 3}, 5]` → `True`,
+  `FreeQ[f[g[2]], g]` → `False`, `FreeQ[f[g[2]], h]` → `True`.
+
+### Pattern subset and matcher
+
+The supported pattern vocabulary is a literal (structural equality via the W-13
+`same_element` comparator), `_` (`Blank[]`, the catch-all), and a head-typed
+`_h` (`Blank[h]`, matching iff the subject's Wolfram head is `h`). A single
+panic-free `pattern_matches` primitive extends the W-14 `Switch` matcher by
+**enforcing** the `Blank[h]` head constraint that `Switch` ignored — the one
+capability W-18 needed beyond W-14. The lowerer turns `_Integer` →
+`Blank[Integer]`, `_Real` → `Blank[Real]`, `_Symbol` → `Blank[Symbol]`, and the
+head map sends an `Integer` atom → head `Integer`, a `Float` atom → head `Real`,
+a symbol → head `Symbol`; so `MatchQ[2.0, _Integer]` is `False` (a float is
+`_Real`).
+
+### Robustness
+
+- **`FreeQ` recursion is depth-bounded** (`FREEQ_MAX_DEPTH = 512`): the tree is
+  already size-bounded by the parser's nesting cap and `MAX_LIST_LENGTH`, and at
+  the cap the walk stops descending and reports "occurs" conservatively, so a
+  crafted over-deep input yields a **safe bounded answer instead of a stack
+  overflow** — never a panic.
+- **Heterogeneous atom comparison is total** — comparing across `Integer` /
+  `Float` / `Symbol` / `String` / `Rational` kinds simply reports no match and
+  never panics.
+
+### Deferred to W-19 (MA04 §19.6)
+
+The richer pattern algebra is **explicitly out of scope** for W-18: named
+patterns `x_` (`Pattern[x, Blank[]]`, capture binding), alternatives `a | b`
+(`Alternatives`), conditions `patt /; t`, `PatternTest`, blank sequences `__`
+(`BlankSequence`), and replacement `/.` / `Replace`. A named blank
+`Pattern[x, Blank[…]]` falls through to the literal branch and simply fails to
+match an evaluated value (rather than mis-binding) — the safe documented W-18
+behaviour until W-19 adds capture binding.
+
+### Tests
+
+- 9 handler-level unit tests in `wolfram-runtime` (literal / blank / head-typed,
+  the Integer-vs-Real head distinction, `Cases` filtering plus empty / non-list,
+  `FreeQ` membership / nesting plus the depth-bound no-overflow guard and
+  heterogeneous no-panic case, wrong-arity-unevaluated for `MatchQ`/`FreeQ`).
+- 1 end-to-end `wolfram-repl` test exercising the real `_Integer` / `_Real`
+  lowering through parse → lower → eval.
+
 ## [0.13.0] — 2026-06-21
 
 The **W-16** deliverable (MA04 §19): Wolfram's **nested/structured list

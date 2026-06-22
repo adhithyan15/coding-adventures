@@ -1562,6 +1562,126 @@ lists are out of scope and left unevaluated.)
 `wolfram-runtime`'s builtin handler table; the lexer, parser, and grammar files
 are untouched. `Flatten` is reused unchanged from W-9.
 
+## §20 W-18 pattern-matching builtins — `MatchQ`, `Cases`, `FreeQ` (implemented)
+
+W-14's `Switch` introduced the first taste of pattern matching: a `form_matches`
+helper that decides whether an evaluated subject equals a literal form *or* is a
+catch-all `Blank[]`. W-18 promotes that idea into three first-class
+**pattern-matching predicates** every introductory Wolfram session reaches for:
+`MatchQ` (does this expression match this pattern?), `Cases` (keep the list
+elements that match), and `FreeQ` (does this form appear *anywhere* inside?).
+
+Like every head since W-5 these are ordinary `Head[args]` applications — **no
+grammar change**. W-18 touches only `wolfram-runtime`'s builtin handler table
+(`builtins.rs`) and the `WolframBackend` held set (`backend.rs`).
+
+### §20.1 What W-18 adds
+
+| Head      | Arity | Held? | Result                                                                  |
+|-----------|-------|-------|------------------------------------------------------------------------|
+| `MatchQ`  | 2     | yes   | `True` if `expr` matches `patt`, else `False`                           |
+| `Cases`   | 2     | yes   | the `List[…]` of `list`'s elements that match `patt` (non-matches dropped) |
+| `FreeQ`   | 2     | yes   | `True` if `form` occurs **nowhere** in `expr` (recursively), else `False` |
+
+Worked examples (the W-18 acceptance tests):
+
+```
+MatchQ[2, _]                        (* → True  — _ matches anything           *)
+MatchQ[2, _Integer]                 (* → True  — 2 has head Integer           *)
+MatchQ[2.0, _Integer]              (* → False — 2.0 has head Real, not Integer*)
+MatchQ[2, 3]                        (* → False — literals differ              *)
+MatchQ[2, 2]                        (* → True  — literals equal               *)
+Cases[{1, 2, 3, 4}, _]              (* → {1, 2, 3, 4} — every element matches  *)
+Cases[{1, 2, 3}, 2]                 (* → {2} — only the literal 2 matches      *)
+Cases[{1, 2.0, 3}, _Integer]        (* → {1, 3} — 2.0 is Real, dropped         *)
+FreeQ[{1, 2, 3}, 2]                 (* → False — 2 occurs                      *)
+FreeQ[{1, 2, 3}, 5]                 (* → True  — 5 never occurs                *)
+FreeQ[f[g[2]], g]                   (* → False — g occurs as the inner head    *)
+FreeQ[f[g[2]], h]                   (* → True  — h occurs nowhere              *)
+```
+
+### §20.2 The supported-pattern subset (and the single match primitive)
+
+W-18 deliberately ships a **small, solid** pattern vocabulary — exactly what the
+W-14 matcher already understood, promoted to *enforce* the head constraint that
+`Switch` treated as a no-op:
+
+* **literal patterns** — any non-`Blank` node; matches iff it is *structurally
+  equal* to the subject under the W-13 `same_element` comparator (so `2` and
+  `2.0` stay distinct, `f[1]` matches `f[1]` recursively);
+* **`_` (`Blank[]`)** — the catch-all; matches any subject;
+* **head-typed blanks `_Integer`/`_Real`/`_Symbol`/`_h` (`Blank[h]`)** — matches
+  iff the subject's *Wolfram head* is exactly `h`. The head of each atom is
+  fixed: `Integer → Integer`, `Float → Real`, `Symbol → Symbol`, `Str → String`,
+  `Rational → Rational`; a compound `Apply` reports its own head symbol (so
+  `f[2]` matches `_f`). This is the **one divergence from W-14**: `Switch`
+  treated `Blank[h]` as a plain catch-all (head ignored); W-18 *enforces* the
+  head so `Cases[{1, 2.0, 3}, _Integer]` correctly drops the `Real`.
+
+All three builtins funnel through a single match primitive, `pattern_matches`,
+which is the W-14 `form_matches` extended with head-constraint enforcement. There
+is no second matcher — `MatchQ` is a one-line wrapper, `Cases` filters a list
+through it, and `FreeQ` walks every subnode through it.
+
+### §20.3 `FreeQ` — the recursive walk and its depth bound
+
+`FreeQ[expr, form]` answers "does `form` occur *nowhere* in `expr`?" by checking
+`pattern_matches(form, node)` at **every** node of `expr` — the whole expression,
+each `Apply` head, and every argument, recursively. The first match short-circuits
+to `False`; if the walk completes with no match the answer is `True`.
+
+The recursion is **depth-bounded** (`FREEQ_MAX_DEPTH`, 512) so a crafted deeply
+nested input cannot overflow the stack: at the cap the walk reports "not free
+here" conservatively rather than recursing further, and the surrounding tree is
+already size-bounded by the parser's nesting cap and `MAX_LIST_LENGTH`. No new
+allocation beyond the bounded traversal occurs; `Cases`/`MatchQ` iterate
+already-materialised, `MAX_LIST_LENGTH`-bounded lists.
+
+### §20.4 Held, with the subject evaluated; the pattern stays literal
+
+`MatchQ`, `Cases`, and `FreeQ` join the `WolframBackend` held set (alongside
+`If`, the W-7 iteration heads, the W-8 scoping heads, and the W-14 conditionals).
+Holding keeps the **pattern** argument literal — `MatchQ[2, 1 + 1]` must match
+against the *form* `Plus[1, 1]`, not the evaluated `2`, exactly as `Switch`
+matches held forms (MA04 §17.2). Each handler then evaluates only the *subject*
+(or list / expr) itself via `vm.eval`, never the pattern. `Blank[h]` survives
+evaluation unchanged regardless (no `Blank` handler exists), but holding makes
+the literal-pattern contract explicit and uniform with `Switch`.
+
+### §20.5 The "I can't reduce this" contract
+
+Following the established convention, each W-18 handler echoes the application
+**unchanged** (never panicking) on malformed input: wrong arity (`MatchQ[2]`,
+`Cases[{1}]`), or — for `Cases` — a non-list first argument (`Cases[5, _]` stays
+unevaluated, since "the elements of `5`" is undefined). `MatchQ`/`FreeQ` accept
+*any* first argument (an atom is a valid expression to test), so they always
+reduce to `True`/`False`. No W-18 head panics on heterogeneous element
+comparison — `same_element` is total and panic-free (built on `f64::total_cmp`).
+
+### §20.6 Deferred to W-19 (explicitly out of scope)
+
+W-18 ships the three core predicates over the *existing* matcher capability and
+**defers** the rest of Wolfram's pattern algebra — none of the following is
+supported, and each is left unevaluated / treated as a literal as appropriate:
+
+* **named patterns** `x_` (`Pattern[x, Blank[]]`) — binding match captures;
+* **alternatives** `a | b` (`Alternatives`);
+* **conditions** `patt /; test` (`Condition`) and **`PatternTest`** `patt ? fn`;
+* **`Repeated`** `patt..`, **`BlankSequence`** `__`, **`BlankNullSequence`** `___`;
+* **replacement** `expr /. rules`, `Replace`, `ReplaceAll`, `ReplaceRepeated`.
+
+These build on the same `pattern_matches` primitive but require capture binding,
+backtracking, and rule application that balloon the matcher well beyond the W-18
+core; they are scheduled for **W-19**.
+
+### §20.7 No grammar change
+
+`MatchQ[…]`, `Cases[…]`, and `FreeQ[…]` are ordinary `Head[args]` applications.
+W-18 touches only `wolfram-runtime`'s builtin handler table and the held set; the
+lexer, parser, and grammar files are untouched. The `Blank`/`Pattern` node
+vocabulary is reused unchanged from `cas-pattern-matching`.
+
+
 ### §6 References
 
 Internal: [`HML00`](HML00-historical-math-languages-roadmap.md),

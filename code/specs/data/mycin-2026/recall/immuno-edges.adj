@@ -99,4 +99,16 @@ rulebook immuno_facts {
         source "X-SCID results from mutations in the IL2RG gene encoding the common gamma chain cytokine receptor subunit, which is essential for multiple interleukin signaling pathways."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK562182/"
         trust authoritative
+
+    % --- EXPAND: Wiskott-Aldrich syndrome molecular lesion is the WAS gene ------
+    relate gene_defect(wiskott_aldrich_syndrome, was)
+        source "The etiology of Wiskott-Aldrich syndrome is mutations in the WAS gene responsible for the production of WAS protein involved in cellular signaling and immunological synapse formation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539838/"
+        trust authoritative
+
+    % --- EXPAND: hereditary angioedema is C1-inhibitor deficiency ---------------
+    relate deficiency_of(hereditary_angioedema, c1_inhibitor)
+        source "Hereditary angioedema (HAE) is an autosomal dominant disease caused by the lack of or a dysfunctional C1-inhibitor protein."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482266/"
+        trust authoritative
 }

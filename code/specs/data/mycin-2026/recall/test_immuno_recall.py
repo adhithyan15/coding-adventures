@@ -41,6 +41,8 @@ EXPECTED = [
     ("type_iii_hypersensitivity", "mediated_by", "immune_complexes"),  # expand (NBK559122)
     ("type_ii_hypersensitivity", "mediated_by", "igg_igm_antibodies"),  # expand (NBK563264)
     ("x_linked_scid", "gene_defect", "il2rg"),                       # expand (NBK562182)
+    ("wiskott_aldrich_syndrome", "gene_defect", "was"),              # expand (NBK539838)
+    ("hereditary_angioedema", "deficiency_of", "c1_inhibitor"),      # expand (NBK482266)
 ]
 VAR = {"mediated_by": "Mediator", "associated_hla": "HLA",
        "gene_defect": "Gene", "deficiency_of": "Component"}

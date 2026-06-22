@@ -287,6 +287,62 @@ mod tests {
     }
 
     #[test]
+    fn w18_pattern_matching_evaluates_end_to_end() {
+        // Parsed from real source, so the `_`/`_Integer`/`_Real` spellings go
+        // through the lowerer (`_Integer` → `Blank[Integer]`) and the held
+        // pattern handlers. (W-18: MatchQ / Cases / FreeQ.)
+        let mut r = WolframRepl::new();
+        // MatchQ.
+        assert!(matches!(
+            r.feed("MatchQ[2, _]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("MatchQ[2, _Integer]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("MatchQ[2, 3]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+        // A float is _Real, not _Integer.
+        assert!(matches!(
+            r.feed("MatchQ[2.0, _Integer]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+        // Cases filters; `_Integer` drops the real.
+        assert!(matches!(
+            r.feed("Cases[{1, 2, 3, 4}, _]"),
+            ReplResponse::Output(t) if t.contains("{1, 2, 3, 4}")
+        ));
+        assert!(matches!(
+            r.feed("Cases[{1, 2, 3}, 2]"),
+            ReplResponse::Output(t) if t.contains("{2}")
+        ));
+        assert!(matches!(
+            r.feed("Cases[{1, 2.0, 3}, _Integer]"),
+            ReplResponse::Output(t) if t.contains("{1, 3}")
+        ));
+        // FreeQ — membership and nested-head occurrence.
+        assert!(matches!(
+            r.feed("FreeQ[{1, 2, 3}, 2]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+        assert!(matches!(
+            r.feed("FreeQ[{1, 2, 3}, 5]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        assert!(matches!(
+            r.feed("FreeQ[f[g[2]], g]"),
+            ReplResponse::Output(t) if t.contains("False")
+        ));
+        assert!(matches!(
+            r.feed("FreeQ[f[g[2]], h]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+    }
+
+    #[test]
     fn continues_while_a_bracket_is_open() {
         let mut r = WolframRepl::new();
         assert_eq!(r.feed("f[1,"), ReplResponse::NeedMore); // open bracket
