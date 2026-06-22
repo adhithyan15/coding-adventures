@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.23.0] - 2026-06-22
+
+### Added — fold `(N).toString([radix])` on non-negative integer literals
+
+A numeric literal's `toString` now folds to a string literal when the receiver
+is a non-negative integer and the radix is known (ECMAScript §21.1.3.6):
+`(255).toString()` → `"255"`, `(255).toString(16)` → `"ff"`,
+`(255).toString(2)` → `"11111111"`, `(35).toString(36)` → `"z"`. A new
+`to_radix_string` helper renders the integer with JS's lowercase `0-9a-z`
+digits.
+
+Conservative scope: the receiver must be a non-negative integer below `2^53`
+(beyond the safe-integer ceiling JS switches to exponential notation, which a
+digit loop would not reproduce); the radix is the default 10 or a single
+integer literal in `2..=36`. A fractional receiver (`(3.5).toString(2)` is a
+binary fraction we don't model), an out-of-range radix (1, 0, 37 → RangeError),
+and a variable radix all pass through unchanged. 7 new unit tests.
+
+> Version note: bumped to 0.23.0 (skipping 0.22.0, reserved by the concurrently
+> -developed `indexOf` fold) so the parallel branches don't collide on the
+> version line.
+
 ## [0.21.0] - 2026-06-22
 
 ### Added — string indexing folds (`"abc".charCodeAt(0)` → `97`, `"abc".charAt(1)` → `"b"`)
