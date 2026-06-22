@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.18.0] - 2026-06-22
+
+### Added — unary bitwise NOT folding (`~5` → `-6`)
+
+`fold_unary` now folds the unary `~` operator on a `NumericLiteral` under ES
+`ToInt32` semantics (ECMAScript §13.5.6 `BitwiseNOT`):
+
+| before  | after | reasoning                                   |
+|---------|-------|---------------------------------------------|
+| `~5`    | `-6`  | `~ToInt32(5)  = ~5  = -6`                    |
+| `~-1`   | `0`   | `~ToInt32(-1) = ~-1 =  0`                    |
+| `~5.9`  | `-6`  | `ToInt32` truncates toward zero first → `~5` |
+| `~~9`   | `9`   | double complement is the `ToInt32` identity (folds bottom-up in one walk) |
+
+This was the lone bitwise gap: the binary `&`/`|`/`^`/`<<`/`>>`/`>>>` operators
+already fold via [`to_int32`]/[`to_uint32`] (CLOC15.D), and `~` now reuses the
+very same `to_int32` coercion so the unary and binary bitwise paths stay
+bit-for-bit consistent. Rust's prefix `!` on `i32` *is* the two's-complement
+bitwise NOT, matching JS exactly.
+
+Folding is restricted to a `NumericLiteral` argument: `~x` for an identifier or
+call needs the runtime value, and `~"5"`/`~true` would require string/boolean
+`ToNumber` coercion that the conservative fold-set deliberately leaves to a
+later phase. The fold emits a correlation-vector contribution like every other
+fold, so `~5 → -6 → emitted token` stays traceable.
+
+Two new unit tests (`fold_bitwise_not_on_numeric_literal`,
+`bitwise_not_on_identifier_does_not_fold`).
+
 ## [0.17.0] - 2026-06-21
 
 ### Added — negation push for (in)equality (`!(a == b)` → `a != b`)

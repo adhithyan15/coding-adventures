@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.163.0] - 2026-06-22
+
+### Added — unary bitwise NOT folding (`~5` → `-6`) at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.18.0, which folds the
+unary `~` operator on a numeric literal under ES `ToInt32` semantics: `~5` →
+`-6`, `~-1` → `0`, `~5.9` → `-6`, `~~9` → `9`. This reuses the same `to_int32`
+coercion the binary bitwise operators already use, so the two stay bit-for-bit
+consistent.
+
+New e2e fixture `tests/diff/simple-fold-bitnot` (and integration test
+`diff_simple_fold_bitnot.rs`) is the end-to-end oracle, with a
+whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
+
+The `--help_markdown` golden fixture was regenerated for the version bump
+(`Version: 0.163.0`).
+
 ## [0.162.0] - 2026-06-21
 
 ### Added — negation push (`!(a == b)` → `a != b`) at SIMPLE/ADVANCED
