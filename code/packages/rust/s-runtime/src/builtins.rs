@@ -6177,15 +6177,33 @@ fn parse_date_by(args: &[Arg]) -> SResult<DateStep> {
     }
 }
 
+/// The widest absolute civil-month index `add_months_clamped` will ever feed to
+/// the kernel. A representable Date is at most `MAX_DATE_DAYS` ≈ 1e11 days from the
+/// epoch (~270 million years); a month is at least 28 days, so any month index
+/// beyond `MAX_DATE_DAYS / 28` (plus a small slack) provably lands outside the
+/// Date range. Clamping `total` to this bound keeps `days_from_civil`'s internal
+/// `era * 146097` multiplication comfortably inside `i64` — so an absurd `by =
+/// "9e18 months"` can never overflow/panic the kernel; the clamped (still
+/// out-of-range) day count is then rejected by the caller's `MAX_DATE_DAYS`
+/// `push` guard, exactly as a directly out-of-range numeric Date would be.
+const MAX_DATE_MONTHS: i64 = MAX_DATE_DAYS / 28 + 12;
+
 /// Add `n` civil months to `(y, m)` (keeping a separate day), clamping the
 /// day-of-month to the target month's length. `n` may be negative. Pure i64
-/// arithmetic with `rem_euclid`/`div_euclid` so negative totals never panic.
+/// arithmetic with `rem_euclid`/`div_euclid` so negative totals never panic, and
+/// the absolute month index is clamped to [`MAX_DATE_MONTHS`] so the kernel call
+/// below can never overflow even for an absurd `n`.
 fn add_months_clamped(y: i64, m: i64, d: i64, n: i64) -> (i64, i64, i64) {
     // Convert to a 0-based absolute month index, shift, decompose back. Saturating
-    // arithmetic keeps this total even for an absurd `n`; the day count it feeds is
-    // re-validated against MAX_DATE_DAYS by the caller's `push`, so a saturated
-    // result simply errors there rather than wrapping.
-    let total = y.saturating_mul(12).saturating_add(m - 1).saturating_add(n);
+    // arithmetic prevents an overflow *here*, and the explicit clamp keeps the
+    // index small enough that `days_from_civil` (called via `days_in_month`)
+    // cannot overflow either. A clamped, out-of-range result is re-validated
+    // against MAX_DATE_DAYS by the caller's `push`, which turns it into an error.
+    let total = y
+        .saturating_mul(12)
+        .saturating_add(m - 1)
+        .saturating_add(n)
+        .clamp(-MAX_DATE_MONTHS, MAX_DATE_MONTHS);
     let ny = total.div_euclid(12);
     let nm = total.rem_euclid(12) + 1; // 1..=12
                                        // Clamp the day to the new month's length.

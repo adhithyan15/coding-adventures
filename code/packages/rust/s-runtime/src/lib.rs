@@ -1741,6 +1741,30 @@ mod tests {
     }
 
     #[test]
+    fn seq_date_huge_month_multiplier_no_overflow_panic() {
+        // A crafted enormous month/year multiplier must NOT overflow-panic the
+        // civil kernel (it would, pre-fix, via add_months_clamped → days_from_civil).
+        // The month index is clamped to MAX_DATE_MONTHS, so the generated date is
+        // out of range: the `to` path simply steps past `to` immediately (empty
+        // sequence), and the `length.out` path errors via the MAX_DATE_DAYS push
+        // guard. Either way — no panic, no OOM. We assert only that evaluation
+        // *completes* (Ok-or-Err, never a panic) and any result stays bounded.
+        let to_path = eval_s(
+            "seq(as.Date(\"2000-01-01\"), as.Date(\"2001-01-01\"), by = \"9000000000000000000 months\")\n",
+        );
+        match to_path {
+            Ok(v) => assert!(v.length() <= 1, "expected a bounded result, got {}", v.length()),
+            Err(_) => {} // erroring is also acceptable
+        }
+        // The length.out path reaches k=1 with the huge step → out-of-range day →
+        // clean error (never a panic).
+        assert!(eval_s(
+            "seq(as.Date(\"2000-01-01\"), by = \"9000000000000000000 years\", length.out = 3)\n"
+        )
+        .is_err());
+    }
+
+    #[test]
     fn seq_numeric_unaffected_by_date_path() {
         // Plain numeric seq still works (no Date dispatch).
         assert_eq!(nums("seq(1, 5)\n"), vec![1.0, 2.0, 3.0, 4.0, 5.0]);
