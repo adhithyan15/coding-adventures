@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.26.0] - 2026-06-22
+
+### Added — fold `"ab".repeat(count)` on string literals
+
+`String.prototype.repeat` (ECMAScript §22.1.3.18) now folds to a string literal
+when the receiver is a string literal and the single argument is a non-negative
+integer literal: `"ab".repeat(3)` → `"ababab"`, `"x".repeat(0)` → `""`. A new
+`fold_string_repeat` helper concatenates the whole receiver `count` times —
+unlike `slice` it can never split a surrogate pair, since the string is
+duplicated, not cut.
+
+Conservative scope, with an explicit **denial-of-service guard**: declines
+(leaves the call) for a negative count (JS throws a `RangeError`, which folding
+would erase), a fractional/non-finite/non-literal count, or a result that would
+exceed `MAX_REPEAT_UNITS` (100 000) UTF-16 code units — `"x".repeat(1e9)` is a
+valid program but must not be materialized into a gigabyte literal at compile
+time. `checked_mul` keeps the length computation itself from overflowing. 6 new
+unit tests.
+
+> Version note: bumped to 0.26.0 — above the merged `slice` fold (0.24.0) and
+> the open numeric `toString(radix)` fold (0.25.0, PR #6560) — so the parallel
+> branches don't collide on the version line.
+
 ## [0.24.0] - 2026-06-22
 
 ### Added — fold `"abcd".slice(start[, end])` on string literals
