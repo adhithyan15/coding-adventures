@@ -159,6 +159,13 @@ struct VarBinding {
     /// produced), `ty` is the **element** type, and `array` carries the extra
     /// state a subscript access needs.  `None` for an ordinary scalar.
     array: Option<ArrayInfo>,
+    /// `true` when this block scalar is accessed from inside a **procedure**
+    /// body (LANG-FULL enabler **E6**).  Such a variable outlives any single
+    /// call frame and is shared across functions, so it is materialised as a
+    /// module **global** rather than a register: every read lowers to
+    /// `global_load "<slot>"` and every write to `global_store "<slot>"` (the
+    /// `slot` doubles as the global's name).  A plain scalar stays `false`.
+    is_global: bool,
 }
 
 /// Per-array state recorded at its declaration, so a later `A[i]` access can be
@@ -231,6 +238,12 @@ struct Compiler {
     /// `goto s[i]` (1-based) selects the i-th target.  Declared in the block's
     /// declaration part, before the statements that use it.
     switches: HashMap<String, Vec<String>>,
+    /// Names referenced inside a **procedure** body in the block currently being
+    /// compiled (LANG-FULL **E6**).  Computed once per block before any scalar
+    /// is declared; a block scalar whose name is in this set is materialised as
+    /// a module global (`is_global`) so the procedure and the enclosing block
+    /// share it.  Saved/restored around nested blocks.
+    block_captured: HashSet<String>,
 }
 
 impl Default for Compiler {
@@ -249,6 +262,7 @@ impl Default for Compiler {
             functions: Vec::new(),
             proc_sigs: HashMap::new(),
             switches: HashMap::new(),
+            block_captured: HashSet::new(),
         }
     }
 }
@@ -333,20 +347,78 @@ impl Compiler {
                 }
             }
         }
+
+        // Pass 0.5 — E6 capture analysis.  Compute the set of names referenced
+        // inside *any* procedure body of this block, so a block scalar with such
+        // a name is declared as a module **global** (shared across functions)
+        // rather than a register.  Done before any scalar is declared so the
+        // `declare_var` below sees the right disposition, and before any
+        // procedure body is lowered so the global binding exists for injection.
+        let saved_captured = std::mem::take(&mut self.block_captured);
+        self.block_captured = self.collect_block_captures(node);
+
+        // Pass 1 — non-procedure declarations (scalars / arrays / switches).
+        // Scalars marked captured become globals here.
         for child in direct_nodes(node) {
-            if child.rule_name == "declaration" {
+            if child.rule_name == "declaration"
+                && first_direct_node(child, "procedure_decl").is_none()
+            {
                 self.emit_declaration(child)?;
             }
         }
+        // Pass 2 — procedure declarations, lowered out of line.  Every global
+        // they capture is now declared, so `compile_procedure` can inject it.
+        for child in direct_nodes(node) {
+            if child.rule_name == "declaration"
+                && first_direct_node(child, "procedure_decl").is_some()
+            {
+                self.emit_declaration(child)?;
+            }
+        }
+        // Pass 3 — statements.
         for child in direct_nodes(node) {
             if child.rule_name == "statement" {
                 self.emit_statement(child)?;
             }
         }
+
+        self.block_captured = saved_captured;
         if !is_root {
             self.pop_scope();
         }
         Ok(())
+    }
+
+    /// E6 capture analysis: collect every NAME referenced inside a procedure
+    /// body of `block`, minus each procedure's own parameters and its result
+    /// name (those are local to the procedure, not enclosing-scope captures).
+    /// A block scalar whose name lands in this set is materialised as a global.
+    fn collect_block_captures(&self, block: &GrammarASTNode) -> HashSet<String> {
+        let mut captured = HashSet::new();
+        for child in direct_nodes(block) {
+            if child.rule_name != "declaration" {
+                continue;
+            }
+            let Some(proc_decl) = first_direct_node(child, "procedure_decl") else {
+                continue;
+            };
+            // The procedure's own locals (param names + the result name) are not
+            // captures. `procedure_parts` is best-effort here; an unparseable
+            // heading just means we exclude nothing, which is safe (we only ever
+            // globalise names that are *also* declared as block scalars).
+            let mut local: HashSet<String> = HashSet::new();
+            if let Ok((pname, params, _)) = self.procedure_parts(proc_decl) {
+                local.insert(pname);
+                for (p, _) in params {
+                    local.insert(p);
+                }
+            }
+            collect_name_tokens(proc_decl, &mut captured);
+            for l in &local {
+                captured.remove(l);
+            }
+        }
+        captured
     }
 
     fn emit_declaration(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
@@ -744,6 +816,21 @@ impl Compiler {
         let saved_switches = std::mem::take(&mut self.switches);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
 
+        // E6: a procedure body addresses an enclosing block scalar that was
+        // materialised as a global (`is_global`).  The fresh scope above hides
+        // the enclosing scopes, so re-inject every visible global binding so the
+        // body's `require_var` resolves it (and lowers to `global_load`/
+        // `global_store`).  A value parameter with the same name shadows it
+        // below — `declare_var` overwrites the entry — which is correct ALGOL
+        // scoping.
+        for scope in &saved_scopes {
+            for (gname, binding) in scope {
+                if binding.is_global {
+                    self.scopes[0].insert(gname.clone(), binding.clone());
+                }
+            }
+        }
+
         // Bind value parameters and the result variable (the procedure name).
         let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len());
         for (pname, pty) in &params {
@@ -1000,12 +1087,22 @@ impl Compiler {
                     binding.ty.name()
                 )));
             }
-            self.emit(IIRInstr::new(
-                "mov",
-                Some(binding.slot),
-                vec![Operand::Var(rhs.slot.clone())],
-                binding.ty.iir(),
-            ));
+            if binding.is_global {
+                // E6: a captured block scalar is a module global.
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![Operand::Str(binding.slot), Operand::Var(rhs.slot.clone())],
+                    "void",
+                ));
+            } else {
+                self.emit(IIRInstr::new(
+                    "mov",
+                    Some(binding.slot),
+                    vec![Operand::Var(rhs.slot.clone())],
+                    binding.ty.iir(),
+                ));
+            }
         }
         Ok(())
     }
@@ -1527,6 +1624,30 @@ impl Compiler {
         Ok(())
     }
 
+    /// Read a scalar binding into an `ExprValue`.  A captured **global** (E6) is
+    /// fetched with `global_load` into a fresh temp; a plain scalar's register
+    /// slot is returned directly.
+    fn read_scalar(&mut self, binding: VarBinding) -> ExprValue {
+        if binding.is_global {
+            let dest = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "global_load",
+                Some(dest.clone()),
+                vec![Operand::Str(binding.slot.clone())],
+                binding.ty.iir(),
+            ));
+            ExprValue {
+                slot: dest,
+                ty: binding.ty,
+            }
+        } else {
+            ExprValue {
+                slot: binding.slot,
+                ty: binding.ty,
+            }
+        }
+    }
+
     fn emit_expr(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         self.set_loc(node);
 
@@ -1542,10 +1663,7 @@ impl Compiler {
                 }
                 let name = self.simple_variable_name(node)?;
                 let binding = self.require_var(&name)?;
-                Ok(ExprValue {
-                    slot: binding.slot,
-                    ty: binding.ty,
-                })
+                Ok(self.read_scalar(binding))
             }
             "proc_call" => self.emit_proc_call(node),
             "expression" | "arith_expr" | "bool_expr" => self.emit_single_child_expr(node),
@@ -2163,15 +2281,22 @@ impl Compiler {
                 "duplicate declaration for {name:?}"
             )));
         }
+        // E6: a scalar referenced from inside a procedure body becomes a module
+        // global (shared across functions) instead of a register. Its slot
+        // doubles as the global's name; no register is reserved.
+        let is_global = self.block_captured.contains(name);
         current.insert(
             name.to_string(),
             VarBinding {
                 slot: slot.clone(),
                 ty,
                 array: None,
+                is_global,
             },
         );
-        self.register_names.insert(slot.clone());
+        if !is_global {
+            self.register_names.insert(slot.clone());
+        }
         Ok(slot)
     }
 
@@ -2209,6 +2334,7 @@ impl Compiler {
                     lower_slot,
                     elem_ty,
                 }),
+                is_global: false, // arrays-as-globals are a later E6 slice
             },
         );
         self.register_names.insert(slot.clone());
@@ -2287,6 +2413,24 @@ fn direct_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
             ASTNodeOrToken::Token(_) => None,
         })
         .collect()
+}
+
+/// Recursively collect every `NAME` token value reachable under `node` into
+/// `out` (LANG-FULL E6 capture analysis). Over-collection is harmless: only a
+/// name that is *also* declared as an enclosing block scalar is ever
+/// globalised, so a stray identifier (operator, keyword token, label) that
+/// happens through here never affects a real variable.
+fn collect_name_tokens(node: &GrammarASTNode, out: &mut HashSet<String>) {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(t) => {
+                if t.effective_type_name() == "NAME" {
+                    out.insert(t.value.clone());
+                }
+            }
+            ASTNodeOrToken::Node(n) => collect_name_tokens(n, out),
+        }
+    }
 }
 
 /// The `arith_expr` subscripts of a `variable` node, or `None` when the
@@ -2448,6 +2592,51 @@ mod tests {
             .expect("ALGOL source should compile and run")
             .expect("main should return a value");
         result.as_f64().expect("result should be a real")
+    }
+
+    // ── E6 (layer 1) — procedure reads/writes an enclosing-block global ──────
+
+    /// The canonical proof: an outer-block `counter` is read+written by the
+    /// procedure `add` *and* by the enclosing block, so it is materialised as a
+    /// module global shared across the two functions. `add(x)` adds `x` to the
+    /// shared counter and returns it; the block seeds `counter := 40`, then
+    /// `result := add(2)` ⇒ 42. (`add` takes a parameter — a *parameterless*
+    /// procedure call would parse as a bare variable, an orthogonal limitation.)
+    const E6_PROG: &str = "begin integer counter, result; \
+         integer procedure add(x); value x; integer x; \
+            add := counter := counter + x; \
+         counter := 40; \
+         result := add(2) end";
+
+    #[test]
+    fn e6_enclosing_scalar_becomes_global() {
+        let module = compile_source(E6_PROG, "test").expect("compiles");
+        // `counter` is referenced inside `bump`, so it must lower to the typed
+        // global ops — in BOTH `bump` and `main`, not a register mov.
+        let mut loads = 0usize;
+        let mut stores = 0usize;
+        for f in &module.functions {
+            for i in &f.instructions {
+                match i.op.as_str() {
+                    "global_load" => {
+                        assert_eq!(i.srcs.first().and_then(|o| o.as_str_lit()), Some("counter"));
+                        loads += 1;
+                    }
+                    "global_store" => {
+                        assert_eq!(i.srcs.first().and_then(|o| o.as_str_lit()), Some("counter"));
+                        stores += 1;
+                    }
+                    _ => {}
+                }
+            }
+        }
+        assert!(loads >= 1 && stores >= 1, "expected global_load+store, got {loads}+{stores}");
+    }
+
+    #[test]
+    fn e6_procedure_shares_global_with_block_runs_on_vm() {
+        // RUN it on the VM (which executes the typed global ops): ⇒ 42.
+        assert_eq!(run_i64(E6_PROG), 42);
     }
 
     #[test]
