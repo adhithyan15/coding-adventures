@@ -6208,20 +6208,23 @@ fn days_in_month(y: i64, m: i64) -> i64 {
 /// bounded by [`MAX_SEQ_LEN`] with checked arithmetic *before* any allocation, so
 /// a span/step implying billions of dates errors rather than exhausting memory.
 fn seq_date(args: &[Arg]) -> SResult<SValue> {
-    // `from` — the first positional Date, taken as a single day count.
+    // `from` — the first positional Date, taken as a single day count. We route it
+    // through `checked_date_days` (the same ±MAX_DATE_DAYS guard `as.Date` uses) so
+    // a hand-built out-of-range Date (e.g. `structure(1e300, class="Date")`) is
+    // rejected up front and the span/step arithmetic below can never overflow i64.
     let from = first_positional(args)?
         .as_double()?
         .get_value(0)
-        .filter(|v| v.is_finite())
-        .map(|v| v.trunc() as i64)
-        .ok_or_else(|| SError::BadArgs("seq.Date: 'from' must be a finite Date".into()))?;
+        .and_then(checked_date_days)
+        .ok_or_else(|| SError::BadArgs("seq.Date: 'from' must be a finite, in-range Date".into()))?;
 
     let step = parse_date_by(args)?;
 
     // `length.out =` (alias `length_out`) takes priority over `to`.
     let length_out = named_count(args, "length.out").or_else(|| named_count(args, "length_out"));
 
-    // `to` is the second positional argument or the named `to =`.
+    // `to` is the second positional argument or the named `to =`. Same in-range
+    // guard as `from`, so a crafted out-of-range `to` cannot overflow `to - from`.
     let to: Option<i64> = nth_positional(args, 1)
         .or_else(|| {
             args.iter()
@@ -6230,8 +6233,7 @@ fn seq_date(args: &[Arg]) -> SResult<SValue> {
         })
         .and_then(|v| v.as_double().ok())
         .and_then(|d| d.get_value(0))
-        .filter(|v| v.is_finite())
-        .map(|v| v.trunc() as i64);
+        .and_then(checked_date_days);
 
     if length_out.is_none() && to.is_none() {
         return Err(SError::BadArgs(
@@ -6318,7 +6320,16 @@ fn seq_date(args: &[Arg]) -> SResult<SValue> {
                             ))
                         })?;
                     for k in 0..n as i64 {
-                        push(&mut days, from + s * k)?;
+                        // Checked: `from + s·k`. By construction k·s stays within
+                        // the (bounded) span, but compute it defensively so even a
+                        // crafted `by` cannot overflow — it errors instead.
+                        let off = s
+                            .checked_mul(k)
+                            .ok_or_else(|| SError::BadArgs("seq.Date: step overflow".into()))?;
+                        let z = from
+                            .checked_add(off)
+                            .ok_or_else(|| SError::BadArgs("seq.Date: step overflow".into()))?;
+                        push(&mut days, z)?;
                     }
                 }
                 // else: step points away from `to` → empty sequence (R returns
