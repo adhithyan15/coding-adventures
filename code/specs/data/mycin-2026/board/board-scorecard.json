@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 154,
-    "correct": 147,
+    "total": 155,
+    "correct": 148,
     "abstained": 7,
     "wrong": 0,
     "by_tactic": {
@@ -11,7 +11,7 @@
         "wrong": 0
       },
       "management": {
-        "correct": 7,
+        "correct": 8,
         "abstained": 0,
         "wrong": 0
       },
@@ -565,6 +565,14 @@
     },
     {
       "id": "mgmt_g6pd",
+      "tactic": "management",
+      "gold": "ceftriaxone+vancomycin",
+      "answer": "ceftriaxone+vancomycin",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "mgmt_myasthenia",
       "tactic": "management",
       "gold": "ceftriaxone+vancomycin",
       "answer": "ceftriaxone+vancomycin",

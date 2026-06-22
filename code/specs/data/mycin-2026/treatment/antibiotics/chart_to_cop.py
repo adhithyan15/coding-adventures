@@ -120,6 +120,9 @@ _CONTEXT_FROM_FACT = {
     # the fluoroquinolone (moxifloxacin) is QT-prolonging — both already grounded in the rulebook.
     ("comorbidity", "g6pd_deficiency"): "g6pd_deficiency",
     ("comorbidity", "qt_prolongation"): "qt_prolongation",
+    # myasthenia gravis → the fluoroquinolone (moxifloxacin) can exacerbate muscle weakness
+    # (FDA boxed warning) — grounded class_contraindicated_in(fluoroquinolone, myasthenia_gravis).
+    ("comorbidity", "myasthenia_gravis"): "myasthenia_gravis",
 }
 
 # CC-4: a chart `objective_priority` fact → the (w_cost, w_tox) objective blend the

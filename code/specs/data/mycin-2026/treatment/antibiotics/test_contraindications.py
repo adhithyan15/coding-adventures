@@ -112,6 +112,19 @@ def test_g6pd_deficiency_excludes_the_sulfonamide():
     assert "glucose-6-phosphate dehydrogenase" in info["source"]
 
 
+def test_myasthenia_gravis_excludes_the_fluoroquinolone():
+    cli = _cli_or_skip()
+    # CC-3c comorbidity family (class route): myasthenia gravis excludes the fluoroquinolone
+    # (moxifloxacin) — the FDA boxed warning — via the SAME generic class rule that fires for
+    # pregnancy / qt_prolongation, proving the mechanism is context-driven, not hardcoded.
+    out = ci.derive_contraindications(cli, {"myasthenia_gravis"})
+    assert set(out) == {"moxifloxacin"}, out
+    info = out["moxifloxacin"]
+    assert info["context"] == "myasthenia_gravis"
+    assert info["trust"] == "authoritative" and info["source"]
+    assert "myasthenia gravis" in info["source"]
+
+
 # --------------------------------------------------------------------------
 # CC-3b — β-lactam allergy is SIDE-CHAIN-scoped, not class-wide.
 # --------------------------------------------------------------------------
