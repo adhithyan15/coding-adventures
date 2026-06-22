@@ -1303,17 +1303,54 @@ fn convert_unary_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
     // unary_expression = postfix_expression
     //                  | "delete" | "void" | "typeof" | PLUS | MINUS | TILDE | BANG
     //                    unary_expression
-    let nodes = node_children(node);
-    if nodes.len() == 1 {
-        return convert_expression(nodes[0]); // pass-through
-    }
-    // Has a prefix operator token.
-    let op_tok = node.children.iter().find_map(|c| match c {
-        ASTNodeOrToken::Token(t) => Some(t.value.as_str()),
+    //
+    // BUG HISTORY — *why this is not a simple child-count switch.* The
+    // prefix operator (`!`, `-`, `typeof`, …) is a **token** child, and the
+    // operand is an **AST-node** child. `node_children` deliberately drops
+    // token children (it returns only `ASTNodeOrToken::Node`s), so BOTH
+    // grammar alternatives expose *exactly one* AST child node:
+    //
+    //     postfix_expression           → children = [ Node(operand) ]
+    //     "!" unary_expression         → children = [ Token("!"), Node(operand) ]
+    //                                                              ^^^^^^^^^^^^^
+    //                                     node_children() = [ Node(operand) ]  (len 1)
+    //
+    // The earlier `if node_children(node).len() == 1 { pass-through }`
+    // therefore mis-classified *every* prefix-operator form as a
+    // pass-through and silently returned the bare operand — `!a` emitted as
+    // `a`, `-b` as `b`, `~c` as `c`, `typeof x` as `x`. That is a
+    // **miscompile** (SIMPLE/ADVANCED), not a missed optimization:
+    // WHITESPACE_ONLY kept the operator because it never runs the bridge.
+    //
+    // The correct discriminator is the *presence of a recognized prefix
+    // operator token*, independent of how many AST child nodes there are.
+    let op = node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t) => unary_operator_from_str(t.value.as_str()),
         _ => None,
     });
-    let op_str = op_tok.ok_or_else(|| internal(node, "unary_expression: missing operator token"))?;
-    let op = match op_str {
+    let nodes = node_children(node);
+    let arg_n = nodes
+        .first()
+        .ok_or_else(|| internal(node, "unary_expression: missing argument"))?;
+    match op {
+        // No prefix operator token ⇒ this is the `postfix_expression`
+        // alternative; pass the single operand straight through.
+        None => convert_expression(arg_n),
+        Some(operator) => Ok(Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator,
+            prefix: true,
+            argument: Box::new(convert_expression(arg_n)?),
+        })),
+    }
+}
+
+/// Map a prefix-operator token's text to its [`UnaryOperator`]. Returns
+/// `None` for any token that is not a unary prefix operator (the operand
+/// of a `postfix_expression` pass-through, for instance), which lets the
+/// caller use "did we find an operator?" as the alternative-discriminator.
+fn unary_operator_from_str(s: &str) -> Option<UnaryOperator> {
+    Some(match s {
         "-" => UnaryOperator::Negate,
         "+" => UnaryOperator::Plus,
         "!" => UnaryOperator::Not,
@@ -1321,17 +1358,8 @@ fn convert_unary_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
         "typeof" => UnaryOperator::TypeOf,
         "void" => UnaryOperator::Void,
         "delete" => UnaryOperator::Delete,
-        _ => return Err(internal(node, format!("unknown unary op '{op_str}'"))),
-    };
-    let arg_n = nodes
-        .first()
-        .ok_or_else(|| internal(node, "unary_expression: missing argument"))?;
-    Ok(Expression::UnaryExpression(UnaryExpression {
-        cv: None,
-        operator: op,
-        prefix: true,
-        argument: Box::new(convert_expression(arg_n)?),
-    }))
+        _ => return None,
+    })
 }
 
 // -------------------------------------------------------------------------
@@ -2174,6 +2202,107 @@ mod tests {
             }
             _ => panic!("expected ExpressionStatement"),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Prefix unary expressions — regression for the operator-drop miscompile.
+    //
+    // The bridge used to discriminate the two `unary_expression` grammar
+    // alternatives by counting AST child *nodes*, but the operator is a
+    // *token* (filtered out by `node_children`), so both alternatives look
+    // like a single child and every prefix operator was silently dropped
+    // (`!a` bridged to bare `a`). These tests pin that each operator now
+    // survives as a `UnaryExpression` with the correct `operator`.
+    // -----------------------------------------------------------------------
+
+    /// Pull the single expression out of a one-statement program.
+    fn only_expr(p: &Program) -> &Expression {
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es),
+            )) => &es.expression,
+            _ => panic!("expected a single ExpressionStatement"),
+        }
+    }
+
+    fn assert_prefix_unary(src: &str, expected_op: UnaryOperator) {
+        let p = bridge_ok(src);
+        match only_expr(&p) {
+            Expression::UnaryExpression(u) => {
+                assert_eq!(
+                    u.operator, expected_op,
+                    "operator mismatch for {src:?}: got {:?}",
+                    u.operator
+                );
+                assert!(u.prefix, "prefix flag must be set for {src:?}");
+            }
+            other => panic!("expected UnaryExpression for {src:?}, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn prefix_not_survives_bridge() {
+        assert_prefix_unary("!a;", UnaryOperator::Not);
+    }
+
+    #[test]
+    fn prefix_negate_survives_bridge() {
+        assert_prefix_unary("-a;", UnaryOperator::Negate);
+    }
+
+    #[test]
+    fn prefix_plus_survives_bridge() {
+        assert_prefix_unary("+a;", UnaryOperator::Plus);
+    }
+
+    #[test]
+    fn prefix_bitnot_survives_bridge() {
+        assert_prefix_unary("~a;", UnaryOperator::BitNot);
+    }
+
+    #[test]
+    fn prefix_typeof_survives_bridge() {
+        assert_prefix_unary("typeof a;", UnaryOperator::TypeOf);
+    }
+
+    #[test]
+    fn prefix_void_survives_bridge() {
+        assert_prefix_unary("void a;", UnaryOperator::Void);
+    }
+
+    #[test]
+    fn prefix_delete_survives_bridge() {
+        assert_prefix_unary("delete a.b;", UnaryOperator::Delete);
+    }
+
+    #[test]
+    fn double_negation_nests_two_unaries() {
+        // `!!a` must bridge to Unary(Not, Unary(Not, a)), not collapse.
+        let p = bridge_ok("!!a;");
+        match only_expr(&p) {
+            Expression::UnaryExpression(outer) => {
+                assert_eq!(outer.operator, UnaryOperator::Not);
+                match outer.argument.as_ref() {
+                    Expression::UnaryExpression(inner) => {
+                        assert_eq!(inner.operator, UnaryOperator::Not);
+                        assert!(matches!(inner.argument.as_ref(), Expression::Identifier(_)));
+                    }
+                    other => panic!("expected inner UnaryExpression, got {other:?}"),
+                }
+            }
+            other => panic!("expected outer UnaryExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn unary_pass_through_is_not_wrapped() {
+        // The `postfix_expression` alternative (no operator token) must NOT
+        // be wrapped in a UnaryExpression — `a;` stays a bare identifier.
+        let p = bridge_ok("a;");
+        assert!(
+            matches!(only_expr(&p), Expression::Identifier(_)),
+            "pass-through operand must not gain a spurious UnaryExpression"
+        );
     }
 
     // -----------------------------------------------------------------------

@@ -974,15 +974,34 @@ impl<'a> Emitter<'a> {
         self.maybe_map(&u.cv);
         let s = unary_op_str(u.operator);
         self.write_str(s);
-        // Word-shaped ops (typeof / void / delete) need a space
-        // before their argument; symbol-shaped ops don't.
+        // Two things can go wrong between a prefix operator and its
+        // argument; both produce a *miscompile*, not just ugly output.
+        //
+        // 1. Word-shaped ops (`typeof` / `void` / `delete`) need a space
+        //    so the operator name doesn't fuse with the operand
+        //    (`typeofx` is one identifier).
+        //
+        // 2. Sign ops (`-` / `+`) need a space when the argument would
+        //    print a leading same-sign character, or the two signs fuse
+        //    into the *decrement / increment* token: `-(-a)` must print
+        //    `- -a`, never `--a` (which JS parses as `--a`, pre-decrement
+        //    of `a`). See `arg_starts_with_sign`.
         if matches!(
             u.operator,
             UnaryOperator::TypeOf | UnaryOperator::Void | UnaryOperator::Delete
         ) {
             self.required_ws();
+        } else if let Some(sign) = sign_op_char(u.operator) {
+            if arg_starts_with_sign(&u.argument, sign) {
+                self.required_ws();
+            }
         }
-        self.emit_expression(&u.argument);
+        // Emit the argument at unary binding strength so that any
+        // lower-precedence operand (binary, logical, conditional,
+        // assignment, sequence) is parenthesised. Without this,
+        // `!(a == b)` printed as `!a == b`, which JS reparses as
+        // `(!a) == b` — a different program.
+        self.emit_expression_inner(&u.argument, PREC_UNARY);
     }
 
     fn emit_assignment(&mut self, a: &AssignmentExpression) {
@@ -1295,6 +1314,39 @@ fn expr_prec(e: &Expression) -> u8 {
     }
 }
 
+/// The single character a *sign* prefix operator prints, or `None` for
+/// every other unary operator. Only `-` and `+` can fuse with a same-sign
+/// leading character in the argument to form the `--` / `++` token.
+fn sign_op_char(op: UnaryOperator) -> Option<char> {
+    match op {
+        UnaryOperator::Negate => Some('-'),
+        UnaryOperator::Plus => Some('+'),
+        _ => None,
+    }
+}
+
+/// Would the unary argument `e`, emitted at `PREC_UNARY`, begin with the
+/// character `sign` (`-` or `+`)? Used by [`emit_unary`] to decide whether
+/// a separating space is required to avoid the `--` / `++` token fusion.
+///
+/// The argument is emitted at unary precedence, so anything that binds
+/// *looser* than unary is parenthesised and therefore begins with `(`
+/// (no fusion possible). The only operands that print a leading sign
+/// without parens are:
+///   * a nested unary with the same sign — `-(-a)` → inner prints `-a`;
+///   * a negative numeric literal — `format_js_number` prints the
+///     leading `-` (e.g. a constant-folded `-5`).
+/// A `+` literal never prints a leading `+`, and a `BigIntLiteral`'s value
+/// is always non-negative (the `-` of `-5n` is a `UnaryExpression`), so
+/// only the nested-unary case matters for `+` and bigints cannot fuse.
+fn arg_starts_with_sign(e: &Expression, sign: char) -> bool {
+    match e {
+        Expression::UnaryExpression(u) => sign_op_char(u.operator) == Some(sign),
+        Expression::NumericLiteral(n) => sign == '-' && n.value.is_sign_negative(),
+        _ => false,
+    }
+}
+
 fn binary_op_str(op: BinaryOperator) -> &'static str {
     use BinaryOperator::*;
     match op {
@@ -1543,6 +1595,22 @@ mod tests {
     fn boolean(v: bool) -> Expression {
         Expression::BooleanLiteral(BooleanLiteral { cv: None, value: v })
     }
+    fn binary(op: BinaryOperator, left: Expression, right: Expression) -> Expression {
+        Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: op,
+            left: Box::new(left),
+            right: Box::new(right),
+        })
+    }
+    fn unary(op: UnaryOperator, arg: Expression) -> Expression {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: op,
+            prefix: true,
+            argument: Box::new(arg),
+        })
+    }
 
     fn emit_default(prog: Program) -> EmitOutput {
         let sidecar = Sidecar::new();
@@ -1745,6 +1813,84 @@ mod tests {
         let prog = program().with_body(vec![stmt(e)]);
         let out = emit_default(prog);
         assert_eq!(out.code, "typeof \"x\";");
+    }
+
+    // ---- prefix-unary precedence + token-adjacency ----------
+    //
+    // These pin the two miscompiles that the bridge fix unmasked: a unary
+    // operator over a lower-precedence operand must parenthesise it, and
+    // `-`/`+` over a same-sign operand must keep a separating space so the
+    // pair never fuses into the `--`/`++` token.
+
+    #[test]
+    fn not_over_equality_parenthesises() {
+        // `!(a == b)` must NOT print `!a == b` (which reparses as `(!a) == b`).
+        let e = unary(UnaryOperator::Not, binary(BinaryOperator::Eq, ident("a"), ident("b")));
+        assert_eq!(emit_expr(e), "!(a == b);");
+    }
+
+    #[test]
+    fn negate_over_addition_parenthesises() {
+        let e = unary(UnaryOperator::Negate, binary(BinaryOperator::Add, ident("a"), ident("b")));
+        assert_eq!(emit_expr(e), "-(a + b);");
+    }
+
+    #[test]
+    fn bitnot_over_bitor_parenthesises() {
+        let e = unary(UnaryOperator::BitNot, binary(BinaryOperator::BitOr, ident("a"), ident("b")));
+        assert_eq!(emit_expr(e), "~(a | b);");
+    }
+
+    #[test]
+    fn unary_over_identifier_needs_no_parens() {
+        assert_eq!(emit_expr(unary(UnaryOperator::Not, ident("a"))), "!a;");
+    }
+
+    #[test]
+    fn double_not_does_not_parenthesise() {
+        // `!!a` — equal precedence, no parens, and `!!` never fuses.
+        let e = unary(UnaryOperator::Not, unary(UnaryOperator::Not, ident("a")));
+        assert_eq!(emit_expr(e), "!!a;");
+    }
+
+    #[test]
+    fn negate_over_negate_keeps_separating_space() {
+        // `-(-a)` must print `- -a`, never `--a` (pre-decrement of `a`).
+        let e = unary(UnaryOperator::Negate, unary(UnaryOperator::Negate, ident("a")));
+        assert_eq!(emit_expr(e), "- -a;");
+    }
+
+    #[test]
+    fn plus_over_plus_keeps_separating_space() {
+        // `+(+a)` must print `+ +a`, never `++a` (pre-increment of `a`).
+        let e = unary(UnaryOperator::Plus, unary(UnaryOperator::Plus, ident("a")));
+        assert_eq!(emit_expr(e), "+ +a;");
+    }
+
+    #[test]
+    fn negate_over_negative_literal_keeps_space() {
+        // A folded `-(-5)` would print `5`, but an un-folded negative literal
+        // under a `-` must still separate: `- -5`, never `--5`.
+        let e = unary(UnaryOperator::Negate, num(-5.0));
+        assert_eq!(emit_expr(e), "- -5;");
+    }
+
+    #[test]
+    fn not_over_negate_needs_no_space() {
+        // `!` and `-` don't fuse, so `!-a` needs neither parens nor a space.
+        let e = unary(UnaryOperator::Not, unary(UnaryOperator::Negate, ident("a")));
+        assert_eq!(emit_expr(e), "!-a;");
+    }
+
+    #[test]
+    fn negate_inside_multiply_needs_no_parens() {
+        // `-x * y`: unary binds tighter than `*`, so no parens around `-x`.
+        let e = binary(
+            BinaryOperator::Mul,
+            unary(UnaryOperator::Negate, ident("x")),
+            ident("y"),
+        );
+        assert_eq!(emit_expr(e), "-x * y;");
     }
 
     // ---- variable + function declarations -------------------
