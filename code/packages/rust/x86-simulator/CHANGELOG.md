@@ -1,5 +1,14 @@
 # Changelog — x86-simulator
 
+## 0.7.1 — 2026-06-22 — Oct `static` global cell (LANG-FULL O3 follow-up)
+
+Adds an executed matrix cell `oct_static_global_runs_on_x86_sim`: an Oct
+top-level `static counter` (LANG-FULL O3, merged) shared across functions —
+`bump()` increments it twice, `main` prints it via `out` ⇒ stdout `42`. Runs
+the real Oct frontend's x86_64 output on the simulator, exercising the
+`_twig_globals` data-region support added in 0.7.0 (S8) from a second frontend
+(the Oct counterpart to the ALGOL E6 cell). Test-only; no library change.
+
 ## 0.7.0 — 2026-06-22 — module globals (`_twig_globals`) run locally (x86-sim PR-S8)
 
 The harness now resolves the **`_twig_globals` data symbol**, so an x86_64
