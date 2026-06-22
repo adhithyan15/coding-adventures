@@ -16,6 +16,27 @@ gap **and** carries it further — to the full surface the Ruby frontend
 (`ruby-to-semantic-ir`) already emits — while changing *how* the runtime is
 delivered.
 
+### Current state vs. target (2026-06-21 audit — honest baseline)
+
+This document is the **target architecture**, not the shipped state. As of the
+2026-06-21 audit:
+
+- **`sir-runtime-core` is the only package that exists** (Python + TypeScript). The
+  per-concern packages below (`-pairs`, `-oop`, `-exceptions`, `-regex`, `-shell`)
+  are **not yet created**; pairs live inside `sir-runtime-core` for now.
+- The **Python backend** accepts the v0 eight plus `Floats, Sequences, Maps,
+  ShortCircuit, StringInterpolation` (expressions only). It still `panic!`s on
+  `MutableBindings`, `Loops`, `Classes`, `Modules`, `InstanceVars`, `ClassVars`,
+  `Constants`, `Exceptions`, and routes `__method__` / `block_pass` to the builtin
+  dispatch (runtime "unknown builtin").
+- The **TypeScript backend** accepts only the v0 eight — not even the expression
+  features above.
+
+The work to reach the target is tracked, phase by phase, in
+[`sir-backend-completion-plan.md`](sir-backend-completion-plan.md). Each phase ships
+as its own PR; this contract is updated as packages and features land so it never
+again drifts ahead of the code.
+
 ## Why this exists
 
 A backend turns a `semantic_ir::Module` into target source. Most SIR constructs
@@ -67,7 +88,6 @@ then implement SIR faithfully and uniformly.
 | `cons` `car` `cdr` (Pairs) | — | `sir-runtime-pairs` |
 | `regex` literal | native `re` / `RegExp` engine | `sir-runtime-regex` (flavour/flags) |
 | `backtick` shell-out | native subprocess | `sir-runtime-shell` |
-| `range` literal (`a..b` `a...b` `a..` `..b`) | — (Python `range` is half-open/integer-only; JS has none) | `sir-runtime-range` |
 | `+ - * / = < > <= >= != %` | native operators where SIR semantics match | `sir-runtime-core` for SIR-specific (variadic, truncating `/`) |
 
 ### The truthiness rule (corrects SIR20)
@@ -113,14 +133,6 @@ The base every emitted program needs.
 - closure-handle helpers (`Closure`, `apply`, `make_closure`) and the global
   store (`global_set`/`global_get`/`global_get_static`) used by `IndirectCall`,
   builtin-as-value, and `Globals`.
-- `as_lambda(c) -> c` (Python) — marks a closure strict-arity (a Ruby lambda);
-  see the proc-vs-lambda arity item under "Out of scope". `make_closure`
-  records each block's arity so `apply` can apply proc/block leniency.
-- `doubleSplatMerge(...maps) -> Map` (TypeScript only) — merges call-position
-  `**h` keyword maps into one fresh `Map` (left-to-right, later keys win). JS
-  has no native keyword-argument call, so the TS backend collapses a `**` run
-  into a single trailing options-map argument via this helper; Python uses
-  native `**`. See the call-position cut-line under "Out of scope".
 
 ### `sir-runtime-pairs`
 `Pair`, `cons`, `car`, `cdr`, `is_pair`; Lisp list display via `Pair.__repr__` /
@@ -145,22 +157,6 @@ plus match/scan helpers.
 `backtick(command) -> str` — run a command and capture stdout (Python
 `subprocess`, TS `child_process.execSync`), preserving the SIR contract for exit
 status / output.
-
-### `sir-runtime-range`
-The SIR first-class `Range` value (a Ruby `a..b` / `a...b` literal lowers to
-`BuiltinCall("range", [start, stop, exclusive])`). No faithful native form
-exists — Python's `range` is half-open and integer-only and can't express the
-inclusive or begin/endless forms, and JavaScript has no range type at all.
-- `range(start, stop, exclusive) -> Range` — the constructor the backends emit
-  (`_sir_range(...)` / `__SirRange.range(...)`). Either bound may be nil/`null`
-  for the beginless (`..b`) / endless (`a..`) forms; `exclusive` selects `...`.
-- `Range` is **iterable** (integers upward from `start`; an endless range yields
-  forever — consume lazily; a beginless range raises on iteration, matching
-  Ruby's `(..5).each`), supports **membership** (`includes` / Ruby `include?`),
-  materialises with `to_list` / `toList` (Ruby `to_a`; raises on an unbounded
-  range), and renders in Ruby notation (`1..5`, `1...5`, `1..`, `..5`).
-- Zero dependencies (numeric ranges need no richer display). v0 covers integer
-  ranges; non-integer stride / float ranges are out of scope.
 
 ## How backends consume them
 
@@ -203,65 +199,27 @@ v0 eight). `TailCalls` and `Intrinsics` remain rejected.
 - Each runtime package: own unit tests, `mypy --strict` + ruff / TS-strict + lint,
   coverage ≥ 95%.
 
+## In scope for core changes (updated 2026-06-21)
+
+The original out-of-scope note forbade `semantic-ir` core and frontend changes. That
+restriction is **lifted** for the completion effort: where a faithful implementation
+requires it, the `semantic-ir` core schema and the `ruby-to-semantic-ir` frontend
+**may** change. Known core changes on the roadmap:
+
+- a **variadic `Param` kind** so `*args` / `**kwargs` survive lowering (today the
+  splat prefix is dropped);
+- a **map has-key primitive** so hash-pattern key-presence is enforced faithfully;
+- a **first-class sequence-slice** (or an executed `__seq_slice__`) so array
+  one-splat patterns bind the middle.
+
+Core changes affect every frontend/backend, so each is specced and validated at the
+SIR boundary before dependent backend work builds on it.
+
 ## Out of scope
 
-- Go and Rust backends (static typing + Ruby exceptions/OOP make them a separate,
-  larger effort).
-- **TypeScript call-position `**h` (double-splat) — implemented via runtime
-  merge helper (Q10f).** Ruby `*x` / `**x` reach the backend as
-  `BuiltinCall("splat"/"double_splat", [x])`; `splat` lowers natively to `*x`
-  (Python) / `...x` (TS), and `double_splat` to `**x` in Python. TypeScript has
-  no keyword-argument call form, so instead of a native `**` the backend
-  collapses each contiguous run of `**` markers at a call site into a **single**
-  trailing argument built by `__Sir.doubleSplatMerge(h1, h2)`
-  (`sir-runtime-core`): a fresh `Map<Val, Val>` merged left-to-right (later keys
-  win), the conventional JS "options object". A callee compiled from
-  `def f(**opts)` receives that map as its last positional parameter. Remaining
-  v0 cut-line: only explicit `**map` operands are merged — mixing inline
-  `key: value` pairs with `**h` at one call site is not modelled.
-- **Proc-vs-lambda arity (Q10g) — Python implemented; TypeScript native.** Ruby
-  blocks/procs adjust arity (extra args dropped, missing → `nil`) while lambdas
-  are strict (`ArgumentError` on mismatch). In **Python** the runtime models
-  this: `make_closure` records each block's fixed-positional arity and `apply`
-  reshapes a block's arguments to it; the `lambda` builtin wraps its closure in
-  `as_lambda(...)` so a lambda stays strict (mismatch raises). In **TypeScript**
-  the JS calling convention is *already* proc-lenient (extra args ignored,
-  missing → `undefined`), so block arity needs no runtime work; remaining v0
-  cut-lines on the TS side are strict-lambda enforcement and `undefined`-vs-`nil`
-  for a missing block parameter. Shared v0 cut-line: optional/keyword block
-  params are treated as required positions; a `*rest` block is never trimmed.
-- **`defined?` runtime-presence fidelity.** Ruby `defined?(x)` reaches the
-  backend as `BuiltinCall("defined?", [operand])` and must never evaluate its
-  operand. Both backends inspect the operand's SIR shape at emit time and emit a
-  constant description string (local→`"local-variable"`, const→`"constant"`,
-  `@x`→`"instance-variable"`, `@@x`→`"class variable"`, `$x`→`"global-variable"`,
-  builtin→`"method"`, anything else→`"expression"`). The **non-evaluation
-  contract is honoured for every shape**. v0 simplifications: an instance/class/
-  global variable reports its static description rather than the runtime
-  `nil`-when-unset Ruby would give (no presence predicate in the per-concern
-  runtimes yet). Q10h: a method-call operand `recv.meth` (the `__method__`
-  dispatch envelope) now reports `"method"` (Ruby's category when the method
-  resolves); the respond_to?-presence check that returns `nil` for an absent
-  method is the method-dispatch boundary below. A still-general operand
-  (assignment, etc.) reports `"expression"`. All shapes are non-evaluating.
-- **Ruby method-dispatch boundary (Q10h) — terminal v0 cut-line.** A receiver
-  call `recv.meth(args…)` lowers to `BuiltinCall("__method__", [recv, "meth",
-  …])`, dispatched at runtime by `sir-runtime-oop`'s `call_method`/`callMethod`.
-  That dispatcher resolves only `is_a?`/`kind_of?`/`instance_of?`/`class` and a
-  user `define_method` table; **any other method returns `nil`** (it does not
-  raise). So built-in/collection methods (`arr.each`, `arr.map`, `obj.to_s`, …)
-  evaluate to `nil` rather than running. Consequently `&:sym` symbol-to-proc —
-  which lowers `&:m` to a `block_pass` of a `SymLit` and would need
-  `recv.send(:m)` semantics — is **not** modelled: a bare `SymLit` threaded as a
-  block reaches `apply` as a non-closure (raising), and even a `Symbol#to_proc`
-  shim would bottom out at the same `nil`-returning dispatch. Faithfully
-  executing arbitrary built-in method dispatch (mapping each collection/string
-  method to its native operation) is the larger effort deferred past v0; the
-  structural `defined?(recv.meth)` → `"method"` answer above is the implemented
-  half, and this nil-dispatch behaviour is the surfaced, un-faked boundary.
+- **Go and Rust backends** (static typing + Ruby exceptions/OOP make them a separate,
+  larger effort). Confirmed out of scope on 2026-06-21.
 - Idiomatic-quality / style-transfer of emitted code (correct + readable, not
-  hand-written-equivalent).
-- Changes to `semantic-ir` core or any frontend — this is purely backend
-  translation + runtime packaging. The reconciliation of cross-frontend truthiness
+  hand-written-equivalent). The reconciliation of cross-frontend truthiness
   (a JS frontend's `0 && x`) is a frontend-lowering concern, noted here only so the
   canonical SIR truthiness rule is unambiguous.
