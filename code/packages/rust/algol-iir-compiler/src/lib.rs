@@ -464,18 +464,32 @@ impl Compiler {
         let ident_list = first_direct_node(type_decl, "ident_list")
             .ok_or_else(|| CompileError::Malformed("type_decl missing ident_list".into()))?;
 
+        // LANG-FULL AL6: a leading `own` token gives these variables static
+        // lifetime — they become module globals that persist across calls.
+        let is_own = direct_tokens(type_decl).iter().any(|t| t.value == "own");
+
         for name in direct_tokens(ident_list)
             .into_iter()
             .filter(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
         {
-            let slot = self.declare_var(&name, ty)?;
-            self.emit(IIRInstr::new(
-                "const",
-                Some(slot),
-                vec![ty.default_operand()],
-                ty.iir(),
-            ));
+            let slot = self.declare_var(&name, ty, is_own)?;
+            // A global (an `own` variable, or an E6-captured block scalar) is
+            // zero-initialised once at module load — exactly the `own`
+            // lifetime semantics — so it must NOT get a per-declaration `const`
+            // init. Emitting one inside a procedure body would re-zero the
+            // global on every call (destroying persistence); even at block
+            // level it would be a dead register write shadowing the global.
+            // A plain (register) scalar keeps its zero-init `const`.
+            let is_global = is_own || self.block_captured.contains(&name);
+            if !is_global {
+                self.emit(IIRInstr::new(
+                    "const",
+                    Some(slot),
+                    vec![ty.default_operand()],
+                    ty.iir(),
+                ));
+            }
         }
         Ok(())
     }
@@ -841,13 +855,14 @@ impl Compiler {
         // Bind value parameters and the result variable (the procedure name).
         let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len());
         for (pname, pty) in &params {
-            let slot = self.declare_var(pname, *pty)?;
+            // Parameters and the result slot are real registers, never `own`.
+            let slot = self.declare_var(pname, *pty, false)?;
             param_pairs.push((slot, pty.iir().to_string()));
         }
         // The procedure's name is an in-scope variable holding the return
         // value; seed it with a default so a path that never assigns it still
         // returns a defined value.
-        let result_slot = self.declare_var(&name, ret)?;
+        let result_slot = self.declare_var(&name, ret, false)?;
         self.emit(IIRInstr::new(
             "const",
             Some(result_slot.clone()),
@@ -2273,7 +2288,12 @@ impl Compiler {
         }
     }
 
-    fn declare_var(&mut self, name: &str, ty: ScalarType) -> Result<String, CompileError> {
+    fn declare_var(
+        &mut self,
+        name: &str,
+        ty: ScalarType,
+        is_own: bool,
+    ) -> Result<String, CompileError> {
         let slot = if self.scopes.len() == 1 {
             name.to_string()
         } else {
@@ -2288,10 +2308,17 @@ impl Compiler {
                 "duplicate declaration for {name:?}"
             )));
         }
-        // E6: a scalar referenced from inside a procedure body becomes a module
-        // global (shared across functions) instead of a register. Its slot
-        // doubles as the global's name; no register is reserved.
-        let is_global = self.block_captured.contains(name);
+        // A scalar becomes a module **global** (shared, persistent storage —
+        // `global_load`/`global_store`, no register) in two cases:
+        //   * E6 — it is referenced from inside a procedure body (captured),
+        //     so the procedure and the enclosing block must see one cell; or
+        //   * AL6 — it was declared `own`, giving it static lifetime so its
+        //     value survives across every call of the enclosing block.
+        // In both the slot doubles as the global's name. The slot is already
+        // unique per scope (`__algol_s<N>_<name>` inside a procedure, where the
+        // per-procedure `scope_counter` differs), so two procedures' `own n`
+        // map to distinct globals.
+        let is_global = is_own || self.block_captured.contains(name);
         current.insert(
             name.to_string(),
             VarBinding {
@@ -2644,6 +2671,62 @@ mod tests {
     fn e6_procedure_shares_global_with_block_runs_on_vm() {
         // RUN it on the VM (which executes the typed global ops): ⇒ 42.
         assert_eq!(run_i64(E6_PROG), 42);
+    }
+
+    /// LANG-FULL AL6: an `own` variable inside a procedure keeps its value
+    /// across calls. `bump(d)` adds `d` to its `own integer n`, so three calls
+    /// accumulate: n = 1, 2, 3 and the sum is 6. A *non-`own*` local would
+    /// reset to 0 each call → 1 + 1 + 1 = 3, so 6 is positive proof of static
+    /// lifetime.
+    const AL6_OWN_PROG: &str = "begin integer result; \
+         integer procedure bump(d); value d; integer d; \
+         begin own integer n; n := n + d; bump := n end; \
+         result := bump(1) + bump(1) + bump(1) end";
+
+    #[test]
+    fn al6_own_variable_lowers_to_global() {
+        // The `own integer n` must lower to the typed module-global ops, never
+        // a per-call register — and it must NOT get a per-declaration `const`
+        // re-init (that would re-zero it every call).
+        let module = compile_source(AL6_OWN_PROG, "test").expect("compiles");
+        let bump = module.functions.iter().find(|f| f.name == "bump").expect("bump fn");
+        let own_slot = "__algol_s1_n";
+        assert!(bump.instructions.iter().any(|i| i.op == "global_load"
+            && i.srcs.first().and_then(|o| o.as_str_lit()) == Some(own_slot)),
+            "own `n` read must be global_load {own_slot}; got: {:?}",
+            bump.instructions.iter().map(|i| &i.op).collect::<Vec<_>>());
+        assert!(bump.instructions.iter().any(|i| i.op == "global_store"
+            && i.srcs.first().and_then(|o| o.as_str_lit()) == Some(own_slot)),
+            "own `n` write must be global_store {own_slot}");
+        // No `const` writes the own global (re-init each call would break it).
+        assert!(!bump.instructions.iter().any(|i| i.op == "const"
+            && i.dest.as_deref() == Some(own_slot)),
+            "own global must not be re-zeroed by a per-call const");
+    }
+
+    #[test]
+    fn al6_own_variable_persists_across_calls_runs_on_vm() {
+        // RUN it: 1 + 2 + 3 = 6 (own persists); a plain local would give 3.
+        assert_eq!(run_i64(AL6_OWN_PROG), 6);
+    }
+
+    #[test]
+    fn al6_two_procedures_have_independent_own() {
+        // Each procedure's `own n` is a DISTINCT global (`__algol_s1_n` vs
+        // `__algol_s2_n`), so they don't alias. (`z` is an unused value param
+        // only because a parameterless procedure call parses as a bare variable
+        // — an orthogonal frontend limitation.)
+        //   a(0): n_a 0→1 ⇒ 1 ; b(0): n_b 0→10 ⇒ 10 ; a(0): n_a 1→2 ⇒ 2
+        //   result = 1 + 10 + 2 = 13.
+        // If the two `n`s aliased one global the calls would interleave on a
+        // single cell: 1, 11, 12 ⇒ 24. So 13 proves they are independent.
+        let src = "begin integer result; \
+             integer procedure a(z); value z; integer z; \
+                begin own integer n; n := n + 1; a := n end; \
+             integer procedure b(z); value z; integer z; \
+                begin own integer n; n := n + 10; b := n end; \
+             result := a(0) + b(0) + a(0) end";
+        assert_eq!(run_i64(src), 13);
     }
 
     #[test]

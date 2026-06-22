@@ -65,7 +65,11 @@ declaration  = type_decl
 #   integer x, y, z
 #   real sum, average
 #   boolean flag
-type_decl    = type ident_list ;
+# An optional leading `own` (LANG-FULL AL6) gives the declared variables
+# *static lifetime*: they are allocated once and retain their value across
+# every invocation of the enclosing block/procedure (ALGOL 60 §5.2.5).
+#   own integer n      ' n persists between calls
+type_decl    = [ "own" ] type ident_list ;
 
 type         = "integer" | "real" | "boolean" | "string" ;
 
