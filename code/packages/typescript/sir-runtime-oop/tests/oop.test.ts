@@ -254,7 +254,9 @@ describe("respond_to? honesty + nil floor (M1a)", () => {
   it("unknown method returns nil, never throws", () => {
     // A block method called WITHOUT a block bottoms out at nil (v0 floor).
     expect(callMethod([1, 2, 3], "map")).toBeNull();
-    expect(callMethod("hi", "upcase")).toBeNull();
+    // An out-of-catalog String method (scan needs a regex engine — later PR).
+    expect(callMethod("hi", "scan")).toBeNull();
+    // Numeric has no catalog yet (M1c-Numeric), so every method is the nil floor.
     expect(callMethod(5, "times")).toBeNull();
   });
 });
@@ -397,5 +399,87 @@ describe("built-in method catalog: Hash (M1c)", () => {
     expect(callMethod(h, "respond_to?", "transform_keys")).toBe(false);
     expect(callMethod(h, "transform_keys")).toBeNull();
     expect(callMethod(h, "nil?")).toBe(false);
+  });
+});
+
+describe("built-in method catalog: String (M1c)", () => {
+  it("length / case / reverse", () => {
+    expect(callMethod("hello", "length")).toBe(5);
+    expect(callMethod("hello", "size")).toBe(5);
+    expect(callMethod("hello", "upcase")).toBe("HELLO");
+    expect(callMethod("HELLO", "downcase")).toBe("hello");
+    expect(callMethod("hello world", "capitalize")).toBe("Hello world");
+    expect(callMethod("abc", "reverse")).toBe("cba");
+  });
+
+  it("strip family and chomp", () => {
+    expect(callMethod("  hi  ", "strip")).toBe("hi");
+    expect(callMethod("  hi  ", "lstrip")).toBe("hi  ");
+    expect(callMethod("  hi  ", "rstrip")).toBe("  hi");
+    expect(callMethod("line\n", "chomp")).toBe("line");
+    expect(callMethod("line\r\n", "chomp")).toBe("line");
+    expect(callMethod("hello", "chomp", "lo")).toBe("hel");
+    expect(callMethod("hello", "chomp")).toBe("hello");
+  });
+
+  it("chars / bytes / split", () => {
+    expect(callMethod("abc", "chars")).toEqual(["a", "b", "c"]);
+    expect(callMethod("AB", "bytes")).toEqual([65, 66]);
+    expect(callMethod("a,b,c", "split", ",")).toEqual(["a", "b", "c"]);
+    expect(callMethod("a  b\tc", "split")).toEqual(["a", "b", "c"]);
+  });
+
+  it("predicates and index", () => {
+    expect(callMethod("hello", "include?", "ell")).toBe(true);
+    expect(callMethod("hello", "start_with?", "he")).toBe(true);
+    expect(callMethod("hello", "end_with?", "lo")).toBe(true);
+    expect(callMethod("hello", "index", "l")).toBe(2);
+    expect(callMethod("hello", "index", "z")).toBeNull();
+    expect(callMethod("", "empty?")).toBe(true);
+    expect(callMethod("x", "empty?")).toBe(false);
+  });
+
+  it("replace / sub / gsub are literal (no $& expansion)", () => {
+    expect(callMethod("old", "replace", "new")).toBe("new");
+    expect(callMethod("a.a.a", "sub", "a", "X")).toBe("X.a.a");
+    expect(callMethod("a.a.a", "gsub", "a", "X")).toBe("X.X.X");
+    // A replacement containing regex/backref syntax is inserted verbatim.
+    expect(callMethod("ab", "gsub", "a", "$&")).toBe("$&b");
+  });
+
+  it("to_i / to_f / to_sym", () => {
+    expect(callMethod("42abc", "to_i")).toBe(42);
+    expect(callMethod("  -7", "to_i")).toBe(-7);
+    expect(callMethod("nope", "to_i")).toBe(0);
+    expect(callMethod("3.14xyz", "to_f")).toBe(3.14);
+    expect(callMethod("nope", "to_f")).toBe(0);
+    const sym = callMethod("name", "to_sym") as { name?: string };
+    expect(sym.name).toBe("name");
+  });
+
+  it("repeat (*) and concat (+)", () => {
+    expect(callMethod("ab", "*", 3)).toBe("ababab");
+    expect(callMethod("foo", "+", "bar")).toBe("foobar");
+    // Non-positive counts yield "" (never throw); a hostile count is capped,
+    // never a RangeError ("Invalid string length").
+    expect(callMethod("ab", "*", 0)).toBe("");
+    expect(callMethod("ab", "*", -5)).toBe("");
+    expect((callMethod("ab", "*", 1e9) as string).length).toBeLessThanOrEqual(100_000_000);
+  });
+
+  it("each_char runs the block and returns the receiver", () => {
+    const seen: Val[] = [];
+    const result = callMethod("abc", "each_char", new Closure((ch: Val) => seen.push(ch)));
+    expect(seen).toEqual(["a", "b", "c"]);
+    expect(result).toBe("abc");
+  });
+
+  it("respond_to? honesty + nil floor", () => {
+    expect(callMethod("x", "respond_to?", "upcase")).toBe(true);
+    expect(callMethod("x", "respond_to?", "each_char")).toBe(true);
+    expect(callMethod("x", "respond_to?", "scan")).toBe(false);
+    expect(callMethod("x", "scan")).toBeNull();
+    expect(callMethod("x", "nil?")).toBe(false);
+    expect(callMethod("x", "class")).toBe("String");
   });
 });

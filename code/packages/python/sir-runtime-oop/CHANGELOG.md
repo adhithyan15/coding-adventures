@@ -2,6 +2,28 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.4] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 4 — the **`String`** catalog (per
+`code/specs/sir-method-dispatch.md`, item M1c; a Ruby `String` is a Python `str`,
+which is **immutable**, so every method is non-mutating and returns a fresh
+value):
+
+- Non-block: `length`/`size`, `upcase`, `downcase`, `capitalize`, `reverse`,
+  `strip`/`lstrip`/`rstrip`, `chomp` (default line-ending or explicit suffix),
+  `chars`, `bytes` (UTF-8), `split` (whitespace default or literal separator),
+  `include?`, `start_with?`, `end_with?`, `index` (nil when absent), `replace`,
+  `sub`/`gsub` (**literal** — pattern matched as a plain substring, replacement
+  inserted verbatim with no `\1`/`&` back-reference expansion), `to_i`/`to_f`
+  (leading-numeric, `0`/`0.0` when none — never raising), `to_sym` (interns a
+  `sir-runtime-core` `Symbol`), `empty?`, `*` (repeat), `+` (concat).
+- Block: `each_char` — applied via `sir-runtime-core` `apply`.
+
+`respond_to?` reports the String methods; out-of-catalog stays `nil`. Universal
+`Object` methods still resolve on a String receiver.
+
 ## [0.1.3] - 2026-06-22
 
 ### Added

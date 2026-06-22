@@ -38,7 +38,7 @@
 // reaches us as a trailing `Closure` from sir-runtime-core; `apply` calls it with
 // proc-lenient arity, and `truthy` applies SIR truthiness (only `false`/`nil` are
 // falsy) to predicate results.
-import { apply, Closure, truthy } from "@coding-adventures/sir-runtime-core";
+import { apply, Closure, intern, truthy } from "@coding-adventures/sir-runtime-core";
 
 /**
  * The SIR universal value type at this package's boundary.  Kept as `unknown`'s
@@ -325,6 +325,44 @@ const HASH_BLOCK_METHODS = new Set<string>([
   "each_value",
 ]);
 
+// Non-block `String` methods (M1c).  A Ruby `String` is a JS `string`, which is
+// **immutable** — so every method here is non-mutating and returns a fresh value
+// (the in-place `upcase!` family is out of v0 scope).  `sub`/`gsub` here are the
+// *literal* forms: the pattern is matched as a plain substring (never a regex)
+// and the replacement is inserted verbatim — crucially side-stepping JS's
+// `String.prototype.replace` special-replacement parsing (`$&`, `$1`, `$$`).
+const STRING_METHODS = new Set<string>([
+  "length",
+  "size",
+  "upcase",
+  "downcase",
+  "capitalize",
+  "reverse",
+  "strip",
+  "lstrip",
+  "rstrip",
+  "chomp",
+  "chars",
+  "bytes",
+  "split",
+  "include?",
+  "start_with?",
+  "end_with?",
+  "index",
+  "replace",
+  "sub",
+  "gsub",
+  "to_i",
+  "to_f",
+  "to_sym",
+  "empty?",
+  "*",
+  "+",
+]);
+
+// Block-taking `String` methods (M1c); `each_char` yields one character.
+const STRING_BLOCK_METHODS = new Set<string>(["each_char"]);
+
 /** SIR value equality used by `include?`/`index`/`==` — `===` for primitives,
  * structural for arrays and `Map`s (Ruby `==` is deep). */
 function valEq(a: Val, b: Val): boolean {
@@ -359,6 +397,9 @@ function respondsTo(recv: Val, name: string): boolean {
   }
   if (methods.has(name)) return true;
   if (OBJECT_METHODS.has(name)) return true;
+  if (typeof recv === "string" && (STRING_METHODS.has(name) || STRING_BLOCK_METHODS.has(name))) {
+    return true;
+  }
   if (Array.isArray(recv) && (ARRAY_METHODS.has(name) || ARRAY_BLOCK_METHODS.has(name))) {
     return true;
   }
@@ -631,6 +672,141 @@ function hashBlockMethod(recv: Map<Val, Val>, name: string, block: Closure): Val
   }
 }
 
+// Leading-numeric extractors for `String#to_i` / `String#to_f`.  Ruby parses an
+// optional sign and the longest leading numeric run, ignoring surrounding
+// whitespace, and yields `0` / `0.0` when nothing numeric leads — never an error
+// (unlike JS `Number(...)`, which yields `NaN`).
+const INT_PREFIX = /^[+-]?\d+/;
+const FLOAT_PREFIX = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/;
+
+function strToI(s: string): number {
+  const match = INT_PREFIX.exec(s.trim());
+  return match ? parseInt(match[0], 10) : 0;
+}
+
+function strToF(s: string): number {
+  const match = FLOAT_PREFIX.exec(s.trim());
+  return match ? parseFloat(match[0]) : 0.0;
+}
+
+// Upper bound on the character count `String#*` will produce.  A repeat count
+// can come from untrusted input (e.g. `gets.to_i`); without a cap, `repeat`
+// throws `RangeError: Invalid string length` (a host-implementation leak) or
+// attempts a huge allocation.  Past the cap we yield `""` rather than throw —
+// honouring the runtime's "never crash on the OO surface" invariant.
+const MAX_REPEAT_LEN = 100_000_000;
+
+function strRepeat(s: string, count: Val): string {
+  const n = typeof count === "number" ? Math.trunc(count) : 0;
+  if (n <= 0 || s.length === 0) return "";
+  const capped = s.length * n > MAX_REPEAT_LEN ? Math.floor(MAX_REPEAT_LEN / s.length) : n;
+  return s.repeat(capped);
+}
+
+/** Ruby `String#chomp`: drop a trailing record separator.  With an explicit
+ * `sep`, drop exactly that suffix; with none, drop one trailing `\r\n`, `\n`, or
+ * `\r` (Ruby's default line-ending handling). */
+function chompStr(s: string, sep: Val): string {
+  if (sep !== null && sep !== undefined) {
+    return sep && s.endsWith(sep) ? s.slice(0, -(sep as string).length) : s;
+  }
+  if (s.endsWith("\r\n")) return s.slice(0, -2);
+  if (s.endsWith("\n") || s.endsWith("\r")) return s.slice(0, -1);
+  return s;
+}
+
+/** Non-block `String` methods.  Returns `MISS` if `name` is not catalogued.
+ * Every result is a fresh value — JS strings are immutable, so nothing mutates
+ * `recv` in place. */
+function stringMethod(recv: string, name: string, args: Val[]): Val | typeof MISS {
+  switch (name) {
+    case "length":
+    case "size":
+      return recv.length;
+    case "upcase":
+      return recv.toUpperCase();
+    case "downcase":
+      return recv.toLowerCase();
+    case "capitalize":
+      // Ruby: first char upcased, the rest downcased.
+      return recv.length === 0 ? recv : recv.charAt(0).toUpperCase() + recv.slice(1).toLowerCase();
+    case "reverse":
+      return [...recv].reverse().join("");
+    case "strip":
+      return recv.trim();
+    case "lstrip":
+      return recv.trimStart();
+    case "rstrip":
+      return recv.trimEnd();
+    case "chomp":
+      return chompStr(recv, args.length > 0 ? args[0] : null);
+    case "chars":
+      return [...recv];
+    case "bytes":
+      return [...new TextEncoder().encode(recv)];
+    case "split": {
+      // No argument ⇒ split on runs of whitespace (Ruby's awk-style default,
+      // dropping leading/trailing empties); with a separator ⇒ literal split.
+      if (args.length === 0) {
+        const trimmed = recv.trim();
+        return trimmed === "" ? [] : trimmed.split(/\s+/);
+      }
+      return recv.split(args[0]);
+    }
+    case "include?":
+      return recv.includes(args[0]);
+    case "start_with?":
+      return recv.startsWith(args[0]);
+    case "end_with?":
+      return recv.endsWith(args[0]);
+    case "index": {
+      const i = recv.indexOf(args[0]);
+      return i === -1 ? null : i;
+    }
+    case "replace":
+      // Ruby `String#replace` overwrites the whole content; for an immutable
+      // string that is just the replacement value.
+      return args[0];
+    case "sub": {
+      // Literal first-occurrence replacement — done by index, so the
+      // replacement is inserted verbatim (no `$&`/`$1` expansion).
+      const search = args[0] as string;
+      const idx = recv.indexOf(search);
+      return idx === -1 ? recv : recv.slice(0, idx) + args[1] + recv.slice(idx + search.length);
+    }
+    case "gsub":
+      // Literal global replacement via split/join — immune to special-replacement
+      // parsing that `String.prototype.replaceAll` would apply to a string arg.
+      return recv.split(args[0]).join(args[1]);
+    case "to_i":
+      return strToI(recv);
+    case "to_f":
+      return strToF(recv);
+    case "to_sym":
+      return intern(recv);
+    case "empty?":
+      return recv.length === 0;
+    case "*":
+      return strRepeat(recv, args[0]);
+    case "+":
+      return recv + args[0];
+    default:
+      return MISS;
+  }
+}
+
+/** Block-taking `String` methods.  Returns `MISS` if `name` is not a string
+ * block method. */
+function stringBlockMethod(recv: string, name: string, block: Closure): Val | typeof MISS {
+  switch (name) {
+    case "each_char":
+      for (const ch of recv) apply(block, [ch]);
+      return recv;
+    default:
+      return MISS;
+  }
+}
+
 /**
  * Dispatch method `name` on `recv`.  Resolution order:
  *
@@ -660,7 +836,16 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
   const m = methods.get(name);
   if (m) return m(recv, args);
 
-  if (Array.isArray(recv)) {
+  if (typeof recv === "string") {
+    // A block method (each_char) dispatches only with a trailing Closure.
+    const last = args[args.length - 1];
+    if (STRING_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
+      const blkResult = stringBlockMethod(recv, name, last);
+      if (blkResult !== MISS) return blkResult;
+    }
+    const strResult = stringMethod(recv, name, args);
+    if (strResult !== MISS) return strResult;
+  } else if (Array.isArray(recv)) {
     // A block method (each/map/…) is dispatched only when an actual trailing
     // Closure block is present; the block is split off the positional args.
     const last = args[args.length - 1];
