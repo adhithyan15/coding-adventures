@@ -258,6 +258,39 @@ mod tests {
         assert_eq!(nums("strtoi(\"FF\", 16L) + 1\n"), vec![256.0]);
     }
 
+    // --- R-37: strtoi base = 0L auto-detection through R syntax ---------------
+
+    #[test]
+    fn r37_strtoi_base0() {
+        // 0x / 0X prefix -> hex.
+        assert_eq!(nums("strtoi(\"0x1F\", 0L)\n"), vec![31.0]);
+        assert_eq!(nums("strtoi(\"0X1f\", 0L)\n"), vec![31.0]);
+        // Leading 0 -> octal; lone 0 -> zero; no prefix -> decimal.
+        assert_eq!(nums("strtoi(\"010\", 0L)\n"), vec![8.0]);
+        assert_eq!(nums("strtoi(\"12\", 0L)\n"), vec![12.0]);
+        assert_eq!(nums("strtoi(\"0\", 0L)\n"), vec![0.0]);
+        // Invalid octal digit and empty-after-prefix -> NA.
+        assert_eq!(show("strtoi(\"08\", 0L)\n"), "[1] NA");
+        assert_eq!(show("strtoi(\"0x\", 0L)\n"), "[1] NA");
+        // Explicit bases still work unchanged.
+        assert_eq!(nums("strtoi(\"FF\", 16L)\n"), vec![255.0]);
+    }
+
+    // --- R-37: trimws(whitespace =) through R syntax --------------------------
+
+    #[test]
+    fn r37_trimws_whitespace() {
+        assert_eq!(show("trimws(\"xxhixx\", whitespace = \"x\")\n"), "[1] \"hi\"");
+        assert_eq!(
+            show("trimws(\"xxhix\", which = \"left\", whitespace = \"x\")\n"),
+            "[1] \"hix\""
+        );
+        // Default whitespace unchanged.
+        assert_eq!(show("trimws(\"  hi  \")\n"), "[1] \"hi\"");
+        // NA propagation preserved.
+        assert_eq!(show("trimws(NA, whitespace = \"x\")\n"), "[1] NA");
+    }
+
     #[test]
     fn lists_through_r_syntax() {
         // list() with $ access; lapply -> list; strsplit -> list of char vectors.
@@ -3342,5 +3375,68 @@ mod tests {
             show("levels(cut(c(1.23456, 5.6789), breaks = c(0, 3.14159, 10), dig.lab = 2))\n"),
             "[1]  \"(0,3.1]\" \"(3.1,10]\""
         );
+    }
+
+    // --- R-44: base R Date support (through R syntax) ------------------------
+
+    #[test]
+    fn date_class_through_r_syntax() {
+        assert_eq!(show("class(as.Date(\"2021-03-14\"))\n"), "[1] \"Date\"");
+    }
+
+    #[test]
+    fn date_as_numeric_through_r_syntax() {
+        assert_eq!(nums("as.numeric(as.Date(\"1970-01-01\"))\n"), vec![0.0]);
+        assert_eq!(nums("as.numeric(as.Date(\"1970-01-02\"))\n"), vec![1.0]);
+        assert_eq!(nums("as.numeric(as.Date(\"1969-12-31\"))\n"), vec![-1.0]);
+    }
+
+    #[test]
+    fn date_format_round_trip_through_r_syntax() {
+        assert_eq!(
+            show("format(as.Date(\"2021-03-14\"))\n"),
+            "[1] \"2021-03-14\""
+        );
+        assert_eq!(
+            show("format(as.Date(\"2000-02-29\"))\n"),
+            "[1] \"2000-02-29\""
+        );
+    }
+
+    #[test]
+    fn date_slash_format_through_r_syntax() {
+        assert_eq!(
+            nums("as.numeric(as.Date(\"2021/03/14\", format = \"%Y/%m/%d\"))\n"),
+            nums("as.numeric(as.Date(\"2021-03-14\"))\n")
+        );
+    }
+
+    #[test]
+    fn date_malformed_is_na_through_r_syntax() {
+        assert_eq!(show("as.numeric(as.Date(\"not-a-date\"))\n"), "[1] NA");
+    }
+
+    #[test]
+    fn date_subtraction_through_r_syntax() {
+        assert_eq!(
+            nums("as.Date(\"2021-03-20\") - as.Date(\"2021-03-14\")\n"),
+            vec![6.0]
+        );
+    }
+
+    #[test]
+    fn weekdays_through_r_syntax() {
+        assert_eq!(
+            show("weekdays(as.Date(\"1970-01-01\"))\n"),
+            "[1] \"Thursday\""
+        );
+        assert_eq!(show("weekdays(as.Date(\"2021-03-14\"))\n"), "[1] \"Sunday\"");
+    }
+
+    #[test]
+    fn sys_date_structure_through_r_syntax() {
+        // Non-deterministic: assert only class + single numeric.
+        assert_eq!(show("class(Sys.Date())\n"), "[1] \"Date\"");
+        assert_eq!(nums("length(Sys.Date())\n"), vec![1.0]);
     }
 }

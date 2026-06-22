@@ -21,11 +21,15 @@
 %   - Mycobacterium tuberculosis: NBK441916 states "acid-fast bacilli" but never
 %     a self-contained "M tuberculosis is an acid-fast bacillus" span naming the
 %     organism — declined here; deserves its own page/PR, not a stretched quote.
-%   - Neisseria meningitidis `causes(meningococcal_meningitis)`: the organism page
-%     names gram/shape cleanly but has no self-contained "N meningitidis causes
-%     meningococcal meningitis" span — gram_stain + morphology kept, causes declined.
+%   - Streptococcus pyogenes morphology: the page's only cocci/chains span names
+%     "Streptococci" generically, never S pyogenes — gram_stain + causes kept,
+%     morphology declined here (deserves a clean self-contained span, not a stretch).
 % Declining an edge that lacks a clean self-contained authoritative span is the
 % correct move: honest absence beats a fabricated citation.
+%
+% RECOVERED: the earlier-declined Neisseria meningitidis causes-edge is now grounded
+% below as causes(meningitis) from NBK549849, whose span names the organism AND the
+% disease in one sentence. A deferral is a backlog item to clear, not a permanent drop.
 % ============================================================================
 
 dictionary micro_vocab {
@@ -147,6 +151,166 @@ rulebook micro_facts {
         trust authoritative
     relate morphology(listeria_monocytogenes, bacilli)
         source "Listeria monocytogenes is a gram-positive, facultative anaerobic, intracellular rod with widespread environmental distribution, commonly found in soil, water, and vegetation, and capable of transient colonization of the human and animal gastrointestinal tract."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534838/"
+        trust authoritative
+
+    % --- Klebsiella pneumoniae (gram-negative) ----------------------------------
+    % One span names the organism AND its gram reaction. (morphology declined: the page
+    % calls it a "bacillus" only in a historical clause anaphoric to "The bacterium".)
+    relate gram_stain(klebsiella_pneumoniae, gram_negative)
+        source "Klebsiella pneumoniae is a gram-negative, encapsulated, non-motile bacterium found in the environment"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519004/"
+        trust authoritative
+
+    % --- Bacillus anthracis (gram-positive rod; causes anthrax) ------------------
+    % One span names BOTH the gram reaction and the shape (rod = bacillus) for the organism.
+    relate gram_stain(bacillus_anthracis, gram_positive)
+        source "Bacillus anthracis is a gram-positive spore-forming rod that produces anthrax toxin resulting in an ulcer with a black eschar."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470553/"
+        trust authoritative
+    relate morphology(bacillus_anthracis, bacilli)
+        source "Bacillus anthracis is a gram-positive spore-forming rod that produces anthrax toxin resulting in an ulcer with a black eschar."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470553/"
+        trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield USMLE organisms (gram stain + morphology + signature
+    % disease), each grounded to its own StatPearls page by a self-contained
+    % verbatim span naming the organism AND the property. Nine new organisms +
+    % four causes-edges that complete organisms already in the graph.
+    % ------------------------------------------------------------------------
+
+    % Neisseria gonorrhoeae — the classic gram-negative diplococcus of gonorrhea
+    % (one opening sentence carries all three facts at once).
+    relate gram_stain(neisseria_gonorrhoeae, gram_negative)
+        source "Gonorrhea is a sexually transmitted infection (STI) caused by Neisseria gonorrhoeae, a gram-negative diplococcus that primarily targets columnar and transitional epithelium, making the cervix, urethra, rectum, pharynx, and conjunctiva common sites of infection."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK558903/"
+        trust authoritative
+    relate morphology(neisseria_gonorrhoeae, diplococci)
+        source "Gonorrhea is a sexually transmitted infection (STI) caused by Neisseria gonorrhoeae, a gram-negative diplococcus that primarily targets columnar and transitional epithelium, making the cervix, urethra, rectum, pharynx, and conjunctiva common sites of infection."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK558903/"
+        trust authoritative
+    relate causes(neisseria_gonorrhoeae, gonorrhea)
+        source "Gonorrhea is a sexually transmitted infection (STI) caused by Neisseria gonorrhoeae, a gram-negative diplococcus that primarily targets columnar and transitional epithelium, making the cervix, urethra, rectum, pharynx, and conjunctiva common sites of infection."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK558903/"
+        trust authoritative
+
+    % Streptococcus pyogenes (Group A Strep) — gram-positive; leading cause of
+    % pharyngitis. (Morphology declined: the page's only cocci/chains span says
+    % "Streptococci" generically, never naming S pyogenes — left for a clean span.)
+    relate gram_stain(streptococcus_pyogenes, gram_positive)
+        source "S. pyogenes is a gram-positive, catalase-negative, oxidase negative, β-hemolytic streptococci."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554528/"
+        trust authoritative
+    relate causes(streptococcus_pyogenes, pharyngitis)
+        source "Streptococcus pyogenes, also known as group A streptococcus (GAS) is a leading cause of pharyngitis in children and adolescents."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554528/"
+        trust authoritative
+
+    % Haemophilus influenzae — gram-negative coccobacillus.
+    relate gram_stain(haemophilus_influenzae, gram_negative)
+        source "Haemophilus influenzae is characterized as a small (0.3 micrometer to 1 micrometer), facultatively anaerobic, pleomorphic, and capnophilic gram-negative coccobacillus of the family Pasteurellaceae."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562176/"
+        trust authoritative
+    relate morphology(haemophilus_influenzae, coccobacilli)
+        source "Haemophilus influenzae is characterized as a small (0.3 micrometer to 1 micrometer), facultatively anaerobic, pleomorphic, and capnophilic gram-negative coccobacillus of the family Pasteurellaceae."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562176/"
+        trust authoritative
+
+    % Corynebacterium diphtheriae — gram-positive club-shaped coccobacillus.
+    relate gram_stain(corynebacterium_diphtheriae, gram_positive)
+        source "_Corynebacterium diphtheria_ is an aerobic or facultatively anaerobic, Gram-positive, non-motile, non-spore-forming, non-capsulated, toxin-producing, pleomorphic coccobacillus, which is usually club-shaped."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559015/"
+        trust authoritative
+    relate morphology(corynebacterium_diphtheriae, coccobacilli)
+        source "_Corynebacterium diphtheria_ is an aerobic or facultatively anaerobic, Gram-positive, non-motile, non-spore-forming, non-capsulated, toxin-producing, pleomorphic coccobacillus, which is usually club-shaped."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559015/"
+        trust authoritative
+
+    % Salmonella — motile gram-negative bacilli (enteric fever / gastroenteritis).
+    relate gram_stain(salmonella, gram_negative)
+        source "Salmonellae are motile gram-negative bacilli that infect or colonize humans, causing a number of clinical infections with different clinical features like gastroenteritis, enteric fever, bacteremia, and a chronic carrier state."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555892/"
+        trust authoritative
+    relate morphology(salmonella, bacilli)
+        source "Salmonellae are motile gram-negative bacilli that infect or colonize humans, causing a number of clinical infections with different clinical features like gastroenteritis, enteric fever, bacteremia, and a chronic carrier state."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555892/"
+        trust authoritative
+
+    % Campylobacter — gram-negative, corkscrew/spiral rod (a leading cause of
+    % bacterial diarrhea). The atom `spiral` matches the verbatim "corkscrew-shaped".
+    relate gram_stain(campylobacter, gram_negative)
+        source "Campylobacter bacteria is a motile, corkscrew-shaped gram-negative rod."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537033/"
+        trust authoritative
+    relate morphology(campylobacter, spiral)
+        source "Campylobacter bacteria is a motile, corkscrew-shaped gram-negative rod."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537033/"
+        trust authoritative
+
+    % Legionella pneumophila — gram-negative; causative agent of Legionnaires disease.
+    relate gram_stain(legionella_pneumophila, gram_negative)
+        source "Legionnaires' disease is primarily caused by L pneumophila—a gram-negative, waterborne bacillus that thrives in aquatic environments and gains access to the human lung via inhalation or aspiration of aerosols from contaminated water sources."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430807/"
+        trust authoritative
+    relate causes(legionella_pneumophila, legionnaires_disease)
+        source "Legionnaires' disease is a potentially severe, often fatal, atypical pneumonia caused by bacteria of the genus Legionella, most frequently Legionella pneumophila."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430807/"
+        trust authoritative
+
+    % Clostridium tetani — gram-positive spore-forming bacillus; causes tetanus.
+    relate gram_stain(clostridium_tetani, gram_positive)
+        source "C tetani are obligate anaerobic, gram-positive, spore-forming bacilli found ubiquitously in the environment, persisting in soil, domestic animal and human feces, dust, and the gastrointestinal (GI) tract."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482484/"
+        trust authoritative
+    relate causes(clostridium_tetani, tetanus)
+        source "Clostridium tetani is the causative organism for the disease known as tetanus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482484/"
+        trust authoritative
+
+    % Treponema pallidum — the spirochete of syphilis (does not gram-stain well,
+    % so morphology + causes only).
+    relate morphology(treponema_pallidum, spirochete)
+        source "Syphilis is a systemic, bacterial infection caused by the spirochete Treponema pallidum."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534780/"
+        trust authoritative
+    relate causes(treponema_pallidum, syphilis)
+        source "Syphilis is a systemic, bacterial infection caused by the spirochete Treponema pallidum."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534780/"
+        trust authoritative
+
+    % Bordetella pertussis — gram-negative coccobacillus; causes whooping cough.
+    relate gram_stain(bordetella_pertussis, gram_negative)
+        source "Pertussis results from infection with Bordetella pertussis, a fastidious aerobic gram-negative coccobacillus that colonizes the ciliated epithelium of the human respiratory tract."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519008/"
+        trust authoritative
+    relate morphology(bordetella_pertussis, coccobacilli)
+        source "Pertussis results from infection with Bordetella pertussis, a fastidious aerobic gram-negative coccobacillus that colonizes the ciliated epithelium of the human respiratory tract."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519008/"
+        trust authoritative
+    relate causes(bordetella_pertussis, pertussis)
+        source "Pertussis, commonly known as whooping cough, represents a highly contagious respiratory disease caused by Bordetella pertussis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519008/"
+        trust authoritative
+
+    % --- causes-edges completing organisms already in the graph above ---
+
+    % Neisseria meningitidis causes(meningitis) — RECOVERS the edge the header note
+    % above had declined: NBK549849 provides the self-contained naming span.
+    relate causes(neisseria_meningitidis, meningitis)
+        source "N meningitidis is a common and significant cause of community-acquired bacterial meningitis in the US, affecting children and adults."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549849/"
+        trust authoritative
+    relate causes(bacillus_anthracis, anthrax)
+        source "Anthrax is an acute zoonotic infection caused by the spore-forming, gram-positive Bacillus anthracis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535379/"
+        trust authoritative
+    relate causes(klebsiella_pneumoniae, pneumonia)
+        source "Klebsiella pneumoniae is a gram-negative, encapsulated, non-motile bacterium found in the environment and has been associated with pneumonia in patient populations with alcohol use disorder or diabetes mellitus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519004/"
+        trust authoritative
+    relate causes(listeria_monocytogenes, listeriosis)
+        source "Listeria monocytogenes is a facultative, intracellular, gram-positive rod that is responsible for causing the infection listeriosis."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK534838/"
         trust authoritative
 }

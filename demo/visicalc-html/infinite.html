@@ -184,6 +184,13 @@
         <button id="loadBook" title="Reload the workbook from the last saved snapshot">Load</button>
       </div>
       <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Structure">
+        <button id="insRow" title="Insert a row above the selected cell (references shift down)">+ Row</button>
+        <button id="delRow" title="Delete the selected cell's row (references shift up; refs into it become #REF!)">− Row</button>
+        <button id="insCol" title="Insert a column left of the selected cell (references shift right)">+ Col</button>
+        <button id="delCol" title="Delete the selected cell's column (references shift left; refs into it become #REF!)">− Col</button>
+      </div>
+      <span class="sep"></span>
       <div class="grp" role="group" aria-label="History">
         <button id="undoBtn" title="Undo the last edit">↶ Undo</button>
         <button id="redoBtn" title="Redo the last undone edit">↷ Redo</button>
@@ -372,6 +379,31 @@
         diff.changed.length + " cell(s): " + diff.changed.slice(0, 8).join(", ");
       render();
       statusEl.innerHTML += " &nbsp;·&nbsp; pasted at " + esc(dst) + " → " + esc(note);
+    });
+
+    // Structural edits: insert / delete the selected cell's row or column. The
+    // engine shifts every formula reference at or after the band and recomputes;
+    // a reference whose entire band is deleted becomes #REF!. We operate on a
+    // single row/column at the cursor (the engine handles any count).
+    document.getElementById("insRow").addEventListener("click", function () {
+      workbook.insertRows(selRow, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; inserted a row at " + selRow;
+    });
+    document.getElementById("delRow").addEventListener("click", function () {
+      workbook.deleteRows(selRow, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; deleted row " + selRow;
+    });
+    document.getElementById("insCol").addEventListener("click", function () {
+      workbook.insertCols(selCol, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; inserted a column at " + esc(workbook.columnLetters(selCol));
+    });
+    document.getElementById("delCol").addEventListener("click", function () {
+      workbook.deleteCols(selCol, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; deleted column " + esc(workbook.columnLetters(selCol));
     });
 
     // Save / load: serialize the whole workbook to a single JSON document and

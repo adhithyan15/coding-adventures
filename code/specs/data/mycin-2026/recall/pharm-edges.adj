@@ -177,4 +177,66 @@ rulebook pharm_facts {
         source "In cases of poisoning resulting from ingesting more than 10 grams of isoniazid (INH), an equal amount of pyridoxine (vitamin B6) should be administered as an antidote."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK557436/"
         trust authoritative
+    % --- EXPAND: sugammadex reverses rocuronium (steroidal neuromuscular blockade) --
+    relate antidote_for(rocuronium_toxicity, sugammadex)
+        source "Sugammadex is a modified gamma-cyclodextrin that is used to reverse steroidal non-depolarizing neuromuscular blocking drugs rocuronium and vecuronium."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470263/"
+        trust authoritative
+
+    % ============================================================================
+    % BATCH: high-yield drug-class table + mechanisms + 1 antidote, grounded in
+    % parallel from each drug's StatPearls page (one self-contained span per edge
+    % naming the drug AND its class/mechanism). atorvastatin & aspirin are filed as
+    % `mechanism` (the span states "works by inhibiting ..." / "is a ... inhibitor").
+    % ============================================================================
+
+    % --- Drug classes ----------------------------------------------------
+    relate drug_class(omeprazole, proton_pump_inhibitor)
+        source "Omeprazole is a proton pump inhibitor used to manage and treat several conditions, including uncomplicated heartburn, peptic ulcer disease, gastrointestinal reflux disease, Zollinger-Ellison syndrome, multiple endocrine adenomas, systemic mastocytosis, erosive esophagitis, gastric ulcers, and helicobacter pylori infection."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539786/"
+        trust authoritative
+    relate drug_class(losartan, angiotensin_receptor_blocker)
+        source "Losartan is an angiotensin receptor blocker (ARB) approved by the US Food and Drug Administration (FDA) for the treatment of several medical conditions, including hypertension and diabetic nephropathy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526065/"
+        trust authoritative
+    relate drug_class(furosemide, loop_diuretic)
+        source "Furosemide is a loop diuretic that has been in use for decades."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499921/"
+        trust authoritative
+    relate drug_class(hydrochlorothiazide, thiazide_type_diuretic)
+        source "Hydrochlorothiazide is a thiazide-type diuretic that inhibits the sodium–chloride cotransporter in the distal convoluted tubule of the nephron, reducing sodium reabsorption and promoting natriuresis and diuresis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430766/"
+        trust authoritative
+    relate drug_class(ciprofloxacin, fluoroquinolone)
+        source "Ciprofloxacin is a bactericidal antibiotic of the fluoroquinolone drug class."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535454/"
+        trust authoritative
+    relate drug_class(azithromycin, macrolide)
+        source "Like other macrolides, azithromycin can cause QTc prolongation, which can result in torsades de pointes or polymorphic ventricular tachycardia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557766/"
+        trust authoritative
+    relate drug_class(vancomycin, glycopeptide)
+        source "Vancomycin is a glycopeptide antibiotic that exerts its bactericidal effect by inhibiting the polymerization of peptidoglycans in the bacterial cell wall."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459263/"
+        trust authoritative
+    relate drug_class(albuterol, short_acting_beta_2_agonist)
+        source "Short-acting β2 agonists (SABAs), including albuterol (also known as salbutamol), levalbuterol, metaproterenol, and terbutaline, are primarily prescribed for the relief of acute bronchospasm associated with conditions such as asthma and chronic obstructive pulmonary disease (COPD)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559069/"
+        trust authoritative
+
+    % --- Mechanisms ------------------------------------------------------
+    relate mechanism(atorvastatin, inhibits_hmg_coa_reductase)
+        source "atorvastatin works by inhibiting HMG-CoA reductase, an enzyme crucial to cholesterol synthesis in the liver."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430779/"
+        trust authoritative
+    relate mechanism(aspirin, cyclooxygenase_inhibition)
+        source "Aspirin is a cyclooxygenase-1 (COX-1) inhibitor."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519032/"
+        trust authoritative
+
+    % --- EXPAND: dantrolene is the treatment for malignant hyperthermia --
+    relate antidote_for(malignant_hyperthermia, dantrolene)
+        source "Dantrolene is the only known treatment for malignant hyperthermia and should be administered as soon as possible following the identification of the symptoms of the disease process."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535398/"
+        trust authoritative
 }

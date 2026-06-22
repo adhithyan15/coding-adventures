@@ -146,7 +146,15 @@ def test_enumerate_binds_full_set_each_cited() -> None:
         return
     rec = _by_query(_run(ENUMERATE))["inheritance(Disease, autosomal_dominant)"]
     bound = {a["bindings"]["Disease"]: a for a in _answers(rec)}
-    assert set(bound) == {"huntington_disease", "marfan_syndrome"}
+    # Ground truth derived from the library itself (self-maintaining as the genetics
+    # library grows): the engine must enumerate EXACTLY the diseases written with an
+    # `inheritance(<disease>, autosomal_dominant)` edge — no more, no fewer.
+    import re
+    genetics = (HERE / "genetics-edges.adj").read_text()
+    expected = set(re.findall(
+        r"relate inheritance\((\w+), autosomal_dominant\)", genetics))
+    assert expected, "no autosomal_dominant edges found in genetics-edges.adj"
+    assert set(bound) == expected, f"engine enumerated {set(bound)} != written {expected}"
     for disease, ans in bound.items():
         assert ans["citations"][0]["trust"] == "authoritative", f"{disease} uncited"
 

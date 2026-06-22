@@ -218,6 +218,13 @@ multiple languages; close an enabler before the features that depend on it.
   Today the IIR-to-{wasm,jvm,clr,llvm} validators reject `call_builtin`/`type_hint="any"`,
   which is why most of Twig only runs on the VM. Closing this is the biggest single unlock
   for Twig (and McCarthy cons/symbols). **Architectural fork — design pass first.**
+  - **E6 layer 1 (typed module globals) — spec [`lang-full-e6-globals.md`](lang-full-e6-globals.md).**
+    The tractable, run-verifiable first slice: a typed `i64` module global a *function*
+    can read/write, on all 7 backends. `global_load`/`global_store` already work on
+    BEAM/WASM/native; the work is LLVM/JVM/CLR (the `LANG32b` rejections) + an ALGOL
+    enclosing-scope-variable frontend + a matrix proof. Unblocks AL6 (`own`), O3 (Oct
+    globals); foundation for closures. The general `any`-dispatch / closure layers
+    stack on top.
 - **E7 — Subroutine / return-stack.** `GOSUB`/`RETURN` and procedure call/return —
   likely expressible with existing `call`/`ret`; confirm and add if needed.
 

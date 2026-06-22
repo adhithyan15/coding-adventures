@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
-## [0.163.0] - 2026-06-21
+## [0.164.0] - 2026-06-22
 
 ### Changed — ASI Rule 1 now handles string/template-ending statements
 
@@ -16,6 +16,27 @@ New end-to-end fixture `simple-asi-string-newline`:
 `var label = "total"` ⏎ `var n = 1 + 2` ⏎ `show(label, n)` →
 `var label="total";var n=3;show(label,n);` (`1 + 2` folds). The full existing
 fixture suite remains byte-for-byte unchanged.
+
+> Version note: bumped to 0.164.0 (rather than 0.163.0) to sit above the
+> concurrently-developed `simple-fold-bitnot` release (0.163.0), which merged
+> first.
+
+## [0.163.0] - 2026-06-22
+
+### Added — unary bitwise NOT folding (`~5` → `-6`) at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.18.0, which folds the
+unary `~` operator on a numeric literal under ES `ToInt32` semantics: `~5` →
+`-6`, `~-1` → `0`, `~5.9` → `-6`, `~~9` → `9`. This reuses the same `to_int32`
+coercion the binary bitwise operators already use, so the two stay bit-for-bit
+consistent.
+
+New e2e fixture `tests/diff/simple-fold-bitnot` (and integration test
+`diff_simple_fold_bitnot.rs`) is the end-to-end oracle, with a
+whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
+
+The `--help_markdown` golden fixture was regenerated for the version bump
+(`Version: 0.163.0`).
 
 ## [0.162.0] - 2026-06-21
 

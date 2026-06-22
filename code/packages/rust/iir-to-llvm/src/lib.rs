@@ -257,6 +257,12 @@ const SUPPORTED_OPS: &[&str] = &[
     // [elems…]`; `array_get`/`array_set` bounds-check the index then GEP+load/
     // store; `array_len` reads the header.
     "alloc_array", "array_get", "array_set", "array_len",
+    // LANG-FULL E6 (layer 1) — typed module globals. A function reads/writes a
+    // module-level variable via `global_load`/`global_store`; each distinct
+    // global name becomes a module-level `@__twig_global_N = internal global i64`
+    // (the LLVM analogue of the native `_twig_globals` slots / JVM-CLR static
+    // fields). The name is a string literal, never a register.
+    "global_load", "global_store",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -510,13 +516,55 @@ pub fn lower_iir_to_llvm(
         }
     }
 
+    // ── Module globals (LANG-FULL E6 layer 1) ─────────────────────────────
+    //
+    // Collect every distinct global name read/written by a `global_load`/
+    // `global_store` (in first-seen order) and assign each an index-based LLVM
+    // symbol `@__twig_global_N`. Index-based (not name-based) so an arbitrary
+    // source identifier can never produce an invalid or colliding LLVM symbol —
+    // the same lazy-slot discipline the native `_twig_globals` backend uses.
+    // Each is `internal global i64 0` (zero-initialised, matching every other
+    // backend's never-written-global-reads-0 convention).
+    let globals = collect_global_syms(module);
+    if !globals.is_empty() {
+        out.push('\n');
+        // Emit in symbol order (0,1,2,…) for stable, readable output.
+        let mut defs: Vec<(&String, &String)> = globals.iter().collect();
+        defs.sort_by(|a, b| a.1.cmp(b.1));
+        for (_name, sym) in defs {
+            out.push_str(&format!("{sym} = internal global i64 0\n"));
+        }
+    }
+
     // ── Function bodies ───────────────────────────────────────────────────
     for func in &module.functions {
         out.push('\n');
-        lower_function(func, &callee_sigs, &mut out)?;
+        lower_function(func, &callee_sigs, &globals, &mut out)?;
     }
 
     Ok(out)
+}
+
+/// Collect every distinct module-global name (read or written) into a map
+/// `name → "@__twig_global_N"`, numbered in first-seen order across all
+/// functions (LANG-FULL E6 layer 1).
+fn collect_global_syms(module: &IIRModule) -> HashMap<String, String> {
+    let mut map: HashMap<String, String> = HashMap::new();
+    let mut next = 0usize;
+    for f in &module.functions {
+        for i in &f.instructions {
+            if i.op == "global_load" || i.op == "global_store" {
+                if let Some(Operand::Str(name)) = i.srcs.first() {
+                    map.entry(name.clone()).or_insert_with(|| {
+                        let s = format!("@__twig_global_{next}");
+                        next += 1;
+                        s
+                    });
+                }
+            }
+        }
+    }
+    map
 }
 
 /// A user-defined function's signature, captured at the start of module
@@ -552,6 +600,10 @@ struct FnState<'a> {
     /// Module-wide map of every user-defined function's signature.  Built
     /// up-front by `lower_iir_to_llvm` before any function body is lowered.
     callee_sigs: &'a HashMap<String, FnSig>,
+    /// Module-wide map: global variable name → its LLVM global symbol
+    /// (`@__twig_global_N`). Built once by `lower_iir_to_llvm` so the same name
+    /// resolves to the same symbol across every function (LANG-FULL E6).
+    globals: &'a HashMap<String, String>,
     /// Is the current LLVM basic block still **open** (no terminator yet)?
     /// LLVM requires every block to end in a terminator (`br`/`ret`/…). IIR
     /// blocks fall through to the next `label` implicitly, and a block whose
@@ -604,6 +656,7 @@ impl FnState<'_> {
 fn lower_function(
     func: &IIRFunction,
     callee_sigs: &HashMap<String, FnSig>,
+    globals: &HashMap<String, String>,
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     // ── Header line: `define <ret> @<name>(<params>) {`
@@ -677,6 +730,7 @@ fn lower_function(
         counter: 0,
         fn_name: &func.name,
         callee_sigs,
+        globals,
         block_open: true, // the entry block is open until its first terminator.
         slots,
         slot_types,
@@ -1012,6 +1066,9 @@ fn lower_instr(
         "array_set" => lower_array_set(instr, state, out),
         "array_len" => lower_array_len(instr, state, out),
 
+        "global_load" => lower_global_load(instr, state, out),
+        "global_store" => lower_global_store(instr, state, out),
+
         other => Err(IIRLlvmError::UnsupportedOp {
             function: fn_name.into(),
             op: other.into(),
@@ -1111,6 +1168,75 @@ fn lower_store_byte(
     out.push_str(&format!("  {p} = getelementptr i8, ptr {base}, i64 {idx}\n"));
     out.push_str(&format!("  {t} = trunc i64 {val} to i8\n"));
     out.push_str(&format!("  store i8 {t}, ptr {p}\n"));
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// LANG-FULL E6 (layer 1) — typed module globals
+// ---------------------------------------------------------------------------
+
+/// Resolve the `@__twig_global_N` symbol for the string-literal global name at
+/// `instr.srcs[0]`. The name must be an `Operand::Str` (never a register), and
+/// it must have been collected into the module's global map.
+fn global_symbol<'a>(
+    instr: &IIRInstr,
+    state: &'a FnState,
+    op: &str,
+) -> Result<&'a str, IIRLlvmError> {
+    let name = match instr.srcs.first() {
+        Some(Operand::Str(s)) => s,
+        _ => {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: state.fn_name.into(),
+                detail: format!("{op} expects a string-literal global name at srcs[0]"),
+            })
+        }
+    };
+    state.globals.get(name).map(String::as_str).ok_or_else(|| IIRLlvmError::InvalidOperand {
+        function: state.fn_name.into(),
+        detail: format!("{op}: global {name:?} was not collected (internal error)"),
+    })
+}
+
+/// Lower `global_load dest <- "g"` — read the module global `g` (an `i64`).
+///
+/// ```llvm
+/// %dest = load i64, ptr @__twig_global_N
+/// ```
+///
+/// `dest` may be a promoted slot; the slot wrapper stores the `i64` we leave in
+/// `env[dest]`.
+fn lower_global_load(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "global_load", state.fn_name)?.to_string();
+    let sym = global_symbol(instr, state, "global_load")?.to_string();
+    out.push_str(&format!("  %{dest} = load i64, ptr {sym}\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `global_store "g", val` (no dest) — write the module global `g`.
+///
+/// ```llvm
+/// store i64 <val>, ptr @__twig_global_N
+/// ```
+fn lower_global_store(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    if instr.dest.is_some() {
+        return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "global_store must not have a dest".into(),
+        });
+    }
+    let sym = global_symbol(instr, state, "global_store")?.to_string();
+    let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+    out.push_str(&format!("  store i64 {val}, ptr {sym}\n"));
     Ok(())
 }
 

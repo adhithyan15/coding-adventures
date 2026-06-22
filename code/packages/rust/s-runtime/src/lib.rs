@@ -690,6 +690,70 @@ mod tests {
         assert_eq!(show("strtoi(\"10\", 1)\n"), "[1] NA");
     }
 
+    // --- R-37: strtoi base = 0 auto-detection -------------------------------
+    // NOTE: the s-runtime lexer reads a trailing `L` as the assignment operator,
+    // so these tests pass base 0 as a plain integer (the r-runtime tests use 0L).
+
+    #[test]
+    fn strtoi_base0_autodetects_radix() {
+        // 0x / 0X prefix -> hexadecimal.
+        assert_eq!(nums("strtoi(\"0x1F\", 0)\n"), vec![31.0]);
+        assert_eq!(nums("strtoi(\"0X1f\", 0)\n"), vec![31.0]);
+        // Leading 0 followed by octal digits -> octal.
+        assert_eq!(nums("strtoi(\"010\", 0)\n"), vec![8.0]);
+        assert_eq!(nums("strtoi(\"077\", 0)\n"), vec![63.0]);
+        // No 0 prefix -> decimal.
+        assert_eq!(nums("strtoi(\"12\", 0)\n"), vec![12.0]);
+        // A lone "0" is the number zero, not an empty octal.
+        assert_eq!(nums("strtoi(\"0\", 0)\n"), vec![0.0]);
+        // Sign is honored before prefix detection.
+        assert_eq!(nums("strtoi(\"-0x10\", 0)\n"), vec![-16.0]);
+        assert_eq!(nums("strtoi(\"-010\", 0)\n"), vec![-8.0]);
+    }
+
+    #[test]
+    fn strtoi_base0_invalid_octal_and_empty_prefix_are_na() {
+        // 8 is not an octal digit; a leading 0 makes "08" octal -> NA.
+        assert_eq!(show("strtoi(\"08\", 0)\n"), "[1] NA");
+        assert_eq!(show("strtoi(\"09\", 0)\n"), "[1] NA");
+        // A 0x prefix with no following digits -> NA.
+        assert_eq!(show("strtoi(\"0x\", 0)\n"), "[1] NA");
+        // Empty string -> NA.
+        assert_eq!(show("strtoi(\"\", 0)\n"), "[1] NA");
+        // Vectorized: decimal ok, bad octal NA.
+        assert_eq!(show("strtoi(c(\"12\", \"08\"), 0)\n"), "[1] 12 NA");
+    }
+
+    // --- R-37: trimws(whitespace =) regex argument --------------------------
+
+    #[test]
+    fn trimws_custom_whitespace_regex() {
+        // A literal character class via the whitespace = argument.
+        assert_eq!(show("trimws(\"xxhixx\", whitespace = \"x\")\n"), "[1] \"hi\"");
+        // which = left only strips the leading run.
+        assert_eq!(
+            show("trimws(\"xxhix\", which = \"left\", whitespace = \"x\")\n"),
+            "[1] \"hix\""
+        );
+        // which = right only strips the trailing run.
+        assert_eq!(
+            show("trimws(\"xxhix\", which = \"right\", whitespace = \"x\")\n"),
+            "[1] \"xxhi\""
+        );
+        // A genuine regex class.
+        assert_eq!(show("trimws(\"..a..\", whitespace = \"[.]\")\n"), "[1] \"a\"");
+        // Default whitespace still works when whitespace = is omitted.
+        assert_eq!(show("trimws(\"  hi  \")\n"), "[1] \"hi\"");
+        // NA propagates with a custom whitespace.
+        assert_eq!(show("trimws(NA, whitespace = \"x\")\n"), "[1] NA");
+    }
+
+    #[test]
+    fn trimws_bad_whitespace_regex_errors() {
+        // An unbalanced bracket is an invalid regex -> clean Err, not a panic.
+        assert!(eval_s("trimws(\"x\", whitespace = \"[\")\n").is_err());
+    }
+
     #[test]
     fn sprintf_formatting() {
         assert_eq!(show("sprintf(\"%d apples\", 3)\n"), "[1] \"3 apples\"");
@@ -1369,6 +1433,130 @@ mod tests {
             nums("s <- 0\nfor (i in 1:3) { s <- s + 1\nswitch(\"a\", a = break) }\ns\n"),
             vec![1.0]
         );
+    }
+
+    // --- R-44: base R Date support (through S syntax) -------------------------
+
+    /// The character elements of a (possibly classed) result, NA → "NA".
+    fn date_strs(src: &str) -> Vec<String> {
+        eval_s(src)
+            .unwrap()
+            .as_character()
+            .into_iter()
+            .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+            .collect()
+    }
+
+    #[test]
+    fn date_class_is_date() {
+        assert_eq!(date_strs("class(as.Date(\"2021-03-14\"))\n"), vec!["Date"]);
+    }
+
+    #[test]
+    fn date_as_numeric_is_days_since_epoch() {
+        assert_eq!(nums("as.numeric(as.Date(\"1970-01-01\"))\n"), vec![0.0]);
+        assert_eq!(nums("as.numeric(as.Date(\"1970-01-02\"))\n"), vec![1.0]);
+        assert_eq!(nums("as.numeric(as.Date(\"1969-12-31\"))\n"), vec![-1.0]);
+    }
+
+    #[test]
+    fn date_format_round_trips() {
+        assert_eq!(show("format(as.Date(\"2021-03-14\"))\n"), "[1] \"2021-03-14\"");
+        // Leap day survives the parse → format round-trip.
+        assert_eq!(show("format(as.Date(\"2000-02-29\"))\n"), "[1] \"2000-02-29\"");
+    }
+
+    #[test]
+    fn date_numeric_origin_is_epoch() {
+        // as.Date(0) is 1970-01-01; as.Date(1) is the next day.
+        assert_eq!(show("format(as.Date(0))\n"), "[1] \"1970-01-01\"");
+        assert_eq!(show("format(as.Date(1))\n"), "[1] \"1970-01-02\"");
+    }
+
+    #[test]
+    fn date_slash_format_parses() {
+        assert_eq!(
+            nums("as.numeric(as.Date(\"2021/03/14\", format = \"%Y/%m/%d\"))\n"),
+            nums("as.numeric(as.Date(\"2021-03-14\"))\n")
+        );
+    }
+
+    #[test]
+    fn date_malformed_is_na() {
+        // An unparseable string becomes NA — never an error/panic.
+        assert_eq!(show("as.numeric(as.Date(\"not-a-date\"))\n"), "[1] NA");
+        assert_eq!(show("as.numeric(as.Date(\"2021-02-30\"))\n"), "[1] NA");
+    }
+
+    #[test]
+    fn date_subtraction_is_day_count() {
+        assert_eq!(
+            nums("as.Date(\"2021-03-20\") - as.Date(\"2021-03-14\")\n"),
+            vec![6.0]
+        );
+        // difftime() is the named form, same result in days.
+        assert_eq!(
+            nums("difftime(as.Date(\"2021-03-20\"), as.Date(\"2021-03-14\"))\n"),
+            vec![6.0]
+        );
+    }
+
+    #[test]
+    fn weekdays_anchor_and_names() {
+        // 1970-01-01 was a Thursday (the anchor).
+        assert_eq!(date_strs("weekdays(as.Date(\"1970-01-01\"))\n"), vec!["Thursday"]);
+        assert_eq!(date_strs("weekdays(as.Date(\"2021-03-14\"))\n"), vec!["Sunday"]);
+        // Pre-epoch (negative day count) must not panic.
+        assert_eq!(
+            date_strs("weekdays(as.Date(\"1969-12-31\"))\n"),
+            vec!["Wednesday"]
+        );
+    }
+
+    #[test]
+    fn date_format_day_of_year() {
+        assert_eq!(
+            show("format(as.Date(\"2021-03-14\"), \"%j\")\n"),
+            "[1] \"073\""
+        );
+    }
+
+    #[test]
+    fn date_is_vectorized() {
+        assert_eq!(
+            nums("as.numeric(as.Date(c(\"1970-01-01\", \"1970-01-03\")))\n"),
+            vec![0.0, 2.0]
+        );
+        assert_eq!(
+            date_strs("weekdays(as.Date(c(\"1970-01-01\", \"1970-01-02\")))\n"),
+            vec!["Thursday", "Friday"]
+        );
+    }
+
+    #[test]
+    fn date_extreme_numeric_is_na_not_overflow() {
+        // A huge / non-finite day count must become NA (the numeric counterpart to
+        // the string digit cap) — never an i64-overflow panic in the civil kernel.
+        assert_eq!(show("as.numeric(as.Date(1e300))\n"), "[1] NA");
+        assert_eq!(show("format(as.Date(1e300))\n"), "[1] NA");
+        assert_eq!(show("weekdays(as.Date(1e300))\n"), "[1] NA");
+        assert_eq!(show("format(as.Date(-1e300), \"%j\")\n"), "[1] NA");
+        // A hand-built classed "Date" with an out-of-range raw count is also safe.
+        assert_eq!(
+            show("weekdays(structure(1e300, class = \"Date\"))\n"),
+            "[1] NA"
+        );
+    }
+
+    #[test]
+    fn sys_date_structure_only() {
+        // Non-deterministic value: assert only its class and that it is a single
+        // finite numeric — never an exact day.
+        assert_eq!(date_strs("class(Sys.Date())\n"), vec!["Date"]);
+        assert_eq!(nums("length(Sys.Date())\n"), vec![1.0]);
+        let day = nums("as.numeric(Sys.Date())\n");
+        assert_eq!(day.len(), 1);
+        assert!(day[0].is_finite());
     }
 }
 

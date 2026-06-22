@@ -1,5 +1,29 @@
 # Changelog — vm-core
 
+## [0.8.0] — 2026-06-22 (LANG-FULL E6 layer 1 — typed module globals)
+
+### Added
+- **`global_load` / `global_store`** — the VM now executes the *lowered, typed*
+  global IIR ops over a new name-keyed `globals: HashMap<String, Value>`:
+  - `global_store("g", %v)` writes; `global_load("g") -> %dest` reads.
+  - The global name is an `Operand::Str` literal (never resolved as a register).
+  - A global that was never written reads as `Int(0)` — matching the zero-init
+    the code-gen backends give their `_twig_globals` slots / static fields.
+  - This is **distinct** from the dynamic `call_builtin "global_get"/"global_set"`
+    table the Twig front-end uses; these typed ops are what a statically-typed
+    frontend (e.g. ALGOL procedures over an enclosing-block variable, E6's proof
+    program) emits directly — so such globals now run on the VM.
+- Because the **JIT** (`JITCore` + `GenericCirJit`) cold-interprets on this VM
+  (only hot functions promote, and a global-using function the compiler doesn't
+  lower simply stays interpreted), the **JIT column gets globals for free** —
+  covered by a `jit-core` integration test.
+
+### Verified
+- `tests/e6_globals.rs`: a cross-function program (`main` seeds `g`, a separate
+  `bump` reads/increments/writes it) ⇒ 42; an unwritten global reads as 0.
+- `jit-core/tests/e6_globals_jit.rs`: the same program runs to 42 through the
+  full JIT path.
+
 ## [0.7.0] — 2026-06-20 (LANG-FULL E5 — bounds-checked arrays)
 
 ### Added — `alloc_array` / `array_len` / `array_get` / `array_set`

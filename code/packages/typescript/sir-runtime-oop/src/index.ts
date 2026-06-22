@@ -34,6 +34,12 @@
 // into method bodies (out of scope for the backend).  See
 // `code/specs/sir-runtime.md`.
 
+// Block-taking catalog methods (each/map/select/…) invoke a Ruby block.  A block
+// reaches us as a trailing `Closure` from sir-runtime-core; `apply` calls it with
+// proc-lenient arity, and `truthy` applies SIR truthiness (only `false`/`nil` are
+// falsy) to predicate results.
+import { apply, Closure, truthy } from "@coding-adventures/sir-runtime-core";
+
 /**
  * The SIR universal value type at this package's boundary.  Kept as `unknown`'s
  * permissive sibling so emitted code can pass `@coding-adventures/sir-runtime-core`
@@ -197,12 +203,329 @@ export function defineMethod(name: string, fn: (recv: Val, args: Val[]) => Val):
   methods.set(name, fn);
 }
 
+// ── Built-in method catalog (SIR method-dispatch spec, M1) ───────────────────
+//
+// `recv.meth(args…)` reaches the backend as `BuiltinCall("__method__", [recv,
+// "meth", …])` and is dispatched here.  Before this catalog every method outside
+// the reflective four + the `defineMethod` table returned `null` — so
+// `[1,2,3].reverse` evaluated to nil instead of running.  This catalog gives the
+// everyday Ruby built-ins their faithful native behaviour, dispatched by the
+// receiver's runtime type.  See `code/specs/sir-method-dispatch.md`.
+//
+// **This file (M1a) covers the *non-block* Array surface plus the universal
+// Object methods.**  Block-taking methods (`each`/`map`/`select`/…) and the
+// Hash/String/Numeric/Symbol catalogs arrive in follow-up PRs that take the
+// `@coding-adventures/sir-runtime-core` `apply` dependency for proc-lenient block
+// invocation.
+//
+// Resolution order (see `callMethod`): reflective built-ins → user `defineMethod`
+// table → this catalog → `null` floor.  `respond_to?` reports catalog membership
+// honestly, so an out-of-catalog method is both `null` and `respond_to? == false`.
+
+// Sentinel meaning "this name is not in the catalog for this receiver" — distinct
+// from a catalog method that legitimately returns `null` (Ruby `nil`).
+const MISS: unique symbol = Symbol("sir-oop-miss");
+
+const OBJECT_METHODS = new Set<string>([
+  "nil?",
+  "==",
+  "!=",
+  "equal?",
+  "respond_to?",
+  "freeze",
+  "frozen?",
+  "dup",
+  "clone",
+  "itself",
+  "to_a",
+]);
+
+// Non-block `Array` methods (M1a); block methods land in a later PR, kept absent
+// here so `respond_to?` stays honest.
+const ARRAY_METHODS = new Set<string>([
+  "length",
+  "size",
+  "count",
+  "first",
+  "last",
+  "include?",
+  "index",
+  "push",
+  "append",
+  "<<",
+  "pop",
+  "shift",
+  "unshift",
+  "prepend",
+  "reverse",
+  "sort",
+  "min",
+  "max",
+  "sum",
+  "uniq",
+  "flatten",
+  "compact",
+  "empty?",
+  "to_a",
+]);
+
+// Block-taking `Array`/`Enumerable` methods (M1b); each invokes a trailing
+// `Closure` block via `apply`. Listed so `respond_to?` reports them.
+const ARRAY_BLOCK_METHODS = new Set<string>([
+  "each",
+  "each_with_index",
+  "map",
+  "collect",
+  "select",
+  "filter",
+  "reject",
+  "reduce",
+  "inject",
+  "find",
+  "detect",
+  "flat_map",
+  "any?",
+  "all?",
+  "none?",
+]);
+
+/** SIR value equality used by `include?`/`index`/`==` — `===` for primitives,
+ * structural for arrays and `Map`s (Ruby `==` is deep). */
+function valEq(a: Val, b: Val): boolean {
+  if (a === b) return true;
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return a.length === b.length && a.every((x: Val, i: number) => valEq(x, b[i]));
+  }
+  if (a instanceof Map && b instanceof Map) {
+    if (a.size !== b.size) return false;
+    for (const [k, v] of a) {
+      if (!b.has(k) || !valEq(v, b.get(k))) return false;
+    }
+    return true;
+  }
+  return false;
+}
+
+/** Coerce a `respond_to?` argument (a core `Symbol`, `":m"`-ish string, or bare
+ * name) to the plain method name used as the catalog key. */
+function methodNameArg(arg: Val): string {
+  if (arg !== null && typeof arg === "object" && typeof arg.name === "string") {
+    return arg.name as string;
+  }
+  return String(arg);
+}
+
+/** Whether dispatch on `recv` resolves `name` — across the reflective built-ins,
+ * the `defineMethod` table, and the type-specific catalog. */
+function respondsTo(recv: Val, name: string): boolean {
+  if (name === "is_a?" || name === "kind_of?" || name === "instance_of?" || name === "class") {
+    return true;
+  }
+  if (methods.has(name)) return true;
+  if (OBJECT_METHODS.has(name)) return true;
+  if (Array.isArray(recv) && (ARRAY_METHODS.has(name) || ARRAY_BLOCK_METHODS.has(name))) {
+    return true;
+  }
+  return false;
+}
+
+function flattenArray(seq: Val[]): Val[] {
+  const out: Val[] = [];
+  for (const item of seq) {
+    if (Array.isArray(item)) out.push(...flattenArray(item));
+    else out.push(item);
+  }
+  return out;
+}
+
+function uniqArray(seq: Val[]): Val[] {
+  const out: Val[] = [];
+  for (const item of seq) {
+    if (!out.some((x: Val) => valEq(x, item))) out.push(item);
+  }
+  return out;
+}
+
+/** Universal `Object` methods.  Returns `MISS` if `name` is not universal. */
+function objectMethod(recv: Val, name: string, args: Val[]): Val | typeof MISS {
+  switch (name) {
+    case "nil?":
+      return recv === null || recv === undefined;
+    case "==":
+      return valEq(recv, args[0]);
+    case "!=":
+      return !valEq(recv, args[0]);
+    case "equal?":
+      return recv === args[0];
+    case "respond_to?":
+      return respondsTo(recv, methodNameArg(args[0]));
+    case "itself":
+      return recv;
+    case "freeze":
+      // No true immutability in v0 — identity-returning, matching Ruby's shape.
+      return recv;
+    case "frozen?":
+      return (
+        recv === null ||
+        recv === undefined ||
+        typeof recv === "number" ||
+        typeof recv === "boolean"
+      );
+    case "dup":
+    case "clone":
+      if (Array.isArray(recv)) return [...recv];
+      if (recv instanceof Map) return new Map(recv);
+      return recv;
+    case "to_a":
+      // Ruby: nil.to_a == [], Array#to_a == self; others fall through.
+      if (recv === null || recv === undefined) return [];
+      if (Array.isArray(recv)) return recv;
+      return MISS;
+    default:
+      return MISS;
+  }
+}
+
+/** Non-block `Array` methods.  Returns `MISS` if `name` is not catalogued. */
+function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS {
+  switch (name) {
+    case "length":
+    case "size":
+      return recv.length;
+    case "count":
+      return args.length > 0 ? recv.filter((x: Val) => valEq(x, args[0])).length : recv.length;
+    case "first":
+      if (args.length > 0) return recv.slice(0, args[0]);
+      return recv.length > 0 ? recv[0] : null;
+    case "last":
+      if (args.length > 0) return args[0] ? recv.slice(-args[0]) : [];
+      return recv.length > 0 ? recv[recv.length - 1] : null;
+    case "include?":
+      return recv.some((x: Val) => valEq(x, args[0]));
+    case "index": {
+      const i = recv.findIndex((x: Val) => valEq(x, args[0]));
+      return i === -1 ? null : i;
+    }
+    case "push":
+    case "append":
+      recv.push(...args);
+      return recv;
+    case "<<":
+      recv.push(args[0]);
+      return recv;
+    case "pop":
+      return recv.length > 0 ? recv.pop() : null;
+    case "shift":
+      return recv.length > 0 ? recv.shift() : null;
+    case "unshift":
+    case "prepend":
+      recv.unshift(...args);
+      return recv;
+    case "reverse":
+      return [...recv].reverse();
+    case "sort":
+      // `<`/`>` ordering keeps numbers numeric (JS default sort is lexicographic).
+      return [...recv].sort((a: Val, b: Val) => (a < b ? -1 : a > b ? 1 : 0));
+    case "min":
+      return recv.length > 0 ? recv.reduce((a: Val, b: Val) => (b < a ? b : a)) : null;
+    case "max":
+      return recv.length > 0 ? recv.reduce((a: Val, b: Val) => (b > a ? b : a)) : null;
+    case "sum": {
+      let total: Val = args.length > 0 ? args[0] : 0;
+      for (const item of recv) total = total + item;
+      return total;
+    }
+    case "uniq":
+      return uniqArray(recv);
+    case "flatten":
+      return flattenArray(recv);
+    case "compact":
+      return recv.filter((x: Val) => x !== null && x !== undefined);
+    case "empty?":
+      return recv.length === 0;
+    case "to_a":
+      return recv;
+    default:
+      return MISS;
+  }
+}
+
+/** Block-taking `Array`/`Enumerable` methods.  `block` is applied via `apply`
+ * (proc-lenient); predicate results route through SIR `truthy`.  Returns `MISS`
+ * if `name` is not a block method. */
+function arrayBlockMethod(
+  recv: Val[],
+  name: string,
+  args: Val[],
+  block: Closure,
+): Val | typeof MISS {
+  switch (name) {
+    case "each":
+      for (const item of recv) apply(block, [item]);
+      return recv;
+    case "each_with_index":
+      recv.forEach((item: Val, index: number) => apply(block, [item, index]));
+      return recv;
+    case "map":
+    case "collect":
+      return recv.map((item: Val) => apply(block, [item]));
+    case "select":
+    case "filter":
+      return recv.filter((item: Val) => truthy(apply(block, [item])));
+    case "reject":
+      return recv.filter((item: Val) => !truthy(apply(block, [item])));
+    case "reduce":
+    case "inject": {
+      let acc: Val;
+      let rest: Val[];
+      if (args.length > 0) {
+        acc = args[0];
+        rest = recv;
+      } else if (recv.length > 0) {
+        acc = recv[0];
+        rest = recv.slice(1);
+      } else {
+        return null;
+      }
+      for (const item of rest) acc = apply(block, [acc, item]);
+      return acc;
+    }
+    case "find":
+    case "detect":
+      for (const item of recv) {
+        if (truthy(apply(block, [item]))) return item;
+      }
+      return null;
+    case "flat_map": {
+      const out: Val[] = [];
+      for (const item of recv) {
+        const mapped = apply(block, [item]);
+        if (Array.isArray(mapped)) out.push(...mapped);
+        else out.push(mapped);
+      }
+      return out;
+    }
+    case "any?":
+      return recv.some((item: Val) => truthy(apply(block, [item])));
+    case "all?":
+      return recv.every((item: Val) => truthy(apply(block, [item])));
+    case "none?":
+      return !recv.some((item: Val) => truthy(apply(block, [item])));
+    default:
+      return MISS;
+  }
+}
+
 /**
- * Dispatch reflective method `name` on `recv`.  Handles the built-ins the SIR
- * frontend emits as `__method__` calls — `is_a?`/`kind_of?`/`instance_of?`
- * (predicate against a class) and `class` (the class name) — then falls back to
- * a `defineMethod` table, returning `null` (nil) for an unknown method rather
- * than throwing.
+ * Dispatch method `name` on `recv`.  Resolution order:
+ *
+ * 1. **Reflective built-ins** the SIR frontend emits as `__method__` calls —
+ *    `is_a?`/`kind_of?`/`instance_of?` (predicate against a class) and `class`.
+ * 2. The user `defineMethod` table.
+ * 3. The **built-in method catalog** (universal `Object` methods, and — when
+ *    `recv` is an array — the non-block `Array` methods).
+ * 4. `null` (Ruby `nil`) for anything still unresolved — the honest floor;
+ *    `respond_to?` reports exactly which names resolve.
  *
  * The class argument to a predicate may arrive as a class-name **string** or as
  * a value whose class is taken; `instance_of?` additionally requires an exact
@@ -211,19 +534,32 @@ export function defineMethod(name: string, fn: (recv: Val, args: Val[]) => Val):
 export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
   switch (name) {
     case "is_a?":
-    case "kind_of?": {
+    case "kind_of?":
       return isA(recv, classNameArg(args[0]));
-    }
-    case "instance_of?": {
+    case "instance_of?":
       return classOf(recv) === classNameArg(args[0]);
-    }
     case "class":
       return classOf(recv);
-    default: {
-      const m = methods.get(name);
-      return m ? m(recv, args) : null;
-    }
   }
+
+  const m = methods.get(name);
+  if (m) return m(recv, args);
+
+  if (Array.isArray(recv)) {
+    // A block method (each/map/…) is dispatched only when an actual trailing
+    // Closure block is present; the block is split off the positional args.
+    const last = args[args.length - 1];
+    if (ARRAY_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
+      const blkResult = arrayBlockMethod(recv, name, args.slice(0, -1), last);
+      if (blkResult !== MISS) return blkResult;
+    }
+    const arrResult = arrayMethod(recv, name, args);
+    if (arrResult !== MISS) return arrResult;
+  }
+  const objResult = objectMethod(recv, name, args);
+  if (objResult !== MISS) return objResult;
+
+  return null;
 }
 
 function classNameArg(arg: Val): string {

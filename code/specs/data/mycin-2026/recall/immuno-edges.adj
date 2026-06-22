@@ -111,4 +111,16 @@ rulebook immuno_facts {
         source "Hereditary angioedema (HAE) is an autosomal dominant disease caused by the lack of or a dysfunctional C1-inhibitor protein."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK482266/"
         trust authoritative
+
+    % --- EXPAND: Chediak-Higashi syndrome molecular lesion is the LYST gene -----
+    relate gene_defect(chediak_higashi_syndrome, lyst)
+        source "Chediak-Higashi syndrome (CHS) is a rare autosomal recessive multisystem disorder caused by mutations in the LYST gene, leading to impaired lysosomal trafficking and dysfunctional organelle formation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507881/"
+        trust authoritative
+
+    % --- EXPAND: Job syndrome (autosomal-dominant hyper-IgE) molecular lesion is STAT3 --
+    relate gene_defect(job_syndrome, stat3)
+        source "Job syndrome is due to a mutation in the STAT3 gene in more than two-thirds of cases (70%)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK525947/"
+        trust authoritative
 }

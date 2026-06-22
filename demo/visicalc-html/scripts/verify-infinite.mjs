@@ -194,5 +194,41 @@ wbh.undo(); // back to A1=1, B1 gone
 wbh.setCell("C1", "9");
 ok(wbh.canRedo() === false, "a fresh edit clears the redo branch");
 
+// Structural edits (the + Row / − Row / + Col / − Col buttons): inserting and
+// deleting rows shifts every formula reference across the band, and deleting a
+// referenced band turns that reference into #REF!. Fresh session for clarity.
+const wbs = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+wbs.setCell("A1", "10");
+wbs.setCell("A2", "20");
+wbs.setCell("A3", "=A1+A2"); // 30
+ok(wbs.getDisplayWindow(3, 1, 3, 1).cells[0][0] === "30", "A3 = A1+A2 = 30 before any structural edit");
+// Insert a row at row 2: the old A2/A3 shift down to A3/A4, the inserted row is
+// blank, and the formula's refs shift with their cells (=A1+A2 → =A1+A3).
+// The engine's formula printer parenthesizes binary ops (=A1+A3 prints as
+// "=(A1+A3)"), so compare with the parens stripped.
+const bareRaw = (a1) => wbs.getRaw(a1).replace(/[()]/g, "");
+wbs.insertRows(2, 1);
+ok(wbs.getDisplayWindow(2, 1, 2, 1).cells[0][0] === "", "insertRows(2): the inserted row 2 is blank");
+ok(bareRaw("A4") === "=A1+A3", `insertRows shifted the formula's refs: ${wbs.getRaw("A4")}`);
+ok(wbs.getDisplayWindow(4, 1, 4, 1).cells[0][0] === "30", "insertRows: formula moved to A4, still = 30");
+// Delete that inserted row: everything shifts back to where it started.
+wbs.deleteRows(2, 1);
+ok(bareRaw("A3") === "=A1+A2", `deleteRows shifted the formula's refs back: ${wbs.getRaw("A3")}`);
+ok(wbs.getDisplayWindow(3, 1, 3, 1).cells[0][0] === "30", "deleteRows: formula back at A3, = 30");
+// Delete row 1 (a row the formula references): the surviving A2 shifts up to A1,
+// the formula shifts up to A2, and its now-destroyed A1 reference becomes #REF!.
+wbs.deleteRows(1, 1);
+ok(wbs.getDisplayWindow(2, 1, 2, 1).cells[0][0] === "#REF!",
+  `deleting a referenced row yields #REF!: ${wbs.getDisplayWindow(2, 1, 2, 1).cells[0][0]}`);
+// Columns shift the same way: a formula one column right of an inserted column
+// keeps pointing at its precedents.
+const wbc = sandbox.window.SpreadsheetEngine.createSpreadsheet();
+wbc.setCell("A1", "5");
+wbc.setCell("B1", "=A1*3"); // 15
+wbc.insertCols(1, 1); // insert a column at A: A1→B1, B1(formula)→C1, refs shift
+ok(wbc.getRaw("C1") === "=(B1*3)" || wbc.getRaw("C1") === "=B1*3",
+  `insertCols shifted the formula's column refs: ${wbc.getRaw("C1")}`);
+ok(wbc.getDisplayWindow(1, 3, 1, 3).cells[0][0] === "15", "insertCols: formula moved to C1, still = 15");
+
 console.log(fail === 0 ? "\nALL PASS" : `\n${fail} FAILURE(S)`);
 process.exit(fail ? 1 : 0);

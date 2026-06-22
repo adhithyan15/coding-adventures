@@ -1344,12 +1344,21 @@ unchanged.
     `startsWith(NA, "a")` → `NA`.
   - **`endsWith(x, suffix)`** — the trailing-edge analogue, same recycling and NA
     rules. `endsWith(c("file.txt","file.csv"), ".txt")` → `c(TRUE, FALSE)`.
-  - **`trimws(x, which = "both")`** — strip leading and/or trailing whitespace from
-    each element. `which ∈ {"both","left","right"}` (read as the second positional
-    or the `which =` named arg); any other value is a clean error. Whitespace is
-    R's default class `[ \t\r\n]`. `trimws("  hi  ")` → `"hi"`;
-    `trimws("  hi  ", "left")` → `"hi  "`; `trimws("  hi  ", "right")` → `"  hi"`;
-    `trimws(NA)` → `NA`. Char-based, UTF-8 safe.
+  - **`trimws(x, which = "both", whitespace = "[ \t\r\n]")`** — strip leading and/or
+    trailing whitespace from each element. `which ∈ {"both","left","right"}` (read as
+    the second positional or the `which =` named arg); any other value is a clean
+    error. `trimws("  hi  ")` → `"hi"`; `trimws("  hi  ", "left")` → `"hi  "`;
+    `trimws("  hi  ", "right")` → `"  hi"`; `trimws(NA)` → `NA`. Char-based, UTF-8 safe.
+    - **`whitespace =` (R-37).** The set of characters to strip is a **regular
+      expression**, defaulting to R's class `"[ \t\r\n]"`. We compile it with the
+      same RE2-based `regex` engine `grepl`/`gsub` use, anchoring it (`^(?:…)+` for
+      the left edge, `(?:…)+$` for the right edge) so only a run of the matched class
+      at the very start/end is removed. Because RE2 matches in guaranteed linear time
+      with no backtracking, a crafted `whitespace=` pattern **cannot** trigger
+      catastrophic backtracking (no ReDoS). An invalid pattern is a clean error.
+      `trimws("xxhixx", whitespace = "x")` → `"hi"`;
+      `trimws("xxhix", whitespace = "x", which = "left")` → `"hix"`;
+      `trimws("..a..", whitespace = "[.]")` → `"a"`. `NA` propagates.
   - **`chartr(old, new, x)`** — translate characters: each char of `x` that appears
     at position *i* of `old` becomes the char at position *i* of `new`. `old` and
     `new` are **length-one** character scalars and must have **equal `nchar`**, else
@@ -1357,9 +1366,10 @@ unchanged.
     Unicode `char`, so multibyte `old`/`new`/`x` work and never panic.
     `chartr("abc", "xyz", "cab")` → `"zxy"`. Vectorized over `x`; `NA` element → `NA`.
   - **`strtoi(x, base = 10L)`** — parse each string as an integer in the given
-    `base` (an integer in **2..36**, read as the second positional or `base =`),
-    returning a **double** vector (this subset has no distinct integer type), with
-    `NA` for anything unparseable. Semantics follow C `strtol` as R does:
+    `base` (an integer in **2..36** *or* the special value `0L`, read as the second
+    positional or `base =`), returning a **double** vector (this subset has no
+    distinct integer type), with `NA` for anything unparseable. Semantics follow C
+    `strtol` as R does:
     - Leading ASCII whitespace is skipped; an optional `+`/`-` sign is honored.
     - For **base 16**, an optional `0x`/`0X` prefix is accepted (e.g.
       `strtoi("0xFF", 16L)` → `255`); for other bases the digits are taken literally.
@@ -1367,7 +1377,16 @@ unchanged.
       (including trailing whitespace) yields `NA`. An empty string yields `NA`.
     - A digit outside the base's range makes the element `NA`
       (`strtoi(c("7","8"), 8L)` → `c(7, NA)`; `strtoi("z", 16L)` → `NA`).
-    - A `base` outside **2..36** makes **every** element `NA` (matching base R's
+    - **`base = 0L` auto-detection (R-37).** When `base` is `0`, the radix of each
+      string is inferred from its prefix, exactly as C `strtol(…, 0)`: after the
+      optional sign, a `0x`/`0X` prefix selects **hexadecimal**; a leading `0`
+      followed by at least one more digit selects **octal**; a lone `"0"` is the
+      number zero; anything else is **decimal**. Because octal is then parsed in
+      base 8, a digit `8`/`9` after a leading `0` is out of range and yields `NA`
+      (`strtoi("08", 0L)` → `NA`, matching base R). A prefix with no following
+      digits (`strtoi("0x", 0L)`) yields `NA`. Examples: `strtoi("0x1F", 0L)` → `31`;
+      `strtoi("010", 0L)` → `8`; `strtoi("12", 0L)` → `12`; `strtoi("0", 0L)` → `0`.
+    - A `base` outside **{0} ∪ 2..36** makes **every** element `NA` (matching base R's
       `strtol`-driven behavior — it does *not* error).
     Examples: `strtoi("FF", 16L)` → `255`; `strtoi("10", 2L)` → `2`;
     `strtoi(c("7","8"), 8L)` → `c(7, NA)`.
@@ -1377,12 +1396,68 @@ unchanged.
     a fixed length cap, so a long all-digits string cannot overflow or hang
     (overflow → `NA`, never a panic). Recycling length is the max of the (bounded)
     input lengths; an empty input recycles to length 0.
-  - **Scope outcome / deferred to R-36.** `startsWith`, `endsWith`, `trimws`,
-    `chartr`, and `strtoi` (explicit bases **2..36**) ship **solidly**. **Deferred to
-    R-36:** `strtoi`'s `base = 0L` auto-detection (C `strtol`'s convention where a
-    `0x` prefix selects base 16 and a leading `0` selects base 8) — a self-contained
-    extension of the same parser. `trimws`'s custom `whitespace =` regex argument
-    (R ≥ 3.6) is likewise deferred; the default class covers the common case.
+  - **Scope outcome.** `startsWith`, `endsWith`, `trimws`, `chartr`, and `strtoi`
+    (explicit bases **2..36**) shipped **solidly** in **R-34**. **R-37** completes the
+    family: `strtoi`'s `base = 0L` prefix auto-detection (C `strtol`'s convention where
+    a `0x` prefix selects base 16 and a leading `0` selects base 8) and `trimws`'s
+    custom `whitespace =` argument, interpreted as a **regex** (faithful to base R
+    ≥ 3.6) by reusing the existing RE2-based `regex` engine. Nothing in the family
+    remains deferred.
+
+- **R-44 — base R Date support** *(this PR)*. A first calendar type. In R a
+  **`Date`** is *not* a new value kind: it is an ordinary numeric vector — the
+  count of **days since the Unix epoch `1970-01-01`** — carrying the S3 class
+  attribute `"Date"`. We model it with the existing transparent
+  `SValue::Classed { inner: Double, class: ["Date"] }` wrapper (the same R-13/S-v2
+  machinery factors and explicit S3 classes already use), so **no new `SValue`
+  variant** is introduced and every coercion (`as_double`, `as_character`,
+  `as_logical`) already sees straight through to the day count. Concretely:
+  - **`Sys.Date()`** — today's date as a length-1 `Date`. The runtime has no
+    pre-existing deterministic clock hook (no `Sys.time`/`now` abstraction exists
+    yet), so this reads the wall clock via `std::time::SystemTime::now()` and
+    converts the elapsed duration to whole days since the epoch (`UNIX_EPOCH`).
+    A clock before the epoch (negative duration) is handled without panic. Because
+    the value is non-deterministic, tests assert only its **structure** — `class()`
+    is `"Date"` and it is a single finite numeric — never an exact day.
+  - **`as.Date(x, format =)`** — parse a **character** vector to `Date`, or wrap a
+    **numeric** vector as days-since-epoch directly (`as.Date(0)` → `1970-01-01`).
+    Character parsing supports the default ISO `"%Y-%m-%d"` and, via `format =`,
+    at least `"%Y/%m/%d"`; the recognised fields are `%Y` (year), `%m` (month),
+    `%d` (day), plus literal separators. Unparseable / malformed / out-of-range
+    strings become `NA` (**never** a panic). Vectorised over the input.
+  - **`format.Date(d, format =)` / `format(d, fmt)`** — render a `Date` back to a
+    string. The default format is `"%Y-%m-%d"`; the supported fields are `%Y`,
+    `%m`, `%d`, and `%j` (zero-padded day-of-year, 001..366). `format()` detects
+    the `"Date"` class and dispatches to the Date renderer; on any other value it
+    is unchanged.
+  - **`difftime(d1, d2)` and `d1 - d2`** — the difference in **days** between two
+    `Date`s, as a numeric. Subtraction needs no special case: `arithmetic("-", …)`
+    already coerces both operands through `as_double` (the `Classed` wrapper is
+    transparent), so `as.Date("2021-03-20") - as.Date("2021-03-14")` is `6`
+    automatically. `difftime` is the named builtin form (units = days only here).
+    `as.numeric(d)` yields the raw days-since-epoch.
+  - **`weekdays(d)`** — the English weekday name (`"Monday"`..`"Sunday"`). The
+    anchor is the historical fact that **`1970-01-01` was a Thursday**; the index
+    is `(days + 3).rem_euclid(7)` so **pre-epoch (negative) day counts** map
+    correctly (Rust's `%` can go negative — `rem_euclid` cannot).
+  - **The civil-date kernel.** Two pure helpers implement the calendar with **no
+    new dependency**, using Howard Hinnant's well-known algorithms:
+    `days_from_civil(y, m, d)` → days since the epoch (handles the proleptic
+    Gregorian calendar, leap years, and negative/pre-epoch dates via the
+    era/year-of-era/day-of-era decomposition), and `civil_from_days(z)` → `(y, m,
+    d)`. They are exact inverses; round-trips are unit-tested across leap days
+    (`2000-02-29`, `2020-02-29`) and pre-epoch dates (`1969-12-31` → `-1`).
+  - **Parse-safety.** Untrusted date strings are parsed with **bounded** integer
+    accumulation in `i64` (a digit cap rejects absurd years before they can
+    overflow the day arithmetic; the civil conversion uses `i64` throughout), so
+    no crafted string can overflow or panic — it degrades to `NA`. All weekday /
+    day-of-year modulo math uses `rem_euclid` so negative day counts never panic.
+  - **Deferred to R-45.** Full `strptime`/`strftime` field coverage (`%B`, `%A`,
+    `%H`, `%M`, `%S`, `%p`, locale names, …); `POSIXct`/`POSIXlt` date-*times* and
+    timezones; `seq.Date`; `months()` / `quarters()`; and `difftime` units other
+    than days. The core (`as.Date` for `%Y-%m-%d`/`%Y/%m/%d`, `Sys.Date`,
+    `format.Date` for `%Y`/`%m`/`%d`/`%j`, Date subtraction + `difftime` in days,
+    and `weekdays`) ships **solidly** here.
 
 ## §4 Reuse strategy
 
@@ -1425,7 +1500,7 @@ making them non-faithful; `cut`'s `labels=`/`right=FALSE`/`include.lowest=` and 
 `breaks` are deferred to **R-33**; the independent string-utility family
 (`startsWith`, `endsWith`, `trimws`, `chartr`, `strtoi` over explicit bases 2..36)
 lands in **R-34**, with `strtoi`'s `base = 0L` auto-detection and `trimws`'s custom
-`whitespace=` argument deferred to **R-36**; namespaces and `library()`
+`whitespace=` argument completing the family in **R-37**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.

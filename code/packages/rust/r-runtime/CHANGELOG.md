@@ -2,6 +2,61 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.34.0] - 2026-06-22
+
+### Added (via the shared `s-runtime`)
+
+- **Base R Date support (R-44)** — R's first calendar type, reached through
+  ordinary R syntax. A **`Date`** is a numeric vector of **days since the Unix
+  epoch 1970-01-01** carrying class `"Date"` (the existing transparent
+  `Classed` wrapper — no new value kind), so coercions and arithmetic see
+  straight through to the day count.
+  - **`as.Date(x, format = "%Y-%m-%d")`** — parse a character vector (default
+    `"%Y-%m-%d"`, or `"%Y/%m/%d"` etc. via `format =`), or wrap a numeric vector
+    as days-since-epoch. `class(as.Date("2021-03-14"))` → `"Date"`;
+    `as.numeric(as.Date("1970-01-02"))` → `1`; `as.numeric(as.Date("1969-12-31"))`
+    → `-1`. Malformed strings (`as.Date("not-a-date")`) → `NA`, never a panic.
+  - **`format(d)` / `format.Date(d, fmt)`** — render to a string (`%Y`/`%m`/`%d`/
+    `%j`, default `"%Y-%m-%d"`). `format(as.Date("2021-03-14"))` → `"2021-03-14"`.
+  - **`Sys.Date()`** — today as a Date (wall clock; non-deterministic, so only its
+    class/structure is asserted in tests).
+  - **`d1 - d2` and `difftime(d1, d2)`** — difference in **days**.
+    `as.Date("2021-03-20") - as.Date("2021-03-14")` → `6`.
+  - **`weekdays(d)`** — `weekdays(as.Date("1970-01-01"))` → `"Thursday"`;
+    `weekdays(as.Date("2021-03-14"))` → `"Sunday"`.
+  - **`as.numeric` / `as.double`** — base coercions yielding a Date's
+    days-since-epoch (and a factor's codes).
+  - **Security**: untrusted date strings parse with bounded `i64` accumulation
+    (no overflow on crafted years); impossible days rejected via a civil
+    round-trip; weekday/day-of-year math uses `rem_euclid` (safe on pre-epoch
+    negatives). Malformed input → `NA`, never a panic.
+  - **Deferred to R-45**: full `strptime`/`strftime` fields; `POSIXct`/`POSIXlt`
+    date-times and timezones; `seq.Date`; `months()`/`quarters()`; non-day
+    `difftime` units.
+
+## [0.33.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-37 — string-utility completeness**: the two options deferred from R-34 now
+  ship, reached through ordinary R syntax. No new builtins; the existing `strtoi`
+  and `trimws` handlers are extended in place.
+  - **`strtoi(x, base = 0L)`** — `base = 0L` infers each string's radix from its
+    prefix, C `strtol`-style: `0x`/`0X` → hex, a leading `0` + digit → octal, a
+    lone `"0"` → zero, else decimal. `strtoi("0x1F", 0L)` → `31`;
+    `strtoi("010", 0L)` → `8`; `strtoi("12", 0L)` → `12`; `strtoi("0", 0L)` → `0`.
+    An invalid octal digit (`strtoi("08", 0L)`) or an empty digit run
+    (`strtoi("0x", 0L)`) → `NA`. Explicit bases 2..36 are unchanged.
+  - **`trimws(x, whitespace = "[ \t\r\n]")`** — a new keyword-only `whitespace =`
+    argument, interpreted as a **regex** (faithful to base R ≥ 3.6) via the same
+    RE2 engine `grepl`/`gsub` use. `trimws("xxhixx", whitespace = "x")` → `"hi"`;
+    `trimws("xxhix", whitespace = "x", which = "left")` → `"hix"`. The default
+    whitespace, `which`, and `NA` behavior are unchanged.
+  - **Security**: base-0 parsing reuses checked-`i64` accumulation (overflow →
+    `NA`); `whitespace =` slicing uses regex-reported `char`-boundary offsets
+    (UTF-8 safe) and RE2's linear-time matching (no ReDoS); an invalid pattern is
+    a clean error. Nothing in the string-utility family remains deferred.
+
 ## [0.32.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)

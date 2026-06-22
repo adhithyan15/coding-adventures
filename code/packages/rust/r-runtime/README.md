@@ -261,8 +261,17 @@ base=10L)` parses integers in bases 2..36 the way C `strtol` does — leading
 whitespace and a sign, a `0x` prefix for base 16, the whole string consumed, and
 `NA` for an empty string, garbage, an out-of-range digit, or a base outside 2..36
 (`strtoi("FF", 16L)` → `255`; `strtoi(c("7","8"), 8L)` → `c(7, NA)`). Parsing uses
-checked `i64` arithmetic, so overflow yields `NA` rather than a panic. (`strtoi`'s
-`base=0L` auto-detection and a custom `trimws(whitespace=)` are deferred to R-36.)
+checked `i64` arithmetic, so overflow yields `NA` rather than a panic.
+
+**R-37 — string-utility completeness** finishes the family. `strtoi(x, base=0L)`
+auto-detects each string's radix from its prefix, C `strtol`-style — `0x`/`0X` →
+hex, a leading `0` + digit → octal, a lone `"0"` → zero, else decimal
+(`strtoi("0x1F", 0L)` → `31`; `strtoi("010", 0L)` → `8`; `strtoi("12", 0L)` → `12`;
+`strtoi("08", 0L)` → `NA`). `trimws(x, whitespace=)` adds a keyword-only
+`whitespace=` argument, interpreted as a **regex** (default `"[ \t\r\n]"`, faithful
+to base R ≥ 3.6) via the same RE2 engine `grepl`/`gsub` use, anchored to the trimmed
+edge (`trimws("xxhixx", whitespace="x")` → `"hi"`). RE2's linear-time matching rules
+out ReDoS, and slicing is on `char`-boundary offsets (UTF-8 safe).
 
 **R-36 — matrix cross products** add `crossprod` and `tcrossprod`, again through the
 shared `s-runtime`. An independent matrix-algebra item, defined entirely in terms of
@@ -291,6 +300,31 @@ the row count `m·p`, column count `n·q`, and their product are each formed wit
 over-large product errors rather than OOMing, and `0×n`/`m×0` inputs give an empty
 result with no out-of-bounds access. The R `%x%` infix alias (`X %x% Y`) needs
 lexer/grammar work and is deferred to **R-40**; this ships the function form only.
+
+**R-44 — base R Date support** adds R's first calendar type, again through the
+shared `s-runtime`. A **`Date`** is *not* a new value kind: it is a numeric vector
+of **days since the Unix epoch 1970-01-01** carrying class `"Date"` (the existing
+transparent `Classed` wrapper), so coercions and arithmetic already see through to
+the day count. `as.Date(x, format=)` parses a character vector (default ISO
+`"%Y-%m-%d"`, or `"%Y/%m/%d"` etc. via `format=`) or wraps a numeric vector as
+days-since-epoch (`as.Date(0)` → 1970-01-01); a malformed string
+(`as.Date("not-a-date")`, `as.Date("2021-02-30")`) → `NA`, never a panic.
+`class(as.Date("2021-03-14"))` → `"Date"`; `as.numeric(as.Date("1970-01-02"))` →
+`1`; `as.numeric(as.Date("1969-12-31"))` → `-1`. `format(d)` / `format.Date(d, fmt)`
+render with `%Y`/`%m`/`%d`/`%j` (default `"%Y-%m-%d"`):
+`format(as.Date("2021-03-14"))` → `"2021-03-14"`. `Sys.Date()` is today (wall
+clock; non-deterministic, so only its class/structure is asserted). `d1 - d2` and
+`difftime(d1, d2)` give the difference in **days** (`as.Date("2021-03-20") -
+as.Date("2021-03-14")` → `6`). `weekdays(d)` names the day, anchored on the fact
+that 1970-01-01 was a Thursday — `weekdays(as.Date("1970-01-01"))` → `"Thursday"`,
+`weekdays(as.Date("2021-03-14"))` → `"Sunday"`. The calendar uses Howard Hinnant's
+dependency-free `days_from_civil`/`civil_from_days` algorithms (leap years and
+pre-epoch dates handled). Parse safety: untrusted strings parse with bounded `i64`
+accumulation (no overflow on crafted years), impossible days are rejected via a
+civil round-trip, and weekday/day-of-year modulo uses `rem_euclid` (safe on
+pre-epoch negatives). Deferred to **R-45**: full `strptime`/`strftime` fields,
+`POSIXct`/`POSIXlt` date-times and timezones, `seq.Date`, `months()`/`quarters()`,
+and `difftime` units other than days.
 
 ## Usage
 

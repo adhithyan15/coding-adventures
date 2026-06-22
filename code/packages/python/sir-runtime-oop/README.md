@@ -37,6 +37,26 @@ _sir_oop.call_method(d, "is_a?", "Animal")        # True
 _sir_oop.cvar_set("@@count", 0)                   # @@count = 0
 ```
 
+## Built-in method dispatch
+
+`recv.meth(args…)` reaches the backend as `BuiltinCall("__method__", …)` and is
+dispatched by `call_method`, in order: reflective built-ins
+(`is_a?`/`kind_of?`/`instance_of?`/`class`) → user `define_method` table →
+built-in catalog → `nil` floor. `respond_to?` reports exactly which names
+resolve, so an out-of-catalog method is both `nil` *and* `respond_to? == False`.
+
+The catalog currently covers (item **M1a** of `code/specs/sir-method-dispatch.md`)
+the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
+`include?`, `index`, `push`/`<<`/`pop`/`shift`/`unshift`, `reverse`, `sort`,
+`min`/`max`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a` — and the
+**universal `Object`** methods `nil?`, `==`, `!=`, `equal?`, `respond_to?`,
+`freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a`; and (item **M1b**)
+**block-taking `Array`/`Enumerable`** methods `each`, `each_with_index`,
+`map`/`collect`, `select`/`filter`, `reject`, `reduce`/`inject`, `find`/`detect`,
+`flat_map`, `any?`/`all?`/`none?` — a trailing `Closure` block is applied via
+`sir-runtime-core`'s `apply` (proc-lenient), predicates routed through SIR
+`truthy`. The Hash/String/Numeric/Symbol catalogs land in follow-up releases.
+
 ## Honest v0 limitation
 
 Because the frontend does not thread receivers into method bodies, the *current

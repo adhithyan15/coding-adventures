@@ -93,6 +93,7 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.12.0 | **Bitwise `not`** — synthesised as `xor x, -1` (LLVM has no `not`); a narrow width masks the result (`~0u8 = 255`). Unblocks Nib N3-`~` / Oct O2-`~`. |
 | v0.13.0 | **`f64` variable slots** (LANG-FULL E3). An `f64` local gets an `alloca double` slot (`store/load double`); a float `cmp_*` result `zext i1 → i64` (not the invalid `→ double`); `f64` literals render as LLVM's exact hex double `0x…`. **ALGOL 60 reals run on LLVM.** |
 | v0.14.0 | **Bounds-checked arrays** (LANG-FULL E5, static model). `alloc_array`→length-prefixed `@calloc` `[i64 len][elems…]`; `array_get`/`array_set` emit an explicit `icmp uge idx, len` + `br` to a `call void @llvm.trap()` block (OOB → trap), then a typed `getelementptr`+`load`/`store`; `array_len` reads the header. Declares `@calloc`/`@llvm.trap` on demand. |
+| v0.15.0 | **Typed module globals** (LANG-FULL E6 layer 1). `global_load`/`global_store` lower: each distinct global name → a module-level `@__twig_global_N = internal global i64 0` (index-based, zero-init), with `load`/`store i64` at use sites — so a function reads/writes a global. Verified end-to-end on real `clang` (⇒ exit 42). |
 | (later) | GC, debug info via `!dbg`. |
 
 ### Bounds-checked arrays (v0.14.0)

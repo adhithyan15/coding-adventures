@@ -246,6 +246,19 @@ pub fn install(env: &Env) {
     define(env, "nlevels", builtin("nlevels", b_nlevels));
     define(env, "as.character", builtin("as.character", b_as_character));
     define(env, "as.integer", builtin("as.integer", b_as_integer));
+    // R-44 — `as.numeric` (a base coercion; needed so `as.numeric(date)`
+    // returns the raw days-since-epoch, and generally to drop a class to plain
+    // numeric). `as.double` is R's exact synonym.
+    define(env, "as.numeric", builtin("as.numeric", b_as_numeric));
+    define(env, "as.double", builtin("as.double", b_as_numeric));
+
+    // R-44 — base R Date support. A Date is days-since-epoch (1970-01-01)
+    // carried by the transparent `SValue::Classed` wrapper with class "Date".
+    define(env, "as.Date", builtin("as.Date", b_as_date));
+    define(env, "Sys.Date", builtin("Sys.Date", b_sys_date));
+    define(env, "format.Date", builtin("format.Date", b_format_date));
+    define(env, "difftime", builtin("difftime", b_difftime));
+    define(env, "weekdays", builtin("weekdays", b_weekdays));
 
     // v2 — data frames.
     define(env, "data.frame", builtin("data.frame", b_data_frame));
@@ -1520,6 +1533,392 @@ fn b_as_integer(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             ))
         }
     }
+}
+
+/// `as.numeric(x)` / `as.double(x)` — coerce to a plain numeric vector, **dropping
+/// any class** (R-44). For a `Date` this returns its raw days-since-epoch: the
+/// `Classed` wrapper is transparent to `as_double`, so we simply re-wrap the
+/// coerced doubles as a bare `Double` (the class is gone). A factor coerces by its
+/// integer codes — matching `as.numeric(factor(...))` in R, which returns the
+/// codes, not the labels.
+fn b_as_numeric(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        // A factor's numeric form is its 1-based codes (NA-preserving), exactly
+        // like `as.integer` — never the labels (those would be NA under as.double).
+        SValue::Factor { codes, .. } => Ok(SValue::doubles(
+            codes
+                .iter()
+                .map(|c| c.map(|k| k as f64).unwrap_or_else(na_real))
+                .collect(),
+        )),
+        other => Ok(SValue::Double(other.as_double()?)),
+    }
+}
+
+// ===========================================================================
+// R-44 — base R Date support
+// ===========================================================================
+//
+// In R a `Date` is *not* a distinct value kind: it is an ordinary numeric vector
+// holding the count of **days since the Unix epoch 1970-01-01**, carrying the S3
+// class attribute "Date". We model it with the existing transparent
+// `SValue::Classed { inner: Double, class: ["Date"] }` wrapper — no new SValue
+// variant — so every coercion (`as_double`/`as_character`) and the `arithmetic`
+// kernel already see straight through to the day count. The only Date-aware code
+// is parsing, rendering, and the small civil-date kernel below.
+//
+//   day 0  = 1970-01-01 (a Thursday)
+//   day 1  = 1970-01-02
+//   day -1 = 1969-12-31
+//
+// ---------------------------------------------------------------------------
+// The civil-date kernel (Howard Hinnant's algorithms — no new dependency)
+// ---------------------------------------------------------------------------
+//
+// These two pure functions convert between a (year, month, day) civil date and a
+// signed day count relative to the epoch. They implement the **proleptic
+// Gregorian calendar** (the Gregorian rules projected backward through all of
+// history, including before 1582), and are exact inverses of one another. The
+// trick is to shift the start of the year to **March**, so the leap day
+// (February 29) lands at the *end* of the year-of-era and never disturbs the
+// month-length pattern; an "era" is a 400-year cycle (exactly 146097 days), which
+// is the calendar's repeat period.
+
+/// Days from the civil date `(y, m, d)` to the Unix epoch 1970-01-01.
+///
+/// Hinnant's `days_from_civil`. `i64` throughout so distant or pre-epoch years can
+/// never overflow within the (bounded) year range the parser admits. Examples:
+/// `(1970,1,1) → 0`, `(1970,1,2) → 1`, `(1969,12,31) → -1`, `(2000,2,29) → 11016`.
+fn days_from_civil(y: i64, m: i64, d: i64) -> i64 {
+    // Shift the year so it starts in March: Jan/Feb belong to the *previous* year.
+    let y = if m <= 2 { y - 1 } else { y };
+    // The era is the 400-year cycle this year falls in (floored toward -inf).
+    let era = if y >= 0 { y } else { y - 399 } / 400;
+    let yoe = y - era * 400; // year of era, 0..=399
+                             // Day of year counting from March 1 (mar=0 … feb=364/365).
+    let doy = (153 * (if m > 2 { m - 3 } else { m + 9 }) + 2) / 5 + d - 1;
+    // Day of era, 0..=146096.
+    let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+    // 719468 = days from 0000-03-01 to 1970-01-01 — shifts the result to the epoch.
+    era * 146097 + doe - 719468
+}
+
+/// The civil date `(y, m, d)` for a day count `z` relative to 1970-01-01.
+///
+/// Hinnant's `civil_from_days` — the exact inverse of [`days_from_civil`]. Examples:
+/// `0 → (1970,1,1)`, `-1 → (1969,12,31)`, `11016 → (2000,2,29)`.
+fn civil_from_days(z: i64) -> (i64, i64, i64) {
+    let z = z + 719468; // re-base onto 0000-03-01
+    let era = if z >= 0 { z } else { z - 146096 } / 146097;
+    let doe = z - era * 146097; // day of era, 0..=146096
+                                // Year of era, 0..=399.
+    let yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+    let y = yoe + era * 400;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100); // day of year (Mar-based), 0..=365
+    let mp = (5 * doy + 2) / 153; // month, shifted (0 = March … 11 = February)
+    let d = doy - (153 * mp + 2) / 5 + 1; // day of month, 1..=31
+    let m = if mp < 10 { mp + 3 } else { mp - 9 }; // un-shift to 1..=12
+    let y = if m <= 2 { y + 1 } else { y }; // Jan/Feb roll into the next civil year
+    (y, m, d)
+}
+
+/// The largest number of decimal digits we will accumulate for any single date
+/// field while parsing. A year is at most 4–6 digits in practice; capping the run
+/// length means a crafted string of a million '9's can never overflow the `i64`
+/// accumulation or hang — it simply fails to parse (→ NA). 9 digits keeps `i64`
+/// far from overflow while still admitting any realistic year.
+const MAX_DATE_DIGITS: usize = 9;
+
+/// The largest magnitude (in days) we admit for a `Date`'s day count. Beyond this
+/// the civil-date kernel's internal multiplications/additions (`z + 719468`,
+/// `era * 146097`, `z - days_from_civil(y, 1, 1)`) could approach `i64` overflow,
+/// and a `weekdays`/`format` call would panic (debug) or wrap to a nonsense date
+/// (release). ±1e11 days is year ≈ ±270 million — astronomically beyond any real
+/// use — yet keeps every kernel operation comfortably inside `i64`. This is the
+/// numeric counterpart to [`MAX_DATE_DIGITS`]: the string parser caps the *year*,
+/// this caps a directly-supplied *day count* (`as.Date(1e300)`), so **neither**
+/// untrusted path can drive an out-of-range `z` into the kernel.
+const MAX_DATE_DAYS: i64 = 100_000_000_000;
+
+/// Clamp-or-reject a raw day count: `Some(z)` if it is finite and within
+/// [`MAX_DATE_DAYS`], else `None` (→ NA). Used at every boundary where an
+/// untrusted `f64` becomes a Date day count, so the civil kernel only ever sees
+/// in-range values and can never overflow.
+fn checked_date_days(v: f64) -> Option<i64> {
+    if is_na_real(v) || !v.is_finite() {
+        return None;
+    }
+    let z = v.trunc();
+    if z.abs() > MAX_DATE_DAYS as f64 {
+        None
+    } else {
+        Some(z as i64)
+    }
+}
+
+/// Is `x` a Date — a value whose (explicit) class vector contains "Date"?
+fn is_date(x: &SValue) -> bool {
+    class_of(x).iter().any(|c| c == "Date")
+}
+
+/// Wrap a vector of day counts (NA-aware doubles) as a `Date` — class "Date" over
+/// a plain `Double`. This is the single constructor every Date-producing builtin
+/// funnels through.
+fn make_date(days: Vec<f64>) -> SValue {
+    SValue::Classed {
+        inner: Box::new(SValue::doubles(days)),
+        class: vec!["Date".to_string()],
+    }
+}
+
+/// Parse one non-negative integer field of at most [`MAX_DATE_DIGITS`] digits from
+/// `chars` starting at `idx`, advancing `idx` past it. Returns `None` (→ the whole
+/// parse fails → NA) on no digits or an over-long run. Accumulates in `i64` so it
+/// cannot overflow within the digit cap.
+fn parse_uint_field(chars: &[char], idx: &mut usize) -> Option<i64> {
+    let start = *idx;
+    let mut val: i64 = 0;
+    while *idx < chars.len() && chars[*idx].is_ascii_digit() {
+        if *idx - start >= MAX_DATE_DIGITS {
+            return None; // absurdly long run — refuse rather than risk overflow
+        }
+        val = val * 10 + (chars[*idx] as i64 - '0' as i64);
+        *idx += 1;
+    }
+    if *idx == start {
+        None // no digits where a number was required
+    } else {
+        Some(val)
+    }
+}
+
+/// Parse one date `string` against a `format` pattern (supporting `%Y`, `%m`, `%d`
+/// and literal characters), returning days-since-epoch — or `None` (→ NA) on any
+/// mismatch, missing field, or out-of-range value. Never panics on crafted input.
+fn parse_date_str(string: &str, format: &str) -> Option<i64> {
+    let chars: Vec<char> = string.chars().collect();
+    let fmt: Vec<char> = format.chars().collect();
+    let (mut ci, mut fi) = (0usize, 0usize);
+    // We require year + month + day to all appear; track each as we read them.
+    let (mut year, mut month, mut day): (Option<i64>, Option<i64>, Option<i64>) =
+        (None, None, None);
+
+    while fi < fmt.len() {
+        if fmt[fi] == '%' && fi + 1 < fmt.len() {
+            match fmt[fi + 1] {
+                'Y' => year = Some(parse_uint_field(&chars, &mut ci)?),
+                'm' => month = Some(parse_uint_field(&chars, &mut ci)?),
+                'd' => day = Some(parse_uint_field(&chars, &mut ci)?),
+                // An unsupported conversion in the format → no parse (NA), rather
+                // than silently misreading. (Full %B/%A/… land in R-45.)
+                _ => return None,
+            }
+            fi += 2;
+        } else {
+            // A literal format character must match the input exactly.
+            if ci >= chars.len() || chars[ci] != fmt[fi] {
+                return None;
+            }
+            ci += 1;
+            fi += 1;
+        }
+    }
+    // Any unconsumed input is a mismatch (trailing garbage → NA).
+    if ci != chars.len() {
+        return None;
+    }
+
+    let (y, m, d) = (year?, month?, day?);
+    // Range-check the calendar fields. `days_from_civil` is total over i64, but a
+    // nonsense month/day would otherwise round-trip to a *different* date, so we
+    // reject anything outside the real calendar. (Day-of-month is validated by a
+    // round-trip below — the simplest correct check.)
+    if !(1..=12).contains(&m) || !(1..=31).contains(&d) {
+        return None;
+    }
+    let z = days_from_civil(y, m, d);
+    // Round-trip to reject impossible days like 2021-02-30 (which the raw formula
+    // would happily fold into March): the day is valid iff it reconstructs exactly.
+    if civil_from_days(z) != (y, m, d) {
+        return None;
+    }
+    Some(z)
+}
+
+/// Render one day count `z` to a string under `format` (`%Y`, `%m`, `%d`, `%j`,
+/// and literals). Total — never panics; pre-epoch counts work via the i64 kernel.
+fn format_date_days(z: i64, format: &str) -> String {
+    let (y, m, d) = civil_from_days(z);
+    let fmt: Vec<char> = format.chars().collect();
+    let mut out = String::new();
+    let mut fi = 0;
+    while fi < fmt.len() {
+        if fmt[fi] == '%' && fi + 1 < fmt.len() {
+            match fmt[fi + 1] {
+                'Y' => out.push_str(&y.to_string()),
+                'm' => out.push_str(&format!("{m:02}")),
+                'd' => out.push_str(&format!("{d:02}")),
+                'j' => {
+                    // Day of year, 001..366 = (this day) − (Jan 1 of the same year) + 1.
+                    let doy = z - days_from_civil(y, 1, 1) + 1;
+                    out.push_str(&format!("{doy:03}"));
+                }
+                other => {
+                    // Unknown conversion: emit it literally (forgiving), e.g. a
+                    // stray "%q" renders as "%q". Full coverage lands in R-45.
+                    out.push('%');
+                    out.push(other);
+                }
+            }
+            fi += 2;
+        } else {
+            out.push(fmt[fi]);
+            fi += 1;
+        }
+    }
+    out
+}
+
+/// `as.Date(x, format = "%Y-%m-%d")` — build a `Date` (R-44).
+///
+/// - **Character `x`:** each element is parsed against `format` (default ISO
+///   `"%Y-%m-%d"`; pass e.g. `format = "%Y/%m/%d"`). Unparseable / out-of-range
+///   strings become `NA` — never a panic.
+/// - **Numeric `x`:** taken directly as days-since-epoch (`as.Date(0)` is
+///   1970-01-01). An `origin =` other than the epoch is deferred (R-45); we use
+///   1970-01-01.
+///
+/// Vectorised; the result always carries class "Date".
+fn b_as_date(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    // Already a Date? Return as-is (idempotent), seeing through the wrapper.
+    if is_date(x) {
+        return Ok(x.clone());
+    }
+    let format = named_str(args, "format").unwrap_or_else(|| "%Y-%m-%d".to_string());
+
+    // The peeled value decides character-parse vs numeric-wrap. A character vector
+    // parses; anything coercible to double is taken as raw day counts.
+    let days: Vec<f64> = match peel_structural(x) {
+        SValue::Character(strs) => strs
+            .iter()
+            .map(|opt| match opt {
+                Some(s) => parse_date_str(s, &format)
+                    .map(|z| z as f64)
+                    .unwrap_or_else(na_real),
+                None => na_real(),
+            })
+            .collect(),
+        other => {
+            // Numeric (or coercible) input → days since epoch, truncated to whole
+            // days (R stores Dates as doubles but they are integral here). An
+            // out-of-range or non-finite count (e.g. `as.Date(1e300)`) becomes NA
+            // rather than saturating to `i64::MAX` and overflowing the kernel — the
+            // numeric counterpart to the string parser's digit cap.
+            let d = other.as_double()?;
+            d.iter()
+                .map(|v| {
+                    checked_date_days(v)
+                        .map(|z| z as f64)
+                        .unwrap_or_else(na_real)
+                })
+                .collect()
+        }
+    };
+    Ok(make_date(days))
+}
+
+/// `Sys.Date()` — today's date as a length-1 `Date` (R-44).
+///
+/// The runtime has **no deterministic clock hook** (there is no `Sys.time`/`now`
+/// abstraction to reuse), so we read the wall clock directly. The duration since
+/// `UNIX_EPOCH` divided by 86400 seconds is the day count; a clock set *before*
+/// the epoch yields a negative count, handled without panic. Because the value is
+/// non-deterministic, tests assert only its structure (class "Date" + a single
+/// finite numeric), never the exact day.
+fn b_sys_date(_interp: &Interpreter, _args: &[Arg]) -> SResult<SValue> {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let now = SystemTime::now();
+    // `duration_since` is Err if `now` precedes the epoch; handle both directions
+    // so a misconfigured clock can never panic.
+    let days = match now.duration_since(UNIX_EPOCH) {
+        Ok(dur) => (dur.as_secs() / 86_400) as i64,
+        Err(e) => -((e.duration().as_secs().div_ceil(86_400)) as i64),
+    };
+    Ok(make_date(vec![days as f64]))
+}
+
+/// `format.Date(d, format = "%Y-%m-%d")` — render a `Date` to a character vector
+/// (R-44). Supported fields: `%Y`, `%m`, `%d`, `%j` (day-of-year). `NA` days stay
+/// `NA`. Vectorised. Reached directly and via the `format()` generic's dispatch.
+fn b_format_date(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    // The format may be the named `format =` or the second positional argument
+    // (`format(d, "%Y/%m/%d")`), defaulting to ISO.
+    let format = named_str(args, "format")
+        .or_else(|| {
+            nth_positional(args, 1).and_then(|v| v.as_character().into_iter().next().flatten())
+        })
+        .unwrap_or_else(|| "%Y-%m-%d".to_string());
+
+    let days = x.as_double()?;
+    let out: Vec<Option<String>> = days
+        .iter()
+        // `checked_date_days` rejects NA / non-finite / out-of-range counts → NA,
+        // so an out-of-range day (e.g. a hand-built `structure(1e300, class="Date")`)
+        // can never overflow the civil kernel in `format_date_days`.
+        .map(|v| checked_date_days(v).map(|z| format_date_days(z, &format)))
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+/// `difftime(time1, time2)` — the difference `time1 − time2` in **days**, as a
+/// numeric vector (R-44). In base R this returns a `"difftime"` object; here the
+/// only supported unit is days, so we return the plain numeric day difference
+/// (units other than days are deferred to R-45). Recycles and propagates `NA`
+/// through the shared `arithmetic` kernel — which already sees through the Date
+/// wrappers — so this is a thin, faithful wrapper.
+fn b_difftime(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let t1 = nth_positional(args, 0)
+        .ok_or_else(|| SError::BadArgs("difftime: missing time1".into()))?;
+    let t2 = nth_positional(args, 1)
+        .ok_or_else(|| SError::BadArgs("difftime: missing time2".into()))?;
+    crate::value::arithmetic("-", t1, t2)
+}
+
+/// `weekdays(d)` — the English weekday name of each `Date` (R-44).
+///
+/// The anchor is the historical fact that **1970-01-01 (day 0) was a Thursday**.
+/// Indexing the names from Sunday=0, day 0 (Thursday) is index 4, so the weekday
+/// index is `(days + 4).rem_euclid(7)`. We use `rem_euclid` — *not* `%` — because
+/// Rust's `%` returns a **negative** remainder for negative (pre-epoch) day
+/// counts, which would panic on `Vec` indexing; `rem_euclid` always lands in
+/// `0..7`. `NA` days yield `NA`.
+fn b_weekdays(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    const NAMES: [&str; 7] = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+    ];
+    let days = first_positional(args)?.as_double()?;
+    let out: Vec<Option<String>> = days
+        .iter()
+        .map(|v| {
+            // `checked_date_days` rejects NA / non-finite / out-of-range counts → NA,
+            // so `z + 4` below can never overflow (which would panic for i64::MAX).
+            checked_date_days(v).map(|z| {
+                // Day 0 = Thursday = index 4 (Sunday-based). rem_euclid keeps the
+                // index in 0..7 even for negative z (pre-epoch).
+                let idx = (z + 4).rem_euclid(7) as usize;
+                NAMES[idx].to_string()
+            })
+        })
+        .collect();
+    Ok(SValue::Character(out))
 }
 
 // ===========================================================================
@@ -3403,26 +3802,41 @@ fn b_ends_with(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     affix_test(args, "suffix", |s, p| s.ends_with(p))
 }
 
-/// A single ASCII/Unicode whitespace character per R's default `trimws` class
-/// `[ \t\r\n]`. We match exactly those four so behavior is locale-free and
-/// predictable (we deliberately do *not* use `char::is_whitespace`, which would
-/// also strip e.g. form-feed and the Unicode spaces).
-fn is_trim_ws(c: char) -> bool {
-    matches!(c, ' ' | '\t' | '\r' | '\n')
-}
+/// Base R's default `trimws` whitespace class, `[ \t\r\n]` — a space, tab, CR,
+/// and LF. Used verbatim when no `whitespace =` argument is supplied (R-37). We
+/// keep it as the literal regex source (rather than `char::is_whitespace`) so the
+/// default and the custom path share one code route and stay locale-free.
+const TRIMWS_DEFAULT_WS: &str = "[ \t\r\n]";
 
-/// `trimws(x, which = "both")` — strip leading and/or trailing whitespace from
-/// each element. `which` is the second positional or the `which =` named arg and
-/// must be one of `"both"`, `"left"`, `"right"`; anything else is a clean error.
-/// `NA` elements pass through unchanged. Char-based, so UTF-8 safe.
+/// `trimws(x, which = "both", whitespace = "[ \t\r\n]")` — strip leading and/or
+/// trailing whitespace from each element. `which` is the second positional or the
+/// `which =` named arg and must be one of `"both"`, `"left"`, `"right"`; anything
+/// else is a clean error. `NA` elements pass through unchanged.
+///
+/// **`whitespace =` (R-37).** The set of characters to strip is a *regular
+/// expression* (faithful to base R ≥ 3.6), defaulting to [`TRIMWS_DEFAULT_WS`].
+/// We compile it once with the same RE2-based `regex` engine `grepl`/`gsub` use,
+/// wrapped as a non-capturing group repeated one-or-more times and anchored to the
+/// edge being trimmed: `^(?:p)+` for the left, `(?:p)+$` for the right. Only a run
+/// of the class at the very start/end is removed; interior matches are untouched.
+/// Because RE2 matches in guaranteed linear time with no backtracking, no
+/// `whitespace =` pattern can cause catastrophic backtracking (no ReDoS). An
+/// invalid pattern is a clean `Err`. All slicing uses the byte offset that the
+/// regex itself reports for a whole-`char` match, so multibyte input is UTF-8 safe.
 fn b_trimws(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?.as_character();
     // `which =` named arg wins; else the second positional; else "both".
+    // (`whitespace` is keyword-only, so it never collides with the positional.)
     let which = args
         .iter()
         .find(|a| a.name.as_deref() == Some("which"))
         .map(|a| &a.value)
-        .or_else(|| nth_positional(args, 1))
+        .or_else(|| {
+            args.iter()
+                .filter(|a| a.name.is_none())
+                .nth(1)
+                .map(|a| &a.value)
+        })
         .map(|v| v.as_character())
         .and_then(|c| c.into_iter().next().flatten())
         .unwrap_or_else(|| "both".to_string());
@@ -3438,16 +3852,46 @@ fn b_trimws(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         }
     };
 
+    // The `whitespace =` pattern (keyword-only); default is R's `[ \t\r\n]`.
+    let ws = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("whitespace"))
+        .map(|a| a.value.as_character())
+        .and_then(|c| c.into_iter().next().flatten())
+        .unwrap_or_else(|| TRIMWS_DEFAULT_WS.to_string());
+
+    // Compile each edge's anchored matcher *once* (not per element). A bad pattern
+    // surfaces here as a clean error before we touch any data.
+    let left_re = if trim_left {
+        Some(compile(&format!("^(?:{ws})+"), false)?)
+    } else {
+        None
+    };
+    let right_re = if trim_right {
+        Some(compile(&format!("(?:{ws})+$"), false)?)
+    } else {
+        None
+    };
+
     let out = x
         .into_iter()
         .map(|o| {
             o.map(|s| {
                 let mut t: &str = &s;
-                if trim_left {
-                    t = t.trim_start_matches(is_trim_ws);
+                // Strip a leading run: the match (if any) starts at byte 0, so we
+                // keep the tail after `m.end()` — a regex-reported byte boundary,
+                // hence always a valid UTF-8 char boundary.
+                if let Some(re) = &left_re {
+                    if let Some(m) = re.find(t) {
+                        t = &t[m.end()..];
+                    }
                 }
-                if trim_right {
-                    t = t.trim_end_matches(is_trim_ws);
+                // Strip a trailing run: the `$`-anchored match ends at the string
+                // end, so we keep the head before `m.start()` (also a char boundary).
+                if let Some(re) = &right_re {
+                    if let Some(m) = re.find(t) {
+                        t = &t[..m.start()];
+                    }
                 }
                 t.to_string()
             })
@@ -3515,10 +3959,11 @@ fn b_chartr(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 ///     (including trailing whitespace) makes the element `NA`;
 ///   * an empty (or sign-only / prefix-only) string is `NA`;
 ///   * a digit outside the base's range makes the element `NA`;
-///   * a `base` outside 2..36 makes **every** element `NA`.
+///   * a `base` outside `{0} ∪ 2..36` makes **every** element `NA`.
 ///
-/// `base = 0L` auto-detection is deferred to R-36. Accumulation is `i64`-checked,
-/// so a long all-digits string overflows to `NA` rather than panicking.
+/// `base = 0L` auto-detects each string's radix from its prefix (R-37; see
+/// [`parse_strtoi`]). Accumulation is `i64`-checked, so a long all-digits string
+/// overflows to `NA` rather than panicking.
 fn b_strtoi(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?.as_character();
     let base = args
@@ -3543,15 +3988,28 @@ fn b_strtoi(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 }
 
 /// Parse a single string for [`b_strtoi`]. Returns `None` (→ `NA`) for any base
-/// outside 2..=36, an empty/garbage string, an out-of-range digit, or an `i64`
-/// overflow. Never panics: every step is a `checked_*` arithmetic op or a bounded
-/// `char` scan.
+/// outside `{0} ∪ 2..=36`, an empty/garbage string, an out-of-range digit, or an
+/// `i64` overflow. Never panics: every step is a `checked_*` arithmetic op or a
+/// bounded `char` scan.
+///
+/// **`base == 0` (R-37).** The radix is inferred from the post-sign prefix, exactly
+/// as C `strtol(…, 0)`:
+///
+/// | post-sign prefix        | inferred base | example         |
+/// |-------------------------|---------------|-----------------|
+/// | `0x` / `0X` + hex digits | 16           | `"0x1F"` → 31   |
+/// | `0` + another digit      | 8            | `"010"` → 8     |
+/// | exactly `"0"`            | 10 (value 0) | `"0"` → 0       |
+/// | anything else            | 10           | `"12"` → 12     |
+///
+/// Because octal is then parsed in base 8, a stray `8`/`9` after a leading `0`
+/// (e.g. `"08"`) is an out-of-range digit and yields `None`. A bare `0x`/`0X`
+/// with no following digits also yields `None` (empty digit run).
 fn parse_strtoi(s: &str, base: i64) -> Option<i64> {
-    // Base must be representable and in 2..=36; anything else is NA.
-    if !(2..=36).contains(&base) {
+    // Base must be representable and in {0} ∪ 2..=36; anything else is NA.
+    if base != 0 && !(2..=36).contains(&base) {
         return None;
     }
-    let base = base as u32;
 
     // Skip leading ASCII whitespace (strtol's `isspace`), then read an optional
     // sign. We work on the char iterator so multibyte tails can't desync indices.
@@ -3561,13 +4019,20 @@ fn parse_strtoi(s: &str, base: i64) -> Option<i64> {
         None => (false, trimmed.strip_prefix('+').unwrap_or(trimmed)),
     };
 
-    // For base 16, an optional `0x`/`0X` prefix is allowed (strtol convention).
-    let digits = if base == 16 {
-        rest.strip_prefix("0x")
+    // Resolve the effective base and strip any radix prefix from the digit run.
+    //   * base 0  → auto-detect from the prefix (R-37);
+    //   * base 16 → tolerate an optional `0x`/`0X` prefix (strtol convention);
+    //   * otherwise → the digits are taken literally.
+    let (base, digits) = if base == 0 {
+        detect_base0_prefix(rest)
+    } else if base == 16 {
+        let d = rest
+            .strip_prefix("0x")
             .or_else(|| rest.strip_prefix("0X"))
-            .unwrap_or(rest)
+            .unwrap_or(rest);
+        (16u32, d)
     } else {
-        rest
+        (base as u32, rest)
     };
 
     // Require at least one digit, and the *entire* remainder to be valid digits
@@ -3584,6 +4049,34 @@ fn parse_strtoi(s: &str, base: i64) -> Option<i64> {
         acc = acc.checked_neg()?;
     }
     Some(acc)
+}
+
+/// `strtoi(x, base = 0L)` prefix detection (R-37). Given the post-sign remainder
+/// `rest`, return `(effective_base, digit_run)`:
+///
+///   * a `0x`/`0X` prefix → base 16, with the prefix stripped;
+///   * a leading `0` *followed by at least one more character* → base 8, with the
+///     leading `0` stripped (so `"010"` parses the run `"10"` in base 8 → 8, and
+///     `"08"` parses `"8"` in base 8 → an out-of-range digit → `NA`);
+///   * a lone `"0"` → base 10, digit run `"0"` (the number zero);
+///   * anything else → base 10, digits taken as-is.
+///
+/// Pure prefix inspection (no allocation); the caller does the actual digit scan
+/// and so still rejects an empty digit run (e.g. a bare `"0x"`) as `NA`.
+fn detect_base0_prefix(rest: &str) -> (u32, &str) {
+    if let Some(d) = rest.strip_prefix("0x").or_else(|| rest.strip_prefix("0X")) {
+        (16, d)
+    } else if let Some(d) = rest.strip_prefix('0') {
+        // A leading `0` with more text behind it is octal; a lone "0" is decimal
+        // zero (octal "" would be an empty run → NA, which is wrong for "0").
+        if d.is_empty() {
+            (10, rest) // exactly "0": decimal, value 0.
+        } else {
+            (8, d) // octal: parse the digits after the leading 0.
+        }
+    } else {
+        (10, rest)
+    }
 }
 
 /// Hard cap on any single field width or precision (1 MiB). A user-supplied
@@ -3911,6 +4404,12 @@ fn format_number_nsmall(x: f64, nsmall: usize, big_mark: &str) -> String {
 /// out). `NA` renders as the string `"NA"`.
 fn b_format(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?;
+    // R-44: `format()` is an S3 generic. A value carrying class "Date" routes to
+    // the Date renderer (`format.Date`) — so `format(as.Date("2021-03-14"))`
+    // yields "2021-03-14" rather than the bare day count.
+    if is_date(x) {
+        return b_format_date(_interp, args);
+    }
     let nsmall = named_count(args, "nsmall").unwrap_or(0);
     let min_width = named_count(args, "width").unwrap_or(0);
     let big_mark = named_str(args, "big.mark").unwrap_or_default();
@@ -5866,5 +6365,117 @@ fn describe(err: StatsError) -> String {
         StatsError::EmptyInput { .. } => "argument has length zero".to_string(),
         StatsError::DomainError { what, .. } => what,
         other => format!("{other:?}"),
+    }
+}
+
+// ===========================================================================
+// R-44 — unit tests for the civil-date kernel and the Date parse/format helpers
+// ===========================================================================
+//
+// The end-to-end Date builtins (`as.Date`, `format`, `weekdays`, `difftime`,
+// `Sys.Date`) are exercised through R/S syntax in the `lib.rs` test module and in
+// `r-runtime`. Here we test the *pure* kernel and parse/format helpers directly,
+// since they are private to this module — especially the round-trip invariant
+// `civil_from_days(days_from_civil(y,m,d)) == (y,m,d)` over leap and pre-epoch
+// dates, and the parse-safety guards (malformed → None, never a panic).
+#[cfg(test)]
+mod date_tests {
+    use super::*;
+
+    /// Known fixed points: the epoch and its neighbours, anchoring the convention
+    /// that day 0 is 1970-01-01 and day -1 is the day before.
+    #[test]
+    fn epoch_anchor_points() {
+        assert_eq!(days_from_civil(1970, 1, 1), 0);
+        assert_eq!(days_from_civil(1970, 1, 2), 1);
+        assert_eq!(days_from_civil(1969, 12, 31), -1);
+        assert_eq!(civil_from_days(0), (1970, 1, 1));
+        assert_eq!(civil_from_days(1), (1970, 1, 2));
+        assert_eq!(civil_from_days(-1), (1969, 12, 31));
+    }
+
+    /// The exact-inverse invariant across leap days, century boundaries, and
+    /// deep pre-epoch / post-epoch dates — the property that makes the kernel
+    /// trustworthy.
+    #[test]
+    fn civil_days_round_trip() {
+        let cases = [
+            (1970, 1, 1),
+            (1969, 12, 31),
+            (2000, 2, 29), // leap day (divisible by 400)
+            (2020, 2, 29), // leap day (divisible by 4, not 100)
+            (1900, 3, 1),  // 1900 is NOT a leap year (divisible by 100, not 400)
+            (2021, 3, 14),
+            (1, 1, 1),
+            (1899, 12, 31),
+            (2400, 12, 31),
+            (-1, 12, 31), // proleptic, year before year 0
+        ];
+        for (y, m, d) in cases {
+            let z = days_from_civil(y, m, d);
+            assert_eq!(
+                civil_from_days(z),
+                (y, m, d),
+                "round-trip failed for {y}-{m}-{d} (z={z})"
+            );
+        }
+    }
+
+    /// 1900 was not a leap year (the divisible-by-100-but-not-400 rule), so
+    /// 1900-02-28 + 1 day is March 1, not February 29.
+    #[test]
+    fn non_leap_century() {
+        let feb28 = days_from_civil(1900, 2, 28);
+        assert_eq!(civil_from_days(feb28 + 1), (1900, 3, 1));
+    }
+
+    #[test]
+    fn parse_iso_default() {
+        assert_eq!(parse_date_str("1970-01-01", "%Y-%m-%d"), Some(0));
+        assert_eq!(parse_date_str("1970-01-02", "%Y-%m-%d"), Some(1));
+        assert_eq!(parse_date_str("1969-12-31", "%Y-%m-%d"), Some(-1));
+        assert_eq!(parse_date_str("2021-03-14", "%Y-%m-%d"), Some(18700));
+    }
+
+    #[test]
+    fn parse_slash_format() {
+        assert_eq!(
+            parse_date_str("2021/03/14", "%Y/%m/%d"),
+            parse_date_str("2021-03-14", "%Y-%m-%d")
+        );
+    }
+
+    /// Malformed, out-of-range, and adversarial inputs must all yield `None`
+    /// (→ NA at the builtin level) and never panic or overflow.
+    #[test]
+    fn parse_rejects_garbage() {
+        assert_eq!(parse_date_str("not-a-date", "%Y-%m-%d"), None);
+        assert_eq!(parse_date_str("2021-13-01", "%Y-%m-%d"), None); // month 13
+        assert_eq!(parse_date_str("2021-02-30", "%Y-%m-%d"), None); // impossible day
+        assert_eq!(parse_date_str("2021-00-10", "%Y-%m-%d"), None); // month 0
+        assert_eq!(parse_date_str("2021-03-14 ", "%Y-%m-%d"), None); // trailing space
+        assert_eq!(parse_date_str("2021-03", "%Y-%m-%d"), None); // missing day
+        assert_eq!(parse_date_str("", "%Y-%m-%d"), None); // empty
+                                                          // A million digits cannot overflow i64 — the digit cap refuses it.
+        let huge = "9".repeat(1_000_000);
+        assert_eq!(parse_date_str(&format!("{huge}-01-01"), "%Y-%m-%d"), None);
+    }
+
+    #[test]
+    fn format_iso_and_fields() {
+        assert_eq!(format_date_days(0, "%Y-%m-%d"), "1970-01-01");
+        assert_eq!(format_date_days(18700, "%Y-%m-%d"), "2021-03-14");
+        // Leap-day round-trip through the formatter.
+        let leap = days_from_civil(2000, 2, 29);
+        assert_eq!(format_date_days(leap, "%Y-%m-%d"), "2000-02-29");
+        // %j day-of-year: Jan 1 is 001; Mar 14 2021 (non-leap) is day 73.
+        assert_eq!(format_date_days(days_from_civil(2021, 1, 1), "%j"), "001");
+        assert_eq!(format_date_days(18700, "%j"), "073");
+    }
+
+    /// Negative (pre-epoch) day counts must format without panicking.
+    #[test]
+    fn format_pre_epoch() {
+        assert_eq!(format_date_days(-1, "%Y-%m-%d"), "1969-12-31");
     }
 }

@@ -54,6 +54,19 @@ EXPECTED = [
     ("dabigatran_toxicity", "antidote_for", "idarucizumab"),      # expand (NBK560651)
     ("arsenic_poisoning", "antidote_for", "dimercaprol"),         # expand (NBK549804)
     ("isoniazid_toxicity", "antidote_for", "pyridoxine"),         # expand (NBK557436)
+    ("rocuronium_toxicity", "antidote_for", "sugammadex"),        # expand (NBK470263)
+    # --- BATCH: drug-class table + mechanisms + dantrolene ---
+    ("omeprazole", "drug_class", "proton_pump_inhibitor"),        # expand (NBK539786)
+    ("losartan", "drug_class", "angiotensin_receptor_blocker"),   # expand (NBK526065)
+    ("furosemide", "drug_class", "loop_diuretic"),                # expand (NBK499921)
+    ("hydrochlorothiazide", "drug_class", "thiazide_type_diuretic"),  # expand (NBK430766)
+    ("ciprofloxacin", "drug_class", "fluoroquinolone"),           # expand (NBK535454)
+    ("azithromycin", "drug_class", "macrolide"),                  # expand (NBK557766)
+    ("vancomycin", "drug_class", "glycopeptide"),                 # expand (NBK459263)
+    ("albuterol", "drug_class", "short_acting_beta_2_agonist"),   # expand (NBK559069)
+    ("atorvastatin", "mechanism", "inhibits_hmg_coa_reductase"),  # expand (NBK430779)
+    ("aspirin", "mechanism", "cyclooxygenase_inhibition"),        # expand (NBK519032)
+    ("malignant_hyperthermia", "antidote_for", "dantrolene"),     # expand (NBK535398)
 ]
 VAR = {"drug_class": "Class", "mechanism": "MOA", "adverse_effect": "Effect",
        "antidote_for": "Antidote"}
