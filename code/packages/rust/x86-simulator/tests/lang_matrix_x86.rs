@@ -333,6 +333,23 @@ fn oct_static_global_runs_on_x86_sim() {
     assert_eq!(out, "42");
 }
 
+/// ALGOL 60 — an **`own` static-lifetime variable** (LANG-FULL AL6) on the
+/// x86_64 backend.  `bump`'s `own integer n` is a module global (the same
+/// `_twig_globals` slot mechanism, S8) that persists across calls:
+/// `bump(1) + bump(1) + bump(1)` accumulates 1 + 2 + 3 = 6 on the one cell.  A
+/// non-`own` local (a register) would give 3 — so 6 proves the global survived
+/// the three real x86_64 `call`s, executed on the simulator.  Together with
+/// `algol_module_global_runs_on_x86_sim` (E6) and `oct_static_global_…` (O3)
+/// this exercises all three module-global frontends locally.
+#[test]
+fn algol_own_variable_runs_on_x86_sim() {
+    let src = "begin integer result; \
+               integer procedure bump(d); value d; integer d; \
+                  begin own integer n; n := n + d; bump := n end; \
+               result := bump(1) + bump(1) + bump(1) end";
+    assert_eq!(run_on_x86_sim(Language::Algol60, src), 6);
+}
+
 /// Nib — **unsigned division** (`84 / 2` ⇒ exit 42).  The `div` op lowers to the
 /// x86 unsigned-division sequence `xor rdx,rdx; div rcx` — exercising the
 /// group-3 `0xF7 /6` end-to-end (S4's unit tests cover `div` in isolation; this
