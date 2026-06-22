@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.31.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-38 — `kronecker(X, Y)` (Kronecker product)**, reached through ordinary R
+  syntax. The block-outer product: for an `m×n` `X` and a `p×q` `Y`,
+  `kronecker(X, Y)` is the `(m·p)×(n·q)` matrix whose block `(i, j)` is the
+  scalar `X[i, j]` times the whole of `Y`, with
+  `result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]` (column-major).
+  - `dim(kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2)))` is
+    `c(4, 4)`; `kronecker(matrix(5), matrix(c(1,2,3,4), nrow=2))` is `5·Y` (2×2);
+    a 2×3 ⊗ 1×2 gives a 2×6 matrix. The result is a real matrix —
+    `dim()`/`nrow()`/`ncol()` work and it composes with `%*%`.
+  - **Security**: the result is quadratic in the inputs, so the row count `m·p`,
+    column count `n·q`, and their product are each formed with `checked_mul` and
+    bounded by the existing `MAX_SEQ_LEN` cap before allocating — an over-large
+    Kronecker product raises a clean "result too large" error rather than OOMing.
+    Degenerate `0×n` / `m×0` inputs give an empty result with the right zero
+    dimension and never index out of bounds.
+  - **Deferred to R-40**: the R `%x%` infix operator (`X %x% Y`) needs
+    lexer/grammar work; this item ships the `kronecker(X, Y)` function form only.
+
 ## [0.30.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)

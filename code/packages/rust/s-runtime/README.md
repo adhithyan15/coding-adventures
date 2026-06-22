@@ -277,6 +277,17 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   `nrow*ncol` multiply). `crossprod(matrix(c(1,2,3,4), nrow=2))` →
   `[[5,11],[11,25]]`; `tcrossprod` of the same → `[[10,14],[14,20]]`; non-square
   `matrix(1:6, nrow=2)` gives a 3×3 `crossprod` and 2×2 `tcrossprod`.
+- **Kronecker product** (R-38): **`kronecker(X, Y)`** — the `(m·p)×(n·q)`
+  block-outer product of an `m×n` `X` and a `p×q` `Y`, where block `(i, j)` is
+  `X[i,j] · Y` and `result[(i-1)·p+k, (j-1)·q+l] = X[i,j] · Y[k,l]`
+  (column-major). Reuses the existing matrix accessor and `SValue::Matrix`
+  constructor; a bare vector promotes to an `n×1` column. The output is
+  *quadratic* in the inputs, so the result row count `m·p`, column count `n·q`,
+  and their product are each formed with `checked_mul` and bounded by the same
+  `MAX_SEQ_LEN` cap (an over-large product errors instead of OOMing; `0×n`/`m×0`
+  inputs give an empty result, no OOB). `kronecker(matrix(c(1,2,3,4), nrow=2),
+  matrix(c(0,1,1,0), nrow=2))` is a 4×4 block matrix; `kronecker(matrix(5), Y)`
+  is `5·Y`. The R `%x%` infix alias is deferred to R-40 (grammar work).
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

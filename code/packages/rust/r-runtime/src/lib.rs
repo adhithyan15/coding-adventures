@@ -3179,6 +3179,59 @@ mod tests {
         );
     }
 
+    // --- R-38: kronecker (Kronecker product, R syntax) ------------------
+
+    #[test]
+    fn kronecker_blocks_through_r_syntax() {
+        // 2x2 ⊗ 2x2 → 4x4. dim() and a few exact entries computed from
+        // result[(i-1)*2+k, (j-1)*2+l] = X[i,j]*Y[k,l].
+        assert_eq!(
+            nums("dim(kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2)))\n"),
+            vec![4.0, 4.0]
+        );
+        let (data, nrow, ncol) = matrix_data(
+            "kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2))\n",
+        );
+        assert_eq!((nrow, ncol), (4, 4));
+        let at = |r: usize, c: usize| data[c * 4 + r];
+        assert_eq!(at(1, 0), 1.0); // block(1,1)=1*Y, Y[2,1]=1
+        assert_eq!(at(1, 2), 3.0); // block(1,2)=3*Y, Y[2,1]=1
+        assert_eq!(at(3, 2), 4.0); // block(2,2)=4*Y, Y[2,1]=1
+    }
+
+    #[test]
+    fn kronecker_nonsquare_through_r_syntax() {
+        // 2x3 ⊗ 1x2 → 2x6.
+        assert_eq!(
+            nums("dim(kronecker(matrix(1:6, nrow=2), matrix(c(1,1), nrow=1)))\n"),
+            vec![2.0, 6.0]
+        );
+        let (data, _, _) =
+            matrix_data("kronecker(matrix(1:6, nrow=2), matrix(c(1,1), nrow=1))\n");
+        let at = |r: usize, c: usize| data[c * 2 + r];
+        assert_eq!(at(0, 0), 1.0); // X[1,1]=1, copied across the 1x2 block
+        assert_eq!(at(0, 1), 1.0);
+        assert_eq!(at(1, 5), 6.0); // X[2,3]=6
+    }
+
+    #[test]
+    fn kronecker_one_by_one_scalar_times_y() {
+        // kronecker(matrix(5), Y) = 5*Y, a 2x2 matrix.
+        assert_eq!(
+            nums("c(kronecker(matrix(5), matrix(c(1,2,3,4), nrow=2)))\n"),
+            vec![5.0, 10.0, 15.0, 20.0]
+        );
+    }
+
+    #[test]
+    fn kronecker_composes_with_matmul() {
+        // The result is a real matrix usable on the LHS of %*%.
+        assert_eq!(
+            nums("K <- kronecker(matrix(c(1,0,0,1), nrow=2), matrix(c(2,0,0,2), nrow=2))\nc(K %*% matrix(c(1,1,1,1), nrow=4))\n"),
+            vec![2.0, 2.0, 2.0, 2.0]
+        );
+    }
+
     // --- R-35: ordered factors & cut() label polish (R syntax) ----------
 
     #[test]

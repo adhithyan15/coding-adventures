@@ -326,6 +326,24 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   `tcrossprod` of the same is `[[10,14],[14,20]]`. As in R a bare vector flows
   through `%*%`'s existing vector promotion (left = row, right = column); the
   dense-matrix case is the solid, tested core.
+- **Kronecker product** *(R-38)*: `kronecker(X, Y)`, the block-outer-product of
+  two matrices. For `X` `m×n` and `Y` `p×q` the result is `(m·p)×(n·q)` with
+  **`result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]`** (1-based,
+  column-major to match `SValue::Matrix`); equivalently each result cell `(r, c)`
+  splits into an outer `X` index (`(r-1) div p`, `(c-1) div q`) and an inner `Y`
+  index (`(r-1) mod p`, `(c-1) mod q`). The implementation reuses the existing
+  `matrix_parts` accessor and emits an `SValue::Matrix` directly. Because the
+  output is *quadratic* in the inputs, the result dimensions `m·p`, `n·q` and
+  their product are formed with `checked_mul` and bounded by the same
+  `MAX_SEQ_LEN` cap `matrix()`/`matrix_multiply` enforce, so a Kronecker of two
+  moderately large matrices raises a clean "result too large" error rather than
+  OOMing; `0×n`/`m×0` degenerate inputs yield an empty result with the correct
+  zero dimension and never index out of bounds. A bare numeric vector promotes
+  to an `n×1` column (the `matrix()` bare-column default). Worked example:
+  `kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2))` is the
+  4×4 block matrix whose `(i, j)` block is `X[i,j]·[[0,1],[1,0]]`. The R `%x%`
+  infix alias is **deferred to R-40** (grammar work); this item ships the
+  `kronecker(X, Y)` function form only.
 - **Apply family:** `sapply(x, f)` / `lapply(x, f)` map a function over elements
   (`sapply` simplifies length-1 atomic results to a vector).
 

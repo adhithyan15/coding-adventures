@@ -260,6 +260,22 @@ is `c(2,2)`. A non-conformable pair raises the same `"non-conformable arguments"
 error `%*%` raises. Because the impl reuses the `%*%` handler, it inherits its
 `MAX_SEQ_LEN` allocation guard and conformability check — no new unbounded multiplier.
 
+**R-38 — `kronecker()` (Kronecker product)** adds the block-outer product, again
+through the shared `s-runtime`. For an `m×n` `X` and a `p×q` `Y`, `kronecker(X, Y)`
+is the `(m·p)×(n·q)` matrix whose block `(i, j)` is `X[i,j] · Y`, i.e.
+`result[(i-1)·p+k, (j-1)·q+l] = X[i,j] · Y[k,l]` (column-major). It reuses the
+existing matrix accessor and `SValue::Matrix` constructor (no new value type); a
+bare vector promotes to an `n×1` column.
+`dim(kronecker(matrix(c(1,2,3,4), nrow=2), matrix(c(0,1,1,0), nrow=2)))` is
+`c(4,4)`; `kronecker(matrix(5), matrix(c(1,2,3,4), nrow=2))` is `5·Y` (2×2); a
+2×3 ⊗ 1×2 gives a 2×6 matrix. The result is a real matrix — `dim`/`nrow`/`ncol`
+work and it composes with `%*%`. Because the result is *quadratic* in the inputs,
+the row count `m·p`, column count `n·q`, and their product are each formed with
+`checked_mul` and bounded by the `MAX_SEQ_LEN` cap before allocating — an
+over-large product errors rather than OOMing, and `0×n`/`m×0` inputs give an empty
+result with no out-of-bounds access. The R `%x%` infix alias (`X %x% Y`) needs
+lexer/grammar work and is deferred to **R-40**; this ships the function form only.
+
 ## Usage
 
 ```rust

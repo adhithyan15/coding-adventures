@@ -1182,6 +1182,47 @@ unchanged.
     **Deferred to R-34:** `dig.lab =` (significant-digit control of auto-label
     formatting) and `ordered_result =` (an ordered factor result). The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
+- **R-38 — `kronecker()` (Kronecker product)** *(this PR)*. An **independent
+  matrix-algebra item** in the same family as R-36, landed in the shared
+  `s-runtime` (R reuses it verbatim through the shared tree-walker). The
+  Kronecker product is the block-outer-product of two matrices: for an `m×n`
+  matrix `X` and a `p×q` matrix `Y`, `kronecker(X, Y)` is the `(m·p)×(n·q)`
+  matrix made of `m·n` blocks, where block `(i, j)` is the scalar `X[i, j]`
+  times the whole of `Y`.
+  - **Block / element formula (1-based, column-major to match `SValue::Matrix`).**
+    `result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]` for `i∈1..m`,
+    `j∈1..n`, `k∈1..p`, `l∈1..q`. Equivalently, result row `r = (i-1)·p + k`
+    and column `c = (j-1)·q + l` decompose the result coordinate into an
+    *outer* index into `X` (`i = (r-1) div p`, `j = (c-1) div q`) and an *inner*
+    index into `Y` (`k = (r-1) mod p`, `l = (c-1) mod q`). The result is stored
+    column-major like every other `SValue::Matrix`.
+  - **Reuse of matrix machinery.** The implementation pulls `(data, nrow, ncol)`
+    out of each operand with the existing `matrix_parts` helper, and emits a
+    `SValue::Matrix` directly (the same constructor `matrix()`/`crossprod` use).
+    A bare numeric vector is promoted with the **same** convention `matrix()`'s
+    bare-column default uses: an `n`-length vector becomes an `n×1` column
+    matrix. So `kronecker(c(1,2), Y)` is a `(2·p)×(1·q)` matrix.
+  - **Output-size guard (security).** The result has `(m·p)·(n·q)` elements — a
+    *quadratic* blow-up in the inputs, so two innocuous-looking 100×100 matrices
+    would Kronecker to a 10 000×10 000 (10⁸-element) matrix. Before allocating,
+    the result row count `m·p`, column count `n·q`, **and** their product are
+    each formed with `checked_mul` and bounded by the existing `MAX_SEQ_LEN`
+    cap (the very bound `matrix()` and `matrix_multiply` already enforce); on
+    overflow or over-cap the function returns the same "result too large" error
+    those builtins raise, never allocating. Degenerate `0×n` / `m×0` inputs
+    produce an empty (`0`-element) result with the correct zero dimension and
+    never index out of bounds.
+  - **Worked example (column-major).** `X = matrix(c(1,2,3,4), nrow = 2)` is
+    col1=(1,2), col2=(3,4), i.e. `[[1,3],[2,4]]`. `Y = matrix(c(0,1,1,0),
+    nrow = 2)` is `[[0,1],[1,0]]`. `kronecker(X, Y)` is the 4×4 matrix whose
+    top-left 2×2 block is `1·Y`, top-right is `3·Y`, bottom-left `2·Y`,
+    bottom-right `4·Y`. A 1×1 `X = matrix(5)` gives `kronecker(X, Y) = 5·Y`.
+  - **`%x%` infix deferred to R-40.** R spells the Kronecker product with the
+    infix `%x%` operator (`X %x% Y`), which — like `%o%`/`%in%` — needs
+    lexer/parser/grammar work to add the special-operator token. This PR ships
+    only the **function form** `kronecker(X, Y)`; the `%x%` infix alias is
+    explicitly deferred to **R-40** (grammar work), as is any `outer`-style
+    generalization (custom `FUN`) and sparse handling.
 - **R-36 — `crossprod` / `tcrossprod` (matrix cross products)** *(this PR)*. An
   **independent matrix-algebra item** (not part of the binning/cut/set-op chains):
   the two cross-product convenience functions that statistics code reaches for
