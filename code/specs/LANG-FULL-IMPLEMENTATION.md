@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6) — all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs` standard function ✅ (AL8, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -443,7 +443,13 @@ backend immediately) come before the enabler-dependent items.
   has drifted ahead of the compiled grammar in other rules; resync is follow-up.)
 - ☐ **AL7** — ⚠ call-by-name (Jensen-style expression thunks). **Hardest item in the
   campaign — design pass + user check before implementing.**
-- ☐ **AL8** — standard functions (`abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/… — needs **E3**).
+- ◑ **AL8** — standard functions (§3.2.4). **`abs` ✅** (algol-iir-compiler 0.8.0):
+  built-in resolved by name (overridable by a user `procedure abs`), lowered inline
+  to `if E < 0 then -E else E` — `cmp_lt` + `jmp_if_false` + negated/pass-through
+  `mov` into one slot — preserving `integer`/`real`. Verified by RUNNING
+  `abs(0 - 42)` ⇒ 42 on native/LLVM/WASM/JVM/CLR/VM/JIT. **Remaining:** `sign`,
+  `entier` (pure IIR, next), then `sqrt`/`sin`/`cos`/`ln`/`exp` (need a cross-backend
+  runtime math library).
 
 ### Twig
 - ✅ **TW1** — variadic arithmetic typed lowering. An all-`i64` `(+ a b c …)` /
