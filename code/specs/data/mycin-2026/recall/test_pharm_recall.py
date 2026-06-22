@@ -47,6 +47,9 @@ EXPECTED = [
     ("cyanide_poisoning", "antidote_for", "hydroxocobalamin"),    # expand (NBK557632)
     ("methotrexate_toxicity", "antidote_for", "leucovorin"),      # expand (NBK553114)
     ("iron_toxicity", "antidote_for", "deferoxamine"),            # expand (NBK459224)
+    ("beta_blocker_overdose", "antidote_for", "glucagon"),        # expand (NBK448097)
+    ("methemoglobinemia", "antidote_for", "methylene_blue"),      # expand (NBK557593)
+    ("lead_poisoning", "antidote_for", "succimer"),               # expand (NBK541097)
 ]
 VAR = {"drug_class": "Class", "mechanism": "MOA", "adverse_effect": "Effect",
        "antidote_for": "Antidote"}
