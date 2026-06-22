@@ -20,3 +20,10 @@ import "derm-edges.adj"
 ? skin_finding_in(nikolsky_sign, $Disease)        % expect pemphigus_vulgaris (expand)
 ? skin_finding_in(sandpaper_rash, $Disease)       % expect scarlet_fever (expand)
 ? skin_finding_in(erythema_migrans, $Disease)     % expect lyme_disease (expand)
+% --- BATCH: high-yield dermatology skin findings ---
+? skin_finding_in(heliotrope_rash, $Disease)      % expect dermatomyositis (expand)
+? skin_finding_in(gottron_papules, $Disease)      % expect dermatomyositis (expand)
+? skin_finding_in(shawl_sign, $Disease)           % expect dermatomyositis (expand)
+? skin_finding_in(cafe_au_lait_macules, $Disease) % expect neurofibromatosis_type_1 (expand)
+? skin_finding_in(ash_leaf_spots, $Disease)       % expect tuberous_sclerosis (expand)
+? skin_finding_in(koplik_spots, $Disease)         % expect measles (expand)
