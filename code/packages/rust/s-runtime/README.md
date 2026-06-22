@@ -253,6 +253,16 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   finite/checked arithmetic, so a huge `N` or a degenerate range is rejected/handled
   rather than over-allocating or dividing by zero. (`dig.lab=` and `ordered_result=`
   are deferred to R-34.)
+- **Matrix cross products** (R-36): **`crossprod(x, y)`** = `t(x) %*% y` and
+  **`crossprod(x)`** = `t(x) %*% x` (the Gram matrix `X'X`); **`tcrossprod(x, y)`** =
+  `x %*% t(y)` and **`tcrossprod(x)`** = `x %*% t(x)` (`XX'`). The second argument
+  defaults to the first. Defined purely in terms of the existing R-11 `t()` and
+  `%*%` — the implementation calls the public `t()` builtin and the evaluator's
+  `matrix_multiply`, so it inherits that handler's `MAX_SEQ_LEN` allocation guard
+  and `"non-conformable arguments"` error (no new linear algebra, no unchecked
+  `nrow*ncol` multiply). `crossprod(matrix(c(1,2,3,4), nrow=2))` →
+  `[[5,11],[11,25]]`; `tcrossprod` of the same → `[[10,14],[14,20]]`; non-square
+  `matrix(1:6, nrow=2)` gives a 3×3 `crossprod` and 2×2 `tcrossprod`.
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

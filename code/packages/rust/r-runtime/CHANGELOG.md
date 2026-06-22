@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.29.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-36 — matrix cross products**: `crossprod` and `tcrossprod`, reached through
+  ordinary R syntax. An independent matrix-algebra item, defined **entirely in
+  terms of the existing R-11 `t()` transpose and `%*%` matrix product** — no new
+  linear algebra, no new value type, no grammar change.
+  - **`crossprod(x, y)`** = `t(x) %*% y`; **`crossprod(x)`** = `t(x) %*% x`
+    (the Gram matrix `X'X`). **`tcrossprod(x, y)`** = `x %*% t(y)`;
+    **`tcrossprod(x)`** = `x %*% t(x)` (`XX'`). The second argument defaults to the
+    first.
+  - `crossprod(matrix(c(1,2,3,4), nrow=2))` → `[[5,11],[11,25]]`;
+    `tcrossprod(...)` of the same → `[[10,14],[14,20]]`. Non-square
+    `B = matrix(1:6, nrow=2)`: `dim(crossprod(B))` is `c(3,3)`,
+    `dim(tcrossprod(B))` is `c(2,2)`. A non-conformable pair (e.g.
+    `crossprod(A, matrix(1:6, nrow=3))`) raises the same `"non-conformable
+    arguments"` error `%*%` raises.
+  - **Security**: no new user-controlled multiplier — the impl reuses the `%*%`
+    handler's existing `MAX_SEQ_LEN` allocation guard and conformability check, so
+    there is no unchecked `nrow*ncol` multiply and no out-of-bounds path; the new
+    code is just two argument-shuffling wrappers.
+
 ## [0.28.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)

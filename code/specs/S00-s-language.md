@@ -312,6 +312,20 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
   supported. Deferred to **R-32**: `incomparables=`/`fromLast=` on the binary set ops
   (`union`/`intersect`/`setdiff`), whose R semantics are ambiguous enough to warrant
   their own pass.
+- **Matrix cross products** *(R-36)*: `crossprod`/`tcrossprod`, defined purely in
+  terms of the existing R-11 `t()` transpose and `%*%` matrix product (no new
+  linear algebra, no new value type). **`crossprod(x, y)` = `t(x) %*% y`** and
+  **`crossprod(x)` = `t(x) %*% x`** (the Gram matrix `X'X`); **`tcrossprod(x, y)` =
+  `x %*% t(y)`** and **`tcrossprod(x)` = `x %*% t(x)`** (`XX'`). The second argument
+  defaults to the first. The implementation calls the public `t()` builtin (`b_t`)
+  and the evaluator's `matrix_multiply` (the `%*%` handler, exposed `pub(crate)`),
+  so it **inherits** that handler's `MAX_SEQ_LEN` allocation guard on the
+  `nrow * ncol` result and its `"non-conformable arguments"` error (raised before
+  any indexing when inner dims disagree) — no new unbounded multiplier, no OOB.
+  `crossprod(matrix(c(1,2,3,4), nrow=2))` is `[[5,11],[11,25]]`;
+  `tcrossprod` of the same is `[[10,14],[14,20]]`. As in R a bare vector flows
+  through `%*%`'s existing vector promotion (left = row, right = column); the
+  dense-matrix case is the solid, tested core.
 - **Apply family:** `sapply(x, f)` / `lapply(x, f)` map a function over elements
   (`sapply` simplifies length-1 atomic results to a vector).
 

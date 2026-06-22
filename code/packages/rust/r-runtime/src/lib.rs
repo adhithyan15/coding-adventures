@@ -3096,4 +3096,86 @@ mod tests {
         let b = nums("set.seed(1)\nrank(c(3, 1, 3), ties.method = \"random\")\n");
         assert_eq!(a, b);
     }
+
+    // --- R-36: crossprod / tcrossprod (R syntax) ------------------------
+
+    /// Evaluate `src` (R syntax), expect a `Matrix`, return `(column-major data,
+    /// nrow, ncol)`.
+    fn matrix_data(src: &str) -> (Vec<f64>, usize, usize) {
+        match eval_r(src).unwrap() {
+            SValue::Matrix { data, nrow, ncol } => (data.data().to_vec(), nrow, ncol),
+            other => panic!("expected matrix, got {}", other.type_name()),
+        }
+    }
+
+    #[test]
+    fn crossprod_one_arg() {
+        // A = matrix(c(1,2,3,4), nrow=2). crossprod(A) = t(A)%*%A = [[5,11],[11,25]].
+        let (data, nrow, ncol) = matrix_data("crossprod(matrix(c(1,2,3,4), nrow = 2))\n");
+        assert_eq!((nrow, ncol), (2, 2));
+        assert_eq!(data, vec![5.0, 11.0, 11.0, 25.0]);
+        // dim() agrees.
+        assert_eq!(
+            nums("dim(crossprod(matrix(c(1,2,3,4), nrow = 2)))\n"),
+            vec![2.0, 2.0]
+        );
+    }
+
+    #[test]
+    fn crossprod_two_arg_equals_one_arg() {
+        assert_eq!(
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(crossprod(A, A))\n"),
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(crossprod(A))\n"),
+        );
+        // And both equal the explicit t(A) %*% A.
+        assert_eq!(
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(crossprod(A))\n"),
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(t(A) %*% A)\n"),
+        );
+    }
+
+    #[test]
+    fn tcrossprod_one_arg() {
+        // tcrossprod(A) = A %*% t(A) = [[10,14],[14,20]].
+        let (data, nrow, ncol) = matrix_data("tcrossprod(matrix(c(1,2,3,4), nrow = 2))\n");
+        assert_eq!((nrow, ncol), (2, 2));
+        assert_eq!(data, vec![10.0, 14.0, 14.0, 20.0]);
+        assert_eq!(
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(tcrossprod(A))\n"),
+            nums("A <- matrix(c(1,2,3,4), nrow = 2)\nc(A %*% t(A))\n"),
+        );
+    }
+
+    #[test]
+    fn crossprod_nonsquare_dims() {
+        // B = matrix(1:6, nrow=2) is 2x3. crossprod(B) -> 3x3; tcrossprod(B) -> 2x2.
+        assert_eq!(
+            nums("dim(crossprod(matrix(1:6, nrow = 2)))\n"),
+            vec![3.0, 3.0]
+        );
+        assert_eq!(
+            nums("dim(tcrossprod(matrix(1:6, nrow = 2)))\n"),
+            vec![2.0, 2.0]
+        );
+        // Spot-check entries: crossprod(B)[1,1] = 1*1+2*2 = 5;
+        // tcrossprod(B)[1,1] = 1*1+3*3+5*5 = 35.
+        let (cp, _, _) = matrix_data("crossprod(matrix(1:6, nrow = 2))\n");
+        assert_eq!(cp[0], 5.0);
+        let (tcp, _, _) = matrix_data("tcrossprod(matrix(1:6, nrow = 2))\n");
+        assert_eq!(tcp[0], 35.0);
+    }
+
+    #[test]
+    fn crossprod_nonconformable_errors() {
+        // t(A) is 2x2; multiplying by a 3-row matrix is non-conformable, the
+        // same error %*% raises.
+        let err = eval_r(
+            "A <- matrix(c(1,2,3,4), nrow = 2)\nC <- matrix(1:6, nrow = 3)\ncrossprod(A, C)\n",
+        )
+        .unwrap_err();
+        assert!(
+            format!("{err}").contains("non-conformable"),
+            "expected conformability error, got: {err}"
+        );
+    }
 }

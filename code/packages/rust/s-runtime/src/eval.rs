@@ -783,7 +783,12 @@ impl Interpreter {
     /// `a %*% b` — the matrix product (column-major). A bare vector on the left
     /// is taken as a `1×n` row; on the right as an `n×1` column (so `v %*% w` is
     /// the dot product), matching R's conformability rules. NA propagates.
-    fn matrix_multiply(&self, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
+    ///
+    /// Exposed `pub(crate)` so the `crossprod`/`tcrossprod` builtins (R-36) can
+    /// reuse the *same* product — including its allocation guard (`MAX_SEQ_LEN`),
+    /// its conformability error, and its `array_runtime` fast path — instead of
+    /// reimplementing the inner loops.
+    pub(crate) fn matrix_multiply(&self, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
         let (ad, am, ak) = match lhs {
             SValue::Matrix { data, nrow, ncol } => (data.clone(), *nrow, *ncol),
             other => {
