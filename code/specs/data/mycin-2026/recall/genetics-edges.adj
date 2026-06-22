@@ -158,4 +158,14 @@ rulebook genetics_facts {
         source "Type 1 hereditary hemochromatosis occurs in patients who are typically homozygous for loss-of-function mutations in HFE."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK430862/"
         trust authoritative
+
+    % --- EXPAND: Tay-Sachs disease (autosomal recessive; HEXA gene) — one span both ---
+    relate inheritance(tay_sachs_disease, autosomal_recessive)
+        source "Tay-Sachs disease is an autosomal recessive disorder caused by a mutation in HEXA, which encodes the enzymes beta-hexosaminidase A."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK564432/"
+        trust authoritative
+    relate gene_defect(tay_sachs_disease, hexa)
+        source "Tay-Sachs disease is an autosomal recessive disorder caused by a mutation in HEXA, which encodes the enzymes beta-hexosaminidase A."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK564432/"
+        trust authoritative
 }
