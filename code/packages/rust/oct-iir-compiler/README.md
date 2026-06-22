@@ -38,10 +38,19 @@ native executable
 |-----------------------------------|-------------------------------------------|
 | Arithmetic, bitwise, comparison   | `in` + arithmetic/rotation intrinsics     |
 | short-circuit `&&` / `||`         | Strings (no STRING token in Oct grammar)  |
-| `if` / `while` / `loop` / `break` | Static globals (silently ignored for V1)  |
-| User fns (i64 returns), recursion | Floating-point (8008 doesn't have FP)     |
+| `if` / `while` / `loop` / `break` | Body-level `static` (static-lifetime local) |
+| User fns (i64 + void returns)     | Floating-point (8008 doesn't have FP)     |
 | Local variables                   |                                           |
+| **Top-level `static` globals**    |                                           |
 | `out(port, value)` → stdout       |                                           |
+
+**`static` module globals** (LANG-FULL O3): a top-level `static counter: u8 = 40;`
+lowers to a module global (`global_load`/`global_store`) — shared across every function
+and surviving across calls — not a per-function register. The initialiser runs once at
+the top of `main`. A void function (`fn bump() { counter = counter + 1; }`) called as a
+statement mutates it; reading it back yields the accumulated value on all 7 backends.
+(Body-level `static` — a static-lifetime *local* — is not yet lowered; a local `let` may
+not shadow a static.)
 
 **u8 width & wrap** (LANG-FULL O2): Oct's only integer type is `u8` (the 8008 byte),
 and arithmetic wraps modulo 256, so arithmetic/bitwise ops and unary `~` carry the
