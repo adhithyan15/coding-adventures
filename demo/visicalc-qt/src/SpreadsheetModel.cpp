@@ -321,6 +321,20 @@ void SpreadsheetModel::fill(const QString &src, const QString &dstStart, const Q
     emit revisionChanged();
 }
 
+// Number formatting: attach an Excel-style format code to the selected cell. The
+// code is display-only — the stored value is unchanged; the engine renders it
+// through the code (sc_get_display_window). An empty code clears the format. The
+// QByteArray locals are NAMED so the UTF-8 buffers outlive the C call.
+void SpreadsheetModel::setFormatInf(const QString &code) {
+    const QByteArray a1 = infAddress().toUtf8();
+    const QByteArray c = code.toUtf8();
+    sc_set_format(session_, a1.constData(), c.constData());
+    recompute();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}
+
 // Clipboard: copy/cut capture the inclusive rectangle into the engine's
 // clipboard; paste places it (the whole block's references shift by the
 // destination's offset). The QByteArray locals are NAMED so the UTF-8 buffers

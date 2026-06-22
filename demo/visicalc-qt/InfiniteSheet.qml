@@ -257,6 +257,34 @@ Item {
                 }
                 Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
 
+                // ── Format (apply a number format to the selected cell) ──
+                // Display-only: the engine renders the stored value through the code.
+                ToolButton {
+                    text: ".00"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Format the selected cell with thousands separators + 2 decimals (#,##0.00)"
+                    onClicked: if (doc) doc.setFormatInf("#,##0.00")
+                }
+                ToolButton {
+                    text: "%"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Format the selected cell as a percent (0.0%)"
+                    onClicked: if (doc) doc.setFormatInf("0.0%")
+                }
+                ToolButton {
+                    text: "$"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Format the selected cell as currency ($#,##0.00)"
+                    onClicked: if (doc) doc.setFormatInf("$#,##0.00")
+                }
+                ToolButton {
+                    text: "Gen"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Clear the selected cell's format (General)"
+                    onClicked: if (doc) doc.setFormatInf("")
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
                 // ── History (undo / redo) ──
                 ToolButton {
                     text: "↶ Undo"
