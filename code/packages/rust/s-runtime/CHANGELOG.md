@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.29.0] - 2026-06-21
+## [0.30.0] - 2026-06-21
 
 ### Added
 
@@ -50,6 +50,38 @@ All notable changes to this project will be documented in this file.
   - **Deferred to R-36**: `strtoi`'s `base = 0L` auto-detection (C `strtol`'s
     `0x`→base-16 / leading-`0`→base-8 convention) and `trimws`'s custom
     `whitespace =` regex argument.
+## [0.29.0] - 2026-06-21
+
+### Added
+
+- **`cut()` option completeness (R-33)** — the four options deferred from R-32,
+  available to both S and R through the shared tree-walker. All extend the R-32
+  `cut` handler in place (same interval scan, same `SValue::Factor` builder); no
+  new value type, no new cap.
+  - **`labels =`** — `labels = FALSE` returns the **integer bin codes** as a plain
+    numeric vector (no factor allocation). A character `labels` vector is used
+    verbatim as the levels and must have length `length(breaks) - 1` (else a clean
+    `BadArgs` error). Absent / `labels = TRUE` keeps the auto-generated interval
+    labels. `strip_wrappers` peels `Classed`/`Named`/`Attributed` so we can tell
+    `FALSE`/`TRUE` from a character vector.
+  - **`right = FALSE`** — left-closed `[lo, hi)` intervals (the index becomes
+    `#{breaks <= x}` rather than `#{breaks < x}`); auto-labels become `"[lo,hi)"`
+    via the new `cut_interval_label` helper. The default `right = TRUE` scan now
+    also honours the `(lo,hi]` boundary convention exactly (an `x` equal to an
+    interior break lands in the lower interval).
+  - **`include.lowest = TRUE`** — folds the single extreme boundary value (the
+    lowest break for `right = TRUE`, the highest for `right = FALSE`) into the
+    adjacent interval so it bins instead of going `NA`.
+  - **integer `breaks`** — a single number `N` requests `N` equal-width bins over
+    the range of `x`, extended by `dx/1000` each side (`dx = max - min`; degenerate
+    `dx == 0` falls back to `abs(min)`, then `1`) — see `equal_width_breaks`.
+  - The new `cut_code` helper centralises the per-value interval logic shared by the
+    factor and `labels = FALSE` paths.
+  - **Security**: `N` is capped at `MAX_SEQ_LEN` **before** any vector is built;
+    the equal-width breaks use finite/checked arithmetic (no divide-by-zero on a
+    degenerate range); the `labels` length check returns `Err`, never panics. No new
+    user-controlled multiplier.
+  - **Deferred to R-34**: `dig.lab=` and `ordered_result=`.
 
 ## [0.28.0] - 2026-06-21
 

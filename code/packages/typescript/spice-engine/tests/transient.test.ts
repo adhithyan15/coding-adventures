@@ -53,6 +53,7 @@ import {
   formatDeckWrdataArtifactCsv,
   formatDeckWrdataArtifactJson,
   formatDeckWrdataArtifactTable,
+  formatDeckWrdataAscii,
   formatDeckTransientTable,
   formatDigitalBridgeScheduleTable,
   formatDigitalEventStreamTable,
@@ -1450,6 +1451,30 @@ describe("transient", () => {
       "Index\tTime\tV(mid)\tV(vin)\tI(V1)\n" +
         "0\t1.000000e-03\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n" +
         "1\t2.000000e-03\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n",
+    );
+  });
+
+  it("selects marker probe columns in WRDATA ASCII output", () => {
+    const table =
+      "Index\tV(in)\tI(V1)\n" +
+      "0\t1.000000e+00\t-1.000000e-03\n" +
+      "1\t2.000000e+00\t-2.000000e-03\n";
+
+    expect(
+      formatDeckWrdataAscii(
+        table,
+        ["I(V1)"],
+        ["set wr_vecnames", "set wr_singlescale"],
+      ),
+    ).toBe(
+      "# SPICE deck wrdata artifact\n" +
+        "Probes: I(V1)\n" +
+        "Options: set wr_vecnames;set wr_singlescale\n" +
+        "VectorNames: Index;I(V1)\n" +
+        "Scale: Index\n" +
+        "Index\tI(V1)\n" +
+        "0\t-1.000000e-03\n" +
+        "1\t-2.000000e-03\n",
     );
   });
 

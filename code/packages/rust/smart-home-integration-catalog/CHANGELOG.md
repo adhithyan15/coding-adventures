@@ -179,6 +179,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReview`
   and summary helpers for classifying clearance action evidence into blocker,
   operator, review, lineage, and release-ready outcomes.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDisposition`
+  and summary helpers for routing clearance action evidence reviews into
+  repair, operator, review, lineage, and release-ready disposition rows.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReadinessSummary`
   and helpers for combining clearance action readiness with evidence lineage
   state.

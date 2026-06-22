@@ -501,10 +501,27 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
      `levels` are the auto-generated `"(lo,hi]"` labels; values outside all intervals
      (or `NA`) get a `NA` code. Built directly on `findInterval` (the interval index
      is the level code), so `levels()`/`as.integer()`/`as.character()`/`table()` all
-     work on the result. `labels=`, `right=FALSE`, `include.lowest=`, and integer
-     `breaks` are **deferred to R-33**. The existing `tabulate(bin, nbins)` (R-28)
+     work on the result. The existing `tabulate(bin, nbins)` (R-28)
      rounds out the family (its `nbins` stays capped at `MAX_SEQ_LEN`).
-8. **String utilities (R-34, shared builtins).** `s-runtime` gains five base-R
+8. **`cut()` option completeness (R-33, shared builtin).** The R-32 `cut` handler
+   gains four options, all layered onto the same `find_interval_index` kernel and
+   factor builder:
+   - **`labels =`** — `labels = FALSE` returns the **integer bin codes** (a plain
+     numeric vector, not a factor); a character vector of length `length(breaks)-1`
+     is used verbatim as the levels (a length mismatch is a clean error); absent /
+     `TRUE` keeps the auto-generated interval labels.
+   - **`right = FALSE`** — left-closed `[lo,hi)` intervals (the scan counts breaks
+     strictly `< x` instead of `<= x`); auto-labels become `"[lo,hi)"`.
+   - **`include.lowest = TRUE`** — folds the extreme boundary (the lowest break for
+     `right = TRUE`, the highest for `right = FALSE`) into the adjacent interval so
+     `x == breaks[1]` (resp. `breaks[k]`) bins instead of going `NA`.
+   - **integer `breaks` (a single number `N`)** — `N` equal-width bins over the
+     range of `x`, with the range extended by `dx/1000` on each side
+     (`dx = max-min`, degenerate `dx == 0` falling back to `abs(min)` then `1`).
+     `N` is capped at `MAX_SEQ_LEN` before the break vector is built; the spacing
+     uses finite/checked arithmetic so a degenerate range never divides by zero.
+   `dig.lab=` and `ordered_result=` are **deferred to R-34**.
+9. **String utilities (R-34, shared builtins).** `s-runtime` gains five base-R
    string builtins that R (R-34) reuses verbatim through the shared tree-walker.
    They build on the existing string machinery (`as_character` coercion, the
    `Option<String>` NA convention, `SValue::Character`/`SValue::Logical`), add no
