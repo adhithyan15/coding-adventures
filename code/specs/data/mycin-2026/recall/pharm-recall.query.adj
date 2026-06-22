@@ -35,3 +35,4 @@ import "pharm-edges.adj"
 ? antidote_for(dabigatran_toxicity, $Antidote)       % expect idarucizumab (expand)
 ? antidote_for(arsenic_poisoning, $Antidote)         % expect dimercaprol (expand)
 ? antidote_for(isoniazid_toxicity, $Antidote)        % expect pyridoxine (expand)
+? antidote_for(rocuronium_toxicity, $Antidote)       % expect sugammadex (expand)
