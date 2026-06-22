@@ -62,7 +62,30 @@ pub enum Instr {
     Ud2,
     /// `nop`.
     Nop,
+    // ── SSE2 scalar double (LANG-FULL E3 — ALGOL `real`) ──────────────────────
+    /// `movsd xmm, m64` — load a double into the low lane of an XMM register.
+    MovsdLoad { xmm: u8, src: Operand },
+    /// `movsd m64, xmm` — store the low double of an XMM register.
+    MovsdStore { dst: Operand, xmm: u8 },
+    /// `movsd xmm, xmm` — copy the low double (register form).
+    MovsdRr { dst: u8, src: u8 },
+    /// `addsd`/`subsd`/`mulsd`/`divsd xmm, xmm/m64`.
+    SseArith { op: SseOp, dst: u8, src: XmmRm },
+    /// `ucomisd xmm, xmm/m64` — unordered compare, sets CF/ZF/PF (OF/SF/AF=0).
+    Ucomisd { a: u8, b: XmmRm },
+    /// `setcc r/m8` — set the low byte to 1 if the condition holds, else 0.
+    Setcc { cond: u8, dst: Operand },
 }
+
+/// SSE2 scalar-double arithmetic ops.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[allow(missing_docs)]
+pub enum SseOp { Add, Sub, Mul, Div }
+
+/// An XMM source: either a register (by number 0..15) or a memory operand.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[allow(missing_docs)]
+pub enum XmmRm { Xmm(u8), Mem(Operand) }
 
 /// Integer ALU ops we decode (all set flags).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -88,6 +111,16 @@ pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
     let at = |p: usize| -> Result<u8, Trap> {
         code.get(p).copied().ok_or(Trap::DecodeError { offset: p as u64, opcode: 0 })
     };
+
+    // ── Mandatory SSE prefix (F2/F3/66) — comes *before* REX ─────────────────
+    // SSE2 scalar ops are `prefix 0F op`: `F2` = scalar-double, `66` = packed/
+    // compare-double. We only need to remember which one preceded the `0F`.
+    let mut sse_prefix: Option<u8> = None;
+    let pb = at(p)?;
+    if pb == 0xF2 || pb == 0xF3 || pb == 0x66 {
+        sse_prefix = Some(pb);
+        p += 1;
+    }
 
     // ── REX prefix ──────────────────────────────────────────────────────────
     let mut rex_w = false;
@@ -118,6 +151,16 @@ pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
         return Ok(Decoded { instr: Instr::Pop(r), len: p - off });
     }
 
+    // movabs r64, imm64  (0xB8+rd with REX.W) — loads a full 64-bit immediate,
+    // e.g. an `f64` constant's bit pattern before it is `movsd`'d into an XMM.
+    if rex_w && (0xB8..=0xBF).contains(&op) {
+        let r = Reg::from_index((op - 0xB8) | ((rex_b as u8) << 3));
+        let b = code.get(p..p + 8).ok_or(Trap::DecodeError { offset: p as u64, opcode: op })?;
+        let imm = i64::from_le_bytes([b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]]);
+        p += 8;
+        return Ok(Decoded { instr: Instr::MovImm { dst: Operand::Reg(r), imm }, len: p - off });
+    }
+
     match op {
         0xC3 => return Ok(Decoded { instr: Instr::Ret, len: p - off }),
         0x90 => return Ok(Decoded { instr: Instr::Nop, len: p - off }),
@@ -133,6 +176,37 @@ pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
     // Two-byte 0F opcodes.
     if op == 0x0F {
         let op2 = at(p)?; p += 1;
+
+        // SSE2 scalar double (a mandatory F2/66 prefix preceded the 0F).
+        if let Some(pfx) = sse_prefix {
+            let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?;
+            let xmm = m.reg; // ModRM.reg is the XMM register number
+            let rm_xmm = match m.rm {
+                Operand::Reg(r) => XmmRm::Xmm(r as u8),
+                mem => XmmRm::Mem(mem),
+            };
+            let instr = match (pfx, op2) {
+                // F2 0F 10 — movsd xmm, xmm/m64 (load)
+                (0xF2, 0x10) => match rm_xmm {
+                    XmmRm::Xmm(s) => Instr::MovsdRr { dst: xmm, src: s },
+                    XmmRm::Mem(mem) => Instr::MovsdLoad { xmm, src: mem },
+                },
+                // F2 0F 11 — movsd xmm/m64, xmm (store)
+                (0xF2, 0x11) => match rm_xmm {
+                    XmmRm::Xmm(s) => Instr::MovsdRr { dst: s, src: xmm },
+                    XmmRm::Mem(mem) => Instr::MovsdStore { dst: mem, xmm },
+                },
+                (0xF2, 0x58) => Instr::SseArith { op: SseOp::Add, dst: xmm, src: rm_xmm },
+                (0xF2, 0x5C) => Instr::SseArith { op: SseOp::Sub, dst: xmm, src: rm_xmm },
+                (0xF2, 0x59) => Instr::SseArith { op: SseOp::Mul, dst: xmm, src: rm_xmm },
+                (0xF2, 0x5E) => Instr::SseArith { op: SseOp::Div, dst: xmm, src: rm_xmm },
+                // 66 0F 2E — ucomisd xmm, xmm/m64 (also 0F 2F comisd; same here)
+                (0x66, 0x2E) | (0x66, 0x2F) => Instr::Ucomisd { a: xmm, b: rm_xmm },
+                _ => return Err(Trap::DecodeError { offset: (p - 1) as u64, opcode: op2 }),
+            };
+            return Ok(Decoded { instr, len: np - off });
+        }
+
         match op2 {
             0x0B => return Ok(Decoded { instr: Instr::Ud2, len: p - off }),
             0xAF => { // imul r64, r/m64
@@ -147,6 +221,10 @@ pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
             0x80..=0x8F => { // jcc rel32
                 let r = read_i32(code, p)? as i64; p += 4;
                 return Ok(Decoded { instr: Instr::Jcc { cond: op2 - 0x80, rel: rel_target(p, r) }, len: p - off });
+            }
+            0x90..=0x9F => { // setcc r/m8
+                let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?; p = np;
+                return Ok(Decoded { instr: Instr::Setcc { cond: op2 - 0x90, dst: m.rm }, len: p - off });
             }
             other => return Err(Trap::DecodeError { offset: (p - 1) as u64, opcode: other }),
         }
@@ -314,5 +392,25 @@ mod tests {
         // jb rel8 +5  (0x72 0x05)
         let d = decode(&[0x72, 0x05], 0).unwrap();
         assert_eq!(d.instr, Instr::Jcc { cond: 0x2, rel: 7 }); // 2 (len) + 5
+    }
+
+    #[test]
+    fn sse2_and_movabs_decode() {
+        // movabs rax, 0x4004000000000000  (2.5)  — 48 B8 <imm64>
+        let d = decode(&[0x48, 0xB8, 0,0,0,0,0,0,0x04,0x40], 0).unwrap();
+        assert_eq!(d.instr, Instr::MovImm { dst: Operand::Reg(Reg::Rax), imm: 0x4004_0000_0000_0000u64 as i64 });
+        assert_eq!(d.len, 10);
+        // movsd xmm0, [rbp-8]  — F2 0F 10 85 F8 FF FF FF
+        let d = decode(&[0xF2, 0x0F, 0x10, 0x85, 0xF8, 0xFF, 0xFF, 0xFF], 0).unwrap();
+        assert_eq!(d.instr, Instr::MovsdLoad { xmm: 0, src: Operand::Mem { base: Some(Reg::Rbp), index: None, scale: 1, disp: -8, rip: false } });
+        // mulsd xmm0, xmm1  — F2 0F 59 C1
+        assert_eq!(decode(&[0xF2, 0x0F, 0x59, 0xC1], 0).unwrap().instr,
+                   Instr::SseArith { op: SseOp::Mul, dst: 0, src: XmmRm::Xmm(1) });
+        // ucomisd xmm0, xmm1  — 66 0F 2E C1
+        assert_eq!(decode(&[0x66, 0x0F, 0x2E, 0xC1], 0).unwrap().instr,
+                   Instr::Ucomisd { a: 0, b: XmmRm::Xmm(1) });
+        // sete al  — 40 0F 94 C0   (cond 4 = E)
+        assert_eq!(decode(&[0x40, 0x0F, 0x94, 0xC0], 0).unwrap().instr,
+                   Instr::Setcc { cond: 0x4, dst: Operand::Reg(Reg::Rax) });
     }
 }
