@@ -223,6 +223,17 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("LCM".to_string(), handler_fn(lcm_handler));
     m.insert("Sqrt".to_string(), handler_fn(sqrt_handler));
 
+    // W-18 pattern-matching predicates (MA04 §19). HELD (see `PATTERN_HEADS`):
+    // each handler evaluates ONLY its subject and matches against the *literal*
+    // pattern, reusing the single `pattern_matches` primitive (the W-14
+    // `form_matches` extended to enforce `Blank[h]` head constraints). Only
+    // literals, `_` (`Blank[]`), and head-typed `_h` (`Blank[h]`) are supported;
+    // named patterns / alternatives / conditions / replacement are deferred to
+    // W-19. Registered as a NEW contiguous block to minimise merge churn.
+    m.insert("MatchQ".to_string(), handler_fn(match_q_handler));
+    m.insert("Cases".to_string(), handler_fn(cases_handler));
+    m.insert("FreeQ".to_string(), handler_fn(free_q_handler));
+
     // W-16 nested/structured list operations (MA04 §19). All ordinary, *eager*
     // `Head[args]` forms — no grammar change. They reuse the W-9 list machinery
     // (`list_elements`, `apply(sym(LIST), …)`, `MAX_LIST_LENGTH`). `Take`/`Drop`
@@ -286,6 +297,21 @@ pub const SCOPING_HEADS: [&str; 3] = ["With", "Module", "Block"];
 /// (unevaluated), and only the selected value is evaluated. `If` already lives in
 /// the inner backend's held set, so it is not repeated here. (MA04 §17.2.)
 pub const CONDITIONAL_HEADS: [&str; 2] = ["Which", "Switch"];
+
+/// The W-18 pattern-matching heads (`MatchQ`, `Cases`, `FreeQ`), which must be
+/// **held** (args not pre-evaluated) so that the *pattern* argument arrives
+/// **literal**. The [`WolframBackend`](crate::backend::WolframBackend) folds
+/// these into its `hold_heads` set (union with the inner held set,
+/// [`ITERATION_HEADS`], [`SCOPING_HEADS`], and [`CONDITIONAL_HEADS`]).
+///
+/// Why held? A pattern is a *form*, not a value: `MatchQ[2, 1 + 1]` must match
+/// against the literal form `Plus[1, 1]`, not the evaluated `2` — exactly the
+/// held-form semantics `Switch` relies on (MA04 §17.2). Each handler evaluates
+/// only the *subject* (the first argument — the expression / list / expr being
+/// tested) via `vm.eval`, and never touches the pattern. A `Blank[h]` survives
+/// evaluation unchanged regardless (no `Blank` handler exists), but holding makes
+/// the literal-pattern contract explicit and uniform with `Switch`. (MA04 §19.4.)
+pub const PATTERN_HEADS: [&str; 3] = ["MatchQ", "Cases", "FreeQ"];
 
 // ---------------------------------------------------------------------------
 // List inspection — Length / First / Last / Part
@@ -1957,6 +1983,173 @@ fn form_matches(form: &IRNode, subject: &IRNode) -> bool {
 /// `h` is accepted but not enforced in this subset (MA04 §17.3).
 fn is_blank(node: &IRNode) -> bool {
     matches!(node, IRNode::Apply(app) if matches!(&app.head, IRNode::Symbol(s) if s == BLANK))
+}
+
+// ---------------------------------------------------------------------------
+// W-18 pattern-matching predicates — MatchQ / Cases / FreeQ (MA04 §19)
+// ---------------------------------------------------------------------------
+//
+// The single match primitive shared by all three heads. It promotes W-14's
+// `form_matches` (used by `Switch`) by *enforcing* the `Blank[h]` head
+// constraint that `Switch` ignored — the one capability W-18 needs that the
+// W-14 matcher lacked. The supported pattern vocabulary is deliberately small
+// (MA04 §19.2):
+//
+//   pattern          matches `subject` when …
+//   ───────────────  ─────────────────────────────────────────────────────────
+//   `_`  (Blank[])   always — the catch-all
+//   `_h` (Blank[h])  the subject's Wolfram head is exactly `h`
+//   literal          the pattern is structurally equal to the subject under the
+//                    W-13 `same_element` comparator (so `2` ≠ `2.0`, `f[1]`
+//                    matches `f[1]` recursively)
+//
+// Everything richer — named patterns `x_`, alternatives `a|b`, conditions
+// `patt/;t`, `PatternTest`, sequences `__`, replacement `/.` — is DEFERRED to
+// W-19 (MA04 §19.6). A `Pattern[x, Blank[…]]` (a *named* blank) is NOT an
+// `is_blank` node, so it falls through to the literal branch and only matches an
+// identical `Pattern[…]` subject — which never occurs for an evaluated value, so
+// a named pattern simply fails to match here rather than mis-binding. That is the
+// safe, documented W-18 behaviour until W-19 adds capture binding.
+
+/// The maximum recursion depth `FreeQ`'s tree walk will descend before reporting
+/// "not free here" conservatively. The expression tree is already bounded by the
+/// parser's nesting cap and `MAX_LIST_LENGTH`, so reaching this depth means a
+/// pathologically nested *crafted* input; the cap turns a potential stack
+/// overflow into a safe, bounded answer (MA04 §19.3).
+const FREEQ_MAX_DEPTH: usize = 512;
+
+/// The single match primitive (MA04 §19.2). True iff `subject` matches `pattern`
+/// within the W-18 supported subset: `pattern` is `Blank[]` (catch-all),
+/// `Blank[h]` (subject's head must be `h`), or a literal structurally equal to
+/// `subject` under [`same_element`]. Total and panic-free.
+fn pattern_matches(pattern: &IRNode, subject: &IRNode) -> bool {
+    if let IRNode::Apply(app) = pattern {
+        if matches!(&app.head, IRNode::Symbol(s) if s == BLANK) {
+            return match app.args.as_slice() {
+                // `_` — Blank[] — matches anything.
+                [] => true,
+                // `_h` — Blank[h] — matches iff the subject's Wolfram head is `h`.
+                [IRNode::Symbol(h)] => wolfram_head_name(subject) == h.as_str(),
+                // Any other Blank shape is outside the W-18 subset → no match.
+                _ => false,
+            };
+        }
+    }
+    // A literal (or an unsupported pattern node): structural equality only.
+    same_element(pattern, subject)
+}
+
+/// The **Wolfram head name** of a node, as a `Blank[h]` head constraint sees it.
+/// Atoms have fixed heads (`Integer`, `Real`, `Symbol`, `String`, `Rational`);
+/// a compound `Apply` reports its own head symbol (so `f[2]` has head `f`), or
+/// the empty string for the rare computed (non-symbol) head — which then matches
+/// no named head constraint. This is the inverse of how `_Integer`/`_Real`/`_Symbol`
+/// lower (MA04 §19.2): `_Real` is `Blank[Real]`, and a `Float` node's head is
+/// `Real`, so they line up.
+fn wolfram_head_name(node: &IRNode) -> &str {
+    match node {
+        IRNode::Integer(_) => "Integer",
+        IRNode::Float(_) => "Real",
+        IRNode::Rational(_, _) => "Rational",
+        IRNode::Str(_) => "String",
+        IRNode::Symbol(_) => "Symbol",
+        IRNode::Apply(app) => match &app.head {
+            IRNode::Symbol(s) => s.as_str(),
+            // A computed head (e.g. `(f[g])[x]`) has no symbol name; it matches
+            // no `Blank[h]` head constraint.
+            _ => "",
+        },
+    }
+}
+
+/// `MatchQ[expr, patt]` → `True` if `expr` matches `patt`, else `False`
+/// (MA04 §19.1). A thin wrapper over [`pattern_matches`]. HELD: the *subject*
+/// (`args[0]`) is evaluated here; the *pattern* (`args[1]`) stays literal. Any
+/// first argument is a valid expression to test, so `MatchQ` always reduces to a
+/// boolean; only the wrong arity leaves it unevaluated.
+fn match_q_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let subject = vm.eval(expr.args[0].clone());
+    let pattern = &expr.args[1];
+    bool_symbol(pattern_matches(pattern, &subject))
+}
+
+/// `Cases[list, patt]` → the `List[…]` of `list`'s elements that match `patt`,
+/// dropping non-matches (MA04 §19.1). HELD: the *list* (`args[0]`) is evaluated
+/// here; the *pattern* (`args[1]`) stays literal. A non-list first argument (or
+/// wrong arity) leaves the whole form unevaluated — "the elements of a non-list"
+/// is undefined. The input list is already bounded by `MAX_LIST_LENGTH`; the
+/// filtered result is no larger, so no new cap is needed.
+fn cases_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let subject = vm.eval(expr.args[0].clone());
+    let Some(elems) = list_elements(&subject) else {
+        return unevaluated(expr);
+    };
+    let pattern = expr.args[1].clone();
+    let kept: Vec<IRNode> = elems
+        .into_iter()
+        .filter(|e| pattern_matches(&pattern, e))
+        .collect();
+    apply(sym(LIST), kept)
+}
+
+/// `FreeQ[expr, form]` → `True` if `form` occurs **nowhere** within `expr`
+/// (recursively — including `expr` itself, every `Apply` head, and every
+/// argument), else `False` (MA04 §19.1, §19.3). HELD: the *expr* (`args[0]`) is
+/// evaluated here; the *form* (`args[1]`) stays literal. Any first argument is a
+/// valid expression to search, so `FreeQ` always reduces to a boolean; only the
+/// wrong arity leaves it unevaluated.
+fn free_q_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let subject = vm.eval(expr.args[0].clone());
+    let form = &expr.args[1];
+    // "Free of" is the negation of "occurs somewhere".
+    bool_symbol(!form_occurs_in(form, &subject, 0))
+}
+
+/// True if `form` matches `node` or any sub-part of `node` (the `Apply` head and
+/// every argument), recursed depth-first. Depth-bounded by [`FREEQ_MAX_DEPTH`]:
+/// at the cap we stop descending and report `true` ("occurs / not provably free")
+/// conservatively, so a crafted deeply nested input can never overflow the stack
+/// — `FreeQ` then answers `False` (the safe, non-panicking direction). The tree
+/// is otherwise size-bounded by `MAX_LIST_LENGTH` and the parser's nesting cap,
+/// so the cap is only reachable by pathological crafted input (MA04 §19.3).
+fn form_occurs_in(form: &IRNode, node: &IRNode, depth: usize) -> bool {
+    // Does the whole node match? (Checked at every level, including the root.)
+    if pattern_matches(form, node) {
+        return true;
+    }
+    // Depth guard: stop descending rather than risk a stack overflow. Reporting
+    // "occurs" here is conservative — it can only flip a `True` (free) to `False`
+    // (not free) on a crafted over-deep input, never panic.
+    if depth >= FREEQ_MAX_DEPTH {
+        return true;
+    }
+    // Otherwise descend into a compound node's head and arguments.
+    if let IRNode::Apply(app) = node {
+        if form_occurs_in(form, &app.head, depth + 1) {
+            return true;
+        }
+        return app
+            .args
+            .iter()
+            .any(|arg| form_occurs_in(form, arg, depth + 1));
+    }
+    // An atom that did not match itself contains nothing further.
+    false
+}
+
+/// Map a Rust `bool` to the Wolfram `True`/`False` symbol — the single
+/// boolean-result convention shared by `MatchQ`/`FreeQ` (and the W-14 predicates).
+fn bool_symbol(b: bool) -> IRNode {
+    sym(if b { "True" } else { "False" })
 }
 
 /// `Boole[True]` → `1`, `Boole[False]` → `0`; anything else (a non-boolean
@@ -5135,6 +5328,161 @@ mod tests {
         assert_eq!(eval_full(apply(sym("Sqrt"), vec![int(2)])), apply(sym("Sqrt"), vec![int(2)]));
         assert_eq!(eval_full(apply(sym("GCD"), vec![int(12), int(18)])), int(6));
         assert_eq!(eval_full(apply(sym("Round"), vec![flt(2.5)])), int(2));
+    }
+
+    // -----------------------------------------------------------------------
+    // W-18 pattern-matching predicates — MatchQ / Cases / FreeQ
+    // -----------------------------------------------------------------------
+    //
+    // These handlers are HELD (`PATTERN_HEADS`), so we route through `eval_full`
+    // (the real `WolframBackend`, which installs the hold set) and build the
+    // pattern argument as a *literal* `Blank` node directly — exactly the shape
+    // `lower.rs` produces for `_` (`Blank[]`) and `_h` (`Blank[h]`). The bare
+    // `_` helper `blank()` is shared with the W-14 Switch tests above.
+
+    /// `_h` — `Blank[h]`, a head-typed blank (e.g. `Blank[Integer]` for `_Integer`).
+    fn blank_h(h: &str) -> IRNode {
+        apply(sym(BLANK), vec![sym(h)])
+    }
+
+    #[test]
+    fn match_q_literal_blank_and_head_typed() {
+        // `MatchQ[2, _]` → True (the catch-all).
+        assert_eq!(eval_full(apply(sym("MatchQ"), vec![int(2), blank()])), sym("True"));
+        // `MatchQ[2, _Integer]` → True (head `Integer` matches an `Integer` atom).
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(2), blank_h("Integer")])),
+            sym("True")
+        );
+        // `MatchQ[2, 2]` → True (literal structural equality).
+        assert_eq!(eval_full(apply(sym("MatchQ"), vec![int(2), int(2)])), sym("True"));
+        // `MatchQ[2, 3]` → False (distinct literals).
+        assert_eq!(eval_full(apply(sym("MatchQ"), vec![int(2), int(3)])), sym("False"));
+    }
+
+    #[test]
+    fn match_q_integer_real_head_distinction() {
+        // `MatchQ[2.0, _Integer]` → False: a `Float`'s Wolfram head is `Real`,
+        // not `Integer`, so the `Blank[Integer]` constraint fails.
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![flt(2.0), blank_h("Integer")])),
+            sym("False")
+        );
+        // `MatchQ[2.0, _Real]` → True: `Float` ↔ head `Real`.
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![flt(2.0), blank_h("Real")])),
+            sym("True")
+        );
+        // `MatchQ[x, _Symbol]` → True: a `Symbol`'s head is `Symbol`.
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![sym("x"), blank_h("Symbol")])),
+            sym("True")
+        );
+        // A head-typed blank against a compound: `MatchQ[f[1], _f]` → True.
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![apply(sym("f"), vec![int(1)]), blank_h("f")])),
+            sym("True")
+        );
+    }
+
+    #[test]
+    fn match_q_wrong_arity_stays_unevaluated() {
+        // One argument is not a valid `MatchQ` call → echoes unevaluated.
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(2)])),
+            apply(sym("MatchQ"), vec![int(2)])
+        );
+    }
+
+    #[test]
+    fn cases_filters_by_pattern() {
+        let l4 = list(vec![int(1), int(2), int(3), int(4)]);
+        // `Cases[{1,2,3,4}, _]` → every element (catch-all).
+        assert_eq!(
+            eval_full(apply(sym("Cases"), vec![l4.clone(), blank()])),
+            l4.clone()
+        );
+        // `Cases[{1,2,3}, 2]` → {2} (literal match keeps only equal elements).
+        assert_eq!(
+            eval_full(apply(sym("Cases"), vec![list(vec![int(1), int(2), int(3)]), int(2)])),
+            list(vec![int(2)])
+        );
+        // `Cases[{1, 2.0, 3}, _Integer]` → {1, 3}: the `Float` 2.0 has head `Real`
+        // and is dropped; only the two `Integer` atoms survive.
+        assert_eq!(
+            eval_full(apply(
+                sym("Cases"),
+                vec![list(vec![int(1), flt(2.0), int(3)]), blank_h("Integer")]
+            )),
+            list(vec![int(1), int(3)])
+        );
+    }
+
+    #[test]
+    fn cases_empty_and_non_list() {
+        // Empty list → empty list (no elements to keep).
+        assert_eq!(
+            eval_full(apply(sym("Cases"), vec![list(vec![]), blank()])),
+            list(vec![])
+        );
+        // A non-list first argument leaves the whole form unevaluated.
+        assert_eq!(
+            eval_full(apply(sym("Cases"), vec![int(5), blank()])),
+            apply(sym("Cases"), vec![int(5), blank()])
+        );
+    }
+
+    #[test]
+    fn free_q_membership_and_nesting() {
+        let l = list(vec![int(1), int(2), int(3)]);
+        // `FreeQ[{1,2,3}, 2]` → False (2 occurs as an element).
+        assert_eq!(eval_full(apply(sym("FreeQ"), vec![l.clone(), int(2)])), sym("False"));
+        // `FreeQ[{1,2,3}, 5]` → True (5 is absent).
+        assert_eq!(eval_full(apply(sym("FreeQ"), vec![l, int(5)])), sym("True"));
+        // `FreeQ[f[g[2]], g]` → False: the symbol `g` appears as a nested head.
+        let fg2 = apply(sym("f"), vec![apply(sym("g"), vec![int(2)])]);
+        assert_eq!(
+            eval_full(apply(sym("FreeQ"), vec![fg2.clone(), sym("g")])),
+            sym("False")
+        );
+        // `FreeQ[f[g[2]], h]` → True: `h` does not occur anywhere.
+        assert_eq!(eval_full(apply(sym("FreeQ"), vec![fg2, sym("h")])), sym("True"));
+    }
+
+    #[test]
+    fn free_q_deeply_nested_input_is_bounded_no_overflow() {
+        // Craft an expression nested far deeper than FREEQ_MAX_DEPTH: `f[f[f[…x…]]]`.
+        // The depth guard turns a potential stack overflow into a bounded answer
+        // (it reports "occurs" at the cap), so this must NOT panic.
+        let mut nested = sym("x");
+        for _ in 0..(FREEQ_MAX_DEPTH + 50) {
+            nested = apply(sym("f"), vec![nested]);
+        }
+        // `h` is genuinely absent, but past the cap we conservatively answer
+        // False (not provably free). Either way: no panic, a Boolean result.
+        let out = eval_full(apply(sym("FreeQ"), vec![nested, sym("h")]));
+        assert!(out == sym("True") || out == sym("False"));
+    }
+
+    #[test]
+    fn free_q_wrong_arity_stays_unevaluated() {
+        assert_eq!(
+            eval_full(apply(sym("FreeQ"), vec![int(2)])),
+            apply(sym("FreeQ"), vec![int(2)])
+        );
+    }
+
+    #[test]
+    fn pattern_matches_heterogeneous_does_not_panic() {
+        // Comparing across atom kinds (Integer vs Float vs Symbol vs String)
+        // must be total and never panic — it simply reports no match.
+        assert!(!pattern_matches(&int(2), &flt(2.0)));
+        assert!(!pattern_matches(&flt(2.0), &int(2)));
+        assert!(!pattern_matches(&sym("x"), &int(2)));
+        assert!(!pattern_matches(&str_node("x"), &sym("x")));
+        // A Blank with an unsupported (non-symbol head) shape never matches.
+        let weird_blank = apply(sym(BLANK), vec![int(1), int(2)]);
+        assert!(!pattern_matches(&weird_blank, &int(1)));
     }
 
     // -----------------------------------------------------------------------
