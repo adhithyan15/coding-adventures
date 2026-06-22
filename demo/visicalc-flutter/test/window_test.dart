@@ -97,6 +97,42 @@ void main() {
       s.setCell('C1', '9');
       expect(s.canRedo(), isFalse);
     });
+
+    test('insert / delete rows & columns shift formula references', () {
+      final s = SpreadsheetSession();
+      s.setCell('A1', '10');
+      s.setCell('A2', '20');
+      s.setCell('A3', '=A1+A2'); // 30
+      expect(s.window(3, 1, 3, 1)[0][0], '30');
+
+      // Insert a row at 2: A2/A3 shift down to A3/A4, row 2 blank, and the
+      // formula's refs shift with their cells (=A1+A2 → =A1+A3). The engine
+      // parenthesizes binary ops on re-emit, so strip parens to compare.
+      String bare(String a1) => s.getRaw(a1).replaceAll(RegExp(r'[()]'), '');
+      s.insertRows(2, 1);
+      expect(s.window(2, 1, 2, 1)[0][0], ''); // inserted row blank
+      expect(s.window(4, 1, 4, 1)[0][0], '30'); // formula at A4
+      expect(bare('A4'), '=A1+A3');
+
+      // Delete that inserted row: everything shifts back.
+      s.deleteRows(2, 1);
+      expect(s.window(3, 1, 3, 1)[0][0], '30');
+      expect(bare('A3'), '=A1+A2');
+
+      // Delete row 1 (referenced by the formula): its A1 reference is destroyed
+      // (→ #REF!) while the survivor shifts up.
+      s.deleteRows(1, 1);
+      expect(s.window(2, 1, 2, 1)[0][0], '#REF!');
+
+      // Columns shift the same way: K1=5, L1 = K1*3 = 15. Insert a column at K
+      // and the formula (now at M1) keeps pointing at its precedent (now L1).
+      final c = SpreadsheetSession();
+      c.setCell('K1', '5');
+      c.setCell('L1', '=K1*3');
+      c.insertCols(11, 1); // col 11 = K
+      expect(c.window(1, 13, 1, 13)[0][0], '15'); // M1
+      expect(c.getRaw('M1').replaceAll(RegExp(r'[()]'), ''), '=L1*3');
+    });
   });
 
   // The infinite-view binding layer (InfiniteGrid drives these): one engine read

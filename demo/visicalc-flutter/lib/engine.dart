@@ -73,6 +73,12 @@ typedef _FillC = Void Function(
 typedef _FillD = void Function(
     Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>, Pointer<Uint8>);
 
+// sc_insert_rows / sc_delete_rows / sc_insert_cols / sc_delete_cols(session, at,
+// count) → void. Structural edits at a 1-based position; the engine shifts
+// formula references across the band.
+typedef _StructC = Void Function(Pointer<Void>, Uint32, Uint32);
+typedef _StructD = void Function(Pointer<Void>, int, int);
+
 // sc_copy / sc_cut(session, start, end) → void (clipboard capture; two A1 strings).
 typedef _ClipC = Void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
 typedef _ClipD = void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
@@ -99,6 +105,10 @@ class SpreadsheetSession {
   late final _ClipD _copyFn;
   late final _ClipD _cutFn;
   late final _PasteD _pasteFn;
+  late final _StructD _insertRowsFn;
+  late final _StructD _deleteRowsFn;
+  late final _StructD _insertColsFn;
+  late final _StructD _deleteColsFn;
   // Save / load: sc_serialize(session) → char* (same shape as the no-arg reads);
   // sc_deserialize(session, data) → int (same shape as sc_paste: session + one
   // string → 1/0).
@@ -131,6 +141,10 @@ class SpreadsheetSession {
     _copyFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_copy');
     _cutFn = _lib.lookupFunction<_ClipC, _ClipD>('sc_cut');
     _pasteFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_paste');
+    _insertRowsFn = _lib.lookupFunction<_StructC, _StructD>('sc_insert_rows');
+    _deleteRowsFn = _lib.lookupFunction<_StructC, _StructD>('sc_delete_rows');
+    _insertColsFn = _lib.lookupFunction<_StructC, _StructD>('sc_insert_cols');
+    _deleteColsFn = _lib.lookupFunction<_StructC, _StructD>('sc_delete_cols');
     _serializeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_serialize');
     _deserializeFn = _lib.lookupFunction<_PasteC, _PasteD>('sc_deserialize');
     _undoFn = _lib.lookupFunction<_FlagC, _FlagD>('sc_undo');
@@ -301,6 +315,25 @@ class SpreadsheetSession {
       _freeCString(endPtr);
     }
   }
+
+  /// Structural edits: insert / delete [count] rows or columns at the 1-based
+  /// position [at]. The engine shifts every formula reference at or after the
+  /// band (a reference whose whole band is deleted becomes `#REF!`), then
+  /// recomputes. [at]/[count] are clamped into the u32 range before crossing the
+  /// C ABI: clamping the LOW end stops a negative wrapping to a huge unsigned
+  /// band, and clamping the HIGH end stops a 64-bit Dart int silently truncating
+  /// to its low 32 bits (Dart `int` is 64-bit; the C param is `Uint32`).
+  void insertRows(int at, int count) =>
+      _insertRowsFn(_handle, _u32(at), _u32(count));
+  void deleteRows(int at, int count) =>
+      _deleteRowsFn(_handle, _u32(at), _u32(count));
+  void insertCols(int at, int count) =>
+      _insertColsFn(_handle, _u32(at), _u32(count));
+  void deleteCols(int at, int count) =>
+      _deleteColsFn(_handle, _u32(at), _u32(count));
+
+  // Clamp a Dart (64-bit) int into the unsigned 32-bit range the C ABI expects.
+  static int _u32(int v) => v < 0 ? 0 : (v > 0xFFFFFFFF ? 0xFFFFFFFF : v);
 
   /// Copy the inclusive rectangle [start]..[end] into the clipboard — a
   /// whole-block copy that pastes as a unit. The source is untouched; the buffer
@@ -603,6 +636,30 @@ class InfiniteSheetModel {
     final first = '$col${selRow + 1}';
     final last = '$col${selRow + rows}';
     _session.fill(infAddress, first, last);
+    computeExtent();
+  }
+
+  /// Structural edits: insert / delete the selected cell's row or column. The
+  /// engine shifts every formula reference at or after the band (a reference
+  /// whose whole band is deleted becomes `#REF!`) and recomputes; regrow the
+  /// extent so the view re-reads. Operate on a single row/column at the cursor.
+  void insertRow() {
+    _session.insertRows(selRow, 1);
+    computeExtent();
+  }
+
+  void deleteRow() {
+    _session.deleteRows(selRow, 1);
+    computeExtent();
+  }
+
+  void insertCol() {
+    _session.insertCols(selCol, 1);
+    computeExtent();
+  }
+
+  void deleteCol() {
+    _session.deleteCols(selCol, 1);
     computeExtent();
   }
 
