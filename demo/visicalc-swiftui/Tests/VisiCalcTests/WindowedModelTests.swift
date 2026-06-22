@@ -197,4 +197,34 @@ final class WindowedModelTests: XCTestCase {
         m.setCell("A1", "7")
         XCTAssertFalse(m.canRedo())
     }
+
+    /// Number format applies to the selected cell's DISPLAY only — the stored
+    /// value is untouched, so `getRaw` still returns the source and the
+    /// display window renders the cell through the format code. The SwiftUI
+    /// proof of the cross-backend "Format" toolbar group.
+    func testApplyFormatChangesDisplayNotValue() {
+        let m = WindowedSheetModel()
+        // Put a plain number in a clear cell (H1, col 8). Unformatted it reads "1234".
+        m.select(row: 1, col: 8)
+        m.formulaText = "1234"
+        m.commitFormula()
+        XCTAssertEqual(m.rowCells(1)[7], "1234")
+
+        // Thousands + 2 decimals.
+        m.select(row: 1, col: 8); m.applyFormat("#,##0.00")
+        XCTAssertEqual(m.rowCells(1)[7], "1,234.00")
+        // Percent (1234 → 123400.0%).
+        m.applyFormat("0.0%")
+        XCTAssertEqual(m.rowCells(1)[7], "123400.0%")
+        // Currency.
+        m.applyFormat("$#,##0.00")
+        XCTAssertEqual(m.rowCells(1)[7], "$1,234.00")
+        // The raw stored value is never mutated by formatting: re-selecting H1
+        // loads its source (not its formatted display) into the formula bar.
+        m.select(row: 1, col: 8)
+        XCTAssertEqual(m.formulaText, "1234")
+        // Clearing the format (empty code) returns to General.
+        m.applyFormat("")
+        XCTAssertEqual(m.rowCells(1)[7], "1234")
+    }
 }
