@@ -192,6 +192,10 @@ fun InfiniteSheet() {
     fun insertCol() { model.insertCol(); formula = model.formula; rev++ }
     fun deleteCol() { model.deleteCol(); formula = model.formula; rev++ }
 
+    // Number formatting: apply an Excel-style code to the selected cell. Display-
+    // only — bump rev so the visible rows re-read and show the formatted string.
+    fun applyFormat(code: String) { model.applyFormat(code); rev++ }
+
     Column(modifier = Modifier.fillMaxSize().background(BG)) {
         // ── Formula bar: a panel holding the address pill, an `fx` marker, the
         // editable source line (with an accent focus ring), and segmented button
@@ -284,6 +288,15 @@ fun InfiniteSheet() {
             toolButton("+ Col") { insertCol() }
             Spacer(Modifier.width(6.dp))
             toolButton("− Col") { deleteCol() }
+            toolSep()
+            // ── Format (apply a number format to the selected cell) ──
+            toolButton(".00") { applyFormat("#,##0.00") }
+            Spacer(Modifier.width(6.dp))
+            toolButton("%") { applyFormat("0.0%") }
+            Spacer(Modifier.width(6.dp))
+            toolButton("$") { applyFormat("\$#,##0.00") }
+            Spacer(Modifier.width(6.dp))
+            toolButton("Gen") { applyFormat("") }
             toolSep()
             // ── History (undo / redo). Reading `rev` re-evaluates canUndo/canRedo
             // on every edit so the buttons gate live.
