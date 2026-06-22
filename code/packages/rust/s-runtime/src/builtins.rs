@@ -258,6 +258,10 @@ pub fn install(env: &Env) {
     // the `t()` transpose and the `%*%` product above — no new linear algebra.
     define(env, "crossprod", builtin("crossprod", b_crossprod));
     define(env, "tcrossprod", builtin("tcrossprod", b_tcrossprod));
+    // Kronecker product (R-38): the (m*p)×(n*q) block-outer product. Reuses the
+    // SValue::Matrix constructor + the MAX_SEQ_LEN cap (the `%x%` infix alias is
+    // deferred to R-40, which needs grammar work).
+    define(env, "kronecker", builtin("kronecker", b_kronecker));
 
     // Matrix linear algebra (R-12).
     define(env, "diag", builtin("diag", b_diag));
@@ -667,6 +671,128 @@ fn b_tcrossprod(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     };
     let yt = transpose_value(interp, y)?;
     interp.matrix_multiply(x, &yt)
+}
+
+/// Coerce a value to `(column-major data, nrow, ncol)` for the matrix builtins
+/// that accept a bare vector. A `Matrix` keeps its shape; any other value is
+/// read as a numeric vector and promoted to an `n × 1` **column** — the same
+/// bare-column default `matrix(v)` itself uses (`matrix(c(1,2))` is 2×1). This
+/// makes `kronecker(c(1,2), Y)` behave like `kronecker(matrix(c(1,2)), Y)`.
+fn matrix_or_column(value: &SValue) -> SResult<(Double, usize, usize)> {
+    match value {
+        SValue::Matrix { data, nrow, ncol } => Ok((data.clone(), *nrow, *ncol)),
+        other => {
+            let d = other.as_double()?;
+            let n = d.len();
+            Ok((d, n, 1)) // bare vector → n×1 column, matching matrix(v)
+        }
+    }
+}
+
+/// `kronecker(X, Y)` — the **Kronecker product** (a.k.a. tensor/direct product).
+///
+/// For an `m × n` matrix `X` and a `p × q` matrix `Y`, the result is the
+/// `(m·p) × (n·q)` matrix built from `m·n` blocks, where block `(i, j)` is the
+/// scalar `X[i, j]` times the **whole** of `Y`:
+///
+/// ```text
+///                 ┌                               ┐
+///                 │  X[1,1]·Y   X[1,2]·Y  …  X[1,n]·Y │
+///   X ⊗ Y   =     │  X[2,1]·Y   X[2,2]·Y  …  X[2,n]·Y │
+///                 │     ⋮           ⋮     ⋱     ⋮     │
+///                 │  X[m,1]·Y   X[m,2]·Y  …  X[m,n]·Y │
+///                 └                               ┘
+/// ```
+///
+/// ## Element formula (1-based, column-major to match `SValue::Matrix`)
+///
+/// `result[(i-1)·p + k, (j-1)·q + l] = X[i, j] · Y[k, l]`. Read the other way:
+/// a result cell at row `r`, column `c` (both 0-based here) splits into
+///   * the **outer** index into `X`:  `i = r / p`,  `j = c / q`  (integer div), and
+///   * the **inner** index into `Y`:  `k = r % p`,  `l = c % q`.
+///
+/// We build the result column-by-column. The element at column-major offset
+/// `c·(m·p) + r` is `X[i, j] · Y[k, l]` for those four decoded indices, where
+/// `X[i, j]` lives at `X`'s offset `j·m + i` and `Y[k, l]` at `Y`'s offset
+/// `l·p + k` (both stores are column-major).
+///
+/// ## Worked example
+///
+/// `X = matrix(c(1,2,3,4), nrow=2)` is `[[1,3],[2,4]]`; `Y = matrix(c(0,1,1,0),
+/// nrow=2)` is `[[0,1],[1,0]]`. `kronecker(X, Y)` is the 4×4 matrix whose
+/// top-left block is `1·Y`, top-right `3·Y`, bottom-left `2·Y`, bottom-right
+/// `4·Y`. A 1×1 `X = matrix(5)` gives `5·Y`.
+///
+/// ## Vectors
+///
+/// A bare numeric vector is promoted to an `n × 1` column (the `matrix(v)`
+/// default), via [`matrix_or_column`].
+///
+/// ## Security — the quadratic output-size guard
+///
+/// The result has `(m·p)·(n·q)` elements, **quadratic** in the inputs: two
+/// 100×100 matrices Kronecker to a 10⁸-element matrix. So *before* allocating
+/// we form the result row count `m·p`, column count `n·q`, **and** their product
+/// with `checked_mul`, and reject anything exceeding `MAX_SEQ_LEN` — the same
+/// cap `matrix()` and `matrix_multiply` enforce. An overflow or over-cap result
+/// returns a "result too large" error and never allocates. Degenerate inputs
+/// (`m=0`, `p=0`, …) yield a `0`-element result with a correct zero dimension;
+/// the loops below simply do not execute, so there is no out-of-bounds risk.
+///
+/// The R infix alias `%x%` (i.e. `X %x% Y`) is **deferred to R-40** (it needs
+/// lexer/grammar work for the special operator); this builtin is the function
+/// form only.
+fn b_kronecker(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let y = nth_positional(args, 1)
+        .ok_or_else(|| SError::BadArgs("kronecker: needs two arguments (X, Y)".into()))?;
+    let (xd, m, n) = matrix_or_column(x)?;
+    let (yd, p, q) = matrix_or_column(y)?;
+
+    // Result is (m*p) × (n*q). Guard each result dimension AND the total element
+    // count with checked_mul against MAX_SEQ_LEN, before any allocation.
+    let too_large =
+        || SError::Index(format!("kronecker: result too large (limit {MAX_SEQ_LEN} elements)"));
+    let rows = m.checked_mul(p).filter(|&t| t <= MAX_SEQ_LEN).ok_or_else(too_large)?;
+    let cols = n.checked_mul(q).filter(|&t| t <= MAX_SEQ_LEN).ok_or_else(too_large)?;
+    let total = rows
+        .checked_mul(cols)
+        .filter(|&t| t <= MAX_SEQ_LEN)
+        .ok_or_else(too_large)?;
+
+    let xs = xd.data();
+    let ys = yd.data();
+    let mut out = vec![0.0; total];
+    // Walk the result column-major. For each output cell (r, c):
+    //   outer X index (i, j) = (r / p, c / q); inner Y index (k, l) = (r % p, c % q).
+    // X[i,j] is at j*m + i (column-major); Y[k,l] is at l*p + k.
+    for c in 0..cols {
+        let j = c / q; // outer column → X column
+        let l = c % q; // inner column → Y column
+        for r in 0..rows {
+            let i = r / p; // outer row → X row
+            let k = r % p; // inner row → Y row
+            let xv = xs[j * m + i];
+            let yv = ys[l * p + k];
+            out[c * rows + r] = na_mul(xv, yv);
+        }
+    }
+    Ok(SValue::Matrix {
+        data: Double::from_values(out),
+        nrow: rows,
+        ncol: cols,
+    })
+}
+
+/// Multiply two doubles, propagating R's `NA` (a specific NaN bit pattern): if
+/// either operand is `NA_real_`, the product is `NA_real_`, exactly as R's
+/// arithmetic does — so an `NA` anywhere in `X` or `Y` shows up in the product.
+fn na_mul(a: f64, b: f64) -> f64 {
+    if is_na_real(a) || is_na_real(b) {
+        na_real()
+    } else {
+        a * b
+    }
 }
 
 /// `apply(X, MARGIN, FUN, …)` — apply `FUN` to each row (`MARGIN = 1`) or column
