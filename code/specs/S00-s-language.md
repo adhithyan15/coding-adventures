@@ -488,6 +488,22 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
    `environment()`, bounded by the same `MAX_ENVIRONMENTS` cap. `parent.frame(n)`
    **clamps** to the global env past the bottom of the stack rather than indexing
    out of bounds.
+7. **Binning & cross-product utilities (R-32, shared builtins).** `s-runtime`
+   gains two binning builtins that R (R-32) reuses verbatim through the shared
+   tree-walker; both are pure functions over the existing `r-vector` `Double` and
+   the existing `SValue::Factor` value, so no new value type or cap is added.
+   - **`findInterval(x, vec)`** — for a **non-decreasing** breakpoint vector `vec`,
+     the 1-based index of the last breakpoint not exceeding each `x` (`0` below the
+     first, `length(vec)` at/above the last); `NA`/non-finite `x` → `NA`. A linear
+     scan, `O(len(x)·len(vec))` with both lengths `MAX_SEQ_LEN`-bounded.
+   - **`cut(x, breaks)`** — bins `x` into the `k-1` right-closed intervals `(lo,hi]`
+     of the sorted `breaks` (length `k`), returning a real `SValue::Factor` whose
+     `levels` are the auto-generated `"(lo,hi]"` labels; values outside all intervals
+     (or `NA`) get a `NA` code. Built directly on `findInterval` (the interval index
+     is the level code), so `levels()`/`as.integer()`/`as.character()`/`table()` all
+     work on the result. `labels=`, `right=FALSE`, `include.lowest=`, and integer
+     `breaks` are **deferred to R-33**. The existing `tabulate(bin, nbins)` (R-28)
+     rounds out the family (its `nbins` stays capped at `MAX_SEQ_LEN`).
 
 ## §10 References
 

@@ -225,6 +225,21 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   reproducible under `set.seed`. Numeric and character vectors; bounded RNG draws;
   malformed named args error gracefully. (`incomparables=`/`fromLast=` on the binary
   set ops `union`/`intersect`/`setdiff` are deferred to R-32.)
+- **Binning & cross-product utilities** (R-32): the numeric-binning family, a
+  pivot away from the non-faithful R-31 deferral (base R's
+  `union`/`intersect`/`setdiff` don't take `incomparables=`/`fromLast=`).
+  **`findInterval(x, vec)`** returns, for each `x`, the 1-based index of the last
+  break in the non-decreasing `vec` not exceeding it (`0` below the first,
+  `length(vec)` at/above the last; `NA` propagates): `findInterval(c(0.5,1.5,2.5),
+  c(1,2,3))` → `c(0,1,2)`, `findInterval(5, c(1,2,3))` → `3`. **`cut(x, breaks)`**
+  bins `x` into the right-closed `(lo,hi]` intervals of the sorted `breaks` and
+  returns a real **factor** with auto-generated `"(lo,hi]"` levels, so
+  `levels()`/`as.integer()`/`as.character()`/`nlevels()` all work on the result
+  (`cut(c(1,5,10), breaks=c(0,3,6,11))` → levels `"(0,3]","(3,6]","(6,11]"` with
+  values `(0,3]`,`(3,6]`,`(6,11]`); values outside all breaks → `NA`. Built on
+  `findInterval`; allocations bounded by the already-capped input/breaks lengths;
+  missing operands error gracefully. (`cut`'s `labels=`/`right=FALSE`/
+  `include.lowest=` and integer `breaks` are deferred to R-33.)
 - The **`d`/`p`/`q`/`r` distribution family** (R-8) over `statistics-core`:
   density/CDF/quantile/sampling for the normal, uniform, and exponential
   distributions, plus `set.seed` for a reproducible per-session RNG.

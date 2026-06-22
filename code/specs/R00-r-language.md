@@ -1077,6 +1077,59 @@ unchanged.
     pass — and the `fromLast =` argument on those same binary set ops. The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
 
+- **R-32 — binning & cross-product utilities** *(this PR)*. A **pivot** away from
+  the R-31 deferral of `incomparables=`/`fromLast=` on the binary set ops
+  (`union`/`intersect`/`setdiff`): on inspection base R's `union`/`intersect`/`setdiff`
+  do **not** accept those arguments at all (only the `{set,union,...}` generics and
+  `duplicated`/`unique` do), so wiring them onto the binary set ops would be
+  **non-faithful**. R-32 instead lands a coherent, faithful adjacent unit — the
+  numeric-binning family — all in the shared `s-runtime` (R reuses them verbatim
+  through the shared tree-walker). They build on the existing factor value
+  (`SValue::Factor { codes, levels }`, the R-13 factor type) and the existing
+  `MAX_SEQ_LEN` cap; no new value type is introduced.
+  - **`findInterval(x, vec)`** — the primitive the others build on. `vec` must be
+    **non-decreasing** (a sorted vector of breakpoints). For each element of `x` it
+    returns the largest index `i` (1-based) such that `vec[i] <= x`, i.e. the count of
+    breakpoints that do not exceed `x`: `0` when `x < vec[1]`, `length(vec)` when
+    `x >= vec[length(vec)]`. Implemented as a linear scan (`vec` is assumed short and
+    sorted); `NA`/non-finite `x` propagate to `NA`. Worked examples:
+    `findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))` is `c(0, 1, 2)`;
+    `findInterval(5, c(1, 2, 3))` is `3`.
+  - **`tabulate(bin, nbins)`** — unchanged from R-28 (already shipped); listed here as
+    part of the binning family. Counts integer codes `1..nbins`; codes `<= 0` or
+    `> nbins` are ignored; `nbins` defaults to `max(bin)` and is capped at
+    `MAX_SEQ_LEN`. `tabulate(c(1,2,2,3,5), nbins = 5)` is `c(1, 2, 1, 0, 1)`.
+  - **`cut(x, breaks)`** — bin a numeric vector `x` into the intervals delimited by
+    the **sorted** breakpoint vector `breaks`, returning a **`factor`** (a real
+    `SValue::Factor`, so `levels()`, `as.integer()`, `as.character()`, and `table()`
+    all work on the result). With `k = length(breaks)` breakpoints there are `k - 1`
+    intervals; the default intervals are **right-closed** `(lo, hi]`, and the
+    auto-generated level labels are exactly `"(lo,hi]"` formatted from the numeric
+    breakpoints. An element that falls in no interval — `x <= breaks[1]` or
+    `x > breaks[k]`, or `NA`/non-finite — maps to a `NA` factor code (printed `<NA>`),
+    not to a level. `cut` is implemented **on top of `findInterval`**: the interval
+    index is `findInterval(x, breaks)`, which is the 1-based level code when it lies in
+    `1..k-1` and `NA` (out of range) otherwise. Worked example:
+    `cut(c(1, 5, 10), breaks = c(0, 3, 6, 11))` is a factor with levels
+    `c("(0,3]", "(3,6]", "(6,11]")` and values `(0,3]`, `(3,6]`, `(6,11]`;
+    `cut(c(-1, 20), breaks = c(0, 3, 6, 11))` is `NA, NA` (both outside the breaks).
+  - **Output-size caps (security).** No new unbounded multiplier. `cut` allocates one
+    output code per input element (length already `MAX_SEQ_LEN`-bounded) and `k - 1`
+    level strings (bounded by the `breaks` length, itself capped). `findInterval` is
+    `O(len(x) * len(vec))` with both lengths capped. `tabulate` keeps its existing
+    `nbins`-vs-`MAX_SEQ_LEN` checked guard. Named-arg readers reject malformed values
+    gracefully (`Err`, never panic): `breaks` is read through `as_double` (NA/empty is
+    a clean error or empty result), and the deferred options below are simply ignored
+    when absent.
+  - **Scope outcome / deferred to R-33.** `findInterval`, `tabulate`, and `cut`
+    (default right-closed `(lo,hi]` intervals with auto-generated labels) ship
+    **solidly**. **Deferred to R-33:** `cut`'s `labels =` (custom level labels),
+    `right = FALSE` (left-closed `[lo,hi)` intervals), `include.lowest =` (fold the
+    extreme endpoint into the adjacent interval), and `breaks` given as a single
+    integer (number of equal-width bins). These are pure extensions of the same
+    `findInterval`-backed core. The `%o%` infix alias for `outer` remains open for a
+    later grammar pass.
+
 ## §4 Reuse strategy
 
 - **Lexer/parser:** the grammar-tools framework, exactly as S uses it. `r.tokens`
@@ -1111,8 +1164,11 @@ refinements (multi-key `order(x, y, ...)`, `rank`'s `ties.method` =
 `average`/`min`/`max`/`first`, `duplicated(fromLast=)`, `anyDuplicated`) land in
 **R-30**; the set-op & ordering refinements (`incomparables=` on
 `duplicated`/`anyDuplicated`/`unique`, `unique(fromLast=)`, and `rank`'s `"random"`
-tie method) land in **R-31**, with `incomparables=`/`fromLast=` on the binary set ops
-(`union`/`intersect`/`setdiff`) deferred to **R-32**; namespaces and `library()`
+tie method) land in **R-31**; the binning & cross-product utilities (`findInterval`,
+`cut` returning a factor) land in **R-32** — a pivot away from `incomparables=`/`fromLast=`
+on the binary set ops (`union`/`intersect`/`setdiff`), which base R does not accept there,
+making them non-faithful; `cut`'s `labels=`/`right=FALSE`/`include.lowest=` and integer
+`breaks` are deferred to **R-33**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.

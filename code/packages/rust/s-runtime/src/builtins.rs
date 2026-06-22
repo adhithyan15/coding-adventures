@@ -137,6 +137,15 @@ pub fn install(env: &Env) {
     define(env, "split", builtin("split", b_split));
     define(env, "tabulate", builtin("tabulate", b_tabulate));
 
+    // Binning & cross-product utilities (R-32) — build on the factor value (R-13)
+    // and reuse `tabulate`'s allocation discipline.
+    define(
+        env,
+        "findInterval",
+        builtin("findInterval", b_find_interval),
+    );
+    define(env, "cut", builtin("cut", b_cut));
+
     // Regular expressions (R-7).
     define(env, "grepl", builtin("grepl", b_grepl));
     define(env, "grep", builtin("grep", b_grep));
@@ -4293,6 +4302,174 @@ fn b_tabulate(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         }
     }
     Ok(SValue::doubles(counts))
+}
+
+/// The second positional argument (used by `findInterval` and `cut` for their
+/// `vec` / `breaks` operand), or the value of the given `name`d argument if
+/// present. Returns a `BadArgs` error (never panics) when neither is supplied.
+fn second_arg<'a>(args: &'a [Arg], name: &str, what: &str) -> SResult<&'a SValue> {
+    args.iter()
+        .find(|a| a.name.as_deref() == Some(name))
+        .map(|a| &a.value)
+        .or_else(|| {
+            args.iter()
+                .filter(|a| a.name.is_none())
+                .nth(1)
+                .map(|a| &a.value)
+        })
+        .ok_or_else(|| SError::BadArgs(format!("{what}: argument \"{name}\" is missing")))
+}
+
+/// `find_interval_index(x, vec)` — the shared kernel behind `findInterval` (and,
+/// transitively, `cut`).
+///
+/// `vec` is a **non-decreasing** vector of breakpoints. For a single value `x`
+/// we return the 1-based count of breakpoints that do **not exceed** `x` — i.e.
+/// the largest `i` with `vec[i] <= x`:
+///
+/// ```text
+///   vec = [1, 2, 3]
+///
+///   x        : -inf .. 1   1 .. 2   2 .. 3   3 .. +inf
+///   result   :     0         1        2         3
+///                  |         |        |         |
+///   meaning  :  below      in       in       at/above
+///              first      [1,2)    [2,3)     last break
+/// ```
+///
+/// A right-continuous (left-closed) step: an `x` exactly equal to `vec[i]` lands
+/// in the bucket that *starts* at `vec[i]`. `NA`/non-finite `x` returns `None`
+/// (the caller maps it to `NA`).
+///
+/// `prefix` is the **leading non-NA run** of the breakpoint vector (everything up
+/// to, but not including, the first `NA` element) — computed once per call by
+/// [`break_prefix_len`]. Within that run the breaks are assumed sorted, so we use
+/// `partition_point` (a binary search) rather than a linear scan: this turns the
+/// whole `findInterval(x, vec)` / `cut` cost from `O(len(x) · len(vec))` into
+/// `O(len(x) · log(len(vec)))`, which matters because both lengths can reach
+/// `MAX_SEQ_LEN` (≈ 16.7M) — a quadratic scan there would be a CPU-amplification
+/// hazard for untrusted programs. Trimming to the non-NA prefix preserves the
+/// "first `NA` breakpoint stops the count" behaviour of the original linear form.
+fn find_interval_index(x: f64, prefix: &[f64]) -> Option<usize> {
+    if is_na_real(x) || !x.is_finite() {
+        return None;
+    }
+    // The number of breaks `<= x` — equivalently the first index whose break is
+    // strictly greater than `x`. `partition_point` requires the predicate to be
+    // partitioned (all-true then all-false), which holds for a sorted prefix.
+    Some(prefix.partition_point(|&b| b <= x))
+}
+
+/// The length of the leading non-`NA` run of a breakpoint vector. `find_interval`
+/// and `cut` only ever consider breaks before the first `NA` (an `NA` break acts
+/// as a hard stop, matching the original linear scan), so the binary search runs
+/// over `&breaks[..break_prefix_len(breaks)]`.
+fn break_prefix_len(breaks: &[f64]) -> usize {
+    breaks
+        .iter()
+        .position(|&b| is_na_real(b))
+        .unwrap_or(breaks.len())
+}
+
+/// `findInterval(x, vec)` — for each element of `x`, the index of the last
+/// breakpoint in the non-decreasing `vec` that does not exceed it (see
+/// [`find_interval_index`]). `0` below the first break, `length(vec)` at or above
+/// the last; `NA`/non-finite `x` → `NA`.
+///
+/// ```text
+///   findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))  ->  c(0, 1, 2)
+///   findInterval(5,                c(1, 2, 3))  ->  3
+/// ```
+fn b_find_interval(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.as_double()?;
+    let vec: Vec<f64> = second_arg(args, "vec", "findInterval")?
+        .as_double()?
+        .iter()
+        .collect();
+    // The binary search runs over the leading non-NA run only (an NA break stops
+    // the count). Computed once, reused for every element of `x`.
+    let prefix = &vec[..break_prefix_len(&vec)];
+
+    let out: Vec<f64> = x
+        .iter()
+        .map(|xi| match find_interval_index(xi, prefix) {
+            Some(i) => i as f64,
+            None => na_real(),
+        })
+        .collect();
+    Ok(SValue::doubles(out))
+}
+
+/// Format a numeric breakpoint for an interval label the way R's `cut` does for
+/// "nice" small integers: drop a trailing `.0` so `3.0` prints as `3`, but keep
+/// genuine fractions (`3.5`). This keeps the auto-generated levels readable
+/// (`"(0,3]"` rather than `"(0,3.0]"`).
+fn format_break(b: f64) -> String {
+    if b.is_finite() && b.fract() == 0.0 && b.abs() < 1e15 {
+        format!("{}", b as i64)
+    } else {
+        format!("{b}")
+    }
+}
+
+/// `cut(x, breaks)` — bin the numeric vector `x` into the intervals delimited by
+/// the **sorted** breakpoint vector `breaks`, returning a **factor**.
+///
+/// With `k = length(breaks)` breakpoints there are `k - 1` intervals. The default
+/// intervals are **right-closed** `(lo, hi]`, and the auto-generated level labels
+/// are exactly `"(lo,hi]"`:
+///
+/// ```text
+///   breaks = [0, 3, 6, 11]            levels = ["(0,3]", "(3,6]", "(6,11]"]
+///
+///   x = 1   -> findInterval = 1 -> code 1 -> "(0,3]"
+///   x = 5   -> findInterval = 2 -> code 2 -> "(3,6]"
+///   x = 10  -> findInterval = 3 -> code 3 -> "(6,11]"
+///   x = -1  -> findInterval = 0 -> out of range -> NA
+///   x = 20  -> findInterval = 4 (= k) -> out of range -> NA
+/// ```
+///
+/// The whole job reduces to `findInterval`: the interval index `i` is the 1-based
+/// factor code precisely when `1 <= i <= k-1`; the boundary indices `0` (below the
+/// first break) and `k` (at/above the last) — and any `NA` `x` — map to a `NA`
+/// code. `labels=`, `right=FALSE`, `include.lowest=`, and integer `breaks` are
+/// deferred to R-33.
+fn b_cut(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.as_double()?;
+    let breaks: Vec<f64> = second_arg(args, "breaks", "cut")?
+        .as_double()?
+        .iter()
+        .collect();
+
+    // `k - 1` intervals; with fewer than two breaks there are none, so every
+    // value is unbinned (NA). `saturating_sub` keeps this from underflowing.
+    let n_intervals = breaks.len().saturating_sub(1);
+
+    // The level labels are "(lo,hi]" for each adjacent break pair.
+    let levels: Vec<String> = (0..n_intervals)
+        .map(|i| {
+            format!(
+                "({},{}]",
+                format_break(breaks[i]),
+                format_break(breaks[i + 1])
+            )
+        })
+        .collect();
+
+    // Each value's 1-based interval index (via the shared kernel, binary-searching
+    // the leading non-NA run of `breaks`) is its factor code when it lands in
+    // `1..=n_intervals`; otherwise (below the first break, at/above the last, or
+    // NA) the code is `None` → a `<NA>` factor element.
+    let prefix = &breaks[..break_prefix_len(&breaks)];
+    let codes: Vec<Option<u32>> = x
+        .iter()
+        .map(|xi| match find_interval_index(xi, prefix) {
+            Some(i) if i >= 1 && i <= n_intervals => Some(i as u32),
+            _ => None,
+        })
+        .collect();
+
+    Ok(SValue::Factor { codes, levels })
 }
 
 fn builtin(name: &str, func: fn(&Interpreter, &[Arg]) -> SResult<SValue>) -> SValue {

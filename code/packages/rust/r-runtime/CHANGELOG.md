@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.27.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-32 — binning & cross-product utilities**: the numeric-binning family,
+  reached through ordinary R syntax. A pivot away from the thin R-31 deferral of
+  `incomparables=`/`fromLast=` on the binary set ops (`union`/`intersect`/`setdiff`)
+  — base R does not accept those arguments there, so implementing them would be
+  non-faithful. All build on the existing factor value and `MAX_SEQ_LEN` cap; no new
+  value type, no grammar change.
+  - **`findInterval(x, vec)`** — 1-based index of the last break in the
+    non-decreasing `vec` not exceeding each `x`; `0` below the first,
+    `length(vec)` at/above the last; `NA`/non-finite `x` → `NA`.
+    `findInterval(c(0.5, 1.5, 2.5), c(1, 2, 3))` → `c(0, 1, 2)`;
+    `findInterval(5, c(1, 2, 3))` → `3`.
+  - **`cut(x, breaks)`** — bins `x` into the right-closed `(lo,hi]` intervals of
+    the sorted `breaks`, returning a real **factor**. `class(cut(...))` is
+    `"factor"`, `levels()` are the `"(lo,hi]"` labels, and `as.character()` /
+    `as.integer()` / `nlevels()` all see through to it. Values outside all breaks
+    (or `NA`) become `NA` factor codes. `cut(c(1, 5, 10), breaks = c(0, 3, 6, 11))`
+    → a factor with levels `c("(0,3]", "(3,6]", "(6,11]")` and values `(0,3]`,
+    `(3,6]`, `(6,11]`; `cut(c(-1, 20), breaks = c(0, 3, 6, 11))` → both `NA`.
+  - **Security**: no new user-controlled multiplier; `cut` allocations are bounded
+    by the already-capped input/breaks lengths; `findInterval` is `O(len(x)·len(vec))`
+    with both capped; `tabulate`'s `nbins` cap is unchanged; the `vec=`/`breaks=`
+    readers reject a missing operand with a clean error (never panic); no path
+    indexes out of bounds.
+  - **Deferred to R-33**: `cut`'s `labels=`, `right=FALSE`, `include.lowest=`, and
+    integer `breaks`.
+
 ## [0.26.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)
