@@ -135,6 +135,15 @@ public:
     Q_INVOKABLE void copy(const QString &start, const QString &end);
     Q_INVOKABLE void cut(const QString &start, const QString &end);
     Q_INVOKABLE bool paste(const QString &dstStart);
+    // Structural edits: insert / delete `count` rows or columns at the 1-based
+    // position `at`. The engine shifts every formula reference at or after the
+    // band so dependents keep pointing at their precedents (a reference whose
+    // whole band is deleted becomes #REF!), then recomputes; these resize the
+    // extent and bump `revision` so the visible rows re-fetch.
+    Q_INVOKABLE void insertRows(int at, int count);
+    Q_INVOKABLE void deleteRows(int at, int count);
+    Q_INVOKABLE void insertCols(int at, int count);
+    Q_INVOKABLE void deleteCols(int at, int count);
     // Save / load: serialize() returns a self-contained JSON document of the
     // workbook's SOURCE (formula text + typed literals) + per-cell formats — not
     // the computed values, which recompute on load. deserialize() replaces the
