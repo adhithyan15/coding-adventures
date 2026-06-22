@@ -295,6 +295,10 @@ pub fn install(env: &Env) {
     define(env, "rbind", builtin("rbind", b_rbind));
     define(env, "solve", builtin("solve", b_solve));
     define(env, "det", builtin("det", b_det));
+    // Cholesky factorization (R-40): upper-triangular R with t(R) %*% R == X.
+    // Reuses the `square_matrix` reader (shared with solve/det) and the
+    // SValue::Matrix constructor. pivot=TRUE / chol2inv / complex deferred to R-41.
+    define(env, "chol", builtin("chol", b_chol));
 }
 
 // ===========================================================================
@@ -1393,6 +1397,103 @@ fn gauss_jordan(mut a: Vec<f64>, n: usize, mut b: Vec<f64>, m: usize) -> SResult
         }
     }
     Ok(b)
+}
+
+/// `chol(x)` — the **Cholesky factorization** of a real symmetric
+/// positive-definite matrix `x` (R-40).
+///
+/// ## What it returns
+///
+/// The **upper-triangular** matrix `R` such that `t(R) %*% R == x`. This is R's
+/// convention: `chol` returns the upper factor, so `R'R = X` (some texts return
+/// the *lower* factor `L` with `L L' = X` — note the difference). For
+///
+/// ```text
+///       | 4  2 |                 | 2   1 |
+///   X = |      |   →   chol(X) = |       |   because t(R) %*% R = X.
+///       | 2  3 |                 | 0  √2 |
+/// ```
+///
+/// ## Algorithm — Cholesky–Banachiewicz, upper form
+///
+/// Walking columns `i = 0 … n-1` (0-based here; the spec is 1-based):
+///
+/// ```text
+///   R[i][i] = sqrt( X[i][i] − Σ_{k<i} R[k][i]² )
+///   R[i][j] = ( X[i][j] − Σ_{k<i} R[k][i]·R[k][j] ) / R[i][i]     (j > i)
+///   R[i][j] = 0                                                   (j < i)
+/// ```
+///
+/// We read **only the upper triangle** of `X` (`X[i][j]` for `i ≤ j`), exactly as
+/// R's default `chol` does — the strictly-lower triangle is never touched, so an
+/// asymmetric lower triangle is silently ignored.
+///
+/// ## Column-major indexing
+///
+/// Like every `SValue::Matrix`, both `X` and the result are stored column-major:
+/// element `(row, col)` lives at offset `col·n + row`. So `X[i][j]` is
+/// `x[j*n + i]` and we write `R[i][j]` to `out[j*n + i]`.
+///
+/// ## Faithful error handling (no panic, no NaN)
+///
+/// * **Non-square / non-matrix / over-cap** `x` → the shared `square_matrix`
+///   helper (used by `det`/`solve`) raises the error *before* we index anything.
+/// * **`NA` in the upper triangle** → a clean error (`NA` cannot be factored).
+/// * **Not positive-definite** → if the diagonal pivot
+///   `X[i][i] − Σ_{k<i} R[k][i]²` is `≤ 0` (or non-finite), `X` is not SPD. We
+///   test this **before** calling `sqrt`, so we never take the square root of a
+///   negative number — the result is R's exact error *"the leading minor of order
+///   i is not positive definite"*, never a propagated `NaN` and never a panic.
+fn b_chol(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // Reuse the det/solve square-matrix reader: it rejects non-matrix, non-square
+    // and over-MAX_SOLVE_DIM inputs up front and returns column-major data + n.
+    let (x, n) = square_matrix(first_positional(args)?, "chol")?;
+
+    // The 0×0 matrix factors to the 0×0 matrix (vacuously, t(R) %*% R == X).
+    // The allocation is the single n×n result, bounded by MAX_SOLVE_DIM (n ≤ 1000
+    // ⇒ n² ≤ 10⁶), the same order cap square_matrix already enforces.
+    let mut out = vec![0.0; n * n];
+    for i in 0..n {
+        // Diagonal: X[i][i] − Σ_{k<i} R[k][i]².  R[k][i] is out[i*n + k].
+        if is_na_real(x[i * n + i]) {
+            return Err(SError::BadArgs("chol: NA in 'a'".into()));
+        }
+        let mut pivot = x[i * n + i];
+        for k in 0..i {
+            let rki = out[i * n + k];
+            pivot -= rki * rki;
+        }
+        // The ≤ 0 (or non-finite) check MUST precede sqrt — a non-SPD matrix is a
+        // clean error here, never sqrt of a negative (NaN) and never a panic.
+        if !(pivot > 0.0) || !pivot.is_finite() {
+            return Err(SError::BadArgs(format!(
+                "chol: the leading minor of order {} is not positive definite",
+                i + 1
+            )));
+        }
+        let diag = pivot.sqrt();
+        out[i * n + i] = diag;
+
+        // Off-diagonal, upper triangle only (j > i):
+        //   R[i][j] = ( X[i][j] − Σ_{k<i} R[k][i]·R[k][j] ) / R[i][i].
+        for j in (i + 1)..n {
+            if is_na_real(x[j * n + i]) {
+                return Err(SError::BadArgs("chol: NA in 'a'".into()));
+            }
+            let mut s = x[j * n + i]; // X[i][j], reading the UPPER triangle
+            for k in 0..i {
+                s -= out[i * n + k] * out[j * n + k]; // R[k][i]·R[k][j]
+            }
+            out[j * n + i] = s / diag;
+        }
+        // Sub-diagonal entries (j < i) stay 0 — `out` was zero-initialized.
+    }
+
+    Ok(SValue::Matrix {
+        data: Double::from_values(out),
+        nrow: n,
+        ncol: n,
+    })
 }
 
 // ===========================================================================
