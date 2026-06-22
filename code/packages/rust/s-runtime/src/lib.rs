@@ -2241,3 +2241,167 @@ mod r30_ordering {
         );
     }
 }
+
+#[cfg(test)]
+mod r33_cut_options {
+    //! R-33 — `cut()` option completeness (exercised through **S** syntax; the
+    //! shared tree-walker is language-neutral so R inherits identical behaviour).
+    //! Covers `labels=` (custom + `FALSE`), `right=FALSE`, `include.lowest=`, and
+    //! integer `breaks` (N equal-width bins over the extended range of `x`).
+    use super::*;
+
+    /// The factor codes recovered via `as.integer` (NaN for `<NA>`).
+    fn codes(src: &str) -> Vec<f64> {
+        match eval_s(src).unwrap().strip_names() {
+            SValue::Double(d) => d.data().to_vec(),
+            other => panic!("expected double, got {}", other.type_name()),
+        }
+    }
+
+    /// The character elements of a (possibly classed) result.
+    fn strs(src: &str) -> Vec<String> {
+        eval_s(src)
+            .unwrap()
+            .as_character()
+            .into_iter()
+            .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+            .collect()
+    }
+
+    // --- labels= (custom character vector) ------------------------------
+
+    #[test]
+    fn labels_custom_replaces_auto_interval_strings() {
+        // labels= supplies the level names verbatim; the binning is unchanged.
+        assert_eq!(
+            strs("levels(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"mid\", \"hi\")))\n"),
+            vec!["lo", "mid", "hi"]
+        );
+        assert_eq!(
+            strs("as.character(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"mid\", \"hi\")))\n"),
+            vec!["lo", "mid", "hi"]
+        );
+        // It is still a real factor.
+        assert_eq!(
+            strs("class(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"mid\", \"hi\")))\n"),
+            vec!["factor"]
+        );
+    }
+
+    #[test]
+    fn labels_wrong_length_is_a_graceful_error() {
+        // length(labels) must equal length(breaks)-1 (= 3 here); 2 is an error.
+        assert!(eval_s(
+            "cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), labels = c(\"lo\", \"hi\"))\n"
+        )
+        .is_err());
+    }
+
+    // --- labels = FALSE (integer codes, NOT a factor) -------------------
+
+    #[test]
+    fn labels_false_returns_integer_codes_not_a_factor() {
+        // labels=FALSE yields the plain integer bin codes c(1,1,2).
+        assert_eq!(
+            codes("cut(c(1, 2, 3), breaks = c(0, 3, 6), labels = FALSE)\n"),
+            vec![1.0, 1.0, 2.0]
+        );
+        // The result is a bare numeric vector — class() is "numeric", not "factor".
+        assert_eq!(
+            strs("class(cut(c(1, 2, 3), breaks = c(0, 3, 6), labels = FALSE))\n"),
+            vec!["numeric"]
+        );
+    }
+
+    #[test]
+    fn labels_false_out_of_range_is_na() {
+        // Values outside the breaks still become NA codes under labels=FALSE.
+        let v = codes("cut(c(-1, 20), breaks = c(0, 3, 6, 11), labels = FALSE)\n");
+        assert!(v[0].is_nan());
+        assert!(v[1].is_nan());
+    }
+
+    // --- right = FALSE (left-closed [lo,hi)) ----------------------------
+
+    #[test]
+    fn right_false_uses_left_closed_intervals_and_labels() {
+        // 1 ∈ [0,3), 3 ∈ [3,6): a left-closed value lands in the bin it opens.
+        assert_eq!(
+            strs("levels(cut(c(1, 3), breaks = c(0, 3, 6), right = FALSE))\n"),
+            vec!["[0,3)", "[3,6)"]
+        );
+        assert_eq!(
+            strs("as.character(cut(c(1, 3), breaks = c(0, 3, 6), right = FALSE))\n"),
+            vec!["[0,3)", "[3,6)"]
+        );
+    }
+
+    #[test]
+    fn right_false_boundary_goes_up_not_down() {
+        // Contrast with the default: under right=TRUE, 3 ∈ (0,3] (bin 1); under
+        // right=FALSE, 3 ∈ [3,6) (bin 2).
+        assert_eq!(
+            codes("as.integer(cut(c(3), breaks = c(0, 3, 6)))\n"),
+            vec![1.0]
+        );
+        assert_eq!(
+            codes("as.integer(cut(c(3), breaks = c(0, 3, 6), right = FALSE))\n"),
+            vec![2.0]
+        );
+    }
+
+    // --- include.lowest = TRUE ------------------------------------------
+
+    #[test]
+    fn include_lowest_folds_the_lowest_break_into_the_first_interval() {
+        // Without include.lowest, x == breaks[1] (here 0) is below (0,1] → NA.
+        let plain = codes("as.integer(cut(c(0, 1, 2), breaks = c(0, 1, 2)))\n");
+        assert!(plain[0].is_nan());
+        // With include.lowest=TRUE, 0 lands in the first interval (code 1).
+        let inc = codes(
+            "as.integer(cut(c(0, 1, 2), breaks = c(0, 1, 2), include.lowest = TRUE))\n",
+        );
+        assert_eq!(inc[0], 1.0);
+        assert_eq!(inc[1], 1.0); // 1 ∈ (0,1]
+        assert_eq!(inc[2], 2.0); // 2 ∈ (1,2]
+    }
+
+    #[test]
+    fn include_lowest_with_right_false_folds_the_highest_break() {
+        // right=FALSE makes the last bin [hi-1,hi); include.lowest folds breaks[k]
+        // (here 2) into it instead of NA.
+        let v = codes(
+            "as.integer(cut(c(0, 2), breaks = c(0, 1, 2), right = FALSE, include.lowest = TRUE))\n",
+        );
+        assert_eq!(v[0], 1.0); // 0 ∈ [0,1)
+        assert_eq!(v[1], 2.0); // 2 folded into [1,2]
+    }
+
+    // --- integer breaks (N equal-width bins) ----------------------------
+
+    #[test]
+    fn integer_breaks_makes_n_equal_width_bins() {
+        // cut(0:10, breaks=5): 5 levels spanning the slightly-extended 0..10 range.
+        assert_eq!(codes("nlevels(cut(0:10, breaks = 5))\n"), vec![5.0]);
+        // Every one of the 11 values gets a non-NA bin (the range extension puts
+        // the endpoints strictly inside the outer bins).
+        let v = codes("as.integer(cut(0:10, breaks = 5))\n");
+        assert_eq!(v.len(), 11);
+        assert!(v.iter().all(|x| !x.is_nan()));
+    }
+
+    #[test]
+    fn integer_breaks_degenerate_all_equal_does_not_divide_by_zero() {
+        // All-equal x has dx==0; the abs(min)/1 fallback keeps the bins finite and
+        // every value still lands in a non-NA bin (no panic, no NaN break).
+        let v = codes("as.integer(cut(c(5, 5, 5), breaks = 3))\n");
+        assert_eq!(v.len(), 3);
+        assert!(v.iter().all(|x| !x.is_nan()));
+    }
+
+    #[test]
+    fn integer_breaks_huge_n_is_rejected_not_allocated() {
+        // A huge N must error (MAX_SEQ_LEN guard), not attempt a giant allocation.
+        assert!(eval_s("cut(0:10, breaks = 1e9)\n").is_err());
+    }
+}
