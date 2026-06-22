@@ -45,6 +45,17 @@ EXPECTED = [
     ("hereditary_angioedema", "deficiency_of", "c1_inhibitor"),      # expand (NBK482266)
     ("chediak_higashi_syndrome", "gene_defect", "lyst"),             # expand (NBK507881)
     ("job_syndrome", "gene_defect", "stat3"),                        # expand (NBK525947)
+    # --- BATCH: HLA disease-associations + classic immunodeficiency genes ---
+    ("rheumatoid_arthritis", "associated_hla", "hla_dr4"),           # expand (NBK441999)
+    ("multiple_sclerosis", "associated_hla", "hla_dr2"),             # expand (NBK499849)
+    ("psoriasis", "associated_hla", "hla_cw6"),                      # expand (NBK448194)
+    ("reactive_arthritis", "associated_hla", "hla_b27"),             # expand (NBK499831)
+    ("behcet_disease", "associated_hla", "hla_b51"),                 # expand (NBK470257)
+    ("type_1_diabetes_mellitus", "associated_hla", "hla_dr4"),       # expand (NBK507713)
+    ("ataxia_telangiectasia", "gene_defect", "atm"),                 # expand (NBK519542)
+    ("ipex_syndrome", "gene_defect", "foxp3"),                       # expand (NBK562182)
+    ("cd40_ligand_deficiency", "gene_defect", "cd40lg"),             # recovered (NBK1402)
+    ("terminal_complement_deficiency", "deficiency_of", "c5_c9"),    # expand (NBK557581)
 ]
 VAR = {"mediated_by": "Mediator", "associated_hla": "HLA",
        "gene_defect": "Gene", "deficiency_of": "Component"}
@@ -116,7 +127,7 @@ def _one(rel: str, subj: str, varname: str) -> dict | None:
 def test_unknown_condition_abstains() -> None:
     if not _cli_available():
         return
-    r = _one("associated_hla", "rheumatoid_arthritis", "HLA")  # not in the library
+    r = _one("associated_hla", "kawasaki_disease", "HLA")  # not in the library
     assert r is not None and r["abstained"], "an ungrounded condition must abstain"
 
 
