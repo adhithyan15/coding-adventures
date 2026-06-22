@@ -504,6 +504,30 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
      work on the result. `labels=`, `right=FALSE`, `include.lowest=`, and integer
      `breaks` are **deferred to R-33**. The existing `tabulate(bin, nbins)` (R-28)
      rounds out the family (its `nbins` stays capped at `MAX_SEQ_LEN`).
+8. **String utilities (R-34, shared builtins).** `s-runtime` gains five base-R
+   string builtins that R (R-34) reuses verbatim through the shared tree-walker.
+   They build on the existing string machinery (`as_character` coercion, the
+   `Option<String>` NA convention, `SValue::Character`/`SValue::Logical`), add no
+   new value type, and operate on Unicode `char`s throughout (never raw byte
+   indices), so multibyte UTF-8 input can never panic or split a code point.
+   - **`startsWith(x, prefix)`** / **`endsWith(x, suffix)`** — a logical vector,
+     `TRUE` where `x[i]` begins/ends with the (recycled) `prefix[i]`/`suffix[i]`.
+     Both arguments are **recycled** to the longer length; `NA` in either position
+     → `NA`. Implemented with `str::starts_with`/`ends_with` (code-point safe).
+   - **`trimws(x, which = "both")`** — strip leading and/or trailing whitespace
+     (`[ \t\r\n]`) from each element; `which ∈ {"both","left","right"}` (second
+     positional or `which =`), any other value a clean `Err`. `NA` → `NA`.
+   - **`chartr(old, new, x)`** — translate each char of `x` found at position *i* of
+     `old` to position *i* of `new`. `old`/`new` are length-one and must have equal
+     `nchar`, else an `Err`. Vectorized over `x`; `NA` → `NA`.
+   - **`strtoi(x, base = 10L)`** — parse each string as an integer in `base` (2..36,
+     second positional or `base =`), returning a `Double` vector (`NA` for
+     unparseable). Follows C `strtol`: leading whitespace and an optional sign are
+     honored, base 16 accepts an `0x`/`0X` prefix, the whole remaining string must be
+     consumed (trailing garbage → `NA`), an empty string → `NA`, an out-of-range
+     digit → `NA`, and a `base` outside 2..36 makes every element `NA`. Parsing uses
+     checked `i64` accumulation (overflow → `NA`, never a panic); `base = 0L`
+     auto-detection is **deferred to R-36**.
 
 ## §10 References
 
