@@ -110,4 +110,16 @@ rulebook pharm_facts {
         source "Oral vitamin K lowers the international normalized ratio more rapidly than subcutaneous vitamin K in the treatment of warfarin-associated coagulopathy."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK557622/"
         trust authoritative
+
+    % --- EXPAND: atropine is the primary treatment for organophosphate poisoning ----
+    relate antidote_for(organophosphate_poisoning, atropine)
+        source "The primary treatment for organophosphate poisoning involves atropine, which competes with acetylcholine at the muscarinic receptors."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470430/"
+        trust authoritative
+
+    % --- EXPAND: fomepizole is the antidote of choice for toxic alcohol poisoning --
+    relate antidote_for(toxic_alcohol_poisoning, fomepizole)
+        source "Fomepizole is the antidote of choice for patients who present early after toxic alcohol exposure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482121/"
+        trust authoritative
 }
