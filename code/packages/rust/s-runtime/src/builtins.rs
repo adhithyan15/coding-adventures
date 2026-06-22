@@ -185,6 +185,15 @@ pub fn install(env: &Env) {
     define(env, "substr", builtin("substr", b_substr));
     define(env, "sprintf", builtin("sprintf", b_sprintf));
 
+    // String utilities (R-34) — an independent string-utility family. All five
+    // operate on Unicode `char`s (never raw byte indices) and reuse the existing
+    // `as_character` coercion and `Option<String>`-NA convention.
+    define(env, "startsWith", builtin("startsWith", b_starts_with));
+    define(env, "endsWith", builtin("endsWith", b_ends_with));
+    define(env, "trimws", builtin("trimws", b_trimws));
+    define(env, "chartr", builtin("chartr", b_chartr));
+    define(env, "strtoi", builtin("strtoi", b_strtoi));
+
     // Output formatting (R-27) — turn numbers and vectors into human-readable
     // text. Pure builtins, deterministic (locale-free) defaults.
     define(env, "format", builtin("format", b_format));
@@ -3036,6 +3045,257 @@ fn substring(s: &str, start: i64, stop: i64) -> String {
     let from = (start - 1).max(0) as usize;
     let count = (stop - start.max(1) + 1).max(0) as usize;
     s.chars().skip(from).take(count).collect()
+}
+
+// ---------------------------------------------------------------------------
+// R-34 — string utilities (startsWith / endsWith / trimws / chartr / strtoi)
+// ---------------------------------------------------------------------------
+//
+// Design notes shared by all five:
+//
+//   * NA convention. A character element is `Option<String>`; `None` means `NA`.
+//     We never invent text for an `NA`; an `NA` input yields an `NA` output.
+//   * UTF-8 safety. Every operation works on Unicode scalar values, never on raw
+//     byte offsets. `startsWith`/`endsWith` lean on `str::starts_with`/`ends_with`
+//     (which compare whole code points), and `trimws`/`chartr`/`strtoi` iterate
+//     `char`s. A multibyte string like "café" can therefore never be split mid
+//     code point, so none of these can panic on real-world text.
+//   * Recycling. `startsWith`/`endsWith` are binary and vectorized over *both*
+//     arguments, recycled to the longer length (R's rule). The length is the max
+//     of the two (already bounded by the input vectors), so the loop count cannot
+//     overflow.
+
+/// The recycled length of two vectors: the longer one, or `0` if either is empty
+/// (R short-circuits a zero-length operand to a zero-length result).
+fn recycle_len(a: usize, b: usize) -> usize {
+    if a == 0 || b == 0 {
+        0
+    } else {
+        a.max(b)
+    }
+}
+
+/// Shared body for `startsWith` / `endsWith`. `test(haystack, needle)` decides a
+/// single pair; both arguments are coerced to character and recycled to the
+/// longer length, with `NA` in either position producing an `NA` result.
+fn affix_test(
+    args: &[Arg],
+    needle_name: &str,
+    test: impl Fn(&str, &str) -> bool,
+) -> SResult<SValue> {
+    let x = nth_positional(args, 0)
+        .ok_or_else(|| SError::BadArgs("argument \"x\" is missing".into()))?
+        .as_character();
+    let affix = nth_positional(args, 1)
+        .ok_or_else(|| SError::BadArgs(format!("argument {needle_name:?} is missing")))?
+        .as_character();
+
+    let n = recycle_len(x.len(), affix.len());
+    let out: Vec<Option<bool>> = (0..n)
+        .map(|i| {
+            // The recycle is modular; both operands are non-empty here (n == 0
+            // when either is, so this closure never runs in that case).
+            match (&x[i % x.len()], &affix[i % affix.len()]) {
+                (Some(s), Some(p)) => Some(test(s, p)),
+                _ => None, // NA in either operand → NA.
+            }
+        })
+        .collect();
+    Ok(SValue::Logical(out))
+}
+
+/// `startsWith(x, prefix)` — `TRUE` where `x[i]` begins with `prefix[i]`.
+/// Vectorized and recycled over both arguments; `NA` → `NA`.
+fn b_starts_with(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    affix_test(args, "prefix", |s, p| s.starts_with(p))
+}
+
+/// `endsWith(x, suffix)` — the trailing-edge analogue of `startsWith`.
+fn b_ends_with(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    affix_test(args, "suffix", |s, p| s.ends_with(p))
+}
+
+/// A single ASCII/Unicode whitespace character per R's default `trimws` class
+/// `[ \t\r\n]`. We match exactly those four so behavior is locale-free and
+/// predictable (we deliberately do *not* use `char::is_whitespace`, which would
+/// also strip e.g. form-feed and the Unicode spaces).
+fn is_trim_ws(c: char) -> bool {
+    matches!(c, ' ' | '\t' | '\r' | '\n')
+}
+
+/// `trimws(x, which = "both")` — strip leading and/or trailing whitespace from
+/// each element. `which` is the second positional or the `which =` named arg and
+/// must be one of `"both"`, `"left"`, `"right"`; anything else is a clean error.
+/// `NA` elements pass through unchanged. Char-based, so UTF-8 safe.
+fn b_trimws(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.as_character();
+    // `which =` named arg wins; else the second positional; else "both".
+    let which = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("which"))
+        .map(|a| &a.value)
+        .or_else(|| nth_positional(args, 1))
+        .map(|v| v.as_character())
+        .and_then(|c| c.into_iter().next().flatten())
+        .unwrap_or_else(|| "both".to_string());
+
+    let (trim_left, trim_right) = match which.as_str() {
+        "both" => (true, true),
+        "left" => (true, false),
+        "right" => (false, true),
+        other => {
+            return Err(SError::BadArgs(format!(
+                "trimws: 'which' must be one of \"both\", \"left\", \"right\" (got {other:?})"
+            )));
+        }
+    };
+
+    let out = x
+        .into_iter()
+        .map(|o| {
+            o.map(|s| {
+                let mut t: &str = &s;
+                if trim_left {
+                    t = t.trim_start_matches(is_trim_ws);
+                }
+                if trim_right {
+                    t = t.trim_end_matches(is_trim_ws);
+                }
+                t.to_string()
+            })
+        })
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+/// `chartr(old, new, x)` — translate each character of `x` found at position *i*
+/// of `old` into the character at position *i* of `new`. `old` and `new` are
+/// single strings of **equal `nchar`** (else an error); the mapping is built by
+/// zipping their `char`s, so multibyte code points map as whole units (UTF-8
+/// safe). Vectorized over `x`; an `NA` element stays `NA`. When `old` repeats a
+/// character, R uses the *first* mapping; `HashMap::entry(...).or_insert` keeps
+/// that first-wins behavior.
+fn b_chartr(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let old = nth_positional(args, 0)
+        .map(|v| v.as_character())
+        .and_then(|c| c.into_iter().next().flatten())
+        .ok_or_else(|| SError::BadArgs("chartr: 'old' is missing".into()))?;
+    let new = nth_positional(args, 1)
+        .map(|v| v.as_character())
+        .and_then(|c| c.into_iter().next().flatten())
+        .ok_or_else(|| SError::BadArgs("chartr: 'new' is missing".into()))?;
+    let x = nth_positional(args, 2)
+        .ok_or_else(|| SError::BadArgs("chartr: 'x' is missing".into()))?
+        .as_character();
+
+    // Compare by code-point count, not byte length: "é" (one char, two bytes)
+    // must match a one-char replacement.
+    let old_chars: Vec<char> = old.chars().collect();
+    let new_chars: Vec<char> = new.chars().collect();
+    if old_chars.len() != new_chars.len() {
+        return Err(SError::BadArgs(
+            "chartr: 'old' and 'new' must be the same length".into(),
+        ));
+    }
+
+    let mut table: std::collections::HashMap<char, char> =
+        std::collections::HashMap::with_capacity(old_chars.len());
+    for (o, n) in old_chars.into_iter().zip(new_chars) {
+        table.entry(o).or_insert(n); // first mapping wins, matching R.
+    }
+
+    let out = x
+        .into_iter()
+        .map(|o| {
+            o.map(|s| {
+                s.chars()
+                    .map(|c| *table.get(&c).unwrap_or(&c))
+                    .collect::<String>()
+            })
+        })
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+/// `strtoi(x, base = 10L)` — parse each string as an integer in the given base
+/// (2..36), returning a `Double` vector with `NA` for anything unparseable.
+///
+/// Semantics follow C `strtol`, as R does:
+///   * leading ASCII whitespace is skipped; an optional `+`/`-` sign is honored;
+///   * for base 16 an optional `0x`/`0X` prefix is accepted;
+///   * the **whole remaining string must be consumed** — trailing garbage
+///     (including trailing whitespace) makes the element `NA`;
+///   * an empty (or sign-only / prefix-only) string is `NA`;
+///   * a digit outside the base's range makes the element `NA`;
+///   * a `base` outside 2..36 makes **every** element `NA`.
+///
+/// `base = 0L` auto-detection is deferred to R-36. Accumulation is `i64`-checked,
+/// so a long all-digits string overflows to `NA` rather than panicking.
+fn b_strtoi(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.as_character();
+    let base = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("base"))
+        .map(|a| &a.value)
+        .or_else(|| nth_positional(args, 1));
+    // `scalar_int` truncates toward zero and defaults to 10 when missing/NA.
+    let base = scalar_int(base, 10);
+
+    let out: Vec<f64> = x
+        .into_iter()
+        .map(|o| match o {
+            None => na_real(),
+            Some(s) => match parse_strtoi(&s, base) {
+                Some(v) => v as f64,
+                None => na_real(),
+            },
+        })
+        .collect();
+    Ok(SValue::doubles(out))
+}
+
+/// Parse a single string for [`b_strtoi`]. Returns `None` (→ `NA`) for any base
+/// outside 2..=36, an empty/garbage string, an out-of-range digit, or an `i64`
+/// overflow. Never panics: every step is a `checked_*` arithmetic op or a bounded
+/// `char` scan.
+fn parse_strtoi(s: &str, base: i64) -> Option<i64> {
+    // Base must be representable and in 2..=36; anything else is NA.
+    if !(2..=36).contains(&base) {
+        return None;
+    }
+    let base = base as u32;
+
+    // Skip leading ASCII whitespace (strtol's `isspace`), then read an optional
+    // sign. We work on the char iterator so multibyte tails can't desync indices.
+    let trimmed = s.trim_start_matches(|c: char| c.is_ascii_whitespace());
+    let (negative, rest) = match trimmed.strip_prefix('-') {
+        Some(r) => (true, r),
+        None => (false, trimmed.strip_prefix('+').unwrap_or(trimmed)),
+    };
+
+    // For base 16, an optional `0x`/`0X` prefix is allowed (strtol convention).
+    let digits = if base == 16 {
+        rest.strip_prefix("0x")
+            .or_else(|| rest.strip_prefix("0X"))
+            .unwrap_or(rest)
+    } else {
+        rest
+    };
+
+    // Require at least one digit, and the *entire* remainder to be valid digits
+    // in this base (no trailing garbage, no embedded whitespace).
+    if digits.is_empty() {
+        return None;
+    }
+    let mut acc: i64 = 0;
+    for c in digits.chars() {
+        let d = c.to_digit(base)?; // out-of-base char or non-digit → None.
+        acc = acc.checked_mul(base as i64)?.checked_add(d as i64)?;
+    }
+    if negative {
+        acc = acc.checked_neg()?;
+    }
+    Some(acc)
 }
 
 /// Hard cap on any single field width or precision (1 MiB). A user-supplied
