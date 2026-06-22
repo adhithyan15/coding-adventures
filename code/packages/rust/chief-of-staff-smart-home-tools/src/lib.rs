@@ -320,6 +320,10 @@ pub const SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID: &str =
     "smart_home.list_supervision_remediation";
 pub const SMART_HOME_GET_SUPERVISION_REMEDIATION_SUMMARY_TOOL_ID: &str =
     "smart_home.get_supervision_remediation_summary";
+pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WINDOWS_TOOL_ID: &str =
+    "smart_home.list_runtime_maintenance_windows";
+pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WINDOW_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_runtime_maintenance_window_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2377,6 +2381,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_SUPERVISION_REMEDIATION_SUMMARY_TOOL_ID => {
                     let query = supervision_remediation_query(&arguments)?;
                     get_supervision_remediation_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WINDOWS_TOOL_ID => {
+                    let query = runtime_maintenance_window_query(&arguments)?;
+                    list_runtime_maintenance_windows_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WINDOW_SUMMARY_TOOL_ID => {
+                    let query = runtime_maintenance_window_query(&arguments)?;
+                    get_runtime_maintenance_window_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6110,6 +6132,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_state_transition_audit_summary_definition(),
         list_supervision_remediation_definition(),
         get_supervision_remediation_summary_definition(),
+        list_runtime_maintenance_windows_definition(),
+        get_runtime_maintenance_window_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -7045,6 +7069,68 @@ fn get_supervision_remediation_summary_definition() -> ToolDefinition {
         "Summarize Chief-visible D23 supervision remediation pressure from plans, heartbeat deadlines, and discovery worker status.",
         supervision_remediation_query_schema(),
         supervision_remediation_summary_output_schema(),
+    )
+}
+
+fn runtime_maintenance_window_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("window_kind", JsonSchema::String),
+            SchemaProperty::new("window_kinds", string_array_schema()),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("recommended_tool", JsonSchema::String),
+            SchemaProperty::new("max_priority", JsonSchema::Integer),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn runtime_maintenance_window_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "runtime_maintenance_windows",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["runtime_maintenance_windows", "summary", "count"],
+        false,
+    )
+}
+
+fn runtime_maintenance_window_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_runtime_maintenance_windows_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WINDOWS_TOOL_ID,
+        "List smart-home runtime maintenance windows",
+        "List Chief-derived maintenance windows grouped from the D23 runtime supervision plan without mutating the runtime.",
+        runtime_maintenance_window_query_schema(),
+        runtime_maintenance_window_list_output_schema(),
+    )
+}
+
+fn get_runtime_maintenance_window_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RUNTIME_MAINTENANCE_WINDOW_SUMMARY_TOOL_ID,
+        "Summarize smart-home runtime maintenance windows",
+        "Summarize schedulable Chief-visible maintenance windows for D23 supervision, state refresh, reconciliation, and discovery work.",
+        runtime_maintenance_window_query_schema(),
+        runtime_maintenance_window_summary_output_schema(),
     )
 }
 
@@ -8343,6 +8429,44 @@ fn supervision_remediation_query(
         integration_id: optional_string(arguments, "integration_id")?.map(IntegrationId::trusted),
         risk_lane: optional_string(arguments, "risk_lane")?,
         risk_action: optional_string(arguments, "risk_action")?,
+        blocked_only: optional_bool(arguments, "blocked_only")?.unwrap_or(false),
+        requires_attention_only: optional_bool(arguments, "requires_attention_only")?
+            .unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum RuntimeMaintenanceWindowKind {
+    CriticalRecovery,
+    StateRefresh,
+    DesiredStateReconciliation,
+    DiscoveryWorkerRun,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeMaintenanceWindowQuery {
+    window_kinds: Vec<RuntimeMaintenanceWindowKind>,
+    risk_lane: Option<String>,
+    recommended_tool: Option<String>,
+    max_priority: Option<u8>,
+    blocked_only: bool,
+    requires_attention_only: bool,
+    limit: Option<usize>,
+}
+
+fn runtime_maintenance_window_query(
+    arguments: &JsonValue,
+) -> Result<RuntimeMaintenanceWindowQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(RuntimeMaintenanceWindowQuery {
+        window_kinds: optional_string_list(arguments, "window_kind", "window_kinds")?
+            .into_iter()
+            .map(|kind| parse_runtime_maintenance_window_kind(&kind))
+            .collect::<Result<Vec<_>, _>>()?,
+        risk_lane: optional_string(arguments, "risk_lane")?,
+        recommended_tool: optional_string(arguments, "recommended_tool")?,
+        max_priority: optional_u64(arguments, "max_priority")?.map(|value| value as u8),
         blocked_only: optional_bool(arguments, "blocked_only")?.unwrap_or(false),
         requires_attention_only: optional_bool(arguments, "requires_attention_only")?
             .unwrap_or(false),
@@ -35243,6 +35367,368 @@ fn supervision_remediation_row_rank(row: &SupervisionRemediationRow) -> u8 {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct RuntimeMaintenanceWindowRow {
+    window_id: String,
+    window_kind: RuntimeMaintenanceWindowKind,
+    priority: u8,
+    risk_lane: &'static str,
+    recommended_tool: &'static str,
+    recommended_action: &'static str,
+    action_count: usize,
+    blocked_action_count: usize,
+    requires_attention_count: usize,
+    overdue_action_count: usize,
+    bridge_count: usize,
+    entity_count: usize,
+    worker_count: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    remediation_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct RuntimeMaintenanceWindowSummary {
+    total_windows: usize,
+    critical_recovery_windows: usize,
+    state_refresh_windows: usize,
+    desired_state_reconciliation_windows: usize,
+    discovery_worker_run_windows: usize,
+    total_actions: usize,
+    blocked_actions: usize,
+    requires_attention_actions: usize,
+    overdue_actions: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    highest_priority: Option<u8>,
+}
+
+impl RuntimeMaintenanceWindowSummary {
+    fn from_rows(rows: &[RuntimeMaintenanceWindowRow]) -> Self {
+        let mut summary = Self::default();
+
+        for row in rows {
+            summary.total_windows += 1;
+            summary.total_actions += row.action_count;
+            summary.blocked_actions += row.blocked_action_count;
+            summary.requires_attention_actions += row.requires_attention_count;
+            summary.overdue_actions += row.overdue_action_count;
+            summary.first_due_at_ms =
+                min_optional_u64(summary.first_due_at_ms, row.first_due_at_ms);
+            summary.max_overdue_by_ms =
+                max_optional_u64(summary.max_overdue_by_ms, row.max_overdue_by_ms);
+            summary.highest_priority =
+                min_optional_u8(summary.highest_priority, Some(row.priority));
+
+            match row.window_kind {
+                RuntimeMaintenanceWindowKind::CriticalRecovery => {
+                    summary.critical_recovery_windows += 1;
+                }
+                RuntimeMaintenanceWindowKind::StateRefresh => summary.state_refresh_windows += 1,
+                RuntimeMaintenanceWindowKind::DesiredStateReconciliation => {
+                    summary.desired_state_reconciliation_windows += 1;
+                }
+                RuntimeMaintenanceWindowKind::DiscoveryWorkerRun => {
+                    summary.discovery_worker_run_windows += 1;
+                }
+            }
+        }
+
+        summary
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.requires_attention_actions > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_actions > 0
+    }
+
+    fn has_overdue_actions(&self) -> bool {
+        self.overdue_actions > 0
+    }
+}
+
+fn list_runtime_maintenance_windows_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWindowQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) =
+        runtime_maintenance_window_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "runtime_maintenance_windows",
+            JsonValue::Array(rows.iter().map(runtime_maintenance_window_json).collect()),
+        ),
+        ("summary", runtime_maintenance_window_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_runtime_maintenance_windows")),
+            ("count", integer(rows.len() as i64)),
+            ("total_actions", integer(summary.total_actions as i64)),
+            (
+                "requires_attention_actions",
+                integer(summary.requires_attention_actions as i64),
+            ),
+            ("blocked_actions", integer(summary.blocked_actions as i64)),
+            ("overdue_actions", integer(summary.overdue_actions as i64)),
+        ]),
+    ))
+}
+
+fn get_runtime_maintenance_window_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceWindowQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = runtime_maintenance_window_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        runtime_maintenance_window_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_runtime_maintenance_window_summary"),
+            ),
+            ("total_windows", integer(summary.total_windows as i64)),
+            ("total_actions", integer(summary.total_actions as i64)),
+            (
+                "requires_attention_actions",
+                integer(summary.requires_attention_actions as i64),
+            ),
+            ("blocked_actions", integer(summary.blocked_actions as i64)),
+            ("overdue_actions", integer(summary.overdue_actions as i64)),
+        ]),
+    ))
+}
+
+fn runtime_maintenance_window_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &RuntimeMaintenanceWindowQuery,
+) -> Result<
+    (
+        Vec<RuntimeMaintenanceWindowRow>,
+        RuntimeMaintenanceWindowSummary,
+    ),
+    ToolCallError,
+> {
+    let observation_output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::ObserveSupervision,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::SupervisionObservation(observation) = observation_output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "runtime maintenance windows expected supervision observation output"
+                .to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let remediation_rows = supervision_remediation_rows_from_observation(&observation);
+    let mut windows = runtime_maintenance_window_rows_from_remediation(&remediation_rows);
+    windows.retain(|row| runtime_maintenance_window_matches(row, query));
+    windows.sort_by(|left, right| {
+        left.priority
+            .cmp(&right.priority)
+            .then_with(|| right.blocked_action_count.cmp(&left.blocked_action_count))
+            .then_with(|| {
+                right
+                    .requires_attention_count
+                    .cmp(&left.requires_attention_count)
+            })
+            .then_with(|| left.first_due_at_ms.cmp(&right.first_due_at_ms))
+            .then_with(|| left.window_id.cmp(&right.window_id))
+    });
+    let summary = RuntimeMaintenanceWindowSummary::from_rows(&windows);
+    Ok((windows, summary))
+}
+
+fn runtime_maintenance_window_rows_from_remediation(
+    rows: &[SupervisionRemediationRow],
+) -> Vec<RuntimeMaintenanceWindowRow> {
+    [
+        RuntimeMaintenanceWindowKind::CriticalRecovery,
+        RuntimeMaintenanceWindowKind::StateRefresh,
+        RuntimeMaintenanceWindowKind::DesiredStateReconciliation,
+        RuntimeMaintenanceWindowKind::DiscoveryWorkerRun,
+    ]
+    .into_iter()
+    .filter_map(|kind| {
+        let grouped_rows = rows
+            .iter()
+            .filter(|row| runtime_maintenance_kind_accepts_remediation(kind, row.remediation_kind))
+            .collect::<Vec<_>>();
+        RuntimeMaintenanceWindowRow::from_remediation(kind, &grouped_rows)
+    })
+    .collect()
+}
+
+impl RuntimeMaintenanceWindowRow {
+    fn from_remediation(
+        kind: RuntimeMaintenanceWindowKind,
+        rows: &[&SupervisionRemediationRow],
+    ) -> Option<Self> {
+        if rows.is_empty() {
+            return None;
+        }
+
+        let mut bridge_ids = BTreeSet::new();
+        let mut entity_ids = BTreeSet::new();
+        let mut worker_ids = BTreeSet::new();
+        let mut first_due_at_ms: Option<u64> = None;
+        let mut max_overdue_by_ms: Option<u64> = None;
+
+        for row in rows {
+            if let Some(bridge_id) = &row.bridge_id {
+                bridge_ids.insert(bridge_id.as_str().to_string());
+            }
+            if let Some(entity_id) = &row.entity_id {
+                entity_ids.insert(entity_id.as_str().to_string());
+            }
+            if let Some(worker_id) = &row.worker_id {
+                worker_ids.insert(worker_id.as_str().to_string());
+            }
+            first_due_at_ms = min_optional_u64(first_due_at_ms, row.due_at_ms);
+            max_overdue_by_ms = max_optional_u64(max_overdue_by_ms, row.overdue_by_ms);
+        }
+
+        Some(Self {
+            window_id: runtime_maintenance_window_kind_label(kind).to_string(),
+            window_kind: kind,
+            priority: runtime_maintenance_window_priority(kind),
+            risk_lane: runtime_maintenance_window_risk_lane(kind),
+            recommended_tool: runtime_maintenance_window_recommended_tool(kind),
+            recommended_action: runtime_maintenance_window_recommended_action(kind),
+            action_count: rows.len(),
+            blocked_action_count: rows.iter().filter(|row| row.blocked).count(),
+            requires_attention_count: rows.iter().filter(|row| row.requires_attention).count(),
+            overdue_action_count: rows
+                .iter()
+                .filter(|row| row.overdue_by_ms.is_some_and(|overdue| overdue > 0))
+                .count(),
+            bridge_count: bridge_ids.len(),
+            entity_count: entity_ids.len(),
+            worker_count: worker_ids.len(),
+            first_due_at_ms,
+            max_overdue_by_ms,
+            remediation_ids: rows.iter().map(|row| row.remediation_id.clone()).collect(),
+        })
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.requires_attention_count > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_action_count > 0
+    }
+}
+
+fn runtime_maintenance_kind_accepts_remediation(
+    kind: RuntimeMaintenanceWindowKind,
+    remediation_kind: SupervisionRemediationKind,
+) -> bool {
+    match kind {
+        RuntimeMaintenanceWindowKind::CriticalRecovery => matches!(
+            remediation_kind,
+            SupervisionRemediationKind::PairingExpiry
+                | SupervisionRemediationKind::WorkerRestart
+                | SupervisionRemediationKind::WorkerHeartbeat
+                | SupervisionRemediationKind::DiscoveryWorkerRecovery
+        ),
+        RuntimeMaintenanceWindowKind::StateRefresh => {
+            remediation_kind == SupervisionRemediationKind::StateRefresh
+        }
+        RuntimeMaintenanceWindowKind::DesiredStateReconciliation => {
+            remediation_kind == SupervisionRemediationKind::DesiredStateReconciliation
+        }
+        RuntimeMaintenanceWindowKind::DiscoveryWorkerRun => {
+            remediation_kind == SupervisionRemediationKind::DiscoveryWorkerRun
+        }
+    }
+}
+
+fn runtime_maintenance_window_matches(
+    row: &RuntimeMaintenanceWindowRow,
+    query: &RuntimeMaintenanceWindowQuery,
+) -> bool {
+    if !query.window_kinds.is_empty() && !query.window_kinds.contains(&row.window_kind) {
+        return false;
+    }
+    if query
+        .risk_lane
+        .as_ref()
+        .is_some_and(|risk_lane| row.risk_lane != risk_lane.as_str())
+    {
+        return false;
+    }
+    if query
+        .recommended_tool
+        .as_ref()
+        .is_some_and(|recommended_tool| row.recommended_tool != recommended_tool.as_str())
+    {
+        return false;
+    }
+    if query
+        .max_priority
+        .is_some_and(|max_priority| row.priority > max_priority)
+    {
+        return false;
+    }
+    if query.blocked_only && !row.has_blockers() {
+        return false;
+    }
+    if query.requires_attention_only && !row.requires_attention() {
+        return false;
+    }
+    true
+}
+
+fn min_optional_u64(left: Option<u64>, right: Option<u64>) -> Option<u64> {
+    match (left, right) {
+        (Some(left), Some(right)) => Some(left.min(right)),
+        (Some(value), None) | (None, Some(value)) => Some(value),
+        (None, None) => None,
+    }
+}
+
+fn max_optional_u64(left: Option<u64>, right: Option<u64>) -> Option<u64> {
+    match (left, right) {
+        (Some(left), Some(right)) => Some(left.max(right)),
+        (Some(value), None) | (None, Some(value)) => Some(value),
+        (None, None) => None,
+    }
+}
+
+fn min_optional_u8(left: Option<u8>, right: Option<u8>) -> Option<u8> {
+    match (left, right) {
+        (Some(left), Some(right)) => Some(left.min(right)),
+        (Some(value), None) | (None, Some(value)) => Some(value),
+        (None, None) => None,
+    }
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -59015,6 +59501,121 @@ fn supervision_remediation_summary_json(summary: &SupervisionRemediationSummary)
     ])
 }
 
+fn runtime_maintenance_window_json(row: &RuntimeMaintenanceWindowRow) -> JsonValue {
+    object([
+        ("window_id", string(&row.window_id)),
+        (
+            "window_kind",
+            string(runtime_maintenance_window_kind_label(row.window_kind)),
+        ),
+        ("priority", integer(row.priority as i64)),
+        ("risk_lane", string(row.risk_lane)),
+        ("recommended_tool", string(row.recommended_tool)),
+        ("recommended_action", string(row.recommended_action)),
+        ("action_count", integer(row.action_count as i64)),
+        (
+            "blocked_action_count",
+            integer(row.blocked_action_count as i64),
+        ),
+        (
+            "requires_attention_count",
+            integer(row.requires_attention_count as i64),
+        ),
+        (
+            "overdue_action_count",
+            integer(row.overdue_action_count as i64),
+        ),
+        ("bridge_count", integer(row.bridge_count as i64)),
+        ("entity_count", integer(row.entity_count as i64)),
+        ("worker_count", integer(row.worker_count as i64)),
+        (
+            "first_due_at_ms",
+            row.first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            row.max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "remediation_ids",
+            JsonValue::Array(
+                row.remediation_ids
+                    .iter()
+                    .map(|remediation_id| string(remediation_id))
+                    .collect(),
+            ),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention()),
+        ),
+        ("has_blockers", JsonValue::Bool(row.has_blockers())),
+    ])
+}
+
+fn runtime_maintenance_window_summary_json(summary: &RuntimeMaintenanceWindowSummary) -> JsonValue {
+    object([
+        ("total_windows", integer(summary.total_windows as i64)),
+        (
+            "critical_recovery_windows",
+            integer(summary.critical_recovery_windows as i64),
+        ),
+        (
+            "state_refresh_windows",
+            integer(summary.state_refresh_windows as i64),
+        ),
+        (
+            "desired_state_reconciliation_windows",
+            integer(summary.desired_state_reconciliation_windows as i64),
+        ),
+        (
+            "discovery_worker_run_windows",
+            integer(summary.discovery_worker_run_windows as i64),
+        ),
+        ("total_actions", integer(summary.total_actions as i64)),
+        ("blocked_actions", integer(summary.blocked_actions as i64)),
+        (
+            "requires_attention_actions",
+            integer(summary.requires_attention_actions as i64),
+        ),
+        ("overdue_actions", integer(summary.overdue_actions as i64)),
+        (
+            "first_due_at_ms",
+            summary
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            summary
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_priority",
+            summary
+                .highest_priority
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_overdue_actions",
+            JsonValue::Bool(summary.has_overdue_actions()),
+        ),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -61797,6 +62398,57 @@ fn supervision_remediation_kind_label(kind: SupervisionRemediationKind) -> &'sta
     }
 }
 
+fn runtime_maintenance_window_kind_label(kind: RuntimeMaintenanceWindowKind) -> &'static str {
+    match kind {
+        RuntimeMaintenanceWindowKind::CriticalRecovery => "critical_recovery",
+        RuntimeMaintenanceWindowKind::StateRefresh => "state_refresh",
+        RuntimeMaintenanceWindowKind::DesiredStateReconciliation => "desired_state_reconciliation",
+        RuntimeMaintenanceWindowKind::DiscoveryWorkerRun => "discovery_worker_run",
+    }
+}
+
+fn runtime_maintenance_window_priority(kind: RuntimeMaintenanceWindowKind) -> u8 {
+    match kind {
+        RuntimeMaintenanceWindowKind::CriticalRecovery => 0,
+        RuntimeMaintenanceWindowKind::StateRefresh
+        | RuntimeMaintenanceWindowKind::DesiredStateReconciliation => 1,
+        RuntimeMaintenanceWindowKind::DiscoveryWorkerRun => 2,
+    }
+}
+
+fn runtime_maintenance_window_risk_lane(kind: RuntimeMaintenanceWindowKind) -> &'static str {
+    match kind {
+        RuntimeMaintenanceWindowKind::CriticalRecovery => "critical_recovery",
+        RuntimeMaintenanceWindowKind::StateRefresh => "state_refresh",
+        RuntimeMaintenanceWindowKind::DesiredStateReconciliation => "desired_state_reconciliation",
+        RuntimeMaintenanceWindowKind::DiscoveryWorkerRun => "discovery_worker_run",
+    }
+}
+
+fn runtime_maintenance_window_recommended_tool(kind: RuntimeMaintenanceWindowKind) -> &'static str {
+    match kind {
+        RuntimeMaintenanceWindowKind::DesiredStateReconciliation => {
+            SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID
+        }
+        RuntimeMaintenanceWindowKind::CriticalRecovery
+        | RuntimeMaintenanceWindowKind::StateRefresh
+        | RuntimeMaintenanceWindowKind::DiscoveryWorkerRun => {
+            SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID
+        }
+    }
+}
+
+fn runtime_maintenance_window_recommended_action(
+    kind: RuntimeMaintenanceWindowKind,
+) -> &'static str {
+    match kind {
+        RuntimeMaintenanceWindowKind::CriticalRecovery => "run_supervision_recovery",
+        RuntimeMaintenanceWindowKind::StateRefresh => "refresh_runtime_state",
+        RuntimeMaintenanceWindowKind::DesiredStateReconciliation => "reconcile_desired_state",
+        RuntimeMaintenanceWindowKind::DiscoveryWorkerRun => "run_discovery_worker",
+    }
+}
+
 fn parse_state_transition_audit_kind(
     value: &str,
 ) -> Result<StateTransitionAuditKind, ToolCallError> {
@@ -61845,6 +62497,28 @@ fn parse_supervision_remediation_kind(
         }
         _ => Err(validation_error(format!(
             "unsupported supervision remediation kind `{value}`"
+        ))),
+    }
+}
+
+fn parse_runtime_maintenance_window_kind(
+    value: &str,
+) -> Result<RuntimeMaintenanceWindowKind, ToolCallError> {
+    match value {
+        "critical_recovery" | "critical" | "recovery" | "runtime_recovery" => {
+            Ok(RuntimeMaintenanceWindowKind::CriticalRecovery)
+        }
+        "state_refresh" | "refresh" | "missing_state" | "stale_state" => {
+            Ok(RuntimeMaintenanceWindowKind::StateRefresh)
+        }
+        "desired_state_reconciliation" | "desired_state" | "reconciliation" | "drift" => {
+            Ok(RuntimeMaintenanceWindowKind::DesiredStateReconciliation)
+        }
+        "discovery_worker_run" | "discovery_worker" | "discovery" => {
+            Ok(RuntimeMaintenanceWindowKind::DiscoveryWorkerRun)
+        }
+        _ => Err(validation_error(format!(
+            "unsupported runtime maintenance window kind `{value}`"
         ))),
     }
 }
@@ -65687,7 +66361,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 256);
+        assert_eq!(definitions.len(), 258);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -66418,9 +67092,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_RUNTIME_MAINTENANCE_WINDOWS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_WINDOW_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            248
+            250
         );
         assert_eq!(
             export
@@ -67267,11 +67947,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(256))
+            Some(&integer(258))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(248))
+            Some(&integer(250))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -81480,6 +82160,201 @@ mod tests {
             runtime.borrow().registry().counts().authorization_decisions,
             2,
             "supervision remediation list and summary both authorize through runtime read tools"
+        );
+    }
+
+    #[test]
+    fn runtime_maintenance_window_tools_group_supervision_pressure_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-light-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(false),
+                    }],
+                )
+                .requested_by("agent:scene-planner"),
+            )
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                BridgeId::trusted("bridge-1"),
+                IntegrationId::trusted("hue"),
+                1_000,
+                250,
+            ));
+        let discovery_worker_id = DiscoveryWorkerId::trusted("hue-mdns-maintenance");
+        runtime
+            .borrow_mut()
+            .register_discovery_worker_schedule(
+                ScheduledDiscoveryWorker::new(
+                    discovery_worker_id.clone(),
+                    IntegrationId::trusted("hue"),
+                    DiscoveryWorkerKind::MdnsScan,
+                    5_000,
+                    250,
+                    1_100,
+                )
+                .with_retry_backoff(500, 2_000, 2)
+                .with_source(DiscoverySource::Mdns)
+                .with_network_interface("en0")
+                .with_metadata(MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY, "_hue._tcp.local"),
+            )
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .mark_discovery_worker_started(&discovery_worker_id, 1_200)
+            .unwrap();
+        let mut failed_run = DiscoveryWorkerRun::new(
+            discovery_worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_200,
+            1_260,
+        );
+        failed_run.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "multicast route unavailable")
+                .unwrap(),
+        );
+        runtime
+            .borrow_mut()
+            .record_scheduled_discovery_worker_run(&failed_run, 1_260, 500)
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let list_request = request(
+            "call-list-runtime-maintenance-windows",
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_WINDOWS_TOOL_ID,
+            object([
+                ("requires_attention_only", JsonValue::Bool(true)),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("max_priority", integer(1)),
+                ("limit", integer(10)),
+            ]),
+            2_000,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        let windows = field(list_output, "runtime_maintenance_windows").unwrap();
+        let summary = field(list_output, "summary").unwrap();
+        assert!(
+            array_len(windows).unwrap() >= 3,
+            "maintenance windows should group critical recovery, state refresh, and desired-state work"
+        );
+        assert!(
+            integer_value(field(summary, "total_windows").unwrap()).unwrap() >= 3,
+            "summary should count the filtered, untruncated maintenance windows"
+        );
+        assert_eq!(
+            field(summary, "critical_recovery_windows"),
+            Some(&integer(1))
+        );
+        assert!(
+            integer_value(field(summary, "state_refresh_windows").unwrap()).unwrap() >= 1,
+            "fixture leaves at least one entity without observed state"
+        );
+        assert_eq!(
+            field(summary, "desired_state_reconciliation_windows"),
+            Some(&integer(1))
+        );
+        assert!(
+            integer_value(field(summary, "total_actions").unwrap()).unwrap() >= 4,
+            "maintenance windows should retain the underlying remediation action count"
+        );
+        assert!(
+            integer_value(field(summary, "blocked_actions").unwrap()).unwrap() >= 4,
+            "blocked remediation work should remain visible at the window level"
+        );
+        assert_eq!(
+            field(summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(summary, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(summary, "has_overdue_actions"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let JsonValue::Array(rows) = windows else {
+            panic!("runtime_maintenance_windows should be an array");
+        };
+        assert!(rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("critical_recovery"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID))
+            && field(row, "priority") == Some(&integer(0))
+            && integer_value(field(row, "worker_count").unwrap()).unwrap() >= 1
+            && field(row, "has_blockers") == Some(&JsonValue::Bool(true))));
+        assert!(rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("desired_state_reconciliation"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID))
+            && field(row, "priority") == Some(&integer(1))
+            && field(row, "entity_count") == Some(&integer(1))
+            && field(row, "recommended_action") == Some(&string("reconcile_desired_state"))));
+
+        let summary_request = request(
+            "call-runtime-maintenance-window-summary",
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_WINDOW_SUMMARY_TOOL_ID,
+            object([
+                ("window_kind", string("critical_recovery")),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            2_001,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_windows"), Some(&integer(1)));
+        assert_eq!(
+            field(rollup, "critical_recovery_windows"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 2);
+        assert_eq!(journal_summary.completed_count, 2);
+        assert_eq!(
+            runtime.borrow().registry().counts().authorization_decisions,
+            2,
+            "maintenance window list and summary both authorize through runtime read tools"
         );
     }
 

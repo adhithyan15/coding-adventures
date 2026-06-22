@@ -258,6 +258,9 @@ All notable changes to this package will be documented in this file.
   descriptors for authorized runtime desired-state target mutation.
 - `smart_home.get_supervision_plan` tool descriptor for read-only runtime
   supervision due-work previews.
+- `smart_home.list_runtime_maintenance_windows` and
+  `smart_home.get_runtime_maintenance_window_summary` tool descriptors for
+  read-only Chief maintenance windows derived from runtime supervision work.
 - `smart_home.reconcile_desired_states` and `smart_home.run_supervision_tick`
   tool descriptors for authorized runtime supervision execution.
 - Health and command-result status helpers for shared supervision/read-side
