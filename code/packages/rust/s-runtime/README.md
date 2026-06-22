@@ -277,6 +277,18 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   `nrow*ncol` multiply). `crossprod(matrix(c(1,2,3,4), nrow=2))` →
   `[[5,11],[11,25]]`; `tcrossprod` of the same → `[[10,14],[14,20]]`; non-square
   `matrix(1:6, nrow=2)` gives a 3×3 `crossprod` and 2×2 `tcrossprod`.
+- **Cholesky factorization** (R-40): **`chol(x)`** — the Cholesky factor of a
+  real symmetric positive-definite `n×n` matrix. Returns the **upper-triangular**
+  `R` with **`t(R) %*% R == x`** (R's convention — the upper factor, `R'R = X`).
+  Uses the Cholesky–Banachiewicz recurrence and reads only the **upper triangle**
+  of `x` (like R's default). Reuses the existing `square_matrix` reader (shared
+  with `det`/`solve`) for non-matrix / non-square / over-cap rejection and the
+  `SValue::Matrix` constructor; column-major throughout. The diagonal pivot is
+  checked `> 0` **before** the `sqrt`, so a non-positive-definite matrix is a
+  clean *"…not positive definite"* error (no `NaN`, no panic); `NA` in the upper
+  triangle errors too. `chol(matrix(c(4,2,2,3), nrow=2))` is `[[2,1],[0,√2]]`
+  with `t(R) %*% R` reconstructing the input; `chol(diag(3))` is the identity.
+  `pivot=TRUE`, `chol2inv()`, and complex matrices are deferred to R-41.
 - **Kronecker product** (R-38): **`kronecker(X, Y)`** — the `(m·p)×(n·q)`
   block-outer product of an `m×n` `X` and a `p×q` `Y`, where block `(i, j)` is
   `X[i,j] · Y` and `result[(i-1)·p+k, (j-1)·q+l] = X[i,j] · Y[k,l]`

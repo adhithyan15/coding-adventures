@@ -276,6 +276,22 @@ over-large product errors rather than OOMing, and `0×n`/`m×0` inputs give an e
 result with no out-of-bounds access. The R `%x%` infix alias (`X %x% Y`) needs
 lexer/grammar work and is deferred to **R-40**; this ships the function form only.
 
+**R-40 — `chol()` (Cholesky factorization)** adds the Cholesky factor of a real
+symmetric positive-definite matrix, again through the shared `s-runtime`. For an
+`n×n` SPD `x`, `chol(x)` returns the **upper-triangular** `R` with
+`t(R) %*% R == x` (R's convention — the upper factor, `R'R = X`), via the
+Cholesky–Banachiewicz recurrence, reading only the **upper triangle** of `x`
+(like R's default). It reuses the existing `square_matrix` reader (shared with
+`det`/`solve`) for the non-matrix / non-square / over-cap rejection and the
+`SValue::Matrix` constructor (no new value type), column-major throughout.
+`chol(matrix(c(4,2,2,3), nrow=2))` is `[[2,1],[0,√2]]` and `t(R) %*% R`
+reconstructs `x`; `chol(diag(3))` is the identity. The diagonal pivot is checked
+`> 0` **before** the `sqrt`, so a non-positive-definite matrix
+(`chol(matrix(c(1,2,2,1), nrow=2))`, eigenvalues `3, -1`) is a clean
+*"…not positive definite"* error — never `NaN`, never a panic; a non-square
+matrix errors before any indexing. `pivot=TRUE` (pivoted Cholesky), `chol2inv()`,
+and complex (Hermitian) matrices are deferred to **R-41**.
+
 ## Usage
 
 ```rust
