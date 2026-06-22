@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.29.0] - 2026-06-21
+
+### Added
+
+- **Matrix cross products (R-36)** — `crossprod` and `tcrossprod`, available to
+  both S and R through the shared tree-walker. An independent matrix-algebra item
+  (not part of the binning/set-op chains), defined **entirely in terms of the
+  existing R-11 `t()` transpose and `%*%` matrix product** — no new linear algebra,
+  no new value type.
+  - **`crossprod(x, y)`** = `t(x) %*% y`; **`crossprod(x)`** (one argument) =
+    `t(x) %*% x` (the unscaled Gram matrix `X'X`). The second argument defaults to
+    the first.
+  - **`tcrossprod(x, y)`** = `x %*% t(y)`; **`tcrossprod(x)`** (one argument) =
+    `x %*% t(x)` (`XX'`). The "t" prefix transposes the *second* operand.
+  - Worked column-major example: `A = matrix(c(1,2,3,4), nrow=2)` gives
+    `crossprod(A)` = `[[5,11],[11,25]]` and `tcrossprod(A)` = `[[10,14],[14,20]]`.
+    Non-square `B = matrix(1:6, nrow=2)` (2×3) gives `crossprod(B)` 3×3 and
+    `tcrossprod(B)` 2×2.
+  - **Reuse / security**: the implementation calls the public `t()` builtin (`b_t`,
+    via a `transpose_value` helper) and the evaluator's `matrix_multiply` (the `%*%`
+    handler, newly exposed `pub(crate)`). It therefore inherits that handler's
+    already-reviewed `MAX_SEQ_LEN` allocation guard on the `nrow*ncol` result (no
+    unchecked multiply → OOM), the `"non-conformable arguments"` error raised before
+    any indexing, the column-major `array_runtime` fast path, and NA propagation.
+    The new surface is just the two argument-shuffling wrappers; a bare vector flows
+    through `%*%`'s existing vector promotion.
+
 ## [0.28.0] - 2026-06-21
 
 ### Added
