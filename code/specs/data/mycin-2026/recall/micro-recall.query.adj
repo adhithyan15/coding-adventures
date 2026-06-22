@@ -28,3 +28,5 @@ import "micro-edges.adj"
 ? gram_stain(listeria_monocytogenes, $Result)          % expect gram_positive (expand)
 ? morphology(listeria_monocytogenes, $Shape)           % expect bacilli (expand)
 ? gram_stain(klebsiella_pneumoniae, $Result)           % expect gram_negative (expand)
+? gram_stain(bacillus_anthracis, $Result)              % expect gram_positive (expand)
+? morphology(bacillus_anthracis, $Shape)               % expect bacilli (expand)

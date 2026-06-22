@@ -157,4 +157,15 @@ rulebook micro_facts {
         source "Klebsiella pneumoniae is a gram-negative, encapsulated, non-motile bacterium found in the environment"
         locator "https://www.ncbi.nlm.nih.gov/books/NBK519004/"
         trust authoritative
+
+    % --- Bacillus anthracis (gram-positive rod; causes anthrax) ------------------
+    % One span names BOTH the gram reaction and the shape (rod = bacillus) for the organism.
+    relate gram_stain(bacillus_anthracis, gram_positive)
+        source "Bacillus anthracis is a gram-positive spore-forming rod that produces anthrax toxin resulting in an ulcer with a black eschar."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470553/"
+        trust authoritative
+    relate morphology(bacillus_anthracis, bacilli)
+        source "Bacillus anthracis is a gram-positive spore-forming rod that produces anthrax toxin resulting in an ulcer with a black eschar."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470553/"
+        trust authoritative
 }
