@@ -37,6 +37,13 @@ EXPECTED = {
     "nikolsky_sign": "pemphigus_vulgaris",   # expand (NBK560860)
     "sandpaper_rash": "scarlet_fever",       # expand (NBK507889)
     "erythema_migrans": "lyme_disease",      # expand (NBK431066)
+    # --- BATCH: high-yield dermatology skin findings ---
+    "heliotrope_rash": "dermatomyositis",         # expand (NBK562290)
+    "gottron_papules": "dermatomyositis",         # expand (NBK562290)
+    "shawl_sign": "dermatomyositis",              # expand (NBK562290)
+    "cafe_au_lait_macules": "neurofibromatosis_type_1",  # expand (NBK459358)
+    "ash_leaf_spots": "tuberous_sclerosis",       # expand (NBK563245)
+    "koplik_spots": "measles",                    # expand (NBK549793)
 }
 REL = "skin_finding_in"
 VAR = "Disease"
