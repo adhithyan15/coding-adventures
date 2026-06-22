@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Carry matched and unmatched `write <rawfile> <probes...>` probe inventories
+  through rawfile artifact `MatchedProbes` / `MatchedProbeList` and
+  `UnmatchedProbes` / `UnmatchedProbeList` summary columns, and keep only
+  requested matching vector columns in deterministic in-memory rawfile output,
+  matching Python and Rust.
 - Carry matched and unmatched `wrdata <file> <probes...>` probe inventories
   through WRDATA artifact `MatchedProbes` / `MatchedProbeList` and
   `UnmatchedProbes` / `UnmatchedProbeList` summary columns, matching Python and
