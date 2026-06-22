@@ -66,6 +66,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 | `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json`, `deck_table_records` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON/record conversion |
 | `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, table, analysis-directive, output-probe, output-directive, measurement, Fourier, control-command, and diagnostic count/name lists |
+| `format_deck_control_policy_artifact_table`, `format_deck_control_policy_artifact_csv`, `format_deck_control_policy_artifact_json` | `.control` policy diagnostic artifact | Stable line/category/command/code/severity/message exports for policy-blocked `.control` commands |
 | `format_deck_rawfile_ascii`, `format_deck_rawfile_artifact_table`, `format_deck_rawfile_artifact_csv`, `format_deck_rawfile_artifact_json` | `.control write` artifact | Deterministic in-memory ASCII rawfile text plus stable probe-aware rawfile artifact table/CSV/JSON exports |
 | `format_deck_wrdata_ascii`, `format_deck_wrdata_artifact_table`, `format_deck_wrdata_artifact_csv`, `format_deck_wrdata_artifact_json` | `.control wrdata` artifact | Deterministic in-memory ASCII data-file text plus stable option-aware WRDATA artifact table/CSV/JSON exports |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
@@ -142,7 +143,11 @@ summaries keep matched and unmatched probe inventories in stable table, CSV,
 JSON, and record exports.
 Existing `.control` body policy diagnostics flow into those selected-run
 artifact `Diagnostics` / `DiagnosticCodeList` fields and through the same
-run-artifact table, CSV, JSON, and `table_artifacts` records.
+run-artifact table, CSV, JSON, and `table_artifacts` records. Policy-blocked
+`source` / `shell`, `cd`, control-flow, and variable/state commands also
+populate `control_policy_artifacts` with stable line, category, command, code,
+severity, and message fields plus table, CSV, compact JSON, and header-keyed
+record exports.
 `format_deck_table_csv()` also converts any stable
 tab-separated deck table to CSV, `format_deck_table_json()` converts the same
 tables to compact JSON records, and `deck_table_records()` returns

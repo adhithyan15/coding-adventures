@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Expose policy-blocked `.control` commands from selected `run_deck_analysis`
+  execution results as `control_policy_artifacts` with stable line, category,
+  command, code, severity, and message metadata plus table, CSV, compact JSON,
+  and header-keyed record exports, matching Python and TypeScript.
 - Carry matched and unmatched `write <rawfile> <probes...>` probe inventories
   through rawfile artifact `MatchedProbes` / `MatchedProbeList` and
   `UnmatchedProbes` / `UnmatchedProbeList` summary columns, and keep only

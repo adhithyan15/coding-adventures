@@ -3459,6 +3459,16 @@ pub struct DeckTableArtifact {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct DeckControlPolicyArtifact {
+    pub line_number: usize,
+    pub category: String,
+    pub command: String,
+    pub code: String,
+    pub severity: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct DeckRawfileArtifact {
     pub target: String,
     pub marker: String,
@@ -3502,6 +3512,12 @@ pub struct DeckAnalysisExecution {
     pub write_markers: Vec<String>,
     pub rawfile_option_count: usize,
     pub rawfile_options: Vec<String>,
+    pub control_policy_artifact_count: usize,
+    pub control_policy_artifacts: Vec<DeckControlPolicyArtifact>,
+    pub control_policy_artifact_table: String,
+    pub control_policy_artifact_csv: String,
+    pub control_policy_artifact_json: String,
+    pub control_policy_artifact_records: Vec<BTreeMap<String, String>>,
     pub rawfile_artifact_count: usize,
     pub rawfile_artifacts: Vec<DeckRawfileArtifact>,
     pub rawfile_artifact_table: String,
@@ -10647,6 +10663,118 @@ fn deck_rawfile_probe_inventory(
     (selected_indices, matched_probes, unmatched_probes)
 }
 
+fn deck_control_policy_category(code: &str) -> Option<&'static str> {
+    match code {
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND" => Some("script"),
+        "SPICE_DECK_CONTROL_WORKDIR_COMMAND" => Some("workdir"),
+        "SPICE_DECK_CONTROL_FLOW_COMMAND" => Some("control-flow"),
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND" => Some("variable"),
+        _ => None,
+    }
+}
+
+fn deck_control_policy_artifacts(netlist: &str) -> Vec<DeckControlPolicyArtifact> {
+    let summary = analyze_deck_controls(netlist);
+    let lines = netlist.lines().collect::<Vec<_>>();
+    summary
+        .diagnostics
+        .iter()
+        .filter_map(|diagnostic| {
+            let category = deck_control_policy_category(&diagnostic.code)?;
+            let command = lines
+                .get(diagnostic.line_number.saturating_sub(1))
+                .copied()
+                .unwrap_or("")
+                .trim()
+                .to_string();
+            Some(DeckControlPolicyArtifact {
+                line_number: diagnostic.line_number,
+                category: category.to_string(),
+                command,
+                code: diagnostic.code.clone(),
+                severity: diagnostic.severity.clone(),
+                message: diagnostic.message.clone(),
+            })
+        })
+        .collect()
+}
+
+const DECK_CONTROL_POLICY_ARTIFACT_COLUMNS: &[&str] =
+    &["Line", "Category", "Command", "Code", "Severity", "Message"];
+
+fn deck_control_policy_artifact_cells(artifact: &DeckControlPolicyArtifact) -> Vec<String> {
+    vec![
+        artifact.line_number.to_string(),
+        artifact.category.clone(),
+        artifact.command.clone(),
+        artifact.code.clone(),
+        artifact.severity.clone(),
+        artifact.message.clone(),
+    ]
+}
+
+pub fn deck_control_policy_artifact_records(
+    artifacts: &[DeckControlPolicyArtifact],
+) -> Vec<BTreeMap<String, String>> {
+    artifacts
+        .iter()
+        .map(|artifact| {
+            DECK_CONTROL_POLICY_ARTIFACT_COLUMNS
+                .iter()
+                .copied()
+                .zip(deck_control_policy_artifact_cells(artifact))
+                .map(|(key, value)| (key.to_string(), value))
+                .collect()
+        })
+        .collect()
+}
+
+pub fn format_deck_control_policy_artifact_table(
+    artifacts: &[DeckControlPolicyArtifact],
+) -> String {
+    let mut rows = vec![DECK_CONTROL_POLICY_ARTIFACT_COLUMNS.join("\t")];
+    for artifact in artifacts {
+        rows.push(deck_control_policy_artifact_cells(artifact).join("\t"));
+    }
+    format!("{}\n", rows.join("\n"))
+}
+
+pub fn format_deck_control_policy_artifact_csv(artifacts: &[DeckControlPolicyArtifact]) -> String {
+    let mut rows = vec![DECK_CONTROL_POLICY_ARTIFACT_COLUMNS.join(",")];
+    for artifact in artifacts {
+        rows.push(
+            deck_control_policy_artifact_cells(artifact)
+                .iter()
+                .map(|cell| format_csv_cell(cell))
+                .collect::<Vec<_>>()
+                .join(","),
+        );
+    }
+    format!("{}\n", rows.join("\n"))
+}
+
+pub fn format_deck_control_policy_artifact_json(artifacts: &[DeckControlPolicyArtifact]) -> String {
+    let records = deck_control_policy_artifact_records(artifacts)
+        .into_iter()
+        .map(|record| {
+            let fields = record
+                .into_iter()
+                .map(|(key, value)| {
+                    format!(
+                        "{}:{}",
+                        format_json_string(&key),
+                        format_json_string(&value)
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join(",");
+            format!("{{{}}}", fields)
+        })
+        .collect::<Vec<_>>()
+        .join(",");
+    format!("[{}]\n", records)
+}
+
 fn deck_write_marker_parts(marker: &str) -> Option<(String, Vec<String>)> {
     let parts = marker.split_whitespace().collect::<Vec<_>>();
     if parts.len() < 2 || parts[0] != "write" {
@@ -11145,6 +11273,15 @@ pub fn run_deck_analysis(
     let control_lines = deck_control_lines(netlist);
     let write_markers = deck_control_write_markers(netlist);
     let rawfile_options = deck_control_rawfile_options(netlist);
+    let control_policy_artifacts = deck_control_policy_artifacts(netlist);
+    let control_policy_artifact_table =
+        format_deck_control_policy_artifact_table(&control_policy_artifacts);
+    let control_policy_artifact_csv =
+        format_deck_control_policy_artifact_csv(&control_policy_artifacts);
+    let control_policy_artifact_json =
+        format_deck_control_policy_artifact_json(&control_policy_artifacts);
+    let control_policy_artifact_records =
+        deck_control_policy_artifact_records(&control_policy_artifacts);
     let analysis_directives = deck_analysis_directives(&plan);
     match plan.analysis.as_str() {
         "op" => {
@@ -11205,6 +11342,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                control_policy_artifact_count: control_policy_artifacts.len(),
+                control_policy_artifacts: control_policy_artifacts.clone(),
+                control_policy_artifact_table: control_policy_artifact_table.clone(),
+                control_policy_artifact_csv: control_policy_artifact_csv.clone(),
+                control_policy_artifact_json: control_policy_artifact_json.clone(),
+                control_policy_artifact_records: control_policy_artifact_records.clone(),
                 rawfile_artifact_count: rawfile_artifacts.len(),
                 rawfile_artifacts,
                 rawfile_artifact_table,
@@ -11294,6 +11437,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                control_policy_artifact_count: control_policy_artifacts.len(),
+                control_policy_artifacts: control_policy_artifacts.clone(),
+                control_policy_artifact_table: control_policy_artifact_table.clone(),
+                control_policy_artifact_csv: control_policy_artifact_csv.clone(),
+                control_policy_artifact_json: control_policy_artifact_json.clone(),
+                control_policy_artifact_records: control_policy_artifact_records.clone(),
                 rawfile_artifact_count: rawfile_artifacts.len(),
                 rawfile_artifacts,
                 rawfile_artifact_table,
@@ -11384,6 +11533,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                control_policy_artifact_count: control_policy_artifacts.len(),
+                control_policy_artifacts: control_policy_artifacts.clone(),
+                control_policy_artifact_table: control_policy_artifact_table.clone(),
+                control_policy_artifact_csv: control_policy_artifact_csv.clone(),
+                control_policy_artifact_json: control_policy_artifact_json.clone(),
+                control_policy_artifact_records: control_policy_artifact_records.clone(),
                 rawfile_artifact_count: rawfile_artifacts.len(),
                 rawfile_artifacts,
                 rawfile_artifact_table,
@@ -11477,6 +11632,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                control_policy_artifact_count: control_policy_artifacts.len(),
+                control_policy_artifacts: control_policy_artifacts.clone(),
+                control_policy_artifact_table: control_policy_artifact_table.clone(),
+                control_policy_artifact_csv: control_policy_artifact_csv.clone(),
+                control_policy_artifact_json: control_policy_artifact_json.clone(),
+                control_policy_artifact_records: control_policy_artifact_records.clone(),
                 rawfile_artifact_count: rawfile_artifacts.len(),
                 rawfile_artifacts,
                 rawfile_artifact_table,
@@ -11564,6 +11725,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                control_policy_artifact_count: control_policy_artifacts.len(),
+                control_policy_artifacts: control_policy_artifacts.clone(),
+                control_policy_artifact_table: control_policy_artifact_table.clone(),
+                control_policy_artifact_csv: control_policy_artifact_csv.clone(),
+                control_policy_artifact_json: control_policy_artifact_json.clone(),
+                control_policy_artifact_records: control_policy_artifact_records.clone(),
                 rawfile_artifact_count: rawfile_artifacts.len(),
                 rawfile_artifacts,
                 rawfile_artifact_table,
@@ -11649,6 +11816,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                control_policy_artifact_count: control_policy_artifacts.len(),
+                control_policy_artifacts: control_policy_artifacts.clone(),
+                control_policy_artifact_table: control_policy_artifact_table.clone(),
+                control_policy_artifact_csv: control_policy_artifact_csv.clone(),
+                control_policy_artifact_json: control_policy_artifact_json.clone(),
+                control_policy_artifact_records: control_policy_artifact_records.clone(),
                 rawfile_artifact_count: rawfile_artifacts.len(),
                 rawfile_artifacts,
                 rawfile_artifact_table,
@@ -11746,6 +11919,12 @@ pub fn run_deck_analysis(
                 write_markers: write_markers.clone(),
                 rawfile_option_count: rawfile_options.len(),
                 rawfile_options: rawfile_options.clone(),
+                control_policy_artifact_count: control_policy_artifacts.len(),
+                control_policy_artifacts: control_policy_artifacts.clone(),
+                control_policy_artifact_table: control_policy_artifact_table.clone(),
+                control_policy_artifact_csv: control_policy_artifact_csv.clone(),
+                control_policy_artifact_json: control_policy_artifact_json.clone(),
+                control_policy_artifact_records: control_policy_artifact_records.clone(),
                 rawfile_artifact_count: rawfile_artifacts.len(),
                 rawfile_artifacts,
                 rawfile_artifact_table,

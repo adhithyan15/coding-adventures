@@ -39,6 +39,9 @@ import {
   formatCornerPssTable,
   formatCornerTransientTable,
   formatDcTable,
+  formatDeckControlPolicyArtifactCsv,
+  formatDeckControlPolicyArtifactJson,
+  formatDeckControlPolicyArtifactTable,
   formatDeckNoiseTable,
   formatDeckOpTable,
   formatDeckRawfileArtifactCsv,
@@ -2105,6 +2108,14 @@ let gain = 2
       "set wr_vecnames",
     ];
     const rawfileOptionList = expectedRawfileOptions.join(";");
+    const expectedPolicyLines = [13, 14, 15, 16];
+    const expectedPolicyCategories = ["script", "workdir", "control-flow", "variable"];
+    const expectedPolicyCommands = [
+      "source other.cir",
+      "cd /tmp",
+      "if v(in) > 0",
+      "let gain = 2",
+    ];
 
     expect(execution.controlLineCount).toBe(expectedControlLines.length);
     expect(execution.controlLines).toEqual(expectedControlLines);
@@ -2209,6 +2220,43 @@ let gain = 2
     expect(wrdataJson.MatchedProbeList).toBe("V(in)");
     expect(wrdataJson.UnmatchedProbeList).toBe("V(missing)");
     expect(wrdataJson.RawfileOptionList).toBe(rawfileOptionList);
+    expect(execution.controlPolicyArtifactCount).toBe(expectedCodes.length);
+    expect(execution.controlPolicyArtifacts.map((artifact) => artifact.lineNumber)).toEqual(
+      expectedPolicyLines,
+    );
+    expect(execution.controlPolicyArtifacts.map((artifact) => artifact.category)).toEqual(
+      expectedPolicyCategories,
+    );
+    expect(execution.controlPolicyArtifacts.map((artifact) => artifact.command)).toEqual(
+      expectedPolicyCommands,
+    );
+    expect(execution.controlPolicyArtifacts.map((artifact) => artifact.code)).toEqual(
+      expectedCodes,
+    );
+    expect(execution.controlPolicyArtifacts.map((artifact) => artifact.severity)).toEqual(
+      Array(expectedCodes.length).fill("error"),
+    );
+    expect(execution.controlPolicyArtifacts[0]?.message).toContain(
+      "external script and shell commands are disabled",
+    );
+    const policyRecord = execution.controlPolicyArtifactRecords[0]!;
+    expect(policyRecord["Line"]).toBe("13");
+    expect(policyRecord["Category"]).toBe("script");
+    expect(policyRecord["Command"]).toBe("source other.cir");
+    expect(policyRecord["Code"]).toBe("SPICE_DECK_CONTROL_SCRIPT_COMMAND");
+    expect(policyRecord["Severity"]).toBe("error");
+    expect(execution.controlPolicyArtifactTable).toBe(
+      formatDeckControlPolicyArtifactTable(execution.controlPolicyArtifacts),
+    );
+    expect(execution.controlPolicyArtifactCsv).toBe(
+      formatDeckControlPolicyArtifactCsv(execution.controlPolicyArtifacts),
+    );
+    expect(execution.controlPolicyArtifactJson).toBe(
+      formatDeckControlPolicyArtifactJson(execution.controlPolicyArtifacts),
+    );
+    const policyJson = JSON.parse(execution.controlPolicyArtifactJson);
+    expect(policyJson[2].Category).toBe("control-flow");
+    expect(policyJson[3].Command).toBe("let gain = 2");
     expect(execution.diagnosticCount).toBe(expectedCodes.length);
     expect(execution.diagnosticCodes).toEqual(expectedCodes);
     expect(execution.runArtifacts[0]?.controlLineCount).toBe(expectedControlLines.length);
