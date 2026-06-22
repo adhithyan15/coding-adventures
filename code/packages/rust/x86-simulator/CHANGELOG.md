@@ -1,5 +1,15 @@
 # Changelog — x86-simulator
 
+## 0.7.2 — 2026-06-22 — ALGOL `own` global cell (LANG-FULL AL6 follow-up)
+
+Adds the executed matrix cell `algol_own_variable_runs_on_x86_sim`: an ALGOL
+`own integer n` (LANG-FULL AL6, merged) inside `bump` persists across calls —
+`bump(1)+bump(1)+bump(1)` accumulates 1+2+3 = 6 on the one `_twig_globals` slot
+(a non-`own` local gives 3) ⇒ exit `6`, run on the real x86_64 bytes. With the
+E6 (`algol_module_global_…`) and O3 (`oct_static_global_…`, 0.7.1) cells, all
+three module-global frontends now execute locally on the x86_64 backend via the
+S8 `_twig_globals` path. Test-only; no library change.
+
 ## 0.7.1 — 2026-06-22 — Oct `static` global cell (LANG-FULL O3 follow-up)
 
 Adds an executed matrix cell `oct_static_global_runs_on_x86_sim`: an Oct
