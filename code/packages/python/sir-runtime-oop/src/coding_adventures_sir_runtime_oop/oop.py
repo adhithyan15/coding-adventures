@@ -204,13 +204,228 @@ def _class_name_arg(arg: Val) -> str:
     return arg if isinstance(arg, str) else class_of(arg)
 
 
-def call_method(recv: Val, name: str, *args: Val) -> Val:
-    """Dispatch reflective method ``name`` on ``recv``.
+# ── Built-in method catalog (SIR method-dispatch spec, M1) ───────────────────
+#
+# ``recv.meth(args…)`` reaches the backend as ``BuiltinCall("__method__",
+# [recv, "meth", …])`` and is dispatched here.  Before this catalog every method
+# outside the reflective four (``is_a?`` etc.) + the ``define_method`` table
+# returned ``nil`` — so ``[1,2,3].reverse`` evaluated to nil instead of running.
+# This catalog gives the everyday Ruby built-ins their faithful native behaviour,
+# dispatched by the receiver's runtime type.  See
+# ``code/specs/sir-method-dispatch.md``.
+#
+# **This file (M1a) covers the *non-block* Array surface plus the universal
+# Object methods.**  Block-taking methods (``each``/``map``/``select``/…) and the
+# Hash/String/Numeric/Symbol catalogs arrive in follow-up PRs that take the
+# ``sir-runtime-core`` ``apply`` dependency for proc-lenient block invocation.
+#
+# Resolution order (see :func:`call_method`): reflective built-ins → user
+# ``define_method`` table → this catalog → ``nil`` floor.  ``respond_to?`` reports
+# catalog membership honestly, so an out-of-catalog method is both ``nil`` *and*
+# ``respond_to? == False``.
 
-    Handles the built-ins the SIR frontend emits as ``__method__`` calls —
-    ``is_a?``/``kind_of?``/``instance_of?`` (predicate against a class) and
-    ``class`` (the class name) — then falls back to a :func:`define_method`
-    table, returning ``None`` (nil) for an unknown method rather than raising.
+# Sentinel meaning "this name is not in the catalog for this receiver" — distinct
+# from a catalog method that legitimately returns ``None`` (Ruby ``nil``).
+_MISS = object()
+
+# Universal methods available on *every* receiver (Ruby's ``Object``/``Kernel``).
+_OBJECT_METHODS = frozenset(
+    {
+        "nil?",
+        "==",
+        "!=",
+        "equal?",
+        "respond_to?",
+        "freeze",
+        "frozen?",
+        "dup",
+        "clone",
+        "itself",
+        "to_a",
+    }
+)
+
+# Non-block ``Array`` methods (M1a).  Block methods (``each``/``map``/…) land in
+# a later PR; they are deliberately absent here so ``respond_to?`` stays honest.
+_ARRAY_METHODS = frozenset(
+    {
+        "length",
+        "size",
+        "count",
+        "first",
+        "last",
+        "include?",
+        "index",
+        "push",
+        "append",
+        "<<",
+        "pop",
+        "shift",
+        "unshift",
+        "prepend",
+        "reverse",
+        "sort",
+        "min",
+        "max",
+        "sum",
+        "uniq",
+        "flatten",
+        "compact",
+        "empty?",
+        "to_a",
+    }
+)
+
+
+def _method_name(arg: Val) -> str:
+    """Coerce a ``respond_to?`` argument (a :class:`Symbol`, ``":m"``-ish string,
+    or bare name) to the plain method name used as the catalog key."""
+    name = getattr(arg, "name", None)
+    return name if isinstance(name, str) else str(arg)
+
+
+def _responds_to(recv: Val, name: str) -> bool:
+    """Whether dispatch on ``recv`` resolves ``name`` — across the reflective
+    built-ins, the ``define_method`` table, and the type-specific catalog."""
+    if name in ("is_a?", "kind_of?", "instance_of?", "class"):
+        return True
+    if name in _methods:
+        return True
+    if name in _OBJECT_METHODS:
+        return True
+    return isinstance(recv, list) and name in _ARRAY_METHODS
+
+
+def _flatten(seq: Val) -> list[Val]:
+    """Recursively flatten nested lists (Ruby ``Array#flatten``)."""
+    out: list[Val] = []
+    for item in seq:
+        if isinstance(item, list):
+            out.extend(_flatten(item))
+        else:
+            out.append(item)
+    return out
+
+
+def _uniq(seq: list[Val]) -> list[Val]:
+    """Order-preserving de-duplication (Ruby ``Array#uniq``)."""
+    out: list[Val] = []
+    for item in seq:
+        if item not in out:
+            out.append(item)
+    return out
+
+
+def _object_method(recv: Val, name: str, args: list[Val]) -> Val:
+    """Universal ``Object`` methods.  Returns :data:`_MISS` if ``name`` is not a
+    universal method."""
+    if name == "nil?":
+        return recv is None
+    if name == "==":
+        return recv == args[0]
+    if name == "!=":
+        return recv != args[0]
+    if name == "equal?":
+        return recv is args[0]
+    if name == "respond_to?":
+        return _responds_to(recv, _method_name(args[0]))
+    if name == "itself":
+        return recv
+    if name in ("freeze",):
+        # No true immutability in v0 — identity-returning, matching Ruby's API
+        # shape (``freeze`` returns the receiver).
+        return recv
+    if name == "frozen?":
+        # v0: nothing is frozen except the always-frozen immutable primitives.
+        return recv is None or isinstance(recv, (bool, int, float))
+    if name in ("dup", "clone"):
+        if isinstance(recv, list):
+            return list(recv)
+        if isinstance(recv, dict):
+            return dict(recv)
+        return recv
+    if name == "to_a":
+        # Ruby: nil.to_a == [], Array#to_a == self; other receivers fall through.
+        if recv is None:
+            return []
+        if isinstance(recv, list):
+            return recv
+        return _MISS
+    return _MISS
+
+
+def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
+    """Non-block ``Array`` methods.  Returns :data:`_MISS` if ``name`` is not a
+    catalogued array method."""
+    if name in ("length", "size"):
+        return len(recv)
+    if name == "count":
+        return recv.count(args[0]) if args else len(recv)
+    if name == "first":
+        if args:
+            return recv[: args[0]]
+        return recv[0] if recv else None
+    if name == "last":
+        if args:
+            return recv[-args[0] :] if args[0] else []
+        return recv[-1] if recv else None
+    if name == "include?":
+        return args[0] in recv
+    if name == "index":
+        return recv.index(args[0]) if args[0] in recv else None
+    if name in ("push", "append"):
+        recv.extend(args)
+        return recv
+    if name == "<<":
+        recv.append(args[0])
+        return recv
+    if name == "pop":
+        return recv.pop() if recv else None
+    if name == "shift":
+        return recv.pop(0) if recv else None
+    if name in ("unshift", "prepend"):
+        recv[:0] = args
+        return recv
+    if name == "reverse":
+        return list(reversed(recv))
+    if name == "sort":
+        return sorted(recv)
+    if name == "min":
+        return min(recv) if recv else None
+    if name == "max":
+        return max(recv) if recv else None
+    if name == "sum":
+        total: Val = args[0] if args else 0
+        for item in recv:
+            total = total + item
+        return total
+    if name == "uniq":
+        return _uniq(recv)
+    if name == "flatten":
+        return _flatten(recv)
+    if name == "compact":
+        return [item for item in recv if item is not None]
+    if name == "empty?":
+        return len(recv) == 0
+    if name == "to_a":
+        return recv
+    return _MISS
+
+
+def call_method(recv: Val, name: str, *args: Val) -> Val:
+    """Dispatch method ``name`` on ``recv``.
+
+    Resolution order:
+
+    1. **Reflective built-ins** the SIR frontend emits as ``__method__`` calls —
+       ``is_a?``/``kind_of?``/``instance_of?`` (predicate against a class) and
+       ``class`` (the class name).
+    2. The user :func:`define_method` table.
+    3. The **built-in method catalog** (universal ``Object`` methods, and — when
+       ``recv`` is a list — the non-block ``Array`` methods).
+    4. ``None`` (Ruby ``nil``) for anything still unresolved — the honest floor.
+       :func:`_responds_to` reports exactly which names resolve, so an
+       out-of-catalog method is both ``nil`` and ``respond_to? == False``.
 
     The class argument to a predicate may arrive as a class-name **string** or as
     a value whose class is taken; ``instance_of?`` requires an exact
@@ -222,8 +437,21 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
         return class_of(recv) == _class_name_arg(args[0])
     if name == "class":
         return class_of(recv)
+
     fn = _methods.get(name)
-    return fn(recv, list(args)) if fn is not None else None
+    if fn is not None:
+        return fn(recv, list(args))
+
+    arg_list = list(args)
+    if isinstance(recv, list):
+        result = _array_method(recv, name, arg_list)
+        if result is not _MISS:
+            return result
+    result = _object_method(recv, name, arg_list)
+    if result is not _MISS:
+        return result
+
+    return None
 
 
 def reset_oop() -> None:

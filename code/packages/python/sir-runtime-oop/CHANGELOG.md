@@ -2,6 +2,31 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.1] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 1 — non-block `Array` + universal `Object`
+methods (per `code/specs/sir-method-dispatch.md`, item M1a). Before this,
+`call_method` returned `nil` for every method outside `is_a?`/`kind_of?`/
+`instance_of?`/`class` + the `define_method` table, so `[1,2,3].reverse`
+evaluated to nil instead of running.
+
+- **Resolution order** in `call_method` is now reflective built-ins → user
+  `define_method` table → built-in catalog → `nil` floor.
+- **Array (non-block):** `length`/`size`/`count`, `first`/`last` (±count),
+  `include?`, `index`, `push`/`append`/`<<`, `pop`, `shift`, `unshift`/`prepend`,
+  `reverse`, `sort`, `min`, `max`, `sum`, `uniq`, `flatten`, `compact`, `empty?`,
+  `to_a`. Mutating methods mutate in place and return the Ruby-specified value;
+  `reverse`/`sort` are non-mutating.
+- **Object (universal):** `nil?`, `==`, `!=`, `equal?`, `respond_to?`, `freeze`,
+  `frozen?`, `dup`/`clone`, `itself`, `to_a` (nil→`[]`).
+- **`respond_to?` is honest** — reports true only for names dispatch actually
+  resolves, so an out-of-catalog method is both `nil` *and* `respond_to? == False`.
+
+Deferred to follow-ups: block-taking methods (`each`/`map`/`select`/…, need the
+`sir-runtime-core` `apply` dependency) and the Hash/String/Numeric/Symbol catalogs.
+
 ## [0.1.0] - 2026-06-13
 
 ### Added
