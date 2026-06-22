@@ -2385,6 +2385,18 @@ class DeckControlPolicyArtifact:
 
 
 @dataclass(frozen=True)
+class DeckControlPolicySummaryArtifact:
+    """Stable per-category summary for policy-blocked control commands."""
+
+    category: str
+    artifact_count: int
+    line_numbers: list[int]
+    commands: list[str]
+    codes: list[str]
+    severities: list[str]
+
+
+@dataclass(frozen=True)
 class DeckRawfileArtifact:
     """In-memory ASCII rawfile content for an accepted control write marker."""
 
@@ -2451,6 +2463,16 @@ class DeckAnalysisExecution:
     control_policy_artifact_csv: str = ""
     control_policy_artifact_json: str = ""
     control_policy_artifact_records: list[dict[str, str]] = field(default_factory=list)
+    control_policy_summary_artifact_count: int = 0
+    control_policy_summary_artifacts: list[DeckControlPolicySummaryArtifact] = field(
+        default_factory=list
+    )
+    control_policy_summary_artifact_table: str = ""
+    control_policy_summary_artifact_csv: str = ""
+    control_policy_summary_artifact_json: str = ""
+    control_policy_summary_artifact_records: list[dict[str, str]] = field(
+        default_factory=list
+    )
     rawfile_artifact_count: int = 0
     rawfile_artifacts: list[DeckRawfileArtifact] = field(default_factory=list)
     rawfile_artifact_table: str = ""
@@ -2499,6 +2521,51 @@ class DeckAnalysisExecution:
             "control_policy_artifact_records",
             self.control_policy_artifact_records
             or deck_control_policy_artifact_records(control_policy_artifacts),
+        )
+        control_policy_summary_artifacts = list(
+            self.control_policy_summary_artifacts
+        ) or _deck_control_policy_summary_artifacts(control_policy_artifacts)
+        object.__setattr__(
+            self,
+            "control_policy_summary_artifact_count",
+            len(control_policy_summary_artifacts),
+        )
+        object.__setattr__(
+            self,
+            "control_policy_summary_artifacts",
+            control_policy_summary_artifacts,
+        )
+        object.__setattr__(
+            self,
+            "control_policy_summary_artifact_table",
+            self.control_policy_summary_artifact_table
+            or format_deck_control_policy_summary_artifact_table(
+                control_policy_summary_artifacts
+            ),
+        )
+        object.__setattr__(
+            self,
+            "control_policy_summary_artifact_csv",
+            self.control_policy_summary_artifact_csv
+            or format_deck_control_policy_summary_artifact_csv(
+                control_policy_summary_artifacts
+            ),
+        )
+        object.__setattr__(
+            self,
+            "control_policy_summary_artifact_json",
+            self.control_policy_summary_artifact_json
+            or format_deck_control_policy_summary_artifact_json(
+                control_policy_summary_artifacts
+            ),
+        )
+        object.__setattr__(
+            self,
+            "control_policy_summary_artifact_records",
+            self.control_policy_summary_artifact_records
+            or deck_control_policy_summary_artifact_records(
+                control_policy_summary_artifacts
+            ),
         )
         rawfile_artifacts = list(self.rawfile_artifacts) or _deck_rawfile_artifacts(
             self.plan,
@@ -3034,6 +3101,122 @@ def format_deck_control_policy_artifact_json(
 
     return json.dumps(
         deck_control_policy_artifact_records(artifacts),
+        separators=(",", ":"),
+    ) + "\n"
+
+
+def _append_unique_string(values: list[str], value: str) -> None:
+    if value not in values:
+        values.append(value)
+
+
+def _deck_control_policy_summary_artifacts(
+    artifacts: Iterable[DeckControlPolicyArtifact],
+) -> list[DeckControlPolicySummaryArtifact]:
+    categories: list[str] = []
+    line_numbers_by_category: dict[str, list[int]] = {}
+    commands_by_category: dict[str, list[str]] = {}
+    codes_by_category: dict[str, list[str]] = {}
+    severities_by_category: dict[str, list[str]] = {}
+    for artifact in artifacts:
+        category = artifact.category
+        if category not in line_numbers_by_category:
+            categories.append(category)
+            line_numbers_by_category[category] = []
+            commands_by_category[category] = []
+            codes_by_category[category] = []
+            severities_by_category[category] = []
+        line_numbers_by_category[category].append(artifact.line_number)
+        commands_by_category[category].append(artifact.command)
+        _append_unique_string(codes_by_category[category], artifact.code)
+        _append_unique_string(severities_by_category[category], artifact.severity)
+    return [
+        DeckControlPolicySummaryArtifact(
+            category=category,
+            artifact_count=len(line_numbers_by_category[category]),
+            line_numbers=line_numbers_by_category[category],
+            commands=commands_by_category[category],
+            codes=codes_by_category[category],
+            severities=severities_by_category[category],
+        )
+        for category in categories
+    ]
+
+
+_DECK_CONTROL_POLICY_SUMMARY_ARTIFACT_COLUMNS = [
+    "Category",
+    "Artifacts",
+    "LineList",
+    "CommandList",
+    "CodeList",
+    "SeverityList",
+]
+
+
+def _deck_control_policy_summary_artifact_cells(
+    artifact: DeckControlPolicySummaryArtifact,
+) -> list[str]:
+    return [
+        artifact.category,
+        str(artifact.artifact_count),
+        ";".join(str(line_number) for line_number in artifact.line_numbers),
+        ";".join(artifact.commands),
+        ";".join(artifact.codes),
+        ";".join(artifact.severities),
+    ]
+
+
+def deck_control_policy_summary_artifact_records(
+    artifacts: Iterable[DeckControlPolicySummaryArtifact],
+) -> list[dict[str, str]]:
+    """Format selected control-policy summary artifacts as header-keyed records."""
+
+    return [
+        dict(
+            zip(
+                _DECK_CONTROL_POLICY_SUMMARY_ARTIFACT_COLUMNS,
+                _deck_control_policy_summary_artifact_cells(artifact),
+                strict=True,
+            )
+        )
+        for artifact in artifacts
+    ]
+
+
+def format_deck_control_policy_summary_artifact_table(
+    artifacts: Iterable[DeckControlPolicySummaryArtifact],
+) -> str:
+    """Format selected control-policy summary artifacts as a stable summary table."""
+
+    rows = ["\t".join(_DECK_CONTROL_POLICY_SUMMARY_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append("\t".join(_deck_control_policy_summary_artifact_cells(artifact)))
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_control_policy_summary_artifact_csv(
+    artifacts: Iterable[DeckControlPolicySummaryArtifact],
+) -> str:
+    """Format selected control-policy summary artifacts as RFC 4180-style CSV."""
+
+    rows = [",".join(_DECK_CONTROL_POLICY_SUMMARY_ARTIFACT_COLUMNS)]
+    for artifact in artifacts:
+        rows.append(
+            ",".join(
+                _format_csv_cell(cell)
+                for cell in _deck_control_policy_summary_artifact_cells(artifact)
+            )
+        )
+    return "\n".join(rows) + "\n"
+
+
+def format_deck_control_policy_summary_artifact_json(
+    artifacts: Iterable[DeckControlPolicySummaryArtifact],
+) -> str:
+    """Format selected control-policy summary artifacts as compact JSON records."""
+
+    return json.dumps(
+        deck_control_policy_summary_artifact_records(artifacts),
         separators=(",", ":"),
     ) + "\n"
 
