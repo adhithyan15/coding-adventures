@@ -661,33 +661,33 @@ mod tests {
 
     #[test]
     fn strtoi_bases_and_na() {
-        assert_eq!(nums("strtoi(\"FF\", 16L)\n"), vec![255.0]);
-        assert_eq!(nums("strtoi(\"10\", 2L)\n"), vec![2.0]);
-        assert_eq!(nums("strtoi(\"077\", 8L)\n"), vec![63.0]);
+        assert_eq!(nums("strtoi(\"FF\", 16)\n"), vec![255.0]);
+        assert_eq!(nums("strtoi(\"10\", 2)\n"), vec![2.0]);
+        assert_eq!(nums("strtoi(\"077\", 8)\n"), vec![63.0]);
         // Default base 10.
         assert_eq!(nums("strtoi(\"42\")\n"), vec![42.0]);
         // base = via named arg.
-        assert_eq!(nums("strtoi(\"FF\", base = 16L)\n"), vec![255.0]);
+        assert_eq!(nums("strtoi(\"FF\", base = 16)\n"), vec![255.0]);
         // 0x prefix accepted for base 16.
-        assert_eq!(nums("strtoi(\"0xFF\", 16L)\n"), vec![255.0]);
+        assert_eq!(nums("strtoi(\"0xFF\", 16)\n"), vec![255.0]);
         // Negative sign honored.
-        assert_eq!(nums("strtoi(\"-10\", 10L)\n"), vec![-10.0]);
+        assert_eq!(nums("strtoi(\"-10\", 10)\n"), vec![-10.0]);
     }
 
     #[test]
     fn strtoi_edges_become_na() {
         // 8 is not a base-8 digit; second element NA.
-        assert_eq!(show("strtoi(c(\"7\", \"8\"), 8L)\n"), "[1]  7 NA");
+        assert_eq!(show("strtoi(c(\"7\", \"8\"), 8)\n"), "[1]  7 NA");
         // Out-of-base char.
-        assert_eq!(show("strtoi(\"z\", 16L)\n"), "[1] NA");
+        assert_eq!(show("strtoi(\"z\", 16)\n"), "[1] NA");
         // Empty string.
         assert_eq!(show("strtoi(\"\")\n"), "[1] NA");
         // Trailing garbage / trailing whitespace -> NA.
         assert_eq!(show("strtoi(\"12x\")\n"), "[1] NA");
         assert_eq!(show("strtoi(\"12 \")\n"), "[1] NA");
         // Base out of 2..36 -> every element NA (matches base R).
-        assert_eq!(show("strtoi(\"10\", 40L)\n"), "[1] NA");
-        assert_eq!(show("strtoi(\"10\", 1L)\n"), "[1] NA");
+        assert_eq!(show("strtoi(\"10\", 40)\n"), "[1] NA");
+        assert_eq!(show("strtoi(\"10\", 1)\n"), "[1] NA");
     }
 
     #[test]
