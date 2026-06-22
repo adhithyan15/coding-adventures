@@ -170,6 +170,27 @@ edit is reversible and a restored formula recomputes live.
 (`Z1000`, `BA50`, `BB50`) and derives the extent from `UsedRange()` + a margin
 (saturated in `long` then clamped to `int`, guarding the u32-overflow case).
 
+#### Visual design
+
+`InfiniteSheet.xaml` / `.xaml.cs` mirror the **reference visual language** defined
+by the web demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend
+reads as one considered dark, modern-spreadsheet surface — the same token set the
+Qt, Flutter, and Compose ports use. The palette lives in a small set of
+`SolidColorBrush` design tokens at the top of the code-behind (`Bg`/`Panel`/
+`Line`/`LineStrong`/`Head`/`HeadSel`/`Ink`/`Muted`/`Accent`/`Sel`), echoing the
+web demo's CSS custom properties. From those it builds: a panel-wrapped **toolbar**
+with an address **pill**, an italic `fx` marker, then a grown formula field with
+an accent **focus ring** (the wrapping `Border` thickens + tints to the accent on
+`GotFocus`); the actions are **segmented button groups** (drag-fill · clipboard ·
+file · history) — a rounded `ToolChip` button style whose hover/pressed/disabled
+chrome is recolored by overriding the stock WinUI `Button*` theme brushes in
+`UserControl.Resources` (no custom `ControlTemplate`) — separated by thin rules.
+The grid gets subtle **zebra** row banding (`rowNum % 2`), a 2-px **accent
+selection ring**, and the selected cell's **row + column headers tint to the
+accent** (the header is rebuilt and the realized gutter rows repainted on
+selection); a hairline-separated **status footer** echoes the live virtual-grid
+size and revision.
+
 ### Verification
 
 The WinUI view itself is Windows-only — this macOS checkout cannot `dotnet

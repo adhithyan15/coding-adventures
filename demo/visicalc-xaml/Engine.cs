@@ -476,6 +476,10 @@ public sealed class InfiniteSheetModel : IDisposable
     /// The A1 address of the selected cell (e.g. `"Z1000"`).
     public string InfAddress => $"{_session.ColumnLetters((uint)SelCol)}{SelRow}";
 
+    /// The engine's per-edit revision clock — bumps on every mutation. The
+    /// status footer shows it so the live recompute is visible while scrolling.
+    public ulong Revision => _session.CurrentRevision();
+
     /// One row's display strings (columns 1..TotalCols) — what a virtualized
     /// `ListView` item renders. A single engine `get_window` over a 1×N strip;
     /// returns an empty list if the request was rejected/oversized.
