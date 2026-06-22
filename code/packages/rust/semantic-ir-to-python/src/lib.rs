@@ -205,10 +205,18 @@ mod tests {
         let pythonpath = std::env::join_paths([
             py_root.join("sir-runtime-core/src"),
             py_root.join("sir-runtime-pairs/src"),
+            py_root.join("sir-runtime-oop/src"),
         ])
         .expect("join PYTHONPATH");
 
-        let file = std::env::temp_dir().join(format!("sir_rb3_{}.py", std::process::id()));
+        // Unique per call: the process id alone collides when several
+        // execution-proof tests run concurrently in the same test binary (they
+        // would clobber each other's temp file). A per-call atomic counter
+        // disambiguates.
+        static SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let nonce = SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let file = std::env::temp_dir()
+            .join(format!("sir_rb3_{}_{}.py", std::process::id(), nonce));
         std::fs::write(&file, source).expect("write temp python");
         let out = std::process::Command::new(exe)
             .arg(&file)
@@ -256,6 +264,22 @@ mod tests {
         // captured block reaches `outer`'s caller block at runtime.
         if let Some(stdout) = run_emitted_python(&a.source) {
             assert_eq!(stdout, "1\n2\n", "emitted python printed unexpected output");
+        }
+    }
+
+    #[test]
+    fn end_to_end_variadic_rest_collects_args_py() {
+        // M3 execution-proof: `def f(*a); a.length; end; puts f(1, 2, 3)` →
+        // the splat param collects the three positional arguments, so the
+        // dispatched `length` reports `3`. Proves the emitted `def f(*a):`
+        // binds variadics at runtime, not just on paper.
+        let src = "def f(*a)\n  a.length\nend\nprint f(1, 2, 3)\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(a.source.contains("def f(*a):"), "got:\n{}", a.source);
+        assert!(a.source.contains("a = list(a)"), "rest param must normalize to list; got:\n{}", a.source);
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "3\n", "emitted python printed unexpected output");
         }
     }
 

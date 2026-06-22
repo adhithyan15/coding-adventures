@@ -14,7 +14,7 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
     Block, Capture, CaptureValue, Effect, EffectSet, ExportName, Expr, Feature, FeatureManifest,
-    Function, Metadata, Module, Param, RescueClause, Scope, Span, Stmt,
+    Function, Metadata, Module, Param, ParamKind, RescueClause, Scope, Span, Stmt,
 };
 
 /// A failure encountered during Ruby → SIR lowering.
@@ -3023,6 +3023,7 @@ impl Lowerer {
             func.params.push(Param {
                 name: BLOCK_PARAM_NAME.to_string(),
                 sir_type: None,
+                kind: ParamKind::Required,
                 span,
             });
             // The synthesized parameter is untyped (`sir_type: None`),
@@ -3663,10 +3664,9 @@ impl Lowerer {
         let name = name_token.value.clone();
 
         // Parameter list — same `params` rule shape as `def_statement`.
-        // Reuse the same extraction (find each `param` subnode, skip
-        // splat-prefix Token, take the identifier Name).  See the
-        // matching code in `lower_def_statement` for the lossy-splat
-        // v0 limitation.
+        // Reuse the same extraction (find each `param` subnode, detect the
+        // `*`/`**` splat prefix → ParamKind, take the identifier Name).  See
+        // the matching code in `lower_def_statement` (M3).
         let params_node = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
             _ => None,
@@ -3676,6 +3676,11 @@ impl Lowerer {
                 .iter()
                 .filter_map(|c| match c {
                     ASTNodeOrToken::Node(param_node) if param_node.rule_name == "param" => {
+                        let kind = param_node.children.iter().find_map(|cc| match cc {
+                            ASTNodeOrToken::Token(t) if t.value == "**" => Some(ParamKind::KwRest),
+                            ASTNodeOrToken::Token(t) if t.value == "*" => Some(ParamKind::Rest),
+                            _ => None,
+                        });
                         param_node.children.iter().find_map(|cc| match cc {
                             ASTNodeOrToken::Token(t)
                                 if matches!(t.type_, TokenType::Name)
@@ -3685,6 +3690,7 @@ impl Lowerer {
                                 Some(Param {
                                     name: t.value.clone(),
                                     sir_type: None,
+                                    kind: kind.unwrap_or(ParamKind::Required),
                                     span: self.span_of_token(t),
                                 })
                             }
@@ -3791,15 +3797,12 @@ impl Lowerer {
         // detect the splat prefix from its leading Token (`*` or `**`,
         // both with `value` set), and extract the parameter Name.
         //
-        // v0 limitation: the splat-ness of a param is LOST at the SIR
-        // level.  Param has no variadic flag, so a splat param lowers
-        // to a regular Param with the bare Name (no `*` prefix in
-        // `name`).  Downstream emitters therefore treat the parameter
-        // as positional rather than variadic — a deferred correctness
-        // limitation tracked for a future SIR phase.  The grammar +
-        // parse round-trip is correct; the lossy SIR shape only
-        // matters when generating target source for a Ruby program
-        // that actually relies on variadic semantics.
+        // M3: the splat-ness of a param is now preserved on the SIR
+        // `Param.kind`.  A `*rest` param lowers to `ParamKind::Rest`,
+        // `**opts` to `ParamKind::KwRest`, everything else
+        // `ParamKind::Required` — so the backends can emit faithful
+        // `*args`/`**kwargs` (Python) / `...rest` (TypeScript).  See
+        // `code/specs/sir-variadic-params.md`.
         let params_node = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
             _ => None,
@@ -3809,13 +3812,17 @@ impl Lowerer {
                 .iter()
                 .filter_map(|c| match c {
                     ASTNodeOrToken::Node(param_node) if param_node.rule_name == "param" => {
-                        // Find the parameter Name token, skipping the
-                        // optional `*`/`**` splat prefix.  Both the
-                        // prefix and the identifier land on Name-typed
-                        // tokens (the 1.8-baseline state machine
-                        // coalesces `**` into one Name token with value
-                        // `"**"`, and `*` is technically a Star token
-                        // but defensive value-filter covers both).
+                        // Detect the leading `*`/`**` splat prefix (the
+                        // 1.8-baseline state machine coalesces `**` into one
+                        // Name token with value `"**"`; `*` is a Star token,
+                        // but a defensive value match covers either spelling).
+                        let kind = param_node.children.iter().find_map(|cc| match cc {
+                            ASTNodeOrToken::Token(t) if t.value == "**" => Some(ParamKind::KwRest),
+                            ASTNodeOrToken::Token(t) if t.value == "*" => Some(ParamKind::Rest),
+                            _ => None,
+                        });
+                        // The parameter Name token is the one that is not the
+                        // `*`/`**` prefix.
                         param_node.children.iter().find_map(|cc| match cc {
                             ASTNodeOrToken::Token(t)
                                 if matches!(t.type_, TokenType::Name)
@@ -3825,6 +3832,7 @@ impl Lowerer {
                                 Some(Param {
                                     name: t.value.clone(),
                                     sir_type: None,
+                                    kind: kind.unwrap_or(ParamKind::Required),
                                     span: self.span_of_token(t),
                                 })
                             }
@@ -5457,6 +5465,7 @@ impl Lowerer {
                             params.push(Param {
                                 name: t.value.clone(),
                                 sir_type: None,
+                                kind: ParamKind::Required,
                                 span: self.span_of_token(t),
                             });
                         }
@@ -5481,6 +5490,7 @@ impl Lowerer {
                     params.push(Param {
                         name: format!("_{n}"),
                         sir_type: None,
+                        kind: ParamKind::Required,
                         span: self.span_of(inner),
                     });
                 }
@@ -5493,6 +5503,7 @@ impl Lowerer {
                 params.push(Param {
                     name: "it".to_string(),
                     sir_type: None,
+                    kind: ParamKind::Required,
                     span: self.span_of(inner),
                 });
             }
@@ -5723,7 +5734,13 @@ impl Lowerer {
                     ASTNodeOrToken::Node(param_node)
                         if param_node.rule_name == "param" =>
                     {
-                        // Skip splat-prefix tokens; pick the bare NAME.
+                        // M3: detect the `*`/`**` splat prefix → ParamKind,
+                        // then pick the bare NAME token.
+                        let kind = param_node.children.iter().find_map(|cc| match cc {
+                            ASTNodeOrToken::Token(t) if t.value == "**" => Some(ParamKind::KwRest),
+                            ASTNodeOrToken::Token(t) if t.value == "*" => Some(ParamKind::Rest),
+                            _ => None,
+                        });
                         param_node.children.iter().find_map(|cc| match cc {
                             ASTNodeOrToken::Token(t)
                                 if matches!(t.type_, TokenType::Name)
@@ -5733,6 +5750,7 @@ impl Lowerer {
                                 Some(Param {
                                     name: t.value.clone(),
                                     sir_type: None,
+                                    kind: kind.unwrap_or(ParamKind::Required),
                                     span: self.span_of_token(t),
                                 })
                             }
