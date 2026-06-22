@@ -2598,4 +2598,183 @@ mod r33_cut_options {
         // error rather than NaN/inf breaks (no garbage levels, no panic).
         assert!(eval_s("cut(c(-1.8e308, 1.8e308), breaks = 5)\n").is_err());
     }
+
+    // --- R-35: ordered factors -----------------------------------------
+
+    /// The logical (`Option<bool>`) elements of a result; `None` (NA) → `None`.
+    fn bools(src: &str) -> Vec<Option<bool>> {
+        match eval_s(src).unwrap().strip_names() {
+            SValue::Logical(v) => v.to_vec(),
+            other => panic!("expected logical, got {}", other.type_name()),
+        }
+    }
+
+    #[test]
+    fn is_ordered_distinguishes_ordered_from_plain_factors() {
+        // ordered() builds an ordered factor; is.ordered sees the flag.
+        assert_eq!(
+            bools("is.ordered(ordered(c(\"lo\", \"hi\"), levels = c(\"lo\", \"mid\", \"hi\")))\n"),
+            vec![Some(true)]
+        );
+        // A plain factor is NOT ordered.
+        assert_eq!(
+            bools("is.ordered(factor(c(\"a\", \"b\")))\n"),
+            vec![Some(false)]
+        );
+        // is.ordered never errors on a non-factor — it is simply FALSE.
+        assert_eq!(bools("is.ordered(c(1, 2, 3))\n"), vec![Some(false)]);
+    }
+
+    #[test]
+    fn ordered_factor_class_is_ordered_then_factor() {
+        // class() of an ordered factor is c("ordered", "factor").
+        assert_eq!(
+            strs("class(ordered(c(\"a\", \"b\")))\n"),
+            vec!["ordered", "factor"]
+        );
+        // A plain factor stays just "factor".
+        assert_eq!(strs("class(factor(c(\"a\", \"b\")))\n"), vec!["factor"]);
+    }
+
+    #[test]
+    fn factor_ordered_true_synonym_builds_an_ordered_factor() {
+        // factor(x, ordered = TRUE) is the documented synonym for ordered(x).
+        assert_eq!(
+            bools("is.ordered(factor(c(\"a\", \"b\"), ordered = TRUE))\n"),
+            vec![Some(true)]
+        );
+    }
+
+    #[test]
+    fn as_ordered_coerces_factor_and_vector() {
+        // as.ordered on a plain factor flips the flag, keeps codes/levels.
+        assert_eq!(
+            bools("is.ordered(as.ordered(factor(c(\"a\", \"b\"))))\n"),
+            vec![Some(true)]
+        );
+        // as.ordered on a bare vector factor-encodes first.
+        assert_eq!(
+            strs("levels(as.ordered(c(\"b\", \"a\", \"b\")))\n"),
+            vec!["a", "b"]
+        );
+    }
+
+    #[test]
+    fn ordered_comparison_is_by_level_index_not_label() {
+        // levels = c("lo","mid","hi"); elements "lo","hi","mid".
+        // f[1] < f[2]  ==  lo < hi  ==  code 1 < code 3  == TRUE.
+        assert_eq!(
+            bools(
+                "f <- ordered(c(\"lo\", \"hi\", \"mid\"), levels = c(\"lo\", \"mid\", \"hi\"))\nf[1] < f[2]\n"
+            ),
+            vec![Some(true)]
+        );
+        // f[2] < f[3]  ==  hi < mid  ==  code 3 < code 2  == FALSE.
+        assert_eq!(
+            bools(
+                "f <- ordered(c(\"lo\", \"hi\", \"mid\"), levels = c(\"lo\", \"mid\", \"hi\"))\nf[2] < f[3]\n"
+            ),
+            vec![Some(false)]
+        );
+    }
+
+    #[test]
+    fn ordered_comparison_covers_all_six_operators() {
+        let setup = "f <- ordered(c(\"lo\", \"hi\"), levels = c(\"lo\", \"mid\", \"hi\"))\n";
+        // lo (code 1) vs hi (code 3).
+        assert_eq!(bools(&format!("{setup}f[1] <= f[2]\n")), vec![Some(true)]);
+        assert_eq!(bools(&format!("{setup}f[1] >= f[2]\n")), vec![Some(false)]);
+        assert_eq!(bools(&format!("{setup}f[2] > f[1]\n")), vec![Some(true)]);
+        assert_eq!(bools(&format!("{setup}f[1] == f[1]\n")), vec![Some(true)]);
+        assert_eq!(bools(&format!("{setup}f[1] != f[2]\n")), vec![Some(true)]);
+    }
+
+    #[test]
+    fn ordered_comparison_na_code_propagates() {
+        // An element whose value is not among the levels has an NA code; comparing
+        // it yields NA, never a panic.
+        assert_eq!(
+            bools(
+                "f <- ordered(c(\"lo\", \"zz\"), levels = c(\"lo\", \"mid\", \"hi\"))\nf[1] < f[2]\n"
+            ),
+            vec![None]
+        );
+    }
+
+    #[test]
+    fn ordered_comparison_different_level_sets_is_an_error() {
+        // Faithful to R: comparing ordered factors with differing level sets errors.
+        assert!(eval_s(
+            "a <- ordered(c(\"lo\"), levels = c(\"lo\", \"hi\"))\nb <- ordered(c(\"x\"), levels = c(\"x\", \"y\"))\na < b\n"
+        )
+        .is_err());
+    }
+
+    // --- R-35: cut(ordered_result=, dig.lab=) --------------------------
+    //
+    // NB: `ordered_result` is NOT expressible in *S* source — the S lexer reads
+    // `_` as the assignment operator (the iconic S detail), so `ordered_result`
+    // tokenises as `ordered <- result`. The `ordered_result =` named argument is
+    // therefore exercised through the **R** grammar in the `r-runtime` tests
+    // (`cut_ordered_result_through_r_syntax`); here we only cover the `dig.lab`
+    // option and the default-unordered behaviour, both of which are S-expressible.
+
+    #[test]
+    fn cut_default_result_is_unordered_factor() {
+        // Without ordered_result, cut() returns an ordinary (unordered) factor.
+        assert_eq!(
+            bools("is.ordered(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11)))\n"),
+            vec![Some(false)]
+        );
+    }
+
+    #[test]
+    fn cut_dig_lab_controls_significant_digits_of_break_labels() {
+        // dig.lab=2: the interior break 3.14159 rounds to 2 sig digits "3.1";
+        // integer breaks 0 and 10 stay integral.
+        assert_eq!(
+            strs("levels(cut(c(1.23456, 5.6789), breaks = c(0, 3.14159, 10), dig.lab = 2))\n"),
+            vec!["(0,3.1]", "(3.1,10]"]
+        );
+    }
+
+    #[test]
+    fn cut_dig_lab_default_is_three_significant_digits() {
+        // Without dig.lab, the default of 3 sig digits applies: 3.14159 -> "3.14".
+        assert_eq!(
+            strs("levels(cut(c(1, 5), breaks = c(0, 3.14159, 10)))\n"),
+            vec!["(0,3.14]", "(3.14,10]"]
+        );
+    }
+
+    #[test]
+    fn cut_tiny_break_label_is_length_bounded() {
+        // Security regression: a subnormal/tiny break (1e-300) must not produce a
+        // ~340-char fixed-precision label. format_sig clamps the decimal count to
+        // 22, so each break number stays short regardless of how tiny it is.
+        let levels = strs("levels(cut(c(2e-300, 5e-300), breaks = c(0, 1e-300, 1e-299)))\n");
+        // Two interval labels, each bounded in length (no runaway allocation).
+        assert_eq!(levels.len(), 2);
+        for lab in &levels {
+            assert!(
+                lab.len() < 40,
+                "interval label unexpectedly long ({} chars): {lab}",
+                lab.len()
+            );
+        }
+    }
+
+    #[test]
+    fn cut_dig_lab_extreme_value_does_not_panic_or_overallocate() {
+        // A huge dig.lab is clamped (1..=22) — no panic, no giant allocation.
+        assert!(eval_s(
+            "cut(c(1.5, 5.5), breaks = c(0, 3.14159, 10), dig.lab = 1e9)\n"
+        )
+        .is_ok());
+        // A non-positive / malformed dig.lab falls back gracefully to the default.
+        assert_eq!(
+            strs("levels(cut(c(1, 5), breaks = c(0, 3.14159, 10), dig.lab = 0))\n"),
+            vec!["(0,3.14]", "(3.14,10]"]
+        );
+    }
 }

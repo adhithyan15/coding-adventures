@@ -32,3 +32,5 @@ import "pharm-edges.adj"
 ? antidote_for(methemoglobinemia, $Antidote)          % expect methylene_blue (expand)
 ? antidote_for(lead_poisoning, $Antidote)             % expect succimer (expand)
 ? antidote_for(copper_toxicity, $Antidote)           % expect penicillamine (expand)
+? antidote_for(dabigatran_toxicity, $Antidote)       % expect idarucizumab (expand)
+? antidote_for(arsenic_poisoning, $Antidote)         % expect dimercaprol (expand)

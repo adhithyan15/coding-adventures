@@ -1215,6 +1215,78 @@ unchanged.
     the same vector-promotion rules `%*%` already applies (left operand a row,
     right operand a column), so `crossprod(v)` is `1×1`; the matrix case is the
     solid, tested core.
+- **R-35 — ordered factors & `cut()` label polish** *(this PR)*. Completes the
+  R-33 deferral of `ordered_result =` and `dig.lab =`, and adds the
+  ordered-factor family. R reuses the shared `s-runtime` factor machinery
+  through the tree-walker, so the whole feature lives in `s-runtime` and is
+  exercised here through R syntax.
+  - **Representation choice.** An ordered factor is a factor whose **levels carry
+    a meaningful order**. R models this as a factor with class
+    `c("ordered", "factor")`. We add a single boolean field to the existing
+    factor value: `SValue::Factor { codes, levels, ordered }` (the R-13 type
+    grew an `ordered` flag rather than introducing a parallel `Classed` wrapper —
+    lowest-churn, and keeps the codes/levels invariants in one place). When
+    `ordered` is `true`, `class()` reports `c("ordered", "factor")`; when `false`
+    it reports `"factor"` as before. All existing constructions default
+    `ordered: false`, so unordered factors are bit-for-bit unchanged.
+  - **`ordered(x, levels =, labels =)`** — build an ordered factor. Identical to
+    `factor` (it **reuses the `factor` builder** for level inference, code
+    assignment, and `labels` renaming) but sets `ordered = true`. With no
+    explicit `levels`, the order is the sorted distinct values — same default as
+    `factor`, but now *meaningful*. `factor(x, ordered = TRUE)` is an accepted
+    synonym (the `ordered =` named flag on `factor`).
+  - **`as.ordered(x)`** — coerce to an ordered factor. A factor (ordered or not)
+    keeps its codes/levels and gains `ordered = true`; any other vector is run
+    through the `factor` builder first.
+  - **`is.ordered(x)`** — `TRUE` iff `x` is a factor with `ordered = true`,
+    `FALSE` for an unordered factor or any non-factor (never errors).
+  - **Ordered-factor comparison.** The relational operators
+    `<`, `<=`, `>`, `>=`, `==`, `!=` between two ordered factors compare by
+    **level index** (the 1-based code into the levels vector), *not* by the label
+    string. So with `levels = c("lo","mid","hi")`, the element `"hi"` (code 3) is
+    `>` the element `"lo"` (code 1). `compare` gains an early ordered-factor
+    branch that runs *before* the numeric/character coercion: it compares the
+    recycled `codes` numerically (an `NA` code on either side → `NA`, matching
+    R). Comparing two ordered factors whose **level sets differ** is an
+    **error** (`"level sets of factors are different"`), faithful to base R. An
+    *unordered* factor under a relational operator keeps R's behaviour for
+    non-`==`/`!=` ops: only `==`/`!=` are defined (by label), and `<`/`>` raise
+    `"'<' not meaningful for factors"` — but the headline path is the ordered
+    case.
+  - **`cut(..., ordered_result = TRUE)`** — make `cut`'s returned factor an
+    **ordered** factor (intervals are naturally ordered low→high), so its bins
+    compare by interval order. Reuses the same factor builder; only flips the
+    `ordered` flag. Default `FALSE` (an ordinary factor, unchanged from R-33).
+  - **`cut(..., dig.lab = k)`** — number of **significant digits** used when
+    auto-generating the `"(lo,hi]"` interval labels (default **3**, matching base
+    R). The break numbers in each label are formatted to `k` significant digits
+    via a small `format_break_sig` helper (built on Rust's `{:.*e}` then trimmed
+    of trailing zeros, so `3.14159` at `dig.lab = 2` → `"3.1"` and integer breaks
+    still print cleanly as `3`). `dig.lab` is read from the named arg, validated
+    to a finite positive integer, and **clamped** to a safe range
+    (`1..=22`, R's representable-digit ceiling) so an extreme `dig.lab` can never
+    drive an unbounded allocation or a formatter panic. A custom `labels =`
+    vector overrides auto-labels entirely, so `dig.lab` is ignored when `labels`
+    is supplied (as in R).
+  - **Worked label example.**
+    `cut(c(1.23456, 5.6789), breaks = c(0, 3.14159, 10), dig.lab = 2)` →
+    a factor with levels `c("(0,3.1]", "(3.1,10]")` (the interior break `3.14159`
+    rounds to 2 significant digits `3.1`; the integer breaks `0` and `10` stay
+    integral). The two values fall in bins 1 and 2 respectively.
+  - **Security.** Ordered comparison never indexes out of bounds: it works on the
+    integer `codes` directly (an out-of-range or `NA` code → `NA`, never a panic),
+    and differing level sets are rejected with a clean `Err` before any compare.
+    `dig.lab` is clamped to `1..=22` before formatting, so no caller-controlled
+    value can drive a huge `{:.*}` width allocation; a malformed (non-numeric /
+    non-finite / ≤ 0) `dig.lab` falls back to the default 3 (or errors cleanly
+    via the shared numeric-arg parse). No new unbounded multiplier; the level
+    vector is still bounded by the break count, itself `MAX_SEQ_LEN`-bounded.
+  - **Scope outcome / deferred to R-39.** `ordered()`/`as.ordered()`/
+    `is.ordered()`, the six ordered-comparison operators, `ordered_result =`, and
+    `dig.lab =` ship **solidly**. **Deferred to R-39:** the S3 `Ops.ordered`
+    group-generic *dispatch* surface and the order statistics on ordered factors
+    (`sort`, `max`, `min`, `range` honouring the level order) — none of which
+    blocks the comparison/constructor core delivered here.
 
 - **R-34 — string utilities** *(this PR)*. An **independent string-utility family**
   (not part of the in-flight cut/set-ops chain): five base-R string builtins that

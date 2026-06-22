@@ -252,7 +252,7 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   `1`). `N` is capped at `MAX_SEQ_LEN` before any allocation and the breaks use
   finite/checked arithmetic, so a huge `N` or a degenerate range is rejected/handled
   rather than over-allocating or dividing by zero. (`dig.lab=` and `ordered_result=`
-  are deferred to R-34.)
+  land in R-35, below.)
 - **String utilities** (R-34): an independent string-utility family that reuses the
   existing string machinery (`as_character`, the `Option<String>`-as-`NA`
   convention, `SValue::Character`/`SValue::Logical`) and operates on Unicode
@@ -268,6 +268,20 @@ a hand-written loop. See [What "S-flavored" means here](#what-s-flavored-means-h
   checked `i64` accumulation (overflow → `NA`, never a panic).
   (`strtoi(base=0L)` auto-detection and a custom `trimws(whitespace=)` are deferred
   to R-36.)
+- **Ordered factors & `cut()` label polish** (R-35): an *ordered* factor is a factor
+  whose levels carry a meaningful order — `SValue::Factor` gains an `ordered: bool`
+  field, so `class()` reports `c("ordered", "factor")` when set (and the `Levels:`
+  line prints with `<` separators). **`ordered(x, levels=, labels=)`** /
+  **`factor(x, ordered=TRUE)`** build one; **`as.ordered(x)`** coerces;
+  **`is.ordered(x)`** tests for it. The relational operators
+  (`<`, `<=`, `>`, `>=`, `==`, `!=`) between two ordered factors compare **by level
+  index** (the 1-based code), so with `levels=c("lo","mid","hi")` the element `"hi"`
+  is `>` the element `"lo"`; an `NA` code → `NA`, and differing level sets is a clean
+  error. `cut(..., ordered_result=TRUE)` makes the binned factor ordered, and
+  `cut(..., dig.lab=k)` formats break labels to `k` significant digits (default 3,
+  clamped to `1..=22` for safety — no extreme value can over-allocate or panic).
+  (Ordered-factor `sort`/`max`/`min`/`range` and `Ops.ordered` dispatch are deferred
+  to R-39.)
 - **Matrix cross products** (R-36): **`crossprod(x, y)`** = `t(x) %*% y` and
   **`crossprod(x)`** = `t(x) %*% x` (the Gram matrix `X'X`); **`tcrossprod(x, y)`** =
   `x %*% t(y)` and **`tcrossprod(x)`** = `x %*% t(x)` (`XX'`). The second argument

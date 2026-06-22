@@ -345,7 +345,9 @@ function(x) …`. The REPL's auto-print routes visible values through this gener
 (class `"factor"`). `levels`, `nlevels`, `as.character`, and `as.integer` are
 provided; factors print as their labels followed by a `Levels:` line.
 Arithmetic on a factor is an error, faithful to S. (`table` is deferred until
-vectors carry a `names` attribute, which v2 does not yet add.)
+vectors carry a `names` attribute, which v2 does not yet add.) R-35 adds an
+**ordered** flag to the factor value (`ordered()`/`as.ordered()`/`is.ordered()`,
+level-index comparison, `cut(ordered_result=, dig.lab=)`) — see §9 item 9.
 
 ### V2.6 Data frames
 
@@ -534,8 +536,41 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
      (`dx = max-min`, degenerate `dx == 0` falling back to `abs(min)` then `1`).
      `N` is capped at `MAX_SEQ_LEN` before the break vector is built; the spacing
      uses finite/checked arithmetic so a degenerate range never divides by zero.
-   `dig.lab=` and `ordered_result=` are **deferred to R-34**.
-9. **String utilities (R-34, shared builtins).** `s-runtime` gains five base-R
+   `dig.lab=` and `ordered_result=` land in R-35 (item 9 below).
+9. **Ordered factors & `cut()` label polish (R-35, shared builtin).** The
+   `SValue::Factor` value gains a single boolean field —
+   `Factor { codes, levels, ordered }` — so an *ordered* factor (one whose levels
+   carry a meaningful order) needs no parallel value type. `ordered` defaults to
+   `false`, so every prior factor is unchanged; when `true`, `class()` reports
+   `c("ordered", "factor")` instead of `"factor"`.
+   - **`ordered(x, levels=, labels=)`** — reuses the `factor` builder, then sets
+     `ordered = true`. `factor(x, ordered = TRUE)` is an accepted synonym.
+   - **`as.ordered(x)`** — coerce to an ordered factor (a factor keeps its
+     codes/levels and flips the flag; any other vector is `factor`-encoded first).
+   - **`is.ordered(x)`** — `TRUE` iff `x` is an ordered factor; `FALSE` otherwise
+     (never errors).
+   - **Ordered-factor comparison.** `<`, `<=`, `>`, `>=`, `==`, `!=` between two
+     ordered factors compare by **level index** (the 1-based code), *not* by the
+     label string. The `compare` kernel gains an early ordered-factor branch that
+     runs before numeric/character coercion, comparing recycled codes numerically
+     (an `NA` code → `NA`). Two ordered factors with **different level sets** is a
+     clean error (`"level sets of factors are different"`).
+   - **`cut(..., ordered_result = TRUE)`** — flips the returned factor's `ordered`
+     flag (intervals are naturally ordered low→high). Default `FALSE`.
+   - **`cut(..., dig.lab = k)`** — significant digits (default **3**) used when
+     auto-generating the `"(lo,hi]"` break labels, via a `format_break_sig`
+     helper. `dig.lab` is validated and **clamped to `1..=22`** so an extreme
+     value can never drive an unbounded allocation or a formatter panic; a
+     malformed value falls back to the default. A custom `labels =` vector still
+     overrides auto-labels (so `dig.lab` is then ignored), as in R.
+   - **Security.** Ordered comparison works on the integer `codes` (out-of-range
+     or `NA` code → `NA`, never a panic) and rejects differing level sets before
+     any compare; `dig.lab` is clamped before formatting. No new unbounded
+     multiplier — the level vector is still bounded by the (`MAX_SEQ_LEN`-bounded)
+     break count.
+   - **Deferred to R-39.** S3 `Ops.ordered` group-generic *dispatch* and order
+     statistics on ordered factors (`sort`/`max`/`min`/`range` by level order).
+10. **String utilities (R-34, shared builtins).** `s-runtime` gains five base-R
    string builtins that R (R-34) reuses verbatim through the shared tree-walker.
    They build on the existing string machinery (`as_character` coercion, the
    `Option<String>` NA convention, `SValue::Character`/`SValue::Logical`), add no

@@ -82,4 +82,16 @@ rulebook neuro_facts {
         source "Adult-onset Huntington disease is typically characterized by early striatal atrophy in the caudate."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK559166/"
         trust authoritative
+
+    % --- EXPAND: cerebellar localization — one span names BOTH lesion sites ----------
+    % Midline (vermis) vs hemispheric cerebellar lesions produce distinct deficits; the
+    % single declarative below names both endpoints for each edge.
+    relate lesion_causes(midline_cerebellum, imbalance)
+        source "Therefore, any midline cerebellar lesions manifest as imbalance, while hemispheric cerebellar lesions result mainly in incoordination."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562317/"
+        trust authoritative
+    relate lesion_causes(cerebellar_hemisphere, incoordination)
+        source "Therefore, any midline cerebellar lesions manifest as imbalance, while hemispheric cerebellar lesions result mainly in incoordination."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562317/"
+        trust authoritative
 }

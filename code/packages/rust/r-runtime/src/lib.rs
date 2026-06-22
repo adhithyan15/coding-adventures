@@ -3224,4 +3224,70 @@ mod tests {
             "expected conformability error, got: {err}"
         );
     }
+
+    // --- R-35: ordered factors & cut() label polish (R syntax) ----------
+
+    #[test]
+    fn is_ordered_through_r_syntax() {
+        assert_eq!(
+            show("is.ordered(ordered(c(\"lo\", \"hi\"), levels = c(\"lo\", \"mid\", \"hi\")))\n"),
+            "[1] TRUE"
+        );
+        assert_eq!(show("is.ordered(factor(c(\"a\", \"b\")))\n"), "[1] FALSE");
+    }
+
+    #[test]
+    fn ordered_class_vector_through_r_syntax() {
+        // class(ordered(...)) prints as the two-element character vector.
+        // Elements are right-aligned to the widest quoted string ("ordered" is
+        // wider than "factor"), so "factor" gets a leading pad space.
+        assert_eq!(
+            show("class(ordered(c(\"a\", \"b\")))\n"),
+            "[1] \"ordered\"  \"factor\""
+        );
+    }
+
+    #[test]
+    fn ordered_comparison_by_level_index_through_r_syntax() {
+        // f[1] < f[2] is lo < hi (TRUE); f[2] < f[3] is hi < mid (FALSE).
+        assert_eq!(
+            show("f <- ordered(c(\"lo\", \"hi\", \"mid\"), levels = c(\"lo\", \"mid\", \"hi\"))\nf[1] < f[2]\n"),
+            "[1] TRUE"
+        );
+        assert_eq!(
+            show("f <- ordered(c(\"lo\", \"hi\", \"mid\"), levels = c(\"lo\", \"mid\", \"hi\"))\nf[2] < f[3]\n"),
+            "[1] FALSE"
+        );
+    }
+
+    #[test]
+    fn as_ordered_through_r_syntax() {
+        assert_eq!(
+            show("is.ordered(as.ordered(factor(c(\"a\", \"b\"))))\n"),
+            "[1] TRUE"
+        );
+    }
+
+    #[test]
+    fn cut_ordered_result_through_r_syntax() {
+        assert_eq!(
+            show("is.ordered(cut(c(1, 5, 10), breaks = c(0, 3, 6, 11), ordered_result = TRUE))\n"),
+            "[1] TRUE"
+        );
+        // Ordered bins compare by interval order.
+        assert_eq!(
+            show("g <- cut(c(1, 10), breaks = c(0, 3, 6, 11), ordered_result = TRUE)\ng[1] < g[2]\n"),
+            "[1] TRUE"
+        );
+    }
+
+    #[test]
+    fn cut_dig_lab_through_r_syntax() {
+        // levels() of the dig.lab=2 cut prints both interval labels, right-aligned
+        // to the wider "(3.1,10]" (so "(0,3.1]" gets a leading pad space).
+        assert_eq!(
+            show("levels(cut(c(1.23456, 5.6789), breaks = c(0, 3.14159, 10), dig.lab = 2))\n"),
+            "[1]  \"(0,3.1]\" \"(3.1,10]\""
+        );
+    }
 }

@@ -51,6 +51,8 @@ EXPECTED = [
     ("methemoglobinemia", "antidote_for", "methylene_blue"),      # expand (NBK557593)
     ("lead_poisoning", "antidote_for", "succimer"),               # expand (NBK541097)
     ("copper_toxicity", "antidote_for", "penicillamine"),         # expand (NBK513316)
+    ("dabigatran_toxicity", "antidote_for", "idarucizumab"),      # expand (NBK560651)
+    ("arsenic_poisoning", "antidote_for", "dimercaprol"),         # expand (NBK549804)
 ]
 VAR = {"drug_class": "Class", "mechanism": "MOA", "adverse_effect": "Effect",
        "antidote_for": "Antidote"}
