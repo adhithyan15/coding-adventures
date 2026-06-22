@@ -37,6 +37,8 @@ EXPECTED = [
     ("chronic_granulomatous_disease", "deficiency_of", "nadph_oxidase"),
     ("digeorge_syndrome", "deficiency_of", "t_cells"),
     ("digeorge_syndrome", "gene_defect", "chromosome_22q11_2_deletion"),
+    ("celiac_disease", "associated_hla", "hla_dq2"),                 # expand (NBK441900)
+    ("type_iii_hypersensitivity", "mediated_by", "immune_complexes"),  # expand (NBK559122)
 ]
 VAR = {"mediated_by": "Mediator", "associated_hla": "HLA",
        "gene_defect": "Gene", "deficiency_of": "Component"}

@@ -20,3 +20,5 @@ import "immuno-edges.adj"
 ? deficiency_of(chronic_granulomatous_disease, $Component) % expect nadph_oxidase
 ? deficiency_of(digeorge_syndrome, $Component)             % expect t_cells
 ? gene_defect(digeorge_syndrome, $Gene)                    % expect chromosome_22q11_2_deletion
+? associated_hla(celiac_disease, $HLA)                 % expect hla_dq2 (expand)
+? mediated_by(type_iii_hypersensitivity, $Mediator)    % expect immune_complexes (expand)
