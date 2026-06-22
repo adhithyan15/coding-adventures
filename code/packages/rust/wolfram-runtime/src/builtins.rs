@@ -2074,20 +2074,69 @@ fn pattern_matches(pattern: &IRNode, subject: &IRNode) -> bool {
 
 /// Try to match `pattern` against `subject`, returning the captured
 /// `name → subexpr` [`Bindings`] on success or `None` on failure (MA04 §21.2).
-/// A thin wrapper over [`cas_pattern_matching::match_pattern`] starting from an
-/// empty binding set — the binding-aware core that `ReplaceAll`/`Replace` use to
-/// fill in a rule's right-hand side. Total and panic-free.
+/// A panic-free wrapper over [`cas_pattern_matching::match_pattern`].
 ///
-/// One head-name convention is reconciled first: Wolfram's `_Real` lowers to
+/// **Safety gate.** The shared `match_pattern` calls `pattern_name`/`pattern_inner`
+/// on any node whose head is the symbol `Pattern`, and those index `args[0]`/
+/// `args[1]` (and `panic!` on a non-symbol name) **without checking arity**. A
+/// `Pattern` is an ordinary symbol, so a user can write a *malformed* one —
+/// `Pattern[]`, `Pattern[a]`, `Pattern[5, x]` — that the lowerer passes through
+/// verbatim (it enforces no `Pattern` arity). To keep this primitive total we
+/// first reject any pattern tree containing a malformed `Pattern[…]`
+/// ([`pattern_tree_well_formed`]): a malformed pattern simply *fails to match*
+/// (`None`), so the caller leaves its form unevaluated instead of the whole
+/// session being torn down by the `catch_unwind` recovery. A well-formed
+/// `Pattern[name, inner]` (the only shape `lower.rs` ever produces for `x_`) is
+/// unaffected.
+///
+/// One head-name convention is reconciled next: Wolfram's `_Real` lowers to
 /// `Blank[Real]`, but the shared matcher (a CAS-native crate) names a `Float`
 /// node's head `"Float"`. [`wolfram_to_cas_pattern`] rewrites any `Blank[Real]`
 /// head constraint in the *pattern* to `Blank[Float]` before delegating, so
 /// `MatchQ[2.0, _Real]` still matches. Every other head name (`Integer`,
 /// `Rational`, `String`, `Symbol`, and any compound head `f`) already agrees.
 fn pattern_match_bindings(pattern: &IRNode, subject: &IRNode) -> Option<Bindings> {
+    // Refuse a crafted malformed `Pattern[…]` rather than let the shared crate
+    // index out of bounds / panic on it (see the doc note above).
+    if !pattern_tree_well_formed(pattern) {
+        return None;
+    }
     let normalized = wolfram_to_cas_pattern(pattern);
     match_pattern(&normalized, subject, Bindings::empty())
 }
+
+/// True iff every `Pattern[…]` node anywhere in `node` is **well-formed** —
+/// exactly `Pattern[Symbol, inner]` — so the shared `pattern_name`/`pattern_inner`
+/// accessors (which index `args[0]`/`args[1]` and `panic!` on a non-symbol name)
+/// can never be reached with a malformed shape. A `Pattern` is an ordinary symbol
+/// in surface Wolfram and the lowerer enforces no arity for it, so `Pattern[]`,
+/// `Pattern[a]`, and `Pattern[5, x]` are all constructible from user source; this
+/// walk is what makes [`pattern_match_bindings`] and [`try_rules_at_node`] total
+/// on such input. Recurses on the tree, which is depth-bounded by the parser's
+/// per-statement token cap (every node consumes ≥1 token) and runs inside the
+/// `catch_unwind` worker, so the unguarded recursion is safe. `Blank[…]` shapes
+/// are *not* checked here — the cas `blank_head_constraint` is `None`-tolerant and
+/// never indexes past `args[0]`, so a stray `Blank` cannot panic.
+fn pattern_tree_well_formed(node: &IRNode) -> bool {
+    if let IRNode::Apply(app) = node {
+        if matches!(&app.head, IRNode::Symbol(s) if s == PATTERN_HEAD) {
+            // A `Pattern` must be exactly `[Symbol(name), inner]`.
+            match app.args.as_slice() {
+                [IRNode::Symbol(_), inner] => return pattern_tree_well_formed(inner),
+                _ => return false,
+            }
+        }
+        // Otherwise every child (head + args) must itself be well-formed.
+        return pattern_tree_well_formed(&app.head)
+            && app.args.iter().all(pattern_tree_well_formed);
+    }
+    // Atoms carry no `Pattern` node.
+    true
+}
+
+/// The sentinel head a named pattern (`x_` → `Pattern[x, Blank[]]`) lowers to —
+/// reused from the shared pattern vocabulary so the constant is never duplicated.
+const PATTERN_HEAD: &str = cas_pattern_matching::nodes::PATTERN;
 
 /// The one Wolfram-head ↔ CAS-head name that differs: Wolfram `Real`, CAS `Float`.
 const WOLFRAM_REAL_HEAD: &str = "Real";
@@ -2260,6 +2309,13 @@ fn try_rules_at_node(rules: &[IRNode], subject: &IRNode) -> Option<IRNode> {
         let IRNode::Apply(app) = r else { continue };
         let lhs = &app.args[0];
         let rhs = &app.args[1];
+        // The RHS template is also walked by `substitute_bindings`, which indexes
+        // `Pattern[…]` nodes; a malformed one (e.g. `x_ -> Pattern[]`) would panic
+        // there. Skip any rule whose RHS contains a malformed `Pattern` so the
+        // form is left unchanged rather than tearing down the session (MA04 §21.6).
+        if !pattern_tree_well_formed(rhs) {
+            continue;
+        }
         if let Some(bindings) = pattern_match_bindings(lhs, subject) {
             // `->` and `:>` substitute identically here (the RHS is held until
             // its captures are filled — see MA04 §21.5); the substituted RHS is
@@ -5856,6 +5912,54 @@ mod tests {
         let rule = rule_node(named_blank("x"), named_blank("y"));
         let out = replace_all_once(&int(3), &[rule], 0);
         assert_eq!(out, named_blank("y"));
+    }
+
+    #[test]
+    fn malformed_pattern_in_lhs_does_not_panic_and_fails_to_match() {
+        // `Pattern[]` / `Pattern[a]` / `Pattern[5, x]` are constructible from user
+        // source (Pattern is an ordinary symbol; the lowerer enforces no arity).
+        // The shared matcher would index args[0]/args[1] or panic on a non-symbol
+        // name; the well-formedness gate must turn these into a clean non-match.
+        let pat0 = apply(sym("Pattern"), vec![]); // Pattern[]
+        let pat1 = apply(sym("Pattern"), vec![sym("a")]); // Pattern[a]
+        let pat2 = apply(sym("Pattern"), vec![int(5), sym("x")]); // Pattern[5, x]
+        assert!(!pattern_matches(&pat0, &int(1)));
+        assert!(!pattern_matches(&pat1, &int(1)));
+        assert!(!pattern_matches(&pat2, &int(1)));
+        // Nested inside a compound LHS, too: `f[Pattern[]]` must not panic.
+        let nested = apply(sym("f"), vec![pat0.clone()]);
+        assert!(!pattern_matches(&nested, &apply(sym("f"), vec![int(1)])));
+        // As a rule LHS through the replacement engine — the rule is skipped, the
+        // subject is returned unchanged (no panic, no session-tearing).
+        let rule = rule_node(pat1, int(99));
+        assert_eq!(replace_all_once(&int(1), &[rule], 0), int(1));
+    }
+
+    #[test]
+    fn malformed_pattern_in_rhs_does_not_panic_and_skips_the_rule() {
+        // A well-formed LHS but a malformed RHS template (`x_ -> Pattern[]`) would
+        // panic inside `substitute`; the rule must be skipped, leaving the subject
+        // unchanged.
+        let bad_rhs = apply(sym("Pattern"), vec![]);
+        let rule = rule_node(named_blank("x"), bad_rhs);
+        assert_eq!(replace_whole(&int(7), std::slice::from_ref(&rule)), int(7));
+        assert_eq!(replace_all_once(&int(7), &[rule], 0), int(7));
+    }
+
+    #[test]
+    fn pattern_tree_well_formed_classifies_shapes() {
+        // Good shapes.
+        assert!(pattern_tree_well_formed(&named_blank("x")));
+        assert!(pattern_tree_well_formed(&named_blank_h("x", "Integer")));
+        assert!(pattern_tree_well_formed(&int(3)));
+        assert!(pattern_tree_well_formed(&apply(sym("f"), vec![named_blank("a"), int(2)])));
+        // Bad shapes.
+        assert!(!pattern_tree_well_formed(&apply(sym("Pattern"), vec![])));
+        assert!(!pattern_tree_well_formed(&apply(sym("Pattern"), vec![sym("a")])));
+        assert!(!pattern_tree_well_formed(&apply(sym("Pattern"), vec![int(5), sym("x")])));
+        // Malformed but nested deep — still detected.
+        let nested = apply(sym("g"), vec![apply(sym("Pattern"), vec![int(1)])]);
+        assert!(!pattern_tree_well_formed(&nested));
     }
 
     // -----------------------------------------------------------------------

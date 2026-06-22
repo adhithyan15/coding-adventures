@@ -137,6 +137,25 @@ fn w19_replace_whole_and_rule_delayed() {
     );
 }
 
+/// A crafted *malformed* `Pattern[…]` (an ordinary symbol the lowerer passes
+/// through with no arity check) must NOT panic / tear down the session — the
+/// well-formedness gate makes it a clean non-match, leaving the form unchanged
+/// (W-19 security hardening).
+#[test]
+fn w19_malformed_pattern_does_not_crash_the_session() {
+    let mut s = WolframSession::new();
+    // Define a function so we can prove the session survives intact afterwards.
+    s.feed("k = 41\n").unwrap();
+    // Malformed Pattern in a rule LHS and RHS — neither should reset the session.
+    // `Pattern[]` has too few args; the rule simply does not fire.
+    let out = s.feed("3 /. Pattern[] -> 0\n").unwrap();
+    assert!(out.contains("3"), "expected the subject unchanged, got {out:?}");
+    let out = s.feed("Replace[3, x_ -> Pattern[5]]\n").unwrap();
+    assert!(out.contains("3"), "expected the subject unchanged, got {out:?}");
+    // The earlier binding still exists — the session was never rebuilt.
+    assert!(s.feed("k + 1\n").unwrap().contains("42"));
+}
+
 /// Comparisons and logic fold when fully numeric, stay symbolic otherwise.
 #[test]
 fn comparisons_and_logic() {
