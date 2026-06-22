@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.175.0] - 2026-06-22
+
+### Added — string `repeat` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.26.0, which folds
+`String#repeat` on a string literal with a non-negative integer-literal count
+to a string literal: `"ab".repeat(3)` → `"ababab"`, `"x".repeat(0)` → `""`. A
+negative count (JS `RangeError`), a fractional/non-literal count, and a result
+over the optimizer's 100 000-code-unit cap (a denial-of-service guard against
+materializing a huge literal at compile time) all pass through unfolded.
+
+New e2e fixture `tests/diff/simple-fold-repeat` (and integration test
+`diff_simple_fold_repeat.rs`): `var s = "ab".repeat(3); report(s);` →
+`var s="ababab";report(s);`, with a whitespace-fallback guard proving the fold
+comes from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.175.0 to sit above main (closurec 0.173.0) and the
+> concurrently-open numeric `toString([radix])` fold branch (closurec 0.174.0,
+> PR #6560), so the parallel branches never collide on the version line.
+
 ## [0.173.0] - 2026-06-22
 
 ### Added — string `slice` fold at SIMPLE/ADVANCED
