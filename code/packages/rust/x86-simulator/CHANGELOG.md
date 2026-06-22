@@ -1,5 +1,39 @@
 # Changelog — x86-simulator
 
+## 0.4.0 — 2026-06-21 — group-3 (`not`/`neg`/`div`/`idiv`) + broader matrix coverage (x86-sim PR-S4)
+
+Broadens the **local** LANG-FULL x86_64 coverage from S3's 7 cells to 17 by
+running more matrix programs through the simulator — which surfaced a real
+missing opcode and added it.
+
+### Added
+- **Group-3 `0xF7` + `cqo`** — the opcodes the `x86_64-backend` emits for the IIR
+  `not`/`neg`/division ops, which S1–S3 never decoded (a Nib `~0` / Oct
+  `out(1, ~0)` trapped with `DecodeError { opcode: 0xF7 }`):
+  - `not r/m64` (`0xF7 /2`) — bitwise complement, no flag effects;
+  - `neg r/m64` (`0xF7 /3`) — two's-complement negate, flags as `sub 0, dst`;
+  - `div`/`idiv r/m64` (`0xF7 /6` unsigned, `/7` signed) — divides the full
+    128-bit `rdx:rax` pair, quotient → `rax`, remainder → `rdx`;
+  - `cqo` (`0x48 0x99`) — sign-extend `rax` into `rdx:rax` (the `idiv` preamble).
+- **`Trap::DivideError`** — divide-by-zero **and** quotient-overflow (e.g.
+  `i64::MIN / -1`) raise the `#DE` analogue, fail-closed like every other fault.
+- **8 new matrix cells** in `tests/lang_matrix_x86.rs`, each a verbatim matrix
+  program run on the x86_64 column locally: Twig top-level `define`s; Nib u8
+  saturating-add wrap and `~` complement; ALGOL switch/computed-goto and the
+  `for`-loop sum-of-squares array; Dartmouth BASIC `PRINT` and `FOR`/`NEXT`
+  (stdout-captured via the host shims); Oct `out(1, ~0)` (the cell that exposed
+  the `0xF7` gap). New `run_capturing_stdout` helper for the print programs.
+- **Division end-to-end** — a Nib unsigned `84 / 2` (lowers to `xor rdx,rdx;
+  div rcx`) and an ALGOL signed `85 div 2` (`cqo; idiv rcx`), both ⇒ 42, so the
+  group-3 division path is exercised from real backend output, not just the unit
+  tests.
+
+### Verified
+- The `not` and `div`/`idiv` ops now run end-to-end (Nib + Oct + ALGOL);
+  `neg`/`cqo` and the division corner cases get direct decode + execute unit
+  tests (quotient/remainder, signed negatives, div-by-zero, signed-overflow, and
+  the crafted `i128::MIN / -1`). 42 tests (25 unit + 17 matrix).
+
 ## 0.3.0 — 2026-06-21 — local LANG-FULL x86_64 matrix column (x86-sim PR-S3)
 
 Wires the simulator into the LANG-FULL matrix: a new integration test drives the

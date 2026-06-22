@@ -51,6 +51,17 @@ pub enum Instr {
     Shift { op: ShiftOp, dst: Operand, amount: u8 },
     /// `imul reg, rm` (two-operand).
     Imul { dst: Reg, src: Operand },
+    /// `not r/m64` — bitwise complement (group-3 `0xF7 /2`). No flags.
+    Not { dst: Operand },
+    /// `neg r/m64` — two's-complement negate (group-3 `0xF7 /3`). Sets flags
+    /// as `sub 0, dst`.
+    Neg { dst: Operand },
+    /// `div`/`idiv r/m64` (group-3 `0xF7 /6` unsigned, `/7` signed) — divides
+    /// the `rdx:rax` pair by the operand: quotient → `rax`, remainder → `rdx`.
+    Div { divisor: Operand, signed: bool },
+    /// `cqo` (`0x48 0x99`) — sign-extend `rax` into `rdx:rax` (the standard
+    /// `idiv` preamble).
+    Cqo,
     /// `jmp rel` (absolute target already resolved from rip+rel).
     Jmp(i64),
     /// `jcc rel` — relative displacement; the condition nibble is `cond`.
@@ -164,6 +175,8 @@ pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
     match op {
         0xC3 => return Ok(Decoded { instr: Instr::Ret, len: p - off }),
         0x90 => return Ok(Decoded { instr: Instr::Nop, len: p - off }),
+        // cqo — sign-extend rax into rdx:rax (REX.W 0x99). No operands.
+        0x99 => return Ok(Decoded { instr: Instr::Cqo, len: p - off }),
         // jmp rel8 / rel32
         0xEB => { let r = at(p)? as i8 as i64; p += 1; return Ok(Decoded { instr: Instr::Jmp(rel_target(p, r)), len: p - off }); }
         0xE9 => { let r = read_i32(code, p)? as i64; p += 4; return Ok(Decoded { instr: Instr::Jmp(rel_target(p, r)), len: p - off }); }
@@ -270,6 +283,20 @@ pub fn decode(code: &[u8], off: usize) -> Result<Decoded, Trap> {
             let sop = match m.reg & 0x7 { 4 => ShiftOp::Shl, 5 => ShiftOp::Shr, 7 => ShiftOp::Sar,
                 other => return Err(Trap::DecodeError { offset: off as u64, opcode: 0xC0 | other }) };
             Ok(Decoded { instr: Instr::Shift { op: sop, dst: m.rm, amount: amt }, len: np + 1 - off })
+        }
+        // group-3 r/m64 — /reg selects: 2=not, 3=neg, 6=div, 7=idiv.
+        // (/0,/1=test imm, /4=mul, /5=imul aren't emitted by the backend.)
+        0xF7 => {
+            let (m, np) = modrm(code, p, rex_r, rex_x, rex_b)?;
+            let instr = match m.reg & 0x7 {
+                2 => Instr::Not { dst: m.rm },
+                3 => Instr::Neg { dst: m.rm },
+                6 => Instr::Div { divisor: m.rm, signed: false },
+                7 => Instr::Div { divisor: m.rm, signed: true },
+                // /0,/1 (test imm) /4 (mul) /5 (imul) — not emitted by the backend.
+                _ => return Err(Trap::DecodeError { offset: off as u64, opcode: 0xF7 }),
+            };
+            Ok(Decoded { instr, len: np - off })
         }
         other => Err(Trap::DecodeError { offset: (p - 1) as u64, opcode: other }),
     }
@@ -384,6 +411,26 @@ mod tests {
             dst: Operand::Mem { base: Some(Reg::Rbp), index: None, scale: 1, disp: -8, rip: false },
             src: Operand::Reg(Reg::Rax) });
         assert_eq!(instrs.last(), Some(&Instr::Ret));
+    }
+
+    #[test]
+    fn group3_and_cqo_decode() {
+        // The exact bytes the x86_64-encoder emits (REX.W 0x48 prefix, mod=11
+        // register-direct, reg field selects the group-3 op).
+        // not rax  = 48 F7 D0 (/2, rm=rax)
+        assert_eq!(decode(&[0x48, 0xF7, 0xD0], 0).unwrap().instr,
+                   Instr::Not { dst: Operand::Reg(Reg::Rax) });
+        // neg rax  = 48 F7 D8 (/3)
+        assert_eq!(decode(&[0x48, 0xF7, 0xD8], 0).unwrap().instr,
+                   Instr::Neg { dst: Operand::Reg(Reg::Rax) });
+        // div rcx  = 48 F7 F1 (/6, rm=rcx, unsigned)
+        assert_eq!(decode(&[0x48, 0xF7, 0xF1], 0).unwrap().instr,
+                   Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: false });
+        // idiv rcx = 48 F7 F9 (/7, signed)
+        assert_eq!(decode(&[0x48, 0xF7, 0xF9], 0).unwrap().instr,
+                   Instr::Div { divisor: Operand::Reg(Reg::Rcx), signed: true });
+        // cqo      = 48 99
+        assert_eq!(decode(&[0x48, 0x99], 0).unwrap().instr, Instr::Cqo);
     }
 
     #[test]
