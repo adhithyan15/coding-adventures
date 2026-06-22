@@ -384,6 +384,20 @@ fn algol_signed_division_runs_on_x86_sim() {
     assert_eq!(run_on_x86_sim(Language::Algol60, src), 42);
 }
 
+/// ALGOL — the **`abs` standard function** (LANG-FULL AL8) on the x86_64 backend.
+/// `abs` lowers to `if E < 0 then -E else E` — a `cmp_lt` against zero, a
+/// `jmp_if_false`, and a negated vs pass-through `mov` into one slot.  This is
+/// the first matrix cell to run that **compare-and-branch-into-a-merged-result**
+/// shape from real x86_64 machine code on the simulator (the existing ALGOL
+/// cells branch for control flow — `for`/`switch` — but don't merge a value back
+/// out of two arms).  `abs(0 - 42)` = 42 ⇒ exit 42 proves the negated arm and
+/// the join produce correct native code.
+#[test]
+fn algol_abs_runs_on_x86_sim() {
+    let src = "begin integer result; result := abs(0 - 42) end";
+    assert_eq!(run_on_x86_sim(Language::Algol60, src), 42);
+}
+
 /// Brainfuck — build 65 on the tape and `putchar` it (`++++++++[>++++++++<-]>+.`
 /// ⇒ stdout `A`).  Exercises the **byte-tape** opcode surface the arithmetic
 /// programs never touch: `__twig_alloc_bytes` for the tape, 8-bit load/store
