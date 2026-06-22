@@ -45,6 +45,9 @@ EXPECTED = [
     ("pseudomonas_aeruginosa", "morphology", "bacilli"),
     ("streptococcus_pneumoniae", "gram_stain", "gram_positive"),
     ("streptococcus_pneumoniae", "causes", "community_acquired_pneumonia"),
+    ("helicobacter_pylori", "gram_stain", "gram_negative"),          # expand (NBK534233)
+    ("helicobacter_pylori", "morphology", "spiral"),                 # expand (NBK534233)
+    ("helicobacter_pylori", "causes", "peptic_ulcer_disease"),       # expand (NBK534233)
 ]
 
 
