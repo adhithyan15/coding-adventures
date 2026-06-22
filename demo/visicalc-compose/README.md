@@ -104,6 +104,13 @@ The **Undo / Redo** buttons walk the engine's snapshot history
 (`InfiniteSheetModel.undoEdit`/`redoEdit` over the C ABI's `sc_undo`/`sc_redo`);
 they disable at the history ends via `canUndo`/`canRedo`. Every edit is
 reversible and a restored formula recomputes live.
+The **+ Row / − Row / + Col / − Col** buttons are **structural edits**
+(`InfiniteSheetModel.insertRow`/`deleteRow`/`insertCol`/`deleteCol` over the C
+ABI's `sc_insert_rows`/`sc_delete_rows`/`sc_insert_cols`/`sc_delete_cols`): insert
+or delete the selected cell's row/column, and the engine shifts every formula
+reference at or after the band so dependents keep pointing at their precedents
+(`=A1+A2` with a row inserted above becomes `=A1+A3`); a reference whose whole band
+is deleted becomes `#REF!`.
 `InfiniteSheetModel` (in `Engine.kt`) seeds far-flung
 sparse cells (`Z1000`, `BA50`, `BB50`) and derives the extent from `usedRange()`
 + a margin.
