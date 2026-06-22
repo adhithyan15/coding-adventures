@@ -2805,3 +2805,127 @@ fn f64_greater_uses_dcmpg() {
     let code = code_bytes(&lower(&module_with(gt)));
     assert!(code.contains(&DCMPG), "cmp_gt over f64 should use dcmpg");
 }
+
+// ===========================================================================
+// LANG-FULL E6 (layer 1) — typed module globals (static fields)
+// ===========================================================================
+
+/// Build the E6 proof module: `compute()` seeds a global, a *separate* `bump()`
+/// reads/increments/writes it, and `compute` returns it ⇒ 42. Entry is named
+/// `compute` so the test launcher's `main(String[])` doesn't collide with it.
+fn e6_globals_module() -> IIRModule {
+    let mut m = IIRModule::new("Main", "Main");
+    m.add_or_replace(IIRFunction::new(
+        "compute",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("seed".into()), vec![Operand::Int(41)], "i64"),
+            IIRInstr::new("global_store", None, vec![Operand::Str("g".into()), Operand::Var("seed".into())], "void"),
+            IIRInstr::new("call", Some("res".into()), vec![Operand::Var("bump".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "i64"),
+        ],
+    ));
+    m.add_or_replace(IIRFunction::new(
+        "bump",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("global_load", Some("cur".into()), vec![Operand::Str("g".into())], "i64"),
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("add", Some("nxt".into()), vec![Operand::Var("cur".into()), Operand::Var("one".into())], "i64"),
+            IIRInstr::new("global_store", None, vec![Operand::Str("g".into()), Operand::Var("nxt".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("nxt".into())], "i64"),
+        ],
+    ));
+    m
+}
+
+/// The lowered class declares a `public static long G_0` field and `bump`
+/// reads/writes it via `getstatic`/`putstatic`.
+#[test]
+fn e6_global_lowers_to_static_field_and_getstatic_putstatic() {
+    let class = lower_iir_to_jvm(&e6_globals_module(), &IIRJvmConfig { class_name: "Main".into(), ..Default::default() })
+        .expect("E6 globals should lower");
+    // A single static long field G_0.
+    assert_eq!(class.fields.len(), 1, "one global ⇒ one static field");
+    assert_eq!(class.fields[0].name, "G_0");
+    assert_eq!(class.fields[0].descriptor, "J");
+    // bump's bytecode contains getstatic (0xB2) and putstatic (0xB3).
+    let bump = class.methods.iter().find(|m| m.name == "bump").expect("bump method");
+    let code = &bump.code_attribute().expect("bump has Code").code;
+    assert!(code.contains(&0xB2), "bump should getstatic the global");
+    assert!(code.contains(&0xB3), "bump should putstatic the global");
+}
+
+/// End-to-end on real `java`: the cross-function global program prints 42.
+/// Skipped if `java` is unavailable.
+#[test]
+fn e6_global_runs_on_real_java() {
+    if !java_available() {
+        eprintln!("java not available — skipping e6_global_runs_on_real_java");
+        return;
+    }
+    let mut class = lower_iir_to_jvm(&e6_globals_module(), &IIRJvmConfig { class_name: "Main".into(), ..Default::default() })
+        .expect("lower");
+
+    // Append the CP entries the launcher needs (System.out + println(J)V), then
+    // inject a `main(String[])` that calls Main.compute()J and prints it.
+    {
+        use jvm_class_file::JvmConstantPoolEntry as E;
+        let cp = &mut class.constant_pool;
+        let sys_utf8 = cp_append(cp, E::Utf8("java/lang/System".into()));
+        let sys_class = cp_append(cp, E::Class { name_index: sys_utf8 });
+        let out_utf8 = cp_append(cp, E::Utf8("out".into()));
+        let ps_desc = cp_append(cp, E::Utf8("Ljava/io/PrintStream;".into()));
+        let out_nat = cp_append(cp, E::NameAndType { name_index: out_utf8, descriptor_index: ps_desc });
+        let out_fieldref = cp_append(cp, E::Fieldref { class_index: sys_class, name_and_type_index: out_nat });
+        let ps_utf8 = cp_append(cp, E::Utf8("java/io/PrintStream".into()));
+        let ps_class = cp_append(cp, E::Class { name_index: ps_utf8 });
+        let pln_utf8 = cp_append(cp, E::Utf8("println".into()));
+        let pln_desc = cp_append(cp, E::Utf8("(J)V".into()));
+        let pln_nat = cp_append(cp, E::NameAndType { name_index: pln_utf8, descriptor_index: pln_desc });
+        let println_ref = cp_append(cp, E::Methodref { class_index: ps_class, name_and_type_index: pln_nat });
+        let _ = cp_append(cp, E::Utf8("main".into()));
+        let _ = cp_append(cp, E::Utf8("([Ljava/lang/String;)V".into()));
+
+        let compute_ref = find_methodref_in_cp(&class.constant_pool, "Main", "compute", "()J");
+        assert_ne!(compute_ref, 0, "Main.compute Methodref must be in CP");
+
+        let [out_hi, out_lo] = out_fieldref.to_be_bytes();
+        let [cmp_hi, cmp_lo] = compute_ref.to_be_bytes();
+        let [pln_hi, pln_lo] = println_ref.to_be_bytes();
+        // getstatic System.out; invokestatic Main.compute()J; invokevirtual println(J)V; return
+        let main_code = vec![
+            0xB2, out_hi, out_lo,
+            0xB8, cmp_hi, cmp_lo,
+            0xB6, pln_hi, pln_lo,
+            0xB1,
+        ];
+        use jvm_class_file::{ACC_PUBLIC, ACC_STATIC, JvmCodeAttribute, JvmMethodAttribute};
+        class.methods.push(JvmMethodInfo {
+            access_flags: ACC_PUBLIC | ACC_STATIC,
+            name: "main".into(),
+            descriptor: "([Ljava/lang/String;)V".into(),
+            attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
+                name: "Code".into(),
+                max_stack: 4, // System.out (1) + long result (2)
+                max_locals: 1,
+                code: main_code,
+                nested_attributes: vec![],
+            })],
+        });
+    }
+
+    let bytes = serialize_jvm_class_file(&class);
+    let tmp = std::env::temp_dir().join(format!("e6_jvm_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("mkdir");
+    std::fs::write(tmp.join("Main.class"), &bytes).expect("write Main.class");
+    let out = std::process::Command::new("java")
+        .arg("-Xverify:none").arg("-cp").arg(&tmp).arg("Main")
+        .output().expect("run java");
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    let _ = std::fs::remove_dir_all(&tmp);
+    assert_eq!(stdout.trim(), "42",
+        "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
+}
