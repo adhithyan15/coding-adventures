@@ -244,5 +244,30 @@ using (var fmt = new SpreadsheetSession())
     Check("fmt raw untouched", fmt.GetRaw("A1"), "1234"); // display-only
 }
 
+// ── Range sort (the ▲/▼ Sort buttons drive SortRange): reorder the budget block
+// A1:E4 by a key column. Each row moves as a record — the E-column SUM formulas
+// travel with their row (the engine shifts the refs), so every total stays
+// correct after the reorder.
+using (var so = new SpreadsheetSession())
+{
+    foreach (var (a, v) in new[]
+    {
+        ("A1", "15"), ("B1", "3"), ("C1", "12"), ("D1", "8"), ("E1", "=SUM(A1:D1)"),
+        ("A2", "8"), ("B2", "14"), ("C2", "7"), ("D2", "22"), ("E2", "=SUM(A2:D2)"),
+        ("A3", "12"), ("B3", "9"), ("C3", "18"), ("D3", "6"), ("E3", "=SUM(A3:D3)"),
+        ("A4", "4"), ("B4", "11"), ("C4", "3"), ("D4", "17"), ("E4", "=SUM(A4:D4)"),
+    }) so.SetCell(a, v);
+    Check("sort pre A1", so.Window(1, 1, 1, 1)[0][0], "15");
+    Check("sort applied asc", so.SortRange("A1", "E4", 1, true).ToString(), "True");
+    Check("sort A1 asc", so.Window(1, 1, 1, 1)[0][0], "4");    // col A → 4,8,12,15
+    Check("sort A4 asc", so.Window(4, 1, 4, 1)[0][0], "15");
+    Check("sort E1 asc", so.Window(1, 5, 1, 5)[0][0], "35");   // E tracks row: 4+11+3+17
+    Check("sort E4 asc", so.Window(4, 5, 4, 5)[0][0], "38");   // 15+3+12+8
+    Check("sort applied desc", so.SortRange("A1", "E4", 1, false).ToString(), "True");
+    Check("sort A1 desc", so.Window(1, 1, 1, 1)[0][0], "15");
+    Check("sort single-row no-op", so.SortRange("A1", "A1", 1, true).ToString(), "False");
+    Check("sort bad key no-op", so.SortRange("A1", "E4", 9, true).ToString(), "False");
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;
