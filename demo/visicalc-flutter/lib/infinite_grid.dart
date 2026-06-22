@@ -188,6 +188,11 @@ class _InfiniteGridState extends State<InfiniteGrid> {
         _formulaCtrl.text = _model.formula;
       });
 
+  // Number formatting: apply an Excel-style format code to the selected cell.
+  // Display-only — the engine renders the stored value through the code, so a
+  // setState rebuild re-reads the row and shows the formatted string.
+  void _applyFormat(String code) => setState(() => _model.applyFormat(code));
+
   // A compact, modern toolbar button (rounded chip with hover/down/disabled
   // states) — the Flutter analog of the web demo's segmented controls and the
   // Qt port's `component ToolButton`. `enabled: null` disables it (Undo/Redo/
@@ -335,6 +340,20 @@ class _InfiniteGridState extends State<InfiniteGrid> {
           _toolButton('− Col',
               "Delete the selected cell's column (references shift left; refs into it become #REF!)",
               _deleteCol),
+          _toolSep(),
+          // ── Format (apply a number format to the selected cell) ──
+          _toolButton('.00',
+              'Format the selected cell with thousands separators + 2 decimals (#,##0.00)',
+              () => _applyFormat('#,##0.00')),
+          const SizedBox(width: 6),
+          _toolButton('%', 'Format the selected cell as a percent (0.0%)',
+              () => _applyFormat('0.0%')),
+          const SizedBox(width: 6),
+          _toolButton('\$', 'Format the selected cell as currency (\$#,##0.00)',
+              () => _applyFormat('\$#,##0.00')),
+          const SizedBox(width: 6),
+          _toolButton('Gen', "Clear the selected cell's format (General)",
+              () => _applyFormat('')),
           _toolSep(),
           // ── History (undo / redo) ──
           _toolButton('↶ Undo', 'Undo the last edit', _undo,
