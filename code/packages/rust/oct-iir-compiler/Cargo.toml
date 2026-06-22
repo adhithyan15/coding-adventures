@@ -1,6 +1,6 @@
 [package]
 name = "oct-iir-compiler"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
 description = "Oct frontend for the LANG VM AOT chain — lowers parsed and type-checked Oct into interpreter_ir::IIRModule.  v0.7.0 (LANG-FULL O2 — u8 width & wrap): Oct's only integer type is u8 (the 8008 byte) and the spec says arithmetic wraps mod-256, so arithmetic/bitwise ops and unary `~` now carry the `u8` type_hint (comparisons stay i64) — every backend masks the result, so `200 + 100 = 44` and `~0 = 255` instead of 300 / -1. (Needs iir-to-jvm-class-file 0.14.0's long-model mask for Oct's printing programs.)  OCT03: emits FullyTyped functions so the JITCore + GenericCirJit chain can run Oct programs JIT-compiled.  OCT04: backend_compat e2e tests prove Oct's IIR is accepted by every IIR-to-{wasm,jvm,clr,beam} validator.  OCT05: threads real source positions through IIRFunction::source_map for line-based debugger breakpoints."
 

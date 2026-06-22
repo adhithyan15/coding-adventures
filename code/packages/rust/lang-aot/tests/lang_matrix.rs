@@ -466,6 +466,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("44"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Oct — `static` module GLOBAL, shared across functions (LANG-FULL O3). Until now
+    // Oct's top-level `static` was silently dropped at IIR-gen; `oct-iir-compiler` 0.8.0
+    // lowers it to the IIR module-global ops (`global_load`/`global_store`, LANG32 — the
+    // same path ALGOL's enclosing-block scalars use for E6). `counter` is initialised to
+    // 40 once at the top of `main`, then `bump()` — a SEPARATE function — increments the
+    // shared global twice, and `main` prints it: `42`. This proves three things at once,
+    // observably: (1) the initialiser ran, (2) a write in one function is visible in
+    // another (it's ONE global, not a per-function register — a register model would
+    // print 40), and (3) the global survives across the two `bump` calls. Runs on all 7
+    // backends, each materialising the global natively (LLVM `@__twig_global_N`, a JVM/CLR
+    // `static` field, a WASM module global, the native `_twig_globals` slot, the VM/JIT
+    // name-keyed map, the BEAM process dict) — no backend learned anything Oct-specific.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "static counter: u8 = 40; \
+               fn bump() { counter = counter + 1; } \
+               fn main() { bump(); bump(); out(1, counter); }",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
         lang: Language::Algol60,

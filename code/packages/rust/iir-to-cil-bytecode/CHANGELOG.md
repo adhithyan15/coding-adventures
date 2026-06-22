@@ -1,5 +1,22 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.25.0] — 2026-06-22 — void functions & void calls in the textual emitter (LANG-FULL O3)
+
+The textual `il_text` path (the one the cross-backend matrix assembles with `ilasm`)
+gained support for **void functions** — a latent gap surfaced by Oct's O3 `static`-global
+proof, whose `bump()` is the first void *user* function to reach the CLR column (every
+prior matrix program returned a value, and `main`'s `ret_void` is rewritten to `ret i32`).
+
+- **`ret_void`** now lowers to a bare `ret` (was an `UnsupportedOp` rejection).
+- **`cil_ret_type`** maps a `void` return type to the CIL `void` signature (it used to
+  fall through `cil_local_type` to `int32` — wrong for a value-less method).
+- **`call` to a void method** (IIR `dest == None`) emits `call void …` and performs **no**
+  trailing `store` (previously the arm hard-required a `dest` and always stored a result,
+  so a dest-less void call panicked). Value-returning calls are unchanged.
+- Proven by **running**: the Oct `static counter` program (`bump()` mutates a shared
+  global twice) assembles with `ilasm` and runs under `dotnet` → `42`, alongside the other
+  six backends in `lang_matrix.rs`. Unit test: `void_function_and_void_call_lower`.
+
 ## [0.24.0] — 2026-06-22 — typed module globals → static fields (LANG-FULL E6 layer 1)
 
 `global_load` / `global_store` were a `LANG32b`-deferred `UnsupportedOp`

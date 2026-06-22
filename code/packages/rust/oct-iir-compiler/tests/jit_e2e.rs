@@ -98,6 +98,30 @@ fn oct_jit_if_else() {
         "Oct if x==0 then x=1 else x=2 should produce x=1 via JIT; got: {v:?}");
 }
 
+/// `static` global, cross-function, RUN-VERIFIED (LANG-FULL O3).
+///
+/// `counter` is a module-level `static`.  `run` writes it (40), then calls
+/// `bump` — a *different* function — twice; each `bump` reads-modifies-writes
+/// the same global.  `run` finally reads it back.  If `static` lowered to a
+/// per-function register (the pre-O3 behaviour, where a name is just a local
+/// slot), `bump`'s mutations would be invisible to `run` and the result would
+/// be 40, not 42.  Getting 42 proves the value lives in ONE shared module
+/// global that survives across calls and is visible to every function — the
+/// whole point of O3.  (The `= 99` initialiser is overwritten by `run`; the
+/// initialiser path itself is proven by the `lang_matrix.rs` `out`-checked
+/// program, which runs `main` end-to-end.)
+#[test]
+fn oct_jit_static_global_shared_across_functions() {
+    let src = "static counter: u8 = 99; \
+               fn bump() { counter = counter + 1; } \
+               fn run() -> u8 { counter = 40; bump(); bump(); return counter; } \
+               fn main() { }";
+    let v = run_oct_through_jit(src, "run");
+    assert_eq!(v.as_i64(), Some(42),
+        "Oct static `counter` shared across run()/bump() should accumulate to \
+         42 (40 + two bumps); a per-function register would give 40. Got: {v:?}");
+}
+
 /// While loop through the JIT — exercises backward `jmp` (the JIT's
 /// bytecode loop) or the interpreter path's label/jmp dispatch.
 /// Either way, the result must be 10 (the loop ran to completion).
