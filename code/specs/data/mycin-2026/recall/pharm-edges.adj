@@ -98,4 +98,16 @@ rulebook pharm_facts {
         source "Protamine is a medication used to reverse and neutralize the anticoagulant effects of heparin."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK547753/"
         trust authoritative
+
+    % --- EXPAND: digoxin immune Fab reverses digoxin toxicity ----------
+    relate antidote_for(digoxin_toxicity, digoxin_immune_fab)
+        source "Digoxin immune Fab is an antidote for digoxin toxicity, a condition typically observed in patients with atrial fibrillation and underlying heart failure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556101/"
+        trust authoritative
+
+    % --- EXPAND: vitamin K reverses warfarin-associated coagulopathy ----
+    relate antidote_for(warfarin_toxicity, vitamin_k)
+        source "Oral vitamin K lowers the international normalized ratio more rapidly than subcutaneous vitamin K in the treatment of warfarin-associated coagulopathy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557622/"
+        trust authoritative
 }
