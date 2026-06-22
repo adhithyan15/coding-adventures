@@ -20,11 +20,23 @@
 // any row pans them all in lockstep (the header is gesture-disabled — it only
 // follows). Vertical drags fall through the per-row horizontalScroll to the
 // LazyColumn.
+//
+// Visually this mirrors the reference design language from the web demo
+// (demo/visicalc-html/infinite.html) — a dark, modern-spreadsheet surface built
+// from a small set of color tokens: an address pill + `fx` marker + a formula
+// field with an accent focus ring, segmented tool-button groups, zebra row
+// banding, a 2px accent selection ring with accent-tinted row/col headers, and a
+// hairline status footer. The same token set the Qt and Flutter ports use.
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +50,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -49,26 +62,43 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// Cell geometry + palette, matching the sibling infinite views.
-private val ROW_H = 24.dp
-private val COL_W = 90.dp
+// Cell geometry (roomier, to match the web reference).
+private val ROW_H = 26.dp
+private val COL_W = 92.dp
 private val GUTTER_W = 64.dp
-private val HEAD_H = 26.dp
+private val HEAD_H = 28.dp
 
-private val BG = Color(0xFF1E1E1E)
-private val CHROME = Color(0xFF2D2D30)
-private val BORDER = Color(0xFF3F3F46)
-private val INK = Color(0xFFCCCCCC)
-private val DIM = Color(0xFF9D9D9D)
-private val SEL = Color(0xFF094771)
+// ── Design tokens ───────────────────────────────────────────────────────────
+// Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc backend
+// reads as one considered surface (dark modern spreadsheet). Same token set as
+// the Qt InfiniteSheet.qml / Flutter infinite_grid.dart ports.
+private val BG = Color(0xFF16181D) // app / base cell
+private val PANEL = Color(0xFF1B1E24) // toolbar + zebra band
+private val SURFACE = Color(0xFF21252C) // buttons, pill
+private val SURFACE_HOVER = Color(0xFF2B313A)
+private val SURFACE_DOWN = Color(0xFF14171C)
+private val FIELD = Color(0xFF0F1115) // formula input well
+private val LINE = Color(0xFF2C313A) // hairline borders
+private val LINE_STRONG = Color(0xFF3A404B) // control borders
+private val HEAD = Color(0xFF20242B) // row/col headers
+private val HEAD_SEL = Color(0xFF2B3340) // header of selected row/col
+private val INK = Color(0xFFE8EAED) // primary text
+private val MUTED = Color(0xFF9AA3B2) // labels, headers
+private val ACCENT = Color(0xFF4AA3FF) // selection + focus
+private val SEL = Color(0xFF21344A) // selected-cell fill
 private val MONO = FontFamily.Monospace
 
 /// The virtualized infinite-sheet view. Owns its [InfiniteSheetModel] and the
@@ -91,6 +121,10 @@ fun InfiniteSheet() {
     // serialized workbook here, Load restores from it. (A real app would write
     // it to a file; the demo keeps the round trip self-contained.)
     var savedSnapshot by remember { mutableStateOf("") }
+
+    // Drives the formula field's accent focus ring.
+    val fieldInteraction = remember { MutableInteractionSource() }
+    val fieldFocused by fieldInteraction.collectIsFocusedAsState()
 
     fun select(row: Int, col: Int) {
         model.selectInf(row, col)
@@ -149,119 +183,204 @@ fun InfiniteSheet() {
         rev++
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
-        // ── Formula bar: the selected cell's address + an editable source ──
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(model.infAddress(), DIM, GUTTER_W)
+    Column(modifier = Modifier.fillMaxSize().background(BG)) {
+        // ── Formula bar: a panel holding the address pill, an `fx` marker, the
+        // editable source line (with an accent focus ring), and segmented button
+        // groups (drag-fill · clipboard · file · history) divided by thin rules.
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 6.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(PANEL)
+                .border(1.dp, LINE, RoundedCornerShape(8.dp))
+                .padding(8.dp),
+        ) {
+            // Address pill.
+            Box(
+                modifier = Modifier
+                    .width(46.dp)
+                    .height(30.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(SURFACE)
+                    .border(1.dp, LINE_STRONG, RoundedCornerShape(5.dp)),
+                contentAlignment = Alignment.Center,
+            ) {
+                androidx.compose.material.Text(
+                    model.infAddress(),
+                    color = INK,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = MONO,
+                )
+            }
+            Spacer(Modifier.width(6.dp))
+            androidx.compose.material.Text(
+                "fx",
+                color = MUTED,
+                fontSize = 12.sp,
+                fontStyle = FontStyle.Italic,
+                fontFamily = MONO,
+            )
+            Spacer(Modifier.width(6.dp))
+            // Formula field — accent focus ring on edit.
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .height(28.dp)
-                    .background(CHROME)
-                    .border(1.dp, BORDER)
-                    .padding(horizontal = 6.dp),
+                    .height(30.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(FIELD)
+                    .border(
+                        if (fieldFocused) 2.dp else 1.dp,
+                        if (fieldFocused) ACCENT else LINE_STRONG,
+                        RoundedCornerShape(5.dp),
+                    )
+                    .padding(horizontal = 8.dp),
                 contentAlignment = Alignment.CenterStart,
             ) {
                 BasicTextField(
                     value = formula,
                     onValueChange = { formula = it },
                     singleLine = true,
+                    interactionSource = fieldInteraction,
                     textStyle = TextStyle(color = INK, fontSize = 13.sp, fontFamily = MONO),
-                    cursorBrush = androidx.compose.ui.graphics.SolidColor(INK),
+                    cursorBrush = androidx.compose.ui.graphics.SolidColor(ACCENT),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = { commit() }),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            Spacer(Modifier.width(8.dp))
-            // Drag-fill: replicate the selected cell into the 10 rows below it.
-            androidx.compose.material.OutlinedButton(
-                onClick = { fillDown() },
-                colors = androidx.compose.material.ButtonDefaults.outlinedButtonColors(
-                    backgroundColor = CHROME,
-                    contentColor = INK,
-                ),
-                border = androidx.compose.foundation.BorderStroke(1.dp, BORDER),
-            ) {
-                androidx.compose.material.Text(
-                    "Fill ↓ 10",
-                    fontSize = 12.sp,
-                    fontFamily = MONO,
-                )
-            }
-            // Clipboard: copy/cut the selected cell, paste at the selection.
-            Spacer(Modifier.width(8.dp))
-            clipButton("Copy") { copyCell() }
-            Spacer(Modifier.width(8.dp))
-            clipButton("Cut") { cutCell() }
-            Spacer(Modifier.width(8.dp))
-            clipButton("Paste") { pasteCell() }
-            // Save / load: serialize the whole workbook to memory, and restore it.
-            Spacer(Modifier.width(8.dp))
-            clipButton("Save") { saveBook() }
-            Spacer(Modifier.width(8.dp))
-            clipButton("Load") { loadBook() }
-            // Undo / redo: walk the engine's snapshot history. Reading `rev` here
-            // re-evaluates canUndo/canRedo on every edit so the buttons gate live.
-            Spacer(Modifier.width(8.dp))
-            gatedButton("Undo", enabled = rev.let { model.canUndo() }) { undo() }
-            Spacer(Modifier.width(8.dp))
-            gatedButton("Redo", enabled = rev.let { model.canRedo() }) { redo() }
+            Spacer(Modifier.width(6.dp))
+            // ── Drag-fill ──
+            toolButton("↓ Fill 10") { fillDown() }
+            toolSep()
+            // ── Clipboard ──
+            toolButton("Copy") { copyCell() }
+            Spacer(Modifier.width(6.dp))
+            toolButton("Cut") { cutCell() }
+            Spacer(Modifier.width(6.dp))
+            toolButton("Paste") { pasteCell() }
+            toolSep()
+            // ── File (save / load) ──
+            toolButton("Save") { saveBook() }
+            Spacer(Modifier.width(6.dp))
+            toolButton("Load", enabled = savedSnapshot.isNotEmpty()) { loadBook() }
+            toolSep()
+            // ── History (undo / redo). Reading `rev` re-evaluates canUndo/canRedo
+            // on every edit so the buttons gate live.
+            toolButton("↶ Undo", enabled = rev.let { model.canUndo() }) { undo() }
+            Spacer(Modifier.width(6.dp))
+            toolButton("↷ Redo", enabled = rev.let { model.canRedo() }) { redo() }
         }
 
-        Spacer(Modifier.height(6.dp))
-
         // ── Column-letter header (frozen vertically, follows horizontal pan) ──
-        Row {
+        // The selected column's header tints to the accent.
+        Row(modifier = Modifier.padding(horizontal = 10.dp)) {
             chromeCell(GUTTER_W, HEAD_H, "") // corner
             Box(modifier = Modifier.horizontalScroll(hScroll, enabled = false)) {
                 Row {
                     for (c in 1..model.totalCols) {
-                        chromeCell(COL_W, HEAD_H, model.columnLetters(c))
+                        chromeCell(COL_W, HEAD_H, model.columnLetters(c), selected = selCol == c)
                     }
                 }
             }
         }
 
         // ── Body: virtualized rows, each with a frozen gutter + scrolling cells ──
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.weight(1f).padding(horizontal = 10.dp)) {
             items(model.totalRows) { idx ->
                 val rowNum = idx + 1
                 // One engine read for the whole row; re-read when `rev` changes.
                 val cells = remember(rowNum, rev) { model.rowCells(rowNum) }
                 Row {
-                    chromeCell(GUTTER_W, ROW_H, "$rowNum") // gutter — frozen left
+                    // Gutter — frozen left; the selected row's label tints to accent.
+                    chromeCell(GUTTER_W, ROW_H, "$rowNum", selected = selRow == rowNum)
                     Box(modifier = Modifier.horizontalScroll(hScroll)) {
                         Row {
                             for (c in 1..model.totalCols) {
                                 val text = if (c - 1 < cells.size) cells[c - 1] else ""
                                 val selected = selRow == rowNum && selCol == c
-                                dataCell(text, selected) { select(rowNum, c) }
+                                dataCell(text, rowNum, selected) { select(rowNum, c) }
                             }
                         }
                     }
                 }
             }
         }
+
+        // ── Status line: a hairline-separated footer echoing the live virtual-grid
+        // size and the per-edit revision clock (mirrors the web/Qt/Flutter demos).
+        Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp).height(1.dp).background(LINE))
+        androidx.compose.material.Text(
+            "Virtual grid: ${model.totalRows} rows × ${model.totalCols} cols" +
+                "  ·  revision ${rev.let { model.revision() }}",
+            color = MUTED,
+            fontSize = 12.sp,
+            fontFamily = MONO,
+            modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 6.dp, bottom = 10.dp),
+        )
     }
 }
 
-/// A right-aligned, tappable data cell.
+/// A thin vertical rule between toolbar button groups.
 @Composable
-private fun dataCell(text: String, selected: Boolean, onTap: () -> Unit) {
+private fun toolSep() {
+    Spacer(Modifier.width(6.dp))
+    Box(modifier = Modifier.width(1.dp).height(22.dp).background(LINE))
+    Spacer(Modifier.width(6.dp))
+}
+
+/// A compact, modern toolbar button — a rounded chip with hover / pressed /
+/// disabled states, the Compose analog of the web demo's segmented controls and
+/// the Qt port's `component ToolButton`.
+@Composable
+private fun toolButton(label: String, enabled: Boolean = true, onClick: () -> Unit) {
+    val interaction = remember { MutableInteractionSource() }
+    val hovered by interaction.collectIsHoveredAsState()
+    val pressed by interaction.collectIsPressedAsState()
+    val bg = when {
+        !enabled -> SURFACE
+        pressed -> SURFACE_DOWN
+        hovered -> SURFACE_HOVER
+        else -> SURFACE
+    }
+    val fg = if (!enabled) MUTED else if (hovered) Color.White else INK
+    Box(
+        modifier = Modifier
+            .height(30.dp)
+            .alpha(if (enabled) 1f else 0.6f)
+            .clip(RoundedCornerShape(5.dp))
+            .background(bg)
+            .border(1.dp, LINE_STRONG, RoundedCornerShape(5.dp))
+            .hoverable(interaction, enabled = enabled)
+            .clickable(interactionSource = interaction, indication = null, enabled = enabled) { onClick() }
+            .padding(horizontal = 11.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        androidx.compose.material.Text(label, color = fg, fontSize = 12.sp, fontFamily = MONO)
+    }
+}
+
+/// A right-aligned, tappable data cell. Selected → accent fill + 2px accent ring;
+/// otherwise a zebra band (even rows take the panel tint).
+@Composable
+private fun dataCell(text: String, rowNum: Int, selected: Boolean, onTap: () -> Unit) {
+    val band = if (rowNum % 2 == 0) PANEL else BG
     Box(
         modifier = Modifier
             .size(COL_W, ROW_H)
-            .background(if (selected) SEL else BG)
-            .border(0.5.dp, BORDER)
+            .background(if (selected) SEL else band)
+            .border(if (selected) 2.dp else 0.5.dp, if (selected) ACCENT else LINE)
             .clickable(onClick = onTap)
-            .padding(end = 4.dp),
+            .padding(end = 6.dp),
         contentAlignment = Alignment.CenterEnd,
     ) {
         androidx.compose.material.Text(
             text = text,
-            color = INK,
+            color = if (selected) Color.White else INK,
             fontSize = 12.sp,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             fontFamily = MONO,
             maxLines = 1,
             textAlign = TextAlign.End,
@@ -270,42 +389,22 @@ private fun dataCell(text: String, selected: Boolean, onTap: () -> Unit) {
 }
 
 /// A frozen header/gutter cell (column letter, row number, or the corner).
+/// When [selected] (its row/column holds the cursor) it tints to the accent.
 @Composable
-private fun chromeCell(w: androidx.compose.ui.unit.Dp, h: androidx.compose.ui.unit.Dp, text: String) {
+private fun chromeCell(w: Dp, h: Dp, text: String, selected: Boolean = false) {
     Box(
-        modifier = Modifier.size(w, h).background(CHROME).border(0.5.dp, BORDER),
+        modifier = Modifier
+            .size(w, h)
+            .background(if (selected) HEAD_SEL else HEAD)
+            .border(0.5.dp, LINE),
         contentAlignment = Alignment.Center,
     ) {
-        androidx.compose.material.Text(text, color = DIM, fontSize = 12.sp, fontFamily = MONO)
-    }
-}
-
-/// The formula-bar address label (fixed width).
-@Composable
-private fun Text(text: String, color: Color, width: androidx.compose.ui.unit.Dp) {
-    Box(modifier = Modifier.width(width)) {
-        androidx.compose.material.Text(text, color = color, fontSize = 12.sp, fontFamily = MONO)
-    }
-}
-
-/// A compact outlined button for the clipboard controls, matching "Fill ↓ 10".
-@Composable
-private fun clipButton(label: String, onClick: () -> Unit) {
-    gatedButton(label, enabled = true, onClick = onClick)
-}
-
-/// A clipboard-style button that disables when `enabled` is false (Undo/Redo).
-@Composable
-private fun gatedButton(label: String, enabled: Boolean, onClick: () -> Unit) {
-    androidx.compose.material.OutlinedButton(
-        onClick = onClick,
-        enabled = enabled,
-        colors = androidx.compose.material.ButtonDefaults.outlinedButtonColors(
-            backgroundColor = CHROME,
-            contentColor = INK,
-        ),
-        border = androidx.compose.foundation.BorderStroke(1.dp, BORDER),
-    ) {
-        androidx.compose.material.Text(label, fontSize = 12.sp, fontFamily = MONO)
+        androidx.compose.material.Text(
+            text,
+            color = if (selected) ACCENT else MUTED,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = MONO,
+        )
     }
 }
