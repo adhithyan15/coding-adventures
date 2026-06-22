@@ -228,6 +228,35 @@ Item {
                 }
                 Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
 
+                // ── Structure (insert / delete the selected row or column) ──
+                // The engine shifts every formula reference across the band; a
+                // reference whose whole band is deleted becomes #REF!.
+                ToolButton {
+                    text: "+ Row"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Insert a row above the selected cell (references shift down)"
+                    onClicked: if (doc) doc.insertRows(doc.infRow, 1)
+                }
+                ToolButton {
+                    text: "− Row"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Delete the selected cell's row (references shift up; refs into it become #REF!)"
+                    onClicked: if (doc) doc.deleteRows(doc.infRow, 1)
+                }
+                ToolButton {
+                    text: "+ Col"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Insert a column left of the selected cell (references shift right)"
+                    onClicked: if (doc) doc.insertCols(doc.infCol, 1)
+                }
+                ToolButton {
+                    text: "− Col"
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Delete the selected cell's column (references shift left; refs into it become #REF!)"
+                    onClicked: if (doc) doc.deleteCols(doc.infCol, 1)
+                }
+                Rectangle { Layout.preferredWidth: 1; Layout.fillHeight: true; Layout.topMargin: 4; Layout.bottomMargin: 4; color: sheet.cLine }
+
                 // ── History (undo / redo) ──
                 ToolButton {
                     text: "↶ Undo"

@@ -26,6 +26,7 @@ private slots:
     void clipboardCopyCutPaste();
     void saveLoadRoundTrips();
     void undoRedoWalksHistory();
+    void structuralInsertDeleteShiftsReferences();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -235,6 +236,52 @@ void TstWindow::undoRedoWalksHistory() {
     QVERIFY(m.canRedo());
     m.setCell("A1", "7");
     QVERIFY(!m.canRedo());
+}
+
+// Structural edits (the + Row / − Row / + Col / − Col controls drive
+// model.insertRows/deleteRows/insertCols/deleteCols): inserting and deleting
+// rows/columns shifts every formula reference across the band, and deleting a
+// referenced band turns that reference into #REF!.
+void TstWindow::structuralInsertDeleteShiftsReferences() {
+    SpreadsheetModel m;
+    // A fresh column away from the seeded budget: H1=10, H2=20, H3 = H1+H2 = 30.
+    m.setCell("H1", "10");
+    m.setCell("H2", "20");
+    m.setCell("H3", "=H1+H2");
+    QCOMPARE(m.window(3, 8, 3, 8).at(0).toList().at(0).toString(), QStringLiteral("30"));
+
+    // The engine's formula printer parenthesizes binary ops ("=(H1+H3)"), so
+    // compare the selected cell's source with the parens stripped.
+    auto bareFormula = [&m]() { return QString(m.infFormula()).remove('(').remove(')'); };
+
+    // Insert a row at row 2: H2/H3 shift down to H3/H4, row 2 is blank, and the
+    // formula's refs shift with their cells (=H1+H2 → =H1+H3).
+    m.insertRows(2, 1);
+    QCOMPARE(m.window(2, 8, 2, 8).at(0).toList().at(0).toString(), QString());          // inserted row blank
+    QCOMPARE(m.window(4, 8, 4, 8).at(0).toList().at(0).toString(), QStringLiteral("30")); // formula at H4
+    m.selectInf(4, 8);
+    QCOMPARE(bareFormula(), QStringLiteral("=H1+H3"));
+
+    // Delete that inserted row: everything shifts back.
+    m.deleteRows(2, 1);
+    QCOMPARE(m.window(3, 8, 3, 8).at(0).toList().at(0).toString(), QStringLiteral("30"));
+    m.selectInf(3, 8);
+    QCOMPARE(bareFormula(), QStringLiteral("=H1+H2"));
+
+    // Delete row 1 (referenced by the formula): H2 shifts up to H1, the formula
+    // shifts up to H2, and its destroyed H1 reference becomes #REF!.
+    m.deleteRows(1, 1);
+    QCOMPARE(m.window(2, 8, 2, 8).at(0).toList().at(0).toString(), QStringLiteral("#REF!"));
+
+    // Columns shift the same way: K1=5, L1 = K1*3 = 15. Insert a column at K and
+    // the formula (now at M1) keeps pointing at its precedent (now L1).
+    SpreadsheetModel m2;
+    m2.setCell("K1", "5");
+    m2.setCell("L1", "=K1*3");
+    m2.insertCols(11, 1); // col 11 = K
+    QCOMPARE(m2.window(1, 13, 1, 13).at(0).toList().at(0).toString(), QStringLiteral("15")); // M1
+    m2.selectInf(1, 13);
+    QCOMPARE(QString(m2.infFormula()).remove('(').remove(')'), QStringLiteral("=L1*3"));
 }
 
 QTEST_MAIN(TstWindow)

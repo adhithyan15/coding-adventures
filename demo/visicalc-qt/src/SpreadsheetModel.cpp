@@ -353,6 +353,52 @@ bool SpreadsheetModel::paste(const QString &dstStart) {
     return applied;
 }
 
+// Structural edits: insert / delete rows or columns at a 1-based position. The
+// engine shifts every formula reference at or after the band (a reference whose
+// whole band is deleted becomes #REF!) and recomputes; we then rebuild the grid,
+// regrow the extent, and bump `revision` so the visible rows re-fetch. `at`/`count`
+// arrive as int from QML — clamp the count to ≥ 0 before the u32 cast so a stray
+// negative can't wrap to a huge unsigned band.
+void SpreadsheetModel::insertRows(int at, int count) {
+    sc_insert_rows(session_, static_cast<uint32_t>(at < 0 ? 0 : at),
+                   static_cast<uint32_t>(count < 0 ? 0 : count));
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}
+
+void SpreadsheetModel::deleteRows(int at, int count) {
+    sc_delete_rows(session_, static_cast<uint32_t>(at < 0 ? 0 : at),
+                   static_cast<uint32_t>(count < 0 ? 0 : count));
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}
+
+void SpreadsheetModel::insertCols(int at, int count) {
+    sc_insert_cols(session_, static_cast<uint32_t>(at < 0 ? 0 : at),
+                   static_cast<uint32_t>(count < 0 ? 0 : count));
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}
+
+void SpreadsheetModel::deleteCols(int at, int count) {
+    sc_delete_cols(session_, static_cast<uint32_t>(at < 0 ? 0 : at),
+                   static_cast<uint32_t>(count < 0 ? 0 : count));
+    recompute();
+    computeExtent();
+    revision_++;
+    emit changed();
+    emit revisionChanged();
+}
+
 // Save: serialize the whole workbook (source + formats) to a JSON document. The
 // host stores the returned string wherever it likes (a file, QSettings, …); the
 // engine owns no I/O. takeString frees the C string with the engine's allocator.
