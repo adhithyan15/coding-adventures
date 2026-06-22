@@ -1,5 +1,27 @@
 # Changelog — x86-simulator
 
+## 0.6.0 — 2026-06-21 — stdin (`getchar`) + Brainfuck cat runs locally (x86-sim PR-S6)
+
+Completes the Brainfuck story: the stdin-driven `,` programs now run on the
+x86_64 column locally. No new opcode was needed — only a real `getchar`.
+
+### Added
+- **`getchar` reads a stdin buffer** — the `Simulator` gains an `input: Vec<u8>`
+  consumed front-to-back; `getchar` returns the next byte, or EOF (`-1`) once
+  drained. Returning `-1` (not `0`) matches the libc/native convention, so the
+  Brainfuck IIR's negative-`getchar`→0 clamp halts a `,[.,]` cat loop at
+  end-of-input exactly as it does on the real native backend.
+- **`MachineCodeHarness::stdin(&[u8])`** — supplies that buffer (defaults to
+  empty, i.e. immediate EOF, so existing programs are unchanged).
+- **3 stdin Brainfuck matrix cells**: `,+.` (input `A` ⇒ `B`), `,.,.` (echo
+  `Hi` ⇒ `Hi`), and `,[.,]` (cat `Hi` ⇒ `Hi`) — run on the x86_64 column
+  locally via a new `run_with_stdin` helper.
+
+### Verified
+- Cat (`,[.,]`) reads+prints until the simulator's EOF threads through the
+  backend's clamp and halts the loop. 53 tests (28 unit + 21 matrix + 4
+  lib/harness).
+
 ## 0.5.0 — 2026-06-21 — byte-tape store + Brainfuck runs locally (x86-sim PR-S5)
 
 Continues the coverage-mining pattern (S4): running a **Brainfuck** program
