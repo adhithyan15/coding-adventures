@@ -591,6 +591,34 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                     }
                 }
+                // ---- padStart(target[, pad]) / padEnd(target[, pad]) ----
+                //
+                // `"5".padStart(3, "0")` → `"005"`, `"abc".padEnd(6)` →
+                // `"abc   "` (ECMAScript §22.1.3.16/17). Pads the string to a
+                // target length (in UTF-16 code units) with a fill string
+                // (default a single space), repeated and truncated to fit.
+                // `fold_string_pad` declines for a non-integer target, a
+                // non-string-literal pad, a target over the size cap, or a
+                // truncation that would leave a lone surrogate.
+                else if id.name == "padStart" || id.name == "padEnd" {
+                    let at_start = id.name == "padStart";
+                    if let Some(result) = fold_string_pad(&s.value, &arguments, at_start) {
+                        let parent = c.cv.clone();
+                        let args_src = arguments
+                            .iter()
+                            .map(|a| match a {
+                                Expression::NumericLiteral(n) => format_js_number(n.value),
+                                Expression::StringLiteral(p) => format!("\"{}\"", p.value),
+                                _ => "?".to_string(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(",");
+                        let before = format!("\"{}\".{}({})", s.value, id.name, args_src);
+                        let after = format!("\"{}\"", result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+                    }
+                }
                 // ---- zero-argument casing methods (ASCII-only) ----
                 else if arguments.is_empty() {
                     let cased = match id.name.as_str() {
@@ -811,6 +839,80 @@ fn fold_string_repeat(value: &str, args: &[Expression]) -> Option<String> {
         Some(total) if total <= MAX_REPEAT_UNITS => Some(value.repeat(count as usize)),
         _ => None,
     }
+}
+
+/// Compute `value.padStart(target[, pad])` (when `at_start`) or
+/// `value.padEnd(target[, pad])` at compile time, or `None` when it cannot be
+/// folded soundly (ECMAScript §22.1.3.16 / §22.1.3.17).
+///
+/// JS pads to `target` **UTF-16 code units** with a fill string (default a
+/// single space `" "`), formed by repeating `pad` and truncating it to exactly
+/// the shortfall. `"5".padStart(3, "0")` → `"005"`, `"abc".padEnd(6)` →
+/// `"abc   "`, `"abc".padStart(6, "12")` → `"121abc"` (the `"12"` repeats to
+/// `"121"`). If the string is already `>= target`, it is returned unchanged.
+///
+/// We decline (return `None`, leaving the call for the runtime) when:
+/// - there is no argument, or more than two;
+/// - the target is not a non-negative integer literal (no `ToLength` coercion);
+/// - the pad argument is present but not a string literal;
+/// - the target exceeds `MAX_PAD_UNITS` (a denial-of-service guard against
+///   materializing a huge literal at compile time); or
+/// - truncating the fill would split a surrogate pair, leaving a lone surrogate
+///   the result `String` cannot hold (`String::from_utf16` fails) — the same
+///   conservative guard `slice`/`charAt` use.
+fn fold_string_pad(value: &str, args: &[Expression], at_start: bool) -> Option<String> {
+    /// Cap on the padded result's length, in UTF-16 code units.
+    const MAX_PAD_UNITS: u64 = 100_000;
+
+    if args.is_empty() || args.len() > 2 {
+        return None;
+    }
+    // arg 0: target length — a non-negative integer literal.
+    let target = match &args[0] {
+        Expression::NumericLiteral(n)
+            if n.value.is_finite() && n.value.fract() == 0.0 && n.value >= 0.0 =>
+        {
+            n.value as u64
+        }
+        _ => return None,
+    };
+    if target > MAX_PAD_UNITS {
+        return None;
+    }
+    // arg 1: pad string — a string literal, defaulting to a single space.
+    let pad: &str = match args.get(1) {
+        None => " ",
+        Some(Expression::StringLiteral(p)) => &p.value,
+        Some(_) => return None,
+    };
+
+    let s_units: Vec<u16> = value.encode_utf16().collect();
+    let s_len = s_units.len() as u64;
+    // Already long enough (or an empty pad can't extend it) → unchanged.
+    if target <= s_len {
+        return Some(value.to_string());
+    }
+    let pad_units: Vec<u16> = pad.encode_utf16().collect();
+    if pad_units.is_empty() {
+        return Some(value.to_string());
+    }
+
+    // Build the filler by repeating `pad` and truncating to the shortfall.
+    let fill_len = (target - s_len) as usize;
+    let mut filler: Vec<u16> = Vec::with_capacity(fill_len);
+    while filler.len() < fill_len {
+        let take = (fill_len - filler.len()).min(pad_units.len());
+        filler.extend_from_slice(&pad_units[..take]);
+    }
+
+    // Concatenate (filler before or after the string) and reject a result that
+    // a Rust `String` cannot hold (a truncation-induced lone surrogate).
+    let result_units: Vec<u16> = if at_start {
+        filler.iter().chain(s_units.iter()).copied().collect()
+    } else {
+        s_units.iter().chain(filler.iter()).copied().collect()
+    };
+    String::from_utf16(&result_units).ok()
 }
 
 // ---------------------------------------------------------------------
@@ -3256,6 +3358,109 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "s.repeat(3) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- padStart / padEnd ---------------------------
+
+    /// Build `"<recv>".<method>(<target>[, "<pad>"])`.
+    fn pad_call(recv: &str, method: &str, target: f64, pad: Option<&str>) -> Expression {
+        let mut arguments = vec![num(target, None)];
+        if let Some(p) = pad {
+            arguments.push(string(p, None));
+        }
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string(recv, None), method)),
+            arguments,
+        })
+    }
+
+    #[test]
+    fn fold_string_pad_basic() {
+        // (recv, method, target, pad, expect) — oracle values from V8.
+        for (recv, method, target, pad, expect) in [
+            ("abc", "padStart", 6.0, None, "   abc"),     // default space pad
+            ("abc", "padStart", 6.0, Some("*"), "***abc"),
+            ("abc", "padEnd", 6.0, Some("*"), "abc***"),
+            ("abc", "padStart", 2.0, Some("*"), "abc"),   // already long enough
+            ("abc", "padStart", 6.0, Some("12"), "121abc"), // repeats + truncates
+            ("abc", "padEnd", 8.0, Some("xy"), "abcxyxyx"),
+            ("abc", "padStart", 6.0, Some(""), "abc"),    // empty pad → unchanged
+            ("5", "padStart", 3.0, Some("0"), "005"),     // zero-pad
+        ] {
+            let c = pad_call(recv, method, target, pad);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "\"{recv}\".{method}({target}, {pad:?}) should fold");
+            match extract_expr(&out) {
+                Expression::StringLiteral(s) => assert_eq!(
+                    s.value, expect,
+                    "\"{recv}\".{method}({target}, {pad:?})"
+                ),
+                other => panic!("expected \"{expect}\"; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn pad_counts_utf16_units() {
+        // "💩" is two UTF-16 units, so "💩".padEnd(4, "x") adds two → "💩xx".
+        let c = pad_call("💩", "padEnd", 4.0, Some("x"));
+        let (out, _, _, _) = run_pass(program_with_expr(c, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "💩xx"),
+            other => panic!("expected \"💩xx\"; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn pad_truncating_a_surrogate_pair_does_not_fold() {
+        // pad "💩" (2 units) truncated to a 1-unit shortfall is a lone high
+        // surrogate — a valid JS string but not a Rust `String`, so decline.
+        let c = pad_call("abc", "padStart", 4.0, Some("💩"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "pad truncating a surrogate pair must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn pad_over_size_cap_does_not_fold() {
+        // target 200_000 > 100_000 cap — DoS guard declines.
+        let c = pad_call("abc", "padStart", 200_000.0, Some("*"));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "pad over the size cap must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn pad_non_integer_target_or_non_literal_pad_does_not_fold() {
+        // Fractional target: don't model ToLength coercion.
+        let frac = pad_call("abc", "padStart", 5.5, Some("*"));
+        let (out, _, changed, _) = run_pass(program_with_expr(frac, true));
+        assert!(!changed, "fractional pad target must not fold");
+
+        // Non-literal pad (a numeric pad arg) — only string-literal pads fold.
+        let numpad = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(string("abc", None), "padStart")),
+            arguments: vec![num(6.0, None), num(0.0, None)],
+        });
+        let (out2, _, changed2, _) = run_pass(program_with_expr(numpad, true));
+        assert!(!changed2, "non-string-literal pad must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        assert!(matches!(extract_expr(&out2), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn pad_on_identifier_receiver_does_not_fold() {
+        // `s.padStart(5)` needs the runtime value of `s`.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("s"), "padStart")),
+            arguments: vec![num(5.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "s.padStart(5) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

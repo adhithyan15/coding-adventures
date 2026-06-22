@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.177.0] - 2026-06-22
+
+### Added — string `padStart` / `padEnd` fold at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.28.0, which folds
+`String#padStart` / `padEnd` on a string literal with an integer-literal target
+length and an optional string-literal pad (default a single space):
+`"5".padStart(3, "0")` → `"005"`, `"abc".padEnd(6)` → `"abc   "`,
+`"abc".padStart(6, "12")` → `"121abc"`. A non-integer target, a non-literal pad,
+a target over the optimizer's 100 000-code-unit cap (a denial-of-service guard),
+and a fill that would split a surrogate pair all pass through unfolded.
+
+New e2e fixture `tests/diff/simple-fold-pad` (and integration test
+`diff_simple_fold_pad.rs`): `var s = "5".padStart(3, "0"); report(s);` →
+`var s="005";report(s);`, with a whitespace-fallback guard proving the fold
+comes from the SIMPLE typed pipeline. The full existing fixture suite remains
+byte-for-byte unchanged.
+
+> Version note: bumped to 0.177.0 to sit above main (closurec 0.175.0) and the
+> concurrently-open numeric `toString([radix])` fold branch (closurec 0.176.0,
+> PR #6560), so the parallel branches never collide on the version line.
+
 ## [0.175.0] - 2026-06-22
 
 ### Added — string `repeat` fold at SIMPLE/ADVANCED
