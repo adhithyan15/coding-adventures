@@ -18,6 +18,7 @@
 //! 7 % 3              →  1
 //! 2 ** 8             →  256
 //! -3                 →  -3                      (UnaryExpression on NumericLiteral)
+//! ~5                 →  -6                      (bitwise NOT, ES ToInt32)
 //! !true              →  false
 //! 1 < 2              →  true                    (numeric comparison)
 //! "a" === "a"        →  true                    (strict equality, same type)
@@ -41,10 +42,12 @@
 //!   Phase 1.x.
 //! - `void` — produces ES `undefined`, same gap as above.
 //! - `delete` — has observable side effects.
-//! - Bitwise (`&`, `|`, `^`, `<<`, `>>`, `>>>`) — NOW FOLDED on two numeric
-//!   literals (CLOC15.D) via ES `ToInt32`/`ToUint32` 32-bit semantics. See
-//!   [`to_int32`] / [`to_uint32`]; `>>>` yields an unsigned result that can
-//!   exceed `i32::MAX`.
+//! - Bitwise binary (`&`, `|`, `^`, `<<`, `>>`, `>>>`) — NOW FOLDED on two
+//!   numeric literals (CLOC15.D) via ES `ToInt32`/`ToUint32` 32-bit
+//!   semantics. See [`to_int32`] / [`to_uint32`]; `>>>` yields an unsigned
+//!   result that can exceed `i32::MAX`. The unary bitwise NOT (`~`) is also
+//!   folded on a numeric literal, reusing [`to_int32`] so it stays
+//!   bit-for-bit consistent with the binary operators.
 //! - Equality between non-matching literal types (`1 == "1"` is `true`
 //!   but `1 === "1"` is `false`). The pass folds equality only when
 //!   both literals are the *same* JS type; mixed-type comparisons are
@@ -1245,7 +1248,32 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
                 _ => None,
             }
         }
-        // Skipped: BitNot (int32 coercion), Delete (side effects).
+        UnaryOperator::BitNot => {
+            // `~<numeric literal>` → bitwise complement under ES `ToInt32`
+            // semantics (ECMAScript §13.5.6 `BitwiseNOT`):
+            //
+            //   ~5      →  -6        (~ToInt32(5)  = ~5  = -6)
+            //   ~-1     →   0        (~ToInt32(-1) = ~-1 =  0)
+            //   ~5.9    →  -6        (truncate toward zero first → ~5)
+            //   ~NaN    →  -1        (ToInt32(NaN) = 0, ~0 = -1)
+            //   ~2.5e10 →  fold of the 32-bit-wrapped operand
+            //
+            // The binary bitwise operators (`&`, `|`, `^`) already fold via
+            // [`to_int32`] (see `fold_binary`); the unary `~` was the lone
+            // bitwise gap and reuses the very same coercion so the two stay
+            // bit-for-bit consistent. Rust's prefix `!` on `i32` *is* the
+            // two's-complement bitwise NOT, matching JS exactly. We fold only
+            // a `NumericLiteral` argument — `~x` for an identifier or call
+            // needs the runtime value, and `~"5"`/`~true` would require
+            // string/boolean ToNumber coercion that the conservative fold-set
+            // deliberately leaves to a later phase.
+            if let Expression::NumericLiteral(n) = &arg {
+                Some(FoldedLiteral::Number((!to_int32(n.value)) as f64))
+            } else {
+                None
+            }
+        }
+        // Skipped: Delete (side effects).
         _ => None,
     };
 
@@ -2254,6 +2282,73 @@ mod tests {
             Expression::NumericLiteral(n) => assert_eq!(n.value, 1.0),
             other => panic!("expected 1; got {:?}", other),
         }
+    }
+
+    #[test]
+    fn fold_bitwise_not_on_numeric_literal() {
+        // ~5 → -6  (~ToInt32(5) = ~5 = -6)
+        let bn = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bn".to_string()),
+            operator: UnaryOperator::BitNot,
+            prefix: true,
+            argument: Box::new(num(5.0, None)),
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(bn, true));
+        assert!(changed, "~5 should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, -6.0),
+            other => panic!("expected -6; got {:?}", other),
+        }
+
+        // ~5.9 → -6  (ToInt32 truncates toward zero first → ~5)
+        let bn_frac = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bnf".to_string()),
+            operator: UnaryOperator::BitNot,
+            prefix: true,
+            argument: Box::new(num(5.9, None)),
+        });
+        let (out, _, _, _) = run_pass(program_with_expr(bn_frac, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, -6.0),
+            other => panic!("expected -6; got {:?}", other),
+        }
+
+        // ~(-1) → 0. The inner `-1` is itself a Negate unary that folds to a
+        // NumericLiteral first, then the outer `~` folds bottom-up in one walk.
+        let inner_neg = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bn.inner".to_string()),
+            operator: UnaryOperator::Negate,
+            prefix: true,
+            argument: Box::new(num(1.0, None)),
+        });
+        let bn_neg = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bn.neg".to_string()),
+            operator: UnaryOperator::BitNot,
+            prefix: true,
+            argument: Box::new(inner_neg),
+        });
+        let (out, _, _, _) = run_pass(program_with_expr(bn_neg, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bitwise_not_on_identifier_does_not_fold() {
+        // `~x` needs the runtime value of `x`, so the unary stays put.
+        let bn = Expression::UnaryExpression(UnaryExpression {
+            cv: Some("u.bnx".to_string()),
+            operator: UnaryOperator::BitNot,
+            prefix: true,
+            argument: Box::new(ident("x")),
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(bn, true));
+        assert!(!changed, "~x must not fold");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::UnaryExpression(_)
+        ));
     }
 
     // ------------------- logical (short-circuit) ---------------------
