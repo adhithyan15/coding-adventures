@@ -171,6 +171,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - mesh release ticket handoff guardrail audit clearance action evidence review
   disposition-action readiness summaries that combine disposition readiness
   with action counts and next disposition-action pointers
+- mesh release ticket handoff guardrail audit clearance action evidence review
+  disposition-action slot readiness summaries that combine disposition-action
+  readiness with slot counts and next slot pointers
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work
