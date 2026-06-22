@@ -307,6 +307,22 @@ fn basic_for_loop_runs_on_x86_sim() {
     assert_eq!(out, "15");
 }
 
+/// Dartmouth BASIC — a **`DIM` array** (LANG-FULL BA3) on the x86_64 backend.
+/// `DIM A(3)` reserves a 4-element (0..3 inclusive) integer array; each
+/// `LET A(i) = e` is an `array_set` and each `A(i)` read is a bounds-checked
+/// `array_get` — the *same* shared array ops `algol_static_array_…` exercises,
+/// but reached through the **BASIC** frontend's lowering rather than ALGOL's.
+/// `A(1)+A(2)+A(3)` = 10 + 20 + 12 ⇒ stdout `42`, proving the BASIC array path
+/// produces correct native machine code (not just the ALGOL one already
+/// covered by `algol_static_array` / `algol_for_loop_array`).
+#[test]
+fn basic_array_runs_on_x86_sim() {
+    let src = "10 DIM A(3)\n20 LET A(1) = 10\n30 LET A(2) = 20\n\
+               40 LET A(3) = 12\n50 PRINT A(1) + A(2) + A(3)\n60 END\n";
+    let (_code, out) = run_capturing_stdout(Language::DartmouthBasic, src);
+    assert_eq!(out, "42");
+}
+
 /// Oct — bitwise complement (the `not` op → x86 `0xF7 /2`) printed via `out`
 /// (`fn main() { out(1, ~0); }` ⇒ stdout `255`, the u8-masked `-1`).  This is
 /// the cell that surfaced the missing group-3 `0xF7` opcode in the simulator.
