@@ -85,4 +85,18 @@ rulebook immuno_facts {
         source "Type III or immune complex-mediated hypersensitivity: Circulating antigen-antibody complexes deposit in tissues, activating complement and recruiting neutrophils, leading to inflammation and tissue injury, causing conditions such as serum sickness, systemic lupus erythematosus (SLE), post-streptococcal glomerulonephritis (PSGN), and hypersensitivity vasculitides such as IgA vasculitis or cryoglobulinemia."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK559122/"
         trust authoritative
+
+    % --- EXPAND: type II hypersensitivity is antibody (IgG/IgM)-mediated --------
+    % One span names the reaction AND its IgG/IgM antibody effector.
+    relate mediated_by(type_ii_hypersensitivity, igg_igm_antibodies)
+        source "Type II hypersensitivity reactions are antibody-mediated immune processes in which immunoglobulin G (IgG) or immunoglobulin M (IgM) antibodies bind to antigens on cell surfaces or within the extracellular matrix."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563264/"
+        trust authoritative
+
+    % --- EXPAND: X-linked SCID molecular lesion is the IL2RG gene --------------
+    % One span names the disorder AND the mutated gene (common gamma chain).
+    relate gene_defect(x_linked_scid, il2rg)
+        source "X-SCID results from mutations in the IL2RG gene encoding the common gamma chain cytokine receptor subunit, which is essential for multiple interleukin signaling pathways."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562182/"
+        trust authoritative
 }
