@@ -80,6 +80,25 @@ EXPECTED = [
     ("niemann_pick_disease", "inheritance", "autosomal_recessive"),  # recovered (NBK1370)
     ("pompe_disease", "gene_defect", "gaa"),                         # recovered (NBK1261)
     ("sickle_cell_disease", "inheritance", "autosomal_recessive"),   # recovered (NBK1377)
+    # --- BATCH 2: high-yield single-gene disorders (gene + inheritance) ---
+    ("neurofibromatosis_type_1", "gene_defect", "nf1"),              # expand (NBK1109)
+    ("neurofibromatosis_type_1", "inheritance", "autosomal_dominant"),  # expand (NBK1109)
+    ("neurofibromatosis_type_2", "gene_defect", "nf2"),              # expand (NBK470350)
+    ("neurofibromatosis_type_2", "inheritance", "autosomal_dominant"),  # expand (NBK470350)
+    ("osteogenesis_imperfecta", "gene_defect", "col1a1"),            # expand (NBK1295)
+    ("familial_adenomatous_polyposis", "gene_defect", "apc"),        # expand (NBK538233)
+    ("familial_adenomatous_polyposis", "inheritance", "autosomal_dominant"),  # expand (NBK538233)
+    ("multiple_endocrine_neoplasia_type_2", "gene_defect", "ret"),   # expand (NBK1257)
+    ("multiple_endocrine_neoplasia_type_2", "inheritance", "autosomal_dominant"),  # expand (NBK1257)
+    ("li_fraumeni_syndrome", "inheritance", "autosomal_dominant"),   # expand (NBK1311)
+    ("familial_hypercholesterolemia", "gene_defect", "ldlr"),        # expand (NBK174884)
+    ("familial_hypercholesterolemia", "inheritance", "autosomal_dominant"),  # expand (NBK174884)
+    ("spinal_muscular_atrophy", "gene_defect", "smn1"),              # expand (NBK1352)
+    ("spinal_muscular_atrophy", "inheritance", "autosomal_recessive"),  # expand (NBK1352)
+    ("rett_syndrome", "gene_defect", "mecp2"),                       # expand (NBK482252)
+    ("rett_syndrome", "inheritance", "x_linked"),                    # expand (NBK482252)
+    ("g6pd_deficiency", "gene_defect", "g6pd"),                      # expand (NBK470315)
+    ("g6pd_deficiency", "inheritance", "x_linked"),                  # expand (NBK470315)
 ]
 VAR = {"inheritance": "Pattern", "gene_defect": "Gene",
        "trinucleotide_repeat": "Repeat", "imprinting": "Parent"}
