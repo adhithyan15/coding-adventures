@@ -305,6 +305,46 @@ _ARRAY_BLOCK_METHODS = frozenset(
     }
 )
 
+# Non-block ``Hash`` methods (M1c).  Hash is a Python ``dict``.
+_HASH_METHODS = frozenset(
+    {
+        "keys",
+        "values",
+        "has_key?",
+        "key?",
+        "include?",
+        "member?",
+        "has_value?",
+        "value?",
+        "fetch",
+        "size",
+        "length",
+        "empty?",
+        "to_a",
+        "dig",
+        "store",
+        "[]=",
+        "merge",
+        "delete",
+        "clear",
+        "invert",
+    }
+)
+
+# Block-taking ``Hash`` methods (M1c); the block receives ``[key, value]``.
+_HASH_BLOCK_METHODS = frozenset(
+    {
+        "each",
+        "each_pair",
+        "map",
+        "select",
+        "filter",
+        "reject",
+        "each_key",
+        "each_value",
+    }
+)
+
 
 def _method_name(arg: Val) -> str:
     """Coerce a ``respond_to?`` argument (a :class:`Symbol`, ``":m"``-ish string,
@@ -324,6 +364,8 @@ def _responds_to(recv: Val, name: str) -> bool:
         return True
     if isinstance(recv, list):
         return name in _ARRAY_METHODS or name in _ARRAY_BLOCK_METHODS
+    if isinstance(recv, dict):
+        return name in _HASH_METHODS or name in _HASH_BLOCK_METHODS
     return False
 
 
@@ -496,6 +538,70 @@ def _array_block_method(recv: list[Val], name: str, args: list[Val], block: Clos
     return _MISS
 
 
+def _hash_method(recv: dict[Val, Val], name: str, args: list[Val]) -> Val:
+    """Non-block ``Hash`` methods (Hash is a ``dict``).  Returns :data:`_MISS` if
+    ``name`` is not a catalogued hash method."""
+    if name == "keys":
+        return list(recv.keys())
+    if name == "values":
+        return list(recv.values())
+    if name in ("has_key?", "key?", "include?", "member?"):
+        return args[0] in recv
+    if name in ("has_value?", "value?"):
+        return args[0] in recv.values()
+    if name == "fetch":
+        if args[0] in recv:
+            return recv[args[0]]
+        return args[1] if len(args) > 1 else None
+    if name in ("size", "length"):
+        return len(recv)
+    if name == "empty?":
+        return len(recv) == 0
+    if name == "to_a":
+        return [[key, value] for key, value in recv.items()]
+    if name == "dig":
+        # v0: single-level dig; nested dig is a documented follow-up.
+        return recv.get(args[0])
+    if name in ("store", "[]="):
+        recv[args[0]] = args[1]
+        return args[1]
+    if name == "merge":
+        return {**recv, **args[0]}
+    if name == "delete":
+        return recv.pop(args[0], None)
+    if name == "clear":
+        recv.clear()
+        return recv
+    if name == "invert":
+        return {value: key for key, value in recv.items()}
+    return _MISS
+
+
+def _hash_block_method(recv: dict[Val, Val], name: str, block: Closure) -> Val:
+    """Block-taking ``Hash`` methods; the block receives ``[key, value]`` (or a
+    single key/value for ``each_key``/``each_value``).  Returns :data:`_MISS` if
+    ``name`` is not a hash block method."""
+    if name in ("each", "each_pair"):
+        for key, value in list(recv.items()):
+            apply(block, [key, value])
+        return recv
+    if name == "each_key":
+        for key in list(recv.keys()):
+            apply(block, [key])
+        return recv
+    if name == "each_value":
+        for value in list(recv.values()):
+            apply(block, [value])
+        return recv
+    if name == "map":
+        return [apply(block, [key, value]) for key, value in recv.items()]
+    if name in ("select", "filter"):
+        return {k: v for k, v in recv.items() if truthy(apply(block, [k, v]))}
+    if name == "reject":
+        return {k: v for k, v in recv.items() if not truthy(apply(block, [k, v]))}
+    return _MISS
+
+
 def call_method(recv: Val, name: str, *args: Val) -> Val:
     """Dispatch method ``name`` on ``recv``.
 
@@ -535,6 +641,14 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
             if result is not _MISS:
                 return result
         result = _array_method(recv, name, arg_list)
+        if result is not _MISS:
+            return result
+    elif isinstance(recv, dict):
+        if name in _HASH_BLOCK_METHODS and arg_list and isinstance(arg_list[-1], Closure):
+            result = _hash_block_method(recv, name, arg_list[-1])
+            if result is not _MISS:
+                return result
+        result = _hash_method(recv, name, arg_list)
         if result is not _MISS:
             return result
     result = _object_method(recv, name, arg_list)

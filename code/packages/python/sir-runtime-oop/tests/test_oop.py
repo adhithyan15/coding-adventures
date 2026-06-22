@@ -315,3 +315,78 @@ def test_any_all_none_use_sir_truthiness() -> None:
 def test_select_uses_sir_truthiness_not_python() -> None:
     # SIR truthiness: only False/None are falsy, so 0 and "" are KEPT.
     assert oop.call_method([0, 1, None, 2], "select", Closure(lambda x: x)) == [0, 1, 2]
+
+
+# ── built-in method catalog: Hash (M1c) ───────────────────────────────────────
+
+
+def test_hash_keys_values_size_empty() -> None:
+    h = {"a": 1, "b": 2}
+    assert oop.call_method(h, "keys") == ["a", "b"]
+    assert oop.call_method(h, "values") == [1, 2]
+    assert oop.call_method(h, "size") == 2
+    assert oop.call_method(h, "length") == 2
+    assert oop.call_method(h, "empty?") is False
+    assert oop.call_method({}, "empty?") is True
+
+
+def test_hash_key_value_membership() -> None:
+    h = {"a": 1}
+    assert oop.call_method(h, "has_key?", "a") is True
+    assert oop.call_method(h, "key?", "z") is False
+    assert oop.call_method(h, "include?", "a") is True
+    assert oop.call_method(h, "member?", "a") is True
+    assert oop.call_method(h, "has_value?", 1) is True
+    assert oop.call_method(h, "value?", 9) is False
+
+
+def test_hash_fetch_dig_to_a() -> None:
+    h = {"a": 1, "b": 2}
+    assert oop.call_method(h, "fetch", "a") == 1
+    assert oop.call_method(h, "fetch", "z") is None
+    assert oop.call_method(h, "fetch", "z", 99) == 99
+    assert oop.call_method(h, "dig", "b") == 2
+    assert oop.call_method(h, "to_a") == [["a", 1], ["b", 2]]
+
+
+def test_hash_store_merge_delete_clear_invert() -> None:
+    h = {"a": 1}
+    assert oop.call_method(h, "store", "b", 2) == 2
+    assert h == {"a": 1, "b": 2}
+    assert oop.call_method(h, "[]=", "c", 3) == 3
+    assert oop.call_method({"a": 1}, "merge", {"b": 2}) == {"a": 1, "b": 2}
+    assert oop.call_method(h, "delete", "a") == 1
+    assert "a" not in h
+    assert oop.call_method({"a": 1, "b": 2}, "invert") == {1: "a", 2: "b"}
+    cleared = {"a": 1}
+    assert oop.call_method(cleared, "clear") == {}
+
+
+def test_hash_block_each_map_select_reject() -> None:
+    seen: list[Val] = []
+    h = {"a": 1, "b": 2}
+    result = oop.call_method(h, "each", Closure(lambda k, v: seen.append((k, v))))
+    assert seen == [("a", 1), ("b", 2)]
+    assert result is h
+    assert oop.call_method(h, "map", Closure(lambda k, v: f"{k}={v}")) == ["a=1", "b=2"]
+    assert oop.call_method(h, "select", Closure(lambda k, v: v > 1)) == {"b": 2}
+    assert oop.call_method(h, "reject", Closure(lambda k, v: v > 1)) == {"a": 1}
+
+
+def test_hash_each_key_each_value() -> None:
+    ks: list[Val] = []
+    vs: list[Val] = []
+    h = {"a": 1, "b": 2}
+    oop.call_method(h, "each_key", Closure(ks.append))
+    oop.call_method(h, "each_value", Closure(vs.append))
+    assert ks == ["a", "b"]
+    assert vs == [1, 2]
+
+
+def test_hash_respond_to_and_nil_floor() -> None:
+    assert oop.call_method({"a": 1}, "respond_to?", "keys") is True
+    assert oop.call_method({"a": 1}, "respond_to?", "each") is True
+    assert oop.call_method({"a": 1}, "respond_to?", "transform_keys") is False
+    assert oop.call_method({"a": 1}, "transform_keys") is None
+    # Universal Object methods still resolve on a Hash receiver.
+    assert oop.call_method({"a": 1}, "nil?") is False

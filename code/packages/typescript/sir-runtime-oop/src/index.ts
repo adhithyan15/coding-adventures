@@ -289,6 +289,42 @@ const ARRAY_BLOCK_METHODS = new Set<string>([
   "none?",
 ]);
 
+// Non-block `Hash` methods (M1c). Hash is a JS `Map`.
+const HASH_METHODS = new Set<string>([
+  "keys",
+  "values",
+  "has_key?",
+  "key?",
+  "include?",
+  "member?",
+  "has_value?",
+  "value?",
+  "fetch",
+  "size",
+  "length",
+  "empty?",
+  "to_a",
+  "dig",
+  "store",
+  "[]=",
+  "merge",
+  "delete",
+  "clear",
+  "invert",
+]);
+
+// Block-taking `Hash` methods (M1c); the block receives `[key, value]`.
+const HASH_BLOCK_METHODS = new Set<string>([
+  "each",
+  "each_pair",
+  "map",
+  "select",
+  "filter",
+  "reject",
+  "each_key",
+  "each_value",
+]);
+
 /** SIR value equality used by `include?`/`index`/`==` — `===` for primitives,
  * structural for arrays and `Map`s (Ruby `==` is deep). */
 function valEq(a: Val, b: Val): boolean {
@@ -324,6 +360,9 @@ function respondsTo(recv: Val, name: string): boolean {
   if (methods.has(name)) return true;
   if (OBJECT_METHODS.has(name)) return true;
   if (Array.isArray(recv) && (ARRAY_METHODS.has(name) || ARRAY_BLOCK_METHODS.has(name))) {
+    return true;
+  }
+  if (recv instanceof Map && (HASH_METHODS.has(name) || HASH_BLOCK_METHODS.has(name))) {
     return true;
   }
   return false;
@@ -516,6 +555,82 @@ function arrayBlockMethod(
   }
 }
 
+/** Non-block `Hash` methods (Hash is a `Map`). Returns `MISS` if not catalogued. */
+function hashMethod(recv: Map<Val, Val>, name: string, args: Val[]): Val | typeof MISS {
+  switch (name) {
+    case "keys":
+      return [...recv.keys()];
+    case "values":
+      return [...recv.values()];
+    case "has_key?":
+    case "key?":
+    case "include?":
+    case "member?":
+      return recv.has(args[0]);
+    case "has_value?":
+    case "value?":
+      return [...recv.values()].some((v: Val) => valEq(v, args[0]));
+    case "fetch":
+      if (recv.has(args[0])) return recv.get(args[0]);
+      return args.length > 1 ? args[1] : null;
+    case "size":
+    case "length":
+      return recv.size;
+    case "empty?":
+      return recv.size === 0;
+    case "to_a":
+      return [...recv.entries()].map(([k, v]: [Val, Val]) => [k, v]);
+    case "dig":
+      // v0: single-level dig.
+      return recv.has(args[0]) ? recv.get(args[0]) : null;
+    case "store":
+    case "[]=":
+      recv.set(args[0], args[1]);
+      return args[1];
+    case "merge":
+      return new Map<Val, Val>([...recv, ...(args[0] as Map<Val, Val>)]);
+    case "delete": {
+      if (!recv.has(args[0])) return null;
+      const v = recv.get(args[0]);
+      recv.delete(args[0]);
+      return v;
+    }
+    case "clear":
+      recv.clear();
+      return recv;
+    case "invert":
+      return new Map<Val, Val>([...recv].map(([k, v]: [Val, Val]) => [v, k]));
+    default:
+      return MISS;
+  }
+}
+
+/** Block-taking `Hash` methods; the block receives `[key, value]` (or a single
+ * key/value for `each_key`/`each_value`). Returns `MISS` if not a block method. */
+function hashBlockMethod(recv: Map<Val, Val>, name: string, block: Closure): Val | typeof MISS {
+  switch (name) {
+    case "each":
+    case "each_pair":
+      for (const [k, v] of [...recv]) apply(block, [k, v]);
+      return recv;
+    case "each_key":
+      for (const k of [...recv.keys()]) apply(block, [k]);
+      return recv;
+    case "each_value":
+      for (const v of [...recv.values()]) apply(block, [v]);
+      return recv;
+    case "map":
+      return [...recv].map(([k, v]: [Val, Val]) => apply(block, [k, v]));
+    case "select":
+    case "filter":
+      return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => truthy(apply(block, [k, v]))));
+    case "reject":
+      return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => !truthy(apply(block, [k, v]))));
+    default:
+      return MISS;
+  }
+}
+
 /**
  * Dispatch method `name` on `recv`.  Resolution order:
  *
@@ -555,6 +670,14 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
     }
     const arrResult = arrayMethod(recv, name, args);
     if (arrResult !== MISS) return arrResult;
+  } else if (recv instanceof Map) {
+    const last = args[args.length - 1];
+    if (HASH_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
+      const blkResult = hashBlockMethod(recv, name, last);
+      if (blkResult !== MISS) return blkResult;
+    }
+    const hashResult = hashMethod(recv, name, args);
+    if (hashResult !== MISS) return hashResult;
   }
   const objResult = objectMethod(recv, name, args);
   if (objResult !== MISS) return objResult;
