@@ -228,8 +228,25 @@ bins over the range of `x`, extended by `dx/1000` on each side (`dx=max-min`;
 degenerate `dx=0` → `abs(min)`, then `1`) — `cut(0:10, breaks=5)` → 5 levels, every
 value binned. Security: `N` is capped at `MAX_SEQ_LEN` before any allocation, the
 breaks use finite/checked arithmetic (no divide-by-zero on a degenerate range), and
-the `labels` length check never panics. `dig.lab=` and `ordered_result=` are
-deferred to R-34.
+the `labels` length check never panics. `dig.lab=` and `ordered_result=` land in
+R-35, below.
+
+**R-35 — ordered factors & `cut()` label polish.** An *ordered* factor is a factor
+whose levels carry a meaningful order. `ordered(x, levels=, labels=)` (and the
+synonym `factor(x, ordered=TRUE)`) build one, `as.ordered(x)` coerces, and
+`is.ordered(x)` tests for it; `class(ordered(c("a","b")))` is
+`c("ordered", "factor")`. The relational operators (`<`, `<=`, `>`, `>=`, `==`,
+`!=`) between ordered factors compare **by level index**, not label string: with
+`f <- ordered(c("lo","hi","mid"), levels=c("lo","mid","hi"))`, `f[1] < f[2]`
+(lo < hi) is `TRUE` while `f[2] < f[3]` (hi < mid) is `FALSE`. An `NA` code yields
+`NA`, and comparing ordered factors with different level sets is an error.
+`cut(..., ordered_result=TRUE)` returns an ordered factor (bins compare by interval
+order), and `cut(..., dig.lab=k)` formats break labels to `k` significant digits
+(default 3), e.g. `levels(cut(c(1.23456, 5.6789), breaks=c(0, 3.14159, 10),
+dig.lab=2))` → `c("(0,3.1]", "(3.1,10]")`. Security: ordered comparison reads the
+integer codes only (out-of-range / NA → NA, never a panic), and `dig.lab` is clamped
+to `1..=22` before formatting. (`sort`/`max`/`min`/`range` on ordered factors and
+`Ops.ordered` dispatch are deferred to R-39.)
 
 **R-36 — matrix cross products** add `crossprod` and `tcrossprod`, again through the
 shared `s-runtime`. An independent matrix-algebra item, defined entirely in terms of

@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.31.0] - 2026-06-21
+
+### Added
+
+- **Ordered factors & `cut()` label polish (R-35)** — available to both S and R
+  through the shared tree-walker.
+  - **Representation**: `SValue::Factor` gains an `ordered: bool` field. `class()`
+    reports `c("ordered", "factor")` when set (plain `"factor"` otherwise), and an
+    ordered factor prints its `Levels:` line with `<` separators
+    (`Levels: lo < mid < hi`). All prior factor constructions default
+    `ordered = false`, so unordered factors are bit-for-bit unchanged.
+  - **`ordered(x, levels =, labels =)`** and **`factor(x, ordered = TRUE)`** build
+    an ordered factor (reusing the refactored `build_factor` helper).
+    **`as.ordered(x)`** coerces (a factor flips its flag; any other vector is
+    factor-encoded first). **`is.ordered(x)`** is `TRUE` iff `x` is an ordered
+    factor — never errors.
+  - **Ordered-factor comparison**: `<`, `<=`, `>`, `>=`, `==`, `!=` between two
+    ordered factors compare **by level index** (the 1-based `code`), not by label
+    string, NA-propagating. Two ordered factors with **different level sets** is a
+    clean error (`"level sets of factors are different"`). Order operators on an
+    *unordered* factor error (`"'<' not meaningful for factors"`); `==`/`!=` fall
+    back to label comparison.
+  - **`cut(..., ordered_result = TRUE)`** makes the binned factor an ordered factor
+    (intervals are naturally ordered low→high). **`cut(..., dig.lab = k)`** formats
+    auto-generated break labels to `k` significant digits (default **3**), e.g.
+    `cut(..., breaks = c(0, 3.14159, 10), dig.lab = 2)` → levels `"(0,3.1]"`,
+    `"(3.1,10]"`.
+  - **Security**: ordered comparison reads the integer `codes` only — an
+    out-of-range or `NA` code maps to `NA`, never panicking — and rejects differing
+    level sets before any compare. `dig.lab` is **clamped to `1..=22`** before
+    formatting (a malformed / non-positive value falls back to the default 3), so
+    no caller-controlled value can drive an unbounded format width or a panic. No
+    new unbounded multiplier; the level vector is still bounded by the
+    `MAX_SEQ_LEN`-bounded break count.
+  - **Deferred to R-39**: the S3 `Ops.ordered` group-generic *dispatch* surface and
+    order statistics on ordered factors (`sort`/`max`/`min`/`range` by level order).
+
 ## [0.30.0] - 2026-06-21
 
 ### Added
