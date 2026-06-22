@@ -7402,8 +7402,8 @@ set wr_vecnames
 set wr_singlescale
 set appendwrite
 .set WR_VECNAMES
-write out.raw V(in)
-wrdata out.dat V(in)
+write out.raw V(in) V(missing)
+wrdata out.dat V(in) V(missing)
 source other.cir
 cd /tmp
 if v(in) > 0
@@ -7423,7 +7423,10 @@ let gain = 2
     code_list = ";".join(expected_codes)
     expected_control_lines = [".save V(in)", ".probe V(in)"]
     control_line_list = ";".join(expected_control_lines)
-    expected_write_markers = ["write out.raw V(in)", "wrdata out.dat V(in)"]
+    expected_write_markers = [
+        "write out.raw V(in) V(missing)",
+        "wrdata out.dat V(in) V(missing)",
+    ]
     write_marker_list = ";".join(expected_write_markers)
     expected_rawfile_options = [
         "set filetype=ascii",
@@ -7442,9 +7445,13 @@ let gain = 2
     assert execution.rawfile_options == expected_rawfile_options
     assert execution.rawfile_artifact_count == 1
     assert execution.rawfile_artifacts[0].target == "out.raw"
-    assert execution.rawfile_artifacts[0].marker == "write out.raw V(in)"
-    assert execution.rawfile_artifacts[0].probe_count == 1
-    assert execution.rawfile_artifacts[0].probes == ["V(in)"]
+    assert execution.rawfile_artifacts[0].marker == "write out.raw V(in) V(missing)"
+    assert execution.rawfile_artifacts[0].probe_count == 2
+    assert execution.rawfile_artifacts[0].probes == ["V(in)", "V(missing)"]
+    assert execution.rawfile_artifacts[0].matched_probe_count == 1
+    assert execution.rawfile_artifacts[0].matched_probes == ["V(in)"]
+    assert execution.rawfile_artifacts[0].unmatched_probe_count == 1
+    assert execution.rawfile_artifacts[0].unmatched_probes == ["V(missing)"]
     assert execution.rawfile_artifacts[0].option_count == len(
         expected_rawfile_options
     )
@@ -7455,9 +7462,13 @@ let gain = 2
     assert "0\t0\t1.000000e+00\n" in execution.rawfile_artifacts[0].rawfile
     rawfile_record = execution.rawfile_artifact_records[0]
     assert rawfile_record["Target"] == "out.raw"
-    assert rawfile_record["Marker"] == "write out.raw V(in)"
-    assert rawfile_record["Probes"] == "1"
-    assert rawfile_record["ProbeList"] == "V(in)"
+    assert rawfile_record["Marker"] == "write out.raw V(in) V(missing)"
+    assert rawfile_record["Probes"] == "2"
+    assert rawfile_record["ProbeList"] == "V(in);V(missing)"
+    assert rawfile_record["MatchedProbes"] == "1"
+    assert rawfile_record["MatchedProbeList"] == "V(in)"
+    assert rawfile_record["UnmatchedProbes"] == "1"
+    assert rawfile_record["UnmatchedProbeList"] == "V(missing)"
     assert rawfile_record["Options"] == str(len(expected_rawfile_options))
     assert rawfile_record["RawfileOptionList"] == rawfile_option_list
     assert rawfile_record["Bytes"] == str(
@@ -7475,17 +7486,25 @@ let gain = 2
     assert json.loads(execution.rawfile_artifact_json)[0]["RawfileOptionList"] == (
         rawfile_option_list
     )
+    rawfile_json = json.loads(execution.rawfile_artifact_json)[0]
+    assert rawfile_json["ProbeList"] == "V(in);V(missing)"
+    assert rawfile_json["MatchedProbeList"] == "V(in)"
+    assert rawfile_json["UnmatchedProbeList"] == "V(missing)"
     assert execution.wrdata_artifact_count == 1
     assert execution.wrdata_artifacts[0].target == "out.dat"
-    assert execution.wrdata_artifacts[0].marker == "wrdata out.dat V(in)"
-    assert execution.wrdata_artifacts[0].probe_count == 1
-    assert execution.wrdata_artifacts[0].probes == ["V(in)"]
+    assert execution.wrdata_artifacts[0].marker == "wrdata out.dat V(in) V(missing)"
+    assert execution.wrdata_artifacts[0].probe_count == 2
+    assert execution.wrdata_artifacts[0].probes == ["V(in)", "V(missing)"]
+    assert execution.wrdata_artifacts[0].matched_probe_count == 1
+    assert execution.wrdata_artifacts[0].matched_probes == ["V(in)"]
+    assert execution.wrdata_artifacts[0].unmatched_probe_count == 1
+    assert execution.wrdata_artifacts[0].unmatched_probes == ["V(missing)"]
     assert execution.wrdata_artifacts[0].option_count == len(
         expected_rawfile_options
     )
     assert execution.wrdata_artifacts[0].options == expected_rawfile_options
     assert "# SPICE deck wrdata artifact\n" in execution.wrdata_artifacts[0].datafile
-    assert "Probes: V(in)\n" in execution.wrdata_artifacts[0].datafile
+    assert "Probes: V(in);V(missing)\n" in execution.wrdata_artifacts[0].datafile
     assert "Options: " + rawfile_option_list + "\n" in execution.wrdata_artifacts[0].datafile
     assert "VectorNames: Index;V(in)\n" in execution.wrdata_artifacts[0].datafile
     assert "Scale: Index\n" in execution.wrdata_artifacts[0].datafile
@@ -7493,9 +7512,13 @@ let gain = 2
     assert "0\t1.000000e+00\n" in execution.wrdata_artifacts[0].datafile
     wrdata_record = execution.wrdata_artifact_records[0]
     assert wrdata_record["Target"] == "out.dat"
-    assert wrdata_record["Marker"] == "wrdata out.dat V(in)"
-    assert wrdata_record["Probes"] == "1"
-    assert wrdata_record["ProbeList"] == "V(in)"
+    assert wrdata_record["Marker"] == "wrdata out.dat V(in) V(missing)"
+    assert wrdata_record["Probes"] == "2"
+    assert wrdata_record["ProbeList"] == "V(in);V(missing)"
+    assert wrdata_record["MatchedProbes"] == "1"
+    assert wrdata_record["MatchedProbeList"] == "V(in)"
+    assert wrdata_record["UnmatchedProbes"] == "1"
+    assert wrdata_record["UnmatchedProbeList"] == "V(missing)"
     assert wrdata_record["Options"] == str(len(expected_rawfile_options))
     assert wrdata_record["RawfileOptionList"] == rawfile_option_list
     assert wrdata_record["Bytes"] == str(
@@ -7510,10 +7533,11 @@ let gain = 2
     assert execution.wrdata_artifact_json == format_deck_wrdata_artifact_json(
         execution.wrdata_artifacts
     )
-    assert json.loads(execution.wrdata_artifact_json)[0]["ProbeList"] == "V(in)"
-    assert json.loads(execution.wrdata_artifact_json)[0]["RawfileOptionList"] == (
-        rawfile_option_list
-    )
+    wrdata_json = json.loads(execution.wrdata_artifact_json)[0]
+    assert wrdata_json["ProbeList"] == "V(in);V(missing)"
+    assert wrdata_json["MatchedProbeList"] == "V(in)"
+    assert wrdata_json["UnmatchedProbeList"] == "V(missing)"
+    assert wrdata_json["RawfileOptionList"] == rawfile_option_list
     assert execution.diagnostic_count == len(expected_codes)
     assert execution.diagnostic_codes == expected_codes
     assert execution.run_artifacts[0].control_line_count == len(expected_control_lines)

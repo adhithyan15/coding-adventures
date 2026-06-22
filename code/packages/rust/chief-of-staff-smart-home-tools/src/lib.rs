@@ -236,12 +236,13 @@ use smart_home_runtime::{
     RuntimeRoomSummary, RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest,
     RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus,
     RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery,
-    RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort, RuntimeSupervisionPlan,
-    RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput, RuntimeSupervisionToolRequest,
-    RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest,
-    ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime, SupervisedBridgeWorker,
-    SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport, WorkerHeartbeatDeadline,
-    WorkerHeartbeatSchedule, WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
+    RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort, RuntimeSupervisionObservation,
+    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput,
+    RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput,
+    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
+    SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport,
+    WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
+    WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
 use std::collections::BTreeSet;
@@ -315,6 +316,10 @@ pub const SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID: &str =
     "smart_home.list_state_transition_audit";
 pub const SMART_HOME_GET_STATE_TRANSITION_AUDIT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_state_transition_audit_summary";
+pub const SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID: &str =
+    "smart_home.list_supervision_remediation";
+pub const SMART_HOME_GET_SUPERVISION_REMEDIATION_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_supervision_remediation_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2354,6 +2359,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_STATE_TRANSITION_AUDIT_SUMMARY_TOOL_ID => {
                     let query = state_transition_audit_query(&arguments)?;
                     get_state_transition_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID => {
+                    let query = supervision_remediation_query(&arguments)?;
+                    list_supervision_remediation_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_SUPERVISION_REMEDIATION_SUMMARY_TOOL_ID => {
+                    let query = supervision_remediation_query(&arguments)?;
+                    get_supervision_remediation_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6085,6 +6108,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_desired_state_drift_audit_summary_definition(),
         list_state_transition_audit_definition(),
         get_state_transition_audit_summary_definition(),
+        list_supervision_remediation_definition(),
+        get_supervision_remediation_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -6955,6 +6980,71 @@ fn get_state_transition_audit_summary_definition() -> ToolDefinition {
         "Summarize pending Chief-visible state transitions from the D23 supervision plan.",
         state_transition_audit_query_schema(),
         state_transition_audit_summary_output_schema(),
+    )
+}
+
+fn supervision_remediation_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("remediation_kind", JsonSchema::String),
+            SchemaProperty::new("remediation_kinds", string_array_schema()),
+            SchemaProperty::new("bridge_id", JsonSchema::String),
+            SchemaProperty::new("entity_id", JsonSchema::String),
+            SchemaProperty::new("worker_id", JsonSchema::String),
+            SchemaProperty::new("integration_id", JsonSchema::String),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("risk_action", JsonSchema::String),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn supervision_remediation_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "supervision_remediation",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["supervision_remediation", "summary", "count"],
+        false,
+    )
+}
+
+fn supervision_remediation_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_supervision_remediation_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID,
+        "List smart-home supervision remediation",
+        "List Chief-derived remediation rows for D23 supervision work, overdue worker heartbeats, and discovery worker pressure without mutating the runtime.",
+        supervision_remediation_query_schema(),
+        supervision_remediation_list_output_schema(),
+    )
+}
+
+fn get_supervision_remediation_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_SUPERVISION_REMEDIATION_SUMMARY_TOOL_ID,
+        "Summarize smart-home supervision remediation",
+        "Summarize Chief-visible D23 supervision remediation pressure from plans, heartbeat deadlines, and discovery worker status.",
+        supervision_remediation_query_schema(),
+        supervision_remediation_summary_output_schema(),
     )
 }
 
@@ -8205,6 +8295,57 @@ fn state_transition_audit_query(
         requires_attention_only: optional_bool(arguments, "requires_attention_only")?
             .unwrap_or(false),
         blocked_only: optional_bool(arguments, "blocked_only")?.unwrap_or(false),
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum SupervisionRemediationKind {
+    PairingExpiry,
+    StateRefresh,
+    DesiredStateReconciliation,
+    WorkerRestart,
+    WorkerHeartbeat,
+    DiscoveryWorkerRun,
+    DiscoveryWorkerRecovery,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct SupervisionRemediationQuery {
+    remediation_kinds: Vec<SupervisionRemediationKind>,
+    bridge_id: Option<BridgeId>,
+    entity_id: Option<EntityId>,
+    worker_id: Option<DiscoveryWorkerId>,
+    integration_id: Option<IntegrationId>,
+    risk_lane: Option<String>,
+    risk_action: Option<String>,
+    blocked_only: bool,
+    requires_attention_only: bool,
+    limit: Option<usize>,
+}
+
+fn supervision_remediation_query(
+    arguments: &JsonValue,
+) -> Result<SupervisionRemediationQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(SupervisionRemediationQuery {
+        remediation_kinds: optional_string_list(
+            arguments,
+            "remediation_kind",
+            "remediation_kinds",
+        )?
+        .into_iter()
+        .map(|kind| parse_supervision_remediation_kind(&kind))
+        .collect::<Result<Vec<_>, _>>()?,
+        bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
+        entity_id: optional_string(arguments, "entity_id")?.map(EntityId::trusted),
+        worker_id: optional_string(arguments, "worker_id")?.map(DiscoveryWorkerId::trusted),
+        integration_id: optional_string(arguments, "integration_id")?.map(IntegrationId::trusted),
+        risk_lane: optional_string(arguments, "risk_lane")?,
+        risk_action: optional_string(arguments, "risk_action")?,
+        blocked_only: optional_bool(arguments, "blocked_only")?.unwrap_or(false),
+        requires_attention_only: optional_bool(arguments, "requires_attention_only")?
+            .unwrap_or(false),
         limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
@@ -34656,6 +34797,452 @@ fn state_transition_row_rank(row: &StateTransitionAuditRow) -> u8 {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct SupervisionRemediationRow {
+    remediation_id: String,
+    remediation_kind: SupervisionRemediationKind,
+    bridge_id: Option<BridgeId>,
+    device_id: Option<DeviceId>,
+    entity_id: Option<EntityId>,
+    worker_id: Option<DiscoveryWorkerId>,
+    integration_id: Option<IntegrationId>,
+    capability_id: Option<CapabilityId>,
+    capability_count: usize,
+    desired_value: Option<Value>,
+    worker_kind: Option<String>,
+    status: Option<String>,
+    reason: &'static str,
+    due_at_ms: Option<u64>,
+    planned_at_ms: Option<u64>,
+    overdue_by_ms: Option<u64>,
+    consecutive_failure_count: Option<u32>,
+    risk_lane: &'static str,
+    risk_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct SupervisionRemediationSummary {
+    total_rows: usize,
+    pairing_expiry_rows: usize,
+    state_refresh_rows: usize,
+    desired_state_reconciliation_rows: usize,
+    worker_restart_rows: usize,
+    worker_heartbeat_rows: usize,
+    discovery_worker_run_rows: usize,
+    discovery_worker_recovery_rows: usize,
+    blocked_rows: usize,
+    requires_attention_rows: usize,
+    overdue_rows: usize,
+    bridge_count: usize,
+    entity_count: usize,
+    worker_count: usize,
+}
+
+impl SupervisionRemediationSummary {
+    fn from_rows(rows: &[SupervisionRemediationRow]) -> Self {
+        let mut summary = Self::default();
+        let mut bridge_ids = BTreeSet::new();
+        let mut entity_ids = BTreeSet::new();
+        let mut worker_ids = BTreeSet::new();
+
+        for row in rows {
+            summary.total_rows += 1;
+            match row.remediation_kind {
+                SupervisionRemediationKind::PairingExpiry => summary.pairing_expiry_rows += 1,
+                SupervisionRemediationKind::StateRefresh => summary.state_refresh_rows += 1,
+                SupervisionRemediationKind::DesiredStateReconciliation => {
+                    summary.desired_state_reconciliation_rows += 1;
+                }
+                SupervisionRemediationKind::WorkerRestart => summary.worker_restart_rows += 1,
+                SupervisionRemediationKind::WorkerHeartbeat => summary.worker_heartbeat_rows += 1,
+                SupervisionRemediationKind::DiscoveryWorkerRun => {
+                    summary.discovery_worker_run_rows += 1;
+                }
+                SupervisionRemediationKind::DiscoveryWorkerRecovery => {
+                    summary.discovery_worker_recovery_rows += 1;
+                }
+            }
+            if row.blocked {
+                summary.blocked_rows += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_rows += 1;
+            }
+            if row.overdue_by_ms.is_some_and(|overdue| overdue > 0) {
+                summary.overdue_rows += 1;
+            }
+            if let Some(bridge_id) = &row.bridge_id {
+                bridge_ids.insert(bridge_id.as_str().to_string());
+            }
+            if let Some(entity_id) = &row.entity_id {
+                entity_ids.insert(entity_id.as_str().to_string());
+            }
+            if let Some(worker_id) = &row.worker_id {
+                worker_ids.insert(worker_id.as_str().to_string());
+            }
+        }
+
+        summary.bridge_count = bridge_ids.len();
+        summary.entity_count = entity_ids.len();
+        summary.worker_count = worker_ids.len();
+        summary
+    }
+
+    fn has_supervision_remediation(&self) -> bool {
+        self.requires_attention_rows > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+}
+
+fn list_supervision_remediation_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: SupervisionRemediationQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) = supervision_remediation_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "supervision_remediation",
+            JsonValue::Array(rows.iter().map(supervision_remediation_row_json).collect()),
+        ),
+        ("summary", supervision_remediation_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_supervision_remediation")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            (
+                "worker_restart_rows",
+                integer(summary.worker_restart_rows as i64),
+            ),
+            (
+                "discovery_worker_recovery_rows",
+                integer(summary.discovery_worker_recovery_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn get_supervision_remediation_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: SupervisionRemediationQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = supervision_remediation_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        supervision_remediation_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_supervision_remediation_summary")),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            (
+                "worker_restart_rows",
+                integer(summary.worker_restart_rows as i64),
+            ),
+            (
+                "discovery_worker_recovery_rows",
+                integer(summary.discovery_worker_recovery_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn supervision_remediation_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &SupervisionRemediationQuery,
+) -> Result<
+    (
+        Vec<SupervisionRemediationRow>,
+        SupervisionRemediationSummary,
+    ),
+    ToolCallError,
+> {
+    let observation_output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::ObserveSupervision,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::SupervisionObservation(observation) = observation_output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "supervision remediation expected supervision observation output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let mut rows = supervision_remediation_rows_from_observation(&observation);
+    rows.retain(|row| supervision_remediation_row_matches(row, query));
+    rows.sort_by(|left, right| {
+        right
+            .blocked
+            .cmp(&left.blocked)
+            .then_with(|| right.requires_attention.cmp(&left.requires_attention))
+            .then_with(|| {
+                supervision_remediation_row_rank(right).cmp(&supervision_remediation_row_rank(left))
+            })
+            .then_with(|| left.remediation_id.cmp(&right.remediation_id))
+    });
+    let summary = SupervisionRemediationSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+fn supervision_remediation_rows_from_observation(
+    observation: &RuntimeSupervisionObservation,
+) -> Vec<SupervisionRemediationRow> {
+    let mut rows = state_transition_rows_from_plan(&observation.plan)
+        .into_iter()
+        .map(SupervisionRemediationRow::from_state_transition)
+        .collect::<Vec<_>>();
+    let restart_bridge_ids = observation
+        .plan
+        .worker_restart_plan
+        .instructions
+        .iter()
+        .map(|instruction| instruction.bridge_id.as_str().to_string())
+        .collect::<BTreeSet<_>>();
+
+    rows.extend(
+        observation
+            .heartbeat_schedule
+            .deadlines
+            .iter()
+            .filter(|deadline| deadline.is_due_at(observation.generated_at_ms))
+            .filter(|deadline| !restart_bridge_ids.contains(deadline.bridge_id.as_str()))
+            .map(|deadline| {
+                SupervisionRemediationRow::from_heartbeat_deadline(
+                    deadline,
+                    observation.generated_at_ms,
+                )
+            }),
+    );
+
+    rows.extend(
+        observation
+            .discovery_workers
+            .iter()
+            .filter(|worker| worker.has_failure_pressure())
+            .map(SupervisionRemediationRow::from_discovery_worker_recovery),
+    );
+
+    rows
+}
+
+impl SupervisionRemediationRow {
+    fn from_state_transition(row: StateTransitionAuditRow) -> Self {
+        let remediation_kind = match row.transition_kind {
+            StateTransitionAuditKind::PairingExpiry => SupervisionRemediationKind::PairingExpiry,
+            StateTransitionAuditKind::StateRefresh => SupervisionRemediationKind::StateRefresh,
+            StateTransitionAuditKind::DesiredStateReconciliation => {
+                SupervisionRemediationKind::DesiredStateReconciliation
+            }
+            StateTransitionAuditKind::WorkerRestart => SupervisionRemediationKind::WorkerRestart,
+            StateTransitionAuditKind::DiscoveryWorkerRun => {
+                SupervisionRemediationKind::DiscoveryWorkerRun
+            }
+        };
+
+        Self {
+            remediation_id: format!("supervision:{}", row.audit_id),
+            remediation_kind,
+            bridge_id: row.bridge_id,
+            device_id: row.device_id,
+            entity_id: row.entity_id,
+            worker_id: row.worker_id,
+            integration_id: row.integration_id,
+            capability_id: row.capability_id,
+            capability_count: row.capability_count,
+            desired_value: row.desired_value,
+            worker_kind: row.worker_kind,
+            status: row.status,
+            reason: row.reason,
+            due_at_ms: row.due_at_ms,
+            planned_at_ms: row.scheduled_at_ms,
+            overdue_by_ms: row.overdue_by_ms,
+            consecutive_failure_count: None,
+            risk_lane: row.risk_lane,
+            risk_action: row.risk_action,
+            blocked: row.blocked,
+            requires_attention: row.requires_attention,
+        }
+    }
+
+    fn from_heartbeat_deadline(deadline: &WorkerHeartbeatDeadline, now_ms: u64) -> Self {
+        Self {
+            remediation_id: format!("worker_heartbeat:{}", deadline.bridge_id.as_str()),
+            remediation_kind: SupervisionRemediationKind::WorkerHeartbeat,
+            bridge_id: Some(deadline.bridge_id.clone()),
+            device_id: None,
+            entity_id: None,
+            worker_id: None,
+            integration_id: Some(deadline.integration_id.clone()),
+            capability_id: None,
+            capability_count: 0,
+            desired_value: None,
+            worker_kind: None,
+            status: Some(deadline.status.as_str().to_string()),
+            reason: "heartbeat_overdue",
+            due_at_ms: Some(deadline.due_at_ms),
+            planned_at_ms: Some(now_ms),
+            overdue_by_ms: Some(deadline.overdue_by_ms_at(now_ms)),
+            consecutive_failure_count: None,
+            risk_lane: "worker_supervision",
+            risk_action: "restart_overdue_worker",
+            blocked: true,
+            requires_attention: true,
+        }
+    }
+
+    fn from_discovery_worker_recovery(worker: &ScheduledDiscoveryWorkerSnapshot) -> Self {
+        let blocked = worker.status == WorkerStatus::Unhealthy;
+        Self {
+            remediation_id: format!("discovery_recovery:{}", worker.worker_id.as_str()),
+            remediation_kind: SupervisionRemediationKind::DiscoveryWorkerRecovery,
+            bridge_id: None,
+            device_id: None,
+            entity_id: None,
+            worker_id: Some(worker.worker_id.clone()),
+            integration_id: Some(worker.integration_id.clone()),
+            capability_id: None,
+            capability_count: 0,
+            desired_value: None,
+            worker_kind: Some(worker.kind.as_str().to_string()),
+            status: Some(worker.status.as_str().to_string()),
+            reason: if blocked {
+                "unhealthy"
+            } else {
+                "recent_failures"
+            },
+            due_at_ms: Some(worker.next_due_at_ms),
+            planned_at_ms: worker.last_completed_at_ms,
+            overdue_by_ms: if worker.is_due {
+                Some(worker.overdue_by_ms)
+            } else {
+                None
+            },
+            consecutive_failure_count: Some(worker.consecutive_failure_count),
+            risk_lane: "discovery_recovery",
+            risk_action: if blocked {
+                "repair_unhealthy_discovery_worker"
+            } else {
+                "review_discovery_worker_failures"
+            },
+            blocked,
+            requires_attention: true,
+        }
+    }
+}
+
+fn supervision_remediation_row_matches(
+    row: &SupervisionRemediationRow,
+    query: &SupervisionRemediationQuery,
+) -> bool {
+    if !query.remediation_kinds.is_empty()
+        && !query.remediation_kinds.contains(&row.remediation_kind)
+    {
+        return false;
+    }
+    if query
+        .bridge_id
+        .as_ref()
+        .is_some_and(|bridge_id| row.bridge_id.as_ref() != Some(bridge_id))
+    {
+        return false;
+    }
+    if query
+        .entity_id
+        .as_ref()
+        .is_some_and(|entity_id| row.entity_id.as_ref() != Some(entity_id))
+    {
+        return false;
+    }
+    if query
+        .worker_id
+        .as_ref()
+        .is_some_and(|worker_id| row.worker_id.as_ref() != Some(worker_id))
+    {
+        return false;
+    }
+    if query
+        .integration_id
+        .as_ref()
+        .is_some_and(|integration_id| row.integration_id.as_ref() != Some(integration_id))
+    {
+        return false;
+    }
+    if query
+        .risk_lane
+        .as_ref()
+        .is_some_and(|risk_lane| row.risk_lane != risk_lane.as_str())
+    {
+        return false;
+    }
+    if query
+        .risk_action
+        .as_ref()
+        .is_some_and(|risk_action| row.risk_action != risk_action.as_str())
+    {
+        return false;
+    }
+    if query.blocked_only && !row.blocked {
+        return false;
+    }
+    if query.requires_attention_only && !row.requires_attention {
+        return false;
+    }
+    true
+}
+
+fn supervision_remediation_row_rank(row: &SupervisionRemediationRow) -> u8 {
+    match row.remediation_kind {
+        SupervisionRemediationKind::PairingExpiry => 7,
+        SupervisionRemediationKind::WorkerRestart => 6,
+        SupervisionRemediationKind::WorkerHeartbeat => 5,
+        SupervisionRemediationKind::StateRefresh => match row.reason {
+            "missing" => 4,
+            "stale" => 3,
+            _ => 2,
+        },
+        SupervisionRemediationKind::DesiredStateReconciliation => match row.reason {
+            "missing" => 4,
+            "stale" => 3,
+            "drifted" => 2,
+            _ => 1,
+        },
+        SupervisionRemediationKind::DiscoveryWorkerRecovery => 3,
+        SupervisionRemediationKind::DiscoveryWorkerRun => 1,
+    }
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -58274,6 +58861,160 @@ fn state_transition_audit_summary_json(summary: &StateTransitionAuditSummary) ->
     ])
 }
 
+fn supervision_remediation_row_json(row: &SupervisionRemediationRow) -> JsonValue {
+    object([
+        ("remediation_id", string(&row.remediation_id)),
+        (
+            "remediation_kind",
+            string(supervision_remediation_kind_label(row.remediation_kind)),
+        ),
+        (
+            "bridge_id",
+            row.bridge_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "device_id",
+            row.device_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "entity_id",
+            row.entity_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "worker_id",
+            row.worker_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "integration_id",
+            row.integration_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "capability_id",
+            row.capability_id
+                .as_ref()
+                .map(|value| string(value.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("capability_count", integer(row.capability_count as i64)),
+        (
+            "desired_value",
+            row.desired_value
+                .as_ref()
+                .map(smart_value_to_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "worker_kind",
+            row.worker_kind
+                .as_ref()
+                .map(|value| string(value))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "status",
+            row.status
+                .as_ref()
+                .map(|value| string(value))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("reason", string(row.reason)),
+        (
+            "due_at_ms",
+            row.due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "planned_at_ms",
+            row.planned_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "overdue_by_ms",
+            row.overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "consecutive_failure_count",
+            row.consecutive_failure_count
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("risk_lane", string(row.risk_lane)),
+        ("risk_action", string(row.risk_action)),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+    ])
+}
+
+fn supervision_remediation_summary_json(summary: &SupervisionRemediationSummary) -> JsonValue {
+    object([
+        ("total_rows", integer(summary.total_rows as i64)),
+        (
+            "pairing_expiry_rows",
+            integer(summary.pairing_expiry_rows as i64),
+        ),
+        (
+            "state_refresh_rows",
+            integer(summary.state_refresh_rows as i64),
+        ),
+        (
+            "desired_state_reconciliation_rows",
+            integer(summary.desired_state_reconciliation_rows as i64),
+        ),
+        (
+            "worker_restart_rows",
+            integer(summary.worker_restart_rows as i64),
+        ),
+        (
+            "worker_heartbeat_rows",
+            integer(summary.worker_heartbeat_rows as i64),
+        ),
+        (
+            "discovery_worker_run_rows",
+            integer(summary.discovery_worker_run_rows as i64),
+        ),
+        (
+            "discovery_worker_recovery_rows",
+            integer(summary.discovery_worker_recovery_rows as i64),
+        ),
+        ("blocked_rows", integer(summary.blocked_rows as i64)),
+        (
+            "requires_attention_rows",
+            integer(summary.requires_attention_rows as i64),
+        ),
+        ("overdue_rows", integer(summary.overdue_rows as i64)),
+        ("bridge_count", integer(summary.bridge_count as i64)),
+        ("entity_count", integer(summary.entity_count as i64)),
+        ("worker_count", integer(summary.worker_count as i64)),
+        (
+            "has_supervision_remediation",
+            JsonValue::Bool(summary.has_supervision_remediation()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -61044,6 +61785,18 @@ fn state_transition_audit_kind_label(kind: StateTransitionAuditKind) -> &'static
     }
 }
 
+fn supervision_remediation_kind_label(kind: SupervisionRemediationKind) -> &'static str {
+    match kind {
+        SupervisionRemediationKind::PairingExpiry => "pairing_expiry",
+        SupervisionRemediationKind::StateRefresh => "state_refresh",
+        SupervisionRemediationKind::DesiredStateReconciliation => "desired_state_reconciliation",
+        SupervisionRemediationKind::WorkerRestart => "worker_restart",
+        SupervisionRemediationKind::WorkerHeartbeat => "worker_heartbeat",
+        SupervisionRemediationKind::DiscoveryWorkerRun => "discovery_worker_run",
+        SupervisionRemediationKind::DiscoveryWorkerRecovery => "discovery_worker_recovery",
+    }
+}
+
 fn parse_state_transition_audit_kind(
     value: &str,
 ) -> Result<StateTransitionAuditKind, ToolCallError> {
@@ -61063,6 +61816,35 @@ fn parse_state_transition_audit_kind(
         }
         _ => Err(validation_error(format!(
             "unsupported state transition audit kind `{value}`"
+        ))),
+    }
+}
+
+fn parse_supervision_remediation_kind(
+    value: &str,
+) -> Result<SupervisionRemediationKind, ToolCallError> {
+    match value {
+        "pairing_expiry" | "pairing" | "pairing_session" => {
+            Ok(SupervisionRemediationKind::PairingExpiry)
+        }
+        "state_refresh" | "refresh" | "missing_state" | "stale_state" => {
+            Ok(SupervisionRemediationKind::StateRefresh)
+        }
+        "desired_state_reconciliation" | "desired_state" | "reconciliation" | "drift" => {
+            Ok(SupervisionRemediationKind::DesiredStateReconciliation)
+        }
+        "worker_restart" | "worker" | "restart" => Ok(SupervisionRemediationKind::WorkerRestart),
+        "worker_heartbeat" | "heartbeat" | "deadline" => {
+            Ok(SupervisionRemediationKind::WorkerHeartbeat)
+        }
+        "discovery_worker_run" | "discovery_worker" | "discovery" => {
+            Ok(SupervisionRemediationKind::DiscoveryWorkerRun)
+        }
+        "discovery_worker_recovery" | "discovery_recovery" | "discovery_failure" => {
+            Ok(SupervisionRemediationKind::DiscoveryWorkerRecovery)
+        }
+        _ => Err(validation_error(format!(
+            "unsupported supervision remediation kind `{value}`"
         ))),
     }
 }
@@ -64892,7 +65674,8 @@ mod tests {
     };
     use smart_home_core::{smart_home_tool_catalog, CapabilityGrant, CapabilityGrantId};
     use smart_home_discovery::{
-        DiscoveryWorkerId, DiscoveryWorkerKind, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
+        DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
+        MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
     };
     use smart_home_runtime::ScheduledDiscoveryWorker;
     use smart_home_testkit::{hue_bridge_discovery_record, hue_lighting_runtime};
@@ -64904,7 +65687,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 254);
+        assert_eq!(definitions.len(), 256);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -64949,6 +65732,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_STATE_TRANSITION_AUDIT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_SUPERVISION_REMEDIATION_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID));
@@ -65631,7 +66420,7 @@ mod tests {
             .contains(&SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            246
+            248
         );
         assert_eq!(
             export
@@ -66237,6 +67026,13 @@ mod tests {
         assert!(
             smart_home_tool_definition(SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID).is_some()
         );
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID).is_some()
+        );
+        assert!(
+            smart_home_tool_definition(SMART_HOME_GET_SUPERVISION_REMEDIATION_SUMMARY_TOOL_ID)
+                .is_some()
+        );
         assert!(smart_home_tool_definition(SMART_HOME_COMPLETE_PAIRING_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_REPORT_EVENT_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
@@ -66471,11 +67267,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(254))
+            Some(&integer(256))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(246))
+            Some(&integer(248))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -80497,6 +81293,194 @@ mod tests {
         let journal_summary = journal.summary();
         assert_eq!(journal_summary.invocation_count, 3);
         assert_eq!(journal_summary.completed_count, 3);
+    }
+
+    #[test]
+    fn supervision_remediation_tools_surface_runtime_supervision_pressure_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-light-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(false),
+                    }],
+                )
+                .requested_by("agent:scene-planner"),
+            )
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                BridgeId::trusted("bridge-1"),
+                IntegrationId::trusted("hue"),
+                1_000,
+                250,
+            ));
+        let discovery_worker_id = DiscoveryWorkerId::trusted("hue-mdns-remediation");
+        runtime
+            .borrow_mut()
+            .register_discovery_worker_schedule(
+                ScheduledDiscoveryWorker::new(
+                    discovery_worker_id.clone(),
+                    IntegrationId::trusted("hue"),
+                    DiscoveryWorkerKind::MdnsScan,
+                    5_000,
+                    250,
+                    1_100,
+                )
+                .with_retry_backoff(500, 2_000, 2)
+                .with_source(DiscoverySource::Mdns)
+                .with_network_interface("en0")
+                .with_metadata(MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY, "_hue._tcp.local"),
+            )
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .mark_discovery_worker_started(&discovery_worker_id, 1_200)
+            .unwrap();
+        let mut failed_run = DiscoveryWorkerRun::new(
+            discovery_worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_200,
+            1_260,
+        );
+        failed_run.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "multicast route unavailable")
+                .unwrap(),
+        );
+        runtime
+            .borrow_mut()
+            .record_scheduled_discovery_worker_run(&failed_run, 1_260, 500)
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let list_request = request(
+            "call-list-supervision-remediation",
+            SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID,
+            object([
+                ("requires_attention_only", JsonValue::Bool(true)),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("limit", integer(10)),
+            ]),
+            2_000,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        let remediation = field(list_output, "supervision_remediation").unwrap();
+        assert!(
+            array_len(remediation).unwrap() >= 4,
+            "supervision remediation should include refresh, reconciliation, worker, and discovery work"
+        );
+        let summary = field(list_output, "summary").unwrap();
+        assert!(
+            integer_value(field(summary, "total_rows").unwrap()).unwrap() >= 4,
+            "summary should count the untruncated remediation queue"
+        );
+        assert!(
+            integer_value(field(summary, "state_refresh_rows").unwrap()).unwrap() >= 1,
+            "fixture leaves at least one entity without observed state"
+        );
+        assert_eq!(
+            field(summary, "desired_state_reconciliation_rows"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(summary, "worker_restart_rows"), Some(&integer(1)));
+        assert!(
+            integer_value(field(summary, "discovery_worker_recovery_rows").unwrap()).unwrap() >= 1
+        );
+        assert_eq!(
+            field(summary, "has_supervision_remediation"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(summary, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let JsonValue::Array(rows) = remediation else {
+            panic!("supervision_remediation should be an array");
+        };
+        assert!(rows.iter().any(|row| field(row, "remediation_kind")
+            == Some(&string("desired_state_reconciliation"))
+            && field(row, "entity_id") == Some(&string("entity-light-1"))
+            && field(row, "capability_id") == Some(&string("light.on_off"))
+            && field(row, "desired_value") == Some(&JsonValue::Bool(false))
+            && field(row, "reason") == Some(&string("drifted"))
+            && field(row, "risk_action") == Some(&string("reconcile_desired_state"))
+            && field(row, "blocked") == Some(&JsonValue::Bool(true))));
+        assert!(rows.iter().any(|row| field(row, "remediation_kind")
+            == Some(&string("worker_restart"))
+            && field(row, "bridge_id") == Some(&string("bridge-1"))
+            && field(row, "risk_action") == Some(&string("restart_overdue_worker"))
+            && field(row, "overdue_by_ms") == Some(&integer(750))));
+        assert!(rows.iter().any(|row| field(row, "remediation_kind")
+            == Some(&string("discovery_worker_recovery"))
+            && field(row, "worker_id") == Some(&string("hue-mdns-remediation"))
+            && field(row, "status") == Some(&string("unhealthy"))
+            && field(row, "consecutive_failure_count") == Some(&integer(1))
+            && field(row, "risk_action") == Some(&string("repair_unhealthy_discovery_worker"))));
+
+        let summary_request = request(
+            "call-supervision-remediation-summary",
+            SMART_HOME_GET_SUPERVISION_REMEDIATION_SUMMARY_TOOL_ID,
+            object([
+                ("remediation_kind", string("discovery_worker_recovery")),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            2_001,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_rows"), Some(&integer(1)));
+        assert_eq!(
+            field(rollup, "discovery_worker_recovery_rows"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(rollup, "blocked_rows"), Some(&integer(1)));
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 2);
+        assert_eq!(journal_summary.completed_count, 2);
+        assert_eq!(
+            runtime.borrow().registry().counts().authorization_decisions,
+            2,
+            "supervision remediation list and summary both authorize through runtime read tools"
+        );
     }
 
     #[test]

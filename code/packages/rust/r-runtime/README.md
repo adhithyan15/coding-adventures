@@ -247,6 +247,18 @@ whitespace and a sign, a `0x` prefix for base 16, the whole string consumed, and
 checked `i64` arithmetic, so overflow yields `NA` rather than a panic. (`strtoi`'s
 `base=0L` auto-detection and a custom `trimws(whitespace=)` are deferred to R-36.)
 
+**R-36 — matrix cross products** add `crossprod` and `tcrossprod`, again through the
+shared `s-runtime`. An independent matrix-algebra item, defined entirely in terms of
+the existing R-11 `t()` transpose and `%*%` matrix product (no new linear algebra).
+`crossprod(x, y)` = `t(x) %*% y` and `crossprod(x)` = `t(x) %*% x` (the Gram matrix
+`X'X`); `tcrossprod(x, y)` = `x %*% t(y)` and `tcrossprod(x)` = `x %*% t(x)` (`XX'`).
+The second argument defaults to the first. `crossprod(matrix(c(1,2,3,4), nrow=2))`
+→ `[[5,11],[11,25]]`; `tcrossprod(...)` of the same → `[[10,14],[14,20]]`; for
+`B = matrix(1:6, nrow=2)`, `dim(crossprod(B))` is `c(3,3)` and `dim(tcrossprod(B))`
+is `c(2,2)`. A non-conformable pair raises the same `"non-conformable arguments"`
+error `%*%` raises. Because the impl reuses the `%*%` handler, it inherits its
+`MAX_SEQ_LEN` allocation guard and conformability check — no new unbounded multiplier.
+
 ## Usage
 
 ```rust

@@ -4,6 +4,20 @@
 
 ### Added
 
+- **Deck rawfile probe inventory artifacts** —
+  selected `run_deck_analysis()` rawfile artifact summaries now carry
+  `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /
+  `UnmatchedProbeList` columns, and `write <rawfile> <probes...>` artifacts now
+  keep only requested matching vector columns in deterministic in-memory
+  rawfile output, matching Rust and TypeScript.
+
+- **Deck WRDATA unmatched probe artifacts** —
+  selected `run_deck_analysis()` WRDATA artifact summaries now carry
+  `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /
+  `UnmatchedProbeList` columns so ignored `wrdata` probe names remain
+  auditable in stable table, CSV, JSON, and record exports, matching Rust and
+  TypeScript.
+
 - **Deck WRDATA probe column artifacts** —
   `format_deck_wrdata_ascii()` now treats explicit `wrdata <file> <probes...>`
   probe lists as data-file column selectors, preserving the scale column plus

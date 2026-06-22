@@ -259,6 +259,10 @@ pub fn install(env: &Env) {
     define(env, "matrix", builtin("matrix", b_matrix));
     define(env, "t", builtin("t", b_t));
     define(env, "apply", builtin("apply", b_apply));
+    // Matrix cross products (R-36): `t(x) %*% y` and `x %*% t(y)`. Both reuse
+    // the `t()` transpose and the `%*%` product above — no new linear algebra.
+    define(env, "crossprod", builtin("crossprod", b_crossprod));
+    define(env, "tcrossprod", builtin("tcrossprod", b_tcrossprod));
 
     // Matrix linear algebra (R-12).
     define(env, "diag", builtin("diag", b_diag));
@@ -562,6 +566,112 @@ fn b_t(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             })
         }
     }
+}
+
+/// Transpose a single value by reusing the public `t()` builtin (`b_t`). We wrap
+/// `value` back into a one-element `Arg` slice — exactly the shape `b_t` expects
+/// — so `crossprod`/`tcrossprod` get *identical* transpose semantics (matrix →
+/// swapped dims; bare vector → `1×n` row matrix) with zero duplicated logic.
+fn transpose_value(interp: &Interpreter, value: &SValue) -> SResult<SValue> {
+    let one = [Arg {
+        name: None,
+        value: value.clone(),
+    }];
+    b_t(interp, &one)
+}
+
+/// `crossprod(x, y)` = `t(x) %*% y`; `crossprod(x)` (one argument) = `t(x) %*% x`.
+///
+/// This is the *Gram matrix* operation that shows up everywhere in statistics:
+/// for a data matrix `X` whose columns are variables, `crossprod(X)` is the
+/// (unscaled) `X'X` — the column-by-column dot products, the heart of a
+/// least-squares normal equation `X'X b = X'y`.
+///
+/// ## Worked example (column-major, as R stores matrices)
+///
+/// `A = matrix(c(1, 2, 3, 4), nrow = 2)` is
+///
+/// ```text
+///       col1 col2
+/// row1   1    3
+/// row2   2    4
+/// ```
+///
+/// Its transpose `t(A)` is
+///
+/// ```text
+///       col1 col2
+/// row1   1    2
+/// row2   3    4
+/// ```
+///
+/// so `crossprod(A) = t(A) %*% A` =
+///
+/// ```text
+/// [ 1*1+2*2  1*3+2*4 ]   [  5  11 ]
+/// [ 3*1+4*2  3*3+4*4 ] = [ 11  25 ]
+/// ```
+///
+/// ## Implementation
+///
+/// We do **not** reimplement multiply or transpose. We call the public `t()`
+/// (`b_t`, via `transpose_value`) for the transpose and the evaluator's
+/// `matrix_multiply` for the product. That means we inherit, for free:
+///   * the `MAX_SEQ_LEN` allocation guard on `nrow * ncol` (no unchecked
+///     multiply → OOM),
+///   * the `"non-conformable arguments"` error when inner dims disagree,
+///   * the column-major `array_runtime` fast path and NA propagation.
+///
+/// The second argument is optional and defaults to `x` (the one-argument form),
+/// matching R. Inner dims always conform in the one-argument case because
+/// `t(x)` has as many columns as `x` has rows.
+fn b_crossprod(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let y_owned;
+    let y = match nth_positional(args, 1) {
+        Some(y) => y,
+        None => {
+            // crossprod(x) ≡ crossprod(x, x): the second operand is x itself.
+            y_owned = x.clone();
+            &y_owned
+        }
+    };
+    let xt = transpose_value(interp, x)?;
+    interp.matrix_multiply(&xt, y)
+}
+
+/// `tcrossprod(x, y)` = `x %*% t(y)`; `tcrossprod(x)` (one argument) =
+/// `x %*% t(x)`.
+///
+/// The "t" is for *transposed*: where `crossprod` transposes the **first**
+/// operand, `tcrossprod` transposes the **second**. For a data matrix `X` whose
+/// rows are observations, `tcrossprod(X)` is the `XX'` of pairwise row dot
+/// products (a Gram matrix over observations rather than variables).
+///
+/// ## Worked example (same `A` as `crossprod`)
+///
+/// `tcrossprod(A) = A %*% t(A)` =
+///
+/// ```text
+/// [ 1*1+3*3  1*2+3*4 ]   [ 10  14 ]
+/// [ 2*1+4*3  2*2+4*4 ] = [ 14  20 ]
+/// ```
+///
+/// As with `crossprod`, the multiply and transpose are *reused*, not rebuilt,
+/// so the allocation guard, conformability error, and NA rules all carry over.
+fn b_tcrossprod(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let y_owned;
+    let y = match nth_positional(args, 1) {
+        Some(y) => y,
+        None => {
+            // tcrossprod(x) ≡ tcrossprod(x, x).
+            y_owned = x.clone();
+            &y_owned
+        }
+    };
+    let yt = transpose_value(interp, y)?;
+    interp.matrix_multiply(x, &yt)
 }
 
 /// `apply(X, MARGIN, FUN, …)` — apply `FUN` to each row (`MARGIN = 1`) or column

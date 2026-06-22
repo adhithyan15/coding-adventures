@@ -1125,7 +1125,7 @@ unchanged.
     (default right-closed `(lo,hi]` intervals with auto-generated labels) ship
     **solidly** in R-32.
 
-- **R-33 — `cut()` option completeness** *(this PR)*. Extends the R-32 `cut`
+- **R-33 — `cut()` option completeness**. Extends the R-32 `cut`
   handler in place (same `findInterval`-backed kernel, same factor builder) with
   the four deferred options. None of them change the default behaviour; they are
   pure refinements layered onto the existing interval scan.
@@ -1182,6 +1182,39 @@ unchanged.
     **Deferred to R-34:** `dig.lab =` (significant-digit control of auto-label
     formatting) and `ordered_result =` (an ordered factor result). The `%o%` infix
     alias for `outer` remains open for a later grammar pass.
+- **R-36 — `crossprod` / `tcrossprod` (matrix cross products)** *(this PR)*. An
+  **independent matrix-algebra item** (not part of the binning/cut/set-op chains):
+  the two cross-product convenience functions that statistics code reaches for
+  constantly, landed in the shared `s-runtime` (R reuses them verbatim through the
+  shared tree-walker). Both are defined **entirely in terms of the existing R-11
+  `t()` transpose and R-11 `%*%` matrix product** — no new linear algebra, no new
+  value type:
+  - **`crossprod(x, y)`** = `t(x) %*% y`; **`crossprod(x)`** (one argument) =
+    `t(x) %*% x` (the unscaled Gram matrix `X'X`, the heart of a least-squares
+    normal equation). The second argument defaults to the first.
+  - **`tcrossprod(x, y)`** = `x %*% t(y)`; **`tcrossprod(x)`** (one argument) =
+    `x %*% t(x)` (the `XX'` of pairwise row dot products). The "t" prefix means
+    the *second* operand is transposed (vs. `crossprod`, which transposes the
+    first).
+  - **Worked example (column-major, as R stores matrices).**
+    `A = matrix(c(1,2,3,4), nrow = 2)` is col1=(1,2), col2=(3,4). Then
+    `crossprod(A) = t(A) %*% A = [[5, 11], [11, 25]]` and
+    `tcrossprod(A) = A %*% t(A) = [[10, 14], [14, 20]]`. Non-square:
+    `B = matrix(1:6, nrow = 2)` (2×3) gives `crossprod(B)` 3×3 and `tcrossprod(B)`
+    2×2.
+  - **Reuse, not reimplementation (security).** The implementation calls the
+    public `t()` builtin (`b_t`) for the transpose and the evaluator's
+    `matrix_multiply` (the `%*%` handler, exposed `pub(crate)` for this) for the
+    product. It therefore **inherits** that handler's already-reviewed safety
+    properties: the `MAX_SEQ_LEN` allocation guard on the `nrow * ncol` result
+    (no unchecked multiply → OOM), the `"non-conformable arguments"` error raised
+    *before* any indexing when inner dimensions disagree (so `crossprod(A, C)` for
+    a non-conformable `C` is the same clean error `%*%` raises), the column-major
+    `array_runtime` fast path, and NA propagation. The new surface is just the
+    two argument-shuffling wrappers. As in R, a bare numeric vector flows through
+    the same vector-promotion rules `%*%` already applies (left operand a row,
+    right operand a column), so `crossprod(v)` is `1×1`; the matrix case is the
+    solid, tested core.
 
 - **R-34 — string utilities** *(this PR)*. An **independent string-utility family**
   (not part of the in-flight cut/set-ops chain): five base-R string builtins that
