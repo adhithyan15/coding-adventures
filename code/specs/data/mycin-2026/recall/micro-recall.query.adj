@@ -23,3 +23,5 @@ import "micro-edges.adj"
 ? gram_stain(helicobacter_pylori, $Result)             % expect gram_negative (expand)
 ? morphology(helicobacter_pylori, $Shape)              % expect spiral (expand)
 ? causes(helicobacter_pylori, $Disease)                % expect peptic_ulcer_disease (expand)
+? gram_stain(clostridioides_difficile, $Result)        % expect gram_positive (expand)
+? causes(clostridioides_difficile, $Disease)           % expect pseudomembranous_colitis (expand)
