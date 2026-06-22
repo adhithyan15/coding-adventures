@@ -176,6 +176,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidence`
   and summary helpers for preserving clearance action evidence lineage across
   blocker, operator, review, and release lanes.
+- `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReadinessSummary`
+  and helpers for combining clearance action readiness with evidence lineage
+  state.
 - `IntegrationMeshReleaseTicketHandoffWorkOrderGuardrailReadinessSummary` and
   helpers for combining work-order readiness with handoff guardrail state.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditReadinessSummary` and
