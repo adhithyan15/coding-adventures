@@ -216,6 +216,22 @@ already-capped input/breaks lengths; missing operands error gracefully. (`cut`'s
 `labels=`/`right=FALSE`/`include.lowest=` and integer `breaks` are deferred to
 R-33.)
 
+**String utilities (R-34)** — an independent string-utility family reached through
+ordinary R syntax (not part of the cut/set-ops chain). All five reuse the existing
+string machinery and operate on Unicode `char`s, never raw byte indices, so
+multibyte UTF-8 input is always safe. `startsWith(x, prefix)` / `endsWith(x, suffix)`
+are logical, recycled over *both* args with `NA` → `NA`
+(`startsWith(c("apple","banana"), "a")` → `c(TRUE, FALSE)`). `trimws(x, which="both")`
+strips leading/trailing whitespace (`[ \t\r\n]`); `which ∈ {both,left,right}`, any
+other value an error. `chartr(old, new, x)` translates characters, requiring
+`old`/`new` of equal `nchar` (`chartr("é","e","café")` → `"cafe"`). `strtoi(x,
+base=10L)` parses integers in bases 2..36 the way C `strtol` does — leading
+whitespace and a sign, a `0x` prefix for base 16, the whole string consumed, and
+`NA` for an empty string, garbage, an out-of-range digit, or a base outside 2..36
+(`strtoi("FF", 16L)` → `255`; `strtoi(c("7","8"), 8L)` → `c(7, NA)`). Parsing uses
+checked `i64` arithmetic, so overflow yields `NA` rather than a panic. (`strtoi`'s
+`base=0L` auto-detection and a custom `trimws(whitespace=)` are deferred to R-36.)
+
 ## Usage
 
 ```rust
