@@ -31,3 +31,5 @@ import "genetics-edges.adj"
 ? gene_defect(angelman_syndrome, $Gene)                % expect ube3a (expand)
 ? inheritance(friedreich_ataxia, $Pattern)             % expect autosomal_recessive (expand)
 ? trinucleotide_repeat(friedreich_ataxia, $Repeat)     % expect gaa (expand)
+? inheritance(wilson_disease, $Pattern)                % expect autosomal_recessive (expand)
+? gene_defect(wilson_disease, $Gene)                   % expect atp7b (expand)
