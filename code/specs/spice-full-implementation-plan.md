@@ -125,7 +125,8 @@ downstream tools to compare.
      carry accepted rawfile/data-write option inventories plus deterministic
      `wr_vecnames` / `wr_singlescale` rendering metadata, and explicit
      `wrdata` probe lists now select the emitted in-memory data-file columns
-     while filesystem writes remain metadata-only.
+     and carry matched/unmatched probe inventories while filesystem writes
+     remain metadata-only.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -1070,6 +1071,14 @@ downstream tools to compare.
     - In-memory WRDATA data files preserve the scale column plus requested
       matching probe columns in marker order, while filesystem writes remain
       metadata-only.
+
+98. Deck WRDATA unmatched probe artifact inventories.
+    - Status: completed in this deck WRDATA unmatched probe artifact slice.
+    - Python, Rust, and TypeScript WRDATA artifact summaries now expose stable
+      matched and unmatched probe counts/lists beside the requested probe list.
+    - Stable WRDATA artifact table, CSV, compact JSON, and host-native record
+      exports make ignored `wrdata` probe names auditable while keeping
+      filesystem writes metadata-only.
 
 ## Backlog
 

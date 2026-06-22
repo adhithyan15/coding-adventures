@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Deck WRDATA unmatched probe artifacts** —
+  selected `run_deck_analysis()` WRDATA artifact summaries now carry
+  `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /
+  `UnmatchedProbeList` columns so ignored `wrdata` probe names remain
+  auditable in stable table, CSV, JSON, and record exports, matching Rust and
+  TypeScript.
+
 - **Deck WRDATA probe column artifacts** —
   `format_deck_wrdata_ascii()` now treats explicit `wrdata <file> <probes...>`
   probe lists as data-file column selectors, preserving the scale column plus

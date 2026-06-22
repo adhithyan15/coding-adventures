@@ -2072,7 +2072,7 @@ set wr_singlescale
 set appendwrite
 .set WR_VECNAMES
 write out.raw V(in)
-wrdata out.dat V(in)
+wrdata out.dat V(in) V(missing)
 source other.cir
 cd /tmp
 if v(in) > 0
@@ -2092,7 +2092,10 @@ let gain = 2
     const codeList = expectedCodes.join(";");
     const expectedControlLines = [".save V(in)", ".probe V(in)"];
     const controlLineList = expectedControlLines.join(";");
-    const expectedWriteMarkers = ["write out.raw V(in)", "wrdata out.dat V(in)"];
+    const expectedWriteMarkers = [
+      "write out.raw V(in)",
+      "wrdata out.dat V(in) V(missing)",
+    ];
     const writeMarkerList = expectedWriteMarkers.join(";");
     const expectedRawfileOptions = [
       "set filetype=ascii",
@@ -2142,15 +2145,23 @@ let gain = 2
     );
     expect(execution.wrdataArtifactCount).toBe(1);
     expect(execution.wrdataArtifacts[0]?.target).toBe("out.dat");
-    expect(execution.wrdataArtifacts[0]?.marker).toBe("wrdata out.dat V(in)");
-    expect(execution.wrdataArtifacts[0]?.probeCount).toBe(1);
-    expect(execution.wrdataArtifacts[0]?.probes).toEqual(["V(in)"]);
+    expect(execution.wrdataArtifacts[0]?.marker).toBe(
+      "wrdata out.dat V(in) V(missing)",
+    );
+    expect(execution.wrdataArtifacts[0]?.probeCount).toBe(2);
+    expect(execution.wrdataArtifacts[0]?.probes).toEqual(["V(in)", "V(missing)"]);
+    expect(execution.wrdataArtifacts[0]?.matchedProbeCount).toBe(1);
+    expect(execution.wrdataArtifacts[0]?.matchedProbes).toEqual(["V(in)"]);
+    expect(execution.wrdataArtifacts[0]?.unmatchedProbeCount).toBe(1);
+    expect(execution.wrdataArtifacts[0]?.unmatchedProbes).toEqual(["V(missing)"]);
     expect(execution.wrdataArtifacts[0]?.optionCount).toBe(expectedRawfileOptions.length);
     expect(execution.wrdataArtifacts[0]?.options).toEqual(expectedRawfileOptions);
     expect(execution.wrdataArtifacts[0]?.datafile).toContain(
       "# SPICE deck wrdata artifact\n",
     );
-    expect(execution.wrdataArtifacts[0]?.datafile).toContain("Probes: V(in)\n");
+    expect(execution.wrdataArtifacts[0]?.datafile).toContain(
+      "Probes: V(in);V(missing)\n",
+    );
     expect(execution.wrdataArtifacts[0]?.datafile).toContain(
       `Options: ${rawfileOptionList}\n`,
     );
@@ -2162,9 +2173,13 @@ let gain = 2
     expect(execution.wrdataArtifacts[0]?.datafile).toContain("0\t1.000000e+00\n");
     const wrdataRecord = execution.wrdataArtifactRecords[0]!;
     expect(wrdataRecord["Target"]).toBe("out.dat");
-    expect(wrdataRecord["Marker"]).toBe("wrdata out.dat V(in)");
-    expect(wrdataRecord["Probes"]).toBe("1");
-    expect(wrdataRecord["ProbeList"]).toBe("V(in)");
+    expect(wrdataRecord["Marker"]).toBe("wrdata out.dat V(in) V(missing)");
+    expect(wrdataRecord["Probes"]).toBe("2");
+    expect(wrdataRecord["ProbeList"]).toBe("V(in);V(missing)");
+    expect(wrdataRecord["MatchedProbes"]).toBe("1");
+    expect(wrdataRecord["MatchedProbeList"]).toBe("V(in)");
+    expect(wrdataRecord["UnmatchedProbes"]).toBe("1");
+    expect(wrdataRecord["UnmatchedProbeList"]).toBe("V(missing)");
     expect(wrdataRecord["Options"]).toBe(String(expectedRawfileOptions.length));
     expect(wrdataRecord["RawfileOptionList"]).toBe(rawfileOptionList);
     expect(wrdataRecord["Bytes"]).toBe(String(execution.wrdataArtifacts[0]?.datafile.length));
@@ -2177,10 +2192,11 @@ let gain = 2
     expect(execution.wrdataArtifactJson).toBe(
       formatDeckWrdataArtifactJson(execution.wrdataArtifacts),
     );
-    expect(JSON.parse(execution.wrdataArtifactJson)[0].ProbeList).toBe("V(in)");
-    expect(JSON.parse(execution.wrdataArtifactJson)[0].RawfileOptionList).toBe(
-      rawfileOptionList,
-    );
+    const wrdataJson = JSON.parse(execution.wrdataArtifactJson)[0];
+    expect(wrdataJson.ProbeList).toBe("V(in);V(missing)");
+    expect(wrdataJson.MatchedProbeList).toBe("V(in)");
+    expect(wrdataJson.UnmatchedProbeList).toBe("V(missing)");
+    expect(wrdataJson.RawfileOptionList).toBe(rawfileOptionList);
     expect(execution.diagnosticCount).toBe(expectedCodes.length);
     expect(execution.diagnosticCodes).toEqual(expectedCodes);
     expect(execution.runArtifacts[0]?.controlLineCount).toBe(expectedControlLines.length);
