@@ -34,6 +34,12 @@
 // into method bodies (out of scope for the backend).  See
 // `code/specs/sir-runtime.md`.
 
+// Block-taking catalog methods (each/map/select/…) invoke a Ruby block.  A block
+// reaches us as a trailing `Closure` from sir-runtime-core; `apply` calls it with
+// proc-lenient arity, and `truthy` applies SIR truthiness (only `false`/`nil` are
+// falsy) to predicate results.
+import { apply, Closure, truthy } from "@coding-adventures/sir-runtime-core";
+
 /**
  * The SIR universal value type at this package's boundary.  Kept as `unknown`'s
  * permissive sibling so emitted code can pass `@coding-adventures/sir-runtime-core`
@@ -263,6 +269,26 @@ const ARRAY_METHODS = new Set<string>([
   "to_a",
 ]);
 
+// Block-taking `Array`/`Enumerable` methods (M1b); each invokes a trailing
+// `Closure` block via `apply`. Listed so `respond_to?` reports them.
+const ARRAY_BLOCK_METHODS = new Set<string>([
+  "each",
+  "each_with_index",
+  "map",
+  "collect",
+  "select",
+  "filter",
+  "reject",
+  "reduce",
+  "inject",
+  "find",
+  "detect",
+  "flat_map",
+  "any?",
+  "all?",
+  "none?",
+]);
+
 /** SIR value equality used by `include?`/`index`/`==` — `===` for primitives,
  * structural for arrays and `Map`s (Ruby `==` is deep). */
 function valEq(a: Val, b: Val): boolean {
@@ -297,7 +323,9 @@ function respondsTo(recv: Val, name: string): boolean {
   }
   if (methods.has(name)) return true;
   if (OBJECT_METHODS.has(name)) return true;
-  if (Array.isArray(recv) && ARRAY_METHODS.has(name)) return true;
+  if (Array.isArray(recv) && (ARRAY_METHODS.has(name) || ARRAY_BLOCK_METHODS.has(name))) {
+    return true;
+  }
   return false;
 }
 
@@ -422,6 +450,72 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
   }
 }
 
+/** Block-taking `Array`/`Enumerable` methods.  `block` is applied via `apply`
+ * (proc-lenient); predicate results route through SIR `truthy`.  Returns `MISS`
+ * if `name` is not a block method. */
+function arrayBlockMethod(
+  recv: Val[],
+  name: string,
+  args: Val[],
+  block: Closure,
+): Val | typeof MISS {
+  switch (name) {
+    case "each":
+      for (const item of recv) apply(block, [item]);
+      return recv;
+    case "each_with_index":
+      recv.forEach((item: Val, index: number) => apply(block, [item, index]));
+      return recv;
+    case "map":
+    case "collect":
+      return recv.map((item: Val) => apply(block, [item]));
+    case "select":
+    case "filter":
+      return recv.filter((item: Val) => truthy(apply(block, [item])));
+    case "reject":
+      return recv.filter((item: Val) => !truthy(apply(block, [item])));
+    case "reduce":
+    case "inject": {
+      let acc: Val;
+      let rest: Val[];
+      if (args.length > 0) {
+        acc = args[0];
+        rest = recv;
+      } else if (recv.length > 0) {
+        acc = recv[0];
+        rest = recv.slice(1);
+      } else {
+        return null;
+      }
+      for (const item of rest) acc = apply(block, [acc, item]);
+      return acc;
+    }
+    case "find":
+    case "detect":
+      for (const item of recv) {
+        if (truthy(apply(block, [item]))) return item;
+      }
+      return null;
+    case "flat_map": {
+      const out: Val[] = [];
+      for (const item of recv) {
+        const mapped = apply(block, [item]);
+        if (Array.isArray(mapped)) out.push(...mapped);
+        else out.push(mapped);
+      }
+      return out;
+    }
+    case "any?":
+      return recv.some((item: Val) => truthy(apply(block, [item])));
+    case "all?":
+      return recv.every((item: Val) => truthy(apply(block, [item])));
+    case "none?":
+      return !recv.some((item: Val) => truthy(apply(block, [item])));
+    default:
+      return MISS;
+  }
+}
+
 /**
  * Dispatch method `name` on `recv`.  Resolution order:
  *
@@ -452,6 +546,13 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
   if (m) return m(recv, args);
 
   if (Array.isArray(recv)) {
+    // A block method (each/map/…) is dispatched only when an actual trailing
+    // Closure block is present; the block is split off the positional args.
+    const last = args[args.length - 1];
+    if (ARRAY_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
+      const blkResult = arrayBlockMethod(recv, name, args.slice(0, -1), last);
+      if (blkResult !== MISS) return blkResult;
+    }
     const arrResult = arrayMethod(recv, name, args);
     if (arrResult !== MISS) return arrResult;
   }

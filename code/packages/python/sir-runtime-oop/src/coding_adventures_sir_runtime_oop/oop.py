@@ -34,6 +34,12 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
+# Block-taking catalog methods (each/map/select/…) invoke a Ruby block.  A block
+# reaches us as a trailing ``Closure`` from ``sir-runtime-core``; ``apply`` calls
+# it with proc-lenient arity, and ``truthy`` applies SIR truthiness (only
+# ``False``/``nil`` are falsy) to predicate results.
+from coding_adventures_sir_runtime_core import Closure, apply, truthy
+
 # The SIR universal value type at this package's boundary.
 Val = Any
 
@@ -276,6 +282,29 @@ _ARRAY_METHODS = frozenset(
     }
 )
 
+# Block-taking ``Array`` / ``Enumerable`` methods (M1b).  Each invokes a trailing
+# ``Closure`` block via :func:`apply`.  Listed in :func:`_responds_to` so
+# ``respond_to?`` reports them, and dispatched in :func:`_array_block_method`.
+_ARRAY_BLOCK_METHODS = frozenset(
+    {
+        "each",
+        "each_with_index",
+        "map",
+        "collect",
+        "select",
+        "filter",
+        "reject",
+        "reduce",
+        "inject",
+        "find",
+        "detect",
+        "flat_map",
+        "any?",
+        "all?",
+        "none?",
+    }
+)
+
 
 def _method_name(arg: Val) -> str:
     """Coerce a ``respond_to?`` argument (a :class:`Symbol`, ``":m"``-ish string,
@@ -293,7 +322,9 @@ def _responds_to(recv: Val, name: str) -> bool:
         return True
     if name in _OBJECT_METHODS:
         return True
-    return isinstance(recv, list) and name in _ARRAY_METHODS
+    if isinstance(recv, list):
+        return name in _ARRAY_METHODS or name in _ARRAY_BLOCK_METHODS
+    return False
 
 
 def _flatten(seq: Val) -> list[Val]:
@@ -412,6 +443,59 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
     return _MISS
 
 
+def _array_block_method(recv: list[Val], name: str, args: list[Val], block: Closure) -> Val:
+    """Block-taking ``Array``/``Enumerable`` methods.  ``block`` is applied via
+    :func:`apply` (proc-lenient); predicate results route through SIR
+    :func:`truthy`.  Returns :data:`_MISS` if ``name`` is not a block method."""
+    if name == "each":
+        for item in recv:
+            apply(block, [item])
+        return recv
+    if name == "each_with_index":
+        for index, item in enumerate(recv):
+            apply(block, [item, index])
+        return recv
+    if name in ("map", "collect"):
+        return [apply(block, [item]) for item in recv]
+    if name in ("select", "filter"):
+        return [item for item in recv if truthy(apply(block, [item]))]
+    if name == "reject":
+        return [item for item in recv if not truthy(apply(block, [item]))]
+    if name in ("reduce", "inject"):
+        if args:
+            acc: Val = args[0]
+            rest = recv
+        elif recv:
+            acc = recv[0]
+            rest = recv[1:]
+        else:
+            return None
+        for item in rest:
+            acc = apply(block, [acc, item])
+        return acc
+    if name in ("find", "detect"):
+        for item in recv:
+            if truthy(apply(block, [item])):
+                return item
+        return None
+    if name == "flat_map":
+        out: list[Val] = []
+        for item in recv:
+            mapped = apply(block, [item])
+            if isinstance(mapped, list):
+                out.extend(mapped)
+            else:
+                out.append(mapped)
+        return out
+    if name == "any?":
+        return any(truthy(apply(block, [item])) for item in recv)
+    if name == "all?":
+        return all(truthy(apply(block, [item])) for item in recv)
+    if name == "none?":
+        return not any(truthy(apply(block, [item])) for item in recv)
+    return _MISS
+
+
 def call_method(recv: Val, name: str, *args: Val) -> Val:
     """Dispatch method ``name`` on ``recv``.
 
@@ -444,6 +528,12 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
 
     arg_list = list(args)
     if isinstance(recv, list):
+        # A block method (each/map/…) is dispatched only when an actual trailing
+        # Closure block is present; the block is split off the positional args.
+        if name in _ARRAY_BLOCK_METHODS and arg_list and isinstance(arg_list[-1], Closure):
+            result = _array_block_method(recv, name, arg_list[:-1], arg_list[-1])
+            if result is not _MISS:
+                return result
         result = _array_method(recv, name, arg_list)
         if result is not _MISS:
             return result

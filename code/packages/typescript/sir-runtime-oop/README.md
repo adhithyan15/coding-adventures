@@ -50,8 +50,12 @@ the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 `include?`, `index`, `push`/`<<`/`pop`/`shift`/`unshift`, `reverse`, `sort`,
 `min`/`max`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a` — and the
 **universal `Object`** methods `nil?`, `==`, `!=`, `equal?`, `respond_to?`,
-`freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a`. `include?`/`index`/`==` use
-deep value equality. Block-taking methods (`each`/`map`/`select`/…) and the
+`freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a` (`include?`/`index`/`==` use
+deep value equality); and (item **M1b**) **block-taking `Array`/`Enumerable`**
+methods `each`, `each_with_index`, `map`/`collect`, `select`/`filter`, `reject`,
+`reduce`/`inject`, `find`/`detect`, `flat_map`, `any?`/`all?`/`none?` — a trailing
+`Closure` block is applied via `@coding-adventures/sir-runtime-core`'s `apply`
+(proc-lenient), predicates routed through SIR `truthy`. The
 Hash/String/Numeric/Symbol catalogs land in follow-up releases.
 
 ## Honest v0 limitation

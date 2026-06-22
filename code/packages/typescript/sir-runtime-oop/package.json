@@ -20,6 +20,10 @@
   ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/sir-runtime-core": "file:../sir-runtime-core",
+    "@coding-adventures/sir-runtime-pairs": "file:../sir-runtime-pairs"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^4.1.0",
