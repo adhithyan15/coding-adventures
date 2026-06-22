@@ -3617,8 +3617,13 @@ fn lower_function(
                 let fref = cp.add_fieldref(class_name, field_name, "J");
                 code.push(GETSTATIC);
                 code.extend_from_slice(&fref.to_be_bytes());
-                // `getstatic J` pushes a long; store it into the dest slot (lstore
-                // for a Long dest — the typed-i64 global case).
+                // `getstatic J` pushes a long.  The field is always 64-bit, but the
+                // dest local may be a narrower `int` (an `integer` program
+                // concretised to i32) — narrow the long with `l2i` before `istore`,
+                // the mirror of the `i2l` widen on `global_store`.
+                if dest_type != JvmType::Long {
+                    code.push(L2I);
+                }
                 emit_typed_store(&mut code, dest_slot, dest_type);
             }
 

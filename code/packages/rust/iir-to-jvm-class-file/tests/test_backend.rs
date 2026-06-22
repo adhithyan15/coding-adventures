@@ -2858,6 +2858,34 @@ fn e6_global_lowers_to_static_field_and_getstatic_putstatic() {
     assert!(code.contains(&0xB3), "bump should putstatic the global");
 }
 
+/// Regression: a `global_load` into an **i32** dest must narrow the 64-bit field
+/// with `l2i` (0xB2 getstatic J pushes a long; `istore` of a long is a verifier
+/// type error). An `integer` ALGOL program concretised to i32 hit exactly this —
+/// the matrix proof caught it; this guards it without `-Xverify:none`.
+#[test]
+fn e6_global_load_into_i32_dest_narrows_with_l2i() {
+    let mut m = IIRModule::new("Main", "Main");
+    m.add_or_replace(IIRFunction::new(
+        "f",
+        vec![],
+        "i32",
+        vec![
+            // store an i32, then load it back into an i32 dest.
+            IIRInstr::new("const", Some("seed".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("global_store", None, vec![Operand::Str("g".into()), Operand::Var("seed".into())], "void"),
+            IIRInstr::new("global_load", Some("v".into()), vec![Operand::Str("g".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ],
+    ));
+    let class = lower_iir_to_jvm(&m, &IIRJvmConfig { class_name: "Main".into(), ..Default::default() })
+        .expect("lowers");
+    let f = class.methods.iter().find(|m| m.name == "f").expect("f");
+    let code = &f.code_attribute().expect("Code").code;
+    assert!(code.contains(&0x88), "global_load into an i32 dest must emit l2i (0x88)");
+    // and the store side widens an i32 value with i2l (0x85).
+    assert!(code.contains(&0x85), "global_store of an i32 value must emit i2l (0x85)");
+}
+
 /// End-to-end on real `java`: the cross-function global program prints 42.
 /// Skipped if `java` is unavailable.
 #[test]

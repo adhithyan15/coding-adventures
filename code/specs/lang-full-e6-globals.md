@@ -95,26 +95,30 @@ run-verifiable proof program.
 (BASIC and Oct globals can follow the same shape in later slices; ALGOL is first
 because its block scoping makes "enclosing variable = global" the natural model.)
 
-## PR breakdown (each its own small PR, run-verified)
+## PR breakdown (each its own small PR, run-verified) — **LAYER 1 COMPLETE ✅**
 
-0. **E6-spec** — this doc (specs-first), for sign-off.
-1. **E6-verify-vm-jit** — a unit test (hand-built IIR: a fn doing
-   `global_store "g", 42` then another reading `global_load "g"`) confirming
-   `vm-core` + `jit-core` execute the ops; fix if they don't. (Establishes the
-   already-green column before touching code-gen backends.)
-2. **E6-llvm** — `global_load`/`global_store` in `iir-to-llvm` (whitelist +
-   `@__twig_global_<name>` emit). Unit test compiles a global-using fn to `.ll`,
-   runs it via real `clang`.
-3. **E6-jvm** — `JvmClassFile` static fields + `getstatic`/`putstatic`. Unit
-   test runs the class on real `java`.
-4. **E6-clr** — static fields + `ldsfld`/`stsfld`. Unit test runs on real
-   `dotnet`.
-5. **E6-algol-frontend** — ALGOL procedure reads/writes an enclosing-block
-   variable → typed `global_load`/`global_store`. Frontend unit tests.
-6. **E6-matrix** — add the ALGOL global program (`bump` ⇒ 42) to
-   `lang-aot/tests/lang_matrix.rs` across **all 7 backends** — the E6-layer-1
-   completion proof, verified by RUNNING. Mirrors how E5 closed (per-backend PR
-   then a `&[…all 7…]` matrix cell).
+0. ✅ **E6-spec** — this doc (#6490).
+1. ✅ **E6-verify-vm-jit** (#6495) — survey showed VM/JIT had *no* handling of the
+   lowered ops (only the dynamic `call_builtin` table); added a name-keyed
+   `globals` map + the two handlers; JIT cold-interprets on it. RUN ⇒ 42.
+2. ✅ **E6-llvm** (#6499) — index-based `@__twig_global_N = internal global i64`
+   + load/store. RUN on real `clang` ⇒ 42.
+3. ✅ **E6-jvm** (#6503) — `JvmFieldInfo`/`fields` on `JvmClassFile` + `static
+   long G_N` + `getstatic`/`putstatic`. RUN on real `java` ⇒ 42. (0.17.1 fixed a
+   `global_load`→i32-dest `l2i` narrowing the matrix proof caught.)
+4. ✅ **E6-clr** (#6510) — `.field public static int64 G_N` + `ldsfld`/`stsfld`
+   (+`conv` at the i32 boundary). RUN on real `ilasm`+`dotnet` ⇒ 42.
+5. ✅ **E6-algol-frontend** (#6514) — capture analysis: a procedure that reads/
+   writes an enclosing-block scalar materialises it as a typed global. RUN on VM
+   ⇒ 42.
+6. ✅ **E6-matrix** — the ALGOL global program (`incr(2)` over a shared `counter`
+   ⇒ 42) RUNS on **all 7 backends** in `lang_matrix.rs`. The E6-layer-1
+   completion proof. (Procedure named `incr`, not `add`: `add` is a CIL opcode.)
+
+**E6 layer 1 (typed module globals accessible from functions) is DONE — every
+backend runs the same typed ALGOL global program.** Follow-ups (separate, out of
+this layer): general `any`-dispatch / closures (the broader E6); CLR reserved-
+word identifier quoting; nested-procedure capture; `array`/`f64` globals.
 
 ## Out of scope (later E6 layers)
 
