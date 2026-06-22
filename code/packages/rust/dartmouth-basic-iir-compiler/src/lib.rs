@@ -533,7 +533,13 @@ impl Compiler {
                 }
                 // `f.fract() == 0.0` and finite, so the cast is exact for any
                 // value an `f64` can represent; guard the i64 range explicitly.
-                if f < i64::MIN as f64 || f > i64::MAX as f64 {
+                // The bounds are written so the rejection is EXACT: `i64::MIN as
+                // f64` is exactly -2^63, but `i64::MAX as f64` rounds *up* to
+                // 2^63 (i64::MAX = 2^63-1 isn't representable), so comparing
+                // against `-(i64::MIN as f64)` (= +2^63) rejects 2^63 and above
+                // rather than admitting that single boundary value (which would
+                // otherwise saturate to i64::MAX through the cast).
+                if f < i64::MIN as f64 || f >= -(i64::MIN as f64) {
                     return Err(CompileError::Unsupported(format!(
                         "DATA value `{raw}` is out of the i64 range")));
                 }
