@@ -560,6 +560,12 @@ public sealed class InfiniteSheetModel : IDisposable
     public void InsertCol() { _session.InsertCols(SelCol, 1); ComputeExtent(); }
     public void DeleteCol() { _session.DeleteCols(SelCol, 1); ComputeExtent(); }
 
+    /// Number formatting: attach an Excel-style format code to the selected cell
+    /// ("#,##0.00", "0.0%", "$#,##0.00", or "" to clear). Display-only — the
+    /// stored value is unchanged; the engine renders it through the code, so a
+    /// fresh RowCells read shows the formatted string.
+    public void ApplyFormat(string code) => _session.SetFormat(InfAddress, code);
+
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative references by the destination's
     /// offset, pins absolute (`$`) refs, carries the format; a cut clears the

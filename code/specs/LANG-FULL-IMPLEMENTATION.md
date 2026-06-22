@@ -13,7 +13,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
 | Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `READ`/`DATA`, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3) — all run on every backend |
-| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2); intrinsics + `static` remain |
+| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
@@ -301,7 +301,15 @@ backend immediately) come before the enabler-dependent items.
   a narrow op had `long` operands — `iir-to-jvm-class-file` 0.14.0 now masks those with
   `i2l; land` (the int `iand` was unverifiable over longs → empty output). (Logical `!` still
   deferred — a separate item; only `~` is in O2.)
-- ☐ **O3** — `static` globals (currently silently dropped) — now verifiable via `out`.
+- ✅ **O3** — `static` module globals (LANG-FULL O3). Top-level `static` was silently
+  dropped at IIR-gen; `oct-iir-compiler` 0.8.0 lowers it to the IIR module-global ops
+  (`global_load`/`global_store`, the E6 substrate). A `static counter: u8 = 40` shared
+  across functions — `bump()` (a separate fn) increments it twice, `main` prints it —
+  runs on **all 7 backends** → `42` (a per-function register would print `40`). Surfaced
+  + fixed two latent *void-function* gaps the proof's void `bump()` exposed: the Oct
+  frontend now emits a dest-less IIR `call` for a void callee (a named void call is
+  malformed LLVM), and `iir-to-cil-bytecode` 0.25.0's textual emitter lowers `ret_void`
+  → bare `ret`, a `void` return signature, and a `call void …` with no trailing store.
 - ☐ **O4** — ⚠ Intel-8008 intrinsics (`in`/`out`/`adc`/`sbb`/`rlc`/`rrc`/`ral`/`rar`/`carry`/`parity`).
   These are hardware-specific; on general backends they need a host/IIR-builtin model or a
   defined semantics. **Decision point — surface to the user before implementing.**

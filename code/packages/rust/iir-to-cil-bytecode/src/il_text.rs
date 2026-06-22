@@ -189,6 +189,12 @@ fn entry_name(module: &IIRModule) -> &str {
 fn cil_ret_type(module: &IIRModule, f: &IIRFunction) -> &'static str {
     if f.name == entry_name(module) {
         "int32"
+    } else if f.return_type == "void" {
+        // A void function (e.g. Oct's `fn bump() { … }`) has no return value;
+        // its CIL signature must say `void` and its body ends in a bare `ret`
+        // (see the `ret_void` op).  `cil_local_type` has no `void` case (it's a
+        // type for *values*), so this must be handled before delegating.
+        "void"
     } else {
         cil_local_type(&f.return_type)
     }
@@ -602,6 +608,12 @@ fn emit_method(
                 load_var(il, &regs, src)?;
                 let _ = writeln!(il, "    ret");
             }
+            // ret_void → a bare `ret` with nothing on the stack (the method's
+            // CIL signature is `void`, see `cil_ret_type`).  Oct's void
+            // functions (`fn bump() { … }`) end here.
+            "ret_void" => {
+                let _ = writeln!(il, "    ret");
+            }
             // alloc <dest> : ref<LispyPair>  →  a fresh 2-element System.Object[]
             //   ldc.i4.2; newarr [System.Runtime]System.Object; st<dest>
             "alloc" => {
@@ -897,10 +909,10 @@ fn emit_method(
             // `call <ret> <Class>::<m>(<argtys>)` and let `ilasm` resolve the token —
             // self-recursive `LABEL` is just a method calling itself.
             "call" => {
-                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
-                    function: f.name.clone(),
-                    detail: "call must have a dest".to_string(),
-                })?;
+                // A value-returning call binds a `dest`; a void call (Oct's
+                // `bump()` as a statement) has `dest == None` and leaves
+                // nothing on the stack — so we must NOT `store_var` afterwards.
+                let dest = instr.dest.as_deref();
                 let callee = var_src(f, instr, 0, "call")?;
                 let callee_fn = module
                     .functions
@@ -949,7 +961,12 @@ fn emit_method(
                     "    call {callee_ret} {asm}Program::{callee_method}({})",
                     arg_tys.join(", ")
                 );
-                store_var(il, &regs, dest)?;
+                // Bind the result only for a value-returning call; a void call
+                // (`callee_ret == "void"`) pushed nothing, so there is no stack
+                // value to store.
+                if let Some(dest) = dest {
+                    store_var(il, &regs, dest)?;
+                }
             }
             // ── McCarthy predicate primitives (call_builtin) ──────────────────
             //
@@ -1267,6 +1284,46 @@ mod tests {
         assert!(il.contains("stelem.r8"), "array_set → stelem.r8");
         assert!(il.contains("ldelem.r8"), "array_get → ldelem.r8");
         assert!(il.contains("float64[]"), "handle local declared float64[]");
+    }
+
+    /// A void IIR function (`return_type == "void"`, body ends in `ret_void`)
+    /// must emit a `void` CIL signature and a bare `ret`; a *call* to it has no
+    /// `dest` and must emit `call void …` with no following `store`.  This is
+    /// the Oct O3 `bump()` path — a void user function called as a statement
+    /// that mutates a `static` global.  Before the fix the textual emitter
+    /// rejected `ret_void` (`UnsupportedOp`) and the `call` arm panicked
+    /// because it required a `dest`.
+    #[test]
+    fn void_function_and_void_call_lower() {
+        let bump = IIRFunction::new(
+            "bump",
+            vec![],
+            "void",
+            vec![IIRInstr::new("ret_void", None, vec![], "void")],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("call", None, vec![Operand::Var("bump".into())], "void"),
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+            ],
+        );
+        let mut m = IIRModule::new("Main", "oct");
+        m.functions.push(bump);
+        m.functions.push(main);
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("public static void bump()"),
+            "void function must have a `void` CIL signature; got:\n{il}");
+        assert!(il.contains("Program::bump()"),
+            "the call must name bump; got:\n{il}");
+        // The call line is `call void …Program::bump()` with no trailing store.
+        assert!(il.lines().any(|l| l.trim_start().starts_with("call void")
+            && l.contains("Program::bump()")),
+            "void call must be `call void …bump()`; got:\n{il}");
     }
 
     /// Build a one-function module `c = <op>(a, b); ret c` over two `i32` constants.

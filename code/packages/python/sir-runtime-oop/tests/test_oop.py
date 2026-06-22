@@ -475,3 +475,147 @@ def test_string_respond_to_and_nil_floor() -> None:
     # Universal Object methods still resolve on a String receiver.
     assert oop.call_method("x", "nil?") is False
     assert oop.call_method("x", "class") == "String"
+
+
+# ── built-in method catalog: Numeric (Integer/Float) (M1c) ────────────────────
+
+
+def test_numeric_predicates_and_sign() -> None:
+    assert oop.call_method(4, "even?") is True
+    assert oop.call_method(3, "odd?") is True
+    assert oop.call_method(0, "zero?") is True
+    assert oop.call_method(5, "positive?") is True
+    assert oop.call_method(-5, "negative?") is True
+    assert oop.call_method(-7, "abs") == 7
+    assert oop.call_method(-3.5, "abs") == 3.5
+
+
+def test_numeric_conversions_and_steps() -> None:
+    assert oop.call_method(3.9, "to_i") == 3
+    assert oop.call_method(4, "to_f") == 4.0
+    assert oop.call_method(5, "succ") == 6
+    assert oop.call_method(5, "next") == 6
+    assert oop.call_method(5, "pred") == 4
+
+
+def test_numeric_floor_ceil_round() -> None:
+    assert oop.call_method(3.2, "floor") == 3
+    assert oop.call_method(3.2, "ceil") == 4
+    assert oop.call_method(7, "floor") == 7
+    # Ruby rounds half away from zero (unlike Python banker's rounding).
+    assert oop.call_method(2.5, "round") == 3
+    assert oop.call_method(-2.5, "round") == -3
+    assert oop.call_method(5, "round") == 5
+
+
+def test_numeric_gcd_pow_digits() -> None:
+    assert oop.call_method(12, "gcd", 18) == 6
+    assert oop.call_method(2, "**", 10) == 1024
+    assert oop.call_method(2, "pow", 5) == 32
+    assert oop.call_method(123, "digits") == [3, 2, 1]
+    assert oop.call_method(0, "digits") == [0]
+
+
+def test_numeric_to_s() -> None:
+    assert oop.call_method(42, "to_s") == "42"
+    assert oop.call_method(3.14, "to_s") == "3.14"
+    assert oop.call_method(7, "inspect") == "7"
+
+
+def test_numeric_block_times_upto_downto_step() -> None:
+    seen: list[Val] = []
+    assert oop.call_method(3, "times", Closure(seen.append)) == 3
+    assert seen == [0, 1, 2]
+    up: list[Val] = []
+    oop.call_method(1, "upto", 4, Closure(up.append))
+    assert up == [1, 2, 3, 4]
+    down: list[Val] = []
+    oop.call_method(3, "downto", 1, Closure(down.append))
+    assert down == [3, 2, 1]
+    step: list[Val] = []
+    oop.call_method(0, "step", 10, 5, Closure(step.append))
+    assert step == [0, 5, 10]
+
+
+def test_numeric_respond_to_and_nil_floor() -> None:
+    assert oop.call_method(5, "respond_to?", "even?") is True
+    assert oop.call_method(5, "respond_to?", "times") is True
+    assert oop.call_method(5, "respond_to?", "bit_length") is False
+    assert oop.call_method(5, "bit_length") is None
+    # A block method called without a block bottoms out at the nil floor.
+    assert oop.call_method(5, "times") is None
+
+
+# ── built-in method catalog: Symbol (M1c) ─────────────────────────────────────
+
+
+def test_symbol_methods() -> None:
+    sym = oop.call_method("hello", "to_sym")
+    assert oop.call_method(sym, "to_s") == "hello"
+    assert oop.call_method(sym, "length") == 5
+    assert oop.call_method(sym, "size") == 5
+    assert oop.call_method(sym, "inspect") == ":hello"
+    assert oop.call_method(sym, "empty?") is False
+    up = oop.call_method(sym, "upcase")
+    assert getattr(up, "name", None) == "HELLO"
+    down = oop.call_method(oop.call_method("ABC", "to_sym"), "downcase")
+    assert getattr(down, "name", None) == "abc"
+    assert oop.call_method(sym, "to_sym") is sym
+
+
+# ── built-in method catalog: nil / true / false + to_s/inspect (M1c) ──────────
+
+
+def test_nil_true_false_to_s_inspect() -> None:
+    assert oop.call_method(None, "to_s") == ""
+    assert oop.call_method(None, "inspect") == "nil"
+    assert oop.call_method(None, "to_a") == []
+    assert oop.call_method(True, "to_s") == "true"
+    assert oop.call_method(False, "to_s") == "false"
+    assert oop.call_method(True, "inspect") == "true"
+    # bool resolves only Object methods, never the numeric catalog.
+    assert oop.call_method(True, "respond_to?", "even?") is False
+    assert oop.call_method(True, "even?") is None
+
+
+def test_object_to_s_inspect_collections() -> None:
+    assert oop.call_method([1, 2, 3], "to_s") == "[1, 2, 3]"
+    assert oop.call_method(["a", "b"], "inspect") == '["a", "b"]'
+    assert oop.call_method("hi", "inspect") == '"hi"'
+    assert oop.call_method("hi", "to_s") == "hi"
+
+
+def test_array_join() -> None:
+    assert oop.call_method([1, 2, 3], "join") == "123"
+    assert oop.call_method([1, 2, 3], "join", "-") == "1-2-3"
+    assert oop.call_method(["a", "b"], "join", ", ") == "a, b"
+
+
+def test_pow_and_digits_bound_hostile_bignums() -> None:
+    # A hostile exponent would allocate gigabytes; pow refuses (0) rather than
+    # hanging, and digits never builds a giant list — neither raises.
+    assert oop.call_method(2, "**", 10**9) == 0
+    assert oop.call_method(2, "pow", 64) == 2**64  # legitimate values still work
+    over_budget = 1 << (1 << 20)  # a >1M-bit integer, past the digits budget
+    assert oop.call_method(over_budget, "digits") == [0]  # refused
+    assert oop.call_method(123, "digits") == [3, 2, 1]
+
+
+def test_numeric_methods_never_raise_on_non_finite() -> None:
+    inf = float("inf")
+    # int-coercing methods degrade gracefully on inf/nan instead of raising.
+    assert oop.call_method(inf, "to_i") == 0
+    assert oop.call_method(inf, "even?") is False
+    assert oop.call_method(inf, "gcd", 6) == 0
+    assert oop.call_method(inf, "floor") == inf
+    assert oop.call_method(inf, "round") == inf
+    assert oop.call_method(inf, "digits") == [0]
+
+
+def test_inspect_handles_cycles_without_raising() -> None:
+    a: list[Val] = []
+    a.append(a)  # self-referential array
+    assert oop.call_method(a, "inspect") == "[[...]]"
+    h: dict[Val, Val] = {}
+    h["self"] = h
+    assert oop.call_method(h, "inspect") == '{"self"=>{...}}'

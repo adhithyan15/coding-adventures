@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.0] — 2026-06-21 — `GrammarLexer` sets `TOKEN_PRECEDED_BY_NEWLINE`
+
+`GrammarLexer` now sets the `TOKEN_PRECEDED_BY_NEWLINE` flag on a token when a
+line terminator (`\n`/`\r`/U+2028/U+2029) was consumed **as trivia** before it.
+Previously the flag constant existed but was never populated.
+
+- Detection lives in `try_skip` (the trivia consumer): a new
+  `newline_before_next` field is set when skipped text contains a line
+  terminator, then read into the next token's flags and cleared.
+- **Correct across multi-line tokens by construction:** a newline *inside* a
+  string or template literal is consumed by token matching, not `try_skip`, so
+  it never trips the flag — the token *after* a multi-line template is only
+  flagged if there is a real line break between them. (This avoids the
+  start-line-arithmetic pitfall, where a multi-line predecessor's lower start
+  line would falsely imply an intervening newline.)
+- **Purely additive:** the flag is OR-ed alongside the existing
+  `TOKEN_CONTEXT_KEYWORD`; nothing in the tree read this flag before, so no
+  existing parser behaviour changes. Enables automatic semicolon insertion
+  (JavaScript) and is available to any ASI-bearing language (Go, …).
+
 ## [0.5.0] — 2026-06-15 — gap-044b: template literal depth tracking
 
 ### Fixed

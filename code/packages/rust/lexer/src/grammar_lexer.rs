@@ -61,7 +61,10 @@ use grammar_tools::token_grammar::{
     ModeTransition, TokenDefinition, TokenGrammar, TransitionAction,
 };
 
-use crate::token::{LexerError, Token, TokenType, string_to_token_type, TOKEN_CONTEXT_KEYWORD};
+use crate::token::{
+    LexerError, Token, TokenType, string_to_token_type, TOKEN_CONTEXT_KEYWORD,
+    TOKEN_PRECEDED_BY_NEWLINE,
+};
 
 // ===========================================================================
 // ContextAction — deferred mutations from the on-token callback
@@ -547,6 +550,19 @@ pub struct GrammarLexer<'a> {
     /// via [`LexerContext::previous_token()`].
     last_emitted_token: Option<Token>,
 
+    /// Whether a line terminator has been consumed *as trivia* since the last
+    /// emitted token. Set in [`GrammarLexer::try_skip`] when the skipped text
+    /// contains `\n`/`\r`/U+2028/U+2029; read into the next token's
+    /// [`TOKEN_PRECEDED_BY_NEWLINE`] flag and then cleared.
+    ///
+    /// Detecting it from *trivia* (not token start-line arithmetic) is what
+    /// makes it correct across multi-line tokens: a `\n` inside a string or
+    /// template literal is consumed by token matching, not `try_skip`, so it
+    /// never sets this flag — the token *after* a multi-line template is only
+    /// "preceded by a newline" if there is an actual line break between them.
+    /// Languages with automatic semicolon insertion (JavaScript) rely on this.
+    newline_before_next: bool,
+
     /// Per-type bracket nesting depth counters.
     ///
     /// Tracks `()`, `[]`, and `{}` independently. Updated after each
@@ -736,6 +752,7 @@ impl<'a> GrammarLexer<'a> {
             post_tokenize_hooks: Vec::new(),
             case_insensitive,
             last_emitted_token: None,
+            newline_before_next: false,
             bracket_depths: BracketDepths::default(),
             template_entry_depths: Vec::new(),
             context_keyword_set,
@@ -934,14 +951,27 @@ impl<'a> GrammarLexer<'a> {
     /// Returns true if something was skipped.
     fn try_skip(&mut self) -> bool {
         let remaining = &self.source[self.byte_pos..];
-        for p in &self.skip_patterns {
-            if let Some(m) = p.pattern.find(remaining) {
-                let char_count = m.as_str().chars().count();
+        // Compute everything from the immutable borrow first, then mutate, so
+        // the `&self.source` borrow does not conflict with `&mut self`.
+        let matched: Option<(usize, bool)> = self.skip_patterns.iter().find_map(|p| {
+            p.pattern.find(remaining).map(|m| {
+                let s = m.as_str();
+                let has_line_terminator =
+                    s.contains(['\n', '\r', '\u{2028}', '\u{2029}']);
+                (s.chars().count(), has_line_terminator)
+            })
+        });
+        match matched {
+            Some((char_count, has_line_terminator)) => {
+                // Record that a line terminator preceded the next token (ASI).
+                if has_line_terminator {
+                    self.newline_before_next = true;
+                }
                 self.advance_n(char_count);
-                return true;
+                true
             }
+            None => false,
         }
-        false
     }
 
     /// Try to match a token pattern at the current position using the
@@ -1225,18 +1255,26 @@ impl<'a> GrammarLexer<'a> {
                 let char_count = matched.chars().count();
                 self.advance_n(char_count);
 
-                // Set the TOKEN_CONTEXT_KEYWORD flag for context-sensitive
-                // keywords. These are NAME tokens whose value appears in
-                // the `context_keywords:` section of the grammar. The flag
-                // tells the parser that this identifier might be a keyword
-                // depending on syntactic context.
-                let flags = if (token_type == TokenType::Name || type_name.as_deref() == Some("NAME"))
+                // Compute the token's flag bits.
+                //
+                // - TOKEN_CONTEXT_KEYWORD: a NAME token whose value appears in
+                //   the grammar's `context_keywords:` section, so the parser
+                //   knows it might be a keyword depending on syntactic context.
+                // - TOKEN_PRECEDED_BY_NEWLINE: a line terminator was consumed as
+                //   trivia since the previous token (tracked in `try_skip`).
+                //   Read here and cleared, so it reflects only the gap between
+                //   the previous token and this one. Used for ASI.
+                let mut flag_bits = 0u32;
+                if (token_type == TokenType::Name || type_name.as_deref() == Some("NAME"))
                     && self.context_keyword_set.contains(&final_value)
                 {
-                    Some(TOKEN_CONTEXT_KEYWORD)
-                } else {
-                    None
-                };
+                    flag_bits |= TOKEN_CONTEXT_KEYWORD;
+                }
+                if self.newline_before_next {
+                    flag_bits |= TOKEN_PRECEDED_BY_NEWLINE;
+                }
+                self.newline_before_next = false;
+                let flags = if flag_bits == 0 { None } else { Some(flag_bits) };
 
                 let token = Token {
                     type_: token_type,
