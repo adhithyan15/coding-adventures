@@ -212,9 +212,24 @@ sorted `breaks` and returns a real **factor**: `class(cut(...))` is `"factor"`,
 `nlevels()` all see through to it (`cut(c(1,5,10), breaks=c(0,3,6,11))` → a factor
 with levels `"(0,3]","(3,6]","(6,11]"` and values `(0,3]`,`(3,6]`,`(6,11]`); values
 outside all breaks → `NA`. Built on `findInterval`; allocations bounded by the
-already-capped input/breaks lengths; missing operands error gracefully. (`cut`'s
-`labels=`/`right=FALSE`/`include.lowest=` and integer `breaks` are deferred to
-R-33.)
+already-capped input/breaks lengths; missing operands error gracefully.
+
+**R-33 — `cut()` option completeness.** `cut` now takes the four options that were
+deferred from R-32. `labels=FALSE` returns the **integer bin codes** as a plain
+numeric vector (not a factor) — `cut(c(1,2,5), breaks=c(0,3,6), labels=FALSE)` →
+`c(1,1,2)`; a character `labels` vector becomes the factor levels and must match
+`length(breaks)-1` (else an error) — `cut(c(1,5,10), breaks=c(0,3,6,11),
+labels=c("lo","mid","hi"))`. `right=FALSE` switches to left-closed `[lo,hi)`
+intervals (labels `"[lo,hi)"`) — `cut(c(1,3), breaks=c(0,3,6), right=FALSE)` →
+`[0,3)`,`[3,6)`. `include.lowest=TRUE` folds the extreme break (the lowest for
+`right=TRUE`, the highest for `right=FALSE`) into the adjacent interval so it bins
+instead of going `NA`. A single-number `breaks` is the **equal-width** form: `N`
+bins over the range of `x`, extended by `dx/1000` on each side (`dx=max-min`;
+degenerate `dx=0` → `abs(min)`, then `1`) — `cut(0:10, breaks=5)` → 5 levels, every
+value binned. Security: `N` is capped at `MAX_SEQ_LEN` before any allocation, the
+breaks use finite/checked arithmetic (no divide-by-zero on a degenerate range), and
+the `labels` length check never panics. `dig.lab=` and `ordered_result=` are
+deferred to R-34.
 
 ## Usage
 
