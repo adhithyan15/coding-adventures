@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.162.0] - 2026-06-21
+
+### Added — negation push (`!(a == b)` → `a != b`) at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.17.0, which rewrites a
+logical-not over an (in)equality comparison into the inverted comparison:
+`!(a == b)` → `a != b`, `!(a === b)` → `a !== b` (and the inverses). Relational
+operators are left intact — `!(a < b)` is **not** `a >= b` under `NaN`.
+
+New e2e fixture `tests/diff/simple-negation-fold` proves the equality push and
+the relational NaN-safety guard (with a whitespace-fallback guard). The
+`simple-unary-preserve` fixture's precedence case was switched from `!(a == b)`
+to `!(a < b)` so the negation push doesn't rewrite it (it still exercises the
+unary-precedence parenthesisation).
+
+> Only reachable now that prefix operators survive the bridge (0.161.0) — before
+> that, the `!` vanished before the optimizer could see the comparison.
+
 ## [0.161.0] - 2026-06-21
 
 ### Fixed — prefix unary operators no longer dropped at SIMPLE/ADVANCED

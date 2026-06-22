@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.17.0] - 2026-06-21
+
+### Added — negation push for (in)equality (`!(a == b)` → `a != b`)
+
+`fold_unary` now rewrites a logical-not over an (in)equality comparison into the
+inverted comparison (upstream Closure's `PeepholeMinimizeConditions`):
+
+| before        | after        |
+|---------------|--------------|
+| `!(a == b)`   | `a != b`     |
+| `!(a != b)`   | `a == b`     |
+| `!(a === b)`  | `a !== b`    |
+| `!(a !== b)`  | `a === b`    |
+
+Sound for these four operators **only**, because `!=`/`!==` are *defined* as the
+boolean negation of `==`/`===` (ECMAScript §13.10) — both sides yield booleans,
+so the rewrite is value-identical in every context. Relational operators
+(`<`/`<=`/`>`/`>=`) are deliberately **not** inverted: `!(a < b)` is not
+`a >= b` when an operand is `NaN` (`!(NaN < 1)` is `true`, `NaN >= 1` is
+`false`). The literal-fold path still runs first, so `!(1 == 1)` folds to
+`false` rather than `1 != 1`. The rewrite emits a correlation-vector
+contribution via `fork_cv`. New helper `invert_equality_operator`; 6 unit tests.
+
+> Only reachable now that the `javascript-parser` bridge stopped dropping the
+> `!` operator (it had emitted the bare comparison) — see closurec 0.161.0.
+
 ## [0.16.0] - 2026-06-20
 
 ### Added — CLOC23: fold inside `for`-`of`
