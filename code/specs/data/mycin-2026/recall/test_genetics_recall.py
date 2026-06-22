@@ -57,6 +57,24 @@ EXPECTED = [
     ("tay_sachs_disease", "inheritance", "autosomal_recessive"),     # expand (NBK564432)
     ("tay_sachs_disease", "gene_defect", "hexa"),                    # expand (NBK564432)
     ("phenylketonuria", "gene_defect", "pah"),                       # expand (NBK535378)
+    # --- BATCH: single-gene disorders + lysosomal storage diseases ---
+    ("achondroplasia", "gene_defect", "fgfr3"),                      # expand (NBK559263)
+    ("achondroplasia", "inheritance", "autosomal_dominant"),         # expand (NBK559263)
+    ("gaucher_disease", "gene_defect", "gba1"),                      # expand (NBK448080)
+    ("gaucher_disease", "inheritance", "autosomal_recessive"),       # expand (NBK448080)
+    ("fabry_disease", "inheritance", "x_linked"),                    # expand (NBK435996)
+    ("fabry_disease", "gene_defect", "gla"),                         # expand (NBK435996)
+    ("pompe_disease", "inheritance", "autosomal_recessive"),         # expand (NBK470558)
+    ("sickle_cell_disease", "gene_defect", "hbb"),                   # expand (NBK482164)
+    ("retinoblastoma", "gene_defect", "rb1"),                        # expand (NBK545276)
+    ("retinoblastoma", "inheritance", "autosomal_dominant"),         # expand (NBK545276)
+    ("von_hippel_lindau", "gene_defect", "vhl"),                     # expand (NBK459242)
+    ("von_hippel_lindau", "inheritance", "autosomal_dominant"),      # expand (NBK459242)
+    ("hemophilia_a", "gene_defect", "factor_viii"),                  # expand (NBK470265)
+    ("hemophilia_a", "inheritance", "x_linked"),                     # expand (NBK470265)
+    ("alpha_1_antitrypsin_deficiency", "inheritance", "autosomal_codominant"),  # expand (NBK442030)
+    ("tuberous_sclerosis", "gene_defect", "tsc1_tsc2"),              # expand (NBK538492)
+    ("tuberous_sclerosis", "inheritance", "autosomal_dominant"),     # expand (NBK538492)
 ]
 VAR = {"inheritance": "Pattern", "gene_defect": "Gene",
        "trinucleotide_repeat": "Repeat", "imprinting": "Parent"}
