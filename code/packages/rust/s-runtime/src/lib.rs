@@ -2405,4 +2405,11 @@ mod r33_cut_options {
         // A huge N must error (MAX_SEQ_LEN guard), not attempt a giant allocation.
         assert!(eval_s("cut(0:10, breaks = 1e9)\n").is_err());
     }
+
+    #[test]
+    fn integer_breaks_extreme_range_is_rejected_not_nan() {
+        // An x range so wide that the extended range overflows to ±inf is a clean
+        // error rather than NaN/inf breaks (no garbage levels, no panic).
+        assert!(eval_s("cut(c(-1.8e308, 1.8e308), breaks = 5)\n").is_err());
+    }
 }

@@ -4487,8 +4487,17 @@ fn equal_width_breaks(x: &Double, n_f: f64) -> SResult<Vec<f64>> {
     let hi = hi + pad;
 
     // `n + 1` equally spaced breakpoints. `n >= 1` so the step denominator is
-    // non-zero and finite (lo/hi are finite by construction).
+    // non-zero and finite. Extreme-magnitude `x` can still overflow the extended
+    // range to `±inf` (e.g. `dx = hi - lo` overflowing), which would make the
+    // breaks `NaN`/`inf`; reject that up front so every emitted break is finite
+    // (no garbage `"(NaN,NaN]"` levels, and the downstream scan only ever sees
+    // sorted finite breaks).
     let step = (hi - lo) / n as f64;
+    if !lo.is_finite() || !hi.is_finite() || !step.is_finite() {
+        return Err(SError::BadArgs(
+            "cut: range of 'x' is too large to bin".to_string(),
+        ));
+    }
     let mut breaks = Vec::with_capacity(n + 1);
     for j in 0..=n {
         breaks.push(lo + j as f64 * step);
