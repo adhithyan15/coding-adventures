@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { Closure } from "@coding-adventures/sir-runtime-core";
+import { apply, Closure, intern } from "@coding-adventures/sir-runtime-core";
 import type { Val } from "../src/index.js";
 import {
   callMethod,
@@ -17,6 +17,7 @@ import {
   resetOop,
   SirInstance,
   superclassOf,
+  symToProc,
 } from "../src/index.js";
 
 beforeEach(() => {
@@ -604,5 +605,39 @@ describe("nil / true / false + Object to_s/inspect (M1c)", () => {
     const m = new Map<Val, Val>();
     m.set("self", m);
     expect(callMethod(m, "inspect")).toBe('{"self"=>{...}}');
+  });
+
+  // ── Symbol#to_proc (&:sym) — M2 ─────────────────────────────────────────
+
+  it("symToProc maps over an array via apply", () => {
+    const proc = symToProc(intern("to_s"));
+    expect(proc).toBeInstanceOf(Closure);
+    // [1, 2, 3].map(&:to_s) — map drives the proc through apply with one arg.
+    expect([1, 2, 3].map((x) => apply(proc, [x]))).toEqual(["1", "2", "3"]);
+  });
+
+  it("symToProc forwards extra args to the dispatched method", () => {
+    // Two-arg apply binds the first as receiver, forwards the rest:
+    // ["hello", "ell"] → "hello".include?("ell").
+    const proc = symToProc(intern("include?"));
+    expect(apply(proc, ["hello", "ell"])).toBe(true);
+    expect(apply(proc, ["hello", "xyz"])).toBe(false);
+  });
+
+  it("symToProc accepts a bare string name", () => {
+    expect(apply(symToProc("upcase" as unknown as Val), ["hi"])).toBe("HI");
+  });
+
+  it("symToProc bottoms out at nil for an out-of-catalog method", () => {
+    expect(apply(symToProc(intern("no_such_method")), [42])).toBeNull();
+  });
+
+  it("symToProc drives array block-method dispatch end to end", () => {
+    // [1, 2, 3].map(&:to_s) through callMethod.
+    expect(callMethod([1, 2, 3], "map", symToProc(intern("to_s")))).toEqual([
+      "1",
+      "2",
+      "3",
+    ]);
   });
 });

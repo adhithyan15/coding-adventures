@@ -927,7 +927,41 @@ fn emit_arg(out: &mut String, a: &Expr, indent: usize) {
             return;
         }
     }
+    if try_emit_block_pass(out, a, indent) {
+        return;
+    }
     emit_expr(out, a, indent);
+}
+
+/// Emit a `&expr` block-pass argument that survived frontend normalization
+/// (M2).  The Ruby frontend wraps a `&`-prefixed block argument as
+/// `BuiltinCall("block_pass", [inner])`.  Q9f unwraps it at *user-method*
+/// `DirectCall` sites, but a block-pass to a **method-dispatch** call
+/// (`recv.map(&:to_s)`) reaches the backend intact inside the `__method__`
+/// envelope.  Two inner shapes matter:
+///
+/// | inner | emitted | meaning |
+/// |---|---|---|
+/// | `SymLit("m")` (`&:m`) | `__SirOop.symToProc(intern("m"))` | `Symbol#to_proc` — a block calling `recv.m(...rest)` |
+/// | any other (`&proc`)   | `<inner>` (unwrapped) | the operand already *is* the proc/block value |
+///
+/// Returns `true` when it handled a `block_pass` envelope (so the caller does
+/// not also `emit_expr` it).  A malformed envelope (not exactly one operand)
+/// is left for the generic path.
+fn try_emit_block_pass(out: &mut String, a: &Expr, indent: usize) -> bool {
+    if let Expr::BuiltinCall { name, args, .. } = a {
+        if name == "block_pass" && args.len() == 1 {
+            if let Expr::SymLit { .. } = &args[0] {
+                out.push_str("__SirOop.symToProc(");
+                emit_expr(out, &args[0], indent);
+                out.push(')');
+            } else {
+                emit_expr(out, &args[0], indent);
+            }
+            return true;
+        }
+    }
+    false
 }
 
 /// Is this argument a `**h` double-splat marker (`BuiltinCall("double_splat",
@@ -1011,6 +1045,10 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                     Expr::VarRef { name: cn, scope: Scope::Const, .. } if is_class_pred && i == 0 => {
                         out.push_str(&quote_ts_string(cn));
                     }
+                    // A `&:sym` / `&proc` block argument on a dispatched call
+                    // (`recv.map(&:to_s)`) survives as a `block_pass` envelope
+                    // (Q9f only unwraps these at user-method DirectCalls).
+                    _ if try_emit_block_pass(out, a, indent) => {}
                     _ => emit_expr(out, a, indent),
                 }
             }
@@ -1708,5 +1746,68 @@ mod tests {
         // Crucially the SymLit form is suppressed in favour of the
         // direct assignment.
         assert!(!out.contains("intern"));
+    }
+
+    // M2 — `&:sym` symbol-to-proc on a method-dispatch call.
+
+    fn method_call(recv: Expr, meth: &str, extra: Vec<Expr>) -> Expr {
+        let mut args = vec![recv, Expr::StrLit { value: meth.into(), span: s() }];
+        args.extend(extra);
+        Expr::BuiltinCall {
+            name: "__method__".into(),
+            args,
+            effects: EffectSet::PURE,
+            span: s(),
+        }
+    }
+
+    fn block_pass(inner: Expr) -> Expr {
+        Expr::BuiltinCall {
+            name: "block_pass".into(),
+            args: vec![inner],
+            effects: EffectSet::PURE,
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn sym_block_pass_on_dispatch_emits_sym_to_proc() {
+        // arr.map(&:to_s) → callMethod(arr, "map", symToProc(intern("to_s")))
+        let e = method_call(
+            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            "map",
+            vec![block_pass(Expr::SymLit { name: "to_s".into(), span: s() })],
+        );
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(
+            out,
+            r#"__SirOop.callMethod(arr, "map", __SirOop.symToProc(__Sir.intern("to_s")))"#
+        );
+    }
+
+    #[test]
+    fn proc_block_pass_on_dispatch_unwraps_to_value() {
+        // arr.each(&p) → callMethod(arr, "each", p) — the proc IS the block.
+        let e = method_call(
+            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            "each",
+            vec![block_pass(Expr::VarRef {
+                name: "p".into(),
+                scope: Scope::Local,
+                span: s(),
+            })],
+        );
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.callMethod(arr, "each", p)"#);
+    }
+
+    #[test]
+    fn sym_block_pass_as_plain_arg_emits_sym_to_proc() {
+        // The general emit_arg path also handles a surviving block_pass.
+        let mut out = String::new();
+        emit_arg(&mut out, &block_pass(Expr::SymLit { name: "upcase".into(), span: s() }), 0);
+        assert_eq!(out, r#"__SirOop.symToProc(__Sir.intern("upcase"))"#);
     }
 }
