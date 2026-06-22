@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck WRDATA probe column artifacts** —
+  `format_deck_wrdata_ascii()` now treats explicit `wrdata <file> <probes...>`
+  probe lists as data-file column selectors, preserving the scale column plus
+  requested matching probe columns in deterministic WRDATA output, matching
+  Rust and TypeScript.
+
 - **Deck WRDATA rawfile option rendering artifacts** —
   selected `run_deck_analysis()` WRDATA artifacts now carry accepted
   `.control` rawfile/data-write option inventories through stable

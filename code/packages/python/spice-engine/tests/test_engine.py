@@ -226,6 +226,7 @@ from spice_engine import (
     format_deck_wrdata_artifact_csv,
     format_deck_wrdata_artifact_json,
     format_deck_wrdata_artifact_table,
+    format_deck_wrdata_ascii,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
     format_digital_event_stream_vcd,
@@ -6708,6 +6709,29 @@ def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
         "Index\tTime\tV(in)\tV(out)\tI(V1)\n"
         "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
         "1\t1.000000e-03\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+
+
+def test_deck_wrdata_ascii_selects_marker_probe_columns() -> None:
+    table = (
+        "Index\tV(in)\tI(V1)\n"
+        "0\t1.000000e+00\t-1.000000e-03\n"
+        "1\t2.000000e+00\t-2.000000e-03\n"
+    )
+
+    assert format_deck_wrdata_ascii(
+        table,
+        ["I(V1)"],
+        ["set wr_vecnames", "set wr_singlescale"],
+    ) == (
+        "# SPICE deck wrdata artifact\n"
+        "Probes: I(V1)\n"
+        "Options: set wr_vecnames;set wr_singlescale\n"
+        "VectorNames: Index;I(V1)\n"
+        "Scale: Index\n"
+        "Index\tI(V1)\n"
+        "0\t-1.000000e-03\n"
+        "1\t-2.000000e-03\n"
     )
 
 
