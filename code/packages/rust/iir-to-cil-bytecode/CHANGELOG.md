@@ -1,5 +1,32 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.24.0] — 2026-06-22 — typed module globals → static fields (LANG-FULL E6 layer 1)
+
+`global_load` / `global_store` were a `LANG32b`-deferred `UnsupportedOp`
+rejection. They now lower (in the textual `il_text` path the matrix assembles) to
+CLR **static-field** access, so a function can read/write a module-level global.
+
+### Added
+- **`global_load` / `global_store`** lowering in `il_text`:
+  - `collect_global_fields` collects every distinct global name (first-seen
+    order) → a `public static int64 G_N` field of the generated class. Field
+    names are index-based (`G_0`, `G_1`, …) so an arbitrary source identifier can
+    never form an invalid or colliding CIL field name. CLR zero-initialises
+    static fields (the never-written-global-reads-0 convention).
+  - `global_load "g" -> %d` → `ldsfld int64 <asm>Program::G_N` (+ `conv.i4` if the
+    dest is a 32-bit local — the field is always 64-bit, like the JVM `J` /
+    native 8-byte slot).
+  - `global_store "g", %v` → `ld<v>` (+ `conv.i8` if `v` is 32-bit) → `stsfld
+    int64 <asm>Program::G_N`.
+  - The name is an `Operand::Str` literal (never a register); a non-string /
+    uncollected name is an `InvalidOperand` error.
+
+### Verified
+- `tests/test_backend.rs`: the emitted `.il` declares `.field public static
+  int64 G_0` and carries `ldsfld`/`stsfld`; and **end-to-end on real `ilasm` +
+  `dotnet`** a cross-function global program (`compute` seeds `g`; a separate
+  `bump` reads/increments/writes it) prints **42**.
+
 ## [0.23.0] — 2026-06-21 — arrays → native CIL `int32[]`/`float64[]` (LANG-FULL E5 PR-3b)
 
 The four E5 array opcodes now lower to **real single-dimensional CIL arrays** in

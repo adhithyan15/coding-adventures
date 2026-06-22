@@ -55,7 +55,9 @@ the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 `map`/`collect`, `select`/`filter`, `reject`, `reduce`/`inject`, `find`/`detect`,
 `flat_map`, `any?`/`all?`/`none?` — a trailing `Closure` block is applied via
 `sir-runtime-core`'s `apply` (proc-lenient), predicates routed through SIR
-`truthy`. The Hash/String/Numeric/Symbol catalogs land in follow-up releases.
+`truthy`; and (item **M1c**) the **`Hash`** catalog
+(`keys`/`values`/`has_key?`/`fetch`/`merge`/`each`/`map`/`select`/…). The
+String/Numeric/Symbol catalogs land in follow-up releases.
 
 ## Honest v0 limitation
 

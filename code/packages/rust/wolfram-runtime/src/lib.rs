@@ -15,7 +15,8 @@
 //!        ▼  crate::lower                              (this crate)
 //!   symbolic_ir::IRNode   (Add, Mul, Pow, List, Rule, …)
 //!        │
-//!        ├─ ReplaceAll? ─► cas_pattern_matching::rewrite
+//!        ├─ ReplaceAll? ─► builtins::replace_all_once  (single top-down pass,
+//!        │                  on cas_pattern_matching::match_pattern + substitute)
 //!        ▼  symbolic_vm::VM over WolframBackend (decorates SymbolicBackend)
 //!   symbolic_ir::IRNode   (evaluated)
 //!        │
@@ -77,8 +78,7 @@ pub use builtins::{MAX_LIST_LENGTH, MAX_RANGE_LENGTH, MAX_STRING_LENGTH};
 pub use lower::{LowerError, REPLACE_ALL};
 pub use printer::print_wolfram;
 
-use cas_pattern_matching::nodes::is_rule;
-use cas_pattern_matching::rewrite;
+use builtins::{collect_rule_list, replace_all_once};
 use coding_adventures_wolfram_lexer::try_tokenize_wolfram;
 use coding_adventures_wolfram_parser::try_parse_wolfram;
 use lower::lower_program;
@@ -102,13 +102,6 @@ pub const MAX_INPUT_LEN: usize = 64 * 1024;
 /// so there is no separately-maintained surface model to diverge from and bypass.
 /// 2000 tokens in one statement is already absurd for human-written Wolfram.
 pub const MAX_STATEMENT_TOKENS: usize = 2000;
-
-/// Maximum number of rewrite-rule applications in a single `/.` before we bail.
-///
-/// `cas_pattern_matching::rewrite` runs to a fixed point; a pathological rule set
-/// could loop. The matcher already guards this with a cycle counter — we pass a
-/// generous bound and surface a cycle as a clean error.
-const MAX_REWRITE_ITERATIONS: usize = 10_000;
 
 /// Stack size of the worker thread that runs evaluation and printing.
 ///
@@ -266,11 +259,21 @@ fn eval_source(vm: &mut VM, src: &str, start_index: usize) -> Result<(Vec<Output
     Ok((outputs, index))
 }
 
-/// Recursively replace every `ReplaceAll(expr, rules)` node with the result of
-/// `cas_pattern_matching::rewrite`. `rules` may be a single `Rule`/`RuleDelayed`
-/// or a `List` of them. Inner `ReplaceAll`s (a `/.` chain lowers left-associative,
-/// so the *expr* side may itself be a ReplaceAll) are handled by recursing into
-/// the children first.
+/// Recursively replace every `ReplaceAll(expr, rules)` node with the result of a
+/// **single top-down leftmost-outermost pass** of `rules` over `expr` (MA04
+/// §21.3, via [`builtins::replace_all_once`]). `rules` may be a single
+/// `Rule`/`RuleDelayed` or a `List` of them. Inner `ReplaceAll`s (a `/.` chain
+/// lowers left-associative, so the *expr* side may itself be a ReplaceAll) are
+/// handled by recursing into the children first.
+///
+/// `ReplaceAll` is *not* a VM handler — the VM has no `ReplaceAll` head — so this
+/// pre-pass rewrites it at the IR level *before* evaluation; the substituted
+/// result is then evaluated normally (so `g[1,2] /. g[a_,b_] -> a+b` folds to
+/// `3`). The W-19 single-pass discipline replaced the prior `cas-pattern-matching`
+/// fixed-point `rewrite`, which looped forever on rules like `x_Integer -> x^2`
+/// (it kept re-matching the `Integer` result); the single pass yields `{1,4,9}`
+/// and stops. Returning `Result` keeps the signature stable, though the bounded
+/// single pass can no longer fail to converge.
 fn apply_replace_all(node: IRNode) -> Result<IRNode, String> {
     match node {
         IRNode::Apply(app) => {
@@ -285,35 +288,14 @@ fn apply_replace_all(node: IRNode) -> Result<IRNode, String> {
 
             if let IRNode::Symbol(name) = &head {
                 if name == REPLACE_ALL && args.len() == 2 {
-                    let expr = args[0].clone();
-                    let rules = collect_rules(&args[1]);
-                    return rewrite(expr, &rules, MAX_REWRITE_ITERATIONS)
-                        .map_err(|e| format!("ReplaceAll did not converge: {e}"));
+                    let rules = collect_rule_list(&args[1]);
+                    return Ok(replace_all_once(&args[0], &rules, 0));
                 }
             }
             Ok(IRNode::Apply(Box::new(IRApply { head, args })))
         }
         other => Ok(other),
     }
-}
-
-/// Collect the `Rule`/`RuleDelayed` nodes from the right-hand side of a `/.`.
-///
-/// Wolfram allows either a single rule (`x /. a -> b`) or a list of rules
-/// (`x /. {a -> b, c -> d}`). A non-rule operand yields an empty rule set, so
-/// `rewrite` simply returns the expression unchanged.
-fn collect_rules(rules: &IRNode) -> Vec<IRNode> {
-    if is_rule(rules) {
-        return vec![rules.clone()];
-    }
-    if let IRNode::Apply(app) = rules {
-        if let IRNode::Symbol(name) = &app.head {
-            if name == symbolic_ir::LIST {
-                return app.args.iter().filter(|r| is_rule(r)).cloned().collect();
-            }
-        }
-    }
-    vec![]
 }
 
 /// Determine, per top-level statement, whether its result should be displayed.

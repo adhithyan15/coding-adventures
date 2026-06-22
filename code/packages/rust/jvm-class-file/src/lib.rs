@@ -225,6 +225,19 @@ impl JvmMethodInfo {
     }
 }
 
+/// A `field_info` entry — a declared field of the class (JVMS §4.5).
+///
+/// Used for module-level **static** globals (LANG-FULL E6): each becomes a
+/// `static long` field accessed via `getstatic`/`putstatic`. `name` and
+/// `descriptor` (e.g. `"J"` for a `long`) are resolved to their Utf8 constant-
+/// pool indices at serialization time, exactly like [`JvmMethodInfo`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JvmFieldInfo {
+    pub access_flags: u16,
+    pub name: String,
+    pub descriptor: String,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct JvmClassFile {
     pub version: JvmClassVersion,
@@ -232,6 +245,9 @@ pub struct JvmClassFile {
     pub this_class_name: String,
     pub super_class_name: String,
     pub constant_pool: Vec<Option<JvmConstantPoolEntry>>,
+    /// Declared fields (JVMS §4.5). Empty for most classes; module-level static
+    /// globals (LANG-FULL E6) populate it with `static long` fields.
+    pub fields: Vec<JvmFieldInfo>,
     pub methods: Vec<JvmMethodInfo>,
 }
 
@@ -569,8 +585,17 @@ pub fn parse_class_file(data: &[u8]) -> Result<JvmClassFile, ClassFileFormatErro
     }
 
     let fields_count = usize::from(reader.u2()?);
+    let mut fields = Vec::with_capacity(fields_count);
     for _ in 0..fields_count {
-        skip_member(&mut reader)?;
+        let access_flags = reader.u2()?;
+        let name = get_utf8(&constant_pool, reader.u2()?)?.to_string();
+        let descriptor = get_utf8(&constant_pool, reader.u2()?)?.to_string();
+        // Skip field attributes (e.g. ConstantValue) — we don't model them.
+        let attributes_count = usize::from(reader.u2()?);
+        for _ in 0..attributes_count {
+            parse_attribute(&mut reader, &constant_pool, false)?;
+        }
+        fields.push(JvmFieldInfo { access_flags, name, descriptor });
     }
 
     let methods_count = usize::from(reader.u2()?);
@@ -597,6 +622,7 @@ pub fn parse_class_file(data: &[u8]) -> Result<JvmClassFile, ClassFileFormatErro
         this_class_name: String::new(),
         super_class_name: String::new(),
         constant_pool,
+        fields,
         methods,
     };
     let this_class_name = partial.resolve_class_name(this_class_index)?;
@@ -678,21 +704,6 @@ fn parse_attribute(
         name,
         info: reader.read(attribute_length)?.to_vec(),
     }))
-}
-
-fn skip_member(reader: &mut ClassReader<'_>) -> Result<(), ClassFileFormatError> {
-    reader.u2()?;
-    reader.u2()?;
-    reader.u2()?;
-    let attributes_count = usize::from(reader.u2()?);
-    for _ in 0..attributes_count {
-        let _name_index = reader.u2()?;
-        let attribute_length_u32 = reader.u4()?;
-        let attribute_length = usize::try_from(attribute_length_u32)
-            .map_err(|_| class_file_error("attribute length does not fit in usize"))?;
-        reader.read(attribute_length)?;
-    }
-    Ok(())
 }
 
 fn get_utf8(

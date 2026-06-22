@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.19.0] - 2026-06-22
+
+### Added — string-literal `.length` folding (`"hello".length` → `5`)
+
+`fold_expression` now folds the `.length` of a **string literal** to a numeric
+literal, via the new `fold_member` helper:
+
+| before        | after | reasoning                                       |
+|---------------|-------|-------------------------------------------------|
+| `"hello".length` | `5` | five UTF-16 code units                          |
+| `"".length`      | `0` | empty string                                    |
+| `"💩".length`    | `2` | one astral char = a UTF-16 surrogate pair       |
+| `("a"+"b").length` | `2` | object folds to `"ab"` first, then `.length`  |
+
+JavaScript's `String#length` is the count of **UTF-16 code units** (ECMAScript
+String exotic objects), not Unicode scalar values or bytes — so the fold uses
+`str::encode_utf16().count()`, which expands astral-plane characters
+(U+10000…U+10FFFF) to a surrogate pair, matching V8/SpiderMonkey exactly.
+`.count()` is total and allocation-free; it cannot panic.
+
+The fold is deliberately narrow — **dotted, non-computed `"...".length` only**:
+the object must fold to a `StringLiteral`, and the access must be non-`computed`
+with an `Identifier` property named `length`. `s.length` on an identifier,
+`"x".charCodeAt`, and the computed form `"abc"["length"]` all pass through
+unchanged (the first needs the runtime value of `s`; the last would mean
+reasoning about arbitrary computed keys). The fold emits a correlation-vector
+contribution like every other fold.
+
+Five new unit tests (`fold_string_literal_length`,
+`fold_string_length_counts_utf16_code_units_not_scalars`,
+`length_on_identifier_does_not_fold`, `non_length_property_on_string_does_not_fold`,
+`computed_string_length_does_not_fold`).
+
 ## [0.18.0] - 2026-06-22
 
 ### Added — unary bitwise NOT folding (`~5` → `-6`)

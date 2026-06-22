@@ -312,3 +312,90 @@ describe("built-in method catalog: block-taking Array/Enumerable (M1b)", () => {
     expect(callMethod([0, 1, null, 2], "select", new Closure((x: Val) => x))).toEqual([0, 1, 2]);
   });
 });
+
+describe("built-in method catalog: Hash (M1c)", () => {
+  it("keys / values / size / empty?", () => {
+    const h = new Map<Val, Val>([["a", 1], ["b", 2]]);
+    expect(callMethod(h, "keys")).toEqual(["a", "b"]);
+    expect(callMethod(h, "values")).toEqual([1, 2]);
+    expect(callMethod(h, "size")).toBe(2);
+    expect(callMethod(h, "length")).toBe(2);
+    expect(callMethod(h, "empty?")).toBe(false);
+    expect(callMethod(new Map(), "empty?")).toBe(true);
+  });
+
+  it("key/value membership", () => {
+    const h = new Map<Val, Val>([["a", 1]]);
+    expect(callMethod(h, "has_key?", "a")).toBe(true);
+    expect(callMethod(h, "key?", "z")).toBe(false);
+    expect(callMethod(h, "include?", "a")).toBe(true);
+    expect(callMethod(h, "member?", "a")).toBe(true);
+    expect(callMethod(h, "has_value?", 1)).toBe(true);
+    expect(callMethod(h, "value?", 9)).toBe(false);
+  });
+
+  it("fetch / dig / to_a", () => {
+    const h = new Map<Val, Val>([["a", 1], ["b", 2]]);
+    expect(callMethod(h, "fetch", "a")).toBe(1);
+    expect(callMethod(h, "fetch", "z")).toBeNull();
+    expect(callMethod(h, "fetch", "z", 99)).toBe(99);
+    expect(callMethod(h, "dig", "b")).toBe(2);
+    expect(callMethod(h, "to_a")).toEqual([
+      ["a", 1],
+      ["b", 2],
+    ]);
+  });
+
+  it("store / merge / delete / clear / invert", () => {
+    const h = new Map<Val, Val>([["a", 1]]);
+    expect(callMethod(h, "store", "b", 2)).toBe(2);
+    expect(h.get("b")).toBe(2);
+    expect(callMethod(h, "[]=", "c", 3)).toBe(3);
+    const merged = callMethod(new Map<Val, Val>([["a", 1]]), "merge", new Map<Val, Val>([["b", 2]]));
+    expect([...(merged as Map<Val, Val>).entries()]).toEqual([
+      ["a", 1],
+      ["b", 2],
+    ]);
+    expect(callMethod(h, "delete", "a")).toBe(1);
+    expect(h.has("a")).toBe(false);
+    const inv = callMethod(new Map<Val, Val>([["a", 1]]), "invert") as Map<Val, Val>;
+    expect(inv.get(1)).toBe("a");
+    const cleared = new Map<Val, Val>([["a", 1]]);
+    expect((callMethod(cleared, "clear") as Map<Val, Val>).size).toBe(0);
+  });
+
+  it("block each / map / select / reject", () => {
+    const seen: Val[] = [];
+    const h = new Map<Val, Val>([["a", 1], ["b", 2]]);
+    const result = callMethod(h, "each", new Closure((k: Val, v: Val) => seen.push([k, v])));
+    expect(seen).toEqual([
+      ["a", 1],
+      ["b", 2],
+    ]);
+    expect(result).toBe(h);
+    expect(callMethod(h, "map", new Closure((k: Val, v: Val) => `${k}=${v}`))).toEqual(["a=1", "b=2"]);
+    const sel = callMethod(h, "select", new Closure((k: Val, v: Val) => v > 1)) as Map<Val, Val>;
+    expect([...sel.entries()]).toEqual([["b", 2]]);
+    const rej = callMethod(h, "reject", new Closure((k: Val, v: Val) => v > 1)) as Map<Val, Val>;
+    expect([...rej.entries()]).toEqual([["a", 1]]);
+  });
+
+  it("each_key / each_value", () => {
+    const ks: Val[] = [];
+    const vs: Val[] = [];
+    const h = new Map<Val, Val>([["a", 1], ["b", 2]]);
+    callMethod(h, "each_key", new Closure((k: Val) => ks.push(k)));
+    callMethod(h, "each_value", new Closure((v: Val) => vs.push(v)));
+    expect(ks).toEqual(["a", "b"]);
+    expect(vs).toEqual([1, 2]);
+  });
+
+  it("respond_to? honesty + nil floor", () => {
+    const h = new Map<Val, Val>([["a", 1]]);
+    expect(callMethod(h, "respond_to?", "keys")).toBe(true);
+    expect(callMethod(h, "respond_to?", "each")).toBe(true);
+    expect(callMethod(h, "respond_to?", "transform_keys")).toBe(false);
+    expect(callMethod(h, "transform_keys")).toBeNull();
+    expect(callMethod(h, "nil?")).toBe(false);
+  });
+});

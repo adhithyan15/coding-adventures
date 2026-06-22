@@ -48,6 +48,16 @@ final class SpreadsheetSession {
         sc_fill(handle, src, dstStart, dstEnd)
     }
 
+    /// Structural edits: insert / delete `count` rows or columns at the 1-based
+    /// position `at`. The engine shifts every formula reference at or after the
+    /// band (a reference whose whole band is deleted becomes `#REF!`), then
+    /// recomputes. `at`/`count` are clamped to ≥ 0 before the UInt32 conversion
+    /// so a negative can't trap / wrap into a huge unsigned band.
+    func insertRows(_ at: Int, _ count: Int) { sc_insert_rows(handle, UInt32(max(0, at)), UInt32(max(0, count))) }
+    func deleteRows(_ at: Int, _ count: Int) { sc_delete_rows(handle, UInt32(max(0, at)), UInt32(max(0, count))) }
+    func insertCols(_ at: Int, _ count: Int) { sc_insert_cols(handle, UInt32(max(0, at)), UInt32(max(0, count))) }
+    func deleteCols(_ at: Int, _ count: Int) { sc_delete_cols(handle, UInt32(max(0, at)), UInt32(max(0, count))) }
+
     /// Copy the inclusive rectangle `start`..`end` into the clipboard — a
     /// whole-block copy that pastes as a unit. The source is untouched; the
     /// buffer survives any number of pastes. Reaches `sc_copy`.

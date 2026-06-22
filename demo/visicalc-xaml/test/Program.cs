@@ -198,5 +198,32 @@ using (var ur = new SpreadsheetSession())
     Check("fresh edit clears redo", ur.CanRedo().ToString(), "False");
 }
 
+// ── Structural edits (the + Row / − Row / + Col / − Col buttons drive
+// InsertRows/DeleteRows/InsertCols/DeleteCols): inserting and deleting
+// rows/columns shifts every formula reference across the band, and deleting a
+// referenced band turns that reference into #REF!. The engine parenthesizes
+// binary ops on re-emit ("=(A1+A3)"), so compare with parens stripped.
+static string Bare(string s) => s.Replace("(", "").Replace(")", "");
+using (var st = new SpreadsheetSession())
+{
+    st.SetCell("A1", "10"); st.SetCell("A2", "20"); st.SetCell("A3", "=A1+A2"); // 30
+    Check("struct A3 before", st.Window(3, 1, 3, 1)[0][0], "30");
+    st.InsertRows(2, 1);
+    Check("struct inserted row blank", st.Window(2, 1, 2, 1)[0][0], "");
+    Check("struct formula at A4", st.Window(4, 1, 4, 1)[0][0], "30");
+    Check("struct insert shifted refs", Bare(st.GetRaw("A4")), "=A1+A3");
+    st.DeleteRows(2, 1);
+    Check("struct delete shifted back", Bare(st.GetRaw("A3")), "=A1+A2");
+    st.DeleteRows(1, 1); // delete the referenced row 1 → A1 ref destroyed
+    Check("struct deleted ref is #REF!", st.Window(2, 1, 2, 1)[0][0], "#REF!");
+}
+using (var sc = new SpreadsheetSession())
+{
+    sc.SetCell("K1", "5"); sc.SetCell("L1", "=K1*3");
+    sc.InsertCols(11, 1); // col 11 = K → formula moves to M1, refs shift
+    Check("struct insertCol value", sc.Window(1, 13, 1, 13)[0][0], "15"); // M1
+    Check("struct insertCol shifted refs", Bare(sc.GetRaw("M1")), "=L1*3");
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;

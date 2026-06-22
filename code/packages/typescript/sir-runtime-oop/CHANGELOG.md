@@ -2,6 +2,24 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.3] - 2026-06-22
+
+### Added
+
+Built-in method dispatch, part 3 — the **`Hash`** catalog (per
+`code/specs/sir-method-dispatch.md`, item M1c; Hash is a JS `Map`):
+
+- Non-block: `keys`, `values`, `has_key?`/`key?`/`include?`/`member?`,
+  `has_value?`/`value?` (deep value equality), `fetch` (with optional default),
+  `size`/`length`, `empty?`, `to_a` (`[[k, v], …]`), `dig` (single-level v0),
+  `store`/`[]=`, `merge` (new `Map`), `delete`, `clear`, `invert`.
+- Block (block receives `[key, value]`): `each`/`each_pair`, `each_key`,
+  `each_value`, `map`, `select`/`filter`, `reject` — applied via
+  `@coding-adventures/sir-runtime-core` `apply`, predicates through SIR `truthy`.
+
+`respond_to?` reports the Hash methods; out-of-catalog stays `null`. Universal
+`Object` methods still resolve on a Hash receiver.
+
 ## [0.1.2] - 2026-06-22
 
 ### Added

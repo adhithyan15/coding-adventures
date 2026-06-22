@@ -1674,12 +1674,193 @@ These build on the same `pattern_matches` primitive but require capture binding,
 backtracking, and rule application that balloon the matcher well beyond the W-18
 core; they are scheduled for **W-19**.
 
+> **W-19 update.** Named patterns (`x_`, `x_h`) *with binding* and replacement
+> (`expr /. rules`, `ReplaceAll`, `Replace`, `Rule`, `RuleDelayed`) are now
+> implemented — see **§21**. Alternatives, conditions, `PatternTest`, sequences
+> (`__`/`___`), `Repeated`, level specs, and `ReplaceRepeated` (`//.`) remain
+> deferred (now to **W-20**, §21.6).
+
 ### §20.7 No grammar change
 
 `MatchQ[…]`, `Cases[…]`, and `FreeQ[…]` are ordinary `Head[args]` applications.
 W-18 touches only `wolfram-runtime`'s builtin handler table and the held set; the
 lexer, parser, and grammar files are untouched. The `Blank`/`Pattern` node
 vocabulary is reused unchanged from `cas-pattern-matching`.
+
+
+## §21 W-19 named patterns & replacement rules — `ReplaceAll` / `/.`, `Replace`, `Rule`/`RuleDelayed` (implemented)
+
+W-18 shipped three *predicates* (`MatchQ`/`Cases`/`FreeQ`) over a deliberately
+small matcher that **could not bind names** — a `Pattern[x, Blank[]]` (`x_`) fell
+through to the literal branch and simply failed to match. W-19 closes that gap and
+adds the half of Wolfram's pattern system everyone reaches for next: **named
+capture** (`x_`, `x_h` bind `x` to whatever they match) and **replacement**
+(`expr /. rule`, `Replace`, the `Rule`/`RuleDelayed` heads).
+
+The grammar already tokenises `->` (`Rule`), `:>` (`RuleDelayed`), `/.`
+(`ReplaceAll`), and `_` (`Blank`), and `lower.rs` already lowers `x_`/`x_h` to
+`Pattern[x, Blank[]]`/`Pattern[x, Blank[h]]`, `_`/`_h` to `Blank[]`/`Blank[h]`,
+and `a -> b` / `a :> b` to `Rule`/`RuleDelayed`. **No grammar change.** W-19 is
+entirely in `wolfram-runtime` (the `builtins.rs` matcher + handler table, the
+`ReplaceAll` pre-pass in `lib.rs`) reusing `cas-pattern-matching`'s
+`match_pattern` (which already records bindings) and `substitute`.
+
+### §21.1 What W-19 adds
+
+| Head           | Form     | Arity | Held? | Result                                                                          |
+|----------------|----------|-------|-------|---------------------------------------------------------------------------------|
+| `ReplaceAll`   | `e /. r` | 2     | n/a*  | apply rule(s) to `e`, **top-down leftmost-outermost, single pass**              |
+| `Replace`      | —        | 2     | n/a*  | apply rule(s) to `e` **as a whole only** (no sub-part descent)                  |
+| `Rule`         | `a -> b` | 2     | —     | an immediate rewrite rule (the data; its RHS substitutes captured names)        |
+| `RuleDelayed`  | `a :> b` | 2     | —     | a delayed rewrite rule — RHS held (not pre-evaluated) until substitution        |
+
+*\*Replacement runs as an **IR-level pre-pass** (`apply_replace_all` in `lib.rs`),
+before VM evaluation, then the substituted result is evaluated normally — so
+`ReplaceAll`/`Replace` are not VM handlers and the "held?" column does not apply.
+Holding the LHS pattern is automatic: there is no `Blank`/`Pattern`/`Rule` VM
+handler, so those nodes survive to the pre-pass literally.*
+
+W-18's `MatchQ`/`Cases`/`FreeQ` are **upgraded in place** to honour named patterns
+(they now route through the binding matcher), so `MatchQ[2, x_] → True` and
+`Cases[{1,2,3}, x_Integer] → {1, 2, 3}`.
+
+Worked examples (the W-19 acceptance tests):
+
+```
+MatchQ[2, x_]                          (* → True  — a named blank matches anything        *)
+f[2] /. f[x_] -> x                     (* → 2     — bind x=2, substitute into the RHS     *)
+{1, 2, 3} /. 2 -> 99                   (* → {1, 99, 3} — literal rule, applied per element*)
+x /. x -> 5                            (* → 5     — whole-expr literal match               *)
+g[1, 2] /. g[a_, b_] -> a + b          (* → 3     — two captures; RHS evaluates (->)        *)
+ReplaceAll[{1, 2, 3}, x_Integer -> x^2](* → {1, 4, 9} — typed named pattern, per element  *)
+Replace[5, x_ -> x + 1]                (* → 6     — Replace matches the whole expr         *)
+Replace[{1, 2, 3}, x_ -> 0]            (* → 0     — the WHOLE list matches x_ (no descent) *)
+{a, b} /. {a -> 1, b -> 2}             (* → {1, 2} — a list of rules, first match per node *)
+h[3] /. h[n_] :> n + 1                 (* → 4     — RuleDelayed: RHS held until substitute *)
+```
+
+### §21.2 Named-pattern binding — reusing `cas-pattern-matching::match_pattern`
+
+The W-18 `pattern_matches(pattern, subject) -> bool` primitive is now a thin
+wrapper over `cas_pattern_matching::match_pattern(pattern, subject,
+Bindings::empty()).is_some()`. That matcher already implements *exactly* the W-19
+vocabulary, with binding:
+
+* `Blank[]` — matches anything (no binding);
+* `Blank[h]` — matches iff the subject's effective head is `h`;
+* `Pattern[name, inner]` — matches `inner`, then records `name → subject`; a
+  repeated name must bind consistently (so `f[x_, x_]` only matches `f[2, 2]`);
+* compound — head and args matched recursively (equal arity, no sequence
+  wildcards);
+* otherwise structural equality (`IRNode`'s `PartialEq`, which keeps `2 ≠ 2.0`
+  exactly as W-13's `same_element` did, so every W-18 literal/`_Integer` test is
+  preserved).
+
+This is a strict superset of the old behaviour, so `MatchQ`/`Cases`/`FreeQ` gain
+named patterns for free and keep all W-18 results.
+
+**One head-name convention is reconciled.** Wolfram's `_Real` lowers to
+`Blank[Real]`, but the shared (CAS-native) matcher names a floating-point node's
+head `Float`. Before delegating, the wrapper rewrites a pattern's `Blank[Real]`
+constraint to `Blank[Float]` (a pure structural copy, `wolfram_to_cas_pattern`),
+so `MatchQ[2.0, _Real] → True` still holds. Every other head name — `Integer`,
+`Rational`, `String`, `Symbol`, and any compound head `f` — already agrees
+between the two crates, so `Real`/`Float` is the only translation.
+
+### §21.3 `ReplaceAll` / `/.` — single top-down leftmost-outermost pass
+
+The crux of W-19's *semantic* fix. Wolfram's `/.` does **one** top-down pass: at
+each node it tries the rules in order; the **first** rule whose LHS matches the
+*whole* node wins — its RHS (with captures substituted) **replaces** the node and
+the pass does **not** descend into the result. If no rule matches the node, the
+pass recurses into the head and each argument. This is *leftmost-outermost,
+single-pass* — distinct from `ReplaceRepeated` (`//.`), which iterates to a fixed
+point (deferred to W-20).
+
+This corrects a real defect: the prior pre-pass called
+`cas-pattern-matching::rewrite`, which is a **bottom-up fixed-point** rewriter that
+re-walks each replacement. On `{1,2,3} /. x_Integer -> x^2` that loops forever
+(`1` → `1^2` → folds to `1`, an `Integer`, which matches `x_Integer` again …),
+hitting the iteration cap and erroring "did not converge". The single-pass
+semantics replace each element exactly once: `{1^2, 2^2, 3^2}` → `{1, 4, 9}`.
+
+Implementation: `replace_all_once(node, &rules)` tries `apply_rule_once` (match
+LHS → substitute bindings into RHS) at the node; on a hit it returns the
+substituted RHS **without recursing into it**; on a miss it rebuilds the node from
+recursively-replaced children. A `List` of rules is tried left-to-right; the first
+match per node wins.
+
+### §21.4 `Replace` — whole-expression only
+
+`Replace[expr, rule]` is `ReplaceAll` restricted to the **root**: it tries the
+rule(s) against `expr` as a whole and never descends into parts. The *visible*
+difference from `/.` needs a head-constrained pattern, because both are
+**outermost-first**: `{1,2,3} /. x_ -> 0` and `Replace[{1,2,3}, x_ -> 0]` both
+yield `0` — the whole `List[1,2,3]` matches the unconstrained `x_` at the root, so
+`/.` never reaches the elements. With `x_Integer` the difference shows:
+`{1,2,3} /. x_Integer -> 0 → {0, 0, 0}` (the list head is not `Integer`, so `/.`
+descends and replaces each element) whereas `Replace[{1,2,3}, x_Integer -> 0]`
+returns `{1, 2, 3}` unchanged (the whole list's head is `List`, not `Integer`, and
+`Replace` does not descend). If no rule matches, `Replace` returns `expr`
+unchanged. **Level specifications** (`Replace[expr, rule, levelspec]`) are
+deferred to W-20; a third argument leaves the form unevaluated.
+
+### §21.5 `Rule` / `RuleDelayed` and the immediate-vs-held distinction
+
+A `Rule[lhs, rhs]` (`a -> b`) and a `RuleDelayed[lhs, rhs]` (`a :> b`) are both
+*data* — they carry a pattern and a template. Because replacement is an IR-level
+pre-pass that runs **before** VM evaluation, the RHS of *both* forms is held until
+substitution in the same mechanical sense: nothing in the rule is evaluated until
+its captures are filled in and the resulting expression is handed to the VM. The
+distinction Wolfram draws — `->` evaluates its RHS once when the rule is built,
+`:>` re-evaluates per match — does not change any W-19 acceptance result (every
+example substitutes then evaluates once), so W-19 treats them identically at the
+rewrite layer while preserving the two distinct heads end-to-end (the printer
+round-trips `->`/`:>`). A bare symbol on the RHS that names a capture is rewritten
+by `lower.rs` into the `Pattern[name, …]` reference shape `substitute` expands.
+
+### §21.6 Safety — bounded single pass, no loops, no panics
+
+* **Bounded recursion.** `replace_all_once` walks the expression tree, which is
+  already bounded by the parser's per-statement token cap (so depth is bounded)
+  and `MAX_LIST_LENGTH` (so breadth is bounded). The walk is depth-guarded by
+  `REPLACE_MAX_DEPTH` (mirroring W-18's `FREEQ_MAX_DEPTH`): at the cap it stops
+  descending and returns the sub-node unchanged, turning a crafted
+  pathologically-nested input into a safe bounded answer rather than a stack
+  overflow. The whole pre-pass also runs inside `lib.rs`'s bounded-stack worker
+  thread with `catch_unwind` (MA04 §0 robustness), so any residual panic becomes a
+  clean `Err`.
+* **No unbounded expansion / no loops.** A *single* top-down pass that does not
+  re-descend into substituted RHSes cannot loop the way the old fixed-point
+  rewriter did — each node is visited at most once. There is no `MAX_REWRITE_ITERATIONS`
+  iteration to exhaust.
+* **No panic on unbound names.** `substitute` leaves an unbound `Pattern[name, …]`
+  reference in place rather than panicking; a non-rule operand to `/.` yields an
+  empty rule set, so the expression is returned unchanged. Heterogeneous compares
+  go through total `PartialEq`.
+
+### §21.7 Deferred to W-20 (explicitly out of scope)
+
+W-19 ships named binding + the immediate single-pass replacement core and defers
+the richer pattern algebra to **W-20**:
+
+* **alternatives** `a | b` (`Alternatives`);
+* **conditions** `patt /; test` (`Condition`) and **`PatternTest`** `patt ? fn`;
+* **sequences** `__` (`BlankSequence`) / `___` (`BlankNullSequence`) and
+  **`Repeated`** `patt..`;
+* **level specifications** for `Replace` (the third argument);
+* **`ReplaceRepeated`** `//.` (fixed-point iteration — the bottom-up `rewrite` the
+  prior pre-pass used is the natural substrate, but it needs the loop bound and a
+  convergence contract);
+* **typed-named edge cases** beyond head constraints (e.g. `x_?test`).
+
+### §21.8 No grammar change
+
+Every W-19 surface form (`->`, `:>`, `/.`, `_`, `x_`) was already tokenised and
+lowered before this item. W-19 touches only `wolfram-runtime` (the binding matcher
+wrapper, the `Replace` handler, the single-pass `ReplaceAll` pre-pass) and reuses
+`cas-pattern-matching`'s `match_pattern`/`substitute` unchanged. The lexer, parser,
+and compiled grammar are untouched.
 
 
 ### §6 References

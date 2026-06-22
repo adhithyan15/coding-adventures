@@ -343,6 +343,43 @@ mod tests {
     }
 
     #[test]
+    fn w19_named_patterns_and_replacement_evaluate_end_to_end() {
+        // Parsed from real source: `x_` → Pattern[x, Blank[]], `->`/`:>` →
+        // Rule/RuleDelayed, `/.` → ReplaceAll. (W-19.)
+        let mut r = WolframRepl::new();
+        // A named blank matches anything (the W-19 upgrade to the W-18 matcher).
+        assert!(matches!(
+            r.feed("MatchQ[2, x_]"),
+            ReplResponse::Output(t) if t.contains("True")
+        ));
+        // Capture + substitute on the RHS.
+        assert!(matches!(
+            r.feed("f[2] /. f[x_] -> x"),
+            ReplResponse::Output(t) if t.contains("2")
+        ));
+        // Two captures; the RHS evaluates after substitution.
+        assert!(matches!(
+            r.feed("g[1, 2] /. g[a_, b_] -> a + b"),
+            ReplResponse::Output(t) if t.contains("3")
+        ));
+        // Typed named pattern per element — the single-pass fix (no infinite loop).
+        assert!(matches!(
+            r.feed("ReplaceAll[{1, 2, 3}, x_Integer -> x^2]"),
+            ReplResponse::Output(t) if t.contains("{1, 4, 9}")
+        ));
+        // `Replace` matches the whole expression.
+        assert!(matches!(
+            r.feed("Replace[5, x_ -> x + 1]"),
+            ReplResponse::Output(t) if t.contains("6")
+        ));
+        // RuleDelayed `:>` — RHS held until substitution.
+        assert!(matches!(
+            r.feed("h[3] /. h[n_] :> n + 1"),
+            ReplResponse::Output(t) if t.contains("4")
+        ));
+    }
+
+    #[test]
     fn continues_while_a_bracket_is_open() {
         let mut r = WolframRepl::new();
         assert_eq!(r.feed("f[1,"), ReplResponse::NeedMore); // open bracket

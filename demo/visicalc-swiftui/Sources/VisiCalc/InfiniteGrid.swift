@@ -141,6 +141,26 @@ final class WindowedSheetModel: ObservableObject {
         revision += 1
     }
 
+    /// Structural edits: insert / delete the selected cell's row or column. The
+    /// engine shifts every formula reference at or after the band (a reference
+    /// whose whole band is deleted becomes `#REF!`) and recomputes; resize the
+    /// extent and bump `revision` so the visible rows re-fetch. Operate on a
+    /// single row/column at the cursor. The SwiftUI sibling of the Qt/Flutter/
+    /// Compose/XAML "+ Row / − Row / + Col / − Col" controls.
+    func insertRow() { session.insertRows(selectedRow, 1); afterStructural() }
+    func deleteRow() { session.deleteRows(selectedRow, 1); afterStructural() }
+    func insertCol() { session.insertCols(selectedCol, 1); afterStructural() }
+    func deleteCol() { session.deleteCols(selectedCol, 1); afterStructural() }
+
+    /// Shared tail for a structural edit: regrow the extent, re-read the (now
+    /// possibly moved/blanked) selected cell's source into the formula bar, and
+    /// bump `revision` so the visible rows re-fetch.
+    private func afterStructural() {
+        resize()
+        formulaText = session.getRaw(address(selectedRow, selectedCol))
+        revision += 1
+    }
+
     /// Clipboard: copy/cut the selected cell, then paste it at the selection. The
     /// engine shifts the pasted formula's relative references by the
     /// destination's offset, pins absolute (`$`) refs, carries the format; a cut
@@ -345,6 +365,16 @@ struct InfiniteGridView: View {
             Button("Load") { if !savedSnapshot.isEmpty { model.loadBook(savedSnapshot) } }
                 .disabled(savedSnapshot.isEmpty)
                 .help("Restore the workbook from the last save")
+            toolSep
+            // ── Structure (insert / delete the selected row or column) ──
+            Button("+ Row") { model.insertRow() }
+                .help("Insert a row above the selected cell (references shift down)")
+            Button("− Row") { model.deleteRow() }
+                .help("Delete the selected cell's row (references shift up; refs into it become #REF!)")
+            Button("+ Col") { model.insertCol() }
+                .help("Insert a column left of the selected cell (references shift right)")
+            Button("− Col") { model.deleteCol() }
+                .help("Delete the selected cell's column (references shift left; refs into it become #REF!)")
             toolSep
             // ── History (undo / redo). The buttons gate off canUndo/canRedo,
             // re-evaluated whenever `revision` (a @Published) bumps after an edit.

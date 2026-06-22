@@ -123,4 +123,62 @@ rulebook immuno_facts {
         source "Job syndrome is due to a mutation in the STAT3 gene in more than two-thirds of cases (70%)."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK525947/"
         trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield HLA disease-associations + classic immunodeficiency
+    % genes. Each grounded to a self-contained verbatim NCBI Bookshelf span
+    % naming both the disease and the allele/gene/component.
+    % ------------------------------------------------------------------------
+
+    % --- HLA disease associations (Step-1 staples) ---
+    relate associated_hla(rheumatoid_arthritis, hla_dr4)
+        source "The risk of developing rheumatoid arthritis has been associated with HLA-DRB1 alleles: HLA-DRB1*04, HLA-DRB1*01, and HLA-DRB1*10."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441999/"
+        trust authoritative
+    relate associated_hla(multiple_sclerosis, hla_dr2)
+        source "The human leukocyte antigen (HLA) DRB1*1501 allele strongly correlates with multiple sclerosis and is one of the most studied alleles relative to multiple sclerosis linkage."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499849/"
+        trust authoritative
+    relate associated_hla(psoriasis, hla_cw6)
+        source "Type 1 psoriasis, which has a positive family history, starts before age 40 and is associated with HLA-Cw6; while type 2 psoriasis does not show a family history, presents after age 40, and is not associated with HLA-Cw6."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448194/"
+        trust authoritative
+    relate associated_hla(reactive_arthritis, hla_b27)
+        source "The HLA-B27 gene is associated with a significantly increased susceptibility to reactive arthritis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499831/"
+        trust authoritative
+    relate associated_hla(behcet_disease, hla_b51)
+        source "The most frequent association is with carriers of HLA-B51/B5, who are at high risk for developing Behcet disease compared to non-carriers."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470257/"
+        trust authoritative
+    % Type 1 diabetes — the page defines T1D = type 1 diabetes; the span names
+    % T1D with the HLA DR4-DQ8 / DR3-DQ2 haplotypes (atom hla_dr4 per the DR4 it names).
+    relate associated_hla(type_1_diabetes_mellitus, hla_dr4)
+        source "Specifically, HLA DR4-DQ8 and DR3-DQ2 have been reported to be present in about 90% of children with T1D."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507713/"
+        trust authoritative
+
+    % --- classic primary immunodeficiency genes ---
+    relate gene_defect(ataxia_telangiectasia, atm)
+        source "Clinically, this syndrome manifests a combination of neurological and systemic symptoms due to the mutation of the ataxia-telangiectasia mutated (ATM) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519542/"
+        trust authoritative
+    relate gene_defect(ipex_syndrome, foxp3)
+        source "IPEX results from mutations in the FOXP3 gene, a transcription factor crucial for regulatory T cell (Treg) development and function."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562182/"
+        trust authoritative
+    % CD40 ligand deficiency = X-linked hyper-IgM syndrome. RECOVERED from
+    % GeneReviews (NBK1402): the StatPearls page referred to it only as
+    % "this syndrome"; GeneReviews names the disease AND CD40LG in one span.
+    relate gene_defect(cd40_ligand_deficiency, cd40lg)
+        source "The diagnosis of CD40 ligand deficiency is established in a male proband with typical clinical and laboratory findings and a hemizygous pathogenic variant in CD40LG identified by molecular genetic testing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1402/"
+        trust authoritative
+
+    % --- complement deficiency ---
+    % Terminal complement (C5-C9 / MAC) deficiency → recurrent Neisseria infections.
+    relate deficiency_of(terminal_complement_deficiency, c5_c9)
+        source "Deficiencies of the late common pathway (C5, C6, C7, C8, and C9) are associated with increased Neisseria infections, including Neisseria meningitidis and Neisseria gonorrhoeae."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557581/"
+        trust authoritative
 }

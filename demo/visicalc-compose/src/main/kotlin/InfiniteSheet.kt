@@ -183,6 +183,15 @@ fun InfiniteSheet() {
         rev++
     }
 
+    // Structural edits: insert / delete the selected cell's row or column. The
+    // engine shifts every formula reference across the band and recomputes; a
+    // reference whose whole band is deleted becomes #REF!. Bump rev so the
+    // visible rows re-read and re-sync the formula bar.
+    fun insertRow() { model.insertRow(); formula = model.formula; rev++ }
+    fun deleteRow() { model.deleteRow(); formula = model.formula; rev++ }
+    fun insertCol() { model.insertCol(); formula = model.formula; rev++ }
+    fun deleteCol() { model.deleteCol(); formula = model.formula; rev++ }
+
     Column(modifier = Modifier.fillMaxSize().background(BG)) {
         // ── Formula bar: a panel holding the address pill, an `fx` marker, the
         // editable source line (with an accent focus ring), and segmented button
@@ -266,6 +275,15 @@ fun InfiniteSheet() {
             toolButton("Save") { saveBook() }
             Spacer(Modifier.width(6.dp))
             toolButton("Load", enabled = savedSnapshot.isNotEmpty()) { loadBook() }
+            toolSep()
+            // ── Structure (insert / delete the selected row or column) ──
+            toolButton("+ Row") { insertRow() }
+            Spacer(Modifier.width(6.dp))
+            toolButton("− Row") { deleteRow() }
+            Spacer(Modifier.width(6.dp))
+            toolButton("+ Col") { insertCol() }
+            Spacer(Modifier.width(6.dp))
+            toolButton("− Col") { deleteCol() }
             toolSep()
             // ── History (undo / redo). Reading `rev` re-evaluates canUndo/canRedo
             // on every edit so the buttons gate live.
