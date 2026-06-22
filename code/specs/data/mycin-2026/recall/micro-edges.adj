@@ -149,4 +149,12 @@ rulebook micro_facts {
         source "Listeria monocytogenes is a gram-positive, facultative anaerobic, intracellular rod with widespread environmental distribution, commonly found in soil, water, and vegetation, and capable of transient colonization of the human and animal gastrointestinal tract."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK534838/"
         trust authoritative
+
+    % --- Klebsiella pneumoniae (gram-negative) ----------------------------------
+    % One span names the organism AND its gram reaction. (morphology declined: the page
+    % calls it a "bacillus" only in a historical clause anaphoric to "The bacterium".)
+    relate gram_stain(klebsiella_pneumoniae, gram_negative)
+        source "Klebsiella pneumoniae is a gram-negative, encapsulated, non-motile bacterium found in the environment"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519004/"
+        trust authoritative
 }
