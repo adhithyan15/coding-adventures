@@ -1,0 +1,22 @@
+% ============================================================================
+% urine-recall.query.adj — a worked recall query over the urinalysis library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this urine finding means
+% which diagnosis?" question: it states no renal fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli urine-recall.query.adj
+% ============================================================================
+
+import "urine-edges.adj"
+
+? urine_finding_indicates(rbc_casts, $Diagnosis)               % expect glomerulonephritis
+? urine_finding_indicates(dysmorphic_rbcs, $Diagnosis)         % expect glomerular_hematuria
+? urine_finding_indicates(muddy_brown_casts, $Diagnosis)       % expect acute_tubular_necrosis
+? urine_finding_indicates(fatty_casts, $Diagnosis)             % expect minimal_change_disease
+? urine_finding_indicates(bence_jones_proteinuria, $Diagnosis) % expect multiple_myeloma
+? urine_finding_indicates(urine_nitrites, $Diagnosis)          % expect urinary_tract_infection
+? urine_finding_indicates(hexagonal_crystals, $Diagnosis)      % expect cystinuria
