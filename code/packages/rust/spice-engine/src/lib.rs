@@ -3475,6 +3475,10 @@ pub struct DeckWrdataArtifact {
     pub marker: String,
     pub probe_count: usize,
     pub probes: Vec<String>,
+    pub matched_probe_count: usize,
+    pub matched_probes: Vec<String>,
+    pub unmatched_probe_count: usize,
+    pub unmatched_probes: Vec<String>,
     pub option_count: usize,
     pub options: Vec<String>,
     pub datafile: String,
@@ -10751,20 +10755,7 @@ fn deck_wrdata_project_rows(rows: &[&str], probes: &[String]) -> Vec<String> {
     if probes.is_empty() {
         return rows.iter().map(|row| (*row).to_string()).collect();
     }
-    let mut selected_indices = Vec::new();
-    if !columns.is_empty() {
-        selected_indices.push(0);
-    }
-    for probe in probes {
-        if let Some(index) = columns
-            .iter()
-            .position(|column| column.eq_ignore_ascii_case(probe))
-        {
-            if !selected_indices.contains(&index) {
-                selected_indices.push(index);
-            }
-        }
-    }
+    let (selected_indices, _, _) = deck_wrdata_probe_inventory(&columns, probes);
     rows.iter()
         .map(|row| {
             let cells = row.split('\t').collect::<Vec<_>>();
@@ -10775,6 +10766,32 @@ fn deck_wrdata_project_rows(rows: &[&str], probes: &[String]) -> Vec<String> {
                 .join("\t")
         })
         .collect()
+}
+
+fn deck_wrdata_probe_inventory(
+    columns: &[&str],
+    probes: &[String],
+) -> (Vec<usize>, Vec<String>, Vec<String>) {
+    let mut selected_indices = Vec::new();
+    let mut matched_probes = Vec::new();
+    let mut unmatched_probes = Vec::new();
+    if !columns.is_empty() {
+        selected_indices.push(0);
+    }
+    for probe in probes {
+        if let Some(index) = columns
+            .iter()
+            .position(|column| column.eq_ignore_ascii_case(probe))
+        {
+            if !selected_indices.contains(&index) {
+                selected_indices.push(index);
+                matched_probes.push(columns[index].to_string());
+            }
+        } else {
+            unmatched_probes.push(probe.clone());
+        }
+    }
+    (selected_indices, matched_probes, unmatched_probes)
 }
 
 fn deck_wrdata_marker_parts(marker: &str) -> Option<(String, Vec<String>)> {
@@ -10797,14 +10814,25 @@ fn deck_wrdata_artifacts(
     write_markers: &[String],
     rawfile_options: &[String],
 ) -> Vec<DeckWrdataArtifact> {
+    let rows = table.lines().collect::<Vec<_>>();
+    let columns = rows
+        .first()
+        .map(|row| row.split('\t').collect::<Vec<_>>())
+        .unwrap_or_default();
     write_markers
         .iter()
         .filter_map(|marker| {
             let (target, probes) = deck_wrdata_marker_parts(marker)?;
+            let (_, matched_probes, unmatched_probes) =
+                deck_wrdata_probe_inventory(&columns, &probes);
             Some(DeckWrdataArtifact {
                 target,
                 marker: marker.clone(),
                 probe_count: probes.len(),
+                matched_probe_count: matched_probes.len(),
+                matched_probes,
+                unmatched_probe_count: unmatched_probes.len(),
+                unmatched_probes,
                 option_count: rawfile_options.len(),
                 options: rawfile_options.to_vec(),
                 datafile: format_deck_wrdata_ascii(table, &probes, rawfile_options),
@@ -10819,6 +10847,10 @@ const DECK_WRDATA_ARTIFACT_COLUMNS: &[&str] = &[
     "Marker",
     "Probes",
     "ProbeList",
+    "MatchedProbes",
+    "MatchedProbeList",
+    "UnmatchedProbes",
+    "UnmatchedProbeList",
     "Options",
     "RawfileOptionList",
     "Bytes",
@@ -10830,6 +10862,10 @@ fn deck_wrdata_artifact_cells(artifact: &DeckWrdataArtifact) -> Vec<String> {
         artifact.marker.clone(),
         artifact.probe_count.to_string(),
         artifact.probes.join(";"),
+        artifact.matched_probe_count.to_string(),
+        artifact.matched_probes.join(";"),
+        artifact.unmatched_probe_count.to_string(),
+        artifact.unmatched_probes.join(";"),
         artifact.option_count.to_string(),
         artifact.options.join(";"),
         artifact.datafile.len().to_string(),

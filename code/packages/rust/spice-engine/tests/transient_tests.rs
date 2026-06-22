@@ -2762,7 +2762,7 @@ set wr_singlescale
 set appendwrite
 .set WR_VECNAMES
 write out.raw V(in)
-wrdata out.dat V(in)
+wrdata out.dat V(in) V(missing)
 source other.cir
 cd /tmp
 if v(in) > 0
@@ -2784,7 +2784,7 @@ let gain = 2
     let control_line_list = expected_control_lines.join(";");
     let expected_write_markers = vec![
         "write out.raw V(in)".to_string(),
-        "wrdata out.dat V(in)".to_string(),
+        "wrdata out.dat V(in) V(missing)".to_string(),
     ];
     let write_marker_list = expected_write_markers.join(";");
     let expected_rawfile_options = vec![
@@ -2870,9 +2870,22 @@ let gain = 2
     );
     assert_eq!(execution.wrdata_artifact_count, 1);
     assert_eq!(execution.wrdata_artifacts[0].target, "out.dat");
-    assert_eq!(execution.wrdata_artifacts[0].marker, "wrdata out.dat V(in)");
-    assert_eq!(execution.wrdata_artifacts[0].probe_count, 1);
-    assert_eq!(execution.wrdata_artifacts[0].probes, vec!["V(in)"]);
+    assert_eq!(
+        execution.wrdata_artifacts[0].marker,
+        "wrdata out.dat V(in) V(missing)"
+    );
+    assert_eq!(execution.wrdata_artifacts[0].probe_count, 2);
+    assert_eq!(
+        execution.wrdata_artifacts[0].probes,
+        vec!["V(in)", "V(missing)"]
+    );
+    assert_eq!(execution.wrdata_artifacts[0].matched_probe_count, 1);
+    assert_eq!(execution.wrdata_artifacts[0].matched_probes, vec!["V(in)"]);
+    assert_eq!(execution.wrdata_artifacts[0].unmatched_probe_count, 1);
+    assert_eq!(
+        execution.wrdata_artifacts[0].unmatched_probes,
+        vec!["V(missing)"]
+    );
     assert_eq!(
         execution.wrdata_artifacts[0].option_count,
         expected_rawfile_options.len()
@@ -2886,7 +2899,7 @@ let gain = 2
         .contains("# SPICE deck wrdata artifact\n"));
     assert!(execution.wrdata_artifacts[0]
         .datafile
-        .contains("Probes: V(in)\n"));
+        .contains("Probes: V(in);V(missing)\n"));
     assert!(execution.wrdata_artifacts[0]
         .datafile
         .contains(&format!("Options: {rawfile_option_list}\n")));
@@ -2912,13 +2925,37 @@ let gain = 2
         execution.wrdata_artifact_records[0]
             .get("Marker")
             .map(String::as_str),
-        Some("wrdata out.dat V(in)")
+        Some("wrdata out.dat V(in) V(missing)")
     );
     assert_eq!(
         execution.wrdata_artifact_records[0]
             .get("ProbeList")
             .map(String::as_str),
+        Some("V(in);V(missing)")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("MatchedProbes")
+            .map(String::as_str),
+        Some("1")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("MatchedProbeList")
+            .map(String::as_str),
         Some("V(in)")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("UnmatchedProbes")
+            .map(String::as_str),
+        Some("1")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("UnmatchedProbeList")
+            .map(String::as_str),
+        Some("V(missing)")
     );
     assert_eq!(
         execution.wrdata_artifact_records[0]

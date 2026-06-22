@@ -727,6 +727,10 @@ export interface DeckWrdataArtifact {
   readonly marker: string;
   readonly probeCount: number;
   readonly probes: readonly string[];
+  readonly matchedProbeCount: number;
+  readonly matchedProbes: readonly string[];
+  readonly unmatchedProbeCount: number;
+  readonly unmatchedProbes: readonly string[];
   readonly optionCount: number;
   readonly options: readonly string[];
   readonly datafile: string;
@@ -8462,7 +8466,24 @@ function deckWrdataProjectRows(rows: readonly string[], probes: readonly string[
   if (probes.length === 0) {
     return [...rows];
   }
+  const { selectedIndices } = deckWrdataProbeInventory(columns, probes);
+  return rows.map((row) => {
+    const cells = row.split("\t");
+    return selectedIndices.map((index) => cells[index] ?? "").join("\t");
+  });
+}
+
+function deckWrdataProbeInventory(
+  columns: readonly string[],
+  probes: readonly string[],
+): {
+  selectedIndices: number[];
+  matchedProbes: string[];
+  unmatchedProbes: string[];
+} {
   const selectedIndices: number[] = [];
+  const matchedProbes: string[] = [];
+  const unmatchedProbes: string[] = [];
   if (columns.length > 0) {
     selectedIndices.push(0);
   }
@@ -8471,12 +8492,12 @@ function deckWrdataProjectRows(rows: readonly string[], probes: readonly string[
     const index = normalizedColumns.indexOf(probe.toLowerCase());
     if (index !== -1 && !selectedIndices.includes(index)) {
       selectedIndices.push(index);
+      matchedProbes.push(columns[index]!);
+    } else if (index === -1) {
+      unmatchedProbes.push(probe);
     }
   }
-  return rows.map((row) => {
-    const cells = row.split("\t");
-    return selectedIndices.map((index) => cells[index] ?? "").join("\t");
-  });
+  return { selectedIndices, matchedProbes, unmatchedProbes };
 }
 
 function deckWrdataMarkerParts(marker: string): { target: string; probes: string[] } | undefined {
@@ -8495,16 +8516,26 @@ function deckWrdataArtifacts(
   writeMarkers: readonly string[],
   rawfileOptions: readonly string[],
 ): DeckWrdataArtifact[] {
+  const rows = deckTableRows(table);
+  const columns = rows[0]?.split("\t") ?? [];
   return writeMarkers.flatMap((marker) => {
     const parts = deckWrdataMarkerParts(marker);
     if (parts === undefined) {
       return [];
     }
+    const { matchedProbes, unmatchedProbes } = deckWrdataProbeInventory(
+      columns,
+      parts.probes,
+    );
     return [{
       target: parts.target,
       marker,
       probeCount: parts.probes.length,
       probes: [...parts.probes],
+      matchedProbeCount: matchedProbes.length,
+      matchedProbes,
+      unmatchedProbeCount: unmatchedProbes.length,
+      unmatchedProbes,
       optionCount: rawfileOptions.length,
       options: [...rawfileOptions],
       datafile: formatDeckWrdataAscii(table, parts.probes, rawfileOptions),
@@ -8517,6 +8548,10 @@ const DECK_WRDATA_ARTIFACT_COLUMNS = [
   "Marker",
   "Probes",
   "ProbeList",
+  "MatchedProbes",
+  "MatchedProbeList",
+  "UnmatchedProbes",
+  "UnmatchedProbeList",
   "Options",
   "RawfileOptionList",
   "Bytes",
@@ -8528,6 +8563,10 @@ function deckWrdataArtifactCells(artifact: DeckWrdataArtifact): string[] {
     artifact.marker,
     String(artifact.probeCount),
     artifact.probes.join(";"),
+    String(artifact.matchedProbeCount),
+    artifact.matchedProbes.join(";"),
+    String(artifact.unmatchedProbeCount),
+    artifact.unmatchedProbes.join(";"),
     String(artifact.optionCount),
     artifact.options.join(";"),
     String(artifact.datafile.length),
