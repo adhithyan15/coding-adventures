@@ -598,20 +598,28 @@ essential: `switch("a", a = stop("no"), b = "ok")` must not raise, and a
      `TRUE` where `x[i]` begins/ends with the (recycled) `prefix[i]`/`suffix[i]`.
      Both arguments are **recycled** to the longer length; `NA` in either position
      → `NA`. Implemented with `str::starts_with`/`ends_with` (code-point safe).
-   - **`trimws(x, which = "both")`** — strip leading and/or trailing whitespace
-     (`[ \t\r\n]`) from each element; `which ∈ {"both","left","right"}` (second
-     positional or `which =`), any other value a clean `Err`. `NA` → `NA`.
+   - **`trimws(x, which = "both", whitespace = "[ \t\r\n]")`** — strip leading and/or
+     trailing whitespace from each element; `which ∈ {"both","left","right"}` (second
+     positional or `which =`), any other value a clean `Err`. `NA` → `NA`. The
+     **`whitespace =`** argument (R-37) is a **regex** (default `"[ \t\r\n]"`),
+     compiled with the same RE2-based `regex` engine `grepl`/`gsub` use and anchored
+     to the matched edge (`^(?:p)+` / `(?:p)+$`); RE2's linear-time matching rules out
+     ReDoS. `trimws("xxhixx", whitespace = "x")` → `"hi"`. An invalid pattern is a
+     clean `Err`.
    - **`chartr(old, new, x)`** — translate each char of `x` found at position *i* of
      `old` to position *i* of `new`. `old`/`new` are length-one and must have equal
      `nchar`, else an `Err`. Vectorized over `x`; `NA` → `NA`.
-   - **`strtoi(x, base = 10L)`** — parse each string as an integer in `base` (2..36,
-     second positional or `base =`), returning a `Double` vector (`NA` for
-     unparseable). Follows C `strtol`: leading whitespace and an optional sign are
-     honored, base 16 accepts an `0x`/`0X` prefix, the whole remaining string must be
-     consumed (trailing garbage → `NA`), an empty string → `NA`, an out-of-range
-     digit → `NA`, and a `base` outside 2..36 makes every element `NA`. Parsing uses
-     checked `i64` accumulation (overflow → `NA`, never a panic); `base = 0L`
-     auto-detection is **deferred to R-36**.
+   - **`strtoi(x, base = 10L)`** — parse each string as an integer in `base` (2..36
+     *or* the special `0`, second positional or `base =`), returning a `Double` vector
+     (`NA` for unparseable). Follows C `strtol`: leading whitespace and an optional
+     sign are honored, base 16 accepts an `0x`/`0X` prefix, the whole remaining string
+     must be consumed (trailing garbage → `NA`), an empty string → `NA`, an
+     out-of-range digit → `NA`, and a `base` outside `{0} ∪ 2..36` makes every element
+     `NA`. Parsing uses checked `i64` accumulation (overflow → `NA`, never a panic).
+     **`base = 0L` auto-detection (R-37):** the radix is inferred from each string's
+     prefix — `0x`/`0X` → hex, a leading `0` followed by another digit → octal (so
+     `"08"` → `NA`), a lone `"0"` → zero, otherwise decimal. `strtoi("0x1F", 0L)` →
+     `31`; `strtoi("010", 0L)` → `8`; `strtoi("12", 0L)` → `12`.
 
 ## §10 References
 
