@@ -143,13 +143,56 @@ pub fn tokenize_javascript_with_cv(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use lexer::token::TokenType;
+    use lexer::token::{TokenType, TOKEN_PRECEDED_BY_NEWLINE};
+
+    fn preceded_by_newline(t: &lexer::token::Token) -> bool {
+        t.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0
+    }
 
     #[test]
     fn tokenizes_es5_javascript() {
         let tokens = tokenize_javascript("var x = 1;", "es5").unwrap();
         assert_eq!(tokens[0].type_, TokenType::Keyword);
         assert_eq!(tokens[0].value, "var");
+    }
+
+    #[test]
+    fn token_after_newline_has_preceded_by_newline_flag() {
+        // `a = 1` then `b = 2` on the next line. `b` (index 3) is preceded by a
+        // line terminator; the tokens up to and including the `1` are not.
+        let tokens = tokenize_javascript("a = 1\nb = 2", "es2025").unwrap();
+        // [a, =, 1, b, =, 2, EOF]
+        assert_eq!(tokens[3].value, "b");
+        assert!(
+            preceded_by_newline(&tokens[3]),
+            "`b` after a newline must carry TOKEN_PRECEDED_BY_NEWLINE"
+        );
+        // The `=` and `1` on the first line must NOT carry the flag.
+        assert!(!preceded_by_newline(&tokens[1]));
+        assert!(!preceded_by_newline(&tokens[2]));
+    }
+
+    #[test]
+    fn same_line_tokens_have_no_newline_flag() {
+        let tokens = tokenize_javascript("a = 1 b = 2", "es2025").unwrap();
+        // Everything is on one line; no token is newline-preceded.
+        assert!(tokens.iter().all(|t| !preceded_by_newline(t)));
+    }
+
+    #[test]
+    fn newline_inside_a_template_does_not_set_the_flag() {
+        // The `\n` lives INSIDE the multi-line template (consumed by token
+        // matching, not trivia), and `x` follows on the same source line as the
+        // template's closing backtick — so `x` is NOT preceded by a newline.
+        let tokens = tokenize_javascript("var t = `a\nb`; x", "es2025").unwrap();
+        let x = tokens
+            .iter()
+            .find(|t| t.value == "x")
+            .expect("found x token");
+        assert!(
+            !preceded_by_newline(x),
+            "a newline inside a template must not flag the following token"
+        );
     }
 
     #[test]

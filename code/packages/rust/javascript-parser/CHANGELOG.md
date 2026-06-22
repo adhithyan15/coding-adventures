@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.18.0] - 2026-06-21
+
+### Changed — ASI Rule 1 reads the lexer's newline flag (limitation removed)
+
+`asi_applies_at`'s line-terminator rule now reads `TOKEN_PRECEDED_BY_NEWLINE`
+off the offending token (the `lexer` crate, 0.6.0, now sets it) instead of
+comparing start lines and guarding against multi-line predecessors. This:
+
+- **removes the `token_may_span_lines` workaround** and the cooked-`value`
+  reasoning it depended on, and
+- **removes the documented Phase-2 limitation** — a statement ending in a
+  string/template/regex literal immediately before a newline now ASI-recovers
+  correctly (the flag is set from *trivia*, so it is robust regardless of the
+  predecessor's lexeme). The corresponding unit test flips from "declined" to
+  "recovered".
+
+Soundness is unchanged: insertion still happens only on a genuine parse failure
+(byte-identical on already-valid input), and Rule 1 still requires an actual
+line terminator, so one-line `a=1 b=2` remains a real error.
+
 ## [0.17.0] - 2026-06-21
 
 ### Fixed — prefix unary operators were silently dropped by the bridge

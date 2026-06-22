@@ -50,7 +50,7 @@
 //! possible future optimization, but correctness-by-construction comes first.
 
 use coding_adventures_javascript_tokens::EsVersion;
-use lexer::token::{Token, TokenType};
+use lexer::token::{Token, TokenType, TOKEN_PRECEDED_BY_NEWLINE};
 use parser::grammar_parser::{GrammarASTNode, GrammarParseError, GrammarParser};
 
 /// Parse `tokens` with Phase-1 ASI applied.
@@ -120,15 +120,13 @@ pub fn parse_with_asi(
 ///
 /// * **Rule 2** — the offending token is a `}` or end-of-input. A statement may
 ///   always be terminated there; no line terminator is required.
-/// * **Rule 1** — the offending token is **preceded by a line terminator**.
-///   The lexer discards newlines as trivia, but every token still records the
-///   `line` it starts on, so a line terminator sits between `tokens[idx-1]` and
-///   `tokens[idx]` exactly when the offending token starts on a *later line*
-///   than its predecessor. We only trust that comparison when the predecessor
-///   is **single-line** (its own text contains no newline); a multi-line
-///   predecessor — e.g. a template literal spanning lines — makes the
-///   start-line comparison ambiguous, so we conservatively decline (a missed
-///   optimization, never a miscompile).
+/// * **Rule 1** — the offending token is **preceded by a line terminator**. The
+///   lexer records this precisely on the token's `flags`
+///   ([`TOKEN_PRECEDED_BY_NEWLINE`]) — set only when a line terminator was
+///   consumed as *trivia* before the token, so it is correct even after a
+///   multi-line string/template (a newline *inside* a token does not count).
+///   This supersedes the earlier start-line-arithmetic heuristic and its
+///   multi-line caveats.
 ///
 /// Soundness: this is only ever consulted on a genuine parse *failure*, so a
 /// program that already parses is untouched. Requiring an actual line
@@ -146,41 +144,8 @@ fn asi_applies_at(tokens: &[Token], idx: usize) -> bool {
         return true;
     }
 
-    // Rule 1: a line terminator between the predecessor and this token.
-    if idx == 0 {
-        return false;
-    }
-    let prev = &tokens[idx - 1];
-    off.line > prev.line && !token_may_span_lines(prev)
-}
-
-/// Could this token's lexeme cross source lines *without that being visible in
-/// its `value`* — making the start-line comparison in [`asi_applies_at`]
-/// unreliable?
-///
-/// The lexer stores the **cooked** text in `value` (escapes resolved), so a
-/// token can span multiple source lines while `value` contains no raw newline:
-///
-/// * a **string** can use a backslash line-continuation (`"a\<LF>b"` → `"ab"`),
-/// * **template literals** and **regex** can embed or escape newlines.
-///
-/// For any such kind we cannot conclude from `off.line > prev.line` that a real
-/// line terminator separates the two tokens (the higher line may just be the
-/// predecessor's own continuation), so we treat it as line-spanning and decline
-/// Rule 1 — a missed optimization, never a miscompile. (A token whose `value`
-/// already contains a raw newline is obviously multi-line and likewise
-/// declined.) Identifiers, numbers, punctuators, and keywords are always
-/// single-line, so the start-line comparison is exact for them.
-///
-/// MAINTENANCE: this enumerates the lexer's only multi-line-capable token
-/// kinds. If a future grammar adds another (e.g. a token-preserving multi-line
-/// comment, or a heredoc/raw-string variant), it MUST be added here or Rule 1
-/// could wrongly fire across it.
-fn token_may_span_lines(t: &Token) -> bool {
-    matches!(t.type_, TokenType::String)
-        || matches!(t.type_name.as_deref(), Some("STRING") | Some("REGEX"))
-        || t.type_name.as_deref().is_some_and(|n| n.starts_with("TEMPLATE"))
-        || t.value.contains('\n')
+    // Rule 1: the offending token is preceded by a line terminator.
+    off.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0
 }
 
 /// A synthesized `;` token positioned at the offending token. The parser matches
@@ -341,19 +306,16 @@ mod tests {
     }
 
     #[test]
-    fn statement_ending_in_a_string_before_a_newline_is_declined() {
-        // Documented Phase-2 limitation: when the token before the newline is a
-        // STRING (a kind that *could* span source lines while its cooked value
-        // hides it), `asi_applies_at` conservatively declines Rule 1 rather than
-        // trust the start-line comparison. So this does NOT recover — a missed
-        // optimization, never a miscompile. (Recoverable later with token
-        // end-position tracking.) `token_may_span_lines` is what makes the
-        // line-terminator heuristic sound regardless of lexer escape handling.
+    fn statement_ending_in_a_string_before_a_newline_is_recovered() {
+        // Previously a documented limitation (the start-line heuristic could not
+        // trust a string predecessor). Now that the lexer flags the offending
+        // token directly, a statement ending in a string literal before a
+        // newline recovers correctly — the limitation is gone.
         let src = "var s = \"x\"\nlog(s)";
         assert!(!parses_without_asi(src), "precondition: should fail raw");
         assert!(
-            !parses_with_asi(src),
-            "string predecessor is conservatively declined for Rule 1"
+            parses_with_asi(src),
+            "string-ending statement before a newline now recovers via the flag"
         );
     }
 }
