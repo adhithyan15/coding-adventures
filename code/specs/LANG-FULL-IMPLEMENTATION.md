@@ -374,8 +374,9 @@ backend immediately) come before the enabler-dependent items.
   JVM native `int[]` (PR-3a), CLR native `int32[]` on real `dotnet` (PR-3b), LLVM static `@calloc`+
   `llvm.trap` via `clang` (PR-4a), WASM linear-memory+`unreachable` via `wasm-runtime` (PR-4b),
   and **native** x86_64/aarch64 `__twig_alloc_bytes`+`ud2`/`udf` trap (PR-4c — aarch64 local,
-  x86_64 CI). The for-loop array Prog joins LLVM after a separate ALGOL-for-loop→LLVM fix.
-  Multidim + array params + `f64` native elements are follow-up.
+  x86_64 CI). The for-loop sum-of-squares array Prog now runs on LLVM too (the ALGOL-for-loop
+  guard-type fix landed in `algol-iir-compiler` 0.5.1). Multidim + array params + `f64` native
+  elements are follow-up.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a

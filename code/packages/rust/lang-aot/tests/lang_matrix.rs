@@ -569,12 +569,14 @@ const PROGRAMS: &[Prog] = &[
     // `alloc_array`→`newarr System.Int32`, `array_set`→`stelem.i4`, `array_get`→
     // `ldelem.i4`, `array_len`→`ldlen`+`conv.i4`, with CoreCLR's native bounds check
     // (OOB → `System.IndexOutOfRangeException`). Both managed runtimes give E5's trap
-    // for free. The handle is a reference local. (This `for`-loop cell stays on the
-    // managed backends; the **LLVM** array proof is the straight-line cell below —
-    // an ALGOL `for` loop hits a *separate*, pre-existing LLVM-only lowering bug in
-    // `iir-to-llvm` — an `i1`-typed loop-guard `icmp` over `i64` operands, emitted
-    // twice — that is unrelated to E5 and tracked as a follow-up.) The native
-    // x86_64/aarch64 static backends join in E5 PR-4b/4c.
+    // for free. The handle is a reference local. On **LLVM** (`iir-to-llvm`) it now
+    // runs too: the ALGOL `for`-loop guard formerly emitted an `i1`-typed `icmp`
+    // over `i64` operands (it tagged the comparison with the boolean *result* type
+    // instead of the operand width) — `clang` rejected that IR, so this cell was VM/
+    // JIT/JVM/CLR only. Fixed in `algol-iir-compiler` (the guard now compares at
+    // `i64`, like every other relation), and the `for`-loop sum-of-squares now
+    // compiles + runs via `clang` → exit 55. (NativeAot/WASM lower arrays but the
+    // for-loop path is the LLVM-specific cmp lowering this exercises.)
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -583,7 +585,7 @@ const PROGRAMS: &[Prog] = &[
                result := 0; \
                for i := 1 step 1 until 5 do result := result + A[i] end",
         expect: Expect::Exit(55),
-        backends: &[Vm, Jit, Jvm, Clr],
+        backends: &[Vm, Jit, Jvm, Clr, Llvm],
     },
     // ALGOL 60 — *straight-line* 1-D integer array (LANG-FULL E5, the **LLVM**
     // static-array proof — PR-4a). `A[1] := 40; A[3] := 2; result := A[1] + A[3]`
