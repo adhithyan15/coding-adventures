@@ -316,6 +316,23 @@ fn oct_complement_runs_on_x86_sim() {
     assert_eq!(out, "255");
 }
 
+/// Oct — a **`static` module global** (LANG-FULL O3) on the x86_64 backend.
+/// `counter` is a top-level `static` shared across functions: it lives in the
+/// `_twig_globals` data region (S8), `bump()` — a *separate* function —
+/// increments it twice, and `main` prints it (`out` → stdout) ⇒ `42`. This is
+/// the Oct counterpart to `algol_module_global_runs_on_x86_sim`: the same
+/// `lea [rip+_twig_globals]` + `mov [rax+slot*8]` lowering, exercised from a
+/// real Oct frontend's output on the simulator. A per-function register would
+/// print `40`; `42` proves the global persisted across the two `bump` calls.
+#[test]
+fn oct_static_global_runs_on_x86_sim() {
+    let src = "static counter: u8 = 40; \
+               fn bump() { counter = counter + 1; } \
+               fn main() { bump(); bump(); out(1, counter); }";
+    let (_code, out) = run_capturing_stdout(Language::Oct, src);
+    assert_eq!(out, "42");
+}
+
 /// Nib — **unsigned division** (`84 / 2` ⇒ exit 42).  The `div` op lowers to the
 /// x86 unsigned-division sequence `xor rdx,rdx; div rcx` — exercising the
 /// group-3 `0xF7 /6` end-to-end (S4's unit tests cover `div` in isolation; this
