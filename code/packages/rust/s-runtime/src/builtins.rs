@@ -3504,26 +3504,41 @@ fn b_ends_with(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     affix_test(args, "suffix", |s, p| s.ends_with(p))
 }
 
-/// A single ASCII/Unicode whitespace character per R's default `trimws` class
-/// `[ \t\r\n]`. We match exactly those four so behavior is locale-free and
-/// predictable (we deliberately do *not* use `char::is_whitespace`, which would
-/// also strip e.g. form-feed and the Unicode spaces).
-fn is_trim_ws(c: char) -> bool {
-    matches!(c, ' ' | '\t' | '\r' | '\n')
-}
+/// Base R's default `trimws` whitespace class, `[ \t\r\n]` — a space, tab, CR,
+/// and LF. Used verbatim when no `whitespace =` argument is supplied (R-37). We
+/// keep it as the literal regex source (rather than `char::is_whitespace`) so the
+/// default and the custom path share one code route and stay locale-free.
+const TRIMWS_DEFAULT_WS: &str = "[ \t\r\n]";
 
-/// `trimws(x, which = "both")` — strip leading and/or trailing whitespace from
-/// each element. `which` is the second positional or the `which =` named arg and
-/// must be one of `"both"`, `"left"`, `"right"`; anything else is a clean error.
-/// `NA` elements pass through unchanged. Char-based, so UTF-8 safe.
+/// `trimws(x, which = "both", whitespace = "[ \t\r\n]")` — strip leading and/or
+/// trailing whitespace from each element. `which` is the second positional or the
+/// `which =` named arg and must be one of `"both"`, `"left"`, `"right"`; anything
+/// else is a clean error. `NA` elements pass through unchanged.
+///
+/// **`whitespace =` (R-37).** The set of characters to strip is a *regular
+/// expression* (faithful to base R ≥ 3.6), defaulting to [`TRIMWS_DEFAULT_WS`].
+/// We compile it once with the same RE2-based `regex` engine `grepl`/`gsub` use,
+/// wrapped as a non-capturing group repeated one-or-more times and anchored to the
+/// edge being trimmed: `^(?:p)+` for the left, `(?:p)+$` for the right. Only a run
+/// of the class at the very start/end is removed; interior matches are untouched.
+/// Because RE2 matches in guaranteed linear time with no backtracking, no
+/// `whitespace =` pattern can cause catastrophic backtracking (no ReDoS). An
+/// invalid pattern is a clean `Err`. All slicing uses the byte offset that the
+/// regex itself reports for a whole-`char` match, so multibyte input is UTF-8 safe.
 fn b_trimws(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?.as_character();
     // `which =` named arg wins; else the second positional; else "both".
+    // (`whitespace` is keyword-only, so it never collides with the positional.)
     let which = args
         .iter()
         .find(|a| a.name.as_deref() == Some("which"))
         .map(|a| &a.value)
-        .or_else(|| nth_positional(args, 1))
+        .or_else(|| {
+            args.iter()
+                .filter(|a| a.name.is_none())
+                .nth(1)
+                .map(|a| &a.value)
+        })
         .map(|v| v.as_character())
         .and_then(|c| c.into_iter().next().flatten())
         .unwrap_or_else(|| "both".to_string());
@@ -3539,16 +3554,46 @@ fn b_trimws(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         }
     };
 
+    // The `whitespace =` pattern (keyword-only); default is R's `[ \t\r\n]`.
+    let ws = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("whitespace"))
+        .map(|a| a.value.as_character())
+        .and_then(|c| c.into_iter().next().flatten())
+        .unwrap_or_else(|| TRIMWS_DEFAULT_WS.to_string());
+
+    // Compile each edge's anchored matcher *once* (not per element). A bad pattern
+    // surfaces here as a clean error before we touch any data.
+    let left_re = if trim_left {
+        Some(compile(&format!("^(?:{ws})+"), false)?)
+    } else {
+        None
+    };
+    let right_re = if trim_right {
+        Some(compile(&format!("(?:{ws})+$"), false)?)
+    } else {
+        None
+    };
+
     let out = x
         .into_iter()
         .map(|o| {
             o.map(|s| {
                 let mut t: &str = &s;
-                if trim_left {
-                    t = t.trim_start_matches(is_trim_ws);
+                // Strip a leading run: the match (if any) starts at byte 0, so we
+                // keep the tail after `m.end()` — a regex-reported byte boundary,
+                // hence always a valid UTF-8 char boundary.
+                if let Some(re) = &left_re {
+                    if let Some(m) = re.find(t) {
+                        t = &t[m.end()..];
+                    }
                 }
-                if trim_right {
-                    t = t.trim_end_matches(is_trim_ws);
+                // Strip a trailing run: the `$`-anchored match ends at the string
+                // end, so we keep the head before `m.start()` (also a char boundary).
+                if let Some(re) = &right_re {
+                    if let Some(m) = re.find(t) {
+                        t = &t[..m.start()];
+                    }
                 }
                 t.to_string()
             })
@@ -3616,10 +3661,11 @@ fn b_chartr(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 ///     (including trailing whitespace) makes the element `NA`;
 ///   * an empty (or sign-only / prefix-only) string is `NA`;
 ///   * a digit outside the base's range makes the element `NA`;
-///   * a `base` outside 2..36 makes **every** element `NA`.
+///   * a `base` outside `{0} ∪ 2..36` makes **every** element `NA`.
 ///
-/// `base = 0L` auto-detection is deferred to R-36. Accumulation is `i64`-checked,
-/// so a long all-digits string overflows to `NA` rather than panicking.
+/// `base = 0L` auto-detects each string's radix from its prefix (R-37; see
+/// [`parse_strtoi`]). Accumulation is `i64`-checked, so a long all-digits string
+/// overflows to `NA` rather than panicking.
 fn b_strtoi(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let x = first_positional(args)?.as_character();
     let base = args
@@ -3644,15 +3690,28 @@ fn b_strtoi(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 }
 
 /// Parse a single string for [`b_strtoi`]. Returns `None` (→ `NA`) for any base
-/// outside 2..=36, an empty/garbage string, an out-of-range digit, or an `i64`
-/// overflow. Never panics: every step is a `checked_*` arithmetic op or a bounded
-/// `char` scan.
+/// outside `{0} ∪ 2..=36`, an empty/garbage string, an out-of-range digit, or an
+/// `i64` overflow. Never panics: every step is a `checked_*` arithmetic op or a
+/// bounded `char` scan.
+///
+/// **`base == 0` (R-37).** The radix is inferred from the post-sign prefix, exactly
+/// as C `strtol(…, 0)`:
+///
+/// | post-sign prefix        | inferred base | example         |
+/// |-------------------------|---------------|-----------------|
+/// | `0x` / `0X` + hex digits | 16           | `"0x1F"` → 31   |
+/// | `0` + another digit      | 8            | `"010"` → 8     |
+/// | exactly `"0"`            | 10 (value 0) | `"0"` → 0       |
+/// | anything else            | 10           | `"12"` → 12     |
+///
+/// Because octal is then parsed in base 8, a stray `8`/`9` after a leading `0`
+/// (e.g. `"08"`) is an out-of-range digit and yields `None`. A bare `0x`/`0X`
+/// with no following digits also yields `None` (empty digit run).
 fn parse_strtoi(s: &str, base: i64) -> Option<i64> {
-    // Base must be representable and in 2..=36; anything else is NA.
-    if !(2..=36).contains(&base) {
+    // Base must be representable and in {0} ∪ 2..=36; anything else is NA.
+    if base != 0 && !(2..=36).contains(&base) {
         return None;
     }
-    let base = base as u32;
 
     // Skip leading ASCII whitespace (strtol's `isspace`), then read an optional
     // sign. We work on the char iterator so multibyte tails can't desync indices.
@@ -3662,13 +3721,20 @@ fn parse_strtoi(s: &str, base: i64) -> Option<i64> {
         None => (false, trimmed.strip_prefix('+').unwrap_or(trimmed)),
     };
 
-    // For base 16, an optional `0x`/`0X` prefix is allowed (strtol convention).
-    let digits = if base == 16 {
-        rest.strip_prefix("0x")
+    // Resolve the effective base and strip any radix prefix from the digit run.
+    //   * base 0  → auto-detect from the prefix (R-37);
+    //   * base 16 → tolerate an optional `0x`/`0X` prefix (strtol convention);
+    //   * otherwise → the digits are taken literally.
+    let (base, digits) = if base == 0 {
+        detect_base0_prefix(rest)
+    } else if base == 16 {
+        let d = rest
+            .strip_prefix("0x")
             .or_else(|| rest.strip_prefix("0X"))
-            .unwrap_or(rest)
+            .unwrap_or(rest);
+        (16u32, d)
     } else {
-        rest
+        (base as u32, rest)
     };
 
     // Require at least one digit, and the *entire* remainder to be valid digits
@@ -3685,6 +3751,34 @@ fn parse_strtoi(s: &str, base: i64) -> Option<i64> {
         acc = acc.checked_neg()?;
     }
     Some(acc)
+}
+
+/// `strtoi(x, base = 0L)` prefix detection (R-37). Given the post-sign remainder
+/// `rest`, return `(effective_base, digit_run)`:
+///
+///   * a `0x`/`0X` prefix → base 16, with the prefix stripped;
+///   * a leading `0` *followed by at least one more character* → base 8, with the
+///     leading `0` stripped (so `"010"` parses the run `"10"` in base 8 → 8, and
+///     `"08"` parses `"8"` in base 8 → an out-of-range digit → `NA`);
+///   * a lone `"0"` → base 10, digit run `"0"` (the number zero);
+///   * anything else → base 10, digits taken as-is.
+///
+/// Pure prefix inspection (no allocation); the caller does the actual digit scan
+/// and so still rejects an empty digit run (e.g. a bare `"0x"`) as `NA`.
+fn detect_base0_prefix(rest: &str) -> (u32, &str) {
+    if let Some(d) = rest.strip_prefix("0x").or_else(|| rest.strip_prefix("0X")) {
+        (16, d)
+    } else if let Some(d) = rest.strip_prefix('0') {
+        // A leading `0` with more text behind it is octal; a lone "0" is decimal
+        // zero (octal "" would be an empty run → NA, which is wrong for "0").
+        if d.is_empty() {
+            (10, rest) // exactly "0": decimal, value 0.
+        } else {
+            (8, d) // octal: parse the digits after the leading 0.
+        }
+    } else {
+        (10, rest)
+    }
 }
 
 /// Hard cap on any single field width or precision (1 MiB). A user-supplied

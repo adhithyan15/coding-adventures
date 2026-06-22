@@ -145,3 +145,112 @@ describe("SirInstance", () => {
     expect(i.ivars.size).toBe(0);
   });
 });
+
+describe("built-in method catalog: non-block Array (M1a)", () => {
+  it("length / size / count", () => {
+    expect(callMethod([1, 2, 3], "length")).toBe(3);
+    expect(callMethod([1, 2, 3], "size")).toBe(3);
+    expect(callMethod([1, 2, 3], "count")).toBe(3);
+    expect(callMethod([1, 2, 2, 3], "count", 2)).toBe(2);
+  });
+
+  it("first / last with and without count", () => {
+    expect(callMethod([1, 2, 3], "first")).toBe(1);
+    expect(callMethod([1, 2, 3], "last")).toBe(3);
+    expect(callMethod([1, 2, 3], "first", 2)).toEqual([1, 2]);
+    expect(callMethod([1, 2, 3], "last", 2)).toEqual([2, 3]);
+    expect(callMethod([], "first")).toBeNull();
+    expect(callMethod([], "last")).toBeNull();
+    expect(callMethod([1, 2], "last", 0)).toEqual([]);
+  });
+
+  it("include? / index (value equality)", () => {
+    expect(callMethod([1, 2, 3], "include?", 2)).toBe(true);
+    expect(callMethod([1, 2, 3], "include?", 9)).toBe(false);
+    expect(callMethod([[1], [2]], "include?", [2])).toBe(true);
+    expect(callMethod([1, 2, 3], "index", 3)).toBe(2);
+    expect(callMethod([1, 2, 3], "index", 9)).toBeNull();
+  });
+
+  it("mutating push / << / pop / shift / unshift", () => {
+    const a: number[] = [1, 2];
+    expect(callMethod(a, "push", 3)).toEqual([1, 2, 3]);
+    expect(a).toEqual([1, 2, 3]);
+    expect(callMethod(a, "<<", 4)).toEqual([1, 2, 3, 4]);
+    expect(callMethod(a, "pop")).toBe(4);
+    expect(a).toEqual([1, 2, 3]);
+    expect(callMethod(a, "shift")).toBe(1);
+    expect(a).toEqual([2, 3]);
+    expect(callMethod(a, "unshift", 0)).toEqual([0, 2, 3]);
+  });
+
+  it("reverse / sort / min / max / sum", () => {
+    expect(callMethod([1, 2, 3], "reverse")).toEqual([3, 2, 1]);
+    expect(callMethod([3, 1, 2], "sort")).toEqual([1, 2, 3]);
+    expect(callMethod([10, 2, 30], "sort")).toEqual([2, 10, 30]);
+    expect(callMethod([3, 1, 2], "min")).toBe(1);
+    expect(callMethod([3, 1, 2], "max")).toBe(3);
+    expect(callMethod([1, 2, 3], "sum")).toBe(6);
+    expect(callMethod([1, 2, 3], "sum", 10)).toBe(16);
+    expect(callMethod([], "min")).toBeNull();
+  });
+
+  it("reverse / sort are non-mutating", () => {
+    const a = [1, 2, 3];
+    expect(callMethod(a, "reverse")).toEqual([3, 2, 1]);
+    expect(a).toEqual([1, 2, 3]);
+  });
+
+  it("uniq / flatten / compact / empty?", () => {
+    expect(callMethod([1, 1, 2, 3, 3], "uniq")).toEqual([1, 2, 3]);
+    expect(callMethod([1, [2, [3, 4]], 5], "flatten")).toEqual([1, 2, 3, 4, 5]);
+    expect(callMethod([1, null, 2, null], "compact")).toEqual([1, 2]);
+    expect(callMethod([], "empty?")).toBe(true);
+    expect(callMethod([1], "empty?")).toBe(false);
+  });
+});
+
+describe("built-in method catalog: universal Object (M1a)", () => {
+  it("nil? / == / != / equal?", () => {
+    expect(callMethod(null, "nil?")).toBe(true);
+    expect(callMethod(0, "nil?")).toBe(false);
+    expect(callMethod([1, 2], "==", [1, 2])).toBe(true);
+    expect(callMethod([1, 2], "==", [1, 3])).toBe(false);
+    expect(callMethod(1, "!=", 2)).toBe(true);
+    const x = [1];
+    expect(callMethod(x, "equal?", x)).toBe(true);
+    expect(callMethod([1], "equal?", [1])).toBe(false);
+  });
+
+  it("dup / clone / itself / freeze / frozen?", () => {
+    const a = [1, 2];
+    const dup = callMethod(a, "dup");
+    expect(dup).toEqual([1, 2]);
+    expect(dup).not.toBe(a);
+    expect(callMethod(5, "itself")).toBe(5);
+    expect(callMethod(a, "freeze")).toBe(a);
+    expect(callMethod(5, "frozen?")).toBe(true);
+    expect(callMethod([1], "frozen?")).toBe(false);
+  });
+
+  it("to_a on nil and array", () => {
+    expect(callMethod(null, "to_a")).toEqual([]);
+    const a = [1, 2];
+    expect(callMethod(a, "to_a")).toBe(a);
+  });
+});
+
+describe("respond_to? honesty + nil floor (M1a)", () => {
+  it("respond_to? reports catalog membership", () => {
+    expect(callMethod([1], "respond_to?", "reverse")).toBe(true);
+    expect(callMethod([1], "respond_to?", "nil?")).toBe(true);
+    expect(callMethod([1], "respond_to?", "is_a?")).toBe(true);
+    expect(callMethod([1], "respond_to?", "map")).toBe(false);
+  });
+
+  it("unknown method returns nil, never throws", () => {
+    expect(callMethod([1, 2, 3], "map")).toBeNull();
+    expect(callMethod("hi", "upcase")).toBeNull();
+    expect(callMethod(5, "times")).toBeNull();
+  });
+});

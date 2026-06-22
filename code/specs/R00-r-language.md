@@ -1385,12 +1385,21 @@ unchanged.
     `startsWith(NA, "a")` → `NA`.
   - **`endsWith(x, suffix)`** — the trailing-edge analogue, same recycling and NA
     rules. `endsWith(c("file.txt","file.csv"), ".txt")` → `c(TRUE, FALSE)`.
-  - **`trimws(x, which = "both")`** — strip leading and/or trailing whitespace from
-    each element. `which ∈ {"both","left","right"}` (read as the second positional
-    or the `which =` named arg); any other value is a clean error. Whitespace is
-    R's default class `[ \t\r\n]`. `trimws("  hi  ")` → `"hi"`;
-    `trimws("  hi  ", "left")` → `"hi  "`; `trimws("  hi  ", "right")` → `"  hi"`;
-    `trimws(NA)` → `NA`. Char-based, UTF-8 safe.
+  - **`trimws(x, which = "both", whitespace = "[ \t\r\n]")`** — strip leading and/or
+    trailing whitespace from each element. `which ∈ {"both","left","right"}` (read as
+    the second positional or the `which =` named arg); any other value is a clean
+    error. `trimws("  hi  ")` → `"hi"`; `trimws("  hi  ", "left")` → `"hi  "`;
+    `trimws("  hi  ", "right")` → `"  hi"`; `trimws(NA)` → `NA`. Char-based, UTF-8 safe.
+    - **`whitespace =` (R-37).** The set of characters to strip is a **regular
+      expression**, defaulting to R's class `"[ \t\r\n]"`. We compile it with the
+      same RE2-based `regex` engine `grepl`/`gsub` use, anchoring it (`^(?:…)+` for
+      the left edge, `(?:…)+$` for the right edge) so only a run of the matched class
+      at the very start/end is removed. Because RE2 matches in guaranteed linear time
+      with no backtracking, a crafted `whitespace=` pattern **cannot** trigger
+      catastrophic backtracking (no ReDoS). An invalid pattern is a clean error.
+      `trimws("xxhixx", whitespace = "x")` → `"hi"`;
+      `trimws("xxhix", whitespace = "x", which = "left")` → `"hix"`;
+      `trimws("..a..", whitespace = "[.]")` → `"a"`. `NA` propagates.
   - **`chartr(old, new, x)`** — translate characters: each char of `x` that appears
     at position *i* of `old` becomes the char at position *i* of `new`. `old` and
     `new` are **length-one** character scalars and must have **equal `nchar`**, else
@@ -1398,9 +1407,10 @@ unchanged.
     Unicode `char`, so multibyte `old`/`new`/`x` work and never panic.
     `chartr("abc", "xyz", "cab")` → `"zxy"`. Vectorized over `x`; `NA` element → `NA`.
   - **`strtoi(x, base = 10L)`** — parse each string as an integer in the given
-    `base` (an integer in **2..36**, read as the second positional or `base =`),
-    returning a **double** vector (this subset has no distinct integer type), with
-    `NA` for anything unparseable. Semantics follow C `strtol` as R does:
+    `base` (an integer in **2..36** *or* the special value `0L`, read as the second
+    positional or `base =`), returning a **double** vector (this subset has no
+    distinct integer type), with `NA` for anything unparseable. Semantics follow C
+    `strtol` as R does:
     - Leading ASCII whitespace is skipped; an optional `+`/`-` sign is honored.
     - For **base 16**, an optional `0x`/`0X` prefix is accepted (e.g.
       `strtoi("0xFF", 16L)` → `255`); for other bases the digits are taken literally.
@@ -1408,7 +1418,16 @@ unchanged.
       (including trailing whitespace) yields `NA`. An empty string yields `NA`.
     - A digit outside the base's range makes the element `NA`
       (`strtoi(c("7","8"), 8L)` → `c(7, NA)`; `strtoi("z", 16L)` → `NA`).
-    - A `base` outside **2..36** makes **every** element `NA` (matching base R's
+    - **`base = 0L` auto-detection (R-37).** When `base` is `0`, the radix of each
+      string is inferred from its prefix, exactly as C `strtol(…, 0)`: after the
+      optional sign, a `0x`/`0X` prefix selects **hexadecimal**; a leading `0`
+      followed by at least one more digit selects **octal**; a lone `"0"` is the
+      number zero; anything else is **decimal**. Because octal is then parsed in
+      base 8, a digit `8`/`9` after a leading `0` is out of range and yields `NA`
+      (`strtoi("08", 0L)` → `NA`, matching base R). A prefix with no following
+      digits (`strtoi("0x", 0L)`) yields `NA`. Examples: `strtoi("0x1F", 0L)` → `31`;
+      `strtoi("010", 0L)` → `8`; `strtoi("12", 0L)` → `12`; `strtoi("0", 0L)` → `0`.
+    - A `base` outside **{0} ∪ 2..36** makes **every** element `NA` (matching base R's
       `strtol`-driven behavior — it does *not* error).
     Examples: `strtoi("FF", 16L)` → `255`; `strtoi("10", 2L)` → `2`;
     `strtoi(c("7","8"), 8L)` → `c(7, NA)`.
@@ -1418,12 +1437,13 @@ unchanged.
     a fixed length cap, so a long all-digits string cannot overflow or hang
     (overflow → `NA`, never a panic). Recycling length is the max of the (bounded)
     input lengths; an empty input recycles to length 0.
-  - **Scope outcome / deferred to R-36.** `startsWith`, `endsWith`, `trimws`,
-    `chartr`, and `strtoi` (explicit bases **2..36**) ship **solidly**. **Deferred to
-    R-36:** `strtoi`'s `base = 0L` auto-detection (C `strtol`'s convention where a
-    `0x` prefix selects base 16 and a leading `0` selects base 8) — a self-contained
-    extension of the same parser. `trimws`'s custom `whitespace =` regex argument
-    (R ≥ 3.6) is likewise deferred; the default class covers the common case.
+  - **Scope outcome.** `startsWith`, `endsWith`, `trimws`, `chartr`, and `strtoi`
+    (explicit bases **2..36**) shipped **solidly** in **R-34**. **R-37** completes the
+    family: `strtoi`'s `base = 0L` prefix auto-detection (C `strtol`'s convention where
+    a `0x` prefix selects base 16 and a leading `0` selects base 8) and `trimws`'s
+    custom `whitespace =` argument, interpreted as a **regex** (faithful to base R
+    ≥ 3.6) by reusing the existing RE2-based `regex` engine. Nothing in the family
+    remains deferred.
 
 ## §4 Reuse strategy
 
@@ -1466,7 +1486,7 @@ making them non-faithful; `cut`'s `labels=`/`right=FALSE`/`include.lowest=` and 
 `breaks` are deferred to **R-33**; the independent string-utility family
 (`startsWith`, `endsWith`, `trimws`, `chartr`, `strtoi` over explicit bases 2..36)
 lands in **R-34**, with `strtoi`'s `base = 0L` auto-detection and `trimws`'s custom
-`whitespace=` argument deferred to **R-36**; namespaces and `library()`
+`whitespace=` argument completing the family in **R-37**; namespaces and `library()`
 (so `baseenv()` aliases the
 global env for now); the C interface; graphics. These layer on later, following
 ST00.

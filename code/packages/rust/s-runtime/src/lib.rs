@@ -690,6 +690,70 @@ mod tests {
         assert_eq!(show("strtoi(\"10\", 1)\n"), "[1] NA");
     }
 
+    // --- R-37: strtoi base = 0 auto-detection -------------------------------
+    // NOTE: the s-runtime lexer reads a trailing `L` as the assignment operator,
+    // so these tests pass base 0 as a plain integer (the r-runtime tests use 0L).
+
+    #[test]
+    fn strtoi_base0_autodetects_radix() {
+        // 0x / 0X prefix -> hexadecimal.
+        assert_eq!(nums("strtoi(\"0x1F\", 0)\n"), vec![31.0]);
+        assert_eq!(nums("strtoi(\"0X1f\", 0)\n"), vec![31.0]);
+        // Leading 0 followed by octal digits -> octal.
+        assert_eq!(nums("strtoi(\"010\", 0)\n"), vec![8.0]);
+        assert_eq!(nums("strtoi(\"077\", 0)\n"), vec![63.0]);
+        // No 0 prefix -> decimal.
+        assert_eq!(nums("strtoi(\"12\", 0)\n"), vec![12.0]);
+        // A lone "0" is the number zero, not an empty octal.
+        assert_eq!(nums("strtoi(\"0\", 0)\n"), vec![0.0]);
+        // Sign is honored before prefix detection.
+        assert_eq!(nums("strtoi(\"-0x10\", 0)\n"), vec![-16.0]);
+        assert_eq!(nums("strtoi(\"-010\", 0)\n"), vec![-8.0]);
+    }
+
+    #[test]
+    fn strtoi_base0_invalid_octal_and_empty_prefix_are_na() {
+        // 8 is not an octal digit; a leading 0 makes "08" octal -> NA.
+        assert_eq!(show("strtoi(\"08\", 0)\n"), "[1] NA");
+        assert_eq!(show("strtoi(\"09\", 0)\n"), "[1] NA");
+        // A 0x prefix with no following digits -> NA.
+        assert_eq!(show("strtoi(\"0x\", 0)\n"), "[1] NA");
+        // Empty string -> NA.
+        assert_eq!(show("strtoi(\"\", 0)\n"), "[1] NA");
+        // Vectorized: decimal ok, bad octal NA.
+        assert_eq!(show("strtoi(c(\"12\", \"08\"), 0)\n"), "[1] 12 NA");
+    }
+
+    // --- R-37: trimws(whitespace =) regex argument --------------------------
+
+    #[test]
+    fn trimws_custom_whitespace_regex() {
+        // A literal character class via the whitespace = argument.
+        assert_eq!(show("trimws(\"xxhixx\", whitespace = \"x\")\n"), "[1] \"hi\"");
+        // which = left only strips the leading run.
+        assert_eq!(
+            show("trimws(\"xxhix\", which = \"left\", whitespace = \"x\")\n"),
+            "[1] \"hix\""
+        );
+        // which = right only strips the trailing run.
+        assert_eq!(
+            show("trimws(\"xxhix\", which = \"right\", whitespace = \"x\")\n"),
+            "[1] \"xxhi\""
+        );
+        // A genuine regex class.
+        assert_eq!(show("trimws(\"..a..\", whitespace = \"[.]\")\n"), "[1] \"a\"");
+        // Default whitespace still works when whitespace = is omitted.
+        assert_eq!(show("trimws(\"  hi  \")\n"), "[1] \"hi\"");
+        // NA propagates with a custom whitespace.
+        assert_eq!(show("trimws(NA, whitespace = \"x\")\n"), "[1] NA");
+    }
+
+    #[test]
+    fn trimws_bad_whitespace_regex_errors() {
+        // An unbalanced bracket is an invalid regex -> clean Err, not a panic.
+        assert!(eval_s("trimws(\"x\", whitespace = \"[\")\n").is_err());
+    }
+
     #[test]
     fn sprintf_formatting() {
         assert_eq!(show("sprintf(\"%d apples\", 3)\n"), "[1] \"3 apples\"");

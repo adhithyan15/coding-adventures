@@ -177,4 +177,9 @@ rulebook pharm_facts {
         source "In cases of poisoning resulting from ingesting more than 10 grams of isoniazid (INH), an equal amount of pyridoxine (vitamin B6) should be administered as an antidote."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK557436/"
         trust authoritative
+    % --- EXPAND: sugammadex reverses rocuronium (steroidal neuromuscular blockade) --
+    relate antidote_for(rocuronium_toxicity, sugammadex)
+        source "Sugammadex is a modified gamma-cyclodextrin that is used to reverse steroidal non-depolarizing neuromuscular blocking drugs rocuronium and vecuronium."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470263/"
+        trust authoritative
 }

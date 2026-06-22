@@ -56,6 +56,7 @@ EXPECTED = [
     ("hereditary_hemochromatosis", "gene_defect", "hfe"),            # expand (NBK430862)
     ("tay_sachs_disease", "inheritance", "autosomal_recessive"),     # expand (NBK564432)
     ("tay_sachs_disease", "gene_defect", "hexa"),                    # expand (NBK564432)
+    ("phenylketonuria", "gene_defect", "pah"),                       # expand (NBK535378)
 ]
 VAR = {"inheritance": "Pattern", "gene_defect": "Gene",
        "trinucleotide_repeat": "Repeat", "imprinting": "Parent"}

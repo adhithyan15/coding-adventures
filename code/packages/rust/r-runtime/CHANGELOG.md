@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.33.0] - 2026-06-21
+## [0.34.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)
 
@@ -25,6 +25,29 @@ All notable changes to this project will be documented in this file.
     upper triangle errors; allocation is bounded by the `MAX_SOLVE_DIM` order cap.
   - **Deferred to R-41**: `pivot=TRUE` (pivoted Cholesky), `chol2inv()`, and
     complex (Hermitian) matrices; this item ships the real-SPD dense core only.
+
+## [0.33.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-37 — string-utility completeness**: the two options deferred from R-34 now
+  ship, reached through ordinary R syntax. No new builtins; the existing `strtoi`
+  and `trimws` handlers are extended in place.
+  - **`strtoi(x, base = 0L)`** — `base = 0L` infers each string's radix from its
+    prefix, C `strtol`-style: `0x`/`0X` → hex, a leading `0` + digit → octal, a
+    lone `"0"` → zero, else decimal. `strtoi("0x1F", 0L)` → `31`;
+    `strtoi("010", 0L)` → `8`; `strtoi("12", 0L)` → `12`; `strtoi("0", 0L)` → `0`.
+    An invalid octal digit (`strtoi("08", 0L)`) or an empty digit run
+    (`strtoi("0x", 0L)`) → `NA`. Explicit bases 2..36 are unchanged.
+  - **`trimws(x, whitespace = "[ \t\r\n]")`** — a new keyword-only `whitespace =`
+    argument, interpreted as a **regex** (faithful to base R ≥ 3.6) via the same
+    RE2 engine `grepl`/`gsub` use. `trimws("xxhixx", whitespace = "x")` → `"hi"`;
+    `trimws("xxhix", whitespace = "x", which = "left")` → `"hix"`. The default
+    whitespace, `which`, and `NA` behavior are unchanged.
+  - **Security**: base-0 parsing reuses checked-`i64` accumulation (overflow →
+    `NA`); `whitespace =` slicing uses regex-reported `char`-boundary offsets
+    (UTF-8 safe) and RE2's linear-time matching (no ReDoS); an invalid pattern is
+    a clean error. Nothing in the string-utility family remains deferred.
 
 ## [0.32.0] - 2026-06-21
 

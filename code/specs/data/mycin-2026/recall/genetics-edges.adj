@@ -168,4 +168,13 @@ rulebook genetics_facts {
         source "Tay-Sachs disease is an autosomal recessive disorder caused by a mutation in HEXA, which encodes the enzymes beta-hexosaminidase A."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK564432/"
         trust authoritative
+
+    % --- EXPAND: phenylketonuria gene defect — the PAH gene (phenylalanine hydroxylase) --
+    % The span names the disease and "the gene encoding phenylalanine hydroxylase" (PAH).
+    % inheritance(autosomal_recessive) declined: the page states it in a separate sentence
+    % anaphoric to "The disorder", not a self-contained both-endpoints span.
+    relate gene_defect(phenylketonuria, pah)
+        source "Phenylketonuria, also known as phenylalanine hydroxylase deficiency, is an inborn error of metabolism most commonly caused by pathogenic or pathogenic variants in the gene encoding phenylalanine hydroxylase—the hepatic enzyme that converts phenylalanine to tyrosine."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535378/"
+        trust authoritative
 }

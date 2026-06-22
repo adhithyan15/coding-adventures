@@ -52,6 +52,9 @@ EXPECTED = [
     ("clostridioides_difficile", "causes", "pseudomembranous_colitis"),  # expand (NBK431054)
     ("listeria_monocytogenes", "gram_stain", "gram_positive"),       # expand (NBK534838)
     ("listeria_monocytogenes", "morphology", "bacilli"),             # expand (NBK534838)
+    ("klebsiella_pneumoniae", "gram_stain", "gram_negative"),        # expand (NBK519004)
+    ("bacillus_anthracis", "gram_stain", "gram_positive"),           # expand (NBK470553)
+    ("bacillus_anthracis", "morphology", "bacilli"),                 # expand (NBK470553)
 ]
 
 
