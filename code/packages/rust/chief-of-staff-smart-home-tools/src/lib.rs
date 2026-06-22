@@ -225,8 +225,9 @@ use smart_home_runtime::{
     RuntimeCommandResultSort, RuntimeCommandResultSummary, RuntimeCommandToolRequest,
     RuntimeCompletePairingToolOutput, RuntimeCompletePairingToolRequest, RuntimeDiscoverToolOutput,
     RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent, RuntimeEventCheckpoint,
-    RuntimeEventDeliveryBatch, RuntimeEventFilter, RuntimeEventLogRecord, RuntimeEventLogSummary,
-    RuntimeEventQuery, RuntimeEventSort, RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest,
+    RuntimeEventDeliveryBatch, RuntimeEventDeliveryOptions, RuntimeEventDeliverySummary,
+    RuntimeEventFilter, RuntimeEventLogRecord, RuntimeEventLogSummary, RuntimeEventQuery,
+    RuntimeEventSort, RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest,
     RuntimePairingPlanToolRequest, RuntimePairingSession, RuntimePairingSessionId,
     RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery, RuntimePairingSessionSort,
     RuntimePendingWorkSummary, RuntimePollEventsToolOutput, RuntimePollEventsToolRequest,
@@ -281,6 +282,10 @@ pub const SMART_HOME_SUBSCRIBE_TOOL_ID: &str = "smart_home.subscribe";
 pub const SMART_HOME_POLL_EVENTS_TOOL_ID: &str = "smart_home.poll_events";
 pub const SMART_HOME_UNSUBSCRIBE_TOOL_ID: &str = "smart_home.unsubscribe";
 pub const SMART_HOME_LIST_SUBSCRIPTIONS_TOOL_ID: &str = "smart_home.list_subscriptions";
+pub const SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID: &str =
+    "smart_home.list_event_delivery_audit";
+pub const SMART_HOME_GET_EVENT_DELIVERY_AUDIT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_event_delivery_audit_summary";
 pub const SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID: &str = "smart_home.inspect_event_log";
 pub const SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID: &str = "smart_home.list_command_results";
 pub const SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID: &str =
@@ -2146,6 +2151,24 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_subscriptions"))
+                }
+                SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID => {
+                    let query = event_delivery_audit_query(&arguments)?;
+                    list_event_delivery_audit_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_EVENT_DELIVERY_AUDIT_SUMMARY_TOOL_ID => {
+                    let query = event_delivery_audit_query(&arguments)?;
+                    get_event_delivery_audit_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
                 }
                 SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID => {
                     let request = inspect_event_log_request(&arguments)?;
@@ -6020,6 +6043,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         poll_events_definition(),
         unsubscribe_definition(),
         list_subscriptions_definition(),
+        list_event_delivery_audit_definition(),
+        get_event_delivery_audit_summary_definition(),
         inspect_event_log_definition(),
         list_command_results_definition(),
         get_command_result_summary_definition(),
@@ -6299,6 +6324,69 @@ fn list_subscriptions_definition() -> ToolDefinition {
             vec!["subscriptions", "summary", "count"],
             false,
         ),
+    )
+}
+
+fn event_delivery_audit_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("subscription_id", JsonSchema::String),
+            SchemaProperty::new("filter", JsonSchema::Any),
+            SchemaProperty::new("min_queued_events", JsonSchema::Integer),
+            SchemaProperty::new("backlogged_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("risk_action", JsonSchema::String),
+            SchemaProperty::new("sort", JsonSchema::String),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn event_delivery_audit_list_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "event_delivery_audit",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["event_delivery_audit", "summary", "count"],
+        false,
+    )
+}
+
+fn event_delivery_audit_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
+fn list_event_delivery_audit_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID,
+        "List smart-home event delivery audit",
+        "List Chief-derived event delivery backlog rows from D23 runtime subscriptions without draining queued events.",
+        event_delivery_audit_query_schema(),
+        event_delivery_audit_list_output_schema(),
+    )
+}
+
+fn get_event_delivery_audit_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_EVENT_DELIVERY_AUDIT_SUMMARY_TOOL_ID,
+        "Summarize smart-home event delivery audit",
+        "Summarize Chief-visible D23 event delivery backlog, command-result pressure, and supervision-event pressure.",
+        event_delivery_audit_query_schema(),
+        event_delivery_audit_summary_output_schema(),
     )
 }
 
@@ -7731,6 +7819,53 @@ fn unsubscribe_request(
     Ok(RuntimeUnsubscribeToolRequest::new(
         RuntimeSubscriptionId::trusted(required_string(arguments, "subscription_id")?),
     ))
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct EventDeliveryAuditQuery {
+    subscription_query: RuntimeSubscriptionQuery,
+    requires_attention_only: bool,
+    risk_lane: Option<String>,
+    risk_action: Option<String>,
+    limit: Option<usize>,
+}
+
+fn event_delivery_audit_query(
+    arguments: &JsonValue,
+) -> Result<EventDeliveryAuditQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut subscription_query = RuntimeSubscriptionQuery::new();
+    if let Some(subscription_id) = optional_string(arguments, "subscription_id")? {
+        subscription_query =
+            subscription_query.for_subscription(RuntimeSubscriptionId::trusted(subscription_id));
+    }
+    if let Some(filter) = optional_field(arguments, "filter") {
+        subscription_query = subscription_query.matching(parse_event_filter(filter)?);
+    }
+
+    let mut min_queued_events = optional_u64(arguments, "min_queued_events")?
+        .map(|value| value as usize)
+        .unwrap_or(0);
+    let backlogged_only = optional_bool(arguments, "backlogged_only")?.unwrap_or(false);
+    let requires_attention_only =
+        optional_bool(arguments, "requires_attention_only")?.unwrap_or(false);
+    if backlogged_only || requires_attention_only {
+        min_queued_events = min_queued_events.max(1);
+    }
+    if min_queued_events > 0 {
+        subscription_query = subscription_query.with_min_queued_events(min_queued_events);
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        subscription_query = subscription_query.sorted_by(parse_subscription_sort(&sort)?);
+    }
+
+    Ok(EventDeliveryAuditQuery {
+        subscription_query,
+        requires_attention_only,
+        risk_lane: optional_string(arguments, "risk_lane")?,
+        risk_action: optional_string(arguments, "risk_action")?,
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
 }
 
 fn list_subscriptions_request(
@@ -33033,6 +33168,316 @@ fn desired_state_drift_reason_rank(reason: Option<ReconciliationReason>) -> u8 {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct EventDeliveryAuditRow {
+    audit_id: String,
+    subscription_id: RuntimeSubscriptionId,
+    filter: RuntimeEventFilter,
+    queued_events: usize,
+    delivery_summary: RuntimeEventDeliverySummary,
+    risk_lane: &'static str,
+    risk_action: &'static str,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct EventDeliveryAuditSummary {
+    total_rows: usize,
+    subscription_count: usize,
+    backlogged_rows: usize,
+    caught_up_rows: usize,
+    queued_events: usize,
+    max_queued_events: usize,
+    device_event_rows: usize,
+    device_events: usize,
+    command_result_rows: usize,
+    command_results: usize,
+    bridge_health_rows: usize,
+    bridge_health_events: usize,
+    state_expired_rows: usize,
+    state_expired_events: usize,
+    desired_state_drift_rows: usize,
+    desired_state_drift_events: usize,
+    worker_restart_rows: usize,
+    worker_restart_events: usize,
+    supervision_event_rows: usize,
+    supervision_events: usize,
+    blocked_rows: usize,
+    requires_attention_rows: usize,
+}
+
+impl EventDeliveryAuditSummary {
+    fn from_rows(rows: &[EventDeliveryAuditRow]) -> Self {
+        let mut summary = Self::default();
+        let mut subscription_ids = BTreeSet::new();
+        for row in rows {
+            summary.total_rows += 1;
+            subscription_ids.insert(row.subscription_id.as_str().to_string());
+            summary.queued_events += row.queued_events;
+            summary.max_queued_events = summary.max_queued_events.max(row.queued_events);
+            if row.queued_events > 0 {
+                summary.backlogged_rows += 1;
+            } else {
+                summary.caught_up_rows += 1;
+            }
+
+            let delivery = &row.delivery_summary;
+            if delivery.device_events > 0 {
+                summary.device_event_rows += 1;
+                summary.device_events += delivery.device_events;
+            }
+            if delivery.command_results > 0 {
+                summary.command_result_rows += 1;
+                summary.command_results += delivery.command_results;
+            }
+            if delivery.bridge_health_events > 0 {
+                summary.bridge_health_rows += 1;
+                summary.bridge_health_events += delivery.bridge_health_events;
+            }
+            if delivery.state_expired_events > 0 {
+                summary.state_expired_rows += 1;
+                summary.state_expired_events += delivery.state_expired_events;
+            }
+            if delivery.desired_state_drift_events > 0 {
+                summary.desired_state_drift_rows += 1;
+                summary.desired_state_drift_events += delivery.desired_state_drift_events;
+            }
+            if delivery.worker_restart_events > 0 {
+                summary.worker_restart_rows += 1;
+                summary.worker_restart_events += delivery.worker_restart_events;
+            }
+            if delivery.has_supervision_events() {
+                summary.supervision_event_rows += 1;
+                summary.supervision_events +=
+                    delivery.desired_state_drift_events + delivery.worker_restart_events;
+            }
+            if row.blocked {
+                summary.blocked_rows += 1;
+            }
+            if row.requires_attention {
+                summary.requires_attention_rows += 1;
+            }
+        }
+        summary.subscription_count = subscription_ids.len();
+        summary
+    }
+
+    fn has_event_delivery_pressure(&self) -> bool {
+        self.requires_attention_rows > 0
+    }
+
+    fn has_command_result_pressure(&self) -> bool {
+        self.command_result_rows > 0
+    }
+
+    fn has_supervision_pressure(&self) -> bool {
+        self.supervision_event_rows > 0
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_rows > 0
+    }
+}
+
+fn list_event_delivery_audit_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: EventDeliveryAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut rows, summary) = event_delivery_audit_rows(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query.limit {
+        rows.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "event_delivery_audit",
+            JsonValue::Array(rows.iter().map(event_delivery_audit_row_json).collect()),
+        ),
+        ("summary", event_delivery_audit_summary_json(&summary)),
+        ("count", integer(rows.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_event_delivery_audit")),
+            ("count", integer(rows.len() as i64)),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            ("queued_events", integer(summary.queued_events as i64)),
+            (
+                "command_result_rows",
+                integer(summary.command_result_rows as i64),
+            ),
+            (
+                "supervision_event_rows",
+                integer(summary.supervision_event_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn get_event_delivery_audit_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: EventDeliveryAuditQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = event_delivery_audit_rows(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        event_delivery_audit_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_event_delivery_audit_summary")),
+            (
+                "requires_attention_rows",
+                integer(summary.requires_attention_rows as i64),
+            ),
+            ("blocked_rows", integer(summary.blocked_rows as i64)),
+            ("queued_events", integer(summary.queued_events as i64)),
+            (
+                "command_result_rows",
+                integer(summary.command_result_rows as i64),
+            ),
+            (
+                "supervision_event_rows",
+                integer(summary.supervision_event_rows as i64),
+            ),
+        ]),
+    ))
+}
+
+fn event_delivery_audit_rows(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &EventDeliveryAuditQuery,
+) -> Result<(Vec<EventDeliveryAuditRow>, EventDeliveryAuditSummary), ToolCallError> {
+    let output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::ListSubscriptions {
+                query: query.subscription_query.clone(),
+            },
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::Subscriptions { subscriptions, .. } = output else {
+        return Err(ToolCallError {
+            kind: ToolErrorKind::ToolExecutionError,
+            message: "event delivery audit expected subscription output".to_string(),
+            details: JsonValue::Null,
+        });
+    };
+
+    let mut rows = Vec::new();
+    for snapshot in subscriptions {
+        let batch = runtime
+            .event_bus()
+            .peek_deliveries(
+                &snapshot.subscription_id,
+                RuntimeEventDeliveryOptions::new(),
+            )
+            .map_err(runtime_error)?;
+        let delivery_summary = batch.summary();
+        let (risk_lane, risk_action) = event_delivery_risk_lane_action(&delivery_summary);
+        let row = EventDeliveryAuditRow {
+            audit_id: format!("event_delivery:{}", snapshot.subscription_id.as_str()),
+            subscription_id: snapshot.subscription_id,
+            filter: snapshot.filter,
+            queued_events: snapshot.queued_events,
+            delivery_summary,
+            risk_lane,
+            risk_action,
+            blocked: batch.has_more() || !batch.is_empty(),
+            requires_attention: batch.has_more() || !batch.is_empty(),
+        };
+        if event_delivery_audit_row_matches(&row, query) {
+            rows.push(row);
+        }
+    }
+
+    rows.sort_by(|left, right| {
+        right
+            .blocked
+            .cmp(&left.blocked)
+            .then_with(|| right.requires_attention.cmp(&left.requires_attention))
+            .then_with(|| right.queued_events.cmp(&left.queued_events))
+            .then_with(|| event_delivery_row_rank(right).cmp(&event_delivery_row_rank(left)))
+            .then_with(|| left.subscription_id.cmp(&right.subscription_id))
+    });
+    let summary = EventDeliveryAuditSummary::from_rows(&rows);
+    Ok((rows, summary))
+}
+
+fn event_delivery_audit_row_matches(
+    row: &EventDeliveryAuditRow,
+    query: &EventDeliveryAuditQuery,
+) -> bool {
+    if query.requires_attention_only && !row.requires_attention {
+        return false;
+    }
+    if query
+        .risk_lane
+        .as_ref()
+        .is_some_and(|risk_lane| row.risk_lane != risk_lane.as_str())
+    {
+        return false;
+    }
+    if query
+        .risk_action
+        .as_ref()
+        .is_some_and(|risk_action| row.risk_action != risk_action.as_str())
+    {
+        return false;
+    }
+    true
+}
+
+fn event_delivery_risk_lane_action(
+    summary: &RuntimeEventDeliverySummary,
+) -> (&'static str, &'static str) {
+    if summary.is_empty() {
+        ("event_delivery", "monitor_delivery")
+    } else if summary.has_supervision_events() {
+        (
+            "supervision_event_delivery",
+            "drain_supervision_subscription",
+        )
+    } else if summary.has_command_results() {
+        ("command_result_delivery", "drain_command_subscription")
+    } else if summary.bridge_health_events > 0 || summary.state_expired_events > 0 {
+        ("state_event_delivery", "drain_state_subscription")
+    } else {
+        ("event_delivery", "drain_subscription")
+    }
+}
+
+fn event_delivery_row_rank(row: &EventDeliveryAuditRow) -> u8 {
+    if row.delivery_summary.has_supervision_events() {
+        4
+    } else if row.delivery_summary.has_command_results() {
+        3
+    } else if row.delivery_summary.bridge_health_events > 0
+        || row.delivery_summary.state_expired_events > 0
+    {
+        2
+    } else if row.queued_events > 0 {
+        1
+    } else {
+        0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 struct StateTransitionAuditRow {
     audit_id: String,
@@ -56327,6 +56772,142 @@ fn subscription_inventory_summary_json(summary: &RuntimeSubscriptionInventorySum
     ])
 }
 
+fn event_delivery_audit_row_json(row: &EventDeliveryAuditRow) -> JsonValue {
+    let delivery = &row.delivery_summary;
+    object([
+        ("audit_id", string(&row.audit_id)),
+        ("subscription_id", string(row.subscription_id.as_str())),
+        ("filter", event_filter_json(&row.filter)),
+        ("queued_events", integer(row.queued_events as i64)),
+        (
+            "backlog_status",
+            string(if row.queued_events > 0 {
+                "backlogged"
+            } else {
+                "caught_up"
+            }),
+        ),
+        ("device_events", integer(delivery.device_events as i64)),
+        ("command_results", integer(delivery.command_results as i64)),
+        (
+            "bridge_health_events",
+            integer(delivery.bridge_health_events as i64),
+        ),
+        (
+            "state_expired_events",
+            integer(delivery.state_expired_events as i64),
+        ),
+        (
+            "desired_state_drift_events",
+            integer(delivery.desired_state_drift_events as i64),
+        ),
+        (
+            "worker_restart_events",
+            integer(delivery.worker_restart_events as i64),
+        ),
+        (
+            "has_command_results",
+            JsonValue::Bool(delivery.has_command_results()),
+        ),
+        (
+            "has_supervision_events",
+            JsonValue::Bool(delivery.has_supervision_events()),
+        ),
+        ("risk_lane", string(row.risk_lane)),
+        ("risk_action", string(row.risk_action)),
+        ("blocked", JsonValue::Bool(row.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(row.requires_attention),
+        ),
+    ])
+}
+
+fn event_delivery_audit_summary_json(summary: &EventDeliveryAuditSummary) -> JsonValue {
+    object([
+        ("total_rows", integer(summary.total_rows as i64)),
+        (
+            "subscription_count",
+            integer(summary.subscription_count as i64),
+        ),
+        ("backlogged_rows", integer(summary.backlogged_rows as i64)),
+        ("caught_up_rows", integer(summary.caught_up_rows as i64)),
+        ("queued_events", integer(summary.queued_events as i64)),
+        (
+            "max_queued_events",
+            integer(summary.max_queued_events as i64),
+        ),
+        (
+            "device_event_rows",
+            integer(summary.device_event_rows as i64),
+        ),
+        ("device_events", integer(summary.device_events as i64)),
+        (
+            "command_result_rows",
+            integer(summary.command_result_rows as i64),
+        ),
+        ("command_results", integer(summary.command_results as i64)),
+        (
+            "bridge_health_rows",
+            integer(summary.bridge_health_rows as i64),
+        ),
+        (
+            "bridge_health_events",
+            integer(summary.bridge_health_events as i64),
+        ),
+        (
+            "state_expired_rows",
+            integer(summary.state_expired_rows as i64),
+        ),
+        (
+            "state_expired_events",
+            integer(summary.state_expired_events as i64),
+        ),
+        (
+            "desired_state_drift_rows",
+            integer(summary.desired_state_drift_rows as i64),
+        ),
+        (
+            "desired_state_drift_events",
+            integer(summary.desired_state_drift_events as i64),
+        ),
+        (
+            "worker_restart_rows",
+            integer(summary.worker_restart_rows as i64),
+        ),
+        (
+            "worker_restart_events",
+            integer(summary.worker_restart_events as i64),
+        ),
+        (
+            "supervision_event_rows",
+            integer(summary.supervision_event_rows as i64),
+        ),
+        (
+            "supervision_events",
+            integer(summary.supervision_events as i64),
+        ),
+        ("blocked_rows", integer(summary.blocked_rows as i64)),
+        (
+            "requires_attention_rows",
+            integer(summary.requires_attention_rows as i64),
+        ),
+        (
+            "has_event_delivery_pressure",
+            JsonValue::Bool(summary.has_event_delivery_pressure()),
+        ),
+        (
+            "has_command_result_pressure",
+            JsonValue::Bool(summary.has_command_result_pressure()),
+        ),
+        (
+            "has_supervision_pressure",
+            JsonValue::Bool(summary.has_supervision_pressure()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+    ])
+}
+
 fn event_log_record_json(record: &RuntimeEventLogRecord) -> JsonValue {
     object([
         ("sequence", integer(record.sequence as i64)),
@@ -63388,7 +63969,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 250);
+        assert_eq!(definitions.len(), 252);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -63415,6 +63996,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_EVENT_DELIVERY_AUDIT_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID));
@@ -64103,7 +64690,7 @@ mod tests {
             .contains(&SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            242
+            244
         );
         assert_eq!(
             export
@@ -64943,11 +65530,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(250))
+            Some(&integer(252))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(242))
+            Some(&integer(244))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -78797,6 +79384,198 @@ mod tests {
         let journal_summary = journal.summary();
         assert_eq!(journal_summary.invocation_count, 3);
         assert_eq!(journal_summary.completed_count, 3);
+    }
+
+    #[test]
+    fn event_delivery_audit_tools_surface_backlogged_runtime_streams_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let subscribe_commands_request = request(
+            "call-subscribe-commands-for-event-delivery-audit",
+            SMART_HOME_SUBSCRIBE_TOOL_ID,
+            object([
+                ("subscription_id", string("commands")),
+                ("filter", object([("filter_type", string("commands"))])),
+            ]),
+            2_000,
+        );
+        let subscribe_commands_trace = tool_runtime.invoke_with_events(&subscribe_commands_request);
+        assert!(subscribe_commands_trace.result.ok);
+
+        let subscribe_supervision_request = request(
+            "call-subscribe-supervision-for-event-delivery-audit",
+            SMART_HOME_SUBSCRIBE_TOOL_ID,
+            object([
+                ("subscription_id", string("supervision")),
+                ("filter", object([("filter_type", string("supervision"))])),
+            ]),
+            2_001,
+        );
+        let subscribe_supervision_trace =
+            tool_runtime.invoke_with_events(&subscribe_supervision_request);
+        assert!(subscribe_supervision_trace.result.ok);
+
+        let set_desired_state_request = request(
+            "call-set-desired-state-for-event-delivery-audit",
+            SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                (
+                    "desired",
+                    JsonValue::Array(vec![object([
+                        ("capability_id", string("light.on_off")),
+                        ("value", JsonValue::Bool(false)),
+                    ])]),
+                ),
+                ("requested_by", string("agent:scene-planner")),
+                ("command_timeout_ms", integer(750)),
+            ]),
+            2_010,
+        );
+        let set_desired_state_trace = tool_runtime.invoke_with_events(&set_desired_state_request);
+        assert!(set_desired_state_trace.result.ok);
+
+        let reconcile_request = request(
+            "call-reconcile-for-event-delivery-audit",
+            SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID,
+            object([]),
+            2_020,
+        );
+        let reconcile_trace = tool_runtime.invoke_with_events(&reconcile_request);
+        assert!(reconcile_trace.result.ok);
+
+        let list_request = request(
+            "call-list-event-delivery-audit",
+            SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID,
+            object([
+                ("requires_attention_only", JsonValue::Bool(true)),
+                ("sort", string("queued_events_desc")),
+                ("limit", integer(10)),
+            ]),
+            2_030,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        let rows = field(list_output, "event_delivery_audit").unwrap();
+        assert!(
+            array_len(rows).unwrap() >= 2,
+            "event delivery audit should include command and supervision subscriptions"
+        );
+        let summary = field(list_output, "summary").unwrap();
+        assert!(
+            integer_value(field(summary, "queued_events").unwrap()).unwrap() >= 2,
+            "reconciliation queues a supervision event and a command result"
+        );
+        assert!(
+            integer_value(field(summary, "command_result_rows").unwrap()).unwrap() >= 1,
+            "commands subscription should have command-result pressure"
+        );
+        assert!(
+            integer_value(field(summary, "supervision_event_rows").unwrap()).unwrap() >= 1,
+            "supervision subscription should have drift pressure"
+        );
+        assert_eq!(
+            field(summary, "has_event_delivery_pressure"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(summary, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        let JsonValue::Array(rows) = rows else {
+            panic!("event_delivery_audit should be an array");
+        };
+        assert!(rows.iter().any(
+            |row| field(row, "subscription_id") == Some(&string("commands"))
+                && field(row, "risk_lane") == Some(&string("command_result_delivery"))
+                && field(row, "risk_action") == Some(&string("drain_command_subscription"))
+                && integer_value(field(row, "command_results").unwrap()).unwrap() >= 1
+                && field(row, "blocked") == Some(&JsonValue::Bool(true))
+        ));
+        assert!(rows.iter().any(|row| field(row, "subscription_id")
+            == Some(&string("supervision"))
+            && field(row, "risk_lane") == Some(&string("supervision_event_delivery"))
+            && field(row, "risk_action") == Some(&string("drain_supervision_subscription"))
+            && integer_value(field(row, "desired_state_drift_events").unwrap()).unwrap() >= 1
+            && field(row, "requires_attention") == Some(&JsonValue::Bool(true))));
+
+        let summary_request = request(
+            "call-event-delivery-audit-summary",
+            SMART_HOME_GET_EVENT_DELIVERY_AUDIT_SUMMARY_TOOL_ID,
+            object([
+                ("risk_lane", string("supervision_event_delivery")),
+                ("requires_attention_only", JsonValue::Bool(true)),
+            ]),
+            2_031,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let rollup = field(summary_output, "summary").unwrap();
+        assert_eq!(field(rollup, "total_rows"), Some(&integer(1)));
+        assert_eq!(field(rollup, "command_result_rows"), Some(&integer(0)));
+        assert_eq!(field(rollup, "supervision_event_rows"), Some(&integer(1)));
+        assert_eq!(
+            field(rollup, "has_supervision_pressure"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(rollup, "has_blockers"), Some(&JsonValue::Bool(true)));
+
+        assert!(
+            runtime
+                .borrow()
+                .event_bus()
+                .queued_events(&RuntimeSubscriptionId::trusted("commands"))
+                .unwrap()
+                >= 1,
+            "audit must not drain command subscription"
+        );
+        assert!(
+            runtime
+                .borrow()
+                .event_bus()
+                .queued_events(&RuntimeSubscriptionId::trusted("supervision"))
+                .unwrap()
+                >= 1,
+            "audit must not drain supervision subscription"
+        );
+
+        let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(subscribe_commands_request, subscribe_commands_trace);
+        journal.record_trace(subscribe_supervision_request, subscribe_supervision_trace);
+        journal.record_trace(set_desired_state_request, set_desired_state_trace);
+        journal.record_trace(reconcile_request, reconcile_trace);
+        journal.record_trace(list_request, list_trace);
+        journal.record_trace(summary_request, summary_trace);
+        let journal_summary = journal.summary();
+        assert_eq!(journal_summary.invocation_count, 6);
+        assert_eq!(journal_summary.completed_count, 6);
     }
 
     #[test]
