@@ -157,4 +157,9 @@ rulebook pharm_facts {
         source "A variety of chelating agents alone or in combination can be used depending on the severity of clinical presentation and the patient's blood lead concentration, including succimer, calcium disodium ethylenediaminetetraacetic acid (EDTA), and British anti-Lewisite (BAL, also known as dimercaprol)."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK541097/"
         trust authoritative
+    % --- EXPAND: penicillamine chelates copper (copper overload / Wilson disease) --
+    relate antidote_for(copper_toxicity, penicillamine)
+        source "Penicillamine is a copper chelator derived from penicillin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK513316/"
+        trust authoritative
 }

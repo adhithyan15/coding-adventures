@@ -31,3 +31,4 @@ import "pharm-edges.adj"
 ? antidote_for(beta_blocker_overdose, $Antidote)      % expect glucagon (expand)
 ? antidote_for(methemoglobinemia, $Antidote)          % expect methylene_blue (expand)
 ? antidote_for(lead_poisoning, $Antidote)             % expect succimer (expand)
+? antidote_for(copper_toxicity, $Antidote)           % expect penicillamine (expand)

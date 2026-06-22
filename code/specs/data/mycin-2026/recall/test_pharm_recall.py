@@ -50,6 +50,7 @@ EXPECTED = [
     ("beta_blocker_overdose", "antidote_for", "glucagon"),        # expand (NBK448097)
     ("methemoglobinemia", "antidote_for", "methylene_blue"),      # expand (NBK557593)
     ("lead_poisoning", "antidote_for", "succimer"),               # expand (NBK541097)
+    ("copper_toxicity", "antidote_for", "penicillamine"),         # expand (NBK513316)
 ]
 VAR = {"drug_class": "Class", "mechanism": "MOA", "adverse_effect": "Effect",
        "antidote_for": "Antidote"}
