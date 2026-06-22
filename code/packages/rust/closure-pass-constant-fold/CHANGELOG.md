@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
-## [0.23.0] - 2026-06-22
+## [0.25.0] - 2026-06-22
 
 ### Added — fold `(N).toString([radix])` on non-negative integer literals
 
@@ -20,9 +20,32 @@ integer literal in `2..=36`. A fractional receiver (`(3.5).toString(2)` is a
 binary fraction we don't model), an out-of-range radix (1, 0, 37 → RangeError),
 and a variable radix all pass through unchanged. 7 new unit tests.
 
-> Version note: bumped to 0.23.0 (skipping 0.22.0, reserved by the concurrently
-> -developed `indexOf` fold) so the parallel branches don't collide on the
+> Version note: bumped to 0.25.0 — above the merged `slice` fold (0.24.0) and
+> `indexOf` fold (0.22.0) — so the parallel branches don't collide on the
 > version line.
+
+## [0.24.0] - 2026-06-22
+
+### Added — fold `"abcd".slice(start[, end])` on string literals
+
+`String.prototype.slice` (ECMAScript §22.1.3.22) now folds to a string literal
+when the receiver is a string literal and the (0, 1, or 2) arguments are integer
+literals: `"abcd".slice(1, 3)` → `"bc"`, `"abcd".slice(1)` → `"bcd"`,
+`"abcd".slice(-2)` → `"cd"`, `"abcd".slice(0, -1)` → `"abc"`,
+`"abcd".slice(2, 1)` → `""`, `"abc".slice()` → `"abc"`. A new `fold_string_slice`
+helper implements the spec's clamp-and-half-open-range over UTF-16 code units (a
+negative index counts from the end).
+
+UTF-16 indexing means `"💩ab".slice(2)` → `"ab"` (the astral char is two units).
+Conservative scope: declines (leaves the call) for more than two arguments, a
+non-integer-literal argument, an identifier receiver, or a cut that would split
+a surrogate pair into a lone surrogate (a valid JS string but not a Rust
+`String` — the same guard `charAt` uses). 6 new unit tests.
+
+> Version note: bumped to 0.24.0 (skipping 0.23.0, reserved by the concurrently
+> -developed numeric `toString(radix)` fold) so the parallel branches don't
+> collide on the version line.
+
 ## [0.22.0] - 2026-06-22
 
 ### Added — fold `"haystack".indexOf("needle")` on string literals
