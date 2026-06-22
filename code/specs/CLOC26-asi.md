@@ -200,10 +200,42 @@ workaround and the string-predecessor limitation are both gone. (Shipped with
 `lexer` 0.6.0 / `javascript-parser` 0.17.0; fixture
 `closurec/tests/diff/simple-asi-string-newline`.)
 
-**Phase 3 — restricted productions (Rule 3).** Force ASI after
-`return`/`throw`/`break`/`continue`/`yield` + newline, and around postfix
-`++`/`--`. Adversarial miscompile tests. This is the highest-risk phase and is
-deliberately last.
+**Phase 3 — restricted productions (Rule 3). ✅ SHIPPED (keywords).** Force ASI
+after `return`/`throw`/`break`/`continue`/`yield` when their argument is pushed
+onto the next line. This is the one rule the **retry-on-error harness cannot
+catch**, because the offending stream parses *successfully into the wrong tree*:
+the grammar is newline-blind, so `return` ⏎ `a + b` parses as `return a + b` and
+closurec would re-emit exactly that — a silent **miscompile** (JS semantics are
+`return; a + b`). The bad parse *succeeds*, so Rules 1/2 never see it.
+
+Rule 3 therefore runs as a **proactive forward-scan pre-pass**
+(`force_restricted_semicolons`, executed *before* the retry loop in
+`parse_with_asi`). It inserts a `;` immediately after a restricted keyword whose
+*next* token carries `TOKEN_PRECEDED_BY_NEWLINE`. Safety holds by the same lever
+as Rules 1/2: the insertion is gated on a real line terminator after the
+keyword, so every valid single-line `return x;` is byte-identical and the full
+existing fixture suite is unchanged. Context guards keep a keyword that is really
+a *property name* from being mis-split:
+
+* **member access** — a `.`/`?.` before the keyword (`a.return`) names a
+  property; declined.
+* **property key / label** — a `:` after the keyword (`{return: 1}`) marks an
+  object key; declined.
+* **already terminated** — a `;`/`}` after the keyword needs no extra `;` (Rule
+  2 covers the `}`); declined.
+
+`yield` only triggers where the lexer classifies it as a genuine keyword (inside
+a generator); as an ordinary identifier it is left to Rule 1, which already
+splits it. Shipped with `javascript-parser` 0.19.0 (8 new unit tests) and
+closurec fixture `simple-asi-restricted` (`function f(){return` ⏎ `42}` →
+`function f(){return};report(f());` — the dead `42` is dropped only because the
+restriction was honored *and* the typed pipeline ran).
+
+**Postfix `++`/`--` restricted production — deferred follow-up.** `a` ⏎ `++b` is
+`a; ++b` (a prefix increment), not `a++ b`; honoring it needs the same proactive
+treatment but keyed on the operator's predecessor being a left-hand side. It is
+the trickier half and is split into its own future PR; the keyword cases above
+are the high-value slice.
 
 **Phase 4 (optional) — remove the semicolon workaround** from any fixture inputs
 that only had explicit semicolons to avoid the fallback, and add a CHANGELOG note
