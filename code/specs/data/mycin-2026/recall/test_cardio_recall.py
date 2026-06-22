@@ -35,6 +35,7 @@ EXPECTED = {
     "holosystolic_left_lower_sternal": "tricuspid_regurgitation",
     "decrescendo_diastolic": "aortic_regurgitation",
     "diastolic_apical": "mitral_stenosis",
+    "continuous_machinery": "patent_ductus_arteriosus",  # expand (NBK430758)
 }
 REL = "murmur_indicates"
 VAR = "Lesion"
@@ -98,8 +99,9 @@ def test_unknown_murmur_abstains() -> None:
     fd, path = tempfile.mkstemp(suffix=".adj", prefix=".cardio_q_", dir=HERE)
     try:
         with os.fdopen(fd, "w") as fh:
-            # continuous_machinery (PDA) is not in the library → must abstain
-            fh.write(f'import "cardio-edges.adj"\n? {REL}(continuous_machinery, ${VAR})\n')
+            # to_and_fro murmur is not in the library → must abstain (continuous_machinery
+            # is now grounded to PDA, so the negative control moved to a still-absent murmur)
+            fh.write(f'import "cardio-edges.adj"\n? {REL}(to_and_fro, ${VAR})\n')
         res = _run(Path(path))
         r = res["recall"][0] if res["recall"] else None
         assert r is not None and r["abstained"], "an ungrounded murmur must abstain"
