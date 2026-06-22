@@ -185,6 +185,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionAction`
   and summary helpers for turning clearance evidence-review dispositions into
   repair, operator, review, lineage, and release handoff actions.
+- `IntegrationMeshReleaseTicketHandoffExecutionWorkOrderGuardrailAuditClearanceActionEvidenceReviewDispositionActionSlot`
+  and summary helpers for sequencing disposition actions into release handoff
+  execution slots.
 - `IntegrationMeshReleaseTicketHandoffGuardrailAuditClearanceActionEvidenceReviewDispositionActionReadinessSummary`
   and helpers for combining disposition readiness with disposition-action
   counts and next action pointers.
