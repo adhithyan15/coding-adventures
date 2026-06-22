@@ -54,6 +54,9 @@ pub struct DispatchCtx<'a> {
     pub frames: &'a mut Vec<VMFrame>,
     pub module_fns: &'a mut Vec<interpreter_ir::function::IIRFunction>,
     pub memory: &'a mut HashMap<i64, Value>,
+    /// Module-level globals (LANG-FULL E6), keyed by name. `global_store`/
+    /// `global_load` read+write here. See [`crate::core::VMCore`].
+    pub globals: &'a mut HashMap<String, Value>,
     /// Heap of bounds-checked arrays (LANG-FULL E5). Indexed by the array
     /// *handle* (`alloc_array`'s 0-based result). See [`crate::core::VMCore`].
     pub arrays: &'a mut Vec<Vec<Value>>,
@@ -674,6 +677,43 @@ fn handle_store_mem(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     Ok(None)
 }
 
+// Module globals (LANG-FULL E6) ---------------------------------------------
+//
+// `global_load("g") -> %dest` reads the module global named `g`; `global_store
+// ("g", %v)` writes it. The name is an `Operand::Str` literal (NOT a register —
+// it must never be looked up in the frame), mirroring how the code-gen backends
+// carry it. A global that was never stored reads as `Int(0)`, matching the
+// zero-initialised `_twig_globals` slots / static fields the other backends use.
+
+/// Extract the string-literal global name at `srcs[idx]`.
+fn global_name(instr: &IIRInstr, idx: usize) -> Result<String, VMError> {
+    match instr.srcs.get(idx) {
+        Some(Operand::Str(s)) => Ok(s.clone()),
+        other => Err(VMError::Custom(format!(
+            "global op expected a string name at srcs[{idx}], got {other:?}"
+        ))),
+    }
+}
+
+fn handle_global_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let name = global_name(instr, 0)?;
+    let value = ctx.globals.get(&name).cloned().unwrap_or(Value::Int(0));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_global_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let name = global_name(instr, 0)?;
+    let value = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 1)?
+    };
+    ctx.globals.insert(name, value);
+    Ok(None)
+}
+
 // Byte-tape memory (the shared-IIR byte buffer) ----------------------------
 //
 // `alloc_bytes` / `load_byte` / `store_byte` are the lowered byte-tape ops that
@@ -1092,6 +1132,8 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "alloc_bytes"  => Some(handle_alloc_bytes),
         "load_byte"    => Some(handle_load_byte),
         "store_byte"   => Some(handle_store_byte),
+        "global_load"  => Some(handle_global_load),
+        "global_store" => Some(handle_global_store),
         "alloc_array"  => Some(handle_alloc_array),
         "array_len"    => Some(handle_array_len),
         "array_get"    => Some(handle_array_get),
