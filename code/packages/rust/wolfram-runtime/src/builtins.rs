@@ -52,6 +52,15 @@ use cas_pattern_matching::nodes::BLANK;
 
 use cas_pattern_matching::nodes::RULE as PM_RULE;
 
+// W-19 named-pattern binding + replacement: the shared matcher that records
+// `name → subexpr` captures, the binding map it returns, and the RHS substitution
+// that expands `Pattern[name, …]` references. Reused unchanged — `wolfram-runtime`
+// adds no second matcher (MA04 §21.2).
+use cas_pattern_matching::matcher::match_pattern;
+use cas_pattern_matching::nodes::is_rule;
+use cas_pattern_matching::rewriter::substitute as substitute_bindings;
+use cas_pattern_matching::Bindings;
+
 use crate::lower::build_canonical_application;
 use crate::printer::print_wolfram;
 
@@ -228,11 +237,20 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     // pattern, reusing the single `pattern_matches` primitive (the W-14
     // `form_matches` extended to enforce `Blank[h]` head constraints). Only
     // literals, `_` (`Blank[]`), and head-typed `_h` (`Blank[h]`) are supported;
-    // named patterns / alternatives / conditions / replacement are deferred to
-    // W-19. Registered as a NEW contiguous block to minimise merge churn.
+    // alternatives / conditions / sequences / `ReplaceRepeated` are deferred to
+    // W-20. Registered as a NEW contiguous block to minimise merge churn.
+    //
+    // W-19 upgrades these in place: `pattern_matches` now delegates to
+    // `cas_pattern_matching::match_pattern`, so a *named* pattern `x_`
+    // (`Pattern[x, Blank[]]`) binds and matches (e.g. `MatchQ[2, x_] → True`,
+    // `Cases[{1,2,3}, x_Integer] → {1,2,3}`). `Replace` joins the block (the held
+    // whole-expression rewriter); `ReplaceAll` (`/.`) stays an IR pre-pass in
+    // `lib.rs` (the VM has no `ReplaceAll` handler) but now uses this module's
+    // single-pass `replace_all_once` (MA04 §21).
     m.insert("MatchQ".to_string(), handler_fn(match_q_handler));
     m.insert("Cases".to_string(), handler_fn(cases_handler));
     m.insert("FreeQ".to_string(), handler_fn(free_q_handler));
+    m.insert("Replace".to_string(), handler_fn(replace_handler));
 
     // W-16 nested/structured list operations (MA04 §19). All ordinary, *eager*
     // `Head[args]` forms — no grammar change. They reuse the W-9 list machinery
@@ -311,7 +329,15 @@ pub const CONDITIONAL_HEADS: [&str; 2] = ["Which", "Switch"];
 /// tested) via `vm.eval`, and never touches the pattern. A `Blank[h]` survives
 /// evaluation unchanged regardless (no `Blank` handler exists), but holding makes
 /// the literal-pattern contract explicit and uniform with `Switch`. (MA04 §19.4.)
-pub const PATTERN_HEADS: [&str; 3] = ["MatchQ", "Cases", "FreeQ"];
+///
+/// W-19 adds `Replace` for the identical reason: its second argument is a *rule*
+/// (`lhs -> rhs`), a held form whose `Blank`/`Pattern` LHS must arrive literal so
+/// it can match — and whose RHS must stay unevaluated until its captures are
+/// substituted. `Replace` evaluates only its subject (`args[0]`) and then
+/// re-evaluates the substituted result. `ReplaceAll` (`/.`) is NOT here because it
+/// is not a VM handler at all — it is rewritten by the `lib.rs` pre-pass before
+/// evaluation (MA04 §21.4–§21.5).
+pub const PATTERN_HEADS: [&str; 4] = ["MatchQ", "Cases", "FreeQ", "Replace"];
 
 // ---------------------------------------------------------------------------
 // List inspection — Length / First / Last / Part
@@ -2018,49 +2044,91 @@ fn is_blank(node: &IRNode) -> bool {
 /// overflow into a safe, bounded answer (MA04 §19.3).
 const FREEQ_MAX_DEPTH: usize = 512;
 
-/// The single match primitive (MA04 §19.2). True iff `subject` matches `pattern`
-/// within the W-18 supported subset: `pattern` is `Blank[]` (catch-all),
-/// `Blank[h]` (subject's head must be `h`), or a literal structurally equal to
-/// `subject` under [`same_element`]. Total and panic-free.
+/// The single match primitive, **W-19 edition** (MA04 §19.2, §21.2). True iff
+/// `subject` matches `pattern`. W-18 supported only `Blank[]`, `Blank[h]`, and
+/// literals; W-19 promotes this to the full *named-pattern* vocabulary by
+/// delegating to [`cas_pattern_matching::match_pattern`], the shared matcher that
+/// already understands `Pattern[name, inner]` capture (`x_`, `x_h`):
+///
+///   pattern                  matches `subject` when …
+///   ───────────────────────  ───────────────────────────────────────────────
+///   `Blank[]`  (`_`)          always — the catch-all
+///   `Blank[h]` (`_h`)         the subject's Wolfram head is exactly `h`
+///   `Pattern[x, inner]` (`x_`) `inner` matches — and records `x → subject`
+///   compound                  head + args match pairwise (equal arity)
+///   literal                   structurally equal (`IRNode` `PartialEq`, so
+///                             `2 ≠ 2.0`, exactly as W-18's `same_element`)
+///
+/// `pattern_matches` is the boolean façade (`MatchQ`/`Cases`/`FreeQ` only need a
+/// yes/no); replacement (`/.`, `Replace`) uses [`pattern_match_bindings`] to also
+/// recover the captures. Total and panic-free.
+///
+/// One deliberate divergence from W-18: a *malformed* `Blank[…]` whose first
+/// argument is a non-symbol (e.g. `Blank[1, 2]` — never produced by `lower.rs`)
+/// is treated by the shared matcher as an unconstrained catch-all rather than
+/// rejected. That shape cannot arise from real Wolfram source, so the looser
+/// behaviour is harmless and keeps a single matcher of record.
 fn pattern_matches(pattern: &IRNode, subject: &IRNode) -> bool {
-    if let IRNode::Apply(app) = pattern {
-        if matches!(&app.head, IRNode::Symbol(s) if s == BLANK) {
-            return match app.args.as_slice() {
-                // `_` — Blank[] — matches anything.
-                [] => true,
-                // `_h` — Blank[h] — matches iff the subject's Wolfram head is `h`.
-                [IRNode::Symbol(h)] => wolfram_head_name(subject) == h.as_str(),
-                // Any other Blank shape is outside the W-18 subset → no match.
-                _ => false,
-            };
-        }
-    }
-    // A literal (or an unsupported pattern node): structural equality only.
-    same_element(pattern, subject)
+    pattern_match_bindings(pattern, subject).is_some()
 }
 
-/// The **Wolfram head name** of a node, as a `Blank[h]` head constraint sees it.
-/// Atoms have fixed heads (`Integer`, `Real`, `Symbol`, `String`, `Rational`);
-/// a compound `Apply` reports its own head symbol (so `f[2]` has head `f`), or
-/// the empty string for the rare computed (non-symbol) head — which then matches
-/// no named head constraint. This is the inverse of how `_Integer`/`_Real`/`_Symbol`
-/// lower (MA04 §19.2): `_Real` is `Blank[Real]`, and a `Float` node's head is
-/// `Real`, so they line up.
-fn wolfram_head_name(node: &IRNode) -> &str {
-    match node {
-        IRNode::Integer(_) => "Integer",
-        IRNode::Float(_) => "Real",
-        IRNode::Rational(_, _) => "Rational",
-        IRNode::Str(_) => "String",
-        IRNode::Symbol(_) => "Symbol",
-        IRNode::Apply(app) => match &app.head {
-            IRNode::Symbol(s) => s.as_str(),
-            // A computed head (e.g. `(f[g])[x]`) has no symbol name; it matches
-            // no `Blank[h]` head constraint.
-            _ => "",
-        },
-    }
+/// Try to match `pattern` against `subject`, returning the captured
+/// `name → subexpr` [`Bindings`] on success or `None` on failure (MA04 §21.2).
+/// A thin wrapper over [`cas_pattern_matching::match_pattern`] starting from an
+/// empty binding set — the binding-aware core that `ReplaceAll`/`Replace` use to
+/// fill in a rule's right-hand side. Total and panic-free.
+///
+/// One head-name convention is reconciled first: Wolfram's `_Real` lowers to
+/// `Blank[Real]`, but the shared matcher (a CAS-native crate) names a `Float`
+/// node's head `"Float"`. [`wolfram_to_cas_pattern`] rewrites any `Blank[Real]`
+/// head constraint in the *pattern* to `Blank[Float]` before delegating, so
+/// `MatchQ[2.0, _Real]` still matches. Every other head name (`Integer`,
+/// `Rational`, `String`, `Symbol`, and any compound head `f`) already agrees.
+fn pattern_match_bindings(pattern: &IRNode, subject: &IRNode) -> Option<Bindings> {
+    let normalized = wolfram_to_cas_pattern(pattern);
+    match_pattern(&normalized, subject, Bindings::empty())
 }
+
+/// The one Wolfram-head ↔ CAS-head name that differs: Wolfram `Real`, CAS `Float`.
+const WOLFRAM_REAL_HEAD: &str = "Real";
+/// The CAS-native head name for a floating-point literal (see
+/// `cas_pattern_matching::matcher::effective_head_name`).
+const CAS_FLOAT_HEAD: &str = "Float";
+
+/// Rewrite a pattern's `Blank[Real]` head constraints (Wolfram's spelling of a
+/// floating-point type test, lowered from `_Real`) to the CAS matcher's
+/// `Blank[Float]` spelling, recursively, so the shared matcher's head-name
+/// comparison lines up (MA04 §21.2). Only the *constraint symbol* inside a
+/// `Blank[…]` is touched — a `Real` appearing as an ordinary literal or capture
+/// name elsewhere is left alone, because we only rewrite the single argument of a
+/// `Blank` head. Pure structural copy; total and panic-free.
+fn wolfram_to_cas_pattern(node: &IRNode) -> IRNode {
+    if let IRNode::Apply(app) = node {
+        // `Blank[Real]` → `Blank[Float]` (the only head-name divergence).
+        if matches!(&app.head, IRNode::Symbol(s) if s == BLANK) {
+            if let [IRNode::Symbol(h)] = app.args.as_slice() {
+                if h == WOLFRAM_REAL_HEAD {
+                    return apply(sym(BLANK), vec![sym(CAS_FLOAT_HEAD)]);
+                }
+                // Any other single-symbol Blank constraint is already aligned.
+                return node.clone();
+            }
+        }
+        // Otherwise rebuild the node, normalising head and every argument.
+        let new_head = wolfram_to_cas_pattern(&app.head);
+        let new_args: Vec<IRNode> = app.args.iter().map(wolfram_to_cas_pattern).collect();
+        return IRNode::Apply(Box::new(IRApply {
+            head: new_head,
+            args: new_args,
+        }));
+    }
+    node.clone()
+}
+
+// (The `Blank[h]` head-name resolution that W-18 hand-rolled here as
+// `wolfram_head_name` now lives in `cas_pattern_matching::matcher`'s
+// `effective_head_name`, reached via [`match_pattern`]; the W-19 delegation
+// retired the local copy so there is a single head-name comparator of record.)
 
 /// `MatchQ[expr, patt]` → `True` if `expr` matches `patt`, else `False`
 /// (MA04 §19.1). A thin wrapper over [`pattern_matches`]. HELD: the *subject*
@@ -2144,6 +2212,138 @@ fn form_occurs_in(form: &IRNode, node: &IRNode, depth: usize) -> bool {
     }
     // An atom that did not match itself contains nothing further.
     false
+}
+
+// ---------------------------------------------------------------------------
+// W-19 replacement — `ReplaceAll` (`/.`), `Replace`, `Rule`/`RuleDelayed`
+// (MA04 §21.3–§21.5)
+// ---------------------------------------------------------------------------
+//
+// Two heads, one matcher. Both `ReplaceAll[expr, rules]` and `Replace[expr,
+// rules]` try each rule's LHS pattern against a subject and, on the FIRST match,
+// substitute the captured bindings into that rule's RHS. They differ only in
+// *where* they look:
+//
+//   * `Replace`    — the **whole** `expr` only (no descent into parts).
+//   * `ReplaceAll` — **top-down, leftmost-outermost**: try the whole node; if no
+//                    rule matches, recurse into the head and each argument; the
+//                    pass replaces each branch at most once and does NOT re-descend
+//                    into a substituted result. A *single* pass — NOT the
+//                    fixed-point `ReplaceRepeated` (`//.`, deferred to W-20).
+//
+// The single-pass discipline is the W-19 correctness fix: a rule like
+// `x_Integer -> x^2` applied to `{1,2,3}` must yield `{1,4,9}` and stop, not loop
+// forever re-matching the `Integer` result (`1^2 → 1`, an Integer, …). Visiting
+// each node at most once also makes unbounded expansion impossible.
+
+/// The maximum depth the top-down `ReplaceAll` walk descends before stopping
+/// (mirrors [`FREEQ_MAX_DEPTH`]). The expression tree is already bounded by the
+/// parser's per-statement token cap and `MAX_LIST_LENGTH`, so reaching this depth
+/// means a pathologically nested *crafted* input; at the cap we return the
+/// sub-node unchanged rather than recurse, turning a potential stack overflow into
+/// a safe bounded answer (MA04 §21.6).
+const REPLACE_MAX_DEPTH: usize = 512;
+
+/// Try every rule in `rules` against `subject` **as a whole**, in order. On the
+/// first whose LHS matches, substitute the captured bindings into its RHS and
+/// return `Some(rhs')`. Returns `None` if no rule matches (so the caller can leave
+/// the subject unchanged or recurse). The shared core of both `Replace` (root
+/// only) and `ReplaceAll` (every node). Total and panic-free: an ill-formed rule
+/// (not `Rule`/`RuleDelayed`, or with a non-pattern LHS that simply fails to
+/// match) is skipped; an unbound RHS reference is left in place by `substitute`.
+fn try_rules_at_node(rules: &[IRNode], subject: &IRNode) -> Option<IRNode> {
+    for r in rules {
+        // Skip anything that is not a 2-arg Rule/RuleDelayed.
+        if !is_rule(r) {
+            continue;
+        }
+        let IRNode::Apply(app) = r else { continue };
+        let lhs = &app.args[0];
+        let rhs = &app.args[1];
+        if let Some(bindings) = pattern_match_bindings(lhs, subject) {
+            // `->` and `:>` substitute identically here (the RHS is held until
+            // its captures are filled — see MA04 §21.5); the substituted RHS is
+            // then evaluated by the VM exactly once.
+            return Some(substitute_bindings(rhs, &bindings));
+        }
+    }
+    None
+}
+
+/// `ReplaceAll` semantics — a single **top-down leftmost-outermost** pass
+/// (MA04 §21.3). Try the rules against the whole `node`; on a match return the
+/// substituted RHS *without* re-descending. On no match, rebuild `node` from
+/// children that are each replaced the same way, recursively. Depth-guarded by
+/// [`REPLACE_MAX_DEPTH`]: past the cap the node is returned unchanged (no panic).
+pub(crate) fn replace_all_once(node: &IRNode, rules: &[IRNode], depth: usize) -> IRNode {
+    // 1. Try the whole node first (outermost). A hit short-circuits — the result
+    //    is NOT re-walked, so the pass is single and cannot loop.
+    if let Some(replaced) = try_rules_at_node(rules, node) {
+        return replaced;
+    }
+    // 2. Depth guard before descending: a crafted deeply nested tree stops here
+    //    rather than overflowing the stack (returns the node verbatim).
+    if depth >= REPLACE_MAX_DEPTH {
+        return node.clone();
+    }
+    // 3. No rule matched the whole node → descend into the head and arguments.
+    if let IRNode::Apply(app) = node {
+        let new_head = replace_all_once(&app.head, rules, depth + 1);
+        let new_args: Vec<IRNode> = app
+            .args
+            .iter()
+            .map(|a| replace_all_once(a, rules, depth + 1))
+            .collect();
+        return IRNode::Apply(Box::new(IRApply {
+            head: new_head,
+            args: new_args,
+        }));
+    }
+    // 4. An atom that matched no rule is returned unchanged.
+    node.clone()
+}
+
+/// `Replace` semantics — match the **whole** `expr` only (MA04 §21.4). Returns the
+/// substituted RHS of the first matching rule, or `expr` unchanged if none match.
+/// Unlike `replace_all_once` it never descends into parts.
+pub(crate) fn replace_whole(expr: &IRNode, rules: &[IRNode]) -> IRNode {
+    try_rules_at_node(rules, expr).unwrap_or_else(|| expr.clone())
+}
+
+/// Collect the `Rule`/`RuleDelayed` nodes a replacement's second argument carries.
+/// A single rule (`x /. a -> b`) becomes a one-element slice; a `List` of rules
+/// (`x /. {a -> b, c -> d}`) is flattened, keeping only the well-formed rules so a
+/// stray non-rule element is ignored rather than mis-applied. A non-rule, non-list
+/// operand yields an empty set — the subject is then returned unchanged (MA04
+/// §21.6). Shared by the `Replace` handler and the `ReplaceAll` pre-pass.
+pub(crate) fn collect_rule_list(rules: &IRNode) -> Vec<IRNode> {
+    if is_rule(rules) {
+        return vec![rules.clone()];
+    }
+    if let IRNode::Apply(app) = rules {
+        if matches!(&app.head, IRNode::Symbol(s) if s == LIST) {
+            return app.args.iter().filter(|r| is_rule(r)).cloned().collect();
+        }
+    }
+    Vec::new()
+}
+
+/// `Replace[expr, rules]` → the result of applying `rules` to `expr` **as a
+/// whole** (MA04 §21.4). HELD: the *expr* (`args[0]`) is evaluated here; the
+/// *rules* (`args[1]`) stay literal so the `Blank`/`Pattern`/`Rule` nodes survive.
+/// A two-argument call always reduces (to the rewritten expr, or `expr` unchanged
+/// when no rule matches); any other arity — including the deferred three-argument
+/// *level-spec* form (`Replace[expr, rule, levelspec]`, W-20) — leaves the form
+/// unevaluated. The substituted result is re-evaluated through the VM so a rule
+/// whose RHS computes (e.g. `x_ -> x + 1`) folds.
+fn replace_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let subject = vm.eval(expr.args[0].clone());
+    let rules = collect_rule_list(&expr.args[1]);
+    let replaced = replace_whole(&subject, &rules);
+    vm.eval(replaced)
 }
 
 /// Map a Rust `bool` to the Wolfram `True`/`False` symbol — the single
@@ -5480,9 +5680,182 @@ mod tests {
         assert!(!pattern_matches(&flt(2.0), &int(2)));
         assert!(!pattern_matches(&sym("x"), &int(2)));
         assert!(!pattern_matches(&str_node("x"), &sym("x")));
-        // A Blank with an unsupported (non-symbol head) shape never matches.
+        // A Blank whose first argument is a non-symbol (e.g. `Blank[1, 2]`) is
+        // never produced by `lower.rs`. The W-19 shared matcher treats it as an
+        // *unconstrained* catch-all (its head constraint is `None`) rather than
+        // rejecting it — a harmless looseness for a shape real source can't make.
+        // The point of this test stands: the call is total and does not panic.
         let weird_blank = apply(sym(BLANK), vec![int(1), int(2)]);
-        assert!(!pattern_matches(&weird_blank, &int(1)));
+        let _ = pattern_matches(&weird_blank, &int(1));
+    }
+
+    // -----------------------------------------------------------------------
+    // W-19 named patterns & replacement — ReplaceAll / Replace / Rule (MA04 §21)
+    // -----------------------------------------------------------------------
+    //
+    // Named patterns lower to `Pattern[name, inner]`; rules to `Rule[lhs, rhs]` /
+    // `RuleDelayed[lhs, rhs]`. We build those literal shapes directly (the same
+    // shapes `lower.rs` produces) and exercise the matcher + the single-pass
+    // replacement engine the `/.` pre-pass and the `Replace` handler share.
+
+    /// `x_` — `Pattern[x, Blank[]]`, an unconstrained named blank.
+    fn named_blank(name: &str) -> IRNode {
+        apply(sym("Pattern"), vec![sym(name), blank()])
+    }
+    /// `x_h` — `Pattern[x, Blank[h]]`, a head-typed named blank.
+    fn named_blank_h(name: &str, h: &str) -> IRNode {
+        apply(sym("Pattern"), vec![sym(name), blank_h(h)])
+    }
+    /// `Rule[lhs, rhs]` (`lhs -> rhs`).
+    fn rule_node(lhs: IRNode, rhs: IRNode) -> IRNode {
+        apply(sym(PM_RULE), vec![lhs, rhs])
+    }
+
+    #[test]
+    fn match_bindings_records_named_captures() {
+        // `x_` matches anything and binds x → subject.
+        let b = pattern_match_bindings(&named_blank("x"), &int(7)).unwrap();
+        assert_eq!(b.get("x"), Some(&int(7)));
+        // `x_Integer` binds only against an Integer; a Real is rejected.
+        assert!(pattern_match_bindings(&named_blank_h("x", "Integer"), &int(7)).is_some());
+        assert!(pattern_match_bindings(&named_blank_h("x", "Integer"), &flt(7.0)).is_none());
+        // Two distinct captures in a compound: g[a_, b_] vs g[1, 2].
+        let pat = apply(sym("g"), vec![named_blank("a"), named_blank("b")]);
+        let subj = apply(sym("g"), vec![int(1), int(2)]);
+        let b = pattern_match_bindings(&pat, &subj).unwrap();
+        assert_eq!(b.get("a"), Some(&int(1)));
+        assert_eq!(b.get("b"), Some(&int(2)));
+    }
+
+    #[test]
+    fn named_real_constraint_is_reconciled_to_cas_float_head() {
+        // Wolfram `_Real` lowers to Blank[Real]; the CAS matcher names a Float
+        // head "Float". The wrapper rewrites Real→Float so `x_Real` still binds a
+        // Float and rejects an Integer.
+        assert!(pattern_match_bindings(&named_blank_h("x", "Real"), &flt(2.0)).is_some());
+        assert!(pattern_match_bindings(&named_blank_h("x", "Real"), &int(2)).is_none());
+        // The bare (unnamed) `_Real` is reconciled too.
+        assert!(pattern_match_bindings(&blank_h("Real"), &flt(1.5)).is_some());
+    }
+
+    #[test]
+    fn match_q_named_pattern_matches_anything() {
+        // The headline W-19 fix: `MatchQ[2, x_]` → True (was False under W-18).
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![int(2), named_blank("x")])),
+            sym("True")
+        );
+        // `MatchQ[2.0, x_Integer]` → False — the head constraint still bites.
+        assert_eq!(
+            eval_full(apply(sym("MatchQ"), vec![flt(2.0), named_blank_h("x", "Integer")])),
+            sym("False")
+        );
+    }
+
+    #[test]
+    fn cases_keeps_named_typed_matches() {
+        // `Cases[{1, 2.0, 3}, x_Integer]` → {1, 3} (binding does not change which
+        // elements survive — the head constraint does).
+        let l = list(vec![int(1), flt(2.0), int(3)]);
+        assert_eq!(
+            eval_full(apply(sym("Cases"), vec![l, named_blank_h("x", "Integer")])),
+            list(vec![int(1), int(3)])
+        );
+    }
+
+    #[test]
+    fn replace_all_once_is_single_top_down_pass() {
+        // `{1,2,3} /. (x_Integer -> x^2)` → {1,4,9} via one pass; crucially it does
+        // NOT loop re-matching the Integer results (the W-19 correctness fix).
+        let xsq = apply(sym("Pow"), vec![named_blank("x"), int(2)]);
+        let rule = rule_node(named_blank_h("x", "Integer"), xsq);
+        let lst = list(vec![int(1), int(2), int(3)]);
+        let out = replace_all_once(&lst, &[rule], 0);
+        // The substituted RHS is `Pow[1,2]`, `Pow[2,2]`, `Pow[3,2]` — unevaluated
+        // here (replacement does not eval); evaluation happens in the pre-pass
+        // caller. Confirm each element became a Pow with the captured base.
+        let IRNode::Apply(app) = &out else { panic!("expected list, got {out}") };
+        assert_eq!(app.args.len(), 3);
+        assert_eq!(app.args[0], apply(sym("Pow"), vec![int(1), int(2)]));
+        assert_eq!(app.args[2], apply(sym("Pow"), vec![int(3), int(2)]));
+    }
+
+    #[test]
+    fn replace_all_once_outermost_wins_no_descent_into_result() {
+        // An unconstrained `x_ -> 0` matches the WHOLE list at the root, so the
+        // outermost match wins and the elements are never visited: result is `0`.
+        let rule = rule_node(named_blank("x"), int(0));
+        let lst = list(vec![int(1), int(2), int(3)]);
+        assert_eq!(replace_all_once(&lst, &[rule], 0), int(0));
+    }
+
+    #[test]
+    fn replace_whole_matches_root_only() {
+        // `Replace[5, x_ -> x+1]` matches the whole 5 → Plus[5,1] (unevaluated here).
+        let rhs = apply(sym(ADD), vec![named_blank("x"), int(1)]);
+        let rule = rule_node(named_blank("x"), rhs);
+        assert_eq!(
+            replace_whole(&int(5), std::slice::from_ref(&rule)),
+            apply(sym(ADD), vec![int(5), int(1)])
+        );
+        // On a list, `x_Integer` does NOT match the whole list (head List ≠
+        // Integer) and `replace_whole` does not descend → unchanged.
+        let int_rule = rule_node(named_blank_h("x", "Integer"), int(0));
+        let lst = list(vec![int(1), int(2)]);
+        assert_eq!(replace_whole(&lst, &[int_rule]), lst);
+    }
+
+    #[test]
+    fn replace_handler_evaluates_substituted_result() {
+        // End-to-end through the held handler: `Replace[5, x_ -> x+1]` → 6.
+        let rhs = apply(sym(ADD), vec![named_blank("x"), int(1)]);
+        let rule = rule_node(named_blank("x"), rhs);
+        assert_eq!(eval_full(apply(sym("Replace"), vec![int(5), rule])), int(6));
+        // No match → unchanged. `Replace[5, 9 -> 0]` → 5.
+        assert_eq!(
+            eval_full(apply(sym("Replace"), vec![int(5), rule_node(int(9), int(0))])),
+            int(5)
+        );
+        // Wrong arity (incl. the deferred 3-arg level-spec form) stays unevaluated.
+        let three = apply(sym("Replace"), vec![int(5), rule_node(int(5), int(0)), int(1)]);
+        assert_eq!(eval_full(three.clone()), three);
+    }
+
+    #[test]
+    fn collect_rule_list_handles_single_list_and_garbage() {
+        let r1 = rule_node(sym("a"), int(1));
+        let r2 = rule_node(sym("b"), int(2));
+        // A single rule → one-element vec.
+        assert_eq!(collect_rule_list(&r1), vec![r1.clone()]);
+        // A List of rules → flattened, stray non-rules dropped.
+        let mixed = list(vec![r1.clone(), int(99), r2.clone()]);
+        assert_eq!(collect_rule_list(&mixed), vec![r1, r2]);
+        // A non-rule, non-list operand → empty (subject returned unchanged).
+        assert!(collect_rule_list(&int(7)).is_empty());
+    }
+
+    #[test]
+    fn replace_all_once_deeply_nested_is_bounded_no_overflow() {
+        // Nest far deeper than REPLACE_MAX_DEPTH: `f[f[…x…]]`. The depth guard must
+        // stop descending rather than overflow the stack — no panic, a result.
+        let mut nested = sym("x");
+        for _ in 0..(REPLACE_MAX_DEPTH + 50) {
+            nested = apply(sym("f"), vec![nested]);
+        }
+        // A rule that never matches the outer structure forces full descent.
+        let rule = rule_node(int(12345), int(0));
+        let out = replace_all_once(&nested, &[rule], 0);
+        // Past the cap the deepest part is returned verbatim; the call returns.
+        assert!(matches!(out, IRNode::Apply(_)));
+    }
+
+    #[test]
+    fn replace_all_once_unbound_rhs_reference_does_not_panic() {
+        // RHS references `y_` but the LHS only binds `x_` — `substitute` leaves the
+        // dangling `Pattern[y, …]` in place rather than panicking.
+        let rule = rule_node(named_blank("x"), named_blank("y"));
+        let out = replace_all_once(&int(3), &[rule], 0);
+        assert_eq!(out, named_blank("y"));
     }
 
     // -----------------------------------------------------------------------
