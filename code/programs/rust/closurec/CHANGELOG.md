@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.167.0] - 2026-06-22
+
+### Added — ASCII string-casing folds at SIMPLE/ADVANCED
+
+Pulls in `coding-adventures-closure-pass-constant-fold` 0.20.0, which folds the
+no-argument string-casing methods on a string literal: `"abc".toUpperCase()` →
+`"ABC"`, `"ABC".toLowerCase()` → `"abc"`. ASCII-only (locale-independent,
+byte-for-byte equal to JS); non-ASCII strings, identifier receivers, the
+computed form, and any-argument calls are all left alone.
+
+New e2e fixture `tests/diff/simple-fold-strcase` (and integration test
+`diff_simple_fold_strcase.rs`) is the end-to-end oracle, with a
+whitespace-fallback guard proving the fold comes from the SIMPLE typed pipeline.
+
+> Version note: bumped to 0.167.0 (skipping 0.166.0, reserved by the
+> concurrently-developed ASI Rule-1 string-newline branch) so the parallel
+> branches don't collide on the version line.
+
 ## [0.165.0] - 2026-06-22
 
 ### Added — string-literal `.length` folding at SIMPLE/ADVANCED
