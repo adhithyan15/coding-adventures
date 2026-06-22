@@ -122,7 +122,10 @@ summaries; filesystem writes remain metadata-only.
 Accepted `.control` rawfile output options (`set filetype=ascii`,
 `set wr_vecnames`, `set wr_singlescale`, and `set appendwrite`) are surfaced as
 `rawfileOptionCount` / `rawfileOptions` execution fields and as
-`RawfileOptions` / `RawfileOptionList` artifact fields. Existing
+`RawfileOptions` / `RawfileOptionList` artifact fields. WRDATA artifacts also
+carry the same option inventories and render `wr_vecnames` / `wr_singlescale`
+intent as stable `VectorNames` / `Scale` metadata in the in-memory data file.
+Existing
 `.control` body policy diagnostics flow into those selected-run artifact `Diagnostics` /
 `DiagnosticCodeList` fields and through the same run-artifact table, CSV, JSON,
 and `tableArtifacts` records. `formatDeckTableCsv` also converts any stable tab-separated deck table to

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Carry accepted `.control` rawfile/data-write option inventories through
+  WRDATA artifact `Options` / `RawfileOptionList` summary columns, and render
+  `wr_vecnames` / `wr_singlescale` intent as deterministic `VectorNames` /
+  `Scale` metadata in in-memory WRDATA data files, matching Python and Rust.
 - Expose deterministic in-memory ASCII data-file artifacts for accepted
   `.control` `wrdata <file> ...` markers from selected `runDeckAnalysis`
   execution results as `wrdataArtifactCount`, `wrdataArtifacts`,

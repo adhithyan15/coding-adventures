@@ -67,7 +67,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `resolve_deck_outputs`, `format_deck_*_table`, `format_deck_table_csv`, `format_deck_table_json`, `deck_table_records` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables plus deterministic CSV/JSON/record conversion |
 | `format_deck_run_artifact_table`, `format_deck_run_artifact_csv`, `format_deck_run_artifact_json` | Deck execution artifact | Stable selected-run row, table, analysis-directive, output-probe, output-directive, measurement, Fourier, control-command, and diagnostic count/name lists |
 | `format_deck_rawfile_ascii`, `format_deck_rawfile_artifact_table`, `format_deck_rawfile_artifact_csv`, `format_deck_rawfile_artifact_json` | `.control write` artifact | Deterministic in-memory ASCII rawfile text plus stable rawfile artifact table/CSV/JSON exports |
-| `format_deck_wrdata_ascii`, `format_deck_wrdata_artifact_table`, `format_deck_wrdata_artifact_csv`, `format_deck_wrdata_artifact_json` | `.control wrdata` artifact | Deterministic in-memory ASCII data-file text plus stable WRDATA artifact table/CSV/JSON exports |
+| `format_deck_wrdata_ascii`, `format_deck_wrdata_artifact_table`, `format_deck_wrdata_artifact_csv`, `format_deck_wrdata_artifact_json` | `.control wrdata` artifact | Deterministic in-memory ASCII data-file text plus stable option-aware WRDATA artifact table/CSV/JSON exports |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
@@ -133,7 +133,9 @@ summaries; filesystem writes remain metadata-only.
 Accepted `.control` rawfile output options (`set filetype=ascii`,
 `set wr_vecnames`, `set wr_singlescale`, and `set appendwrite`) are surfaced as
 `rawfile_option_count` / `rawfile_options` execution fields and as
-`RawfileOptions` / `RawfileOptionList` artifact fields.
+`RawfileOptions` / `RawfileOptionList` artifact fields. WRDATA artifacts also
+carry the same option inventories and render `wr_vecnames` / `wr_singlescale`
+intent as stable `VectorNames` / `Scale` metadata in the in-memory data file.
 Existing `.control` body policy diagnostics flow into those selected-run
 artifact `Diagnostics` / `DiagnosticCodeList` fields and through the same
 run-artifact table, CSV, JSON, and `table_artifacts` records.

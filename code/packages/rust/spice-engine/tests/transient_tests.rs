@@ -2771,6 +2771,7 @@ let gain = 2
         "set wr_vecnames".to_string(),
     ];
     let rawfile_option_list = expected_rawfile_options.join(";");
+    let rawfile_option_count = expected_rawfile_options.len().to_string();
 
     assert_eq!(execution.control_line_count, expected_control_lines.len());
     assert_eq!(execution.control_lines, expected_control_lines);
@@ -2848,12 +2849,29 @@ let gain = 2
     assert_eq!(execution.wrdata_artifacts[0].marker, "wrdata out.dat V(in)");
     assert_eq!(execution.wrdata_artifacts[0].probe_count, 1);
     assert_eq!(execution.wrdata_artifacts[0].probes, vec!["V(in)"]);
+    assert_eq!(
+        execution.wrdata_artifacts[0].option_count,
+        expected_rawfile_options.len()
+    );
+    assert_eq!(
+        execution.wrdata_artifacts[0].options,
+        expected_rawfile_options
+    );
     assert!(execution.wrdata_artifacts[0]
         .datafile
         .contains("# SPICE deck wrdata artifact\n"));
     assert!(execution.wrdata_artifacts[0]
         .datafile
         .contains("Probes: V(in)\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains(&format!("Options: {rawfile_option_list}\n")));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("VectorNames: Index;V(in)\n"));
+    assert!(execution.wrdata_artifacts[0]
+        .datafile
+        .contains("Scale: Index\n"));
     assert!(execution.wrdata_artifacts[0]
         .datafile
         .contains("Index\tV(in)\n"));
@@ -2877,6 +2895,18 @@ let gain = 2
             .get("ProbeList")
             .map(String::as_str),
         Some("V(in)")
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("Options")
+            .map(String::as_str),
+        Some(rawfile_option_count.as_str())
+    );
+    assert_eq!(
+        execution.wrdata_artifact_records[0]
+            .get("RawfileOptionList")
+            .map(String::as_str),
+        Some(rawfile_option_list.as_str())
     );
     let wrdata_bytes = execution.wrdata_artifacts[0].datafile.len().to_string();
     assert_eq!(

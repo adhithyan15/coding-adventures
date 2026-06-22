@@ -2393,6 +2393,8 @@ class DeckWrdataArtifact:
     marker: str
     probe_count: int
     probes: list[str]
+    option_count: int
+    options: list[str]
     datafile: str
 
 
@@ -2474,6 +2476,7 @@ class DeckAnalysisExecution:
         wrdata_artifacts = list(self.wrdata_artifacts) or _deck_wrdata_artifacts(
             self.table,
             self.write_markers,
+            self.rawfile_options,
         )
         object.__setattr__(
             self, "wrdata_artifact_count", len(wrdata_artifacts)
@@ -3009,19 +3012,28 @@ def format_deck_rawfile_artifact_json(
 def format_deck_wrdata_ascii(
     table: str,
     probes: Iterable[str] = (),
+    rawfile_options: Iterable[str] = (),
 ) -> str:
     """Format a selected deck table as deterministic in-memory WRDATA text."""
 
     rows = table.splitlines()
     if not rows:
         return ""
-    return "\n".join(
-        [
-            "# SPICE deck wrdata artifact",
-            "Probes: " + ";".join(probes),
-            *rows,
-        ]
-    ) + "\n"
+    columns = rows[0].split("\t")
+    options = list(rawfile_options)
+    lines = [
+        "# SPICE deck wrdata artifact",
+        "Probes: " + ";".join(probes),
+    ]
+    if options:
+        lines.append("Options: " + ";".join(options))
+    normalized_options = {option.casefold() for option in options}
+    if "set wr_vecnames" in normalized_options:
+        lines.append("VectorNames: " + ";".join(columns))
+    if "set wr_singlescale" in normalized_options and columns:
+        lines.append("Scale: " + columns[0])
+    lines.extend(rows)
+    return "\n".join(lines) + "\n"
 
 
 def _deck_wrdata_marker_parts(marker: str) -> tuple[str, list[str]] | None:
@@ -3034,8 +3046,10 @@ def _deck_wrdata_marker_parts(marker: str) -> tuple[str, list[str]] | None:
 def _deck_wrdata_artifacts(
     table: str,
     write_markers: Iterable[str],
+    rawfile_options: Iterable[str] = (),
 ) -> list[DeckWrdataArtifact]:
     artifacts: list[DeckWrdataArtifact] = []
+    options = list(rawfile_options)
     for marker in write_markers:
         parts = _deck_wrdata_marker_parts(marker)
         if parts is None:
@@ -3047,7 +3061,9 @@ def _deck_wrdata_artifacts(
                 marker=marker,
                 probe_count=len(probes),
                 probes=probes,
-                datafile=format_deck_wrdata_ascii(table, probes),
+                option_count=len(options),
+                options=list(options),
+                datafile=format_deck_wrdata_ascii(table, probes, options),
             )
         )
     return artifacts
@@ -3058,6 +3074,8 @@ _DECK_WRDATA_ARTIFACT_COLUMNS = [
     "Marker",
     "Probes",
     "ProbeList",
+    "Options",
+    "RawfileOptionList",
     "Bytes",
 ]
 
@@ -3068,6 +3086,8 @@ def _deck_wrdata_artifact_cells(artifact: DeckWrdataArtifact) -> list[str]:
         artifact.marker,
         str(artifact.probe_count),
         ";".join(artifact.probes),
+        str(artifact.option_count),
+        ";".join(artifact.options),
         str(len(artifact.datafile.encode())),
     ]
 
