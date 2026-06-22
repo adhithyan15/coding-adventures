@@ -12,7 +12,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Twig | `42` | rich Lisp frontend, but only typed int-arith/`if` clears the backend validators; lists/lambdas/strings/`print`/symbols need the VM only |
 | Nib | `double(21)` → 42 | no `*` `/`, no `for`, no bitwise, no `&&`/`||`, no `const`/`static`; u4/u8 collapse to i64 (no wrap) |
 | Brainfuck | one 1-loop "print A" | all 8 ops are correct **but cat/Hello-World/nested-multiply run only on the VM/JIT**, never on the code-gen backends |
-| Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `READ`/`DATA`, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3) — all run on every backend |
+| Dartmouth BASIC | `PRINT 42` | integer-only: no `GOSUB`, strings, `^`; has `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` arrays (BA3), `READ`/`DATA`/`RESTORE` (BA6) — all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3); intrinsics remain |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures, switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends); arrays + reals run on VM/JIT only so far; no call-by-name, strings, multidim arrays |
 
@@ -385,7 +385,15 @@ backend immediately) come before the enabler-dependent items.
   i64), keeping cross-function call signatures consistent (lang-aot 0.94.0). **Limits:** one
   numeric parameter; body references its parameter only (globals need **E6**); built-in
   maths fns (`SIN`/`ABS`/…) need **E3**.
-- ☐ **BA6** — `READ` / `DATA` / `RESTORE`.
+- ✅ **BA6** — `READ` / `DATA` / `RESTORE` (`dartmouth-basic-iir-compiler` 0.8.0).
+  Lowers onto the **E5 array** substrate — no new IIR op, no enabler: a pre-pass
+  gathers all `DATA` integer literals (line order) into a pool materialised once at
+  the top of `main` as an `array<i64>` + a `__basic_data_ptr` register (a register,
+  not a global, since the program is one `main` function). `READ` does `array_get
+  pool, ptr` + `ptr := ptr + 1`; `RESTORE` resets `ptr := 0`; out-of-DATA traps via
+  the bounds-checked `array_get`. **Runs on all 7 backends**: `DATA 21 / READ A /
+  RESTORE / READ B / PRINT A+B` ⇒ 42 (proves sequential consumption + rewind).
+  Integer DATA only (real DATA = follow-up).
 - ☐ **BA7** — floating-point (needs **E3**).
 
 ### ALGOL 60

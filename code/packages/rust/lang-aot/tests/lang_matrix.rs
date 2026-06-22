@@ -881,6 +881,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6). The `DATA`
+    // pool is materialised once at the top of `main` as an `array<i64>` (the same
+    // E5 array ops BA3 uses) plus an `__basic_data_ptr` register seeded to 0;
+    // `READ` does `array_get pool, ptr` then `ptr := ptr + 1`, and `RESTORE` resets
+    // `ptr := 0`. Here `DATA 21` is a one-value pool: `READ A` takes 21 and advances
+    // the pointer; `RESTORE` rewinds it; `READ B` therefore takes 21 *again* — so
+    // `PRINT A + B` ⇒ 42, observably proving sequential consumption AND the rewind
+    // in one program. Straight-line (no loop), so it runs on all 7 backends exactly
+    // like the BA3 array cell — no new IIR op (pure frontend lowering onto the E5
+    // array substrate). A non-rewinding READ would read past the 1-element pool and
+    // trap, so 42 also proves the pointer/RESTORE arithmetic is correct.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DATA 21\n20 READ A\n30 RESTORE\n40 READ B\n50 PRINT A + B\n60 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

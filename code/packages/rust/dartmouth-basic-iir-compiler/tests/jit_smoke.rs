@@ -96,6 +96,37 @@ fn jit_basic_let_arithmetic_print() {
         "expected [42] from 30 + 12, got {got:?}");
 }
 
+/// BA6 — `READ` / `DATA`: a single value flows from the DATA pool into a
+/// variable.  `10 DATA 42 / 20 READ X / 30 PRINT X / 40 END` ⇒ [42].
+#[test]
+fn jit_basic_read_data_single() {
+    let src = "10 DATA 42\n\
+               20 READ X\n\
+               30 PRINT X\n\
+               40 END\n";
+    let got = jit_execute_and_capture_prints(src);
+    assert_eq!(got, vec![42], "READ X from DATA 42 should print 42, got {got:?}");
+}
+
+/// BA6 — multi-`READ` advances the pointer, and `RESTORE` rewinds it.  The
+/// pool is `10, 20, 30`; `READ A, B` takes 10 and 20; after `RESTORE`, `READ C`
+/// takes 10 again.  ⇒ prints 10, 20, 10 — proving sequential consumption *and*
+/// the rewind.
+#[test]
+fn jit_basic_read_restore_rewinds() {
+    let src = "10 DATA 10, 20, 30\n\
+               20 READ A, B\n\
+               30 PRINT A\n\
+               40 PRINT B\n\
+               50 RESTORE\n\
+               60 READ C\n\
+               70 PRINT C\n\
+               80 END\n";
+    let got = jit_execute_and_capture_prints(src);
+    assert_eq!(got, vec![10, 20, 10],
+        "READ A,B then RESTORE then READ C should print 10,20,10, got {got:?}");
+}
+
 /// FOR / NEXT loop: `10 FOR I = 1 TO 3 / 20 PRINT I / 30 NEXT I / 40 END`
 /// should print 1, 2, 3 in order.  Exercises label / jmp_if_false /
 /// add / jmp under the JIT interpreter.
