@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.30.0] - 2026-06-21
+
+### Added (via the shared `s-runtime`)
+
+- **R-35 — ordered factors & `cut()` label polish**, reached through ordinary R
+  syntax. Completes the R-33 deferral of `ordered_result =` / `dig.lab =` and adds
+  the ordered-factor family.
+  - **`ordered(x, levels =, labels =)`** / **`factor(x, ordered = TRUE)`** build an
+    ordered factor; **`as.ordered(x)`** coerces; **`is.ordered(x)`** tests for it.
+    `class(ordered(c("a","b")))` is `c("ordered", "factor")`.
+  - **Ordered comparison by level index**: with
+    `f <- ordered(c("lo","hi","mid"), levels = c("lo","mid","hi"))`,
+    `f[1] < f[2]` (lo < hi) is `TRUE` and `f[2] < f[3]` (hi < mid) is `FALSE` —
+    comparison is by the level position, not the label string. All six relational
+    operators are supported; an `NA` code yields `NA`; comparing ordered factors
+    with different level sets is an error.
+  - **`cut(..., ordered_result = TRUE)`** returns an ordered factor (its bins
+    compare by interval order); **`cut(..., dig.lab = k)`** formats break labels to
+    `k` significant digits (default 3), e.g.
+    `levels(cut(c(1.23456, 5.6789), breaks = c(0, 3.14159, 10), dig.lab = 2))` →
+    `c("(0,3.1]", "(3.1,10]")`. (`ordered_result` is an R-only spelling — the S
+    lexer reads `_` as assignment.)
+  - **Security**: ordered comparison works on integer codes only (out-of-range / NA
+    → NA, never a panic) and rejects differing level sets; `dig.lab` is clamped to
+    `1..=22` before formatting, so no extreme value can over-allocate or panic. No
+    new unbounded multiplier.
+  - **Deferred to R-39**: `Ops.ordered` group-generic dispatch and ordered-factor
+    `sort`/`max`/`min`/`range`.
+
 ## [0.29.0] - 2026-06-21
 
 ### Added (via the shared `s-runtime`)

@@ -229,6 +229,10 @@ pub fn install(env: &Env) {
 
     // v2 — factors.
     define(env, "factor", builtin("factor", b_factor));
+    // R-35 — ordered factors.
+    define(env, "ordered", builtin("ordered", b_ordered));
+    define(env, "as.ordered", builtin("as.ordered", b_as_ordered));
+    define(env, "is.ordered", builtin("is.ordered", b_is_ordered));
     define(env, "levels", builtin("levels", b_levels));
     define(env, "nlevels", builtin("nlevels", b_nlevels));
     define(env, "as.character", builtin("as.character", b_as_character));
@@ -1247,9 +1251,23 @@ fn gauss_jordan(mut a: Vec<f64>, n: usize, mut b: Vec<f64>, m: usize) -> SResult
 // v2 — factors
 // ===========================================================================
 
-/// `factor(x, levels =, labels =)` — encode `x` as a factor. Levels default to
-/// the sorted unique non-`NA` values of `x`; `labels` (if given) rename them.
+/// `factor(x, levels =, labels =, ordered =)` — encode `x` as a factor. Levels
+/// default to the sorted unique non-`NA` values of `x`; `labels` (if given) rename
+/// them. **R-35:** `ordered = TRUE` makes the result an *ordered* factor (see
+/// [`build_factor`]); the default is an unordered factor.
 fn b_factor(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    // `ordered =` is a logical flag (default FALSE). A malformed value surfaces as
+    // a clean error via `truthy` rather than a panic.
+    let ordered = named_flag(args, "ordered", false)?;
+    build_factor(args, ordered)
+}
+
+/// The shared factor builder used by `factor` (R-13) and `ordered` (R-35). Reads
+/// the first positional argument as the data, the `levels =` / `labels =` named
+/// arguments exactly as `factor` does, and stamps the supplied `ordered` flag onto
+/// the result. Centralising this keeps `ordered()` from re-deriving the level
+/// inference and code assignment.
+fn build_factor(args: &[Arg], ordered: bool) -> SResult<SValue> {
     let values = first_positional(args)?.as_character();
 
     // Levels: explicit, else the sorted distinct non-NA values.
@@ -1288,7 +1306,41 @@ fn b_factor(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     Ok(SValue::Factor {
         codes,
         levels: display,
+        ordered,
     })
+}
+
+/// `ordered(x, levels =, labels =)` — build an **ordered** factor (R-35): a factor
+/// whose levels carry a meaningful order, so its elements compare by level index.
+/// Identical to `factor` (it reuses [`build_factor`]) but with `ordered = true`.
+fn b_ordered(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    build_factor(args, true)
+}
+
+/// `as.ordered(x)` — coerce `x` to an ordered factor (R-35). An existing factor
+/// (ordered or not) keeps its codes/levels and gains the ordered flag; any other
+/// value is first encoded with [`build_factor`] (sorted-unique levels).
+fn b_as_ordered(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match peel_structural(first_positional(args)?) {
+        SValue::Factor { codes, levels, .. } => Ok(SValue::Factor {
+            codes: codes.clone(),
+            levels: levels.clone(),
+            ordered: true,
+        }),
+        // Not already a factor: encode it, then mark ordered. We reuse the same
+        // single positional argument (the data) through `build_factor`.
+        _ => build_factor(args, true),
+    }
+}
+
+/// `is.ordered(x)` — `TRUE` iff `x` is an ordered factor (R-35); `FALSE` for an
+/// unordered factor or any non-factor. Never errors.
+fn b_is_ordered(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let ordered = matches!(
+        peel_structural(first_positional(args)?),
+        SValue::Factor { ordered: true, .. }
+    );
+    Ok(SValue::Logical(vec![Some(ordered)]))
 }
 
 /// `levels(f)` — the level labels of a factor (`NULL` otherwise).
@@ -4239,7 +4291,7 @@ fn b_outer(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// Returns `(levels, labels)` where `labels[k]` is the group of element `k`.
 fn group_labels(index: &SValue) -> (Vec<String>, Vec<Option<String>>) {
     match index.strip_names() {
-        SValue::Factor { codes, levels } => {
+        SValue::Factor { codes, levels, .. } => {
             let labels: Vec<Option<String>> = codes
                 .iter()
                 .map(|c| c.and_then(|k| levels.get((k as usize).wrapping_sub(1)).cloned()))
@@ -4510,24 +4562,64 @@ fn b_find_interval(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     Ok(SValue::doubles(out))
 }
 
-/// Format a numeric breakpoint for an interval label the way R's `cut` does for
-/// "nice" small integers: drop a trailing `.0` so `3.0` prints as `3`, but keep
-/// genuine fractions (`3.5`). This keeps the auto-generated levels readable
-/// (`"(0,3]"` rather than `"(0,3.0]"`).
-fn format_break(b: f64) -> String {
-    if b.is_finite() && b.fract() == 0.0 && b.abs() < 1e15 {
-        format!("{}", b as i64)
+/// Format a numeric breakpoint for an interval label to `dig_lab` **significant
+/// digits** (R-35), the way R's `cut` formats break numbers.
+///
+/// * A "nice" integer break (`3.0`, `10`) prints without a decimal point
+///   (`"3"`, `"10"`) regardless of `dig_lab`, keeping labels like `"(0,3]"`.
+/// * A fractional break is rounded to `dig_lab` significant figures with trailing
+///   zeros trimmed, so `3.14159` at `dig_lab = 2` → `"3.1"` and at the default
+///   `dig_lab = 3` → `"3.14"`.
+///
+/// `dig_lab` is already clamped to `1..=22` by [`dig_lab_value`], so the fixed
+/// precision below is bounded — no caller-controlled value can force a huge width.
+fn format_break(b: f64, dig_lab: usize) -> String {
+    // Non-finite (shouldn't reach here for real breaks) → plain fallback.
+    if !b.is_finite() {
+        return format!("{b}");
+    }
+    // A whole-number break keeps its integer form (no spurious ".0"), matching the
+    // R-32/R-33 behaviour, as long as it is representable as an i64.
+    if b.fract() == 0.0 && b.abs() < 1e15 {
+        return format!("{}", b as i64);
+    }
+    format_sig(b, dig_lab)
+}
+
+/// Round `x` to `sig` significant digits and render it without an exponent,
+/// trimming trailing zeros. `sig` is bounded (`1..=22`) by the caller.
+///
+/// **Bound on the format width (security).** The number of decimal places needed
+/// for `sig` significant figures is `sig - 1 - floor(log10|x|)`. For a *tiny* break
+/// (e.g. `1e-300`) `floor(log10|x|)` is very negative, so the naive count would be
+/// several hundred — a 340-character fixed-precision string per break. The clamp to
+/// `0..=22` below caps that: we never emit more than 22 fractional digits, so a
+/// caller-controlled (subnormal) break can neither force a huge allocation nor a
+/// long label. `sig <= 22` keeps the *high* end small too. (R itself switches to
+/// scientific notation for such values; capping the digit count tracks that.)
+fn format_sig(x: f64, sig: usize) -> String {
+    if x == 0.0 {
+        return "0".to_string();
+    }
+    let exp = x.abs().log10().floor() as i32;
+    // Clamp the decimal count to `0..=22`: `.max(0)` alone is NOT enough, because a
+    // tiny `x` makes `exp` very negative and blows the count up — `clamp` bounds it.
+    let decimals = (sig as i32 - 1 - exp).clamp(0, 22) as usize;
+    let s = format!("{x:.decimals$}");
+    if s.contains('.') {
+        s.trim_end_matches('0').trim_end_matches('.').to_string()
     } else {
-        format!("{b}")
+        s
     }
 }
 
 /// Build the auto-generated interval label for the `i`-th interval (0-based) of
 /// `breaks`, respecting `right`: right-closed intervals print `"(lo,hi]"`,
-/// left-closed `[lo,hi)`. (R-33 — extends the R-32 right-closed-only formatter.)
-fn cut_interval_label(breaks: &[f64], i: usize, right: bool) -> String {
-    let lo = format_break(breaks[i]);
-    let hi = format_break(breaks[i + 1]);
+/// left-closed `[lo,hi)`. (R-33 — extends the R-32 right-closed-only formatter;
+/// R-35 — break numbers are formatted to `dig_lab` significant digits.)
+fn cut_interval_label(breaks: &[f64], i: usize, right: bool, dig_lab: usize) -> String {
+    let lo = format_break(breaks[i], dig_lab);
+    let hi = format_break(breaks[i + 1], dig_lab);
     if right {
         format!("({lo},{hi}]")
     } else {
@@ -4698,11 +4790,47 @@ fn b_cut(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         }
     }
 
-    // Otherwise build the factor levels: custom `labels` (validated length) or the
-    // auto-generated interval strings (respecting `right`).
-    let levels = cut_levels(args, &breaks, n_intervals, right)?;
+    // R-35: `dig.lab` (default 3) controls the number of significant digits used
+    // when formatting break numbers in the auto-generated labels. It is clamped to
+    // a safe range inside `dig_lab_value` so an extreme value cannot drive a huge
+    // allocation or a formatter panic.
+    let dig_lab = dig_lab_value(args)?;
 
-    Ok(SValue::Factor { codes, levels })
+    // Otherwise build the factor levels: custom `labels` (validated length) or the
+    // auto-generated interval strings (respecting `right` and `dig.lab`).
+    let levels = cut_levels(args, &breaks, n_intervals, right, dig_lab)?;
+
+    // R-35: `ordered_result = TRUE` makes the binned factor an *ordered* factor —
+    // its intervals are naturally ordered low→high, so the bins compare by order.
+    let ordered = named_flag(args, "ordered_result", false)?;
+
+    Ok(SValue::Factor {
+        codes,
+        levels,
+        ordered,
+    })
+}
+
+/// R-35 — read `cut`'s `dig.lab` argument: the number of **significant digits**
+/// used when auto-formatting break numbers in interval labels. Defaults to **3**
+/// (base R's default). The value is **clamped to `1..=22`** (R's representable-
+/// digit ceiling) so a caller-supplied extreme (e.g. `dig.lab = 1e9`) can never
+/// drive an unbounded format width or a panic; a non-finite or non-positive value
+/// falls back to the default rather than erroring, matching R's lenient handling.
+fn dig_lab_value(args: &[Arg]) -> SResult<usize> {
+    const DEFAULT: usize = 3;
+    const MAX: usize = 22;
+    match args.iter().find(|a| a.name.as_deref() == Some("dig.lab")) {
+        None => Ok(DEFAULT),
+        Some(arg) => {
+            let d = arg.value.as_double()?;
+            match d.get_value(0) {
+                Some(x) if x.is_finite() && x >= 1.0 => Ok((x.trunc() as usize).clamp(1, MAX)),
+                // NA / non-finite / < 1 → fall back to the default (no panic).
+                _ => Ok(DEFAULT),
+            }
+        }
+    }
 }
 
 /// The 1-based factor code for a single value under `cut`'s interval rules, or
@@ -4769,6 +4897,7 @@ fn cut_levels(
     breaks: &[f64],
     n_intervals: usize,
     right: bool,
+    dig_lab: usize,
 ) -> SResult<Vec<String>> {
     if let Some(arg) = args.iter().find(|a| a.name.as_deref() == Some("labels")) {
         let stripped = strip_wrappers(&arg.value);
@@ -4792,7 +4921,7 @@ fn cut_levels(
         }
     }
     Ok((0..n_intervals)
-        .map(|i| cut_interval_label(breaks, i, right))
+        .map(|i| cut_interval_label(breaks, i, right, dig_lab))
         .collect())
 }
 
