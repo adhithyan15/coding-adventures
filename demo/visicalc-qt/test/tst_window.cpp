@@ -27,6 +27,7 @@ private slots:
     void saveLoadRoundTrips();
     void undoRedoWalksHistory();
     void structuralInsertDeleteShiftsReferences();
+    void numberFormatAppliesToSelectedCell();
 };
 
 // Helper: the display string at window (1-based) cell (row, col), given the
@@ -282,6 +283,28 @@ void TstWindow::structuralInsertDeleteShiftsReferences() {
     QCOMPARE(m2.window(1, 13, 1, 13).at(0).toList().at(0).toString(), QStringLiteral("15")); // M1
     m2.selectInf(1, 13);
     QCOMPARE(QString(m2.infFormula()).remove('(').remove(')'), QStringLiteral("=L1*3"));
+}
+
+// Number formatting (the .00 / % / $ / Gen controls drive model.setFormatInf):
+// applying a format code changes only how the selected cell DISPLAYS; the stored
+// value is unchanged. An empty code clears the format.
+void TstWindow::numberFormatAppliesToSelectedCell() {
+    SpreadsheetModel m;
+    m.setCell("H1", "1234"); // col 8, away from the budget
+    m.selectInf(1, 8);
+    auto disp = [&m]() { return m.window(1, 8, 1, 8).at(0).toList().at(0).toString(); };
+    QCOMPARE(disp(), QStringLiteral("1234")); // unformatted
+    m.setFormatInf(QStringLiteral("#,##0.00"));
+    QCOMPARE(disp(), QStringLiteral("1,234.00"));
+    m.setFormatInf(QStringLiteral("0.0%"));
+    QCOMPARE(disp(), QStringLiteral("123400.0%"));
+    m.setFormatInf(QStringLiteral("$#,##0.00"));
+    QCOMPARE(disp(), QStringLiteral("$1,234.00"));
+    m.setFormatInf(QString()); // clear → General
+    QCOMPARE(disp(), QStringLiteral("1234"));
+    // The format is display-only: the stored source never changed.
+    m.selectInf(1, 8);
+    QCOMPARE(m.infFormula(), QStringLiteral("1234"));
 }
 
 QTEST_MAIN(TstWindow)

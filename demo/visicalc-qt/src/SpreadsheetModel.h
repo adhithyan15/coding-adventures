@@ -126,6 +126,11 @@ public:
     // `dstStart`..`dstEnd` (relative refs shift, absolute pin, format carried);
     // resizes the extent and bumps `revision` so the visible rows re-fetch.
     Q_INVOKABLE void fill(const QString &src, const QString &dstStart, const QString &dstEnd);
+    // Number formatting: attach an Excel-style format code (e.g. "#,##0.00",
+    // "0.0%", "$#,##0.00", or "" to clear) to the selected cell. Display-only —
+    // the stored value is unchanged; the engine renders it through the code.
+    // Recomputes the grid + bumps `revision` so the visible rows re-fetch.
+    Q_INVOKABLE void setFormatInf(const QString &code);
     // Clipboard: copy/cut capture the inclusive rectangle `start`..`end` (a
     // whole-block copy that pastes as a unit); paste places the block so its
     // top-left lands at `dstStart`, shifting the block's references by the
