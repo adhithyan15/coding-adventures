@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.34.0] - 2026-06-21
+
+### Added
+
+- **String-utility completeness (R-37)** — the two options deferred from R-34 now
+  ship, extending the existing `strtoi`/`trimws` handlers in place (no new
+  builtins, no grammar change).
+  - **`strtoi(x, base = 0L)` auto-detection** — when `base` is `0`, the radix of
+    each string is inferred from its post-sign prefix, exactly as C
+    `strtol(…, 0)`: a `0x`/`0X` prefix → hexadecimal; a leading `0` followed by at
+    least one more digit → octal; a lone `"0"` → decimal zero; anything else →
+    decimal. Because octal is parsed in base 8, an out-of-range digit after a
+    leading `0` is `NA` (`strtoi("08", 0L)` → `NA`), and a bare `"0x"` (no digits)
+    → `NA`. `strtoi("0x1F", 0L)` → `31`; `strtoi("010", 0L)` → `8`;
+    `strtoi("12", 0L)` → `12`; `strtoi("0", 0L)` → `0`. Explicit bases 2..36 are
+    unchanged; a `base` outside `{0} ∪ 2..36` still makes every element `NA`.
+  - **`trimws(x, whitespace = "[ \t\r\n]")`** — a new keyword-only `whitespace =`
+    argument selecting the set of characters to strip. It is a **regular
+    expression** (faithful to base R ≥ 3.6), compiled with the same RE2-based
+    `regex` engine `grepl`/`gsub` use and anchored to the trimmed edge
+    (`^(?:p)+` for the left, `(?:p)+$` for the right). `trimws("xxhixx",
+    whitespace = "x")` → `"hi"`; `trimws("..a..", whitespace = "[.]")` → `"a"`. The
+    default and `which`/`NA` behavior are unchanged.
+  - **Security**: base-0 parsing reuses the checked-`i64` accumulation (overflow →
+    `NA`, never a panic) and rejects empty digit runs (e.g. `"0x"`) as `NA`;
+    `whitespace =` slicing uses the regex-reported byte offsets (always `char`
+    boundaries), so multibyte input is UTF-8 safe, and RE2's guaranteed
+    linear-time matching means a crafted `whitespace =` pattern cannot cause
+    catastrophic backtracking (no ReDoS). An invalid `whitespace =` pattern is a
+    clean `Err`.
+
 ## [0.33.0] - 2026-06-21
 
 ### Added

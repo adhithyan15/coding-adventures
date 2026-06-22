@@ -258,6 +258,39 @@ mod tests {
         assert_eq!(nums("strtoi(\"FF\", 16L) + 1\n"), vec![256.0]);
     }
 
+    // --- R-37: strtoi base = 0L auto-detection through R syntax ---------------
+
+    #[test]
+    fn r37_strtoi_base0() {
+        // 0x / 0X prefix -> hex.
+        assert_eq!(nums("strtoi(\"0x1F\", 0L)\n"), vec![31.0]);
+        assert_eq!(nums("strtoi(\"0X1f\", 0L)\n"), vec![31.0]);
+        // Leading 0 -> octal; lone 0 -> zero; no prefix -> decimal.
+        assert_eq!(nums("strtoi(\"010\", 0L)\n"), vec![8.0]);
+        assert_eq!(nums("strtoi(\"12\", 0L)\n"), vec![12.0]);
+        assert_eq!(nums("strtoi(\"0\", 0L)\n"), vec![0.0]);
+        // Invalid octal digit and empty-after-prefix -> NA.
+        assert_eq!(show("strtoi(\"08\", 0L)\n"), "[1] NA");
+        assert_eq!(show("strtoi(\"0x\", 0L)\n"), "[1] NA");
+        // Explicit bases still work unchanged.
+        assert_eq!(nums("strtoi(\"FF\", 16L)\n"), vec![255.0]);
+    }
+
+    // --- R-37: trimws(whitespace =) through R syntax --------------------------
+
+    #[test]
+    fn r37_trimws_whitespace() {
+        assert_eq!(show("trimws(\"xxhixx\", whitespace = \"x\")\n"), "[1] \"hi\"");
+        assert_eq!(
+            show("trimws(\"xxhix\", which = \"left\", whitespace = \"x\")\n"),
+            "[1] \"hix\""
+        );
+        // Default whitespace unchanged.
+        assert_eq!(show("trimws(\"  hi  \")\n"), "[1] \"hi\"");
+        // NA propagation preserved.
+        assert_eq!(show("trimws(NA, whitespace = \"x\")\n"), "[1] NA");
+    }
+
     #[test]
     fn lists_through_r_syntax() {
         // list() with $ access; lapply -> list; strsplit -> list of char vectors.
