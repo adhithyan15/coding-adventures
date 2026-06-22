@@ -393,6 +393,13 @@ impl Compiler {
     /// body of `block`, minus each procedure's own parameters and its result
     /// name (those are local to the procedure, not enclosing-scope captures).
     /// A block scalar whose name lands in this set is materialised as a global.
+    ///
+    /// Caveat: only the *immediate* procedure's own params/result are excluded;
+    /// `collect_name_tokens` recurses into any **nested** procedures, so a nested
+    /// procedure's own locals could be over-captured. Harmless unless a block
+    /// scalar shares a name with a nested-procedure local — a rare, untested
+    /// shape (this slice targets one level of block→procedure capture). A proper
+    /// fix tracks nested scopes; tracked as an E6 follow-up.
     fn collect_block_captures(&self, block: &GrammarASTNode) -> HashSet<String> {
         let mut captured = HashSet::new();
         for child in direct_nodes(block) {
