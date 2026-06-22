@@ -169,6 +169,15 @@ var __SPREADSHEET_WASM_B64__ = "AGFzbQEAAAABqAIrYAF/AX9gAX8AYAJ/fwF/YAJ/fwBgA39/
           canUndo: () => ex.can_undo() === 1,
           canRedo: () => ex.can_redo() === 1,
 
+          // Structural edits: insert / delete `count` rows or columns at a
+          // 1-based position. The engine shifts every formula reference at or
+          // after the band (a ref inside a deleted band becomes #REF!), then
+          // recomputes. Re-read the window afterwards.
+          insertRows: (at, count) => ex.insert_rows(at >>> 0, count >>> 0),
+          deleteRows: (at, count) => ex.delete_rows(at >>> 0, count >>> 0),
+          insertCols: (at, count) => ex.insert_cols(at >>> 0, count >>> 0),
+          deleteCols: (at, count) => ex.delete_cols(at >>> 0, count >>> 0),
+
           // Viewport primitive — render only the visible window of an unbounded
           // sheet. 1-based inclusive coords.
           getWindow: (row0, col0, row1, col1) =>
